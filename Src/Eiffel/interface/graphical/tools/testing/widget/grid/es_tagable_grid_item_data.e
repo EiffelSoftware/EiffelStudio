@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent a tagable item associated with a grid row for {ES_TAGABLE_GRID}. These rows
 		represent the leaves in the underlayint {TAG_BASED_TREE}.

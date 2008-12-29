@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Toolbar toggle button with the ability to synchronize its status with its related preference.
 				]"
@@ -31,7 +31,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_preference: BOOLEAN_PREFERENCE) is
+	make (a_preference: BOOLEAN_PREFERENCE)
 			-- Initialize `preference' with `a_preference'.
 		require
 			a_preference_attached: a_preference /= Void
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 	preference_status_change_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent to be performed when value of `preference' changes
 
-	set_selection_status (b: BOOLEAN) is
+	set_selection_status (b: BOOLEAN)
 			-- Set selection status of Current toggle button with `b'.
 			-- `b' is True means enable selection of Current,
 			-- `b' is False means disable selection of Current.
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			selection_status_set: (b implies is_selected) and then (not b implies not is_selected)
 		end
 
-	notify_synchronizer (a_value_host: ANY)	is
+	notify_synchronizer (a_value_host: ANY)
 			-- Notify `synchronizer' that value from `a_value_host' changes
 		require
 			a_value_host_valid: a_value_host = Current or else a_value_host = preference
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 
 feature{NONE} -- Recycle
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the button has became useless.
 		do
 			synchronizer.wipe_out_hosts
@@ -116,7 +116,7 @@ feature{NONE} -- Recycle
 			pointer_button_press_actions.wipe_out
 		end
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- <Precursor>
 		do
 			pointer_button_press_actions := Void
@@ -133,7 +133,7 @@ invariant
 	button_status_change_agent_attached: is_interface_usable implies button_status_change_agent /= Void
 	preference_status_change_agent_attached: is_interface_usable implies preference_status_change_agent /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

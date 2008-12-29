@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Errors for invalid custom attribute specification."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,13 +16,13 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VICA"
+	code: STRING = "VICA"
 		-- Error code
 
 invariant
 	context_class_not_void: context_class /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

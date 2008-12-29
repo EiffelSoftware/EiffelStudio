@@ -1,4 +1,4 @@
-indexing
+note
 	description: "User preferences used in the interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	preferences: COMPILER_PREFERENCES is
+	preferences: COMPILER_PREFERENCES
 			-- All preferences for `ec'.
 		do
 			Result := preferences_cell.item
@@ -20,7 +20,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_preferences (p: like preferences) is
+	set_preferences (p: like preferences)
 			-- Set `command_executor' with `c'.
 		require
 			c_not_void: p /= Void
@@ -32,7 +32,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation
 
-	preferences_cell: CELL [COMPILER_PREFERENCES] is
+	preferences_cell: CELL [COMPILER_PREFERENCES]
 			-- Once cell.
 		once
 			create Result.put (create {COMPILER_PREFERENCES}.make (create {PREFERENCES}.make))
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			preferences_cell_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

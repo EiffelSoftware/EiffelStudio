@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to run an eiffel application."
@@ -22,19 +22,19 @@ inherit
 
 feature {NONE} -- Implementation
 
-	loop_action is
+	loop_action
 			-- Execute the generated application
 		do
 			execute
 		end
 
-	execute is
+	execute
 			-- This command is available only for the `loop' mode
 		do
 			print ("Not available in this version%N")
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

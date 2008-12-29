@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A widget for viewing the contracts and comments of a particular feature.
 	]"
@@ -21,7 +21,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	build_widget_interface (a_widget: !EV_VERTICAL_BOX) is
+	build_widget_interface (a_widget: !EV_VERTICAL_BOX)
 			-- Builds widget's interface.
 			-- `a_widget': The widget to initialize of build upon.
 		local
@@ -319,7 +319,7 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Comment extraction
 
-	feature_comment_tokens (a_feature: !E_FEATURE; a_token_writer: !EB_EDITOR_TOKEN_GENERATOR): ARRAYED_LIST [EDITOR_TOKEN] is
+	feature_comment_tokens (a_feature: !E_FEATURE; a_token_writer: !EB_EDITOR_TOKEN_GENERATOR): ARRAYED_LIST [EDITOR_TOKEN]
 			-- Editor token representation of comment of `a_feature'.
 			--
 			-- `a_feature': The feature to show comments for.
@@ -433,7 +433,7 @@ feature {NONE} -- Internationalization
 	l_view_contracts: !STRING = "View Contracts..."
 	f_edit_contracts: !STRING = "Places the current feature in the contract editor for edition"
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

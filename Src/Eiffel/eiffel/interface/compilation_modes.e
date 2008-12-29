@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Status of current compilation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ feature -- Properties
 
 feature -- Access
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- Normalized output for current compilation mode.
 		do
 			if is_precompiling then
@@ -44,47 +44,47 @@ feature -- Access
 			string_representation_not_void: Result /= Void
 		end
 
-	precompile_type: STRING is "Precompile"
-	precompile_finalize_type: STRING is "Precompile+Finalize"
-	quick_melt_type: STRING is "Quick_melt"
-	override_scan_type: STRING is "Override_scan"
-	discover_type: STRING is "Discover"
-	freeze_type: STRING is "Freeze"
-	finalize_type: STRING is "Finalize"
+	precompile_type: STRING = "Precompile"
+	precompile_finalize_type: STRING = "Precompile+Finalize"
+	quick_melt_type: STRING = "Quick_melt"
+	override_scan_type: STRING = "Override_scan"
+	discover_type: STRING = "Discover"
+	freeze_type: STRING = "Freeze"
+	finalize_type: STRING = "Finalize"
 
 feature -- Update
 
-	set_is_freezing is
+	set_is_freezing
 			-- Set `is_freezing' to `True'
 		do
 			is_freezing := True
 		end
 
-	set_is_quick_melt is
+	set_is_quick_melt
 			-- Set `is_quick_melt' to `True'
 		do
 			is_quick_melt := True
 		end
 
-	set_is_override_scan is
+	set_is_override_scan
 			-- Set `is_override_scan' to `True'
 		do
 			is_override_scan := True
 		end
 
-	set_is_finalizing is
+	set_is_finalizing
 			-- Set `is_finalizing' to `True'
 		do
 			is_finalizing := True
 		end
 
-	set_is_precompiling (b: BOOLEAN) is
+	set_is_precompiling (b: BOOLEAN)
 			-- Set `is_precompiling' to `b'
 		do
 			is_precompiling := b
 		end
 
-	set_is_discover is
+	set_is_discover
 			-- Set `is_discover' to `True'.
 		do
 			is_discover := True
@@ -94,7 +94,7 @@ feature -- Update
 
 feature -- Setting
 
-	reset_modes is
+	reset_modes
 		do
 			is_override_scan := False
 			is_quick_melt := False
@@ -104,7 +104,7 @@ feature -- Setting
 			is_discover := False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

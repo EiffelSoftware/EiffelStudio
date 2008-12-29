@@ -1,17 +1,17 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SHARED_STATUS
 
 feature -- Access
 
-	server_mode: BOOLEAN is
+	server_mode: BOOLEAN
 			-- Is the compiler in server mode?
 		do
 			Result := server_mode_cell.item
 		end
 
-	enable_server_mode is
+	enable_server_mode
 			-- Set `server_mode' to True.
 		do
 			server_mode_cell.replace (True)
@@ -19,7 +19,7 @@ feature -- Access
 			server_mode: server_mode
 		end
 
-	disable_server_mode is
+	disable_server_mode
 			-- Set `server_mode' to True.
 		do
 			server_mode_cell.replace (False)
@@ -29,12 +29,12 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	server_mode_cell: CELL [BOOLEAN] is
+	server_mode_cell: CELL [BOOLEAN]
 		once
 			create Result.put (False)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

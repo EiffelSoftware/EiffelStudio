@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 				Regular replace strategy, replace current item in replace_items,
 				 after replacing items_matched are refreshed. `is_current_replaced_as_cluster'
@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	replace_items: ARRAYED_LIST [MSR_ITEM] is
+	replace_items: ARRAYED_LIST [MSR_ITEM]
 			-- Replace items upon which replacing will be done.
 		require
 			is_replace_items_set: is_replace_items_set
@@ -29,7 +29,7 @@ feature -- Access
 			replace_item_not_void : Result = replace_item_internal
 		end
 
-	replace_string: STRING_32 is
+	replace_string: STRING_32
 			-- Replacement string.
 		require
 			is_replace_string_set: is_replace_string_set
@@ -39,7 +39,7 @@ feature -- Access
 			replace_string_not_void: Result = replace_string_internal
 		end
 
-	replace_report: MSR_REPLACE_REPORT is
+	replace_report: MSR_REPLACE_REPORT
 			-- Replace report
 		do
 			if replace_report_internal = Void then
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_replace_items (items: ARRAYED_LIST [MSR_ITEM]) is
+	set_replace_items (items: ARRAYED_LIST [MSR_ITEM])
 			-- Set `replace_item_internal' with items.
 		require
 			items_not_void: items /= Void
@@ -62,7 +62,7 @@ feature -- Element change
 			is_replace_items_set: is_replace_items_set
 		end
 
-	set_surrounding_text_range (n: INTEGER) is
+	set_surrounding_text_range (n: INTEGER)
 			-- Set `surrounding_text_range_internal' with n.
 		require
 			larger_equal_than_zero: n >= 0
@@ -70,7 +70,7 @@ feature -- Element change
 			surrounding_text_range_internal := n
 		end
 
-	set_replace_string (string: like replace_string) is
+	set_replace_string (string: like replace_string)
 			-- Set `replace_string_internal' with string.
 		require
 			string_not_void: string /= Void
@@ -82,19 +82,19 @@ feature -- Element change
 
 feature -- Status report
 
-	is_replace_items_set: BOOLEAN is
+	is_replace_items_set: BOOLEAN
 			-- Is `replace_items' set?
 		do
 			Result := (replace_item_internal /= Void)
 		end
 
-	is_replace_string_set: BOOLEAN is
+	is_replace_string_set: BOOLEAN
 			-- Is replace_string set?
 		do
 			Result := (replace_string_internal /= Void)
 		end
 
-	is_replace_launched : BOOLEAN is
+	is_replace_launched : BOOLEAN
 			-- Is replacing launched
 		do
 			Result := is_replace_launched_internal
@@ -104,7 +104,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	replace is
+	replace
 			-- Launch replacement, one time. Other items are freshed.
 		require
 			replace_items_set: is_replace_items_set
@@ -117,7 +117,7 @@ feature -- Basic operations
 			is_replace_launched: is_replace_launched
 		end
 
-	replace_all is
+	replace_all
 			-- All items will be replaced, cluster mode is used by default.
 		local
 			l_last_item, l_item : MSR_TEXT_ITEM
@@ -184,17 +184,17 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	item_replaced is
+	item_replaced
 			-- One item replaced when replacing all.
 		do
 		end
 
-	all_item_replaced is
+	all_item_replaced
 			-- Replace all is done.
 		do
 		end
 
-	remove_item (a_item: MSR_ITEM) is
+	remove_item (a_item: MSR_ITEM)
 			-- Remove item from item_matched.
 			-- If `a_item' is a class item, we remove it and its children.
 			-- If `a_item' is a text item, we remove from `replace_items', set the cursor to next item.
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	string_formatter: MSR_FORMATTER is
+	string_formatter: MSR_FORMATTER
 			-- String formatter. i.e. Mute every GOBO regular expression meta-characters in a string.
 		once
 			Result := create {MSR_FORMATTER}
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 	surrounding_text_range_internal : INTEGER
 			-- maximal number of charactors by oneside of text in a item's context text.
 
-	one_cluster_item_replaced (a_item : MSR_TEXT_ITEM) is
+	one_cluster_item_replaced (a_item : MSR_TEXT_ITEM)
 			-- Consequent text items that come from the same text are replaced, a_item is one of them.
 		require
 			a_item_not_void: a_item /= Void
@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 	replace_report_internal: MSR_REPLACE_REPORT
 			-- Replace report.
 
-	is_current_replaced_as_cluster (a_item: MSR_TEXT_ITEM) : BOOLEAN  is
+	is_current_replaced_as_cluster (a_item: MSR_TEXT_ITEM) : BOOLEAN
 			-- When replacing all, should a_item be replaced as in a cluster as a fast way? Once Result returns
 			-- True, text items surrounding a_item will be replaced in cluster as fast way. Former replacing
 			-- in this cluster will be discarded.
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 			Result := True
 		end
 
-	replace_current_item (refresh_finding: BOOLEAN) is
+	replace_current_item (refresh_finding: BOOLEAN)
 			-- Replace current_item. If refresh_finding,
 			-- surrounding and line number will be freshed in all items.
 		local
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	refresh_item_text is
+	refresh_item_text
 			-- Refresh all item context, according to start and end index.
 		require
 			replace_items_set: is_replace_items_set
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			replace_items_current_in_the_same_place: old replace_items.index = replace_items.index
 		end
 
-	refresh_item_text_perform_item (l_text_item: MSR_TEXT_ITEM) is
+	refresh_item_text_perform_item (l_text_item: MSR_TEXT_ITEM)
 			-- Refresh all item context, according to start and end index.
 		local
 			present_start, present_end: INTEGER
@@ -415,7 +415,7 @@ feature {NONE} -- Implementation
 
 	last_item: MSR_TEXT_ITEM
 
-	refresh_item_capture_positions (a_offset: INTEGER) is
+	refresh_item_capture_positions (a_offset: INTEGER)
 			-- Calculate new positions and refresh the rest items' start and end index.
 		require
 			replace_items_set: is_replace_items_set
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 			not_replace_items_moved: old replace_items.index = replace_items.index
 		end
 
-	append_replacement_to_string (a_string, a_replacement: STRING_32; a_text_item: MSR_TEXT_ITEM) is
+	append_replacement_to_string (a_string, a_replacement: STRING_32; a_text_item: MSR_TEXT_ITEM)
 			-- Append to `a_string' a copy of `a_replacement' where all occurrences
 			-- of \n\ have been replaced by the corresponding n-th captured substrings
 			-- if any. This code if from GOBO RX_REGULAR_EXPRESSION but changed some here.
@@ -502,7 +502,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	actual_replacement (a_item: MSR_TEXT_ITEM): STRING_32 is
+	actual_replacement (a_item: MSR_TEXT_ITEM): STRING_32
 			-- All /n/ have been replaced by the corresponding n-th captured substrings if any
 		require
 			a_item_not_void: a_item /= Void
@@ -518,13 +518,13 @@ feature {NONE} -- Implementation
 			Result := re
 		end
 
-	item_writable (a_item: MSR_ITEM): BOOLEAN is
+	item_writable (a_item: MSR_ITEM): BOOLEAN
 			-- Is text representation of `a_item' writable?
 		do
 			Result := True
 		end
 
-	on_new_position_yielded (a_start, a_end : INTEGER; a_item : MSR_TEXT_ITEM) is
+	on_new_position_yielded (a_start, a_end : INTEGER; a_item : MSR_TEXT_ITEM)
 			-- When replacing all, start and end indexes will be yielded one by one.
 			-- a_item is the item replacing.
 		require
@@ -557,7 +557,7 @@ invariant
 
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

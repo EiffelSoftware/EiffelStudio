@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scan the override clusters for changes and recompile."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} --Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
@@ -35,7 +35,7 @@ feature {NONE} --Initialization
 
 feature {NONE} -- Implementation
 
-	perform_compilation is
+	perform_compilation
 			-- The actual compilation process.
 		do
 			eiffel_project.discover_melt
@@ -43,34 +43,34 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	name: STRING is "Discover_melt"
+	name: STRING = "Discover_melt"
 			-- Name of the command.
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_discover_melt
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name used in menu entry
 		do
 			Result := Interface_names.m_discover_melt
 		end
 
-	description, tooltip: STRING_GENERAL is
+	description, tooltip: STRING_GENERAL
 			-- String displayed as a tooltip and in the toolbar customization dialog.
 		do
 			Result := Interface_names.e_discover_melt
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.project_discover_melt_icon
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

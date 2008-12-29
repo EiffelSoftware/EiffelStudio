@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Output options as specified by the user."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,19 +9,19 @@ class PROFILER_OPTIONS
 
 feature -- Status setting
 
-	set_output_names (names: ARRAY [STRING]) is
+	set_output_names (names: ARRAY [STRING])
 			-- Set `output_names' to `names'.
 		do	
 			output_names := names
 		end
 
-	set_filenames (names: ARRAY [STRING]) is
+	set_filenames (names: ARRAY [STRING])
 			-- Set `filenames' to `names'.
 		do
 			filenames := names
 		end
 
-	set_language_names (names: ARRAY [STRING]) is
+	set_language_names (names: ARRAY [STRING])
 			-- Set `language_names' to `names'.
 		do
 			language_names := names
@@ -38,7 +38,7 @@ feature -- Status report
 	language_names: ARRAY [STRING]
 			-- The languages to be taken into account
 
-	image: STRING is
+	image: STRING
 			-- Options as a string value
 		local
 			idx: INTEGER
@@ -70,7 +70,7 @@ feature -- Status report
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

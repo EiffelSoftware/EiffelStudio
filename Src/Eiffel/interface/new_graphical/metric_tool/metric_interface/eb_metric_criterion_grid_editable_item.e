@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid item used to input criterion name in metric tool"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_completion_possibilities_provider (a_provider: like completion_possibilities_provider) is
+	set_completion_possibilities_provider (a_provider: like completion_possibilities_provider)
 			-- Set `completion_possibilities_provider'.
 		require
 			a_provider_not_void: a_provider /= Void
@@ -46,14 +46,14 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	on_save_auto_complete_window_position (a_x, a_y, a_width, a_height: INTEGER) is
+	on_save_auto_complete_window_position (a_x, a_y, a_width, a_height: INTEGER)
 			-- Action to be performed to save position of auto-complete window
 		do
 			preferences.metric_tool_data.criterion_completion_list_width_preference.set_value (a_width)
 			preferences.metric_tool_data.criterion_completion_list_height_preference.set_value (a_height)
 		end
 
-	initialize_actions is
+	initialize_actions
 			-- Setup actions sequences of `Current'.
 		do
 			Precursor
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			text_field.set_caret_position (text_field.text_length + 1)
 		end
 
-	activate_action (popup_window: EV_POPUP_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
 		do
 			create text_field
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			text_field.set_can_complete_agent (agent can_complete)
 		end
 
-	can_complete (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN): BOOLEAN is
+	can_complete (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN): BOOLEAN
 			-- `a_key' can activate text completion?
 		do
 			Result := not (
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

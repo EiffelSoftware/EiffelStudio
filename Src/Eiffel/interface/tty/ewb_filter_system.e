@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Notion of a filter applied to the Ace file."
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Execution
 
-	loop_action is
+	loop_action
 			-- Action to be done before `execute'.
 		do
 			command_line_io.get_filter_name;
@@ -26,7 +26,7 @@ feature {NONE} -- Execution
 			check_arguments_and_execute
 		end;
 
-	execute is
+	execute
 		local
 			cmd: like associated_cmd;
 			filter: TEXT_FILTER
@@ -45,7 +45,7 @@ feature {NONE} -- Execution
 			output_window.put_new_line;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scope used to calculate metric"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature -- Access
 
-	item_domain (a_scope: QL_SCOPE): QL_DOMAIN is
+	item_domain (a_scope: QL_SCOPE): QL_DOMAIN
 			-- QL_DOMAIN with scope `a_scope' representing of `item'
 		require
 			not_off: not off
@@ -39,13 +39,13 @@ feature -- Access
 			Result := item.domain (a_scope)
 		end
 
-	visitable_name: STRING_GENERAL is
+	visitable_name: STRING_GENERAL
 			-- Name of current visitable item
 		do
 			Result := metric_names.l_domain
 		end
 
-	actual_domain: like Current is
+	actual_domain: like Current
 			-- Actual domain
 		do
 			if has_delayed_input_domain_item and then external_domain /= Void then
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is current domain valid?
 		do
 			if not is_empty then
@@ -73,7 +73,7 @@ feature -- Status report
 			end
 		end
 
-	has_delayed_domain_item: BOOLEAN is
+	has_delayed_domain_item: BOOLEAN
 			-- Does current domain has delayed domain item?
 		do
 			Result := there_exists (
@@ -83,7 +83,7 @@ feature -- Status report
                       )
 		end
 
-	has_delayed_input_domain_item: BOOLEAN is
+	has_delayed_input_domain_item: BOOLEAN
 			-- Does current domain has delayed input domain item?
 		do
 			Result := there_exists (
@@ -93,7 +93,7 @@ feature -- Status report
                       )
 		end
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to Current?
 			-- Equivalent means that every item from `other' is also in `Current', and
 			-- every item from `Current' is also in `other', i.e., set equal.
@@ -111,7 +111,7 @@ feature -- Status report
 			end
 		end
 
-	is_domain_item_equal (a_domain_item, b_domain_item: EB_DOMAIN_ITEM): BOOLEAN is
+	is_domain_item_equal (a_domain_item, b_domain_item: EB_DOMAIN_ITEM): BOOLEAN
 			-- Is `a_domain_item' equal to `b_domain_item'?
 		do
 			if a_domain_item = Void then
@@ -123,7 +123,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_external_domain (a_domain: like external_domain) is
+	set_external_domain (a_domain: like external_domain)
 			-- Set `external_domain' with `a_domain'.
 		do
 			external_domain := a_domain
@@ -133,13 +133,13 @@ feature -- Setting
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_domain (Current)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

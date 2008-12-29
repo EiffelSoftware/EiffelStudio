@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Stores into a string."
@@ -19,7 +19,7 @@ create
 
 feature -- Initalization
 
-	make is
+	make
 		do
 			create stored_output.make (0);
 		end;
@@ -28,7 +28,7 @@ feature -- Properties
 
 	stored_output: STRING_32
 
-	count : INTEGER is
+	count : INTEGER
 			-- Count
 		do
 			Result := stored_output.count
@@ -36,29 +36,29 @@ feature -- Properties
 
 feature -- Element change
 
-	reset_output is
+	reset_output
 		do
 			stored_output.wipe_out
 		end;
 
 feature -- Output
 
-	put_string (s: STRING_GENERAL) is
+	put_string (s: STRING_GENERAL)
 		do
 			stored_output.append (s)
 		end;
 
-	put_char (c: CHARACTER_32) is
+	put_char (c: CHARACTER_32)
 		do
 			stored_output.extend (c)
 		end;
 
-	put_new_line is
+	put_new_line
 		do
 			stored_output.extend ('%N')
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

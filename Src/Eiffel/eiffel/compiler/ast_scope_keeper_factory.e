@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory to create keepers for non-void entity scopes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature -- Access
 			result_local_count_set: Result.local_count = n
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

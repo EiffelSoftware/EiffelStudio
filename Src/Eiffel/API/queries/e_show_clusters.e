@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to show the universe: clusters in class lists."
@@ -22,7 +22,7 @@ create
 
 feature -- Status report
 
-	is_folder_hierarchy_displayed: BOOLEAN is
+	is_folder_hierarchy_displayed: BOOLEAN
 			-- Is folder hierarchy displayed?
 			-- e.g., should we display folders in a cluster?
 		do
@@ -31,7 +31,7 @@ feature -- Status report
 
 feature -- Execution
 
-	work is
+	work
 			-- Show clusters in universe.
 		local
 			l_creators: LIST [SYSTEM_ROOT]
@@ -57,7 +57,7 @@ feature -- Execution
 			Precursor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Tool for viewing the active editor's list of feature clauses and features.
 	]"
@@ -48,7 +48,7 @@ create {ES_FEATURES_TOOL}
 
 feature {NONE} -- User interface initialization
 
-    build_tool_interface (a_widget: ES_FEATURES_GRID) is
+    build_tool_interface (a_widget: ES_FEATURES_GRID)
             -- Builds the tools user interface elements.
             -- Note: This function is called prior to showing the tool for the first time.
             --
@@ -422,7 +422,7 @@ invariant
 	show_signatures_button_attached: is_initialized and is_interface_usable implies
 		show_signatures_button /= Void
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

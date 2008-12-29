@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Item for EB_FAVORITES, This item describes a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,14 +38,14 @@ create
 
 feature {NONE} -- Access
 
-	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST) is
+	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Initialize Current with `name' set to `a_name'.
 		do
 			Precursor {EB_FAVORITES_ITEM} (a_name, a_parent)
 			get_e_feature
 		end
 
-	make_from_feature_stone (a_stone: FEATURE_STONE; a_parent: EB_FAVORITES_ITEM_LIST) is
+	make_from_feature_stone (a_stone: FEATURE_STONE; a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Generate from the data associated to a feature stone and attach to `a_parent'
 		require
 			parent_non_void: a_parent /= Void
@@ -58,7 +58,7 @@ feature {NONE} -- Access
 			make (feature_name, a_parent)
 		end
 
-	make_with_class_c (a_name: STRING; a_class_c: CLASS_C; a_parent: EB_FAVORITES_ITEM_LIST) is
+	make_with_class_c (a_name: STRING; a_class_c: CLASS_C; a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Generate from the data associated to a feature stone and attach to `a_parent'
 		require
 			parent_non_void: a_parent /= Void
@@ -73,18 +73,18 @@ feature {NONE} -- Access
 
 feature -- Status
 
-	is_folder: BOOLEAN is False
+	is_folder: BOOLEAN = False
 			-- Is the current item a folder ?
 
-	is_class: BOOLEAN is False
+	is_class: BOOLEAN = False
 			-- Is the current item a class ?			
 
-	is_feature: BOOLEAN is True
+	is_feature: BOOLEAN = True
 			-- Is the current item a feature ?
 
 feature -- Element change
 
-	refresh is
+	refresh
 			-- Refresh information.
 		local
 			l_stone: like associated_stone
@@ -97,12 +97,12 @@ feature -- Element change
 
 feature -- Graphical interface
 
-	mouse_cursor: EV_POINTER_STYLE is
+	mouse_cursor: EV_POINTER_STYLE
 		once
 			Result := Cursors.cur_feature
 		end
 
-	Xmouse_cursor: EV_POINTER_STYLE is
+	Xmouse_cursor: EV_POINTER_STYLE
 		once
 			Result := Cursors.cur_X_Feature
 		end
@@ -119,7 +119,7 @@ feature -- Convert
 	associated_class_c: CLASS_C
 			-- CLASS_C associated with Current, Void if none.
 
-	associated_stone: FEATURE_STONE is
+	associated_stone: FEATURE_STONE
 			-- FEATURE_STONE associated with favorite class, Void if none.
 		do
 			if associated_e_feature /= Void then
@@ -129,34 +129,34 @@ feature -- Convert
 
 feature -- Feature nature
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 		do
 			Result := associated_e_feature.is_deferred
 		end
 
-	is_constant: BOOLEAN is
+	is_constant: BOOLEAN
 		do
 			Result := associated_e_feature.is_constant
 		end
 
-	is_once: BOOLEAN is
+	is_once: BOOLEAN
 		do
 			Result := associated_e_feature.is_once
 		end
 
-	is_attribute: BOOLEAN is
+	is_attribute: BOOLEAN
 		do
 			Result := associated_e_feature.is_attribute
 		end
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN
 		do
 			Result := associated_e_feature.is_external
 		end
 
 feature {NONE} -- Implementation
 
-	get_e_feature is
+	get_e_feature
 		-- Find the corresponding feature_i, depending on the name.
 		local
 			conv_class: EB_FAVORITES_CLASS
@@ -176,13 +176,13 @@ feature {NONE} -- Implementation
 
 feature {EB_FAVORITES_ITEM_LIST, EB_FAVORITES_ITEM} -- Load/Save
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- String representation for Current.
 		do
 			Result := name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

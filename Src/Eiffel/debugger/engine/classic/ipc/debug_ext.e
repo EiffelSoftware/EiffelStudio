@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		External routines for debugging
 		run-time counterpart: /C/ipc/ewb/eif_out.c
@@ -15,138 +15,138 @@ inherit
 
 feature
 
-	send_rqst_0 (code: INTEGER) is
+	send_rqst_0 (code: INTEGER)
 		external
 			"C"
 		end;
 
-	send_rqst_1 (code: INTEGER; info1: INTEGER) is
+	send_rqst_1 (code: INTEGER; info1: INTEGER)
 		external
 			"C"
 		end;
 
-	send_rqst_1_ptr (code: INTEGER; info1: POINTER) is
+	send_rqst_1_ptr (code: INTEGER; info1: POINTER)
 		do
 			send_rqst_1 (code, info1.to_integer_32)
 		end
 
-	send_rqst_2 (code: INTEGER; info1: INTEGER; info2: INTEGER) is
+	send_rqst_2 (code: INTEGER; info1: INTEGER; info2: INTEGER)
 		external
 			"C"
 		end;
 
-	send_rqst_3 (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: POINTER) is
+	send_rqst_3 (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: POINTER)
 		external
 			"C"
 		end
 
-	send_rqst_4 (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: POINTER; info4: INTEGER) is
+	send_rqst_4 (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: POINTER; info4: INTEGER)
 		external
 			"C"
 		end
 
-	send_rqst_4_integer (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: INTEGER; info4: INTEGER) is
+	send_rqst_4_integer (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: INTEGER; info4: INTEGER)
 		do
 			send_rqst_4 (code, info1, info2, integer_to_pointer (info3), info4)
 		end;
 
-	send_rqst_3_integer (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: INTEGER) is
+	send_rqst_3_integer (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: INTEGER)
 		do
 			send_rqst_3 (code, info1, info2, integer_to_pointer (info3))
 		end
 
-	send_integer_8_value (value: INTEGER_8) is
+	send_integer_8_value (value: INTEGER_8)
 		external
 			"C"
 		end
 
-	send_integer_16_value (value: INTEGER_16) is
+	send_integer_16_value (value: INTEGER_16)
 		external
 			"C"
 		end
 
-	send_integer_32_value (value: INTEGER_32) is
+	send_integer_32_value (value: INTEGER_32)
 		external
 			"C"
 		end
 
-	send_integer_64_value (value: INTEGER_64) is
+	send_integer_64_value (value: INTEGER_64)
 		external
 			"C"
 		end
 
-	send_natural_8_value (value: NATURAL_8) is
+	send_natural_8_value (value: NATURAL_8)
 		external
 			"C"
 		end
 
-	send_natural_16_value (value: NATURAL_16) is
+	send_natural_16_value (value: NATURAL_16)
 		external
 			"C"
 		end
 
-	send_natural_32_value (value: NATURAL_32) is
+	send_natural_32_value (value: NATURAL_32)
 		external
 			"C"
 		end
 
-	send_natural_64_value (value: NATURAL_64) is
+	send_natural_64_value (value: NATURAL_64)
 			--
 		external
 			"C"
 		end
 
-	send_real_32_value (value: REAL_32) is
+	send_real_32_value (value: REAL_32)
 		external
 			"C"
 		end
 
-	send_real_64_value (value: REAL_64) is
+	send_real_64_value (value: REAL_64)
 		external
 			"C"
 		end
 
-	send_char_8_value (value: CHARACTER_8) is
+	send_char_8_value (value: CHARACTER_8)
 		external
 			"C"
 		end
 
-	send_char_32_value (value: CHARACTER_32) is
+	send_char_32_value (value: CHARACTER_32)
 		external
 			"C"
 		end
 
-	send_bool_value (value: BOOLEAN) is
+	send_bool_value (value: BOOLEAN)
 		external
 			"C"
 		end
 
-	send_ptr_value (value: POINTER) is
+	send_ptr_value (value: POINTER)
 			-- value is the value of the pointer
 		external
 			"C"
 		end
 
-	send_string_value (value: POINTER) is
+	send_string_value (value: POINTER)
 			-- value is the address of a C string
 		external
 			"C"
 		end
 
-	send_ref_value (value: POINTER) is
+	send_ref_value (value: POINTER)
 			-- value is the address of the object
 		external
 			"C signature (EIF_REFERENCE)"
 		end
 
-	send_ack_ok is
+	send_ack_ok
 		external
 			"C"
 		alias
 			"ewb_send_ack_ok"
 		end;
 
-	send_string_content (s: STRING_GENERAL) is
+	send_string_content (s: STRING_GENERAL)
 		local
 			c_string: C_STRING
 		do
@@ -154,7 +154,7 @@ feature
 			c_send_str (c_string.item)
 		end
 
-	send_string_content_with_size (s: STRING_GENERAL; a_size: INTEGER) is
+	send_string_content_with_size (s: STRING_GENERAL; a_size: INTEGER)
 		local
 			c_string: C_STRING
 		do
@@ -162,37 +162,37 @@ feature
 			c_send_sized_str (c_string.item, a_size)
 		end
 
-	recv_ack: BOOLEAN is
+	recv_ack: BOOLEAN
 		external
 			"C"
 		end;
 
-	recv_dead: BOOLEAN is
+	recv_dead: BOOLEAN
 		external
 			"C"
 		end;
 
-	c_twrite (data: POINTER; size: INTEGER) is
+	c_twrite (data: POINTER; size: INTEGER)
 		external
 			"C"
 		end;
 
-	c_send_sized_str (str: POINTER; size: INTEGER) is
+	c_send_sized_str (str: POINTER; size: INTEGER)
 		external
 			"C"
 		end;
 
-	c_send_str (str: POINTER) is
+	c_send_str (str: POINTER)
 		external
 			"C"
 		end;
 
-	c_tread: STRING is
+	c_tread: STRING
 		external
 			"C"
 		end;
 
-	integer_to_pointer (i: INTEGER): POINTER is
+	integer_to_pointer (i: INTEGER): POINTER
 			-- Convert integer value `i' in a valid `POINTER' value.
 		external
 			"C inline use %"eif_eiffel.h%""
@@ -202,7 +202,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	to_boolean (s: STRING): BOOLEAN is
+	to_boolean (s: STRING): BOOLEAN
 			-- Convert binary boolean enclosed in `s' into an BOOLEAN.
 		require
 			s_not_void: s /= Void
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Boolean_bytes)
 		end
 
-	to_character_8 (s: STRING): CHARACTER_8 is
+	to_character_8 (s: STRING): CHARACTER_8
 			-- Convert binary character enclosed in `s' into an CHARACTER.
 		require
 			s_not_void: s /= Void
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Character_8_bytes);
 		end
 
-	to_character_32 (s: STRING): CHARACTER_32 is
+	to_character_32 (s: STRING): CHARACTER_32
 			-- Convert binary wide_char enclosed in `s' into an WIDE_CHARACTER.
 		require
 			s_not_void: s /= Void
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, character_32_bytes)
 		end
 
-	to_natural_8 (s: STRING): NATURAL_8 is
+	to_natural_8 (s: STRING): NATURAL_8
 			-- Convert binary integer_8 enclosed in `s' into an NATURAL_8.
 		require
 			s_not_void: s /= Void
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, natural_8_bytes)
 		end
 
-	to_natural_16 (s: STRING): NATURAL_16 is
+	to_natural_16 (s: STRING): NATURAL_16
 			-- Convert binary integer_16 enclosed in `s' into an NATURAL_16.
 		require
 			s_not_void: s /= Void
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, natural_16_bytes)
 		end
 
-	to_natural_32 (s: STRING): NATURAL_32 is
+	to_natural_32 (s: STRING): NATURAL_32
 			-- Convert binary integer enclosed in `s' into an NATURAL.
 		require
 			s_not_void: s /= Void
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, natural_32_bytes)
 		end
 
-	to_natural_64 (s: STRING): NATURAL_64 is
+	to_natural_64 (s: STRING): NATURAL_64
 			-- Convert binary integer_64 enclosed in `s' into an NATURAL_64.
 		require
 			s_not_void: s /= Void
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, natural_64_bytes)
 		end
 
-	to_integer_8 (s: STRING): INTEGER_8 is
+	to_integer_8 (s: STRING): INTEGER_8
 			-- Convert binary integer_8 enclosed in `s' into an INTEGER_8.
 		require
 			s_not_void: s /= Void
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Integer_8_bytes)
 		end
 
-	to_integer_16 (s: STRING): INTEGER_16 is
+	to_integer_16 (s: STRING): INTEGER_16
 			-- Convert binary integer_16 enclosed in `s' into an INTEGER_16.
 		require
 			s_not_void: s /= Void
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Integer_16_bytes)
 		end
 
-	to_integer_32 (s: STRING): INTEGER_32 is
+	to_integer_32 (s: STRING): INTEGER_32
 			-- Convert binary integer enclosed in `s' into an INTEGER.
 		require
 			s_not_void: s /= Void
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Integer_32_bytes)
 		end
 
-	to_integer_64 (s: STRING): INTEGER_64 is
+	to_integer_64 (s: STRING): INTEGER_64
 			-- Convert binary integer_64 enclosed in `s' into an INTEGER_64.
 		require
 			s_not_void: s /= Void
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Integer_64_bytes)
 		end
 
-	to_pointer (s: STRING): POINTER is
+	to_pointer (s: STRING): POINTER
 			-- Convert binary pointer enclosed in `s' into a POINTER.
 		require
 			s_not_void: s /= Void
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Pointer_bytes)
 		end
 
-	to_real_32 (s: STRING): REAL_32 is
+	to_real_32 (s: STRING): REAL_32
 			-- Convert binary double enclosed in `s' into a DOUBLE.
 		require
 			s_not_void: s /= Void
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Real_32_bytes)
 		end
 
-	to_real_64 (s: STRING): REAL_64 is
+	to_real_64 (s: STRING): REAL_64
 			-- Convert binary double enclosed in `s' into a DOUBLE.
 		require
 			s_not_void: s /= Void
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Real_64_bytes)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Context for third pass"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create instance of AST_CONTEXT.	
 		do
 			create inline_agent_counter
@@ -116,19 +116,19 @@ feature -- Access
 	used_object_test_local_names: SEARCH_TABLE [INTEGER_32]
 			-- Names of object-test locals used by enclosing features
 
-	set_used_argument_names (table: like used_argument_names) is
+	set_used_argument_names (table: like used_argument_names)
 			-- Set the used argument names
 		do
 			used_argument_names := table
 		end
 
-	set_used_local_names (table: like used_local_names) is
+	set_used_local_names (table: like used_local_names)
 			-- Set the used local names
 		do
 			used_local_names := table
 		end
 
-	is_name_used (id: INTEGER_32): BOOLEAN is
+	is_name_used (id: INTEGER_32): BOOLEAN
 			-- Is the name with id `id' already used in an enclosing feature?
 		do
 			if used_argument_names /= Void then
@@ -448,7 +448,7 @@ feature -- Status report
 
 feature -- Setting
 
-	initialize (a_class: like current_class; a_type: CL_TYPE_A; a_feat_tbl: like current_feature_table) is
+	initialize (a_class: like current_class; a_type: CL_TYPE_A; a_feat_tbl: like current_feature_table)
 			-- Initialize current context for class analyzis.
 		require
 			a_class_not_void: a_class /= Void
@@ -481,7 +481,7 @@ feature -- Setting
 			current_feature_table_set: current_feature_table = a_feat_tbl
 		end
 
-	set_current_feature (f: FEATURE_I) is
+	set_current_feature (f: FEATURE_I)
 			-- Assign `f' to `current_feature'.
 		require
 			f_not_void: f /= Void
@@ -491,7 +491,7 @@ feature -- Setting
 			current_feature_set: current_feature = f
 		end
 
-	set_written_class (c: like written_class) is
+	set_written_class (c: like written_class)
 			-- Set `written_class' to `c'.
 		do
 			written_class := c
@@ -499,7 +499,7 @@ feature -- Setting
 			written_class_set: written_class = c
 		end
 
-	set_is_ignoring_export (b: BOOLEAN) is
+	set_is_ignoring_export (b: BOOLEAN)
 			-- Assign `b' to `is_ignoring_export'.
 		do
 			is_ignoring_export := b
@@ -507,13 +507,13 @@ feature -- Setting
 			is_ignoring_export_set: is_ignoring_export = b
 		end
 
-	set_locals (l: like locals) is
+	set_locals (l: like locals)
 			-- Assign `l' to `locals'.
 		do
 			locals := l;
 		end;
 
-	set_last_conversion_info (l: like last_conversion_info) is
+	set_last_conversion_info (l: like last_conversion_info)
 			-- Assign `l' to `last_conversion_info'.
 		do
 			last_conversion_info := l
@@ -521,7 +521,7 @@ feature -- Setting
 			last_conversion_info_set: last_conversion_info = l
 		end
 
-	init_error (e: FEATURE_ERROR) is
+	init_error (e: FEATURE_ERROR)
 			-- Initialize `e'.
 		require
 			good_argument: not (e = Void)
@@ -533,7 +533,7 @@ feature -- Setting
 			end
 		end
 
-	init_byte_code (byte_code: BYTE_CODE) is
+	init_byte_code (byte_code: BYTE_CODE)
 			-- Initialiaze `byte_code'.
 		require
 			byte_code_attached: byte_code /= Void
@@ -653,7 +653,7 @@ feature -- Setting
 			end
 		end
 
-	set_current_inline_agent_body (body: like current_inline_agent_body) is
+	set_current_inline_agent_body (body: like current_inline_agent_body)
 			-- Sets the current inline agent body
 		do
 			current_inline_agent_body := body
@@ -661,7 +661,7 @@ feature -- Setting
 
 feature -- Managing the type stack
 
-	clear_all is
+	clear_all
 			-- Clear the structure: to use while changing of analyzed
 			-- current_class.
 		do
@@ -672,7 +672,7 @@ feature -- Managing the type stack
 			clear_feature_context
 		end
 
-	clear_feature_context is
+	clear_feature_context
 			-- Clear `current_feature' context: to use while changing of current
 			-- analyzed feature.
 		do
@@ -698,7 +698,7 @@ feature -- Managing the type stack
 
 feature	-- Saving contexts
 
-	save: AST_CONTEXT is
+	save: AST_CONTEXT
 			-- Returns a saved context
 		require
 			current_class_attached: current_class /= Void
@@ -713,7 +713,7 @@ feature	-- Saving contexts
 			initialization_keeper := Void
 		end
 
-	restore (context: AST_CONTEXT) is
+	restore (context: AST_CONTEXT)
 			-- Restores a given context
 		do
 			copy (context)
@@ -727,7 +727,7 @@ invariant
 	object_test_locals_attached: object_test_locals /= Void
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when the target of an assignment or a reverse %
@@ -20,23 +20,23 @@ feature
 	target: ACCESS_AS;
 			-- Target of attachment involved in the error
 
-	set_target (t: ACCESS_AS) is
+	set_target (t: ACCESS_AS)
 			-- Assign `t' to `target'.
 		do
 			target := t;
 		end;
 
-	code: STRING is "VJAW";
+	code: STRING = "VJAW";
 			-- Error code
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Target: ");
 			a_text_formatter.add (target.access_name);
 			a_text_formatter.add_new_line;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

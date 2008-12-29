@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a graph of clusters and classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an ES_CLUSTER_GRAPH.
 		do
 			Precursor {ES_GRAPH}
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			supercluster_depth := 1
 		end
 
-	make (a_tool: like context_editor) is
+	make (a_tool: like context_editor)
 			-- Create a ES_CLUSTER_GRAPH in `a_tool'.
 		require
 			a_tool_not_void: a_tool /= Void
@@ -58,7 +58,7 @@ feature -- Access
 	center_cluster: ES_CLUSTER
 			-- Center cluster of `Current'.
 
-	cluster_of_id (a_id: STRING): ES_CLUSTER is
+	cluster_of_id (a_id: STRING): ES_CLUSTER
 			-- Cluster of cluster_id `a_id'
 		require
 			a_id_not_void: a_id /= Void
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_supercluster_depth (a_supercluster_depth: like supercluster_depth) is
+	set_supercluster_depth (a_supercluster_depth: like supercluster_depth)
 			-- Set `supercluster_depth' to `a_supercluster_depth'.
 		require
 			a_supercluster_depth_non_negative: a_supercluster_depth >= 0
@@ -95,7 +95,7 @@ feature -- Element change
 			supercluster_depth_assigned: supercluster_depth = a_supercluster_depth
 		end
 
-	set_subcluster_depth (a_subcluster_depth: like subcluster_depth) is
+	set_subcluster_depth (a_subcluster_depth: like subcluster_depth)
 			-- Set `subcluster_depth' to `a_subcluster_depth'.
 		require
 			a_subcluster_depth_non_negative: a_subcluster_depth >= 0
@@ -105,7 +105,7 @@ feature -- Element change
 			subcluster_depth_assigned: subcluster_depth = a_subcluster_depth
 		end
 
-	set_center_cluster (a_center_cluster: like center_cluster) is
+	set_center_cluster (a_center_cluster: like center_cluster)
 			-- Set `center_cluster' to `a_center_cluster'.
 		require
 			a_center_cluster_not_void: a_center_cluster /= Void
@@ -115,7 +115,7 @@ feature -- Element change
 			set: center_cluster = a_center_cluster
 		end
 
-	explore_center_cluster is
+	explore_center_cluster
 			-- Explore relations according to `center_cluster'.
 		require
 			center_cluster_not_void: center_cluster /= Void
@@ -126,7 +126,7 @@ feature -- Element change
 			explore_relations
 		end
 
-	include_all_classes (cluster: ES_CLUSTER) is
+	include_all_classes (cluster: ES_CLUSTER)
 			-- Include all classes in `cluster'.
 		require
 			cluster_not_void: cluster /= Void
@@ -168,7 +168,7 @@ feature -- Element change
 
 feature {ES_DIAGRAM_TOOL_PANEL} -- Synchronization
 
-	synchronize is
+	synchronize
 			-- Contexts need to be updated because of recompilation
 			-- or similar action that needs resynchronization.
 		do
@@ -183,7 +183,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Synchronization
 
 feature {NONE} -- Implementation
 
-	explore_relations is
+	explore_relations
 			--
 		local
 			nb_of_items: INTEGER
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 			explore_subclusters (center_cluster, subcluster_depth, True, True)
 		end
 
-	number_of_superclusters (a_group: CONF_GROUP; depth: INTEGER): INTEGER is
+	number_of_superclusters (a_group: CONF_GROUP; depth: INTEGER): INTEGER
 			-- Add superclusters of `a_cluster' until `depth' is reached.
 		require
 			a_group_not_void: a_group /= Void
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	explore_superclusters (a_group: ES_CLUSTER; depth: INTEGER) is
+	explore_superclusters (a_group: ES_CLUSTER; depth: INTEGER)
 			-- Add superclusters of `a_group' until `depth' is reached.
 		require
 			a_group_not_void: a_group /= Void
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	number_of_subclusters (a_group: CONF_GROUP; depth: INTEGER): INTEGER is
+	number_of_subclusters (a_group: CONF_GROUP; depth: INTEGER): INTEGER
 			-- Add subgroups of `a_group' until `depth' is reached.
 		require
 			a_group_not_void: a_group /= Void
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	explore_subclusters (a_group: ES_CLUSTER; depth: INTEGER; include_class: BOOLEAN; status_bar: BOOLEAN) is
+	explore_subclusters (a_group: ES_CLUSTER; depth: INTEGER; include_class: BOOLEAN; status_bar: BOOLEAN)
 			-- Add subclusters of `a_group' until `depth' is reached.
 		require
 			a_group_not_void: a_group /= Void
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_class (a_class: CLASS_I; cluster: ES_CLUSTER) is
+	add_class (a_class: CLASS_I; cluster: ES_CLUSTER)
 			-- Include `a_class' in the diagram.
 			-- Add any relations `a_class' may have with
 			-- all items in `class_figures'.
@@ -455,7 +455,7 @@ invariant
 	subcluster_depth_positive: subcluster_depth >= 0
 	supercluster_depth_positive: supercluster_depth >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

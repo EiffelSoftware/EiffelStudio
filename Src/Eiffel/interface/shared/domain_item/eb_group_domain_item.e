@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Group domain item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,10 +22,10 @@ create
 
 feature -- Status report
 
-	is_group_item: BOOLEAN is True
+	is_group_item: BOOLEAN = True
 			-- Is current a group item?
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Does current represent a valid domain item?
 		do
 			update
@@ -34,20 +34,20 @@ feature -- Status report
 
 feature -- Access
 
-	domain (a_scope: QL_SCOPE): QL_DOMAIN is
+	domain (a_scope: QL_SCOPE): QL_DOMAIN
 			-- New query lanaguage domain representing current item
 		do
 			Result := ql_group.wrapped_domain
 		end
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- Text of current item
 		do
 			update
 			Result := string_representation_internal
 		end
 
-	ql_group: QL_GROUP is
+	ql_group: QL_GROUP
 			-- Query language item of current
 		require
 			valid: is_valid
@@ -58,13 +58,13 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	query_language_item: QL_ITEM is
+	query_language_item: QL_ITEM
 			-- Query language item representation of current domain item
 		do
 			Result := ql_group
 		end
 
-	group: QL_GROUP is
+	group: QL_GROUP
 			-- Group to which current domain item belongs
 			-- Return group itself.
 		do
@@ -73,7 +73,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	sorting_order_index: INTEGER is
+	sorting_order_index: INTEGER
 			-- Sorting order index
 		do
 			update
@@ -90,7 +90,7 @@ feature -- Access
 			end
 		end
 
-	item_type_name: STRING_GENERAL is
+	item_type_name: STRING_GENERAL
 			-- Name of type of current item
 		do
 			Result := names.l_group_domain_item
@@ -98,7 +98,7 @@ feature -- Access
 
 feature{NONE} -- Implemenation
 
-	update is
+	update
 			-- Update status of current item.			
 		do
 			if not is_up_to_date then
@@ -125,7 +125,7 @@ feature{NONE} -- Implemenation
 	ql_group_internal: QL_GROUP;
 			-- Query language group represented by Current
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -15,7 +15,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_bin_not_tilde_b (Current)
@@ -23,13 +23,13 @@ feature -- Visitor
 
 feature -- Access
 
-	enlarged: EXPR_B is
+	enlarged: EXPR_B
 			-- Enlarge node
 		do
 			create {BIN_NOT_TILDE_BL} Result.make (left.enlarged, right.enlarged)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

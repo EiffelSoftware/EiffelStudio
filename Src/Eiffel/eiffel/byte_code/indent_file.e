@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A file with primitives for indenting"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_c_code_file (fn: STRING) is
+	make_c_code_file (fn: STRING)
 			-- Create file object with `fn' as file name
 			-- and open file for writing;
 			-- create it if it does not exist.
@@ -55,13 +55,13 @@ feature
 
 feature
 
-	indent is
+	indent
 			-- Indent next output line by one tab.
 		do
 			tabs := tabs + 1;
 		end;
 
-	exdent is
+	exdent
 			-- Remove one leading tab for next line.
 		require
 			valid_tabs: tabs > 0;
@@ -69,21 +69,21 @@ feature
 			tabs := tabs - 1;
 		end;
 
-	left_margin is
+	left_margin
 			-- Temporary reset to left margin
 		do
 			old_tabs := tabs;
 			tabs := 0;
 		end;
 
-	restore_margin is
+	restore_margin
 			-- Restore margin value as of the one which was in
 			-- use when a `left_margin' call was issued.
 		do
 			tabs := old_tabs;
 		end;
 
-	emit_tabs is
+	emit_tabs
 			-- Emit the `tabs' leading tabs
 		local
 			i: INTEGER
@@ -104,7 +104,7 @@ feature
 			end
 		end;
 
-	new_line is
+	new_line
 			-- Write a '\n'.
 			-- Do not allow two ore more consecutive blank lines.
 		do
@@ -115,7 +115,7 @@ feature
 			end
 		end;
 
-	putchar (c: CHARACTER) is
+	putchar (c: CHARACTER)
 			-- Write char `c'.
 		do
 			emit_tabs;
@@ -125,7 +125,7 @@ feature
 			end
 		end;
 
-	putint (i: INTEGER) is
+	putint (i: INTEGER)
 			-- Write int `i'.
 		do
 			emit_tabs;
@@ -135,7 +135,7 @@ feature
 			end
 		end;
 
-	putreal (r: REAL) is
+	putreal (r: REAL)
 			-- Writes real `r'.
 		do
 			emit_tabs;
@@ -145,7 +145,7 @@ feature
 			end
 		end;
 
-	putdouble (d: DOUBLE) is
+	putdouble (d: DOUBLE)
 			-- Write double `d'.
 		do
 			emit_tabs;
@@ -155,7 +155,7 @@ feature
 			end
 		end;
 
-	putstring (s: STRING) is
+	putstring (s: STRING)
 			-- Write string `s'.
 		do
 			emit_tabs;
@@ -165,7 +165,7 @@ feature
 			end
 		end;
 
-	putoctal (i: INTEGER) is
+	putoctal (i: INTEGER)
 			-- Print octal representation of `i'
 			--| always generate 3 digits
 		local
@@ -202,7 +202,7 @@ feature
 			end
 		end;
 
-	escape_char (c: CHARACTER) is
+	escape_char (c: CHARACTER)
 			-- Write char `c' with C escape sequences
 		do
 				-- Assume ASCII set, sorry--RAM.
@@ -221,7 +221,7 @@ feature
 			end
 		end;
 
-	escape_string (s: STRING) is
+	escape_string (s: STRING)
 			-- Write string `s' with escape quotes
 		require
 			good_argument: s /= Void
@@ -254,7 +254,7 @@ feature
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

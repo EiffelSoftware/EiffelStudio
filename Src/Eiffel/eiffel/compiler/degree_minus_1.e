@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Degree -1 during Eiffel compilation"
 	legal: "See notice at end of class."
@@ -19,12 +19,12 @@ create
 
 feature -- Access
 
-	Degree_number: INTEGER is -1
+	Degree_number: INTEGER = -1
 			-- Degree number
 
 feature -- Processing
 
-	execute is
+	execute
 			-- Process Degree -1.
 			-- Freeze system: generate C files.
 		local
@@ -101,7 +101,7 @@ feature -- Processing
 			l_degree_output.put_end_degree
 		end
 
-	make_update_feature_tables (file: RAW_FILE) is
+	make_update_feature_tables (file: RAW_FILE)
 			-- Write the byte code for feature tables to be updated
 			-- into `file'.
 		require
@@ -169,7 +169,7 @@ feature -- Processing
 
 feature -- Element change
 
-	insert_class (a_class: CLASS_C) is
+	insert_class (a_class: CLASS_C)
 			-- Add `a_class' to be processed.
 		do
 			if not a_class.is_true_external and not a_class.degree_minus_1_needed then
@@ -180,7 +180,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_class (a_class: CLASS_C) is
+	remove_class (a_class: CLASS_C)
 			-- Remove `a_class'.
 		do
 			if a_class.degree_minus_1_needed then
@@ -189,7 +189,7 @@ feature -- Removal
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all classes.
 		local
 			i, nb: INTEGER
@@ -215,12 +215,12 @@ feature -- Removal
 
 feature {NONE} -- External features
 
-	write_int (f: POINTER; v: INTEGER) is
+	write_int (f: POINTER; v: INTEGER)
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

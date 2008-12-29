@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Default implementation for a help context used by ESF tools and dialogs to link help.
 		For a client based customizable implementation, use {ES_HELP_CUSTOM_CONTEXT}.
@@ -35,7 +35,7 @@ feature -- Access
 			Result := (create {HELP_PROVIDER_KINDS}).eiffel_doc
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

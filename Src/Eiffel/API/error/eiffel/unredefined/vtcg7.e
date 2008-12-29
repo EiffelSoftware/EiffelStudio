@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for violation of the constrained genericity %
 				%rule."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -44,7 +44,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_parent_type (p: TYPE_A) is
+	set_parent_type (p: TYPE_A)
 			-- Assign `p' to `parent_type'.
 		require
 			p_not_void: p /= Void
@@ -54,7 +54,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			parent_type_set: parent_type = p
 		end
 
-	set_in_constraint (v: like in_constraint) is
+	set_in_constraint (v: like in_constraint)
 			-- Assign `v' to `in_constraint'.
 		do
 			in_constraint := v
@@ -62,7 +62,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			in_constraint_set: in_constraint = v
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

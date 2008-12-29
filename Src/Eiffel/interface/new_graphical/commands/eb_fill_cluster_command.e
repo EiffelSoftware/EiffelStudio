@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to fill a cluster with all its classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize default values.
 		do
 			create accelerator.make_with_key_combination (
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Perform on center cluster.
 		local
 			cluster_fig: EIFFEL_CLUSTER_FIGURE
@@ -46,7 +46,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_with_cluster_stone (a_stone: CLUSTER_STONE) is
+	execute_with_cluster_stone (a_stone: CLUSTER_STONE)
 			-- Add all classes of `a_stone'.
 		local
 			es_cluster: ES_CLUSTER
@@ -78,7 +78,7 @@ feature -- Basic operations
 			end
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text)
@@ -87,7 +87,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	include_all_classes (a_cluster_fig: EIFFEL_CLUSTER_FIGURE) is
+	include_all_classes (a_cluster_fig: EIFFEL_CLUSTER_FIGURE)
 			-- Include all classes into `a_cluster'.
 		require
 			a_cluster_exists: a_cluster_fig /= Void
@@ -114,35 +114,35 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.diagram_fill_cluster_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.diagram_fill_cluster_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_fill_cluster
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name on corresponding menu items
 		do
 			Result := interface_names.m_include_all_classes
 		end
 
-	name: STRING is "Cluster_filling";
+	name: STRING = "Cluster_filling";
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"General notion of an eiffel command with output%
@@ -28,7 +28,7 @@ feature -- Properties
 
 feature -- Access
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- Is Current command executable?
 		do
 			Result := text_formatter /= Void
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Setting
 
-	make (a_text_formatter: TEXT_FORMATTER) is
+	make (a_text_formatter: TEXT_FORMATTER)
 			-- Create `a_text_formatter' to `text_formatter'.
 		require
 			a_text_formatter_attached: a_text_formatter /= Void
@@ -44,7 +44,7 @@ feature -- Setting
 			set_text_formatter (a_text_formatter)
 		end;
 
-	set_text_formatter (a_text_formatter: TEXT_FORMATTER) is
+	set_text_formatter (a_text_formatter: TEXT_FORMATTER)
 			-- Set `text_formatter' with `a_text_formatter'
 		do
 			text_formatter := a_text_formatter
@@ -52,7 +52,7 @@ feature -- Setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute the current command. Add a before and after
 			-- declaration (cluster declaration by default) to `text_formatter'
 			-- and invoke `work'.
@@ -62,20 +62,20 @@ feature -- Execution
 			text_formatter.process_filter_item (f_cluster_declaration, false);
 		end;
 
-	work is
+	work
 			-- Perform the command only.
 		deferred
 		end;
 
 feature {NONE} -- Implementation
 
-	add_tabs (a_text_formatter: TEXT_FORMATTER; i: INTEGER) is
+	add_tabs (a_text_formatter: TEXT_FORMATTER; i: INTEGER)
 			-- Add `i' tabs to `text_formatter'.
 		do
 			a_text_formatter.add_indents (i)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

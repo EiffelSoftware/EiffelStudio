@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Criterion to test if a feature is of certain return type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: like item_type): BOOLEAN is
+	is_satisfied_by (a_item: like item_type): BOOLEAN
 			-- Evaluate `a_item'.
 		local
 			l_return_type: CLASS_C
@@ -44,7 +44,7 @@ feature -- Evaluate
 
 feature{NONE} -- Implementation
 
-	return_type (a_feature: E_FEATURE): CLASS_C is
+	return_type (a_feature: E_FEATURE): CLASS_C
 			-- Return type of `a_feature'
 		require
 			a_feature_attached: a_feature /= Void
@@ -57,7 +57,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	initialize_domain is
+	initialize_domain
 			-- Prepare clients defined `criterion_domain'.
 		local
 			l_domain_generator: QL_CLASS_DOMAIN_GENERATOR
@@ -90,7 +90,7 @@ feature{NONE} -- Implementation
 			-- Set of return types found in `criterion_domain'
 			-- Key is class id, value is CLASS_C of that class id.
 
-	has_conformed_return_type (a_return_type: CLASS_C): BOOLEAN is
+	has_conformed_return_type (a_return_type: CLASS_C): BOOLEAN
 			-- Does `a_return_type' conform to any class in `return_types'?
 		require
 			a_return_type_attached: a_return_type /= Void
@@ -108,7 +108,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create {EB_PRINTER}
 
 feature {NONE} -- Initialization
 
-	make (interf: EB_PRINTER) is
+	make (interf: EB_PRINTER)
 			-- Initialize `Current' and associate it with `interf'.
 		require
 			valid_interface: interf /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature {EB_PRINTER} -- Basic operations
 
-	send_print_request is
+	send_print_request
 			-- Send a print request based on the parameters in `interface'.
 		require
 			text_set: interface.text /= Void
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 invariant
 	valid_interface: interface /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

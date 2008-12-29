@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actual type for NONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_none_a (Current)
@@ -25,7 +25,7 @@ feature -- Visitor
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := True
@@ -33,44 +33,44 @@ feature -- Comparison
 
 feature -- Properties
 
-	is_none: BOOLEAN is True
+	is_none: BOOLEAN = True
 			-- Is the current type a none type ?
 
-	is_full_named_type: BOOLEAN is True
+	is_full_named_type: BOOLEAN = True
 			-- Current is a full named type.
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code for current type
 		do
 			Result := {SHARED_HASH_CODE}.none_code
 		end
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		do
 			Result := other.is_none
 		end
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 		do
 			-- No associated class
 		end
 
 feature -- Output
 
-	dump: STRING is "NONE"
+	dump: STRING = "NONE"
 			-- Dumped trace
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 		do
 			st.add ({SHARED_TEXT_ITEMS}.ti_none_class)
 		end
 
 feature -- Generic conformance
 
-	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16 is
+	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16
 			-- Id of a `like xxx'.
 		do
 			Result := {SHARED_GEN_CONF_LEVEL}.none_type
@@ -78,7 +78,7 @@ feature -- Generic conformance
 
 feature -- IL code generation
 
-	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN) is
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN)
 			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
 		do
@@ -87,19 +87,19 @@ feature -- IL code generation
 
 feature {COMPILER_EXPORTER}
 
-	create_info: CREATE_TYPE is
+	create_info: CREATE_TYPE
 			-- Byte code information for entity type creation
 		do
 			create Result.make (as_attachment_mark_free)
 		end
 
-	c_type: REFERENCE_I is
+	c_type: REFERENCE_I
 			-- Void C type
 		do
 			Result := reference_c_type
 		end
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
 			-- Does Current conform to `other'?
 		local
 			l_type: TYPE_A
@@ -112,7 +112,7 @@ feature {COMPILER_EXPORTER}
 				(l_type.is_formal implies l_type.is_reference)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

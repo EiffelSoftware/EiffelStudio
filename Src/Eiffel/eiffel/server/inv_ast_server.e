@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server for abstract syntax description of invariant indexed by class id."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,20 +19,20 @@ create
 
 feature
 
-	cache: CACHE [INVARIANT_AS] is
+	cache: CACHE [INVARIANT_AS]
 			-- Cache for routine tables
 		once
 			create Result.make
 		end
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN
 			-- Is the id `an_id' present either in Current or in
 			-- `Tmp_inv_ast_server' ?
 		do
 			Result := Tmp_ast_server.invariant_has (an_id) or else Precursor (an_id)
 		end
 
-	item (an_id: INTEGER): INVARIANT_AS is
+	item (an_id: INTEGER): INVARIANT_AS
 			-- Invariant of class of id `an_id'. Look for it first in
 			-- the associated temporary server
 	   do
@@ -42,14 +42,14 @@ feature
 			end
 		end
 
-	remove (an_id: INTEGER_32) is
+	remove (an_id: INTEGER_32)
 			-- <Precursor>
 		do
 			tmp_ast_server.invariant_remove (an_id)
 			Precursor (an_id)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

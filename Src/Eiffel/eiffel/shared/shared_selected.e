@@ -1,18 +1,18 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SHARED_SELECTED
 
 feature {NONE}
 
-	Selected: ARRAYED_LIST [INTEGER] is
+	Selected: ARRAYED_LIST [INTEGER]
 			-- Feature actually selected by second pass: the goal is to
 			-- track useless selection
 		once
 			create Result.make (35)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

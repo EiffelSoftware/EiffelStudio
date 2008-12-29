@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server of features on temporary file. This server is used%
 				%during the compilation. The goal is to merge the file Tmp_feature_file%
 				%and Feature_file if the compilation is successful.%
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			Precursor
 			create storage.make (chunk)
@@ -32,13 +32,13 @@ feature {NONE} -- Initialization
 
 feature -- Element access
 
-	has (a_id: INTEGER): BOOLEAN is
+	has (a_id: INTEGER): BOOLEAN
 			-- Does the server contain a class with `a_id'?
 		do
 			Result := storage.has (a_id) or else Precursor (a_id)
 		end
 
-	item (a_id: INTEGER): FEATURE_I is
+	item (a_id: INTEGER): FEATURE_I
 			-- Get class with `a_id'.
 		do
 			Result := storage.item (a_id)
@@ -49,7 +49,7 @@ feature -- Element access
 
 feature -- Element change
 
-	put (t: FEATURE_I) is
+	put (t: FEATURE_I)
 			-- Put feature `t' in memory.
 		require
 			t_not_void: t /= Void
@@ -69,7 +69,7 @@ feature -- Element change
 
 feature -- Server
 
-	flush is
+	flush
 			-- Flush all FEATURE_I objects at once on disk.
 		local
 			l_server_file_id, l_server_file_descriptor: INTEGER
@@ -115,7 +115,7 @@ feature -- Server
 
 feature -- Access
 
-	cache: CACHE [FEATURE_I] is
+	cache: CACHE [FEATURE_I]
 			-- Cache for routine tables
 		once
 			create Result.make
@@ -126,13 +126,13 @@ feature {NONE} -- Implementation (in memory)
 	storage: HASH_TABLE [FEATURE_I, INTEGER]
 			-- In memory storage for class.
 
-	Chunk: INTEGER is 500;
+	Chunk: INTEGER = 500;
 			-- Size of a HASH_TABLE block
 
 invariant
 	storage_not_void: storage /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

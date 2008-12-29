@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Run time value representing an expanded object."
@@ -25,7 +25,7 @@ create {DEBUG_VALUE_EXPORTER}
 feature {DEBUG_VALUE_EXPORTER}
 
 	make_attribute_of_special (attr_name: like name; a_class: like e_class;
-			type: like dynamic_type_id) is
+			type: like dynamic_type_id)
 		require
 			not_attr_name_void: attr_name /= Void
 		do
@@ -50,7 +50,7 @@ feature -- Property
 
 feature -- Access
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		do
 			Result := Debugger_manager.Dump_value_factory.new_expanded_object_value (address, dynamic_class)
@@ -58,13 +58,13 @@ feature -- Access
 
 feature {NONE} -- Output
 
-	output_value: STRING_32 is
+	output_value: STRING_32
 			-- Return a string representing `Current'.
 		once
 			Result := "Expanded object"
 		end
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 			-- Return a string representing `Current'.
 		local
 			ec: CLASS_C;
@@ -82,7 +82,7 @@ feature {NONE} -- Output
 
 feature -- Output
 
-	expandable: BOOLEAN is
+	expandable: BOOLEAN
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 		do
 			Result :=	attributes /= Void and then
@@ -90,14 +90,14 @@ feature -- Output
 						dynamic_class /= Void
 		end
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
 			Result := attributes
 		end
 
-	kind: INTEGER is
+	kind: INTEGER
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		do
@@ -106,11 +106,11 @@ feature -- Output
 
 feature {NONE} -- Constants
 
-	Expanded_label: STRING is " (expanded)"
+	Expanded_label: STRING = " (expanded)"
 
 feature {NONE} -- Implementation
 
-	set_hector_addr is
+	set_hector_addr
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 
 feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 
-	debug_value_type_id: INTEGER is
+	debug_value_type_id: INTEGER
 		do
 			Result := expanded_value_id
 		end
@@ -140,7 +140,7 @@ invariant
 	is_attribute: is_attribute;
 	attributes_exists: attributes /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

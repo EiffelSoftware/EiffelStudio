@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class ASSERT_ID_SET 
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Array creation
 		do
 			array_create (1, n)
@@ -33,10 +33,10 @@ feature -- Access
 	count: INTEGER
 			-- Number of routine ids present in the set
 
-	Chunk: INTEGER is 5
+	Chunk: INTEGER = 5
 			-- Array chunk
 
-	first: INH_ASSERT_INFO is
+	first: INH_ASSERT_INFO
 			-- First routine id
 		do
 			Result := item (1)
@@ -44,13 +44,13 @@ feature -- Access
 
 feature -- Element change
 
-	set_count (i: INTEGER) is
+	set_count (i: INTEGER)
 			-- Assign `i' to `count'.
 		do
 			count := i
 		end
 
-	wipe_out is
+	wipe_out
 			-- Clear the structure.
 		do
 			count := 0
@@ -59,19 +59,19 @@ feature -- Element change
 
 feature -- Status report
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is the set full ?
 		do
 			Result := count = array_count
 		end
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 			-- Is the set empty ?
 		do
 			Result := count = 0
 		end
 
-	has (assert: INH_ASSERT_INFO): BOOLEAN is
+	has (assert: INH_ASSERT_INFO): BOOLEAN
 			-- Is the body id `body_index' present in the set ?
 		local
 			i: INTEGER
@@ -86,7 +86,7 @@ feature -- Status report
 			end
 		end
 
-	has_assert (assert: INH_ASSERT_INFO): BOOLEAN is
+	has_assert (assert: INH_ASSERT_INFO): BOOLEAN
 			-- Is the `assert' in Current? 
 		local
 			i: INTEGER
@@ -108,7 +108,7 @@ feature -- Status Report
 
 feature -- Status Setting
 
-	set_has_precondition (b: BOOLEAN) is
+	set_has_precondition (b: BOOLEAN)
 			-- Set `has_precondition' to `b'.
 		do
 			has_precondition := b
@@ -118,7 +118,7 @@ feature -- Status Setting
 
 feature -- Basic operations
 
-	put (assert: INH_ASSERT_INFO) is
+	put (assert: INH_ASSERT_INFO)
 			-- Insert routine id `rout_id' in the set if not already
 			-- present.
 		require
@@ -131,7 +131,7 @@ feature -- Basic operations
 			end
 		end
 
-	force (assert: INH_ASSERT_INFO) is
+	force (assert: INH_ASSERT_INFO)
 			-- Insert body index `body_index' in the set if not already
 			-- present. Resize the array if needed.
 		do
@@ -146,7 +146,7 @@ feature -- Basic operations
 			end
 		end
 
-	merge (other: like Current) is
+	merge (other: like Current)
 			-- Put assert body index of `other' not present in Current.
 		require
 			good_argument: other /= Void
@@ -166,7 +166,7 @@ feature -- Basic operations
 
 feature -- Comparison
 
-	same_as (other: like Current): BOOLEAN is
+	same_as (other: like Current): BOOLEAN
 			-- Has `other' the same content than Current ?
 		local
 			i: INTEGER
@@ -196,7 +196,7 @@ feature -- Comparison
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

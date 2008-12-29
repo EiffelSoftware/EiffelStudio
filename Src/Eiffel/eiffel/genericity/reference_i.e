@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Mapping of real Eiffel types to underlying machine type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,30 +15,30 @@ inherit
 
 feature -- Access
 
-	level: INTEGER is
+	level: INTEGER
 			-- Internal code for generation
 		do
 			Result := {SHARED_C_LEVEL}.c_ref
 		end
 
-	element_type: INTEGER_8 is
+	element_type: INTEGER_8
 			-- Pointer element type
 		do
 			Result := {MD_SIGNATURE_CONSTANTS}.Element_type_object
 		end
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 		do
 			Result := {SK_CONST}.sk_ref
 		end
 
-	c_string: STRING is "EIF_REFERENCE"
+	c_string: STRING = "EIF_REFERENCE"
 			-- String generated for the type.
 
-	typed_field: STRING is "it_r"
+	typed_field: STRING = "it_r"
 			-- Value field of a C structure corresponding to this type
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code for current type
 		do
 			Result := {SHARED_HASH_CODE}.reference_code
@@ -46,18 +46,18 @@ feature -- Access
 
 feature -- Status report
 
-	is_pointer: BOOLEAN is True
+	is_pointer: BOOLEAN = True
 			-- The C type is a reference type.
 
 feature -- C code generation
 
-	generate_sk_value (buffer: GENERATION_BUFFER) is
+	generate_sk_value (buffer: GENERATION_BUFFER)
 			-- Generate SK value associated to current C type in `buffer'.
 		do
 			buffer.put_string ({SK_CONST}.sk_ref_string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

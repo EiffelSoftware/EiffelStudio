@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stone that has a file name associated with it."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	file_name: STRING is
+	file_name: STRING
 			-- Name of the file which parsing led
 			-- to the creation of current AST node.
 		deferred
@@ -25,7 +25,7 @@ feature -- Access
 			file_name_valid: Result /= Void implies Result.same_type ("")
 		end
 
-	origin_text: STRING is
+	origin_text: STRING
 			-- Content of the file named `file_name'
 			-- Void if unreadable file.
 		local
@@ -42,7 +42,7 @@ feature -- Access
 			end
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Does `Current' still represent a valid file?
 		local
 			testfile: RAW_FILE
@@ -53,7 +53,7 @@ feature -- Access
 			end
 		end
 
-	synchronized_stone: STONE is
+	synchronized_stone: STONE
 			-- Valid stone corresponding to `Current' if `is_valid'
 			-- or Void if not.
 		do
@@ -62,7 +62,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

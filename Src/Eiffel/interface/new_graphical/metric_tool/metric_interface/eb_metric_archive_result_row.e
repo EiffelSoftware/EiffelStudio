@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a row to dispaly archive comparison result"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_metric_name: like metric_name; a_type: like type; a_reference_value: DOUBLE; a_is_ref_set: BOOLEAN; a_current_value: DOUBLE; a_is_cur_set: BOOLEAN; a_time: DATE_TIME) is
+	make (a_metric_name: like metric_name; a_type: like type; a_reference_value: DOUBLE; a_is_ref_set: BOOLEAN; a_current_value: DOUBLE; a_is_cur_set: BOOLEAN; a_time: DATE_TIME)
 			-- Initialize.
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -65,13 +65,13 @@ feature -- Status report
 	is_current_value_set: BOOLEAN
 			-- Is `current_value' set?
 
-	is_difference_set: BOOLEAN is
+	is_difference_set: BOOLEAN
 			-- Is `difference` set?
 		do
 			Result := is_reference_value_set and is_current_value_set
 		end
 
-	is_ratio_set: BOOLEAN is
+	is_ratio_set: BOOLEAN
 			-- Is `ratio` set?
 		do
 			Result := (is_reference_value_set and is_current_value_set and then reference_value /= 0)
@@ -82,7 +82,7 @@ invariant
 	type_attached: type /= Void
 	time_attached: time /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

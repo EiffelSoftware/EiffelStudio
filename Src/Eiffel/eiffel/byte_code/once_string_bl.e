@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Enlarged byte code for once manifest string."
 	legal: "See notice at end of class."
@@ -29,19 +29,19 @@ feature
 	register: REGISTRABLE
 			-- Where string is kept to ensure it is GC safe
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Set `register' to `r'.
 		do
 			register := r
 		end
 
-	unanalyze is
+	unanalyze
 			-- Undo analysis work.
 		do
 			register := Void
 		end
 
-	analyze is
+	analyze
 			-- Analyze the string.
 		do
 			if allocates_memory then
@@ -51,7 +51,7 @@ feature
 			end
 		end
 
-	generate is
+	generate
 			-- Generate the string.
 		local
 			buf: like buffer
@@ -82,7 +82,7 @@ feature
 			end
 		end
 
-	print_register is
+	print_register
 			-- Print the string (or the register in which it is held).
 		local
 			buf: like buffer
@@ -103,14 +103,14 @@ feature
 
 feature -- Properties
 
-	allocates_memory: BOOLEAN is
+	allocates_memory: BOOLEAN
 			-- Does the expression allocates memory?
 		do
 				-- Memory is allocated only when strings are not pre-initialized
 			Result := not context.is_static_system_data_safe
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

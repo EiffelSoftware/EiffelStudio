@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a search engine for search through quick search bar"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Search
 
-	search (a_grid_wrapper: EVS_GRID_WRAPPER [ANY]; a_start_from_current: BOOLEAN) is
+	search (a_grid_wrapper: EVS_GRID_WRAPPER [ANY]; a_start_from_current: BOOLEAN)
 			-- Search in `a_grid_wrapper' for `a_keyword' and
 			-- make sure result available in `last_result'.
 		local
@@ -101,7 +101,7 @@ feature -- Search
 
 feature{NONE} -- Implementation
 
-	prepare_search_strategy (a_strategy: like msr_search_strategy) is
+	prepare_search_strategy (a_strategy: like msr_search_strategy)
 			-- Prepare `a_strategy' before `search',
 			-- e.g. setup search conditions.			
 		require
@@ -125,7 +125,7 @@ feature{NONE} -- Implementation
 
 		end
 
-	msr_search_strategy: MSR_SEARCH_INCREMENTAL_STRATEGY is
+	msr_search_strategy: MSR_SEARCH_INCREMENTAL_STRATEGY
 			-- MSR search strategy used to search
 		do
 			if msr_search_strategy_internal = Void then
@@ -140,7 +140,7 @@ feature{NONE} -- Implementation
 	msr_search_strategy_internal: like msr_search_strategy;
 			-- Internal `msr_search_strategy'
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

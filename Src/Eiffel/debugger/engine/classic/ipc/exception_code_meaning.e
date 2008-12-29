@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Format exception code to string meaning"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	exception_code_meaning (a_code: INTEGER): STRING is
+	exception_code_meaning (a_code: INTEGER): STRING
 			-- Meaning of the Exception code `a_code'.
 		do
 			Result := "Exception : "
@@ -133,7 +133,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

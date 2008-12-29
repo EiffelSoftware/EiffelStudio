@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Provides access to a tool, given a host development window.
 	]"
@@ -29,7 +29,7 @@ feature -- Access
 			result_is_interface_usable: Result.is_interface_usable
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

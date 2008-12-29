@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display flat of `current_feature'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,12 +19,12 @@ create
 
 feature -- Access
 
-	has_valid_feature: BOOLEAN is True
+	has_valid_feature: BOOLEAN = True
 			-- Always a valid feature
 
 feature -- Execution
 
-	work is
+	work
 		local
 			ctxt: FEATURE_TEXT_FORMATTER;
 		do
@@ -35,7 +35,7 @@ feature -- Execution
 			ctxt.format (current_feature, False, text_formatter);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text we can display on the wizard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (par: EV_BOX) is
+	make (par: EV_BOX)
 			-- Initialize with box parent 'par'.
 		do
 			default_create
@@ -27,7 +27,7 @@ feature -- Initialization
 
 feature -- basic Operations 
 
-	add_line(s: STRING) is
+	add_line(s: STRING)
 			-- Add a line to the text.
 		require
 			possible: s /= Void
@@ -35,7 +35,7 @@ feature -- basic Operations
 			extend(Create {EV_LABEL}.make_with_text(s))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

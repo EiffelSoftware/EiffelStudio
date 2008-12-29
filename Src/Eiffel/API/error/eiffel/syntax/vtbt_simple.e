@@ -1,4 +1,4 @@
-indexing
+note
 	description: "VTBT error detected at parsing time."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,14 +16,14 @@ inherit
 
 feature -- Property
 
-	code: STRING is "VTBT";
+	code: STRING = "VTBT";
 			-- Error code
 
 	value: INTEGER;
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			if value < 0 then
 				a_text_formatter.add ("Constant: ");
@@ -34,12 +34,12 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_value (i: INTEGER) is
+	set_value (i: INTEGER)
 		do
 			value := i;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

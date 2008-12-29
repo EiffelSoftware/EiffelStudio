@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Enlarged byte code for nested call
@@ -19,7 +19,7 @@ feature
 	register: REGISTRABLE
 			-- In which register the expression is stored
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Set current register to `r'
 		do
 			register := r
@@ -28,19 +28,19 @@ feature
 	parent: NESTED_BL
 			-- Parent of current node
 
-	set_parent (p: NESTED_BL) is
+	set_parent (p: NESTED_BL)
 			-- Set `parent' to `p'
 		do
 			parent := p
 		end
 
-	c_type: TYPE_C is
+	c_type: TYPE_C
 			-- Current C type (used by `get_register')
 		do
 			Result := local_type.c_type
 		end
 
-	local_type: TYPE_A is
+	local_type: TYPE_A
 			-- Type of the current call
 		require
 			valid_message: message /= Void
@@ -48,7 +48,7 @@ feature
 			Result := real_type (message.target.type)
 		end
 
-	has_gcable_variable: BOOLEAN is
+	has_gcable_variable: BOOLEAN
 			-- Is the current call using a GCable variable ?
 			-- Only the last dot is important for us.
 		do
@@ -62,7 +62,7 @@ feature
 			end
 		end
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Propagates register to calls in expression whose type matches
 			-- the one of the propagated entity. Anyway, the last call catches
 			-- it, so that No_register may be caught too...
@@ -121,7 +121,7 @@ feature
 			end
 		end
 
-	stored_register: REGISTRABLE is
+	stored_register: REGISTRABLE
 			-- Register in which the call is stored (last one)
 		do
 			if message.target = message then
@@ -132,7 +132,7 @@ feature
 			end
 		end
 
-	print_register is
+	print_register
 			-- Print register or generate if there are no register.
 			-- This is the last register in a multidot expression. When
 			-- register is No_register, the call is not meant to be put in
@@ -165,7 +165,7 @@ feature
 			end
 		end
 
-	free_register is
+	free_register
 			-- Free register used by last call expression. If No_register was
 			-- propagated, also frees the registers used by target and
 			-- last message.
@@ -186,7 +186,7 @@ feature
 			end
 		end
 
-	free_target_register is
+	free_target_register
 			-- Free the register used by the message target
 		local
 			msg_target: ACCESS_B
@@ -202,7 +202,7 @@ feature
 			end
 		end
 
-	unanalyze is
+	unanalyze
 			-- Undo the analysis of the expression
 		local
 			void_register: REGISTER
@@ -219,7 +219,7 @@ feature
 			end
 		end
 
-	analyze is
+	analyze
 			-- Analyze expression
 		local
 			msg_target: ACCESS_B
@@ -294,7 +294,7 @@ feature
 			end
 		end
 
-	generate is
+	generate
 			-- Generate expression
 		local
 			with_inv: BOOLEAN
@@ -323,7 +323,7 @@ feature
 			end
 		end
 
-	generate_call (reg: REGISTRABLE; with_inv: BOOLEAN) is
+	generate_call (reg: REGISTRABLE; with_inv: BOOLEAN)
 			-- Generate a call on entity held in `reg'
 		local
 			message_target: ACCESS_B
@@ -363,12 +363,12 @@ feature
 			end
 		end
 
-	has_call: BOOLEAN is True
+	has_call: BOOLEAN = True
 			-- The expression has at least one call
 
-	allocates_memory: BOOLEAN is True;
+	allocates_memory: BOOLEAN = True;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

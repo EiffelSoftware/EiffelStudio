@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A helper class for tools to redirect a dropped stone to a well known stone tool.
 	]"
@@ -176,7 +176,7 @@ invariant
 	development_window_attached: is_interface_usable implies development_window /= Void
 	not_development_window_is_recycled: is_interface_usable implies development_window.is_interface_usable
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

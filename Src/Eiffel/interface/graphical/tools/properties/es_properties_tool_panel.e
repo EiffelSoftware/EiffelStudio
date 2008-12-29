@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Tool to view the properties of a system/cluster/class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -58,7 +58,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor)
 			-- Make a new properties tool.
 		do
 			cluster_manager.extend (Current)
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			Precursor (a_manager, a_tool)
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Build docking content
 		do
 			Precursor {EB_STONABLE_TOOL}(a_docking_manager)
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			content.drop_actions.set_veto_pebble_function (agent dropable)
 		end
 
-	build_interface is
+	build_interface
 			-- Build all the tool's widgets.
 		do
 			create widget
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_stone_valid (a_stone: like stone): BOOLEAN is
+	is_stone_valid (a_stone: like stone): BOOLEAN
 			-- Is stone valid to set?
 		do
 			Result := a_stone /= Void and then a_stone.is_valid
@@ -105,7 +105,7 @@ feature -- Status report
 
 feature -- Command
 
-	show is
+	show
 			-- Show tool.
 		do
 			Precursor {EB_STONABLE_TOOL}
@@ -114,7 +114,7 @@ feature -- Command
 
 feature -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
@@ -124,13 +124,13 @@ feature -- Memory management
 
 feature {NONE} -- External changes to classes/clusters
 
-	on_class_removed (a_class: EIFFEL_CLASS_I) is
+	on_class_removed (a_class: EIFFEL_CLASS_I)
 			-- Refresh the properties to not display properties for `a_class'.
 		do
 			refresh
 		end
 
-	on_cluster_removed (a_group: EB_SORTED_CLUSTER; a_path: STRING_8) is
+	on_cluster_removed (a_group: EB_SORTED_CLUSTER; a_path: STRING_8)
 			-- Refresh the properties to not display properties for `a_group'.
 		do
 			refresh
@@ -138,7 +138,7 @@ feature {NONE} -- External changes to classes/clusters
 
 feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 
-	set_stone (a_stone: STONE) is
+	set_stone (a_stone: STONE)
 			-- Add `a_stone'.
 		local
 			l_gs: CLUSTER_STONE
@@ -266,7 +266,7 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 			stone_set: stone = a_stone
 		end
 
-	dropable (a_pebble: ANY): BOOLEAN is
+	dropable (a_pebble: ANY): BOOLEAN
 			-- Can user drop `a_pebble' on `Current'?
 		require
 			a_pebble_not_void: a_pebble /= Void
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 	stone: STONE
 			-- Stone we display properties for.
 
-	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL] is
+	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL]
 			-- Expanded status of sections of groups.
 		once
 			create Result.make (5)
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 			Result.force (False, conf_interface_names.section_advanced)
 		end
 
-	class_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL] is
+	class_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL]
 			-- Expanded status of sections of class options.
 		once
 			create Result.make (4)
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 			Result.force (False, conf_interface_names.section_debug)
 		end
 
-	target_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL] is
+	target_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL]
 			-- Expanded status of sections of targets.
 		once
 			create Result.make (5)
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 			Result.force (False, conf_interface_names.section_dotnet)
 		end
 
-	handle_value_changes (a_has_group_changed: BOOLEAN) is
+	handle_value_changes (a_has_group_changed: BOOLEAN)
 			-- Store changes to disk.
 		do
 				-- only if the stone is still valid
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	refresh is
+	refresh
 			-- Refresh the displayed data.
 		do
 			if not is_storing then
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

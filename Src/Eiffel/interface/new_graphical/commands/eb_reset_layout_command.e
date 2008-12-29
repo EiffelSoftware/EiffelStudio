@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to reset docking layout."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_develop_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_develop_window: EB_DEVELOPMENT_WINDOW)
 			-- Creation method
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}(a_develop_window)
@@ -36,7 +36,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	execute is
+	execute
 			-- Reset to default docking layout
 		local
 			l_graphical_debugger: EB_DEBUGGER_MANAGER
@@ -61,13 +61,13 @@ feature -- Command
 
 feature -- Query
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu name
 		do
 			Result := interface_names.m_reset_layout
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

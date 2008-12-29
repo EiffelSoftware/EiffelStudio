@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Output strategy for documentation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_text_formatter: like text_formatter_decorator; a_doc: like documentation) is
+	make (a_text_formatter: like text_formatter_decorator; a_doc: like documentation)
 			-- Format `a_node' in `a_text_formatter' in `a_is_simple' mode.
 		require
 			a_text_not_void: a_text_formatter /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Process
 
-	process_class_as (l_as: CLASS_AS) is
+	process_class_as (l_as: CLASS_AS)
 		do
 			text_formatter_decorator.process_filter_item (f_class_declaration, true)
 
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 	documentation: DOCUMENTATION_ROUTINES;
 			-- For documentation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

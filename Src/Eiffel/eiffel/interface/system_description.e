@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All the information about the system"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -47,7 +47,7 @@ feature -- Access for precompilation configuration
 
 feature -- Update
 
-	add_new_debug_clause (a_text_formatter: STRING) is
+	add_new_debug_clause (a_text_formatter: STRING)
 			-- Add `a_text_formatter' to list of existing debug clauses.
 		require
 			st_not_void: a_text_formatter /= Void
@@ -60,19 +60,19 @@ feature -- Update
 			extended: debug_clauses.has (a_text_formatter)
 		end
 
-	set_name (s: STRING) is
+	set_name (s: STRING)
 			-- Assign `s' to `system_name'.
 		do
 			name := s
 		end
 
-	set_c_file_names (l: like c_file_names) is
+	set_c_file_names (l: like c_file_names)
 			-- Assign `l' to `c_file_names'.
 		do
 			c_file_names := l
 		end
 
-	set_assembly_names (l: like assembly_names) is
+	set_assembly_names (l: like assembly_names)
 			-- Assign `l' to `assembly_names'.
 		do
 			assembly_names := l
@@ -80,7 +80,7 @@ feature -- Update
 			assembly_names_set: assembly_names = l
 		end
 
-	set_has_cpp_externals (v: BOOLEAN) is
+	set_has_cpp_externals (v: BOOLEAN)
 			-- Set `has_cpp_externals' to `v'.
 		require
 			only_true: v
@@ -92,7 +92,7 @@ feature -- Update
 
 feature -- Update for the precompilation
 
-	set_compilation_id (i: INTEGER) is
+	set_compilation_id (i: INTEGER)
 			-- Set `compilation_id' value.
 		do
 			compilation_id := i
@@ -100,18 +100,18 @@ feature -- Update for the precompilation
 			compilation_id_set: compilation_id = i
 		end
 
-	set_precompilation (b: BOOLEAN) is
+	set_precompilation (b: BOOLEAN)
 		do
 			is_precompiled := b
 		end
 
-	set_has_precompiled_preobj (b: BOOLEAN) is
+	set_has_precompiled_preobj (b: BOOLEAN)
 			-- Set `has_precompiled_preobj' to `b'.
 		do
 			has_precompiled_preobj := b
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

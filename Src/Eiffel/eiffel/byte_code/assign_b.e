@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Byte code for assignment
@@ -17,7 +17,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_assign_b (Current)
@@ -31,7 +31,7 @@ feature
 	source: EXPR_B;
 			-- Source of the assignment
 
-	is_creation_instruction: BOOLEAN is
+	is_creation_instruction: BOOLEAN
 			-- Is instruction used to model creation instruction?
 		require
 			source_not_void: source /= Void
@@ -44,22 +44,22 @@ feature
 			end
 		end
 
-	set_target (t: ACCESS_B) is
+	set_target (t: ACCESS_B)
 			-- Assign `t' to `target'.
 		do
 			target := t;
 		end;
 
-	set_source (s: EXPR_B) is
+	set_source (s: EXPR_B)
 			-- Assign `s' to `source'.
 		do
 			source := s;
 		end;
 
-	need_enlarging: BOOLEAN is True;
+	need_enlarging: BOOLEAN = True;
 			-- This node needs enlarging
 
-	enlarged: ASSIGN_BL is
+	enlarged: ASSIGN_BL
 			-- Enlarge current node.
 		do
 			create Result.make (Current)
@@ -67,22 +67,22 @@ feature
 
 feature -- Array optimization
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (i: INTEGER): BOOLEAN
 		do
 			Result := target.assigns_to (i)
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := source.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := source.is_unsafe
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current;
 			source := source.optimized_byte_node
@@ -90,12 +90,12 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := 1 + source.size
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current;
 			source := source.pre_inlined_code;
@@ -104,13 +104,13 @@ feature -- Inlining
 			target ?= target.pre_inlined_code;
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			source := source.inlined_byte_code
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

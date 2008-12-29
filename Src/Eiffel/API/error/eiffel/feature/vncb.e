@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for invalid assignment attempt for bits."
@@ -18,10 +18,10 @@ inherit
 	
 feature -- Property
 
-	code: STRING is "VNCB";
+	code: STRING = "VNCB";
 			-- Error code
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

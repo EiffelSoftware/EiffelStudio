@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that designate the position of a searched word or expression in a file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (char_cnt: INTEGER; lgth: INTEGER) is
+	make (char_cnt: INTEGER; lgth: INTEGER)
 			-- creates an object with `line_nb' as `line_number' and
 			-- `character_cnt' as `character_count'
 		require
@@ -33,13 +33,13 @@ feature -- Access
 
 feature -- Element change
 
-	add_offset (an_offset: INTEGER) is
+	add_offset (an_offset: INTEGER)
 			-- add `an_offset' to character_count
 		do
 			character_count := character_count + an_offset
 		end
 	
-	set_character_count (n: INTEGER) is
+	set_character_count (n: INTEGER)
 			-- set `character_count' to 'n'
 		require
 			valid_character_cnt: n > 0
@@ -49,7 +49,7 @@ feature -- Element change
 			character_count = n
 		end
 
-	set_length (n: INTEGER) is
+	set_length (n: INTEGER)
 			-- set `line_number' to 'n'
 		require
 			valid_length: n > 0
@@ -63,7 +63,7 @@ invariant
 		valid_character_cnt: character_count > 0		
 		valid_length: length > 0 	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

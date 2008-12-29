@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"General information about the Eiffel system."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize statistical information.
 		require
 			project_inititalized: Eiffel_project.initialized
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			number_of_compilations := Workbench.compilation_counter - 1
 		end
 
-	make_compilation_stat is
+	make_compilation_stat
 			-- Initailize `number_of_compilations'
 		do
 			number_of_compilations := Workbench.compilation_counter
@@ -50,7 +50,7 @@ feature -- Access
 	number_of_compiled_classes: INTEGER
 			-- Number of compiled classes
 
-	number_of_classes: INTEGER is
+	number_of_classes: INTEGER
 			-- Number of classes
 		local
 			l_domain_generator: QL_GROUP_DOMAIN_GENERATOR
@@ -66,7 +66,7 @@ feature -- Access
 			Result := number_count
 		end
 
-	count_class (a_group: QL_GROUP; is_recursive: BOOLEAN) is
+	count_class (a_group: QL_GROUP; is_recursive: BOOLEAN)
 			-- Count class in `a_group'.
 			-- If `is_recursive' is True, recursively count class if `a_group' is a library.
 		local
@@ -103,7 +103,7 @@ feature -- Access
 	processed_targets: ARRAYED_LIST [CONF_TARGET]
 			-- List of processed targets
 
-	number_of_used_classes: INTEGER is
+	number_of_used_classes: INTEGER
 			-- Number of used classes
 		local
 			l_domain_generator: QL_GROUP_DOMAIN_GENERATOR
@@ -119,19 +119,19 @@ feature -- Access
 			Result := number_count
 		end
 
-	number_of_clusters: INTEGER is
+	number_of_clusters: INTEGER
 			-- Number of clusters in the system
 		do
 			Result := number_of_groups (group_criterion_factory.simple_criterion_with_index (group_criterion_factory.c_is_cluster))
 		end
 
-	number_of_assemblies: INTEGER is
+	number_of_assemblies: INTEGER
 			-- Number of assemblies
 		do
 			Result := number_of_groups (group_criterion_factory.simple_criterion_with_index (group_criterion_factory.c_is_assembly))
 		end
 
-	number_of_libraries: INTEGER is
+	number_of_libraries: INTEGER
 			-- Number of libraries
 		do
 			Result := number_of_groups (group_criterion_factory.simple_criterion_with_index (group_criterion_factory.c_is_library))
@@ -145,7 +145,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	count_number (a_group: QL_GROUP) is
+	count_number (a_group: QL_GROUP)
 			-- Increase `number_count' by 1.
 		do
 			number_count := number_count + 1
@@ -156,7 +156,7 @@ feature{NONE} -- Implementation
 	number_count: INTEGER
 			-- Number of some data being calculated
 
-	number_of_groups (a_criterion: QL_GROUP_CRITERION): INTEGER is
+	number_of_groups (a_criterion: QL_GROUP_CRITERION): INTEGER
 			-- Number of groups which satisfy `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -175,7 +175,7 @@ feature{NONE} -- Implementation
 invariant
 	processed_targets_attached: processed_targets /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

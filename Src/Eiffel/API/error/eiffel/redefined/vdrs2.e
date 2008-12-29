@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when the compiler find a redefinition of a frozen feature %
@@ -26,14 +26,14 @@ feature -- Properties
 			-- Parent class involving the non-valid
 			-- redefinition
 
-	code: STRING is "VDRS";
+	code: STRING = "VDRS";
 			-- Error code
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER = 2;
 
 feature -- Access
 
-    is_defined: BOOLEAN is
+    is_defined: BOOLEAN
             -- Is the error fully defined?
         do
 			Result := is_class_defined and then
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -60,20 +60,20 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_feature_name (fn: STRING) is
+	set_feature_name (fn: STRING)
 			-- Assign `fn' to `feature_name'.
 		do
 			feature_name := fn;
 		end;
 
-	set_parent (p: CLASS_C) is
+	set_parent (p: CLASS_C)
 		require
 			valid_p: p /= Void
 		do
 			parent := p
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

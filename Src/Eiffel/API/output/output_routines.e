@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Common routines shared by documentation generation and%N%
 		%$EiffelGraphicalCompiler$ viewer/editor tools."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Miscellaneous
 
-	append_system_info (text: TEXT_FORMATTER) is
+	append_system_info (text: TEXT_FORMATTER)
 			-- Append to `text' information about `e_system'.
 		local
 			creation_name: STRING
@@ -113,7 +113,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	append_class_ancestors (text: TEXT_FORMATTER; class_c: CLASS_C) is
+	append_class_ancestors (text: TEXT_FORMATTER; class_c: CLASS_C)
 			-- Append class ancestors for `class_c' to `text'.
 		local
 			parents: FIXED_LIST [CL_TYPE_A]
@@ -133,7 +133,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	append_class_descendants (text: TEXT_FORMATTER; class_c: CLASS_C) is
+	append_class_descendants (text: TEXT_FORMATTER; class_c: CLASS_C)
 			-- Append class descendants for `class_c' to `text'.
 		local
 			c_classes: LINEAR [CLASS_C]
@@ -147,7 +147,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	append_class_clients (text: TEXT_FORMATTER; class_c: CLASS_C) is
+	append_class_clients (text: TEXT_FORMATTER; class_c: CLASS_C)
 			-- Append class clients for `class_c' to `text'.
 		local
 			c_classes: LINEAR [CLASS_C]
@@ -161,7 +161,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	append_class_suppliers (text: TEXT_FORMATTER; class_c: CLASS_C) is
+	append_class_suppliers (text: TEXT_FORMATTER; class_c: CLASS_C)
 			-- Append class suppliers for `class_c' to `text'.
 		local
 			suppliers: SUPPLIER_LIST
@@ -181,7 +181,7 @@ feature -- Miscellaneous
 			end
 		end
 
-	append_simple_class_list (text: TEXT_FORMATTER; class_list: LINKED_LIST [CLASS_I]) is
+	append_simple_class_list (text: TEXT_FORMATTER; class_list: LINKED_LIST [CLASS_I])
 			-- Append to `ctxt.text', formatted `class_list'.
 			-- Depending on `desc', include descriptions.
 		local
@@ -202,7 +202,7 @@ feature -- Miscellaneous
 
 feature {NONE} -- Implementation
 
-	lace_classes (l: LINEAR [CLASS_C]): SORTED_TWO_WAY_LIST [CLASS_I] is
+	lace_classes (l: LINEAR [CLASS_C]): SORTED_TWO_WAY_LIST [CLASS_I]
 			-- Similar list of lace classes.
 		do
 			create Result.make
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

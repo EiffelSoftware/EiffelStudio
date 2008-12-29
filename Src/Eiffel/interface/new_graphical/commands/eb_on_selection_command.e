@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command on selected text"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- initialization
 
-	make (a_target: like target) is
+	make (a_target: like target)
 			-- creation function
 		do
 			make_standard
@@ -44,26 +44,26 @@ feature {NONE} -- initialization
 
 feature -- Execution
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 		do
 			Result := is_sensitive
 		end
 
 feature -- Status setting
 
-	set_needs_editable (ed: BOOLEAN) is
+	set_needs_editable (ed: BOOLEAN)
 			-- Tell the command it requires the editor to be editable.
 		do
 			needs_editable := ed
 		end
 
-	set_is_for_main_editors (a_b: BOOLEAN) is
+	set_is_for_main_editors (a_b: BOOLEAN)
 			-- Set `is_for_main_editor' with `a_b'.
 		do
 			is_for_main_editor := a_b
 		end
 
-	update_status is
+	update_status
 			-- Enable or disable `Current'.
 		do
 			if has_selection then
@@ -91,28 +91,28 @@ feature -- Status report
 
 feature -- Observer pattern
 
-	on_selection_begun is
+	on_selection_begun
 			-- make the command sensitive
 		do
 			has_selection := True
 			update_status
 		end
 
-	on_selection_finished is
+	on_selection_finished
 			-- make the command insensitive
 		do
 			has_selection := False
 			update_status
 		end
 
-	on_editable is
+	on_editable
 			-- Editor has become editable.
 		do
 			is_editable := True
 			update_status
 		end
 
-	on_not_editable is
+	on_not_editable
 			-- Editor is no longer editable.
 		do
 			is_editable := False
@@ -121,7 +121,7 @@ feature -- Observer pattern
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 	is_editable: BOOLEAN;
 			-- Is the current text editable?
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

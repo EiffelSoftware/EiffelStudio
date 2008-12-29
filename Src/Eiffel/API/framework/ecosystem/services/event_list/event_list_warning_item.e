@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An implementation of an event list service ({EVENT_LIST_SERVICE_I}) item for Eiffel compiler {ERROR} objects.
 	]"
@@ -27,7 +27,7 @@ feature -- Status report
 			Result := True
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

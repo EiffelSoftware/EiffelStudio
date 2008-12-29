@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Access to a development window's collection of tools.
 	]"
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
+	internal_recycle
 			-- Called to clean up resources of Current.
 		local
 			l_win: like window
@@ -272,7 +272,7 @@ feature {NONE} -- Access
 			result_contains_attached_items: not Result.has (Void)
 		end
 
-	requested_tools: DS_HASH_TABLE [ARRAY [ES_TOOL [EB_TOOL]], STRING_8] is
+	requested_tools: DS_HASH_TABLE [ARRAY [ES_TOOL [EB_TOOL]], STRING_8]
 			-- Table of requested, and therefore created, tools.
 		do
 			if not is_recycled then
@@ -630,7 +630,7 @@ feature -- Basic operation
 
 feature {ES_TOOL} -- Removal
 
-	close_tool (a_tool: ES_TOOL [EB_TOOL]) is
+	close_tool (a_tool: ES_TOOL [EB_TOOL])
 			-- Performs clean up of tool and removes it from the cached heap of tools.
 			-- Note: This should be called only by ES_TOOL! Calling it from elsewhere
 			--       will only perform the recycling.
@@ -698,7 +698,7 @@ invariant
 	internal_requested_tools_attached: not is_recycled implies internal_requested_tools /= Void
 	internal_requested_tools_contains_attached_items: not is_recycled implies not internal_requested_tools.has_item (Void)
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

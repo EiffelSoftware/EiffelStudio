@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represent a component used in grid domain item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_domain_item: like domain_item; a_padding: INTEGER) is
+	make (a_domain_item: like domain_item; a_padding: INTEGER)
 			-- Initialize `domain_item' with `a_domain_item'.
 		require
 			a_domain_item_attached: a_domain_item /= Void
@@ -42,13 +42,13 @@ feature -- Access
 	domain_item: EB_DOMAIN_ITEM
 			-- Domain item which will be displayed here
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Required width in pixel of Current component
 		do
 			Result := editor_token_text.required_width + pixmap_from_domain_item (domain_item).width + padding
 		end
 
-	required_height: INTEGER is
+	required_height: INTEGER
 			-- Required height in pixel of Current component
 		do
 			Result := editor_token_text.required_height.max (pixmap_from_domain_item (domain_item).height)
@@ -59,7 +59,7 @@ feature -- Access
 
 feature{ES_GRID_LIST_ITEM} -- Drawing
 
-	display (a_drawable: EV_DRAWABLE; a_x, a_y: INTEGER; a_max_width, a_max_height: INTEGER) is
+	display (a_drawable: EV_DRAWABLE; a_x, a_y: INTEGER; a_max_width, a_max_height: INTEGER)
 			-- Draw Current component in `a_drawable' starting from (`a_x', `a_y').
 			-- The maximum width and height in pixel for Current is `a_max_width' and `a_max_height' respectively.
 		local
@@ -89,7 +89,7 @@ feature{ES_GRID_LIST_ITEM} -- Drawing
 
 feature{NONE} -- Implementation
 
-	token_index_at_position (a_x, a_y: INTEGER): INTEGER is
+	token_index_at_position (a_x, a_y: INTEGER): INTEGER
 			-- Token item index in `editor_token_text' at position (`a_x', `a_y')
 			-- Zero means that no editor token is at position (`a_x', `a_y').
 		local
@@ -102,7 +102,7 @@ feature{NONE} -- Implementation
 invariant
 	domain_item_attached: domain_item /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

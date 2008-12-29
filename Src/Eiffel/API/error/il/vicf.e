@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		Warning when a source file could not be copied to its target.
 		]"
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_source_file_name: like source_file_name; a_target_file_name: like target_file_name) is
+	make (a_source_file_name: like source_file_name; a_target_file_name: like target_file_name)
 			--
 		require
 			non_void_source_file_name: a_source_file_name /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	code: STRING is "VICF"
+	code: STRING = "VICF"
 		-- Error code
 
 	source_file_name: STRING
@@ -59,14 +59,14 @@ feature -- Properties
 	is_unreadable_source: BOOLEAN
 			-- indicates that warning to due to an unreadable source file
 
-	file_name: STRING is
+	file_name: STRING
 			-- No associated file name
 		do
 		end
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- No need for an error message.
 		do
 			a_text_formatter.add ("Reason: ")
@@ -82,7 +82,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	retrieve_reason: STRING is
+	retrieve_reason: STRING
 			-- retrieves reason for warning
 		do
 			if is_missing_source then
@@ -103,7 +103,7 @@ invariant
 	non_void_target_file_name: target_file_name /= Void
 	valid_target_file_name: not target_file_name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

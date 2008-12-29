@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 					Describes a breakpoint. A breakpoint is represented by its `body_index' 
 				  	and its `breakable_line_number' (line number in stop points view). 
@@ -31,7 +31,7 @@ create {BREAKPOINT}
 
 feature {NONE} -- Creation
 
-	make (a_location: BREAKPOINT_LOCATION) is
+	make (a_location: BREAKPOINT_LOCATION)
 			-- Create a breakpoint at location `a_location'
 		do
 			Precursor {BREAKPOINT_KEY} (a_location)
@@ -43,7 +43,7 @@ feature {NONE} -- Creation
 			tags.compare_objects
 		end
 
-	make_copy_for_saving (bp: like Current) is
+	make_copy_for_saving (bp: like Current)
 			-- Create Current as a copy of `bp'
 		do
 				--| Key part
@@ -67,7 +67,7 @@ feature {NONE} -- Creation
 
 feature {BREAK_LIST} -- Copy for saving
 
-	copy_for_saving: like Current is
+	copy_for_saving: like Current
 			-- Create Current as a copy of `bp'
 		do
 			create Result.make_copy_for_saving (Current)
@@ -75,7 +75,7 @@ feature {BREAK_LIST} -- Copy for saving
 
 feature -- debug output
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- Debug output.
 		do
 			Result := string_representation (True)
@@ -83,7 +83,7 @@ feature -- debug output
 
 feature -- Output
 
-	string_representation (with_details: BOOLEAN): STRING is
+	string_representation (with_details: BOOLEAN): STRING
 			-- String representation of current Breakpoint.
 		local
 			lcl: CLASS_C
@@ -145,7 +145,7 @@ feature -- Tags access
 	tags: LIST [STRING_32]
 			-- Associated tags.
 
-	tags_as_string: STRING_32 is
+	tags_as_string: STRING_32
 			-- Associated tags as string.
 		local
 			ltags: like tags
@@ -170,7 +170,7 @@ feature -- Tags access
 			Result_not_void: Result /= Void
 		end
 
-	tags_as_array: ARRAY [STRING_32] is
+	tags_as_array: ARRAY [STRING_32]
 			-- Associated tags as Array.
 		local
 			ts: like tags
@@ -192,7 +192,7 @@ feature -- Tags access
 			end
 		end
 
-	match_tags (a_tags: ARRAY [STRING_32]): BOOLEAN is
+	match_tags (a_tags: ARRAY [STRING_32]): BOOLEAN
 			-- Does Current match `a_tags' criterion ?
 		require
 			a_tags_not_void: a_tags /= Void
@@ -243,7 +243,7 @@ feature -- Tags access
 			end
 		end
 
-	to_tag_path: STRING_32 is
+	to_tag_path: STRING_32
 			-- Tag path representation of Current.
 			-- Group_name.class_name.feature_name.index
 		local
@@ -274,7 +274,7 @@ feature -- Tags access
 
 feature -- Tags change
 
-	set_tags_from_array (a_tags: ARRAY [STRING_32]) is
+	set_tags_from_array (a_tags: ARRAY [STRING_32])
 			-- Set `tags' from `a_tags'
 		local
 			i: INTEGER
@@ -292,7 +292,7 @@ feature -- Tags change
 			end
 		end
 
-	add_tag (t: STRING_32) is
+	add_tag (t: STRING_32)
 			-- Add tag `t' to `tags'
 		require
 			has_not_tag: not tags.has (t)
@@ -302,7 +302,7 @@ feature -- Tags change
 			has_tag: tags.has (t)
 		end
 
-	remove_tag (t: STRING_32) is
+	remove_tag (t: STRING_32)
 			-- Remove tag `t' from `tags'
 		do
 			tags.prune_all (t)
@@ -323,13 +323,13 @@ feature -- Properties
 	condition: DBG_EXPRESSION
 			-- Condition to stop.
 
-	condition_as_is_true: BOOLEAN is
+	condition_as_is_true: BOOLEAN
 			-- Condition is a "Is True" condition.
 		do
 			Result := condition_type = Condition_is_type_is_true
 		end
 
-	condition_as_has_changed: BOOLEAN is
+	condition_as_has_changed: BOOLEAN
 			-- Condition is a "Has Changed" condition.
 		do
 			Result := condition_type = Condition_is_type_has_changed
@@ -348,7 +348,7 @@ feature -- Properties
 
 feature -- Access
 
-	condition_respected (eval: DBG_EXPRESSION_EVALUATION): BOOLEAN is
+	condition_respected (eval: DBG_EXPRESSION_EVALUATION): BOOLEAN
 			-- Is condition respected ?
 		require
 			condition_attached: condition /= Void
@@ -397,37 +397,37 @@ feature {NONE} -- Internal value
 
 feature -- Change
 
-	set_location (loc: BREAKPOINT_LOCATION) is
+	set_location (loc: BREAKPOINT_LOCATION)
 			-- Set `location' with `loc'
 		do
 			location := loc
 		end
 
-	set_continue_on_condition_failure (b: BOOLEAN) is
+	set_continue_on_condition_failure (b: BOOLEAN)
 			-- Set `continue_on_condition_failure' to `b'
 		do
 			continue_on_condition_failure := b
 		end
 
-	set_continue_execution (b: BOOLEAN) is
+	set_continue_execution (b: BOOLEAN)
 			-- Set `continue_execution' to `b'
 		do
 			continue_execution := b
 		end
 
-	increase_hits_count is
+	increase_hits_count
 			-- Increase hits_count by one
 		do
 			hits_count := hits_count + 1
 		end
 
-	reset_hits_count is
+	reset_hits_count
 			-- Reset `hits_count'
 		do
 			hits_count := 0
 		end
 
-	set_hits_count_condition (m,v: INTEGER) is
+	set_hits_count_condition (m,v: INTEGER)
 			-- Set `hits_count_condition'
 		do
 			if m = 0 then
@@ -437,19 +437,19 @@ feature -- Change
 			end
 		end
 
-	set_condition_as_is_true is
+	set_condition_as_is_true
 			-- Set `condition_type' as `Condition_is_type_is_true'
 		do
 			condition_type := Condition_is_type_is_true
 		end
 
-	set_condition_as_has_changed is
+	set_condition_as_has_changed
 			-- Set `condition_type' as `Condition_is_type_has_changed'
 		do
 			condition_type := Condition_is_type_has_changed
 		end
 
-	reset_session_data is
+	reset_session_data
 			-- Reset data changed during debugging session
 		do
 			reset_hits_count
@@ -460,19 +460,19 @@ feature -- Change
 			revert_saved_bench_status
 		end
 
-	revert_session_data	is
+	revert_session_data
 			-- Revert breakpoint status changes which occurred during debugging session
 		do
 			revert_saved_bench_status
 		end
 
-	clear_when_hits_actions is
+	clear_when_hits_actions
 			-- Clear all when_hits_actions
 		do
 			when_hits_actions.wipe_out
 		end
 
-	when_hits_actions_for (a_type: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]): LIST [BREAKPOINT_WHEN_HITS_ACTION_I] is
+	when_hits_actions_for (a_type: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]): LIST [BREAKPOINT_WHEN_HITS_ACTION_I]
 			-- List of When hits actions of type `a_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -497,13 +497,13 @@ feature -- Change
 			Result_not_void: Result /= Void
 		end
 
-	add_when_hits_action (a_ac: BREAKPOINT_WHEN_HITS_ACTION_I) is
+	add_when_hits_action (a_ac: BREAKPOINT_WHEN_HITS_ACTION_I)
 			-- Add `a_ac' to `when_hits_actions'
 		do
 			when_hits_actions.extend (a_ac)
 		end
 
-	remove_when_hits_action (a_ac: BREAKPOINT_WHEN_HITS_ACTION_I) is
+	remove_when_hits_action (a_ac: BREAKPOINT_WHEN_HITS_ACTION_I)
 			-- Remove `a_ac' from `when_hits_actions'
 		do
 			when_hits_actions.prune_all (a_ac)
@@ -511,31 +511,31 @@ feature -- Change
 
 feature -- Status
 
-	has_condition: BOOLEAN is
+	has_condition: BOOLEAN
 			-- Is `Current' a conditional breakpoint?
 		do
 			Result := condition /= Void
 		end
 
-	has_hit_count_condition: BOOLEAN is
+	has_hit_count_condition: BOOLEAN
 			-- Is `Current' has a condition on `hit_count' ?
 		do
 			Result := hits_count_condition /= Void and then hits_count_condition.mode /= hits_count_condition_always
 		end
 
-	has_when_hits_action: BOOLEAN is
+	has_when_hits_action: BOOLEAN
 			-- Has action to be processed when hit ?
 		do
 			Result := when_hits_actions /= Void and then not when_hits_actions.is_empty
 		end
 
-	has_when_hits_action_for (a_type: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]): BOOLEAN is
+	has_when_hits_action_for (a_type: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]): BOOLEAN
 			-- Has When hits action of type `a_type' ?
 		do
 			Result := not when_hits_actions_for (a_type).is_empty
 		end
 
-	has_tags: BOOLEAN is
+	has_tags: BOOLEAN
 			-- Has tags ?
 		do
 			Result := tags /= Void and then not tags.is_empty
@@ -543,7 +543,7 @@ feature -- Status
 
 feature -- Access
 
-	is_useless: BOOLEAN is
+	is_useless: BOOLEAN
 			-- Is structure now useless ?
 			--
 			-- If the bench and the application status are `no_set'
@@ -554,7 +554,7 @@ feature -- Access
 			is_not_usefull: Result implies bench_status = bench_breakpoint_not_set and not location.is_set_for_application
 		end
 
-	is_set: BOOLEAN is
+	is_set: BOOLEAN
 			-- Is the breakpoint set (enabled or disabled)?
 		do
 			Result := bench_status = Bench_breakpoint_enabled
@@ -562,13 +562,13 @@ feature -- Access
 				--| i.e: bench_status /= Bench_breakpoint_not_set
 		end
 
-	is_disabled: BOOLEAN is
+	is_disabled: BOOLEAN
 			-- Is the breakpoint set but disabled?
 		do
 			Result := bench_status = Bench_breakpoint_disabled
 		end
 
-	is_enabled: BOOLEAN is
+	is_enabled: BOOLEAN
 			-- Is the breakpoint set and enabled?
 		do
 			Result := bench_status = Bench_breakpoint_enabled
@@ -576,14 +576,14 @@ feature -- Access
 
 feature -- Live's changes
 
-	live_enable is
+	live_enable
 			-- Enable Current during debugging session
 		do
 			save_bench_status
 			set_bench_status (Bench_breakpoint_enabled)
 		end
 
-	live_disable is
+	live_disable
 			-- Disable Current during debugging session
 		do
 			save_bench_status
@@ -594,7 +594,7 @@ feature -- Live's changes
 			-- During execution, the `bench_status' can be artificially modified by
 			-- a `BREAKPOINT_WHEN_HITS_ACTION' event
 
-	save_bench_status is
+	save_bench_status
 			-- Save original bench status
 		do
 			if saved_bench_status = Void then
@@ -602,7 +602,7 @@ feature -- Live's changes
 			end
 		end
 
-	revert_saved_bench_status is
+	revert_saved_bench_status
 			-- Revert `bench_status' to `saved_bench_status' if any
 		do
 			if saved_bench_status /= Void then
@@ -611,7 +611,7 @@ feature -- Live's changes
 			reset_saved_bench_status
 		end
 
-	reset_saved_bench_status is
+	reset_saved_bench_status
 			-- Reset `saved_bench_status'
 		do
 			saved_bench_status := Void
@@ -619,7 +619,7 @@ feature -- Live's changes
 
 feature -- Setting
 
-	discard is
+	discard
 			-- Set the breakpoint to be removed.
 			--| Note: safe to call more than once
 		do
@@ -632,7 +632,7 @@ feature -- Setting
 			breakpoint_is_removed: bench_status = Bench_breakpoint_not_set
 		end
 
-	enable is
+	enable
 			-- Set and enable the breakpoint.
 		do
 			reset_saved_bench_status
@@ -641,7 +641,7 @@ feature -- Setting
 			breakpoint_is_enabled: bench_status = Bench_breakpoint_enabled
 		end
 
-	disable is
+	disable
 			-- Disable the breakpoint.
 		do
 			reset_saved_bench_status
@@ -650,7 +650,7 @@ feature -- Setting
 			breakpoint_is_disabled: bench_status = Bench_breakpoint_disabled
 		end
 
-	update_status: INTEGER is
+	update_status: INTEGER
 			-- Update the status between Bench and the application.
 			--
 			-- See the public constants below to see the
@@ -680,7 +680,7 @@ feature -- Setting
 
 feature {NONE} -- bench status implementation
 
-	set_bench_status (v: like bench_status) is
+	set_bench_status (v: like bench_status)
 			-- Set `bench_status' to `v'
 		do
 			bench_status := v
@@ -688,7 +688,7 @@ feature {NONE} -- bench status implementation
 
 feature -- Condition change
 
-	set_condition (expr: DBG_EXPRESSION) is
+	set_condition (expr: DBG_EXPRESSION)
 			-- Set `Current's condition.
 		require
 			valid_breakable_line_number: location.breakable_line_number > 0
@@ -699,7 +699,7 @@ feature -- Condition change
 			condition := expr
 		end
 
-	remove_condition is
+	remove_condition
 			-- Remove any condition on `Current'.
 		do
 			condition := Void
@@ -707,7 +707,7 @@ feature -- Condition change
 
 feature {BREAK_LIST} -- Saving protocol.
 
-	reload is
+	reload
 			-- To be used after save and load operations, to restore the condition.
 		do
 			if expression /= Void then
@@ -748,7 +748,7 @@ feature {NONE} -- Private constants
 	Bench_breakpoint_not_set: INTEGER 		= 1
 	Bench_breakpoint_disabled: INTEGER 		= 2
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

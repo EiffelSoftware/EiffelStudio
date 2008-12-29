@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an eiffel constant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Properties
 
-	is_constant: BOOLEAN is True
+	is_constant: BOOLEAN = True
 			-- Is current a function
 
 	value: STRING
@@ -34,7 +34,7 @@ feature -- Properties
 
 feature -- Setting
 
-	set_type (t: like type; a: like assigner_name) is
+	set_type (t: like type; a: like assigner_name)
 			-- Set `type' to `t' and `assigner_name' to `a'.
 		require
 			valid_t: t /= Void
@@ -46,7 +46,7 @@ feature -- Setting
 			assigner_name_set: assigner_name = a
 		end
 
-	set_value (v: like value) is
+	set_value (v: like value)
 			-- Set `value' to `v'.
 		require
 			valid_v: v /= Void
@@ -56,7 +56,7 @@ feature -- Setting
 			set: value = v
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

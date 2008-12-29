@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A service to access the running editor documents in the EiffelStudio IDE.
 		
@@ -134,7 +134,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	events (a_observer: !EDITOR_DOCUMENTS_TABLE_EVENT_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]] is
+	events (a_observer: !EDITOR_DOCUMENTS_TABLE_EVENT_OBSERVER): DS_ARRAYED_LIST [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE [ANY, TUPLE]]]
 			-- List of events and associated action.
 			--
 			-- `a_observer': Event observer interface to bind agent actions to.
@@ -201,7 +201,7 @@ feature -- Events
 			result_attached: Result /= Void
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

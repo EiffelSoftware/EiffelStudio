@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common functionality for all views of ES_CLIENT_SUPPLIER_LINKs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create {EIFFEL_CLIENT_SUPPLIER_FIGURE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EIFFEL_CLIENT_SUPPLIER_LINK
 		do
 			Precursor {EIFFEL_LINK_FIGURE}
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			set_deny_cursor (cursors.cur_x_client_link)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current' with `model'.
 		do
 			Precursor {EIFFEL_LINK_FIGURE}
@@ -47,7 +47,7 @@ feature -- Access
 	model: ES_CLIENT_SUPPLIER_LINK
 			-- The model for `Current'.
 
-	feature_names: ARRAYED_LIST [STRING] is
+	feature_names: ARRAYED_LIST [STRING]
 			-- List of names of all features.
 		local
 			l_features: LIST [FEATURE_AS]
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_LINK_FIGURE}
@@ -79,7 +79,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	on_needed_on_diagram_changed is
+	on_needed_on_diagram_changed
 			-- `model'.`is_needed_on_diagram' changed.
 		do
 			if model.is_needed_on_diagram then
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-	e_feature_from_abstract (a_feature: FEATURE_AS): E_FEATURE is
+	e_feature_from_abstract (a_feature: FEATURE_AS): E_FEATURE
 			-- compiled version of `a_feature' if any.
 		require
 			a_feature_exists: a_feature /= Void
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

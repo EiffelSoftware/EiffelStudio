@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Editor used as a text selectable widget in {EB_GRID_EDITOR_ITEM}"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 create {EB_GRID_EDITOR_ITEM}
 	make
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

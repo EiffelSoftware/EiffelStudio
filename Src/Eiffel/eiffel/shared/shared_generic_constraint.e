@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Save state of checking constraint."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,14 +13,14 @@ inherit
 
 feature -- Error reporting
 
-	constraint_error_list: LINKED_LIST [CONSTRAINT_INFO] is
+	constraint_error_list: LINKED_LIST [CONSTRAINT_INFO]
 			-- List of the possible errors in the declaration of an
 			-- occurrence of a generic class.
 		do
 			Result := Constraint_error_list_cell.item
 		end
 
-	reset_constraint_error_list is
+	reset_constraint_error_list
 			-- Reset `constraint_error_list' with an empty list.
 		do
 			Constraint_error_list_cell.put (create {LINKED_LIST [CONSTRAINT_INFO]} .make)
@@ -28,13 +28,13 @@ feature -- Error reporting
 
 feature {NONE} -- Shared object implementation
 
-	Constraint_error_list_cell: CELL [LINKED_LIST [CONSTRAINT_INFO]] is
+	Constraint_error_list_cell: CELL [LINKED_LIST [CONSTRAINT_INFO]]
 			-- Shared object which contains the `constraint_error_list'.
 		once
 			create Result.put (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

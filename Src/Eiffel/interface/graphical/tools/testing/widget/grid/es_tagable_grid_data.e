@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent data for a row in a {ES_TAGABLE_GRID}. Given a layout it will fill the
 		corresponding row with items based on the data.

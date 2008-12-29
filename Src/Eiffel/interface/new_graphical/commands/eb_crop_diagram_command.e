@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to crop displayed diagram"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Display history dialog.
 		do
 			tool.crop_diagram
@@ -28,29 +28,29 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: ARRAY [EV_PIXMAP]
 			-- Pixmaps representing the command (one for the
 			-- gray version, one for the color version).
 		do
 			Result := pixmaps.icon_crop
 		end
 
-	tooltip: STRING is
+	tooltip: STRING
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.F_diagram_crop
 		end
 
-	Name: STRING is "Crop_diagram"
+	Name: STRING = "Crop_diagram"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-	menu_name: STRING is
+	menu_name: STRING
 		do
 			Result := Interface_names.M_diagram_crop
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

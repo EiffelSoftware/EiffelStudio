@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Argument switch for optimization flags"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -50,7 +50,7 @@ feature -- Flags
 	keep_flag: CHARACTER_8 = 'k';
 			-- Flag used to keep assertions
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

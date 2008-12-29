@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that stores all the info needed for validity checking of a declaration%N%
 			%of a generic class with its generic creation constraint part"
 	legal: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Initialization
 
-	make (c_class: like context_class; p: like action) is
+	make (c_class: like context_class; p: like action)
 				-- Initialize all the fields.
 		require
 			c_class_not_void: c_class /= Void
@@ -40,7 +40,7 @@ invariant
 	context_class_not_void: context_class /= Void
 	action_not_void: action /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

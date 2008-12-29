@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to show/hide a toolbar"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: SD_TOOL_BAR_CONTENT; a_menu_name: STRING_GENERAL) is
+	make (a_target: SD_TOOL_BAR_CONTENT; a_menu_name: STRING_GENERAL)
 			-- Initialize Current with target `a_target' and `menu_name' set to `a_menu_name'.
 		require
 			not_void: a_target /= Void
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status setting
 
-	execute is
+	execute
 			-- toggle between show and hide.
 		do
 			if is_visible then
@@ -57,7 +57,7 @@ feature -- Status setting
 			end
 		end
 
-	enable_visible is
+	enable_visible
 			-- Set `is_visible' to True.
 		local
 			menu_items: like managed_menu_items
@@ -86,7 +86,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_visible is
+	disable_visible
 			-- Set `is_visible' to True.
 		local
 			menu_items: like managed_menu_items
@@ -116,7 +116,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	new_menu_item: EB_COMMAND_CHECK_MENU_ITEM is
+	new_menu_item: EB_COMMAND_CHECK_MENU_ITEM
 			-- Create a new menu entry for this command.
 		do
 				-- Create the menu item
@@ -125,7 +125,7 @@ feature -- Basic operations
 			Result.select_actions.extend (agent execute)
 		end
 
-	initialize_menu_item (a_item: EV_MENU_ITEM) is
+	initialize_menu_item (a_item: EV_MENU_ITEM)
 			-- Init `a_item'.
 		local
 			l_item: like new_menu_item
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 	target: SD_TOOL_BAR_CONTENT;
 			-- Tool bar content managed.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

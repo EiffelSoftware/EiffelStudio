@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List item associated to a resource."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_resource (res: RESOURCE) is
+	make_resource (res: RESOURCE)
 			-- Creation
 		require
 			resource_exists: res /= Void
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_row_number (a_number: INTEGER) is
+	set_row_number (a_number: INTEGER)
 			-- Set `row_number' to `a_number'
 		do
 			row_number := a_number
@@ -61,7 +61,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	update is
+	update
 			-- Refresh Current's display according to its new value.
 		local
 			s: STRING
@@ -85,7 +85,7 @@ feature -- Basic operations
 invariant
 	RESOURCE_LIST_ITEM_resource_exists: resource /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

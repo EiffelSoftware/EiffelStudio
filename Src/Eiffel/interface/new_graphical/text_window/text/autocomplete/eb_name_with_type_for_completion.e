@@ -1,4 +1,4 @@
-indexing
+note
 	description: "'name: TYPE' as one of completion possiblities."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_type: TYPE_A; a_feature: like feature_i) is
+	make (a_name: like name; a_type: TYPE_A; a_feature: like feature_i)
 			-- Create feature name with value name.
 		require
 			a_name_not_void: a_name /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
+	grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			-- Grid item
 		local
 			l_style: like local_style
@@ -77,7 +77,7 @@ feature -- Access
 	feature_i: FEATURE_I;
 			-- Feature used to print types
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

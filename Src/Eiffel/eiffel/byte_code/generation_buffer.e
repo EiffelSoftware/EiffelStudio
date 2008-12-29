@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Temporization buffer used during the C generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create new generation buffer.
 		require
 			n_positive: n >= 0
@@ -30,7 +30,7 @@ feature -- Status report
 	tabs: INTEGER
 			-- Number of inserted tabs.
 
-	as_string: STRING is
+	as_string: STRING
 			-- Representation of Current as a STRING.
 		local
 			l_buffers: like buffers
@@ -50,7 +50,7 @@ feature -- Status report
 			as_string_not_void: Result /= Void
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is current empty?
 		do
 			Result := count = 0
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Open, close buffer operations
 
-	clear_all is
+	clear_all
 			-- Reset the cache for a new generation
 		do
 			tabs := 0
@@ -73,21 +73,21 @@ feature -- Open, close buffer operations
 			buffers.wipe_out
 		end
 
-	start_c_specific_code is
+	start_c_specific_code
 			-- Write at beginning of buffer that it will be a C file with the
 			-- extern C declaration in case a C++ compiler is used.
 		do
 			put_string (starting_c_code_string)
 		end
 
-	end_c_specific_code is
+	end_c_specific_code
 			-- Write at end of buffer that it will be a C file with the
 			-- extern C declaration in case a C++ compiler is used.
 		do
 			put_string (ending_c_code_string)
 		end
 
-	flush_buffer (file: INDENT_FILE) is
+	flush_buffer (file: INDENT_FILE)
 			-- Flush buffer to `file' if more than one buffer has been allocated.
 		require
 			file_not_void: file /= Void
@@ -102,7 +102,7 @@ feature -- Open, close buffer operations
 			end
 		end
 
-	put_in_file (file: FILE) is
+	put_in_file (file: FILE)
 			-- Write Current into `file'
 		require
 			file_not_void: file /= Void
@@ -124,7 +124,7 @@ feature -- Open, close buffer operations
 			clear_all
 		end
 
-	put_buffer (a_buffer: like Current) is
+	put_buffer (a_buffer: like Current)
 			-- Append `a_buffer' to Current.
 		require
 			a_buffer_not_void: a_buffer /= Void
@@ -145,7 +145,7 @@ feature -- Open, close buffer operations
 
 feature -- Settings
 
-	set_is_il_generation (v: BOOLEAN) is
+	set_is_il_generation (v: BOOLEAN)
 			-- Set `is_il_generation' with `v'.
 		do
 			is_il_generation := v
@@ -155,35 +155,35 @@ feature -- Settings
 
 feature -- Ids generation
 
-	put_class_id (class_id: INTEGER) is
+	put_class_id (class_id: INTEGER)
 			-- Generate textual representation of class id
 			-- in generated C code
 		do
 			current_buffer.append_integer (class_id)
 		end
 
-	put_real_body_id (real_body_id: INTEGER) is
+	put_real_body_id (real_body_id: INTEGER)
 			-- Generate textual representation of real body id
 			-- in generated C code
 		do
 			current_buffer.append_integer (real_body_id - 1)
 		end
 
-	put_real_body_index (real_body_index: INTEGER) is
+	put_real_body_index (real_body_index: INTEGER)
 			-- Generate textual representation of real body index
 			-- in generated C code
 		do
 			current_buffer.append_integer (real_body_index - 1)
 		end
 
-	put_type_id (type_id: INTEGER) is
+	put_type_id (type_id: INTEGER)
 			-- Generate textual representation of static type id
 			-- in generated C code
 		do
 			current_buffer.append_integer (type_id - 1)
 		end
 
-	put_static_type_id (static_type_id: INTEGER) is
+	put_static_type_id (static_type_id: INTEGER)
 			-- Generate textual representation of type id
 			-- in generated C code
 		do
@@ -192,13 +192,13 @@ feature -- Ids generation
 
 feature -- Automatically indented output
 
-	put_character (c: CHARACTER) is
+	put_character (c: CHARACTER)
 			-- Write char `c'.
 		do
 			current_buffer.append_character (c)
 		end
 
-	put_two_character (a, b: CHARACTER) is
+	put_two_character (a, b: CHARACTER)
 			-- Write char `a' and `b' assuming no calls to `put_new_line' were done prior to this call.
 		local
 			l_buffer: like current_buffer
@@ -208,7 +208,7 @@ feature -- Automatically indented output
 			l_buffer.append_character (b)
 		end
 
-	put_three_character (a, b, c: CHARACTER) is
+	put_three_character (a, b, c: CHARACTER)
 			-- Write char `a', `b' and `c' assuming no calls to `put_new_line' were done prior to this call.
 		local
 			l_buffer: like current_buffer
@@ -219,7 +219,7 @@ feature -- Automatically indented output
 			l_buffer.append_character (c)
 		end
 
-	put_four_character (a, b, c, d: CHARACTER) is
+	put_four_character (a, b, c, d: CHARACTER)
 			-- Write char `a', `b', `c' and `d' assuming no calls to `put_new_line' were done prior to this call.
 		local
 			l_buffer: like current_buffer
@@ -231,43 +231,43 @@ feature -- Automatically indented output
 			l_buffer.append_character (d)
 		end
 
-	put_integer (i: INTEGER) is
+	put_integer (i: INTEGER)
 			-- Write int `i'.
 		do
 			current_buffer.append_integer (i)
 		end
 
-	put_integer_64 (i: INTEGER_64) is
+	put_integer_64 (i: INTEGER_64)
 			-- Write `i'.
 		do
 			current_buffer.append_integer_64 (i)
 		end
 
-	put_natural_8 (i: NATURAL_8) is
+	put_natural_8 (i: NATURAL_8)
 			-- Write natural `i'.
 		do
 			current_buffer.append_natural_8 (i)
 		end
 
-	put_natural_16 (i: NATURAL_16) is
+	put_natural_16 (i: NATURAL_16)
 			-- Write natural `i'.
 		do
 			current_buffer.append_natural_16 (i)
 		end
 
-	put_natural_32 (i: NATURAL_32) is
+	put_natural_32 (i: NATURAL_32)
 			-- Write natural `i'.
 		do
 			current_buffer.append_natural_32 (i)
 		end
 
-	put_natural_64 (i: NATURAL_64) is
+	put_natural_64 (i: NATURAL_64)
 			-- Write natural `i'.
 		do
 			current_buffer.append_natural_64 (i)
 		end
 
-	put_hex_integer_16 (v: INTEGER) is
+	put_hex_integer_16 (v: INTEGER)
 			-- Write integer `v' as a 16-bit hexadecimal value.
 		require
 			valid_as_integer_16: v <= {INTEGER_16}.max_value
@@ -275,7 +275,7 @@ feature -- Automatically indented output
 			put_hex_natural_16 (v.as_natural_16)
 		end
 
-	put_hex_natural_16 (v: NATURAL) is
+	put_hex_natural_16 (v: NATURAL)
 			-- Write natural `v' as a 16-bit hexadecimal value.
 		require
 			valid_as_natural_16: v <= {NATURAL_16}.max_value
@@ -320,7 +320,7 @@ feature -- Automatically indented output
 			l_buffer.put ('0', i - 1)
 		end
 
-	put_string (s: STRING) is
+	put_string (s: STRING)
 			-- Write string `s'.
 		require
 			s_not_void: s /= Void
@@ -339,7 +339,7 @@ feature -- Automatically indented output
 			new_count: count = old count + s.count
 		end
 
-	put_string_array (a: ARRAY [STRING]) is
+	put_string_array (a: ARRAY [STRING])
 			-- Write elements of array `a'
 		require
 			a_not_void: a /= Void
@@ -362,7 +362,7 @@ feature -- Automatically indented output
 			end
 		end
 
-	put_safe_array (a: ARRAY [ANY]) is
+	put_safe_array (a: ARRAY [ANY])
 			-- Write elements of array `a'
 		require
 			a_not_void: a /= Void
@@ -385,7 +385,7 @@ feature -- Automatically indented output
 			end
 		end
 
-	put_local_registration (i: INTEGER; loc_name: STRING) is
+	put_local_registration (i: INTEGER; loc_name: STRING)
 			-- Write "RTLR(`i',`loc_name');".
 		require
 			i_positive: i >= 0
@@ -401,7 +401,7 @@ feature -- Automatically indented output
 			current_buffer.append_character (';')
 		end
 
-	put_current_registration (i: INTEGER) is
+	put_current_registration (i: INTEGER)
 			-- Write "RTLR(`i',Current);".
 		require
 			i_positive: i >= 0
@@ -409,7 +409,7 @@ feature -- Automatically indented output
 			put_local_registration (i, current_string)
 		end
 
-	put_result_registration (i: INTEGER) is
+	put_result_registration (i: INTEGER)
 			-- Write "RTLR(`i',Result);".
 		require
 			i_positive: i >= 0
@@ -417,7 +417,7 @@ feature -- Automatically indented output
 			put_local_registration (i, result_string)
 		end
 
-	put_character_literal (c: CHARACTER) is
+	put_character_literal (c: CHARACTER)
 			-- Append `c'.
 		local
 			l_buffer: like current_buffer
@@ -440,7 +440,7 @@ feature -- Automatically indented output
 			l_buffer.append_character ('%'')
 		end
 
-	put_string_literal (s: STRING) is
+	put_string_literal (s: STRING)
 			-- Append string literal `s' breaking it into several chunks if required.
 		require
 			s_not_void: s /= Void
@@ -484,7 +484,7 @@ feature -- Automatically indented output
 			end
 		end
 
-	put_indivisible_string_literal (s: STRING) is
+	put_indivisible_string_literal (s: STRING)
 			-- Append string literal `s' without breaking it into chunks.
 		require
 			s_not_void: s /= Void
@@ -497,7 +497,7 @@ feature -- Automatically indented output
 			l_buffer.append_character ('"')
 		end
 
-	put_escaped_string (s: STRING) is
+	put_escaped_string (s: STRING)
 			-- Append string `s' and add escape character if necessary.
 		require
 			s_not_void: s /= Void
@@ -505,14 +505,14 @@ feature -- Automatically indented output
 			escape_string (current_buffer, s)
 		end
 
-	put_gtcx is
+	put_gtcx
 			-- Add GTCX macro.
 		do
 			put_new_line
 			put_string (gtcx_string)
 		end
 
-	generate_block_open is
+	generate_block_open
 			-- Open a new C block and indent code
 		do
 			put_new_line
@@ -522,7 +522,7 @@ feature -- Automatically indented output
 			tabs_set: tabs = old tabs + 1
 		end
 
-	generate_block_close is
+	generate_block_close
 			-- Close C block.
 		do
 			exdent
@@ -534,13 +534,13 @@ feature -- Automatically indented output
 
 feature -- Formatting
 
-	indent is
+	indent
 			-- Indent next output line by one tab.
 		do
 			tabs := tabs + 1
 		end
 
-	exdent is
+	exdent
 			-- Remove one leading tab for next line.
 		require
 			valid_tabs: tabs > 0
@@ -548,20 +548,20 @@ feature -- Formatting
 			tabs := tabs - 1
 		end
 
-	put_new_line_only is
+	put_new_line_only
 			-- Write a '\n'.
 		do
 			current_buffer.append_character ('%N')
 		end
 
-	put_new_line is
+	put_new_line
 			-- Write a '\n' and add the necessary `\t' after.
 		do
 			current_buffer.append_character ('%N')
 			put_indentation
 		end
 
-	put_indentation is
+	put_indentation
 			-- Write as many `\t' as `tabs'.
 		local
 			i: INTEGER
@@ -581,7 +581,7 @@ feature -- Formatting
 feature -- prototype code generation
 
 	generate_extern_declaration (type: STRING; f_name: STRING;
-					arg_types: ARRAY [STRING]) is
+					arg_types: ARRAY [STRING])
 			-- Generate the external declaration for a C function
 		require
 			non_void_args: type /= Void and f_name /= Void and arg_types /= Void
@@ -591,7 +591,7 @@ feature -- prototype code generation
 		end
 
 	generate_static_declaration (type: STRING; f_name: STRING;
-					arg_types: ARRAY [STRING]) is
+					arg_types: ARRAY [STRING])
 			-- Generate the external declaration for a C function
 		require
 			non_void_args: type /= Void and f_name /= Void and arg_types /= Void
@@ -602,7 +602,7 @@ feature -- prototype code generation
 
 	generate_function_signature (type: STRING; f_name: STRING;
 					extern: BOOLEAN; extern_header: like Current
-					arg_names: ARRAY [STRING]; arg_types: ARRAY [STRING]) is
+					arg_names: ARRAY [STRING]; arg_types: ARRAY [STRING])
 			-- Generate the function signature for ANSI C
 			-- without the starting '{'
 		require
@@ -659,7 +659,7 @@ feature -- prototype code generation
 feature {GENERATION_BUFFER} -- prototype code generation
 
 	generate_function_declaration (type: STRING; f_name: STRING;
-			extern: BOOLEAN; arg_types: ARRAY [STRING]) is
+			extern: BOOLEAN; arg_types: ARRAY [STRING])
 				-- Generate funtion declaration using macros
 		require
 			type_not_void: type /= Void
@@ -714,10 +714,10 @@ feature {NONE} -- Implementation: Status report
 	is_il_generation: BOOLEAN
 			-- Are we in IL code generation?
 
-	max_chunk_size: INTEGER is 262144
+	max_chunk_size: INTEGER = 262144
 			-- Maximum size of chunks allocated (256KB)
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of characters in current.
 		local
 			l_buffers: like buffers
@@ -737,7 +737,7 @@ feature {NONE} -- Implementation: Status report
 			count_nonnegative: Result >= 0
 		end
 
-	maximum_string_literal_count: INTEGER is 512
+	maximum_string_literal_count: INTEGER = 512
 			-- Maximum length of C string literal
 			-- (CL limit is 2048 - see CL error C2026)
 
@@ -752,7 +752,7 @@ feature {GENERATION_BUFFER} -- Implementation: Access
 
 feature {NONE} -- Implementation
 
-	escape_string (buffer: like current_buffer; s: STRING) is
+	escape_string (buffer: like current_buffer; s: STRING)
 			-- Append `buffer' with the escaped version of `s'
 		require
 			valid_arguments: s /= Void and then buffer /= Void
@@ -760,7 +760,7 @@ feature {NONE} -- Implementation
 			escape_substring (buffer, s, 1, s.count)
 		end
 
-	escape_substring (buffer: like current_buffer; s: STRING; start_index, end_index: INTEGER) is
+	escape_substring (buffer: like current_buffer; s: STRING; start_index, end_index: INTEGER)
 			-- Append escaped version of `s.substring (start_index, end_index)' to `buffer'.
 		require
 			buffer_not_void: buffer /= Void
@@ -799,7 +799,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	put_octal (buffer: like current_buffer; i: INTEGER) is
+	put_octal (buffer: like current_buffer; i: INTEGER)
 			-- Print octal representation of `i' into `buffer'
 			--| always generate 3 digits
 		local
@@ -830,25 +830,25 @@ feature {NONE} -- Implementation
 
 feature -- Constants
 
-	starting_c_code_string: STRING is "%N%N#ifdef __cplusplus%Nextern %"C%" {%N#endif%N"
-	ending_c_code_string: STRING is "%N%N#ifdef __cplusplus%N}%N#endif%N"
-	coma_sep_string: STRING is ", "
-	rtlr_string: STRING is "RTLR("
-	current_string: STRING is "Current"
-	result_string: STRING is "Result"
-	static_string: STRING is "static "
-	void_string: STRING is "void"
-	gtcx_string: STRING is "GTCX"
-	stdcall_string: STRING is " __stdcall "
-	rtil_string: STRING is "RT_IL "
-	extern_string: STRING is "extern "
+	starting_c_code_string: STRING = "%N%N#ifdef __cplusplus%Nextern %"C%" {%N#endif%N"
+	ending_c_code_string: STRING = "%N%N#ifdef __cplusplus%N}%N#endif%N"
+	coma_sep_string: STRING = ", "
+	rtlr_string: STRING = "RTLR("
+	current_string: STRING = "Current"
+	result_string: STRING = "Result"
+	static_string: STRING = "static "
+	void_string: STRING = "void"
+	gtcx_string: STRING = "GTCX"
+	stdcall_string: STRING = " __stdcall "
+	rtil_string: STRING = "RT_IL "
+	extern_string: STRING = "extern "
 			-- String constants for code generation to avoid useless creation of string objects.
 
 invariant
 	current_buffer_not_void: current_buffer /= Void
 	buffers_not_void: buffers /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

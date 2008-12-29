@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Check that checks if a given feature name could be added as feature to a class. (There is no feature with this name in the class or a descendant.)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_class: CLASS_C; a_ignore_list: SEARCH_TABLE [INTEGER]; a_recursive, a_ignore_deferred: BOOLEAN) is
+	make (a_name: STRING; a_class: CLASS_C; a_ignore_list: SEARCH_TABLE [INTEGER]; a_recursive, a_ignore_deferred: BOOLEAN)
 			-- Create a check which may be `a_recursive', ignore classes in `a_ignore_list' and may also `ignore_deferred'.
 		require
 			a_name_not_void: a_name /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-	execute is
+	execute
             -- Execute a check.
         do
 			success := True
@@ -43,7 +43,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	check_class (a_class: CLASS_C) is
+	check_class (a_class: CLASS_C)
 			-- Check if `a_class' and all descendants are ok.
 		require
 			a_class_not_void: a_class /= Void
@@ -94,7 +94,7 @@ invariant
 	class_not_void: class_c /= Void
 	ignore_list_not_void: ignore_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

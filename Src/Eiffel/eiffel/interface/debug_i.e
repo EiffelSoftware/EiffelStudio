@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -9,13 +9,13 @@ feature -- Access
 	has_unnamed: BOOLEAN
 			-- Are unnamed debug clauses enabled?
 
-	is_debug (tag: STRING): BOOLEAN is
+	is_debug (tag: STRING): BOOLEAN
 			-- Is the debug compatible with tag `tag' ?
 		do
 			Result := tags /= Void and then tags.has (tag)
 		end
 
-	generate_keys (buffer: GENERATION_BUFFER; id: INTEGER) is
+	generate_keys (buffer: GENERATION_BUFFER; id: INTEGER)
 			-- Generate keys C array
 		require
 			good_argument: buffer /= Void;
@@ -41,7 +41,7 @@ feature -- Access
 			end
 		end;
 
-	generate (buffer: GENERATION_BUFFER; id: INTEGER) is
+	generate (buffer: GENERATION_BUFFER; id: INTEGER)
 			-- Generate assertion value in `buffer'.
 		require
 			good_argument: buffer /= Void;
@@ -61,7 +61,7 @@ feature -- Access
 			end
 		end
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for current debug level
 		local
 			l: SORTED_TWO_WAY_LIST [STRING];
@@ -93,7 +93,7 @@ feature -- Access
 
 feature {CLASS_I} -- Update
 
-	enable_unnamed is
+	enable_unnamed
 			-- Enable unnamed debug clauses.
 		do
 			has_unnamed := True
@@ -101,7 +101,7 @@ feature {CLASS_I} -- Update
 			has_unnamed: has_unnamed
 		end
 
-	enable_tag (a_tag: STRING) is
+	enable_tag (a_tag: STRING)
 			-- Enable debug clauses with `a_tag'.
 		require
 			a_tag_ok: a_tag /= Void and then not a_tag.is_empty
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 invariant
 	tags_not_empty: tags /= Void implies not tags.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

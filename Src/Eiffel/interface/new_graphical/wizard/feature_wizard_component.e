@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common routines for FCW."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,14 +24,14 @@ inherit
 
 feature -- Factory
 
-	new_label (a_text: STRING): EV_LABEL is
+	new_label (a_text: STRING): EV_LABEL
 			-- Create new label with `a_text'.
 		do
 			create Result.make_with_text (a_text)
 			Result.set_font (fcw_font)
 		end
 
-	new_create_button: EV_BUTTON is
+	new_create_button: EV_BUTTON
 			-- Create button with a star.
 		do
 			create Result
@@ -39,7 +39,7 @@ feature -- Factory
 			Result.set_minimum_size (16, 16)
 		end
 
-	new_tab (ind: INTEGER): EV_CELL is
+	new_tab (ind: INTEGER): EV_CELL
 			-- Return container with minimum width.
 		do
 			create Result
@@ -48,7 +48,7 @@ feature -- Factory
 
 feature -- Defaults
 
-	fcw_font: EV_FONT is
+	fcw_font: EV_FONT
 			-- Font for labels.
 		once
 			create Result
@@ -59,10 +59,10 @@ feature -- Defaults
 
 feature {NONE} -- Implementation
 
-	Indent_size: INTEGER is 30;
+	Indent_size: INTEGER = 30;
 			-- Number of pixels used to indent widgets.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

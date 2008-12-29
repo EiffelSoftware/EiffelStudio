@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an expression line"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_expression_evaluation (evl: DBG_EXPRESSION_EVALUATION; g: like parent_grid) is
+	make_with_expression_evaluation (evl: DBG_EXPRESSION_EVALUATION; g: like parent_grid)
 			-- Create Current line with `evl' data, and inside grid `g'
 		require
 			evaluation_attached: evl /= Void
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Recycling
 
-	reset is
+	reset
 			-- Recycle data
 			-- in order to free special data (for instance dotnet references)
 		do
@@ -83,7 +83,7 @@ feature -- Refresh management
 	refresh_requested: BOOLEAN
 			-- Has a refresh operation been requested?
 
-	request_refresh is
+	request_refresh
 			-- Use this when we don't want to evaluate the expression if the grid is not displayed
 		require
 			refresh_not_requested: not refresh_requested
@@ -99,7 +99,7 @@ feature -- Refresh management
 			refresh_not_requested: not refresh_requested
 		end
 
-	refresh is
+	refresh
 			-- Effective refresh of current line
 		require else
 			has_expression: expression_evaluation /= Void
@@ -128,14 +128,14 @@ feature -- Refresh management
 			Precursor
 		end
 
-	request_evaluation (v: BOOLEAN) is
+	request_evaluation (v: BOOLEAN)
 			-- Request an evaluation on next grid display computing
 			-- (i.e: evaluate `text' only if displayed)
 		do
 			evaluation_requested := v
 		end
 
-	refresh_expression is
+	refresh_expression
 			-- Refresh expression
 			--| Moved from ES_WATCH_TOOL_PANEL
 			--| to reduce dependencies and prepare refactoring
@@ -145,7 +145,7 @@ feature -- Refresh management
 
 feature {NONE} -- Refresh implementation
 
-	process_evaluation is
+	process_evaluation
 		local
 			evl: like expression_evaluation
 		do
@@ -169,7 +169,7 @@ feature {NONE} -- Refresh implementation
 			refresh
 		end
 
-	process_evaluation_request is
+	process_evaluation_request
 		require
 			evaluation_requested: evaluation_requested
 		do
@@ -184,7 +184,7 @@ feature {NONE} -- Refresh implementation
 
 feature -- change properties
 
-	apply_cell_expression_text_properties_on (a_item: EV_GRID_LABEL_ITEM) is
+	apply_cell_expression_text_properties_on (a_item: EV_GRID_LABEL_ITEM)
 			-- Apply comestic properties on text item `a_item'
 		require
 			expression_not_void: expression_evaluation /= Void
@@ -205,7 +205,7 @@ feature -- change properties
 
 feature -- Settings
 
-	set_auto_expression	(b: like is_auto_expression) is
+	set_auto_expression	(b: like is_auto_expression)
 			-- Set `is_auto_expression' value
 		do
 			is_auto_expression := b
@@ -225,7 +225,7 @@ feature -- Properties
 	expression_evaluation: DBG_EXPRESSION_EVALUATION
 			-- Associated expression evaluation
 
-	object_name: STRING_32 is
+	object_name: STRING_32
 			-- Name associated to Current's object
 		do
 			if title /= Void then
@@ -243,20 +243,20 @@ feature -- Properties
 	object_dynamic_class: CLASS_C
 			-- Dynamic class associated to expression's value
 
-	object_spec_capacity: INTEGER is
+	object_spec_capacity: INTEGER
 		do
 			Result := debugger_manager.object_manager.special_object_capacity_at_address (object_address)
 		end
 
 feature -- Query
 
-	has_attributes_values: BOOLEAN is
+	has_attributes_values: BOOLEAN
 		do
 fixme ("find a smarter way to get a valid value")
 			Result := True
 		end
 
-	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		local
 			dmp: DUMP_VALUE
 		do
@@ -268,7 +268,7 @@ fixme ("find a smarter way to get a valid value")
 			end
 		end
 
-	sorted_once_routines: LIST [E_FEATURE] is
+	sorted_once_routines: LIST [E_FEATURE]
 			-- <Precursor>	
 		do
 			if {cl: like object_dynamic_class} object_dynamic_class then
@@ -276,7 +276,7 @@ fixme ("find a smarter way to get a valid value")
 			end
 		end
 
-	sorted_constant_features: LIST [E_CONSTANT] is
+	sorted_constant_features: LIST [E_CONSTANT]
 			-- <Precursor>
 		do
 			if {cl: like object_dynamic_class} object_dynamic_class then
@@ -284,7 +284,7 @@ fixme ("find a smarter way to get a valid value")
 			end
 		end
 
-	object_value: STRING_32 is
+	object_value: STRING_32
 			-- Full ouput representation for related object
 		require
 			last_dump_value /= Void
@@ -292,7 +292,7 @@ fixme ("find a smarter way to get a valid value")
 			Result := last_dump_value.output_for_debugger
 		end
 
-	object_type_representation: STRING is
+	object_type_representation: STRING
 			-- Full ouput representation for related object
 		require
 			last_dump_value /= Void
@@ -300,7 +300,7 @@ fixme ("find a smarter way to get a valid value")
 			Result := last_dump_value.generating_type_representation (generating_type_evaluation_enabled)
 		end
 
-	associated_dump_value: DUMP_VALUE is
+	associated_dump_value: DUMP_VALUE
 		do
 			Result := internal_associated_dump_value
 			if Result = Void and then object_address /= Void then
@@ -313,12 +313,12 @@ fixme ("find a smarter way to get a valid value")
 
 feature -- Graphical changes
 
-	new_cell_expression: ES_OBJECTS_GRID_EXPRESSION_CELL is
+	new_cell_expression: ES_OBJECTS_GRID_EXPRESSION_CELL
 		do
 			create Result
 		end
 
-	set_expression_text (v: STRING_32) is
+	set_expression_text (v: STRING_32)
 		require else
 			is_attached_to_row: row /= Void
 		local
@@ -373,7 +373,7 @@ feature -- Graphical changes
 			grid_cell_set_text (glab, v)
 		end
 
-	update_expression_on_deactivate (a_item: ES_OBJECTS_GRID_EXPRESSION_CELL) is
+	update_expression_on_deactivate (a_item: ES_OBJECTS_GRID_EXPRESSION_CELL)
 			-- Update Current data with expression data from `a_item'
 		require
 			a_item /= Void
@@ -421,7 +421,7 @@ feature -- Graphical changes
 			end
 		end
 
-	set_error_pixmap (v: EV_PIXMAP) is
+	set_error_pixmap (v: EV_PIXMAP)
 		require
 			row.count > 0
 		local
@@ -431,7 +431,7 @@ feature -- Graphical changes
 			grid_cell_set_pixmap (gi, v)
 		end
 
-	set_expression_pixmap (v: EV_PIXMAP) is
+	set_expression_pixmap (v: EV_PIXMAP)
 		require
 			row.count > 0
 		local
@@ -441,7 +441,7 @@ feature -- Graphical changes
 			grid_cell_set_pixmap (gi, v)
 		end
 
-	show_error_dialog (txt: STRING_GENERAL) is
+	show_error_dialog (txt: STRING_GENERAL)
 		local
 			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
 			edv: EXCEPTION_DEBUG_VALUE
@@ -471,7 +471,7 @@ feature -- Graphical changes
 				ax, ay, abutton: INTEGER;
 				ax_tilt, ay_tilt, apressure: DOUBLE;
 				ascreen_x, ascreen_y: INTEGER
-			) is
+			)
 		require
 			item_not_void: a_item /= Void
 		local
@@ -494,7 +494,7 @@ feature -- Graphical changes
 			end
 		end
 
-	compute_grid_display is
+	compute_grid_display
 		local
 			l_error_message: STRING_32
 			l_error_tag: STRING_32
@@ -631,7 +631,7 @@ feature -- Graphical changes
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Format an EXPORT_I object using a TEXT_FORMATTER_DECORATOR. We are not using the visitor pattern
 		but as soon as we need to process EXPORT_I objects in a similar fashion we should.
@@ -29,7 +29,7 @@ inherit
 
 feature -- Formatting
 
-	format (a_ctxt: TEXT_FORMATTER_DECORATOR; a_export: EXPORT_I) is
+	format (a_ctxt: TEXT_FORMATTER_DECORATOR; a_export: EXPORT_I)
 			-- Format `a_export' using `a_ctxt'.
 		require
 			a_ctxt_not_void: a_ctxt /= Void
@@ -71,7 +71,7 @@ feature -- Formatting
 
 feature {NONE} -- Implementation
 
-	format_client_i (a_ctxt: TEXT_FORMATTER_DECORATOR; a_client: CLIENT_I) is
+	format_client_i (a_ctxt: TEXT_FORMATTER_DECORATOR; a_client: CLIENT_I)
 		require
 			a_ctxt_not_void: a_ctxt /= Void
 			a_client_not_void: a_client /= Void

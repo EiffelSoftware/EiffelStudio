@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Abstract inferface for tools/UI where stones can set and synchronized.
 	]"
@@ -165,7 +165,7 @@ feature -- Synchronization
 invariant
 	stone_is_stone_usable: stone /= Void implies is_stone_usable (stone)
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Interface between an eiffel project and the user interface, if any."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make (a_project: E_PROJECT) is
+	make (a_project: E_PROJECT)
 			-- Associate `Current' with `a_project'.
 		require
 			a_project_not_void: a_project /= Void
@@ -31,7 +31,7 @@ feature -- Initialization
 
 feature -- Access
 
-	initialized: BOOLEAN is
+	initialized: BOOLEAN
 			-- Has `project' been initialized?
 		do
 			Result := project.initialized
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	on_project_loaded is
+	on_project_loaded
 			-- `project' has been loaded or re-loaded.
 		local
 			l_load_agents: like load_agents
@@ -78,7 +78,7 @@ feature -- Basic operations
 			l_load_agents.call (Void)
 		end
 
-	on_project_create is
+	on_project_create
 			-- `project' has been created.
 		require
 			project_unloaded: not is_created
@@ -95,7 +95,7 @@ feature -- Basic operations
 			l_create_agents.call (Void)
 		end
 
-	on_project_close is
+	on_project_close
 			-- `project' has been closed.
 		require
 			project_loaded: is_created
@@ -111,7 +111,7 @@ feature -- Basic operations
 			l_close_agents.call (Void)
 		end
 
-	on_project_compiles is
+	on_project_compiles
 			-- `project' starts a new compilation.
 		require
 			project_created: is_created
@@ -119,7 +119,7 @@ feature -- Basic operations
 			compile_start_agents.call (Void)
 		end
 
-	on_project_recompiled (is_successful: BOOLEAN) is
+	on_project_recompiled (is_successful: BOOLEAN)
 			-- `project' ends a compilation (not necessarily successfully).
 		require
 			project_created: is_created
@@ -130,7 +130,7 @@ feature -- Basic operations
 invariant
 	project_not_void: project /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

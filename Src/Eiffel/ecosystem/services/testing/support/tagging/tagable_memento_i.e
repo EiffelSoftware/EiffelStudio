@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Memento for {TAGABLE_I} containing description which tags have been added or removed.
 	]"

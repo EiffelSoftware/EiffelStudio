@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represent a CLI interface representation of an Eiffel class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_class (a_class: CLASS_C) is
+	make_with_class (a_class: CLASS_C)
 			-- Initialize current with `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			class_id_set: class_id = a_class.class_id
 		end
 
-	make_from_context (other: like Current; cl_type: CLASS_TYPE) is
+	make_from_context (other: like Current; cl_type: CLASS_TYPE)
 			-- Initialize current with `other' in context of `class_type.
 		require
 			other_not_void: other /= Void
@@ -74,7 +74,7 @@ feature -- Access
 	feature_insertion_type: INTEGER
 			-- Level of what will be inserted in class interface definition.
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Associated class to `class_id'.
 		do
 			Result := System.class_of_id (class_id)
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Status
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN
 			-- Is current interface defined from an external class.
 		do
 			Result := associated_class.is_external
@@ -92,7 +92,7 @@ feature -- Status
 
 feature -- Settings
 
-	set_parents (p: like parents) is
+	set_parents (p: like parents)
 			-- Assign `parents' with `p'.
 		require
 			p_not_void: p /= Void
@@ -104,7 +104,7 @@ feature -- Settings
 
 feature -- Control
 
-	process_features (feat_tbl: FEATURE_TABLE) is
+	process_features (feat_tbl: FEATURE_TABLE)
 			-- Added `features' into current.
 		local
 			class_c, parent_class: like associated_class
@@ -161,7 +161,7 @@ feature -- Control
 
 feature -- Constants
 
-	valid_insertion_type (a_type: INTEGER): BOOLEAN is
+	valid_insertion_type (a_type: INTEGER): BOOLEAN
 			-- Is `a_type' a valid insertion type constants?	
 		do
 			inspect
@@ -175,17 +175,17 @@ feature -- Constants
 			end
 		end
 
-	insert_origin_only_type: INTEGER is 1
-	insert_renaming_type: INTEGER is 2
-	insert_explicit_covariance_type: INTEGER is 3
-	insert_implicit_covariance_type: INTEGER is 4
-	insert_all_features_type: INTEGER is 5
+	insert_origin_only_type: INTEGER = 1
+	insert_renaming_type: INTEGER = 2
+	insert_explicit_covariance_type: INTEGER = 3
+	insert_implicit_covariance_type: INTEGER = 4
+	insert_all_features_type: INTEGER = 5
 			-- Type corresponding to which features will be inserted
 			-- in current interface.
 
 feature {NONE} -- Implementation
 
-	add_feature (feat: FEATURE_I) is
+	add_feature (feat: FEATURE_I)
 			-- Add `feat' in list of features implemented by current interface.
 		require
 			f_not_void: feat /= Void
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			inserted: features.has (feat.rout_id_set.first)
 		end
 
-	compare_with_parent (feat: FEATURE_I; p: SPECIAL [SELECT_TABLE]) is
+	compare_with_parent (feat: FEATURE_I; p: SPECIAL [SELECT_TABLE])
 			-- Search for `feat' in `p'. If found with different signature, then
 			-- we add it to current.
 		require
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_good_for_renaming_insertion (new_feat, inh_feat: FEATURE_I): BOOLEAN is
+	is_good_for_renaming_insertion (new_feat, inh_feat: FEATURE_I): BOOLEAN
 			-- Does `new_feat' needs to be inserted in Current if we are handling
 			-- renaming? Not always, e.g. an inherited constructor, a field,
 			-- a static routine or a static field of an external class should
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation: constants
 
-	Chunk: INTEGER is 50
+	Chunk: INTEGER = 50
 			-- Initial size of containers.
 
 invariant
@@ -380,7 +380,7 @@ invariant
 	features_not_void: features /= Void
 	il_generation: (create {SHARED_WORKBENCH}).System.il_generation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

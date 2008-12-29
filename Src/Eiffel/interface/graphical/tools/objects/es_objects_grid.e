@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a GRID containing Object values (for debugging)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_name (a_name: like name; a_id: STRING) is
+	make_with_name (a_name: like name; a_id: STRING)
 			-- Create current with a_name and a_tool
 		do
 			default_create
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			load_preferences
 		end
 
-	load_preferences is
+	load_preferences
 		local
 			bp: BOOLEAN_PREFERENCE
 			colp: COLOR_PREFERENCE
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 					end)
 		end
 
-	initialize is
+	initialize
 		do
 			Precursor {ES_GRID}
 			make_with_grid (Current)
@@ -113,7 +113,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- GRID Customization
 
-	row_type: ES_OBJECTS_GRID_ROW is do end
+	row_type: ES_OBJECTS_GRID_ROW do end
 		-- Type used for row objects.
 		-- May be redefined by EV_GRID descendents.		
 
@@ -135,11 +135,11 @@ feature -- Properties
 	col_address_index: INTEGER
 	col_context_index: INTEGER
 
-	col_name_id: INTEGER is 1
-	col_value_id: INTEGER is 2
-	col_type_id: INTEGER is 3
-	col_address_id: INTEGER is 4
-	col_context_id: INTEGER	is 5
+	col_name_id: INTEGER = 1
+	col_value_id: INTEGER = 2
+	col_type_id: INTEGER = 3
+	col_address_id: INTEGER = 4
+	col_context_id: INTEGER	= 5
 
 	slices_cmd: ES_OBJECTS_GRID_SLICES_CMD
 
@@ -147,7 +147,7 @@ feature -- Number formatting
 
 	hexadecimal_mode_enabled: BOOLEAN
 
-	set_hexadecimal_mode (v: BOOLEAN) is
+	set_hexadecimal_mode (v: BOOLEAN)
 		local
 			i: INTEGER
 		do
@@ -163,7 +163,7 @@ feature -- Number formatting
 			end
 		end
 
-	propagate_hexadecimal_mode (t: EV_GRID_ROW) is
+	propagate_hexadecimal_mode (t: EV_GRID_ROW)
 		local
 			l_eb_t: ES_OBJECTS_GRID_OBJECT_LINE
 		do
@@ -175,7 +175,7 @@ feature -- Number formatting
 
 feature -- Change with preferences
 
-	set_columns_layout_from_string_preference (spref: STRING_PREFERENCE) is
+	set_columns_layout_from_string_preference (spref: STRING_PREFERENCE)
 		require
 			default_columns_layout_not_void: default_columns_layout /= Void
 		local
@@ -190,7 +190,7 @@ feature -- Change with preferences
 			end
 		end
 
-	save_columns_layout_to_string_preference (spref: STRING_PREFERENCE) is
+	save_columns_layout_to_string_preference (spref: STRING_PREFERENCE)
 		local
 			s: STRING
 		do
@@ -200,7 +200,7 @@ feature -- Change with preferences
 			end
 		end
 
-	set_columns_layout_from_string (s: STRING) is
+	set_columns_layout_from_string (s: STRING)
 		require
 			s_valid: s /= Void and then not s.is_empty
 		local
@@ -247,7 +247,7 @@ feature -- Change with preferences
 			retry
 		end
 
-	columns_layout_to_string: STRING is
+	columns_layout_to_string: STRING
 		local
 			t: like column_layout
 			i: INTEGER
@@ -287,7 +287,7 @@ feature -- Columns layout access
 	default_columns_layout: ARRAY [like column_layout]
 			-- Default columns layout		
 
-	columns_layout_to_array: like default_columns_layout is
+	columns_layout_to_array: like default_columns_layout
 		local
 			i: INTEGER
 			retried: BOOLEAN
@@ -308,7 +308,7 @@ feature -- Columns layout access
 			retry
 		end
 
-	column_layout (c: INTEGER): TUPLE [col_index:INTEGER; is_displayed:BOOLEAN; has_auto_resizing:BOOLEAN; width:INTEGER; title:STRING_GENERAL; title_for_pre: STRING] is
+	column_layout (c: INTEGER): TUPLE [col_index:INTEGER; is_displayed:BOOLEAN; has_auto_resizing:BOOLEAN; width:INTEGER; title:STRING_GENERAL; title_for_pre: STRING]
 		require
 			c_positive: c > 0
 			c_not_greater_than_column_count: c <= column_count
@@ -338,7 +338,7 @@ feature -- Columns layout access
 
 feature -- Change
 
-	set_default_columns_layout (d: like default_columns_layout) is
+	set_default_columns_layout (d: like default_columns_layout)
 			-- Set `default_columns_layout' value
 		require
 			d /= Void
@@ -349,7 +349,7 @@ feature -- Change
 	set_columns_layout (
 				a_col_pixmap_index: INTEGER;
 				a_col_details: ARRAY [like column_layout] --| name, address, value, type, context
-				) is
+				)
 		require
 			a_col_details.count > 0
 		local
@@ -370,7 +370,7 @@ feature -- Change
 			end
 		end
 
-	set_column_layout (a_pos: INTEGER; t: like column_layout) is
+	set_column_layout (a_pos: INTEGER; t: like column_layout)
 			-- Index, width, title
 		require
 			a_pos_positive: a_pos > 0
@@ -410,14 +410,14 @@ feature -- Change
 			set_auto_resizing_column (c, t.has_auto_resizing)
 		end
 
-	set_slices_cmd (v: like slices_cmd) is
+	set_slices_cmd (v: like slices_cmd)
 		do
 			slices_cmd := v
 		end
 
 feature {ES_OBJECTS_TOOL_PANEL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_CMD} -- EiffelStudio specific
 
-	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_OBJECT_LINE; a_title: STRING_GENERAL) is
+	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_OBJECT_LINE; a_title: STRING_GENERAL)
 		require
 			dv /= Void
 		local
@@ -433,14 +433,14 @@ feature {ES_OBJECTS_TOOL_PANEL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, E
 			litem.attach_to_row (a_row)
 		end
 
-	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_title: STRING_GENERAL) is
+	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_title: STRING_GENERAL)
 		require
 			dv /= Void
 		do
 			attach_debug_value_from_line_to_grid_row (a_row, dv, Void, a_title)
 		end
 
-	attach_dump_value_to_grid_row (a_row: EV_GRID_ROW; a_dumpv: DUMP_VALUE; a_title: STRING_GENERAL) is
+	attach_dump_value_to_grid_row (a_row: EV_GRID_ROW; a_dumpv: DUMP_VALUE; a_title: STRING_GENERAL)
 		local
 			litem: ES_OBJECTS_GRID_ADDRESS_LINE
 		do
@@ -451,14 +451,14 @@ feature {ES_OBJECTS_TOOL_PANEL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, E
 			litem.attach_to_row (a_row)
 		end
 
-	object_line_from_row (a_row: EV_GRID_ROW): ES_OBJECTS_GRID_OBJECT_LINE is
+	object_line_from_row (a_row: EV_GRID_ROW): ES_OBJECTS_GRID_OBJECT_LINE
 		require
 			a_row /= Void
 		do
 			Result ?= a_row.data
 		end
 
-	objects_grid_item (add: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE is
+	objects_grid_item (add: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE
 		require
 			valid_address: add /= Void
 		do
@@ -475,14 +475,14 @@ feature {ES_OBJECTS_TOOL_PANEL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, E
 	objects_grid_item_function: FUNCTION [ANY, TUPLE [DBG_ADDRESS], like objects_grid_item]
 			-- Function used to retrieve the objects_grid objects line related to `addr'.
 
-	set_objects_grid_item_function (fct: like objects_grid_item_function) is
+	set_objects_grid_item_function (fct: like objects_grid_item_function)
 		do
 			objects_grid_item_function := fct
 		end
 
 feature -- Menu
 
-	grid_menu: EV_MENU is
+	grid_menu: EV_MENU
 		local
 			mci: EV_CHECK_MENU_ITEM
 			mi: EV_MENU_ITEM
@@ -511,7 +511,7 @@ feature -- Menu
 feature -- Query
 
 	grid_pnd_details_from_row_and_column (a_row: EV_GRID_ROW; a_col: EV_GRID_COLUMN):
-				TUPLE [pebble:ANY; accept_cursor: EV_POINTER_STYLE; deny_cursor: EV_POINTER_STYLE] is
+				TUPLE [pebble:ANY; accept_cursor: EV_POINTER_STYLE; deny_cursor: EV_POINTER_STYLE]
 			-- Return pnd details which may be contained in `a_row' related to `a_col'.
 		local
 			ctler: ES_GRID_ROW_CONTROLLER
@@ -528,7 +528,7 @@ feature -- Query
 			end
 		end
 
-	grid_pebble_from_cell (a_cell: EV_GRID_ITEM): ANY is
+	grid_pebble_from_cell (a_cell: EV_GRID_ITEM): ANY
 			-- Return pebble which may be contained in `a_cell'.
 		require
 			a_cell_not_void: a_cell /= Void
@@ -536,7 +536,7 @@ feature -- Query
 			Result := grid_pebble_from_row_and_column (a_cell.row, a_cell.column)
 		end
 
-	grid_pebble_from_row_and_column (a_row: EV_GRID_ROW; a_col: EV_GRID_COLUMN): ANY is
+	grid_pebble_from_row_and_column (a_row: EV_GRID_ROW; a_col: EV_GRID_COLUMN): ANY
 			-- Return pebble which may be contained in `a_row' related to `a_col'.
 		local
 			t: like grid_pnd_details_from_row_and_column
@@ -547,7 +547,7 @@ feature -- Query
 			end
 		end
 
-	grid_accept_cursor_from_cell (a_cell: EV_GRID_ITEM): EV_POINTER_STYLE is
+	grid_accept_cursor_from_cell (a_cell: EV_GRID_ITEM): EV_POINTER_STYLE
 			-- Return accept_cursor which may be contained in `a_row' related to `a_col'.
 		require
 			a_cell_not_void: a_cell /= Void
@@ -566,7 +566,7 @@ feature -- Query
 			end
 		end
 
-	grid_deny_cursor_from_cell (a_cell: EV_GRID_ITEM): EV_POINTER_STYLE is
+	grid_deny_cursor_from_cell (a_cell: EV_GRID_ITEM): EV_POINTER_STYLE
 			-- Return deny_cursor which may be contained in `a_row' related to `a_col'.
 		require
 			a_cell_not_void: a_cell /= Void
@@ -587,7 +587,7 @@ feature -- Query
 
 feature {NONE} -- Actions implementation
 
-	on_pebble_function (a_item: EV_GRID_ITEM): ANY is
+	on_pebble_function (a_item: EV_GRID_ITEM): ANY
 		do
 			if
 				not ev_application.ctrl_pressed
@@ -597,7 +597,7 @@ feature {NONE} -- Actions implementation
 			end
 		end
 
-	evs_on_pebble_function (a_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT) is
+	evs_on_pebble_function (a_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT)
 		local
 			l_pebble: ANY
 		do
@@ -607,7 +607,7 @@ feature {NONE} -- Actions implementation
 			end
 		end
 
-	on_pnd_accept_cursor_function (a_item: EV_GRID_ITEM): EV_POINTER_STYLE is
+	on_pnd_accept_cursor_function (a_item: EV_GRID_ITEM): EV_POINTER_STYLE
 		do
 			if
 				not ev_application.ctrl_pressed
@@ -622,7 +622,7 @@ feature {NONE} -- Actions implementation
 			end
 		end
 
-	on_pnd_deny_cursor_function (a_item: EV_GRID_ITEM): EV_POINTER_STYLE is
+	on_pnd_deny_cursor_function (a_item: EV_GRID_ITEM): EV_POINTER_STYLE
 		do
 			if
 				not ev_application.ctrl_pressed
@@ -637,7 +637,7 @@ feature {NONE} -- Actions implementation
 			end
 		end
 
-	on_pointer_double_press_item (ax,ay,ab: INTEGER; a_item: EV_GRID_ITEM) is
+	on_pointer_double_press_item (ax,ay,ab: INTEGER; a_item: EV_GRID_ITEM)
 		do
 			if ab = 1 then
 				if {ei: ES_OBJECTS_GRID_CELL} a_item then
@@ -646,7 +646,7 @@ feature {NONE} -- Actions implementation
 			end
 		end
 
-	on_pointer_right_click_item (ax,ay,ab: INTEGER; a_item: EV_GRID_ITEM) is
+	on_pointer_right_click_item (ax,ay,ab: INTEGER; a_item: EV_GRID_ITEM)
 			-- Action to be performed when pointer right click on grid
 			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.	
 		do
@@ -660,7 +660,7 @@ feature {NONE} -- Actions implementation
 			end
 		end
 
-	on_row_expand (a_row: EV_GRID_ROW) is
+	on_row_expand (a_row: EV_GRID_ROW)
 		require
 			a_row /= Void
 			row_related_to_current: a_row.parent = Current
@@ -675,7 +675,7 @@ feature {NONE} -- Actions implementation
 			request_columns_auto_resizing
 		end
 
-	on_row_collapse (a_row: EV_GRID_ROW) is
+	on_row_collapse (a_row: EV_GRID_ROW)
 		require
 			a_row /= Void
 			row_related_to_current: a_row.parent = Current
@@ -689,7 +689,7 @@ feature {NONE} -- Actions implementation
 			request_columns_auto_resizing
 		end
 
-	compute_grid_item (c, r: INTEGER): EV_GRID_ITEM is
+	compute_grid_item (c, r: INTEGER): EV_GRID_ITEM
 		local
 			a_row: EV_GRID_ROW
 			obj_item: ES_OBJECTS_GRID_LINE
@@ -726,7 +726,7 @@ end
 
 feature {NONE} -- Grid items activation
 
-	activate_grid_item (ei: EV_GRID_ITEM) is
+	activate_grid_item (ei: EV_GRID_ITEM)
 		require
 			ei /= Void
 		do
@@ -740,14 +740,14 @@ feature {NONE} -- Grid items activation
 
 feature -- Grid items activation change
 
-	set_pre_activation_action (v: like pre_activation_action) is
+	set_pre_activation_action (v: like pre_activation_action)
 		do
 			pre_activation_action := v
 		end
 
 feature {ES_OBJECTS_GRID_MANAGER} -- Keep object
 
-	create_kept_object_references is
+	create_kept_object_references
 		do
 			create kept_object_references.make
 			kept_object_references.compare_objects
@@ -755,13 +755,13 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Keep object
 
 	kept_object_references: LINKED_SET [DBG_ADDRESS]
 
-	clear_kept_object_references is
+	clear_kept_object_references
 		do
 			Debugger_manager.release_object_references (kept_object_references)
 			kept_object_references.wipe_out
 		end
 
-	keep_object_in_debugger_for_gui_need (add: DBG_ADDRESS) is
+	keep_object_in_debugger_for_gui_need (add: DBG_ADDRESS)
 		require
 			application_is_executing: debugger_manager.application_is_executing
 		do
@@ -773,7 +773,7 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Keep object
 
 feature {ES_OBJECTS_GRID_MANAGER} -- Layout managment
 
-	grid_objects_on_difference_cb (a_row: EV_GRID_ROW; a_val: ANY) is
+	grid_objects_on_difference_cb (a_row: EV_GRID_ROW; a_val: ANY)
 		do
 			debug ("es_grid_layout")
 				print ("DIFF:: " + grid_objects_id_name_from_row (a_row)
@@ -783,7 +783,7 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Layout managment
 			a_row.set_background_color (Highlight_different_value_bg_color)
 		end
 
-	row_is_ready_for_grid_objects_identification (a_row: EV_GRID_ROW): BOOLEAN is
+	row_is_ready_for_grid_objects_identification (a_row: EV_GRID_ROW): BOOLEAN
 		do
 			if a_row.parent /= Void then
 				if Col_name_index <= a_row.count then
@@ -792,7 +792,7 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Layout managment
 			end
 		end
 
-	grid_objects_id_name_from_row (a_row: EV_GRID_ROW): STRING is
+	grid_objects_id_name_from_row (a_row: EV_GRID_ROW): STRING
 		local
 			lab: EV_GRID_LABEL_ITEM
 		do
@@ -806,7 +806,7 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Layout managment
 			end
 		end
 
-	grid_objects_id_value_from_row (a_row: EV_GRID_ROW; is_recording_layout: BOOLEAN): ANY is
+	grid_objects_id_value_from_row (a_row: EV_GRID_ROW; is_recording_layout: BOOLEAN): ANY
 		local
 			lab: EV_GRID_LABEL_ITEM
 			s: STRING
@@ -848,7 +848,7 @@ feature -- Layout manager
 
 	layout_preference: BOOLEAN_PREFERENCE
 
-	on_layout_preferenced_changed is
+	on_layout_preferenced_changed
 		do
 			if layout_preference.value then
 				if not is_layout_managed then
@@ -861,7 +861,7 @@ feature -- Layout manager
 			end
 		end
 
-	initialize_layout_management (v: BOOLEAN_PREFERENCE) is
+	initialize_layout_management (v: BOOLEAN_PREFERENCE)
 		require
 			layout_manager_void: layout_manager = Void
 			layout_preference = Void
@@ -878,7 +878,7 @@ feature -- Layout manager
 			layout_manager.set_on_difference_callback (agent grid_objects_on_difference_cb)
 		end
 
-	reset_layout_recorded_values is
+	reset_layout_recorded_values
 		do
 			if layout_manager /= Void then
 				layout_manager.reset_layout_recorded_values
@@ -886,7 +886,7 @@ feature -- Layout manager
 			clear_kept_object_references
 		end
 
-	reset_layout_manager is
+	reset_layout_manager
 		do
 			if layout_manager /= Void then
 				layout_manager.wipe_out
@@ -894,7 +894,7 @@ feature -- Layout manager
 			clear_kept_object_references
 		end
 
-	enable_layout_management is
+	enable_layout_management
 		do
 			if layout_manager /= Void then
 				layout_manager.enable
@@ -908,7 +908,7 @@ feature -- Layout manager
 			end
 		end
 
-	disable_layout_management is
+	disable_layout_management
 		do
 			if layout_manager /= Void then
 				layout_manager.disable
@@ -926,7 +926,7 @@ feature -- Layout manager
 
 	layout_manager: ES_OBJECTS_GRID_LAYOUT_MANAGER
 
-	record_layout is
+	record_layout
 		local
 			old_kept: like kept_object_references
 		do
@@ -943,7 +943,7 @@ feature -- Layout manager
 			end
 		end
 
-	restore_layout is
+	restore_layout
 		local
 			retried: BOOLEAN
 		do
@@ -957,51 +957,51 @@ feature -- Layout manager
 
 feature -- Graphical look
 
-	Title_font: EV_FONT is
+	Title_font: EV_FONT
 		once
 			create Result
 			Result.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 		end
 
-	folder_label_item (s: STRING_GENERAL): EV_GRID_LABEL_ITEM is
+	folder_label_item (s: STRING_GENERAL): EV_GRID_LABEL_ITEM
 		do
 			create Result
 			grid_cell_set_text (Result, s)
 			Result.set_foreground_color (folder_row_fg_color)
 		end
 
-	name_label_item (s: STRING_GENERAL): EV_GRID_LABEL_ITEM is
+	name_label_item (s: STRING_GENERAL): EV_GRID_LABEL_ITEM
 		do
 			create Result
 			grid_cell_set_text (Result, s)
 		end
 
-	folder_row_fg_color: EV_COLOR is
+	folder_row_fg_color: EV_COLOR
 		once
 			create Result.make_with_8_bit_rgb (60,60,190)
 		end
 
-	object_folder_row_fg_color: EV_COLOR is
+	object_folder_row_fg_color: EV_COLOR
 		once
 			create Result.make_with_8_bit_rgb (60,60,190)
 		end
 
-	slice_row_fg_color: EV_COLOR is
+	slice_row_fg_color: EV_COLOR
 		once
 			create Result.make_with_8_bit_rgb (210, 160, 160)
 		end
 
-	disabled_row_fg_color: EV_COLOR is
+	disabled_row_fg_color: EV_COLOR
 		once
 			create Result.make_with_8_bit_rgb (190, 190, 190)
 		end
 
-	error_row_fg_color: EV_COLOR is
+	error_row_fg_color: EV_COLOR
 		once
 			create Result.make_with_8_bit_rgb (190, 130, 130)
 		end
 
-	Highlight_different_value_bg_color: EV_COLOR is
+	Highlight_different_value_bg_color: EV_COLOR
 		local
 			l_colors: ES_COLORS
 		once
@@ -1009,7 +1009,7 @@ feature -- Graphical look
 			Result := l_colors.grid_different_value_background_color
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

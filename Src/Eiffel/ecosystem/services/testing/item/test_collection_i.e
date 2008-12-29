@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface representing an active collection containing a list of tests.
 	]"

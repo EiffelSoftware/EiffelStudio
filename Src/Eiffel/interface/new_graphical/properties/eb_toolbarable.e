@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that can be contained in an EB_TOOLBAR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Access
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the command. Use to store the command in the
 			-- preferences.
 		deferred
@@ -19,19 +19,19 @@ feature -- Access
 
 feature -- Basic operations
 
-	new_sd_toolbar_item (a_display_text: BOOLEAN): SD_TOOL_BAR_ITEM is
+	new_sd_toolbar_item (a_display_text: BOOLEAN): SD_TOOL_BAR_ITEM
 			-- Create a new docking tool bar item for Current
 		deferred
 		end
 
 feature {EB_CUSTOMIZABLE_LIST_ITEM, EB_CUSTOM_TOOLBAR_LIST, ES_TOOLBAR_PREFERENCE} -- Implementation
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmaps representing the item.
 		deferred
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description of the command as it appears in the
 			-- "customize" dialog.
 		deferred
@@ -39,7 +39,7 @@ feature {EB_CUSTOMIZABLE_LIST_ITEM, EB_CUSTOM_TOOLBAR_LIST, ES_TOOLBAR_PREFERENC
 			description_set: Result /= Void and then not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

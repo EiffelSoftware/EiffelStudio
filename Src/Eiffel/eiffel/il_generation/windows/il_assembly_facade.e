@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Provides access to IL assembly information, i.e the GAC and local assemblies,%
 	%from FusionSupport.dll"
 	legal: "See notice at end of class."
@@ -15,14 +15,14 @@ create
 
 feature	-- Initialization
 
-	make is
+	make
 			-- Create the COM component to access assembly data
 		do
 			assembly_interface := (create {FUSION_FACTORY}).new_fusion_support
 			initialize
 		end
 		
-	initialize is
+	initialize
 			-- Initilaization
 		do
 			if exists then
@@ -34,19 +34,19 @@ feature	-- Initialization
 
 feature -- Access
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does interface exist?
 		do
 			Result := assembly_interface /= Void
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Find out if some calls can be made.
 		do
 			Result := item /= Void and then item.is_successful
 		end
 		
-	assembly_name: STRING is
+	assembly_name: STRING
 			-- Name of assembly at 'item'
 		require
 			is_valid: is_valid
@@ -54,7 +54,7 @@ feature -- Access
 			Result := item.name
 		end
 	
-	assembly_version: STRING is
+	assembly_version: STRING
 			-- Version number of assembly at 'item'
 		require
 			is_valid: is_valid
@@ -62,7 +62,7 @@ feature -- Access
 			Result := item.version
 		end
 	
-	assembly_culture: STRING is
+	assembly_culture: STRING
 			-- Culture/locale of assembly at 'item'
 		require
 			is_valid: is_valid
@@ -70,7 +70,7 @@ feature -- Access
 			Result := item.culture
 		end
 	
-	assembly_public_key_token: STRING is
+	assembly_public_key_token: STRING
 			-- Public key of assembly at 'item'
 		require
 			is_valid: is_valid
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Cursor Movement
 
-	start is
+	start
 			-- Move cursor to start of assembly list
 		require
 			exists: exists
@@ -89,7 +89,7 @@ feature -- Cursor Movement
 			item := assemblies.i_th (pos)
 		end
 		
-	forth is
+	forth
 			-- Move cursor to next assembly
 		require
 			exists: exists
@@ -104,7 +104,7 @@ feature -- Cursor Movement
 			moved: pos = old pos + 1
 		end
 
-	go_i_th (i_th: INTEGER) is
+	go_i_th (i_th: INTEGER)
 			-- Move cursor to 'i_th' position
 		require
 			exists: exists
@@ -114,7 +114,7 @@ feature -- Cursor Movement
 
 feature -- Status Report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid position to the right of the cursor
 		require
 			exists: exists
@@ -122,7 +122,7 @@ feature -- Status Report
 			Result := pos = assemblies.count
 		end
 		
-	signed (a_loc: STRING): BOOLEAN is
+	signed (a_loc: STRING): BOOLEAN
 			-- Is assembly at 'a_loc' signed?
 		require
 			location_not_void: a_loc /= Void
@@ -132,7 +132,7 @@ feature -- Status Report
 			Result := assembly_interface.signed (create {UNI_STRING}.make (a_loc))
 		end
 		
-	get_assembly_info_from_assembly (a_loc: STRING) is
+	get_assembly_info_from_assembly (a_loc: STRING)
 			-- Retrieve assembly information structure for assembly at
 			-- location 'a_loc' and make 'item' result
 		require
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 invariant
 	assemblies_not_void: exists implies (assembly_interface /= Void and then assemblies /= Void)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

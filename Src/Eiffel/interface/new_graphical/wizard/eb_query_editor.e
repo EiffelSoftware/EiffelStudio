@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Component to let the user create queries."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	type: STRING is
+	type: STRING
 			-- Full type as string.
 		do
 			Result := type_selector.code
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_type (a_type: STRING) is
+	set_type (a_type: STRING)
 			-- Set content of `type_field' to `a_type'.
 		do
 			if a_type.is_empty then
@@ -41,7 +41,7 @@ feature -- Status report
 
 feature {EB_QUERY_COMPOSITION_WIZARD} -- Status setting
 
-	enable_expanded_needed is
+	enable_expanded_needed
 			-- Set `expanded_needed' to `True'.
 		do
 			expanded_needed := True
@@ -52,7 +52,7 @@ feature {EB_QUERY_COMPOSITION_WIZARD} -- Status setting
 
 feature -- Adaptation
 
-	adapt (other: EB_FEATURE_EDITOR) is
+	adapt (other: EB_FEATURE_EDITOR)
 			-- Set with `other'.
 		local
 			qe: EB_QUERY_EDITOR
@@ -71,7 +71,7 @@ feature {EB_FEATURE_EDITOR} -- Implementation
 
 	type_selector: EB_TYPE_SELECTOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

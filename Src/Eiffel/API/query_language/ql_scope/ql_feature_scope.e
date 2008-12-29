@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a feature scope"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature{QL_SHARED_SCOPES} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			index := feature_scope_index
@@ -36,7 +36,7 @@ feature{QL_SHARED_SCOPES} -- Initialization
 feature -- Metric support
 
 	basic_scope (a_calculate_function: FUNCTION [ANY, TUPLE [QL_FEATURE], DOUBLE];
-	                  a_criterion: QL_FEATURE_CRITERION): QL_METRIC_FEATURE_BASIC_SCOPE_INFO is
+	                  a_criterion: QL_FEATURE_CRITERION): QL_METRIC_FEATURE_BASIC_SCOPE_INFO
 			-- Metric basic scope information that uses `a_calculate_function' and `a_criterion' to calculate metric.
 			-- If `a_calculate_function' or `a_criterion' is Void, default value will be used.
 			-- Default value for `a_calculate_function' is to do counting simply, and for `a_criterion' is a tautology criterion.
@@ -46,13 +46,13 @@ feature -- Metric support
 
 feature -- Access
 
-	domain_generator: QL_FEATURE_DOMAIN_GENERATOR is
+	domain_generator: QL_FEATURE_DOMAIN_GENERATOR
 			-- Domain generator for current scope
 		do
 			create Result
 		end
 
-	path_domain_generator (a_item: QL_FEATURE; a_path: STRING): QL_DOMAIN_GENERATOR is
+	path_domain_generator (a_item: QL_FEATURE; a_path: STRING): QL_DOMAIN_GENERATOR
 			-- Domain generator for current scope
 		local
 			l_assert_name: STRING
@@ -77,13 +77,13 @@ feature -- Access
 			end
 		end
 
-	empty_domain: QL_FEATURE_DOMAIN is
+	empty_domain: QL_FEATURE_DOMAIN
 			-- An empty domain whose scope is feature
 		do
 			create Result.make
 		end
 
-	delayed_domain: QL_DELAYED_FEATURE_DOMAIN is
+	delayed_domain: QL_DELAYED_FEATURE_DOMAIN
 			-- An empty delayed domain whose scope is same as current scope
 		do
 			create Result.make
@@ -91,10 +91,10 @@ feature -- Access
 
 feature -- Status report
 
-	is_code_structure_scope: BOOLEAN is True;
+	is_code_structure_scope: BOOLEAN = True;
 			-- Is current scope a code structure scope?
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

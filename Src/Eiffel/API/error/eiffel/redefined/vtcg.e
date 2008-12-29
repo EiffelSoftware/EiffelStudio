@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for violation of constrained genericity validity rule."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VTCG";
+	code: STRING = "VTCG";
 			-- Error code
 
 	error_list: LINKED_LIST [CONSTRAINT_INFO];
@@ -24,7 +24,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -40,7 +40,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_error_list (list: like error_list) is
+	set_error_list (list: like error_list)
 			-- Set `list' to `error_list'
 		require
 			list_exists: list /= Void
@@ -50,7 +50,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			error_list: error_list = list
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Priority levels used to signify in basic terms if an entity should have an elevated or lowered priority.
 	]"
@@ -32,7 +32,7 @@ feature -- Query
 			not_a_level_is_valid: not Result implies a_level /= low and a_level /= normal and a_level /= high
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

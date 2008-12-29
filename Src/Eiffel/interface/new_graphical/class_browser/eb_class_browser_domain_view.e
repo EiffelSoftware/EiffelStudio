@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class browser viewer to display result of a query language domain"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -57,7 +57,7 @@ create
 
 feature -- Access
 
-	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Widget of a control bar through which, certain control can be performed upon current view
 			-- Every view can provide a customized control bar. Normally a tool bar is placed in this area
 			-- through which behavior (such as tooltip display) of current view can be changed.
@@ -79,27 +79,27 @@ feature -- Status report
 
 feature{NONE} -- Actions
 
-	on_expand_all_level is
+	on_expand_all_level
 			-- Action to be performed to recursively expand all selected rows.
 		do
 		end
 
-	on_collapse_all_level is
+	on_collapse_all_level
 			-- Action to be performed to recursively collapse all selected rows.
 		do
 		end
 
-	on_expand_one_level is
+	on_expand_one_level
 			-- Action to be performed to expand all selected rows.
 		do
 		end
 
-	on_collapse_one_level is
+	on_collapse_one_level
 			-- Action to be performed to collapse all selected rows.
 		do
 		end
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- Action to be performed when `a_key' is pressed
 		require
 			a_key_attached: a_key /= Void
@@ -111,13 +111,13 @@ feature{NONE} -- Actions
 
 feature -- Refresh
 
-	refresh is
+	refresh
 			-- Refresh.
 		do
 			fill_rows
 		end
 
-	update (a_observable: QL_OBSERVABLE; a_data: ANY) is
+	update (a_observable: QL_OBSERVABLE; a_data: ANY)
 			-- Notification from `a_observable' indicating that `a_data' changed.
 		require else
 			a_observable_can_be_void: a_observable = Void
@@ -136,7 +136,7 @@ feature -- Refresh
 
 feature -- Setting
 
-	set_should_headers_be_shown (b: BOOLEAN) is
+	set_should_headers_be_shown (b: BOOLEAN)
 			-- Set `should_headers_be_shown' with `b'.
 		do
 			should_headers_be_shown := b
@@ -146,7 +146,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation/Data
 
-	item_to_put_in_editor: EV_GRID_ITEM is
+	item_to_put_in_editor: EV_GRID_ITEM
 			-- Grid item which may contain a stone to put into editor
 			-- Void if no satisfied item is found.			
 		do
@@ -159,7 +159,7 @@ feature{NONE} -- Implementation/Data
 	editor_token_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 			-- Supports editor token grid
 
-	item_function (x, y: INTEGER): EV_GRID_ITEM is
+	item_function (x, y: INTEGER): EV_GRID_ITEM
 			-- Grid item at position (`x', `y').
 		require
 			x_positive: x > 0 and x <= content.count
@@ -176,7 +176,7 @@ feature{NONE} -- Implementation/Data
 			end
 		end
 
-	row_background_color (y: INTEGER): EV_COLOR is
+	row_background_color (y: INTEGER): EV_COLOR
 			-- Background color for items in row indexed by `y'
 		local
 			l_last_item: EB_GRID_QL_ITEM
@@ -216,7 +216,7 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	next_row_background_color (a_color: EV_COLOR): EV_COLOR is
+	next_row_background_color (a_color: EV_COLOR): EV_COLOR
 			-- Alternative row background color according to `a_color'
 		local
 			l_odd_color: like odd_row_background_color
@@ -239,7 +239,7 @@ feature{NONE} -- Implementation/Data
 			-- Content of `domain'
 			-- Key of the inner hash table is row index, value is the grid item.
 
-	read_content (y: INTEGER) is
+	read_content (y: INTEGER)
 			-- Generate grid item from `domain'. `y' is the starting row.
 			-- `cache_row_count' items will be generated every time.
 		require
@@ -267,10 +267,10 @@ feature{NONE} -- Implementation/Data
 			end
 		end
 
-	cache_row_count: INTEGER is 50
+	cache_row_count: INTEGER = 50
 			-- Cache row count
 
-	domain_type_name (a_domain: QL_DOMAIN): STRING_GENERAL is
+	domain_type_name (a_domain: QL_DOMAIN): STRING_GENERAL
 			-- Type name of `a_domain'
 		require
 			a_domain_attached: a_domain /= Void
@@ -300,7 +300,7 @@ feature{NONE} -- Implementation/Data
 			good_result: Result /= Void and then not Result.is_empty
 		end
 
-	odd_row_background_color: EV_COLOR is
+	odd_row_background_color: EV_COLOR
 			-- Background color for odd rows
 		do
 			Result := preferences.class_browser_data.odd_row_background_color
@@ -308,7 +308,7 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	even_row_background_color: EV_COLOR is
+	even_row_background_color: EV_COLOR
 			-- Background color for even rows
 		do
 			Result := preferences.class_browser_data.even_row_background_color
@@ -316,7 +316,7 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	dynamic_grid_item_function (a_column, a_row: INTEGER): EV_GRID_ITEM is
+	dynamic_grid_item_function (a_column, a_row: INTEGER): EV_GRID_ITEM
 			-- Grid item at position (`a_column', `a_row')
 		do
 			Result := grid.item (a_column, a_row)
@@ -333,7 +333,7 @@ feature{NONE} -- Implementation/Data
 
 feature{NONE} -- Implementation
 
-	provide_result is
+	provide_result
 			-- Provide result displayed in Current view.
 		do
 			set_all_path_retrieved (False)
@@ -351,7 +351,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	fill_rows is
+	fill_rows
 			-- Fill rows with `data'.
 		do
 			content.i_th (1).wipe_out
@@ -365,7 +365,7 @@ feature{NONE} -- Implementation
 			grid.refresh_now
 		end
 
-	bind_grid is
+	bind_grid
 			-- Bind grid.
 		local
 			l_content: LIST [QL_ITEM]
@@ -404,7 +404,7 @@ feature{NONE} -- Implementation
 			try_auto_resize_grid (<<[300, 500, 1]>>, False)
 		end
 
-	build_grid is
+	build_grid
 			-- Build `grid'.
 		do
 			create content.make (2)
@@ -442,7 +442,7 @@ feature{NONE} -- Implementation
 			disable_use_fixed_fonts
 		end
 
-	build_sortable_and_searchable is
+	build_sortable_and_searchable
 			-- Build sortable and searchable facilities
 		local
 			l_item_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]
@@ -467,7 +467,7 @@ feature{NONE} -- Implementation
 			enable_direct_start_search
 		end
 
-	generate_grid_item (a_y: INTEGER; a_item: TUPLE [ql_item: QL_ITEM; item_path: STRING_32]) is
+	generate_grid_item (a_y: INTEGER; a_item: TUPLE [ql_item: QL_ITEM; item_path: STRING_32])
 			-- Generate grid items for row `a_y' from `a_item'.
 		require
 			domain_attached: domain /= Void
@@ -509,7 +509,7 @@ feature{NONE} -- Implementation
 			l_path_item.set_background_color (l_row_background_color)
 		end
 
-	ensure_item_visible (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
+	ensure_item_visible (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN)
 			-- Ensure that `a_item' is visible.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
 		local
@@ -533,7 +533,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	select_all is
+	select_all
 			-- Action to be performed to select all items in `grid'					
 		do
 			select_all_in_dynamic_grid (grid, agent item_function, Void)
@@ -544,7 +544,7 @@ feature{NONE} -- Implementation/Sorting
 	all_path_retrieved: BOOLEAN
 			-- Have all path information for `domain' been retrieved?
 
-	set_all_path_retrieved (b: BOOLEAN) is
+	set_all_path_retrieved (b: BOOLEAN)
 			-- Set `all_path_retrieved' with `b'.
 		do
 			all_path_retrieved := b
@@ -552,7 +552,7 @@ feature{NONE} -- Implementation/Sorting
 			all_path_retrieved_set: all_path_retrieved = b
 		end
 
-	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]) is
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]])
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
@@ -598,7 +598,7 @@ feature{NONE} -- Implementation/Sorting
 			fill_rows
 		end
 
-	sort_domain (a_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]]) is
+	sort_domain (a_comparator: AGENT_LIST_COMPARATOR [TUPLE [ql_item: QL_ITEM; item_path: STRING_32]])
 			-- Sort `domain' using `a_comparator'.
 		require
 			a_comparator_attached: a_comparator /= Void
@@ -641,7 +641,7 @@ feature{NONE} -- Implementation/Sorting
 
 feature{NONE} -- Recycle
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle.
 		do
 			Precursor
@@ -649,7 +649,7 @@ feature{NONE} -- Recycle
 			editor_token_grid_support.desynchronize_scroll_behavior_with_editor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

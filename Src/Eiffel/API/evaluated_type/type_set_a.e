@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					 Set of types. This class encapsulates features to handle conformance and feature lookup on a set of types .
 					 Refactoring:
@@ -74,7 +74,7 @@ create
 
 feature -- Commands
 
-	merge (a_other_type_set: like Current) is
+	merge (a_other_type_set: like Current)
 			-- Merge `a_other_type_set' into current.
 		do
 			merge_right (a_other_type_set)
@@ -106,7 +106,7 @@ feature -- Access
 			Result := l_type_set
 		end
 
-	feature_i_state (a_name: ID_AS): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A;  features_found_count: INTEGER]  is
+	feature_i_state (a_name: ID_AS): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A;  features_found_count: INTEGER]
 			-- Compute feature state.
 			--
 			-- `a_name' is the id of the feature.
@@ -124,7 +124,7 @@ feature -- Access
 								e_feature_state (a_name).class_type_of_feature.same_as (Result.class_type_of_feature)
 		end
 
-	feature_i_state_by_name_id (a_name_id: INTEGER): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]  is
+	feature_i_state_by_name_id (a_name_id: INTEGER): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
 			-- Compute feature state.
 			--
 			-- `a_name_id': This is the `names_heap'-id of the feature name string.
@@ -334,7 +334,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	feature_i_state_by_alias_name (an_alias_name: STRING): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER;  constraint_position: INTEGER]  is
+	feature_i_state_by_alias_name (an_alias_name: STRING): TUPLE [feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER;  constraint_position: INTEGER]
 			-- Compute feature state.
 			--
 			-- `an_alias_name': A feature alias for which the state is computed.
@@ -353,7 +353,7 @@ feature -- Access
 			result_semantic_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
 		end
 
-	feature_i_state_by_alias_name_id (an_alias_name_id: INTEGER): like feature_i_state_by_alias_name is
+	feature_i_state_by_alias_name_id (an_alias_name_id: INTEGER): like feature_i_state_by_alias_name
 			-- Compute feature state.
 			--
 			-- `an_alias' is a feature alias for which the state is computed.
@@ -434,7 +434,7 @@ feature -- Access
 			result_semantic_correct: Result.features_found_count > 1  implies (Result.feature_item = Void and Result.class_type_of_feature = Void)
 		end
 
-	e_feature_state (a_name: ID_AS): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A;  features_found_count: INTEGER]  is
+	e_feature_state (a_name: ID_AS): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A;  features_found_count: INTEGER]
 			-- Compute feature state.
 			--
 			-- `a_name' is a feature id for which the state is computed.
@@ -466,7 +466,7 @@ feature -- Access
 			feature_i_relation: feature_i_state_by_name_id (names_heap.id_of (a_name)).features_found_count = Result.features_found_count
 		end
 
-	e_feature_state_by_name_id (a_name_id: INTEGER): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]  is
+	e_feature_state_by_name_id (a_name_id: INTEGER): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
 			-- Compute feature state.	
 			--
 			-- `a_name_id': It is the `names_heap'-id of the feature name string.
@@ -547,7 +547,7 @@ feature -- Access
 			feature_i_relation: feature_i_state_by_name_id (a_name_id).features_found_count = Result.features_found_count
 		end
 
-	e_feature_state_by_rout_id (a_routine_id: INTEGER): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]  is
+	e_feature_state_by_rout_id (a_routine_id: INTEGER): TUPLE [feature_item: E_FEATURE; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER; constraint_position: INTEGER]
 			-- Compute feature state for `a_routine_id'			
 			--
 			-- `a_routine_id' is the first entry in the routine id set of the queried routine.
@@ -670,7 +670,7 @@ feature -- Access
 
 feature -- Access for Error handling
 
-	info_about_feature (a_id: ID_AS; a_formal_position: INTEGER; a_context_class: CLASS_C): MC_FEATURE_INFO is
+	info_about_feature (a_id: ID_AS; a_formal_position: INTEGER; a_context_class: CLASS_C): MC_FEATURE_INFO
 			-- Gathers information  about a feature.
 			--
 			-- `a_id' is the ID for the feature for which information is gatherd.
@@ -865,7 +865,7 @@ feature -- Conversion
 
 feature -- Comparison
 
-	conform_to (a_context_class: CLASS_C; a_other: like Current): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; a_other: like Current): BOOLEAN
 			-- Is `Current' conform to `a_other' in `a_context_class'?
 			-- `a_other' will be modified. Elements will be removed.
 			-- So pass a copy if you still need it after this call.
@@ -902,7 +902,7 @@ feature -- Comparison
 				-- This is not necessary but will hopefully prevent further usage
 		end
 
-	conform_to_type (a_context_class: CLASS_C; a_type: TYPE_A): BOOLEAN is
+	conform_to_type (a_context_class: CLASS_C; a_type: TYPE_A): BOOLEAN
 			-- Is `Current' conform to `a_type' in `a_context_class'?
 		local
 			l_type_set: TYPE_SET_A
@@ -925,7 +925,7 @@ feature -- Comparison
 			end
 		end
 
-	is_conforming_type (a_context_class: CLASS_C; a_type: TYPE_A): BOOLEAN is
+	is_conforming_type (a_context_class: CLASS_C; a_type: TYPE_A): BOOLEAN
 			-- Conforms `a_type' to the type set in `a_context_class'?
 		require
 			a_context_class_not_void: a_context_class /= Void
@@ -948,7 +948,7 @@ feature -- Comparison
 			end
 		end
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object?
 		local
 			s1,s2: like Current
@@ -962,7 +962,7 @@ feature -- Comparison
 
 feature -- Output
 
-	ext_append_to (a_text_formatter: TEXT_FORMATTER; c: CLASS_C) is
+	ext_append_to (a_text_formatter: TEXT_FORMATTER; c: CLASS_C)
 			-- Append `Current' to `text'.
 			-- `c' is used to retreive the generic type or argument name as string.	
 		do
@@ -986,7 +986,7 @@ feature -- Output
 				end
 		end
 
-	dump: STRING is
+	dump: STRING
 			-- Dumped trace
 		do
 			create Result.make (50)
@@ -1012,7 +1012,7 @@ feature -- Output
 
 feature -- Status
 
-	has_expanded: BOOLEAN is
+	has_expanded: BOOLEAN
 			-- Does the current type set contain the NONE type?
 		do
 			Result := there_exists (agent(a_renamed_type: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
@@ -1021,7 +1021,7 @@ feature -- Status
 						end)
 		end
 
-	has_none: BOOLEAN is
+	has_none: BOOLEAN
 			-- Does the current type set contain the NONE type?
 		do
 			Result := there_exists (agent(a_renamed_type: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
@@ -1030,7 +1030,7 @@ feature -- Status
 						end)
 		end
 
-	has_void: BOOLEAN is
+	has_void: BOOLEAN
 			-- Does the current type set contain the NONE type?
 		do
 			Result := there_exists (agent(a_renamed_type: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
@@ -1039,7 +1039,7 @@ feature -- Status
 						end)
 		end
 
-	has_overloaded (a_feature_name_id: INTEGER): BOOLEAN is
+	has_overloaded (a_feature_name_id: INTEGER): BOOLEAN
 			-- Does Current have `a_feature_name' as an overloaded routine?
 		local
 			l_type: TYPE_A
@@ -1069,7 +1069,7 @@ feature -- Status
 			end
 		end
 
-	has_renamings: BOOLEAN is
+	has_renamings: BOOLEAN
 			-- Has the `current' any renamings?
 		do
 			Result := there_exists (agent(a_renamed_type: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
@@ -1078,7 +1078,7 @@ feature -- Status
 						end)
 		end
 
-	has_formal_generic: BOOLEAN is
+	has_formal_generic: BOOLEAN
 			-- Has current type set any formal genrics?
 		do
 			Result := there_exists (agent(a_renamed_type: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
@@ -1087,7 +1087,7 @@ feature -- Status
 						end)
 		end
 
-	is_class_valid: BOOLEAN is
+	is_class_valid: BOOLEAN
 			-- Is the type set valid, meaning that all items are valid items?
 		do
 			Result := for_all (agent (a_item: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
@@ -1102,7 +1102,7 @@ feature -- Status
 			Result := True
 		end
 
-	is_loose: BOOLEAN is
+	is_loose: BOOLEAN
 			-- Is at least one of the types om the type set a loose type (`is_loose')?
 		do
 			Result := there_exists (agent (a_item: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
@@ -1111,7 +1111,7 @@ feature -- Status
 						 end)
 		end
 
-	has_formal: BOOLEAN is
+	has_formal: BOOLEAN
 			-- Does the current set contain a formal type?
 			--| A generic (GEN_TYPE_A) which has a formal type parameter is not counted.
 		do
@@ -1121,7 +1121,7 @@ feature -- Status
 						 end)
 		end
 
-	has_deferred: BOOLEAN is
+	has_deferred: BOOLEAN
 			-- Does the current set contain a deferred class?
 		do
 			Result := there_exists (agent (a_item: RENAMED_TYPE_A [TYPE_A]): BOOLEAN
@@ -1134,12 +1134,12 @@ feature -- Status
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 		do
 			Result := {SHARED_HASH_CODE}.other_code
 		end
 
-	expanded_representative: RENAMED_TYPE_A [TYPE_A] is
+	expanded_representative: RENAMED_TYPE_A [TYPE_A]
 			-- Expanded item is returned.
 			--| Such a case can be treated like a normal type because there's no other class which can satisfy the constraint but the expanded itself.
 			--| If you write code like G-> {COMPARABLE,INTEGER_REF,INTEGER} (which is non-sense)
@@ -1171,7 +1171,7 @@ feature -- Access
 			result_is_expaned: Result.type.is_expanded
 		end
 
-	constraining_types (a_context_class: CLASS_C): TYPE_SET_A is
+	constraining_types (a_context_class: CLASS_C): TYPE_SET_A
 			-- Constraining types of `a_type'.
 			--| A generic (GEN_TYPE_A) which has a formal type parameter is not counted, but all chains of formals like [G->H, H->I,I->STRING] are resolved.
 			--| Recursive formals fall back to ANY.
@@ -1230,7 +1230,7 @@ feature -- Access
 			not_has_formal: not Result.has_formal
 		end
 
-	constraining_types_if_possible (a_context_class: CLASS_C): TYPE_SET_A is
+	constraining_types_if_possible (a_context_class: CLASS_C): TYPE_SET_A
 			-- Fault tolerant constraining types of `a_type'.
 			-- Use it for feature lookups in faulty systems.
 			--
@@ -1290,7 +1290,7 @@ feature -- Access
 			not_has_formal: not Result.has_formal
 		end
 
-	overloaded_items (an_id: INTEGER): LIST [FEATURE_I] is
+	overloaded_items (an_id: INTEGER): LIST [FEATURE_I]
 			-- List of features matching overloaded name `an_id'.
 		local
 			l_feature_table_set: ARRAYED_LIST[FEATURE_TABLE]
@@ -1472,7 +1472,7 @@ feature -- Attachment properties
 
 feature -- Not anymore applicable: a type set has most likley not one, but many associated classes.
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Class associated to the current type.
 		do
 				-- We are not able to return a CLASS_C object so easily.
@@ -1483,7 +1483,7 @@ feature -- Not anymore applicable: a type set has most likley not one, but many 
 
 feature {COMPILER_EXPORTER} -- Access
 
-	create_info: CREATE_FORMAL_TYPE is
+	create_info: CREATE_FORMAL_TYPE
 			-- Create formal type info.
 		do
 				-- TYPE_SET_A does not support this feature.
@@ -1492,7 +1492,7 @@ feature {COMPILER_EXPORTER} -- Access
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 				-- Martins 12/19/06: Right now it would most likely be a bug if we arrive here.
@@ -1501,7 +1501,7 @@ feature -- Visitor
 
 feature {TYPE_A} -- Helpers
 
-	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 			-- Is the type set valid, meaning that all items are valid items?
 		do
 			Result := for_all (agent (a_item: RENAMED_TYPE_A [TYPE_A]; a_context_class: CLASS_C): BOOLEAN
@@ -1512,7 +1512,7 @@ feature {TYPE_A} -- Helpers
 
 feature {NONE} -- Implementation
 
-	formal_resolution_stack: STACK[INTEGER] is
+	formal_resolution_stack: STACK[INTEGER]
 			-- A stack which is used to prohibit inifinite recursion while resolving a formal type to its constraining type set.
 		once
 			create {ARRAYED_STACK[INTEGER]} Result.make (3)

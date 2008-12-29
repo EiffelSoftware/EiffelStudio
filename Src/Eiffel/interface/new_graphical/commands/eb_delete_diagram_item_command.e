@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to delete diagram components and to remove corresponding code in system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -55,7 +55,7 @@ create
 
 feature -- Initialization
 
-	make (a_target: like tool; a_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_target: like tool; a_window: EB_DEVELOPMENT_WINDOW)
 			-- Initialize with `a_target' and `a_window'.
 		do
 			make_context_diagram (a_target)
@@ -64,13 +64,13 @@ feature -- Initialization
 
 feature -- Access
 
-	execute is
+	execute
 			-- Display information about `Current'.
 		do
 			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_info_prompt (Interface_names.e_Diagram_hole, tool.develop_window.window, Void)
 		end
 
-	drop_class (st: CLASSI_STONE) is
+	drop_class (st: CLASSI_STONE)
 			-- Extract the class that should be removed from `st' and erase it.
 		local
 			fs: CLASSI_FIGURE_STONE
@@ -114,7 +114,7 @@ feature -- Access
 			end
 		end
 
-	execute_with_inherit_stone (a_stone: INHERIT_STONE) is
+	execute_with_inherit_stone (a_stone: INHERIT_STONE)
 			-- Remove `a_stone' from diagram.
 		local
 			ctm: CLASS_TEXT_MODIFIER
@@ -141,7 +141,7 @@ feature -- Access
 			end
 		end
 
-	execute_with_client_stone (a_stone: CLIENT_STONE) is
+	execute_with_client_stone (a_stone: CLIENT_STONE)
 			-- Delete feature in `a_stone'.
 		local
 			features: LIST [FEATURE_AS]
@@ -186,7 +186,7 @@ feature -- Access
 			end
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for docking.
 		do
 			Result := Precursor {EB_CONTEXT_DIAGRAM_COMMAND}(display_text)
@@ -197,43 +197,43 @@ feature -- Access
 			Result.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_delete_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_delete_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_delete
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := Interface_names.l_diagram_delete
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu name
 		do
 			Result := interface_names.m_delete
 		end
 
-	name: STRING is "Delete_item"
+	name: STRING = "Delete_item"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
 feature -- Status report
 
-	veto_pebble_function (a_pebble: ANY): BOOLEAN is
+	veto_pebble_function (a_pebble: ANY): BOOLEAN
 			-- Veto pebble function
 		local
 			l_client: CLIENT_STONE
@@ -268,7 +268,7 @@ feature -- Status report
 
 feature {NONE} -- Removal
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle code.
 		do
 			Precursor {EB_CONTEXT_DIAGRAM_COMMAND}
@@ -277,7 +277,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Implementation
 
-	delete_class is
+	delete_class
 			-- Remove `class_i' from the system.
 		local
 			file: PLAIN_TEXT_FILE
@@ -333,14 +333,14 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	delete_cluster is
+	delete_cluster
 			-- Remove `group' from the system.
 		do
 			tool.reset_history
 			Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND}
 		end
 
-	remove_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK) is
+	remove_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK)
 			-- Remove ancestor with `a_name' and hide `a_link' if succesfull.
 		do
 			a_ctm.remove_ancestor (a_name)
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK) is
+	add_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK)
 			--Add ancestor with `a_name' and show `a_link' if succesfull.
 		do
 			a_ctm.add_ancestor (a_name)
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	item_from_name (a_list: LIST [FEATURE_AS]; a_name: STRING): FEATURE_AS is
+	item_from_name (a_list: LIST [FEATURE_AS]; a_name: STRING): FEATURE_AS
 			-- Feature with `a_name' in `a_list' or Void if none.
 		require
 			a_list_not_void: a_list /= Void
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	delete_features (a_features: LIST [FEATURE_AS]; a_link: EIFFEL_CLIENT_SUPPLIER_FIGURE) is
+	delete_features (a_features: LIST [FEATURE_AS]; a_link: EIFFEL_CLIENT_SUPPLIER_FIGURE)
 			-- Delete features in `a_features'.
 		require
 			a_features_not_void: a_features /= Void
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_features (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; a_link: ES_CLIENT_SUPPLIER_LINK; a_client: ES_CLASS) is
+	remove_features (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; a_link: ES_CLIENT_SUPPLIER_LINK; a_client: ES_CLASS)
 			-- Remove `a_features' from `a_ctm' and remove `a_features' from `a_client'.
 		do
 			a_ctm.remove_features (a_features)
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	reinclude_features (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; code: LIST [TUPLE [STRING, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK; a_client: ES_CLASS) is
+	reinclude_features (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; code: LIST [TUPLE [STRING, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK; a_client: ES_CLASS)
 			-- Reinclude `code' to `a_ctm' and add `a_features' to `a_link'.
 		do
 			a_ctm.undelete_code (code)
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_features_and_link (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; a_link: ES_CLIENT_SUPPLIER_LINK) is
+	remove_features_and_link (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; a_link: ES_CLIENT_SUPPLIER_LINK)
 			-- Remove `a_features' from `a_ctm' and disable `a_link' in diagram.
 		do
 			a_ctm.remove_features (a_features)
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	reinclude_code_and_link (a_ctm: CLASS_TEXT_MODIFIER; code: LIST [TUPLE [STRING, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK) is
+	reinclude_code_and_link (a_ctm: CLASS_TEXT_MODIFIER; code: LIST [TUPLE [STRING, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK)
 			-- Reinclude `code' to `a_ctm' and enable `a_link' on diagram.
 		do
 			a_ctm.undelete_code (code)
@@ -454,13 +454,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	delete_client_link_dialog: EB_DELETE_CLIENT_LINK_DIALOG is
+	delete_client_link_dialog: EB_DELETE_CLIENT_LINK_DIALOG
 			-- Associated widget.
 		do
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that provider completion possiblities for normal use.
 			i.e. EB_CODE_COMPLETABLE_TEXT_FIELD which can auto complete names of features and classes
@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class_c: CLASS_C; a_feature_as: FEATURE_AS) is
+	make (a_class_c: CLASS_C; a_feature_as: FEATURE_AS)
 			-- Initialization
 		do
 			set_context (a_class_c, a_feature_as)
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	insertion: STRING_32 is
+	insertion: STRING_32
 			-- Insertion
 		do
 			Result := insertion_cell.item
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Change
 
-	set_context (a_class_c: CLASS_C; a_feature_as: FEATURE_AS) is
+	set_context (a_class_c: CLASS_C; a_feature_as: FEATURE_AS)
 			-- Set `context_class_c' with `a_class_c'.
 		do
 			context_class_c := a_class_c
@@ -89,7 +89,7 @@ feature -- Change
 
 feature -- Basic operation
 
-	prepare_completion is
+	prepare_completion
 			-- Prepare completion
 		do
 			Precursor
@@ -132,7 +132,7 @@ feature -- Basic operation
 			end
 		end
 
-	reset is
+	reset
 		do
 			Precursor {EB_COMPLETE_INFO_ANALYZER}
 			Precursor {EB_COMPLETION_POSSIBILITIES_PROVIDER}
@@ -145,13 +145,13 @@ feature -- Basic operation
 
 feature -- Element change
 
-	set_dynamic_context_functions (a_class_call: like dynamic_context_class_c_function; a_feat_call: like dynamic_context_feature_as_function) is
+	set_dynamic_context_functions (a_class_call: like dynamic_context_class_c_function; a_feat_call: like dynamic_context_feature_as_function)
 		do
 			dynamic_context_class_c_function := a_class_call
 			dynamic_context_feature_as_function := a_feat_call
 		end
 
-	set_group_callback (a_call: FUNCTION [ANY, TUPLE, CONF_GROUP]) is
+	set_group_callback (a_call: FUNCTION [ANY, TUPLE, CONF_GROUP])
 			-- Group call back
 		require
 			a_call_not_void: a_call /= Void
@@ -161,7 +161,7 @@ feature -- Element change
 			group_callback_not_void: group_callback = a_call
 		end
 
-	set_use_all_classes_in_universe (a_b: BOOLEAN) is
+	set_use_all_classes_in_universe (a_b: BOOLEAN)
 			-- Set `use_all_classes_in_universe' with `a_b'.
 		do
 			use_all_classes_in_universe := a_b
@@ -169,13 +169,13 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	save_cursor_position is
+	save_cursor_position
 			-- Save cursor position
 		do
 			text_field.save_cursor
 		end
 
-	retrieve_cursor_position is
+	retrieve_cursor_position
 			-- Retrieve cursor position
 		do
 			text_field.retrieve_cursor
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Class info analyzer
 
-	go_to_previous_token is
+	go_to_previous_token
 			-- move current token backward if possible
 		local
 			found: BOOLEAN
@@ -252,7 +252,7 @@ feature {NONE} -- Class info analyzer
 			end
 		end
 
-	go_to_next_token is
+	go_to_next_token
 			-- move current token forward if possible
 		local
 			found: BOOLEAN
@@ -320,7 +320,7 @@ feature {NONE} -- Class info analyzer
 			end
 		end
 
-	after_searched_token: BOOLEAN is
+	after_searched_token: BOOLEAN
 			-- is `current_token' after `searched_token' ?
 			-- We only care about one line.
 			-- True if current_token is Void.
@@ -332,7 +332,7 @@ feature {NONE} -- Class info analyzer
 			end
 		end
 
-	go_to_left_position is
+	go_to_left_position
 			-- Go to left position by charactor.
 		do
 			text_field.go_left_char
@@ -340,36 +340,36 @@ feature {NONE} -- Class info analyzer
 
 feature {NONE} -- Build completion possibilities
 
-	stone_at_position (cursor: TEXT_CURSOR): STONE is
+	stone_at_position (cursor: TEXT_CURSOR): STONE
 			-- Return stone associated with position pointed by `cursor', if any
 			-- Do nothing.
 		do
 		end
 
-	update is
+	update
 			-- Do nothing
 		do
 		end
 
-	cursor_token: EDITOR_TOKEN is
+	cursor_token: EDITOR_TOKEN
 			-- Current token.
 		do
 			Result := text_field.current_token_in_line (watching_line)
 		end
 
-	cursor_token_provider: EDITOR_TOKEN is
+	cursor_token_provider: EDITOR_TOKEN
 			-- Current token. No buffer needed.
 		do
 			Result := text_field.current_token_in_line (text_field.current_line)
 		end
 
-	current_pos_in_token: INTEGER is
+	current_pos_in_token: INTEGER
 			--
 		do
 			Result := text_field.position_in_token
 		end
 
-	types_from_formal_type (a_class_c: CLASS_C; a_formal: FORMAL_A): TYPE_SET_A is
+	types_from_formal_type (a_class_c: CLASS_C; a_formal: FORMAL_A): TYPE_SET_A
 			-- For `_a_class_c' get actual type of `a_formal'.
 		do
 			if
@@ -387,7 +387,7 @@ feature {NONE} -- Build completion possibilities
 	group_callback: FUNCTION [ANY, TUPLE, CONF_GROUP]
 			-- Function to retrieve group
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Display the implementers of a feature in output_window."
@@ -23,14 +23,14 @@ create
 
 feature {NONE} -- Implementation
 
-	associated_cmd: E_SHOW_ROUTINE_IMPLEMENTERS is
+	associated_cmd: E_SHOW_ROUTINE_IMPLEMENTERS
 			-- Associated feature command to be executed
 			-- after successfully retrieving the feature_i
 		do
 			create Result
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

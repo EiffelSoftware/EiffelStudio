@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a SERVER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,14 +17,14 @@ inherit
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			create tables.make (1)
 		end
 
 feature -- Access
 
-	has, frozen server_has (i: INTEGER): BOOLEAN is
+	has, frozen server_has (i: INTEGER): BOOLEAN
 			-- Does the server contain an element of id `i'?
 		require
 			an_id_positive: i > 0
@@ -32,14 +32,14 @@ feature -- Access
 			Result := tbl_has (i)
 		end
 
-	server_item, item (an_id: INTEGER): T is
+	server_item, item (an_id: INTEGER): T
 			-- Object of id `an_id'
 		require
 			an_id_positive: an_id > 0
 		deferred
 		end
 
-	disk_item (an_id: INTEGER):T is
+	disk_item (an_id: INTEGER):T
 			-- Object of id `an_id'
 		require
 			an_id_positive: an_id > 0
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Removal
 
-	remove (an_id: INTEGER) is
+	remove (an_id: INTEGER)
 			-- Remove an element from the Server
 		deferred
 		ensure
@@ -57,7 +57,7 @@ feature -- Removal
 
 feature -- Update
 
-	clear is
+	clear
 			-- Clear the server.
 		do
 			cache.wipe_out
@@ -66,7 +66,7 @@ feature -- Update
 
 feature -- Server size configuration
 
-	Chunk: INTEGER is
+	Chunk: INTEGER
 			-- Hash table chunk
 			-- We will add `Chunk' element during resizing.
 		deferred
@@ -74,7 +74,7 @@ feature -- Server size configuration
 
 feature -- Implementation
 
-	cache: CACHE [T] is
+	cache: CACHE [T]
 			-- Server cache, to make things faster
 		deferred
 		ensure
@@ -83,7 +83,7 @@ feature -- Implementation
 
 feature {NONE} -- External features
 
-	store_append (f_desc: INTEGER; object, make_index_proc, need_index_proc, s: POINTER): INTEGER is
+	store_append (f_desc: INTEGER; object, make_index_proc, need_index_proc, s: POINTER): INTEGER
 		external
 			"C inline use %"pstore.h%""
 		alias
@@ -93,26 +93,26 @@ feature {NONE} -- External features
 			]"
 		end
 
-	retrieve_all (f_desc: INTEGER; pos: INTEGER): T is
+	retrieve_all (f_desc: INTEGER; pos: INTEGER): T
 		external
 			"C | %"pretrieve.h%""
 		end
 
-	partial_retrieve (file_desc: INTEGER; pos, nb_obj: INTEGER): T is
+	partial_retrieve (file_desc: INTEGER; pos, nb_obj: INTEGER): T
 		external
 			"C | %"pretrieve.h%""
 		end
 
 feature -- Traversal
 
-	start is
+	start
 			-- Bring cursor to first position.
 		do
 			tables_index := 0
 			tbl_forth
 		end
 
-	item_for_iteration: G is
+	item_for_iteration: G
 			-- Element at current iteration position
 		require
 			not_off: not after
@@ -120,7 +120,7 @@ feature -- Traversal
 			Result := current_table.item_for_iteration
 		end
 
-	key_for_iteration: INTEGER is
+	key_for_iteration: INTEGER
 			-- Key at current iteration position
 		require
 			not_off: not after
@@ -128,13 +128,13 @@ feature -- Traversal
 			Result := current_table.key_for_iteration
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is cursor past last item?
 		do
 			Result := current_table = Void
 		end
 
-	forth is
+	forth
 			-- Advance cursor to next occupied position,
 			-- or off if no such position remains.
 		require
@@ -157,7 +157,7 @@ feature -- Status report
 	found_item: ?G
 			-- Item, if any, yielded by last search operation
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in table
 		local
 			i, nb: INTEGER
@@ -180,7 +180,7 @@ feature -- Status report
 
 feature -- Search
 
-	search (key: INTEGER) is
+	search (key: INTEGER)
 			-- Search for item of key `key'.
 			-- If found, set found to true, and set
 			-- found_item to item associated with `key'.
@@ -204,7 +204,7 @@ feature -- Search
 
 feature -- Element change
 
-	merge (other: like table_type) is
+	merge (other: like table_type)
 			-- Merge `other' into Current. If `other' has some elements
 			-- with same key as in `Current', replace them by one from
 			-- `other'.
@@ -223,7 +223,7 @@ feature -- Element change
 			inserted: other.current_keys.linear_representation.for_all (agent tbl_has)
 		end
 
-	clear_all is
+	clear_all
 			-- Reset all items to default values; reset status.
 		do
 			create tables.make (1)
@@ -236,7 +236,7 @@ feature {NONE} -- HASH_TABLE like features
 		do
 		end
 
-	tbl_item (key: INTEGER): ?G is
+	tbl_item (key: INTEGER): ?G
 			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
 		require
@@ -252,7 +252,7 @@ feature {NONE} -- HASH_TABLE like features
 			default_value_if_not_present: (not (tbl_has (key))) implies (Result = tbl_computed_default_value)
 		end
 
-	tbl_has (key: INTEGER): BOOLEAN is
+	tbl_has (key: INTEGER): BOOLEAN
 			-- Is there an item in the table with key `key'?
 		local
 			l_table: like table_type
@@ -261,7 +261,7 @@ feature {NONE} -- HASH_TABLE like features
 			Result := l_table /= Void and then l_table.has (key)
 		end
 
-	tbl_remove (key: INTEGER) is
+	tbl_remove (key: INTEGER)
 			-- Remove item associated with `key', if present.
 		local
 			l_table: like table_type
@@ -274,7 +274,7 @@ feature {NONE} -- HASH_TABLE like features
 			not_present: not tbl_has (key)
 		end
 
-	tbl_put (new: G; key: INTEGER) is
+	tbl_put (new: G; key: INTEGER)
 			-- Insert `new' with `key' if there is no other item
 			-- associated with the same key.
 		require
@@ -285,7 +285,7 @@ feature {NONE} -- HASH_TABLE like features
 			present: tbl_has (key)
 		end
 
-	tbl_force (new: G; key: INTEGER) is
+	tbl_force (new: G; key: INTEGER)
 			-- Update table so that `new' will be the item associated
 			-- with `key'.
 			-- If there was an item for that key, set found
@@ -308,20 +308,20 @@ feature {NONE} -- HASH_TABLE like features
 
 feature {NONE} -- Helpers
 
-	table_type: HASH_TABLE [G, INTEGER] is do end
+	table_type: HASH_TABLE [G, INTEGER] do end
 			-- For typing purposes.
 
 	tables: SPECIAL [like table_type]
 			-- All tables for current server.
 
-	tbl_modulo: INTEGER is 100_000
+	tbl_modulo: INTEGER = 100_000
 			-- Maximum number of entries per HASH_TABLE.
 
 	tables_index: INTEGER
 	current_table: like table_type
 			-- Cursor for traversing the server.
 
-	table_entry (key: INTEGER): like table_type is
+	table_entry (key: INTEGER): like table_type
 			-- Table in which `key' is or will be. If not yet present Void.
 		require
 			key_valid: key >= 0
@@ -336,7 +336,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	safe_table_entry (key: INTEGER): like table_type is
+	safe_table_entry (key: INTEGER): like table_type
 			-- Table in which `key' is or will be. If not yet present,
 			-- we create its associated table and possibly reallocate `tables'.
 		require
@@ -360,7 +360,7 @@ feature {NONE} -- Helpers
 			table_entry_not_void: Result /= Void
 		end
 
-	tbl_forth  is
+	tbl_forth
 			-- Initiate a `forth' starting at position  `tables_index'.
 		require
 			tables_index_non_negative: tables_index >= 0
@@ -395,7 +395,7 @@ feature {NONE} -- Helpers
 invariant
 	tables_not_void: tables /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Observer for EB_HISTORY_MANAGER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,28 +11,28 @@ deferred class
 
 feature -- Updates
 
-	on_update is
+	on_update
 			-- The history has been modified, by more than a simple add or remove.
 			-- (typically called after a synchronization).
 		do
 		end
 
-	on_position_changed is
+	on_position_changed
 			-- the position in history has changed.
 		do
 		end
 
-	on_item_added (a_stone: STONE; a_stone_position: INTEGER) is
+	on_item_added (a_stone: STONE; a_stone_position: INTEGER)
 			-- Item `a_stone' has been added at place `a_stone_position'.
 		do
 		end
 
-	on_item_removed (a_stone: STONE; index_item: INTEGER) is
+	on_item_removed (a_stone: STONE; index_item: INTEGER)
 			-- Item `a_stone' has been removed from history.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

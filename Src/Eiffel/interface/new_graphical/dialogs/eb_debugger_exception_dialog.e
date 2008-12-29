@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that display an exception or an error in an EV_DIALOG."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	build_dialog_interface (a_container: EV_VERTICAL_BOX) is
+	build_dialog_interface (a_container: EV_VERTICAL_BOX)
 			-- Builds the dialog's user interface.
 			--
 			-- `a_container': The dialog's container where the user interface elements should be extended
@@ -93,7 +93,7 @@ feature -- Widgets
 
 feature -- Details
 
-	set_title_and_label (t,l: STRING_GENERAL) is
+	set_title_and_label (t,l: STRING_GENERAL)
 			-- Set the title and the label of the window
 		require
 			title_not_void: t /= Void
@@ -103,14 +103,14 @@ feature -- Details
 			label.set_text (l)
 		end
 
-	set_exception (e: EXCEPTION_DEBUG_VALUE) is
+	set_exception (e: EXCEPTION_DEBUG_VALUE)
 			-- Set Exception value
 		do
 			exception_text := e.long_description
 			display_exception_info
 		end
 
-	display_exception_info is
+	display_exception_info
 			-- Display Exception's tag and message
 		local
 			s: STRING_32
@@ -132,7 +132,7 @@ feature -- Details
 			end
 		end
 
-	set_details (d: STRING_GENERAL) is
+	set_details (d: STRING_GENERAL)
 			-- Add additional details
 		require
 			d_not_void: d /= Void
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 	exception_text: STRING_32
 			-- Exception meaning, message, and text
 
-	save_exception_message is
+	save_exception_message
 			-- Save exception trace into a file
 		local
 			l_save_tool: EB_SAVE_STRING_TOOL
@@ -163,19 +163,19 @@ feature {NONE} -- Implementation
 			l_save_tool.save
 		end
 
-	on_save is
+	on_save
 			-- Action to do when "Save" button is activated
 		do
 			save_exception_message
 			veto_close
 		end
 
-	on_close is
+	on_close
 			-- Action to do when "Close" button is activated
 		do
 		end
 
-	set_wrapping_mode is
+	set_wrapping_mode
 			-- update wrapping mode for exception message
 		do
 			if wrapping_button.is_selected then
@@ -200,32 +200,32 @@ feature -- Access
 			Result := interface_names.l_debugger_exception_message
 		end
 
-	buttons: DS_SET [INTEGER] is
+	buttons: DS_SET [INTEGER]
 			-- Set of button id's for dialog
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		once
 			Result := dialog_buttons.ok_cancel_buttons
 		end
 
-	default_button: INTEGER is
+	default_button: INTEGER
 			-- The dialog's default action button
 		do
 			Result := dialog_buttons.cancel_button
 		end
 
-	default_cancel_button: INTEGER is
+	default_cancel_button: INTEGER
 			-- The dialog's default cancel button
 		do
 			Result := dialog_buttons.cancel_button
 		end
 
-	default_confirm_button: INTEGER is
+	default_confirm_button: INTEGER
 			-- The dialog's default confirm button		
 		do
 			Result := dialog_buttons.cancel_button
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

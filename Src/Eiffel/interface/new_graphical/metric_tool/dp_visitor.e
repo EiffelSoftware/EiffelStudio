@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor Pattern"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize Current.
 		do
 			create action_type_table.make (initial_capacity)
@@ -30,7 +30,7 @@ feature{NONE} -- Initialization
 
 feature -- Status report
 
-	has_action (a_action: PROCEDURE [ANY, TUPLE [G]]): BOOLEAN is
+	has_action (a_action: PROCEDURE [ANY, TUPLE [G]]): BOOLEAN
 			-- Does Current visitor has `a_action'?
 		require
 			a_action_attached: a_action /= Void
@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Visit
 
-	visit (a_item: G) is
+	visit (a_item: G)
 			-- Visitor `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -85,7 +85,7 @@ feature -- Visit
 
 feature -- Action registeration
 
-	extend (a_action: PROCEDURE [ANY, TUPLE [G]]) is
+	extend (a_action: PROCEDURE [ANY, TUPLE [G]])
 			-- Extend `a_action' for processing type {G} into Current visitor.
 			-- If another action which processes type {G} already exists, it will be overwritten by the new one.
 		require
@@ -100,7 +100,7 @@ feature -- Action registeration
 			action_extended: has_action (a_action)
 		end
 
-	append (a_actions: ARRAY [PROCEDURE [ANY, TUPLE [G]]]) is
+	append (a_actions: ARRAY [PROCEDURE [ANY, TUPLE [G]]])
 			-- Append actions in `a_actions' to the end of the `actions' list.
 			-- If another action which processes type {G} already exists, it will be overwritten by the new one.
 		require
@@ -133,7 +133,7 @@ feature{NONE} -- Implementation
 	cache: like action_type_table
 			-- Cache used to enhance performance of agent look up
 
-	initial_capacity: INTEGER is 10
+	initial_capacity: INTEGER = 10
 			-- Initial capacity of `action_type_table', `sorter'
 
 	catch_all_agent: PROCEDURE [ANY, TUPLE [G]]
@@ -141,7 +141,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	prepare_topological_sort (a_action: PROCEDURE [ANY, TUPLE [G]]) is
+	prepare_topological_sort (a_action: PROCEDURE [ANY, TUPLE [G]])
 			-- Prepare topological sort for `a_action'.
 		require
 			a_action_attached: a_action /= Void
@@ -184,7 +184,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	topological_sort is
+	topological_sort
 			-- Perform the topological sort.
 		do
 			sorter.sort
@@ -198,7 +198,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	fill_cache is
+	fill_cache
 			-- Fill `cache'.
 		do
 			cache.wipe_out
@@ -207,7 +207,7 @@ feature{NONE} -- Implementation
 			cache_filled: cache.count = action_type_table.count
 		end
 
-	catch_all (a_item: G) is
+	catch_all (a_item: G)
 			-- Routine called when no action is found for `a_item'
 		require
 			a_item_attached: a_item /= Void
@@ -222,7 +222,7 @@ invariant
 	cache_attached: cache /= Void
 	catch_all_agent_attached: catch_all_agent /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

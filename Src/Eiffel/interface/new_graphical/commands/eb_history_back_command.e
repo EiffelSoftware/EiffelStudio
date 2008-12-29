@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to go backward in the history."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,19 +21,19 @@ create
 
 feature -- Access
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- Is `operate' possible (i.e. can we go back)?
 		do
 			Result := history_manager.is_back_possible
 		end
 
-	mini_pixmap: EV_PIXMAP is
+	mini_pixmap: EV_PIXMAP
 			-- Mini pixmap representing the command.
 		do
 			Result := pixmaps.mini_pixmaps.general_previous_icon
 		end
 
-	mini_pixel_buffer: EV_PIXEL_BUFFER is
+	mini_pixel_buffer: EV_PIXEL_BUFFER
 			-- Mini pixmap representing the command.
 		do
 			Result := pixmaps.mini_pixmaps.general_previous_icon_buffer
@@ -41,47 +41,47 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	operate is
+	operate
 			-- Move backward in the history.
 		do
 			history_manager.back
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_History_back
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.view_previous_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.view_previous_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_history_back
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := Interface_names.e_history_back
 		end
 
-	name: STRING is "History_back";
+	name: STRING = "History_back";
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

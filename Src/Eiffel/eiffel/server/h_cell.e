@@ -1,4 +1,4 @@
-indexing
+note
 	description: "History cell for CACHE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,26 +18,26 @@ feature
 	index: INTEGER
 		-- index of the item in the cache
 
-	make (e: T; i: INTEGER) is
+	make (e: T; i: INTEGER)
 		-- creation of a filled cell
 		do
 			item := e
 			index := i
 		end
 	
-	set_item (e: T) is
+	set_item (e: T)
 		-- set item to e
 		do
 			item := e
 		end
 
-	set_index (i: INTEGER) is
+	set_index (i: INTEGER)
 		-- set index to i
 		do
 			index := i
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

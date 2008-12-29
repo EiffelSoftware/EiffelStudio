@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Editable eiffel code.
 			Includes syntax completion and feature calls completion computation.
@@ -45,7 +45,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize text.
 		do
 			Precursor {CLICKABLE_TEXT}
@@ -54,7 +54,7 @@ feature -- Initialization
 
 feature -- Access
 
-	last_syntax_error: SYNTAX_ERROR is
+	last_syntax_error: SYNTAX_ERROR
 			-- Syntax error found last time file was parsed.
 		do
 			if click_tool /= Void then
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Element Change
 
-	clear_syntax_error is
+	clear_syntax_error
 			-- Set last_syntax_error to Void.
 		do
 			if click_tool /= Void then
@@ -77,7 +77,7 @@ feature -- Element Change
 
 feature -- Status report
 
-	exploring_current_class: BOOLEAN is
+	exploring_current_class: BOOLEAN
 			-- Is the completion being used to choose a feature of the current class (i.e. will a dotted
 			-- notation be needed in completion)?
 		do
@@ -90,7 +90,7 @@ feature -- Status report
 	click_tool_enabled: BOOLEAN
 			-- Should `Current' use `click_tool'?
 
-	click_and_complete_is_active: BOOLEAN is
+	click_and_complete_is_active: BOOLEAN
 			-- Can `click_tool' be used with currently opened class?
 		do
 			Result := current_class_is_clickable and then click_tool_enabled
@@ -99,12 +99,12 @@ feature -- Status report
 	click_tool_status: INTEGER
 			-- `click_tool' status after initialization.
 
-	no_error: INTEGER is 1
-	syntax_error: INTEGER is 2
-	class_name_changed: INTEGER is 3
+	no_error: INTEGER = 1
+	syntax_error: INTEGER = 2
+	class_name_changed: INTEGER = 3
 			-- `click_tool_status' possible values.
 
-	current_feature_containing : TUPLE [feat_as:FEATURE_AS; name: FEATURE_NAME] is
+	current_feature_containing : TUPLE [feat_as:FEATURE_AS; name: FEATURE_NAME]
 			-- Feature containg current cursor.
 			-- Void if not exists.
 		do
@@ -115,7 +115,7 @@ feature -- Status report
 			valid_result: Result /= Void implies (Result.feat_as /= Void and Result.name /= Void)
 		end
 
-	syntax_is_correct: BOOLEAN is
+	syntax_is_correct: BOOLEAN
 			-- When text was parsed, was a syntax error found?
 		do
 			Result := click_tool_status /= syntax_error
@@ -123,13 +123,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_click_tool is
+	enable_click_tool
 			-- let `Current' use `click_tool'.
 		do
 			click_tool_enabled := True
 		end
 
-	disable_click_tool is
+	disable_click_tool
 			-- Prevent `Current' from using `click_tool'.
 		do
 			click_tool_enabled := False
@@ -137,7 +137,7 @@ feature -- Status setting
 
 feature -- Basic Operations
 
-	embed_in_block (keyword: STRING_32; pos_in_keyword: INTEGER) is
+	embed_in_block (keyword: STRING_32; pos_in_keyword: INTEGER)
 			-- Embed selection or current line in block formed by `keyword' and "end".
 			-- Cursor is positioned to the `pos_in_keyword'-th caracter of `keyword'.
 		require
@@ -211,7 +211,7 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
-	smallest_indentation (start_cursor, end_cursor: EDITOR_CURSOR): STRING_32 is
+	smallest_indentation (start_cursor, end_cursor: EDITOR_CURSOR): STRING_32
 			-- Smallest indentation in lines between `start_cursor' and
 			-- `end_cursor' (lines containing cursors are included).
 			-- Lines with no indentation or blank lines are not
@@ -269,7 +269,7 @@ feature -- Basic Operations
 
 feature -- Search
 
-	find_feature_named (a_name: STRING) is
+	find_feature_named (a_name: STRING)
 			-- Look for a feature named `a_name' in the text.
 			-- If `a_name' is found, `found_feature' is set to True
 			-- and `cursor' is moved to `a_name' position.
@@ -317,7 +317,7 @@ feature -- Search
 	found_feature: BOOLEAN
 			-- Was the last searched feature found?
 
-	reset_text is
+	reset_text
 			-- Make the editor ready to load a new content
 		do
 			Precursor {CLICKABLE_TEXT}
@@ -327,13 +327,13 @@ feature -- Search
 
 feature -- History operation
 
-	history_item_bind is
+	history_item_bind
 			-- Bind current item in history stack to next.
 		do
 			history.bind_current_item_to_next
 		end
 
-	history_item_unbind is
+	history_item_unbind
 			-- Bind current item in history stack to next.
 		do
 			history.unbind_current_item_to_next
@@ -341,7 +341,7 @@ feature -- History operation
 
 feature -- Pick and drop
 
-	stone_at (cursr: like cursor): STONE is
+	stone_at (cursr: like cursor): STONE
 			-- Stone corresponding to word at `cursor' position.
 		do
 			if not Workbench.is_compiling then
@@ -358,7 +358,7 @@ feature -- Pick and drop
 
 feature -- Completion-clickable initialization / update
 
-	setup_click_tool (stone: STONE; file_std_is_win: BOOLEAN) is
+	setup_click_tool (stone: STONE; file_std_is_win: BOOLEAN)
 			-- prepare `click_tool' before file is read.
 		do
 			if click_tool_enabled then
@@ -373,7 +373,7 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-	reinitialize_click_and_complete_tool (stone: STONE; after_save: BOOLEAN) is
+	reinitialize_click_and_complete_tool (stone: STONE; after_save: BOOLEAN)
 			-- check if it is possible to use `click_tool' with class corresponding to `stone'
 			-- and set `current_class_is_clickable' accordingly.
 			-- `after_save' must be True if current class text has just been saved
@@ -411,7 +411,7 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-	update_click_list (a_stone: STONE; after_save: BOOLEAN) is
+	update_click_list (a_stone: STONE; after_save: BOOLEAN)
 			-- update the click tool
 			-- `after_save' must be True if current class text has just been saved
 			-- and False otherwise.
@@ -425,7 +425,7 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-	prepare_auto_complete (add_point: BOOLEAN) is
+	prepare_auto_complete (add_point: BOOLEAN)
 			-- Use `click_tool' to determine whether there is some
 			-- name to be completed at `cursor' position and set
 			-- `auto_complete_is_possible' accordingly.
@@ -453,7 +453,7 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-	prepare_class_name_complete is
+	prepare_class_name_complete
 			-- Determine whether there is some
 			-- name to be completed at cursor position and set
 			-- `auto_complete_is_possible' accordingly.
@@ -471,7 +471,7 @@ feature -- Completion-clickable initialization / update
 	auto_complete_possible: BOOLEAN
 			-- Did `prepare_auto_complete' manage to find a list of completion proposals?
 
-	completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
+	completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
 			-- Completions proposals found by `prepare_auto_complete'
 		do
 			if click_tool /= Void and then auto_complete_possible then
@@ -479,7 +479,7 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-	class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION] is
+	class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
 			-- Completions proposals found by `prepare_auto_complete'
 		do
 			if click_tool /= Void and then auto_complete_possible then
@@ -487,7 +487,7 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-	feature_name_part_to_be_completed: STRING is
+	feature_name_part_to_be_completed: STRING
 			-- Word, which is the beginning of feature names, which is being completed.
 		do
 			if click_tool /= Void and then auto_complete_possible then
@@ -495,7 +495,7 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-	feature_name_part_to_be_completed_remainder: INTEGER is
+	feature_name_part_to_be_completed_remainder: INTEGER
 			-- Number of characters past the cursor on the token currenly being completed.
 		do
 			if click_tool /= Void and then auto_complete_possible then
@@ -503,7 +503,7 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-	complete_feature_call (completed: STRING_32; is_feature_signature: BOOLEAN; appended_character: CHARACTER_32; remainder: INTEGER; a_select: BOOLEAN) is
+	complete_feature_call (completed: STRING_32; is_feature_signature: BOOLEAN; appended_character: CHARACTER_32; remainder: INTEGER; a_select: BOOLEAN)
  			-- Finish completion process by inserting the completed expression.
 		require
 			completion_proposals_found: auto_complete_possible
@@ -551,7 +551,7 @@ feature -- Completion-clickable initialization / update
 
 feature -- Syntax completion
 
-	complete_syntax (keyword: STRING; keyword_already_present, newline: BOOLEAN) is
+	complete_syntax (keyword: STRING; keyword_already_present, newline: BOOLEAN)
 			-- Complete syntax after `keyword' according to what is specified in
 			-- the preferences. If `keyword_already_present', completion will use
 			-- preferences for keyword that were not typed immediatly before
@@ -601,7 +601,7 @@ feature -- Syntax completion
 	syntax_completed: BOOLEAN
 			-- Did latest call to `complete_syntax' modified `Current'?
 
-	insert_customized_expression (expr: STRING_32) is
+	insert_customized_expression (expr: STRING_32)
 			-- Analyze syntax completion string preferences `expr', which may include "%N", "%T","%B",
 			-- "$cursor$" and "$indent$" special character sequences.
 			-- Insert the resulting expression defined by user in preferences at `cursor' position.
@@ -709,21 +709,21 @@ feature -- Syntax completion
 
 feature {NONE} -- Possiblilities provider
 
-	insertion: STRING_32 is
+	insertion: STRING_32
 			-- Strings to be partially completed : the first one is the dot or tilda if there is one
 			-- the second one is the feature name to be completed
 		do
 			Result := click_tool.insertion.item
 		end
 
-	insertion_remainder: INTEGER is
+	insertion_remainder: INTEGER
 			-- The number of characters in the insertion remaining from the cursor position to the
 			-- end of the token
 		do
 			Result := click_tool.insertion_remainder
 		end
 
-	prepare_completion is
+	prepare_completion
 			-- Prepare completion
 		do
 			Precursor
@@ -737,7 +737,7 @@ feature {NONE} -- Possiblilities provider
 			end
 		end
 
-	reset is
+	reset
 			-- Reset completion
 		do
 			if click_tool /= Void then
@@ -745,7 +745,7 @@ feature {NONE} -- Possiblilities provider
 			end
 		end
 
-	completion_possible: BOOLEAN is
+	completion_possible: BOOLEAN
 			-- Is completion possible?
 		do
 			Result := auto_complete_possible and then Precursor
@@ -759,7 +759,7 @@ feature {NONE} -- Possiblilities provider
 			end
 		end
 
-	current_pos_in_token: INTEGER is
+	current_pos_in_token: INTEGER
 		do
 			if cursor /= Void then
 				Result := cursor.pos_in_token
@@ -768,7 +768,7 @@ feature {NONE} -- Possiblilities provider
 
 feature {NONE}-- click information update
 
-	restore_tokens_properties (begin_line, end_line: like line) is
+	restore_tokens_properties (begin_line, end_line: like line)
 			-- Restore some token properties (position, beginning of a feature)
 			-- using lists crated by `record...modified_line' procedures.
 		local
@@ -848,7 +848,7 @@ feature {NONE}-- click information update
 			end
 		end
 
-	restore_tokens_properties_one_line (begin_line: like line) is
+	restore_tokens_properties_one_line (begin_line: like line)
 			-- Restore some token properties (position, beginning of a feature)
 			-- using lists crated by `record...modified_line' procedures.
 		do
@@ -857,7 +857,7 @@ feature {NONE}-- click information update
 
 feature {NONE} -- Implementation
 
-	after_reading_idle_action is
+	after_reading_idle_action
 			-- Prepare click tool when idle.
 		do
 			if click_and_complete_is_active and then not click_tool.is_ready then
@@ -867,7 +867,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_line_from_lexer (line_image: STRING): like line is
+	new_line_from_lexer (line_image: STRING): like line
 			-- <precursor>
 		do
 			Result ?= Precursor {CLICKABLE_TEXT} (line_image)
@@ -876,7 +876,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

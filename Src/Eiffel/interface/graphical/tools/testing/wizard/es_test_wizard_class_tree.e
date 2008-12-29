@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Class tree which only displayes test classes.
 	]"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Entry representing a piece of EIS information"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_protocol: like protocol; a_source: like source; a_tags: like tags a_id: like id; a_others: like others) is
+	make (a_name: like name; a_protocol: like protocol; a_source: like source; a_tags: like tags a_id: like id; a_others: like others)
 			-- Initialization
 		require
 			a_id_not_void: a_id /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 feature {ES_EIS_COMPONENT_VIEW} -- Element change
 								-- Be careful to change entry that has been registered in storage.
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'
 		do
 			name := a_name
@@ -47,7 +47,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			name_set: name = a_name
 		end
 
-	set_protocol (a_protocol: like protocol) is
+	set_protocol (a_protocol: like protocol)
 			-- Set `protocol' with `a_protocol'
 		do
 			protocol := a_protocol
@@ -55,7 +55,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			protocol_set: protocol = a_protocol
 		end
 
-	set_source (a_source: like source) is
+	set_source (a_source: like source)
 			-- Set `source' with `a_source'
 		do
 			source := a_source
@@ -63,7 +63,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			source_set: source = a_source
 		end
 
-	set_tags (a_tags: like tags) is
+	set_tags (a_tags: like tags)
 			-- Set `tags' with `a_tags'
 		do
 			tags := a_tags
@@ -71,7 +71,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			tags_set: tags = a_tags
 		end
 
-	set_id (a_id: like id) is
+	set_id (a_id: like id)
 			-- Set `id' with `a_id'
 		require
 			a_id_not_void: a_id /= Void
@@ -81,7 +81,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Element change
 			id_set: id = a_id
 		end
 
-	set_others (a_others: like others) is
+	set_others (a_others: like others)
 			-- Set `others' with `a_others'
 		do
 			others := a_others
@@ -109,7 +109,7 @@ feature -- Access
 	others: HASH_TABLE [STRING_32, STRING_32]
 			-- Other attributes of the entry
 
-	tags_as_string: STRING_32 is
+	tags_as_string: STRING_32
 			-- Tags as a string
 			-- Simple combination, not for display popose
 		do
@@ -129,7 +129,7 @@ feature -- Access
 					tags /= Void implies Result /= Void
 		end
 
-	others_as_string: STRING_32 is
+	others_as_string: STRING_32
 			-- Others as string
 			-- Simple combination, not for display popose
 		do
@@ -152,7 +152,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_entry (other: like Current): BOOLEAN is
+	same_entry (other: like Current): BOOLEAN
 			-- <precursor>
 			-- Do not compare ids.
 		do
@@ -238,7 +238,7 @@ feature {NONE} -- Hash code
 invariant
 	a_id_not_void: id /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

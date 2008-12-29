@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an Eiffel Project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ inherit
 
 feature -- Initialization
 
-	make (a_project_location: PROJECT_DIRECTORY) is
+	make (a_project_location: PROJECT_DIRECTORY)
 			-- An Eiffel Project has already been created.
 			-- We just create the basic structure to enable the retrieving.
 		require
@@ -67,7 +67,7 @@ feature -- Initialization
 		deletion_requested: BOOLEAN
 		deletion_agent: PROCEDURE [ANY, TUPLE [ARRAYED_LIST [STRING]]]
 		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
-	) is
+	)
 			-- Create an Eiffel Project.
 			-- Also create, if needed, the sub-directories (EIFGEN, W_code ...)
 			-- (If a read-write error occurred you must exit from
@@ -142,14 +142,14 @@ feature -- Initialization
 			initialized: initialized
 		end
 
-	create_dynamic_lib is
+	create_dynamic_lib
 		do
 			create dynamic_lib
 		end
 
 feature -- Properties
 
-	ace: E_ACE is
+	ace: E_ACE
 			-- Eiffel Ace file
 		once
 			create Result
@@ -164,7 +164,7 @@ feature -- Properties
 	system: E_SYSTEM
 			-- Eiffel system
 
-	name: DIRECTORY_NAME is
+	name: DIRECTORY_NAME
 			-- Path of eiffel project
 		do
 			Result := project_directory.path
@@ -172,13 +172,13 @@ feature -- Properties
 			is_project_dir: Result = project_directory.path
 		end
 
-	error_displayer: ERROR_DISPLAYER is
+	error_displayer: ERROR_DISPLAYER
 			-- Displays error and warning messages
 		do
 			Result := Error_handler.error_displayer
 		end
 
-	manager: EB_PROJECT_MANAGER is
+	manager: EB_PROJECT_MANAGER
 			-- interface between `Current' and the user interface.
 		once
 			create Result.make (Current)
@@ -186,13 +186,13 @@ feature -- Properties
 
 feature -- Access
 
-	is_read_only: BOOLEAN is
+	is_read_only: BOOLEAN
 			-- Is the project open in read only permission?
 		do
 			Result := file_status = read_only_status
 		end
 
-	successful: BOOLEAN is
+	successful: BOOLEAN
 			-- Was the last compilation successful?
 		do
 			Result := Workbench.successful
@@ -200,13 +200,13 @@ feature -- Access
 			not_successful_means_wb: Result implies Workbench.successful
 		end
 
-	initialized: BOOLEAN is
+	initialized: BOOLEAN
 			-- Is the Eiffel project initialized?
 		do
 			Result := initialized_mode.item
 		end
 
-	system_defined: BOOLEAN is
+	system_defined: BOOLEAN
 			-- Has the Eiffel system been defined.
 		do
 			Result := system /= Void and then workbench.system_defined
@@ -214,7 +214,7 @@ feature -- Access
 			Result = Workbench.system_defined
 		end
 
-	able_to_compile: BOOLEAN is
+	able_to_compile: BOOLEAN
 			-- Can we compile?
 		do
 			Result := not is_read_only and then
@@ -231,13 +231,13 @@ feature -- Access
 					not is_compiling
 		end
 
-	was_saved: BOOLEAN is
+	was_saved: BOOLEAN
 			-- Was the last attempt to save successful?
 		do
 			Result := not save_error
 		end
 
-	freezing_occurred: BOOLEAN is
+	freezing_occurred: BOOLEAN
 			-- Did the system have to freeze during melting?
 			-- (True, if new externals are introduce or a
 			-- new derivation of SPECIAL was made).
@@ -246,7 +246,7 @@ feature -- Access
 				Comp_system.freezing_occurred
 		end
 
-	is_new: BOOLEAN is
+	is_new: BOOLEAN
 			-- Is the Current Project new?
 		local
 --			proj_dir: PROJECT_DIRECTORY
@@ -260,7 +260,7 @@ feature -- Access
 			Result := True
 		end
 
-	is_compiling: BOOLEAN is
+	is_compiling: BOOLEAN
 			-- Is it compiling?
 		do
 			Result := is_compiling_ref.item
@@ -268,13 +268,13 @@ feature -- Access
 
 feature -- Error status
 
-	error_occurred: BOOLEAN is
+	error_occurred: BOOLEAN
 			-- Did an error occurred in last operation?
 		do
 			Result := error_status /= Ok_status
 		end
 
-	read_write_error: BOOLEAN is
+	read_write_error: BOOLEAN
 			-- Does the project not have read write permission?
 		do
 			Result := error_status = file_error_status
@@ -283,7 +283,7 @@ feature -- Error status
 						error_status = file_error_status
 		end
 
-	incomplete_project: BOOLEAN is
+	incomplete_project: BOOLEAN
 		do
 			Result := error_status = incomplete_project_status
 		ensure
@@ -291,7 +291,7 @@ feature -- Error status
 						error_status = incomplete_project_status
 		end
 
-	save_error: BOOLEAN is
+	save_error: BOOLEAN
 			-- Was the last attempt to save the project not successful?
 		do
 			Result := error_status = save_error_status or
@@ -302,7 +302,7 @@ feature -- Error status
 						error_status = precomp_save_error_status)
 		end
 
-	precomp_save_error: BOOLEAN is
+	precomp_save_error: BOOLEAN
 			-- Was the last attempt to save the precompilation information
 			-- not successful?
 		do
@@ -312,7 +312,7 @@ feature -- Error status
 						error_status = Precomp_save_error_status
 		end
 
-	retrieval_error: BOOLEAN is
+	retrieval_error: BOOLEAN
 			-- Was the project retrieved successful?
 		do
 			Result :=
@@ -327,7 +327,7 @@ feature -- Error status
 						error_status = retrieve_incompatible_error_status
 		end
 
-	retrieval_interrupted: BOOLEAN is
+	retrieval_interrupted: BOOLEAN
 			-- Was the retrieval of the project interrupted?
 		require
 			retrieval_error: retrieval_error
@@ -338,7 +338,7 @@ feature -- Error status
 						error_status = retrieve_interrupt_error_status
 		end
 
-	is_corrupted: BOOLEAN is
+	is_corrupted: BOOLEAN
 			-- Is the retrieved project corrupted?
 		require
 			retrieval_error: retrieval_error
@@ -349,7 +349,7 @@ feature -- Error status
 						error_status = retrieve_corrupt_error_status
 		end
 
-	incompatible_version_number: STRING is
+	incompatible_version_number: STRING
 			-- Incompatible version number of project
 		require
 			is_project_incompatible: is_incompatible
@@ -357,7 +357,7 @@ feature -- Error status
 			create Result.make (0)
 		end
 
-	is_incompatible: BOOLEAN is
+	is_incompatible: BOOLEAN
 			-- Is the retrieved project incompatible with current version
 			-- of the compiler?
 		require
@@ -371,7 +371,7 @@ feature -- Error status
 
 feature -- Status report
 
-	degree_output: DEGREE_OUTPUT is
+	degree_output: DEGREE_OUTPUT
 			-- Degree output messages during compilation
 			-- (By default it redirects output compilation
 			-- messages to io.)
@@ -381,7 +381,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_degree_output (a_degree_ouput: like degree_output) is
+	set_degree_output (a_degree_ouput: like degree_output)
 			-- Set `degree_output' to `a_degree_ouput'.
 		require
 			non_void_a_degree_ouput: a_degree_ouput /= Void
@@ -391,7 +391,7 @@ feature -- Status setting
 			set: degree_output = a_degree_ouput
 		end
 
-	set_error_displayer (ed: like error_displayer) is
+	set_error_displayer (ed: like error_displayer)
 			-- Set `error_displayer' to `ed'.
 		require
 			non_void_ed: ed /= Void
@@ -403,7 +403,7 @@ feature -- Status setting
 
 feature -- Update
 
-	melt (is_for_finalization: BOOLEAN) is
+	melt (is_for_finalization: BOOLEAN)
 			-- Incremental recompilation of Eiffel project.
 			-- Raise error messages if necessary if unsuccessful. Otherwize,
 			-- save the project and link driver to precompiled library
@@ -452,7 +452,7 @@ feature -- Update
 			is_compiling_ref.put (False)
 		end
 
-	discover_melt is
+	discover_melt
 			-- Full rebuild and melt.
 		require
 			able_to_compile: able_to_compile
@@ -470,7 +470,7 @@ feature -- Update
 			error_implies: error_occurred implies save_error
 		end
 
-	quick_melt is
+	quick_melt
 			-- Melt eiffel project and then freeze it (i.e generate
 			-- C code for workbench mode).
 		require
@@ -489,7 +489,7 @@ feature -- Update
 			error_implies: error_occurred implies save_error
 		end
 
-	override_scan is
+	override_scan
 			-- Same as `quick_melt' but only scans override clusters for changes.
 		require
 			able_to_compile: able_to_compile
@@ -507,7 +507,7 @@ feature -- Update
 			error_implies: error_occurred implies save_error
 		end
 
-	freeze is
+	freeze
 			-- Melt eiffel project and then freeze it (i.e generate
 			-- C code for workbench mode).
 		require
@@ -523,7 +523,7 @@ feature -- Update
 					successful implies (freezing_occurred or else workbench.system.il_generation)
 		end
 
-	finalize (keep_assertions: BOOLEAN) is
+	finalize (keep_assertions: BOOLEAN)
 			-- Melt eiffel project and then finalize it (i.e generate
 			-- optimize C code for workbench mode).
 		require
@@ -551,7 +551,7 @@ feature -- Update
 			error_implies: error_occurred implies save_error
 		end
 
-	call_finish_freezing (workbench_mode: BOOLEAN) is
+	call_finish_freezing (workbench_mode: BOOLEAN)
 			-- Call `finish_freezing' after freezing
 			-- an eiffel project in W_code or F_wode
 			-- depending on the value `workbench_mode'
@@ -578,7 +578,7 @@ feature -- Update
 			compiler_objects.command_executor.invoke_finish_freezing (path, l_cmd, True, workbench_mode)
 		end
 
-	call_finish_freezing_and_wait (workbench_mode: BOOLEAN) is
+	call_finish_freezing_and_wait (workbench_mode: BOOLEAN)
 			-- Call `finish_freezing' after freezing
 			-- an eiffel project in W_code or F_wode
 			-- depending on the value `workbench_mode'.
@@ -608,13 +608,13 @@ feature -- Update
 			compiler_objects.command_executor.invoke_finish_freezing (path, l_cmd, False, workbench_mode)
 		end
 
-	terminate_c_compilation is
+	terminate_c_compilation
 			-- Terminate running c compilation, if any.
 		do
 			compiler_objects.command_executor.terminate_c_compilation
 		end
 
-	precompile (is_for_finalization: BOOLEAN) is
+	precompile (is_for_finalization: BOOLEAN)
 			-- Precompile eiffel project.
 		require
 			able_to_compile: able_to_compile
@@ -651,7 +651,7 @@ feature -- Update
 			is_compiling_ref.put (False)
 		end
 
-	finalize_precompile (keep_assertions: BOOLEAN) is
+	finalize_precompile (keep_assertions: BOOLEAN)
 			-- precompile eiffel project and then finalize it (i.e generate
 			-- optimize C code for workbench mode).
 		require
@@ -677,7 +677,7 @@ feature -- Update
 	delete_generation_directory (
 			base_name: STRING; deletion_agent: PROCEDURE [ANY, TUPLE];
 			cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN])
-		is
+		
 			-- Delete then EIFFEL generated directory named `base_name'.
 			--
 			-- `deletion_agent' is called each time `Deletion_agent_efficiency'
@@ -703,7 +703,7 @@ feature -- Update
 			retry
 		end
 
-	delete_project_file (a_file_name: STRING) is
+	delete_project_file (a_file_name: STRING)
 			-- Delete `a_file_name' if possible.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -722,7 +722,7 @@ feature -- Update
 			retry
 		end
 
-	stop_and_exit (ag: like exit_agent) is
+	stop_and_exit (ag: like exit_agent)
 			-- Stop the compilation and exit EiffelStudio.
 		do
 			exit_on_error := True
@@ -733,7 +733,7 @@ feature -- Update
 
 feature -- Output
 
-	save_project is
+	save_project
 			-- Clear the servers and save the system structures
 			-- to disk.
 		require
@@ -758,7 +758,7 @@ feature -- Output
 			error_implies: error_occurred implies save_error
 		end
 
-	save_precomp is
+	save_precomp
 			-- Save precompilation information to disk.
 		require
 			initialized: initialized
@@ -783,7 +783,7 @@ feature -- Output
 
 feature {LACE_I} -- Initialization
 
-	init_system is
+	init_system
 			-- Initializes the system.
 		do
 			create system.make
@@ -791,7 +791,7 @@ feature {LACE_I} -- Initialization
 
 feature {NONE} -- Retrieval
 
-	retrieve is
+	retrieve
 			-- Retrieve an existing Eiffel Project from `file.
 			-- (If a read-write error occurred you must exit from
 			-- application).
@@ -866,7 +866,7 @@ feature {NONE} -- Retrieval
 
 feature {NONE} -- Implementation
 
-	check_existence is
+	check_existence
 			-- Check the permissions of `project_directory' before to retrieve
 			-- the project.
 		require
@@ -878,7 +878,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_permissions is
+	check_permissions
 			-- Check the permissions of `project_directory' after the retrieving
 			-- of the project.
 		do
@@ -893,33 +893,33 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	Ok_status: INTEGER is 1
+	Ok_status: INTEGER = 1
 
-	Write_status: INTEGER is 2
-	Read_only_status: INTEGER is 3
-	File_error_status: INTEGER is 4
-	Incomplete_project_status: INTEGER is 5
+	Write_status: INTEGER = 2
+	Read_only_status: INTEGER = 3
+	File_error_status: INTEGER = 4
+	Incomplete_project_status: INTEGER = 5
 
-	Corrupt_status: INTEGER is 6
-	Retrieve_corrupt_error_status: INTEGER is 8
-	Retrieve_incompatible_error_status: INTEGER is 9
-	Retrieve_interrupt_error_status: INTEGER is 10
-	Save_error_status: INTEGER is 11
-	Precomp_save_error_status: INTEGER is 12
+	Corrupt_status: INTEGER = 6
+	Retrieve_corrupt_error_status: INTEGER = 8
+	Retrieve_incompatible_error_status: INTEGER = 9
+	Retrieve_interrupt_error_status: INTEGER = 10
+	Save_error_status: INTEGER = 11
+	Precomp_save_error_status: INTEGER = 12
 
-	error_status: INTEGER is
+	error_status: INTEGER
 			-- Give last error status.
 		do
 			Result := error_status_mode.item
 		end
 
-	file_status: INTEGER is
+	file_status: INTEGER
 			-- Give last file status.
 		do
 			Result := file_status_mode.item
 		end
 
-	error_status_mode: CELL [INTEGER] is
+	error_status_mode: CELL [INTEGER]
 			-- Structure to keep the last error status.
 		once
 			create Result.put (Ok_status)
@@ -927,7 +927,7 @@ feature {NONE} -- Implementation
 			error_status_mode_not_void: Result /= Void
 		end
 
-	file_status_mode: CELL [INTEGER] is
+	file_status_mode: CELL [INTEGER]
 			-- Structure to keep the last file status.
 		once
 			create Result.put (Write_status)
@@ -935,14 +935,14 @@ feature {NONE} -- Implementation
 			file_status_mode_not_void: Result /= Void
 		end
 
-	initialized_mode: CELL [BOOLEAN] is
+	initialized_mode: CELL [BOOLEAN]
 		once
 			create Result.put (False)
 		ensure
 			initialized_mode_not_void: Result /= Void
 		end
 
-	set_is_initialized is
+	set_is_initialized
 			-- Set `initialized' to `True'
 		do
 			initialized_mode.put (True)
@@ -950,7 +950,7 @@ feature {NONE} -- Implementation
 			initialized: initialized
 		end
 
-	set_error_status (status: INTEGER) is
+	set_error_status (status: INTEGER)
 			-- Set `error_status' to `status'
 		do
 			error_status_mode.put (status)
@@ -958,7 +958,7 @@ feature {NONE} -- Implementation
 			set: error_status = status
 		end
 
-	set_file_status (status: INTEGER) is
+	set_file_status (status: INTEGER)
 			-- Set `file_status' to `status'
 		do
 			file_status_mode.put (status)
@@ -968,7 +968,7 @@ feature {NONE} -- Implementation
 
 feature {PRECOMP_R} -- Implementation
 
-	set_system (s: like system) is
+	set_system (s: like system)
 		do
 			system := s
 		end
@@ -979,14 +979,14 @@ feature {E_PROJECT, PRECOMP_R} -- Implementation
 
 feature {NONE} -- Implementation
 
-	Deletion_agent_efficiency: INTEGER is 50
+	Deletion_agent_efficiency: INTEGER = 50
 		-- When deleting a directory, the callback function is called
 		-- each time `Deletion_agent_efficiency' files are deleted
 		--
 		-- Set this value to 1 for a better look, a to 50 for better
 		-- performances.
 
-	degree_output_cell: CELL [DEGREE_OUTPUT] is
+	degree_output_cell: CELL [DEGREE_OUTPUT]
 			-- Degree output window
 		local
 			deg_output: DEGREE_OUTPUT
@@ -995,7 +995,7 @@ feature {NONE} -- Implementation
 			create Result.put (deg_output)
 		end
 
-	compiler_objects: SETTABLE_COMPILER_OBJECTS is
+	compiler_objects: SETTABLE_COMPILER_OBJECTS
 			-- Compiler specific objects.
 		once
 			create Result
@@ -1007,7 +1007,7 @@ feature {NONE} -- Implementation
 			-- Optional procedure that should be called when an error occurs and
 			-- `exit_on_error' is set.
 
-	is_compiling_ref: CELL [BOOLEAN] is
+	is_compiling_ref: CELL [BOOLEAN]
 			-- Is it compiling?
 		once
 			create Result.put (False)
@@ -1018,7 +1018,7 @@ feature {NONE} -- Implementation
 	exit_on_error: BOOLEAN
 			-- Should we exit EiffelStudio when an error occurs? (used to kill EiffelStudio during compilations)
 
-	link_driver is
+	link_driver
 		local
 			uf: PLAIN_TEXT_FILE
 			app_name: STRING
@@ -1049,7 +1049,7 @@ feature {NONE} -- Implementation
 invariant
 	degree_output_not_void: degree_output /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

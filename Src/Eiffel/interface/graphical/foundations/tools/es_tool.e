@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A shim for EiffelStudio tools, providing access to information required without having to actually initialize the tool.
 		
@@ -326,7 +326,7 @@ feature {ES_SHELL_TOOLS} -- Status report
 
 feature -- Hashing
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := type_id.hash_code
@@ -334,7 +334,7 @@ feature -- Hashing
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- New string containing terse printable representation
 			-- of current object
 		do
@@ -474,7 +474,7 @@ invariant
 	edition_big_enough: window /= Void implies edition > 0
 	edition_small_enough: not is_supporting_multiple_instances implies edition <= 1
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

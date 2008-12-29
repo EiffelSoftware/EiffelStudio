@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Target domain item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,10 +27,10 @@ create
 
 feature -- Status report
 
-	is_target_item: BOOLEAN is True
+	is_target_item: BOOLEAN = True
 			-- Is current an application target item?
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Does current represent a valid domain item?
 		do
 			update
@@ -39,7 +39,7 @@ feature -- Status report
 
 feature -- Access
 
-	domain (a_scope: QL_SCOPE): QL_DOMAIN is
+	domain (a_scope: QL_SCOPE): QL_DOMAIN
 			-- New query lanaguage domain representing current item
 		do
 			if id.is_empty then
@@ -50,34 +50,34 @@ feature -- Access
 			end
 		end
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- Text of current item
 		do
 			update
 			Result := string_representation_internal
 		end
 
-	query_language_item: QL_ITEM is
+	query_language_item: QL_ITEM
 			-- Query language item representation of current domain item
 		do
 			update
 			Result := query_language_target
 		end
 
-	group: QL_GROUP is
+	group: QL_GROUP
 			-- Group to which current domain item belongs
 		do
 		ensure then
 			result_not_attached: Result = Void
 		end
 
-	sorting_order_index: INTEGER is
+	sorting_order_index: INTEGER
 			-- Sorting order index
 		do
 			Result := target_index
 		end
 
-	item_type_name: STRING_GENERAL is
+	item_type_name: STRING_GENERAL
 			-- Name of type of current item
 		do
 			Result := names.l_target_domain_item
@@ -85,7 +85,7 @@ feature -- Access
 
 feature{NONE} -- Implemenation
 
-	update is
+	update
 			-- Update status of current item.			
 		do
 			if not is_up_to_date then
@@ -115,7 +115,7 @@ feature{NONE} -- Implemenation
 	query_language_target: QL_TARGET;
 			-- Query language target represented by Current
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

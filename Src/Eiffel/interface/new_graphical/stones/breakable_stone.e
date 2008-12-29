@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Stone representating a breakable point."
 	legal: "See notice at end of class."
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (e_feature: E_FEATURE; break_index: INTEGER) is
+	make (e_feature: E_FEATURE; break_index: INTEGER)
 		require
 			not_feature_i_void: e_feature /= Void
 			valid_index: break_index > 0
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			index := break_index
 		end -- make
 
-	make_from_breakpoint (a_bp: BREAKPOINT) is
+	make_from_breakpoint (a_bp: BREAKPOINT)
 		require
 			bp_not_void: a_bp /= Void
 			bp_valid: a_bp.location.is_valid
@@ -62,7 +62,7 @@ feature -- Properties
 	routine: E_FEATURE
 			-- Associated routine
 
-	body_index: INTEGER is
+	body_index: INTEGER
 			-- Breakpoint index in `routine'
 		do
 			Result := routine.body_index
@@ -87,39 +87,39 @@ feature -- Access
 			end
 		end
 
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
 			Result := Cursors.cur_Setstop
 		end
 
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
 			Result := Cursors.cur_X_setstop
 		end
 
-	history_name: STRING is
+	history_name: STRING
 			-- History name.
 		do
 			Result := "Breakpoint in " + routine.name
 		end
 
-	is_storable: BOOLEAN is
+	is_storable: BOOLEAN
 			-- Breakpoint stones are not kept.
 		do
 			Result := False
 		end
 
-	stone_signature: STRING is
+	stone_signature: STRING
 			-- Stone signature
 		do
 			Result := routine.feature_signature
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 			-- Header's string.
 		do
 			Result := "Stop point in " + routine.name + " at line " + index.out
@@ -127,7 +127,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	display_bkpt_menu is
+	display_bkpt_menu
 			-- Display a context menu associated with `bkpt', so that
 			-- the user can enable/disable/remove it, or run to cursor.
 		local
@@ -247,14 +247,14 @@ feature -- Basic operations
 
 feature -- operation on breakpoint
 
-	last_dialogs: LINKED_LIST [ES_BREAKPOINT_DIALOG] is
+	last_dialogs: LINKED_LIST [ES_BREAKPOINT_DIALOG]
 			-- Opened dialogs
 			-- to avoid the dialog to be destroy on GC cycle.
 		once
 			create Result.make
 		end
 
-	new_breakpoint_dialog: ES_BREAKPOINT_DIALOG is
+	new_breakpoint_dialog: ES_BREAKPOINT_DIALOG
 			-- New breakpoint dialog.
  		do
  			create Result.make
@@ -267,13 +267,13 @@ feature -- operation on breakpoint
  			Result_not_void: Result /= Void
 		end
 
- 	open_breakpoint_dialog is
+ 	open_breakpoint_dialog
  			-- Open a new breakpoint dialog for Current
  		do
  			new_breakpoint_dialog.show_on_active_window
  		end
 
-	edit_conditional_breakpoint is
+	edit_conditional_breakpoint
 			-- Prompt the user for a condition and create a new breakpoint with that condition at coordinates (`f',`pos').
 		local
 			dlg: like new_breakpoint_dialog
@@ -283,7 +283,7 @@ feature -- operation on breakpoint
 			dlg.show_on_active_window
 		end
 
-	edit_hit_count_breakpoint is
+	edit_hit_count_breakpoint
 			-- Open new breakpoint dialog and focus the hit_count panel
 		local
 			dlg: like new_breakpoint_dialog
@@ -293,7 +293,7 @@ feature -- operation on breakpoint
 			dlg.show_on_active_window
  		end
 
-	edit_when_hits_breakpoint is
+	edit_when_hits_breakpoint
 			-- Open new breakpoint dialog and focus the when_hits panel	
 		local
 			dlg: like new_breakpoint_dialog
@@ -381,7 +381,7 @@ feature -- state of breakpoint
 			bpm.notify_breakpoints_changes
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

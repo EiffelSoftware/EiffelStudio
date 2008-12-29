@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Detector of local scopes for conjunctive condition."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,10 +34,10 @@ feature {AST_EIFFEL} -- Visitor pattern
 
 feature {NONE} -- Status
 
-	is_negation_expected: BOOLEAN is False;
+	is_negation_expected: BOOLEAN = False;
 			-- Is negated value of a boolean expression expected?
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

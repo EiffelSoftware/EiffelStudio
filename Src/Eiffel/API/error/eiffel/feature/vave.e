@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error for variant loop of bad type."
@@ -18,24 +18,24 @@ inherit
 
 feature
 
-	code: STRING is "VAVE";
+	code: STRING = "VAVE";
 			-- Error code
 
 	type: TYPE_A;
 
-	set_type (t: TYPE_A) is
+	set_type (t: TYPE_A)
 		do
 			type := t;
 		end;
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Expression type: ");
 			type.append_to (a_text_formatter);
 			a_text_formatter.add_new_line;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

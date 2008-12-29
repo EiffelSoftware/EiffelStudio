@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared output signs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	error_window: OUTPUT_WINDOW is
+	error_window: OUTPUT_WINDOW
 			-- Error window that displays error message
 		once
 			Result := init_error_window
@@ -18,19 +18,19 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	init_error_window: OUTPUT_WINDOW is
+	init_error_window: OUTPUT_WINDOW
 			-- error window. this function is redefined for graphic mode
 		do
 			Result := term_window
 		end
 
-	term_window: TERM_WINDOW is
+	term_window: TERM_WINDOW
 			-- terminal output. Used in text mode
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

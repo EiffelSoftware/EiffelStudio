@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to change visibility of client/supplier layer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize default values.
 		do
 			create accelerator.make_with_key_combination (
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Perform operation.
 		do
 			if is_sensitive then
@@ -54,7 +54,7 @@ feature -- Basic operations
 			end
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
@@ -71,7 +71,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			if current_button.is_selected then
@@ -83,25 +83,25 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.diagram_supplier_link_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.diagram_supplier_link_icon_buffer
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := Interface_names.l_diagram_supplier_visibility
 		end
 
-	name: STRING is "Supplier_visibility"
+	name: STRING = "Supplier_visibility"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
@@ -110,7 +110,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Implementation
 	current_button: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON;
 			-- Current toggle button.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

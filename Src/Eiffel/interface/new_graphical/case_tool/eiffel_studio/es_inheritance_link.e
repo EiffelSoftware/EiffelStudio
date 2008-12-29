@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is an inheritance link in eiffel studio."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,14 +28,14 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a ES_INHERITANCE_LINK
 		do
 			Precursor {EM_INHERITANCE_LINK}
 			is_needed_on_diagram := True
 		end
 
-	make_with_classes (a_descendant, an_ancestor: ES_CLASS) is
+	make_with_classes (a_descendant, an_ancestor: ES_CLASS)
 			-- Create an ES_INHERITANCE_LINK connecting `a_descendant' with `an_ancestor'.
 		do
 			make_directed_with_source_and_target (a_descendant, an_ancestor)
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Element change
 
-	synchronize is
+	synchronize
 			-- Check if descendant is still descendant of ancestor.
 			-- Remove `Current' otherwise.
 		local
@@ -86,7 +86,7 @@ invariant
 	descendant_not_void: descendant /= Void
 	ancestor_not_void: ancestor /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The built-in help provider types ("kinds") retrievable through a help providers service interface {HELP_PROVIDERS_S}.
 	]"
@@ -71,7 +71,7 @@ feature -- Constants
 	doc_uuid_string: STRING     = "49CA2564-83BB-45AE-95C0-491245F4FB3C"
 	eis_uuid_string: STRING     = "309C1917-9AB0-44E0-AD42-53C2E5F7FD16"
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

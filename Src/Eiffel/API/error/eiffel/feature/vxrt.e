@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for retry instruction outside a feature rescue clause."
@@ -15,10 +15,10 @@ inherit
 	
 feature -- Properties
 
-	code: STRING is "VXRT";
+	code: STRING = "VXRT";
 			-- Error code
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

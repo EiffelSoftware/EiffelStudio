@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An interface for an event list item used with the event service, which is never persisted in the event list item heap.
 		See {EVENT_SERVICE_I} for more information on the event service and how items are used.
@@ -25,7 +25,7 @@ feature -- Status report
 			Result := False
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

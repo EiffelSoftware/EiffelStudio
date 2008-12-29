@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Factory to create a custom attribute to a specific
 			.NET feature or class given provided information.
@@ -36,7 +36,7 @@ inherit
 
 feature -- Settings
 
-	set_feature_custom_attributes (a_feature: FEATURE_I; a_feature_token: INTEGER) is
+	set_feature_custom_attributes (a_feature: FEATURE_I; a_feature_token: INTEGER)
 			-- Extract all defined custom attribute of `a_feature' if any
 			-- and applied them to `a_feature_token'.
 		require
@@ -106,7 +106,7 @@ feature -- Settings
 
 feature {CIL_CODE_GENERATOR} -- Generation
 
-	generate_custom_attributes (a_owner_token: INTEGER; ca: BYTE_LIST [BYTE_NODE]) is
+	generate_custom_attributes (a_owner_token: INTEGER; ca: BYTE_LIST [BYTE_NODE])
 			-- Generate custom attributes represented by `ca'
 			-- using `a_owner_token' as target.
 		require
@@ -131,7 +131,7 @@ feature {CIL_CODE_GENERATOR} -- Generation
 
 feature {NONE} -- Implementation
 
-	custom_attribute_generator: CUSTOM_ATTRIBUTE_GENERATOR is
+	custom_attribute_generator: CUSTOM_ATTRIBUTE_GENERATOR
 			-- Visitor to generate a custom attribute blob.
 		once
 			create Result
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 			custom_attribute_generator_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

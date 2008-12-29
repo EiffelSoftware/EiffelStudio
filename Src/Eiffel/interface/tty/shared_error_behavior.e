@@ -1,23 +1,23 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SHARED_ERROR_BEHAVIOR
 
 feature
 
-	stop_on_error: BOOLEAN is
+	stop_on_error: BOOLEAN
 		do
 			Result := stop_mode.item
 		end
 
-	set_stop_on_error (b: BOOLEAN) is
+	set_stop_on_error (b: BOOLEAN)
 		do
 			stop_mode.put (b)
 		end
 
 feature {NONE}
 
-	stop_mode: CELL [BOOLEAN] is
+	stop_mode: CELL [BOOLEAN]
 			-- Structure to keep `stop_on_error'.
 		once
 			create Result.put (False)
@@ -25,7 +25,7 @@ feature {NONE}
 			stop_mode_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

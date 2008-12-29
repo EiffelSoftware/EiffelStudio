@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when the compiler cannot find an effective redefinition."
@@ -21,14 +21,14 @@ feature -- Properties
 	feature_name: STRING;
 			-- Feature name involved
 
-	code: STRING is "VDRS";
+	code: STRING = "VDRS";
 			-- Error code
 
-	subcode: INTEGER is 4;
+	subcode: INTEGER = 4;
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -39,7 +39,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		do
 			Precursor {EIFFEL_ERROR} (a_text_formatter)
@@ -48,13 +48,13 @@ feature {NONE} -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_feature_name (fn: STRING) is
+	set_feature_name (fn: STRING)
 			-- Assign `fn' to `feature_name'.
 		do
 			feature_name := fn;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

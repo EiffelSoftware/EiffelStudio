@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract notion of value during the execution of the application in the dotnet world."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -72,7 +72,7 @@ inherit
 
 feature {NONE} -- Init
 
-	init_dotnet_data (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value) is
+	init_dotnet_data (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value)
 			-- Init data regarding to dotnet specific values
 		do
 			icd_referenced_value := a_referenced_value
@@ -80,7 +80,7 @@ feature {NONE} -- Init
 			create icd_value_info.make_from_prepared_value (icd_referenced_value, a_prepared_value)
 		end
 
-	register_dotnet_data is
+	register_dotnet_data
 			-- Register this object to estudio system
 		do
 			if address /= Void then
@@ -102,13 +102,13 @@ feature -- Special Dotnet status
 	is_property: BOOLEAN
 			-- Is a property value ?
 
-	set_static (v: like is_static) is
+	set_static (v: like is_static)
 			-- Set `is_static' as `v'
 		do
 			is_static := v
 		end
 
-	set_property (v: like is_property) is
+	set_property (v: like is_property)
 			-- Set `is_property' as `v'
 		do
 			is_property := v
@@ -116,7 +116,7 @@ feature -- Special Dotnet status
 
 feature {NONE} -- Special childrens
 
-	children_from_external_type: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children_from_external_type: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- Children list from a Reference which is an external type
 			-- (ie: a dotnet type, not pure Eiffel)
 		local
@@ -156,7 +156,7 @@ feature {NONE} -- Special childrens
 		end
 
 	field_values_for (l_class_token: NATURAL_32; l_icd_class: ICOR_DEBUG_CLASS; l_object_value: ICOR_DEBUG_OBJECT_VALUE;
-				l_icd_frame: ICOR_DEBUG_FRAME; l_icd_module: ICOR_DEBUG_MODULE): DS_LIST [ABSTRACT_DEBUG_VALUE] is
+				l_icd_frame: ICOR_DEBUG_FRAME; l_icd_module: ICOR_DEBUG_MODULE): DS_LIST [ABSTRACT_DEBUG_VALUE]
 		local
 			l_md_import: MD_IMPORT
 			l_tokens: LIST [NATURAL_32]
@@ -234,7 +234,7 @@ feature {NONE} -- Special childrens
 
 	property_values_for (l_class_token: NATURAL_32; l_icd_class: ICOR_DEBUG_CLASS; a_icd_value: ICOR_DEBUG_VALUE;
 				l_icd_frame: ICOR_DEBUG_FRAME; l_icd_module: ICOR_DEBUG_MODULE;
-			): DS_LIST [ABSTRACT_DEBUG_VALUE] is
+			): DS_LIST [ABSTRACT_DEBUG_VALUE]
 		local
 			l_md_import: MD_IMPORT
 			l_tokens: LIST [NATURAL_32]
@@ -335,7 +335,7 @@ feature -- Properties
 	icd_value_info: EIFNET_DEBUG_VALUE_INFO;
 			-- Value info of object.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects capable of printing."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_text (stt: STRING) is
+	set_text (stt: STRING)
 			-- Set the text that should be printed next.
 		do
 			text := stt
@@ -59,7 +59,7 @@ feature -- Status setting
 			text = stt
 		end
 
-	set_window (wnd: EV_WINDOW) is
+	set_window (wnd: EV_WINDOW)
 			-- Define the window to which dialogs will be relative.
 		do
 			window := wnd
@@ -67,7 +67,7 @@ feature -- Status setting
 			window = wnd
 		end
 
-	set_print_context (pc: EV_PRINT_CONTEXT) is
+	set_print_context (pc: EV_PRINT_CONTEXT)
 			-- Define the options used for the next print job.
 		do
 			context := pc
@@ -75,14 +75,14 @@ feature -- Status setting
 			context = pc
 		end
 
-	set_job_name (nname: like job_name) is
+	set_job_name (nname: like job_name)
 			-- Set the name of the next print job.
 			--| Only used on Windows. Optional.
 		do
 			job_name := nname
 		end
 
-	set_external_command (cmd: STRING) is
+	set_external_command (cmd: STRING)
 			-- Set the command that should be invoked to print files using an external editor.
 		do
 			external_command := cmd
@@ -93,7 +93,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	print_text is
+	print_text
 			-- Launch an effective print job.
 		require
 			text_set: text /= Void
@@ -118,7 +118,7 @@ feature -- Basic operations
 			retry
 		end
 
-	ask_and_print is
+	ask_and_print
 			-- Pop up an EV_PRINT_DIALOG to query the context and then print `text'.
 			-- May be cancelled.
 		require
@@ -136,7 +136,7 @@ feature -- Basic operations
 			dial.show_modal_to_window (window)
 		end
 
-	print_via_command is
+	print_via_command
 			-- Invoke an external command to print `text'.
 		require
 			cmd_set: external_command /= Void and then not external_command.is_empty
@@ -178,7 +178,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation: graphical interface
 
-	implementation: EB_PRINTER_IMP is
+	implementation: EB_PRINTER_IMP
 			-- Object used to send print requests.
 		do
 			if internal_implementation = Void then
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation: graphical interface
 	internal_implementation: EB_PRINTER_IMP
 			-- Once per object implementation.
 
-	call_print_from (d: EV_PRINT_DIALOG) is
+	call_print_from (d: EV_PRINT_DIALOG)
 			-- Initialize `Current's parameters with the values in `d' and call `print_text'.
 		require
 			valid_print_dialog: d /= Void -- and not d.is_destroyed to query it?
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation: graphical interface
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a remote object's address"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -168,7 +168,7 @@ feature -- Status report
 	is_void: BOOLEAN
 			-- Current represents Void value
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -190,13 +190,13 @@ feature -- Status report
 			end
 		end
 
-	is_hashable: BOOLEAN is
+	is_hashable: BOOLEAN
 			-- <Precursor>
 		do
 			Result := not is_void
 		end
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			Result := output
@@ -211,7 +211,7 @@ invariant
 	default_value_if_is_void: is_void implies value = Default_pointer
 	not_default_value_implies_not_is_void: value /= Default_pointer implies not is_void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for violation of the constrained genericity %
 				%rule."
 	legal: "See notice at end of class."
@@ -25,12 +25,12 @@ feature -- Properties
 	constraint_types: TYPE_SET_A
 			-- Constraint type
 
-	code: STRING is "VTCG"
+	code: STRING = "VTCG"
 			-- Error code
 
 feature -- Status report
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := Precursor and then feature_name /= Void and then
@@ -39,7 +39,7 @@ feature -- Status report
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -67,7 +67,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_feature_name (a_name: STRING) is
+	set_feature_name (a_name: STRING)
 			-- Set missing `a_name' of `constraint_class' to `feature_name'.
 		require
 			feature_name_not_void: a_name /= Void
@@ -79,7 +79,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			feature_name_set: feature_name = a_name
 		end
 
-	set_constraint_class (c: CLASS_C) is
+	set_constraint_class (c: CLASS_C)
 			-- Set `c' to `constraint_class' which does not
 			-- contain `feature_name'
 		require
@@ -90,7 +90,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			constraint_class_set: constraint_class = c
 		end
 
-	set_constraint_types (t: TYPE_SET_A) is
+	set_constraint_types (t: TYPE_SET_A)
 			-- Set `t' to `constraint_type' which does not
 			-- contain `feature_name'.
 		require
@@ -101,7 +101,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			constraint_types_set: constraint_types = t
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

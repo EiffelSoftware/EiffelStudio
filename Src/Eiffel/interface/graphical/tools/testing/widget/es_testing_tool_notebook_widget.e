@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing notebook widgets displayed in testing tool.
 	]"

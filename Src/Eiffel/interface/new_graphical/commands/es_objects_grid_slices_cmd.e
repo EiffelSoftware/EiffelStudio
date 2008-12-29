@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command in the object tool to define the default slice limits."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature -- Initialization
 
-	make (a_tool: like tool) is
+	make (a_tool: like tool)
 			-- Initialize `Current' and associate it with `tool'.
 		do
 			tool := a_tool
@@ -44,37 +44,37 @@ feature -- Initialization
 
 feature -- Access
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu name for `Current'.
 		once
 			Result := Interface_names.m_Set_slice_size
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmaps representing the command.
 		do
 			--| No big pixmap is required for this command.
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			--| No big pixmap is required for this command.
 		end
 
-	mini_pixmap: EV_PIXMAP is
+	mini_pixmap: EV_PIXMAP
 			-- Pixmap representing the command for mini toolbars.
 		do
 			Result := pixmaps.mini_pixmaps.debugger_set_sizes_icon
 		end
 
-	mini_pixel_buffer: EV_PIXEL_BUFFER is
+	mini_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixmap representing the command for mini toolbars.
 		do
 			Result := pixmaps.mini_pixmaps.debugger_set_sizes_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := description
@@ -85,13 +85,13 @@ feature -- Status report
 	tool: ES_OBJECTS_GRID_MANAGER
 			-- Object tool `Current' is associated with. `Void' if not `for_tool'.
 
-	name: STRING is
+	name: STRING
 			-- Name of the command.
 		once
 			Result := Interface_names.l_Set_slice_limits + "New"
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description of the command.
 		once
 			Result := Interface_names.l_Set_slice_limits_desc
@@ -99,7 +99,7 @@ feature -- Status report
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Change the default slice limits through a dialog box.
 		local
 			dm: like debugger_manager
@@ -127,7 +127,7 @@ feature -- Execution
 
 feature -- Basic operations
 
-	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new mini toolbar button for this command.
 		do
 			Result := Precursor
@@ -136,7 +136,7 @@ feature -- Basic operations
 			Result.drop_actions.set_veto_pebble_function (agent is_resizable)
 		end
 
-	is_resizable (st: ANY): BOOLEAN is
+	is_resizable (st: ANY): BOOLEAN
 			-- Is the object represented by `st' droppable, i.e. SPECIAL?
 		local
 			obj_grid_item: like object_grid_line_for
@@ -154,7 +154,7 @@ feature -- Basic operations
 			Result := obj_grid_item /= Void and then obj_grid_item.object_is_special_value
 		end
 
-	object_grid_line_for (ost: OBJECT_STONE): ES_OBJECTS_GRID_OBJECT_LINE is
+	object_grid_line_for (ost: OBJECT_STONE): ES_OBJECTS_GRID_OBJECT_LINE
 			-- Object grid line related to `ost if any.
 		local
 			l_addr: DBG_ADDRESS
@@ -193,25 +193,25 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Implementation
 
-	Cst_field_label_width: INTEGER is 70
-	Cst_border_width: INTEGER is 5
-	Cst_padding_width: INTEGER is 5
+	Cst_field_label_width: INTEGER = 70
+	Cst_border_width: INTEGER = 5
+	Cst_padding_width: INTEGER = 5
 
 	get_effective: BOOLEAN
 			-- Did the user really enter new min/max values in the dialog box?
 			-- Valid after each call to get_slice_limits.
 
-	get_slice_limits_on_target (obj_grid_item: ES_OBJECTS_GRID_OBJECT_LINE) is
+	get_slice_limits_on_target (obj_grid_item: ES_OBJECTS_GRID_OBJECT_LINE)
 		do
 			get_slice_limits (False, obj_grid_item)
 		end
 
-	get_slice_limits_on_global is
+	get_slice_limits_on_global
 		do
 			get_slice_limits (True, Void)
 		end
 
-	get_slice_limits (def: BOOLEAN; obj: ES_OBJECTS_GRID_OBJECT_LINE) is
+	get_slice_limits (def: BOOLEAN; obj: ES_OBJECTS_GRID_OBJECT_LINE)
 			-- Display a dialog box to enter new slice limits
 			-- as default values if `def',
 			-- as object specific values otherwise,
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 			dial.show_modal_to_window (w)
 		end
 
-	on_cb_disp_str_limit_cb (cb_disp_str_limit: EV_CHECK_BUTTON; tf_disp_str_size: EV_TEXT_FIELD) is
+	on_cb_disp_str_limit_cb (cb_disp_str_limit: EV_CHECK_BUTTON; tf_disp_str_size: EV_TEXT_FIELD)
 		require
 			cb_disp_str_limit /= Void
 			tf_disp_str_size /= Void
@@ -431,7 +431,7 @@ feature {NONE} -- Implementation
 
 feature {ES_OBJECTS_GRID_LINE} -- Dropping action
 
-	drop_feature_on_object_stone (st: FEATURE_ON_OBJECT_STONE) is
+	drop_feature_on_object_stone (st: FEATURE_ON_OBJECT_STONE)
 		require
 			st_not_void: st /= Void
 		local
@@ -443,7 +443,7 @@ feature {ES_OBJECTS_GRID_LINE} -- Dropping action
 			end
 		end
 
-	drop_object_stone (st: OBJECT_STONE) is
+	drop_object_stone (st: OBJECT_STONE)
 			-- Change the slice limits for the object
 			-- represented by `st' in the object tool managed objects.
 		require
@@ -476,7 +476,7 @@ feature {ES_OBJECTS_GRID_LINE} -- Dropping action
 
 feature {NONE} -- Implementation
 
-	internal_set_limits (lower, upper: INTEGER; disp_str_size: INTEGER) is
+	internal_set_limits (lower, upper: INTEGER; disp_str_size: INTEGER)
 			-- Change limits to `lower, upper' values.
 		local
 			nmin, nmax: INTEGER
@@ -497,7 +497,7 @@ feature {NONE} -- Implementation
 			get_effective := True
 		end
 
-	get_current_values is
+	get_current_values
 			-- Get current values
 		do
 			slice_min := debugger_manager.min_slice
@@ -505,7 +505,7 @@ feature {NONE} -- Implementation
 			displayed_string_size := debugger_manager.displayed_string_size
 		end
 
-	restore_default_values	is
+	restore_default_values
 			-- Restore default values
 		do
 			slice_min := preferences.debugger_data.min_slice
@@ -514,7 +514,7 @@ feature {NONE} -- Implementation
 		end
 
 	update_fields (cb_disp_str_limit: EV_CHECK_BUTTON; tf_disp_str_size: EV_TEXT_FIELD;
-				tf_minf: EV_TEXT_FIELD; tf_maxf: EV_TEXT_FIELD) is
+				tf_minf: EV_TEXT_FIELD; tf_maxf: EV_TEXT_FIELD)
 			--
 		do
 			if tf_disp_str_size /= Void then
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 	check_and_get_limits_from_fields (cb_set_as_default, cb_disp_str_limit: EV_CHECK_BUTTON; tf_disp_str_size: EV_TEXT_FIELD;
 				tf_minf: EV_TEXT_FIELD; tf_maxf: EV_TEXT_FIELD;
 				cb_refresh: EV_CHECK_BUTTON;
-				dial: EV_DIALOG) is
+				dial: EV_DIALOG)
 			-- Set `slice_min' and `slice_max' according to the values entered
 			-- in `tf_minf' and `tf_maxf'.
 		require
@@ -585,7 +585,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid item for metric path criterion"
 	author: ""
 	date: "$Date$"
@@ -25,7 +25,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			old_make ("")
@@ -35,7 +35,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	grid_item: EV_GRID_ITEM is
+	grid_item: EV_GRID_ITEM
 			-- Grid item for Current property
 		do
 			Result := Current
@@ -43,13 +43,13 @@ feature -- Access
 
 feature -- Setting
 
-	load_criterion (a_criterion: EB_METRIC_PATH_CRITERION) is
+	load_criterion (a_criterion: EB_METRIC_PATH_CRITERION)
 			-- Load `a_criterion' into Current.
 		do
 			set_value (a_criterion.path.as_string_32)
 		end
 
-	store_criterion (a_criterion: EB_METRIC_PATH_CRITERION) is
+	store_criterion (a_criterion: EB_METRIC_PATH_CRITERION)
 			-- Store Current in `a_criterion'.
 		local
 			l_value: like value

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Compute export status of a feature clause or an export clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ inherit
 
 feature -- Status report
 
-	feature_clause_export_status (a_system: SYSTEM_I; a_class: CLASS_C; a_clause: FEATURE_CLAUSE_AS): EXPORT_I is
+	feature_clause_export_status (a_system: SYSTEM_I; a_class: CLASS_C; a_clause: FEATURE_CLAUSE_AS): EXPORT_I
 			-- Export status for `a_Client' in `a_class' in `a_system'.
 		require
 			a_system_not_void: a_system /= Void
@@ -51,7 +51,7 @@ feature -- Status report
 			reset
 		end
 
-	export_status (a_system: SYSTEM_I; a_class: CLASS_C; a_client: CLIENT_AS): EXPORT_I is
+	export_status (a_system: SYSTEM_I; a_class: CLASS_C; a_client: CLIENT_AS): EXPORT_I
 			-- Export status for `a_Client' in `a_class' in `a_system'.
 		require
 			a_system_not_void: a_system /= Void
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation: Reset
 
-	reset is
+	reset
 		do
 			current_system := Void
 			current_class := Void
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Implementation
 
-	process_client_as (l_as: CLIENT_AS) is
+	process_client_as (l_as: CLIENT_AS)
 		local
 			l_clients: CLASS_LIST_AS
 			l_lst: ID_LIST
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS) is
+	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS)
 		do
 			if l_as.clients /= Void then
 				l_as.clients.process (Current)
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

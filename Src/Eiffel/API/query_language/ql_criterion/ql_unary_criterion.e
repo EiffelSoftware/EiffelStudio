@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an unary criterion wrapping another criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Status report
 
-	require_compiled: BOOLEAN is
+	require_compiled: BOOLEAN
 			-- Does current criterion require a compiled item?
 		do
 			Result := wrapped_criterion.require_compiled
@@ -27,7 +27,7 @@ feature -- Status report
 			good_result: Result implies wrapped_criterion.require_compiled
 		end
 
-	is_atomic: BOOLEAN is
+	is_atomic: BOOLEAN
 			-- Is current criterion atomic?
 		do
 			Result := False
@@ -35,13 +35,13 @@ feature -- Status report
 
 feature -- Process
 
-	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+	process (a_criterion_visitor: QL_CRITERION_VISITOR)
 			-- Process Current using `a_criterion_visitor'.
 		do
 			a_criterion_visitor.process_unary_criterion (Current)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

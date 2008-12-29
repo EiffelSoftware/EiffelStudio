@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents a criterion to decide whether or not a feature is descendant of another feature
 					
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Implementation
 
-	find_result is
+	find_result
 			-- Find ancestors of feature `descendant_feature'.
 		local
 			classes: ARRAYED_LIST [CLASS_C]
@@ -83,7 +83,7 @@ feature{NONE} -- Implementation
 			is_intrinsic_domain_cached_in_domain_generator := False
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

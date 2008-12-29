@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when a feature name in an undefining clause is not %
@@ -19,12 +19,12 @@ inherit
 	
 feature -- Properties
 
-	code: STRING is "VDUS";
+	code: STRING = "VDUS";
 			-- Error code
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Invalid feature name: ");
 			a_text_formatter.add (feature_name);
@@ -34,7 +34,7 @@ feature -- Output
 			a_text_formatter.add_new_line;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

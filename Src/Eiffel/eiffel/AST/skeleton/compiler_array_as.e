@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of manifest array for the compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ feature -- Attributes
 
 feature -- Settings
 
-	set_array_type (t: like array_type) is
+	set_array_type (t: like array_type)
 		require
 			t_not_void: t /= Void
 		do
@@ -38,7 +38,7 @@ feature -- Settings
 			array_type_set: array_type = t
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Check if the current project compiles without any errors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create check
 		do
 			error_message := interface_names.l_compilation_was_not_successful
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-	execute is
+	execute
 			-- Execute the check.
 		local
 			l_sensitive: BOOLEAN
@@ -55,7 +55,7 @@ feature -- Basic operation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

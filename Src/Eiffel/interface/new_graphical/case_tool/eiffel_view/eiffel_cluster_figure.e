@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common functionality for all views of ES_CLUSTERs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an CLUSTER_FIGURE.
 		do
 			Precursor {EG_RESIZABLE_CLUSTER_FIGURE}
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			create label_pixmap
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current' with `model'.
 		do
 			Precursor {EG_RESIZABLE_CLUSTER_FIGURE}
@@ -70,7 +70,7 @@ feature -- Access
 	model: ES_CLUSTER
 			-- Model for `Current'.
 
-	world: EIFFEL_WORLD is
+	world: EIFFEL_WORLD
 			-- World `Current' is part of.
 		do
 			Result ?= Precursor {EG_RESIZABLE_CLUSTER_FIGURE}
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EG_RESIZABLE_CLUSTER_FIGURE}
@@ -93,7 +93,7 @@ feature -- Element change
 			end
 		end
 
-	apply_right_angles is
+	apply_right_angles
 			-- Apply right angles to all links in `links' and all elements in `Current'.
 		local
 			l_item: EIFFEL_LINK_FIGURE
@@ -135,13 +135,13 @@ feature -- Element change
 
 feature -- XML
 
-	group_id_string: STRING is "GROUP_ID"
+	group_id_string: STRING = "GROUP_ID"
 			-- Group id
 
-	cluster_id_string: STRING is "CLUSTER_ID"
+	cluster_id_string: STRING = "CLUSTER_ID"
 			-- ES_CLUSTER id string
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml element representing `Current's state.
 		do
 			Result := Precursor {EG_RESIZABLE_CLUSTER_FIGURE} (node)
@@ -149,7 +149,7 @@ feature -- XML
 			node.add_attribute (cluster_id_string, xml_namespace, model.cluster_id)
 		end
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		do
 			node.forth
@@ -160,21 +160,21 @@ feature -- XML
 
 feature {EG_LAYOUT} -- Layouting
 
-	set_to_minimum_size is
+	set_to_minimum_size
 			-- Set `Current's to `minimum_size'.
 		deferred
 		end
 
 feature {EIFFEL_WORLD} -- Show/Hide
 
-	disable_shown is
+	disable_shown
 			-- Hide `Current'.
 		deferred
 		ensure
 			set: not is_shown
 		end
 
-	enable_shown is
+	enable_shown
 			-- Show `Current'.
 		deferred
 		ensure
@@ -186,7 +186,7 @@ feature {EIFFEL_WORLD} -- Show/Hide
 
 feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 
-	collapse is
+	collapse
 			-- Hide all elements in `Current' and minimize `Current'.
 		local
 			linkable_figure: EG_LINKABLE_FIGURE
@@ -231,7 +231,7 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 			resizer_bottom_left.disable_sensitive
 		end
 
-	expand is
+	expand
 			-- Show all not iconified elements in `Current'.
 		local
 			linkable_figure: EG_LINKABLE_FIGURE
@@ -288,7 +288,7 @@ feature {EIFFEL_CLUSTER_FIGURE} -- Expand/Collapse
 
 feature {NONE} -- Implementation
 
-	on_needed_on_diagram_changed is
+	on_needed_on_diagram_changed
 			-- `model'.`is_needed_on_diagram' changed.
 		do
 			if model.is_needed_on_diagram then
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-	save_position is
+	save_position
 			-- Make a backup of current coordinates.
 		do
 			saved_x := port_x
@@ -312,7 +312,7 @@ feature {NONE} -- Implementation
 	saved_x, saved_y: INTEGER
 			-- Saved positions.
 
-	on_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Cluster is moving.
 		do
 			world.context_editor.restart_force_directed
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	extend_history is
+	extend_history
 			-- Register move in the history.
 		local
 			ce: ES_DIAGRAM_TOOL_PANEL
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_linkable_add (a_linkable: EG_LINKABLE) is
+	on_linkable_add (a_linkable: EG_LINKABLE)
 			-- `a_linkable' was added to the cluster.
 		local
 			l_world: like world
@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-	on_handle_start is
+	on_handle_start
 			-- User started to move `Current'.
 		do
 			was_fixed := is_fixed
@@ -403,13 +403,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_handle_end is
+	on_handle_end
 			-- User ended to move `Current'.
 		do
 			set_is_fixed (was_fixed)
 		end
 
-	update_links is
+	update_links
 			-- Update all links in `Current'.
 		local
 			i, nb: INTEGER
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_pebble_request: CLUSTER_FIGURE_STONE is
+	on_pebble_request: CLUSTER_FIGURE_STONE
 			-- Pebble request.
 		do
 			if model /= Void then
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

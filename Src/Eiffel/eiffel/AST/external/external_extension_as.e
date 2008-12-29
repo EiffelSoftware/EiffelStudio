@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of an external extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ feature -- Properties
 
 feature -- Conveniences
 
-	has_signature: BOOLEAN is
+	has_signature: BOOLEAN
 			-- Does the extension define a c_signature?
 		do
 			Result := return_type > 0 or else argument_types /= Void
@@ -50,7 +50,7 @@ feature -- Conveniences
 
 feature {EXTERNAL_LANG_AS} -- Implementation
 
-	parse is
+	parse
 			-- Parse the external extension.
 		do
 			parse_signature
@@ -65,12 +65,12 @@ feature {EXTERNAL_LANG_AS} -- Implementation
 
 feature -- Feature information
 
-	extension_i: EXTERNAL_EXT_I is
+	extension_i: EXTERNAL_EXT_I
 			-- EXTERNAL_EXT_I corresponding to current extension
 		deferred
 		end
 
-	init_extension_i (ext_i: EXTERNAL_EXT_I) is
+	init_extension_i (ext_i: EXTERNAL_EXT_I)
 			-- Initialize `ext_i'
 		require
 			ext_i_not_void: ext_i /= Void
@@ -83,13 +83,13 @@ feature -- Feature information
 
 feature -- Type check
 
-	type_check (ext_as_b: EXTERNAL_AS) is
+	type_check (ext_as_b: EXTERNAL_AS)
 			-- Perform type check on Current associated with `ext_as_b'.
 		do
 			type_check_signature
 		end
 
-	type_check_signature is
+	type_check_signature
 			-- Perform type check on the signature.
 		local
 			ext_same_sign: EXT_SAME_SIGN
@@ -116,25 +116,25 @@ feature -- Type check
 
 feature -- Setting
 
-	set_include_files (s: STRING) is
+	set_include_files (s: STRING)
 			-- Assign `s' to `include_files'.
 		do
 			include_files := s
 		end
 
-	set_signature (s: STRING) is
+	set_signature (s: STRING)
 			-- Assign `s' to `c_signature'.
 		do
 			c_signature := s
 		end
 
-	set_special_part (s: STRING) is
+	set_special_part (s: STRING)
 			-- Assign `s' to `special_part'.
 		do
 			special_part := s
 		end
 
-	set_is_blocking_call (v: like is_blocking_call) is
+	set_is_blocking_call (v: like is_blocking_call)
 			-- Assign `v' to `is_blocking_call'.
 		do
 			is_blocking_call := v
@@ -144,12 +144,12 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	parse_special_part is
+	parse_special_part
 			-- Parse the special part clause.
 		do
 		end
 
-	parse_signature is
+	parse_signature
 			-- Parse the signature clause.
 		local
 			end_arg_list: INTEGER
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_include_files is
+	parse_include_files
 			-- Parse the include file clause.
 		local
 			start_pos, end_pos: INTEGER
@@ -267,7 +267,7 @@ end
 			end
 		end
 
-	parse_file_name (s: STRING; start: INTEGER): INTEGER is
+	parse_file_name (s: STRING; start: INTEGER): INTEGER
 			-- Return position of the end of the file name in `s'
 			-- or 0 for invalid construct (parsing starts at `start')
 		require
@@ -299,7 +299,7 @@ debug
 end
 		end
 
-	insert_error (msg: STRING) is
+	insert_error (msg: STRING)
 			-- Raise syntax error (`msg' is the explanation).
 		local
 			ext_error: EXTERNAL_SYNTAX_ERROR
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 	special_part: STRING;
 			-- Special part
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

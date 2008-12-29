@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Information gathered by the eiffel test wizard to create new test.
 	]"
@@ -527,7 +527,7 @@ invariant
 	            type = extracted_test_class_code or
 	            type = generated_test_class_code
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

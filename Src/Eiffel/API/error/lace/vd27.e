@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when root creation procedure name is not valid."
@@ -23,7 +23,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Root class: ");
 			root_class.append_name (a_text_formatter);
@@ -35,17 +35,17 @@ feature -- Output
 
 feature {CLASS_C} -- Setting
 
-	set_creation_routine (a_name: STRING) is
+	set_creation_routine (a_name: STRING)
 		do
 			creation_routine := a_name;
 		end;
 
-	set_root_class (a_class: like root_class) is
+	set_root_class (a_class: like root_class)
 		do
 			root_class := a_class;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

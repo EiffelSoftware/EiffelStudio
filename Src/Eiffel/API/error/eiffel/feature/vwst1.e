@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when an id in a strip expression is %
@@ -19,7 +19,7 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is
+	subcode: INTEGER
 		do
 			Result := 1;
 		end;
@@ -27,12 +27,12 @@ feature -- Properties
 	attribute_name: STRING;
 			-- Attribute name in the strip expresssion
 
-	code: STRING is "VWST";
+	code: STRING = "VWST";
 			-- Error code
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
 		do
@@ -43,13 +43,13 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_attribute_name (s: STRING) is
+	set_attribute_name (s: STRING)
 			-- Assign `s' to `attribute_name'.
 		do
 			attribute_name := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

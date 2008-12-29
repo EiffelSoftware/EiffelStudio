@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects that represents the special debug menu access point"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,32 +21,32 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 		do
 			create windows_lists.make
 		end
 
 feature -- Status report
 
-	preference_enable_menu: BOOLEAN is
+	preference_enable_menu: BOOLEAN
 			-- If the preference_want_to_show_estudio_debug_menu ?
 		do
 			Result := preferences.development_window_data.estudio_dbg_menu_allowed_preference.value
 		end
 
-	preference_debug_menu_enabled: BOOLEAN_PREFERENCE is
+	preference_debug_menu_enabled: BOOLEAN_PREFERENCE
 		do
 			Result := preferences.development_window_data.estudio_dbg_menu_enabled_preference
 		end
 
-	preference_debug_menu_on_accelerator_enabled: BOOLEAN_PREFERENCE is
+	preference_debug_menu_on_accelerator_enabled: BOOLEAN_PREFERENCE
 		do
 			Result := preferences.development_window_data.estudio_dbg_menu_accelerator_allowed_preference
 		end
 
 feature -- Element change
 
-	attach_window (w: EB_VISION_WINDOW) is
+	attach_window (w: EB_VISION_WINDOW)
 			-- Set main_window
 		local
 			lw: EB_VISION_WINDOW
@@ -67,7 +67,7 @@ feature -- Element change
 			end
 		end
 
-	unattach_window (w: EB_VISION_WINDOW) is
+	unattach_window (w: EB_VISION_WINDOW)
 		local
 			lw: EB_VISION_WINDOW
 		do
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 
 	windows_lists: LINKED_LIST [TUPLE [EB_VISION_WINDOW, ESTUDIO_DEBUG_MENU, EV_ACCELERATOR]]
 
-	menu (w: EB_VISION_WINDOW; remove_if_found: BOOLEAN): ESTUDIO_DEBUG_MENU is
+	menu (w: EB_VISION_WINDOW; remove_if_found: BOOLEAN): ESTUDIO_DEBUG_MENU
 		local
 			t: TUPLE [window: EB_VISION_WINDOW; menu: ESTUDIO_DEBUG_MENU; acc: EV_ACCELERATOR]
 		do
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	accelerator (w: EB_VISION_WINDOW; remove_if_found: BOOLEAN): EV_ACCELERATOR is
+	accelerator (w: EB_VISION_WINDOW; remove_if_found: BOOLEAN): EV_ACCELERATOR
 		local
 			t: TUPLE [window: EB_VISION_WINDOW; menu: ESTUDIO_DEBUG_MENU; acc: EV_ACCELERATOR]
 		do
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_details_for (w: EB_VISION_WINDOW; m: ESTUDIO_DEBUG_MENU; acc: EV_ACCELERATOR) is
+	add_details_for (w: EB_VISION_WINDOW; m: ESTUDIO_DEBUG_MENU; acc: EV_ACCELERATOR)
 		local
 			t: TUPLE [window: EB_VISION_WINDOW; menu: ESTUDIO_DEBUG_MENU; acc: EV_ACCELERATOR]
 		do
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 
 feature -- Command
 
-	add_accelerator (w: EB_VISION_WINDOW) is
+	add_accelerator (w: EB_VISION_WINDOW)
 			-- Add accelerator related to Current command.
 		require
 			window_not_void: w /= Void
@@ -191,7 +191,7 @@ feature -- Command
 			end
 		end
 
-	remove_accelerator (w: EB_VISION_WINDOW) is
+	remove_accelerator (w: EB_VISION_WINDOW)
 			-- Remove `accelerator' from main development window.
 		local
 			acc: like accelerator
@@ -204,7 +204,7 @@ feature -- Command
 			end
 		end
 
-	remove_menu (w: EB_VISION_WINDOW) is
+	remove_menu (w: EB_VISION_WINDOW)
 			-- Remove menu from menu bar then change the preference.
 		local
 			m: like menu
@@ -222,7 +222,7 @@ feature -- Command
 			end
 		end
 
-	add_menu (w: EB_VISION_WINDOW) is
+	add_menu (w: EB_VISION_WINDOW)
 			-- Add menu to menu bar then change the preference.
 		require
 			w_not_void: w /= Void
@@ -244,7 +244,7 @@ feature -- Command
 			end
 		end
 
-	update_menu (w: EB_VISION_WINDOW) is
+	update_menu (w: EB_VISION_WINDOW)
 		require
 			window_not_void: w /= Void
 		local
@@ -260,7 +260,7 @@ feature -- Command
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Assigner commands of joined features should be the same."
 	legal: "See notice at end of class."
@@ -17,10 +17,10 @@ create {COMPILER_EXPORTER}
 
 feature -- Access
 
-	subcode: INTEGER is 3;
+	subcode: INTEGER = 3;
 			-- Error subcode
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

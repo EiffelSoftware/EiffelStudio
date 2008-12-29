@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents the abstraction of a Reference value for the debugger
 		]"
@@ -37,7 +37,7 @@ feature -- Expanded status
 
 feature {NONE} -- Output
 
-	output_value: STRING_32 is
+	output_value: STRING_32
 			-- Return a string representing `Current'.
 		do
 			if
@@ -52,14 +52,14 @@ feature {NONE} -- Output
 
 feature -- Output
 
-	expandable: BOOLEAN is
+	expandable: BOOLEAN
 			-- Does `Current' have sub-items?
 			-- (Is it a non void reference, a special object, ...)
 		do
 			Result := not is_null
 		end
 
-	kind: INTEGER is
+	kind: INTEGER
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		local
@@ -78,7 +78,7 @@ feature -- Output
 
 feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 
-	debug_value_type_id: INTEGER is
+	debug_value_type_id: INTEGER
 		do
 			Result := abstract_reference_value_id
 		end
@@ -86,7 +86,7 @@ feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 invariant
 	address_void_only_for_expanded: address = Void implies is_expanded
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

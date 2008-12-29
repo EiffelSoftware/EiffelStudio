@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Tool descriptor for EiffelStudio's memory analyser tool.
 	]"
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- User interface initialization
 
-	build_tool_interface (a_widget: EV_HORIZONTAL_SPLIT_AREA) is
+	build_tool_interface (a_widget: EV_HORIZONTAL_SPLIT_AREA)
 			-- Builds the tools user interface elements.
 			-- Note: This function is called prior to showing the tool for the first time.
 			--
@@ -143,7 +143,7 @@ feature {NONE} -- User interface initialization
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle tool.
 		do
 			if is_initialized then
@@ -163,7 +163,7 @@ feature {NONE} -- Access
 	last_map: HASH_TABLE [INTEGER, INTEGER]
 			-- Last cached object count map from `calculate_memory_data'
 
-	filter_match_expression: RX_PCRE_MATCHER is
+	filter_match_expression: RX_PCRE_MATCHER
 			-- Regular expression used when filtering memory map result
 		require
 			is_filtering: is_filtering
@@ -269,7 +269,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Query
 
-	row_data: TUPLE [name: STRING; instances: INTEGER; delta: INTEGER; type_id: INTEGER] is
+	row_data: TUPLE [name: STRING; instances: INTEGER; delta: INTEGER; type_id: INTEGER]
 		do
 		end
 
@@ -413,7 +413,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	populate_memory_grid_type_subrows (a_data: like row_data; a_parent_row: EV_GRID_ROW) is
+	populate_memory_grid_type_subrows (a_data: like row_data; a_parent_row: EV_GRID_ROW)
 			-- Populates a row with type instances.
 			--
 			-- `a_parent_row': The row to populate with type instance subrows.
@@ -446,7 +446,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	populate_memory_grid_referer_subrows (a_parent_row: EV_GRID_ROW) is
+	populate_memory_grid_referer_subrows (a_parent_row: EV_GRID_ROW)
 			-- Populates a row with referring object (object is taken from the supplied row's user data) subrows.
 			--
 			-- `a_parent_row': The row to populate with subrows.
@@ -507,7 +507,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	populate_memory_grid_referer_row (a_row: EV_GRID_ROW; a_index: INTEGER; a_object: ANY) is
+	populate_memory_grid_referer_row (a_row: EV_GRID_ROW; a_index: INTEGER; a_object: ANY)
 			-- Populates a row with the object information
 			--
 			-- `a_row': The row to populate, or repopulate.
@@ -566,7 +566,7 @@ feature {NONE} -- Basic operations
 			a_row_is_expandable: a_row.is_expandable
 		end
 
-	populate_memory_grid_clouds (a_dynamic_type: INTEGER; a_parent_row: EV_GRID_ROW) is
+	populate_memory_grid_clouds (a_dynamic_type: INTEGER; a_parent_row: EV_GRID_ROW)
 			-- For each object of type `a_dynamic_type' create a list of objects referencing them
 			-- ordered by increasing number of reference to objects of type `a_dynamic_type.
 			-- This list is inserted as a child node of `a_parent_row'.
@@ -764,7 +764,7 @@ feature {NONE} -- Sort handling
 			end
 		end
 
-	sort_handler (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EV_GRID_ROW]) is
+	sort_handler (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EV_GRID_ROW])
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
@@ -782,7 +782,7 @@ feature {NONE} -- Sort handling
 			end
 		end
 
-	sort_memory_data (a_map: like memory_data) is
+	sort_memory_data (a_map: like memory_data)
 			-- Sorts memory map by type name and returns a list of sorted associated type ids.
 			--
 			-- `a_table': Memory counter map table to sort.
@@ -818,7 +818,7 @@ feature {NONE} -- Sort handling
 
 feature {NONE} -- Analysis
 
-	is_data_result_of_analyzis (a_data: ANY): BOOLEAN is
+	is_data_result_of_analyzis (a_data: ANY): BOOLEAN
 			-- Is `a_data' indirectly the result of an internal operation of Current
 		local
 			l_row: EV_GRID_ROW
@@ -832,7 +832,7 @@ feature {NONE} -- Analysis
 			end
 		end
 
-	sort_on_type_name (u, v: like row_data; sorting_order: BOOLEAN): BOOLEAN is
+	sort_on_type_name (u, v: like row_data; sorting_order: BOOLEAN): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -853,7 +853,7 @@ feature {NONE} -- Analysis
 			end
 		end
 
-	sort_on_count (u, v: like row_data; sorting_order: BOOLEAN): BOOLEAN is
+	sort_on_count (u, v: like row_data; sorting_order: BOOLEAN): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -866,7 +866,7 @@ feature {NONE} -- Analysis
 			end
 		end
 
-	sort_on_delta (u, v: like row_data; sorting_order: BOOLEAN): BOOLEAN is
+	sort_on_delta (u, v: like row_data; sorting_order: BOOLEAN): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -879,7 +879,7 @@ feature {NONE} -- Analysis
 			end
 		end
 
-	sort_on_cloud_entry (u, v: TUPLE [obj: ANY; nb: NATURAL_32]): BOOLEAN is
+	sort_on_cloud_entry (u, v: TUPLE [obj: ANY; nb: NATURAL_32]): BOOLEAN
 			-- Compare u, v
 		require
 			u_not_void: u /= Void
@@ -888,7 +888,7 @@ feature {NONE} -- Analysis
 			Result := u.nb > v.nb
 		end
 
-	calculate_memory_data (a_refresh: BOOLEAN) is
+	calculate_memory_data (a_refresh: BOOLEAN)
 			-- Calculates and analyzes the memory data.
 			--
 			-- `a_refresh': Causes pre-existing data to be discarded.
@@ -1235,7 +1235,7 @@ feature {NONE} -- Action handlers
 
 feature {NONE} -- Memory pruning
 
-	select_object (a_object: ANY) is
+	select_object (a_object: ANY)
 			-- Navigates to a object in the grid strcuture.
 			--
 			-- `a_object': An object to navigate too.
@@ -1305,7 +1305,7 @@ feature {NONE} -- Memory pruning
 			end
 		end
 
-	free_object (a_object: ANY) is
+	free_object (a_object: ANY)
 			-- Release an object.
 		require
 			is_initialized: is_initialized
@@ -1345,7 +1345,7 @@ feature {NONE} -- Memory pruning
 			end
 		end
 
-	recycle_object (a_object: EB_RECYCLABLE) is
+	recycle_object (a_object: EB_RECYCLABLE)
 			-- Recycled an object
 		require
 			is_initialized: is_initialized
@@ -1516,7 +1516,7 @@ invariant
 	memory_update_timer_attached: is_initialized and not is_recycled implies memory_update_timer /= Void
 	filter_update_timer_attached: is_initialized and not is_recycled implies filter_update_timer /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

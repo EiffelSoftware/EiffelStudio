@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Information about an Eiffel feature."
@@ -24,7 +24,7 @@ create
 
 feature -- Creation
 
-	make (new_cluster_name, new_class_name, new_name: STRING) is
+	make (new_cluster_name, new_class_name, new_name: STRING)
 			-- Create an Eiffel feature with
 			-- class `new_class', featurename `new_name'. I
 		do
@@ -33,7 +33,7 @@ feature -- Creation
 			feature_name := new_name;
 		end;
 
-	set_class_id (a_class_id: INTEGER) is
+	set_class_id (a_class_id: INTEGER)
 			-- Set `class_id' to `a_class_id'.
 		do
 			class_id := a_class_id
@@ -41,7 +41,7 @@ feature -- Creation
 
 feature -- Output
 
-	class_c: CLASS_C is
+	class_c: CLASS_C
 			-- CLASS_C associated with `Current'.
 		do
 			Result := Eiffel_system.class_of_id (class_id);
@@ -49,7 +49,7 @@ feature -- Output
 			class_c_not_void: Eiffel_system.valid_class_id (class_id) implies Result /= Void
 		end
 
-	e_feature: E_FEATURE is
+	e_feature: E_FEATURE
 			-- E_FEATURE associated with `Current'.
 			-- May be Void if feature was renamed or profile
 			-- information is out of synch with the compiled project.
@@ -71,7 +71,7 @@ feature -- Output
 			end
 		end
 
-	displayed_feature_name: STRING is
+	displayed_feature_name: STRING
 			-- Representation of `feature_name' to be displayed
 			-- as part of profiler output.
 		do
@@ -82,7 +82,7 @@ feature -- Output
 			end
 		end
 
-	append_to (st: TEXT_FORMATTER) is
+	append_to (st: TEXT_FORMATTER)
 			-- Append Current function to `st'.
 		local
 			cluster: CLUSTER_I
@@ -134,7 +134,7 @@ feature -- Output
 			end;
 		end;
 
-	name: STRING is
+	name: STRING
 			-- The name of the feature.
 		local
 			l_class: CLASS_C
@@ -170,7 +170,7 @@ feature --{NONE} -- Access
 	feature_name: STRING;
 		-- Eiffel feature name as declared in source code.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

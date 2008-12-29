@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Topological sort on classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation
 		do
 			create order.make (1,0)
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			create outsides2.make
 		end
 
-	init (n: INTEGER) is
+	init (n: INTEGER)
 			-- Initialization for `n' items to sort.
 		require
 			n_positive: n >= 0
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 
 feature -- Sort
 
-	sort is
+	sort
 			-- Topological sort of classes
 		do
 				-- Initialize data structures
@@ -106,7 +106,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Filling
 
-	fill_original is
+	fill_original
 			-- Fill `original' with the lists `descendants' of classes
 		local
 			class_array: ARRAY [CLASS_C]
@@ -136,7 +136,7 @@ feature {NONE} -- Filling
 			end
 		end
 
-	fill is
+	fill
 			-- Fill `precursor_count' and `outsides'.
 		require
 			good_context: count > 0
@@ -182,7 +182,7 @@ feature {NONE} -- Filling
 			end
 		end
 
-	perform_sort is
+	perform_sort
 			-- Perform topological sort
 		require
 			good_context: count > 0
@@ -235,7 +235,7 @@ feature {NONE} -- Filling
 			end
 		end
 
-	insert_succ (succ_list: ARRAYED_LIST [CLASS_C]) is
+	insert_succ (succ_list: ARRAYED_LIST [CLASS_C])
 			-- Insert all the successors in `outsides' if they don't have any
 			-- precursor which still remains for a later sutdy.
 		require
@@ -270,7 +270,7 @@ feature {NONE} -- Filling
 			end
 		end
 
-	sort_succ (succ: ARRAYED_LIST [CLASS_C]): ARRAY [CLASS_C] is
+	sort_succ (succ: ARRAYED_LIST [CLASS_C]): ARRAY [CLASS_C]
 			-- Create a sorted array of CLASS_C where the criteria is
 			-- less precursor and less successors and more class usage (i.e.
 			-- referring more classes).
@@ -336,7 +336,7 @@ feature {NONE} -- Filling
 			end
 		end
 
-	check_validity is
+	check_validity
 			-- Check if there is cycle(s) in the inheritance graph
 		local
 			i: INTEGER
@@ -374,7 +374,7 @@ feature {NONE} -- Filling
 			end
 		end
 
-	finalize is
+	finalize
 			-- Finalization of the topological sort: i.e change the
 			-- class ids
 		local
@@ -403,7 +403,7 @@ end
 
 feature -- Update System
 
-	update_system is
+	update_system
 			-- Sort all the data structures of the system by following the new
 			-- topological sort
 		local
@@ -416,7 +416,7 @@ feature -- Update System
 
 feature -- Wipe out
 
-	clear is
+	clear
 			-- Clear the structure
 		do
 			order.clear_all
@@ -429,13 +429,13 @@ feature -- Wipe out
 
 feature {NONE} -- Implementation
 
-	sort_class_c (nb: INTEGER) is
+	sort_class_c (nb: INTEGER)
 			-- Sort an ARRAY by the topological ID of CLASS_C.
 		do
 			quick_sort (1, nb)
 		end
 
-	quick_sort (min, max: INTEGER) is
+	quick_sort (min, max: INTEGER)
 			-- Apply `quick_sort' algorithm.
 			-- If `max' < `min' then it stops
 		local
@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	partition_quick_sort  (min, max: INTEGER): INTEGER is
+	partition_quick_sort  (min, max: INTEGER): INTEGER
 			-- Apply `quick_sort' algorithm to position [`min'..`max']
 		require
 			correct_bounds: min <= max
@@ -510,7 +510,7 @@ invariant
 	outsides1_not_void: outsides1 /= Void
 	outsides2_not_void: outsides2 /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

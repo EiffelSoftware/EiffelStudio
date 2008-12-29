@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Call as an instruction
@@ -19,7 +19,7 @@ create
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_instr_call_b (Current)
@@ -27,7 +27,7 @@ feature -- Visitor
 
 feature {NONE} -- Initialization
 
-	make (c: like call; l: like line_number) is
+	make (c: like call; l: like line_number)
 			-- New instance of INSTR_CALL_B initialized with `c' and `l'.
 		require
 			c_not_void: c /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature
 
-	enlarge_tree is
+	enlarge_tree
 			-- Enlarge byte code tree
 		do
 			call := call.enlarged;
@@ -51,13 +51,13 @@ feature
 	call: CALL_B;
 			-- Instruction call
 
-	analyze is
+	analyze
 			-- Analyze the call
 		do
 			call.analyze;
 		end;
 
-	generate is
+	generate
 			-- Generate the call
 		do
 			generate_line_info;
@@ -67,17 +67,17 @@ feature
 
 feature -- Array optimization
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := call.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := call.is_unsafe
 		end;
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 			call := call.optimized_byte_node
@@ -85,18 +85,18 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := call.size
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current;
 			call := call.pre_inlined_code
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			call := call.inlined_byte_code
@@ -105,7 +105,7 @@ feature -- Inlining
 invariant
 	call_not_void: call /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

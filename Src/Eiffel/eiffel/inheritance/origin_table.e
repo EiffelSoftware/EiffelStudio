@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Duplication (conceptual) and actual duplication (code duplication is handled here).
 		Each line of the ORIGIN_TABLE is processes separately.
@@ -61,7 +61,7 @@ create
 
 feature
 
-	insert (info: INHERIT_INFO) is
+	insert (info: INHERIT_INFO)
 			-- Insert information `info' in the table.
 		require
 			good_argument: info /= Void
@@ -170,7 +170,7 @@ feature
 		end
 
 
-	compute_feature_table (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE) is
+	compute_feature_table (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE)
 			-- Origin table for instance of FEATURE_TABLE resulting
 			-- of an analysis of possible repeated inheritance
 		require
@@ -262,7 +262,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

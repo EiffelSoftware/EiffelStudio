@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Keeper for non-void entity scopes with an unlimited range of variable positions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			create Result.make (0, n)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

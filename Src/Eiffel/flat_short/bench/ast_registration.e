@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Abstract class for registering AST structures."
@@ -16,7 +16,7 @@ feature -- Properties
 
 feature {AST_EIFFEL} -- Element change
 
-	register_class (a_class: CLASS_AS) is
+	register_class (a_class: CLASS_AS)
 			-- Register class `a_class'
 		require
 			a_class_not_void: a_class /= Void
@@ -47,7 +47,7 @@ feature {AST_EIFFEL} -- Element change
 			end
 		end
 
-	register_features_of_clause (a_clause: FEATURE_CLAUSE_AS) is
+	register_features_of_clause (a_clause: FEATURE_CLAUSE_AS)
 			-- Register features in `ast_reg'.
 		require
 			a_clause_not_void: a_clause /= Void
@@ -67,14 +67,14 @@ feature {AST_EIFFEL} -- Element change
 			end
 		end
 
-	register_feature (feature_as: FEATURE_AS) is
+	register_feature (feature_as: FEATURE_AS)
 			-- Register feature `feature_as'.
 		require
 			valid_feature_as: feature_as /= Void
 		deferred
 		end;
 
-	register_feature_clause (feature_clause: FEATURE_CLAUSE_AS) is
+	register_feature_clause (feature_clause: FEATURE_CLAUSE_AS)
 			-- Register feature_clause `feature_clause' after registering
             -- features.
 		require
@@ -82,14 +82,14 @@ feature {AST_EIFFEL} -- Element change
 		deferred
 		end;
 
-	register_invariant (invariant_part: INVARIANT_AS) is
+	register_invariant (invariant_part: INVARIANT_AS)
 			-- Register invariant `invariant_part'.
 		require
 			valid_invariant: invariant_part /= Void
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

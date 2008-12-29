@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Specification of the output-language for the query"
@@ -25,14 +25,14 @@ create
 
 feature -- Creation
 
-	make_loop is
+	make_loop
 		do
 			language_names.force ("eiffel", language_names.count + 1);
 		end;
 
 feature {NONE} -- Help message
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		local
 			i: INTEGER
 			l_str: STRING_32
@@ -57,7 +57,7 @@ feature {NONE} -- Help message
 
 feature {NONE} -- Execute
 
-	loop_action is
+	loop_action
 		local
 			command_arguments: EWB_ARGUMENTS;
 			i: INTEGER;
@@ -90,9 +90,9 @@ feature {NONE} -- Execute
 
 	-- don't know exactly how, but that comes.
 	-- IDEA: Wipe out current one and replace with user's.
-	execute is do end;
+	execute do end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

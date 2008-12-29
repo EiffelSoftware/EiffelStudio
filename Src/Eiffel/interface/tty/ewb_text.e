@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Displays class text in output_window."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Implementation
 
-	associated_cmd: E_CLASS_CMD is
+	associated_cmd: E_CLASS_CMD
 			-- Associated class command to be executed
 			-- after successfully retrieving the compiled
 			-- class
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Execution
 
-	want_compiled_class (class_i: CLASS_I): BOOLEAN is
+	want_compiled_class (class_i: CLASS_I): BOOLEAN
 			-- Does Current want `class_i' to be compiled?
 			--| If the class is in the system: True
 			--| else: False.
@@ -46,7 +46,7 @@ feature {NONE} -- Execution
 			Result := class_i.compiled_class /= Void
 		end;
 
-	process_compiled_class (e_class: CLASS_C) is
+	process_compiled_class (e_class: CLASS_C)
 			-- Display the (may be) filtered text of `e_class'.
 		local
 			ctxt: CLASS_TEXT_FORMATTER;
@@ -65,7 +65,7 @@ feature {NONE} -- Execution
 			output_window.put_new_line;
 		end;
 
-	process_uncompiled_class (class_i: CLASS_I) is
+	process_uncompiled_class (class_i: CLASS_I)
 			-- Display the class text.
 		local
 			text: STRING
@@ -82,7 +82,7 @@ feature {NONE} -- Execution
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

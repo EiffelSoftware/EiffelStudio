@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Feature domain criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_domain: like criterion_domain) is
+	make (a_domain: like criterion_domain)
 			-- Initialize `criterion_domain' with `a_feature'.
 		require
 			a_domain_attached: a_domain /= Void
@@ -31,7 +31,7 @@ feature{NONE} -- Initialization
 			criterion_domain_set: criterion_domain = a_domain
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

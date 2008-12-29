@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Used for extracting comments from a routine and displaying inherited comments, when appropriate.
 		
@@ -28,7 +28,7 @@ feature -- Query
 			Result := feature_comments_ex (a_feature, False)
 		end
 
-	feature_comments_ex (a_feature: !E_FEATURE; a_show_impl: BOOLEAN): ?EIFFEL_COMMENTS is
+	feature_comments_ex (a_feature: !E_FEATURE; a_show_impl: BOOLEAN): ?EIFFEL_COMMENTS
 			-- Retrieve's the feature comments from a given compiled feature, with the option to include implementation comments
 			--
 			-- `a_feature': The feature to show comments for.
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation: Query
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

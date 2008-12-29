@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information on an association of the system for XMI export"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make (id: INTEGER; n: STRING; supplier, client: XMI_TYPE; a_ordered, a_multiple: BOOLEAN) is
+	make (id: INTEGER; n: STRING; supplier, client: XMI_TYPE; a_ordered, a_multiple: BOOLEAN)
 			-- Initialization of `Current'.
 		require
 			supplier_not_void: supplier /= Void
@@ -51,13 +51,13 @@ feature -- Access
 
 feature -- Query
 
-	has_type (a_xmi_type_id: INTEGER): BOOLEAN is
+	has_type (a_xmi_type_id: INTEGER): BOOLEAN
 			-- Does this association contain 'a_xmi_type_id'?
 		do
 			Result := (a_xmi_type_id = client_role) or (a_xmi_type_id = supplier_role)
 		end
 
-	end_id_from_xmi_type (a_xmi_type_id: INTEGER): INTEGER is
+	end_id_from_xmi_type (a_xmi_type_id: INTEGER): INTEGER
 			-- Get the association end identifier of the type identified by 'a_xmi_type_id'
 		require
 			contains_type: has_type (a_xmi_type_id)
@@ -73,7 +73,7 @@ feature -- Query
 
 feature -- Actions
 
-	code: STRING is
+	code: STRING
 			-- XMI representation of the attribute.
 		do
 			Result := "<Foundation.Core.Association xmi.id = 'G."
@@ -100,7 +100,7 @@ feature -- Actions
 				%			</Foundation.Core.Association>")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

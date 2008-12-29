@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constant class for IL operators"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Property
 
-	valid_type_kind (i: INTEGER): BOOLEAN is
+	valid_type_kind (i: INTEGER): BOOLEAN
 			-- Is `i' on of the following values `il_i1', `il_i2', `il_i4', `il_i8',
 			-- `il_r4', `il_r8', `il_ref'?
 		do
@@ -22,58 +22,58 @@ feature -- Property
 feature -- Constants for binary expression
 
 		-- Comparisons operators on numeric and characters.
-	Il_lt: INTEGER is 0
-	Il_le: INTEGER is 1
-	Il_gt: INTEGER is 2
-	Il_ge: INTEGER is 3
+	Il_lt: INTEGER = 0
+	Il_le: INTEGER = 1
+	Il_gt: INTEGER = 2
+	Il_ge: INTEGER = 3
 
 		-- Numeric operators.
-	Il_star: INTEGER is 4
-	Il_slash: INTEGER is 5
-	Il_power: INTEGER is 6
-	Il_plus: INTEGER is 7
-	Il_mod: INTEGER is 8
-	Il_minus: INTEGER is 9
-	Il_div: INTEGER is 10
+	Il_star: INTEGER = 4
+	Il_slash: INTEGER = 5
+	Il_power: INTEGER = 6
+	Il_plus: INTEGER = 7
+	Il_mod: INTEGER = 8
+	Il_minus: INTEGER = 9
+	Il_div: INTEGER = 10
 
 		-- Boolean comparisons operators.
-	Il_xor: INTEGER is 11
-	Il_or: INTEGER is 12
-	Il_and: INTEGER is 13
+	Il_xor: INTEGER = 11
+	Il_or: INTEGER = 12
+	Il_and: INTEGER = 13
 
 		-- Equality operators.
-	Il_ne: INTEGER is 14
-	Il_eq: INTEGER is 15
+	Il_ne: INTEGER = 14
+	Il_eq: INTEGER = 15
 
 		-- Shifting operator
-	Il_shl: INTEGER is 20
-	Il_shr: INTEGER is 21
+	Il_shl: INTEGER = 20
+	Il_shr: INTEGER = 21
 
 feature -- Constants for unary expression
 
-	Il_uplus: INTEGER is 16
-	Il_not: INTEGER is 17
-	Il_uminus: INTEGER is 18
-	Il_old: INTEGER is 19
-	Il_bitwise_not: INTEGER is 22
+	Il_uplus: INTEGER = 16
+	Il_not: INTEGER = 17
+	Il_uminus: INTEGER = 18
+	Il_old: INTEGER = 19
+	Il_bitwise_not: INTEGER = 22
 
 feature -- Constants for variable kind
 
-	il_i1: INTEGER is 30
-	il_i2: INTEGER is 31
-	il_i4: INTEGER is 32
-	il_i8: INTEGER is 33
-	il_r4: INTEGER is 34
-	il_r8: INTEGER is 35
-	il_ref: INTEGER is 36
-	il_i: INTEGER is 37
-	il_u1: INTEGER is 38
-	il_u2: INTEGER is 39
-	il_u4: INTEGER is 40
-	il_u8: INTEGER is 41
-	il_expanded: INTEGER is 42;
+	il_i1: INTEGER = 30
+	il_i2: INTEGER = 31
+	il_i4: INTEGER = 32
+	il_i8: INTEGER = 33
+	il_r4: INTEGER = 34
+	il_r8: INTEGER = 35
+	il_ref: INTEGER = 36
+	il_i: INTEGER = 37
+	il_u1: INTEGER = 38
+	il_u2: INTEGER = 39
+	il_u4: INTEGER = 40
+	il_u8: INTEGER = 41
+	il_expanded: INTEGER = 42;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

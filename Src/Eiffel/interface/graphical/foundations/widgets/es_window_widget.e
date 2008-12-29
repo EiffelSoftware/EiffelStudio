@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A foundation widget that provides access to the host development window.
 	]"
@@ -52,7 +52,7 @@ feature -- Access
 invariant
 	develop_window_attached: is_interface_usable implies develop_window /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

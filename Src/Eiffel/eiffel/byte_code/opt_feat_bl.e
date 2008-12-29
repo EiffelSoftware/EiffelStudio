@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class OPT_FEAT_BL
@@ -35,7 +35,7 @@ feature
 
 	parent: NESTED_BL;
 
-	fill_from (f: OPT_FEAT_B) is
+	fill_from (f: OPT_FEAT_B)
 		do
 			multi_constraint_static := f.multi_constraint_static
 			type := f.type
@@ -48,7 +48,7 @@ feature
 			enlarge_parameters
 		end
 
-	analyze is
+	analyze
 		do
 			array_desc.analyze
 			analyze_on (Current_register)
@@ -57,15 +57,15 @@ feature
 
 feature -- Code generation
 
-	check_dt_current (reg: REGISTRABLE) is
+	check_dt_current (reg: REGISTRABLE)
 		do
 		end;
 
-	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN is
+	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN
 		do
 		end;
 
-	external_reg_name (id: INTEGER): STRING is
+	external_reg_name (id: INTEGER): STRING
 			-- Register name which will be effectively generated at the C level.
 		do
 			create Result.make (0);
@@ -82,7 +82,7 @@ feature -- Code generation
 			end
 		end
 
-	internal_reg_name (id: INTEGER): STRING is
+	internal_reg_name (id: INTEGER): STRING
 			-- Same as `external_reg_name' except that for a function returning a
 			-- result we need to return `Result' and not `tmp_result' because the
 			-- hash_code is based on `Result'.
@@ -101,7 +101,7 @@ feature -- Code generation
 			end
 		end
 
-	register_acces (buf: GENERATION_BUFFER; id: INTEGER) is
+	register_acces (buf: GENERATION_BUFFER; id: INTEGER)
 		do
 			if context.byte_code.is_once and then id = 0 then
 				buf.put_string ("Result")
@@ -110,12 +110,12 @@ feature -- Code generation
 			end
 		end
 
-	type_c (id: INTEGER): TYPE_C is
+	type_c (id: INTEGER): TYPE_C
 		do
 			Result := System.remover.array_optimizer.array_item_type (id);
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A)
 		local
 			expr: EXPR_B
 			id: INTEGER;
@@ -158,12 +158,12 @@ feature -- Code generation
 		end
 
 	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_A;
-		basic_type: BASIC_A; buf: GENERATION_BUFFER) is
+		basic_type: BASIC_A; buf: GENERATION_BUFFER)
 			-- Generate final portion of C code.
 		do
 			generate_end (gen_reg, class_type)
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

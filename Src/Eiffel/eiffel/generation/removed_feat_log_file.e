@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class REMOVED_FEAT_LOG_FILE
@@ -11,7 +11,7 @@ create
 
 feature
 
-	add (class_type: CLASS_TYPE; feature_name: STRING) is
+	add (class_type: CLASS_TYPE; feature_name: STRING)
 			-- Add `class_type', `feature_name' in REMOVED file.
 		require
 			class_type_not_void: class_type /= Void
@@ -25,7 +25,7 @@ feature
 			put_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

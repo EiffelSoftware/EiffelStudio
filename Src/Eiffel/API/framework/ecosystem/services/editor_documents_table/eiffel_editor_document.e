@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 	
 		Note: Service is not yet in effect. This was developed early in 6.2 but was not used. Hopefully it
@@ -82,7 +82,7 @@ feature {NONE} -- Internal implementation cache
 	internal_editors: DS_ARRAYED_LIST [ANY]
 			-- Mutable version of `editors'
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

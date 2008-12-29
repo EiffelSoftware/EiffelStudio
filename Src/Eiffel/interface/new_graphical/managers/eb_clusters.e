@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Object that encapsulates all the clusters and the classes of the project%
 				  %The favorites are project-wide."
 	legal: "See notice at end of class."
@@ -58,7 +58,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialization.
 		do
 			create observer_list.make (10)
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	load_tree is
+	load_tree
 			-- Load all clusters and classes.
 		local
 			l_target: CONF_TARGET
@@ -120,14 +120,14 @@ feature -- Initialization
 
 feature -- Observer Pattern
 
-	add_observer (an_observer: EB_CLUSTER_MANAGER_OBSERVER) is
+	add_observer (an_observer: EB_CLUSTER_MANAGER_OBSERVER)
 		require
 			an_observer_not_void: an_observer /= Void
 		do
 			observer_list.extend (an_observer)
 		end
 
-	remove_observer (an_observer: EB_CLUSTER_MANAGER_OBSERVER) is
+	remove_observer (an_observer: EB_CLUSTER_MANAGER_OBSERVER)
 		require
 			an_observer_not_void: an_observer /= Void
 		do
@@ -135,7 +135,7 @@ feature -- Observer Pattern
 			observer_list.prune_all (an_observer)
 		end
 
-	refresh is
+	refresh
 			-- Reload the tree.
 			-- Useful in case clusters are modified directly without
 			-- notifying `Current'. (during compilations for instance)
@@ -152,7 +152,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_cluster_added (a_cluster: CLUSTER_I) is
+	on_cluster_added (a_cluster: CLUSTER_I)
 			-- `a_cluster' has been added.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -167,7 +167,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_class_added (a_class: CLASS_I) is
+	on_class_added (a_class: CLASS_I)
 			-- `a_class' has been added.
 		require
 			a_class_not_void: a_class /= Void
@@ -182,7 +182,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_class_removed (a_class: CLASS_I) is
+	on_class_removed (a_class: CLASS_I)
 			-- `a_class' has been removed.
 		require
 			a_class_not_void: a_class /= Void
@@ -197,7 +197,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING) is
+	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING)
 			-- `a_class' has been moved away from `old_cluster'.
 			-- `old_path' is old relative path in `old_group'
 		require
@@ -215,7 +215,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_cluster_changed (a_cluster: CLUSTER_I) is
+	on_cluster_changed (a_cluster: CLUSTER_I)
 			-- `a_cluster' has been modified
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -230,7 +230,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_cluster_moved (a_cluster: EB_SORTED_CLUSTER; old_cluster: CLUSTER_I) is
+	on_cluster_moved (a_cluster: EB_SORTED_CLUSTER; old_cluster: CLUSTER_I)
 			-- `a_cluster' has been moved away from `old_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -245,7 +245,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_cluster_removed (a_group: CONF_GROUP; a_path: STRING) is
+	on_cluster_removed (a_group: CONF_GROUP; a_path: STRING)
 			-- `a_cluster' has been removed.
 		require
 			a_cluster_not_void: a_group /= Void
@@ -265,7 +265,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_project_loaded is
+	on_project_loaded
 			-- A new project has been loaded.
 		do
 			load_tree
@@ -280,7 +280,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_project_unloaded is
+	on_project_unloaded
 			-- Current project has been closed.
 		do
 			from
@@ -320,13 +320,13 @@ feature -- Access
 
 feature -- Element change
 
-	wipe_out is
+	wipe_out
 			-- Erase the observer list.
 		do
 			observer_list.wipe_out
 		end
 
-	prune (obs: EB_CLUSTER_MANAGER_OBSERVER) is
+	prune (obs: EB_CLUSTER_MANAGER_OBSERVER)
 			-- Prune an observer from the observer list.
 		require
 			obs_not_void: obs /= Void
@@ -335,7 +335,7 @@ feature -- Element change
 			observer_list.prune (obs)
 		end
 
-	extend (obs: EB_CLUSTER_MANAGER_OBSERVER) is
+	extend (obs: EB_CLUSTER_MANAGER_OBSERVER)
 			-- Add an observer to the observer list.
 		require
 			obs_not_void: obs /= Void
@@ -343,7 +343,7 @@ feature -- Element change
 			observer_list.extend (obs)
 		end
 
-	remove_class (a_class: CLASS_I) is
+	remove_class (a_class: CLASS_I)
 			-- Remove `a_class' from its parent and notify observers.
 		require
 			a_class_not_void: a_class /= Void
@@ -358,7 +358,7 @@ feature -- Element change
 			system.force_rebuild
 		end
 
-	move_class (a_class: CONF_CLASS; old_group: CONF_GROUP; new_cluster: CONF_CLUSTER; new_path: STRING) is
+	move_class (a_class: CONF_CLASS; old_group: CONF_GROUP; new_cluster: CONF_CLUSTER; new_path: STRING)
 			-- Move `a_class' from `old_group' to `new_cluster'/`new_path'.
 		require
 			valid_class: a_class /= Void
@@ -474,7 +474,7 @@ feature -- Element change
 			retry
 		end
 
-	add_class_to_cluster (a_class: STRING; a_cluster: CONF_CLUSTER; a_path: STRING; a_class_name: STRING) is
+	add_class_to_cluster (a_class: STRING; a_cluster: CONF_CLUSTER; a_path: STRING; a_class_name: STRING)
 			-- Add class with file name `a_class' to `a_cluster' under `a_path' and notify observers.
 		require
 			a_class_not_void: a_class /= Void
@@ -517,7 +517,7 @@ feature -- Element change
 			last_added_class_set: last_added_class /= Void
 		end
 
-	remove_group (a_group: CONF_GROUP; a_path: STRING) is
+	remove_group (a_group: CONF_GROUP; a_path: STRING)
 			-- Remove `a_group' from its parent and notify observers.
 		require
 			a_group_not_void: a_group /= Void
@@ -531,7 +531,7 @@ feature -- Element change
 			end
 		end
 
-	add_cluster (a_name: STRING; a_parent: CONF_GROUP; a_path: STRING; a_is_tests_cluster: BOOLEAN) is
+	add_cluster (a_name: STRING; a_parent: CONF_GROUP; a_path: STRING; a_is_tests_cluster: BOOLEAN)
 			-- Add new cluster with `a_name' optionally `a_parent' and `a_path'.
 			--
 			-- `a_name': Name of new cluster.
@@ -602,7 +602,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	create_groups (a_groups: HASH_TABLE [CONF_GROUP, STRING]): DS_ARRAYED_LIST [EB_SORTED_CLUSTER] is
+	create_groups (a_groups: HASH_TABLE [CONF_GROUP, STRING]): DS_ARRAYED_LIST [EB_SORTED_CLUSTER]
 			-- Create sorted groups out of `a_groups'.
 		require
 			a_groups_not_void: a_groups /= Void
@@ -626,7 +626,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	name: STRING is "Clusters"
+	name: STRING = "Clusters"
 			-- Name of the item.
 
 --	move_directory (old_path: STRING; new_path: STRING) is
@@ -714,7 +714,7 @@ feature {NONE} -- Implementation
 ----			io.put_string ("Cant move directory")
 --		end
 
-	folder_from_cluster (a_group: CONF_GROUP): EB_SORTED_CLUSTER is
+	folder_from_cluster (a_group: CONF_GROUP): EB_SORTED_CLUSTER
 			-- Find a sorted cluster representing `a_cluster'.
 		require
 			a_cluster_not_void: a_group /= Void
@@ -732,7 +732,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	cluster_parents (a_group: CONF_GROUP): LINKED_LIST [CONF_GROUP] is
+	cluster_parents (a_group: CONF_GROUP): LINKED_LIST [CONF_GROUP]
 			-- List of parent groups of `group', from the root to `group', `cluster' included.
 		local
 			l_group, l_next_group: CONF_GROUP
@@ -764,7 +764,7 @@ feature {NONE} -- Implementation
 			result_not_empty: not Result.is_empty
 		end
 
-	find_cluster_in (clusteri: CONF_GROUP; parent_cluster: EB_SORTED_CLUSTER): EB_SORTED_CLUSTER is
+	find_cluster_in (clusteri: CONF_GROUP; parent_cluster: EB_SORTED_CLUSTER): EB_SORTED_CLUSTER
 			-- Find the sorted cluster associated to `clusteri' in `parent_cluster'.
 		require
 			clusteri_not_void: clusteri /= Void
@@ -820,7 +820,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_group_from_config (a_group: CONF_GROUP; a_path: STRING) is
+	remove_group_from_config (a_group: CONF_GROUP; a_path: STRING)
 			-- Remove the entry corresponding to `a_group' from the config file.
 			-- If `a_group' is a recursive cluster and a_path is not empty, add a file rule excluding `a_path'.
 		require
@@ -881,7 +881,7 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Implementation
 
-	build_pattern (a_path: STRING): STRING is
+	build_pattern (a_path: STRING): STRING
 			-- Build a regular expression for `a_path'.
 		require
 			a_path_ok: a_path /= Void and then not a_path.is_empty
@@ -895,7 +895,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Contracts
 
-	is_recursive_cluster (a_group: CONF_GROUP): BOOLEAN is
+	is_recursive_cluster (a_group: CONF_GROUP): BOOLEAN
 			-- Is `a_grp' a recursive cluster?
 		require
 			a_group_not_void: a_group /= Void
@@ -914,7 +914,7 @@ invariant
 	libraries_not_void: libraries /= Void
 	assemblies_not_void: assemblies /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C Pattern of a feature: it is constitued of the meta types of the %
 		%arguments and result."
 	legal: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (t: TYPE_C; a_args: like argument_types) is
+	make (t: TYPE_C; a_args: like argument_types)
 			-- Creation of a pattern with a result meta type
 		require
 			valid_type: t /= Void;
@@ -59,7 +59,7 @@ feature
 	argument_types: ARRAY [TYPE_C];
 			-- Meta types of the arguments
 
-	argument_count: INTEGER is
+	argument_count: INTEGER
 			-- Number of arguments
 		do
 			if argument_types /= Void then
@@ -67,7 +67,7 @@ feature
 			end;
 		end;
 
-	is_equal (other: C_PATTERN): BOOLEAN is
+	is_equal (other: C_PATTERN): BOOLEAN
 			-- Is `other' equal to Current ?
 		local
 			n, i: INTEGER;
@@ -85,7 +85,7 @@ feature
 			end;
 		end;
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code for pattern
 		local
 			i, n: INTEGER
@@ -114,7 +114,7 @@ feature
 
 feature -- Pattern generation
 
-	nb_hooks: INTEGER is
+	nb_hooks: INTEGER
 			-- Number of garbage collector hooks needed
 		local
 			i, nb: INTEGER;
@@ -136,7 +136,7 @@ feature -- Pattern generation
 			end;
 		end;
 
-	argument_hook_index (j: INTEGER): INTEGER is
+	argument_hook_index (j: INTEGER): INTEGER
 			-- Hook index for i-th argument
 		require
 			index_small_enough: j <= argument_count;
@@ -159,7 +159,7 @@ feature -- Pattern generation
 			Result > 0
 		end;
 
-	argument_name_array: ARRAY [STRING] is
+	argument_name_array: ARRAY [STRING]
 			-- Argument names for code generation
 		local
 			i, nb: INTEGER;
@@ -180,7 +180,7 @@ feature -- Pattern generation
 			end;
 		end;
 
-	workbench_argument_type_array: ARRAY [STRING] is
+	workbench_argument_type_array: ARRAY [STRING]
 			-- Argument types for code generation
 		local
 			i, j, nb: INTEGER
@@ -202,7 +202,7 @@ feature -- Pattern generation
 			workench_argument_type_array_not_void: Result /= Void
 		end
 
-	argument_type_array: ARRAY [STRING] is
+	argument_type_array: ARRAY [STRING]
 			-- Argument types for code generation
 		local
 			i, j, nb: INTEGER
@@ -222,7 +222,7 @@ feature -- Pattern generation
 			end;
 		end
 
-	generate_argument_declaration (buffer: GENERATION_BUFFER) is
+	generate_argument_declaration (buffer: GENERATION_BUFFER)
 			-- Generate argument declarations
 		local
 			i, nb: INTEGER;
@@ -241,7 +241,7 @@ feature -- Pattern generation
 			end
 		end
 
-	generate_pattern (id: INTEGER; buffer: GENERATION_BUFFER) is
+	generate_pattern (id: INTEGER; buffer: GENERATION_BUFFER)
 			-- Generate pattern
 		do
 				-- Generate pattern from C code to interpreter
@@ -251,7 +251,7 @@ feature -- Pattern generation
 			generate_toc_compound (id, buffer)
 		end
 
-	generate_toc_compound (id: INTEGER; buffer: GENERATION_BUFFER) is
+	generate_toc_compound (id: INTEGER; buffer: GENERATION_BUFFER)
 			-- Generate compound pattern from interpreter to C code
 		local
 			f_name: STRING
@@ -300,7 +300,7 @@ feature -- Pattern generation
 			buffer.put_new_line
 		end
 
-	generate_toi_compound (id: INTEGER; buffer: GENERATION_BUFFER) is
+	generate_toi_compound (id: INTEGER; buffer: GENERATION_BUFFER)
 			-- Generate compound pattern from C code to the interpreter
 		local
 			f_name: STRING
@@ -349,7 +349,7 @@ feature -- Pattern generation
 			buffer.put_new_line
 		end
 
-	generate_toi_push (buffer: GENERATION_BUFFER) is
+	generate_toi_push (buffer: GENERATION_BUFFER)
 			-- Generates stack pushing instruction for the patterns
 			-- going from C to the interpreter
 		local
@@ -399,7 +399,7 @@ feature -- Pattern generation
 				%%Tit->it_ref = Current;%N");
 		end;
 
-	generate_toc_pop (buffer: GENERATION_BUFFER) is
+	generate_toc_pop (buffer: GENERATION_BUFFER)
 			-- Generate poping instructions for pattern from interpreter
 			-- to C code
 		local
@@ -421,7 +421,7 @@ feature -- Pattern generation
 			end
 		end
 
-	generate_routine_call (buffer: GENERATION_BUFFER) is
+	generate_routine_call (buffer: GENERATION_BUFFER)
 			-- Generate C routine call
 		local
 			i, nb: INTEGER
@@ -456,7 +456,7 @@ feature -- Pattern generation
 
 feature {NONE} -- Implemantation
 
-	equivalent_type (first_type, other_type: TYPE_C): BOOLEAN is
+	equivalent_type (first_type, other_type: TYPE_C): BOOLEAN
 			-- Are `first_type' and `other_type' equivalent regarding C types
 			-- used for generation.
 		require
@@ -470,7 +470,7 @@ invariant
 
 	result_type_exists: result_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a model for an Eiffel class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 		
 feature {NONE} -- Implementation
 
-	default_create is
+	default_create
 			-- Create an EIFFEL_CLASS.
 		do
 			Precursor {EG_NODE}
@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 			create root_class_changed_actions
 		end
 
-	make_with_name (a_name: like name) is
+	make_with_name (a_name: like name)
 			-- Create an EIFFEL_CLASS using `a_name' as `name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			set: name = a_name
 		end
 		
-	make_expanded_with_name (a_name: like name) is
+	make_expanded_with_name (a_name: like name)
 			-- Create an expanded EIFFEL_CLASS using `a_name' as `name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -95,7 +95,7 @@ feature -- Access
 
 feature -- Status settings.
 
-	set_is_root_class (b: BOOLEAN) is
+	set_is_root_class (b: BOOLEAN)
 			-- Set `is_root_class' to `b'.
 		do
 			if b /= is_root_class then
@@ -106,7 +106,7 @@ feature -- Status settings.
 			set: is_root_class = b
 		end
 
-	set_is_expanded (b: BOOLEAN) is
+	set_is_expanded (b: BOOLEAN)
 			-- Set `is_expanded' to `b'.
 		local
 			e_cs_link: EM_CLIENT_SUPPLIER_LINK
@@ -132,7 +132,7 @@ feature -- Status settings.
 			set: is_expanded = b
 		end
 		
-	set_is_deferred (b: BOOLEAN) is
+	set_is_deferred (b: BOOLEAN)
 			-- Set `is_deferred' to `b'.
 		do
 			if is_deferred /= b then
@@ -143,7 +143,7 @@ feature -- Status settings.
 			set: is_deferred = b
 		end
 		
-	set_is_effective (b: BOOLEAN) is
+	set_is_effective (b: BOOLEAN)
 			-- Set `is_effective' to `b'.
 		do
 			if is_deferred /= b then
@@ -154,7 +154,7 @@ feature -- Status settings.
 			set: is_effective = b
 		end
 		
-	set_is_persistent (b: BOOLEAN) is
+	set_is_persistent (b: BOOLEAN)
 			-- Set `is_persistent' to `b'.
 		do
 			if is_persistent /= b then
@@ -165,7 +165,7 @@ feature -- Status settings.
 			set: is_persistent = b
 		end
 		
-	set_is_interfaced (b: BOOLEAN) is
+	set_is_interfaced (b: BOOLEAN)
 			-- Set `is_effective' to `b'.
 		do
 			if is_interfaced /= b then
@@ -176,7 +176,7 @@ feature -- Status settings.
 			set: is_interfaced = b
 		end
 		
-	set_is_reused (b: BOOLEAN) is
+	set_is_reused (b: BOOLEAN)
 			-- Set `is_reused' to `b'.
 		do
 			if is_reused /= b then
@@ -189,7 +189,7 @@ feature -- Status settings.
 	
 feature -- Element change
 
-	set_generics (a_generic: STRING) is
+	set_generics (a_generic: STRING)
 			-- Set `generics' to `a_generic'.
 		do
 			if (generics /= Void and a_generic = Void) or else
@@ -207,7 +207,7 @@ invariant
 	properties_changed_actions_not_void: properties_changed_actions /= Void
 	root_class_changed_actions_not_void: root_class_changed_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

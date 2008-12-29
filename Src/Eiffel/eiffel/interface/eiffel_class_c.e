@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represent a compiled eiffel class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -50,16 +50,16 @@ feature -- Access
 	original_class: EIFFEL_CLASS_I
 			-- Original class.
 
-	is_eiffel_class_c: BOOLEAN is True
+	is_eiffel_class_c: BOOLEAN = True
 			-- Is `Current' an EIFFEL_CLASS_C?
 
-	eiffel_class_c: EIFFEL_CLASS_C is
+	eiffel_class_c: EIFFEL_CLASS_C
 			-- `Current' as `EIFFEL_CLASS_C'.
 		do
 			Result := Current
 		end
 
-	cluster: CLUSTER_I is
+	cluster: CLUSTER_I
 			-- Cluster to which the class belongs to
 		do
 			Result := lace_class.cluster
@@ -84,7 +84,7 @@ feature -- Access
 			Result := l_internal_inline_agent_table /= Void and then l_internal_inline_agent_table.count > 0
 		end
 
-	remove_inline_agents_of_feature (body_id: INTEGER; a_removed: HASH_TABLE [FEATURE_I, INTEGER]) is
+	remove_inline_agents_of_feature (body_id: INTEGER; a_removed: HASH_TABLE [FEATURE_I, INTEGER])
 			-- Removes all the inline agents of a given feature
 		local
 			l_feat: FEATURE_I
@@ -113,7 +113,7 @@ feature -- Access
 			end
 		end
 
-	feature_of_feature_id (a_feature_id: INTEGER): FEATURE_I is
+	feature_of_feature_id (a_feature_id: INTEGER): FEATURE_I
 			-- Feature whose feature_id is a_feature_id.
 			-- Look into feature_table, generic_features,
 			-- anchored_features and inline agent table
@@ -139,7 +139,7 @@ feature -- Access
 			end
 		end
 
-	feature_with_name_id (a_feature_name_id: INTEGER): E_FEATURE is
+	feature_with_name_id (a_feature_name_id: INTEGER): E_FEATURE
 			-- <Precursor>
 		local
 			f: FEATURE_I
@@ -155,7 +155,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_new_byte_code_needed (v: like new_byte_code_needed) is
+	set_new_byte_code_needed (v: like new_byte_code_needed)
 			-- Set `new_byte_code_needed' with `v'.
 		do
 			new_byte_code_needed := v
@@ -165,7 +165,7 @@ feature -- Settings
 
 feature -- Status report
 
-	apply_msil_application_optimizations: BOOLEAN is
+	apply_msil_application_optimizations: BOOLEAN
 			-- Should MSIL application optimizations be applied?
 		do
 				-- Optimizations will take place on non-deferfed classes that are tag with having optimizations
@@ -179,7 +179,7 @@ feature -- Status report
 
 feature -- Action
 
-	remove_c_generated_files is
+	remove_c_generated_files
 			-- Remove the C generated files when we remove `Current' from system.
 		local
 			retried, file_exists: BOOLEAN
@@ -237,7 +237,7 @@ feature -- Action
 			retry
 		end
 
-	record_precompiled_class_in_system is
+	record_precompiled_class_in_system
 		local
 			ast_b: CLASS_AS
 			supplier_list: SEARCH_TABLE [ID_AS]
@@ -259,7 +259,7 @@ feature -- Action
 			end
 		end
 
-	build_ast (save_copy, is_warning_generated: BOOLEAN): CLASS_AS is
+	build_ast (save_copy, is_warning_generated: BOOLEAN): CLASS_AS
 			-- Parse file and generate AST.
 			-- If `save_copy' a copy will be made in BACKUP
 			-- directory of EIFGEN.
@@ -361,7 +361,7 @@ feature -- Action
 			end
 		end
 
-	end_of_pass1 (ast_b: CLASS_AS) is
+	end_of_pass1 (ast_b: CLASS_AS)
 				-- End of the first pass after syntax analysis
 		require
 			ast_b_not_void: ast_b /= Void
@@ -438,7 +438,7 @@ feature -- Action
 
 feature -- Element change
 
-	parsed_ast (after_save: BOOLEAN): CLASS_AS is
+	parsed_ast (after_save: BOOLEAN): CLASS_AS
 			-- Parse the AST structure of current class.
 			-- Note: Callers are responsible to clearing out any errors and warnings generated
 			--       by the last parse!
@@ -495,7 +495,7 @@ feature -- Element change
 
 feature -- Third pass: byte code production and type check
 
-	pass3 (is_safe_to_check_ancestor: BOOLEAN) is
+	pass3 (is_safe_to_check_ancestor: BOOLEAN)
 			-- Third pass of the compiler on current class. Two cases:
 			-- 1. the class is marked `changed': for all the features
 			--	marked `melted', produce byte code and make a type check.
@@ -969,7 +969,7 @@ feature -- Third pass: byte code production and type check
 
 	invariant_pass3 (	dependances: CLASS_DEPENDANCE
 						new_suppliers: like suppliers
-						melt_set: like melted_set) is
+						melt_set: like melted_set)
 			-- Recomputation of invariant clause
 --		require
 --			good_argument1: dependances /= Void
@@ -1054,7 +1054,7 @@ feature -- Third pass: byte code production and type check
 --			end
 		end
 
-	process_custom_attributes is
+	process_custom_attributes
 			-- Perform type checking and byte node generation on custom attributes.
 		require
 			il_generation: System.il_generation
@@ -1159,7 +1159,7 @@ feature -- Third pass: byte code production and type check
 
 feature -- Generation
 
-	pass4 is
+	pass4
 			-- Generation of C files for each type associated to the current
 			-- class
 			--|Don't forget to modify also `generate_workbench_files' when modifying
@@ -1171,7 +1171,7 @@ feature -- Generation
 
 feature -- Melting
 
-	melt is
+	melt
 			-- Melt changed features.
 		do
 			Inst_context.set_group (cluster)
@@ -1181,7 +1181,7 @@ feature -- Melting
 			melted_set := Void
 		end
 
-	update_execution_table is
+	update_execution_table
 			-- Update execution table.
 		do
 			Inst_context.set_group (cluster)
@@ -1191,7 +1191,7 @@ feature -- Melting
 			melted_set := Void
 		end
 
-	has_features_to_melt: BOOLEAN is
+	has_features_to_melt: BOOLEAN
 			-- Has the current class features to melt ?
 		local
 			melt_set: like melted_set
@@ -1200,7 +1200,7 @@ feature -- Melting
 			Result := melt_set /= Void and then not melt_set.is_empty
 		end
 
-	melt_all is
+	melt_all
 			-- Melt all the features written in the class
 		local
 			c_dep: CLASS_DEPENDANCE
@@ -1254,7 +1254,7 @@ feature -- Melting
 			inst_context.set_group (l_old_group)
 		end
 
-	melt_feature_and_descriptor_tables is
+	melt_feature_and_descriptor_tables
 			-- Melt feature table.
 			-- Melt descriptor tables of associated class types
 		require
@@ -1274,7 +1274,7 @@ feature -- Melting
 
 feature -- Workbench feature and descriptor table generation
 
-	generate_feature_table is
+	generate_feature_table
 			-- Generation of workbench mode feature table for
 			-- the current class
 		local
@@ -1301,7 +1301,7 @@ feature -- Workbench feature and descriptor table generation
 			end
 		end
 
-	generate_workbench_files is
+	generate_workbench_files
 			-- Collect calls to generate_decriptor_table, generate_feature_table and pass4
 			-- in case of first compilation.
 		do
@@ -1314,7 +1314,7 @@ feature -- Workbench feature and descriptor table generation
 			types.pass4
  		end
 
-	generate_descriptor_tables is
+	generate_descriptor_tables
 			-- Generation of workbench mode descriptor tables
 			-- of associated class types.
 			--|Note: when precompiling a system a class might
@@ -1328,7 +1328,7 @@ feature -- Workbench feature and descriptor table generation
 
 feature
 
-	feature_table_file_name: FILE_NAME is
+	feature_table_file_name: FILE_NAME
 			-- Generated file name prefix
 			-- Side effect: Create the corresponding subdirectory if it
 			-- doesnot exist yet.
@@ -1375,7 +1375,7 @@ feature
 			feature_table_file_name_not_empty: not Result.is_empty
 		end
 
-	base_file_name: STRING is
+	base_file_name: STRING
 			-- Generated base file name prefix. Keep first two letters
 			-- of class `name'.
 			--| Once per object: meaning that even if `name' changes
@@ -1401,7 +1401,7 @@ feature
 			base_file_name_not_empty: not Result.is_empty
 		end
 
-	packet_number: INTEGER is
+	packet_number: INTEGER
 			-- Packet in which the file will be generated
 		require
 			has_types: has_types
@@ -1411,7 +1411,7 @@ feature
 			packet_number_positive: Result > 0
 		end
 
-	feature_table_file_id: INTEGER is
+	feature_table_file_id: INTEGER
 			-- Number added at end of C file corresponding to generated
 			-- feature table. Initialized by default to -1.
 		require
@@ -1429,7 +1429,7 @@ feature
 
 feature {NONE} -- Class initialization	
 
-	init (ast_b: CLASS_AS; old_suppliers: like syntactical_suppliers) is
+	init (ast_b: CLASS_AS; old_suppliers: like syntactical_suppliers)
 			-- Initialization of the class with AST produced by yacc
 		require
 			good_argument: ast_b /= Void
@@ -1663,7 +1663,7 @@ feature {NONE} -- Class initialization
 			end
 		end
 
-	check_generics is
+	check_generics
 			-- Check validity formal generic parameter declaration.
 			-- Validity rule VCFG (page 52)
 		local
@@ -1750,7 +1750,7 @@ feature {NONE} -- Class initialization
 			end
 		end
 
-	check_generic_parameters is
+	check_generic_parameters
 			-- Check validity formal generic parameter declaration.
 			-- Validity rule VCFG1 (page 52)
 		local
@@ -1780,7 +1780,7 @@ feature {NONE} -- Class initialization
 			end
 		end
 
-	check_creation_constraint_genericity is
+	check_creation_constraint_genericity
 			-- Check validity of creation constraint genericity
 			-- I.e. that the specified creation procedures does exist
 			-- in the constraint class.
@@ -1808,7 +1808,7 @@ feature {NONE} -- Class initialization
 			end
 		end
 
-	check_constraint_genericity is
+	check_constraint_genericity
 			-- Check validity of constraint genericity
 		do
 			Inst_context.set_group (cluster)
@@ -1846,7 +1846,7 @@ feature {NONE} -- Class initialization
 
 feature -- Supplier checking
 
-	check_suppliers_and_parents is
+	check_suppliers_and_parents
 			-- Check the suppliers and the parents before a recompilation
 			-- of a system
 		local
@@ -1877,7 +1877,7 @@ feature -- Supplier checking
 			end
 		end
 
-	check_suppliers (supplier_list: SEARCH_TABLE [ID_AS]; a_light_suppliers: BOOLEAN) is
+	check_suppliers (supplier_list: SEARCH_TABLE [ID_AS]; a_light_suppliers: BOOLEAN)
 			-- Check the supplier ids of the current parsed class
 			-- and add perhaps classes to the system.
 			--
@@ -1898,7 +1898,7 @@ feature -- Supplier checking
 			end
 		end
 
-	check_parent_classes (parent_list: EIFFEL_LIST [PARENT_AS]) is
+	check_parent_classes (parent_list: EIFFEL_LIST [PARENT_AS])
 			-- Check the parents of the current parsed class
 			-- and add perhaps classes to the system.
 		require
@@ -1918,7 +1918,7 @@ feature -- Supplier checking
 			end
 		end
 
-	check_one_supplier (cl_name: STRING; a_light_supplier: BOOLEAN) is
+	check_one_supplier (cl_name: STRING; a_light_supplier: BOOLEAN)
 			-- Check if supplier class named `cl_name' is in the
 			-- universe.
 			-- `a_light_supplier' indicates that we only record it if it is already compiled but don't add it.
@@ -1984,7 +1984,7 @@ feature -- Supplier checking
 
 feature -- Inline agents
 
-	put_inline_agent (a_feature: FEATURE_I) is
+	put_inline_agent (a_feature: FEATURE_I)
 			-- adds a new inline agent to this eiffel class.
 		require
 			valid_feature: a_feature /= Void
@@ -1994,7 +1994,7 @@ feature -- Inline agents
 			agent_added: inline_agent_table.has (a_feature.feature_name_id)
 		end
 
-	inline_agent_of_name_id (a_feature_name_id: INTEGER): FEATURE_I is
+	inline_agent_of_name_id (a_feature_name_id: INTEGER): FEATURE_I
 			-- Returns the inline agent with the given `a_feature_name_id'.
 		require
 			valid_feature_name_id: a_feature_name_id > 0
@@ -2009,7 +2009,7 @@ feature -- Inline agents
 			valid_agent_found: Result /= Void implies Result.feature_name_id = a_feature_name_id
 		end
 
-	inline_agent_of_id (a_feature_id: INTEGER): FEATURE_I is
+	inline_agent_of_id (a_feature_id: INTEGER): FEATURE_I
 			-- Returns the inline agent with the feature_id `a_feature_id'.
 		require
 			valid_feature_id: a_feature_id > 0
@@ -2041,7 +2041,7 @@ feature -- Inline agents
 			valid_agent_found: Result /= Void implies Result.feature_id = a_feature_id
 		end
 
-	inline_agent_of_rout_id (a_rout_id: INTEGER): FEATURE_I is
+	inline_agent_of_rout_id (a_rout_id: INTEGER): FEATURE_I
 			-- Returns the inline agent with the routine id `a_rout_id'.
 		require
 			valid_rout_id: a_rout_id > 0
@@ -2076,7 +2076,7 @@ feature -- Inline agents
 			valid_agent_found: Result /= Void implies Result.rout_id_set.first = a_rout_id
 		end
 
-	has_inline_agent_with_body_index (body_index: INTEGER): BOOLEAN is
+	has_inline_agent_with_body_index (body_index: INTEGER): BOOLEAN
 		require
 			valid_body_index: body_index > 0
 		local
@@ -2095,7 +2095,7 @@ feature -- Inline agents
 			end
 		end
 
-	inline_agent_with_nr (a_enclosing_body_id: INTEGER; a_inline_agent_nr: INTEGER): FEATURE_I is
+	inline_agent_with_nr (a_enclosing_body_id: INTEGER; a_inline_agent_nr: INTEGER): FEATURE_I
 			-- Searches for the inline agent with number `a_inline_agent_nr'.
 		local
 			l_feat: FEATURE_I
@@ -2127,7 +2127,7 @@ feature -- Inline agents
 				Result.inline_agent_nr = a_inline_agent_nr
 		end
 
-	api_inline_agent_of_name (n: STRING): E_FEATURE is
+	api_inline_agent_of_name (n: STRING): E_FEATURE
 			-- API feature for the inline agent named by `n'
 		require
 			n_not_void: n /= Void
@@ -2148,7 +2148,7 @@ feature -- Inline agents
 
 feature -- Conformance table generation
 
-	process_polymorphism is
+	process_polymorphism
 		do
 			System.set_current_class (Current)
 			feature_table.select_table.add_units (Current)
@@ -2156,7 +2156,7 @@ feature -- Conformance table generation
 
 feature {NONE} -- Backup implementation
 
-	copy_class (a_class: CONF_CLASS; a_location: STRING) is
+	copy_class (a_class: CONF_CLASS; a_location: STRING)
 			-- Make a backup of `a_class' in `a_location'.
 		require
 			a_class_not_void: a_class /= Void
@@ -2202,7 +2202,7 @@ feature {NONE} -- Backup implementation
 			end
 		end
 
-	adapt_and_copy_configuration (a_system: CONF_SYSTEM; a_location: STRING) is
+	adapt_and_copy_configuration (a_system: CONF_SYSTEM; a_location: STRING)
 			-- Adapt `a_system' for backup locations and copy the adapted configuration file and assemblies into `a_location'.
 		require
 			a_system_not_void: a_system /= Void
@@ -2245,7 +2245,7 @@ feature {NONE} -- Implementation
 invariant
 	inline_agent_table_not_void: inline_agent_table /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

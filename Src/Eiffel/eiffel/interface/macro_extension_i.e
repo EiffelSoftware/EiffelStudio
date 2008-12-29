@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of a C macro extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature  -- Initialization
 
-	make (is_cpp_macro: BOOLEAN) is
+	make (is_cpp_macro: BOOLEAN)
 			-- Create Current object
 			-- Set `is_cpp' to `is_cpp_macro'.
 		do
@@ -29,14 +29,14 @@ feature  -- Initialization
 
 feature -- Properties
 
-	is_macro: BOOLEAN is True
+	is_macro: BOOLEAN = True
 
 	is_cpp: BOOLEAN
 			-- Is Current macro a C++ one?
 
 feature -- Code generation
 
-	generate_body (macro_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+	generate_body (macro_byte_code: EXT_BYTE_CODE; a_result: RESULT_B)
 			-- Generate encapsulation to C/C++ macro external `macro_byte_code'.
 		local
 			l_buffer: GENERATION_BUFFER
@@ -57,7 +57,7 @@ feature -- Code generation
 			l_buffer.put_character (';')
 		end
 
-	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A) is
+	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_A)
 			-- Generate inline C/C++ macro external.
 		require
 			external_name_not_void: external_name /= Void
@@ -72,7 +72,7 @@ feature -- Code generation
 
 feature {NONE} -- Implementation
 
-	internal_generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_ret_type: TYPE_A) is
+	internal_generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_ret_type: TYPE_A)
 			-- Generate inline C/C++ macro external.
 		require
 			external_name_not_void: external_name /= Void
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

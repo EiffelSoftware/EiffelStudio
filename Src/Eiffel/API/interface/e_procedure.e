@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Representation of an eiffel procedure."
@@ -22,9 +22,9 @@ create
 
 feature -- Properties
 
-	is_procedure: BOOLEAN is True;
+	is_procedure: BOOLEAN = True;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

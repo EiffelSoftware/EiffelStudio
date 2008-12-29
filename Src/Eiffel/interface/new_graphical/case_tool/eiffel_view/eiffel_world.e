@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a view for on EIFFEL_GRAPH"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ create {EIFFEL_WORLD}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EIFFEL_WORLD.
 		do
 			Precursor {EG_FIGURE_WORLD}
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			cluster_legend.hide
 		end
 
-	make_with_model_and_factory (a_model: like model; a_factory: like factory) is
+	make_with_model_and_factory (a_model: like model; a_factory: like factory)
 			-- Create a view for `a_model' using `a_factory'.
 		do
 			Precursor {EG_FIGURE_WORLD} (a_model, a_factory)
@@ -96,7 +96,7 @@ feature -- Status report
 	is_right_angles: BOOLEAN
 			-- Are right angles used for links?
 
-	is_statistics: BOOLEAN is False
+	is_statistics: BOOLEAN = False
 			-- Is a statistic shown informing of draw and physics time?
 
 	is_uml: BOOLEAN
@@ -116,7 +116,7 @@ feature -- Access
 	available_views: LINKED_LIST [STRING]
 			-- All the views described in `Current' ead file.
 
-	default_view_name: STRING is
+	default_view_name: STRING
 			-- Name for the default view.
 		do
 			Result := once "DEFAULT"
@@ -124,7 +124,7 @@ feature -- Access
 			Result_not_Void: Result /= Void
 		end
 
-	uml_views (file_name: STRING): LIST [STRING] is
+	uml_views (file_name: STRING): LIST [STRING]
 			-- All views in `file_name' which are uml views.
 		require
 			file_name_not_void: file_name /= Void
@@ -160,7 +160,7 @@ feature -- Access
 			end
 		end
 
-	bon_views (file_name: STRING): LIST [STRING] is
+	bon_views (file_name: STRING): LIST [STRING]
 			-- All views in `file_name' which are bon views.
 		require
 			file_name_not_void: file_name /= Void
@@ -198,7 +198,7 @@ feature -- Access
 
 feature -- Element change.
 
-	update is
+	update
 			-- Update.
 		local
 			l_background_color: like background_color
@@ -217,7 +217,7 @@ feature -- Element change.
 			end
 		end
 
-	scale (a_scale: DOUBLE) is
+	scale (a_scale: DOUBLE)
 			-- Scale to x and y direction for `a_scale'.
 		local
 			val: DOUBLE
@@ -253,7 +253,7 @@ feature -- Element change.
 			end
 		end
 
-	enable_high_quality is
+	enable_high_quality
 			-- Enable high quality.
 		do
 			is_high_quality := True
@@ -262,7 +262,7 @@ feature -- Element change.
 			is_high_quality: is_high_quality
 		end
 
-	disable_high_quality is
+	disable_high_quality
 			-- Disable high qualtiy.
 		do
 			is_high_quality := False
@@ -271,7 +271,7 @@ feature -- Element change.
 			is_low_quality: not is_high_quality
 		end
 
-	show_labels is
+	show_labels
 			-- Show labels.
 		do
 			is_labels_shown := True
@@ -280,7 +280,7 @@ feature -- Element change.
 			is_labels_shown: is_labels_shown
 		end
 
-	hide_labels is
+	hide_labels
 			-- Hide labels.
 		do
 			is_labels_shown := False
@@ -289,7 +289,7 @@ feature -- Element change.
 			labels_hidden: not is_labels_shown
 		end
 
-	show_client_supplier_links is
+	show_client_supplier_links
 			-- Show client supplier links.
 		do
 			is_client_supplier_links_shown := True
@@ -301,7 +301,7 @@ feature -- Element change.
 			client_supplier_links_shown: is_client_supplier_links_shown
 		end
 
-	hide_client_supplier_links is
+	hide_client_supplier_links
 			-- Hide client supplier links.
 		do
 			is_client_supplier_links_shown := False
@@ -313,7 +313,7 @@ feature -- Element change.
 			client_supplier_links_hidden: not is_client_supplier_links_shown
 		end
 
-	show_inheritance_links is
+	show_inheritance_links
 			-- Show client supplier links.
 		do
 			is_inheritance_links_shown := True
@@ -325,7 +325,7 @@ feature -- Element change.
 			inheritance_links_shown: is_inheritance_links_shown
 		end
 
-	hide_inheritance_links is
+	hide_inheritance_links
 			-- Hide client supplier links.
 		do
 			is_inheritance_links_shown := False
@@ -337,7 +337,7 @@ feature -- Element change.
 			inheritance_links_hidden: not is_inheritance_links_shown
 		end
 
-	show_clusters is
+	show_clusters
 			-- Show cluster figures.
 		do
 			is_cluster_shown := True
@@ -347,7 +347,7 @@ feature -- Element change.
 			is_cluster_shown: is_cluster_shown
 		end
 
-	hide_clusters is
+	hide_clusters
 			-- Hide cluster figures.
 		local
 			l_c_fig: EIFFEL_CLASS_FIGURE
@@ -373,7 +373,7 @@ feature -- Element change.
 			not_is_cluster_shown: not is_cluster_shown
 		end
 
-	show_legend is
+	show_legend
 			-- Show legend of clusters and colors.
 		local
 			bbox: like bounding_box
@@ -393,7 +393,7 @@ feature -- Element change.
 			legend_is_shown: is_legend_shown
 		end
 
-	hide_legend is
+	hide_legend
 			-- Hide legend of clusters and colors.
 		do
 			cluster_legend.hide
@@ -403,7 +403,7 @@ feature -- Element change.
 			legend_is_hidden: not is_legend_shown
 		end
 
-	enable_right_angles is
+	enable_right_angles
 			-- Set `is_right_angles' to True.
 		do
 			is_right_angles := True
@@ -411,7 +411,7 @@ feature -- Element change.
 			set: is_right_angles
 		end
 
-	disable_right_angles is
+	disable_right_angles
 			-- Set `is_right_angles' to False.
 		do
 			is_right_angles := False
@@ -419,7 +419,7 @@ feature -- Element change.
 			set: not is_right_angles
 		end
 
-	apply_right_angles is
+	apply_right_angles
 			-- Apply right angles to all LINK_FIGUREs in the world.
 		local
 			l_edges: ARRAYED_LIST [EG_LINK_FIGURE]
@@ -444,7 +444,7 @@ feature -- Element change.
 			end
 		end
 
-	remove_right_angles is
+	remove_right_angles
 			-- Remove all edges in links.
 		local
 			l_edges: ARRAYED_LIST [EG_LINK_FIGURE]
@@ -468,13 +468,13 @@ feature -- Element change.
 
 feature {ES_DIAGRAM_TOOL_PANEL} -- Status settings
 
-	show_anchors is
+	show_anchors
 			-- Show all anchors of fixed linkable figures.
 		do
 			set_is_anchor_shown (True)
 		end
 
-	hide_anchors is
+	hide_anchors
 			-- Hide all anchors of fixed linkable figures.
 		do
 			set_is_anchor_shown (False)
@@ -482,7 +482,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Status settings
 
 feature {EB_CHANGE_COLOR_COMMAND, EB_DELETE_FIGURE_COMMAND, EG_FIGURE} -- Cluster color legend.
 
-	update_cluster_legend is
+	update_cluster_legend
 			--
 		do
 			if is_legend_shown then
@@ -498,7 +498,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Legend
 
 feature -- Store/Retrive
 
-	remove_view (name: STRING) is
+	remove_view (name: STRING)
 			-- Remove any reference to view named `name' in the .xml file.
 			-- Switch to view default_view_name.
 		require
@@ -529,7 +529,7 @@ feature -- Store/Retrive
 			default_view_restored: current_view.is_equal (default_view_name)
 		end
 
-	set_current_view (name: STRING) is
+	set_current_view (name: STRING)
 			-- Set `current_view' to `name'.
 		require
 			name_not_void: name /= Void
@@ -543,7 +543,7 @@ feature -- Store/Retrive
 			name_is_available: available_views.has (name)
 		end
 
-	retrieve_view (name: STRING) is
+	retrieve_view (name: STRING)
 			-- Assign `name' to `current_view' and retrieve corresponding settings.
 		require
 			name_not_void: name /= Void
@@ -575,7 +575,7 @@ feature -- Store/Retrive
 			name_assigned: current_view.is_equal (name)
 		end
 
-	store (ptf: RAW_FILE) is
+	store (ptf: RAW_FILE)
 			-- Freeze state of `Current'.
 		local
 			diagram_output: XM_DOCUMENT
@@ -621,7 +621,7 @@ feature -- Store/Retrive
 			end
 		end
 
-	load_available_views (f: RAW_FILE) is
+	load_available_views (f: RAW_FILE)
 			-- Load avaiable views from `f' store it in `available_views.
 		require
 			f_exists: f /= Void
@@ -658,7 +658,7 @@ feature -- Store/Retrive
 			end
 		end
 
-	retrieve (f: RAW_FILE) is
+	retrieve (f: RAW_FILE)
 			-- Reload former state of `Current'.
 		local
 			diagram_input: XM_DOCUMENT
@@ -726,13 +726,13 @@ feature -- Store/Retrive
 			end
 		end
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := once "EIFFEL_WORLD"
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml node representing `Current's state.
 		do
 			node.put_last (Xml_routines.xml_node (node, once "INHERITANCE_LINKS_DISPLAYED", is_inheritance_links_shown.out))
@@ -748,7 +748,7 @@ feature -- Store/Retrive
 			Result := Precursor {EG_FIGURE_WORLD} (node)
 		end
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
 			ax, ay: INTEGER
@@ -800,7 +800,7 @@ feature -- Store/Retrive
 
 feature {ES_DIAGRAM_TOOL_PANEL} -- Statistic
 
-	set_last_draw_time (ms: INTEGER) is
+	set_last_draw_time (ms: INTEGER)
 			-- Set time needed for draw.
 		do
 			if draw_count >= 1000 then
@@ -812,7 +812,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Statistic
 			nbOfDraws := nbOfDraws + 1
 		end
 
-	set_last_physics_time (ms: INTEGER) is
+	set_last_physics_time (ms: INTEGER)
 			-- Set time needed for physics.
 		do
 			if physics_count >= 1000 then
@@ -833,7 +833,7 @@ feature {NONE} -- Statistic
 	statistic_box: EV_MODEL_MOVE_HANDLE
 	txt: EV_MODEL_TEXT
 
-	update_statistic is
+	update_statistic
 			-- Update statistic
 		local
 			l_classes: like classes
@@ -936,7 +936,7 @@ feature {NONE} -- Statistic
 
 feature {NONE} -- Implementation
 
-	remove_view_from_file (ptf: RAW_FILE; a_name: STRING) is
+	remove_view_from_file (ptf: RAW_FILE; a_name: STRING)
 			-- Remove view named `a_name' in `ptf'.
 		require
 			file_not_void: ptf /= Void
@@ -974,7 +974,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_view_with_name (f: RAW_FILE; a_name: STRING): BOOLEAN is
+	has_view_with_name (f: RAW_FILE; a_name: STRING): BOOLEAN
 			-- Does `f' contain a view with name `a_name'?
 		local
 			diagram_input: XM_DOCUMENT
@@ -1006,7 +1006,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	figure_added (a_figure: EG_FIGURE) is
+	figure_added (a_figure: EG_FIGURE)
 			-- `a_figure' was added to the view.
 		local
 			bon_fig: BON_FIGURE
@@ -1061,7 +1061,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_high_quality (b: BOOLEAN) is
+	set_high_quality (b: BOOLEAN)
 			-- Set all BON_FIGUREs in `world' to high quality if `b', low quality otherwise.
 		local
 			bon_fig: BON_FIGURE
@@ -1117,7 +1117,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_label_shown (b: BOOLEAN) is
+	set_label_shown (b: BOOLEAN)
 			-- Show labels if `b', hide otherwise.
 		local
 			l_links: like links
@@ -1145,7 +1145,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_client_supplier_links_shown (b: BOOLEAN) is
+	set_client_supplier_links_shown (b: BOOLEAN)
 			-- Show client supplier links in `links' if `b', hide otherwise.
 		local
 			l_links: like links
@@ -1171,7 +1171,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_inheritance_links_shown (b: BOOLEAN) is
+	set_inheritance_links_shown (b: BOOLEAN)
 			-- Show inheritance links in `links' if `b', hide otherwise.
 		local
 			l_links: like links
@@ -1197,7 +1197,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_is_cluster_shown (b: BOOLEAN) is
+	set_is_cluster_shown (b: BOOLEAN)
 			-- Show clusters in `clusters' if `b', hide otherwise.
 		local
 			l_clusters: like clusters
@@ -1221,7 +1221,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_is_anchor_shown (b: BOOLEAN) is
+	set_is_anchor_shown (b: BOOLEAN)
 			-- Show all anchors of linkable figures if `b'.
 		local
 			bcf: BON_CLASS_FIGURE
@@ -1247,7 +1247,7 @@ feature {NONE} -- Implementation
 
 feature {EB_DELETE_FIGURE_COMMAND} -- UndoRedo delete
 
-	reinclude_class (a_class: EIFFEL_CLASS_FIGURE; a_links: LIST [ES_ITEM]; ax, ay: INTEGER) is
+	reinclude_class (a_class: EIFFEL_CLASS_FIGURE; a_links: LIST [ES_ITEM]; ax, ay: INTEGER)
 			-- Reinclude `a_class' and all links in `a_links' that has been removed by `disable_needed_on_diagram'
 			-- and set the corresponding figures port position to (`ax',`ay').
 		require
@@ -1268,7 +1268,7 @@ feature {EB_DELETE_FIGURE_COMMAND} -- UndoRedo delete
 			a_class_needed_on_diagram: a_class.model.is_needed_on_diagram
 		end
 
-	remove_class_virtual (a_class: EIFFEL_CLASS_FIGURE; a_links: LIST [ES_ITEM]) is
+	remove_class_virtual (a_class: EIFFEL_CLASS_FIGURE; a_links: LIST [ES_ITEM])
 			-- Remove `a_class' and all links in `a_links' from diagram
 			-- by disable `is_needed_on_diagram'
 		do
@@ -1283,7 +1283,7 @@ feature {EB_DELETE_FIGURE_COMMAND} -- UndoRedo delete
 			end
 		end
 
-	remove_cluster_virtual (cluster_figure: EIFFEL_CLUSTER_FIGURE; a_links: LIST [ES_ITEM]; a_classes: LIST [TUPLE [figure: EIFFEL_CLASS_FIGURE; port_x: INTEGER; port_y: INTEGER]]) is
+	remove_cluster_virtual (cluster_figure: EIFFEL_CLUSTER_FIGURE; a_links: LIST [ES_ITEM]; a_classes: LIST [TUPLE [figure: EIFFEL_CLASS_FIGURE; port_x: INTEGER; port_y: INTEGER]])
 			-- Remove `cluster_figure' all links in `a_links' and all classes in `a_classes' at position in TUPLE by
 			-- disable `is_needed_on_diagram'.
 		local
@@ -1313,7 +1313,7 @@ feature {EB_DELETE_FIGURE_COMMAND} -- UndoRedo delete
 
 	reinclude_cluster (cluster_figure: EIFFEL_CLUSTER_FIGURE; a_links: LIST [ES_ITEM];
 				a_classes: LIST [TUPLE [figure: EIFFEL_CLASS_FIGURE; port_x: INTEGER; port_y: INTEGER]]
-			) is
+			)
 			-- Reinclude `cluster_figure', all links in `a_links' and all classes in `a_classes' at position in TUPLE
 			-- by enable `is_needed_on_diagram'.
 		local
@@ -1346,7 +1346,7 @@ feature {EB_DELETE_FIGURE_COMMAND} -- UndoRedo delete
 
 feature {NONE} -- Implementation
 
-	enable_all_links (a_linkable: EG_LINKABLE) is
+	enable_all_links (a_linkable: EG_LINKABLE)
 			-- Enable is_neede_on_diagram for all links in `a_linkable'.
 		local
 			l_links: LIST [EG_LINK]
@@ -1374,14 +1374,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_pointer_button_press (figure: EG_LINKABLE_FIGURE; ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_pointer_button_press (figure: EG_LINKABLE_FIGURE; ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Pointer button was pressed on `figure'.
 		do
 			Precursor {EG_FIGURE_WORLD} (figure, ax, ay, button, x_tilt, y_tilt, pressure, screen_x, screen_y)
 			bring_to_front (cluster_legend)
 		end
 
-	on_linkable_move (figure: EG_LINKABLE_FIGURE; ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_linkable_move (figure: EG_LINKABLE_FIGURE; ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- `figure' was moved for `ax' `ay'.
 			-- | Move all `selected_figures' as well.
 		local
@@ -1430,7 +1430,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_valid_tag_read is
+	on_valid_tag_read
 			-- A valid tag was read through xml routines.
 		local
 			lpd: EB_PERCENT_PROGRESS_BAR
@@ -1443,7 +1443,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_fade is
+	update_fade
 			-- Fade out classes with cluster on top fade in otherwise.
 		local
 			l_c_fig: EIFFEL_CLASS_FIGURE
@@ -1467,7 +1467,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	node_type: ES_CLASS is
+	node_type: ES_CLASS
 			-- Type for nodes.
 		do
 		end
@@ -1478,7 +1478,7 @@ invariant
 	available_views_not_void: available_views /= Void
 	available_views_compare_objects: available_views.object_comparison
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

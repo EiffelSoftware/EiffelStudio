@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Type evaluator
@@ -18,7 +18,7 @@ inherit
 
 feature
 
-	evaluated_type (type: TYPE_A; feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
+	evaluated_type (type: TYPE_A; feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A
 			-- Evaluation of type `type' in the context of the feature
 			-- table `feat_table' and the feature `f'
 		require
@@ -30,19 +30,19 @@ feature
 			Result := type_a_checker.check_and_solved (type, Void)
 		end
 
-	new_error: VTAT1 is
+	new_error: VTAT1
 			-- New error message
 		deferred
 		ensure
 			Result /= Void
 		end
 
-	update (error_msg: VTAT1) is
+	update (error_msg: VTAT1)
 			-- Update error message
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

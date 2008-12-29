@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Definition of deferred inherited features by another non-deferred%N%
 			%inherited feature."
 	legal: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature -- Status Report
 
-	is_valid_old_features (old_feats: like old_features): BOOLEAN is
+	is_valid_old_features (old_feats: like old_features): BOOLEAN
 			-- Is `old_feats' valid for Current?
 		do
 			Result := True
@@ -38,7 +38,7 @@ feature -- Status Report
 
 feature -- Checking
 
-	check_adaptation (feat_tbl: FEATURE_TABLE) is
+	check_adaptation (feat_tbl: FEATURE_TABLE)
 			-- Check signature conformance between the precursors contained
 			-- in `old_features' and the feature `new_feature'. Since it
 			-- is a definition, there is no merging of assertions.
@@ -68,7 +68,7 @@ feature -- Checking
 			end
 		end
 
-	check_list (feats: LINKED_LIST [INHERIT_INFO]; tbl: FEATURE_TABLE) is
+	check_list (feats: LINKED_LIST [INHERIT_INFO]; tbl: FEATURE_TABLE)
 			-- Check signature conformance of the redefinition of the
 			-- features contained into `features' into `new_feature'.
 		require
@@ -88,7 +88,7 @@ feature -- Checking
 	check_redeclaration (new_tbl, old_tbl: FEATURE_TABLE
 			pattern_list: ARRAYED_LIST [INTEGER]
 			origin_table: ORIGIN_TABLE)
-		is
+		
 			-- Check redeclaration into an attribute.
 		local
 			l_attribute, old_attribute: ATTRIBUTE_I
@@ -192,7 +192,7 @@ feature -- Checking
 			origin_table.insert (create {INHERIT_INFO}.make (new_feature))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

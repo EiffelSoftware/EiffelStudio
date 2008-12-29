@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -30,7 +30,7 @@ feature -- Data
 
 feature -- Status
 
-	is_breakpoint_set (i: INTEGER): BOOLEAN is
+	is_breakpoint_set (i: INTEGER): BOOLEAN
 			-- Is the `i'-th breakable point set ?
 		do
 			if i >= 1 and i <= breakable_points.count then
@@ -38,7 +38,7 @@ feature -- Status
 			end
 		end; -- is_breakpoint_set
 
-	has_breakpoint_set: BOOLEAN is
+	has_breakpoint_set: BOOLEAN
 			-- Is at least one breakable point set ?
 		do
 			from
@@ -53,39 +53,39 @@ feature -- Status
 
 feature -- Setting
 
-	set_breakable_points (bp: SORTED_TWO_WAY_LIST [AST_POSITION]) is
+	set_breakable_points (bp: SORTED_TWO_WAY_LIST [AST_POSITION])
 		do
 			breakable_points := bp
 		end;
 
-	set_byte_code (ca: CHARACTER_ARRAY) is
+	set_byte_code (ca: CHARACTER_ARRAY)
 		do
 			byte_code := ca
 		end;
 
-	set_real_body_index (i: INTEGER) is
+	set_real_body_index (i: INTEGER)
 		do
 			real_body_index := i
 		end;
 
-	set_real_body_id (i: INTEGER) is
+	set_real_body_id (i: INTEGER)
 		do
 			real_body_id := i
 		end;
 
-	set_was_frozen is
+	set_was_frozen
 		do
 			was_frozen := True
 		end;
 
-	set_class_type (ct: CLASS_TYPE) is
+	set_class_type (ct: CLASS_TYPE)
 		do
 			class_type := ct
 		end
 
 feature -- Tracing
 
-	trace is
+	trace
 		local
 			i: INTEGER
 		do
@@ -119,7 +119,7 @@ feature -- Tracing
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

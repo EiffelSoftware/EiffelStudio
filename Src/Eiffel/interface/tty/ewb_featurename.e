@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Disables or Enables output of featurenames in %
@@ -23,7 +23,7 @@ create
 
 feature -- Creation
 
-	make_loop is
+	make_loop
 		do
 			show_enabled := true;
 			output_names.force ("featurename", output_names.count + 1);
@@ -31,35 +31,35 @@ feature -- Creation
 
 feature {NONE} -- Initialization
 
-	init is
+	init
 		do
 		end
 
 feature {NONE} -- Help message
 
-	real_help_message: STRING_32 is
+	real_help_message: STRING_32
 		once
 			Result := featurename_help;
 		end;
 
-	tabs: STRING is
+	tabs: STRING
 		once
 			Result := "%T%T%T%T%T";
 		end;
 
-	column_name: STRING is
+	column_name: STRING
 		once
 			Result := "featurename"
 		end;
 
 feature -- Output string
 
-	abbrev_cmd_name: STRING is
+	abbrev_cmd_name: STRING
 		once
 			Result := "Name";
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

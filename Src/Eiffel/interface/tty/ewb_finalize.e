@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Finalize eiffel system."
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make (k: BOOLEAN) is
+	make (k: BOOLEAN)
 			-- Initialize Current with keep_assertions as `k'
 			-- and project `proj'.
 		do
@@ -37,24 +37,24 @@ feature -- Properties
 	keep_assertions: BOOLEAN;
 			-- Keep assertions in finalize code generation
 
-	name: STRING is
+	name: STRING
 		do
 			Result := finalize_cmd_name
 		end;
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		do
 			Result := finalize_help
 		end;
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 		do
 			Result := finalize_abb
 		end;
 
 feature {NONE} -- Execution
 
-	loop_action is
+	loop_action
 			-- Execute Current batch command form -loop.
 		local
 			answer: STRING
@@ -78,7 +78,7 @@ feature {NONE} -- Execution
 			end
 		end;
 
-	execute is
+	execute
 			-- Execute Current batch command.
 		do
 			if Eiffel_project.is_read_only then
@@ -95,7 +95,7 @@ feature {NONE} -- Execution
 			end
 		end;
 
-	perform_compilation is
+	perform_compilation
 		do
 			if
 				Workbench.system_defined and then
@@ -109,7 +109,7 @@ feature {NONE} -- Execution
 			Eiffel_project.finalize (keep_assertions)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

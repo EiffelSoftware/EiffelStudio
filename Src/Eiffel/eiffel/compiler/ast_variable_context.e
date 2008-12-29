@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Context for third pass that tracks variables usage. It is void-unsafe by default."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -57,7 +57,7 @@ feature -- Modification
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2007-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

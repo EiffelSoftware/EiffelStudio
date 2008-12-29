@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Criterion to test if bottom indexing clause of a class has an indexing with a given tag"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
+	is_satisfied_by (a_item: QL_CLASS): BOOLEAN
 			-- Evaluate `a_item'.
 		local
 			l_class_as: CLASS_AS
@@ -29,7 +29,7 @@ feature -- Evaluate
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

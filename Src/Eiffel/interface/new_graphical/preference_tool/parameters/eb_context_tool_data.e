@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All shared attributes specific to the context tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {EB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -26,25 +26,25 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Value
 
-	default_class_formatter_index: INTEGER is
+	default_class_formatter_index: INTEGER
 			-- Default class formatter that should be popped up automatically.
 		do
 			Result := default_class_formatter_index_preference.value
 		end
 
-	default_feature_formatter_index: INTEGER is
+	default_feature_formatter_index: INTEGER
 			-- Default feature formatter that should be popped up automatically.
 		do
 			Result := default_feature_formatter_index_preference.value
 		end
 
-	default_dependency_formatter_index: INTEGER is
+	default_dependency_formatter_index: INTEGER
 			-- Default dependency formatter that should be popped up automatically.
 		do
 			Result := default_dependency_formatter_index_preference.value
 		end
 
-	editor_history_size: INTEGER is
+	editor_history_size: INTEGER
 			-- Number of memorized formatted text in formatters.
 		do
 			Result := editor_history_size_preference.value
@@ -59,14 +59,14 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	editor_history_size_string: STRING is "tools.context_tool.formatters_history_size"
-	default_class_formatter_index_string: STRING is "tools.context_tool.default_class_formatter_index"
-	default_feature_formatter_index_string: STRING is "tools.context_tool.default_feature_formatter_index"
-	default_dependency_formatter_index_string: STRING is "tools.context_tool.default_dependency_formatter_index"
+	editor_history_size_string: STRING = "tools.context_tool.formatters_history_size"
+	default_class_formatter_index_string: STRING = "tools.context_tool.default_class_formatter_index"
+	default_feature_formatter_index_string: STRING = "tools.context_tool.default_feature_formatter_index"
+	default_dependency_formatter_index_string: STRING = "tools.context_tool.default_dependency_formatter_index"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 invariant
 	preferences_not_void: preferences /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory to create text replacement fragments for external command"
 	author: ""
 	date: "$Date$"
@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	new_file_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_file_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$file_name" fragment
 		local
 			l_fragment: EB_AGENT_BASED_TEXT_FRAGMENT
@@ -24,7 +24,7 @@ feature -- Access
 			Result.set_data (a_scanner.t_file_name)
 		end
 
-	new_file (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_file (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$file" tool buffer selected fragment
 		local
 			l_fragment: EB_AGENT_BASED_TEXT_FRAGMENT
@@ -36,14 +36,14 @@ feature -- Access
 			Result.set_data (a_scanner.t_file)
 		end
 
-	new_path (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_path (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$path" tool buffer selected fragment
 		do
 			Result := new_file_name (a_scanner)
 			Result.set_data (a_scanner.t_path)
 		end
 
-	new_directory_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_directory_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$directory_name" fragment
 		local
 			l_fragment: EB_AGENT_BASED_TEXT_FRAGMENT
@@ -55,7 +55,7 @@ feature -- Access
 			Result.set_data (a_scanner.t_directory_name)
 		end
 
-	new_class_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_class_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$class_name" fragment
 		local
 			l_fragment: EB_AGENT_BASED_TEXT_FRAGMENT
@@ -67,7 +67,7 @@ feature -- Access
 			Result.set_data (a_scanner.t_class_name)
 		end
 
-	new_line (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_line (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$line" fragment
 		local
 			l_fragment: EB_AGENT_BASED_TEXT_FRAGMENT
@@ -79,7 +79,7 @@ feature -- Access
 			Result.set_data (a_scanner.t_line)
 		end
 
-	new_class_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_class_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "{CLASS}" buffer fragment
 		local
 			l_class: CLASS_I
@@ -113,7 +113,7 @@ feature -- Access
 			Result.set_data (a_scanner.t_group_directory)
 		end
 
-	new_class_buffer_selected (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_class_buffer_selected (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "@{CLASS}" class buffer selected fragment
 		local
 			l_editor: EB_SMART_EDITOR
@@ -154,7 +154,7 @@ feature -- Access
 			Result.set_data (a_scanner.t_class_buffer_selected)
 		end
 
-	new_feature_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_feature_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "{CLASS}.feature" buffer fragment
 		local
 			l_class_feature_name: STRING
@@ -204,21 +204,21 @@ feature -- Access
 			Result.set_data (a_scanner.t_feature_buffer)
 		end
 
-	new_tool_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_tool_buffer (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "[Tool name]" tool buffer fragment
 		do
 			Result := basic_text_fragment (a_scanner)
 			Result.set_data (a_scanner.t_tool_buffer)
 		end
 
-	new_tool_buffer_selected (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_tool_buffer_selected (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "@[Tool name]" tool buffer selected fragment
 		do
 			Result := basic_text_fragment (a_scanner)
 			Result.set_data (a_scanner.t_tool_buffer_selected)
 		end
 
-	class_with_name (a_text: STRING): CLASS_I is
+	class_with_name (a_text: STRING): CLASS_I
 			-- Class with `a_text' as name
 			-- Void if no class found.
 		require
@@ -234,7 +234,7 @@ feature -- Access
 			end
 		end
 
-	new_group_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT is
+	new_group_name (a_scanner: EB_COMMAND_SCANNER_SKELETON): EB_TEXT_FRAGMENT
 			-- New "$group_name" fragment
 		local
 			l_fragment: EB_AGENT_BASED_TEXT_FRAGMENT
@@ -248,7 +248,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	is_class_buffer_name_valid (a_class_buffer_name: STRING): BOOLEAN is
+	is_class_buffer_name_valid (a_class_buffer_name: STRING): BOOLEAN
 			-- Is `a_class_buffer_name' valid?
 		require
 			a_class_buffer_name_attached: a_class_buffer_name /= Void
@@ -256,7 +256,7 @@ feature{NONE} -- Implementation
 			Result := True
 		end
 
-	is_feature_buffer_name_valid (a_feature_name: STRING): BOOLEAN is
+	is_feature_buffer_name_valid (a_feature_name: STRING): BOOLEAN
 			-- Is `a_feature_name' valid?
 		require
 			a_feature_name_attached: a_feature_name /= Void
@@ -264,7 +264,7 @@ feature{NONE} -- Implementation
 			Result := True
 		end
 
-	new_path_replacement (a_text: STRING): STRING is
+	new_path_replacement (a_text: STRING): STRING
 			-- New path for `a_text'
 			-- Return the file name (with path) of the currently focused class in editor,
 			-- if there is no such class, return a copy of `a_text'.
@@ -283,7 +283,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_file_name_replacement (a_text: STRING): STRING is
+	new_file_name_replacement (a_text: STRING): STRING
 			-- New file name  (only the file name part) replacement for `a_text'
 			-- Return the file name (with path) of the currently focused class in editor,
 			-- if there is no such class, return a copy of `a_text'.
@@ -302,7 +302,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	class_i_from_editor: CLASS_I is
+	class_i_from_editor: CLASS_I
 			-- CLASS_I from last focused editor
 		local
 			cv_cst: CLASSI_STONE
@@ -317,7 +317,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	new_directory_name_replacement (a_text: STRING): STRING is
+	new_directory_name_replacement (a_text: STRING): STRING
 			-- New directory name replacement for `a_text'
 			-- Return the directory name of the currently focused class in editor,
 			-- if there is no such class, return a copy of `a_text'.
@@ -345,7 +345,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_group_directory_replacement (a_text: STRING): STRING is
+	new_group_directory_replacement (a_text: STRING): STRING
 			-- New group path replacement for `a_text'
 			-- Return the path of the group where the currently focused class in editor is defined,
 			-- if there is no such class, return a copy of `a_text'.
@@ -365,7 +365,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_group_name_replacement (a_text: STRING): STRING is
+	new_group_name_replacement (a_text: STRING): STRING
 			-- New group name replacement for `a_text'
 			-- Return the path of the group where the currently focused class in editor is defined,
 			-- if there is no such class, return a copy of `a_text'.
@@ -385,7 +385,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	group_from_current_class: CONF_GROUP is
+	group_from_current_class: CONF_GROUP
 			-- Group from current class in editor
 			-- Void if no class is found.
 		local
@@ -401,7 +401,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	new_class_name_replacement (a_text: STRING): STRING is
+	new_class_name_replacement (a_text: STRING): STRING
 			-- New class name replacement for `a_text'
 			-- Return name of the currently focused class in editor,
 			-- If there is no such class, return a copy of `a_text'.
@@ -424,7 +424,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_line_replacement (a_text: STRING): STRING is
+	new_line_replacement (a_text: STRING): STRING
 			-- New line replacement for `a_text'
 			-- Return the line number of the cursor in the currently focused editor
 			-- If no such line number, return a copy of `a_text'.
@@ -448,7 +448,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	file_content (a_file_name: STRING): STRING is
+	file_content (a_file_name: STRING): STRING
 			-- Content of file specified by `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -474,7 +474,7 @@ feature{NONE} -- Implementation
 			retry
 		end
 
-	temporary_file_name (a_base_name: STRING): STRING is
+	temporary_file_name (a_base_name: STRING): STRING
 			-- Temporary file name for buffer based on `a_base_name'
 		require
 			a_base_name_attached: a_base_name /= Void
@@ -488,7 +488,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	editor_for_class (a_class_i: CLASS_I): EB_SMART_EDITOR is
+	editor_for_class (a_class_i: CLASS_I): EB_SMART_EDITOR
 			-- Editor for `a_class_i'
 			-- Void if no editor found.
 		require
@@ -499,7 +499,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	new_buffer_file_name (a_file_name: STRING): STRING is
+	new_buffer_file_name (a_file_name: STRING): STRING
 			-- New file name for `a_file_name' used in external command launching,
 			-- If on Windows and `a_file_name' contains space, we srround `a_file_name' with double quotes.
 		require

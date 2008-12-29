@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Register ast structures for formatting ast."
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization
 
-	make (target, cl: CLASS_C) is
+	make (target, cl: CLASS_C)
 			-- Initialize current with client class
 			-- `cl' and target_class `target'.
 		require
@@ -37,7 +37,7 @@ feature -- Initialization
 			initialize;
 		end;
 
-	initialize is
+	initialize
 			-- Initialize Current structures.
 		do
 			create ancestors.make (5);
@@ -92,13 +92,13 @@ feature -- Properties
 
 feature -- Access
 
-	chained_assertion: CHAINED_ASSERTIONS is
+	chained_assertion: CHAINED_ASSERTIONS
 			-- Chained assertion for feature id `fid'
 		do
 			Result := assert_server.current_assertion
 		end;
 
-	feature_clause_comments (ast: FEATURE_CLAUSE_AS): EIFFEL_COMMENTS is
+	feature_clause_comments (ast: FEATURE_CLAUSE_AS): EIFFEL_COMMENTS
 			-- Feature clause comments for `ast'
 		require
 			non_void_ast: ast /= Void;
@@ -106,7 +106,7 @@ feature -- Access
 			Result := ast.comment (match_list)
 		end;
 
-	feature_comments (ast: FEATURE_AS): EIFFEL_COMMENTS is
+	feature_comments (ast: FEATURE_AS): EIFFEL_COMMENTS
 			-- Feature comments for feature `ast'
 		require
 			non_void_ast: ast /= Void;
@@ -116,7 +116,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_feature_clause_order (fco: like feature_clause_order) is
+	set_feature_clause_order (fco: like feature_clause_order)
 			-- Set `feature_clause_order' to `fco'.
 		require
 			valid_fco: fco /= Void
@@ -126,7 +126,7 @@ feature -- Setting
 			set: feature_clause_order = fco
 		end;
 
-	set_class (target: CLASS_C) is
+	set_class (target: CLASS_C)
 			-- Set target_class to `target'.
 			--| For EiffelCase.
 		require
@@ -141,7 +141,7 @@ feature -- Setting
 
 feature -- Element change
 
-	fill (current_class_only: BOOLEAN) is
+	fill (current_class_only: BOOLEAN)
 			-- Fill data structures. If current_class_only is true
 			-- then only fill the data structures for target_class.
 			-- Otherwize, fill the data structures of the inherited
@@ -186,7 +186,7 @@ debug ("FLAT_SHORT")
 end;
 		end;
 
-	record_replicated_feature (feat_adapter: FEATURE_ADAPTER) is
+	record_replicated_feature (feat_adapter: FEATURE_ADAPTER)
 			-- Record replicated feature `f' in `category'.
 		require
 			valid_feat_adapter: feat_adapter /= Void
@@ -194,7 +194,7 @@ end;
 			current_category.add (feat_adapter);
 		end;
 
-	record_feature (feat_adapter: FEATURE_ADAPTER) is
+	record_feature (feat_adapter: FEATURE_ADAPTER)
 			-- Record feature `f' in `current category'.
 		require
 			valid_feat_adapter: feat_adapter /= Void
@@ -207,7 +207,7 @@ end;
 			end
 		end;
 
-	record_invariant (inv: INVARIANT_ADAPTER) is
+	record_invariant (inv: INVARIANT_ADAPTER)
 			-- Record invariant `inv' in format.
 		require
 			valid_inv: inv /= Void
@@ -219,7 +219,7 @@ end;
 			end
 		end
 
-	record_creation_feature (feat_adapter: FEATURE_ADAPTER) is
+	record_creation_feature (feat_adapter: FEATURE_ADAPTER)
 			-- Record adapter feature `feat' if it is
 			-- a creation routine.
 		require
@@ -233,7 +233,7 @@ end;
 			end
 		end;
 
-	register_feature (feature_as: FEATURE_AS) is
+	register_feature (feature_as: FEATURE_AS)
 			-- Register feature `feature_as' for format
 			-- processing
 		local
@@ -243,7 +243,7 @@ end;
 			feat_adapter.register (feature_as, Current);
 		end;
 
-	register_feature_clause (feature_clause: FEATURE_CLAUSE_AS) is
+	register_feature_clause (feature_clause: FEATURE_CLAUSE_AS)
 			-- Register feature clause `feature_clause' after registering
 			-- features.
 			--| The reason that the feature clause is register last is
@@ -271,7 +271,7 @@ end;
 			create current_category.make;
 		end;
 
-	register_invariant (invariant_part: INVARIANT_AS) is
+	register_invariant (invariant_part: INVARIANT_AS)
 			-- Register invariant `invariant_part'.
 		local
 			inv_adapter: INVARIANT_ADAPTER
@@ -280,7 +280,7 @@ end;
 			inv_adapter.register (invariant_part, Current);
 		end;
 
-	register_invariants is
+	register_invariants
 			-- Register the invariants defined in `target_class'.
 		local
 			l_inv: INVARIANT_AS
@@ -312,7 +312,7 @@ end;
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Wipe out Current structure.
 		do
 			target_ast := Void;
@@ -327,7 +327,7 @@ feature -- Removal
 			target_replicated_feature_table := Void;
 		end;
 
-	wipe_out_parse_info is
+	wipe_out_parse_info
 			-- Wipe out information related to parsing.
 		do
 			target_feature_table := Void;
@@ -338,7 +338,7 @@ feature -- Removal
 
 feature -- Output
 
-	format_categories (ctxt: TEXT_FORMATTER_DECORATOR) is
+	format_categories (ctxt: TEXT_FORMATTER_DECORATOR)
 			-- Format categories into `ctxt'.
 		require
 			valid_ctxt: ctxt /= Void
@@ -360,7 +360,7 @@ feature -- Output
 			end;
 		end;
 
-	format_invariants (ctxt: TEXT_FORMATTER_DECORATOR) is
+	format_invariants (ctxt: TEXT_FORMATTER_DECORATOR)
 			-- Format the invariants.
 		require
 			valid_ctxt: ctxt /= Void
@@ -370,7 +370,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	current_class_ast: CLASS_AS is
+	current_class_ast: CLASS_AS
 			-- Retrieve the ast structure for current_class
 			--| (If class is out of date with compiled
 			--| structures reparse class)
@@ -397,7 +397,7 @@ end;
 			end
 		end;
 
-	search_comment (comment: EIFFEL_COMMENTS) is
+	search_comment (comment: EIFFEL_COMMENTS)
 			-- Search comment `comment' for a category.
 		do
 			from
@@ -410,7 +410,7 @@ end;
 			end;
 		end;
 
-	parse_ancestors is
+	parse_ancestors
 			-- Parse the ancestores of target_class.
 			-- (class ANY is skipped)
 		local
@@ -447,7 +447,7 @@ end;
 			end
 		end
 
-	register_skipped_classes_assertions (l: LINKED_LIST [CLASS_C]) is
+	register_skipped_classes_assertions (l: LINKED_LIST [CLASS_C])
 			-- Register the assertions of classes that have
 			-- been skipped (eg ANY)
 		local
@@ -496,13 +496,13 @@ debug ("FLAT_SHORT")
 end
 		end;
 
-	register_current_ast is
+	register_current_ast
 			-- Register the current_ast in the format registration.
 		do
 			register_class (current_ast)
 		end;
 
-	record_ancestors_of_class (a_class: CLASS_C; a_processed: SEARCH_TABLE [INTEGER]) is
+	record_ancestors_of_class (a_class: CLASS_C; a_processed: SEARCH_TABLE [INTEGER])
 			-- Record all ancestores of `a_class' in `ancestors' .
 			-- Add processed class to `a_processed' if not Void.
 		require
@@ -540,7 +540,7 @@ end
 
 feature {NONE} -- Implementation
 
-	match_list: LEAF_AS_LIST is
+	match_list: LEAF_AS_LIST
 			-- Match list for roundtrip parser
 		local
 			l_id: INTEGER
@@ -556,7 +556,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_feature_clause_order (array: ARRAY [STRING]) is
+	update_feature_clause_order (array: ARRAY [STRING])
 			-- Update the feature clause order.
 		require
 			valid_array: array /= Void
@@ -621,7 +621,7 @@ feature {NONE} -- Implementation
 	feature_clause_order: ARRAY [STRING];
 			-- Array of ordered feature clause comments
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

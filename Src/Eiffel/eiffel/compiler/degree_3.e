@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Degree 3 during Eiffel compilation"
 	legal: "See notice at end of class."
@@ -24,19 +24,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			create ignored_classes.make (0)
 		end
 
 feature -- Access
 
-	Degree_number: INTEGER is 3
+	Degree_number: INTEGER = 3
 			-- Degree number
 
 feature -- Processing
 
-	execute is
+	execute
 			-- Process Degree 3.
 			-- Byte code production and type checking.
 		local
@@ -121,7 +121,7 @@ feature -- Processing
 
 feature {NONE} -- Processing
 
-	process_class (a_class: EIFFEL_CLASS_C) is
+	process_class (a_class: EIFFEL_CLASS_C)
 			-- Byte code production and type checking: Degree 3
 			-- contains classes marked `changed' and/or changed3. For
 			-- the classes marked `changed', produce byte code and type
@@ -158,7 +158,7 @@ feature {NONE} -- Processing
 			-- List of classes that should not be processed at degree 4 due to an
 			-- error in one of their ancestors.
 
-	remove_descendant_classes_from_processing (a_class: CLASS_C) is
+	remove_descendant_classes_from_processing (a_class: CLASS_C)
 			-- Add all descendants of `a_class' to `ignored_classes'.
 		require
 			a_class_not_void: a_class /= Void
@@ -179,7 +179,7 @@ feature {NONE} -- Processing
 
 feature -- Assertion changes
 
-	update_assertions is
+	update_assertions
 			-- Go through all classes to melt features that have just their assertions
 			-- changed
 		local
@@ -205,7 +205,7 @@ feature -- Assertion changes
 
 feature -- Element change
 
-	insert_class (a_class: CLASS_C) is
+	insert_class (a_class: CLASS_C)
 			-- Add `a_class' to be processed.
 		do
 			if not a_class.is_true_external and then not a_class.degree_3_needed then
@@ -216,7 +216,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_class (a_class: CLASS_C) is
+	remove_class (a_class: CLASS_C)
 			-- Remove `a_class'.
 		do
 			if a_class.degree_3_needed then
@@ -225,7 +225,7 @@ feature -- Removal
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all classes.
 		local
 			i, nb: INTEGER
@@ -252,7 +252,7 @@ feature -- Removal
 invariant
 	ignored_classes_not_void: ignored_classes /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

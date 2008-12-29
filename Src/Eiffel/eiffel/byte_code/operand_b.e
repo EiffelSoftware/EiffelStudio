@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Open operand
@@ -13,7 +13,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_operand_b (Current)
@@ -21,13 +21,13 @@ feature -- Visitor
 
 feature
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Type of operand.
 		do
 			Result := system.any_type
 		end
 
-	same (other: ACCESS_B): BOOLEAN is
+	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		local
 			operand_b: OPERAND_B
@@ -36,14 +36,14 @@ feature
 			Result := operand_b /= Void
 		end
 
-	enlarged: OPERAND_B is
+	enlarged: OPERAND_B
 			-- Enlarges the tree to get more attributes and returns the
 			-- new enlarged tree node.
 		do
 			create {OPERAND_BL} Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

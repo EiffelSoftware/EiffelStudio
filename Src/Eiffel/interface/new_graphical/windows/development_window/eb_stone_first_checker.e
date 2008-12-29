@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Handle stone for development window.
 						This class is extract from EB_DEVELOPMENT_WINDOW set_stone_after_first_check.
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_window: EB_DEVELOPMENT_WINDOW)
 			-- Creation method.
 		require
 			not_void: a_window /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_stone_after_first_check (a_stone: STONE) is
+	set_stone_after_first_check (a_stone: STONE)
 			-- Display text associated with `a_stone', if any and if possible
 		local
 			l_managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
@@ -158,7 +158,7 @@ feature -- Command
 
 feature{NONE} -- Implementation
 
-	has_error_when_error_tool_auto_hide: BOOLEAN is
+	has_error_when_error_tool_auto_hide: BOOLEAN
 			-- When project has errors and Errors Tools is auto hiding, we should not set focus to editor.
 			-- Otherwise the Errors Tools sliding panel will be removed automatically, because it doesn't has focus.
 			-- See bug#12765.
@@ -210,7 +210,7 @@ feature{NONE} -- Implementation
 	save_needed: BOOLEAN;
 			-- If save file needed?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

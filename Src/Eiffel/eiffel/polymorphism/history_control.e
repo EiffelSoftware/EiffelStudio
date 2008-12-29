@@ -1,4 +1,4 @@
-indexing
+note
 	description: "History table controler"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			create new_units.make (500)
 		end
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Checking
 
-	check_overload is
+	check_overload
 			-- Transfer data on disk if overload
 		do
 			if count > Overload then
@@ -50,7 +50,7 @@ feature -- Checking
 
 feature -- Settings
 
-	add_new (f: FEATURE_I; id: INTEGER; rout_id: INTEGER) is
+	add_new (f: FEATURE_I; id: INTEGER; rout_id: INTEGER)
 			-- Add a new unit for routine id `rout_id' to the controler
 		require
 			f_attached: f /= Void
@@ -97,7 +97,7 @@ feature -- Settings
 			end
 		end
 
-	transfer is
+	transfer
 			-- Transfer new recorded (and remove obsolete) units in the
 			-- temporary server of polymorphic unit tables.
 		local
@@ -148,7 +148,7 @@ end
 
 feature -- Cleaning
 
-	wipe_out is
+	wipe_out
 			-- Delete existing data.
 		do
 			new_units.clear_all
@@ -162,13 +162,13 @@ feature -- Cleaning
 
 feature {NONE} -- Implementation
 
-	Overload: INTEGER is 150000
+	Overload: INTEGER = 150000
 			-- Number of units after which we will perform a transfer.
 
 invariant
 	new_units_not_void: new_units /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

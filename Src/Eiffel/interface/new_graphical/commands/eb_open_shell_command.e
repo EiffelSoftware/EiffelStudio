@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to open a shell with an editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Enable `Current'.
 		do
 			is_sensitive := True
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text)
@@ -56,7 +56,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	execute_with_stone (s: STONE) is
+	execute_with_stone (s: STONE)
 		local
 			cs: CLASSI_STONE
 			fs: FEATURE_STONE
@@ -92,7 +92,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	process_feature (fs: FEATURE_STONE) is
+	process_feature (fs: FEATURE_STONE)
 			-- Process feature stone.
 		require
 			fs_not_void: fs /= Void
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			req.execute (preferences.misc_data.external_editor_cli (fs.file_name, fs.line_number))
 		end
 
-	process_class (cs: CLASSI_STONE) is
+	process_class (cs: CLASSI_STONE)
 			-- Process class stone.
 		require
 			cs_not_void: cs /= Void
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_line (ls: LINE_STONE) is
+	process_line (ls: LINE_STONE)
 			-- Process line stone.
 		require
 			ls_not_void: ls /= Void
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_ast (s: AST_STONE) is
+	process_ast (s: AST_STONE)
 			-- Process AST stone
 		require
 			ast_not_void: s /= Void
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_class_syntax (syn: CL_SYNTAX_STONE) is
+	process_class_syntax (syn: CL_SYNTAX_STONE)
 			-- Process class syntax stone.
 		require
 			syn_not_void: syn /= Void
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			req.execute (preferences.misc_data.external_editor_cli (syn.file_name, syn.syntax_message.line))
 		end
 
-	execute is
+	execute
 			-- Redefine
 		local
 			req: COMMAND_EXECUTOR
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 			req.execute (preferences.misc_data.external_editor_cli (window_file_name, line_nb.max (1)))
 		end
 
-	window_file_name: STRING is
+	window_file_name: STRING
 			-- Provides the filename of the current edited element, if possible.
 		local
 			fs: FILED_STONE
@@ -205,47 +205,47 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation properties
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_external_editor
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.command_send_to_external_editor_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.command_send_to_external_editor_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.e_shell
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Textp for the toolbar button.
 		do
 			Result := Interface_names.b_shell
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := Interface_names.e_shell
 		end
 
-	name: STRING is "Open_shell"
+	name: STRING = "Open_shell"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-	is_droppable (st: ANY): BOOLEAN is
+	is_droppable (st: ANY): BOOLEAN
 			-- Can `st' be dropped?
 		local
 			conv_st: STONE
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation properties
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Wizard to create attributes and insert them in a specific%N%
 		%feature clause. Also provides field for invariant and option%N%
@@ -26,7 +26,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Create as attribute wizard.
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING is
+	code: STRING
 			-- Current text of the feature in the wizard.
 		do
 			create Result.make (100)
@@ -83,7 +83,7 @@ feature -- Access
 			Result.append ("%N")
 		end
 
-	precondition: STRING is
+	precondition: STRING
 			-- Selected precondition for set-procedure.
 		local
 			f_name: STRING
@@ -95,7 +95,7 @@ feature -- Access
 			end
 		end
 
-	invariant_part: STRING is
+	invariant_part: STRING
 			-- Invariant for feature. Void if none.
 		do
 			Result := invariant_field.text
@@ -108,7 +108,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_name_number (a_number: INTEGER) is
+	set_name_number (a_number: INTEGER)
 			-- Assign `a_number' to `name_number'.
 		do
 			name_number := a_number
@@ -119,18 +119,18 @@ feature -- Element change
 
 feature -- Status report
 
-	generate_setter_procedure: BOOLEAN is
+	generate_setter_procedure: BOOLEAN
 			-- Should a set-procedure be generated?
 		do
 			Result := procedure_check_box.is_selected
 		end
 
-	is_attribute: BOOLEAN is True
+	is_attribute: BOOLEAN = True
 			-- Is `Current' an attribute editor?
 
 feature {EB_QUERY_COMPOSITION_WIZARD} -- Status setting
 
-	enable_expanded_needed is
+	enable_expanded_needed
 			-- Set `expanded_needed' to `True'.
 		local
 			hb_type: EV_HORIZONTAL_BOX
@@ -146,7 +146,7 @@ feature {EB_QUERY_COMPOSITION_WIZARD} -- Status setting
 
 feature {NONE} -- Implementation
 
-	name_preposition: STRING is
+	name_preposition: STRING
 			-- `Result' is either "an_" or "a_" depending on the first character of `feature_name_field.text'.
 		require
 			feature_name_field_not_empty: feature_name_field.text.count > 0
@@ -164,10 +164,10 @@ feature {NONE} -- Implementation
 			Result_valid: Result.is_equal ("an_") or Result.is_equal ("a_")
 		end
 
-	pc_None: STRING is "(none)"
+	pc_None: STRING = "(none)"
 			-- Mark for no precondition.
 
-	on_declaration_change is
+	on_declaration_change
 			-- Update invariant when attribute declaration changes.
 		do
 			if not feature_name_field.text.is_empty then
@@ -178,19 +178,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_invariant_focus_gain is
+	on_invariant_focus_gain
 			-- `invariant_field' gained focus: update.
 		do
 			fill_with_assertions (invariant_field, False)
 		end
 
-	on_precondition_focus_gain is
+	on_precondition_focus_gain
 			-- `precondition_selector' gained focus: update.
 		do
 			fill_with_assertions (precondition_selector, True)
 		end
 
-	fill_with_assertions (b: EV_COMBO_BOX; for_precondition: BOOLEAN) is
+	fill_with_assertions (b: EV_COMBO_BOX; for_precondition: BOOLEAN)
 			-- Fill `b' with assertions for current attribute.
 		local
 			pc: LIST [STRING]
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			-- Edit field where the user can select from
 			-- generated preconditions or type her own.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

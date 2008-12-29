@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access to an Eiffel attribute"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_attribute_b (Current)
@@ -49,16 +49,16 @@ feature
 	type: TYPE_A
 			-- Attribute type
 
-	read_only: BOOLEAN is False
+	read_only: BOOLEAN = False
 			-- Is the access only a read-only one ?
 
-	set_type (t: like type) is
+	set_type (t: like type)
 			-- Assign `t' to `type'.
 		do
 			type := t
 		end
 
-	init (a: FEATURE_I) is
+	init (a: FEATURE_I)
 			-- Initialization
 		require
 			good_argument: a /= Void
@@ -87,13 +87,13 @@ feature
 			-- Does current call really need a target to be performed?
 			-- E.g. not a static external field
 
-	is_attribute: BOOLEAN is True
+	is_attribute: BOOLEAN = True
 			-- Is Current an access to an attribute ?
 
-	is_creatable: BOOLEAN is True
+	is_creatable: BOOLEAN = True
 			-- Can an access to an attribute be a target for a creation ?
 
-	same (other: ACCESS_B): BOOLEAN is
+	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		local
 			attribute_b: ATTRIBUTE_B
@@ -140,7 +140,7 @@ feature
 			end
 		end
 
-	enlarged: CALL_ACCESS_B is
+	enlarged: CALL_ACCESS_B
 			-- Enlarges the tree to get more attributes and returns the
 			-- new enlarged tree node.
 		local
@@ -171,7 +171,7 @@ feature
 
 feature -- Byte code generation
 
-	assign_code: CHARACTER is
+	assign_code: CHARACTER
 			-- Assignment code to an attribute
 		local
 			cl_type: CL_TYPE_A
@@ -184,7 +184,7 @@ feature -- Byte code generation
 			end
 		end
 
-	expanded_assign_code: CHARACTER is
+	expanded_assign_code: CHARACTER
 			-- Expanded assignment code to an attribute
 		local
 			cl_type: CL_TYPE_A
@@ -197,7 +197,7 @@ feature -- Byte code generation
 			end
 		end
 
-	reverse_code: CHARACTER is
+	reverse_code: CHARACTER
 			-- Reverse assignment code
 		local
 			cl_type: CL_TYPE_A
@@ -212,7 +212,7 @@ feature -- Byte code generation
 
 feature -- Array optimization
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (i: INTEGER): BOOLEAN
 		do
 			Result := attribute_id = i
 		end
@@ -228,7 +228,7 @@ feature -- Inlining
 			end
 		end
 
-	pre_inlined_code: ATTRIBUTE_B is
+	pre_inlined_code: ATTRIBUTE_B
 		local
 			inlined_attr_b: INLINED_ATTR_B
 		do
@@ -243,7 +243,7 @@ feature -- Inlining
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

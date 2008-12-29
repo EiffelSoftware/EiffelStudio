@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Preferences manager for EiffelStudio preferencs.  Extends the default preference with new preferences preference%
 		%types specific to EiffelStudio."
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Status Setting
 
-	new_identified_font_preference_value (a_name: STRING; a_value: EV_IDENTIFIED_FONT): IDENTIFIED_FONT_PREFERENCE is
+	new_identified_font_preference_value (a_name: STRING; a_value: EV_IDENTIFIED_FONT): IDENTIFIED_FONT_PREFERENCE
 			-- Add a new identified font preference with name `a_name' and `a_value'.
 		require
 			name_valid: a_name /= Void
@@ -41,7 +41,7 @@ feature -- Status Setting
 			preference_added: preferences.has_preference (a_name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

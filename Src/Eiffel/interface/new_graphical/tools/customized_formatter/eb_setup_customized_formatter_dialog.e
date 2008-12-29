@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to setup customized formatters"
 	author: ""
 	date: "$Date$"
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -40,19 +40,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name_of_item (a_item: EB_CUSTOMIZED_FORMATTER_DESP): STRING_GENERAL is
+	name_of_item (a_item: EB_CUSTOMIZED_FORMATTER_DESP): STRING_GENERAL
 			-- Name of `a_item'
 		do
 			Result := a_item.name
 		end
 
-	item_grid_column_count: INTEGER is
+	item_grid_column_count: INTEGER
 			-- Number of columns in `item_grid'
 		do
 			Result := 2
 		end
 
-	new_item: EB_CUSTOMIZED_FORMATTER_DESP is
+	new_item: EB_CUSTOMIZED_FORMATTER_DESP
 			-- New item used when adding new item
 		local
 			l_descriptor: EB_CUSTOMIZED_FORMATTER_DESP
@@ -66,7 +66,7 @@ feature -- Access
 
 feature{NONE} -- Actions
 
-	on_displayer_change (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_new_value: HASH_TABLE [TUPLE [view_name: STRING; sorting: STRING], STRING]) is
+	on_displayer_change (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_new_value: HASH_TABLE [TUPLE [view_name: STRING; sorting: STRING], STRING])
 			-- Action to be performed when displayer/tool of `a_descriptor' changed
 		require
 			a_descriptor_attached: a_descriptor /= Void
@@ -85,7 +85,7 @@ feature{NONE} -- Actions
 			refresh_grid_for_descriptor (a_descriptor)
 		end
 
-	on_data_change (a_new_data: STRING_32; a_setter: PROCEDURE [ANY, TUPLE [STRING]]; a_refresher: PROCEDURE [ANY, TUPLE]) is
+	on_data_change (a_new_data: STRING_32; a_setter: PROCEDURE [ANY, TUPLE [STRING]]; a_refresher: PROCEDURE [ANY, TUPLE])
 			-- Action to be performed when `a_new_data' changes.
 			-- Invoke `a_setter' to set this new data.
 			-- After setting, invoke `a_referesh' to refresh Current dialog if `a_refresher' is not Void.
@@ -100,7 +100,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_filter_change (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_filter: BOOLEAN) is
+	on_filter_change (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_filter: BOOLEAN)
 			-- Action to be performed if metric filter status changed for `a_descrptor' from `property_grid'
 		require
 			a_descriptor_attached: a_descriptor /= Void
@@ -109,7 +109,7 @@ feature{NONE} -- Actions
 			a_descriptor.set_is_filter_enabled (a_filter)
 		end
 
-	on_scope_change  (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_scope: STRING_32) is
+	on_scope_change  (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_scope: STRING_32)
 			-- Action to be performed if formatter scope status changed for `a_descrptor' from `property_grid'
 		require
 			a_descriptor_attached: a_descriptor /= Void
@@ -123,7 +123,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_metric_change  (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_metric: STRING_32) is
+	on_metric_change  (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_metric: STRING_32)
 			-- Action to be performed if formatter metric changed for `a_descrptor' from `property_grid'
 		require
 			a_descriptor_attached: a_descriptor /= Void
@@ -180,7 +180,7 @@ feature{NONE} -- Actions
 			a_descriptor.set_metric_name (string_32_from_string_8 (a_metric))
 		end
 
-	on_ok is
+	on_ok
 			-- Action to be performed when "OK" button is pressed
 		local
 			l_warning: ES_DISCARDABLE_WARNING_PROMPT
@@ -198,7 +198,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_confirmed_ok is
+	on_confirmed_ok
 			-- Action to be performed when close and save is conformed
 		do
 			if is_displayed then
@@ -209,7 +209,7 @@ feature{NONE} -- Actions
 
 feature -- Setting
 
-	load_descriptors is
+	load_descriptors
 			-- Load descriptors retrieved from `items_getter' into Current.
 			-- Keep a copy of retrieved descriptors so modification done in Current dialog don't mess up the source.
 		local
@@ -248,19 +248,19 @@ feature -- Setting
 
 feature{NONE} -- Implementation/Data
 
-	default_icon_pixmap: EV_PIXMAP is
+	default_icon_pixmap: EV_PIXMAP
 			-- Default icon pixmap for `items'
 		do
 			Result := pixmaps.icon_pixmaps.diagram_export_to_png_icon
 		end
 
-	new_item_name: STRING is
+	new_item_name: STRING
 			-- Base for new created items
 		do
 			Result := "New formatter #"
 		end
 
-	display_value (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP): HASH_TABLE [TUPLE [view_name: STRING; sorting: STRING], STRING] is
+	display_value (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP): HASH_TABLE [TUPLE [view_name: STRING; sorting: STRING], STRING]
 			-- Displayer value from `a_descriptor'
 		require
 			a_descriptor_attached: a_descriptor /= Void
@@ -301,7 +301,7 @@ feature{NONE} -- Implementation/Data
 	metric_property: MENU_PROPERTY [STRING_GENERAL]
 			-- Property to setup metric
 
-	data_from_row (a_row: EV_GRID_ROW): EB_CUSTOMIZED_FORMATTER_DESP is
+	data_from_row (a_row: EV_GRID_ROW): EB_CUSTOMIZED_FORMATTER_DESP
 			-- Data from `a_row'.
 		do
 			Result ?= a_row.data
@@ -309,14 +309,14 @@ feature{NONE} -- Implementation/Data
 
 feature{NONE} -- Implementation
 
-	setup_item_grid is
+	setup_item_grid
 			-- Setup `item_grid'.
 		do
 			item_grid.column (1).set_title (interface_names.l_formatter)
 			item_grid.column (2).set_title (interface_names.l_displayed_in)
 		end
 
-	bind_property_grid (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP) is
+	bind_property_grid (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP)
 			-- Load information of `a_descriptor' in `property_grid'.
 		local
 			l_grid: like property_grid
@@ -422,7 +422,7 @@ feature{NONE} -- Implementation
 			l_metric.enable_select
 		end
 
-	refresh_grid_for_descriptor (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP) is
+	refresh_grid_for_descriptor (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP)
 			-- Refresh grid item for `a_descriptor'.
 		local
 			l_grid_row: EV_GRID_ROW
@@ -444,7 +444,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	tools_display_function (a_tool_value: like display_value): STRING_32 is
+	tools_display_function (a_tool_value: like display_value): STRING_32
 			-- String representation of `a_tool_value' for grid display
 		require
 			a_tool_value_attached: a_tool_value /= Void
@@ -480,7 +480,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	resize_item_grid is
+	resize_item_grid
 			-- Resize `item_grid'.
 		local
 			l_size_table: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
@@ -490,7 +490,7 @@ feature{NONE} -- Implementation
 			item_grid_wrapper.auto_resize_columns (item_grid, l_size_table)
 		end
 
-	sorted_tools_for_formatter (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP): LIST [TUPLE [displayed_name: STRING_GENERAL; pixmap: EV_PIXMAP]] is
+	sorted_tools_for_formatter (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP): LIST [TUPLE [displayed_name: STRING_GENERAL; pixmap: EV_PIXMAP]]
 			-- Sorted store names for tools of `a_descriptors'
 		require
 			a_descriptor_attached: a_descriptor /= Void
@@ -535,7 +535,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	bind_item_row (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_grid_row: EV_GRID_ROW) is
+	bind_item_row (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_grid_row: EV_GRID_ROW)
 			-- Bind `a_descriptor' in `a_grid_row'.
 		local
 			l_formatter_item: EV_GRID_LABEL_ITEM
@@ -570,7 +570,7 @@ feature{NONE} -- Implementation
 			a_grid_row.set_data (a_descriptor)
 		end
 
-	displayed_in_tooltip (a_tool_name: STRING_GENERAL; a_component: ES_GRID_ITEM_COMPONENT; a_item: ES_GRID_LISTABLE_ITEM): EVS_GENERAL_TOOLTIP is
+	displayed_in_tooltip (a_tool_name: STRING_GENERAL; a_component: ES_GRID_ITEM_COMPONENT; a_item: ES_GRID_LISTABLE_ITEM): EVS_GENERAL_TOOLTIP
 			-- Tooltip for `a_tool_name'.
 		require
 			a_tool_name_attached: a_tool_name /= Void

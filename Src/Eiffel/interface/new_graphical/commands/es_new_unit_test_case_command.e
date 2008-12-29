@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Command that will create a new unit test case
 																		]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like manager) is
+	make (a_manager: like manager)
 			-- Creation method
 		do
 			manager := a_manager
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	execute is
+	execute
 			-- Redefine
 		do
 			manager.create_unit_test_case
@@ -36,37 +36,37 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := tooltip
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.testing_new_unit_test_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.testing_new_unit_test_icon_buffer
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 		do
 			Result := "New_manual_test_case"
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := interface_names.t_New_manual_test_case
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 
 	manager: !ES_EWEASEL_EXECUTION_MANAGER;
 			-- Chief eweasel execution manager		
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

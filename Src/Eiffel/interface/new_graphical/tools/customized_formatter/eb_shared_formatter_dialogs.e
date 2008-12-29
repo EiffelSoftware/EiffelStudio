@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared dialogs for customized formatter/tool setup"
 	author: ""
 	date: "$Date$"
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	formatter_dialog: EB_SETUP_CUSTOMIZED_FORMATTER_DIALOG is
+	formatter_dialog: EB_SETUP_CUSTOMIZED_FORMATTER_DIALOG
 			-- Dialog to setup customized formatters
 		once
 			create Result.make (agent customized_formatter_manager.formatter_descriptors)
@@ -23,7 +23,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	tools_dialog: EB_CUSTOMIZED_TOOL_DIALOG is
+	tools_dialog: EB_CUSTOMIZED_TOOL_DIALOG
 			-- Dialog to setup customized tools
 		once
 			create Result.make (agent customized_tool_manager.tool_descriptors)
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Display
 
-	popup_formatter_dialog (a_develop_window: EB_DEVELOPMENT_WINDOW) is
+	popup_formatter_dialog (a_develop_window: EB_DEVELOPMENT_WINDOW)
 			-- Popup `formatter_dialog' in `a_develop_window'.
 		require
 			a_develop_window_attached: a_develop_window /= Void
@@ -45,7 +45,7 @@ feature -- Display
 			end
 		end
 
-	popup_tools_dialog (a_develop_window: EB_DEVELOPMENT_WINDOW) is
+	popup_tools_dialog (a_develop_window: EB_DEVELOPMENT_WINDOW)
 			-- Popup `tools_dialog' in `a_develop_window'.
 		require
 			a_develop_window_attached: a_develop_window /= Void
@@ -57,7 +57,7 @@ feature -- Display
 
 feature{NONE} -- Actions
 
-	on_ok_from_formatter_dialog is
+	on_ok_from_formatter_dialog
 			-- Action to be performed when "OK" button is pressed in `formatter_dialog'
 		do
 			if formatter_dialog.has_changed then
@@ -66,7 +66,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_ok_from_tool_dialog is
+	on_ok_from_tool_dialog
 			-- Action to be performed when "OK" button is pressed in `tool_dialog'
 		do
 			if tools_dialog.has_changed then
@@ -78,7 +78,7 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Implementation
 
-	reload_customized_formatter (a_force: BOOLEAN) is
+	reload_customized_formatter (a_force: BOOLEAN)
 			-- Reload customized formatters.
 			-- If `a_force' is True, load customized formatters even if they are already loaded.
 		local
@@ -96,7 +96,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	reload_customized_tool (a_force: BOOLEAN) is
+	reload_customized_tool (a_force: BOOLEAN)
 			-- Reload customized tools.
 			-- If `a_force' is True, load customized tools even if they are already loaded.
 		local

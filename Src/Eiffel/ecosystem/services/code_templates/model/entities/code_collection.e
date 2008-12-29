@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface for simple collections used in code template models.
 	]"
@@ -82,7 +82,7 @@ feature {NONE} -- Internal implementation cache
 	internal_items: !DS_ARRAYED_LIST [!G]
 			-- Mutable version of `items'
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A category is a list of feature_clauses with the%
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize Current and set comments to `c'.
 		do
 			create clauses.make;
@@ -47,7 +47,7 @@ feature -- Properties
 
 feature -- Access
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Are the clauses empty?
 		do
 			Result := True;
@@ -61,7 +61,7 @@ feature -- Access
 			end;
 		end;
 
-	same_comment (c: like comments): BOOLEAN is
+	same_comment (c: like comments): BOOLEAN
 			-- Is the comment same as `c'?
 		do
 			Result := comments = Void and c = Void
@@ -70,13 +70,13 @@ feature -- Access
 
 feature -- Setting
 
-	set_comments (c: like comments) is
+	set_comments (c: like comments)
 			-- Set comment to all clauses to `c'.
 		do
 			comments := c;
 		end;
 
-	set_order (o: like order) is
+	set_order (o: like order)
 			-- Set `order' to `o'.
 		require
 			valid_o: o > 0
@@ -86,7 +86,7 @@ feature -- Setting
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is Current less than `other' comment?
 		do
 			Result := (order < other.order);
@@ -100,7 +100,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	merge (other: like Current) is
+	merge (other: like Current)
 			-- Import other category clauses. Merge them with
 			-- previous clauses when appropriate
 		require
@@ -138,7 +138,7 @@ feature -- Element change
 			end
 		end;
 
-	add (feat_adapter: FEATURE_ADAPTER) is
+	add (feat_adapter: FEATURE_ADAPTER)
 			-- Add `feat_adapter' to a feature_clause.
 		require
 			good_argument:  feat_adapter /= Void
@@ -166,7 +166,7 @@ feature -- Element change
 			end;
 		end;
 
-	add_at_end (feat_adapter: FEATURE_ADAPTER) is
+	add_at_end (feat_adapter: FEATURE_ADAPTER)
 			-- Add `feat_adapter' to the end of feature_clause.
 		require
 			good_argument: feat_adapter /= Void
@@ -185,7 +185,7 @@ feature -- Element change
 
 feature -- Context output
 
-	format (ctxt: TEXT_FORMATTER_DECORATOR) is
+	format (ctxt: TEXT_FORMATTER_DECORATOR)
 			-- Reconstitute text
 		do
 			from
@@ -200,7 +200,7 @@ feature -- Context output
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Wipe out Current structures.
 		do
 			clauses.wipe_out;
@@ -211,7 +211,7 @@ invariant
 
 	non_void_clauses: clauses /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

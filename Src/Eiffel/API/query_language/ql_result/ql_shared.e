@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for Eifel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	path_separator: CHARACTER is
+	path_separator: CHARACTER
 			-- Path separator
 		once
 			Result := '.'
@@ -26,7 +26,7 @@ feature -- Access
 			good_result: Result = '.'
 		end
 
-	criterion_with_index (a_scope: QL_SCOPE; a_index: INTEGER; a_argu: TUPLE): QL_CRITERION is
+	criterion_with_index (a_scope: QL_SCOPE; a_index: INTEGER; a_argu: TUPLE): QL_CRITERION
 			-- Criterion with `a_index' and argument `a_argu' in `a_scope'
 		require
 			a_scope_attached: a_scope /= Void
@@ -35,7 +35,7 @@ feature -- Access
 			Result := criterion_factory_table.item (a_scope).criterion_with_index (a_index, a_argu)
 		end
 
-	criterion_with_name (a_scope: QL_SCOPE; a_name: STRING; a_argu: TUPLE): QL_CRITERION is
+	criterion_with_name (a_scope: QL_SCOPE; a_name: STRING; a_argu: TUPLE): QL_CRITERION
 			-- Criterion with `a_name' and argument `a_argu' in `a_scope'
 		require
 			a_scope_attached: a_scope /= Void
@@ -46,7 +46,7 @@ feature -- Access
 			Result := criterion_factory_table.item (a_scope).criterion_with_name (a_name, a_argu)
 		end
 
-	metric_factory: QL_METRIC_FACTORY is
+	metric_factory: QL_METRIC_FACTORY
 			-- Metric factory
 		once
 			create Result
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Domain
 
-	system_target_domain: QL_TARGET_DOMAIN is
+	system_target_domain: QL_TARGET_DOMAIN
 			-- Target domain representing target of current system
 		local
 			l_target: QL_TARGET
@@ -69,13 +69,13 @@ feature -- Domain
 			result_valid: Result.count = 1 and then Result.first.target = universe.target
 		end
 
-	system_target_path: STRING is "%"%""
+	system_target_path: STRING = "%"%""
 			-- Path for `syatem_target_domain', an quoted empty string
 
-	empty_assertion_name: STRING is "#";
+	empty_assertion_name: STRING = "#";
 			-- Name for an empty assertion
 
-	dummy_domain: QL_DOMAIN is
+	dummy_domain: QL_DOMAIN
 			-- Dummy domain
 		do
 			create {QL_QUANTITY_DOMAIN} Result.make
@@ -85,7 +85,7 @@ feature -- Domain
 
 feature -- Criterion factory
 
-	criterion_factory_table: HASH_TABLE [QL_CRITERION_FACTORY, QL_SCOPE] is
+	criterion_factory_table: HASH_TABLE [QL_CRITERION_FACTORY, QL_SCOPE]
 			-- Criterion factory table
 			-- Key is criterion scope type, value is the factory of that scope type.
 		once
@@ -104,7 +104,7 @@ feature -- Criterion factory
 			result_attached: Result /= Void
 		end
 
-	target_criterion_factory: QL_TARGET_CRITERION_FACTORY is
+	target_criterion_factory: QL_TARGET_CRITERION_FACTORY
 			-- Target criterion factory
 		once
 			create Result.make
@@ -112,7 +112,7 @@ feature -- Criterion factory
 			result_attached: Result /= Void
 		end
 
-	group_criterion_factory: QL_GROUP_CRITERION_FACTORY is
+	group_criterion_factory: QL_GROUP_CRITERION_FACTORY
 			-- Group criterion factory
 		once
 			create Result.make
@@ -120,7 +120,7 @@ feature -- Criterion factory
 			result_attached: Result /= Void
 		end
 
-	class_criterion_factory: QL_CLASS_CRITERION_FACTORY is
+	class_criterion_factory: QL_CLASS_CRITERION_FACTORY
 			-- Class criterion factory
 		once
 			create Result.make
@@ -128,7 +128,7 @@ feature -- Criterion factory
 			result_attached: Result /= Void
 		end
 
-	generic_criterion_factory: QL_GENERIC_CRITERION_FACTORY is
+	generic_criterion_factory: QL_GENERIC_CRITERION_FACTORY
 			-- Generic criterion factory
 		once
 			create Result.make
@@ -136,7 +136,7 @@ feature -- Criterion factory
 			result_attached: Result /= Void
 		end
 
-	feature_criterion_factory: QL_FEATURE_CRITERION_FACTORY is
+	feature_criterion_factory: QL_FEATURE_CRITERION_FACTORY
 			-- Feature criterion factory
 		once
 			create Result.make
@@ -144,7 +144,7 @@ feature -- Criterion factory
 			result_attached: Result /= Void
 		end
 
-	argument_criterion_factory: QL_ARGUMENT_CRITERION_FACTORY is
+	argument_criterion_factory: QL_ARGUMENT_CRITERION_FACTORY
 			-- Argument criterion factory
 		once
 			create Result.make
@@ -152,7 +152,7 @@ feature -- Criterion factory
 			result_attached: Result /= Void
 		end
 
-	local_criterion_factory: QL_LOCAL_CRITERION_FACTORY is
+	local_criterion_factory: QL_LOCAL_CRITERION_FACTORY
 			-- Local criterion factory
 		once
 			create Result.make
@@ -160,7 +160,7 @@ feature -- Criterion factory
 			result_attached: Result /= Void
 		end
 
-	assertion_criterion_factory: QL_ASSERTION_CRITERION_FACTORY is
+	assertion_criterion_factory: QL_ASSERTION_CRITERION_FACTORY
 			-- Assertion criterion factory
 		once
 			create Result.make
@@ -168,7 +168,7 @@ feature -- Criterion factory
 			result_attached: Result /= Void
 		end
 
-	line_criterion_factory: QL_LINE_CRITERION_FACTORY is
+	line_criterion_factory: QL_LINE_CRITERION_FACTORY
 			-- Line criterion factory
 		once
 			create Result.make
@@ -176,7 +176,7 @@ feature -- Criterion factory
 			result_attached: Result /= Void
 		end
 
-	quantity_criterion_factory: QL_QUANTITY_CRITERION_FACTORY is
+	quantity_criterion_factory: QL_QUANTITY_CRITERION_FACTORY
 			-- Line criterion factory
 		once
 			create Result.make
@@ -184,7 +184,7 @@ feature -- Criterion factory
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

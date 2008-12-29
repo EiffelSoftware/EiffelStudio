@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Representation of a menu for the batch compiler%
@@ -38,7 +38,7 @@ feature -- Properties
 
 feature -- Access
 
-	abbrev_item (abb: CHARACTER): EWB_CMD is
+	abbrev_item (abb: CHARACTER): EWB_CMD
 			-- Command with abbreviated character `abb'
 		local
 			i: INTEGER
@@ -58,7 +58,7 @@ feature -- Access
 			end;
 		end;
 
-	cmd_name_item (cmd_name: STRING): EWB_CMD is
+	cmd_name_item (cmd_name: STRING): EWB_CMD
 			-- Command with command name `cmd_name'
 		local
 			i: INTEGER
@@ -80,7 +80,7 @@ feature -- Access
 			end;
 		end;
 
-	option_item (cmd_name: STRING): EWB_CMD is
+	option_item (cmd_name: STRING): EWB_CMD
 			-- Command with command name `cmd_name'.
 		do
 			if cmd_name.count = 1 then
@@ -92,7 +92,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_entry (cmd: EWB_CMD) is
+	add_entry (cmd: EWB_CMD)
 			-- Add command entry `cmd' to Current menu.
 		local
 			i: INTEGER
@@ -109,19 +109,19 @@ feature -- Element change
 
 feature -- Setting
 
-	set_is_main is
+	set_is_main
 		do
 			is_main := True
 		end;
 
-	set_parent (new_parent: EWB_MENU) is
+	set_parent (new_parent: EWB_MENU)
 		do
 			parent := new_parent;
 		end;
 
 feature -- Output
 
-	print_help is
+	print_help
 			-- Display the help information for menu.
 		local
 			cmd: EWB_CMD
@@ -151,7 +151,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	print_one_help (opt: STRING; txt: STRING_GENERAL; abb: CHARACTER) is
+	print_one_help (opt: STRING; txt: STRING_GENERAL; abb: CHARACTER)
 			-- Display the help information for option `opt'
 			-- with help text `txt' and abbreviation `abb'.
 		local
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			io.put_string (".%N")
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

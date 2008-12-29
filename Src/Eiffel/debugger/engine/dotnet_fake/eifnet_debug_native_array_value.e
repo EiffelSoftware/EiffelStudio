@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,34 +21,34 @@ inherit
 
 feature -- Access
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 			-- Find corresponding CLASS_C to type represented by `value'.
 		once
 		end
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		do
 		end
 
 feature -- Output	
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
 		end
 
-	get_items (a_slice_min, a_slice_max: INTEGER) is
+	get_items (a_slice_min, a_slice_max: INTEGER)
 			-- Get Items for attributes
 		do
 		end
 
-	string_value: STRING is
+	string_value: STRING
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

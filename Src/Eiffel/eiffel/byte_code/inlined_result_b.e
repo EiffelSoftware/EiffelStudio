@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class INLINED_RESULT_B
@@ -12,19 +12,19 @@ inherit
 
 feature
 
-	enlarged: INLINED_RESULT_B is
+	enlarged: INLINED_RESULT_B
 		do
 			Result := Current
 		end
 
-	is_result: BOOLEAN is
+	is_result: BOOLEAN
 		do
 		end
 
-	is_inlined_result: BOOLEAN is True
+	is_inlined_result: BOOLEAN = True
 			-- Current is inlined `Result'.
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' the inlined `Result' entity ?
 		do
 			Result := r.is_inlined_result
@@ -32,39 +32,39 @@ feature
 
 feature -- Register and code generation
 
-	Current_register: INLINED_CURRENT_B is
+	Current_register: INLINED_CURRENT_B
 		once
 			create Result
 		end
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Do nothing
 		do
 		end;
 
-	generate is
+	generate
 			-- Do nothing
 		do
 		end;
 
-	free_register is
+	free_register
 			-- Do nothing
 		do
 		end;
 
-	print_register is
+	print_register
 		do
 			System.remover.inliner.inlined_feature.result_reg.print_register
 		end;
 
 feature
 
-	type: TYPE_A is
+	type: TYPE_A
 		do
 			Result := System.remover.inliner.inlined_feature.result_type
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

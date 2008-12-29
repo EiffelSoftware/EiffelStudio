@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Multi-searcher and replacer Container of search and replace strategy
 					that then are used to deal with search and replace issures.
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Set Text strategy as default to `search_strategy_internal'
 		do
 			create {MSR_SEARCH_TEXT_STRATEGY} search_strategy_internal.make_empty
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			is_replace_strategy_set : is_replace_strategy_set
 		end
 
-	make_with_strategy (p_search_strategy: MSR_SEARCH_STRATEGY; p_replace_strategy: MSR_REPLACE_STRATEGY) is
+	make_with_strategy (p_search_strategy: MSR_SEARCH_STRATEGY; p_replace_strategy: MSR_REPLACE_STRATEGY)
 			-- Set both `search_strategy_internal' and `replace_strategy_internal'.
 		require
 			p_search_strategy_not_void: p_search_strategy /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			is_replace_strategy_set : is_replace_strategy_set
 		end
 
-	make_with_search_strategy (p_search_strategy: MSR_SEARCH_STRATEGY) is
+	make_with_search_strategy (p_search_strategy: MSR_SEARCH_STRATEGY)
 			-- Set `search_strategy_internal' with p_search_strategy.
 		require
 			p_search_strategy_not_void: p_search_strategy /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	search_strategy: MSR_SEARCH_STRATEGY is
+	search_strategy: MSR_SEARCH_STRATEGY
 			-- Search strategy
 		do
 			Result := search_strategy_internal
@@ -57,7 +57,7 @@ feature -- Access
 			search_strategy_not_void: Result = search_strategy_internal
 		end
 
-	replace_strategy: MSR_REPLACE_STRATEGY is
+	replace_strategy: MSR_REPLACE_STRATEGY
 			-- Replace strategy
 		require
 			is_replace_strategy_set: is_replace_strategy_set
@@ -67,7 +67,7 @@ feature -- Access
 			replace_strategy_not_void: Result = replace_strategy_internal
 		end
 
-	item_matched: ARRAYED_LIST [MSR_ITEM] is
+	item_matched: ARRAYED_LIST [MSR_ITEM]
 			-- Items repesenting search or replace results
 		require
 			is_search_launched : is_search_launched
@@ -77,7 +77,7 @@ feature -- Access
 			item_matched_not_void_if_launched: is_search_launched implies Result /= Void
 		end
 
-	item: MSR_ITEM is
+	item: MSR_ITEM
 			-- Current item in `item_matched'
 		require
 			is_search_launched: is_search_launched
@@ -88,61 +88,61 @@ feature -- Access
 
 feature -- Status report
 
-	case_sensitive: BOOLEAN is
+	case_sensitive: BOOLEAN
 			-- If set, case will be matched when searching or replacing
 		do
 			Result := search_strategy_internal.case_sensitive
 		end
 
-	is_regular_expression_used : BOOLEAN is
+	is_regular_expression_used : BOOLEAN
 			-- Regular expression is used in searching?
 		do
 			Result := search_strategy.is_regular_expression_used
 		end
 
-	is_whole_word_matched: BOOLEAN is
+	is_whole_word_matched: BOOLEAN
 			-- Let searching match whole word?
 		do
 			Result := search_strategy.is_whole_word_matched
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		do
 			Result := (is_search_launched and then item_matched.off)
 		end
 
-	isfisrt: BOOLEAN is
+	isfisrt: BOOLEAN
 			-- Current item is the first item?
 		do
 			Result := (is_search_launched and then item_matched.isfirst)
 		end
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Current item is the last item?
 		do
 			Result := (is_search_launched and then item_matched.islast)
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- No matches?
 		do
 			Result := (is_search_launched and then item_matched.is_empty)
 		end
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid cursor position to the left of cursor?
 		do
 			Result := (is_search_launched and then item_matched.before)
 		end
 
-	is_replace_strategy_set : BOOLEAN is
+	is_replace_strategy_set : BOOLEAN
 			-- Is `replace_strategy_internal' set?
 		do
 			Result := (replace_strategy_internal /= Void)
 		end
 
-	is_replace_launched: BOOLEAN is
+	is_replace_launched: BOOLEAN
 			-- Replace launched?
 		require
 			is_replace_strategy_set: is_replace_strategy_set
@@ -150,13 +150,13 @@ feature -- Status report
 			Result := replace_strategy_internal.is_replace_launched
 		end
 
-	is_search_launched: BOOLEAN is
+	is_search_launched: BOOLEAN
 			-- The search launched?
 		do
 			Result := search_strategy_internal.is_launched
 		end
 
-	is_first_text_item: BOOLEAN is
+	is_first_text_item: BOOLEAN
 			-- Is `item' the first text item?
 		local
 			l_text_item: MSR_TEXT_ITEM
@@ -182,7 +182,7 @@ feature -- Status report
 			Result := (l_index = l_first_text_index)
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items, all class and text items included
 		require
 			is_search_launched : is_search_launched
@@ -192,7 +192,7 @@ feature -- Status report
 			count_not_void: Result = item_matched.count
 		end
 
-	class_count: INTEGER is
+	class_count: INTEGER
 			-- Number of top items that contain found text (normally number of classes or files)
 		require
 			is_search_launched : is_search_launched
@@ -219,7 +219,7 @@ feature -- Status report
 			item_matched.go_i_th (l_index)
 		end
 
-	text_found_count: INTEGER is
+	text_found_count: INTEGER
 			-- Number of all buttom children items (normally number of texts found)
 		require
 			is_search_launched : is_search_launched
@@ -243,13 +243,13 @@ feature -- Status report
 			item_matched.go_i_th (l_index)
 		end
 
-	after : BOOLEAN is
+	after : BOOLEAN
 			-- Is there no valid cursor position to the right of cursor?			
 		do
 			Result := (is_search_launched and then item_matched.after)
 		end
 
-	index : INTEGER is
+	index : INTEGER
 			-- Index of current position
 		do
 			if is_search_launched then
@@ -257,13 +257,13 @@ feature -- Status report
 			end
 		end
 
-	exhausted: BOOLEAN is
+	exhausted: BOOLEAN
 			-- Has structure been completely explored?
 		do
 			Result := (is_search_launched and then item_matched.exhausted)
 		end
 
-	index_of_item (p_item: MSR_ITEM; i: INTEGER): INTEGER is
+	index_of_item (p_item: MSR_ITEM; i: INTEGER): INTEGER
 			-- Index of `i'-th occurrence of item identical to `v'.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -276,7 +276,7 @@ feature -- Status report
 			Result := item_matched.index_of (p_item, i)
 		end
 
-	contain_data (a_data: ANY) : BOOLEAN is
+	contain_data (a_data: ANY) : BOOLEAN
 			-- Does `item_matches' contain `a_data'?
 		local
 			l_cursor: ARRAYED_LIST_CURSOR
@@ -300,7 +300,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_search_strategy (p_strategy: MSR_SEARCH_STRATEGY) is
+	set_search_strategy (p_strategy: MSR_SEARCH_STRATEGY)
 			-- Set `search_strategy_internal'.
 		require
 			p_strategy_not_void: p_strategy /= Void
@@ -310,7 +310,7 @@ feature -- Status setting
 			search_strategy_internal_set: search_strategy_internal = p_strategy
 		end
 
-	set_replace_strategy (p_strategy: MSR_REPLACE_STRATEGY) is
+	set_replace_strategy (p_strategy: MSR_REPLACE_STRATEGY)
 			-- Set `replace_strategy_internal'.
 		require
 			p_strategy_not_void: p_strategy /= Void
@@ -320,7 +320,7 @@ feature -- Status setting
 			replace_strategy_internal_set: replace_strategy_internal = p_strategy
 		end
 
-	set_keyword (text: STRING_32) is
+	set_keyword (text: STRING_32)
 			-- Set keyword for searching.
 		require
 			text_not_void: text /= Void
@@ -328,7 +328,7 @@ feature -- Status setting
 			search_strategy_internal.set_keyword (text)
 		end
 
-	set_surrounding_text_range (range: INTEGER) is
+	set_surrounding_text_range (range: INTEGER)
 			-- Set maximul number of characters by each side of the found text.
 		require
 			surrounding_text_range_larger_and_equal_then_zero: range >= 0
@@ -336,7 +336,7 @@ feature -- Status setting
 			search_strategy_internal.set_surrounding_text_range (range)
 		end
 
-	set_case_sensitive is
+	set_case_sensitive
 			-- Set search matching case.
 		do
 			search_strategy_internal.set_case_sensitive
@@ -344,7 +344,7 @@ feature -- Status setting
 			case_sensitive: case_sensitive
 		end
 
-	set_case_insensitive is
+	set_case_insensitive
 			-- Set search caseless.
 		do
 			search_strategy_internal.set_case_insensitive
@@ -352,7 +352,7 @@ feature -- Status setting
 			case_insensitive: not case_sensitive
 		end
 
-	set_replace_string (string: STRING_32) is
+	set_replace_string (string: STRING_32)
 			-- String to replace
 		require
 			string_not_void: string /= Void
@@ -361,13 +361,13 @@ feature -- Status setting
 			replace_strategy_internal.set_replace_string (string)
 		end
 
-	set_regular_expression_used (p_regular_expression_used: BOOLEAN) is
+	set_regular_expression_used (p_regular_expression_used: BOOLEAN)
 			-- Set is_regular_expression_used
 		do
 			search_strategy.set_regular_expression_used (p_regular_expression_used)
 		end
 
-	set_whole_word_matched (p_whole_word_matched: BOOLEAN) is
+	set_whole_word_matched (p_whole_word_matched: BOOLEAN)
 			-- Set is_whole_word_matched
 		do
 			search_strategy.set_whole_word_matched (p_whole_word_matched)
@@ -375,7 +375,7 @@ feature -- Status setting
 
 feature -- Cursor movement
 
-	back is
+	back
 			-- Move cursor one position backward.
 		require
 			is_search_launched: is_search_launched
@@ -383,7 +383,7 @@ feature -- Cursor movement
 			search_strategy_internal.item_matched.back
 		end
 
-	finish is
+	finish
 			-- Move cursor to last position if any.
 		require
 			is_search_launched: is_search_launched
@@ -391,7 +391,7 @@ feature -- Cursor movement
 			search_strategy_internal.item_matched.finish
 		end
 
-	forth is
+	forth
 			-- Move cursor one position forward.
 		require
 			is_search_launched: is_search_launched
@@ -399,7 +399,7 @@ feature -- Cursor movement
 			search_strategy_internal.item_matched.forth
 		end
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th position.
 		require
 			is_search_launched: is_search_launched
@@ -407,7 +407,7 @@ feature -- Cursor movement
 			search_strategy_internal.item_matched.go_i_th (i)
 		end
 
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		require
 			is_search_launched: is_search_launched
@@ -415,7 +415,7 @@ feature -- Cursor movement
 			search_strategy_internal.item_matched.go_to (p)
 		end
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions.
 		require
 			is_search_launched: is_search_launched
@@ -423,7 +423,7 @@ feature -- Cursor movement
 			search_strategy_internal.item_matched.move (i)
 		end
 
-	search (v: MSR_ITEM) is
+	search (v: MSR_ITEM)
 			-- Move to first position (at or after current
 			-- position) where `item' and `v' are equal.
 			-- If structure does not include `v' ensure that
@@ -436,7 +436,7 @@ feature -- Cursor movement
 			search_strategy_internal.item_matched.search (v)
 		end
 
-	start is
+	start
 			-- Move cursor to first position if any.
 		require
 			is_search_launched: is_search_launched
@@ -444,7 +444,7 @@ feature -- Cursor movement
 			search_strategy_internal.item_matched.start
 		end
 
-	go_to_first_text_item is
+	go_to_first_text_item
 			-- Go to first text item, if none, off.
 		require
 			is_search_launched: is_search_launched
@@ -464,7 +464,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_to_next_text_item (reverse: BOOLEAN) is
+	go_to_next_text_item (reverse: BOOLEAN)
 			-- Go to next text item if exists, if reverse go to previous text item.
 		local
 			l_text_item: MSR_TEXT_ITEM
@@ -521,7 +521,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_to_closest_item (a_position: INTEGER; backwards: BOOLEAN; a_data: ANY; compare_data: BOOLEAN) is
+	go_to_closest_item (a_position: INTEGER; backwards: BOOLEAN; a_data: ANY; compare_data: BOOLEAN)
 			-- Go to the item closest to `a_position', if compare_data compare data.
 		local
 			l_cursor: INTEGER
@@ -654,19 +654,19 @@ feature -- Cursor movement
 
 feature -- Basic operations		
 
-	reset_all is
+	reset_all
 			-- Reset
 		do
 			search_strategy_internal.reset_all
 		end
 
-	do_search is
+	do_search
 			-- Launch searching
 		do
 			search_strategy_internal.launch
 		end
 
-	replace is
+	replace
 			-- Replace current item.
 		require
 			is_replace_strategy_set: is_replace_strategy_set
@@ -684,7 +684,7 @@ feature -- Basic operations
 			replace_report_not_void: replace_report /= Void
 		end
 
-	replace_all is
+	replace_all
 			-- Replace all item in the search result.
 		require
 			is_replace_strategy_set: is_replace_strategy_set
@@ -702,13 +702,13 @@ feature -- Basic operations
 
 feature -- Sorting
 
-	Sort_by_class_name: INTEGER is 1
+	Sort_by_class_name: INTEGER = 1
 			-- Sort by class name. If searched only in text, sort by line number.
 
-	Sort_by_found: INTEGER is 2
+	Sort_by_found: INTEGER = 2
 			-- Sort by found number in classes
 
-	sort_on (a_attribute: INTEGER; ascent: BOOLEAN) is
+	sort_on (a_attribute: INTEGER; ascent: BOOLEAN)
 			-- Sort search result by `a_attribute'
 		local
 			ds_array: DS_ARRAYED_LIST [like row_data]
@@ -741,7 +741,7 @@ feature -- Sorting
 
 feature {NONE} -- Sorting
 
-	build_items_by_ds_array (ds_array: DS_ARRAYED_LIST [like row_data]): like item_matched is
+	build_items_by_ds_array (ds_array: DS_ARRAYED_LIST [like row_data]): like item_matched
 			--
 		require
 			ds_array_list_attached: ds_array /= Void
@@ -771,9 +771,9 @@ feature {NONE} -- Sorting
 			end
 		end
 
-	Sort_by_line_number: INTEGER is 3
+	Sort_by_line_number: INTEGER = 3
 
-	build_ds_arrayed_list (a_only_class_item: BOOLEAN): DS_ARRAYED_LIST [like row_data] is
+	build_ds_arrayed_list (a_only_class_item: BOOLEAN): DS_ARRAYED_LIST [like row_data]
 			--
 		local
 			l_array: ARRAYED_LIST [MSR_ITEM]
@@ -796,7 +796,7 @@ feature {NONE} -- Sorting
 
 	row_data: like item
 
-	sort_data (grid_data: DS_ARRAYED_LIST [like row_data]; a_sorted_attribute: INTEGER): DS_ARRAYED_LIST [like row_data] is
+	sort_data (grid_data: DS_ARRAYED_LIST [like row_data]; a_sorted_attribute: INTEGER): DS_ARRAYED_LIST [like row_data]
 			-- Sort `grid_data' according to `sorted_column' and `sorting_order'.
 		require
 			grid_data_not_void: grid_data /= Void
@@ -817,7 +817,7 @@ feature {NONE} -- Sorting
 			Result_not_void: Result /= Void
 		end
 
-	sort_on_count (u, v: like row_data): BOOLEAN is
+	sort_on_count (u, v: like row_data): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -830,7 +830,7 @@ feature {NONE} -- Sorting
 			end
 		end
 
-	sort_on_class_name (u, v: like row_data): BOOLEAN is
+	sort_on_class_name (u, v: like row_data): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -843,7 +843,7 @@ feature {NONE} -- Sorting
 			end
 		end
 
-	sort_on_line_number (u, v: like row_data): BOOLEAN is
+	sort_on_line_number (u, v: like row_data): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -861,7 +861,7 @@ feature {NONE} -- Sorting
 			end
 		end
 
-	is_text_item (a_item: MSR_ITEM): BOOLEAN is
+	is_text_item (a_item: MSR_ITEM): BOOLEAN
 			--
 		local
 			l_text_item: MSR_TEXT_ITEM
@@ -885,7 +885,7 @@ invariant
 
 	search_strategy_internal_not_void: search_strategy_internal /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

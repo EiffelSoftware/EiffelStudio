@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that manage timer events based on EB_DEVELOPMENT_WINDOW."
 	author: "$Author$"
 	date: "$Date$"
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a: like development_window_agent) is
+	make (a: like development_window_agent)
 		do
 			development_window_agent := a
 			create implementation
@@ -29,25 +29,25 @@ feature -- Access
 
 feature -- Status
 
-	start_events_handling is
+	start_events_handling
 		do
 			--| Do nothing
 		end
 
-	stop_events_handling is
+	stop_events_handling
 		do
 			--| Do nothing			
 		end
 
 feature -- Access
 
-	new_timer: EV_DEBUGGER_TIMER is
+	new_timer: EV_DEBUGGER_TIMER
 			--
 		do
 			create Result
 		end
 
-	timer_win32_handle: POINTER is
+	timer_win32_handle: POINTER
 			--
 		local
 			dw: EB_DEVELOPMENT_WINDOW
@@ -64,20 +64,20 @@ feature -- Access
 
 feature -- Change
 
-	recycle is
+	recycle
 			--
 		do
 			development_window_agent := Void
 			implementation := Void
 		end
 
-	add_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+	add_idle_action (v: PROCEDURE [ANY, TUPLE])
 			-- Extend `idle_actions' with `v'.
 		do
 			ev_application.add_idle_action (v)
 		end
 
-	remove_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+	remove_idle_action (v: PROCEDURE [ANY, TUPLE])
 			-- Remove `v' from `idle_actions'
 		do
 			ev_application.remove_idle_action (v)
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 
 	implementation: EB_DEBUGGER_EVENTS_HANDLER_IMP ;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

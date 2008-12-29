@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Box in which the user may choose whether the value is True or False."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Display
 	
-	display (new_resource: like resource) is
+	display (new_resource: like resource)
 			-- Display Current with title 'txt' and content 'new_value'.
 		do
 			Precursor (new_resource)
@@ -38,7 +38,7 @@ feature -- Display
 
 feature {NONE} -- Implementation
 
-	update_changes is
+	update_changes
 			-- Commit the resource.
 		local
 			new_value: BOOLEAN
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_change_item_widget is
+	build_change_item_widget
 			-- Create and setup `change_item_widget'.
 		local
 			combobox: EV_COMBO_BOX
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 	no_item: EV_LIST_ITEM;
 			-- "False" item in the combo box.
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

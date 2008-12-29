@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object to store archive information for one metric"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_metric_name: STRING; a_metric_type: INTEGER; a_time: DATE_TIME; a_value: DOUBLE; a_input: like input_domain; a_uuid: STRING; a_filtered: BOOLEAN) is
+	make (a_metric_name: STRING; a_metric_type: INTEGER; a_time: DATE_TIME; a_value: DOUBLE; a_input: like input_domain; a_uuid: STRING; a_filtered: BOOLEAN)
 			-- Initialize `metric_name' with `a_metric_name', `metric_type' with `a_metric_type', `calculated_time' with `a_time',
 			-- `value' with `a_value', `input_domain' with `a_input' and `uuid' with `a_uuid'.
 		require
@@ -66,7 +66,7 @@ feature -- Access
 	uuid: UUID
 			-- UUID of current metric
 
-	previous_value: DOUBLE is
+	previous_value: DOUBLE
 			-- Previous calculated value, used in archive comparison.
 			-- If a metric archive is just loaded, there is no prevous value.
 			-- When a metric archive is calculated again, then we get a current value,
@@ -77,7 +77,7 @@ feature -- Access
 			Result := previous_value_internal
 		end
 
-	metric: EB_METRIC is
+	metric: EB_METRIC
 			-- Metric associated with Current archive, i.e., metric over which current archive is calculated.
 		require
 			metric_exists: is_metric_valid
@@ -87,7 +87,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result :=uuid.hash_code
@@ -96,7 +96,7 @@ feature -- Access
 	detailed_result: QL_DOMAIN
 			-- Last detailed result
 
-	visitable_name: STRING_GENERAL is
+	visitable_name: STRING_GENERAL
 			-- Name of current visitable item
 		do
 			Result := metric_names.visitable_name (metric_names.l_metric_archive_node, metric_name)
@@ -111,20 +111,20 @@ feature -- Status report
 			-- Does `previous_value' exist?
 			-- See `previous_value' for more information.
 
-	has_detailed_result: BOOLEAN is
+	has_detailed_result: BOOLEAN
 			-- Does current archive contain detailed result?
 		do
 			Result := detailed_result /= Void
 		end
 
-	is_metric_valid: BOOLEAN is
+	is_metric_valid: BOOLEAN
 			-- Is metric associated with `archive_node' valid?
 		do
 			Result := metric_manager.is_metric_calculatable (metric_name) and then
 					  metric_type_id (metric_manager.metric_with_name (metric_name)) = metric_type
 		end
 
-	is_mergable (other: like Current): BOOLEAN is
+	is_mergable (other: like Current): BOOLEAN
 			-- Can `other' be merged into Current?
 			-- If `other' is calculated over the same metric as Current's and with the same input domain, it's mergable.
 			-- A merge means update `value' and `calculated_time' with value and time from `other', and put original `value'
@@ -140,13 +140,13 @@ feature -- Status report
 			symmetric: Result implies other.is_mergable (Current)
 		end
 
-	is_input_domain_valid: BOOLEAN is
+	is_input_domain_valid: BOOLEAN
 			-- Is `input_domain' valid for current application?
 		do
 			Result := input_domain.is_valid
 		end
 
-	is_recalculatable: BOOLEAN is
+	is_recalculatable: BOOLEAN
 			-- Can current archive be recalculated?
 		do
 			Result := is_metric_valid and then is_input_domain_valid
@@ -170,7 +170,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_metric_name (a_name: STRING) is
+	set_metric_name (a_name: STRING)
 			-- Set `metric_name' with `a_name'.
 		do
 			create metric_name.make_from_string (a_name)
@@ -178,7 +178,7 @@ feature -- Setting
 			metric_name_set: metric_name /= Void and then metric_name.is_equal (a_name)
 		end
 
-	set_metric_type (a_type: INTEGER) is
+	set_metric_type (a_type: INTEGER)
 			-- Set `metric_type' with `a_type'.
 		require
 			type_valid: is_metric_type_valid (a_type)
@@ -188,7 +188,7 @@ feature -- Setting
 			metric_type_set: metric_type = a_type
 		end
 
-	set_calculated_time (a_time: like calculated_time) is
+	set_calculated_time (a_time: like calculated_time)
 			-- Set `calculated_time' with `a_time'.
 		require
 			a_time_attached: a_time /= Void
@@ -198,7 +198,7 @@ feature -- Setting
 			calculated_time_set: calculated_time = a_time
 		end
 
-	set_input_domain (a_domain: like input_domain) is
+	set_input_domain (a_domain: like input_domain)
 			-- Set `input_domain' with `a_domain'.
 		require
 			a_domain_attached: a_domain /= Void
@@ -208,7 +208,7 @@ feature -- Setting
 			input_domain_set: input_domain = a_domain
 		end
 
-	set_value (a_value: DOUBLE) is
+	set_value (a_value: DOUBLE)
 			--  Set `value 'with `a_value'.
 		do
 			value := a_value
@@ -216,7 +216,7 @@ feature -- Setting
 			value_set: value = a_value
 		end
 
-	set_uuid (a_uuid: like uuid) is
+	set_uuid (a_uuid: like uuid)
 			-- Set `uuid' with `a_uuid'.
 		require
 			a_uuid_attached: a_uuid /= Void
@@ -226,7 +226,7 @@ feature -- Setting
 			uuid_set: uuid = a_uuid
 		end
 
-	set_has_previous_value (b: BOOLEAN) is
+	set_has_previous_value (b: BOOLEAN)
 			-- Set `has_previous_value' with `b'.
 		do
 			has_previous_value := b
@@ -234,7 +234,7 @@ feature -- Setting
 			result_attached: has_previous_value = b
 		end
 
-	set_previous_value (a_value: like previous_value) is
+	set_previous_value (a_value: like previous_value)
 			-- Set `previous_value' with `a_value'.
 		do
 			previous_value_internal := a_value
@@ -242,7 +242,7 @@ feature -- Setting
 			previous_value_set: previous_value = a_value
 		end
 
-	set_is_up_to_date (b: BOOLEAN) is
+	set_is_up_to_date (b: BOOLEAN)
 			-- Set `is_up_to_date' with `b'.
 		do
 			is_up_to_date := b
@@ -250,7 +250,7 @@ feature -- Setting
 			is_up_to_date_set: is_up_to_date = b
 		end
 
-	set_detailed_result (a_result: like detailed_result) is
+	set_detailed_result (a_result: like detailed_result)
 			-- Set `detailed_result' with `a_result'.
 		do
 			detailed_result := a_result
@@ -258,7 +258,7 @@ feature -- Setting
 			detailed_result_set: detailed_result = a_result
 		end
 
-	set_is_value_valid (b: BOOLEAN) is
+	set_is_value_valid (b: BOOLEAN)
 			-- Set `is_value_valid' with `b'.
 		do
 			is_value_valid := b
@@ -266,7 +266,7 @@ feature -- Setting
 			is_value_valid_set: is_value_valid = b
 		end
 
-	set_is_result_filtered (b: BOOLEAN) is
+	set_is_result_filtered (b: BOOLEAN)
 			-- Set `is_result_filtered' with `b'.
 		do
 			is_result_filtered := b
@@ -274,7 +274,7 @@ feature -- Setting
 			is_result_filtered_set: is_result_filtered = b
 		end
 
-	set_value_tester (a_value_tester: like value_tester) is
+	set_value_tester (a_value_tester: like value_tester)
 			-- Set `value_tester' with `a_value_tester'.
 		do
 			value_tester := a_value_tester
@@ -282,7 +282,7 @@ feature -- Setting
 			value_tester_set: value_tester = a_value_tester
 		end
 
-	set_is_last_warning_check_successful (b: BOOLEAN) is
+	set_is_last_warning_check_successful (b: BOOLEAN)
 			-- Set `is_last_warning_check_successful' with `b'.
 		do
 			is_last_warning_check_successful := b
@@ -290,7 +290,7 @@ feature -- Setting
 			is_last_warning_check_successful_set: is_last_warning_check_successful = b
 		end
 
-	merge (a_archive: like Current) is
+	merge (a_archive: like Current)
 			-- Update Current with information from `a_archive'.
 		require
 			current_valid: is_metric_valid
@@ -310,7 +310,7 @@ feature -- Setting
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_metric_archive_node (Current)
@@ -329,7 +329,7 @@ invariant
 	uuid_attached: uuid /= Void
 	value_tester_attached: value_tester /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte node representing a call (either call or item) to an agent"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make (f: FEATURE_I; t: like type; p_type: like precursor_type; a_is_item: BOOLEAN) is
+	make (f: FEATURE_I; t: like type; p_type: like precursor_type; a_is_item: BOOLEAN)
 			-- Initialization
 		do
 			make_feature (f, t, p_type)
@@ -33,7 +33,7 @@ feature -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		local
 		do
@@ -66,7 +66,7 @@ feature -- Attributes
 
 feature -- Access
 
-	enlarged: CALL_ACCESS_B is
+	enlarged: CALL_ACCESS_B
 			-- Enlarge the tree to get more attributes and return the
 			-- new enlarged tree node.
 		local
@@ -87,14 +87,14 @@ feature -- Access
 			end
 		end
 
-	is_polymorphic: BOOLEAN is False
+	is_polymorphic: BOOLEAN = False
 
-	inlined_byte_code: ACCESS_B is
+	inlined_byte_code: ACCESS_B
 		do
 			Result := Current
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

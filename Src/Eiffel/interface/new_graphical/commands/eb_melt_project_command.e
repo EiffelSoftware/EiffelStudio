@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to update the Eiffel project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -75,7 +75,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize default values.
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties		
 
-	is_precompiling: BOOLEAN is
+	is_precompiling: BOOLEAN
 			-- Is this compilation a precompilation?
 		do
 			-- False for a standard compilation
@@ -101,7 +101,7 @@ feature -- Status report
 
 feature -- Status Setting
 
-	set_run_after_melt (b: BOOLEAN) is
+	set_run_after_melt (b: BOOLEAN)
 			-- Request for the system to be executed after a
 			-- successful melt compilation or not.
 			-- Assign `b' to `run_after_melt'.
@@ -111,13 +111,13 @@ feature -- Status Setting
 
 feature {NONE} -- Compilation implementation
 
-	reset_debugger is
+	reset_debugger
 			-- Kill the application, if it is running.
 		do
 			Eb_debugger_manager.on_compile_start
 		end
 
-	compile is
+	compile
 			-- Compile, in the one way or the other.
 		do
 			if not Eiffel_project.is_compiling then
@@ -148,7 +148,7 @@ feature {NONE} -- Compilation implementation
 			end
 		end
 
-	display_eiffel_compilation_status is
+	display_eiffel_compilation_status
 			-- Display status of eiffel compilation.
 		do
 			if Workbench.successful then
@@ -160,7 +160,7 @@ feature {NONE} -- Compilation implementation
 			end
 		end
 
-	tool_resynchronization is
+	tool_resynchronization
 			-- Resynchronize class, feature and system tools.
 			-- Clear the format_context buffers.
 		local
@@ -196,7 +196,7 @@ feature {NONE} -- Compilation implementation
 			end
 		end
 
-	launch_c_compilation is
+	launch_c_compilation
 			-- Launch the C compilation.
 		do
 			if start_c_compilation and then Eiffel_project.freezing_occurred and then not lace.compile_all_classes then
@@ -208,7 +208,7 @@ feature {NONE} -- Compilation implementation
 			end
 		end
 
-	perform_compilation is
+	perform_compilation
 			-- The real compilation. (This is melting.)
 		do
 			Eiffel_project.quick_melt
@@ -216,13 +216,13 @@ feature {NONE} -- Compilation implementation
 
 feature {NONE} -- Attributes
 
-	not_saved: BOOLEAN is
+	not_saved: BOOLEAN
 			-- Has the text of some tool been edited and not saved?
 		do
 			Result := window_manager.has_modified_windows
 		end
 
-	finalization_error: BOOLEAN is
+	finalization_error: BOOLEAN
 			-- Has a validity error been detected during the
 			-- finalization? This happens with DLE dealing
 			-- with statically bound feature calls
@@ -246,7 +246,7 @@ feature {NONE} -- Attributes
 	retried: BOOLEAN
 			-- Is this already tried?
 
-	c_code_directory: STRING is
+	c_code_directory: STRING
 			-- Directory where the C code is stored.
 		do
 			Result := project_location.workbench_path
@@ -254,7 +254,7 @@ feature {NONE} -- Attributes
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Recompile the project, start C compilation if necessarry.
 		local
 			l_content: SD_CONTENT
@@ -272,7 +272,7 @@ feature -- Execution
 			end
 		end
 
-	execute_and_wait is
+	execute_and_wait
 			-- Execute current command and wait for it to finish.
 		do
 			execute
@@ -284,7 +284,7 @@ feature -- Execution
 			end
 		end
 
-	go_on_compile is
+	go_on_compile
 			-- Go on running Eiffel compilation.
 		local
 			l_dev_window: EB_DEVELOPMENT_WINDOW
@@ -299,7 +299,7 @@ feature -- Execution
 
 feature {NONE} -- Execution
 
-	execute_with_c_compilation_flag (c_compilation_enabled: BOOLEAN) is
+	execute_with_c_compilation_flag (c_compilation_enabled: BOOLEAN)
 			-- Recompile the project and start C compilation if `c_compilation_enabled'
 			-- is True.
 		local
@@ -331,14 +331,14 @@ feature {NONE} -- Execution
 			end
 		end
 
-	save_and_compile is
+	save_and_compile
 			-- Save all files, then launch compilation
 		do
 			window_manager.save_all_before_compiling
 			compile_no_save
 		end
 
-	compile_no_save is
+	compile_no_save
 			-- Launch compilation.
 		local
 			l_last_window: EV_WINDOW
@@ -351,14 +351,14 @@ feature {NONE} -- Execution
 			confirm_and_compile
 		end
 
-	confirm_and_compile is
+	confirm_and_compile
 			-- Ask for confirmations and options, then compile.
 			--| Can be redefined in descendants!
 		do
 			confirm_execution_halt
 		end
 
-	confirm_execution_halt is
+	confirm_execution_halt
 			-- If the application is running, prompt
 			-- user so and ask for a confirmation.
 			-- If confirmation successful then compile.
@@ -377,7 +377,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	compile_and_run is
+	compile_and_run
 			-- Compile, then run application, according
 			-- to run ability and `run_after_melt' flag.
 		do
@@ -405,7 +405,7 @@ feature {NONE} -- Implementation
 			Result.set_menu (drop_down_menu (Result))
 		end
 
-	drop_down_menu (a_cmd: like new_sd_toolbar_item): EV_MENU is
+	drop_down_menu (a_cmd: like new_sd_toolbar_item): EV_MENU
 			-- Drop down menu for `new_sd_toolbar_item'.
 		local
 			l_item: EB_COMMAND_MENU_ITEM
@@ -439,56 +439,56 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed in toolbar
 		do
 			Result := Interface_names.b_Compile
 		end
 
-	is_tooltext_important: BOOLEAN is
+	is_tooltext_important: BOOLEAN
 			-- Is the tooltext important shown when view is 'Selective Text'
 		do
 			Result := tooltext.is_equal (Interface_names.b_Compile)
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Melt_new
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.project_melt_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.project_melt_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Melt
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for the command.
 		do
 			Result := Interface_names.f_Melt
 		end
 
-	name: STRING is
+	name: STRING
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 		do
 			Result := "Melt_project"
 		end
 
-	stop_execution: ANY is
+	stop_execution: ANY
 			-- Argument used when files needs to be saved before compiling.
 		once
 			create Result
@@ -497,7 +497,7 @@ feature {NONE} -- Implementation
 	number_of_compilations: INTEGER;
 			-- Number of compilations done in a certain mode so far.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

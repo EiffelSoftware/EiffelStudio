@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Internal levels used to encode C types.
 			Those values have to match with run-time source file "update.h".
@@ -12,26 +12,26 @@ class SHARED_C_LEVEL
 
 feature
 
-	C_void: INTEGER is 1
-	C_char: INTEGER is 2
-	c_boolean: INTEGER is 3
-	c_uint8: INTEGER is 4
-	C_int8: INTEGER is 5
-	c_uint16: INTEGER is 6
-	C_int16: INTEGER is 7
-	C_wide_char: INTEGER is 8
-	c_uint32: INTEGER is 9
-	C_int32: INTEGER is 10
-	C_real32: INTEGER is 11
-	c_uint64: INTEGER is 12
-	C_int64: INTEGER is 13
-	C_real64: INTEGER is 14
-	C_ref: INTEGER is 15
-	C_pointer: INTEGER is 16
-	C_nb_types: INTEGER is 17;
+	C_void: INTEGER = 1
+	C_char: INTEGER = 2
+	c_boolean: INTEGER = 3
+	c_uint8: INTEGER = 4
+	C_int8: INTEGER = 5
+	c_uint16: INTEGER = 6
+	C_int16: INTEGER = 7
+	C_wide_char: INTEGER = 8
+	c_uint32: INTEGER = 9
+	C_int32: INTEGER = 10
+	C_real32: INTEGER = 11
+	c_uint64: INTEGER = 12
+	C_int64: INTEGER = 13
+	C_real64: INTEGER = 14
+	C_ref: INTEGER = 15
+	C_pointer: INTEGER = 16
+	C_nb_types: INTEGER = 17;
 			-- Number of internal C types
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

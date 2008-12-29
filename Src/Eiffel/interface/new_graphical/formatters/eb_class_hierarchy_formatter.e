@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display hierarchy information concerning a compiled class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Status report
 
-	is_tree_node_highlight_enabled: BOOLEAN is
+	is_tree_node_highlight_enabled: BOOLEAN
 			-- Is tree node highlight enabled?
 			-- For more information, go to {EB_CLASS_BROWSER_GRID_VIEW}.is_tree_node_highlight_enabled.
 		deferred
@@ -26,7 +26,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_focus is
+	set_focus
 			-- Set focus to current formatter.
 		do
 			if browser /= Void then
@@ -36,7 +36,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	generate_result is
+	generate_result
 			-- Generate result for display
 		local
 			l_domain: QL_CLASS_DOMAIN
@@ -61,7 +61,7 @@ feature{NONE} -- Implementation
 			retry
 		end
 
-	domain_generator: QL_DOMAIN_GENERATOR is
+	domain_generator: QL_DOMAIN_GENERATOR
 			-- Domain generator to generate result				
 		do
 			create {QL_CLASS_DOMAIN_GENERATOR}Result
@@ -71,7 +71,7 @@ feature{NONE} -- Implementation
 			Result.disable_distinct_item
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

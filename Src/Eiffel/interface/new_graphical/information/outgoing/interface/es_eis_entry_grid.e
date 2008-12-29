@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid widget for entries in Information tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_panel: ES_INFORMATION_TOOL_PANEL) is
+	make (a_panel: ES_INFORMATION_TOOL_PANEL)
 			-- Initialization
 		require
 			a_panel_not_void: a_panel /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			panel_set: panel /= Void
 		end
 
-	build_grid is
+	build_grid
 			-- Build grid
 		do
 		end
@@ -47,7 +47,7 @@ feature -- Access
 	panel: ES_INFORMATION_TOOL_PANEL;
 			-- Information tool panel
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

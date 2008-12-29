@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error for a creation of an instance of a deferred class."
@@ -18,9 +18,9 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER = 2;
 
-	set_deferred_classes (a_deferred_class_list: LIST[CLASS_C]) is
+	set_deferred_classes (a_deferred_class_list: LIST[CLASS_C])
 			-- Set deferred_classes to `a_list_of_deferred_classes'.
 		require
 			a_deferred_class_list_not_void: a_deferred_class_list /= Void
@@ -33,7 +33,7 @@ feature -- Properties
 
 feature -- Output
 
-print_name (a_text_formatter: TEXT_FORMATTER) is
+print_name (a_text_formatter: TEXT_FORMATTER)
 		do
 			if target_name /= Void then
 				a_text_formatter.add ("Creation of: ");
@@ -52,7 +52,7 @@ print_name (a_text_formatter: TEXT_FORMATTER) is
 			a_text_formatter.add_new_line
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

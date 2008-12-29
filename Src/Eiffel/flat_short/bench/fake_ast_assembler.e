@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fake AST node assembler for flatting."
 	author: ""
 	date: "$Date$"
@@ -16,7 +16,7 @@ inherit
 
 feature -- Assembler
 
-	normal_to_deferred_feature_as (a_feature_as: FEATURE_AS; a_list: LEAF_AS_LIST): FEATURE_AS is
+	normal_to_deferred_feature_as (a_feature_as: FEATURE_AS; a_list: LEAF_AS_LIST): FEATURE_AS
 			-- Make a normal feature as to a deferred feature as,
 			-- replacing body, removing locals and resecue.
 		require
@@ -48,7 +48,7 @@ feature -- Assembler
 			result_not_void: Result /= Void
 		end
 
-	replace_name_from_feature (a_ast: FEATURE_AS; a_name: FEATURE_NAME; target_feature: FEATURE_I): FEATURE_AS is
+	replace_name_from_feature (a_ast: FEATURE_AS; a_name: FEATURE_NAME; target_feature: FEATURE_I): FEATURE_AS
 			-- Replace name in `a_ast' with `a_name' using attributes in `target_feature'.
 		require
 			a_ast_not_void: a_ast /= Void
@@ -101,7 +101,7 @@ feature -- Assembler
 
 feature {NONE} -- Implementation
 
-	deferred_content: ROUT_BODY_AS is
+	deferred_content: ROUT_BODY_AS
 			-- Deferred content
 		local
 			l_feat_text: STRING
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			Result := l_deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

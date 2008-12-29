@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The contract editor tool graphical panel.
 	]"
@@ -882,7 +882,7 @@ feature {NONE} -- Tool action handlers
 			update_if_modified
 		end
 
-	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN is
+	on_handle_key (a_key: EV_KEY; a_alt: BOOLEAN; a_ctrl: BOOLEAN; a_shift: BOOLEAN; a_released: BOOLEAN): BOOLEAN
 			-- <Precursor>
 		do
 			if contract_editor.has_context then
@@ -1047,7 +1047,7 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_add_contract_from_template (a_template: !CODE_TEMPLATE_DEFINITION) is
+	on_add_contract_from_template (a_template: !CODE_TEMPLATE_DEFINITION)
 			-- Called when the user chooses to add a new contract, from a template, to the existing feature.
 			--
 			-- `a_template': The template to use to render a contract.
@@ -1599,7 +1599,7 @@ invariant
 	show_callers_button_attached: (is_initialized and is_interface_usable) implies show_callers_button /= Void
 	contract_editor_attached: (is_initialized and is_interface_usable) implies contract_editor /= Void
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class VISIBLE_EXPORT_I
@@ -16,7 +16,7 @@ inherit
 
 feature
 
-	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN is
+	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN
 			-- Is feature name `feat_name' visible in context
 			-- of class `class_id'?
 		local
@@ -34,10 +34,10 @@ feature
 			end
 		end;
 
-	has_visible: BOOLEAN is True
+	has_visible: BOOLEAN = True
 			-- Has the current object some visible features ?
 
-	mark_visible (remover: REMOVER; feat_table: FEATURE_TABLE) is
+	mark_visible (remover: REMOVER; feat_table: FEATURE_TABLE)
 			-- Mark visible features from `feat_table'.
 		local
 			a_feature: FEATURE_I
@@ -80,7 +80,7 @@ end;
 			end;
 		end;
 
-	generate_cecil_table (a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING]) is
+	generate_cecil_table (a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING])
 			-- Generate cecil table
 		local
 			buffer: GENERATION_BUFFER
@@ -91,7 +91,7 @@ end;
 			cecil_routine_table.generate (buffer, a_class, generated_wrappers)
 		end
 
-	prepare_table (feat_table: FEATURE_TABLE) is
+	prepare_table (feat_table: FEATURE_TABLE)
 			-- Prepare hash table
 		local
 			a_feature: FEATURE_I
@@ -136,7 +136,7 @@ end;
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

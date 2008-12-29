@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Internal representation of a class built of partial classes. Instance of CLASS_I represent%
 		%non-compiled classes, but instance of CLASS_C already compiled%
@@ -43,7 +43,7 @@ feature -- Access
 	cluster: CLUSTER_I
 			-- Cluster to which the class belongs to.
 
-	file_name: FILE_NAME is
+	file_name: FILE_NAME
 			-- Full file name of the class.
 		do
 			create Result.make_from_string (base_location.build_path (path, ""))
@@ -52,12 +52,12 @@ feature -- Access
 
 feature {NONE} -- Type anchor
 
-	class_type: PARTIAL_EIFFEL_CLASS_I is
+	class_type: PARTIAL_EIFFEL_CLASS_I
 			-- <Precursor>
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

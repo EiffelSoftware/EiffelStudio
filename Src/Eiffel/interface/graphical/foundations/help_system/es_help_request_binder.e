@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Provides access to help functionality through inheritance.
 		
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	bind_help_shortcut (a_window: EV_WINDOW) is
+	bind_help_shortcut (a_window: EV_WINDOW)
 			-- Binds the help shortcut to a specify window for contextual help requests via the keyboard.
 			--
 			-- `a_window': The window to bind the help shortcut key to.
@@ -84,7 +84,7 @@ feature {NONE} -- Factory
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

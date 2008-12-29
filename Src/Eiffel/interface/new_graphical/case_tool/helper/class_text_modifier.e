@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Associated with a class, can modify certain elements of that class text.
 
@@ -93,14 +93,14 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an CLASS_TEXT_MODIFIER.
 		do
 			create {ARRAYED_LIST [TUPLE [STRING, INTEGER]]} last_added_code.make (10)
 			create {ARRAYED_LIST [TUPLE [STRING, INTEGER]]} last_removed_code.make (10)
 		end
 
-	make (a_class: CLASS_I) is
+	make (a_class: CLASS_I)
 			--
 		require
 			a_class_not_void: a_class /= Void
@@ -112,7 +112,7 @@ feature {NONE} -- Initialization
 			set: class_i = a_class
 		end
 
-	make_with_tool (a_class: CLASS_I; a_tool: like context_editor) is
+	make_with_tool (a_class: CLASS_I; a_tool: like context_editor)
 			-- Make for `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -143,7 +143,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_syntax: BOOLEAN is
+	valid_syntax: BOOLEAN
 			-- Was syntax valid when the class was parsed last time?
 		do
 			Result := class_as /= Void
@@ -152,7 +152,7 @@ feature -- Status report
 	is_modified: BOOLEAN
 			-- Has `class_text' been modified since it was parsed last time?
 
-	text_managed: BOOLEAN is
+	text_managed: BOOLEAN
 			-- Is `text' loaded or retrieved from editor?
 		do
 			Result := text /= Void
@@ -165,7 +165,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	prepare_for_modification is
+	prepare_for_modification
 			-- Retrieve `class_text' from file or from an editor if
 			-- the class is open.
 			-- Callers should check `valid_syntax' afterwards to see if
@@ -196,7 +196,7 @@ feature -- Status setting
 			last_added_code_empty: last_added_code.is_empty
 		end
 
-	commit_modification is
+	commit_modification
 			-- Save `class_text' to file when not opened in an editor
 			-- or display changes in editors, and reset `date'.
 		require
@@ -210,7 +210,7 @@ feature -- Status setting
 			text_unreferenced: not text_managed
 		end
 
-	reset_date is
+	reset_date
 			-- A modifying session is about to begin.
 			-- Update `date'.
 		local
@@ -224,7 +224,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	insert_code (a_text: STRING) is
+	insert_code (a_text: STRING)
 			-- Insert in `class_text' on `insertion_position', `a_text'.
 		require
 			text_managed: text_managed
@@ -237,7 +237,7 @@ feature -- Element change
 			is_modified: is_modified
 		end
 
-	remove_code (start_pos, end_pos: INTEGER) is
+	remove_code (start_pos, end_pos: INTEGER)
 			-- Remove code between `start_pos' and `end_pos'.
 		require
 			start_pos_smaller_than_end_pos: start_pos <= end_pos
@@ -250,7 +250,7 @@ feature -- Element change
 			is_modified: is_modified
 		end
 
-	replace_code (new_code: STRING; start_pos, end_pos: INTEGER) is
+	replace_code (new_code: STRING; start_pos, end_pos: INTEGER)
 			-- Replace code between `start_pos' and `end_pos' with `new_code'.
 		require
 			start_pos_smaller_than_end_pos: start_pos <= end_pos
@@ -263,7 +263,7 @@ feature -- Element change
 			is_modified: is_modified
 		end
 
-	code (start_pos, end_pos: INTEGER): STRING is
+	code (start_pos, end_pos: INTEGER): STRING
 			-- Code between `start_pos' and `end_pos'.
 		require
 			start_pos_smaller_than_end_pos: start_pos <= end_pos
@@ -272,7 +272,7 @@ feature -- Element change
 			Result := text.substring (start_pos, end_pos)
 		end
 
-	index_of (c: CHARACTER; start: INTEGER): INTEGER is
+	index_of (c: CHARACTER; start: INTEGER): INTEGER
 			-- Position of first occurrence of `c' at or after `start';
 			-- 0 if none.
 		require
@@ -285,7 +285,7 @@ feature -- Element change
 
 feature -- Modification (Add/Remove feature)
 
-	new_feature is
+	new_feature
 			-- Complete steps for adding a feature to a class.
 			-- If class text is ready for code generation (no
 			-- syntax errors), pops up the Feature Composition Wizard (FCW)
@@ -303,7 +303,7 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	remove_ancestor (a_name: STRING) is
+	remove_ancestor (a_name: STRING)
 			-- Remove `a_name' from the parent list of `class_as'.
 		require
 			a_name_not_void: a_name /= Void
@@ -339,7 +339,7 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	add_ancestor (a_name: STRING) is
+	add_ancestor (a_name: STRING)
 			-- Reinclude `code' to inheritance clause.
 		require
 			a_name /= Void
@@ -364,7 +364,7 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	remove_features (data: LIST [FEATURE_AS]) is
+	remove_features (data: LIST [FEATURE_AS])
 			-- Remove features in `data', store removed.
 		require
 			data_not_void: data /= Void
@@ -447,7 +447,7 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	undelete_code (data: LIST [TUPLE [str: STRING; pos: INTEGER]]) is
+	undelete_code (data: LIST [TUPLE [str: STRING; pos: INTEGER]])
 			-- Reinclude code in `data'.
 		require
 			data_not_void: data /= Void
@@ -483,7 +483,7 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	delete_code (data: LIST [TUPLE [str: STRING; pos: INTEGER]]) is
+	delete_code (data: LIST [TUPLE [str: STRING; pos: INTEGER]])
 			--
 		local
 			class_file: PLAIN_TEXT_FILE
@@ -524,7 +524,7 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	new_query_from_diagram (preset_type: STRING; x_pos, y_pos, screen_w, screen_h: INTEGER) is
+	new_query_from_diagram (preset_type: STRING; x_pos, y_pos, screen_w, screen_h: INTEGER)
 			-- Complete steps for adding a supplier of `preset_type'.
 		require
 			preset_type_not_void: preset_type /= Void
@@ -560,7 +560,7 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	new_aggregate_query_from_diagram (preset_type: STRING; x_pos, y_pos, screen_w, screen_h: INTEGER) is
+	new_aggregate_query_from_diagram (preset_type: STRING; x_pos, y_pos, screen_w, screen_h: INTEGER)
 			-- Complete steps for adding a supplier of `preset_type'.
 		require
 			preset_type_not_void: preset_type /= Void
@@ -597,7 +597,7 @@ feature -- Modification (Add/Remove feature)
 			end
 		end
 
-	extend_feature_with_wizard (fcw: EB_FEATURE_COMPOSITION_WIZARD) is
+	extend_feature_with_wizard (fcw: EB_FEATURE_COMPOSITION_WIZARD)
 			-- Add feature described in `fcw' to the class.
 		require
 			wizard_not_void: fcw /= Void
@@ -831,7 +831,7 @@ feature -- Modification (Add/Remove feature)
 
 feature -- Modification (Change class name)
 
-	set_class_name_declaration (a_name, a_generics: STRING) is
+	set_class_name_declaration (a_name, a_generics: STRING)
 			-- Set `a_name' `a_generics' as new class header.
 		require
 			a_name_not_void: a_name /= Void
@@ -859,7 +859,7 @@ feature -- Modification (Change class name)
 			end
 		end
 
-	set_end_mark (a_name: STRING) is
+	set_end_mark (a_name: STRING)
 			-- Set `a_name' as X in "end -- class X".
 		require
 			a_name_not_void: a_name /= Void
@@ -899,13 +899,13 @@ feature {NONE} -- Implementation
 	match_list: LEAF_AS_LIST
 			-- Match list from `reparse'
 
-	parser: EIFFEL_PARSER is
+	parser: EIFFEL_PARSER
 			-- Eiffel parser
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_COMPILER_FACTORY})
 		end
 
-	reparse is
+	reparse
 			-- Parse `class_text' and assign AST to `class_as'.
 		require
 			text_managed: text_managed
@@ -935,7 +935,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	remove_feature_with_ast (f: FEATURE_AS) is
+	remove_feature_with_ast (f: FEATURE_AS)
 			-- Remove `f' from the class.
 		require
 			text_managed: text_managed
@@ -948,7 +948,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execute_wizard (fcw: EB_FEATURE_COMPOSITION_WIZARD) is
+	execute_wizard (fcw: EB_FEATURE_COMPOSITION_WIZARD)
 			-- Show `fcw' and generate code if requested.
 		require
 			valid_syntax: valid_syntax
@@ -960,7 +960,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_last_feature_as (a_name: STRING) is
+	set_last_feature_as (a_name: STRING)
 			-- Assign `last_feature_as'.
 		do
 			last_feature_as := Void
@@ -970,7 +970,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	setter_procedure (a_attribute, a_type, a_pc: STRING): STRING is
+	setter_procedure (a_attribute, a_type, a_pc: STRING): STRING
 			-- Add in "Element change" for `a_attribute'.
 			-- If `a_pc' not Void, add as precondition.
 		require
@@ -1005,7 +1005,7 @@ feature {NONE} -- Implementation
 			Result := s
 		end
 
-	feature_insert_position (f: FEATURE_CLAUSE_AS): INTEGER is
+	feature_insert_position (f: FEATURE_CLAUSE_AS): INTEGER
 			-- Insertion position for `f'.
 		do
 			Result := f.feature_keyword.final_position
@@ -1013,7 +1013,7 @@ feature {NONE} -- Implementation
 			Result := index_of ('%N', Result) + 1
 		end
 
-	set_position_by_feature_clause (a_export, a_comment: STRING) is
+	set_position_by_feature_clause (a_export, a_comment: STRING)
 			-- Go to `insertion_position' at feature clause with `a_export' and `a_comment'.
 			-- If it does not exist, add it to the class in the right place.
 			-- `a_comment' will be compared case sensitive.
@@ -1097,7 +1097,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_feature_clause (a_export, a_comment: STRING) is
+	insert_feature_clause (a_export, a_comment: STRING)
 			-- Insert in `insertion_position' a new empty feature clause with
 			-- `a_export' and `a_comment'.
 		require
@@ -1152,7 +1152,7 @@ feature {NONE} -- Implementation
 --			end
 --		end
 
-	leading_clauses (a_clause: STRING): ARRAYED_LIST [STRING] is
+	leading_clauses (a_clause: STRING): ARRAYED_LIST [STRING]
 			-- Subset of `feature_clause_order' that should appear before `c' in the class text.
 		require
 			a_clause_not_void: a_clause /= Void
@@ -1180,7 +1180,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	position_before_inherit: INTEGER is
+	position_before_inherit: INTEGER
 			-- Position in `text' before inherit keyword.
 		local
 			i: INTEGER
@@ -1204,14 +1204,14 @@ feature {NONE} -- Implementation
 	context_editor: ES_DIAGRAM_TOOL_PANEL
 			--
 
-	invalidate_text is
+	invalidate_text
 			-- Errors were found during last parsing.
 			-- Class text will have to be reloaded.
 		do
 			text := Void
 		end
 
-	execute_wizard_from_diagram (fcw: EB_FEATURE_COMPOSITION_WIZARD) is
+	execute_wizard_from_diagram (fcw: EB_FEATURE_COMPOSITION_WIZARD)
 			-- Show `fcw' and generate code if requested.
 			-- Add any graphical items.
 		require
@@ -1227,7 +1227,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	extend_feature_on_diagram_with_wizard (fcw: EB_FEATURE_COMPOSITION_WIZARD) is --; supplier_data: CASE_SUPPLIER) is
+	extend_feature_on_diagram_with_wizard (fcw: EB_FEATURE_COMPOSITION_WIZARD) --; supplier_data: CASE_SUPPLIER) is
 			-- Add feature described in `fcw' to the class.
 		require
 			wizard_not_void: fcw /= Void
@@ -1303,7 +1303,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	extend_invariant (a_inv: STRING) is
+	extend_invariant (a_inv: STRING)
 			-- Add `a_inv' to end of invariant.
 		require
 			a_inv_not_void: a_inv /= Void
@@ -1322,7 +1322,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	put_class_modified_outside_diagram_warning is
+	put_class_modified_outside_diagram_warning
 			-- Inform user, that class was modified outside diagram.
 		do
 			if not context_editor.history.is_empty then
@@ -1332,7 +1332,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Extern declarations for final mode generation
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialization
 		do
 			create routine_tables.make (50)
@@ -33,7 +33,7 @@ feature -- Initialization
 
 feature -- Settings
 
-	add_routine_table (rout_table: STRING) is
+	add_routine_table (rout_table: STRING)
 			-- Add one routine table to the current extern declarations.
 		require
 			rout_table_exists: rout_table /= Void
@@ -41,7 +41,7 @@ feature -- Settings
 			routine_tables.put (rout_table.twin)
 		end
 
-	add_attribute_table (attr_table: STRING) is
+	add_attribute_table (attr_table: STRING)
 			-- Add one attribute offset table to the current extern declarations.
 		require
 			attr_table_exists: attr_table /= Void
@@ -49,7 +49,7 @@ feature -- Settings
 			attribute_tables.put (attr_table.twin)
 		end
 
-	add_once (type: TYPE_C; code_index: INTEGER; is_process_relative: BOOLEAN) is
+	add_once (type: TYPE_C; code_index: INTEGER; is_process_relative: BOOLEAN)
 			-- Add `once_name' to current extern declarations.
 		require
 			type__not_void: type /= Void
@@ -59,7 +59,7 @@ feature -- Settings
 			end
 		end
 
-	add_type_table (type_table: STRING) is
+	add_type_table (type_table: STRING)
 			-- Add one type table to the current extern declarations.
 		require
 			type_table_exists: type_table /= Void
@@ -67,7 +67,7 @@ feature -- Settings
 			type_tables.put (type_table.twin)
 		end
 
-	add_routine (type: TYPE_C; rout_name: STRING) is
+	add_routine (type: TYPE_C; rout_name: STRING)
 			-- Add one routine of name `rout_name' and C type `type`.
 		require
 			rout_name_exists: rout_name /= Void
@@ -76,7 +76,7 @@ feature -- Settings
 			routines.put (new_signature (type.c_string, rout_name, Void))
 		end
 
-	add_routine_with_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING]) is
+	add_routine_with_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING])
 			-- Add one routine of name `rout_name' and C type `type' and with argument types
 			-- `arguments_types
 		require
@@ -86,7 +86,7 @@ feature -- Settings
 			routines.put (new_signature (type, rout_name, argument_types))
 		end
 
-	add_wrapper_with_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING]) is
+	add_wrapper_with_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING])
 			-- Add one routine of name `rout_name' and C type `type' and with argument types
 			-- `arguments_types
 		require
@@ -96,7 +96,7 @@ feature -- Settings
 			wrappers.put (new_signature (type, rout_name, argument_types))
 		end
 
-	wipe_out is
+	wipe_out
 			-- Wipe out current structure
 		do
 			routines.clear_all
@@ -107,7 +107,7 @@ feature -- Settings
 			onces_table.clear_all
 		end
 
-	generate_header_files (buffer: GENERATION_BUFFER) is
+	generate_header_files (buffer: GENERATION_BUFFER)
 			-- Generate header files in `buffer'.
 		require
 			buffer_exists: buffer /= Void
@@ -133,7 +133,7 @@ feature -- Settings
 			end
 		end
 
-	generate (buffer: GENERATION_BUFFER) is
+	generate (buffer: GENERATION_BUFFER)
 			-- Generate declarations in a file of name `file_name'.
 		require
 			buffer_not_void: buffer /= Void
@@ -236,7 +236,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation
 
-	new_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING]): STRING is
+	new_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING]): STRING
 			-- Add one routine of name `rout_name' and C type `type' and with argument types
 			-- `arguments_types
 		require
@@ -292,7 +292,7 @@ feature {NONE} -- Attributes
 	onces_table: HASH_TABLE [TYPE_C, INTEGER];
 			-- Once names
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

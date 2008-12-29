@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Target item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: CONF_TARGET) is
+	make (a_target: CONF_TARGET)
 			-- Create.
 		do
 			default_create
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Interactivity
 
-	associate_with_window (a_window: EB_STONABLE) is
+	associate_with_window (a_window: EB_STONABLE)
 			-- Associate recursively with `a_window' so that we can call `set_stone' on `a_window'.
 		local
 			l_conv_target: EB_CLASSES_TREE_TARGET_ITEM
@@ -70,7 +70,7 @@ feature -- Interactivity
 invariant
 	stone_set: stone /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

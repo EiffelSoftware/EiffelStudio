@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formatter displayer which uses a grid browser to display result"
 	author: ""
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_browser: like browser) is
+	make (a_browser: like browser)
 			-- Initialize Current with `a_browser'.
 		require
 			a_browser_attached: a_browser /= Void
@@ -33,7 +33,7 @@ feature -- Access
 	browser: EB_CLASS_BROWSER_GRID_VIEW [ANY]
 			-- Browser
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget of Current displayer
 		do
 			Result := browser.widget
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_browser (a_browser: like browser) is
+	set_browser (a_browser: like browser)
 			-- Set `browser' with `a_browser'.
 		require
 			a_browser_attached: a_browser /= Void
@@ -53,7 +53,7 @@ feature -- Setting
 
 feature -- Setting
 
-	set_refresher (a_refresher: PROCEDURE [ANY, TUPLE]) is
+	set_refresher (a_refresher: PROCEDURE [ANY, TUPLE])
 			-- Set `a_refresher' into Current, it serves as a refresher to be invoked to update Current displayer
 		do
 			browser.retrieve_data_actions.extend (a_refresher)
@@ -61,7 +61,7 @@ feature -- Setting
 
 feature {NONE} -- Recycle
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the button has became useless.
 		do
 			browser.retrieve_data_actions.wipe_out
@@ -72,7 +72,7 @@ feature {NONE} -- Recycle
 invariant
 	browser_attached: not is_recycled implies browser /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

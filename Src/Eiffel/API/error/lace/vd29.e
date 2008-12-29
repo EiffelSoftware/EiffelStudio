@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when the root class is in two different clusters%
@@ -22,7 +22,7 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Class name: ");
 			a_text_formatter.add (root_class_name);
@@ -37,17 +37,17 @@ feature -- Output
 
 feature {COMPILER_EXPORTER,SYSTEM_I} -- Setting
 
-	set_second_cluster_name (s: STRING) is
+	set_second_cluster_name (s: STRING)
 		do
 			second_cluster_name := s;
 		end;
 
-	set_root_class_name (s: STRING) is
+	set_root_class_name (s: STRING)
 		do
 			root_class_name := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents a dialog to setup a metric domain as class client/supplier
 					Three items (in order) are used as value:
@@ -37,7 +37,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			l_vertical_box: EV_VERTICAL_BOX
@@ -89,7 +89,7 @@ feature -- Status report
 	is_for_supplier_class: BOOLEAN
 			-- Is Current dialog to setup client class?
 
-	is_for_client_class: BOOLEAN is
+	is_for_client_class: BOOLEAN
 			-- Is Current dialog to setup supplier class?
 		do
 			Result := not is_for_supplier_class
@@ -97,7 +97,7 @@ feature -- Status report
 
 feature -- Setting
 
-	enable_for_supplier_class is
+	enable_for_supplier_class
 			-- Switch Current dialog to setup supplier class.
 		do
 			is_for_supplier_class := True
@@ -106,7 +106,7 @@ feature -- Setting
 			for_supplier_class: is_for_supplier_class
 		end
 
-	enable_for_client_class is
+	enable_for_client_class
 			-- Switch Current dialog to setup client class.
 		do
 			is_for_supplier_class := False
@@ -117,7 +117,7 @@ feature -- Setting
 
 feature{NONE} -- Actions
 
-	on_show is
+	on_show
 			-- Action to be performed when dialog is displayed
 		local
 			l_value: like value
@@ -148,7 +148,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_ok is
+	on_ok
 			-- Ok was pressed.
 		do
 			Precursor
@@ -159,7 +159,7 @@ feature{NONE} -- Actions
 			ok_actions.call (Void)
 		end
 
-	on_cancel is
+	on_cancel
 			-- Cancel was pressed.
 		do
 			Precursor
@@ -180,7 +180,7 @@ feature{NONE} -- Implementation
 	syntactical_referenced_checkbox: EV_CHECK_BUTTON
 			-- Check box to indicate if only syntactically referenced classa are retireved
 
-	update_ui is
+	update_ui
 			-- Update interface.
 		do
 			set_title (metric_names.l_setup_referenced_class_dialog (is_for_supplier_class))
@@ -196,7 +196,7 @@ invariant
 	normal_referenced_checkbox_attached: normal_referenced_checkbox /= Void
 	syntactical_referenced_checkbox_attached: syntactical_referenced_checkbox /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

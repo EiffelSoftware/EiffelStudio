@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for export list rule."
@@ -21,12 +21,12 @@ feature -- Properties
 	parent: CLASS_C;
 			-- Parent node involved
 
-	code: STRING is "VLEL";
+	code: STRING = "VLEL";
 			-- Error code
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Output
 
-	print_parent (a_text_formatter: TEXT_FORMATTER) is
+	print_parent (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Parent for which export list appears: ");
 			parent.append_name (a_text_formatter);
@@ -46,13 +46,13 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_parent (p: CLASS_C) is
+	set_parent (p: CLASS_C)
 			-- Assign `p' to `parent_id'.
 		do
 			parent := p
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

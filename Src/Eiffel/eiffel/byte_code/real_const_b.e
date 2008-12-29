@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Real constant for code generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (v: STRING; a_type: TYPE_A) is
+	make (v: STRING; a_type: TYPE_A)
 			-- Assign `v' to `value'.
 			-- Remove the '_' signs in the real number.
 		require
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_real_const_b (Current)
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Evaluation
 
-	evaluate: VALUE_I is
+	evaluate: VALUE_I
 			-- Evaluation of Current.
 		do
 			if real_size = 64 then
@@ -71,19 +71,19 @@ feature -- Evaluation
 
 feature -- Status report
 
-	is_simple_expr: BOOLEAN is True
+	is_simple_expr: BOOLEAN = True
 			-- A constant is a simple expresion
 
-	is_predefined: BOOLEAN is True
+	is_predefined: BOOLEAN = True
 			-- A constant is a predefined structure.
 
-	is_constant_expression: BOOLEAN is True
+	is_constant_expression: BOOLEAN = True
 			-- A real constant is constant.
 
 	real_size: NATURAL_8
 			-- Size of REAL constant
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Float type
 		do
 			if real_size = 64 then
@@ -95,7 +95,7 @@ feature -- Status report
 
 feature -- C code generation
 
-	print_register is
+	print_register
 			-- Print real value
 		do
 			if real_size = 64 then
@@ -106,21 +106,21 @@ feature -- C code generation
 			buffer.put_string (value)
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- False
 		do
 		end
 
 feature -- IL code generation
 
-	is_fast_as_local: BOOLEAN is True
+	is_fast_as_local: BOOLEAN = True
 			-- Is expression calculation as fast as loading a local?
 
 invariant
 	value_not_void: value /= Void
 	value_has_no_undescores: not value.has ('_')
 	real_size_valid: real_size = 32 or real_size = 64
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

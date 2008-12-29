@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Enlarged byte code for Eiffel loops."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature -- Access
 
-	analyze is
+	analyze
 			-- Builds a proper context (for C code).
 		local
 			workbench_mode: BOOLEAN
@@ -66,7 +66,7 @@ feature -- Access
 			end
 		end
 
-	generate is
+	generate
 			-- Generate C code in `buffer'.
 		do
 			generate_line_info
@@ -74,7 +74,7 @@ feature -- Access
 			generate_loop_body
 		end
 
-	generate_assertions is
+	generate_assertions
 		local
 			generate_invariant, generate_variant, workbench_mode: BOOLEAN
 		do
@@ -123,7 +123,7 @@ feature -- Access
 			end
 		end
 
-	generate_loop_body is
+	generate_loop_body
 		local
 			generate_invariant, generate_variant, workbench_mode: BOOLEAN
 			buf: GENERATION_BUFFER
@@ -214,7 +214,7 @@ feature -- Access
 			buf.put_character ('}')
 		end
 
-	generate_workbench_test is
+	generate_workbench_test
 			-- Generate dynamic test in workbench mode
 		require
 			workbench_mode: context.workbench_mode
@@ -227,7 +227,7 @@ feature -- Access
 			buf.indent
 		end
 
-	generate_end_workbench_test is
+	generate_end_workbench_test
 			-- Generate end of dynamic test in workbench mode
 		require
 			context.workbench_mode
@@ -240,7 +240,7 @@ feature -- Access
 			buf.put_character ('}')
 		end
 
-	generate_final_mode_test is
+	generate_final_mode_test
 		local
 			buf: GENERATION_BUFFER
 		do
@@ -250,7 +250,7 @@ feature -- Access
 			buf.indent
 		end
 
-	generate_end_final_mode_test is
+	generate_end_final_mode_test
 		local
 			buf: GENERATION_BUFFER
 		do
@@ -260,7 +260,7 @@ feature -- Access
 			buf.put_character ('}')
 		end
 
-	fill_from (l: LOOP_B) is
+	fill_from (l: LOOP_B)
 			-- Fill in current node
 		do
 			from_part := l.from_part
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 			-- Number of the first breakpoint slot of the
 			-- "invariant/variant" clause.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help provider to launch Microsoft .doc files"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -40,7 +40,7 @@ feature -- Basic operations
 			Precursor {ES_EIS_ENTRY_HELP_PROVIDER}(a_context_id, a_section)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to edit class headers."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,37 +16,37 @@ create
 
 feature -- Basic operations
 
-	execute is
+	execute
 		do
 			tool.reset
 		end
 
 feature {NONE} -- Implementation
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: ARRAY [EV_PIXMAP]
 			-- Pixmaps representing the command (one for the
 			-- gray version, one for the color version).
 		do
 			Result := Pixmaps.Icon_reset_diagram
 		end
 
-	tooltip: STRING is
+	tooltip: STRING
 			-- Tooltip for the toolbar button.
 		do
 			Result := "Redo default placement"
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description for this command.
 		do
 			Result := "Reset diagram"
 		end
 
-	name: STRING is "Reset_diagram";
+	name: STRING = "Reset_diagram";
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

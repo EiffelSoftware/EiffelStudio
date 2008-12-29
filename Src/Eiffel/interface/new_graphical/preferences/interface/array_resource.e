@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Resource encapsulating an array of strings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_value: ARRAY [STRING]) is
+	make (a_name: STRING; a_value: ARRAY [STRING])
 			-- Initialize Current
 		do
 			name := a_name
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			update_value
 		end
 
-	make_from_string (a_name: STRING; a_value: STRING) is
+	make_from_string (a_name: STRING; a_value: STRING)
 			-- Initialize Current
 		do
 			name := a_name
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_actual_value (an_array: ARRAY [STRING]) is
+	set_actual_value (an_array: ARRAY [STRING])
 			-- Set `actual_value' to `an_array' and
 			-- update `value'.
 		do
@@ -58,7 +58,7 @@ feature -- Setting
 			update_value
 		end
 
-	set_value (a_string: STRING) is
+	set_value (a_string: STRING)
 			-- Set `value' to `a_string' and update
 			-- `actual_value',
 		do
@@ -68,7 +68,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	update_value is
+	update_value
 			-- Updates `value' using current `actual_value'.
 		local
 			index: INTEGER
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_actual_value is
+	update_actual_value
 			-- Update `actual_value' using current `value'.
 		local
 			start_pos, end_pos: INTEGER
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 
 feature -- Output
 
-	xml_trace: STRING is
+	xml_trace: STRING
 			-- XML representation of current
 		local
 			xml_name, xml_value: STRING
@@ -135,13 +135,13 @@ feature -- Output
 			Result.append ("</LIST_STRING></TEXT>")
 		end
 
-	registry_name: STRING is
+	registry_name: STRING
 			-- name of Current in the registry
 		do
 			Result := "EIFARR_" + name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to constants used in profiling."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,59 +10,59 @@ class
 
 feature -- Access
 
-	profiler_and: STRING is "and"
+	profiler_and: STRING = "and"
 	
-	profiler_or: STRING is "or"
+	profiler_or: STRING = "or"
 	
-	profiler_feature_name: STRING is "featurename"
+	profiler_feature_name: STRING = "featurename"
 	
-	profiler_calls: STRING is "calls"
+	profiler_calls: STRING = "calls"
 	
-	profiler_self: STRING is "self"
+	profiler_self: STRING = "self"
 	
-	profiler_descendants: STRING is "descendants"
+	profiler_descendants: STRING = "descendants"
 	
-	profiler_total: STRING is "total"
+	profiler_total: STRING = "total"
 	
-	profiler_percentage : STRING is "percentage"
+	profiler_percentage : STRING = "percentage"
 	
-	profiler_c_functions: STRING is "C Functions"
+	profiler_c_functions: STRING = "C Functions"
 	
-	profiler_cyclic_functions: STRING is "Cyclic Functions"
+	profiler_cyclic_functions: STRING = "Cyclic Functions"
 	
-	profiler_eiffel_features: STRING is "Eiffel Features"
+	profiler_eiffel_features: STRING = "Eiffel Features"
 	
-	profiler_expand_all: STRING is "Expand All"
+	profiler_expand_all: STRING = "Expand All"
 	
-	profiler_collapse_all: STRING is "Collapse All"
+	profiler_collapse_all: STRING = "Collapse All"
 	
-	profiler_end_of_query: STRING is "EOQ"
+	profiler_end_of_query: STRING = "EOQ"
 	
-	profiler_in: STRING is "in"
+	profiler_in: STRING = "in"
 	
-	profiler_less_than_or_equal: STRING is "<="
+	profiler_less_than_or_equal: STRING = "<="
 	
-	profiler_greater_than_or_equal: STRING is ">="
+	profiler_greater_than_or_equal: STRING = ">="
 	
-	profiler_not_equal: STRING is "/="
+	profiler_not_equal: STRING = "/="
 	
-	profiler_min: STRING is "min"
+	profiler_min: STRING = "min"
 	
-	profiler_max: STRING is "max"
+	profiler_max: STRING = "max"
 	
-	profiler_avg: STRING is "avg"
+	profiler_avg: STRING = "avg"
 	
-	profiler_spaced_and: STRING is " and "
+	profiler_spaced_and: STRING = " and "
 	
-	profiler_spaced_or: STRING is " or "
+	profiler_spaced_or: STRING = " or "
 	
-	profiler_eiffel: STRING is "eiffel"
+	profiler_eiffel: STRING = "eiffel"
 	
-	profiler_c: STRING is "c"
+	profiler_c: STRING = "c"
 	
-	profiler_cycle: STRING is "cycle";
+	profiler_cycle: STRING = "cycle";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

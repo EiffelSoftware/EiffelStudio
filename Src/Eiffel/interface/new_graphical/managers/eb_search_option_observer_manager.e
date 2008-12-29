@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Search option observer manager."
 	author: ""
 	date: "$Date$"
@@ -9,7 +9,7 @@ class
 
 feature {EB_SEARCH_OPTION_OBSERVER} -- Element Change
 
-	case_sensitivity_changed (a_case_sensitive: BOOLEAN) is
+	case_sensitivity_changed (a_case_sensitive: BOOLEAN)
 			-- Change case sensitivity option.
 		do
 			if observers /= Void then
@@ -24,7 +24,7 @@ feature {EB_SEARCH_OPTION_OBSERVER} -- Element Change
 			end
 		end
 
-	match_regex_changed (a_match_regex: BOOLEAN) is
+	match_regex_changed (a_match_regex: BOOLEAN)
 			-- Change match regex option.
 		do
 			if observers /= Void then
@@ -39,7 +39,7 @@ feature {EB_SEARCH_OPTION_OBSERVER} -- Element Change
 			end
 		end
 
-	whole_word_changed (a_whole_word: BOOLEAN) is
+	whole_word_changed (a_whole_word: BOOLEAN)
 			-- Change whole word option.
 		do
 			if observers /= Void then
@@ -54,7 +54,7 @@ feature {EB_SEARCH_OPTION_OBSERVER} -- Element Change
 			end
 		end
 
-	backwards_changed (a_bachwards: BOOLEAN) is
+	backwards_changed (a_bachwards: BOOLEAN)
 			-- Change backwards option.
 		do
 			if observers /= Void then
@@ -71,7 +71,7 @@ feature {EB_SEARCH_OPTION_OBSERVER} -- Element Change
 
 feature -- Observer Change
 
-	add_observer (a_observer: EB_SEARCH_OPTION_OBSERVER) is
+	add_observer (a_observer: EB_SEARCH_OPTION_OBSERVER)
 			-- Add an observer.
 		require
 			a_observer_not_void: a_observer /= Void
@@ -86,7 +86,7 @@ feature -- Observer Change
 			a_observer_exists: observers.has (a_observer)
 		end
 
-	remove_observer (a_observer: EB_SEARCH_OPTION_OBSERVER) is
+	remove_observer (a_observer: EB_SEARCH_OPTION_OBSERVER)
 			-- Remove an observer.
 		require
 			a_observer_not_void: a_observer /= Void
@@ -103,7 +103,7 @@ feature {NONE}-- Observers
 	observers: ARRAYED_LIST [EB_SEARCH_OPTION_OBSERVER];
 		-- Observers
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

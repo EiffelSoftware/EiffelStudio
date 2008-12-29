@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Byte code for the debug instruction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_debug_b (Current)
@@ -37,19 +37,19 @@ feature -- Access
 
 feature -- Status setting
 
-	set_compound (c: like compound) is
+	set_compound (c: like compound)
 			-- Assign `c' to `compound'.
 		do
 			compound := c
 		end
 
-	set_keys (k: like keys) is
+	set_keys (k: like keys)
 			-- Assign `k' to `keys'.
 		do
 			keys := k
 		end
 
-	set_end_location (e: like end_location) is
+	set_end_location (e: like end_location)
 			-- Set `end_location' with `e'.
 		require
 			e_not_void: e /= Void
@@ -61,7 +61,7 @@ feature -- Status setting
 
 feature -- Basic Operations
 
-	enlarge_tree is
+	enlarge_tree
 			-- Enlarge generation tree
 		do
 			if compound /= Void and then is_debug_clause_enabled then
@@ -69,7 +69,7 @@ feature -- Basic Operations
 			end
 		end
 
-	analyze is
+	analyze
 			-- Analysis of debug compound
 		do
 			if compound /= Void and then is_debug_clause_enabled then
@@ -79,7 +79,7 @@ feature -- Basic Operations
 
 feature -- C Code generation
 
-	is_debug_clause_enabled: BOOLEAN is
+	is_debug_clause_enabled: BOOLEAN
 			-- Has the debug compound to be generated in final mode?
 		local
 			debug_level: DEBUG_I
@@ -102,7 +102,7 @@ feature -- C Code generation
 			end
 		end
 
-	generate is
+	generate
 			-- Generation of the C code for debug compound
 		local
 			buf: GENERATION_BUFFER
@@ -155,25 +155,25 @@ feature -- C Code generation
 
 feature -- Array optimization
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (i: INTEGER): BOOLEAN
 		do
 			Result := (compound /= Void and then is_debug_clause_enabled) and then
 				compound.assigns_to (i)
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := (compound /= Void and then is_debug_clause_enabled) and then
 						compound.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := (compound /= Void and then is_debug_clause_enabled) and then
 				compound.is_unsafe
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current;
 			if compound /= Void and then is_debug_clause_enabled then
@@ -183,14 +183,14 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			if compound /= Void and then is_debug_clause_enabled then
 				Result := compound.size
 			end
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current
 			if compound /= Void and then is_debug_clause_enabled then
@@ -198,7 +198,7 @@ feature -- Inlining
 			end
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			if compound /= Void and then is_debug_clause_enabled then
@@ -206,7 +206,7 @@ feature -- Inlining
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

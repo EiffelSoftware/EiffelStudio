@@ -1,36 +1,36 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 deferred class ASSERT_TYPE
 
 feature -- Access
 
-	In_precondition: INTEGER is 1
+	In_precondition: INTEGER = 1
 			-- Assertion is a precondition
 
-	In_postcondition: INTEGER is 2
+	In_postcondition: INTEGER = 2
 			-- Assertion is a postcondition
 
-	In_check: INTEGER is 3
+	In_check: INTEGER = 3
 			-- Assertion is a check
 
-	In_loop_invariant: INTEGER is 4
+	In_loop_invariant: INTEGER = 4
 			-- Assertion in a loop
 
-	In_loop_variant: INTEGER is 5
+	In_loop_variant: INTEGER = 5
 			-- Variant in a loop
 
-	In_invariant: INTEGER is 6
+	In_invariant: INTEGER = 6
 			-- Class invariant
 
-	buffer: GENERATION_BUFFER is
+	buffer: GENERATION_BUFFER
 			-- File used for C code generation
 		deferred
 		end
 
 feature -- Code generation
 
-	generate_assertion_code (i: INTEGER) is
+	generate_assertion_code (i: INTEGER)
 			-- Write the exception code associated with assertion code `i'
 		do
 			inspect i
@@ -49,7 +49,7 @@ feature -- Code generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

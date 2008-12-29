@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common functionalities for all views of ES_INHERITANCE_LINKs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create {EIFFEL_INHERITANCE_FIGURE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an inheritance figure.
 		do
 			Precursor {EIFFEL_LINK_FIGURE}
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			set_deny_cursor (cursors.cur_x_inherit_link)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current' with `model'.
 		do
 			Precursor {EIFFEL_LINK_FIGURE}
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_LINK_FIGURE}
@@ -63,7 +63,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	on_needed_on_diagram_changed is
+	on_needed_on_diagram_changed
 			-- `model'.`is_needed_on_diagram' changed.
 		do
 			if model.is_needed_on_diagram then
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Analyze eweasel result output.
 					Descendants will generate a {EWEASEL_TEST_RESULT_ITEM} if they find related eweasel out string.
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			cleared: Result /= Void implies (lines = Void and one_block = Void)
 		end
 
-	to_one_string (a_lines: !LIST [STRING]): !STRING is
+	to_one_string (a_lines: !LIST [STRING]): !STRING
 			-- Join each lines of string in `a_line' to one string.
 		local
 			l_item: STRING
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_with_current_item (a_item: !ES_EWEASEL_TEST_RESULT_ITEM) is
+	set_with_current_item (a_item: !ES_EWEASEL_TEST_RESULT_ITEM)
 			-- Set `a_item' with Current date and time.
 		local
 			l_date_time: DT_DATE_TIME
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	pre_process (a_eweasel_buffer_output: STRING) is
+	pre_process (a_eweasel_buffer_output: STRING)
 			-- Find one result block in `a_eweasel_output'.
 			-- The block means ONE test case result, other test cases results will be excluded.
 			-- If found, the result is avaliable in `one_block'
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pre_process_on_exit (a_eweasel_buffer_output: STRING) is
+	pre_process_on_exit (a_eweasel_buffer_output: STRING)
 				-- Find one result block in `a_eweasel_buffer_output'.
 				-- Almost same as `pre_process' except it handle special cases on eweasel exit
 		require
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	one_result_block (a_string: STRING): TUPLE [STRING_GENERAL, INTEGER] is
+	one_result_block (a_string: STRING): TUPLE [STRING_GENERAL, INTEGER]
 			-- Text block between two "Test " tag. Void if not found.
 		require
 			not_voidP: a_string /= Void
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			Result := l_finder.one_result_block (a_string)
 		end
 
-	class_name_in_string (a_string: STRING): STRING_GENERAL is
+	class_name_in_string (a_string: STRING): STRING_GENERAL
 			-- Find class names in `a_string'
 		require
 			not_void: a_string /= Void
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Non string implementation
 
-	result_analyzer: !ES_EWEASEL_RESULT_ANALYZER is
+	result_analyzer: !ES_EWEASEL_RESULT_ANALYZER
 			-- Manager of Current
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -196,7 +196,7 @@ feature {NONE} -- Non string implementation
 			Result := l_shared.result_analyzer
 		end
 
-	separate_lines (a_result_content: STRING_GENERAL): LIST [STRING] is
+	separate_lines (a_result_content: STRING_GENERAL): LIST [STRING]
 			-- Separate `a_result_content' to list of lines base on `%N'.
 		require
 			not_void: a_result_content /= Void
@@ -224,7 +224,7 @@ feature {NONE} -- Non string implementation
 														Result := a_string /= Void and then not a_string.is_empty and then not a_string.is_equal ("%R")
 													end)
 		end
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

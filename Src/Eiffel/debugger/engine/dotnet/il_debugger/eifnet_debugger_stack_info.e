@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Current stack information for dotnet debugging"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_copy (other: like Current) is
+	make_copy (other: like Current)
 		do
 			copy (other)
 
@@ -51,7 +51,7 @@ feature -- Access
 	current_il_offset: INTEGER -- FIXME: we should use NATURAL_32
 	current_il_code_size: INTEGER -- FIXME: we should use NATURAL_32
 
-	to_string: STRING is
+	to_string: STRING
 			-- String representation
 			-- debug purpose only
 		do
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Is Equal
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -78,7 +78,7 @@ feature -- Is Equal
 
 feature -- Properties
 
-	set_synchronized (val: BOOLEAN) is
+	set_synchronized (val: BOOLEAN)
 			-- Change is_synchronized.
 		do
 			is_synchronized := val
@@ -86,44 +86,44 @@ feature -- Properties
 
 feature -- Change
 
-	set_current_stack_address (val: like current_stack_address) is
+	set_current_stack_address (val: like current_stack_address)
 			-- Change value
 		require
 		do
 			current_stack_address := val
 		end
 
-	set_current_stack_pseudo_depth (val: like current_stack_pseudo_depth) is
+	set_current_stack_pseudo_depth (val: like current_stack_pseudo_depth)
 			-- Change value
 		do
 			current_stack_pseudo_depth := val
 		end
 
-	set_current_module_name (val: like current_module_name) is
+	set_current_module_name (val: like current_module_name)
 			-- Change value
 		do
 			current_module_name := val
 		end
 
-	set_current_class_token (val: like current_class_token) is
+	set_current_class_token (val: like current_class_token)
 			-- Change value
 		do
 			current_class_token := val
 		end
 
-	set_current_feature_token (val: like current_feature_token) is
+	set_current_feature_token (val: like current_feature_token)
 			-- Change value
 		do
 			current_feature_token := val
 		end
 
-	set_current_il_offset (val: like current_il_offset) is
+	set_current_il_offset (val: like current_il_offset)
 			-- Change value
 		do
 			current_il_offset := val
 		end
 
-	set_current_il_code_size (val: like current_il_code_size) is
+	set_current_il_code_size (val: like current_il_code_size)
 			-- Change value
 		do
 			current_il_code_size := val
@@ -131,7 +131,7 @@ feature -- Change
 
 feature
 
-	reset is
+	reset
 			-- Reset values
 		do
 			current_stack_address         := Void
@@ -143,7 +143,7 @@ feature
 			current_il_code_size		  := 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

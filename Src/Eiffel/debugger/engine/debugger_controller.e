@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that control the debugger session"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ create {DEBUGGER_MANAGER}
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like manager) is
+	make (a_manager: like manager)
 			-- Initialize `Current'.
 		do
 			manager := a_manager
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Debug Operation
 
-	debug_application (param: DEBUGGER_EXECUTION_PARAMETERS; a_execution_mode: INTEGER) is
+	debug_application (param: DEBUGGER_EXECUTION_PARAMETERS; a_execution_mode: INTEGER)
 			-- Launch the program from the project target.
 			-- see EXEC_MODES for `a_execution_mode' values.
 		local
@@ -171,7 +171,7 @@ feature -- Debug Operation
 			end
 		end
 
-	resume_workbench_application is
+	resume_workbench_application
 			-- Continue the execution of the program (stepping ...)
 		require
 			debugger_running_and_stopped: manager.safe_application_is_stopped
@@ -205,7 +205,7 @@ feature -- Debug Operation
 
 feature {DEBUGGER_MANAGER} -- Debugging operation
 
-	debug_operate (a_exec_mode: INTEGER) is
+	debug_operate (a_exec_mode: INTEGER)
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
@@ -213,42 +213,42 @@ feature {DEBUGGER_MANAGER} -- Debugging operation
 			resume_workbench_application
 		end
 
-	debug_step_next is
+	debug_step_next
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
 			debug_operate ({EXEC_MODES}.Step_next)
 		end
 
-	debug_step_into is
+	debug_step_into
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
 			debug_operate ({EXEC_MODES}.Step_into)
 		end
 
-	debug_step_out is
+	debug_step_out
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
 			debug_operate ({EXEC_MODES}.Step_out)
 		end
 
-	debug_run is
+	debug_run
 		require
 			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
 			debug_operate ({EXEC_MODES}.Run)
 		end
 
-	debug_kill is
+	debug_kill
 		require
 			application_is_executing: manager.application_is_executing
 		do
 			manager.application.kill
 		end
 
-	debug_interrupt is
+	debug_interrupt
 		require
 			application_is_executing: manager.application_is_executing
 		do
@@ -257,7 +257,7 @@ feature {DEBUGGER_MANAGER} -- Debugging operation
 
 feature -- Start Operation
 
-	start_workbench_application (param: DEBUGGER_EXECUTION_PARAMETERS) is
+	start_workbench_application (param: DEBUGGER_EXECUTION_PARAMETERS)
 		local
 			appl_name: STRING
 			cmd_exec: COMMAND_EXECUTOR
@@ -320,7 +320,7 @@ feature -- Start Operation
 			end
 		end
 
-	start_finalized_application (param: DEBUGGER_EXECUTION_PARAMETERS) is
+	start_finalized_application (param: DEBUGGER_EXECUTION_PARAMETERS)
 		local
 			appl_name: STRING
 			cmd_exec: COMMAND_EXECUTOR
@@ -383,36 +383,36 @@ feature -- Start Operation
 
 feature {NONE} -- Callbacks
 
-	before_starting (param: DEBUGGER_EXECUTION_PARAMETERS) is
+	before_starting (param: DEBUGGER_EXECUTION_PARAMETERS)
 		do
 			manager.display_debugger_info (param)
 		end
 
-	after_starting is
+	after_starting
 		do
 		end
 
-	warning (msg: STRING_GENERAL) is
+	warning (msg: STRING_GENERAL)
 		do
 			manager.debugger_warning_message (msg)
 		end
 
-	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
+	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE])
 		do
 		end
 
 	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
-			a_button_count: INTEGER; a_pref_string: STRING) is
+			a_button_count: INTEGER; a_pref_string: STRING)
 		do
 		end
 
-	activate_debugger_environment (b: BOOLEAN) is
+	activate_debugger_environment (b: BOOLEAN)
 		do
 		end
 
 feature {NONE} -- debugging
 
-	debug_workbench_application (param: DEBUGGER_EXECUTION_PARAMETERS; a_execution_mode: INTEGER; ign_bp: BOOLEAN) is
+	debug_workbench_application (param: DEBUGGER_EXECUTION_PARAMETERS; a_execution_mode: INTEGER; ign_bp: BOOLEAN)
 		require
 			param.working_directory /= Void
 		local
@@ -457,7 +457,7 @@ feature {NONE} -- debugging
 			end
 		end
 
-	c_compile is
+	c_compile
 			-- Freeze system.
 		do
 			if Eiffel_project.initialized then
@@ -471,7 +471,7 @@ feature -- {DEBUGGER_MANAGER, SHARED_DEBUGGER_MANAGER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	directory_exists (a_dirname: STRING): BOOLEAN is
+	directory_exists (a_dirname: STRING): BOOLEAN
 			-- Is directory named `a_dirname' exists ?
 		local
 			d: DIRECTORY
@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 
 feature -- Environment related
 
-	environment_variables_updated_with (env: HASH_TABLE [STRING_32, STRING_32]; return_void_if_unchanged: BOOLEAN): HASH_TABLE [STRING_32, STRING_32] is
+	environment_variables_updated_with (env: HASH_TABLE [STRING_32, STRING_32]; return_void_if_unchanged: BOOLEAN): HASH_TABLE [STRING_32, STRING_32]
 			-- String representation of the Environment variables
 		local
 			k,v: STRING_32
@@ -513,7 +513,7 @@ feature -- Environment related
 			Result_not_void_unless_unchanged: Result = Void implies (return_void_if_unchanged and (env = Void or else env.is_empty))
 		end
 
-	environment_variables_to_string_8 (env32: HASH_TABLE [STRING_32, STRING_32]): HASH_TABLE [STRING, STRING] is
+	environment_variables_to_string_8 (env32: HASH_TABLE [STRING_32, STRING_32]): HASH_TABLE [STRING, STRING]
 			-- String representation of the Environment variables
 		local
 			k,v: STRING_32
@@ -541,7 +541,7 @@ invariant
 
 	manager_not_void: manager /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Name of a feature or a class to be inserted by autocomplete"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -63,7 +63,7 @@ create {EB_NAME_FOR_COMPLETION}
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name)
 			-- Create feature name with value `name'
 		do
 			Precursor {NAME_FOR_COMPLETION} (a_name)
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			name_set: name = a_name
 		end
 
-	make_token (a_token: EDITOR_TOKEN) is
+	make_token (a_token: EDITOR_TOKEN)
 			-- Create with single token.
 		require
 			a_token_not_void: a_token /= Void
@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 			token_exist: token_exist
 		end
 
-	make_tokens (a_tokens: like tokens) is
+	make_tokens (a_tokens: like tokens)
 			-- Create with `a_tokens'
 		require
 			a_tokens_not_void: a_tokens /= Void
@@ -100,25 +100,25 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	is_class: BOOLEAN is
+	is_class: BOOLEAN
 			-- Is a class?
 		do
 			Result := False
 		end
 
-	is_obsolete: BOOLEAN is
+	is_obsolete: BOOLEAN
 			-- Is item obsolete?
 		do
 			Result := False
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon
 		do
 			Result := pixmaps.icon_pixmaps.feature_local_variable_icon
 		end
 
-	grid_item : EB_GRID_EDITOR_TOKEN_ITEM is
+	grid_item : EB_GRID_EDITOR_TOKEN_ITEM
 			-- Corresponding grid item
 		local
 			l_style: like local_style
@@ -145,7 +145,7 @@ feature -- Query
 			end
 		end
 
-	child_grid_items: ARRAYED_LIST [EB_GRID_EDITOR_TOKEN_ITEM] is
+	child_grid_items: ARRAYED_LIST [EB_GRID_EDITOR_TOKEN_ITEM]
 			-- Grid items of childrenS
 		local
 			i: INTEGER
@@ -168,31 +168,31 @@ feature -- Status Report
 
 	has_dot: BOOLEAN
 
-	token_exist: BOOLEAN is
+	token_exist: BOOLEAN
 			-- Does `tokens' exist?
 		do
 			Result := tokens /= Void
 		end
 
-	show_signature: BOOLEAN is
+	show_signature: BOOLEAN
 			-- Should signature be displayed?
 		do
 		    Result := preferences.editor_data.show_completion_signature
 		end
 
-	show_type: BOOLEAN is
+	show_type: BOOLEAN
 			-- Should feature return type be displayed?
 		do
 		    Result := preferences.editor_data.show_completion_type
 		end
 
-	show_disambiguated_name: BOOLEAN is
+	show_disambiguated_name: BOOLEAN
 			-- Should disambiguated name be displayed?
 		do
 			Result := preferences.editor_data.show_completion_disambiguated_name
 		end
 
-	display_colorized_tooltip: BOOLEAN is
+	display_colorized_tooltip: BOOLEAN
 			-- Display colorized tooltip?
 			-- We do not display this tooltip since focus issue.
 		do
@@ -201,13 +201,13 @@ feature -- Status Report
 
 feature -- Status setting
 
-	set_has_dot (hd: BOOLEAN) is
+	set_has_dot (hd: BOOLEAN)
 			-- assign `hd' to `has_dot'
 		do
 			has_dot := hd
 		end
 
-	set_tokens (a_tokens: like tokens) is
+	set_tokens (a_tokens: like tokens)
 			-- Set `tokens' with `a_tokens'.
 		require
 			a_tokens_not_void: a_tokens /= Void
@@ -231,7 +231,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	name_matcher: COMPLETION_NAME_MATCHER is
+	name_matcher: COMPLETION_NAME_MATCHER
 			-- Name matcher
 		once
 			create {WILD_COMPLETION_NAME_MATCHER}Result
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 	child_type: EB_NAME_FOR_COMPLETION;
 		-- Child type
 
-	completion_type: STRING_32 is
+	completion_type: STRING_32
 			-- The type of the feature (for a function, attribute)
 		local
 			l_desc: STRING_32
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 	internal_completion_type: STRING_32
 			-- cache `completion_type'
 
-	local_style: EB_LOCAL_EDITOR_TOKEN_STYLE is
+	local_style: EB_LOCAL_EDITOR_TOKEN_STYLE
 			-- Local style to generate text of local
 		once
 			create Result
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

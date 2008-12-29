@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Set debugging options."
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like debugger_manager) is
+	make (a_manager: like debugger_manager)
 			-- Initialize `Current' and associate it with `a_manager'.
 		do
 			debugger_manager := a_manager
@@ -35,14 +35,14 @@ feature {NONE} -- Initialization
 
 feature -- Formatting
 
-	launch_project (params: DEBUGGER_EXECUTION_PARAMETERS) is
+	launch_project (params: DEBUGGER_EXECUTION_PARAMETERS)
 		do
 			if is_sensitive then
 				debugger_manager.run_project_cmd.launch_with_parameters ({EXEC_MODES}.run, params)
 			end
 		end
 
-	execute is
+	execute
 			-- Set the execution format to `stone'.
 		local
 			args_dialog: EB_ARGUMENT_DIALOG
@@ -69,37 +69,37 @@ feature -- Properties
 	debugger_manager: EB_DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for `Current'.
 		do
 			Result := interface_names.b_Execution_parameters
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer which representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_icon_buffer
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap for the button.
 		do
 			Result := pixmaps.icon_pixmaps.tool_config_icon
 		end
 
-	name: STRING is
+	name: STRING
 			-- Name of the command.
 		do
 			Result := "Execution_parameters"
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu name
 		do
 			Result := interface_names.m_Execution_parameters
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Default text displayed in toolbar button
 		do
 			Result := interface_names.b_Execution_parameters
@@ -107,13 +107,13 @@ feature -- Properties
 
 feature {NONE} -- Attributes
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

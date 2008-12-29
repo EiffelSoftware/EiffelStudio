@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		List of all C external features in IL code generation.
 		For each class ID we have a SEARCH_TABLE [INTEGER] that
@@ -66,7 +66,7 @@ create
 
 feature -- Insertion/Removal
 
-	add_external (ext: EXTERNAL_I) is
+	add_external (ext: EXTERNAL_I)
 			-- Add `ext' in Current.
 		require
 			ext_not_void: ext /= Void
@@ -85,7 +85,7 @@ feature -- Insertion/Removal
 			added: has (ext.written_in) and then item (ext.written_in).has (ext.feature_name_id)
 		end
 
-	remove_external (ext: EXTERNAL_I) is
+	remove_external (ext: EXTERNAL_I)
 			-- Remove `ext' in Current.
 		require
 			ext_not_void: ext /= Void
@@ -109,7 +109,7 @@ feature -- Insertion/Removal
 
 feature -- Freeze externals.
 
-	freeze is
+	freeze
 			-- Save current version for later comparison for `is_equivalent'.
 		local
 			l_other: like Current
@@ -130,7 +130,7 @@ feature -- Freeze externals.
 
 feature -- Comparison
 
-	is_equivalent: BOOLEAN is
+	is_equivalent: BOOLEAN
 			-- Is `Current' equivalent to last saved version of Current? That is to say for each
 			-- class, external name set is identical to previous one.
 		local
@@ -176,7 +176,7 @@ feature -- Comparison
 
 feature -- Code generation
 
-	generate_il (a_makefile_generator: MAKEFILE_GENERATOR) is
+	generate_il (a_makefile_generator: MAKEFILE_GENERATOR)
 			-- Generate C encapsulation for all calls.
 		require
 			a_makefile_generator_not_void: a_makefile_generator /= Void
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	generate_class_il (a_s: SEARCH_TABLE [INTEGER]; class_c: CLASS_C; class_type: CLASS_TYPE; a_for_cpp: BOOLEAN; buffer: GENERATION_BUFFER) is
+	generate_class_il (a_s: SEARCH_TABLE [INTEGER]; class_c: CLASS_C; class_type: CLASS_TYPE; a_for_cpp: BOOLEAN; buffer: GENERATION_BUFFER)
 			-- Generate C il code
 		require
 			a_s_not_void: a_s /= Void
@@ -330,7 +330,7 @@ feature {NONE} -- Previous version
 	old_externals: like Current;
 			-- Old version of Current.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display exported features of a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Properties
 
-	symbol: ARRAY [EV_PIXMAP] is
+	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
@@ -24,13 +24,13 @@ feature -- Properties
 			Result.put (pixmaps.icon_pixmaps.class_features_exported_icon, 2)
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Graphical representation of the command.
 		once
 			Result := pixmaps.icon_pixmaps.class_features_exported_icon_buffer
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showexported
@@ -38,13 +38,13 @@ feature -- Properties
 
 feature {NONE} -- Properties
 
-	capital_command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL
 			-- Name of the command.
 		do
 			Result := Interface_names.l_Exported
 		end
 
-	post_fix: STRING is "exp"
+	post_fix: STRING = "exp"
 			-- String symbol of the command, used as an extension when saving.
 feature -- Access
 
@@ -56,7 +56,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion of current formatter
 		local
 			l_factory: like feature_criterion_factory
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			Result := l_factory.simple_criterion_with_index (l_factory.c_is_exported)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

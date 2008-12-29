@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -26,7 +26,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make_with_line (a_class_i: like class_i; a_line_number: INTEGER; a_select: BOOLEAN) is
+	make_with_line (a_class_i: like class_i; a_line_number: INTEGER; a_select: BOOLEAN)
 			-- Initialize `class_i' with `a_class_i' and `line_number' with `line_number'.
 		require
 			a_class_i_attached: a_class_i /= Void

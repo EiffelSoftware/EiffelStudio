@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects containing the information relative to a resource folder."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (doc: WEL_REGISTRY_KEY; p: POINTER; struct: like structure) is
+	make (doc: WEL_REGISTRY_KEY; p: POINTER; struct: like structure)
 			-- Initialization
 		do
 			name := doc.name
@@ -27,7 +27,7 @@ feature -- Initialization
 			load_attributes
 		end
 
-	make_root (path: STRING; struct: like structure) is
+	make_root (path: STRING; struct: like structure)
 		do
 			name := "root"
 			description := "root folder"
@@ -40,7 +40,7 @@ feature -- Initialization
 			end
 		end
 
-	load_attributes is
+	load_attributes
 		local
 			i: INTEGER
 			child: like Current
@@ -88,7 +88,7 @@ feature -- Initialization
 
 feature -- Update
 
-	update_root (path: STRING) is
+	update_root (path: STRING)
 		do
 			name := "root"
 			description := "root folder"
@@ -106,7 +106,7 @@ feature -- Update
 			end
 		end
 
-	update_attributes (p_handle: POINTER) is
+	update_attributes (p_handle: POINTER)
 		local
 			i: INTEGER
 			child: like Current
@@ -165,7 +165,7 @@ feature -- Access
 
 feature -- Save
 
-	root_save (location: STRING) is
+	root_save (location: STRING)
 		local
 			reg_resource: REGISTRY_RESOURCE
 			resource: RESOURCE
@@ -204,7 +204,7 @@ feature -- Save
 			end
 		end
 
-	save (father_handle: POINTER) is
+	save (father_handle: POINTER)
 		local
 			reg_resource: REGISTRY_RESOURCE
 			resource: RESOURCE
@@ -242,7 +242,7 @@ feature -- Save
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

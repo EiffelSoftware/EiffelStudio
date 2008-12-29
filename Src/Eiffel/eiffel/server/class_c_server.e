@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server to keep track of all classes in system.%
 				%Warning: this is not a real server!%
 				%Indexed by class id."
@@ -35,7 +35,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create a new class server.
 		do
 			array_make (1, Chunk)
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Status report
 
-	has (id: INTEGER): BOOLEAN is
+	has (id: INTEGER): BOOLEAN
 			-- Is there a class associated with `id'?
 		require
 			id_not_void: id > 0
@@ -64,7 +64,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put (class_c: CLASS_C; id: INTEGER) is
+	put (class_c: CLASS_C; id: INTEGER)
 			-- Insert `class_c' at key `id'.
 		require
 			class_c_not_void: class_c /= Void
@@ -91,7 +91,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (id: INTEGER) is
+	remove (id: INTEGER)
 			-- Remove class with `id'.
 		require
 			id_not_void: id > 0
@@ -109,7 +109,7 @@ feature -- Removal
 
 feature -- Sort
 
-	sort is
+	sort
 			-- Sort `sorted_classes' by topological ids.
 		local
 			i, nb: INTEGER
@@ -154,14 +154,14 @@ feature -- Sort
 
 feature {NONE} -- Implementation
 
-	Chunk: INTEGER is 150
+	Chunk: INTEGER = 150
 			-- Chunk size of class arrays
 
 invariant
 
 	sorted_classes_not_void: sorted_classes /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

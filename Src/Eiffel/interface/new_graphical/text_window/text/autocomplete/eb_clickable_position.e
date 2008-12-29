@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that represent a clickable position in the editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,13 +15,13 @@ create
 
 feature -- Initialisation
 
-	make(a_beginning: INTEGER; an_end: INTEGER ) is
+	make(a_beginning: INTEGER; an_end: INTEGER )
 		do
 			start := a_beginning
 			stop := an_end
 		end
 
-	make_from_token(a_token: EDITOR_TOKEN) is
+	make_from_token(a_token: EDITOR_TOKEN)
 		do
 			start := a_token.position
 			stop := a_token.width + start
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- element change
 
-	set_feature (a_class_name, a_feature_name: STRING) is
+	set_feature (a_class_name, a_feature_name: STRING)
 		require
 			valid_class_name: a_class_name /= Void
 			valid_feature_feature_name: a_feature_name /= Void
@@ -54,7 +54,7 @@ feature -- element change
 			is_class := False
 		end
 
-	set_class(a_class_name: STRING) is
+	set_class(a_class_name: STRING)
 		require
 			valid_class_name: a_class_name /= Void
 		do
@@ -66,7 +66,7 @@ feature -- element change
 
 feature -- comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := start < other.start
@@ -80,7 +80,7 @@ invariant
 	coherent_class: is_class implies class_name /= Void and feature_name = Void
 	class_or_feature: not (is_class and is_feature)
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

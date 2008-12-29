@@ -1,4 +1,4 @@
-indexing
+note
 	description: "interface method entry"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,12 +19,12 @@ inherit
 	make
 			
 feature {ANY}
-	tag_id: INTEGER is 11
-	out: STRING is
+	tag_id: INTEGER = 11
+	out: STRING
 		do
 			Result := "InterfaceMethodRef= " + Precursor;
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

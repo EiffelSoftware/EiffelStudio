@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Check to test if a list of classes is writable."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_classes: DS_HASH_SET [CLASS_I]) is
+	make (a_classes: DS_HASH_SET [CLASS_I])
 			-- Create check for `a_classes'.
 		require
 			a_classes_not_void: a_classes /= void
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-	execute is
+	execute
             -- Execute a check.
         local
         	l_class: CLASS_I
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 invariant
 	classes_not_void: classes /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

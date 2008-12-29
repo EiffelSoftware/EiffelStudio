@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Batch compiler invoked by the -loop option.%
@@ -27,7 +27,7 @@ inherit
 
 feature -- Properties
 
-	yank_window: YANK_WINDOW is
+	yank_window: YANK_WINDOW
 			-- Output window to be saved to a file
 		once
 			create Result.make
@@ -44,7 +44,7 @@ feature -- Properties
 
 feature -- Initialization
 
-	main_menu: EWB_MENU is
+	main_menu: EWB_MENU
 			-- Main menu options
 		local
 			i: INTEGER
@@ -87,7 +87,7 @@ feature -- Initialization
 			main_menu_not_void: Result /= Void
 		end
 
-	Documentation_menu: EWB_MENU is
+	Documentation_menu: EWB_MENU
 			-- Documentation menu options
 		once
 			create Result.make (1, 4)
@@ -99,7 +99,7 @@ feature -- Initialization
 			documentation_menu_not_void: Result /= Void
 		end
 
-	System_menu: EWB_MENU is
+	System_menu: EWB_MENU
 			-- System menu options
 		once
 			create Result.make (1, 9)
@@ -117,7 +117,7 @@ feature -- Initialization
 			system_menu_not_void: Result /= Void
 		end
 
-	profile_menu: EWB_MENU is
+	profile_menu: EWB_MENU
 			-- Profile menu options.
 		once
 			create Result.make (1, 7)
@@ -135,7 +135,7 @@ feature -- Initialization
 			profile_menu_not_void: Result /= Void
 		end
 
-	class_menu: EWB_MENU is
+	class_menu: EWB_MENU
 			-- Class menu options
 		once
 			create Result.make (1, 17)
@@ -161,7 +161,7 @@ feature -- Initialization
 			class_menu_not_void: Result /= Void
 		end
 
-	feature_menu: EWB_MENU is
+	feature_menu: EWB_MENU
 			-- Feature menu options
 		once
 			create Result.make (1, 8)
@@ -178,13 +178,13 @@ feature -- Initialization
 			feature_menu_not_void: Result /= Void
 		end
 
-	compile_menu: EWB_MENU is
+	compile_menu: EWB_MENU
 			-- Menu options for compilation
 		once
 			Result := c_menu
 		end
 
-	c_menu: EWB_MENU is
+	c_menu: EWB_MENU
 			-- Menu options for execution
 		do
 			create Result.make (1,9)
@@ -201,7 +201,7 @@ feature -- Initialization
 			c_menu_not_void: Result /= Void
 		end
 
-	menu_commands: ARRAY [EWB_MENU] is
+	menu_commands: ARRAY [EWB_MENU]
 			-- Menu commands
 		local
 			i: INTEGER
@@ -236,7 +236,7 @@ feature -- Initialization
 			menu_commands_not_void: menu_commands /= Void
 		end
 
-	switches_menu: EWB_MENU is
+	switches_menu: EWB_MENU
 			-- Menu containing output switches
 		once
 			create Result.make (1, 6)
@@ -251,7 +251,7 @@ feature -- Initialization
 			switches_menu_not_void: Result /= Void
 		end
 
-	queries_menu: EWB_MENU is
+	queries_menu: EWB_MENU
 			-- Sub-menu containing commands to manipulate queries.
 		once
 			create Result.make (1,5)
@@ -267,7 +267,7 @@ feature -- Initialization
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute current menu option.
 		require else
 			no_need_for_compiled_project: True
@@ -277,7 +277,7 @@ feature -- Execution
 
 feature -- Update
 
-	save_to_disk is
+	save_to_disk
 			-- Save last output to file.
 		local
 			s: STRING_32
@@ -321,7 +321,7 @@ feature -- Update
 			end
 		end
 
-	get_user_request is
+	get_user_request
 			-- Get user request.
 		local
 			done: BOOLEAN
@@ -347,7 +347,7 @@ feature -- Update
 			end
 		end
 
-	process_request (req: STRING) is
+	process_request (req: STRING)
 			-- Process request `req'.
 		local
 			next_cmd: EWB_CMD
@@ -452,19 +452,19 @@ feature -- Update
 
 feature -- Output
 
-	display_header is
+	display_header
 		do
 			localized_print (ewb_names.ise_batch_version (Workbench_name, Version_number))
 		end
 
-	display_commands is
+	display_commands
 		do
 			menu_command_list.print_help
 		end
 
 feature -- Command loop
 
-	ewb_iterate is
+	ewb_iterate
 		local
 			done: BOOLEAN
 		do
@@ -488,7 +488,7 @@ feature -- Command loop
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

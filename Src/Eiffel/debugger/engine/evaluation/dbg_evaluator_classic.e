@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class used to process evaluation on classic system ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dm: like debugger_manager) is
+	make (dm: like debugger_manager)
 		require else
 			is_classic_project: dm.is_classic_project
 		do
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 
 	effective_evaluate_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE];
-			is_static_call: BOOLEAN) is
+			is_static_call: BOOLEAN)
 		local
 			fi: FEATURE_I
 			dmp: DUMP_VALUE
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	effective_evaluate_once_function (f: FEATURE_I) is
+	effective_evaluate_once_function (f: FEATURE_I)
 		local
 			once_r: ONCE_REQUEST
 			res: ABSTRACT_DEBUG_VALUE
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_empty_instance_of (a_type_i: CL_TYPE_A) is
+	create_empty_instance_of (a_type_i: CL_TYPE_A)
 			-- create an empty instance of `a_type_i' in the context of object's type `a_curr_obj_typeid'
 		local
 			b: BOOLEAN
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 --			end
 --		end
 
-	create_special_any_instance (a_type_i: CL_TYPE_A; a_count: INTEGER) is
+	create_special_any_instance (a_type_i: CL_TYPE_A; a_count: INTEGER)
 		local
 			l_class_c: CLASS_C
 			l_params: LINKED_LIST [DUMP_VALUE]
@@ -263,12 +263,12 @@ feature {NONE} -- Implementation
 
 feature -- Query
 
-	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE is
+	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE
 		do
 			Result := Debugger_manager.Dump_value_factory.new_object_value (cse.object_address, cse.dynamic_class)
 		end
 
-	dump_value_at_address (addr: DBG_ADDRESS): DUMP_VALUE is
+	dump_value_at_address (addr: DBG_ADDRESS): DUMP_VALUE
 			-- <Precursor>
 		local
 			l_cl: CLASS_C
@@ -281,7 +281,7 @@ feature -- Query
 			end
 		end
 
-	address_from_basic_dump_value (a_target: DUMP_VALUE): DBG_ADDRESS is
+	address_from_basic_dump_value (a_target: DUMP_VALUE): DBG_ADDRESS
 		require else
 			a_target_not_void: a_target /= Void
 		local
@@ -297,12 +297,12 @@ feature -- Query
 
 feature {NONE} -- Parameters operation
 
-	parameters_push (dmp: DUMP_VALUE) is
+	parameters_push (dmp: DUMP_VALUE)
 		do
 			dmp.classic_send_value
 		end
 
-	parameters_push_and_metamorphose (dmp: DUMP_VALUE) is
+	parameters_push_and_metamorphose (dmp: DUMP_VALUE)
 		do
 			debug ("debugger_trace_eval_data")
 				print (generating_type + ".parameters_push_and_metamorphose :: Send Metamorphose request ... %N")
@@ -313,14 +313,14 @@ feature {NONE} -- Parameters operation
 
 feature -- Implementation
 
-	Once_request: ONCE_REQUEST is
+	Once_request: ONCE_REQUEST
 			-- Facilities to inspect whether a once routine
 			-- has already been called
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

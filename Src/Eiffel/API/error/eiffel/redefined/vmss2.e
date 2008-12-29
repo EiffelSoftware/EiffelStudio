@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error for useless selections. The selection is not needed or there are two %
@@ -26,17 +26,17 @@ feature -- Properties
 	parent: CLASS_C;
 			-- Class id of the involved parent
 
-	code: STRING is "VMSS";
+	code: STRING = "VMSS";
 			-- Error code
 
-	subcode: INTEGER is
+	subcode: INTEGER
 		do
 			Result := 3
 		end;
 
 feature -- Access
 
-    is_defined: BOOLEAN is
+    is_defined: BOOLEAN
             -- Is the error fully defined?
         do
 			Result := is_class_defined and then
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -63,7 +63,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_feature_name (s: STRING) is
+	set_feature_name (s: STRING)
 			-- Assign `s' to `feature_name'.
 		require
 			valid_s: s /= Void
@@ -71,7 +71,7 @@ feature {COMPILER_EXPORTER}
 			feature_name := s;
 		end;
 
-	set_parent (c: CLASS_C) is
+	set_parent (c: CLASS_C)
 			-- Assign `i' to `parent_id'.
 		require
 			valid_c: c /= Void
@@ -79,7 +79,7 @@ feature {COMPILER_EXPORTER}
 			parent := c
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

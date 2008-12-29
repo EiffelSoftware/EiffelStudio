@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display the flat aspect of a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 	
 feature -- Properties
 
-	symbol: ARRAY [EV_PIXMAP] is
+	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
@@ -32,18 +32,18 @@ feature -- Properties
 
 feature {NONE} -- Properties
 
-	command_name: STRING is
+	command_name: STRING
 			-- Name of the command.
 		do
 			Result := Interface_names.l_Flat
 		end
 
-	post_fix: STRING is "fla"
+	post_fix: STRING = "fla"
 			-- String symbol of the command, used as an extension when saving.
 
 feature {NONE} -- Implementation
 
-	create_feature_cmd is
+	create_feature_cmd
 			-- Create `feature_cmd'.
 		require else
 			associated_feature_non_void: associated_feature /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			create feature_cmd.make (associated_feature)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

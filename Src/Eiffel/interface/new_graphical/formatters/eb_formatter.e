@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Objects that display class information in a widget."
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ inherit
 
 feature -- Initialization
 
-	make (a_manager: like manager) is
+	make (a_manager: like manager)
 			-- Create a formatter associated with `a_manager'.
 		do
 			manager := a_manager
@@ -51,7 +51,7 @@ feature -- Properties
 	output_line: EV_LABEL
 			-- Where status information should be printed.
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget representing the associated system information.
 		deferred
 		end
@@ -65,7 +65,7 @@ feature -- Properties
 	post_execution_action: EV_NOTIFY_ACTION_SEQUENCE
 			-- Called after execution
 
-	empty_widget: EV_WIDGET is
+	empty_widget: EV_WIDGET
 			-- Widget displayed when no information can be displayed.
 		do
 			if internal_empty_widget = Void then
@@ -77,14 +77,14 @@ feature -- Properties
 	command_name: STRING_GENERAL
 			-- Command name
 
-	element_name: STRING is
+	element_name: STRING
 			-- name of associated element in current formatter.
 			-- For exmaple, if a class stone is associated to current, `element_name' would be the class name.
 			-- Void if element is not retrievable.
 		deferred
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of Current formatter
 		do
 			Result := command_name.twin
@@ -92,7 +92,7 @@ feature -- Properties
 			result_attached: Result /= Void
 		end
 
-	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING]
 			-- Generator to generate proper `displayer' for Current formatter
 		deferred
 		ensure
@@ -100,12 +100,12 @@ feature -- Properties
 			result_valid: Result.any_generator /= Void and then (Result.name /= Void and then not Result.name.is_empty)
 		end
 
-	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Possible area to display a tool bar
 		deferred
 		end
 
-	displayer: EB_FORMATTER_DISPLAYER is
+	displayer: EB_FORMATTER_DISPLAYER
 			-- Displayer used to display Result of Current formatter
 		deferred
 		end
@@ -118,7 +118,7 @@ feature -- Properties
 
 feature -- Displayer factory
 
-	displayer_generators: EB_FORMATTER_DISPLAYERS is
+	displayer_generators: EB_FORMATTER_DISPLAYERS
 			-- Displayer generators
 		once
 			create Result
@@ -128,28 +128,28 @@ feature -- Displayer factory
 
 feature -- Status report
 
-	is_dotnet_formatter: BOOLEAN is
+	is_dotnet_formatter: BOOLEAN
 			-- Is Current able to format .NET class texts?
 		deferred
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is Current formatter valid?
 		do
 			Result := True
 		end
 
-	is_customized_fomatter: BOOLEAN is
+	is_customized_fomatter: BOOLEAN
 			-- Is Current a customized formatter?
 		do
 		end
 
-	is_editor_formatter: BOOLEAN is
+	is_editor_formatter: BOOLEAN
 			-- Is Current formatter based on an editor?
 		do
 		end
 
-	is_browser_formatter: BOOLEAN is
+	is_browser_formatter: BOOLEAN
 			-- Is Current formatter based on a browser?
 		do
 		end
@@ -159,25 +159,25 @@ feature -- Status report
 
 feature -- Setting
 
-	invalidate is
+	invalidate
 			-- Force `Current' to refresh itself next time `format' is called.
 		do
 			must_format := True
 		end
 
-	set_output_line (a_line: like output_line) is
+	set_output_line (a_line: like output_line)
 			-- Set `output_line' to `a_line'.
 		do
 			output_line := a_line
 		end
 
-	set_accelerator (accel: EV_ACCELERATOR) is
+	set_accelerator (accel: EV_ACCELERATOR)
 			-- Set `accelerator' to `accel'.
 		do
 			accelerator := accel
 		end
 
-	set_manager (a_manager: like manager) is
+	set_manager (a_manager: like manager)
 			-- Change `Current's stone manager.
 		require
 			a_manager_not_void: a_manager /= Void
@@ -185,7 +185,7 @@ feature -- Setting
 			manager := a_manager
 		end
 
-	set_viewpoints (a_viewpoints: like viewpoints) is
+	set_viewpoints (a_viewpoints: like viewpoints)
 			-- Viewpoints of current formatting
 		do
 			viewpoints := a_viewpoints
@@ -193,7 +193,7 @@ feature -- Setting
 			viewpoints_is_set: viewpoints = a_viewpoints
 		end
 
-	set_veto_format_function (a_function: like veto_format_function) is
+	set_veto_format_function (a_function: like veto_format_function)
 			-- Set `veto_format_function' with `a_function'.
 		do
 			veto_format_function := a_function
@@ -201,17 +201,17 @@ feature -- Setting
 			veto_format_function_set: veto_format_function = a_function
 		end
 
-	set_focus is
+	set_focus
 			-- Set focus to current formatter.
 		deferred
 		end
 
-	reset_display is
+	reset_display
 			-- Clear all graphical output.
 		deferred
 		end
 
-	synchronize is
+	synchronize
 			-- Check validity of Current formatter.
 			-- Update UI according to validity of Current formatter if displayed.
 		do
@@ -224,7 +224,7 @@ feature -- Setting
 			end
 		end
 
-	update (a_window: EV_WINDOW) is
+	update (a_window: EV_WINDOW)
 			-- Update `accelerator' and interfaces according to `referred_shortcut'.
 		local
 			mname: STRING_GENERAL
@@ -254,7 +254,7 @@ feature -- Setting
 			end
 		end
 
-	ensure_display_in_widget_owner is
+	ensure_display_in_widget_owner
 			-- If Current is selected, ensure Current is displayed in `widget_owner' if `widget_owner' is attached.
 		do
 			if selected and then widget_owner /= Void then
@@ -263,7 +263,7 @@ feature -- Setting
 			end
 		end
 
-	set_should_displayer_be_recycled (b: BOOLEAN) is
+	set_should_displayer_be_recycled (b: BOOLEAN)
 			-- Set `should_displayer_be_recycled' with `b'.
 		do
 			should_displayer_be_recycled := b
@@ -273,7 +273,7 @@ feature -- Setting
 
 feature -- Formatting
 
-	format is
+	format
 			-- Refresh `widget' if `must_format' and `selected'.
 		deferred
 		end
@@ -281,7 +281,7 @@ feature -- Formatting
 	last_was_error: BOOLEAN
 			-- Did an error occur during the last attempt to format?
 
-	set_must_format (b: BOOLEAN) is
+	set_must_format (b: BOOLEAN)
 			-- Set `must_format' with `b'.
 		do
 			must_format := b
@@ -291,17 +291,17 @@ feature -- Formatting
 
 feature -- Interface
 
-	symbol: ARRAY [EV_PIXMAP] is
+	symbol: ARRAY [EV_PIXMAP]
 			-- Pixmaps for the default button (1 is color, 2 is grey, if any).
 		deferred
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representation.
 		deferred
 		end
 
-	new_standalone_menu_item: EV_RADIO_MENU_ITEM is
+	new_standalone_menu_item: EV_RADIO_MENU_ITEM
 			-- Create a new menu item.
 		local
 			mname: STRING_GENERAL
@@ -326,7 +326,7 @@ feature -- Interface
 			new_menu_item_not_void: Result /= Void
 		end
 
-	new_button: EV_TOOL_BAR_RADIO_BUTTON is
+	new_button: EV_TOOL_BAR_RADIO_BUTTON
 			-- Create a new tool bar button representing `Current'.
 		local
 			tt: STRING_GENERAL
@@ -345,7 +345,7 @@ feature -- Interface
 			Result.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 		end
 
-	new_sd_button: SD_TOOL_BAR_RADIO_BUTTON is
+	new_sd_button: SD_TOOL_BAR_RADIO_BUTTON
 			-- Create a new tool bar button representing `Current'
 		local
 			tt: STRING_GENERAL
@@ -369,7 +369,7 @@ feature -- Interface
 
 feature -- Pop up
 
-	popup is
+	popup
 			-- Make `widget' visible.
 		do
 			if widget_owner /= Void then
@@ -385,7 +385,7 @@ feature -- Pop up
 	widget_owner: ES_FORMATTER_TOOL_PANEL_BASE
 			-- Container of `widget'.
 
-	set_widget_owner (new_owner: like widget_owner) is
+	set_widget_owner (new_owner: like widget_owner)
 			-- Set `widget_owner' to `new_owner'.
 		do
 			widget_owner := new_owner
@@ -393,7 +393,7 @@ feature -- Pop up
 
 feature -- Actions
 
-	on_shown is
+	on_shown
 			-- `Widget's parent is displayed.
 		do
 			internal_displayed := True
@@ -406,13 +406,13 @@ feature -- Actions
 			end
 		end
 
-	on_hidden is
+	on_hidden
 			-- `Widget's parent is hidden.
 		do
 			internal_displayed := False
 		end
 
-	execute_with_stone (a_stone: STONE) is
+	execute_with_stone (a_stone: STONE)
 			-- Notify `manager' of the dropping of `stone'.
 		do
 			if not selected then
@@ -424,7 +424,7 @@ feature -- Actions
 
 feature -- Commands
 
-	execute is
+	execute
 			-- Execute as a command.
 		do
 			enable_select
@@ -434,13 +434,13 @@ feature -- Commands
 			post_execution_action.call (Void)
 		end
 
-	save_in_file is
+	save_in_file
 			-- Save output format into a file.
 		do
 --|FIXME XR: To be implemented.		
 		end
 
-	display_header is
+	display_header
 			-- Show header for current formatter.
 		do
 			if output_line /= Void then
@@ -458,12 +458,12 @@ feature -- Commands
 
 feature -- Stonable
 
-	refresh is
+	refresh
 			-- Do nothing.
 		do
 		end
 
-	force_stone (a_stone: STONE) is
+	force_stone (a_stone: STONE)
 			-- Directly set `stone' with `a_stone'
 		do
 			stone := a_stone
@@ -477,7 +477,7 @@ feature -- Stonable
 
 feature -- Loacation
 
-	fresh_position is
+	fresh_position
 			-- Fresh stone position
 		do
 			if manager.stone /= Void then
@@ -494,7 +494,7 @@ feature -- Loacation
 
 feature -- Agents
 
-	popup_actions: ACTION_SEQUENCE [TUPLE] is
+	popup_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when current format `popup's.
 		do
 			if popup_actions_internal = Void then
@@ -507,7 +507,7 @@ feature -- Agents
 
 feature {NONE} -- Location
 
-	fresh_old_formatter is
+	fresh_old_formatter
 			-- Fresh old formatter position
 		local
 			l_formatter: EB_FORMATTER
@@ -518,7 +518,7 @@ feature {NONE} -- Location
 			end
 		end
 
-	save_manager_position is
+	save_manager_position
 			-- Save container and position in manager
 		do
 			if stone /= Void then
@@ -529,14 +529,14 @@ feature {NONE} -- Location
 			manager.set_previous_pos_container (Current)
 		end
 
-	setup_viewpoint is
+	setup_viewpoint
 			-- Setup viewpoint for formatting.
 		deferred
 		end
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			manager := Void
@@ -566,7 +566,7 @@ feature {NONE} -- Implementation
 	cur_wid: EV_WIDGET
 			-- Widget on which the hourglass cursor was set.
 
-	displayed: BOOLEAN is
+	displayed: BOOLEAN
 			-- Is `widget' displayed?
 		do
 			Result := selected and then internal_displayed
@@ -579,13 +579,13 @@ feature {NONE} -- Implementation
 			-- Is a call to `format' really necessary?
 			-- (i.e. has the stone changed since last call?)
 
-	display_info (str: STRING) is
+	display_info (str: STRING)
 			-- Print `str' in `output_line'.
 		do
 			output_line.set_text (str)
 		end
 
-	display_temp_header is
+	display_temp_header
 			-- Display a temporary header during the format processing.
 			-- Display a hourglass-shaped cursor.
 		do
@@ -605,17 +605,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 			-- Text displayed in the ouput_line when current formatter is displayed.
 		deferred
 		end
 
-	temp_header: STRING_GENERAL is
+	temp_header: STRING_GENERAL
 			-- Text displayed in the ouput_line when current formatter is working.
 		deferred
 		end
 
-	file_name: FILE_NAME is
+	file_name: FILE_NAME
 			-- Name of the file in which displayed information may be stored
 		require
 			element_name_attached: element_name /= Void
@@ -626,7 +626,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	post_fix: STRING is
+	post_fix: STRING
 			-- Postfix name of current format.
 			-- Used as an extension while saving.
 		deferred
@@ -635,14 +635,14 @@ feature {NONE} -- Implementation
 			valid_extension: Result.count <= 3
 		end
 
-	Tabulation: STRING is "%T"
-	Opening_parenthesis: STRING is " ("
-	Closing_parenthesis: STRING is ")"
+	Tabulation: STRING = "%T"
+	Opening_parenthesis: STRING = " ("
+	Closing_parenthesis: STRING = ")"
 
-	has_breakpoints: BOOLEAN is deferred end
+	has_breakpoints: BOOLEAN deferred end
 		-- Should `Current' display breakpoints?
 
-	line_numbers_allowed: BOOLEAN is deferred end
+	line_numbers_allowed: BOOLEAN deferred end
 		-- Does it make sense to show line numbers in Current?
 
 	popup_actions_internal: like popup_actions
@@ -651,7 +651,7 @@ feature {NONE} -- Implementation
 	internal_empty_widget: EV_WIDGET
 			-- Widget displayed when no information can be displayed.	
 
-	new_empty_widget is
+	new_empty_widget
 			-- Initialize a default empty_widget.
 		local
 			l_frame: EV_FRAME
@@ -667,12 +667,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_sorting_order is
+	retrieve_sorting_order
 			-- Retrieve last recored sorting order.
 		do
 		end
 
-	actual_veto_format_result: BOOLEAN is
+	actual_veto_format_result: BOOLEAN
 			-- Actual veto format result.
 			-- i.e., if `veto_format_function' is Void, always allow format to go on.
 		do
@@ -683,13 +683,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	veto_pebble_function (a_any: ANY): BOOLEAN is
+	veto_pebble_function (a_any: ANY): BOOLEAN
 			-- Veto pebble function
 		do
 			Result := actual_veto_format_result
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

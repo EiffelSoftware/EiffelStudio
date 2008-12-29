@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Set all specified values back to default."
@@ -25,7 +25,7 @@ create
 
 feature -- Creation
 
-	make_loop (parent: EWB_LOOP) is
+	make_loop (parent: EWB_LOOP)
 			-- Create menu-option with link
 			-- to `parent'
 		do
@@ -34,13 +34,13 @@ feature -- Creation
 
 feature {NONE} -- Execute
 
-	loop_action is
+	loop_action
 			-- Execute the command.
 		do
 			execute;
 		end;
 
-	execute is
+	execute
 			-- Reset all menu options to default.
 		local
 			ewb_cmd: EWB_CMD;
@@ -72,7 +72,7 @@ feature {NONE} -- Attributes
 		-- The manin menu with all sub menus.
 		-- Needed for reinitialization of the options in this menu.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

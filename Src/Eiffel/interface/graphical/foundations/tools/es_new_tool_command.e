@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A command used to show a tool through a tool shim {ES_TOOL} descendants.
 	]"
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tool: like new_tool) is
+	make (a_tool: like new_tool)
 			-- Creation method.
 		require
 			a_tool_attached: a_tool /= Void
@@ -105,7 +105,7 @@ feature {NONE} -- Helpers
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute command (toggle between show and hide).
 		local
 			l_shared: SD_SHARED
@@ -128,7 +128,7 @@ feature -- Execution
 
 feature -- Factory
 
-	new_sd_toolbar_item (a_display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (a_display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 		do
 			create Result.make (Current)
@@ -156,7 +156,7 @@ feature {NONE} -- Internationalization
 invariant
 	tool_type_attached: not is_recycled implies tool_type /= Void
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

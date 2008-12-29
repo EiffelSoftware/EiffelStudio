@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Internal representation of class POINTER and TYPED_POINTER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l: like original_class; a_is_typed_pointer: like is_typed_pointer) is
+	make (l: like original_class; a_is_typed_pointer: like is_typed_pointer)
 			-- Creation of POINTER_B instance where `is_typed_pointer' is initialized
 			-- with `a_is_typed_pointer'.
 		do
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	actual_type: BASIC_A is
+	actual_type: BASIC_A
 			-- Actual double type
 		local
 			l_formal: FORMAL_A
@@ -46,7 +46,7 @@ feature -- Access
 			end
 		end
 
-	constraint_actual_type: BASIC_A is
+	constraint_actual_type: BASIC_A
 			-- Actual double type
 		do
 			if generics = Void then
@@ -65,7 +65,7 @@ feature -- Access
 
 feature {CLASS_TYPE_AS} -- Actual class type
 
-	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp: BOOLEAN; is_sep: BOOLEAN): CL_TYPE_A is
+	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp: BOOLEAN; is_sep: BOOLEAN): CL_TYPE_A
 			-- Actual type of `current depending on the context in which it is declared
 			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
 			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
@@ -85,7 +85,7 @@ feature {CLASS_TYPE_AS} -- Actual class type
 
 feature -- Validity
 
-	check_validity is
+	check_validity
 			-- Check validity of a simple type reference class.
 		local
 			skelet: SKELETON
@@ -140,7 +140,7 @@ feature -- Validity
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

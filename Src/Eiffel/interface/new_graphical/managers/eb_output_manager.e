@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Manager for output and error messages"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,150 +16,150 @@ inherit
 
 feature -- Basic Operations / Generic purpose
 
-	clear is
+	clear
 			-- Clear the window.
 		deferred
 		end
 
-	clear_general is
+	clear_general
 			-- Clear the general window.
 		do
 			clear
 		end
 
-	scroll_to_end is
+	scroll_to_end
 			-- Scroll to end of text.
 		deferred
 		end
 
 feature {NONE} -- Text formatter
 
-	process_basic_text (text: STRING_GENERAL) is
+	process_basic_text (text: STRING_GENERAL)
 			-- Process default basic text `t'.
 		do
 		end
 
-	process_quoted_text (text: STRING_GENERAL) is
+	process_quoted_text (text: STRING_GENERAL)
 			-- Process the quoted `text' within a comment.
 		do
 		end
 
-	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL) is
+	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL)
 			-- Process comment text.
 			-- `url' is possible url, which can be void if none.
 		do
 		end
 
-	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN) is
+	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
 			-- Process class name of `a_class'.
 		do
 		end
 
-	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
 			-- Process cluster name of `a_cluster'.
 		do
 		end
 
-	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET) is
+	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET)
 			-- Process target name text `text'.
 		do
 		end
 
-	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C) is
+	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C)
 			-- Process feature name text `text'.
 		do
 		end
 
-	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN) is
+	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
 			-- Process feature text `text'.
 		do
 		end
 
-	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN) is
+	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN)
 			-- Process breakpoint index `a_index'.
 		do
 		end
 
-	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER) is
+	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER)
 			-- Process breakpoint.
 		do
 		end
 
-	process_padded is
+	process_padded
 			-- Process padded item at start of non breakpoint line.
 		do
 		end
 
-	process_new_line is
+	process_new_line
 			-- Process new line.
 		do
 		end
 
-	process_indentation (a_indent_depth: INTEGER) is
+	process_indentation (a_indent_depth: INTEGER)
 			-- Process indentation `t'.
 		do
 		end
 
-	process_after_class (a_class: CLASS_C) is
+	process_after_class (a_class: CLASS_C)
 			-- Process after class `a_class'.
 		do
 		end
 
-	process_before_class (a_class: CLASS_C) is
+	process_before_class (a_class: CLASS_C)
 			-- Process before class `a_class'.
 		do
 		end
 
-	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN) is
+	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN)
 			-- Process filter text `t'.
 		do
 		end
 
-	process_symbol_text (text: STRING_GENERAL) is
+	process_symbol_text (text: STRING_GENERAL)
 			-- Process symbol text.
 		do
 		end
 
-	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
+	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process keyword text.
 			-- `a_feature' is possible feature.
 		do
 		end
 
-	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
+	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process operator text.
 			-- `a_feature' can be void.
 		do
 		end
 
-	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C) is
+	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C)
 			-- Process address text.
 		do
 		end
 
-	process_error_text (text: STRING_GENERAL; a_error: ERROR) is
+	process_error_text (text: STRING_GENERAL; a_error: ERROR)
 			-- Process error text.
 		do
 		end
 
-	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C) is
+	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
 			-- Process class syntax text.
 		do
 		end
 
 feature -- Basic Operations / Information message
 
-	display_system_info is
+	display_system_info
 			-- Print information about the current project.
 		deferred
 		end
 
-	display_application_status is
+	display_application_status
 			-- Display the application status.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

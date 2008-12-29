@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Recent project preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {EB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -26,7 +26,7 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature -- Value
 
-	last_opened_projects: ARRAY [STRING] is
+	last_opened_projects: ARRAY [STRING]
 			-- List of last opened projects	
 		do
 			Result := last_opened_projects_preference.value
@@ -38,11 +38,11 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 feature {EB_RECENT_PROJECTS_MANAGER} -- Preference Strings
 
-	last_opened_projects_string: STRING is "recent_projects.last_opened_projects"
+	last_opened_projects_string: STRING = "recent_projects.last_opened_projects"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 invariant
 	preferences_not_void: preferences /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

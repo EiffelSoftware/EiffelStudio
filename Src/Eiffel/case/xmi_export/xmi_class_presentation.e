@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Graphical representation of an XMI class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make (id: INTEGER; c: XMI_CLASS; x, y: INTEGER) is
+	make (id: INTEGER; c: XMI_CLASS; x, y: INTEGER)
 			-- Initialize `Current'.
 		do	
 			xmi_id := id
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Action
 
-	code: STRING is
+	code: STRING
 			-- XMI representation of the presentation.
 		do
 			Result := "<Foundation.Auxiliary_Elements.Presentation xmi.id='G."
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 	width: INTEGER;
 			-- Width of the class in Rose.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

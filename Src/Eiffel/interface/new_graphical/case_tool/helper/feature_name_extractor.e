@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	feature_name (a_feature: FEATURE_AS): STRING is
+	feature_name (a_feature: FEATURE_AS): STRING
 			-- Return name of `a_feature' (i.e. "feature_name")
 		require
 			a_feature_not_void: a_feature /= Void
@@ -24,7 +24,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	feature_names (a_feature: FEATURE_AS): LIST [STRING] is
+	feature_names (a_feature: FEATURE_AS): LIST [STRING]
 			-- Return all names of `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -52,7 +52,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	full_signature_compiled (a_feature: E_FEATURE): STRING is
+	full_signature_compiled (a_feature: E_FEATURE): STRING
 			-- Parameter of `a_feature'. (i.e. (foo: LIST [BAR], bar: BAR): INTEGER
 		require
 			a_feature_not_void: a_feature /= Void
@@ -66,7 +66,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	full_name_compiled (a_feature: E_FEATURE): STRING is
+	full_name_compiled (a_feature: E_FEATURE): STRING
 			-- Full name of `a_feature' (i.e. "feature_name (foo: FOO): LIST [FOO, BAR [FOO2]]")
 		require
 			a_feature_not_void: a_feature /= Void
@@ -76,7 +76,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	full_name (a_feature: FEATURE_AS): STRING is
+	full_name (a_feature: FEATURE_AS): STRING
 			-- Full name of `a_feature' (i.e. "feature_name: LIST [FOO, BAR [FOO2]]")
 			-- without parameters.
 		require
@@ -90,7 +90,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	full_signature (a_feature: FEATURE_AS): STRING is
+	full_signature (a_feature: FEATURE_AS): STRING
 			-- Full signature of `a_feature' (i.e. : INTEGER [FOO [BAR], INTEGER])
 		local
 			l_body: BODY_AS
@@ -107,7 +107,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	suppliers_name_compiled (a_type: TYPE_A): STRING is
+	suppliers_name_compiled (a_type: TYPE_A): STRING
 			-- Try to extract as good as possible all supplier names
 			-- from `a_type'
 		require
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	suppliers_name (a_type: TYPE_AS): STRING is
+	suppliers_name (a_type: TYPE_AS): STRING
 			-- Try to extract as good as possible all supplier names
 			-- from `a_type'
 		require
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	supplier_name (sup: CLASS_I): STRING is
+	supplier_name (sup: CLASS_I): STRING
 			-- Name of `sup'.
 		do
 			if sup /= Void then
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

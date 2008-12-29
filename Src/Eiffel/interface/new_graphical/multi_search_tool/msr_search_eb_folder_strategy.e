@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Strategy search in a folder of a group"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ feature -- Initialization
 	make (a_keyword: like keyword;
 			a_range: like surrounding_text_range;
 			a_folder: like folder;
-			only_compiled_class: like only_compiled_class_searched) is
+			only_compiled_class: like only_compiled_class_searched)
 			-- Initialization
 		require
 			a_folder_not_void: a_folder /= Void
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_folder (a_folder: like folder) is
+	set_folder (a_folder: like folder)
 			-- Set `folder' with `a_folder'.
 		require
 			a_folder_not_void: a_folder /= Void
@@ -63,7 +63,7 @@ feature -- Element change
 
 feature -- Search
 
-	launch is
+	launch
 			-- Launch searching
 		local
 			l_ql_group: QL_GROUP
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

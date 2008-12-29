@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Window to create dynamic libraries"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ create {EB_WINDOW_MANAGER}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new tool with `man' as manager.
 		do
 				-- Vision2 initialization
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			create exports.make (10)
 		end
 
-	build_menus is
+	build_menus
 			-- Build all menus.
 		do
 				-- Build each menu
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			build_menu_bar
 		end
 
-	build_interface is
+	build_interface
 		local
 			vb: EV_VERTICAL_BOX
 			w: INTEGER
@@ -151,13 +151,13 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	init_size_and_position is
+	init_size_and_position
 			-- Retrieve the size of `Current' from the preferences and affect it.
 		do
 			window.set_size (initial_width, initial_height)
 		end
 
-	init_commands is
+	init_commands
 			-- Create all the commands `Current' uses.
 		local
 			kcsts: EV_KEY_CONSTANTS
@@ -248,7 +248,7 @@ feature {NONE} -- Initialization
 			check_exports_cmd.enable_sensitive
 		end
 
-	build_file_menu is
+	build_file_menu
 			-- Create and build `file_menu'.
 		local
 			menu_item: EV_MENU_ITEM
@@ -281,7 +281,7 @@ feature {NONE} -- Initialization
 			file_menu.extend (menu_item)
 		end
 
-	build_edit_menu is
+	build_edit_menu
 			-- Generate `edit_menu'.
 		local
 			command_menu_item: EB_COMMAND_MENU_ITEM
@@ -305,7 +305,7 @@ feature {NONE} -- Initialization
 			auto_recycle (command_menu_item)
 		end
 
-	build_menu_bar is
+	build_menu_bar
 			-- Generate `menu_bar' and fill it with the correct menus.
 		local
 			mb: EV_MENU_BAR
@@ -316,7 +316,7 @@ feature {NONE} -- Initialization
 			window.set_menu_bar (mb)
 		end
 
-	build_tool_bar is
+	build_tool_bar
 			-- Create `toolbar' and display it.
 		local
 			tb: SD_TOOL_BAR
@@ -367,7 +367,7 @@ feature {NONE} -- Initialization
 			tb.compute_minimum_size
 		end
 
-	enable_accelerators is
+	enable_accelerators
 			-- Enable the accelerators of all commands.
 		local
 			acc: EV_ACCELERATOR
@@ -408,7 +408,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing Current window.
 		do
 			Result := pixmaps.icon_pixmaps.general_dialog_icon
@@ -419,13 +419,13 @@ feature -- Access
 
 feature -- Status setting
 
-	give_focus is
+	give_focus
 			-- Grab the focus.
 		do
 			exports_list.set_focus
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			if changed and not confirmed then
@@ -438,7 +438,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	save is
+	save
 			-- Save `Current's state into a .def file.
 			-- May be cancelled by the user.
 		do
@@ -447,13 +447,13 @@ feature -- Basic operations
 
 feature -- Stone process
 
-	refresh is
+	refresh
 			-- Synchronize the display with the internal dynamic library representation.
 		do
 			refresh_list
 		end
 
-	synchronize is
+	synchronize
 			-- A compilation is over, update `Current's internal state.
 		local
 			exp: DYNAMIC_LIB_EXPORT_FEATURE
@@ -492,7 +492,7 @@ feature {NONE} -- Status
 
 feature {NONE} -- Implementation: File operations
 
-	open_def_file is
+	open_def_file
 			-- Let the user select a `.def' file and open it.
 			-- Cancelling is possible.
 		do
@@ -504,7 +504,7 @@ feature {NONE} -- Implementation: File operations
 			end
 		end
 
-	save_def_file is
+	save_def_file
 			-- Write the contents of `Current' to `file_name' if any,
 			-- Prompt the user for a file name otherwise.
 			-- Cancelling is possible.
@@ -520,7 +520,7 @@ feature {NONE} -- Implementation: File operations
 			end
 		end
 
-	save_def_file_as is
+	save_def_file_as
 			-- Prompt the user for a file name and save the contents of `Current' to it.
 			-- Cancelling is possible.
 		local
@@ -535,7 +535,7 @@ feature {NONE} -- Implementation: File operations
 			end
 		end
 
-	new_def_file is
+	new_def_file
 			-- Prompt the user for a file name and create a new `.def' file.
 			-- Cancelling is possible.
 		do
@@ -547,7 +547,7 @@ feature {NONE} -- Implementation: File operations
 			end
 		end
 
-	actually_save is
+	actually_save
 			-- Save the definition whether or not there are errors.
 		do
 			save_ok := False
@@ -558,7 +558,7 @@ feature {NONE} -- Implementation: File operations
 			end
 		end
 
-	force_destroy is
+	force_destroy
 			-- Destroy without asking.
 		do
 			confirmed := True
@@ -570,7 +570,7 @@ feature {NONE} -- Implementation: File operations
 
 feature {NONE} -- Implementation: Feature operations
 
-	add_feature is
+	add_feature
 			-- Prompt the user for a feature to add to the list.
 			-- May be cancelled.
 		do
@@ -578,7 +578,7 @@ feature {NONE} -- Implementation: Feature operations
 			properties_dialog.show_modal_to_window (window)
 		end
 
-	drop_feature (fst: FEATURE_STONE) is
+	drop_feature (fst: FEATURE_STONE)
 			-- Add the dropped feature associated to `fst' to the list.
 			-- Prompt the user for the creation routine, if necessary.
 			-- May be cancelled.
@@ -598,7 +598,7 @@ feature {NONE} -- Implementation: Feature operations
 			end
 		end
 
-	edit_selected_feature is
+	edit_selected_feature
 			-- Modify the exportation properties of the selected feature.
 		local
 			sel: EV_MULTI_COLUMN_LIST_ROW
@@ -614,7 +614,7 @@ feature {NONE} -- Implementation: Feature operations
 			end
 		end
 
-	remove_selected_feature is
+	remove_selected_feature
 			-- Remove the selected feature from the exported features.
 		local
 			sel: EV_MULTI_COLUMN_LIST_ROW
@@ -632,7 +632,7 @@ feature {NONE} -- Implementation: Feature operations
 			end
 		end
 
-	check_exported_features is
+	check_exported_features
 			-- Check the validity of the exported features,
 			-- both one at a time and globally.
 		local
@@ -653,7 +653,7 @@ feature {NONE} -- Implementation: Feature operations
 			end
 		end
 
-	reset is
+	reset
 			-- Wipe out all data (`file_name', `exports' and `exports_list').
 		do
 			exports.wipe_out
@@ -663,14 +663,14 @@ feature {NONE} -- Implementation: Feature operations
 
 feature {NONE} -- Implementation: Basic event handling
 
-	item_selected (it: EV_MULTI_COLUMN_LIST_ROW) is
+	item_selected (it: EV_MULTI_COLUMN_LIST_ROW)
 			-- An item was selected in `exports_list'. Enable the related commands.
 		do
 			edit_feature_cmd.enable_sensitive
 			remove_feature_cmd.enable_sensitive
 		end
 
-	item_deselected (it: EV_MULTI_COLUMN_LIST_ROW) is
+	item_deselected (it: EV_MULTI_COLUMN_LIST_ROW)
 			-- An item was selected in `exports_list'. Enable the related commands.
 		do
 			edit_feature_cmd.disable_sensitive
@@ -709,19 +709,19 @@ feature {NONE} -- Implementation: Graphical interface
 	check_exports_cmd: EB_STANDARD_CMD
 			-- Command to check the validity of the library definition as a whole.
 
-	initial_width: INTEGER is
+	initial_width: INTEGER
 			-- Initial width for the dialog.
 		do
 			Result := preferences.misc_data.dyn_lib_window_width
 		end
 
-	initial_height: INTEGER is
+	initial_height: INTEGER
 			-- Initial width for the dialog.
 		do
 			Result := preferences.misc_data.dyn_lib_window_height
 		end
 
-	save_width_and_height is
+	save_width_and_height
 			-- Save current width and height to the preferences.
 		do
 			preferences.misc_data.dyn_lib_window_width_preference.set_value (window.width)
@@ -731,7 +731,7 @@ feature {NONE} -- Implementation: Graphical interface
 						initial_height = window.height
 		end
 
-	refresh_list is
+	refresh_list
 			-- Refresh `exports_list' according to `exports'.
 		local
 			sel: EV_MULTI_COLUMN_LIST_ROW
@@ -751,7 +751,7 @@ feature {NONE} -- Implementation: Graphical interface
 			end
 		end
 
-	feature_to_row (exp: DYNAMIC_LIB_EXPORT_FEATURE): EV_MULTI_COLUMN_LIST_ROW is
+	feature_to_row (exp: DYNAMIC_LIB_EXPORT_FEATURE): EV_MULTI_COLUMN_LIST_ROW
 			-- Convert `exp' into a row for `exports_list'.
 		require
 			feature_not_void: exp /= Void
@@ -792,11 +792,11 @@ feature {NONE} -- Implementation: Graphical interface
 			end
 		end
 
-	empty_string: STRING is ""
+	empty_string: STRING = ""
 
 feature {NONE} -- Implementation: Creation routine selection
 
-	choose_creation_routine (next_action: PROCEDURE [ANY, TUPLE]) is
+	choose_creation_routine (next_action: PROCEDURE [ANY, TUPLE])
 			-- If possible, find a valid creation routine of `current_class',
 			-- and set `current_creation_routine' after asking the user if necessary.
 			-- Call `next_action' iff a creation routine was chosen.
@@ -821,7 +821,7 @@ feature {NONE} -- Implementation: Creation routine selection
 			end
 		end
 
-	valid_creation_routines (cl:CLASS_C): LIST [E_FEATURE] is
+	valid_creation_routines (cl:CLASS_C): LIST [E_FEATURE]
 			-- Calculate the list of valid creation procedure.
 		require
 			valid_class_c: cl /= Void and then cl.has_feature_table
@@ -859,7 +859,7 @@ feature {NONE} -- Implementation: Creation routine selection
 			only_valid_creation_routines: Result.for_all (agent valid_creation_routine (?, cl))
 		end
 
-	display_creation_routine_choice is
+	display_creation_routine_choice
 			-- Display feature names from `creation_routine_list' to `choice'.
 		require
 			feature_list_not_void: creation_routine_list /= Void
@@ -895,7 +895,7 @@ feature {NONE} -- Implementation: Creation routine selection
 			end
 		end
 
-	process_creation_routine_callback (pos: INTEGER) is
+	process_creation_routine_callback (pos: INTEGER)
 			-- The choice `pos' has been selected, process the choice.
 		require
 			looking_for_a_creation_routine: creation_routine_list /= Void
@@ -915,7 +915,7 @@ feature {NONE} -- Implementation: Creation routine selection
 
 feature {NONE} -- Implementation: Low_level dialog, file operations
 
-	save_to_dynamic_lib is
+	save_to_dynamic_lib
 			-- Save the current `exports' to `dynamic_library'.
 		local
 			exp: DYNAMIC_LIB_EXPORT_FEATURE
@@ -937,7 +937,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			end
 		end
 
-	save_dynamic_lib is
+	save_dynamic_lib
 			-- Write the contents of `dynamic_lib' to `file_name'.
 		require
 			valid_dynamic_library: dynamic_library /= Void
@@ -973,7 +973,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 	load_ok: BOOLEAN
 			-- Was the last load effective?
 
-	load_dynamic_lib is
+	load_dynamic_lib
 			-- Initialize `dynamic_lib' from `file_name'.
 		local
 			rescued: BOOLEAN
@@ -1006,7 +1006,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			retry
 		end
 
-	load_from_dynamic_lib is
+	load_from_dynamic_lib
 			-- Retrieve the information in `dynamic_library' definition to initialize `Current'.
 		require
 			dynamic_library_initialized: dynamic_library /= Void
@@ -1037,7 +1037,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			load_ok := True
 		end
 
-	ask_for_file_name (load: BOOLEAN; next_action: PROCEDURE [ANY, TUPLE]) is
+	ask_for_file_name (load: BOOLEAN; next_action: PROCEDURE [ANY, TUPLE])
 			-- Prompt the user for a `.def' file, set `file_name' to the chosen file name, and execute `next_action'.
 			-- If `load' then we assume we want to open a file. Otherwise we want to save it.
 		local
@@ -1064,7 +1064,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			dd.show_modal_to_window (window)
 		end
 
-	file_was_chosen (dd: EB_FILE_DIALOG) is
+	file_was_chosen (dd: EB_FILE_DIALOG)
 			-- The user selected a file in `dd'.
 			-- Set `file_name' accordingly and call `file_call_back'.
 		require
@@ -1092,7 +1092,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 
 feature {NONE} -- Implementation: Feature creation
 
-	generate_new_exported_feature is
+	generate_new_exported_feature
 			-- Effectively add an element to `exports' and `exports_list'.
 		require
 			valid_export: valid_export_parameters (current_class, current_creation_routine, current_feature,
@@ -1141,7 +1141,7 @@ feature {NONE} -- Implementation: Feature creation
 
 feature {NONE} -- Implementation: Properties dialog
 
-	create_properties_dialog (for_modification: BOOLEAN) is
+	create_properties_dialog (for_modification: BOOLEAN)
 			-- Generate `properties_dialog' and if `for_modification', give it a layout of modification dialog.
 		require
 			possible_to_modify: for_modification implies modified_exported_feature /= Void and then
@@ -1327,7 +1327,7 @@ feature {NONE} -- Implementation: Properties dialog
 			dialog_created: valid_properties_dialog
 		end
 
-	valid_properties_dialog: BOOLEAN is
+	valid_properties_dialog: BOOLEAN
 			-- Contract support.
 		do
 			Result := properties_dialog /= Void and
@@ -1338,7 +1338,7 @@ feature {NONE} -- Implementation: Properties dialog
 			end
 		end
 
-	initialize_modification_dialog is
+	initialize_modification_dialog
 			-- Fill in the fields of `properties_dialog' according to `modified_exported_feature'.
 		require
 			properties_dialog_created: valid_properties_dialog
@@ -1394,7 +1394,7 @@ feature {NONE} -- Implementation: Properties dialog
 			end
 		end
 
-	on_modification_ok is
+	on_modification_ok
 			-- Check if the modified feature is valid enough,
 			-- update `modified_exported_feature' if necessary.
 		require
@@ -1465,7 +1465,7 @@ feature {NONE} -- Implementation: Properties dialog
 			end
 		end
 
-	may_enable_ok_button is
+	may_enable_ok_button
 			-- Depending on the content of `properties', enable or disable
 			-- default push button. Enabled when both class and feature text
 			-- field are filled, disabled otherwise.
@@ -1479,7 +1479,7 @@ feature {NONE} -- Implementation: Properties dialog
 			end
 		end
 
-	on_creation_ok is
+	on_creation_ok
 			-- Check if the modified feature is valid enough,
 			-- update `modified_exported_feature' if necessary.
 		require
@@ -1560,7 +1560,7 @@ feature {NONE} -- Implementation: Properties dialog
 			end
 		end
 
-	new_class_name (is_enter_pressed: BOOLEAN) is
+	new_class_name (is_enter_pressed: BOOLEAN)
 			-- A new class name was entered in `class_field'.
 			-- Update the creation routines list if possible.
 		require
@@ -1647,7 +1647,7 @@ feature {NONE} -- Implementation: Properties dialog
 
 feature {NONE} -- Implementation: checks
 
-	valid_exported_feature (exp: DYNAMIC_LIB_EXPORT_FEATURE): BOOLEAN is
+	valid_exported_feature (exp: DYNAMIC_LIB_EXPORT_FEATURE): BOOLEAN
 			-- Is `exp' a valid export feature?
 		do
 			Result := valid_export_parameters (exp.compiled_class, exp.creation_routine, exp.routine,
@@ -1655,7 +1655,7 @@ feature {NONE} -- Implementation: checks
 		end
 
 	valid_export_parameters (cl: CLASS_C; cr: E_FEATURE; f: E_FEATURE;
-							al: STRING; ind: INTEGER; cc: STRING): BOOLEAN is
+							al: STRING; ind: INTEGER; cc: STRING): BOOLEAN
 			-- Is the export feature defined by these parameters valid?
 			-- `cl': its class, `cr': the creation routine, `f': the exported feature,
 			-- `ind': the index, `al': an alias name, `cc': the calling convention.
@@ -1673,7 +1673,7 @@ feature {NONE} -- Implementation: checks
 						((cc /= Void and then not cc.is_empty) implies valid_calling_convention (cc))
 		end
 
-	conflicting_exports: BOOLEAN is
+	conflicting_exports: BOOLEAN
 			-- Do some exported features present conflicts?
 			-- It may be the case if the exported names are similar, or if indices are similar.
 		local
@@ -1709,7 +1709,7 @@ feature {NONE} -- Implementation: checks
 			end
 		end
 
-	export_definition_problem: INTEGER is
+	export_definition_problem: INTEGER
 			-- Does `Current' represent a valid definition file?
 			-- All exported features must be valid, and there must be no conflict.
 			-- Return the index of an invalid exported feature if there is an invalid feature,
@@ -1733,13 +1733,13 @@ feature {NONE} -- Implementation: checks
 			end
 		end
 
-	valid_class (c: CLASS_C): BOOLEAN is
+	valid_class (c: CLASS_C): BOOLEAN
 			-- Is `c' a valid class to export to a dynamic library?
 		do
 			Result := c /= void and then c.has_feature_table and then not c.is_deferred and then c.generics = Void
 		end
 
-	valid_creation_routine (f: E_FEATURE; cl: CLASS_C): BOOLEAN is
+	valid_creation_routine (f: E_FEATURE; cl: CLASS_C): BOOLEAN
 			-- Is `f' a valid creation routine for `cl'?
 		require
 			valid_class: valid_class (cl)
@@ -1750,7 +1750,7 @@ feature {NONE} -- Implementation: checks
 						f.is_procedure
 		end
 
-	valid_feature (f: E_FEATURE; cl: CLASS_C): BOOLEAN is
+	valid_feature (f: E_FEATURE; cl: CLASS_C): BOOLEAN
 			-- Is `f' a valid feature to export for `cl'?
 		require
 			valid_current_class: valid_class (cl)
@@ -1762,25 +1762,25 @@ feature {NONE} -- Implementation: checks
 						not f.is_external
 		end
 
-	valid_alias (al: STRING): BOOLEAN is
+	valid_alias (al: STRING): BOOLEAN
 			-- Is `al' a valid alias?
 		do
 			Result := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_identifier (al)
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' a valid integer to be an index in a dynamic library?
 		do
 			Result := i > 0
 		end
 
-	valid_calling_convention (cc: STRING): BOOLEAN is
+	valid_calling_convention (cc: STRING): BOOLEAN
 			-- Is `cc' a valid calling convention?
 		do
 			Result := valid_calling_conventions.has (cc)
 		end
 
-	valid_calling_conventions: LIST [STRING] is
+	valid_calling_conventions: LIST [STRING]
 			-- Supported valid calling conventions.
 			--| Only support the VC++ calling conventions, since this tool doesn't generate DLL's for Borland,
 			--| and the calling convention has no meaning for this tool on Unix systems.
@@ -1792,7 +1792,7 @@ feature {NONE} -- Implementation: checks
 			Result.extend ("__stdcall")
 		end
 
-	default_calling_convention: STRING is "__cdecl"
+	default_calling_convention: STRING = "__cdecl"
 			-- Default calling convention when none is specified.
 
 invariant
@@ -1800,7 +1800,7 @@ invariant
 	exports_list_exists: exports_list /= Void
 	graphical_synchronization_ok: exports_list.count = exports.count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

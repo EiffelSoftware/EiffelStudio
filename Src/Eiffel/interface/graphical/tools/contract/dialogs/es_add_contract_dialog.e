@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A dialog to add a new contract to the contract tool {ES_CONTRACT_TOOL}.
 	]"
@@ -274,7 +274,7 @@ invariant
 	contract_tag_is_valid: contract /= Void implies not contract.tag.is_empty
 	contract_tag_is_valid: contract /= Void implies not contract.contract.is_empty
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

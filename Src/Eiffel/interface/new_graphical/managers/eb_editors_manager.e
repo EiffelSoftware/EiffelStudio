@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tabbed editor manager for one window of EiffelStudio"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ create
 
 feature -- Initialization
 
-	make (a_dev_win: EB_DEVELOPMENT_WINDOW) is
+	make (a_dev_win: EB_DEVELOPMENT_WINDOW)
 			-- Initialization
 		require
 			a_dev_win_attached: a_dev_win /= Void
@@ -95,7 +95,7 @@ feature -- Initialization
 
 feature -- Access
 
-	unsaved_editors: like editors_internal is
+	unsaved_editors: like editors_internal
 			-- Unsaved editors
 		local
 			l_editors: like editors
@@ -114,7 +114,7 @@ feature -- Access
 			end
 		end
 
-	current_editor: EB_SMART_EDITOR is
+	current_editor: EB_SMART_EDITOR
 			-- Current editor
 		do
 			if editors_internal.has (last_focused_editor) then
@@ -128,7 +128,7 @@ feature -- Access
 			end
 		end
 
-	editor_with_stone (a_stone: STONE) : like current_editor is
+	editor_with_stone (a_stone: STONE) : like current_editor
 			-- Editor that has `a_stone', or editing the same path file.
 		local
 			l_fake_editor: EB_FAKE_SMART_EDITOR
@@ -146,7 +146,7 @@ feature -- Access
 			end
 		end
 
-	editor_with_class (a_file_name: FILE_NAME) : like current_editor is
+	editor_with_class (a_file_name: FILE_NAME) : like current_editor
 			-- Editor editing a class with `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -176,13 +176,13 @@ feature -- Access
 			end
 		end
 
-	editors: like editors_internal is
+	editors: like editors_internal
 			-- Clone of all editors
 		do
 			Result := editors_internal.twin
 		end
 
-	editor_count: INTEGER is
+	editor_count: INTEGER
 			-- Number of editors under management.
 		do
 			Result := editors_internal.count
@@ -194,7 +194,7 @@ feature -- Access
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Associated development window.
 
-	editor_editing (a_class_i: CLASS_I) : like editors_internal  is
+	editor_editing (a_class_i: CLASS_I) : like editors_internal
 			-- Editors contain `a_class_i'
 		require
 			a_class_i_attached: a_class_i /= Void
@@ -225,7 +225,7 @@ feature -- Access
 	last_created_editor: like current_editor
 			-- Last created editor
 
-	open_classes: HASH_TABLE [STRING, STRING] is
+	open_classes: HASH_TABLE [STRING, STRING]
 			-- Open classes. [ID, title]
 		local
 			l_classc_stone: CLASSC_STONE
@@ -254,7 +254,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	open_fake_classes: HASH_TABLE [STRING, STRING] is
+	open_fake_classes: HASH_TABLE [STRING, STRING]
 			-- Opened classes that in fake editors. [ID, title]
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -289,7 +289,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	open_clusters: HASH_TABLE [STRING, STRING] is
+	open_clusters: HASH_TABLE [STRING, STRING]
 			-- Open clusters. [ID, title]
 		local
 			l_cluster_stone: CLUSTER_STONE
@@ -312,7 +312,7 @@ feature -- Access
 			end
 		end
 
-	open_fake_clusters: HASH_TABLE [STRING, STRING] is
+	open_fake_clusters: HASH_TABLE [STRING, STRING]
 			-- Opened clusters that in fake editors. [ID, title]
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -343,7 +343,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	changed_classes: ARRAYED_LIST [CLASS_I] is
+	changed_classes: ARRAYED_LIST [CLASS_I]
 			-- All classes with unsaved changes
 		require
 			changed: changed
@@ -399,7 +399,7 @@ feature -- Actions
 
 feature {NONE} -- Action handlers
 
-	on_editor_switched (a_editor: EB_SMART_EDITOR) is
+	on_editor_switched (a_editor: EB_SMART_EDITOR)
 			-- Editor is switched.
 		require
 			a_editor_attached: a_editor /= Void
@@ -412,7 +412,7 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_veto_tab_drop_action (a_stone: ANY; a_content: SD_CONTENT): BOOLEAN is
+	on_veto_tab_drop_action (a_stone: ANY; a_content: SD_CONTENT): BOOLEAN
 			-- Veto function for tab area drop actions
 		do
 			-- `a_content' can be void or its type is editor type
@@ -424,7 +424,7 @@ feature {NONE} -- Action handlers
 
 feature -- Status report
 
-	is_class_editing (a_file_name: STRING) : BOOLEAN is
+	is_class_editing (a_file_name: STRING) : BOOLEAN
 			-- Editor editing a class with `a_file_name'
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -457,7 +457,7 @@ feature -- Status report
 			end
 		end
 
-	changed : BOOLEAN is
+	changed : BOOLEAN
 			-- Any editor is changed?
 		local
 			l_editors: like editors_internal
@@ -473,7 +473,7 @@ feature -- Status report
 			end
 		end
 
-	full_loaded: BOOLEAN is
+	full_loaded: BOOLEAN
 			-- Have all editor full loaded?
 		local
 			l_editors: like editors_internal
@@ -496,7 +496,7 @@ feature -- Status report
 	not_backuped: INTEGER
 			-- Number of editors not backuped last time
 
-	stone_acceptable (a_stone: ANY): BOOLEAN is
+	stone_acceptable (a_stone: ANY): BOOLEAN
 			-- Is `a_stone' suitable for a new editor?
 		do
 			if veto_pebble_function_internal /= Void then
@@ -516,7 +516,7 @@ feature -- Status report
 
 feature -- Editor observer
 
-	add_edition_observer (a_text_observer: TEXT_OBSERVER) is
+	add_edition_observer (a_text_observer: TEXT_OBSERVER)
 			-- Add observer for all editors.
 		require
 			a_text_abserver_attached: a_text_observer /= Void
@@ -539,7 +539,7 @@ feature -- Editor observer
 			end
 		end
 
-	add_history_observer (history_observer: UNDO_REDO_OBSERVER) is
+	add_history_observer (history_observer: UNDO_REDO_OBSERVER)
 			-- Add history observer for all editors.
 		require
 			history_observer_attached: history_observer /= Void
@@ -558,7 +558,7 @@ feature -- Editor observer
 			end
 		end
 
-	remove_history_observer (history_observer: UNDO_REDO_OBSERVER) is
+	remove_history_observer (history_observer: UNDO_REDO_OBSERVER)
 			-- Remove observer for all editors.
 		require
 			history_observer_attached: history_observer /= Void
@@ -577,7 +577,7 @@ feature -- Editor observer
 			end
 		end
 
-	add_cursor_observer (a_cursor_observer: TEXT_OBSERVER) is
+	add_cursor_observer (a_cursor_observer: TEXT_OBSERVER)
 			-- Add cursor observer for all editors.
 		require
 			a_cursor_abserver_attached: a_cursor_observer /= Void
@@ -602,13 +602,13 @@ feature -- Editor observer
 
 feature -- Element change
 
-	create_editor is
+	create_editor
 			-- Create a new editor.
 		do
 			create_editor_beside_content (Void, exist_content)
 		end
 
-	create_editor_beside_content (a_stone: STONE; a_content: SD_CONTENT) is
+	create_editor_beside_content (a_stone: STONE; a_content: SD_CONTENT)
 			-- Create an editor beside `a_content'. Meanwile set `a_stone' to the editor if `a_stone' is not void.
 			-- Set top if the a_content is void.
 		local
@@ -625,7 +625,7 @@ feature -- Element change
 			end
 		end
 
-	close_editor (a_editor: like current_editor) is
+	close_editor (a_editor: like current_editor)
 			-- Close an editor.
 		require
 			a_editor_attached: a_editor /= Void
@@ -633,7 +633,7 @@ feature -- Element change
 			on_close (a_editor)
 		end
 
-	close_all_editor is
+	close_all_editor
 			-- Close all editor
 		local
 			l_editors: ARRAYED_LIST [like current_editor]
@@ -651,7 +651,7 @@ feature -- Element change
 			create editors_internal.make (5)
 		end
 
-	set_veto_pebble_function (a_func: FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN]) is
+	set_veto_pebble_function (a_func: FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN])
 			-- Set veto pebble_function for all editors.
 		require
 			a_func_attached: a_func /= Void
@@ -675,7 +675,7 @@ feature -- Element change
 			set: veto_pebble_function_internal = a_func
 		end
 
-	restore_editors (a_open_classes: HASH_TABLE [STRING, STRING]; a_open_clusters: HASH_TABLE [STRING, STRING]): BOOLEAN is
+	restore_editors (a_open_classes: HASH_TABLE [STRING, STRING]; a_open_clusters: HASH_TABLE [STRING, STRING]): BOOLEAN
 			-- Restore editors.
 			-- If really have editors to open, then result is True, otherwise is False
 		require
@@ -763,7 +763,7 @@ feature -- Element change
 	fake_editors: ARRAYED_LIST [EB_SMART_EDITOR]
 			-- Fake editors which is for fast opening Eiffel Studio.
 
-	show_editors_possible is
+	show_editors_possible
 			-- Show editors which are possible to show.
 		local
 			l_snapshot: like fake_editors
@@ -784,7 +784,7 @@ feature -- Element change
 			synchronize_with_docking_manager
 		end
 
-	update_content_description (a_stone: STONE; a_content: SD_CONTENT) is
+	update_content_description (a_stone: STONE; a_content: SD_CONTENT)
 			-- Update `a_content''s detail and description text which are readed from `a_stone'.
 		local
 			l_class_stone: CLASSI_STONE
@@ -830,7 +830,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	select_editor (a_editor: like current_editor; a_force_focus: BOOLEAN) is
+	select_editor (a_editor: like current_editor; a_force_focus: BOOLEAN)
 			-- Give `a_editor' focus.
 			-- `a_force_focus' means if force unmaximized other tool to show `a_editor'.
 		require
@@ -850,7 +850,7 @@ feature -- Basic operations
 			end
 		end
 
-	backup_all is
+	backup_all
 			-- Back up all changed editor.
 		local
 			l_editors: like editors_internal
@@ -867,7 +867,7 @@ feature -- Basic operations
 			end
 		end
 
-	toggle_formatting_marks is
+	toggle_formatting_marks
 			-- Toggle formatting marks.
 		local
 			l_editors: like editors
@@ -889,7 +889,7 @@ feature -- Basic operations
 
 feature -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Memory management
 		local
 			l_editors: like editors
@@ -926,7 +926,7 @@ feature -- Memory management
 			docking_manager.tab_drop_actions.set_veto_pebble_function (Void)
 		end
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- <Precursor>
 		do
 			development_window := Void
@@ -975,7 +975,7 @@ feature {NONE} -- Observer
 	lines_observer_list_internal: ARRAYED_LIST [TEXT_OBSERVER]
 		-- List of editor observers.
 
-	build_observer_lists is
+	build_observer_lists
 			-- Build all internal observer lists.
 		do
 			create edition_observer_list_internal.make (0)
@@ -985,7 +985,7 @@ feature {NONE} -- Observer
 			create lines_observer_list_internal.make (0)
 		end
 
-	add_observers (a_editor: like current_editor) is
+	add_observers (a_editor: like current_editor)
 			-- Add exsiting observers for a new editor.
 		do
 			from
@@ -1025,7 +1025,7 @@ feature {NONE} -- Observer
 
 feature {NONE} -- Agents
 
-	on_focus (a_editor: like current_editor) is
+	on_focus (a_editor: like current_editor)
 			-- Invoke when `a_editor' is focusing.
 		local
 			l_fake_editor: EB_FAKE_SMART_EDITOR
@@ -1061,7 +1061,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_fake_focus (a_editor: like current_editor) is
+	on_fake_focus (a_editor: like current_editor)
 			-- Handle `focus_in_actions' of fake editors.
 		local
 			l_env: EV_ENVIRONMENT
@@ -1075,7 +1075,7 @@ feature {NONE} -- Agents
 			on_focus (a_editor)
 		end
 
-	on_show (a_editor: like current_editor) is
+	on_show (a_editor: like current_editor)
 			-- Handle `show_actions' of fake editors.
 		local
 			l_env: EV_ENVIRONMENT
@@ -1090,7 +1090,7 @@ feature {NONE} -- Agents
 			registed: on_show_imp_agent /= Void
 		end
 
-	on_show_imp (a_editor: like current_editor) is
+	on_show_imp (a_editor: like current_editor)
 			-- Invoke when `a_editor' is shown, and `a_editor' is fake focus editor.
 		local
 			l_last_focused_editor: like last_focused_editor
@@ -1110,7 +1110,7 @@ feature {NONE} -- Agents
 			cleared: on_show_imp_agent = Void
 		end
 
-	on_drop (a_stone: STONE; a_editor: like current_editor) is
+	on_drop (a_stone: STONE; a_editor: like current_editor)
 			-- Invoke when a stone is dropped on `a_editor'.
 		local
 			l_editor : like current_editor
@@ -1140,7 +1140,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_close (a_editor: like current_editor) is
+	on_close (a_editor: like current_editor)
 			-- Closing an editor callback.
 		do
 			if a_editor.changed then
@@ -1179,7 +1179,7 @@ feature {NONE} -- Implementation
 	veto_pebble_function_internal: FUNCTION [ANY, TUPLE [ANY, SD_CONTENT], BOOLEAN]
 			-- Veto pebble function.
 
-	close_editor_perform (a_editor: like current_editor) is
+	close_editor_perform (a_editor: like current_editor)
 			-- Perform closing editor.
 		local
 			l_editors: like editors_internal
@@ -1207,7 +1207,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate_editor (a_editor: like current_editor) is
+	validate_editor (a_editor: like current_editor)
 			-- Locate `a_editor' in `editor_internal'. If not exist, start `editor_internal'.
 		do
 			editors_internal.start
@@ -1217,7 +1217,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	exist_content : SD_CONTENT is
+	exist_content : SD_CONTENT
 			-- A docking content that exists. Void if not.
 		do
 			if not editors_internal.is_empty then
@@ -1225,7 +1225,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	init_editor is
+	init_editor
 			-- Initial an editor.
 		do
 			create last_created_editor.make (development_window)
@@ -1248,7 +1248,7 @@ feature {NONE} -- Implementation
 			formatting_marks_set: show_formatting_marks = last_created_editor.view_invisible_symbols
 		end
 
-	has_editor_with_long_title (a_title: STRING_GENERAL): BOOLEAN is
+	has_editor_with_long_title (a_title: STRING_GENERAL): BOOLEAN
 			-- Does `editors_internal' has a editor's content's long title is `a_title'?
 		local
 			l_editors: like editors_internal
@@ -1266,7 +1266,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_docking_content (a_unique_title: STRING; a_editor: like current_editor; a_content: SD_CONTENT): SD_CONTENT is
+	create_docking_content (a_unique_title: STRING; a_editor: like current_editor; a_content: SD_CONTENT): SD_CONTENT
 			-- Create a docking content with `a_editor' in it.
 			-- This content is set close to a_content if a_content is not void.
 		require
@@ -1293,7 +1293,7 @@ feature {NONE} -- Implementation
 			create_docking_content_not_void: Result /= Void
 		end
 
-	create_docking_content_fake_one (a_unique_title: STRING): SD_CONTENT is
+	create_docking_content_fake_one (a_unique_title: STRING): SD_CONTENT
 			-- Create a fake docking content.
 		require
 			not_void: a_unique_title /= Void
@@ -1318,7 +1318,7 @@ feature {NONE} -- Implementation
 			Result.set_type ({SD_ENUMERATION}.editor)
 		end
 
-	change_fake_to_real (a_editor, a_fake_editor: like current_editor; a_content: SD_CONTENT) is
+	change_fake_to_real (a_editor, a_fake_editor: like current_editor; a_content: SD_CONTENT)
 			-- Change fake editor to real editors.
 		require
 			not_void: a_editor /= Void
@@ -1351,7 +1351,7 @@ feature {NONE} -- Implementation
 			not_has: not fake_editors.has (a_fake_editor)
 		end
 
-	build_class_name (a_path: STRING): STRING is
+	build_class_name (a_path: STRING): STRING
 			-- Build the class name of the text if exists --not well solved
 		local
 			l_class_name:STRING
@@ -1367,7 +1367,7 @@ feature {NONE} -- Implementation
 			Result.to_upper
 		end
 
-	back_up_editor (a_editor: like current_editor) is
+	back_up_editor (a_editor: like current_editor)
 			-- Back up `a_editor'.
 		require
 			a_editor_not_void: a_editor /= Void
@@ -1407,7 +1407,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	editor_with_stone_internal (a_editors: ARRAYED_LIST [EB_SMART_EDITOR]; a_stone: STONE): EB_SMART_EDITOR is
+	editor_with_stone_internal (a_editors: ARRAYED_LIST [EB_SMART_EDITOR]; a_stone: STONE): EB_SMART_EDITOR
 			-- Quey a editor which from `a_editors' has `a_stone'.
 		require
 			not_void: a_editors /= Void
@@ -1436,7 +1436,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	synchronize_with_docking_manager is
+	synchronize_with_docking_manager
 			-- Becaues sometimes the editors datas we saved will not synchronized with docking editors data,
 			-- we want to make sure it's synchronized here.
 		local
@@ -1461,7 +1461,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_editor_of_content (a_content: SD_CONTENT) is
+	remove_editor_of_content (a_content: SD_CONTENT)
 			-- Remove editor related with `a_content'.
 		local
 			l_editors: like editors
@@ -1499,7 +1499,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_veto_func (a_stone: ANY; a_content: SD_CONTENT): BOOLEAN is
+	default_veto_func (a_stone: ANY; a_content: SD_CONTENT): BOOLEAN
 			-- Default veto function
 		local
 			l_cluster_stone: CLUSTER_STONE
@@ -1516,7 +1516,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

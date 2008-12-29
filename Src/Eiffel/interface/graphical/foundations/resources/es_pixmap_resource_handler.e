@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Handles icon resource managment, preventing duplication of loaded resources.
 	]"
@@ -109,7 +109,7 @@ feature -- Query
 			matrices_has_a_name: Result /= Void implies matrices.has (a_name)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

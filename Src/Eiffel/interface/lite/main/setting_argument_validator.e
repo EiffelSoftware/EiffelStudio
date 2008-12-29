@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A command line switch configuration setting validator that checks if a setting is seting is the correct way
 		and is a valid configuration setting.
@@ -19,7 +19,7 @@ inherit
 
 feature -- Validation
 
-	validate_value (a_value: !STRING) is
+	validate_value (a_value: !STRING)
 			-- Validates option value against any defined rules.
 			-- `is_option_valid' will be set upon completion.
 		local
@@ -49,7 +49,7 @@ feature -- Validation
 
 feature {NONE} -- Configuration validity
 
-	validator: CONF_VALIDITY is
+	validator: CONF_VALIDITY
 			-- Configuration system validator
 		once
 			create Result
@@ -57,7 +57,7 @@ feature {NONE} -- Configuration validity
 			result_attached: Result /= Void
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

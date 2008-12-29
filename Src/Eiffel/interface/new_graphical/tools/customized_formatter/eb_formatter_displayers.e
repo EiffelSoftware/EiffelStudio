@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Supported formatter displayers (names and their generators)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,27 +14,27 @@ inherit
 
 feature -- Views
 
-	editor_displayer: STRING is "editor view"
+	editor_displayer: STRING = "editor view"
 
-	class_tree_displayer: STRING is "class tree view"
+	class_tree_displayer: STRING = "class tree view"
 
-	class_flat_displayer: STRING is "class flat view"
+	class_flat_displayer: STRING = "class flat view"
 
-	class_feature_displayer: STRING is "feature flat view"
+	class_feature_displayer: STRING = "feature flat view"
 
-	feature_displayer: STRING is "feature tree view"
+	feature_displayer: STRING = "feature tree view"
 
-	feature_caller_displayer: STRING is "feature caller view"
+	feature_caller_displayer: STRING = "feature caller view"
 
-	feature_callee_displayer: STRING is "feature callee view"
+	feature_callee_displayer: STRING = "feature callee view"
 
-	dependency_displayer: STRING is "dependency view"
+	dependency_displayer: STRING = "dependency view"
 
-	domain_displayer: STRING is "domain view"
+	domain_displayer: STRING = "domain view"
 
 feature -- Generators
 
-	generator_with_name (a_name: STRING): FUNCTION [ANY, TUPLE, EB_FORMATTER_BROWSER_DISPLAYER] is
+	generator_with_name (a_name: STRING): FUNCTION [ANY, TUPLE, EB_FORMATTER_BROWSER_DISPLAYER]
 			-- Generator with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -56,7 +56,7 @@ feature -- Generators
 			result_attached: Result /= Void
 		end
 
-	new_editor_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_EDITOR_DISPLAYER is
+	new_editor_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_EDITOR_DISPLAYER
 			-- New editor displayer.
 		local
 			l_editor: EB_CLICKABLE_EDITOR
@@ -71,7 +71,7 @@ feature -- Generators
 			result_attached: Result /= Void
 		end
 
-	new_class_tree_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER is
+	new_class_tree_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER
 			-- New class tree view
 		do
 			create Result.make (create {EB_CLASS_BROWSER_TREE_VIEW}.make_with_flag (a_dev_window, a_drop_actions, True))
@@ -79,7 +79,7 @@ feature -- Generators
 			result_attached: Result /= Void
 		end
 
-	new_class_flat_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER is
+	new_class_flat_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER
 			-- New class flat view
 		do
 			create Result.make (create {EB_CLASS_BROWSER_TREE_VIEW}.make_with_flag (a_dev_window, a_drop_actions, False))
@@ -87,7 +87,7 @@ feature -- Generators
 			result_attached: Result /= Void
 		end
 
-	new_class_feature_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER is
+	new_class_feature_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER
 			-- New class feature displayer
 		do
 			create Result.make (create {EB_CLASS_BROWSER_FLAT_VIEW}.make (a_dev_window, a_drop_actions))
@@ -95,7 +95,7 @@ feature -- Generators
 			result_attached: Result /= Void
 		end
 
-	new_feature_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER is
+	new_feature_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER
 			-- New feature caller/callee displayer
 		do
 			create Result.make (create {EB_FEATURE_BROWSER_GRID_VIEW}.make (a_dev_window, a_drop_actions))
@@ -103,7 +103,7 @@ feature -- Generators
 			result_attached: Result /= Void
 		end
 
-	new_feature_caller_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER is
+	new_feature_caller_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER
 			-- New feature caller displayer
 		do
 			create Result.make (create {EB_CLASS_BROWSER_CALLER_CALLEE_VIEW}.make (a_dev_window, a_drop_actions, True))
@@ -111,7 +111,7 @@ feature -- Generators
 			result_attached: Result /= Void
 		end
 
-	new_feature_callee_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER is
+	new_feature_callee_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER
 			-- New feature caller displayer
 		do
 			create Result.make (create {EB_CLASS_BROWSER_CALLER_CALLEE_VIEW}.make (a_dev_window, a_drop_actions, False))
@@ -119,7 +119,7 @@ feature -- Generators
 			result_attached: Result /= Void
 		end
 
-	new_dependency_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER is
+	new_dependency_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER
 			-- New dependency displayer
 		do
 			create Result.make (create {EB_CLASS_BROWSER_DEPENDENCY_VIEW}.make (a_dev_window, a_drop_actions))
@@ -127,7 +127,7 @@ feature -- Generators
 			result_attached: Result /= Void
 		end
 
-	new_domain_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER is
+	new_domain_displayer (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): EB_FORMATTER_BROWSER_DISPLAYER
 			-- New dependency displayer
 		do
 			create Result.make (create {EB_CLASS_BROWSER_DOMAIN_VIEW}.make (a_dev_window, a_drop_actions))
@@ -140,7 +140,7 @@ feature{NONE} -- Implementation
 	generators_internal: HASH_TABLE [FUNCTION [ANY, TUPLE, EB_FORMATTER_BROWSER_DISPLAYER], STRING];
 		-- Generators indexed with name
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

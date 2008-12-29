@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of a boolean value."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (v: BOOLEAN) is
+	make (v: BOOLEAN)
 			-- Create current with value `v'.
 		do
 			boolean_value := v
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := boolean_value = other.boolean_value
@@ -39,16 +39,16 @@ feature -- Access
 	boolean_value: BOOLEAN;
 			-- Integer constant value
 
-	is_boolean: BOOLEAN is True
+	is_boolean: BOOLEAN = True
 			-- Is the constant value a boolean one ?
 
-	valid_type (t: TYPE_A): BOOLEAN is
+	valid_type (t: TYPE_A): BOOLEAN
 			-- Is the current value compatible with `t' ?
 		do
 			Result := t.is_boolean;
 		end;
 
-	generate (buffer: GENERATION_BUFFER) is
+	generate (buffer: GENERATION_BUFFER)
 			-- Generate value in `file'.
 		do
 			if boolean_value then
@@ -58,13 +58,13 @@ feature -- Access
 			end;
 		end;
 
-	generate_il is
+	generate_il
 			-- Generate IL code for boolean constant value.
 		do
 			il_generator.put_boolean_constant (boolean_value)	
 		end
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a boolean constant value.
 		do
 			ba.append (Bc_bool);
@@ -75,12 +75,12 @@ feature -- Access
 			end;
 		end;
 
-	dump: STRING is
+	dump: STRING
 		do
 			Result := boolean_value.out			
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

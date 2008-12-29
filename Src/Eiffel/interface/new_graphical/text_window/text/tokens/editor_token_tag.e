@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Tokens that describe a tag (indexing or assertion)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_indexing (f: BOOLEAN) is
+	set_indexing (f: BOOLEAN)
 			-- Assign `f' to `is_indexing'.
 		do
 			is_indexing := f
@@ -39,7 +39,7 @@ feature -- Status setting
 
 feature -- Visitor
 
-	process (a_visitor: EIFFEL_TOKEN_VISITOR) is
+	process (a_visitor: EIFFEL_TOKEN_VISITOR)
 			-- Visitor
 		do
 			a_visitor.process_editor_token_tag (Current)
@@ -47,7 +47,7 @@ feature -- Visitor
 
 feature -- Color
 
-	text_color_id: INTEGER is
+	text_color_id: INTEGER
 		do
 			if is_indexing then
 				Result := indexing_tag_text_color_id
@@ -56,7 +56,7 @@ feature -- Color
 			end
 		end
 
-	background_color_id: INTEGER is
+	background_color_id: INTEGER
 		do
 			if is_indexing then
 				Result := indexing_tag_background_color_id
@@ -67,13 +67,13 @@ feature -- Color
 
 feature {NONE} -- Implementation
 
-	editor_preferences: EB_EDITOR_DATA is
+	editor_preferences: EB_EDITOR_DATA
 			--
 		once
 			Result ?= editor_preferences_cell.item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

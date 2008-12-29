@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Dialog for choosing where to put a new class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -86,7 +86,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_default (a_target: EB_HISTORY_OWNER) is
+	make_default (a_target: EB_HISTORY_OWNER)
 		require
 			a_target_not_void: a_target /= Void
 		local
@@ -243,13 +243,13 @@ feature -- Status Report
 
 feature -- Status Settings
 
-	set_stone_when_finished is
+	set_stone_when_finished
 			-- `Current' will send a stone when its execution is over.
 		do
 			set_stone := True
 		end
 
-	preset_cluster (a_cluster: CONF_CLUSTER) is
+	preset_cluster (a_cluster: CONF_CLUSTER)
 			-- Assign `a_cluster' to `cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -264,14 +264,14 @@ feature -- Status Settings
 
 feature -- Basic operations
 
-	call_default is
+	call_default
 			-- Create a new dialog with a pre-computed class name.
 		do
 			call ("NEW_CLASS_" + new_class_counter.item.out)
 			new_class_counter.put (new_class_counter.item + 1)
 		end
 
-	call_stone (a_stone: CLUSTER_STONE) is
+	call_stone (a_stone: CLUSTER_STONE)
 			-- Create a new dialog with `a_stone' as parent cluster.
 		require
 			a_stone_not_void: a_stone /= Void
@@ -286,7 +286,7 @@ feature -- Basic operations
 			show_modal_to_window (target.window)
 		end
 
-	call (class_n: STRING) is
+	call (class_n: STRING)
 			-- Create a new dialog with `class_n' as preset class name.
 		require
 			valid_args: class_n /= Void
@@ -438,7 +438,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Access
 
-	change_cluster is
+	change_cluster
 			-- Set `cluster' to selected cluster from tree.
 		local
 			l_folder: EB_CLASSES_TREE_FOLDER_ITEM
@@ -473,7 +473,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING
 			-- Name of the class entered by the user.
 		do
 			Result := class_entry.text.as_upper
@@ -481,7 +481,7 @@ feature {NONE} -- Implementation
 			class_name_not_void: class_name /= Void
 		end
 
-	file_name: FILE_NAME is
+	file_name: FILE_NAME
 			-- File name of the class chosen by the user.
 		local
 			str: STRING
@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 	target: EB_HISTORY_OWNER
 			-- Associated target.
 
-	create_new_class is
+	create_new_class
 			-- Create a new class
 		local
 			f_name: !FILE_NAME
@@ -578,7 +578,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	on_show_actions is
+	on_show_actions
 			-- The dialog has just been shown, set it up.
 		local
 			curr_selected_item: EV_TREE_NODE
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation
 			class_entry.select_all
 		end
 
-	check_class_not_exists is
+	check_class_not_exists
 			-- Check that class with name `class_name' does not exist in the universe.
 		require
 			current_state_is_valid: aok
@@ -610,7 +610,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_valid_class_name is
+	check_valid_class_name
 			-- Check that name `class_name' is a valid class name.
 		require
 			current_state_is_valid: aok
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_valid_creation_procedure is
+	check_valid_creation_procedure
 			-- Check that creation procedure name is valid
 		require
 			current_state_is_valid: aok
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_file_entry is
+	update_file_entry
 			-- Update the file name according to the class name.
 		local
 			str: STRING
@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	cancel is
+	cancel
 			-- User pressed `cancel_b'.
 		do
 			cancelled := True
@@ -665,7 +665,7 @@ feature {NONE} -- Implementation
 			cancelled_set: cancelled
 		end
 
-	on_deferred is
+	on_deferred
 			-- User selected deferred => uncheck expanded.
 		do
 			if deferred_check.is_selected then
@@ -685,7 +685,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_creation_check is
+	on_creation_check
 			-- User selected or unselected the `creation procedure' check box.
 		do
 			if creation_check.is_selected then
@@ -695,7 +695,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_expanded is
+	on_expanded
 			-- User selected expanded => uncheck deferred.
 		do
 			if expanded_check.is_selected then
@@ -703,7 +703,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_focus_in is
+	on_focus_in
 			-- When the parents list has the focus, we disable the default push button.
 		do
 			if default_push_button /= Void then
@@ -711,7 +711,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_focus_out is
+	on_focus_out
 			-- When the parents list loses the focus, we enable the default push button.
 		do
 				-- Need to check that the dialog is not destroyed as sometimes
@@ -721,7 +721,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_group: CONF_GROUP is
+	compute_group: CONF_GROUP
 			-- Compute group.
 		do
 			change_cluster
@@ -762,19 +762,19 @@ feature {NONE} -- Vision2 widgets
 
 feature {NONE} -- Constants
 
-	Cluster_list_minimum_width: INTEGER is
+	Cluster_list_minimum_width: INTEGER
 			-- Minimum width for the cluster list.
 		do
 			Result := Layout_constants.Dialog_unit_to_pixels (250)
 		end
 
-	Cluster_list_minimum_height: INTEGER is
+	Cluster_list_minimum_height: INTEGER
 			-- Minimum height for the cluster list.
 		do
 			Result := Layout_constants.Dialog_unit_to_pixels (100)
 		end
 
-	new_class_counter: CELL [INTEGER] is
+	new_class_counter: CELL [INTEGER]
 			-- Number of classes being created so far
 		once
 			create Result.put (1)
@@ -808,7 +808,7 @@ invariant
 	target_not_void: target /= Void
 	cluster_implies_path: cluster /= Void implies path /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

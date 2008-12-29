@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to run the system while debugging."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -64,7 +64,7 @@ create
 
 feature -- Initialization	
 
-	make is
+	make
 			-- Initialize the command, create a couple of requests and windows.
 			-- Add some actions as well.
 		do
@@ -73,7 +73,7 @@ feature -- Initialization
 
 feature -- Access
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 		local
 			l_tool_bar: SD_TOOL_BAR
 		do
@@ -84,7 +84,7 @@ feature -- Access
 			Result.select_actions.put_front (agent execute_from (l_tool_bar))
 		end
 
-	new_menu_item: EB_COMMAND_MENU_ITEM is
+	new_menu_item: EB_COMMAND_MENU_ITEM
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
 			Result.select_actions.put_front (agent execute_from (Result))
@@ -92,13 +92,13 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Launch program in debugger with mode `Run' (i.e "Run").
 		do
 			execute_with_mode ({EXEC_MODES}.run)
 		end
 
-	execute_with_mode (execution_mode: INTEGER) is
+	execute_with_mode (execution_mode: INTEGER)
 			-- execute program in debugger with mode `Run' (i.e "Run").
 		do
 			if
@@ -113,7 +113,7 @@ feature -- Execution
 			end
 		end
 
-	launch_with_mode (execution_mode: INTEGER; params: DEBUGGER_EXECUTION_PARAMETERS) is
+	launch_with_mode (execution_mode: INTEGER; params: DEBUGGER_EXECUTION_PARAMETERS)
 		require
 			project_initialized: Eiffel_project.initialized
 			not_compiling: not Eiffel_project.Workbench.is_compiling
@@ -161,7 +161,7 @@ feature -- Execution
 			end
 		end
 
-	resume_with_mode (execution_mode: INTEGER) is
+	resume_with_mode (execution_mode: INTEGER)
 			-- resume program in debugger with mode `execution_mode'.
 		require
 			project_initialized: Eiffel_project.initialized
@@ -181,7 +181,7 @@ feature -- Execution
 			end
 		end
 
-	execute_from (widget: EV_CONTAINABLE) is
+	execute_from (widget: EV_CONTAINABLE)
 			-- Set widget's top-level window as the debugging window.
 		local
 			trigger: EV_CONTAINABLE
@@ -211,7 +211,7 @@ feature -- Execution
 			end
 		end
 
-	process_breakable (bs: BREAKABLE_STONE) is
+	process_breakable (bs: BREAKABLE_STONE)
 			-- Process breakable stone: i.e. run to cursor.
 		local
 			index: INTEGER
@@ -280,7 +280,7 @@ feature -- Execution
 			end
 		end
 
-	launch_application (a_execution_mode: INTEGER; a_params: DEBUGGER_EXECUTION_PARAMETERS) is
+	launch_application (a_execution_mode: INTEGER; a_params: DEBUGGER_EXECUTION_PARAMETERS)
 			-- Launch the program from the project target.
 		local
 			ctlr: DEBUGGER_CONTROLLER
@@ -289,7 +289,7 @@ feature -- Execution
 			ctlr.debug_application (a_params, a_execution_mode)
 		end
 
-	resume_application is
+	resume_application
 			-- Continue the execution of the program (stepping ...)
 		do
 			debugger_manager.controller.resume_workbench_application
@@ -297,7 +297,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation / Attributes
 
-	directory_exists (a_dirname: STRING): BOOLEAN is
+	directory_exists (a_dirname: STRING): BOOLEAN
 			-- Is directory named `a_dirname' exists ?
 		local
 			d: DIRECTORY
@@ -306,47 +306,47 @@ feature {NONE} -- Implementation / Attributes
 			Result := d.exists
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Toolbar button text for the command
 		do
 			Result := Interface_names.b_Launch
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the command.
 		do
 			Result := Interface_names.f_Debug_run
 		end
 
-	is_tooltext_important: BOOLEAN is
+	is_tooltext_important: BOOLEAN
 			-- Is the tooltext important shown when view is 'Selective Text'
 		do
 			Result := True
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for the command.
 		do
 			Result := Interface_names.f_Debug_run
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name used in menu entry
 		do
 			Result := Interface_names.m_Debug_run
 		end
 
-	name: STRING is "Run"
+	name: STRING = "Run"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_icon_buffer
@@ -358,14 +358,14 @@ feature {NONE} -- Implementation / Attributes
 	need_to_wait: BOOLEAN
 			-- Do we need to wait until the end of the compilation?
 
-	dotnet_debugger: STRING is
+	dotnet_debugger: STRING
 			-- String indicating the .NET debugger to launch if specified in the
 			-- Preferences Tool.
 		do
 			Result := preferences.debugger_data.dotnet_debugger.item (1)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

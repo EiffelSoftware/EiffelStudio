@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "$EiffelGraphicalCompiler$ window. Ancestor of all windows in $EiffelGraphicalCompiler$."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -56,14 +56,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	init_size_and_position is
+	init_size_and_position
 			-- Initialize the size and position of the window.
 		do
 			--| redefine this feature if you want to set a particular
 			--| size or position at launch time.
 		end
 
-	init_commands is
+	init_commands
 			-- Initialize commands.
 		do
 			create show_dynamic_lib_tool.make
@@ -111,7 +111,7 @@ feature -- Access
 	window: EB_VISION_WINDOW
 			-- Window representing Current.
 
-	new_menu: EV_MENU is
+	new_menu: EV_MENU
 			-- Menu to be used as a context menu displaying associated commands.
 		require
 			window_not_void: window /= Void
@@ -156,14 +156,14 @@ feature -- Status report
 	minimized_title: STRING_GENERAL
 			-- Title of the window in minimized state
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap for current window.
 		deferred
 		end
 
 feature -- Status setting
 
-	set_title (a_title: like title) is
+	set_title (a_title: like title)
 			-- Set `title' to `a_title'.
 		require
 			valid_title: a_title /= Void
@@ -180,7 +180,7 @@ feature -- Status setting
 			end
 		end
 
-	set_minimized_title (a_title: like title) is
+	set_minimized_title (a_title: like title)
 			-- Set `minimized_title' to `a_title'.
 		do
 			if not equal (minimized_title, a_title) then
@@ -192,7 +192,7 @@ feature -- Status setting
 			end
 		end
 
-	lock_update is
+	lock_update
 			-- Lock updates for this window on certain platforms until
 			-- `unlock_update' is called.
 			--
@@ -211,7 +211,7 @@ feature -- Status setting
 			lock_level_incremented: lock_level = old lock_level + 1
 		end
 
-	unlock_update is
+	unlock_update
 			-- Unlock updates for this window on certain platforms.
 		require
 			lock_level_positive: lock_level > 0
@@ -235,7 +235,7 @@ feature -- Window management / Status Report
 	destroyed: BOOLEAN
 			-- Is Current destroyed?
 
-	is_visible: BOOLEAN is
+	is_visible: BOOLEAN
 			-- Is Current shown on the screen?
 		require
 			exists: not destroyed
@@ -245,7 +245,7 @@ feature -- Window management / Status Report
 
 feature -- Window management / Status Setting
 
-	show is
+	show
 			-- Show current window.
 		require
 			exists: not destroyed
@@ -255,7 +255,7 @@ feature -- Window management / Status Setting
 			shown: is_visible
 		end
 
-	hide is
+	hide
 			-- Hide current window.
 		require
 			exists: not destroyed
@@ -265,7 +265,7 @@ feature -- Window management / Status Setting
 			hidden: not is_visible
 		end
 
-	destroy is
+	destroy
 			-- Destroy Current window.
 		local
 			l_window: EB_WINDOW
@@ -297,7 +297,7 @@ feature -- Window management / Status Setting
 			end
 		end
 
-	refresh is
+	refresh
 			-- Refresh window after a compilation, resynchronize everything.
 		require
 			exists: not destroyed
@@ -305,7 +305,7 @@ feature -- Window management / Status Setting
 			--| By default do nothing.			
 		end
 
-	refresh_all_commands is
+	refresh_all_commands
 			-- Refresh all commands.
 		require
 			exists: not destroyed
@@ -313,7 +313,7 @@ feature -- Window management / Status Setting
 			-- | By default do nothing.
 		end
 
-	refresh_external_commands is
+	refresh_external_commands
 			-- Refresh external commands.
 		require
 			exists: not destroyed
@@ -323,26 +323,26 @@ feature -- Window management / Status Setting
 
 feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 
-	show_imp is
+	show_imp
 			-- Make window visible.
 		do
 			window.show
 		end
 
-	raise_imp is
+	raise_imp
 			-- Raise window in front, bringing it into focus.
 		do
 			window.show
 			--| FIXME ARNAUD: The Focus...
 		end
 
-	hide_imp is
+	hide_imp
 			-- Hide window.
 		do
 			window.hide
 		end
 
-	destroy_imp is
+	destroy_imp
 			-- Destroy window.
 		do
 			recycle
@@ -368,7 +368,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Controls & widgets
 
 feature {NONE} -- Menus initializations
 
-	build_file_menu is
+	build_file_menu
 			-- Create and build `file_menu'.
 		local
 			menu_item: EV_MENU_ITEM
@@ -387,7 +387,7 @@ feature {NONE} -- Menus initializations
 			file_menu_created: file_menu /= Void
 		end
 
-	build_edit_menu is
+	build_edit_menu
 			-- Create and build `edit_menu'
 		do
 			create edit_menu.make_with_text (Interface_names.m_Edit)
@@ -395,7 +395,7 @@ feature {NONE} -- Menus initializations
 			edit_menu_created: edit_menu /= Void
 		end
 
-	build_menu_bar is
+	build_menu_bar
 			-- Build the menu bar and put it into the window.
 		local
 			menu_bar: EV_MENU_BAR
@@ -417,7 +417,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW
 
 feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Implementation / Flags
 
-	window_displayed is
+	window_displayed
 			-- `Current' has been displayed on screen.
 		do
 			--| redefine this feature to perform any processing post display.
@@ -426,7 +426,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Implementation / Flags
 	initialized: BOOLEAN
 			-- Is the "initialization sequence" finished?
 
-	display_help_contents is
+	display_help_contents
 			-- Display the part of the help relative to EiffelStudio.
 		local
 			l_service: SERVICE_CONSUMER [HELP_PROVIDERS_S]
@@ -437,7 +437,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Implementation / Flags
 			end
 		end
 
-	display_how_to_s is
+	display_how_to_s
 			-- Display the part of the help relative to EiffelStudio.
 		local
 			l_service: SERVICE_CONSUMER [HELP_PROVIDERS_S]
@@ -448,7 +448,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Implementation / Flags
 			end
 		end
 
-	display_guided_tour is
+	display_guided_tour
 			-- Display the guided tour of EiffelStudio.
 		local
 			l_service: SERVICE_CONSUMER [HELP_PROVIDERS_S]
@@ -459,7 +459,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Implementation / Flags
 			end
 		end
 
-	display_eiffel_introduction is
+	display_eiffel_introduction
 			-- Display the introduction to Eiffel.
 		local
 			l_service: SERVICE_CONSUMER [HELP_PROVIDERS_S]
@@ -473,7 +473,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Implementation / Flags
 invariant
 	lock_level_nonnegative: lock_level >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

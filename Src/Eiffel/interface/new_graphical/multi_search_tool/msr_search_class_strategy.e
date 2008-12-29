@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Use to search in a CLASS_I"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	make (a_keyword: like keyword;
 			a_range: like surrounding_text_range;
 			a_class: like class_i;
-			only_compiled_class: like only_compiled_class_searched) is
+			only_compiled_class: like only_compiled_class_searched)
 			-- Initialization with a class to be searched
 		require
 			a_class_not_void: a_class /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-	launch is
+	launch
 			-- Launch the search
 		local
 			l_class_item: MSR_CLASS_ITEM
@@ -98,7 +98,7 @@ feature -- Basic operation
 			end
 		end
 
-	reset_all is
+	reset_all
 			-- Reset all
 		do
 			Precursor
@@ -109,13 +109,13 @@ feature -- Basic operation
 
 feature -- Status report
 
-	is_class_set: BOOLEAN is
+	is_class_set: BOOLEAN
 			-- Is the `class_i' set?
 		do
 			Result := (class_i /= Void)
 		end
 
-	is_search_prepared: BOOLEAN is
+	is_search_prepared: BOOLEAN
 			-- Is search prepared?
 		do
 			Result := Precursor and	is_class_set
@@ -125,7 +125,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_class (a_class: CLASS_I) is
+	set_class (a_class: CLASS_I)
 			-- Set `class_i' with a_class.
 		require
 			a_class_not_void: a_class /= Void
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 	class_i: CLASS_I
 			-- Class to be searched
 
-	class_text: STRING_32 is
+	class_text: STRING_32
 			-- String buffer to store class text temporarily
 		require
 			class_set: is_class_set
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

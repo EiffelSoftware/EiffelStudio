@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of a C external extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	initialize (a_language_type, a_type: INTEGER; a_sig: SIGNATURE_AS; a_class: ID_AS) is
+	initialize (a_language_type, a_type: INTEGER; a_sig: SIGNATURE_AS; a_class: ID_AS)
 			-- Create IL_EXTENSION_AS node.
 		require
 			a_type: valid_type (a_type)
@@ -45,7 +45,7 @@ feature -- Properties
 
 feature -- Get the C extension
 
-	extension_i: IL_EXTENSION_I is
+	extension_i: IL_EXTENSION_I
 			-- EXTERNAL_EXT_I corresponding to current extension
 		do
 			create Result
@@ -60,7 +60,7 @@ feature -- Get the C extension
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

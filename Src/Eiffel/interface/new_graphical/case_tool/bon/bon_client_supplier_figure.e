@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a BON view for an EIFFEL_CLIENT_SUPPLIER_LINK"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -74,7 +74,7 @@ create {BON_CLIENT_SUPPLIER_FIGURE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a BON_CLIENT_SUPPLIER_FIGURE.
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE}
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 			is_label_shown := True
 		end
 
-	make_with_model (a_model: ES_CLIENT_SUPPLIER_LINK) is
+	make_with_model (a_model: ES_CLIENT_SUPPLIER_LINK)
 			-- Create an BON_CLIENT_SUPPLIER_FIGURE with `a_model'.
 		do
 			default_create
@@ -132,7 +132,7 @@ feature -- Status report
 
 feature -- Access
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml node representing `Current's state.
 		local
 			was_low: BOOLEAN
@@ -159,7 +159,7 @@ feature -- Access
 			end
 		end
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
 			was_low: BOOLEAN
@@ -194,7 +194,7 @@ feature -- Access
 			end
 		end
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := "BON_CLIENT_SUPPLIER_FIGURE"
@@ -202,7 +202,7 @@ feature -- Access
 
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE}
@@ -214,7 +214,7 @@ feature -- Element change
 			preferences.diagram_tool_data.remove_observer (Current)
 		end
 
-	hide_label is
+	hide_label
 			-- Hide label.
 		do
 			if is_high_quality then
@@ -227,7 +227,7 @@ feature -- Element change
 			request_update
 		end
 
-	show_label is
+	show_label
 			-- Show label.
 		do
 			if is_high_quality then
@@ -245,28 +245,28 @@ feature -- Element change
 			request_update
 		end
 
-	set_line_width (a_line_width: like line_width) is
+	set_line_width (a_line_width: like line_width)
 			-- Set `line_width' to `a_line_width'.
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (a_line_width)
 			real_line_width := a_line_width
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Set `foreground_color' to `a_color'.
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (a_color)
 			aggregate_figure.set_foreground_color (a_color)
 		end
 
-	add_point_between (i, j: INTEGER) is
+	add_point_between (i, j: INTEGER)
 			-- Add a point between `i'-th and `j'-th point.
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (i, j)
 			set_label_line_start_and_end
 		end
 
-	remove_i_th_point (i: INTEGER) is
+	remove_i_th_point (i: INTEGER)
 			-- Remove `i'-th point.
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (i)
@@ -274,7 +274,7 @@ feature -- Element change
 			request_update
 		end
 
-	retrieve_edges (retrieved_edges: LIST [EG_EDGE]) is
+	retrieve_edges (retrieved_edges: LIST [EG_EDGE])
 			-- Add lines corresponding to the points in `retrieved_edges'.
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (retrieved_edges)
@@ -282,7 +282,7 @@ feature -- Element change
 			request_update
 		end
 
-	reset is
+	reset
 			--
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE}
@@ -291,7 +291,7 @@ feature -- Element change
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
-	update is
+	update
 			-- Some properties of `Current' may have changed.
 		local
 			an_angle: DOUBLE
@@ -336,7 +336,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 feature {EV_MODEL_GROUP} -- Transformation
 
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
@@ -374,7 +374,7 @@ feature {NONE} -- Implementation
 	real_arrow_head_size: REAL
 			-- Real size of arrow head.
 
-	polyline_points: SPECIAL [EV_COORDINATE] is
+	polyline_points: SPECIAL [EV_COORDINATE]
 			-- Points defining the line.
 			-- | For EG_POLYLINE_LABEL.
 		do
@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 	aggregate_figure: EV_MODEL_LINE
 			-- Figure indicating that `Current' `is_aggregated'.
 
-	aggregate_figure_distance: INTEGER is
+	aggregate_figure_distance: INTEGER
 			-- Distance in pixel `aggregate_figure' has from `end_point'
 		do
 			Result := (real_arrow_head_size * 3).truncated_to_integer
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 			Result_positive: Result >= 0
 		end
 
-	aggregate_figure_length: INTEGER is
+	aggregate_figure_length: INTEGER
 			-- Length of aggregate figure.
 		do
 			Result := real_arrow_head_size.truncated_to_integer
@@ -406,7 +406,7 @@ feature {NONE} -- Implementation
 			Result_positive: Result >= 0
 		end
 
-	set_aggregate_figure_position (a_distance: INTEGER) is
+	set_aggregate_figure_position (a_distance: INTEGER)
 			-- Set `aggregate_figure' `a_distance' away from `end_point'.
 		local
 			an_angle: DOUBLE
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation
 			aggregate_figure.set_point_b_position (px + as_integer (dcos + hssin), py + as_integer (dsin - hscos))
 		end
 
-	on_is_aggregated_change is
+	on_is_aggregated_change
 			-- `model'.`is_aggregated' was changed.
 		do
 			if model.is_aggregated then
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_label_position_on_line (nearest_start, nearest_end: EV_COORDINATE) is
+	set_label_position_on_line (nearest_start, nearest_end: EV_COORDINATE)
 			-- Set the `label_move_handle' position such that its point is
 			-- on the segment from `nearest_start' to `nearest_end'.
 		local
@@ -470,7 +470,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_label_move_handle_position_out_of_intersection (label_bbox, other_bbox: EV_RECTANGLE; p, q: EV_COORDINATE) is
+	set_label_move_handle_position_out_of_intersection (label_bbox, other_bbox: EV_RECTANGLE; p, q: EV_COORDINATE)
 			-- Set position of `label_move_handle' such that `label_bbox' does not intersect with `other_bbox'
 			-- and `point' position of `label_move_handle' is on the line from `p' to `q'.
 		require
@@ -572,14 +572,14 @@ feature {NONE} -- Implementation
 			label_move_handle.set_point_position (as_integer (nx), as_integer (ny))
 		end
 
-	on_label_group_double_clicked (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_label_group_double_clicked (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- User doubleclicked on `label_group'.
 		do
 			is_label_expanded := not is_label_expanded
 			on_name_change
 		end
 
-	set_name_label_text (a_text: STRING) is
+	set_name_label_text (a_text: STRING)
 			-- Set `name_label'.`text' to `a_text'.
 		local
 			txt: EV_MODEL_TEXT
@@ -675,7 +675,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_is_high_quality (an_is_high_quality: like is_high_quality) is
+	set_is_high_quality (an_is_high_quality: like is_high_quality)
 			-- Set `is_high_quality' to `an_is_high_quality'.
 		local
 			l_mh: EV_MODEL_MOVE_HANDLE
@@ -758,7 +758,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_preferences is
+	retrieve_preferences
 			-- Retrieve preferences from shared resources.
 		local
 			txt: EV_MODEL_TEXT
@@ -784,7 +784,7 @@ feature {NONE} -- Implementation
 invariant
 	aggregate_figure_not_void: aggregate_figure /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

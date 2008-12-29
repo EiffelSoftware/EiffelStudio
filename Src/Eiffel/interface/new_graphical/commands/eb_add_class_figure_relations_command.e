@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command used for adding a certain class relations to diagram class figure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_for_clients (a_target: like tool) is
+	make_for_clients (a_target: like tool)
 			-- Initialize the command with target `a_target' to handle client relations.
 		require
 			a_target_not_void: a_target /= Void
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			make (a_target)
 		end
 
-	make_for_suppliers (a_target: like tool) is
+	make_for_suppliers (a_target: like tool)
 			-- Initialize the command with target `a_target' to handle supplier relations.
 		require
 			a_target_not_void: a_target /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			make (a_target)
 		end
 
-	make_for_ancestors (a_target: like tool) is
+	make_for_ancestors (a_target: like tool)
 			-- Initialize the command with target `a_target' to handle ancestor relations.
 		require
 			a_target_not_void: a_target /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			make (a_target)
 		end
 
-	make_for_descendents (a_target: like tool) is
+	make_for_descendents (a_target: like tool)
 			-- Initialize the command with target `a_target' to handle descendent relations.
 		require
 			a_target_not_void: a_target /= Void
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Perform operation.
 		local
 			l_sel_figures: ARRAYED_LIST [EG_FIGURE]
@@ -96,7 +96,7 @@ feature -- Basic operations
 			end
 		end
 
-	relations_list_from_class_c (a_class: CLASS_C): LIST [CLASS_C] is
+	relations_list_from_class_c (a_class: CLASS_C): LIST [CLASS_C]
 			-- Return all of the compiled relations for `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -114,7 +114,7 @@ feature -- Basic operations
 			end
 		end
 
-	calculate_relations_for_classes (a_classes: ARRAYED_LIST [ES_CLASS]) is
+	calculate_relations_for_classes (a_classes: ARRAYED_LIST [ES_CLASS])
 			-- Calculate relations for `a_classes'.
 		require
 			a_classes_not_void: a_classes /= Void
@@ -179,7 +179,7 @@ feature -- Basic operations
 			end
 		end
 
-	undo_name: STRING is
+	undo_name: STRING
 			-- Undo name for operation of `Current'.
 		do
 			inspect
@@ -195,7 +195,7 @@ feature -- Basic operations
 			end
 		end
 
-	hide_classes_from_diagram (a_class_list_list: ARRAYED_LIST [ARRAYED_LIST [ES_CLASS]]) is
+	hide_classes_from_diagram (a_class_list_list: ARRAYED_LIST [ARRAYED_LIST [ES_CLASS]])
 			-- Hide all classes in `a_class_list_list' on diagram.
 		local
 			l_list: ARRAYED_LIST [ES_CLASS]
@@ -229,7 +229,7 @@ feature -- Basic operations
 			tool.projector.full_project
 		end
 
-	add_and_position_classes (a_class_list: ARRAYED_LIST [ES_CLASS]; a_class_list_list: ARRAYED_LIST [ARRAYED_LIST [ES_CLASS]]) is
+	add_and_position_classes (a_class_list: ARRAYED_LIST [ES_CLASS]; a_class_list_list: ARRAYED_LIST [ARRAYED_LIST [ES_CLASS]])
 			--
 		require
 			a_class_list_not_void: a_class_list /= Void and then not a_class_list.is_empty
@@ -295,7 +295,7 @@ feature -- Basic operations
 			tool.projector.full_project
 		end
 
-	execute_with_class_stone (a_stone: CLASSI_STONE) is
+	execute_with_class_stone (a_stone: CLASSI_STONE)
 			-- Handle pick and drop for `a_stone'.
 		local
 			a_class_list: ARRAYED_LIST [ES_CLASS]
@@ -315,7 +315,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_with_class_list (a_stone: CLASS_FIGURE_LIST_STONE) is
+	execute_with_class_list (a_stone: CLASS_FIGURE_LIST_STONE)
 			-- Handle pick and drop for `a_stone'.
 		local
 			a_class_list: ARRAYED_LIST [ES_CLASS]
@@ -340,7 +340,7 @@ feature -- Basic operations
 			end
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
@@ -355,7 +355,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			inspect
@@ -373,7 +373,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			inspect
@@ -389,7 +389,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			inspect
@@ -405,7 +405,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			inspect
@@ -421,13 +421,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name on corresponding menu items
 		do
 			Result := description
 		end
 
-	Name: STRING is "Supplier_visibility"
+	Name: STRING = "Supplier_visibility"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
@@ -436,13 +436,13 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Implementation
 	selected_implementation: INTEGER
 		-- Implementation used for `Current', set in creation procedure.
 
-	adds_clients: INTEGER is 1
-	adds_suppliers: INTEGER is 2
-	adds_descendents: INTEGER is 3
-	adds_ancestors: INTEGER is 4;
+	adds_clients: INTEGER = 1
+	adds_suppliers: INTEGER = 2
+	adds_descendents: INTEGER = 3
+	adds_ancestors: INTEGER = 4;
 		-- Constants used to define the behavior of `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

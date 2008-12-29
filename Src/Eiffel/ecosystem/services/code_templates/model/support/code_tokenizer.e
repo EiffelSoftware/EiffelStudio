@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The default code tokenizer for creating code token object ({CODE_TOKEN}) from a raw code template string.
 	]"
@@ -156,7 +156,7 @@ feature {NONE} -- Constants
 	esc_specifier_char: CHARACTER = '%%'
 			-- Escape character prefix, use when escaping `id_specifier_char'
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

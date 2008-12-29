@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that retrieves corresponding C files/functions for an Eiffel class/feature"
 	author: ""
 	date: "$Date$"
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Initialization
 
-	create_with_class (a_class: like class_c; a_workbench: BOOLEAN) is
+	create_with_class (a_class: like class_c; a_workbench: BOOLEAN)
 			-- Initialize Current with `a_class'.
 			-- `a_workbench' is True indicates that workbench C files should be retrieved,
 			-- otherwise finalized C files.
@@ -31,7 +31,7 @@ feature{NONE} -- Initialization
 			is_for_workbench := a_workbench
 		end
 
-	create_with_feature (a_feature: like e_feature; a_workbench: BOOLEAN) is
+	create_with_feature (a_feature: like e_feature; a_workbench: BOOLEAN)
 			-- Initialize Current with `a_feature'.
 			-- `a_workbench' is True indicates that workbench C files should be retrieved,
 			-- otherwise finalized C files.		
@@ -50,7 +50,7 @@ feature -- Access
 	e_feature: E_FEATURE
 			-- Feature whose corresponding C functions are to be retrieved
 
-	valid_c_file_table: HASH_TABLE [CLASS_TYPE, STRING] is
+	valid_c_file_table: HASH_TABLE [CLASS_TYPE, STRING]
 			-- Table of C files for `class_c'.
 			-- [Generic deriviation type, C file name]
 		local
@@ -85,7 +85,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	line_number (a_file_name: STRING): INTEGER is
+	line_number (a_file_name: STRING): INTEGER
 			-- If `e_feature' is set, return the line number for its corresponding C function in `a_file_name'.
 			-- IF `e_feature' is not set or some error occurred when trying to retrieve line number, return 1.
 		require
@@ -141,7 +141,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_for_feature: BOOLEAN is
+	is_for_feature: BOOLEAN
 			-- Is a feature wrapped in Current?
 		do
 			Result := e_feature /= Void
@@ -154,7 +154,7 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	c_file (a_class_type: CLASS_TYPE): STRING is
+	c_file (a_class_type: CLASS_TYPE): STRING
 			-- C file name for `a_class_type'
 			-- If that C file is not generated, return an empty string.
 		require
@@ -191,7 +191,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	set_context_mode (a_workbench_mode: BOOLEAN) is
+	set_context_mode (a_workbench_mode: BOOLEAN)
 			-- If `a_workbench_mode' is True, enable workbench mode in `context',
 			-- otherwise enable final mode.
 		do

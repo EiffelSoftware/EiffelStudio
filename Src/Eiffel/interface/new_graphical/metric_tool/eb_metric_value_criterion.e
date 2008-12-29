@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a value criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_scope: like scope; a_name: STRING) is
+	make (a_scope: like scope; a_name: STRING)
 			-- Initialize `scope' with `a_scope' and `name' with `a_name'.
 		do
 			metric_name := ""
@@ -44,7 +44,7 @@ feature -- Access
 	value_tester: EB_METRIC_VALUE_TESTER
 			-- Value tester
 
-	new_criterion (a_scope: QL_SCOPE): QL_CRITERION is
+	new_criterion (a_scope: QL_SCOPE): QL_CRITERION
 			-- QL_CRITERION representing current criterion
 		do
 			Result := criterion_factory_table.item (a_scope).criterion_with_name (name, [agent evaluate_function])
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- status report
 
-	is_parameter_valid: BOOLEAN is
+	is_parameter_valid: BOOLEAN
 			-- Is parameters of current criterion valid?
 			-- Parameter for current is `domain'.
 		do
@@ -60,7 +60,7 @@ feature -- status report
 					  (metric_manager.is_metric_calculatable (metric_name))
 		end
 
-	is_value_criterion: BOOLEAN is True
+	is_value_criterion: BOOLEAN = True
 			-- Is crrent a value criterion?
 
 	should_delayed_domain_from_parent_be_used: BOOLEAN
@@ -106,7 +106,7 @@ feature -- status report
 
 feature -- Setting
 
-	set_metric_name (a_metric_name: like metric_name) is
+	set_metric_name (a_metric_name: like metric_name)
 			-- Set `metric_name' with `a_metric_name'.
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -116,7 +116,7 @@ feature -- Setting
 			metric_name_set: metric_name /= Void
 		end
 
-	set_value_tester (a_tester: like value_tester) is
+	set_value_tester (a_tester: like value_tester)
 			-- Set `value_tester' with `a_tester'.
 		require
 			a_tester_attached: a_tester /= Void
@@ -126,7 +126,7 @@ feature -- Setting
 			value_tester_set: value_tester = a_tester
 		end
 
-	set_should_delayed_domain_from_parent_be_used (b: BOOLEAN) is
+	set_should_delayed_domain_from_parent_be_used (b: BOOLEAN)
 			-- Set `should_delayed_domain_from_parent_be_used' with `b'.
 		do
 			should_delayed_domain_from_parent_be_used := b
@@ -134,7 +134,7 @@ feature -- Setting
 			should_delayed_domain_from_parent_be_used_set: should_delayed_domain_from_parent_be_used = b
 		end
 
-	set_metric_value (a_value: DOUBLE) is
+	set_metric_value (a_value: DOUBLE)
 			-- Set `metric_value' with `a_value'.
 		do
 			metric_value := a_value
@@ -142,7 +142,7 @@ feature -- Setting
 			metric_value_set: metric_value = a_value
 		end
 
-	set_has_metric_status_checked (b: BOOLEAN) is
+	set_has_metric_status_checked (b: BOOLEAN)
 			-- Set `has_metric_status_checked' with `b'.
 		do
 			has_metric_status_checked := b
@@ -152,7 +152,7 @@ feature -- Setting
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_value_criterion (Current)
@@ -160,7 +160,7 @@ feature -- Process
 
 feature{NONE} -- Implementation
 
-	evaluate_function (a_item: QL_ITEM): BOOLEAN is
+	evaluate_function (a_item: QL_ITEM): BOOLEAN
 			-- Function to evaluate if Current criterion is satisfied by `a_item'
 		require
 			a_item_attached: a_item /= Void
@@ -208,7 +208,7 @@ feature{NONE} -- Implementation
 			-- Note: If metric whose name is `metric_name' doesn't rely on any delayed domain item,
 			-- we just calculate it once and reuse the value. The calculated value is stored here.			
 
-	set_metric_has_delayed_domain_item (b: BOOLEAN) is
+	set_metric_has_delayed_domain_item (b: BOOLEAN)
 			-- Set `metric_has_delayed_domain_item' with `b'.
 		do
 			metric_has_delayed_domain_item := b
@@ -216,7 +216,7 @@ feature{NONE} -- Implementation
 			metric_has_delayed_domain_item_set: metric_has_delayed_domain_item = b
 		end
 
-	check_metric_status is
+	check_metric_status
 			-- Check status of metric whose name is `metric_name'
 			-- to know if that metric doesn't rely on any delayed domain item.
 		require
@@ -240,7 +240,7 @@ invariant
 	metric_name_attached: metric_name /= Void
 	value_tester_attached: value_tester /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

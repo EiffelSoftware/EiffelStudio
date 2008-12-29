@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Tools with information about a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature -- Docking issue
 
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Attach to docking manager
 		do
 			build_docking_content (a_docking_manager)
@@ -48,13 +48,13 @@ feature -- Access
 	stone: STONE
 			-- Currently managed stone.
 
-	predefined_formatters: like formatters is
+	predefined_formatters: like formatters
 			-- Predefined formatters
 		do
 			Result := develop_window.managed_feature_formatters
 		end
 
-	no_target_message: STRING_GENERAL is
+	no_target_message: STRING_GENERAL
 			-- Message to be displayed in `output_line' when no stone is set
 		do
 			Result := Interface_names.l_No_feature
@@ -133,7 +133,7 @@ feature {ES_FEATURE_RELATION_TOOL} -- Element change
 
 feature -- Status setting
 
-	set_stone (new_stone: STONE) is
+	set_stone (new_stone: STONE)
 			-- Send a stone to feature formatters.
 		local
 			l_last_stone, fst: FEATURE_STONE
@@ -179,7 +179,7 @@ feature -- Status setting
 			end
 		end
 
-	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL is
+	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL
 			-- Decide which tool to display.
 		local
 			fs: FEATURE_STONE
@@ -192,7 +192,7 @@ feature -- Status setting
 			end
 		end
 
-	drop_stone (st: like stone) is
+	drop_stone (st: like stone)
 			-- Test if there is a feature with the same name (or routine id?)
 			-- in the dropped class.
 		local
@@ -258,7 +258,7 @@ feature -- Status setting
 			end
 		end
 
-	pop_default_formatter is
+	pop_default_formatter
 			-- Force the display of `Current' and select the default formatter.
 		local
 			l_index: INTEGER
@@ -298,7 +298,7 @@ feature {NONE} -- Event handlers
 
 feature {NONE} -- Implementation
 
-	enable_dotnet_formatters (a_flag: BOOLEAN) is
+	enable_dotnet_formatters (a_flag: BOOLEAN)
 			-- Set sensitivity of formatters to 'a_flag'.
 		local
 			l_done: BOOLEAN
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	force_last_stone is
+	force_last_stone
 			-- Force that `last_stone' is displayed in formatters in Current view
 			-- And show debugged line if any.
 		do
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	retrieve_formatters is
+	retrieve_formatters
 			-- Retrieve all formatters related with Current tool and store them in `formatters'
 		do
 			Precursor
@@ -371,7 +371,7 @@ feature{NONE} -- Implementation
 			)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Byte code for 'when...then' construct in multi-branch instruction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_case_b (Current)
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Line number setting
 
-	set_line_number (lnr : INTEGER) is
+	set_line_number (lnr : INTEGER)
 		do
 			line_number := lnr
 		ensure then
@@ -46,19 +46,19 @@ feature  -- Status Report
 	compound: BYTE_LIST [BYTE_NODE]
 			-- Associated compound {list of INSTR_B}: can be Void
 
-	set_interval (i: like interval) is
+	set_interval (i: like interval)
 			-- Assign `i' to `interval'.
 		do
 			interval := i
 		end
 
-	set_compound (c: like compound) is
+	set_compound (c: like compound)
 			-- Assign `c' to `compound'.
 		do
 			compound := c
 		end
 
-	enlarge_tree is
+	enlarge_tree
 			-- Enlarge the when construct
 		do
 			interval.enlarge_tree
@@ -67,7 +67,7 @@ feature  -- Status Report
 			end
 		end
 
-	analyze is
+	analyze
 			-- Builds a proper context (for C code).
 		do
 				-- Values are constants (need not be analyzed)
@@ -78,7 +78,7 @@ feature  -- Status Report
 
 feature -- C generation
 
-	generate is
+	generate
 			-- Generate C code in `buffer'.
 		local
 			buf: GENERATION_BUFFER
@@ -97,23 +97,23 @@ feature -- C generation
 
 feature -- Array optimization
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (i: INTEGER): BOOLEAN
 		do
 			Result := compound /= Void and then compound.assigns_to (i)
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := compound /= Void and then
 						compound.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := compound /= Void and then compound.is_unsafe
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 			if compound /= Void then
@@ -123,7 +123,7 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := 1
 			if compound /= Void then
@@ -131,7 +131,7 @@ feature -- Inlining
 			end
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current
 			if compound /= Void then
@@ -139,14 +139,14 @@ feature -- Inlining
 			end
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			if compound /= Void then
 				compound := compound.inlined_byte_code
 			end
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

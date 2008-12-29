@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to select docking layout names for opening.."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_dev_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Creation method.
 		do
 			default_create
@@ -33,7 +33,7 @@ feature {NONE} -- Initlization
 			key_press_actions.extend (agent on_key_press)
 		end
 
-	init_widgets is
+	init_widgets
 			-- Initilalize widgets.
 		local
 			l_h_box: EV_HORIZONTAL_BOX
@@ -79,7 +79,7 @@ feature {NONE} -- Initlization
 			show_actions.extend_kamikaze (agent list_for_existing_layouts.set_focus)
 		end
 
-	init_layout_items is
+	init_layout_items
 			-- Initlialize layout list items.
 		local
 			l_item: EV_LIST_ITEM
@@ -99,7 +99,7 @@ feature {NONE} -- Initlization
 
 feature {NONE} -- Implementation functions
 
-	on_key_press (a_key: EV_KEY) is
+	on_key_press (a_key: EV_KEY)
 			-- Handle key press actions.
 		do
 			inspect
@@ -111,13 +111,13 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_cancel is
+	on_cancel
 			-- On `cancel' button pressed.
 		do
 			destroy
 		end
 
-	on_ok is
+	on_ok
 			-- On `ok' button pressed.
 		local
 			l_item: EV_LIST_ITEM
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation functions
 			destroy
 		end
 
-	on_list_select is
+	on_list_select
 			-- Handle list selcect actions.
 		local
 			l_env: EV_ENVIRONMENT
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation functions
 				end)
 		end
 
-	on_list_double_press is
+	on_list_double_press
 			-- Handle list double press actions.
 		do
 			if list_for_existing_layouts.selected_item /= Void then
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_list_key_press (a_key: EV_KEY) is
+	on_list_key_press (a_key: EV_KEY)
 			-- Handle list press actions.
 		do
 			inspect
@@ -181,10 +181,10 @@ feature {NONE} -- Implementation
 	ok, cancel: EV_BUTTON
 			-- Ok, cancel buttons.
 
-	list_minimum_height: INTEGER is 200;
+	list_minimum_height: INTEGER = 200;
 			-- Minimum height for `list_for_existing_layouts'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared instance of Cecil hash table Eiffel image."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,17 +9,17 @@ class SHARED_CECIL
 	
 feature {NONE}
 
-	cecil_routine_table: CECIL_ROUTINE_TABLE is
+	cecil_routine_table: CECIL_ROUTINE_TABLE
 		once
 			create Result.init (1)
 		end
 
-	cecil_class_table: CECIL_CLASS_TABLE is
+	cecil_class_table: CECIL_CLASS_TABLE
 		once
 			create Result.init (1)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

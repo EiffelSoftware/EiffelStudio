@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for specifying a DLL32 without an integer alias."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -12,10 +12,10 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "EXT_DLL_ALIAS";
+	code: STRING = "EXT_DLL_ALIAS";
 			-- Error code
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

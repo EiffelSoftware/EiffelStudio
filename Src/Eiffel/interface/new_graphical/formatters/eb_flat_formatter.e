@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display flat form of a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like manager) is
+	make (a_manager: like manager)
 			-- Initialize `Current'.
 		do
 			Precursor (a_manager)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	symbol: ARRAY [EV_PIXMAP] is
+	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
@@ -40,13 +40,13 @@ feature -- Properties
 			Result.put (pixmaps.icon_pixmaps.view_flat_icon, 2)
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Graphical representation of the command.
 		once
 			Result := pixmaps.icon_pixmaps.view_flat_icon_buffer
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showflat
@@ -54,13 +54,13 @@ feature -- Properties
 
 feature {NONE} -- Properties
 
-	capital_command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL
 			-- Name of the command.
 		do
 			Result := Interface_names.l_Flat_view
 		end
 
-	post_fix: STRING is "flt"
+	post_fix: STRING = "flt"
 			-- String symbol of the command, used as an extension when saving.
 
 feature -- Access
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_class (a_class: CLASS_C) is
+	set_class (a_class: CLASS_C)
 			-- Associate current formatter with `a_class'.  Redefined to prevent
 			-- attempted formatting of external class type.
 		do
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 	class_cmd: E_SHOW_FLAT
 			-- Class command that can generate the information. Not used.
 
-	create_class_cmd is
+	create_class_cmd
 			-- Create `class_cmd'.
 		require else
 			associated_class_non_void: associated_class /= Void
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 			create class_cmd
 		end
 
-	generate_text is
+	generate_text
 		local
 			retried: BOOLEAN
 		do
@@ -114,12 +114,12 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	has_breakpoints: BOOLEAN is True
+	has_breakpoints: BOOLEAN = True
 		-- Should `Current' display breakpoints?	
 
-	line_numbers_allowed: BOOLEAN is False;
+	line_numbers_allowed: BOOLEAN = False;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

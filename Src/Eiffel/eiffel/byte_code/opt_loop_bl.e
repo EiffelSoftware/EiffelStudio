@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Optimized byte code for loops."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Access
 
-	fill_from (l: OPT_LOOP_B) is
+	fill_from (l: OPT_LOOP_B)
 		do
 			Precursor {LOOP_BL} (l)
 			array_desc := l.array_desc
@@ -31,7 +31,7 @@ feature -- Access
 			already_generated_offsets := l.already_generated_offsets
 		end
 
-	external_reg_name (id: INTEGER): STRING is
+	external_reg_name (id: INTEGER): STRING
 			-- Register name which will be effectively generated at the C level.
 		do
 			create Result.make (0)
@@ -48,7 +48,7 @@ feature -- Access
 			end
 		end
 
-	internal_reg_name (id: INTEGER): STRING is
+	internal_reg_name (id: INTEGER): STRING
 			-- Same as `external_reg_name' except that for a function returning a
 			-- result we need to return `Result' and not `tmp_result' because the
 			-- hash_code is based on `Result'.
@@ -67,7 +67,7 @@ feature -- Access
 			end
 		end;
 
-	register_acces (buf: GENERATION_BUFFER; id: INTEGER) is
+	register_acces (buf: GENERATION_BUFFER; id: INTEGER)
 		do
 			if context.byte_code.is_once and then id = 0 then
 				buf.put_string ("Result")
@@ -76,7 +76,7 @@ feature -- Access
 			end
 		end
 
-	generate is
+	generate
 		do
 			generate_line_info
 			generate_assertions
@@ -86,7 +86,7 @@ feature -- Access
 			generate_free
 		end
 
-	generate_declarations is
+	generate_declarations
 		local
 			id: INTEGER
 			r_name: STRING
@@ -146,7 +146,7 @@ feature -- Access
 			end
 		end
 
-	generate_initializations is
+	generate_initializations
 		local
 			id: INTEGER
 			r_name: STRING
@@ -199,7 +199,7 @@ feature -- Access
 			end
 		end
 
-	generate_free is
+	generate_free
 		local
 			id: INTEGER
 			buf: GENERATION_BUFFER
@@ -230,7 +230,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

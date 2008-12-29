@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Call commands outside the eiffel environment. Version for EiffelStudio."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ inherit
 
 feature -- Command execution
 
-	invoke_finish_freezing (c_code_dir, freeze_command: STRING; asynchronous: BOOLEAN; workbench_mode: BOOLEAN) is
+	invoke_finish_freezing (c_code_dir, freeze_command: STRING; asynchronous: BOOLEAN; workbench_mode: BOOLEAN)
 			-- Invoke the `finish_freezing' script.
 		local
 			cwd: STRING
@@ -63,7 +63,7 @@ feature -- Command execution
 			Execution_environment.change_working_directory (cwd)
 		end
 
-	terminate_c_compilation is
+	terminate_c_compilation
 			-- Terminate running c compilation, if any.
 		do
 			process_manager.terminate_freezing

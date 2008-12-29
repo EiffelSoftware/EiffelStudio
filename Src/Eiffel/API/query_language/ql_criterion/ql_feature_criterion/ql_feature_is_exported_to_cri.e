@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Criterion to decide whether or not a feature is exported to a given domain"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_FEATURE): BOOLEAN is
+	is_satisfied_by (a_item: QL_FEATURE): BOOLEAN
 			-- Evaluate `a_item'.
 		local
 			l_clients: like clients
@@ -46,7 +46,7 @@ feature -- Evaluate
 
 feature{NONE} -- Implementation
 
-	initialize_domain is
+	initialize_domain
 			-- Prepare clients defined `criterion_domain'.
 		local
 			l_domain_generator: QL_CLASS_DOMAIN_GENERATOR
@@ -62,7 +62,7 @@ feature{NONE} -- Implementation
 	clients: QL_CLASS_DOMAIN;
 			-- Client class domain
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

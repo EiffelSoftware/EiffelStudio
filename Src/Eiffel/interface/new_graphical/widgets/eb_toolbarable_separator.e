@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract representation of a separator in a tool bar"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	new_sd_toolbar_item (a_display_text: BOOLEAN): SD_TOOL_BAR_ITEM is
+	new_sd_toolbar_item (a_display_text: BOOLEAN): SD_TOOL_BAR_ITEM
 			-- Create a new toolbar item for Current
 		do
 			create {SD_TOOL_BAR_SEPARATOR} Result.make
@@ -33,23 +33,23 @@ feature -- Basic operations
 
 feature -- Implementation
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Picture representing a button in the customize toolbar dialog box
 		once
 			Result := pixmaps.icon_pixmaps.toolbar_separator_icon
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Identifier of a separator in the customize toolbar dialog box
 		do
 			Result := interface_names.e_description
 		end
 
-	name: STRING is "Separator";
+	name: STRING = "Separator";
 			-- Name of the command. Use to store the command in the
 			-- preferences.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

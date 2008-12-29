@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All shared attributes specific to the context tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {EB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -39,315 +39,315 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature -- Value
 
-	diagram_background_color: EV_COLOR is
+	diagram_background_color: EV_COLOR
 			--
 		do
 			Result := diagram_background_color_preference.value
 		end
 
-	diagram_toolbar_layout: ARRAY [STRING] is
+	diagram_toolbar_layout: ARRAY [STRING]
 			-- Toolbar organization
 		do
 			Result := diagram_toolbar_layout_preference.value
 		end
 
-	subcluster_depth: INTEGER is
+	subcluster_depth: INTEGER
 			--
 		do
 			Result := subcluster_depth_preference.value
 		end
 
-	supercluster_depth: INTEGER is
+	supercluster_depth: INTEGER
 			--
 		do
 			Result := supercluster_depth_preference.value
 		end
 
-	client_depth: INTEGER is
+	client_depth: INTEGER
 			--
 		do
 			Result := client_depth_preference.value
 		end
 
-	supplier_depth: INTEGER is
+	supplier_depth: INTEGER
 			--
 		do
 			Result := supplier_depth_preference.value
 		end
 
-	ancestor_depth: INTEGER is
+	ancestor_depth: INTEGER
 			--
 		do
 			Result := ancestor_depth_preference.value
 		end
 
-	descendant_depth: INTEGER is
+	descendant_depth: INTEGER
 			--
 		do
 			Result := descendant_depth_preference.value
 		end
 
-	ignore_excluded_class_figures: BOOLEAN is
+	ignore_excluded_class_figures: BOOLEAN
 			--
 		do
 			Result := ignore_excluded_class_figures_preference.value
 		end
 
-	excluded_class_figures: ARRAY [STRING] is
+	excluded_class_figures: ARRAY [STRING]
 			--
 		do
 			Result := excluded_class_figures_preference.value
 		end
 
-	diagram_auto_scroll_speed: INTEGER is
+	diagram_auto_scroll_speed: INTEGER
 			--
 		do
 			Result := diagram_auto_scroll_speed_preference.value
 		end
 
 			-- BON Class
-	bon_class_name_font: EV_IDENTIFIED_FONT is
+	bon_class_name_font: EV_IDENTIFIED_FONT
 			--
 		do
 			Result := bon_class_name_font_preference.value
 		end
 
-	bon_class_name_color: EV_COLOR is
+	bon_class_name_color: EV_COLOR
 			--
 		do
 			Result := bon_class_name_color_preference.value
 		end
 
-	bon_class_fill_color: EV_COLOR is
+	bon_class_fill_color: EV_COLOR
 			--
 		do
 			Result := bon_class_fill_color_preference.value
 		end
 
-	bon_class_uncompiled_fill_color: EV_COLOR is
+	bon_class_uncompiled_fill_color: EV_COLOR
 			--
 		do
 			Result := bon_class_uncompiled_fill_color_preference.value
 		end
 
-	bon_generics_font: EV_IDENTIFIED_FONT is
+	bon_generics_font: EV_IDENTIFIED_FONT
 			--
 		do
 			Result := bon_generics_font_preference.value
 		end
 
-	bon_generics_color: EV_COLOR is
+	bon_generics_color: EV_COLOR
 			--
 		do
 			Result := bon_generics_color_preference.value
 		end
 
 		-- BON Client supplier link
-	bon_client_label_font: EV_IDENTIFIED_FONT is
+	bon_client_label_font: EV_IDENTIFIED_FONT
 			--
 		do
 			Result := bon_client_label_font_preference.value
 		end
 
-	bon_client_label_color: EV_COLOR is
+	bon_client_label_color: EV_COLOR
 			--
 		do
 			Result := bon_client_label_color_preference.value
 		end
 
-	bon_client_color: EV_COLOR is
+	bon_client_color: EV_COLOR
 			--
 		do
 			Result := bon_client_color_preference.value
 		end
 
-	bon_client_line_width: INTEGER is
+	bon_client_line_width: INTEGER
 			--
 		do
 			Result := bon_client_line_width_preference.value
 		end
 
 		-- BON Cluster
-	bon_cluster_line_color: EV_COLOR is
+	bon_cluster_line_color: EV_COLOR
 			--
 		do
 			Result := bon_cluster_line_color_preference.value
 		end
 
-	bon_cluster_iconified_fill_color: EV_COLOR is
+	bon_cluster_iconified_fill_color: EV_COLOR
 			--
 		do
 			Result := bon_cluster_iconified_fill_color_preference.value
 		end
 
-	bon_cluster_name_area_color: EV_COLOR is
+	bon_cluster_name_area_color: EV_COLOR
 			--
 		do
 			Result := bon_cluster_name_area_color_preference.value
 		end
 
-	bon_cluster_name_color: EV_COLOR is
+	bon_cluster_name_color: EV_COLOR
 			--
 		do
 			Result := bon_cluster_name_color_preference.value
 		end
 
-	bon_cluster_name_font: EV_IDENTIFIED_FONT is
+	bon_cluster_name_font: EV_IDENTIFIED_FONT
 			--
 		do
 			Result := bon_cluster_name_font_preference.value
 		end
 
 		-- BON Inheritance link
-	bon_inheritance_color: EV_COLOR is
+	bon_inheritance_color: EV_COLOR
 			--
 		do
 			Result := bon_inheritance_color_preference.value
 		end
 
-	bon_inheritance_line_width: INTEGER is
+	bon_inheritance_line_width: INTEGER
 			--
 		do
 			Result := bon_inheritance_line_width_preference.value
 		end
 
 		-- UML Class
-	uml_class_name_font: EV_IDENTIFIED_FONT is
+	uml_class_name_font: EV_IDENTIFIED_FONT
 			--
 		do
 			Result := uml_class_name_font_preference.value
 		end
 
-	uml_class_deferred_font: EV_IDENTIFIED_FONT is
+	uml_class_deferred_font: EV_IDENTIFIED_FONT
 			--
 		do
 			Result := uml_class_deferred_font_preference.value
 		end
 
-	uml_class_properties_font: EV_IDENTIFIED_FONT is
+	uml_class_properties_font: EV_IDENTIFIED_FONT
 			--
 		do
 			Result := uml_class_properties_font_preference.value
 		end
 
-	uml_class_properties_color: EV_COLOR is
+	uml_class_properties_color: EV_COLOR
 			--
 		do
 			Result := uml_class_properties_color_preference.value
 		end
 
-	uml_class_name_color: EV_COLOR is
+	uml_class_name_color: EV_COLOR
 			--
 		do
 			Result := uml_class_name_color_preference.value
 		end
 
-	uml_class_fill_color: EV_COLOR is
+	uml_class_fill_color: EV_COLOR
 			--
 		do
 			Result := uml_class_fill_color_preference.value
 		end
 
-	uml_generics_font: EV_IDENTIFIED_FONT is
+	uml_generics_font: EV_IDENTIFIED_FONT
 			--
 		do
 			Result := uml_generics_font_preference.value
 		end
 
-	uml_generics_color: EV_COLOR is
+	uml_generics_color: EV_COLOR
 			--
 		do
 			Result := uml_generics_color_preference.value
 		end
 
-	uml_class_features_font: EV_IDENTIFIED_FONT is
+	uml_class_features_font: EV_IDENTIFIED_FONT
 			--
 		do
 			Result := uml_class_features_font_preference.value
 		end
 
-	uml_class_features_color: EV_COLOR is
+	uml_class_features_color: EV_COLOR
 			--
 		do
 			Result := uml_class_features_color_preference.value
 		end
 
-	uml_class_feature_section_font: EV_IDENTIFIED_FONT is
+	uml_class_feature_section_font: EV_IDENTIFIED_FONT
 			--
 		do
 			Result :=uml_class_feature_section_font_preference.value
 		end
 
-	uml_class_feature_section_color: EV_COLOR is
+	uml_class_feature_section_color: EV_COLOR
 			--
 		do
 			Result := uml_class_feature_section_color_preference.value
 		end
 
 		-- UML Client supplier link
-	uml_client_line_width: INTEGER is
+	uml_client_line_width: INTEGER
 			--
 		do
 			Result := uml_client_line_width_preference.value
 		end
 
-	uml_client_color: EV_COLOR is
+	uml_client_color: EV_COLOR
 			--
 		do
 			Result := uml_client_color_preference.value
 		end
 
-	uml_client_label_color: EV_COLOR is
+	uml_client_label_color: EV_COLOR
 			--
 		do
 			Result := uml_client_label_color_preference.value
 		end
 
-	uml_client_label_font: EV_IDENTIFIED_FONT is
+	uml_client_label_font: EV_IDENTIFIED_FONT
 			--
 		do
 			Result := uml_client_label_font_preference.value
 		end
 
 		-- UML Cluster
-	uml_cluster_line_color: EV_COLOR is
+	uml_cluster_line_color: EV_COLOR
 			--
 		do
 			Result := uml_cluster_line_color_preference.value
 		end
 
-	uml_cluster_iconified_fill_color: EV_COLOR is
+	uml_cluster_iconified_fill_color: EV_COLOR
 			--
 		do
 			Result := uml_cluster_iconified_fill_color_preference.value
 		end
 
-	uml_cluster_name_area_color: EV_COLOR is
+	uml_cluster_name_area_color: EV_COLOR
 			--
 		do
 			Result := uml_cluster_name_area_color_preference.value
 		end
 
-	uml_cluster_name_color: EV_COLOR is
+	uml_cluster_name_color: EV_COLOR
 			--
 		do
 			Result := uml_cluster_name_color_preference.value
 		end
 
-	uml_cluster_name_font: EV_IDENTIFIED_FONT is
+	uml_cluster_name_font: EV_IDENTIFIED_FONT
 			--
 		do
 			Result := uml_cluster_name_font_preference.value
 		end
 
 		-- UML Inheritance link
-	uml_inheritance_line_width: INTEGER is
+	uml_inheritance_line_width: INTEGER
 			--
 		do
 			Result := uml_inheritance_line_width_preference.value
 		end
 
-	uml_inheritance_color: EV_COLOR is
+	uml_inheritance_color: EV_COLOR
 			--
 		do
 			Result := uml_inheritance_color_preference.value
@@ -355,13 +355,13 @@ feature -- Value
 
 feature -- Toolbar
 
-	retrieve_diagram_sd_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
+	retrieve_diagram_sd_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- Retreive the project toolbar using the available commands in `command_pool'
 		do
 			Result := retrieve_toolbar_items (command_pool, diagram_toolbar_layout)
 		end
 
-	save_diagram_toolbar (toolbar: ARRAYED_SET [SD_TOOL_BAR_ITEM]) is
+	save_diagram_toolbar (toolbar: ARRAYED_SET [SD_TOOL_BAR_ITEM])
 			-- Save the project toolbar `project_toolbar' layout/status into the preferences.
 			-- Call `save_preferences' to have the changes actually saved.
 		do
@@ -444,78 +444,78 @@ feature {NONE} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	diagram_toolbar_layout_string: STRING is "tools.diagram_tool.diagram_toolbar_layout"
-	subcluster_depth_string: STRING is "tools.diagram_tool.subcluster_depth"
-	supercluster_depth_string: STRING is "tools.diagram_tool.supercluster_depth"
-	client_depth_string: STRING is "tools.diagram_tool.client_depth"
-	supplier_depth_string: STRING is "tools.diagram_tool.supplier_depth"
-	ancestor_depth_string: STRING is "tools.diagram_tool.ancestor_depth"
-	descendant_depth_string: STRING is "tools.diagram_tool.descendant_depth"
-	ignore_excluded_class_figures_string: STRING is "tools.diagram_tool.ignore_excluded_class_figures"
-	excluded_class_figures_string: STRING is "tools.diagram_tool.excluded_class_figures"
-	diagram_background_color_string: STRING is "tools.diagram_tool.diagram_background_color"
+	diagram_toolbar_layout_string: STRING = "tools.diagram_tool.diagram_toolbar_layout"
+	subcluster_depth_string: STRING = "tools.diagram_tool.subcluster_depth"
+	supercluster_depth_string: STRING = "tools.diagram_tool.supercluster_depth"
+	client_depth_string: STRING = "tools.diagram_tool.client_depth"
+	supplier_depth_string: STRING = "tools.diagram_tool.supplier_depth"
+	ancestor_depth_string: STRING = "tools.diagram_tool.ancestor_depth"
+	descendant_depth_string: STRING = "tools.diagram_tool.descendant_depth"
+	ignore_excluded_class_figures_string: STRING = "tools.diagram_tool.ignore_excluded_class_figures"
+	excluded_class_figures_string: STRING = "tools.diagram_tool.excluded_class_figures"
+	diagram_background_color_string: STRING = "tools.diagram_tool.diagram_background_color"
 
 		-- BON Class
-	bon_class_name_font_string: STRING is "tools.diagram_tool.bon.bon_class_name_font"
-	bon_class_name_color_string: STRING is "tools.diagram_tool.bon.bon_class_name_color"
-	bon_class_fill_color_string: STRING is "tools.diagram_tool.bon.bon_class_fill_color"
-	bon_class_uncompiled_fill_color_string: STRING is "tools.diagram_tool.bon.bon_class_uncompiled_fill_color"
-	bon_generics_font_string: STRING is "tools.diagram_tool.bon.bon_class_generics_font"
-	bon_generics_color_string: STRING is "tools.diagram_tool.bon.bon_class_generics_color"
+	bon_class_name_font_string: STRING = "tools.diagram_tool.bon.bon_class_name_font"
+	bon_class_name_color_string: STRING = "tools.diagram_tool.bon.bon_class_name_color"
+	bon_class_fill_color_string: STRING = "tools.diagram_tool.bon.bon_class_fill_color"
+	bon_class_uncompiled_fill_color_string: STRING = "tools.diagram_tool.bon.bon_class_uncompiled_fill_color"
+	bon_generics_font_string: STRING = "tools.diagram_tool.bon.bon_class_generics_font"
+	bon_generics_color_string: STRING = "tools.diagram_tool.bon.bon_class_generics_color"
 
 		-- BON Client supplier link
-	bon_client_label_font_string: STRING is "tools.diagram_tool.bon.bon_client_label_font"
-	bon_client_label_color_string: STRING is "tools.diagram_tool.bon.bon_client_label_color"
-	bon_client_color_string: STRING is "tools.diagram_tool.bon.bon_client_color"
-	bon_client_line_width_string: STRING is "tools.diagram_tool.bon.bon_client_line_width"
+	bon_client_label_font_string: STRING = "tools.diagram_tool.bon.bon_client_label_font"
+	bon_client_label_color_string: STRING = "tools.diagram_tool.bon.bon_client_label_color"
+	bon_client_color_string: STRING = "tools.diagram_tool.bon.bon_client_color"
+	bon_client_line_width_string: STRING = "tools.diagram_tool.bon.bon_client_line_width"
 
 		-- BON Cluster
-	bon_cluster_line_color_string: STRING is "tools.diagram_tool.bon.bon_cluster_line_color"
-	bon_cluster_iconified_fill_color_string: STRING is "tools.diagram_tool.bon.bon_cluster_iconified_fill_color"
-	bon_cluster_name_area_color_string: STRING is "tools.diagram_tool.bon.bon_cluster_name_area_color"
-	bon_cluster_name_color_string: STRING is "tools.diagram_tool.bon.bon_cluster_name_color"
-	bon_cluster_name_font_string: STRING is "tools.diagram_tool.bon.bon_cluster_name_font"
+	bon_cluster_line_color_string: STRING = "tools.diagram_tool.bon.bon_cluster_line_color"
+	bon_cluster_iconified_fill_color_string: STRING = "tools.diagram_tool.bon.bon_cluster_iconified_fill_color"
+	bon_cluster_name_area_color_string: STRING = "tools.diagram_tool.bon.bon_cluster_name_area_color"
+	bon_cluster_name_color_string: STRING = "tools.diagram_tool.bon.bon_cluster_name_color"
+	bon_cluster_name_font_string: STRING = "tools.diagram_tool.bon.bon_cluster_name_font"
 
 		-- BON Inheritance link
-	bon_inheritance_color_string: STRING is "tools.diagram_tool.bon.bon_inheritance_color"
-	bon_inheritance_line_width_string: STRING is "tools.diagram_tool.bon.bon_inheritance_line_width"
+	bon_inheritance_color_string: STRING = "tools.diagram_tool.bon.bon_inheritance_color"
+	bon_inheritance_line_width_string: STRING = "tools.diagram_tool.bon.bon_inheritance_line_width"
 
 		-- UML Class
-	uml_class_name_font_string: STRING is "tools.diagram_tool.uml.uml_class_name_font"
-	uml_class_deferred_font_string: STRING is "tools.diagram_tool.uml.uml_class_deferred_font"
-	uml_class_properties_font_string: STRING is "tools.diagram_tool.uml.uml_class_properties_font"
-	uml_class_properties_color_string: STRING is "tools.diagram_tool.uml.uml_class_properties_color"
-	uml_class_name_color_string: STRING is "tools.diagram_tool.uml.uml_class_name_color"
-	uml_class_fill_color_string: STRING is "tools.diagram_tool.uml.uml_class_fill_color"
-	uml_generics_font_string: STRING is "tools.diagram_tool.uml.uml_generics_font"
-	uml_generics_color_string: STRING is "tools.diagram_tool.uml.uml_generics_color"
-	uml_class_features_font_string: STRING is "tools.diagram_tool.uml.uml_class_features_font"
-	uml_class_features_color_string: STRING is "tools.diagram_tool.uml.uml_class_features_color"
-	uml_class_feature_section_font_string: STRING is "tools.diagram_tool.uml.uml_class_feature_section_font"
-	uml_class_feature_section_color_string: STRING is "tools.diagram_tool.uml.uml_class_feature_section_color"
+	uml_class_name_font_string: STRING = "tools.diagram_tool.uml.uml_class_name_font"
+	uml_class_deferred_font_string: STRING = "tools.diagram_tool.uml.uml_class_deferred_font"
+	uml_class_properties_font_string: STRING = "tools.diagram_tool.uml.uml_class_properties_font"
+	uml_class_properties_color_string: STRING = "tools.diagram_tool.uml.uml_class_properties_color"
+	uml_class_name_color_string: STRING = "tools.diagram_tool.uml.uml_class_name_color"
+	uml_class_fill_color_string: STRING = "tools.diagram_tool.uml.uml_class_fill_color"
+	uml_generics_font_string: STRING = "tools.diagram_tool.uml.uml_generics_font"
+	uml_generics_color_string: STRING = "tools.diagram_tool.uml.uml_generics_color"
+	uml_class_features_font_string: STRING = "tools.diagram_tool.uml.uml_class_features_font"
+	uml_class_features_color_string: STRING = "tools.diagram_tool.uml.uml_class_features_color"
+	uml_class_feature_section_font_string: STRING = "tools.diagram_tool.uml.uml_class_feature_section_font"
+	uml_class_feature_section_color_string: STRING = "tools.diagram_tool.uml.uml_class_feature_section_color"
 
 		-- UML Client supplier link
-	uml_client_line_width_string: STRING is "tools.diagram_tool.uml.uml_client_line_width"
-	uml_client_color_string: STRING is "tools.diagram_tool.uml.uml_client_color"
-	uml_client_label_color_string: STRING is "tools.diagram_tool.uml.uml_client_label_color"
-	uml_client_label_font_string: STRING is "tools.diagram_tool.uml.uml_client_label_font"
+	uml_client_line_width_string: STRING = "tools.diagram_tool.uml.uml_client_line_width"
+	uml_client_color_string: STRING = "tools.diagram_tool.uml.uml_client_color"
+	uml_client_label_color_string: STRING = "tools.diagram_tool.uml.uml_client_label_color"
+	uml_client_label_font_string: STRING = "tools.diagram_tool.uml.uml_client_label_font"
 
 		-- UML Cluster
-	uml_cluster_line_color_string: STRING is "tools.diagram_tool.uml.uml_cluster_line_color"
-	uml_cluster_iconified_fill_color_string: STRING is "tools.diagram_tool.uml.uml_cluster_iconified_fill_color"
-	uml_cluster_name_area_color_string: STRING is "tools.diagram_tool.uml.uml_cluster_name_area_color"
-	uml_cluster_name_color_string: STRING is "tools.diagram_tool.uml.uml_cluster_name_color"
-	uml_cluster_name_font_string: STRING is "tools.diagram_tool.uml.uml_cluster_name_font"
+	uml_cluster_line_color_string: STRING = "tools.diagram_tool.uml.uml_cluster_line_color"
+	uml_cluster_iconified_fill_color_string: STRING = "tools.diagram_tool.uml.uml_cluster_iconified_fill_color"
+	uml_cluster_name_area_color_string: STRING = "tools.diagram_tool.uml.uml_cluster_name_area_color"
+	uml_cluster_name_color_string: STRING = "tools.diagram_tool.uml.uml_cluster_name_color"
+	uml_cluster_name_font_string: STRING = "tools.diagram_tool.uml.uml_cluster_name_font"
 
 		-- UML Inheritance link
-	uml_inheritance_line_width_string: STRING is "tools.diagram_tool.uml.uml_inheritance_line_width"
-	uml_inheritance_color_string: STRING is "tools.diagram_tool.uml.uml_inheritance_color"
+	uml_inheritance_line_width_string: STRING = "tools.diagram_tool.uml.uml_inheritance_line_width"
+	uml_inheritance_color_string: STRING = "tools.diagram_tool.uml.uml_inheritance_color"
 
-	diagram_auto_scroll_speed_preference_string: STRING is "tools.diagram_tool.autoscroll_speed"
+	diagram_auto_scroll_speed_preference_string: STRING = "tools.diagram_tool.autoscroll_speed"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -693,7 +693,7 @@ invariant
 	ignore_excluded_class_figures_preference_not_void: ignore_excluded_class_figures_preference /= Void
 	excluded_class_figures_preference_not_void: excluded_class_figures_preference /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Process ast to compute the bp index from source code line index."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -185,12 +185,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			reset
 		end
 
-	make_for_inline_agent (parent_strategy: like Current; a_as: INLINE_AGENT_CREATION_AS) is
+	make_for_inline_agent (parent_strategy: like Current; a_as: INLINE_AGENT_CREATION_AS)
 		do
 			make
 			source_class := parent_strategy.source_class
@@ -202,7 +202,7 @@ feature {NONE} -- Initialization
 
 feature -- reset
 
-	reset is
+	reset
 		do
 			if breakable_lines /= Void then
 				breakable_lines.wipe_out
@@ -223,7 +223,7 @@ feature -- reset
 
 feature -- Access
 
-	sorted_breakable_lines: DS_LIST [INTEGER] is
+	sorted_breakable_lines: DS_LIST [INTEGER]
 		do
 			Result := breakable_lines
 			if not integer_sorter.sorted (Result) then
@@ -231,7 +231,7 @@ feature -- Access
 			end
 		end
 
-	integer_sorter: DS_QUICK_SORTER [INTEGER] is
+	integer_sorter: DS_QUICK_SORTER [INTEGER]
 		once
 			create Result.make (create {KL_COMPARABLE_COMPARATOR [INTEGER]}.make)
 		end
@@ -240,35 +240,35 @@ feature -- Access
 
 feature -- Element change
 
-	set_source_feature (a_feature: like source_feature) is
+	set_source_feature (a_feature: like source_feature)
 		do
 			source_feature := a_feature
 		ensure
 			source_feature_set: source_feature = a_feature
 		end
 
-	set_current_feature (a_feature: like current_feature) is
+	set_current_feature (a_feature: like current_feature)
 		do
 			current_feature := a_feature
 		end
 
-	set_source_class (a_class: like source_class) is
+	set_source_class (a_class: like source_class)
 		do
 			source_class := a_class
 		end
 
-	set_current_class (a_class: like current_class) is
+	set_current_class (a_class: like current_class)
 		do
 			current_class := a_class
 		end
 
-	reset_last_class_and_type is
+	reset_last_class_and_type
 		do
 			last_type := Void
 			last_class := Void
 		end
 
-	wipe_out_error is
+	wipe_out_error
 			-- Wipe out errors.
 		do
 			has_error_internal := False
@@ -303,7 +303,7 @@ feature -- Access
 	error_message: ARRAYED_LIST [STRING]
 			-- Error message.
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Did an error happen?
 		do
 			Result := not error_message.is_empty
@@ -333,7 +333,7 @@ feature {AST_BREAKABLE_SLOT_STRATEGY} -- Access
 
 feature {AST_BREAKABLE_SLOT_STRATEGY} -- Error handling
 
-	set_error_message (a_str: STRING) is
+	set_error_message (a_str: STRING)
 			-- Setup `error_message'.
 		require
 			a_str_not_void: a_str /= Void
@@ -345,7 +345,7 @@ feature {AST_BREAKABLE_SLOT_STRATEGY} -- Error handling
 
 feature -- Roundtrip
 
-	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS) is
+	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS)
 		local
 			l_strategy: like Current
 			l_feat: FEATURE_I
@@ -374,12 +374,12 @@ feature -- Roundtrip
 
 feature {NONE} -- Implementation
 
-	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS) is
+	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS)
 		do
 			l_as.creation_expr.process (Current)
 		end
 
-	process_integer_as (l_as: INTEGER_CONSTANT) is
+	process_integer_as (l_as: INTEGER_CONSTANT)
 		do
 			if l_as.constant_type /= Void then
 				l_as.constant_type.process (Current)
@@ -387,7 +387,7 @@ feature {NONE} -- Implementation
 			last_type := l_as.manifest_type
 		end
 
-	process_static_access_as (l_as: STATIC_ACCESS_AS) is
+	process_static_access_as (l_as: STATIC_ACCESS_AS)
 		local
 			l_feat: E_FEATURE
 			l_rout_ids: ID_SET
@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS) is
+	process_feature_clause_as (l_as: FEATURE_CLAUSE_AS)
 		local
 			i, l_count: INTEGER
 			f: EIFFEL_LIST [FEATURE_AS]
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_tuple_as (l_as: TUPLE_AS) is
+	process_tuple_as (l_as: TUPLE_AS)
 		local
 			l_tuple_type: TUPLE_TYPE_A
 		do
@@ -473,7 +473,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_real_as (l_as: REAL_AS) is
+	process_real_as (l_as: REAL_AS)
 		do
 			if not expr_type_visiting then
 				if l_as.constant_type /= Void then
@@ -489,17 +489,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_bool_as (l_as: BOOL_AS) is
+	process_bool_as (l_as: BOOL_AS)
 		do
 			last_type := Boolean_type
 		end
 
-	process_bit_const_as (l_as: BIT_CONST_AS) is
+	process_bit_const_as (l_as: BIT_CONST_AS)
 		do
 			create {BITS_A} last_type.make (l_as.value.name.count)
 		end
 
-	process_array_as (l_as: COMPILER_ARRAY_AS) is
+	process_array_as (l_as: COMPILER_ARRAY_AS)
 		do
 			reset_last_class_and_type
 			if not l_as.expressions.is_empty then
@@ -508,24 +508,24 @@ feature {NONE} -- Implementation
 			last_type := l_as.array_type
 		end
 
-	process_char_as (l_as: CHAR_AS) is
+	process_char_as (l_as: CHAR_AS)
 		do
 			last_type := character_type
 		end
 
-	process_string_as (l_as: STRING_AS) is
+	process_string_as (l_as: STRING_AS)
 		do
 			last_type := string_type
 		end
 
-	process_verbatim_string_as (l_as: VERBATIM_STRING_AS) is
+	process_verbatim_string_as (l_as: VERBATIM_STRING_AS)
 		do
 			if not expr_type_visiting then
 			end
 			last_type := string_type
 		end
 
-	process_body_as (l_as: BODY_AS) is
+	process_body_as (l_as: BODY_AS)
 		local
 			l_feat: E_FEATURE
 		do
@@ -546,13 +546,13 @@ feature {NONE} -- Implementation
 			safe_process (l_as.content)
 		end
 
-	process_built_in_as (l_as: BUILT_IN_AS) is
+	process_built_in_as (l_as: BUILT_IN_AS)
 			-- Process `l_as'.
 		do
 			process_external_as (l_as)
 		end
 
-	process_result_as (l_as: RESULT_AS) is
+	process_result_as (l_as: RESULT_AS)
 		local
 			l_feat: E_FEATURE
 		do
@@ -569,12 +569,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_current_as (l_as: CURRENT_AS) is
+	process_current_as (l_as: CURRENT_AS)
 		do
 			last_type := current_class.actual_type
 		end
 
-	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
+	process_access_feat_as (l_as: ACCESS_FEAT_AS)
 		local
 			l_feat: E_FEATURE
 			l_feat_result: like feature_from_type_set
@@ -738,22 +738,22 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_access_inv_as (l_as: ACCESS_INV_AS) is
+	process_access_inv_as (l_as: ACCESS_INV_AS)
 		do
 			process_access_feat_as (l_as)
 		end
 
-	process_access_id_as (l_as: ACCESS_ID_AS) is
+	process_access_id_as (l_as: ACCESS_ID_AS)
 		do
 			process_access_feat_as (l_as)
 		end
 
-	process_access_assert_as (l_as: ACCESS_ASSERT_AS) is
+	process_access_assert_as (l_as: ACCESS_ASSERT_AS)
 		do
 			process_access_feat_as (l_as)
 		end
 
-	process_precursor_as (l_as: PRECURSOR_AS) is
+	process_precursor_as (l_as: PRECURSOR_AS)
 		local
 			real_feature: E_FEATURE
 			l_parent_class: CLASS_C
@@ -818,19 +818,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_nested_expr_as (l_as: NESTED_EXPR_AS) is
+	process_nested_expr_as (l_as: NESTED_EXPR_AS)
 		do
 			l_as.target.process (Current)
 			l_as.message.process (Current)
 		end
 
-	process_nested_as (l_as: NESTED_AS) is
+	process_nested_as (l_as: NESTED_AS)
 		do
 			l_as.target.process (Current)
 			l_as.message.process (Current)
 		end
 
-	process_creation_expr_as (l_as: CREATION_EXPR_AS) is
+	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 		local
 			l_type: TYPE_A
 		do
@@ -842,7 +842,7 @@ feature {NONE} -- Implementation
 			last_type := l_type
 		end
 
-	process_type_expr_as (l_as: TYPE_EXPR_AS) is
+	process_type_expr_as (l_as: TYPE_EXPR_AS)
 		do
 			if not expr_type_visiting then
 				l_as.type.process (Current)
@@ -853,7 +853,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_routine_as (l_as: ROUTINE_AS) is
+	process_routine_as (l_as: ROUTINE_AS)
 		local
 			is_inline_agent: BOOLEAN
 			inline_agent_assertion: ROUTINE_ASSERTIONS
@@ -901,12 +901,12 @@ feature {NONE} -- Implementation
 				end
 		end
 
-	process_constant_as (l_as: CONSTANT_AS) is
+	process_constant_as (l_as: CONSTANT_AS)
 		do
 			l_as.value.process (Current)
 		end
 
-	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]) is
+	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL])
 		local
 			i, l_count: INTEGER
 			failure: BOOLEAN
@@ -924,7 +924,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS) is
+	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -932,7 +932,7 @@ feature {NONE} -- Implementation
 			process_eiffel_list (l_as)
 		end
 
-	process_operand_as (l_as: OPERAND_AS) is
+	process_operand_as (l_as: OPERAND_AS)
 		do
 			if l_as.class_type /= Void then
 				l_as.class_type.process (Current)
@@ -953,7 +953,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_variant_as (l_as: VARIANT_AS) is
+	process_variant_as (l_as: VARIANT_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -961,7 +961,7 @@ feature {NONE} -- Implementation
 			process_tagged_as (l_as)
 		end
 
-	process_un_strip_as (l_as: UN_STRIP_AS) is
+	process_un_strip_as (l_as: UN_STRIP_AS)
 		local
 			first_printed: BOOLEAN
 			l_names_heap: like names_heap
@@ -990,23 +990,23 @@ feature {NONE} -- Implementation
 			last_type := strip_type
 		end
 
-	process_converted_expr_as (l_as: CONVERTED_EXPR_AS) is
+	process_converted_expr_as (l_as: CONVERTED_EXPR_AS)
 		do
 			l_as.expr.process (Current)
 		end
 
-	process_paran_as (l_as: PARAN_AS) is
+	process_paran_as (l_as: PARAN_AS)
 		do
 			l_as.expr.process (Current)
 		end
 
-	process_expr_call_as (l_as: EXPR_CALL_AS) is
+	process_expr_call_as (l_as: EXPR_CALL_AS)
 		do
 			reset_last_class_and_type
 			l_as.call.process (Current)
 		end
 
-	process_expr_address_as (l_as: EXPR_ADDRESS_AS) is
+	process_expr_address_as (l_as: EXPR_ADDRESS_AS)
 		do
 			if not expr_type_visiting then
 				l_as.expr.process (Current)
@@ -1014,7 +1014,7 @@ feature {NONE} -- Implementation
 			last_type := pointer_type
 		end
 
-	process_address_result_as (l_as: ADDRESS_RESULT_AS) is
+	process_address_result_as (l_as: ADDRESS_RESULT_AS)
 		local
 			l_type: TYPE_A
 		do
@@ -1022,7 +1022,7 @@ feature {NONE} -- Implementation
 			create {TYPED_POINTER_A} last_type.make_typed (l_type)
 		end
 
-	process_address_current_as (l_as: ADDRESS_CURRENT_AS) is
+	process_address_current_as (l_as: ADDRESS_CURRENT_AS)
 		local
 			l_type: TYPE_A
 		do
@@ -1030,7 +1030,7 @@ feature {NONE} -- Implementation
 			create {TYPED_POINTER_A} last_type.make_typed (l_type)
 		end
 
-	process_address_as (l_as: ADDRESS_AS) is
+	process_address_as (l_as: ADDRESS_AS)
 		local
 			l_feat: E_FEATURE
 		do
@@ -1053,7 +1053,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
+	process_routine_creation_as (l_as: ROUTINE_CREATION_AS)
 		local
 			l_feat: E_FEATURE
 		do
@@ -1082,7 +1082,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_unary_as (l_as: UNARY_AS) is
+	process_unary_as (l_as: UNARY_AS)
 		local
 			l_feat: E_FEATURE
 			l_type: TYPE_A
@@ -1151,32 +1151,32 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_un_free_as (l_as: UN_FREE_AS) is
+	process_un_free_as (l_as: UN_FREE_AS)
 		do
 			process_unary_as (l_as)
 		end
 
-	process_un_minus_as (l_as: UN_MINUS_AS) is
+	process_un_minus_as (l_as: UN_MINUS_AS)
 		do
 			process_unary_as (l_as)
 		end
 
-	process_un_not_as (l_as: UN_NOT_AS) is
+	process_un_not_as (l_as: UN_NOT_AS)
 		do
 			process_unary_as (l_as)
 		end
 
-	process_un_old_as (l_as: UN_OLD_AS) is
+	process_un_old_as (l_as: UN_OLD_AS)
 		do
 			l_as.expr.process (Current)
 		end
 
-	process_un_plus_as (l_as: UN_PLUS_AS) is
+	process_un_plus_as (l_as: UN_PLUS_AS)
 		do
 			process_unary_as (l_as)
 		end
 
-	process_binary_as (l_as: BINARY_AS) is
+	process_binary_as (l_as: BINARY_AS)
 		local
 			l_feat: E_FEATURE
 			l_name: STRING
@@ -1289,125 +1289,125 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_bin_and_then_as (l_as: BIN_AND_THEN_AS) is
+	process_bin_and_then_as (l_as: BIN_AND_THEN_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_free_as (l_as: BIN_FREE_AS) is
+	process_bin_free_as (l_as: BIN_FREE_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_implies_as (l_as: BIN_IMPLIES_AS) is
+	process_bin_implies_as (l_as: BIN_IMPLIES_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_or_as (l_as: BIN_OR_AS) is
+	process_bin_or_as (l_as: BIN_OR_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS) is
+	process_bin_or_else_as (l_as: BIN_OR_ELSE_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_xor_as (l_as: BIN_XOR_AS) is
+	process_bin_xor_as (l_as: BIN_XOR_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_ge_as (l_as: BIN_GE_AS) is
+	process_bin_ge_as (l_as: BIN_GE_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_gt_as (l_as: BIN_GT_AS) is
+	process_bin_gt_as (l_as: BIN_GT_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_le_as (l_as: BIN_LE_AS) is
+	process_bin_le_as (l_as: BIN_LE_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_lt_as (l_as: BIN_LT_AS) is
+	process_bin_lt_as (l_as: BIN_LT_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_div_as (l_as: BIN_DIV_AS) is
+	process_bin_div_as (l_as: BIN_DIV_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_minus_as (l_as: BIN_MINUS_AS) is
+	process_bin_minus_as (l_as: BIN_MINUS_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_mod_as (l_as: BIN_MOD_AS) is
+	process_bin_mod_as (l_as: BIN_MOD_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_plus_as (l_as: BIN_PLUS_AS) is
+	process_bin_plus_as (l_as: BIN_PLUS_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_power_as (l_as: BIN_POWER_AS) is
+	process_bin_power_as (l_as: BIN_POWER_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_slash_as (l_as: BIN_SLASH_AS) is
+	process_bin_slash_as (l_as: BIN_SLASH_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_star_as (l_as: BIN_STAR_AS) is
+	process_bin_star_as (l_as: BIN_STAR_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_and_as (l_as: BIN_AND_AS) is
+	process_bin_and_as (l_as: BIN_AND_AS)
 		do
 			process_binary_as (l_as)
 		end
 
-	process_bin_eq_as (l_as: BIN_EQ_AS) is
+	process_bin_eq_as (l_as: BIN_EQ_AS)
 		do
 			l_as.left.process (Current)
 			l_as.right.process (Current)
 			last_type := boolean_type
 		end
 
-	process_bin_ne_as (l_as: BIN_NE_AS) is
+	process_bin_ne_as (l_as: BIN_NE_AS)
 		do
 			l_as.left.process (Current)
 			l_as.right.process (Current)
 			last_type := boolean_type
 		end
 
-	process_bin_tilde_as (l_as: BIN_TILDE_AS) is
+	process_bin_tilde_as (l_as: BIN_TILDE_AS)
 		do
 			l_as.left.process (Current)
 			l_as.right.process (Current)
 			last_type := boolean_type
 		end
 
-	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS) is
+	process_bin_not_tilde_as (l_as: BIN_NOT_TILDE_AS)
 		do
 			l_as.left.process (Current)
 			l_as.right.process (Current)
 			last_type := boolean_type
 		end
 
-	process_bracket_as (l_as: BRACKET_AS) is
+	process_bracket_as (l_as: BRACKET_AS)
 		local
 			l_feat: E_FEATURE
 			l_type: TYPE_A
@@ -1464,7 +1464,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_object_test_as (l_as: OBJECT_TEST_AS) is
+	process_object_test_as (l_as: OBJECT_TEST_AS)
 		do
 			l_as.name.process (Current)
 			l_as.type.process (Current)
@@ -1472,7 +1472,7 @@ feature {NONE} -- Implementation
 			last_type := boolean_type
 		end
 
-	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
+	process_external_lang_as (l_as: EXTERNAL_LANG_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1480,7 +1480,7 @@ feature {NONE} -- Implementation
 			l_as.language_name.process (Current)
 		end
 
-	process_feature_as (l_as: FEATURE_AS) is
+	process_feature_as (l_as: FEATURE_AS)
 		local
 			cont: CONTENT_AS
 			is_const_or_att: BOOLEAN
@@ -1497,12 +1497,12 @@ feature {NONE} -- Implementation
 			is_const_or_att := cont = Void or else cont.is_constant
 		end
 
-	process_feature_list_as (l_as: FEATURE_LIST_AS) is
+	process_feature_list_as (l_as: FEATURE_LIST_AS)
 		do
 			l_as.features.process (Current)
 		end
 
-	process_assign_as (l_as: ASSIGN_AS) is
+	process_assign_as (l_as: ASSIGN_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1516,7 +1516,7 @@ feature {NONE} -- Implementation
 			l_as.source.process (Current)
 		end
 
-	process_assigner_call_as (l_as: ASSIGNER_CALL_AS) is
+	process_assigner_call_as (l_as: ASSIGNER_CALL_AS)
 		do
 			if not expr_type_visiting then
 				reset_last_class_and_type
@@ -1526,7 +1526,7 @@ feature {NONE} -- Implementation
 			l_as.source.process (Current)
 		end
 
-	process_reverse_as (l_as: REVERSE_AS) is
+	process_reverse_as (l_as: REVERSE_AS)
 		do
 			if not expr_type_visiting then
 				put_breakable (l_as)
@@ -1535,7 +1535,7 @@ feature {NONE} -- Implementation
 			l_as.source.process (Current)
 		end
 
-	process_check_as (l_as: CHECK_AS) is
+	process_check_as (l_as: CHECK_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1545,7 +1545,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_creation_as (l_as: CREATION_AS) is
+	process_creation_as (l_as: CREATION_AS)
 		do
 			if not expr_type_visiting then
 				put_breakable (l_as)
@@ -1562,7 +1562,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	process_debug_as (l_as: DEBUG_AS) is
+	process_debug_as (l_as: DEBUG_AS)
 		do
 			if l_as.keys /= Void and then not l_as.keys.is_empty then
 				l_as.keys.process (Current)
@@ -1572,7 +1572,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_if_as (l_as: IF_AS) is
+	process_if_as (l_as: IF_AS)
 		do
 			put_breakable (l_as)
 			l_as.condition.process (Current)
@@ -1587,7 +1587,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_inspect_as (l_as: INSPECT_AS) is
+	process_inspect_as (l_as: INSPECT_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1604,7 +1604,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_instr_call_as (l_as: INSTR_CALL_AS) is
+	process_instr_call_as (l_as: INSTR_CALL_AS)
 		do
 			reset_last_class_and_type
 			if not expr_type_visiting then
@@ -1613,7 +1613,7 @@ feature {NONE} -- Implementation
 			l_as.call.process (Current)
 		end
 
-	process_loop_as (l_as: LOOP_AS) is
+	process_loop_as (l_as: LOOP_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1635,7 +1635,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_retry_as (l_as: RETRY_AS) is
+	process_retry_as (l_as: RETRY_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1643,7 +1643,7 @@ feature {NONE} -- Implementation
 			put_breakable (l_as)
 		end
 
-	process_external_as (l_as: EXTERNAL_AS) is
+	process_external_as (l_as: EXTERNAL_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1654,7 +1654,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_attribute_as (l_as: ATTRIBUTE_AS) is
+	process_attribute_as (l_as: ATTRIBUTE_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1664,7 +1664,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_do_as (l_as: DO_AS) is
+	process_do_as (l_as: DO_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1674,7 +1674,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_once_as (l_as: ONCE_AS) is
+	process_once_as (l_as: ONCE_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1684,7 +1684,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_type_dec_as (l_as: TYPE_DEC_AS) is
+	process_type_dec_as (l_as: TYPE_DEC_AS)
 		local
 			l_names_heap: like names_heap
 		do
@@ -1705,7 +1705,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_class_as (l_as: CLASS_AS) is
+	process_class_as (l_as: CLASS_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1713,7 +1713,7 @@ feature {NONE} -- Implementation
 			share_class_processing (l_as)
 		end
 
-	share_class_processing (l_as: CLASS_AS) is
+	share_class_processing (l_as: CLASS_AS)
 			-- Shared part of `'processing_class_as' for both normal flat views and doc.
 		local
 			l_creators: EIFFEL_LIST [CREATE_AS]
@@ -1757,7 +1757,7 @@ feature {NONE} -- Implementation
 			safe_process (l_as.bottom_indexes)
 		end
 
-	process_parent_as (l_as: PARENT_AS) is
+	process_parent_as (l_as: PARENT_AS)
 		local
 			end_to_print: BOOLEAN
 		do
@@ -1795,7 +1795,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_type_as (l_as: TYPE_AS) is
+	process_type_as (l_as: TYPE_AS)
 			-- Process `l_as'
 		require
 			l_as_not_void: l_as /= Void
@@ -1806,7 +1806,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_like_id_as (l_as: LIKE_ID_AS) is
+	process_like_id_as (l_as: LIKE_ID_AS)
 		do
 			check_type (l_as)
 			if processing_locals then
@@ -1814,7 +1814,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_like_cur_as (l_as: LIKE_CUR_AS) is
+	process_like_cur_as (l_as: LIKE_CUR_AS)
 		do
 			check_type (l_as)
 			if processing_locals then
@@ -1822,12 +1822,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_formal_as (l_as: FORMAL_AS) is
+	process_formal_as (l_as: FORMAL_AS)
 		do
 			process_type_as (l_as)
 		end
 
-	process_formal_dec_as (l_as: FORMAL_DEC_AS) is
+	process_formal_dec_as (l_as: FORMAL_DEC_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1836,38 +1836,38 @@ feature {NONE} -- Implementation
 
 		end
 
-	process_class_type_as (l_as: CLASS_TYPE_AS) is
+	process_class_type_as (l_as: CLASS_TYPE_AS)
 		do
 			process_type_as (l_as)
 		end
 
-	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS)
 		do
 			process_type_as (l_as)
 		end
 
-	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS)
 			-- Process `l_as'.
 		do
 			process_type_as (l_as)
 		end
 
-	process_none_type_as (l_as: NONE_TYPE_AS) is
+	process_none_type_as (l_as: NONE_TYPE_AS)
 		do
 			process_type_as (l_as)
 		end
 
-	process_bits_as (l_as: BITS_AS) is
+	process_bits_as (l_as: BITS_AS)
 		do
 			process_type_as (l_as)
 		end
 
-	process_bits_symbol_as (l_as: BITS_SYMBOL_AS) is
+	process_bits_symbol_as (l_as: BITS_SYMBOL_AS)
 		do
 			process_type_as (l_as)
 		end
 
-	process_rename_as (l_as: RENAME_AS) is
+	process_rename_as (l_as: RENAME_AS)
 		local
 			l_last_parent: like last_parent
 		do
@@ -1881,7 +1881,7 @@ feature {NONE} -- Implementation
 			last_parent := l_last_parent
 		end
 
-	process_invariant_as (l_as: INVARIANT_AS) is
+	process_invariant_as (l_as: INVARIANT_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1891,7 +1891,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_interval_as (l_as: INTERVAL_AS) is
+	process_interval_as (l_as: INTERVAL_AS)
 		do
 			l_as.lower.process (Current)
 			if l_as.upper /= Void then
@@ -1899,7 +1899,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_index_as (l_as: INDEX_AS) is
+	process_index_as (l_as: INDEX_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1907,7 +1907,7 @@ feature {NONE} -- Implementation
 			l_as.index_list.process (Current)
 		end
 
-	process_export_item_as (l_as: EXPORT_ITEM_AS) is
+	process_export_item_as (l_as: EXPORT_ITEM_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1916,7 +1916,7 @@ feature {NONE} -- Implementation
 			l_as.features.process (Current)
 		end
 
-	process_elseif_as (l_as: ELSIF_AS) is
+	process_elseif_as (l_as: ELSIF_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1928,7 +1928,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_create_as (l_as: CREATE_AS) is
+	process_create_as (l_as: CREATE_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1941,7 +1941,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_client_as (l_as: CLIENT_AS) is
+	process_client_as (l_as: CLIENT_AS)
 		local
 			temp: STRING
 			cluster: CONF_GROUP
@@ -1964,7 +1964,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_case_as (l_as: CASE_AS) is
+	process_case_as (l_as: CASE_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1975,7 +1975,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_ensure_as (l_as: ENSURE_AS) is
+	process_ensure_as (l_as: ENSURE_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1983,7 +1983,7 @@ feature {NONE} -- Implementation
 			format_assert_list_as (l_as, ti_ensure_keyword)
 		end
 
-	process_ensure_then_as (l_as: ENSURE_THEN_AS) is
+	process_ensure_then_as (l_as: ENSURE_THEN_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1991,7 +1991,7 @@ feature {NONE} -- Implementation
 			format_assert_list_as (l_as, ti_ensure_then_keyword)
 		end
 
-	process_require_as (l_as: REQUIRE_AS) is
+	process_require_as (l_as: REQUIRE_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -1999,7 +1999,7 @@ feature {NONE} -- Implementation
 			format_assert_list_as (l_as, ti_require_keyword)
 		end
 
-	process_require_else_as (l_as: REQUIRE_ELSE_AS) is
+	process_require_else_as (l_as: REQUIRE_ELSE_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2007,7 +2007,7 @@ feature {NONE} -- Implementation
 			format_assert_list_as (l_as, ti_require_else_keyword)
 		end
 
-	process_convert_feat_as (l_as: CONVERT_FEAT_AS) is
+	process_convert_feat_as (l_as: CONVERT_FEAT_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2016,30 +2016,22 @@ feature {NONE} -- Implementation
 			l_as.conversion_types.process (Current)
 		end
 
-	process_void_as (l_as: VOID_AS) is
+	process_void_as (l_as: VOID_AS)
 		do
 			last_type := none_type
 		end
 
-	process_type_list_as (l_as: TYPE_LIST_AS) is
+	process_type_list_as (l_as: TYPE_LIST_AS)
 		do
 			process_eiffel_list (l_as)
 		end
 
-	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS) is
+	process_type_dec_list_as (l_as: TYPE_DEC_LIST_AS)
 		do
 			process_eiffel_list (l_as)
 		end
 
-	process_convert_feat_list_as (l_as: CONVERT_FEAT_LIST_AS) is
-		do
-			check
-				not_expr_type_visiting: not expr_type_visiting
-			end
-			process_eiffel_list (l_as)
-		end
-
-	process_class_list_as (l_as: CLASS_LIST_AS) is
+	process_convert_feat_list_as (l_as: CONVERT_FEAT_LIST_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2047,7 +2039,7 @@ feature {NONE} -- Implementation
 			process_eiffel_list (l_as)
 		end
 
-	process_parent_list_as (l_as: PARENT_LIST_AS) is
+	process_class_list_as (l_as: CLASS_LIST_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2055,7 +2047,15 @@ feature {NONE} -- Implementation
 			process_eiffel_list (l_as)
 		end
 
-	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS) is
+	process_parent_list_as (l_as: PARENT_LIST_AS)
+		do
+			check
+				not_expr_type_visiting: not expr_type_visiting
+			end
+			process_eiffel_list (l_as)
+		end
+
+	process_local_dec_list_as (l_as: LOCAL_DEC_LIST_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2063,7 +2063,7 @@ feature {NONE} -- Implementation
 			l_as.locals.process (Current)
 		end
 
-	process_formal_argu_dec_list_as (l_as: FORMAL_ARGU_DEC_LIST_AS) is
+	process_formal_argu_dec_list_as (l_as: FORMAL_ARGU_DEC_LIST_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2071,7 +2071,7 @@ feature {NONE} -- Implementation
 			l_as.arguments.process (Current)
 		end
 
-	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS) is
+	process_debug_key_list_as (l_as: DEBUG_KEY_LIST_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2079,7 +2079,7 @@ feature {NONE} -- Implementation
 			l_as.keys.process (Current)
 		end
 
-	process_delayed_actual_list_as (l_as: DELAYED_ACTUAL_LIST_AS) is
+	process_delayed_actual_list_as (l_as: DELAYED_ACTUAL_LIST_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2087,12 +2087,12 @@ feature {NONE} -- Implementation
 			l_as.operands.process (Current)
 		end
 
-	process_parameter_list_as (l_as: PARAMETER_LIST_AS) is
+	process_parameter_list_as (l_as: PARAMETER_LIST_AS)
 		do
 			l_as.parameters.process (Current)
 		end
 
-	process_rename_clause_as (l_as: RENAME_CLAUSE_AS) is
+	process_rename_clause_as (l_as: RENAME_CLAUSE_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2100,7 +2100,7 @@ feature {NONE} -- Implementation
 			safe_process (l_as.content)
 		end
 
-	process_export_clause_as (l_as: EXPORT_CLAUSE_AS) is
+	process_export_clause_as (l_as: EXPORT_CLAUSE_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2108,7 +2108,7 @@ feature {NONE} -- Implementation
 			safe_process (l_as.content)
 		end
 
-	process_undefine_clause_as (l_as: UNDEFINE_CLAUSE_AS) is
+	process_undefine_clause_as (l_as: UNDEFINE_CLAUSE_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2116,7 +2116,7 @@ feature {NONE} -- Implementation
 			safe_process (l_as.content)
 		end
 
-	process_redefine_clause_as (l_as: REDEFINE_CLAUSE_AS) is
+	process_redefine_clause_as (l_as: REDEFINE_CLAUSE_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2124,7 +2124,7 @@ feature {NONE} -- Implementation
 			safe_process (l_as.content)
 		end
 
-	process_select_clause_as (l_as: SELECT_CLAUSE_AS) is
+	process_select_clause_as (l_as: SELECT_CLAUSE_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2132,7 +2132,7 @@ feature {NONE} -- Implementation
 			safe_process (l_as.content)
 		end
 
-	process_formal_generic_list_as (l_as: FORMAL_GENERIC_LIST_AS) is
+	process_formal_generic_list_as (l_as: FORMAL_GENERIC_LIST_AS)
 		do
 			check
 				not_expr_type_visiting: not expr_type_visiting
@@ -2142,7 +2142,7 @@ feature {NONE} -- Implementation
 
 feature -- Expression visitor
 
-	expr_type (a_expr: EXPR_AS): TYPE_A is
+	expr_type (a_expr: EXPR_AS): TYPE_A
 			-- Type of `a_expr'
 			-- `last_type' is not modified.
 		local
@@ -2169,7 +2169,7 @@ feature -- Expression visitor
 			Result_is_not_a_type_set: not has_error_internal implies (not Result.is_type_set)
 		end
 
-	expr_types (a_exprs: EIFFEL_LIST [EXPR_AS]): ARRAY [TYPE_A] is
+	expr_types (a_exprs: EIFFEL_LIST [EXPR_AS]): ARRAY [TYPE_A]
 			-- Types of `expr_types'
 			-- `last_type' is not modified.
 		local
@@ -2206,7 +2206,7 @@ feature {NONE} -- Expression visitor
 
 feature {NONE} -- Implementation: helpers
 
-	format_compound (lc: EIFFEL_LIST [INSTRUCTION_AS]) is
+	format_compound (lc: EIFFEL_LIST [INSTRUCTION_AS])
 		require
 			lc_not_void: lc /= Void
 		local
@@ -2223,30 +2223,30 @@ feature {NONE} -- Implementation: helpers
 			end
 		end
 
-	Carriage_return_char: CHARACTER is '%N'
+	Carriage_return_char: CHARACTER = '%N'
 
-	format_header (l_as: CLASS_AS) is
+	format_header (l_as: CLASS_AS)
 		require
 			l_as_not_void: l_as /= Void
 		do
 			format_generics (l_as.generics)
 		end
 
-	format_generics (l_as: EIFFEL_LIST [FORMAL_DEC_AS]) is
+	format_generics (l_as: EIFFEL_LIST [FORMAL_DEC_AS])
 		do
 			if l_as /= Void then
 				l_as.process (Current)
 			end
 		end
 
-	format_convert_clause (l_as: EIFFEL_LIST [CONVERT_FEAT_AS]) is
+	format_convert_clause (l_as: EIFFEL_LIST [CONVERT_FEAT_AS])
 		do
 			if l_as /= Void then
 				l_as.process (Current)
 			end
 		end
 
-	features_simple_format (l_as: EIFFEL_LIST [FEATURE_CLAUSE_AS]) is
+	features_simple_format (l_as: EIFFEL_LIST [FEATURE_CLAUSE_AS])
 		require
 			l_as_not_void: l_as /= Void
 		local
@@ -2273,7 +2273,7 @@ feature {NONE} -- Implementation: helpers
 			end
 		end
 
-	format_clause (a_keyword: STRING; a_clause: EIFFEL_LIST [AST_EIFFEL]; has_separator: BOOLEAN) is
+	format_clause (a_keyword: STRING; a_clause: EIFFEL_LIST [AST_EIFFEL]; has_separator: BOOLEAN)
 		require
 			a_keyword_not_void: a_keyword /= Void
 			a_clause_not_void: a_clause /= Void
@@ -2281,7 +2281,7 @@ feature {NONE} -- Implementation: helpers
 			a_clause.process (Current)
 		end
 
-	format_tagged_as (l_as: TAGGED_AS; hide_breakable_marks: BOOLEAN) is
+	format_tagged_as (l_as: TAGGED_AS; hide_breakable_marks: BOOLEAN)
 		require
 			l_as_not_void: l_as /= Void
 		do
@@ -2291,7 +2291,7 @@ feature {NONE} -- Implementation: helpers
 			l_as.expr.process (Current)
 		end
 
-	invariant_format_assertions (l_as: EIFFEL_LIST [TAGGED_AS]) is
+	invariant_format_assertions (l_as: EIFFEL_LIST [TAGGED_AS])
 		require
 			l_as_not_vod: l_as /= Void
 		local
@@ -2310,7 +2310,7 @@ feature {NONE} -- Implementation: helpers
 			end
 		end
 
-	invariant_simple_format_assertions (l_as: EIFFEL_LIST [TAGGED_AS]) is
+	invariant_simple_format_assertions (l_as: EIFFEL_LIST [TAGGED_AS])
 		require
 			l_as_not_vod: l_as /= Void
 		local
@@ -2329,7 +2329,7 @@ feature {NONE} -- Implementation: helpers
 			end
 		end
 
-	format_assertions (l_as: EIFFEL_LIST [TAGGED_AS]; hide_breakable_marks: BOOLEAN) is
+	format_assertions (l_as: EIFFEL_LIST [TAGGED_AS]; hide_breakable_marks: BOOLEAN)
 		require
 			l_as_not_void: l_as /= Void
 		local
@@ -2352,7 +2352,7 @@ feature {NONE} -- Implementation: helpers
 			end
 		end
 
-	simple_format_assertions (l_as: EIFFEL_LIST [TAGGED_AS]) is
+	simple_format_assertions (l_as: EIFFEL_LIST [TAGGED_AS])
 		require
 			l_as_not_void: l_as /= Void
 		local
@@ -2371,7 +2371,7 @@ feature {NONE} -- Implementation: helpers
 			end
 		end
 
-	format_assert_list_as (l_as: ASSERT_LIST_AS; a_keyword: STRING) is
+	format_assert_list_as (l_as: ASSERT_LIST_AS; a_keyword: STRING)
 		require
 			l_as_not_void: l_as /= Void
 			a_keyword_not_void: a_keyword /= Void
@@ -2381,13 +2381,13 @@ feature {NONE} -- Implementation: helpers
 			end
 		end
 
-	format_creation_features (a_list: EIFFEL_LIST [FEATURE_NAME]) is
+	format_creation_features (a_list: EIFFEL_LIST [FEATURE_NAME])
 		require
 			list_not_void: a_list /= Void
 		do
 		end
 
-	current_assigner_feature: E_FEATURE is
+	current_assigner_feature: E_FEATURE
 		local
 			l_feature: FEATURE_I
 		do
@@ -2395,14 +2395,14 @@ feature {NONE} -- Implementation: helpers
 			Result := feature_in_class (current_class, l_feature.rout_id_set)
 		end
 
-	feature_from_ancestors (a_current_class: CLASS_C; a_name_id: INTEGER): FEATURE_I is
+	feature_from_ancestors (a_current_class: CLASS_C; a_name_id: INTEGER): FEATURE_I
 		require
 			a_current_class_not_void: a_current_class /= Void
 		do
 			Result := a_current_class.feature_table.item_id (a_name_id)
 		end
 
-	feature_in_class (a_class_c: CLASS_C; a_id_set: ID_SET): E_FEATURE is
+	feature_in_class (a_class_c: CLASS_C; a_id_set: ID_SET): E_FEATURE
 			-- Feature with `a_id_set' in `a_class_c'
 		require
 			a_classs_c_not_void: a_class_c /= Void
@@ -2446,7 +2446,7 @@ feature {NONE} -- Implementation: helpers
 			feature_in_class_not_void: not has_error_internal implies (Result /= Void and then not Result.is_empty)
 		end
 
-	type_feature_i_from_ancestor (a_ancestor: CLASS_C; a_formal: FORMAL_A): TYPE_FEATURE_I is
+	type_feature_i_from_ancestor (a_ancestor: CLASS_C; a_formal: FORMAL_A): TYPE_FEATURE_I
 			-- Formal constraint class from `a_ancestor'
 		local
 			l_type_feature_i: TYPE_FEATURE_I
@@ -2455,7 +2455,7 @@ feature {NONE} -- Implementation: helpers
 			Result := l_type_feature_i
 		end
 
-	type_from_ancestor (a_ancestor: CLASS_C; a_formal: FORMAL_A): TYPE_A is
+	type_from_ancestor (a_ancestor: CLASS_C; a_formal: FORMAL_A): TYPE_A
 			-- Type from ancestor
 		local
 			l_feature_i: TYPE_FEATURE_I
@@ -2470,7 +2470,7 @@ feature {NONE} -- Implementation: helpers
 			Result := l_feature_i.type
 		end
 
-	formal_constraint_class (a_type_feature_i: TYPE_FEATURE_I): CLASS_C is
+	formal_constraint_class (a_type_feature_i: TYPE_FEATURE_I): CLASS_C
 			-- Formal constraint class from `a_type_feature_i'.
 		local
 			l_type: TYPE_A
@@ -2521,7 +2521,7 @@ feature {NONE} -- Implementation: helpers
 --			end
 --		end
 
-	strip_type: GEN_TYPE_A is
+	strip_type: GEN_TYPE_A
 			-- Strip type
 		require
 			any_compiled: system.any_class.is_compiled
@@ -2536,13 +2536,13 @@ feature {NONE} -- Implementation: helpers
 			create Result.make (system.array_id, generics)
 		end
 
-	string_type: CL_TYPE_A is
+	string_type: CL_TYPE_A
 			-- Actual string type
 		once
 			Result := system.string_8_class.compiled_class.actual_type
 		end
 
-	check_type (a_type: TYPE_AS) is
+	check_type (a_type: TYPE_AS)
 			-- Evaluate `a_type' into a TYPE_A instance if valid.
 			-- If not valid, raise a compiler error and return Void.
 		require
@@ -2582,7 +2582,7 @@ feature {NONE} -- Implementation: helpers
 			last_type := l_type
 		end
 
-	agent_type (l_as: ROUTINE_CREATION_AS): GEN_TYPE_A is
+	agent_type (l_as: ROUTINE_CREATION_AS): GEN_TYPE_A
 			-- Compute type of `l_as'.
 		require
 			l_as_not_void: l_as /= Void
@@ -2760,7 +2760,7 @@ feature {NONE} -- Implementation: helpers
 			agent_type_not_void_if_no_error: not has_error_internal implies Result /= Void
 		end
 
-	put_breakable (a_as: AST_EIFFEL) is
+	put_breakable (a_as: AST_EIFFEL)
 			-- Puts a breakable if needed.
 		do
 			debug ("debugger_trace")
@@ -2773,7 +2773,7 @@ invariant
 	error_message_not_void: error_message /= Void
 	has_error_implies_error_message_not_empty: has_error implies not error_message.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

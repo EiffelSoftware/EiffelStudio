@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Main Builder for EB_DEVELOPMENT_WINDOW.
 					Build all tools and formatters.
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the button has became useless.
 		do
 			if develop_window.docking_manager /= Void then
@@ -32,7 +32,7 @@ feature {NONE} -- Clean up
 			Precursor {EB_DEVELOPMENT_WINDOW_BUILDER}
 		end
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- Detaches objects from their container
 		do
 
@@ -41,7 +41,7 @@ feature {NONE} -- Clean up
 
 feature -- Command
 
-	init_size_and_position is
+	init_size_and_position
 			-- Initialize window size.
 		local
 			l_screen: EB_STUDIO_SCREEN
@@ -82,7 +82,7 @@ feature -- Command
 			develop_window.window.set_position (l_x, l_y)
 		end
 
-	safe_restore is
+	safe_restore
 			-- Ensure that when restoring a window it appears on screen.
 		local
 			l_screen: EB_STUDIO_SCREEN
@@ -107,7 +107,7 @@ feature -- Command
 			end
 		end
 
-	init_commands is
+	init_commands
 			-- Initialize commands.
 		local
 			l_accel: EV_ACCELERATOR
@@ -450,7 +450,7 @@ feature -- Command
 			end
 		end
 
-	setup_history_back_and_forth_commands is
+	setup_history_back_and_forth_commands
 			-- Setup accelerators for back and forth commands.
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
@@ -472,13 +472,13 @@ feature -- Command
 			l_cmd.set_accelerator (l_accel)
 		end
 
-	set_up_accelerators is
+	set_up_accelerators
 			-- All proper configurable shortcut is related to the window.
 		do
 			develop_window.refresh_all_commands
 		end
 
-	build_formatters is
+	build_formatters
 			-- Build all formatters used.
 		local
 			l_form: EB_CLASS_TEXT_FORMATTER
@@ -563,7 +563,7 @@ feature -- Command
 			l_managed_main_formatters.extend (l_form)
 		end
 
-	end_build_formatters is
+	end_build_formatters
 			-- Finish initialization of formatters (associate them with editor
 			-- and select a formatter).
 		local
@@ -655,7 +655,7 @@ feature -- Command
 			develop_window.managed_dependency_formatters.i_th (l_f_ind).enable_select
 		end
 
-	build_tools is
+	build_tools
 			-- Build all tools that can take place in this window and attach them with docking manager.
 		local
 			l_undo_redo_observer: UNDO_REDO_OBSERVER
@@ -742,7 +742,7 @@ feature -- Command
 			develop_window.unlock_update
 		end
 
-	prepare_editor_tool is
+	prepare_editor_tool
 			-- Build address toolbar and docking manager.
 		local
 			l_editors_widget_for_docking: EV_HORIZONTAL_BOX
@@ -756,7 +756,7 @@ feature -- Command
 			l_editors_widget.extend (l_editors_widget_for_docking)
 		end
 
-	build_vision_window is
+	build_vision_window
 			-- Build development window
 		local
 			l_window: EB_VISION_WINDOW
@@ -783,7 +783,7 @@ feature -- Command
 			init_tool_commands
 		end
 
-	build_interface is
+	build_interface
 			-- Build system widget.
 		local
 			l_cell: EV_CELL
@@ -847,7 +847,7 @@ feature -- Command
 			setup_editor_close_action
 		end
 
-	register_customized_tools (a_tools: LIST [EB_CUSTOMIZED_TOOL]) is
+	register_customized_tools (a_tools: LIST [EB_CUSTOMIZED_TOOL])
 			-- Register `a_tools' into `develop_window'.
 		require
 			a_tools_attached: a_tools /= Void
@@ -875,7 +875,7 @@ feature -- Command
 			l_menu_builder.attach_customized_tools (a_tools)
 		end
 
-	deregister_customized_tool (a_tool: EB_CUSTOMIZED_TOOL) is
+	deregister_customized_tool (a_tool: EB_CUSTOMIZED_TOOL)
 			-- Delete `a_tool' from `develop_window'.
 		require
 			a_tool_attached: a_tool /= Void
@@ -924,13 +924,13 @@ feature {NONE} -- Access
 
 feature {NONE} -- Tool construction
 
-	build_shell_tools is
+	build_shell_tools
 			-- Builds all dynamically activated tools of {ES_SHELL_TOOLS}.
 		do
 			develop_window.shell_tools.all_tools.do_all (agent setup_shell_tool)
 		end
 
-	setup_shell_tool (a_tool: ES_TOOL [EB_TOOL]) is
+	setup_shell_tool (a_tool: ES_TOOL [EB_TOOL])
 			-- Sets up a dynamically created tool's shortcut, and commands.
 		require
 			a_tool_not_void: a_tool /= Void
@@ -960,7 +960,7 @@ feature {NONE} -- Tool construction
 
 feature {NONE} -- Docking
 
-	frozen retrieve_docking_content (a_tool_id: STRING_GENERAL): SD_CONTENT is
+	frozen retrieve_docking_content (a_tool_id: STRING_GENERAL): SD_CONTENT
 			-- Performs dynamic creation of tools when restoration of the docked layout requires them.
 			--
 			-- `a_tool_id': The unique title for the persisted docking content.
@@ -1016,7 +1016,7 @@ feature {NONE} -- Docking
 
 feature{NONE} -- Implementation
 
-	build_customized_tools is
+	build_customized_tools
 			-- Build customized tools.
 		local
 			l_customized_tool: EB_CUSTOMIZED_TOOL
@@ -1045,7 +1045,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	setup_tool (a_tool: EB_TOOL; a_shortcut_string: STRING) is
+	setup_tool (a_tool: EB_TOOL; a_shortcut_string: STRING)
 			-- Setup tool.
 		require
 			a_tool_not_void: a_tool /= Void
@@ -1073,7 +1073,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	setup_main_formatter (a_form: EB_CLASS_TEXT_FORMATTER; a_shortcut_string: STRING) is
+	setup_main_formatter (a_form: EB_CLASS_TEXT_FORMATTER; a_shortcut_string: STRING)
 			-- Setup formatter.
 		require
 			a_form_not_void: a_form /= Void
@@ -1091,7 +1091,7 @@ feature{NONE} -- Implementation
 			a_form.set_referred_shortcut (l_shortcut)
 		end
 
-	build_undo_redo_accelerators is
+	build_undo_redo_accelerators
 			-- Initialize undo / redo accelerators.
 		local
 			l_undo_accelerator: EV_ACCELERATOR
@@ -1115,7 +1115,7 @@ feature{NONE} -- Implementation
 			develop_window.window.accelerators.extend (l_redo_accelerator)
 		end
 
-	build_close_content_accelerator is
+	build_close_content_accelerator
 			-- Build content close accelerator.
 		local
 			l_acc: EV_ACCELERATOR
@@ -1131,14 +1131,14 @@ feature{NONE} -- Implementation
 			develop_window.commands.simple_shortcut_commands.extend (l_cmd)
 		end
 
-	setup_editor_close_action is
+	setup_editor_close_action
 			-- Setup editor commands in editors manager.
 			-- so that they are correctly disable when there is no editor open.
 		do
 			develop_window.editors_manager.editor_closed_actions.extend (agent (a_editor: EB_SMART_EDITOR) do develop_window.all_editor_closed end)
 		end
 
-	setup_focus_editor_accelerators is
+	setup_focus_editor_accelerators
 			-- Setup accelerators of focusing current editor.
 		local
 			l_acc: EV_ACCELERATOR
@@ -1154,7 +1154,7 @@ feature{NONE} -- Implementation
 			develop_window.window.accelerators.extend (l_acc)
 		end
 
-	setup_class_address_accelerators is
+	setup_class_address_accelerators
 			-- Setup accelerators for focus class combo box.
 		local
 			l_acc: EV_ACCELERATOR
@@ -1170,7 +1170,7 @@ feature{NONE} -- Implementation
 			develop_window.commands.simple_shortcut_commands.extend (l_cmd)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

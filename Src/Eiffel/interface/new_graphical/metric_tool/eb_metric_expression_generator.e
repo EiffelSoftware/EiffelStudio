@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric expression generator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_output: like output) is
+	make (a_output: like output)
 			-- Initialize `output' with `a_output'.
 		require
 			a_output_attached: a_output /= Void
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_output (a_output: like output) is
+	set_output (a_output: like output)
 			-- Set `output' with `a_output'.
 		require
 			a_output_attached: a_output /= Void
@@ -50,7 +50,7 @@ feature -- Setting
 
 feature -- Output generation
 
-	generate_output (a_item: EB_METRIC_VISITABLE) is
+	generate_output (a_item: EB_METRIC_VISITABLE)
 			-- Generate output for `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -61,7 +61,7 @@ feature -- Output generation
 
 feature{NONE} -- Process
 
-	process_basic_metric (a_basic_metric: EB_METRIC_BASIC) is
+	process_basic_metric (a_basic_metric: EB_METRIC_BASIC)
 			-- Process `a_basic_metric'.
 		do
 			if a_basic_metric.criteria /= Void then
@@ -69,7 +69,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR) is
+	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR)
 			-- Process `a_linear_metric'.
 		local
 			l_metrics: LIST [STRING]
@@ -112,7 +112,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO) is
+	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO)
 			-- Process `a_ratio_metric'.
 		do
 			append_metric (a_ratio_metric.numerator_coefficient, a_ratio_metric.numerator_metric_name)
@@ -120,18 +120,18 @@ feature{NONE} -- Process
 			append_metric (a_ratio_metric.denominator_coefficient, a_ratio_metric.denominator_metric_name)
 		end
 
-	process_criterion (a_criterion: EB_METRIC_CRITERION) is
+	process_criterion (a_criterion: EB_METRIC_CRITERION)
 			-- Process `a_criterion'.
 		do
 		end
 
-	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION) is
+	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION)
 			-- Process `a_criterion'.
 		do
 			process_domain_criterion_internal (a_criterion, Void, Void)
 		end
 
-	process_domain_criterion_internal (a_criterion: EB_METRIC_DOMAIN_CRITERION; a_modifiers: LIST [STRING_GENERAL]; a_modifier_separator: STRING_GENERAL) is
+	process_domain_criterion_internal (a_criterion: EB_METRIC_DOMAIN_CRITERION; a_modifiers: LIST [STRING_GENERAL]; a_modifier_separator: STRING_GENERAL)
 			-- Process `a_criterion'.
 			-- If `a_modifiers' is not Void, display those modifiers (separated by `a_modifier_separator') as well.
 		require
@@ -171,7 +171,7 @@ feature{NONE} -- Process
 			append_negation_end (a_criterion)
 		end
 
-	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION)
 			-- Process `a_criterion'.		
 		local
 			l_modifiers: ARRAYED_LIST [STRING_GENERAL]
@@ -186,7 +186,7 @@ feature{NONE} -- Process
 			process_domain_criterion_internal (a_criterion, l_modifiers, "+")
 		end
 
-	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
+	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_modifiers: ARRAYED_LIST [STRING_GENERAL]
@@ -206,7 +206,7 @@ feature{NONE} -- Process
 			process_domain_criterion_internal (a_criterion, l_modifiers, "+")
 		end
 
-	process_text_criterion_internal (a_criterion: EB_METRIC_TEXT_CRITERION; a_show_matching_strategy: BOOLEAN) is
+	process_text_criterion_internal (a_criterion: EB_METRIC_TEXT_CRITERION; a_show_matching_strategy: BOOLEAN)
 			-- Process `a_criterion'.
 			-- If `a_show_matching_strategy' is True, display matching strategy modifier.
 		require
@@ -238,19 +238,19 @@ feature{NONE} -- Process
 			append_negation_end (a_criterion)
 		end
 
-	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION) is
+	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION)
 			-- Process `a_criterion'.
 		do
 			process_text_criterion_internal (a_criterion, True)
 		end
 
-	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION) is
+	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION)
 			-- Process `a_criterion'.
 		do
 			process_text_criterion_internal (a_criterion, False)
 		end
 
-	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION) is
+	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION)
 			-- Process `a_criterion'.
 		do
 			append_negation_start (a_criterion)
@@ -258,7 +258,7 @@ feature{NONE} -- Process
 			append_negation_end (a_criterion)
 		end
 
-	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_output: like output
@@ -277,7 +277,7 @@ feature{NONE} -- Process
 			l_output.put_normal_text (ti_r_parenthesis.as_string_32)
 		end
 
-	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION) is
+	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_output: like output
@@ -288,7 +288,7 @@ feature{NONE} -- Process
 			l_output.put_normal_text (")")
 		end
 
-	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
+	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_para_needed: BOOLEAN
@@ -329,19 +329,19 @@ feature{NONE} -- Process
 			append_negation_end (a_criterion)
 		end
 
-	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION) is
+	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION)
 			-- Process `a_criterion'.
 		do
 			process_nary_criterion (a_criterion)
 		end
 
-	process_or_criterion (a_criterion: EB_METRIC_OR_CRITERION) is
+	process_or_criterion (a_criterion: EB_METRIC_OR_CRITERION)
 			-- Process `a_criterion'.
 		do
 			process_nary_criterion (a_criterion)
 		end
 
-	process_domain (a_domain: EB_METRIC_DOMAIN) is
+	process_domain (a_domain: EB_METRIC_DOMAIN)
 			-- Process `a_domain'.
 		local
 			l_count: INTEGER
@@ -365,58 +365,58 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM) is
+	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 		end
 
-	process_application_target_domain_item (a_item: EB_METRIC_TARGET_DOMAIN_ITEM) is
+	process_application_target_domain_item (a_item: EB_METRIC_TARGET_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			output.put_target_domain_item (a_item)
 		end
 
-	process_group_domain_item (a_item: EB_METRIC_GROUP_DOMAIN_ITEM) is
+	process_group_domain_item (a_item: EB_METRIC_GROUP_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			output.put_group_domain_item (a_item)
 		end
 
-	process_folder_domain_item (a_item: EB_METRIC_FOLDER_DOMAIN_ITEM) is
+	process_folder_domain_item (a_item: EB_METRIC_FOLDER_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			output.put_folder_domain_item (a_item)
 		end
 
-	process_class_domain_item (a_item: EB_METRIC_CLASS_DOMAIN_ITEM) is
+	process_class_domain_item (a_item: EB_METRIC_CLASS_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			output.put_class_domain_item (a_item)
 		end
 
-	process_feature_domain_item (a_item: EB_METRIC_FEATURE_DOMAIN_ITEM) is
+	process_feature_domain_item (a_item: EB_METRIC_FEATURE_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			output.put_feature_domain_item (a_item)
 		end
 
-	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
+	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			output.put_delayed_domain_item (a_item)
 		end
 
-	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
+	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE)
 			-- Process `a_item'.
 		do
 		end
 
-	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER) is
+	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		do
 		end
 
-	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
+	process_value_tester (a_item: EB_METRIC_VALUE_TESTER)
 			-- Process `a_item'.
 		local
 			l_cri_list: LIST [TUPLE [l_retriever: EB_METRIC_VALUE_RETRIEVER; l_criterion_type: INTEGER]]
@@ -452,13 +452,13 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
+	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		do
 			output.put_double (a_item.value_internal)
 		end
 
-	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		local
 			l_output: like output
@@ -471,7 +471,7 @@ feature{NONE} -- Process
 			l_output.put_normal_text (")")
 		end
 
-	process_domain_internal (a_domain: EB_METRIC_DOMAIN) is
+	process_domain_internal (a_domain: EB_METRIC_DOMAIN)
 			-- Process `a_domain'.
 		require
 			a_domain_attached: a_domain /= Void
@@ -483,7 +483,7 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER) is
+	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER)
 			-- Process `a_item'.
 		local
 			l_first: BOOLEAN
@@ -547,7 +547,7 @@ feature{NONE} -- Process
 
 feature{NONE} -- Implementation
 
-	append_negation_start (a_criterion: EB_METRIC_CRITERION) is
+	append_negation_start (a_criterion: EB_METRIC_CRITERION)
 			-- Append negation for `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -562,7 +562,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	append_negation_end (a_criterion: EB_METRIC_CRITERION) is
+	append_negation_end (a_criterion: EB_METRIC_CRITERION)
 			-- Append negation end.
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -572,7 +572,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	append_metric (a_coefficient: DOUBLE; a_metric_name: STRING) is
+	append_metric (a_coefficient: DOUBLE; a_metric_name: STRING)
 			-- Append `a_metric_name' with `a_coefficient'.
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -592,7 +592,7 @@ feature{NONE} -- Implementation
 invariant
 	output_attached: output /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

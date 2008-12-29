@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Conditional expression is not a boolean expression."
@@ -15,9 +15,9 @@ inherit
 
 feature -- Properties
 
-	where: STRING is "In if clause";
+	where: STRING = "In if clause";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

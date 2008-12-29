@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shortcuts preferences other than editor shortcuts and external commands shortcuts."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {EB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -39,7 +39,7 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature -- Access
 
-	shortcuts: HASH_TABLE [SHORTCUT_PREFERENCE, STRING] is
+	shortcuts: HASH_TABLE [SHORTCUT_PREFERENCE, STRING]
 			-- Shortcuts
 		once
 			create Result.make (default_shortcut_actions.count)
@@ -47,31 +47,31 @@ feature -- Access
 
 feature -- Fixed shortcuts
 
-	focus_editor_shortcut: EB_FIXED_SHORTCUT is
+	focus_editor_shortcut: EB_FIXED_SHORTCUT
 			-- Fixed shortcut for focusing current editor.
 		once
 			create Result.make (names.fs_focus_on_editor, create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_escape), False, False, False)
 		end
 
-	close_window_shortcut: EB_FIXED_SHORTCUT is
+	close_window_shortcut: EB_FIXED_SHORTCUT
 			-- Fixed shortcut for closing window.
 		once
 			create Result.make (names.fs_close_window, create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_f4), True, False, False)
 		end
 
-	undo_shortcut: EB_FIXED_SHORTCUT is
+	undo_shortcut: EB_FIXED_SHORTCUT
 			-- Fixed shortcut for all undo command.
 		once
 			create Result.make (names.fs_undo_command, create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_z), False, True, False)
 		end
 
-	redo_shortcut: EB_FIXED_SHORTCUT is
+	redo_shortcut: EB_FIXED_SHORTCUT
 			-- Fixed shortcut for all redo command.
 		once
 			create Result.make (names.fs_redo_command, create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_y), False, True, False)
 		end
 
-	debug_menu_shortcut: EB_FIXED_SHORTCUT is
+	debug_menu_shortcut: EB_FIXED_SHORTCUT
 			-- Shortcut for debug menu
 		once
 			create Result.make (names.fs_debug_menu, create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_d), True, True, False)
@@ -79,7 +79,7 @@ feature -- Fixed shortcuts
 
 feature {NONE} -- Initializing fixed shortcuts
 
-	initialize_fixed_shortcuts is
+	initialize_fixed_shortcuts
 			-- Initialize fixed shortcuts in relative shortcuts.
 			-- Fixed shortcuts can not be overridden by normal shortcuts.
 		do
@@ -92,7 +92,7 @@ feature {NONE} -- Initializing fixed shortcuts
 
 feature {NONE} -- Preference Strings
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -138,7 +138,7 @@ feature {NONE} -- Preference Strings
 
 feature {NONE} -- Modifiable shortcuts
 
-	general_shortcuts: like default_shortcut_actions is
+	general_shortcuts: like default_shortcut_actions
 			-- General shortcuts. (Alt/Ctrl/Shift/KeyString)
 		local
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
@@ -150,7 +150,7 @@ feature {NONE} -- Modifiable shortcuts
 			Result.extend ([l_hash, main_window_group])
 		end
 
-	file_shortcuts: like default_shortcut_actions is
+	file_shortcuts: like default_shortcut_actions
 			-- File shortcuts. (Alt/Ctrl/Shift/KeyString)
 		local
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
@@ -164,7 +164,7 @@ feature {NONE} -- Modifiable shortcuts
 			Result.extend ([l_hash, main_window_group])
 		end
 
-	show_tool_shortcuts: like default_shortcut_actions is
+	show_tool_shortcuts: like default_shortcut_actions
 			-- Show tool shortcuts. (Alt/Ctrl/Shift/KeyString)
 		local
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
@@ -195,7 +195,7 @@ feature {NONE} -- Modifiable shortcuts
 			Result.extend ([l_hash, main_window_group])
 		end
 
-	views_shortcuts: like default_shortcut_actions is
+	views_shortcuts: like default_shortcut_actions
 			-- Basic/Clickable/Flat/Contract/interface etc. view shortcuts. (Alt/Ctrl/Shift/KeyString)
 		local
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
@@ -213,7 +213,7 @@ feature {NONE} -- Modifiable shortcuts
 			Result.extend ([l_hash, main_window_group])
 		end
 
-	project_shortcuts: like default_shortcut_actions is
+	project_shortcuts: like default_shortcut_actions
 			-- Project shortcuts. (Alt/Ctrl/Shift/KeyString)
 		local
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
@@ -233,7 +233,7 @@ feature {NONE} -- Modifiable shortcuts
 			Result.extend ([l_hash, main_window_group])
 		end
 
-	debug_shortcuts: like default_shortcut_actions is
+	debug_shortcuts: like default_shortcut_actions
 			-- Debug shortcuts. (Alt/Ctrl/Shift/KeyString)
 		local
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
@@ -259,7 +259,7 @@ feature {NONE} -- Modifiable shortcuts
 invariant
 	preferences_not_void: preferences /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

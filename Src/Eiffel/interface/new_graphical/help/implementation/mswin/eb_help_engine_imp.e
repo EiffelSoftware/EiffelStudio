@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help engine, displays help context, Windows implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create HTML Help handler.
 		do
 			create hh_handler
@@ -36,13 +36,13 @@ feature {NONE} -- Initialization
 
 feature -- Status Report
 
-	last_show_successful: BOOLEAN is
+	last_show_successful: BOOLEAN
 			-- Was last call to `show' successful?
 		do
 			Result := internal_show_successful
 		end
 
-	last_error_message: STRING_GENERAL is
+	last_error_message: STRING_GENERAL
 			-- Last error message, if any
 		do
 			Result := internal_error_message
@@ -50,7 +50,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	show (a_help_context: EB_HELP_CONTEXT) is
+	show (a_help_context: EB_HELP_CONTEXT)
 			-- Show help with context `a_help_context'.
 		do
 			hh_handler.show (Url_prefix + a_help_context.url)
@@ -71,14 +71,14 @@ feature {NONE} -- Implementation
 	hh_handler: EB_HTML_HELP_HANDLER
 			-- Control content of Microsoft HTML Help
 
-	Url_prefix: STRING is
+	Url_prefix: STRING
 			-- URL prefix for $EiffelGraphicalCompiler$ help files
 		once
 			Result := eiffel_layout.docs_path.string
 			Result.append ("\eiffel.chm::")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

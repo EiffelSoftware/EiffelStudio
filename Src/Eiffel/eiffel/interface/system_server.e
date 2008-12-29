@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All the server used during an Eiffel compilation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create all the servers.
 		do
 			create classes.make
@@ -39,7 +39,7 @@ feature -- Initialization
 
 feature -- Purge of compilation files
 
-	prepare_before_saving (normal_compilation: BOOLEAN) is
+	prepare_before_saving (normal_compilation: BOOLEAN)
 		do
 				-- Purges server files only if it is not a precompilation.
 			if normal_compilation then
@@ -127,7 +127,7 @@ invariant
 	m_desc_server_not_void: m_desc_server /= Void
 	match_list_server_not_void: match_list_server /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

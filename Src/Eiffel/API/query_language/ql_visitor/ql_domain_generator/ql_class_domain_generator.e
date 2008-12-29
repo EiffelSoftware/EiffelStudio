@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object to generate class domains used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Access
 	criterion: QL_CLASS_CRITERION
 			-- Criterion used when generating new items
 
-	domain: QL_CLASS_DOMAIN is
+	domain: QL_CLASS_DOMAIN
 			-- Generated domain
 		do
 			if internal_domain = Void then
@@ -37,7 +37,7 @@ feature -- Access
 			result_set: Result = internal_domain
 		end
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current generator
 		do
 			Result := class_scope
@@ -47,79 +47,79 @@ feature -- Access
 
 feature -- Process
 
-	process_target (a_item: QL_TARGET) is
+	process_target (a_item: QL_TARGET)
 			-- Process `a_item'.
 		do
 			process_groups_from_target (a_item.target, a_item, agent process_group)
 		end
 
-	process_group (a_item: QL_GROUP) is
+	process_group (a_item: QL_GROUP)
 			-- Process `a_item'.
 		do
 			process_classes_from_group (a_item.group, a_item, agent evaluate_item)
 		end
 
-	process_class (a_item: QL_CLASS) is
+	process_class (a_item: QL_CLASS)
 			-- Process `a_item'.
 		do
 			evaluate_item (a_item)
 		end
 
-	process_feature (a_item: QL_FEATURE) is
+	process_feature (a_item: QL_FEATURE)
 			-- Process `a_item'.
 		do
 		end
 
-	process_real_feature (a_item: QL_REAL_FEATURE) is
+	process_real_feature (a_item: QL_REAL_FEATURE)
 			-- Process `a_item'.
 		do
 		end
 
-	process_invariant (a_item: QL_INVARIANT) is
+	process_invariant (a_item: QL_INVARIANT)
 			-- Process `a_item'.
 		do
 		end
 
-	process_quantity (a_item: QL_QUANTITY) is
+	process_quantity (a_item: QL_QUANTITY)
 			-- Process `a_item'.
 		do
 		end
 
-	process_line (a_item: QL_LINE) is
+	process_line (a_item: QL_LINE)
 			-- Process `a_item'.
 		do
 		end
 
-	process_generic (a_item: QL_GENERIC) is
+	process_generic (a_item: QL_GENERIC)
 			-- Process `a_item'.
 		do
 		end
 
-	process_local (a_item: QL_LOCAL) is
+	process_local (a_item: QL_LOCAL)
 			-- Process `a_item'.
 		do
 		end
 
-	process_argument (a_item: QL_ARGUMENT) is
+	process_argument (a_item: QL_ARGUMENT)
 			-- Process `a_item'.
 		do
 		end
 
-	process_assertion (a_item: QL_ASSERTION) is
+	process_assertion (a_item: QL_ASSERTION)
 			-- Process `a_item'.
 		do
 		end
 
 feature{NONE} -- Implementation
 
-	tautology_criterion: like criterion is
+	tautology_criterion: like criterion
 			-- Tautology criterion
 		do
 			Result := class_criterion_factory.simple_criterion_with_index (
 					class_criterion_factory.c_true)
 		end
 
-	compiled_criterion: like criterion is
+	compiled_criterion: like criterion
 			-- A criterion that only compiled items can satisfy
 		do
 			Result := class_criterion_factory.simple_criterion_with_index (
@@ -133,7 +133,7 @@ feature{NONE} -- Observable
 
 feature{NONE} -- Implementation/Criterion interaction
 
-	temp_domain: like domain is
+	temp_domain: like domain
 			-- Temporary domain used to store candidate items from relation criterion such as "ancestor_is", "descendant_is"
 		do
 			if temp_domain_internal = Void then
@@ -142,7 +142,7 @@ feature{NONE} -- Implementation/Criterion interaction
 			Result := temp_domain_internal
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

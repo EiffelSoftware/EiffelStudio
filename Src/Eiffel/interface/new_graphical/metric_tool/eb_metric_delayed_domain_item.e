@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric delayed domain item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature -- Access
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- Text of current item
 		do
 			if not is_valid or else not id.is_empty then
@@ -48,7 +48,7 @@ feature -- Access
 			end
 		end
 
-	domain (a_scope: QL_SCOPE): QL_DOMAIN is
+	domain (a_scope: QL_SCOPE): QL_DOMAIN
 			-- New query lanaguage domain representing current item
 		do
 			if is_external_ql_domain_enabled then
@@ -65,7 +65,7 @@ feature{EB_METRIC_VALUE_CRITERION, EB_METRIC_METRIC_VALUE_RETRIEVER, EB_METRIC_C
 
 feature{EB_METRIC_VALUE_CRITERION, EB_METRIC_METRIC_VALUE_RETRIEVER, EB_METRIC_COMPONENT_HELPER} -- Status report
 
-	is_external_ql_domain_enabled: BOOLEAN is
+	is_external_ql_domain_enabled: BOOLEAN
 			-- Should `domain' return `external_ql_domain'?
 			-- Note: This is used to calculate value criterion.
 		do
@@ -74,7 +74,7 @@ feature{EB_METRIC_VALUE_CRITERION, EB_METRIC_METRIC_VALUE_RETRIEVER, EB_METRIC_C
 
 feature{EB_METRIC_VALUE_CRITERION, EB_METRIC_METRIC_VALUE_RETRIEVER, EB_METRIC_COMPONENT_HELPER} -- Setting
 
-	set_external_ql_domain (a_domain: like external_ql_domain) is
+	set_external_ql_domain (a_domain: like external_ql_domain)
 			-- Set `external_ql_domain' with `a_domain'.
 		do
 			external_ql_domain := a_domain
@@ -84,13 +84,13 @@ feature{EB_METRIC_VALUE_CRITERION, EB_METRIC_METRIC_VALUE_RETRIEVER, EB_METRIC_C
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_delayed_domain_item (Current)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

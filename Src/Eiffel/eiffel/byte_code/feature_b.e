@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Byte code generation for feature call."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (f: FEATURE_I; t: like type; p_type: like precursor_type) is
+	make (f: FEATURE_I; t: like type; p_type: like precursor_type)
 			-- Initialization
 		require
 			good_argument: f /= Void
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		local
 			c: CL_TYPE_A
@@ -126,7 +126,7 @@ feature -- Access
 	parameters: BYTE_LIST [PARAMETER_B]
 			-- Feature parameters: can be Void
 
-	set_parameters (p: like parameters) is
+	set_parameters (p: like parameters)
 			-- Assign `p' to `parameters'.
 		local
 			i: INTEGER
@@ -145,18 +145,18 @@ feature -- Access
 			end
 		end
 
-	set_type (t: like type) is
+	set_type (t: like type)
 			-- Assign `t' to `type'.
 		do
 			type := t
 		end
 
-	is_any_feature: BOOLEAN is
+	is_any_feature: BOOLEAN
 			-- Is Current an instance of ANY_FEATURE_B?
 		do
 		end
 
-	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN is
+	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN
 			-- Search for feature_name in special_routines.
 			-- This is used for simple types only.
 			-- If found return True (and keep reference position).
@@ -165,10 +165,10 @@ feature -- Access
 			Result := special_routines.has (feature_name_id, compilation_type, target_type)
 		end
 
-	is_feature: BOOLEAN is True
+	is_feature: BOOLEAN = True
 			-- Is Current an access to an Eiffel feature ?
 
-	same (other: ACCESS_B): BOOLEAN is
+	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		local
 			feature_b: FEATURE_B
@@ -179,14 +179,14 @@ feature -- Access
 			end
 		end
 
-	enlarged: CALL_ACCESS_B is
+	enlarged: CALL_ACCESS_B
 			-- Enlarge the tree to get more attributes and return the
 			-- new enlarged tree node.
 		do
 			Result := enlarged_on (context_type)
 		end
 
-	enlarged_on (type_i: TYPE_A): CALL_ACCESS_B is
+	enlarged_on (type_i: TYPE_A): CALL_ACCESS_B
 			-- Enlarged byte node evaluated in the context of `type_i'.
 		local
 			feature_bl: FEATURE_BL
@@ -231,7 +231,7 @@ feature -- Access
 
 feature -- Context type
 
-	context_type: TYPE_A is
+	context_type: TYPE_A
 			-- Context type of the access (properly instantiated)
 		do
 			if precursor_type = Void then
@@ -243,7 +243,7 @@ feature -- Context type
 
 feature -- Array optimization
 
-	is_special_feature: BOOLEAN is
+	is_special_feature: BOOLEAN
 		local
 			cl_type: CL_TYPE_A
 			base_class: CLASS_C
@@ -257,7 +257,7 @@ feature -- Array optimization
 			Result := optimizer.special_features.has (dep)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		local
 			cl_type: CL_TYPE_A
 			base_class: CLASS_C
@@ -288,7 +288,7 @@ debug ("OPTIMIZATION")
 end
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 			if parameters /= Void then
@@ -296,7 +296,7 @@ end
 			end
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			if parameters /= Void then
 				Result := parameters.calls_special_features (array_desc)
@@ -305,14 +305,14 @@ end
 
 feature {NONE} -- Array optimization
 
-	optimizer: ARRAY_OPTIMIZER is
+	optimizer: ARRAY_OPTIMIZER
 		do
 			Result := System.remover.array_optimizer
 		end
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			if parameters /= Void then
 				Result := 1 + parameters.size
@@ -321,7 +321,7 @@ feature -- Inlining
 			end
 		end
 
-	pre_inlined_code: CALL_B is
+	pre_inlined_code: CALL_B
 		local
 			inlined_current_b: INLINED_CURRENT_B
 		do
@@ -347,7 +347,7 @@ feature -- Inlining
 			end
 		end
 
-	inlined_byte_code: ACCESS_B is
+	inlined_byte_code: ACCESS_B
 		local
 			inlined_feat_b: INLINED_FEAT_B
 			inline: BOOLEAN
@@ -536,7 +536,7 @@ feature -- Inlining
 
 feature {NONE} -- Normalization of types
 
-	normalized (a_type: CL_TYPE_A; a_class_type: CLASS_TYPE): CL_TYPE_A is
+	normalized (a_type: CL_TYPE_A; a_class_type: CLASS_TYPE): CL_TYPE_A
 			-- Replace all formals of `a_type' with formals of `a_class_type'.
 		require
 			a_type_not_void: a_type /= Void
@@ -575,7 +575,7 @@ feature {NONE} -- Normalization of types
 			normalized: Result /= Void
 		end
 
-	same_for_generics (a_current_class, a_class: CLASS_C): BOOLEAN is
+	same_for_generics (a_current_class, a_class: CLASS_C): BOOLEAN
 			-- Is `a_current_class' using the same sets of generics as `a_class'.
 			-- That is to say that `a_current_class' and `a_class' have the same number of
 			-- generic parameter, and that each of them have the same routine ID.
@@ -617,7 +617,7 @@ feature {NONE} -- Normalization of types
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

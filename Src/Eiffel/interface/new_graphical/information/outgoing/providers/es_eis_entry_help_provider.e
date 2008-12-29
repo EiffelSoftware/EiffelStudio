@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EIS entry help provider. Information is retrieved from given EIS entry to launch actual resources."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ feature {NONE} -- Variable expansion
 	last_entry: ?EIS_ENTRY
 			-- Last shown entry.
 
-	context_variables: !HASH_TABLE [STRING_8, STRING_8] is
+	context_variables: !HASH_TABLE [STRING_8, STRING_8]
 			-- A table of context variables, indexed by a variable name
 		local
 			l_type: NATURAL
@@ -75,7 +75,7 @@ feature {NONE} -- Variable expansion
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

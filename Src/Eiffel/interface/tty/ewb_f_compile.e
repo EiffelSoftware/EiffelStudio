@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Invoke finalization of the eiffel system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,10 +20,10 @@ inherit
 
 feature {NONE} -- Properties
 
-	workbench_mode: BOOLEAN is False;
+	workbench_mode: BOOLEAN = False;
 			-- Not in workbench mode
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

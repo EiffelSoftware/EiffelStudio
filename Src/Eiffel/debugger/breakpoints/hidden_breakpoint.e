@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 					Describes a hidden breakpoint.
 				]"
@@ -22,7 +22,7 @@ create {HIDDEN_BREAKPOINT}
 
 feature -- Run to cursor mode
 
-	enable_run_to_cursor_mode is
+	enable_run_to_cursor_mode
 			-- backup Current's data to process Run To This Point action
 			-- This should be done only on hidden breakpoint
 			-- since we do not this trick otherwise
@@ -51,7 +51,7 @@ feature -- Run to cursor mode
 			backup_data /= Void
 		end
 
-	disable_run_to_cursor_mode is
+	disable_run_to_cursor_mode
 			-- Restore Current's data after Run To This Point action is proceed
 		require
 			backup_data_not_void: backup_data /= Void
@@ -86,7 +86,7 @@ feature -- Run to cursor mode
 invariant
 	is_hidden: is_hidden
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

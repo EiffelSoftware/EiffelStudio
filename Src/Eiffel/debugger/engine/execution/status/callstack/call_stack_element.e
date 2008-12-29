@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Information about a call in the calling stack."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,7 +9,7 @@ deferred class CALL_STACK_ELEMENT
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER; tid: like thread_id) is
+	make (level: INTEGER; tid: like thread_id)
 		require
 			valid_level: level >= 1
 		do
@@ -35,7 +35,7 @@ feature -- Properties
 	break_index: INTEGER
 			-- the "Line number" where application is stopped within current feature
 
-	object_address: DBG_ADDRESS is
+	object_address: DBG_ADDRESS
 			-- Hector address of associated object
 			--| Because the debugger is already in communication with
 			--| the application (retrieving information such as locals ...)
@@ -52,14 +52,14 @@ feature -- Status
 			-- Current call stack element is not valid ?
 			-- (i.e: issue retrieving the data...)
 
-	is_eiffel_call_stack_element: BOOLEAN is
+	is_eiffel_call_stack_element: BOOLEAN
 			-- Is, Current, an eiffel call stack element or not (external stack) ?
 		deferred
 		end
 
 feature -- Output
 
-	to_string: STRING is
+	to_string: STRING
 			-- String representation.
 		do
 			create Result.make_empty
@@ -79,12 +79,12 @@ feature -- Output
 			Result.append (" @" + break_index.out)
 		end
 
-	object_address_to_string: STRING is
+	object_address_to_string: STRING
 			-- Display object address
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

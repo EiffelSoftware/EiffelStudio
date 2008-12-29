@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for calls to a problematicfeature of a multi constraing formal generic type. The feature was found multiple times."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Properties
 
-	subcode: INTEGER_32 is 2
+	subcode: INTEGER_32 = 2
 
 	error_report: MC_FEATURE_INFO
 			-- List of classes with same feature.
@@ -49,7 +49,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			is_set: a_error_report = error_report
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

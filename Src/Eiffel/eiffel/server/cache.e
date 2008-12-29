@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cache for data, the index is an integer number"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -17,7 +17,7 @@ create
 
 feature -- Initialisation
 
-	make is
+	make
 			-- Creates a table of Cache_size hash_entry
 		local
 			i: INTEGER
@@ -41,7 +41,7 @@ feature -- Initialisation
 			end
 		end
 
-	cache_size: INTEGER is
+	cache_size: INTEGER
 			-- Cache size
 		local
 			s: STRING
@@ -65,7 +65,7 @@ feature -- Initialisation
 			end
 		end;
 
-	default_value: INTEGER is
+	default_value: INTEGER
 			-- Default value of cache
 		do
 			Result :=  Configure_resources.get_integer (r_Cache_size, 20)
@@ -79,7 +79,7 @@ feature -- Initialisation
 
 feature -- Cache manipulations
 
-	has_id (id: INTEGER): BOOLEAN is
+	has_id (id: INTEGER): BOOLEAN
 			-- Is an item of id `i' in the cache ?
 		require
 			not_void: id /= 0
@@ -147,7 +147,7 @@ feature -- Cache manipulations
 			end
 		end
 
-	item_id (id: INTEGER): T is
+	item_id (id: INTEGER): T
 			-- Item which id is `an_id'
 			-- Void if not found
 		require
@@ -225,7 +225,7 @@ feature -- Cache manipulations
 			end
 		end
 
-	remove_id (id: INTEGER) is
+	remove_id (id: INTEGER)
 			-- Remove item of id `i' form cache.
 			-- better use force instead
 		require
@@ -267,7 +267,7 @@ feature -- Cache manipulations
 			end
 		end
 
-	force (e: T) is
+	force (e: T)
 			-- like put if full remove an element
 			-- to put our new one
 		require
@@ -299,19 +299,19 @@ feature -- Cache manipulations
 			l_array.put (h_cell, t + 1)
 		end
 
-	is_full: BOOLEAN is
+	is_full: BOOLEAN
 			-- is the cache full ?
 		do
 			Result := count >= size
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- is the cache empty ?
 		do
 			Result := count = 0
 		end
 
-	clear_all, wipe_out is
+	clear_all, wipe_out
 			-- wipe all out
 		local
 			s: INTEGER
@@ -330,7 +330,7 @@ feature -- Cache manipulations
 			after := True
 		end
 
-	change_last_item (e: T) is
+	change_last_item (e: T)
 			-- make e take the place of the last item consulted
 		local
 			tmp: H_CELL[T]
@@ -357,7 +357,7 @@ feature -- Cache manipulations
 
 feature -- linear iteration
 
-	start is
+	start
 			-- put item_for_iteration on the first element of the cache
 		local
 			item_array: INTEGER
@@ -385,7 +385,7 @@ feature -- linear iteration
 
 	after: BOOLEAN
 
-	forth is
+	forth
 			-- put item_for_iteration on the next element of the cache
 		local
 			item_array, item_number, limit: INTEGER
@@ -424,7 +424,7 @@ feature -- linear iteration
 			end
 		end
 
-	item_for_iteration: T is
+	item_for_iteration: T
 			-- give the item in a linear ?????
 		do
 			Result := last_item_array.item (last_item_pos).item
@@ -445,7 +445,7 @@ feature {NONE}
 
 feature {NONE} -- to implement force
 
-	internal_remove (e: T) is
+	internal_remove (e: T)
 			-- Remove item of id `i' from cache.
 			-- but do not touch to history nor count
 		require
@@ -515,7 +515,7 @@ feature {NONE} -- statistics
 	success: REAL;
 		-- proportion of successful researchs in the cache
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

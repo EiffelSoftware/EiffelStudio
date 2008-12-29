@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor used to find referenced metrics"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create {LINKED_LIST [STRING]} referenced_metric_name.make
@@ -32,7 +32,7 @@ feature{NONE} -- Initialization
 
 feature -- Referenced metric searching
 
-	search_referenced_metric (a_item: EB_METRIC_VISITABLE) is
+	search_referenced_metric (a_item: EB_METRIC_VISITABLE)
 			-- Search `a_item' for referenced metrics and
 			-- store names of found referenced metrics in `referenced_metric_names'.
 		require
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Process
 
-	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR) is
+	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR)
 			-- Process `a_linear_metric'.
 		local
 			l_var_metrics: LIST [STRING]
@@ -64,27 +64,27 @@ feature -- Process
 			end
 		end
 
-	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO) is
+	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO)
 			-- Process `a_ratio_metric'.
 		do
 			insert_referenced_metric (a_ratio_metric.numerator_metric_name)
 			insert_referenced_metric (a_ratio_metric.denominator_metric_name)
 		end
 
-	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION)
 			-- Process `a_criterion'.
 		do
 			insert_referenced_metric (a_criterion.metric_name)
 			a_criterion.value_tester.process (Current)
 		end
 
-	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		do
 			insert_referenced_metric (a_item.metric_name)
 		end
 
-	insert_referenced_metric (a_metric_name: STRING) is
+	insert_referenced_metric (a_metric_name: STRING)
 			-- Insert `a_metric_name' into `referenced_metric_name'
 			-- if `a_metric_name' is not contained in `reference_metric_name'.
 		require
@@ -98,7 +98,7 @@ feature -- Process
 invariant
 	referenced_metric_name_attached: referenced_metric_name /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

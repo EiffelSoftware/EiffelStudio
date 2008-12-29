@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to display ancestores of `current_class'."
@@ -23,7 +23,7 @@ create
 
 feature -- Execution
 
-	work is
+	work
 			-- Execute Current command.	
 		local
 			l_domain: QL_CLASS_DOMAIN
@@ -43,7 +43,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	rec_display_ancestors (a_class: QL_CLASS; a_tab_count: INTEGER; a_text_formatter: TEXT_FORMATTER) is
+	rec_display_ancestors (a_class: QL_CLASS; a_tab_count: INTEGER; a_text_formatter: TEXT_FORMATTER)
 			-- Display ancestors of `a_class' recursively in `a_text_formatter'.
 			-- `a_tab_count' indicates how many tabs should be prepended in each line.
 		require
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	processed_class: DS_HASH_SET [QL_CLASS] is
+	processed_class: DS_HASH_SET [QL_CLASS]
 			-- List of processed classes
 		do
 			if processed_class_internal = Void then
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 	processed_class_internal: like processed_class
 			-- Implementation of `processed_class'
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion used in current command
 		do
 			create {QL_CLASS_ANCESTOR_RELATION_CRI}Result.make (
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	domain_generator: QL_DOMAIN_GENERATOR is
+	domain_generator: QL_DOMAIN_GENERATOR
 			-- Domain generator used in current command
 		do
 			create {QL_CLASS_DOMAIN_GENERATOR}Result
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

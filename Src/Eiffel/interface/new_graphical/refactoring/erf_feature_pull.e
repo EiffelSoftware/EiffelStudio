@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Refactoring that allows to pull a feature to a parent."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature -- Status
 
-	feature_set: BOOLEAN is
+	feature_set: BOOLEAN
 			-- Has the the feature to pull been set?
 		do
 			Result := feature_i /= Void
@@ -38,7 +38,7 @@ feature -- Status
 
 feature -- Element change
 
-	set_feature (a_feature: FEATURE_I) is
+	set_feature (a_feature: FEATURE_I)
 			-- The feature that get's pulled.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 	recursive_descendants: SEARCH_TABLE [INTEGER]
 			-- All the classes that are descendants of the class where the feature was written.
 
-	compute_recursive_descendants (a_class: CLASS_C) is
+	compute_recursive_descendants (a_class: CLASS_C)
 			-- Compute all the recursive descendants
 		require
 			a_class_not_void: a_class /= Void
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	refactor is
+	refactor
 			-- Do the refactoring changes.
 		require else
 			feature_set: feature_set
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_redefine (a_parent_name: STRING; a_class: CLASS_C) is
+	add_redefine (a_parent_name: STRING; a_class: CLASS_C)
 			-- Add some redefine clauses to descendants of the parent that implement the feature.
 		require
 			a_parent_name_ok: a_parent_name /= Void and not a_parent_name.is_empty
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-    ask_run_settings is
+    ask_run_settings
             -- Ask for the settings, that are run specific.
 		require else
 			feature_set: feature_set
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 	parent_class: CLASS_I;
 			-- The parent class where we pull the feature into.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

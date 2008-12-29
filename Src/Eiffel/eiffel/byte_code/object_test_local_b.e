@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access to an object-test local."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ feature {NONE} -- Creation
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_object_test_local_b (Current)
@@ -46,7 +46,7 @@ feature -- Visitor
 
 feature -- Status report
 
-	is_creatable: BOOLEAN is False
+	is_creatable: BOOLEAN = False
 			-- Can an access to a local variable be the target for
 			-- a creation ?
 
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same (other: ACCESS_B): BOOLEAN is
+	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		do
 			if {o: OBJECT_TEST_LOCAL_B} other then
@@ -84,13 +84,13 @@ feature -- Comparison
 
 feature -- C code generation
 
-	enlarged: OBJECT_TEST_LOCAL_B is
+	enlarged: OBJECT_TEST_LOCAL_B
 			-- Enlarge current node
 		do
 			create {OBJECT_TEST_LOCAL_BL} Result.make_from (Current)
 		end
 
-	register_name: STRING is
+	register_name: STRING
 			-- The "otl<body_id>_<pos>" string
 		do
 			create Result.make (6)
@@ -100,24 +100,24 @@ feature -- C code generation
 
 feature -- Array optimization
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (i: INTEGER): BOOLEAN
 		do
 				-- False here.
 		end
 
-	array_descriptor: INTEGER is
+	array_descriptor: INTEGER
 		do
 			Result := - context.object_test_local_position (Current)
 		end
 
 feature -- Inlining
 
-	pre_inlined_code: INLINED_OBJECT_TEST_LOCAL_B is
+	pre_inlined_code: INLINED_OBJECT_TEST_LOCAL_B
 		do
 			create Result.make_from (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

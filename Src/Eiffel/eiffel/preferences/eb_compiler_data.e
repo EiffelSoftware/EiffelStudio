@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All shared preferences for the compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 feature -- Value
 
-	maximum_processor_usage: INTEGER is
+	maximum_processor_usage: INTEGER
 			-- Maximum number of processors to utilize for compilation
 		do
 			Result := maximum_processor_usage_preference.value
@@ -33,11 +33,11 @@ feature {NONE} -- Preference
 
 	maximum_processor_usage_preference: INTEGER_PREFERENCE
 
-	maximum_processor_usage_string: STRING is "compiler.maximum_processors_usage"
+	maximum_processor_usage_string: STRING = "compiler.maximum_processors_usage"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences (a_preferences: PREFERENCES) is
+	initialize_preferences (a_preferences: PREFERENCES)
 			-- Initialize preference values.
 		require
 			a_preferences_not_void: a_preferences /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 invariant
 	maximum_processor_usage_preference_attached: maximum_processor_usage_preference /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to build a precomplie eiffel system."
@@ -19,24 +19,24 @@ inherit
 
 feature -- Properties
 
-	name: STRING is
+	name: STRING
 		do
 			Result := precompile_cmd_name
 		end;
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		do
 			Result := precompile_help
 		end;
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 		do
 			Result := precompile_abb
 		end;
 
 feature {NONE} -- Execution
 
-	execute is
+	execute
 		do
 			print_header;
 			if Eiffel_project.is_new and then Eiffel_project.able_to_compile then
@@ -50,12 +50,12 @@ feature {NONE} -- Execution
 			end
 		end;
 
-	perform_compilation is
+	perform_compilation
 		do
 			Eiffel_project.precompile (False)
 		end;
 
-	save_project_again is
+	save_project_again
 			-- Try to save the project again.
 		local
 			finished: BOOLEAN;
@@ -85,7 +85,7 @@ feature {NONE} -- Execution
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

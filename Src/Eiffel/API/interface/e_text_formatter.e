@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Formats text for an eiffel class."
@@ -22,7 +22,7 @@ feature -- Properties
 
 feature -- Setting
 
-	set_text_formatter (a_formatter: TEXT_FORMATTER) is
+	set_text_formatter (a_formatter: TEXT_FORMATTER)
 			-- Set `text_formatter' with `a_formatter'
 		require
 			a_formatter_attached: a_formatter /= Void
@@ -32,7 +32,7 @@ feature -- Setting
 			text_formatter_not_void: text_formatter /= Void
 		end
 
-	set_clickable is
+	set_clickable
 			-- Set `is_clickable' to True.
 		do
 			is_clickable := True
@@ -40,7 +40,7 @@ feature -- Setting
 			is_clickable: is_clickable
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

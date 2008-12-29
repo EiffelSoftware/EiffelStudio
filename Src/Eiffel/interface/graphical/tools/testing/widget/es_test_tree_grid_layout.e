@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing a {ES_TAGABLE_GRID} layout for eiffel tests.
 		
@@ -56,14 +56,14 @@ feature {NONE} -- Query
 
 feature -- Basic functionality
 
-	populate_header (a_header: !EV_GRID_HEADER) is
+	populate_header (a_header: !EV_GRID_HEADER)
 			-- <Precursor>
 		do
 			a_header.i_th (last_tested_column).set_text (locale_formatter.translation (t_last_executed))
 			Precursor (a_header)
 		end
 
-	populate_item_row (a_row: !EV_GRID_ROW; a_item: !TEST_I) is
+	populate_item_row (a_row: !EV_GRID_ROW; a_item: !TEST_I)
 			-- <Precursor>
 		local
 			l_label: EV_GRID_LABEL_ITEM
@@ -80,7 +80,7 @@ feature -- Basic functionality
 
 feature {NONE} -- Basic functionality
 
-	date_time_item (a_date: !DATE_TIME): !EV_GRID_ITEM is
+	date_time_item (a_date: !DATE_TIME): !EV_GRID_ITEM
 			-- Item displaying how long a given date is in the past.
 			--
 			-- `a_date': Date shown on item.
@@ -165,7 +165,7 @@ feature {NONE} -- Constants
 			create Result.make ("yyyy-[0]mm-[0]dd [0]hh-[0]mi-[0]ss")
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

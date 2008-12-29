@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ancestor for basic types."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,21 +18,21 @@ inherit
 
 feature -- C code generation
 
-	generate_conversion_to_real_64 (buffer: GENERATION_BUFFER) is
+	generate_conversion_to_real_64 (buffer: GENERATION_BUFFER)
 			-- Generate conversion to `REAL_64', needed because
 			-- for some descendants, it is not enough to just to a cast to EIF_REAL_64.
 		do
 			buffer.put_string ("(EIF_REAL_64) (")
 		end
 
-	generate_conversion_to_real_32 (buffer: GENERATION_BUFFER) is
+	generate_conversion_to_real_32 (buffer: GENERATION_BUFFER)
 			-- Generate conversion to `REAL_32', needed because
 			-- for some descendants, it is not enough to just to a cast to EIF_REAL_32.
 		do
 			buffer.put_string ("(EIF_REAL_32) (")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

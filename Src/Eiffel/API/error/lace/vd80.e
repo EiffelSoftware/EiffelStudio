@@ -1,4 +1,4 @@
-indexing
+note
 	description: "General configuration warning"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: TEXT_FORMATTER) is
+	build_explain (st: TEXT_FORMATTER)
 		do
 				-- No need to add a line, there is already one inserted by `print_short_help'.
 			st.add (warning.out)
@@ -31,7 +31,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		local
 			l_text: STRING_8
@@ -51,13 +51,13 @@ feature {NONE} -- Output
 
 feature {SYSTEM_I, LACE_I} -- Setting
 
-	set_warning (s: like warning) is
+	set_warning (s: like warning)
 			-- Assign `s' to `warning'
 		do
 			warning := s
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

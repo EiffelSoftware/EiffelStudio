@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when a name of a creation clause is not a final name %
@@ -18,7 +18,7 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER = 2;
 
 	feature_name: STRING;
 			-- Feature name repeated in the creation clause of the class
@@ -26,7 +26,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Invalid creation procedure name: ");
 			a_text_formatter.add (feature_name);
@@ -35,7 +35,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		do
 			Precursor {VGCP} (a_text_formatter)
@@ -45,13 +45,13 @@ feature {NONE} -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_feature_name (s: STRING) is
+	set_feature_name (s: STRING)
 			-- Assign `s' to `feature_name'.
 		do
 			feature_name := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

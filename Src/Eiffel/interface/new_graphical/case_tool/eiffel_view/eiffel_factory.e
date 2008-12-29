@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,18 +49,18 @@ feature -- Access
 
 	world: EIFFEL_WORLD
 
-	name_string: STRING is "NAME"
-	cluster_name_string: STRING is "CLUSTER_NAME"
-	source_string: STRING is "SOURCE"
-	target_string: STRING is "TARGET"
-	source_cluster_string: STRING is "SOURCE_CLUSTER"
-	target_cluster_string: STRING is "TARGET_CLUSTER"
-	class_id_string: STRING is "CLASS_FIGURE_ID"
-	group_id_string: STRING is "GROUP_ID"
-	cluster_id_string: STRING is "CLUSTER_ID"
+	name_string: STRING = "NAME"
+	cluster_name_string: STRING = "CLUSTER_NAME"
+	source_string: STRING = "SOURCE"
+	target_string: STRING = "TARGET"
+	source_cluster_string: STRING = "SOURCE_CLUSTER"
+	target_cluster_string: STRING = "TARGET_CLUSTER"
+	class_id_string: STRING = "CLASS_FIGURE_ID"
+	group_id_string: STRING = "GROUP_ID"
+	cluster_id_string: STRING = "CLUSTER_ID"
 		-- Xml string constants
 
-	model_from_xml (node: XM_ELEMENT): EG_ITEM is
+	model_from_xml (node: XM_ELEMENT): EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
 		local
 			node_name, class_name, source_name, target_name: STRING
@@ -141,27 +141,27 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	xml_class_figure_node_name: STRING is
+	xml_class_figure_node_name: STRING
 			-- Name of xml nodes describing class figures.
 		deferred
 		end
 
-	xml_cluster_figure_node_name: STRING is
+	xml_cluster_figure_node_name: STRING
 			-- Name of xml nodes describing cluster figures.
 		deferred
 		end
 
-	xml_client_supplier_figure_node_name: STRING is
+	xml_client_supplier_figure_node_name: STRING
 			-- Name of xml nodes describing client supplier links.
 		deferred
 		end
 
-	xml_inheritance_figure_node_name: STRING is
+	xml_inheritance_figure_node_name: STRING
 			-- Name of xml nodes describing inheritance links.
 		deferred
 		end
 
-	put_class_not_exist_warning (class_name: STRING; group_id: STRING) is
+	put_class_not_exist_warning (class_name: STRING; group_id: STRING)
 			-- Put a waring on the screen that class with `class_name' does not exist in the system.
 		local
 			l_output_manager: EB_OUTPUT_MANAGER
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	put_cluster_not_exist_warning (cluster_name: STRING) is
+	put_cluster_not_exist_warning (cluster_name: STRING)
 			-- Put a warning on the screen saying that class with `cluster_name'
 		local
 			l_output_manager: EB_OUTPUT_MANAGER
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

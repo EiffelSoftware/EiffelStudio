@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that contains an debugging execution parameters"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,25 +22,25 @@ feature -- Properties
 
 feature -- Change
 
-	set_arguments (v: like arguments) is
+	set_arguments (v: like arguments)
 			-- Set `arguments'
 		do
 			arguments := v
 		end
 
-	set_working_directory (v: like working_directory) is
+	set_working_directory (v: like working_directory)
 			-- Set `working_directory'
 		do
 			working_directory := v
 		end
 
-	set_environment_variables (v: like environment_variables) is
+	set_environment_variables (v: like environment_variables)
 			-- Set `environment_variables'
 		do
 			environment_variables := v
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

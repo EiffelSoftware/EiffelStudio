@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Address table entry indexed by feature reordering"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,14 +19,14 @@ create
 
 feature -- Initialize
 
-	make is
+	make
 		do
 			make_search_table (2)
 		end
 
 feature -- Access
 
-	force_reordering (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]; a_frozen_age: INTEGER) is
+	force_reordering (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]; a_frozen_age: INTEGER)
 		local
 			reordering: FEATURE_REORDERING
 		do
@@ -41,7 +41,7 @@ feature -- Access
 
 	has_dollar_op: BOOLEAN
 
-	set_has_dollar_op is
+	set_has_dollar_op
 		do
 			has_dollar_op := True
 			create dollar_ids.make (0)
@@ -50,7 +50,7 @@ feature -- Access
 	dollar_ids: HASH_TABLE [INTEGER, INTEGER];
 		-- Id of dollar operator for a given type-id
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

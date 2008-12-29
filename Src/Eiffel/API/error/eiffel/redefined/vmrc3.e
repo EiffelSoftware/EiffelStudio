@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when a selection is needed."
@@ -21,11 +21,11 @@ feature -- Property
 	selection_list: LINKED_LIST [CELL2 [E_FEATURE, CLASS_C]];
 			-- Info about the features to select
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER = 2;
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		local
@@ -64,7 +64,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_selection_list (l: SELECTION_LIST) is
+	set_selection_list (l: SELECTION_LIST)
 			-- Assign `l' to `selection_list'.
 		require
 			valid_l: l /= Void
@@ -91,7 +91,7 @@ feature {COMPILER_EXPORTER}
 			end
 		end; 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Iterator to go through every node of a criterion and do nothing"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Process
 
-	process_criterion_item (a_item: QL_CRITERION) is
+	process_criterion_item (a_item: QL_CRITERION)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -24,65 +24,65 @@ feature -- Process
 
 feature{NONE} -- Process
 
-	process_criterion (a_cri: QL_CRITERION) is
+	process_criterion (a_cri: QL_CRITERION)
 			-- Process `a_cri'.
 		do
 		end
 
-	process_binary_criterion (a_cri: QL_BINARY_CRITERION) is
+	process_binary_criterion (a_cri: QL_BINARY_CRITERION)
 			-- Process `a_cri'.
 		do
 			a_cri.left.process (Current)
 			a_cri.right.process (Current)
 		end
 
-	process_unary_criterion (a_cri: QL_UNARY_CRITERION) is
+	process_unary_criterion (a_cri: QL_UNARY_CRITERION)
 			-- Process `a_cri'.
 		do
 			a_cri.wrapped_criterion.process (Current)
 		end
 
-	process_not_criterion (a_cri: QL_NOT_CRITERION) is
+	process_not_criterion (a_cri: QL_NOT_CRITERION)
 			-- Process `a_cri'.
 		do
 			process_unary_criterion (a_cri)
 		end
 
-	process_and_criterion (a_cri: QL_AND_CRITERION) is
+	process_and_criterion (a_cri: QL_AND_CRITERION)
 			-- Process `a_cri'.
 		do
 			process_binary_criterion (a_cri)
 		end
 
-	process_or_criterion (a_cri: QL_OR_CRITERION) is
+	process_or_criterion (a_cri: QL_OR_CRITERION)
 			-- Process `a_cri'.
 		do
 			process_binary_criterion (a_cri)
 		end
 
-	process_criterion_adapter (a_cri: QL_CRITERION_ADAPTER) is
+	process_criterion_adapter (a_cri: QL_CRITERION_ADAPTER)
 			-- Process `a_cri'.
 		do
 			a_cri.wrapped_criterion.process (Current)
 		end
 
-	process_compiled_imp_criterion (a_cri: QL_ITEM_IS_COMPILED_CRI_IMP) is
+	process_compiled_imp_criterion (a_cri: QL_ITEM_IS_COMPILED_CRI_IMP)
 			-- Process `a_cri'.
 		do
 			process_criterion_adapter (a_cri)
 		end
 
-	process_intrinsic_domain_criterion (a_cri: QL_INTRINSIC_DOMAIN_CRITERION) is
+	process_intrinsic_domain_criterion (a_cri: QL_INTRINSIC_DOMAIN_CRITERION)
 			-- Process `a_cri'.
 		do
 		end
 
-	process_domain_criterion (a_cri: QL_DOMAIN_CRITERION) is
+	process_domain_criterion (a_cri: QL_DOMAIN_CRITERION)
 			-- Process `a_cri'.
 		do
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

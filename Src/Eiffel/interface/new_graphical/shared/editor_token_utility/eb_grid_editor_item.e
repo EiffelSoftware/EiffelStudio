@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Selectable editor token grid item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Action
 
-	deactivate is
+	deactivate
 			-- Cleanup from previous call to activate.
 		do
 			if not is_destroyed and then is_parented then
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_popup_dimensions (a_popup: !EV_POPUP_WINDOW) is
+	update_popup_dimensions (a_popup: !EV_POPUP_WINDOW)
 			-- Update dimensions and positioning for `a_popup'.
 		local
 			l_x_offset: INTEGER
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			viewport.set_y_offset (l_hidden_upper)
 		end
 
-	handle_key (a_key: EV_KEY) is
+	handle_key (a_key: EV_KEY)
 			-- Handle the Escape key for cancelling activation.
 		require
 			a_key_not_void: a_key /= Void
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	activate_action (popup_window: EV_POPUP_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
 		do
 			create editor.make (Void)
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			popup_window.show_actions.extend (agent initialize_actions)
 		end
 
-	initialize_actions is
+	initialize_actions
 			-- Setup the action sequences when the item is shown.
 		do
 			editor.editor_drawing_area.focus_out_actions.extend (agent deactivate)
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			editor.editor_drawing_area.key_press_actions.extend (agent handle_key)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

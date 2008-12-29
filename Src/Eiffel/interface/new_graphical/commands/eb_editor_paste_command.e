@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to perform a clipboard-paste operation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target) is
+	make (a_target: like target)
 			-- Initialization
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}(a_target)
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- Is the operation possible?
 		do
 				--| FIXME ARNAUD: waiting for Vision2 clipboard.
@@ -70,7 +70,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	execute_command is
+	execute_command
 			-- Execute the copy/copy/paste operation
 		local
 			l_editor: like editor
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	editor: EB_EDITOR is
+	editor: EB_EDITOR
 			-- Editor corresponding to Current
 		do
 			Result := target.ui.current_editor
@@ -94,14 +94,14 @@ feature {NONE} -- Implementation
 
 	mini_pixel_buffer: EV_PIXEL_BUFFER
 
-	internal_recycle is
+	internal_recycle
 			-- Internal recycle
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}
 			Precursor {EB_EDITOR_COMMAND}
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

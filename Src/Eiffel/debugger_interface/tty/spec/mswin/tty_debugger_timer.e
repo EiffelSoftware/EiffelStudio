@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "TIMER for debugger on mswin"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dmi: TTY_DEBUGGER_EVENTS_HANDLER_IMP) is
+	make (dmi: TTY_DEBUGGER_EVENTS_HANDLER_IMP)
 		do
 			tty_dbg_events_handler_imp := dmi
 			create actions
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Change
 
-	set_interval (i: like interval) is
+	set_interval (i: like interval)
 		do
 			interval := i
 			if i = 0 then
@@ -46,19 +46,19 @@ feature -- Change
 			end
 		end
 
-	set_timer is
+	set_timer
 		do
 			tty_dbg_events_handler_imp.set_timer (object_id, interval)
 		end
 
-	kill_timer is
+	kill_timer
 		do
 			tty_dbg_events_handler_imp.kill_timer (object_id)
 		end
 
 feature -- Execution
 
-	execute is
+	execute
 		do
 			actions.call (Void)
 		end
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 
 	tty_dbg_events_handler_imp: TTY_DEBUGGER_EVENTS_HANDLER_IMP;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

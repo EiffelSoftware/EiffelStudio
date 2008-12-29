@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Byte code for instruction inside a loop variant"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_variant_b (Current)
@@ -23,14 +23,14 @@ feature -- Visitor
 
 feature -- Access
 
-	enlarged: VARIANT_BL is
+	enlarged: VARIANT_BL
 			-- Enlarge current node
 		do
 			create Result
 			Result.fill_from (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

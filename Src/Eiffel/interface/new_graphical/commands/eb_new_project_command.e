@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to create a new project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -53,7 +53,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_parent (a_window: EV_WINDOW) is
+	make_with_parent (a_window: EV_WINDOW)
 			-- Create the command relative to the parent window `a_window'
 		require
 			a_window_not_void: a_window /= Void
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Let the user choose the kind of new project he wants to create.
 		local
 			new_project_dialog: EB_STARTING_DIALOG
@@ -76,7 +76,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	build_deleting_dialog is
+	build_deleting_dialog
 			-- Build the dialog displayed to have the user wait during the
 			-- deletion of a directory.
 		local
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			deleting_dialog.show_relative_to_window (parent_window)
 		end
 
-	on_delete_directory (deleted_files: ARRAYED_LIST [STRING]) is
+	on_delete_directory (deleted_files: ARRAYED_LIST [STRING])
 			-- The files in `deleted_files' have just been deleted.
 			-- Display
 		local
@@ -156,13 +156,13 @@ feature {NONE} -- Implementation
 			ev_application.process_events
 		end
 
-	on_cancel_operation: BOOLEAN is
+	on_cancel_operation: BOOLEAN
 			-- Has the user pushed the "Cancel" in the deleting dialog?
 		do
 			Result := cancel_button_pushed
 		end
 
-	on_cancel_button_pushed is
+	on_cancel_button_pushed
 			-- The user has just pushed the "Cancel" in the deleting dialog.
 		do
 			cancel_button_pushed := True
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Callbacks
 
-	parent_window: EV_WINDOW is
+	parent_window: EV_WINDOW
 			-- Parent window.
 		local
 			dev_window: EB_DEVELOPMENT_WINDOW
@@ -209,19 +209,19 @@ feature {NONE} -- Implementation / Private attributes
 
 feature {NONE} -- Implementation / Private constants.
 
-	Minimum_width_of_Deleting_dialog: INTEGER is 70
+	Minimum_width_of_Deleting_dialog: INTEGER = 70
 			-- Minimum width of the deleting dialog in characters.
 
-	Minimum_height_of_Deleting_dialog: INTEGER is 2
+	Minimum_height_of_Deleting_dialog: INTEGER = 2
 			-- Minimum height of the deleting dialog in characters.
 
-	Path_ellipsis_width: INTEGER is
+	Path_ellipsis_width: INTEGER
 			-- Maximum number of characters per item.
 		once
 			Result := Minimum_width_of_Deleting_dialog - 10
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

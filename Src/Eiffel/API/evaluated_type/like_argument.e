@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Representation of an type anchored on a routine argument."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_like_argument (Current)
@@ -26,15 +26,15 @@ feature -- Visitor
 
 feature -- Properties
 
-	is_like_argument: BOOLEAN is True
+	is_like_argument: BOOLEAN = True
 			-- Is Current a like argument? (True)
 
-	has_like_argument: BOOLEAN is True
+	has_like_argument: BOOLEAN = True
 			-- Has the type like argument in its definition? (True)
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := position = other.position and then
@@ -45,7 +45,7 @@ feature -- Comparison
 
 feature -- Access
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		local
 			other_like_arg: LIKE_ARGUMENT
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_position (p: like position) is
+	set_position (p: like position)
 			-- Assign `p' to `position'.
 		do
 			position := p
@@ -70,25 +70,25 @@ feature -- Setting
 
 feature -- Generic conformance
 
-	initialize_info (an_info: like shared_create_info) is
+	initialize_info (an_info: like shared_create_info)
 		do
 			an_info.set_position (position)
 		end
 
-	create_info: CREATE_ARG is
+	create_info: CREATE_ARG
 		do
 			create Result
 			Result.set_position (position)
 		end
 
-	shared_create_info: CREATE_ARG is
+	shared_create_info: CREATE_ARG
 		once
 			create Result
 		end
 
 feature -- Output
 
-	dump: STRING is
+	dump: STRING
 			-- Dumped trace
 		local
 			actual_dump: STRING
@@ -107,7 +107,7 @@ feature -- Output
 			Result.append (actual_dump)
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 		do
 			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
 			if has_attached_mark then
@@ -134,7 +134,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Primitives
 
-	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current is
+	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current
 		local
 			l_new_type: TYPE_A
 		do
@@ -151,7 +151,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): TYPE_A is
+	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): TYPE_A
 			-- Type for conformance.
 			-- `actual_type' is the declared type and is the wrong one for
 			-- conformance validation.
@@ -163,7 +163,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			Result := a_arg_types.item (position).to_other_attachment (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

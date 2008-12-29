@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is the rectangle used in BON_CLUSTER_FIGURE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a BON_CLUSTER_RECTANGLE.
 		do
 			Precursor {EV_MODEL_ROUNDED_RECTANGLE}
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 		
 feature -- Element change
 		
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' to `a_width'.
 		local
 			l_points: like polyline_points
@@ -50,7 +50,7 @@ feature -- Element change
 			l_points.item (2).set_precise (p0.x_precise + a_width, l_points.item (2).y_precise)
 		end
 	
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' to `a_height'.
 		local
 			l_points: like polyline_points
@@ -63,7 +63,7 @@ feature -- Element change
 			l_points.item (3).set_precise (l_points.item (3).x_precise, p0.y_precise + a_height)
 		end
 
-	set_point_a_position (ax, ay: INTEGER) is
+	set_point_a_position (ax, ay: INTEGER)
 			-- Set position of `point_a' to position (`ax', `ay').
 		local
 			l_points: like polyline_points
@@ -75,7 +75,7 @@ feature -- Element change
 			l_points.item (3).set_precise (l_points.item (3).x_precise, ay)
 		end
 		
-	set_point_b_position (ax, ay: INTEGER) is
+	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `point_b' to position (`ax', `ay').
 		local
 			l_points: like polyline_points
@@ -90,7 +90,7 @@ feature -- Element change
 
 feature {EV_MODEL_GROUP} -- Transformation
 		
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
@@ -114,13 +114,13 @@ feature {BON_CLUSTER_FIGURE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	assign_draw_id is
+	assign_draw_id
 			-- Assign same id as EV_FIGURE_ROUNDED_RECTANGLE.
 		do
 			draw_id := (create {EV_MODEL_ROUNDED_RECTANGLE}).draw_id
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

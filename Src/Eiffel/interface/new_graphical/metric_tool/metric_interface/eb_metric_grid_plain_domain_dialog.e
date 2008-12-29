@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a dialog to setup metric domain"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			l_ver_box: EV_VERTICAL_BOX
@@ -56,7 +56,7 @@ feature -- Status report
 	is_for_supplier_class: BOOLEAN
 			-- Is Current dialog to setup client class?
 
-	is_for_client_class: BOOLEAN is
+	is_for_client_class: BOOLEAN
 			-- Is Current dialog to setup supplier class?
 		do
 			Result := not is_for_supplier_class
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Setting
 
-	enable_for_supplier_class is
+	enable_for_supplier_class
 			-- Switch Current dialog to setup supplier class.
 		do
 			is_for_supplier_class := True
@@ -72,7 +72,7 @@ feature -- Setting
 			for_supplier_class: is_for_supplier_class
 		end
 
-	enable_for_client_class is
+	enable_for_client_class
 			-- Switch Current dialog to setup client class.
 		do
 			is_for_supplier_class := False
@@ -82,26 +82,26 @@ feature -- Setting
 
 feature{NONE} -- Actions
 
-	on_show is
+	on_show
 			-- Action to be performed when dialog is displayed
 		do
 		end
 
-	on_ok is
+	on_ok
 			-- Ok was pressed.
 		do
 			Precursor
 			ok_actions.call (Void)
 		end
 
-	on_cancel is
+	on_cancel
 			-- Cancel was pressed.
 		do
 			Precursor
 			cancel_actions.call (Void)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

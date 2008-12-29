@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of a macro external extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,7 +19,7 @@ create
 
 feature  -- Initialization
 
-	make (is_cpp_macro: like is_cpp) is
+	make (is_cpp_macro: like is_cpp)
 			-- Create Current object
 			-- Set `is_cpp' to `is_cpp_macro'.
 		do
@@ -28,7 +28,7 @@ feature  -- Initialization
 			is_cpp_set: is_cpp = is_cpp_macro
 		end
 
-	initialize (is_cpp_macro: like is_cpp; sig: SIGNATURE_AS; use_list: USE_LIST_AS) is
+	initialize (is_cpp_macro: like is_cpp; sig: SIGNATURE_AS; use_list: USE_LIST_AS)
 			-- Create MACRO_EXTENSION_AS node.
 		require
 			use_list_not_void: use_list /= Void
@@ -55,7 +55,7 @@ feature -- Properties
 
 feature -- Get the macro extension
 
-	extension_i: MACRO_EXTENSION_I is
+	extension_i: MACRO_EXTENSION_I
 			-- MACRO_EXTENSION_I corresponding to current extension
 		do
 			create Result.make (is_cpp)
@@ -64,7 +64,7 @@ feature -- Get the macro extension
 
 feature {NONE} -- Implementation
 
-	parse_special_part is
+	parse_special_part
 			-- Parse include file containing struct definition
 		local
 			end_file: INTEGER
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

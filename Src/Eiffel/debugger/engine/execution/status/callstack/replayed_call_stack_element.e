@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Information about the replayed called stack element"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_string (a_id: STRING; s32: !STRING_32) is
+	make_from_string (a_id: STRING; s32: !STRING_32)
 			-- Initialize `Current'.
 		local
 			p,q,i: INTEGER
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	index_of_right_limit_position (s32: !STRING_32; i: INTEGER): INTEGER is
+	index_of_right_limit_position (s32: !STRING_32; i: INTEGER): INTEGER
 			-- Index of next right limit position  i.e index of associated ']'
 		local
 			p: INTEGER
@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	extract_properties (s32: !STRING_32) is
+	extract_properties (s32: !STRING_32)
 			-- Extract stack properties
 		require
 			s32_not_empty: not s32.is_empty
@@ -194,7 +194,7 @@ feature -- Properties
 	id: STRING
 			-- Identifier
 
-	remote_id: STRING is
+	remote_id: STRING
 			-- Remote id
 		do
 			create Result.make_empty
@@ -236,7 +236,7 @@ feature -- Properties
 	feature_i: FEATURE_I
 			-- associated feature
 
-	e_feature: E_FEATURE is
+	e_feature: E_FEATURE
 			-- API feature
 		do
 			if feature_i /= Void and dynamic_class /= Void then
@@ -278,45 +278,45 @@ feature -- Properties
 
 feature -- Call stack element access
 
-	class_name: STRING is
+	class_name: STRING
 		do
 			if {dc: CLASS_C} dynamic_class then
 				Result := dc.name_in_upper
 			end
 		end
 
-	routine_name: STRING is
+	routine_name: STRING
 		do
 			Result := feature_i.feature_name
 		end
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 		do
 			if {ct: CLASS_TYPE} dynamic_class_type then
 				Result := ct.associated_class
 			end
 		end
 
-	written_class: CLASS_C is
+	written_class: CLASS_C
 		do
 			if {ct: CLASS_TYPE} class_type then
 				Result := ct.associated_class
 			end
 		end
 
-	is_melted: BOOLEAN is
+	is_melted: BOOLEAN
 		do
 			Result := False
 		end
 
-	has_rescue: BOOLEAN is
+	has_rescue: BOOLEAN
 		do
 			Result := feature_i /= Void and then feature_i.has_rescue_clause
 		end
 
 feature -- change
 
-	set_calls (v: like calls) is
+	set_calls (v: like calls)
 			-- Set `calls' to `v'
 		require
 			valid_cound: v /= Void and then v.count = calls_count
@@ -324,7 +324,7 @@ feature -- change
 			calls := v
 		end
 
-	set_active_replayed (b: BOOLEAN) is
+	set_active_replayed (b: BOOLEAN)
 			-- Set `is_active_replayed'
 		do
 			is_active_replayed := b
@@ -332,7 +332,7 @@ feature -- change
 
 feature -- Access
 
-	to_string: !STRING is
+	to_string: !STRING
 		local
 			fi: FEATURE_I
 		do
@@ -365,7 +365,7 @@ feature -- Access
 			Result.append_character (']')
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

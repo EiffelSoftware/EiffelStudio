@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Pattern of a feature: it is constitued of the meta types of the
@@ -34,13 +34,13 @@ feature
 	argument_types: ARRAY [TYPE_A];
 			-- Meta types of the arguments
 
-	set_argument_types (a: like argument_types) is
+	set_argument_types (a: like argument_types)
 			-- Assign `a' to `argument_types'.
 		do
 			argument_types := a;
 		end;
 
-	make (t: TYPE_A) is
+	make (t: TYPE_A)
 			-- Creation of a pattern with a result meta type
 		require
 			good_argument: t /= Void;
@@ -48,7 +48,7 @@ feature
 			result_type := t;
 		end;
 
-	argument_count: INTEGER is
+	argument_count: INTEGER
 			-- Number of arguments
 		do
 			if argument_types /= Void then
@@ -56,7 +56,7 @@ feature
 			end;
 		end;
 
-	is_valid (a_class: CLASS_C): BOOLEAN is
+	is_valid (a_class: CLASS_C): BOOLEAN
 			-- Is `Current' valid for `a_class'?
 		local
 			n, i: INTEGER;
@@ -75,7 +75,7 @@ feature
 			end
 		end
 
-	is_equal (other: PATTERN): BOOLEAN is
+	is_equal (other: PATTERN): BOOLEAN
 			-- Is `other' equal to Current ?
 		local
 			n, i: INTEGER
@@ -93,7 +93,7 @@ feature
 			end
 		end
 
-	duplicate: like Current is
+	duplicate: like Current
 			-- Duplication
 		do
 			create Result.make (result_type);
@@ -102,7 +102,7 @@ feature
 			end;
 		end;
 
-	instantiation_in (gen_type: CLASS_TYPE): PATTERN is
+	instantiation_in (gen_type: CLASS_TYPE): PATTERN
 			-- Instantiated pattern in the context of generical type
 			-- `gen_type'.
 		require
@@ -155,7 +155,7 @@ feature
 			result_not_void: Result /= Void
 		end
 
-	c_pattern: C_PATTERN is
+	c_pattern: C_PATTERN
 			-- C pattern
 		local
 			new_arguments: ARRAY [TYPE_C];
@@ -178,7 +178,7 @@ feature
 
 feature -- Hash code
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code for pattern
 		local
 			i, n: INTEGER
@@ -207,7 +207,7 @@ feature -- Hash code
 
 feature {NONE} -- Implementation
 
-	type_deep_equal (first_type, other_type: TYPE_A): BOOLEAN is
+	type_deep_equal (first_type, other_type: TYPE_A): BOOLEAN
 			-- Deep equal comparison wich does not compare the `cr_info´ attribute
 			-- declared in CL_TYPE_I and the `true_generics' attributes declared
 			-- in GEN_TYPE_I.
@@ -253,7 +253,7 @@ invariant
 
 	result_type_exists: result_type /= Void;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

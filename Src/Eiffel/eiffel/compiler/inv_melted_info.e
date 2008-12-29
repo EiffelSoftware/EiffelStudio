@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about invariant recently added to system"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature
 
-	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I is
+	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I
 			-- Associated feature
 		do
 			check
@@ -33,7 +33,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	internal_execution_unit (class_type: CLASS_TYPE): INV_EXECUTION_UNIT is
+	internal_execution_unit (class_type: CLASS_TYPE): INV_EXECUTION_UNIT
 			-- Create new EXECUTION_UNIT corresponding to Current type.
 		do
 			create Result.make (class_type)
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			Result.set_type (Void_c_type)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

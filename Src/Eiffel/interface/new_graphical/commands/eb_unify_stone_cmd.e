@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to separate the stone management between the development%
 				%window and the context tool"
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make (dev: EB_DEVELOPMENT_WINDOW) is
+	make (dev: EB_DEVELOPMENT_WINDOW)
 			-- Initialize `Current' and associate it with `dev'.
 		do
 			window := dev
@@ -38,14 +38,14 @@ feature -- Initialization
 
 feature -- Status report
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 		do
 			Result := Interface_names.e_Toggle_stone_management
 		end
 
-	name: STRING is "Toggle_stone"
+	name: STRING = "Toggle_stone"
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 		do
 			if window.unified_stone then
 				Result := pixmaps.icon_pixmaps.context_unlink_icon
@@ -54,7 +54,7 @@ feature -- Status report
 			end
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			if window.unified_stone then
@@ -64,7 +64,7 @@ feature -- Status report
 			end
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 		do
 			if window.unified_stone then
 				Result := Interface_names.e_Separate_stone
@@ -73,13 +73,13 @@ feature -- Status report
 			end
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed on the toolbar button.
 		do
 			Result := Interface_names.b_Toggle_stone_management
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 		do
 			if window.unified_stone then
 				Result := Interface_names.m_Separate_stone
@@ -90,7 +90,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Toggle between a unified mode and a separate mode.
 		local
 			l_button: SD_TOOL_BAR_TOGGLE_BUTTON
@@ -140,7 +140,7 @@ feature -- Basic operations
 			end
 		end
 
-	update_tooltip is
+	update_tooltip
 			-- Display the good tooltip on buttons.
 		do
 			if internal_managed_sd_toolbar_items /= Void then
@@ -148,7 +148,7 @@ feature -- Basic operations
 			end
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON
 			-- Create a new sd toolbar button for this command.
 		do
 				-- Create the button
@@ -164,7 +164,7 @@ feature -- Basic operations
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			window := Void
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 	window: EB_DEVELOPMENT_WINDOW;
 			-- Window `Current' is associated with.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

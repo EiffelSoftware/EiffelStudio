@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature -- Properties
 	is_eiffel_call_stack_element: BOOLEAN = True
 			-- Is Current an Eiffel Call Stack Element ?
 
-	body_index: INTEGER is
+	body_index: INTEGER
 			-- body index of the associated routine
 		require
 			routine_not_void: routine /= Void
@@ -49,7 +49,7 @@ feature -- Properties
 	written_class: CLASS_C
 			-- Class where routine is written in
 
-	routine_i: FEATURE_I is
+	routine_i: FEATURE_I
 		local
 			ef: E_FEATURE
 		do
@@ -59,13 +59,13 @@ feature -- Properties
 			end
 		end
 
-	routine: E_FEATURE is
+	routine: E_FEATURE
 			-- Routine being called
 			-- Note from Arnaud: Computation has been deferred for optimisation purpose
 		deferred
 		end
 
-	has_result: BOOLEAN is
+	has_result: BOOLEAN
 			-- Does this routine has a Result ?
 			-- ie: function or once
 		local
@@ -75,12 +75,12 @@ feature -- Properties
 			Result := r /= Void and then r.has_return_value
 		end
 
-	has_rescue: BOOLEAN is
+	has_rescue: BOOLEAN
 		do
 			Result := routine_i /= Void and then routine_i.has_rescue_clause
 		end
 
-	result_value: ABSTRACT_DEBUG_VALUE is
+	result_value: ABSTRACT_DEBUG_VALUE
 			-- Result value of routine
 		do
 			if not initialized then
@@ -97,12 +97,12 @@ feature -- Properties
 			is_function_non_void: routine.is_function implies Result /= Void
 		end
 
-	current_object_value: ABSTRACT_DEBUG_VALUE is
+	current_object_value: ABSTRACT_DEBUG_VALUE
 			-- Current object's value.
 		deferred
 		end
 
-	local_value (i: INTEGER): ABSTRACT_DEBUG_VALUE is
+	local_value (i: INTEGER): ABSTRACT_DEBUG_VALUE
 			-- Local value at position `i'
 		require
 			routine_attached: routine /= Void
@@ -115,7 +115,7 @@ feature -- Properties
 			end
 		end
 
-	object_test_local_value (i: INTEGER): ABSTRACT_DEBUG_VALUE is
+	object_test_local_value (i: INTEGER): ABSTRACT_DEBUG_VALUE
 			-- Local value at position `i'
 		require
 			routine_attached: routine /= Void
@@ -130,7 +130,7 @@ feature -- Properties
 			end
 		end
 
-	locals: LIST [ABSTRACT_DEBUG_VALUE] is
+	locals: LIST [ABSTRACT_DEBUG_VALUE]
 			-- Value of local variables
 		local
 			l_locals: EIFFEL_LIST [TYPE_DEC_AS]
@@ -155,7 +155,7 @@ feature -- Properties
 			end
 		end
 
-	arguments: LIST [ABSTRACT_DEBUG_VALUE] is
+	arguments: LIST [ABSTRACT_DEBUG_VALUE]
 			-- Value of arguments
 		local
 			l_args: E_FEATURE_ARGUMENTS
@@ -182,7 +182,7 @@ feature -- Properties
 			non_void_implies_not_empty: Result /= Void implies not Result.is_empty
 		end
 
-	argument (pos: INTEGER): ABSTRACT_DEBUG_VALUE is
+	argument (pos: INTEGER): ABSTRACT_DEBUG_VALUE
 			-- Argument at position `pos'
 		do
 			if {args: like arguments} arguments then
@@ -194,7 +194,7 @@ feature -- Properties
 
 feature -- Stack reset
 
-	reset_stack is
+	reset_stack
 			-- Reset stack data (locals, arguments, result, ..)
 		do
 			initialized := False
@@ -207,7 +207,7 @@ feature -- Stack reset
 
 feature {NONE} -- Implementation
 
-	initialize_stack is
+	initialize_stack
 			-- Initialize stack data (locals, arguments, result, ..)
 		require
 			not_initialized: not initialized
@@ -216,13 +216,13 @@ feature {NONE} -- Implementation
 			initialized: initialized
 		end
 
-	local_decl_grps_from (feat: E_FEATURE): EIFFEL_LIST [TYPE_DEC_AS] is
+	local_decl_grps_from (feat: E_FEATURE): EIFFEL_LIST [TYPE_DEC_AS]
 			-- Locals declaration groups for `feat'.
 		do
 			Result := feat.locals
 		end
 
-	object_test_locals_from (feat: E_FEATURE): LIST [TUPLE [id: ID_AS; type: TYPE_AS]] is
+	object_test_locals_from (feat: E_FEATURE): LIST [TUPLE [id: ID_AS; type: TYPE_AS]]
 			-- Locals declaration groups for `feat'.
 		do
 			Result := feat.object_test_locals
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation Properties
 
 feature {NONE} -- Implementation helper
 
-	error_value (a_name, a_mesg: STRING): DUMMY_MESSAGE_DEBUG_VALUE is
+	error_value (a_name, a_mesg: STRING): DUMMY_MESSAGE_DEBUG_VALUE
 		do
 			create Result.make_with_name (a_name)
 			Result.set_message (a_mesg)
@@ -261,7 +261,7 @@ invariant
 --				not private_locals.is_empty
 --	valid_level: level_in_stack >= 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

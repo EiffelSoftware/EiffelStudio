@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Controller of a compiler pass for a class
@@ -27,7 +27,7 @@ feature
 			-- resp.) beetween two recompilations. All the features
 			-- using such a feature should be melted.
 
-	make is
+	make
 			-- Initialization
 		do
 			create removed_features.make (5);
@@ -37,7 +37,7 @@ feature
 			melted_propagators.compare_objects
 		end;
 
-	wipe_out is
+	wipe_out
 			-- Empty the structure
 		do
 			removed_features.clear_all;
@@ -45,13 +45,13 @@ feature
 			melted_propagators.wipe_out;
 		end;
 
-	make_pass3: BOOLEAN is
+	make_pass3: BOOLEAN
 			-- Has a third pass to be done ?
 		do
 			Result := propagate_pass3 or else removed_features.count > 0
 		end;
 
-	propagate_pass3: BOOLEAN is
+	propagate_pass3: BOOLEAN
 			-- Has a third pass to be propagated to clients ?
 		do
 			Result := not (propagators.is_empty and then melted_propagators.is_empty)
@@ -59,7 +59,7 @@ feature
 
 feature -- Debug
 
-	trace is
+	trace
 		do
 			io.error.put_string ("Propagators:%N");
 			from
@@ -87,7 +87,7 @@ invariant
 	propagators_exists: propagators /= Void;
 	melted_propagators_exists: melted_propagators /= Void;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

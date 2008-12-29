@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An interface for the most basic event list item used with the event service. See {EVENT_SERVICE_I} for more information on the
 		event service and how items are used.
@@ -112,7 +112,7 @@ feature -- Basic operations
 			is_invalidated: is_invalidated
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

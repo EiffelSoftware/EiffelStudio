@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Byte code for once feature
@@ -23,10 +23,10 @@ feature {NONE} -- Status
 
 feature -- Status
 
-	is_once: BOOLEAN is True;
+	is_once: BOOLEAN = True;
 			-- Is the current byte code relative to a once feature ?
 
-	is_global_once: BOOLEAN is
+	is_global_once: BOOLEAN
 			-- Is current once compiled in multithreaded mode with global status?
 		do
 			Result := (System.has_multithreaded or else System.il_generation) and then internal_is_global_once
@@ -34,7 +34,7 @@ feature -- Status
 
 feature -- Setting
 
-	set_is_global_once (v: BOOLEAN) is
+	set_is_global_once (v: BOOLEAN)
 			-- Assign `v' to `internal_is_global_once'.
 		do
 			internal_is_global_once := v
@@ -44,7 +44,7 @@ feature -- Setting
 
 feature -- Byte code generation
 
-	append_once_mark (ba: BYTE_ARRAY) is
+	append_once_mark (ba: BYTE_ARRAY)
 			-- Append byte code indicating a kind of a once routine
 			-- (thread-relative once, process-relative once, etc.)
 			-- and associated information (code index)
@@ -61,7 +61,7 @@ feature -- Byte code generation
 
 feature {NONE} -- C code generation: implementation
 
-	generate_once_result_definition (result_macro_prefix: STRING; data_macro_prefix: STRING) is
+	generate_once_result_definition (result_macro_prefix: STRING; data_macro_prefix: STRING)
 			-- Generate definition of once data using `result_macro_prefix' to define Result and
 			-- `data_macro_prefix' to initialize associated variables (if required).
 		require
@@ -119,7 +119,7 @@ feature {NONE} -- C code generation: implementation
 
 feature -- C code generation
 
-	generate_once_declaration (a_name: STRING; a_type: TYPE_C) is
+	generate_once_declaration (a_name: STRING; a_type: TYPE_C)
 			-- Generate declaration of static fields that keep once result or point to it
 		local
 			buf: GENERATION_BUFFER
@@ -165,7 +165,7 @@ feature -- C code generation
 			end
 		end
 
-	generate_once_data (name: STRING) is
+	generate_once_data (name: STRING)
 			-- Generate once-specific data
 		local
 			buf: like buffer
@@ -189,7 +189,7 @@ feature -- C code generation
 			init_dtype
 		end
 
-	generate_once_prologue (name: STRING) is
+	generate_once_prologue (name: STRING)
 			-- Generate test at the head of once routines
 		local
 			buf: like buffer
@@ -250,7 +250,7 @@ feature -- C code generation
 			end
 		end
 
-	generate_once_epilogue (a_name: STRING) is
+	generate_once_epilogue (a_name: STRING)
 			-- Generate end of a once block.
 		local
 			buf: like buffer
@@ -279,19 +279,19 @@ feature -- C code generation
 
 feature -- Inlining
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 			-- Never called!!! (a once function cannot be inlined)
 		do
 		end
 
-	inlined_byte_code_type: INLINED_ONCE_BYTE_CODE is
+	inlined_byte_code_type: INLINED_ONCE_BYTE_CODE
 			-- Type for `inlined_byte_code'
 		do
 		end
 
 feature {NONE} -- Convenience
 
-	result_name (a_name: STRING): STRING is
+	result_name (a_name: STRING): STRING
 			-- Once result variable name using `a_name' as prefix
 		require
 			a_name_not_void: a_name /= Void
@@ -303,7 +303,7 @@ feature {NONE} -- Convenience
 			result_name_not_void: Result /= Void
 		end
 
-	done_name (a_name: STRING): STRING is
+	done_name (a_name: STRING): STRING
 			-- Once result variable name using `a_name' as prefix
 		require
 			a_name_not_void: a_name /= Void
@@ -315,7 +315,7 @@ feature {NONE} -- Convenience
 			done_name_not_void: Result /= Void
 		end
 
-	mutex_name (a_name: STRING): STRING is
+	mutex_name (a_name: STRING): STRING
 			-- Once mutex variable name using `a_name' as prefix
 		require
 			a_name_not_void: a_name /= Void
@@ -327,7 +327,7 @@ feature {NONE} -- Convenience
 			mutex_name_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

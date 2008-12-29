@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Refactoring logger."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create.
 		do
 			create start_actions.make (1)
@@ -37,7 +37,7 @@ feature
 
 feature -- Trigger events
 
-	refactoring_start is
+	refactoring_start
 			-- Triggered when a new refactoring is started.
 		do
 			from
@@ -50,7 +50,7 @@ feature -- Trigger events
 			end
 		end
 
-	refactoring_end is
+	refactoring_end
 			-- Triggered when a refactoring is finished.
 		do
 			from
@@ -63,7 +63,7 @@ feature -- Trigger events
 			end
 		end
 
-	refactoring_class (a_class: CLASS_I) is
+	refactoring_class (a_class: CLASS_I)
 			-- Triggered when a class is edited.
 		do
 			from
@@ -76,7 +76,7 @@ feature -- Trigger events
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

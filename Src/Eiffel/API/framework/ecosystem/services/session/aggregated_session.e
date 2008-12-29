@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A session to aggregate another session, providing read access to the wrapped session's data values and write access to only the current session.
 	]"
@@ -160,7 +160,7 @@ feature {NONE} -- Event handlers
 invariant
 	extension_name_set: not (is_actively_disposing or is_disposed) implies inner_session /= Void and then equal (extension_name, inner_session.extension_name)
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

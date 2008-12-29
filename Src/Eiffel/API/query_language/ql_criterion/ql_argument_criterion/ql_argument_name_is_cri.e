@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a criterion to decide whether or not an argument's name is equal to another name"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,13 +26,13 @@ create
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_ARGUMENT): BOOLEAN is
+	is_satisfied_by (a_item: QL_ARGUMENT): BOOLEAN
 			-- Evaluate `a_item'.
 		do
 			Result := is_name_same_as (a_item.name)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

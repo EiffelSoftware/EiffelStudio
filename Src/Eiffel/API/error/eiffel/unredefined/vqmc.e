@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error on type of a constant feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ feature -- Properties
 			-- [Note that the class id where the constant is written is
 			-- `class_id'.]
 
-	code: STRING is "VQMC"
+	code: STRING = "VQMC"
 			-- Error code
 
 	constant_type: TYPE_A
@@ -41,7 +41,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Constant name: ")
 			a_text_formatter.add (feature_name)
@@ -56,13 +56,13 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_feature_name (i: STRING) is
+	set_feature_name (i: STRING)
 			-- Assign `i' to `feature_name'.
 		do
 			feature_name := i
 		end
 
-	set_constant_type (a_const: VALUE_I) is
+	set_constant_type (a_const: VALUE_I)
 			-- Assign proper type to `constant_type'
 		require
 			a_const_not_void: a_const /= Void
@@ -98,7 +98,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			constant_type_set: constant_type /= Void
 		end
 
-	set_expected_type (t: TYPE_A) is
+	set_expected_type (t: TYPE_A)
 			-- Assign `t' to `expected_type'.
 		require
 			t_not_void: t /= Void
@@ -108,7 +108,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			expected_type_set: expected_type = t
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

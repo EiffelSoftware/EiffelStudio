@@ -1,4 +1,4 @@
-indexing
+note
 	description: "User Interfaces of EB_DEVELOPMENT_WINDOW"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ feature -- Query
 
 feature -- Settings
 
-	set_current_editor (a_editor: like current_editor) is
+	set_current_editor (a_editor: like current_editor)
 			-- Set `current_editor'
 		do
 			if current_editor /= a_editor then
@@ -46,7 +46,7 @@ feature -- Settings
 			set: current_editor = a_editor
 		end
 
-	set_editors_widget (a_widget: like editors_widget) is
+	set_editors_widget (a_widget: like editors_widget)
 			-- Set `editors_widget'
 		do
 			editors_widget := a_widget
@@ -54,7 +54,7 @@ feature -- Settings
 			set: editors_widget = a_widget
 		end
 
-	set_goto_dialog (a_dialog: like goto_dialog) is
+	set_goto_dialog (a_dialog: like goto_dialog)
 			-- Set `goto_dialog'
 		do
 			goto_dialog := a_dialog
@@ -62,7 +62,7 @@ feature -- Settings
 			set: goto_dialog = a_dialog
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

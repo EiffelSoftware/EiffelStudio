@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory to produce metrics"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature -- Metrics
 
-	metric (a_unit: QL_METRIC_UNIT): QL_METRIC is
+	metric (a_unit: QL_METRIC_UNIT): QL_METRIC
 			-- A metric whose unit is `a_unit'
 		require
 			a_unit_attached: a_unit /= Void
@@ -36,7 +36,7 @@ feature -- Metrics
 
 feature{NONE} -- Metric calculation functionalities
 
-	target_metric: QL_METRIC is
+	target_metric: QL_METRIC
 			-- New metric to calculate target, e.g., its unit is target
 		do
 			create {QL_METRIC_BASIC}Result.make (target_unit, create{QL_METRIC_TARGET_BASIC_SCOPE_INFO}.make (Void))
@@ -45,7 +45,7 @@ feature{NONE} -- Metric calculation functionalities
 			result_attached: Result /= Void
 		end
 
-	group_metric: QL_METRIC is
+	group_metric: QL_METRIC
 			-- New metric to calculate group, e.g., its unit is group
 		do
 			create {QL_METRIC_BASIC}Result.make (target_unit, create{QL_METRIC_GROUP_BASIC_SCOPE_INFO}.make (Void))
@@ -54,7 +54,7 @@ feature{NONE} -- Metric calculation functionalities
 			result_attached: Result /= Void
 		end
 
-	class_metric: QL_METRIC is
+	class_metric: QL_METRIC
 			-- New metric to calculate class, e.g., its unit is class
 		do
 			create {QL_METRIC_BASIC}Result.make (target_unit, create{QL_METRIC_CLASS_BASIC_SCOPE_INFO}.make (Void))
@@ -63,7 +63,7 @@ feature{NONE} -- Metric calculation functionalities
 			result_attached: Result /= Void
 		end
 
-	feature_metric: QL_METRIC is
+	feature_metric: QL_METRIC
 			-- New metric to calculate feature, e.g., its unit is feature
 		do
 			create {QL_METRIC_BASIC}Result.make (target_unit, create{QL_METRIC_FEATURE_BASIC_SCOPE_INFO}.make (Void))
@@ -72,7 +72,7 @@ feature{NONE} -- Metric calculation functionalities
 			result_attached: Result /= Void
 		end
 
-	generic_metric: QL_METRIC is
+	generic_metric: QL_METRIC
 			-- New metric to calculate class formal generic parameters
 		do
 			create {QL_METRIC_BASIC}Result.make (target_unit, create{QL_METRIC_GENERIC_BASIC_SCOPE_INFO}.make (Void))
@@ -81,7 +81,7 @@ feature{NONE} -- Metric calculation functionalities
 			result_attached: Result /= Void
 		end
 
-	local_metric: QL_METRIC is
+	local_metric: QL_METRIC
 			-- New metric to calculate feature local variables, e.g., its unit is local
 		do
 			create {QL_METRIC_BASIC}Result.make (target_unit, create{QL_METRIC_LOCAL_BASIC_SCOPE_INFO}.make (Void))
@@ -90,7 +90,7 @@ feature{NONE} -- Metric calculation functionalities
 			result_attached: Result /= Void
 		end
 
-	argument_metric: QL_METRIC is
+	argument_metric: QL_METRIC
 			-- New metric to calculate feature formal arguments, e.g., its unit is argument
 		do
 			create {QL_METRIC_BASIC}Result.make (target_unit, create{QL_METRIC_ARGUMENT_BASIC_SCOPE_INFO}.make (Void))
@@ -99,7 +99,7 @@ feature{NONE} -- Metric calculation functionalities
 			result_attached: Result /= Void
 		end
 
-	assertion_metric: QL_METRIC is
+	assertion_metric: QL_METRIC
 			-- New metric to calculate feature assertions, e.g., its unit is argument
 		do
 			create {QL_METRIC_BASIC}Result.make (target_unit, create{QL_METRIC_ASSERTION_BASIC_SCOPE_INFO}.make (Void))
@@ -108,7 +108,7 @@ feature{NONE} -- Metric calculation functionalities
 			result_attached: Result /= Void
 		end
 
-	line_metric: QL_METRIC is
+	line_metric: QL_METRIC
 			-- New metric to calculate line, e.g., its unit is line
 			-- This metric is faster than `advanced_line_metric'.
 		do
@@ -118,7 +118,7 @@ feature{NONE} -- Metric calculation functionalities
 			result_attached: Result /= Void
 		end
 
-	compilation_metric: QL_METRIC is
+	compilation_metric: QL_METRIC
 			-- New metric to calculate feature local variables, e.g., its unit is local
 		local
 			l_metric: QL_METRIC_COMPILATION
@@ -129,7 +129,7 @@ feature{NONE} -- Metric calculation functionalities
 			result_attached: Result /= Void
 		end
 
-	count_metric: QL_METRIC is
+	count_metric: QL_METRIC
 			-- New metric which returns number of items in a given domain.
 			-- This metric is faster, so, if we are just doing simple counting, use this metric.
 		do
@@ -139,7 +139,7 @@ feature{NONE} -- Metric calculation functionalities
 			result_attached: Result /= Void
 		end
 
-	sum_metric: QL_METRIC is
+	sum_metric: QL_METRIC
 			-- New metric which returns sum of a quantity domain
 		local
 			l_metric: QL_METRIC_BASIC
@@ -151,7 +151,7 @@ feature{NONE} -- Metric calculation functionalities
 			result_attached: Result /= Void
 		end
 
-	average_metric: QL_METRIC is
+	average_metric: QL_METRIC
 			-- New metric which returns average of a quantity domain
 		local
 			l_metric: QL_METRIC_BASIC
@@ -166,7 +166,7 @@ feature{NONE} -- Metric calculation functionalities
 
 feature{NONE} -- Calculation
 
-	average_value (a_domain: QL_DOMAIN; a_sum: DOUBLE): DOUBLE is
+	average_value (a_domain: QL_DOMAIN; a_sum: DOUBLE): DOUBLE
 			-- Average value: `a_sum' / `a_domain'.count.
 		require
 			a_domain_attached: a_domain /= Void
@@ -175,7 +175,7 @@ feature{NONE} -- Calculation
 			Result := a_sum / a_domain.count
 		end
 
-	value_from_quantity (a_quantity: QL_QUANTITY): DOUBLE is
+	value_from_quantity (a_quantity: QL_QUANTITY): DOUBLE
 			-- Value from `a_quantity'
 		require
 			a_quantity_attached: a_quantity /= Void
@@ -188,7 +188,7 @@ feature{NONE} -- Calculation
 
 feature{NONE} -- Implementation
 
-	metric_creator_table: HASH_TABLE [FUNCTION [ANY, TUPLE, QL_METRIC], QL_METRIC_UNIT] is
+	metric_creator_table: HASH_TABLE [FUNCTION [ANY, TUPLE, QL_METRIC], QL_METRIC_UNIT]
 			-- Table for metric creators
 			-- Key is metric unit, value is the creator for that unit
 		once
@@ -215,7 +215,7 @@ feature{NONE} -- Implementation
 	metric_creator_table_internal: like metric_creator_table;
 			-- Implementation of `metric_creator_table'
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

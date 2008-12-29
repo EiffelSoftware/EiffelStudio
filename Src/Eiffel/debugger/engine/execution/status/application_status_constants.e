@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Constants used in Application Status information "
@@ -41,7 +41,7 @@ feature {APPLICATION_STATUS_EXPORTER} -- Constants
 	Pg_catcall: INTEGER = 8
 			-- The application ran into a catcall.
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

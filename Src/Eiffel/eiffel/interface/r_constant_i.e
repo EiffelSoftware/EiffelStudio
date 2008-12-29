@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a replicated constant"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ feature
 	code_id: INTEGER;
 			-- Code id
 
-	set_code_id (i: INTEGER) is
+	set_code_id (i: INTEGER)
 			-- Assign `i' to `code_id'.
 		do
 			code_id := i
@@ -31,13 +31,13 @@ feature
 	access_in: INTEGER;
 			-- Access class id
 
-	set_access_in (i: INTEGER) is
+	set_access_in (i: INTEGER)
 			-- Assign `i' to `access_in'.
 		do
 			access_in := i
 		end;
 
-	unselected (i: INTEGER): FEATURE_I is
+	unselected (i: INTEGER): FEATURE_I
 			-- Unselected feature
 		local
 			unselect: RD2_CONSTANT_I
@@ -48,7 +48,7 @@ feature
 			Result := unselect
 		end; -- unselected
 
-	replicated (in: INTEGER): FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I
 			-- Replication
 		local
 			rep: RD2_CONSTANT_I
@@ -60,17 +60,17 @@ feature
 			Result := rep;
 		end;
 
-	transfer_to (f: like Current) is
+	transfer_to (f: like Current)
 			-- Data transfer
 		do
 			Precursor {CONSTANT_I} (f);
 			f.set_code_id (code_id);
 		end;
 
-	is_replicated: BOOLEAN is True;
+	is_replicated: BOOLEAN = True;
 			-- Is Current feature conceptually replicated (True)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,26 +1,26 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class SHARED_OPTIMIZE_LEVEL
 	
 feature {NONE}
 
-	No_optimize: OPT_NO_I is
+	No_optimize: OPT_NO_I
 		once
 			create Result;
 		end;
 
-	Yes_optimize: OPT_YES_I is
+	Yes_optimize: OPT_YES_I
 		once
 			create Result;
 		end;
 
-	All_optimize: OPT_ALL_I is
+	All_optimize: OPT_ALL_I
 		once
 			create Result;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

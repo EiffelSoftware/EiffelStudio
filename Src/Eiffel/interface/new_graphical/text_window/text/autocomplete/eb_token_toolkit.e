@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class that provides a set of test for tokens"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- basic operations
 
-	is_keyword (a_token: EDITOR_TOKEN):BOOLEAN is
+	is_keyword (a_token: EDITOR_TOKEN):BOOLEAN
 			-- is `a_token' a keyword token ?
 		local
 			kwt: EDITOR_TOKEN_KEYWORD
@@ -20,7 +20,7 @@ feature -- basic operations
 			Result := kwt /= Void
 		end
 
-	is_comment (a_token: EDITOR_TOKEN):BOOLEAN is
+	is_comment (a_token: EDITOR_TOKEN):BOOLEAN
 			-- is `a_token' a comment token ?
 		local
 			ct: EDITOR_TOKEN_COMMENT
@@ -29,7 +29,7 @@ feature -- basic operations
 			Result := ct /= Void
 		end
 
-	is_blank (a_token: EDITOR_TOKEN):BOOLEAN is
+	is_blank (a_token: EDITOR_TOKEN):BOOLEAN
 			-- is `a_token' a blank token ?
 		local
 			bt: EDITOR_TOKEN_BLANK
@@ -38,7 +38,7 @@ feature -- basic operations
 			Result := bt /= Void
 		end
 
-	is_string (a_token: EDITOR_TOKEN):BOOLEAN is
+	is_string (a_token: EDITOR_TOKEN):BOOLEAN
 			-- is `a_token' a string token ?
 		local
 			st: EDITOR_TOKEN_STRING
@@ -47,7 +47,7 @@ feature -- basic operations
 			Result := st /= Void
 		end
 
-	is_eol(a_token: EDITOR_TOKEN):BOOLEAN is
+	is_eol(a_token: EDITOR_TOKEN):BOOLEAN
 			-- is `a_token' a end-of-line token ?
 		local
 			eolt: EDITOR_TOKEN_EOL
@@ -56,13 +56,13 @@ feature -- basic operations
 			Result := eolt /= Void
 		end
 
-	is_known_infix (token: EDITOR_TOKEN): BOOLEAN is
+	is_known_infix (token: EDITOR_TOKEN): BOOLEAN
 			-- is token a known binary operator ?
 		do
 			Result := token_image_is_in_array (token, binary_operators)
 		end
 
-	is_known_prefix (token: EDITOR_TOKEN): BOOLEAN is
+	is_known_prefix (token: EDITOR_TOKEN): BOOLEAN
 			-- is token a known unary operator ?
 		do
 			Result := token_image_is_in_array (token, unary_operators)
@@ -77,7 +77,7 @@ feature -- basic operations
 			Result := a_token.wide_image.as_string_8.is_equal (a_str)
 		end
 
-	token_image_is_same_as_word (token: EDITOR_TOKEN; word: STRING): BOOLEAN is
+	token_image_is_same_as_word (token: EDITOR_TOKEN; word: STRING): BOOLEAN
 			-- Are the token image (except comments) and the word equal (case has no importance)?
 		require
 			word_not_void: word /= Void
@@ -92,7 +92,7 @@ feature -- basic operations
 			end
 		end
 
-	token_image_is_in_array (token: EDITOR_TOKEN; words: ARRAY [STRING]): BOOLEAN is
+	token_image_is_in_array (token: EDITOR_TOKEN; words: ARRAY [STRING]): BOOLEAN
 			-- Does the token image belong to the list `words' ?
 		require
 			word_not_void: words /= Void
@@ -115,7 +115,7 @@ feature -- basic operations
 			end
 		end
 
-	is_beginning_of_expression (token: EDITOR_TOKEN): BOOLEAN is
+	is_beginning_of_expression (token: EDITOR_TOKEN): BOOLEAN
 			-- is `token' the beginning of an expression ?
 		do
 			Result := token = Void
@@ -129,7 +129,7 @@ feature -- basic operations
 					token_image_is_in_array (token, unary_operators)
 		end
 
-	can_attempt_auto_complete_from_token (token: EDITOR_TOKEN; a_pos_in_token: INTEGER): BOOLEAN is
+	can_attempt_auto_complete_from_token (token: EDITOR_TOKEN; a_pos_in_token: INTEGER): BOOLEAN
 			-- Is `token' of the correct type that we can attempt to build a feature or class
 			-- autocompletion list?
 		require
@@ -143,7 +143,7 @@ feature -- basic operations
 			end
 		end
 
-	string_32_to_lower (a_str: ?STRING_32): !STRING_32 is
+	string_32_to_lower (a_str: ?STRING_32): !STRING_32
 			-- Make all possible char in `a_str' to lower.
 			-- |FIXME: We need real Unicode as lower.
 			-- |For the moment, only ANSII code are concerned.
@@ -168,7 +168,7 @@ feature -- basic operations
 			end
 		end
 
-	string_32_to_upper (a_str: ?STRING_32): !STRING_32 is
+	string_32_to_upper (a_str: ?STRING_32): !STRING_32
 			-- Make all possible char in `a_str' to upper.
 			-- |FIXME: We need real Unicode as upper.
 			-- |For the moment, only ANSII code are concerned.
@@ -193,7 +193,7 @@ feature -- basic operations
 			end
 		end
 
-	string_32_is_caseless_ascii_string (a_str_32: STRING_32; a_str: STRING): BOOLEAN is
+	string_32_is_caseless_ascii_string (a_str_32: STRING_32; a_str: STRING): BOOLEAN
 			-- Is `a_str_32' in UTF32 case insensitive equal to `a_str' taken as ISO-8859-1?
 		require
 			a_str_32_not_void: a_str_32 /= Void
@@ -208,14 +208,14 @@ feature -- basic operations
 
 feature -- Qerry
 
-	char_32_is_alpha (a_char: CHARACTER_32): BOOLEAN is
+	char_32_is_alpha (a_char: CHARACTER_32): BOOLEAN
 		do
 			if a_char.is_character_8 then
 				Result := a_char.to_character_8.is_alpha
 			end
 		end
 
-	char_32_is_digit (a_char: CHARACTER_32): BOOLEAN is
+	char_32_is_digit (a_char: CHARACTER_32): BOOLEAN
 		do
 			if a_char.is_character_8 then
 				Result := a_char.to_character_8.is_digit
@@ -224,64 +224,64 @@ feature -- Qerry
 
 feature {NONE} -- Constants
 
-	binary_operators: ARRAY [STRING] is
+	binary_operators: ARRAY [STRING]
 		once
 			Result := <<"@", "^", "*", "/", "//", "\\", "+", "-", "/=", "=", ">", ">=", "<", "<=", "and", "xor", "or", "implies">>
 		end
 
-	unary_operators: ARRAY [STRING] is
+	unary_operators: ARRAY [STRING]
 		once
 			Result := <<"+", "-", "not", "old">>
 		end
 
-	opening_separators: ARRAY [STRING] is
+	opening_separators: ARRAY [STRING]
 		once
 			Result := <<":=", "?=", ";", ",","(">>
 		end
 
-	opening_bracket: STRING is "["
+	opening_bracket: STRING = "["
 
-	closing_bracket: STRING is "]"
+	closing_bracket: STRING = "]"
 
-	opening_brace: STRING is "{"
+	opening_brace: STRING = "{"
 
-	closing_brace: STRING is "}"
+	closing_brace: STRING = "}"
 
-	opening_parenthesis: STRING is "("
+	opening_parenthesis: STRING = "("
 
-	closing_parenthesis: STRING is ")"
+	closing_parenthesis: STRING = ")"
 
-	semi_colon: STRING is ";"
+	semi_colon: STRING = ";"
 
-	colon: STRING is ":"
+	colon: STRING = ":"
 
-	comma: STRING is ","
+	comma: STRING = ","
 
-	period: STRING is "."
+	period: STRING = "."
 
-	equal_sign: STRING is "="
+	equal_sign: STRING = "="
 
-	different_sign: STRING is "/="
+	different_sign: STRING = "/="
 
-	feature_word: STRING is "feature"
+	feature_word: STRING = "feature"
 
-	end_word: STRING is "end"
+	end_word: STRING = "end"
 
-	like_word: STRING is "like"
+	like_word: STRING = "like"
 
-	is_word: STRING is "is"
+	is_word: STRING = "is"
 
-	current_word: STRING is "current"
+	current_word: STRING = "current"
 
-	local_word: STRING is "local"
+	local_word: STRING = "local"
 
-	create_word: STRING is "create"
+	create_word: STRING = "create"
 
-	result_word: STRING is "result"
+	result_word: STRING = "result"
 
-	precursor_word: STRING is "precursor";
+	precursor_word: STRING = "precursor";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

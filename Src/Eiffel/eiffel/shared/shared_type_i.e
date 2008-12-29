@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of precomputed TYPE_I instances that can be reused."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,103 +9,103 @@ class SHARED_TYPE_I
 	
 feature -- Access
 
-	Boolean_c_type: BOOLEAN_I is
+	Boolean_c_type: BOOLEAN_I
 			-- Boolean C type
 		once
 			create Result
 		end
 
-	Char_c_type: CHAR_I is
+	Char_c_type: CHAR_I
 			-- Char C type
 		once
 			create Result.make (False)
 		end
 
-	Wide_char_c_type: CHAR_I is
+	Wide_char_c_type: CHAR_I
 			-- Wide char C type
 		once
 			create Result.make (True)
 		end
 
-	Pointer_c_type: POINTER_I is
+	Pointer_c_type: POINTER_I
 			-- Pointer C type
 		once
 			create Result
 		end
 
-	uint8_c_type: NATURAL_I is
+	uint8_c_type: NATURAL_I
 			-- uint8 C type
 		once
 			create Result.make (8)
 		end
 
-	uint16_c_type: NATURAL_I is
+	uint16_c_type: NATURAL_I
 			-- uint16 C type
 		once
 			create Result.make (16)
 		end
 
-	uint32_c_type: NATURAL_I is
+	uint32_c_type: NATURAL_I
 			-- uint32 C type
 		once
 			create Result.make (32)
 		end
 
-	uint64_c_type: NATURAL_I is
+	uint64_c_type: NATURAL_I
 			-- uint64 C type
 		once
 			create Result.make (64)
 		end
 
-	int8_c_type: INTEGER_I is
+	int8_c_type: INTEGER_I
 			-- int8 C type
 		once
 			create Result.make (8)
 		end
 
-	int16_c_type: INTEGER_I is
+	int16_c_type: INTEGER_I
 			-- int16 C type
 		once
 			create Result.make (16)
 		end
 
-	int32_c_type: INTEGER_I is
+	int32_c_type: INTEGER_I
 			-- int32 C type
 		once
 			create Result.make (32)
 		end
 
-	int64_c_type: INTEGER_I is
+	int64_c_type: INTEGER_I
 			-- int64 C type
 		once
 			create Result.make (64)
 		end
 
-	real32_c_type: REAL_32_I is
+	real32_c_type: REAL_32_I
 			-- Float C type
 		once
 			create Result
 		end
 
-	real64_c_type: REAL_64_I is
+	real64_c_type: REAL_64_I
 			-- Double C type
 		once
 			create Result
 		end
 
-	Reference_c_type: REFERENCE_I is
+	Reference_c_type: REFERENCE_I
 			-- Reference C type
 		once
 			create Result
 		end
 
-	Void_c_type: VOID_I is
+	Void_c_type: VOID_I
 			-- Void C type
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

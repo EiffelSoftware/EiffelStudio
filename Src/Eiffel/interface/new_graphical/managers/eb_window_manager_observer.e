@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Observer for EB_WINDOW_MANAGER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,33 +11,33 @@ deferred class
 
 feature -- Updates
 
-	on_item_added (a_item: EB_WINDOW) is
+	on_item_added (a_item: EB_WINDOW)
 			-- `a_item' has been added.
 		do
 		end
 
-	on_item_changed (a_item: EB_WINDOW) is
+	on_item_changed (a_item: EB_WINDOW)
 			-- `a_item' has changed. 
 			-- (Typically the current edited class in a development tool has changed)
 		do
 		end
 
-	on_item_removed (a_item: EB_WINDOW) is
+	on_item_removed (a_item: EB_WINDOW)
 			-- `a_item' has been removed. 
 		do
 		end
 
-	on_item_shown (a_item: EB_WINDOW) is
+	on_item_shown (a_item: EB_WINDOW)
 			-- `a_item' has been shown. 
 		do
 		end
 
-	on_item_hidden (a_item: EB_WINDOW) is
+	on_item_hidden (a_item: EB_WINDOW)
 			-- `a_item' has been hidden. 
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

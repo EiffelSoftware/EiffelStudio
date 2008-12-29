@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stone for configuration targets."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target) is
+	make (a_target: like target)
 			-- Create.
 		require
 			a_target_ok: a_target /= Void
@@ -35,14 +35,14 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		once
 			Result := cursors.cur_target
 		end
 
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		once
@@ -54,21 +54,21 @@ feature -- Access
 	target: CONF_TARGET
 			-- Target we are representing
 
-	stone_signature: STRING is
+	stone_signature: STRING
 			-- Short string to describe Current
 			-- (basically the name of the stoned object).
 		do
 			Result := target.name
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 			-- String to describe Current
 			-- (as it may be described in the title of a development window).
 		do
 			Result := stone_signature
 		end
 
-	history_name: STRING is
+	history_name: STRING
 			-- Name used in the history list,
 			-- (By default, it is the stone_signature
 			-- and a string to describe the type of stone (Class, feature,...)).
@@ -76,7 +76,7 @@ feature -- Access
 			Result := stone_signature
 		end
 
-	stone_name: STRING_GENERAL is
+	stone_name: STRING_GENERAL
 			-- Name of Current stone
 		do
 			if is_valid then
@@ -86,7 +86,7 @@ feature -- Access
 			end
 		end
 
-	set_is_delayed_application_target (b: BOOLEAN) is
+	set_is_delayed_application_target (b: BOOLEAN)
 			-- Set `is_delayed_application_target' with `b'.
 		do
 			is_delayed_application_target := b
@@ -96,7 +96,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is `Current' a valid stone?
 		local
 			l_target: CONF_TARGET

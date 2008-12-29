@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing the row having subrows for all untagged items in a {ES_TAGABLE_GRID}.
 	]"
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Basic functionality
 
-	populate_row (a_layout: ES_TAGABLE_GRID_LAYOUT [TAGABLE_I]) is
+	populate_row (a_layout: ES_TAGABLE_GRID_LAYOUT [TAGABLE_I])
 			-- <Precursor>
 		do
 			a_layout.populate_text_row (row, text)

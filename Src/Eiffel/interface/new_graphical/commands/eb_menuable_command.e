@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command that can be added in a menu."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with '&' symbol).
 		deferred
 		ensure
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Set `is_sensitive' to True.
 		local
 			menu_items: like internal_managed_menu_items
@@ -51,7 +51,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Set `is_sensitive' to False.
 		local
 			menu_items: like internal_managed_menu_items
@@ -72,7 +72,7 @@ feature -- Status setting
 			end
 		end
 
-	update (a_window: EV_WINDOW) is
+	update (a_window: EV_WINDOW)
 			-- Update `accelerator' and interfaces according to `referred_shortcut'.
 		local
 			l_items: like managed_menu_items
@@ -97,7 +97,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	new_menu_item: EB_COMMAND_MENU_ITEM is
+	new_menu_item: EB_COMMAND_MENU_ITEM
 			-- New menu item, managed, recycling needed.
 		do
 			create Result.make (Current)
@@ -105,7 +105,7 @@ feature -- Basic operations
 			Result.select_actions.extend (agent execute)
 		end
 
-	new_menu_item_unmanaged: EV_MENU_ITEM is
+	new_menu_item_unmanaged: EV_MENU_ITEM
 			-- New menu item, unmanaged.
 			-- Command name, pixmap and shortcut text are never updated.
 		do
@@ -114,7 +114,7 @@ feature -- Basic operations
 			Result.select_actions.extend (agent execute)
 		end
 
-	initialize_menu_item (a_menu_item: EV_MENU_ITEM) is
+	initialize_menu_item (a_menu_item: EV_MENU_ITEM)
 			-- Initialize `a_menu_item'
 		require
 			a_menu_item_attached: a_menu_item /= Void
@@ -136,7 +136,7 @@ feature -- Basic operations
 
 feature {EB_COMMAND_MENU_ITEM} -- Implementation
 
-	add_menu_item (a_menu_item: like new_menu_item) is
+	add_menu_item (a_menu_item: like new_menu_item)
 			-- Add `a_menu_item' to `managed_menu_items'.
 		do
 			managed_menu_items.extend (a_menu_item)
@@ -144,7 +144,7 @@ feature {EB_COMMAND_MENU_ITEM} -- Implementation
 			managed_menu_items_has_item: managed_menu_items.has (a_menu_item)
 		end
 
-	remove_menu_item (a_menu_item: like new_menu_item) is
+	remove_menu_item (a_menu_item: like new_menu_item)
 			-- Remove `a_menu_item' from `managed_menu_items'.
 		require
 			managed_menu_items_not_empty: not managed_menu_items.is_empty
@@ -155,7 +155,7 @@ feature {EB_COMMAND_MENU_ITEM} -- Implementation
 			managed_menu_items_not_has_item: not managed_menu_items.has (a_menu_item)
 		end
 
-	managed_menu_items: ARRAYED_LIST [like new_menu_item] is
+	managed_menu_items: ARRAYED_LIST [like new_menu_item]
 			-- Menu items associated with this command.
 		do
 			if internal_managed_menu_items = Void then
@@ -171,9 +171,9 @@ feature {NONE} -- Implementation
 	internal_managed_menu_items: ARRAYED_LIST [like new_menu_item]
 		-- Menu items associated with this command.
 
-	Tabulation: STRING is "%T";
+	Tabulation: STRING = "%T";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

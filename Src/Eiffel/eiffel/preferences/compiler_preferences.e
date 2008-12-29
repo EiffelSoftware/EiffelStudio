@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Preferences for compiler components of the Eiffel Compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Initialize preference data
 		require
 			preferences_not_void: a_preferences /= Void
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	maximum_processor_usage: INTEGER is
+	maximum_processor_usage: INTEGER
 			-- Maximum number of processors to utilitize in C/C++ compilation
 		do
 			Result := compiler_data.maximum_processor_usage
@@ -47,7 +47,7 @@ invariant
 	compiler_data_attached: compiler_data /= Void
 	preferences_attached: preferences /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

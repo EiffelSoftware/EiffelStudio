@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Makefile generator for precompiled C compilation
@@ -17,13 +17,13 @@ create
 
 feature
 
-	system_name: STRING is
+	system_name: STRING
 			-- Name of executable
 		do
 			Result := Driver
 		end;
 
-	generate_additional_rules is
+	generate_additional_rules
 		do
 			if
 				not (object_baskets.count = 1 and then
@@ -40,7 +40,7 @@ feature
 			end;
 		end;
 
-	add_eiffel_objects is
+	add_eiffel_objects
 			-- Add Eiffel objects to the basket, i.e. C code for
 			-- each class as well as descriptor tables.
 		local
@@ -90,7 +90,7 @@ feature
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Create with defaults.
 		do
 			Precursor
@@ -55,21 +55,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING is
+	code: STRING
 			-- Current text of the feature in the wizard.
 		do
 		end
 
 feature -- Status report
 
-	valid_content: BOOLEAN is
+	valid_content: BOOLEAN
 			-- Is user input valid for code generation?
 		do
 		end
 
 feature -- Element change
 
-	set_clause_name (a_name: STRING) is
+	set_clause_name (a_name: STRING)
 			-- Set feature clause comment to `a_name'.
 		do
 			if a_name.is_empty then
@@ -81,7 +81,7 @@ feature -- Element change
 
 feature {EB_FEATURE_COMPOSITION_WIZARD} -- Implementation
 
-	fill_export_field is
+	fill_export_field
 			-- Fill `export_field' with default export classes.
 		local
 			li: EV_LIST_ITEM
@@ -92,7 +92,7 @@ feature {EB_FEATURE_COMPOSITION_WIZARD} -- Implementation
 			export_field.extend (li)
 		end
 
-	fill_comment_field is
+	fill_comment_field
 			-- Fill `comment_field' with feature clauses in order.
 		local
 			fco: ARRAY [STRING]
@@ -123,7 +123,7 @@ feature {EB_FEATURE_COMPOSITION_WIZARD} -- Widgets
 
 feature {EV_ANY} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state.
 		do
 			Result := (
@@ -133,7 +133,7 @@ feature {EV_ANY} -- Contract support
 			)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

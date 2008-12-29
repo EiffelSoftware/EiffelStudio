@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Editor token utilitizes to one day replace some of the implementation of {EB_TOKEN_TOOLKIT}.
 		]"
@@ -426,7 +426,7 @@ feature -- Query
 			result_token_belongs_on_line: Result /= Void implies Result.line.has_token (Result.token)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

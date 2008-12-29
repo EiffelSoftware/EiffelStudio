@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Standard Byte code generation for features"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_std_byte_code (Current)
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Status
 
-	is_global_once: BOOLEAN is
+	is_global_once: BOOLEAN
 			-- Is current once compiled in multithreaded mode with global status?
 		do
 			-- False
@@ -50,7 +50,7 @@ feature -- Status
 
 feature -- Access
 
-	generated_c_feature_name: STRING is
+	generated_c_feature_name: STRING
 			-- Name of generated routine in C generated code
 		do
 			Result := Encoder.feature_name (
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_compound (c: like compound) is
+	set_compound (c: like compound)
 			-- Assign `c' to `compound'.
 		do
 			compound := c
@@ -68,7 +68,7 @@ feature -- Setting
 
 feature -- Analyzis
 
-	analyze is
+	analyze
 			-- Builds a proper context (for C code).
 		local
 			workbench_mode, keep_assertions: BOOLEAN
@@ -206,7 +206,7 @@ feature -- Analyzis
 
 		end
 
-	analyze_arguments is
+	analyze_arguments
 			-- Analyze arguments (check for expanded)
 		local
 			args: like arguments
@@ -236,12 +236,12 @@ feature -- Analyzis
 			end
 		end
 
-	add_in_log (encoded_name: STRING) is
+	add_in_log (encoded_name: STRING)
 		do
 			System.used_features_log_file.add (Context.class_type, feature_name, encoded_name)
 		end
 
-	generate is
+	generate
 			-- Generate C code.
 		local
 			type_c: TYPE_C
@@ -522,7 +522,7 @@ debug ("DEBUGGER_HOOK")
 end
 		end
 
-	generate_compound is
+	generate_compound
 			-- Generate the function compound
 		do
 			if compound /= Void then
@@ -530,7 +530,7 @@ end
 			end
 		end
 
-	generate_return_not_reached is
+	generate_return_not_reached
 			-- Generate a mark that the final return is not reached
 		local
 			assignment: ASSIGN_B
@@ -556,7 +556,7 @@ end
 			end
 		end
 
-	generate_return_exp is
+	generate_return_exp
 			-- Generate the return expression
 		local
 			type_c: TYPE_C
@@ -592,7 +592,7 @@ end
 			end
 		end -- generate_return_exp
 
-	generate_once_declaration (a_name: STRING; a_type: TYPE_C) is
+	generate_once_declaration (a_name: STRING; a_type: TYPE_C)
 			-- Generate static variable and their declarations used by
 			-- generation of opimized once functions.
 		require
@@ -601,14 +601,14 @@ end
 		do
 		end
 
-	generate_once_data (a_name: STRING) is
+	generate_once_data (a_name: STRING)
 			-- Generate data for once routines.
 		require
 			a_name_not_void: a_name /= Void
 		do
 		end
 
-	generate_once_prologue (a_name: STRING) is
+	generate_once_prologue (a_name: STRING)
 			-- Generate start of a once block that will ensure that body is not re-executed.
 		require
 			a_name_not_void: a_name /= Void
@@ -616,14 +616,14 @@ end
 		do
 		end
 
-	generate_once_epilogue (a_name: STRING) is
+	generate_once_epilogue (a_name: STRING)
 			-- Generate end of a once block.
 		require
 			a_name_not_void: a_name /= Void
 		do
 		end
 
-	generate_expanded_arguments is
+	generate_expanded_arguments
 			-- Generate declaration for locals `earg' that will hold a copy of passed
 			-- arguments.
 		local
@@ -666,7 +666,7 @@ end
 			end
 		end
 
-	generate_expanded_initialization is
+	generate_expanded_initialization
 			-- Clone expanded parameters and initialize local expanded objects.
 		local
 			l_adapted_type: CL_TYPE_A
@@ -775,7 +775,7 @@ end
 			end
 		end
 
-	generate_expanded_variables is
+	generate_expanded_variables
 			-- Create local expanded variables and Result
 		local
 			i, count: INTEGER
@@ -831,7 +831,7 @@ end
 			end
 		end
 
-	generate_locals is
+	generate_locals
 			-- Declare C local variables
 		local
 			i: INTEGER
@@ -904,7 +904,7 @@ end
 			buf.put_new_line
 		end
 
-	generate_argument_checks is
+	generate_argument_checks
 			-- Generate checks that ensure that arguments are of the expected type.
 		local
 			i: INTEGER
@@ -954,7 +954,7 @@ end
 			end
 		end
 
-	generate_result_declaration (may_need_volatile: BOOLEAN) is
+	generate_result_declaration (may_need_volatile: BOOLEAN)
 			-- Generate the declaration of the Result entity
 		local
 			ctype: TYPE_C
@@ -977,7 +977,7 @@ end
 			end
 		end
 
-	init_dftype is
+	init_dftype
 			-- Initializes the value of 'dftype' in once routines. For regular
 			-- ones, the variable is initialized directly in the declaration.
 		local
@@ -990,7 +990,7 @@ end
 			end
 		end
 
-	init_dtype is
+	init_dtype
 			-- Initializes the value of 'dtype' in once routines. For regular
 			-- ones, the variable is initialized directly in the declaration.
 		local
@@ -1003,7 +1003,7 @@ end
 			end
 		end
 
-	generate_precondition is
+	generate_precondition
 			-- Generate precondition check if needed
 		local
 			workbench_mode	: BOOLEAN
@@ -1049,7 +1049,7 @@ end
 			end
 		end
 
-	generate_postcondition is
+	generate_postcondition
 			-- Generate postcondition check if needed
 		local
 			workbench_mode: BOOLEAN
@@ -1084,7 +1084,7 @@ end
 			end
 		end
 
-	generate_save_assertion_level is
+	generate_save_assertion_level
 			-- Generate the instruction for saving the workbench mode
 			-- assertion level of the current object.
 		local
@@ -1099,19 +1099,19 @@ end
 			buf.put_string ("RTSC;")
 		end
 
-	generate_invariant_before is
+	generate_invariant_before
 			-- Generate invariant check at the entry of the routine.
 		do
 			generate_invariant ("RTIV2")
 		end
 
-	generate_invariant_after is
+	generate_invariant_after
 			-- Generate invariant check at the end of the routine.
 		do
 			generate_invariant ("RTVI2")
 		end
 
-	generate_invariant (tag: STRING) is
+	generate_invariant (tag: STRING)
 			-- Generate invariant check with tag `tag'.
 		local
 			buf: GENERATION_BUFFER
@@ -1126,7 +1126,7 @@ end
 			end
 		end
 
-	generate_rescue is
+	generate_rescue
 			-- Generate the rescue clause
 		local
 			nb_refs: INTEGER
@@ -1160,7 +1160,7 @@ end
 			end
 		end
 
-	exception_stack_managed: BOOLEAN is
+	exception_stack_managed: BOOLEAN
 			-- Do we have to manage the exception stack
 		do
 			Result :=
@@ -1169,7 +1169,7 @@ end
 				context.is_result_checked
 		end
 
-	generate_execution_declarations is
+	generate_execution_declarations
 			-- Generate the declarations needed for exception trace, profiling and tracing handling
 		local
 			buf: GENERATION_BUFFER
@@ -1223,7 +1223,7 @@ end
 			end
 		end
 
-	generate_execution_trace is
+	generate_execution_trace
 			-- Generate the execution trace stack handling
 		do
 			if exception_stack_managed then
@@ -1237,7 +1237,7 @@ end
 			end
 		end
 
-	generate_rtdbgd_enter is
+	generate_rtdbgd_enter
 			-- Generate the execution recording for enter feature
 		local
 			buf: GENERATION_BUFFER
@@ -1256,7 +1256,7 @@ end
 			end
 		end
 
-	generate_rtdbgd_leave is
+	generate_rtdbgd_leave
 			-- Generate the execution recording for leave feature
 		local
 			buf: GENERATION_BUFFER
@@ -1268,7 +1268,7 @@ end
 			end
 		end
 
-	generate_pop_execution_trace is
+	generate_pop_execution_trace
 			-- Generate the execution trace stack handling at the end of the
 			-- routine
 		local
@@ -1281,7 +1281,7 @@ end
 			end
 		end
 
-	trace_enabled: BOOLEAN is
+	trace_enabled: BOOLEAN
 			-- Is the trace enabled for the associated class
 			-- in final mode?
 		do
@@ -1289,7 +1289,7 @@ end
 				Context.associated_class.trace_level.is_yes
 		end
 
-	profile_enabled: BOOLEAN is
+	profile_enabled: BOOLEAN
 			-- Is the profile enabled for the associated class
 			-- in final mode?
 		do
@@ -1297,7 +1297,7 @@ end
 				Context.associated_class.profile_level.is_yes
 		end
 
-	generate_profile_start is
+	generate_profile_start
 			-- Generate the "start of profile" macro
 		do
 			if profile_enabled then
@@ -1305,7 +1305,7 @@ end
 			end
 		end
 
-	generate_profile_stop is
+	generate_profile_stop
 			-- Generate the "stop of progile" macro
 		local
 			buf: GENERATION_BUFFER
@@ -1317,7 +1317,7 @@ end
 			end
 		end
 
-	generate_trace_start is
+	generate_trace_start
 			-- Generate the "start of trace" macro
 		do
 			if trace_enabled then
@@ -1325,7 +1325,7 @@ end
 			end
 		end
 
-	generate_trace_stop is
+	generate_trace_stop
 			-- Generate the "end of trace" macro
 		do
 			if trace_enabled then
@@ -1333,7 +1333,7 @@ end
 			end
 		end
 
-	generate_option_macro (macro_name: STRING) is
+	generate_option_macro (macro_name: STRING)
 			-- Generate an option macro call will the feature name, the feature origin
 			-- and the "dynamic type" of `Current' as arguments
 		require
@@ -1353,7 +1353,7 @@ end
 			buf.put_string (gc_rparan_semi_c)
 		end
 
-	generate_stack_macro (macro_name: STRING) is
+	generate_stack_macro (macro_name: STRING)
 			-- Generate a macro call will the feature name, the feature origin,
 			-- `Current', the number of locals, the number of arguments and the
 			-- real body id of the feature as arguments.
@@ -1388,7 +1388,7 @@ end
 			buf.put_string (gc_rparan_semi_c)
 		end
 
-	finish_compound is
+	finish_compound
 			-- Generate the end of the compound routine
 		do
 				-- Generate the hook corresponding to the end of the feature ("end;")
@@ -1409,7 +1409,7 @@ end
 			generate_pop_execution_trace
 		end
 
-	generate_catcall_check is
+	generate_catcall_check
 			-- Add a check for catcall at runtime.
 		local
 			i, nb: INTEGER
@@ -1464,7 +1464,7 @@ end
 
 feature -- Byte code generation
 
-	make_body_code (ba: BYTE_ARRAY; a_generator: MELTED_GENERATOR) is
+	make_body_code (ba: BYTE_ARRAY; a_generator: MELTED_GENERATOR)
 			-- Generate compound byte code
 		local
 			have_assert, has_old: BOOLEAN
@@ -1583,19 +1583,19 @@ feature -- Byte code generation
 
 feature -- Array optimization
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (i: INTEGER): BOOLEAN
 		do
 			Result := (compound /= Void and then compound.assigns_to (i))
 				or else (rescue_clause /= Void and then rescue_clause.assigns_to (i))
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := (compound /= Void and then compound.calls_special_features (array_desc))
 				or else (rescue_clause /= Void and then rescue_clause.calls_special_features (array_desc))
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		local
 			opt_context: OPTIMIZATION_CONTEXT
 			optimizer: ARRAY_OPTIMIZER
@@ -1617,7 +1617,7 @@ feature -- Array optimization
 			end
 		end
 
-	initial_optimization_context: OPTIMIZATION_CONTEXT is
+	initial_optimization_context: OPTIMIZATION_CONTEXT
 			-- Record the descendants of array for
 			-- arguments(>0); Result(=0); local(<0)
 			-- but only if the routine calls a special routine
@@ -1674,7 +1674,7 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			if compound /= Void then
 				Result := compound.size
@@ -1684,7 +1684,7 @@ feature -- Inlining
 			end
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		local
 			old_bc: BYTE_CODE
 			i, nb: INTEGER
@@ -1725,7 +1725,7 @@ feature -- Inlining
 			Context.set_byte_code (old_bc)
 		end
 
-	inlined_byte_code: STD_BYTE_CODE is
+	inlined_byte_code: STD_BYTE_CODE
 		local
 			inliner: INLINER
 		do
@@ -1758,19 +1758,19 @@ feature {NONE} -- Typing
 
 feature {NONE} -- Convenience
 
-	local_var: LOCAL_B is
+	local_var: LOCAL_B
 			-- Instance used to generate local variable name
 		once
 			create Result
 		end
 
-	arg_var: ARGUMENT_B is
+	arg_var: ARGUMENT_B
 			-- Instance used to generate local variable name
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Regular expression utility to find text blocks in eweasel output.
 																					]"
@@ -20,7 +20,7 @@ feature -- Query
 			Result := find_expression ("\n?Test\s(.*?)\nTest\s", a_string)
 		end
 
-	class_name_in (a_string: STRING): STRING_GENERAL is
+	class_name_in (a_string: STRING): STRING_GENERAL
 			-- Class name in frist line of eweasel output
 			-- Result void if not found
 		require
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 				Result := [l_matcher.captured_substring (1), l_matcher.captured_end_position (1)]
 			end
 		end
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

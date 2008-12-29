@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object being debugged."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Creation
 
-	make (addr: like object_address; sp_lower, sp_upper: INTEGER) is
+	make (addr: like object_address; sp_lower, sp_upper: INTEGER)
 			-- Make debugged object with hector address `addr'
 			-- with upper and lower bounds `sp_lower' and `sp_upper'.
 			-- (At this stage we do not know if addr is a special object
@@ -52,7 +52,7 @@ feature {NONE} -- Creation
 
 feature -- Helpers
 
-	is_valid_object_address (addr: like object_address): BOOLEAN is
+	is_valid_object_address (addr: like object_address): BOOLEAN
 		require
 			application_is_executing: debugger_manager.application_is_executing
 		do
@@ -61,12 +61,12 @@ feature -- Helpers
 
 feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 
-	reset is
+	reset
 			-- Reset internal data
 		deferred
 		end
 
-	refresh (sp_lower, sp_upper: INTEGER) is
+	refresh (sp_lower, sp_upper: INTEGER)
 		require
 			valid_bounds: sp_lower >= 0 and (sp_upper >= sp_lower or else
 					sp_upper = -1)
@@ -79,7 +79,7 @@ feature -- Properties
 			-- Is current erroneous ?
 			--| For now only used for classic debugger (when dealing with bad object address)
 
-	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- Attributes of object being inspected (sorted by name)
 		 deferred
 		 end
@@ -109,7 +109,7 @@ feature -- Properties
 
 feature -- Query
 
-	sorted_attributes: like attributes is
+	sorted_attributes: like attributes
 			-- Sort and return `attributes'.
 		do
 			Result := attributes
@@ -120,7 +120,7 @@ feature -- Query
 			end
 		end
 
-	attribute_by_name (n: STRING): ABSTRACT_DEBUG_VALUE is
+	attribute_by_name (n: STRING): ABSTRACT_DEBUG_VALUE
 			-- Try to find an attribute named `n' in list `attributes'.
 		require
 			not_void: n /= Void
@@ -152,7 +152,7 @@ invariant
 	non_void_attributes: attributes /= Void;
 	non_void_address: object_address /= Void and then not object_address.is_void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

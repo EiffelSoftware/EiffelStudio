@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Direct access structure of ROUT_INFO objects indexed by the%
 				%routine id's of the entire system."
 	legal: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Create an empty table.
 		do
 			ht_make (n)
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Insertion
 
-	put (rout_id: INTEGER; org: CLASS_C) is
+	put (rout_id: INTEGER; org: CLASS_C)
 			-- Record the routine id `rout_id', the origin
 			-- of the corresponding routine and the offset of
 			-- the routine in the origin class.
@@ -74,7 +74,7 @@ feature -- Insertion
 
 feature -- Offset processing
 
-	new_offset (c: CLASS_C): INTEGER is
+	new_offset (c: CLASS_C): INTEGER
 			-- New offset for class `c'. The routine offsets
 			-- start from 0.
 			--|Beware: this function has a side effect!
@@ -101,7 +101,7 @@ feature -- Offset processing
 
 feature -- Query features
 
-	origin (rout_id: INTEGER): CLASS_C is
+	origin (rout_id: INTEGER): CLASS_C
 			-- Origin of routine of id `rout_id'
 		require
 			rout_id_not_void: rout_id /= 0
@@ -112,7 +112,7 @@ feature -- Query features
 			origin_not_void: Result /= Void
 		end
 
-	offset (rout_id: INTEGER): INTEGER is
+	offset (rout_id: INTEGER): INTEGER
 			-- Offset of routine of id `rout_id'
 			-- in origin class
 		require
@@ -122,7 +122,7 @@ feature -- Query features
 			Result := item (rout_id).offset
 		end
 
-	descriptor_size (class_id: INTEGER): INTEGER is
+	descriptor_size (class_id: INTEGER): INTEGER
 			-- Number of routines introduced
 			-- in class of id `class_id'
 		do
@@ -132,7 +132,7 @@ feature -- Query features
 			end
 		end
 
-	renumbered_table: ARRAY [ROUT_INFO] is
+	renumbered_table: ARRAY [ROUT_INFO]
 			-- Routine info indexed by routine ids after
 			-- renumbering
 		local
@@ -158,7 +158,7 @@ feature -- Query features
 
 feature -- Generation
 
-	generate (buffer: GENERATION_BUFFER) is
+	generate (buffer: GENERATION_BUFFER)
 			-- C code of run-time structure representing Current
 		require
 			buffer_not_void: buffer /= Void
@@ -208,7 +208,7 @@ feature -- Generation
 
 feature -- Melting
 
-	melted: CHARACTER_ARRAY is
+	melted: CHARACTER_ARRAY
 			-- Byte code of Current table.
 			-- Format:
 			--    1) Number of elements (uint32)
@@ -260,7 +260,7 @@ feature -- Melting
 
 feature -- Merging
 
-	append (other: like Current) is
+	append (other: like Current)
 			-- Append `other' to `Current'.
 			-- Used when merging precompilations.
 		require
@@ -270,7 +270,7 @@ feature -- Merging
 			offset_counters.merge (other.offset_counters)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to execute the workbench code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,20 +49,20 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 		end
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute Current.
 		do
 			debugger_manager.controller.start_workbench_application (debugger_manager.current_execution_parameters)
 		end
 
-	execute_with_parameters (params: DEBUGGER_EXECUTION_PARAMETERS) is
+	execute_with_parameters (params: DEBUGGER_EXECUTION_PARAMETERS)
 			-- Execute Current with parameters.
 		do
 			debugger_manager.controller.start_workbench_application (debugger_manager.resolved_execution_parameters (params))
@@ -70,46 +70,46 @@ feature -- Execution
 
 feature -- Properties
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_run_icon_buffer
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Text describing `Current' in the customize tool bar dialog.
 		do
 			Result := Interface_names.f_Run_workbench
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Short description of Current.
 		do
 			Result := Interface_names.f_Run_workbench
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Short description of Current.
 		do
 			Result := Interface_names.b_Run_workbench
 		end
 
-	name: STRING is "Run_workbench"
+	name: STRING = "Run_workbench"
 			-- Text internally defining Current.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name used in menu entry
 		do
 			Result := Interface_names.m_Run_workbench
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

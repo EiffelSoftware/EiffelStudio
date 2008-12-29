@@ -1,4 +1,4 @@
-indexing
+note
 	description	: " Multi column list tooltipable (on windows for now)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create {EB_MULTI_COLUMN_LIST_ROW}
 
 feature -- Element access
 
-	tooltip: STRING is
+	tooltip: STRING
 			-- Tooltip displayed on `Current'.
 		do
 			Result := implementation.tooltip
@@ -28,19 +28,19 @@ feature -- Element access
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: STRING) is
+	set_tooltip (a_tooltip: STRING)
 			-- Assign `a_tooltip' to `tooltip'.
 		do
 			implementation.set_tooltip (a_tooltip)
 		end
 		
-	remove_tooltip is
+	remove_tooltip
 			-- Make `tooltip' empty.
 		do
 			implementation.remove_tooltip
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

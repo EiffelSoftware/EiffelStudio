@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Use this class as ansector of classes that are used to do a boolean %
@@ -15,14 +15,14 @@ inherit
 
 feature -- Creation
 
-	make is
+	make
 		do
 			create filters.make
 		end
 
 feature -- Adding PROFILE_FILTERs
 
-	extend (new_filter: PROFILE_FILTER) is
+	extend (new_filter: PROFILE_FILTER)
 			-- Extend filters to be checked with `new_filter'.
 		do
 			filters.extend (new_filter)
@@ -31,7 +31,7 @@ feature -- Adding PROFILE_FILTERs
 
 feature -- Checking
 
-	filtering_is_allowed: BOOLEAN is
+	filtering_is_allowed: BOOLEAN
 			-- May `filter' be called?
 		do
 			Result := filters.count >= 2
@@ -44,19 +44,19 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Hidden features
 
-	set_operator (new_operator: STRING) is
+	set_operator (new_operator: STRING)
 		do
 		end
 
-	set_value (new_value: COMPARABLE) is
+	set_value (new_value: COMPARABLE)
 		do
 		end
 
-	set_value_range (lower, upper: COMPARABLE) is
+	set_value_range (lower, upper: COMPARABLE)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

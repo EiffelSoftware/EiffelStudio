@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Execution unit of an Eiffel feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,7 +51,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (cl_type: CLASS_TYPE) is
+	make (cl_type: CLASS_TYPE)
 			-- Initialization
 		require
 			cl_type_not_void: cl_type /= Void
@@ -75,20 +75,20 @@ feature -- Access
 	real_body_index: INTEGER
 			-- Index of the unit in an array
 
-	real_body_id: INTEGER is
+	real_body_id: INTEGER
 			-- Real body id
 			--| To be redefined in EXT_EXECUTION_UNIT
 		do
 			Result := real_body_index
 		end
 
-	is_precompiled: BOOLEAN is
+	is_precompiled: BOOLEAN
 			-- Is `index' coming from a precompiled library?
 		do
 			Result := real_body_id_counter.is_precompiled (real_body_id)
 		end
 
-	type_id: INTEGER is
+	type_id: INTEGER
 			-- `type_id' of `class_type'
 		require
 			class_type_exists: class_type /= Void
@@ -96,7 +96,7 @@ feature -- Access
 			Result := class_type.type_id
 		end
 
-	class_type_id: INTEGER is
+	class_type_id: INTEGER
 			-- `id' of `class_type'
 		require
 			class_type_exists: class_type /= Void
@@ -111,7 +111,7 @@ feature -- Access
 	written_in: INTEGER
 		-- Id of the class where the associated feature of the unit is written in.
 
-	real_pattern_id: INTEGER is
+	real_pattern_id: INTEGER
 			-- Pattern id associated with Current execution unit
 		local
 			l_written_type_id: INTEGER_32
@@ -122,7 +122,7 @@ feature -- Access
 			Result := l_system.pattern_table.c_pattern_id_in (pattern_id, l_system.class_type_of_id (l_written_type_id)) - 1
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the execution unit still valid ?
 		local
 			written_type: CLASS_TYPE
@@ -167,7 +167,7 @@ feature -- Access
 			end
 		end
 
-	is_encapsulation_needed: BOOLEAN is
+	is_encapsulation_needed: BOOLEAN
 			-- Check if an encapsulation is still needed?
 		require
 			is_encapsulated: is_encapsulated
@@ -189,31 +189,31 @@ feature -- Access
 			Result := encapsulated_feat /= Void and then encapsulated_feat.generate_in > 0
 		end
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN
 			-- Is current execution unit an external one ?
 		do
 			-- Do nothing
 		end
 
-	is_encapsulated: BOOLEAN is
+	is_encapsulated: BOOLEAN
 			-- Is current execution unit for an encapsulated call?
 		do
 			-- Do nothing
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := class_type_id * Mask + body_index
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' equal to Current ?
 		do
 			Result := same_as (other)
 		end
 
-	same_as (other: EXECUTION_UNIT): BOOLEAN is
+	same_as (other: EXECUTION_UNIT): BOOLEAN
 			-- Is `other' similar to Current for EXECUTION_TABLE searches?
 		require
 			other_not_void: other /= Void
@@ -225,25 +225,25 @@ feature -- Access
 
 feature -- Setting
 
-	set_class_type (t: CLASS_TYPE) is
+	set_class_type (t: CLASS_TYPE)
 			-- Assign `t' to `class_type'.
 		do
 			class_type := t
 		end
 
-	set_body_index (i: like body_index) is
+	set_body_index (i: like body_index)
 			-- Assign `i' to `body_index'.
 		do
 			body_index := i
 		end
 
-	set_index (i: like real_body_index) is
+	set_index (i: like real_body_index)
 			-- Assign `i' to `real_body_index'.
 		do
 			real_body_index := i
 		end
 
-	set_pattern_id (id: INTEGER) is
+	set_pattern_id (id: INTEGER)
 			-- Assign `id' to `pattern_id'.
 		require
 			valid_id: id >= 0
@@ -253,7 +253,7 @@ feature -- Setting
 			pattern_id_set: pattern_id = id
 		end
 
-	set_written_in (id: INTEGER) is
+	set_written_in (id: INTEGER)
 			-- Assign `id' to `written_in'.
 		require
 			valid_id: id >= 0
@@ -263,7 +263,7 @@ feature -- Setting
 			written_in_set: written_in = id
 		end
 
-	set_type (a_type: TYPE_C) is
+	set_type (a_type: TYPE_C)
 			-- Assign `a_type' to `type'.
 		require
 			valid_type: a_type /= Void
@@ -275,13 +275,13 @@ feature -- Setting
 
 feature -- Generation
 
-	compound_name: STRING is
+	compound_name: STRING
 			-- Generate compound name
 		do
 			Result := Encoder.feature_name (class_type.type_id, body_index)
 		end
 
-	generate_declaration (buffer: GENERATION_BUFFER) is
+	generate_declaration (buffer: GENERATION_BUFFER)
 			-- Generate external declaration for the compound routine
 		require
 			good_argument: buffer /= Void
@@ -293,7 +293,7 @@ feature -- Generation
 			buffer.put_three_character ('(', ')', ';')
 		end
 
-	generate (buffer: GENERATION_BUFFER) is
+	generate (buffer: GENERATION_BUFFER)
 			-- Generate compound pointer
 		require
 			good_argument: buffer /= Void
@@ -306,12 +306,12 @@ feature -- Generation
 
 feature {NONE} -- Implementation
 
-	Mask: INTEGER is 32768
+	Mask: INTEGER = 32768
 
 invariant
 	class_type_not_void: class_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

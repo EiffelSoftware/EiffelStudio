@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that generate an html file representing a diagram,%N%
 			%to be included in html documentation (Dummy version for old%N%
 			%graphical interface."
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_for_documentation (a_cluster: CONF_GROUP; view_name: STRING; doc: DOCUMENTATION) is
+	make_for_documentation (a_cluster: CONF_GROUP; view_name: STRING; doc: DOCUMENTATION)
 		require
 			a_cluster_not_void: a_cluster /= Void
 			doc_not_void: doc /= Void
@@ -24,11 +24,11 @@ feature {NONE} -- Initialization
 
 feature {DOCUMENTATION} -- Basic operations
 
-	execute is
+	execute
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

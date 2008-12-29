@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Byte code for multi-branch instruction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_inspect_b (Current)
@@ -45,25 +45,25 @@ feature -- Access
 
 feature -- Status setting
 
-	set_switch (s: like switch) is
+	set_switch (s: like switch)
 			-- Assign `s' to `switch'.
 		do
 			switch := s
 		end
 
-	set_case_list (c: like case_list) is
+	set_case_list (c: like case_list)
 			-- Assign `c' to `case_list'.
 		do
 			case_list := c
 		end
 
-	set_else_part (e: like else_part) is
+	set_else_part (e: like else_part)
 			-- Assign `e' to `else_part'.
 		do
 			else_part := e
 		end
 
-	set_end_location (e: like end_location) is
+	set_end_location (e: like end_location)
 			-- Set `end_location' with `e'.
 		require
 			e_not_void: e /= Void
@@ -75,7 +75,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	enlarge_tree is
+	enlarge_tree
 			-- Enlarge the inspect statement
 		do
 			switch := switch.enlarged
@@ -87,7 +87,7 @@ feature -- Basic operations
 			end
 		end
 
-	analyze is
+	analyze
 			-- Builds a proper context (for C code).
 		do
 			context.init_propagation
@@ -104,7 +104,7 @@ feature -- Basic operations
 
 feature -- C code generation
 
-	generate is
+	generate
 			-- Generate C code in `buffer'.
 		local
 			buf: GENERATION_BUFFER
@@ -143,27 +143,27 @@ feature -- C code generation
 
 feature -- Array optimization
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (i: INTEGER): BOOLEAN
 		do
 			Result := (case_list /= Void and then case_list.assigns_to (i)) or else
 				(else_part /= Void and then else_part.assigns_to (i))
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := (case_list /= Void and then case_list.calls_special_features (array_desc))
 				or else (else_part /= Void and then else_part.calls_special_features (array_desc))
 				or else switch.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := (case_list /= Void and then case_list.is_unsafe)
 				or else (else_part /= Void and then else_part.is_unsafe)
 				or else switch.is_unsafe
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 			switch := switch.optimized_byte_node
@@ -177,7 +177,7 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := 1 + switch.size
 			if case_list /= Void then
@@ -188,7 +188,7 @@ feature -- Inlining
 			end
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current
 			if case_list /= Void then
@@ -200,7 +200,7 @@ feature -- Inlining
 			switch := switch.pre_inlined_code
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			if case_list /= Void then
@@ -212,7 +212,7 @@ feature -- Inlining
 			switch := switch.inlined_byte_code
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Context used by class browser filters to help to decide if an itme can go through a certain filter"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,7 +9,7 @@ indexing
 deferred class
 	EB_CLASS_BROWSER_FILTER_CONTEXT [G]
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

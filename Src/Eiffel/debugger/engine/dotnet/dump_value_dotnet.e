@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects join all debug values: STRING, INTEGER, BOOLEAN, REFERENCES, ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create {DUMP_VALUE_FACTORY}
 
 feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 
-	set_object_value (value: DBG_ADDRESS; dtype: CLASS_C) is
+	set_object_value (value: DBG_ADDRESS; dtype: CLASS_C)
 			-- make a object item initialized to `value'
 		local
 			dobj: DEBUGGED_OBJECT_DOTNET
@@ -59,7 +59,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			end
 		end
 
-	set_string_for_dotnet_value  (a_eifnet_dsv: EIFNET_DEBUG_STRING_VALUE) is
+	set_string_for_dotnet_value  (a_eifnet_dsv: EIFNET_DEBUG_STRING_VALUE)
 			-- make a object ICorDebugStringValue item initialized to `value'
 		require
 			is_dotnet_system
@@ -87,7 +87,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_object_for_dotnet_value  (a_eifnet_drv: EIFNET_DEBUG_REFERENCE_VALUE) is
+	set_object_for_dotnet_value  (a_eifnet_drv: EIFNET_DEBUG_REFERENCE_VALUE)
 			-- make a object ICorDebugObjectValue item initialized to `value'
 		require
 			is_dotnet_system
@@ -120,7 +120,7 @@ feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
 			type /= Type_unknown
 		end
 
-	set_native_array_object_for_dotnet_value  (a_eifnet_dnav: EIFNET_DEBUG_NATIVE_ARRAY_VALUE) is
+	set_native_array_object_for_dotnet_value  (a_eifnet_dnav: EIFNET_DEBUG_NATIVE_ARRAY_VALUE)
 			-- make a object ICorDebugObjectValue item initialized to `value'
 		require
 			is_dotnet_system
@@ -160,7 +160,7 @@ feature -- Dotnet access
 	value_string_dotnet: ICOR_DEBUG_STRING_VALUE
 			-- ICorDebugStringValue for the dotnet String
 
-	value_frame_dotnet: ICOR_DEBUG_FRAME is
+	value_frame_dotnet: ICOR_DEBUG_FRAME
 			-- ICorDebugFrame in this DUMP_VALUE context
 		do
 			Result := Eifnet_debugger.current_stack_icor_debug_frame
@@ -168,7 +168,7 @@ feature -- Dotnet access
 
 feature -- Access
 
-	extra_output_details: STRING_32 is
+	extra_output_details: STRING_32
 		do
 			if is_dotnet_value and then eifnet_debug_value /= Void then
 				Result := eifnet_debug_value.extra_output_details
@@ -177,7 +177,7 @@ feature -- Access
 			end
 		end
 
-	formatted_output: STRING_32 is
+	formatted_output: STRING_32
 			-- Output of the call to `debug_output' on `Current', if any.
 		do
 			if type = Type_string_dotnet and then value_string_dotnet = Void then
@@ -189,7 +189,7 @@ feature -- Access
 
 feature {NONE} -- string_representation Implementation
 
-	dotnet_generating_type_evaluated_string: STRING is
+	dotnet_generating_type_evaluated_string: STRING
 		local
 			l_feat: FEATURE_I
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
@@ -210,7 +210,7 @@ feature {NONE} -- string_representation Implementation
 			end
 		end
 
-	dotnet_string_representation (min, max: INTEGER): STRING_32 is
+	dotnet_string_representation (min, max: INTEGER): STRING_32
 			-- String representation for dotnet value
 			-- with bounds from `min' and `max'.
 		local
@@ -277,7 +277,7 @@ feature {NONE} -- string_representation Implementation
 			end
 		end
 
-	dotnet_debug_output_evaluated_string (a_dbg: EIFNET_DEBUGGER; min, max: INTEGER): STRING_32 is
+	dotnet_debug_output_evaluated_string (a_dbg: EIFNET_DEBUGGER; min, max: INTEGER): STRING_32
 			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current
 		require
 			is_dotnet_system
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation dotnet
 	dotnet_value_class_token: NATURAL_32
 			-- Class token for the dotnet value
 
-	dotnet_value_class_name: STRING is
+	dotnet_value_class_name: STRING
 			-- Class name for the dotnet value
 		local
 			l_edvi: EIFNET_DEBUG_VALUE_INFO
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation dotnet
 			end
 		end
 
-	new_value_object_dotnet: ICOR_DEBUG_OBJECT_VALUE is
+	new_value_object_dotnet: ICOR_DEBUG_OBJECT_VALUE
 			-- Dotnet value as an ICorDebugObjectValue interface
 		do
 			if icd_value_info /= Void then
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation dotnet
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

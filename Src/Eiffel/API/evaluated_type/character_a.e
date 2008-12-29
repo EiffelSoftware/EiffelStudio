@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actual type for character type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (w: BOOLEAN) is
+	make (w: BOOLEAN)
 			-- Create instance of CHARACTER_A. If `w' a normal character.
 			-- Otherwise a wide character.
 		do
@@ -34,7 +34,7 @@ feature -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_character_a (Current)
@@ -42,7 +42,7 @@ feature -- Visitor
 
 feature -- Property
 
-	is_character: BOOLEAN is True
+	is_character: BOOLEAN = True
 			-- Is the current type a character type ?
 
 	is_character_32: BOOLEAN
@@ -50,13 +50,13 @@ feature -- Property
 
 feature -- Access
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		do
 			Result := {c: CHARACTER_A} other and then is_character_32 = c.is_character_32
 		end
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Class CHARACTER
 		do
 			if is_character_32 then
@@ -68,13 +68,13 @@ feature -- Access
 
 feature -- IL code generation
 
-	minimum_interval_value: CHAR_VAL_B is
+	minimum_interval_value: CHAR_VAL_B
 			-- Minimum value in inspect interval for current type
 		do
 			create Result.make ('%/0/')
 		end
 
-	maximum_interval_value: CHAR_VAL_B is
+	maximum_interval_value: CHAR_VAL_B
 			-- Maximum value in inspect interval for current type
 		do
 			if is_character_32 then
@@ -86,7 +86,7 @@ feature -- IL code generation
 
 feature -- Access
 
-	c_type: CHAR_I is
+	c_type: CHAR_I
 			-- C type
 		do
 			if is_character_32 then
@@ -96,7 +96,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

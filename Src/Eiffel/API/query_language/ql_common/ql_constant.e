@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a constant in Eiffel Query Language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of current
 		deferred
 		ensure
@@ -22,7 +22,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			if internal_hash_code = 0 then
@@ -43,7 +43,7 @@ invariant
 	name_attached: name /= Void
 	not_name_is_empty: not name.is_empty
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

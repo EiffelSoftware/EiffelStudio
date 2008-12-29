@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command using toggle button."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Change
 
-	set_select (b: BOOLEAN) is
+	set_select (b: BOOLEAN)
 		local
 			sdlst: like internal_managed_sd_toolbar_items
 			sdbut: like new_sd_toolbar_item
@@ -47,11 +47,11 @@ feature -- Change
 
 feature -- Basic operations
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 		deferred
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON
 			-- Create a new docking tool bar toggle button for this command.
 		do
 			create Result.make (Current)
@@ -59,7 +59,7 @@ feature -- Basic operations
 			Result.select_actions.extend (agent execute)
 		end
 
-	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON
 			-- Create a new mini toolbar button for this command.
 		do
 			create Result.make (Current)
@@ -80,19 +80,19 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	update_sd_tooltip (toggle: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON) is
+	update_sd_tooltip (toggle: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON)
 			-- Update tooltip of `toggle'.
 		do
 			toggle.set_tooltip (tooltip)
 		end
 
-	initialize_sd_toolbar_item (a_item: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON; display_text: BOOLEAN) is
+	initialize_sd_toolbar_item (a_item: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON; display_text: BOOLEAN)
 			-- Initialize `a_item'
 		do
 			Precursor (a_item, display_text)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

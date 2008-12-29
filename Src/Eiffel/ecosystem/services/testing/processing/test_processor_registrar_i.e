@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface of an registrar for test processors
 		
@@ -87,7 +87,7 @@ feature -- Query
 
 feature -- Element change
 
-	register (a_processor: !TEST_PROCESSOR_I) is
+	register (a_processor: !TEST_PROCESSOR_I)
 			-- Register processor associated with type.
 			--
 			-- `a_processor': Processor to be registered.

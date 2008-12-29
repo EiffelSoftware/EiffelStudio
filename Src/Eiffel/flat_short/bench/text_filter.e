@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Allow generation of specific formats (troff, mif, TEX,%
 		%PostScript) for output of clickable, short, flat and flat-short"
@@ -50,7 +50,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (filtername: STRING) is
+	make (filtername: STRING)
 			-- Make a new text filter with information read from `filtername'.
 		require
 			filtername_not_void: filtername /= Void
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_from_filename (filename: STRING) is
+	make_from_filename (filename: STRING)
 			-- Make a new text filter with information read from `filename'.
 		require
 			filename_not_void: filename /= Void;
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			doc_universe.include_all
 		end
 
-	init_file_separator is
+	init_file_separator
 			-- Get preferred file separator from `format_table'.
 		do
 			if format_table.has_key (f_File_separator) then
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	init_file_suffix is
+	init_file_suffix
 			-- Get file suffix from `format_table'.
 		do
 			if format_table.has_key (f_Suffix) then
@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 
 feature -- Optional initialization
 
-	prepend_to_file_suffix (a_suffix: STRING) is
+	prepend_to_file_suffix (a_suffix: STRING)
 			-- Set `a_suffix' to be the suffix of every class link in
 			-- the output file.
 			-- Examples: "_flat" "_output"
@@ -129,7 +129,7 @@ feature -- Optional initialization
 
 feature -- Removal
 
-	wipe_out_image is
+	wipe_out_image
 			-- Wipe out the image.
 		do
 			image.clear_all
@@ -137,7 +137,7 @@ feature -- Removal
 
 feature -- Access
 
-	count : INTEGER is
+	count : INTEGER
 			-- Count
 		do
 			Result := image.count
@@ -173,7 +173,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_universe (a_universe: DOCUMENTATION_UNIVERSE) is
+	set_universe (a_universe: DOCUMENTATION_UNIVERSE)
 			-- Change `doc_universe' to `a_universe'.
 		require
 			a_universe_not_void: a_universe /= Void
@@ -181,14 +181,14 @@ feature -- Status setting
 			doc_universe := a_universe
 		end
 
-	set_feature_redirect (a_suffix: STRING) is
+	set_feature_redirect (a_suffix: STRING)
 			-- Let feature links be redirected to a different class format.
 			-- Reason: in "_chart" format there is no feature bookmark.
 		do
 			feature_redirect := a_suffix
 		end
 
-	set_file_name (f: like file_name) is
+	set_file_name (f: like file_name)
 			-- Set `file_name' to `f'.
 		do
 			file_name := f
@@ -196,7 +196,7 @@ feature -- Status setting
 			set: file_name = f
 		end
 
-	set_keyword (a_keyword, a_substitute: STRING_32) is
+	set_keyword (a_keyword, a_substitute: STRING_32)
 			-- Add/change a keyword replacement. This means that
 			-- in the .FIL file, every instance of "$`a_keyword'$"
 			-- will be replaced with `a_substitute'.
@@ -212,7 +212,7 @@ feature -- Status setting
 			end
 		end
 
-	set_base_path (s: STRING_32) is
+	set_base_path (s: STRING_32)
 			-- Set `base_path' to `s'.
 		require
 			s_not_void: s /= Void
@@ -233,19 +233,19 @@ feature -- Status setting
 			set_keyword (kw_Root, p)
 		end
 
-	start_skipping is
+	start_skipping
 			do
 				skipping := true
 			end
 
-	stop_skipping is
+	stop_skipping
 			do
 				skipping := false
 			end
 
 feature -- Status report
 
-	is_html: BOOLEAN is
+	is_html: BOOLEAN
 		local
 			s: STRING
 		do
@@ -259,7 +259,7 @@ feature -- Status report
 
 feature -- Text processing
 
-	escaped_text (str: STRING_GENERAL): STRING_GENERAL is
+	escaped_text (str: STRING_GENERAL): STRING_GENERAL
 			-- New string where characters of `str' are escaped.
 		require
 			str_not_void: str /= Void
@@ -273,7 +273,7 @@ feature -- Text processing
 			escaped_text_not_void: Result /= Void
 		end
 
-	escaped_text_in_buffer (str, buffer: STRING_32) is
+	escaped_text_in_buffer (str, buffer: STRING_32)
 			-- Escape characters in `str'.
 		require
 			str_not_void: str /= Void
@@ -304,7 +304,7 @@ feature -- Text processing
 
 feature -- Text processing
 
-	process_symbol_text (text: STRING_GENERAL) is
+	process_symbol_text (text: STRING_GENERAL)
 			-- Process symbol text.
 		local
 			format: CELL2 [STRING_32, STRING_32];
@@ -329,7 +329,7 @@ feature -- Text processing
 			end
 		end;
 
-	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
+	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process keyword text.
 		local
 			format: CELL2 [STRING_32, STRING_32];
@@ -372,7 +372,7 @@ feature -- Text processing
 			end
 		end
 
-	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
+	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process operator text.
 		local
 			format: CELL2 [STRING_32, STRING_32]
@@ -418,7 +418,7 @@ feature -- Text processing
 			end
 		end
 
-	process_basic_text (text: STRING_GENERAL) is
+	process_basic_text (text: STRING_GENERAL)
 			-- Check first if a format has been specified for `text'.
 		local
 			format: CELL2 [STRING_32, STRING_32]
@@ -439,7 +439,7 @@ feature -- Text processing
 			end
 		end;
 
-	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL) is
+	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL)
 			-- Process the quoted text within a comment.
 		local
 			format: CELL2 [STRING_32, STRING_32]
@@ -469,7 +469,7 @@ feature -- Text processing
 			end
 		end
 
-	process_quoted_text (text: STRING_GENERAL) is
+	process_quoted_text (text: STRING_GENERAL)
 			-- Process the quoted `text' within a comment.
 		local
 			format: CELL2 [STRING_32, STRING_32];
@@ -488,7 +488,7 @@ feature -- Text processing
 			end
 		end
 
-	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
 		local
 			format: CELL2 [STRING_32, STRING_32]
 			cluster_generated: BOOLEAN
@@ -528,7 +528,7 @@ feature -- Text processing
 			end
 		end
 
-	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN) is
+	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
 		local
 			format: CELL2 [STRING_32, STRING_32]
 			class_generated: BOOLEAN
@@ -575,13 +575,13 @@ feature -- Text processing
 			end
 		end
 
-	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET) is
+	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET)
 			-- Process target name text `text'.
 		do
 			process_basic_text (text)
 		end
 
-	process_new_line is
+	process_new_line
 		local
 			format: CELL2 [STRING_32, STRING_32]
 		do
@@ -599,7 +599,7 @@ feature -- Text processing
 			end
 		end;
 
-	process_indentation (a_indent_depth: INTEGER) is
+	process_indentation (a_indent_depth: INTEGER)
 		local
 			format: CELL2 [STRING_32, STRING_32];
 			i: INTEGER
@@ -627,7 +627,7 @@ feature -- Text processing
 			end
 		end;
 
-	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN) is
+	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN)
 			-- Mark appearing before or after major syntactic constructs.
 		local
 			construct: STRING_32
@@ -672,7 +672,7 @@ feature -- Text processing
 			end
 		end;
 
-	process_feature_dec_item (a_feature_name: STRING_GENERAL; is_before: BOOLEAN) is
+	process_feature_dec_item (a_feature_name: STRING_GENERAL; is_before: BOOLEAN)
 			-- Process a feature start or after.
 		local
 			construct: STRING_32
@@ -721,7 +721,7 @@ feature -- Text processing
 			end
 		end;
 
-	process_tooltip_item (a_tooltip: STRING_GENERAL; is_before: BOOLEAN) is
+	process_tooltip_item (a_tooltip: STRING_GENERAL; is_before: BOOLEAN)
 			-- Process a tooltip start or after.
 		local
 			construct: STRING_32
@@ -752,7 +752,7 @@ feature -- Text processing
 			end
 		end;
 
-	process_after_class (a_class: CLASS_C) is
+	process_after_class (a_class: CLASS_C)
 		do
 			if not skipping then
 				print_escaped_text (" ");
@@ -763,7 +763,7 @@ feature -- Text processing
 			end
 		end;
 
-	print_escaped_text (str: STRING_GENERAL) is
+	print_escaped_text (str: STRING_GENERAL)
 			-- Append `str' to `image' with escape characters
 			-- substitutions if required.
 		require
@@ -772,36 +772,36 @@ feature -- Text processing
 			escaped_text_in_buffer (str, image)
 		end
 
-	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C) is
+	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
 			-- Process class syntax text.
 		do
 			process_basic_text (text)
 		end;
 
-	process_ace_syntax (text: STRING_GENERAL; a_error: ERROR) is
+	process_ace_syntax (text: STRING_GENERAL; a_error: ERROR)
 			-- Process Ace syntax text.
 		do
 			process_basic_text (text)
 		end;
 
-	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C) is
+	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C)
 			-- Process address text.
 		do
 			process_basic_text (a_address)
 		end;
 
-	process_padded is
+	process_padded
 			-- Process padded item at start of non breakpoint line.
 		do
 		end;
 
-	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C) is
+	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C)
 			-- Process feature name text `t'.
 		do
 			process_basic_text (text)
 		end
 
-	set_keywords_for_feature (f: E_FEATURE; a_group: CONF_GROUP) is
+	set_keywords_for_feature (f: E_FEATURE; a_group: CONF_GROUP)
 			-- Set keywords "$file$" and "$feature$" to the correct
 			-- values for `f'.
 		require
@@ -839,7 +839,7 @@ feature -- Text processing
 			set_keyword (kw_Feature, escaped_text (l_name))
 		end
 
-	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN) is
+	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
 			-- Process feature text `text'.
 		local
 			format: CELL2 [STRING_32, STRING_32]
@@ -879,7 +879,7 @@ feature -- Text processing
 			end
 		end
 
-	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN) is
+	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN)
 			-- Process breakpoint index `text'.
 		local
 			str: STRING_32
@@ -891,23 +891,23 @@ feature -- Text processing
 			process_basic_text (str)
 		end;
 
-	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER) is
+	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER)
 			-- Process breakpoint.
 		do
 		end;
 
-	process_error_text (text: STRING_GENERAL; a_error: ERROR) is
+	process_error_text (text: STRING_GENERAL; a_error: ERROR)
 			-- Process error text.
 		do
 			process_basic_text (text)
 		end;
 
-	process_before_class (a_class: CLASS_C) is
+	process_before_class (a_class: CLASS_C)
 			-- Process before class `t'.
 		do
 		end;
 
-	process_character_text (text: STRING_GENERAL) is
+	process_character_text (text: STRING_GENERAL)
 			-- Process the character `text'.
 		local
 			format: CELL2 [STRING_32, STRING_32];
@@ -926,7 +926,7 @@ feature -- Text processing
 			end
 		end
 
-	process_generic_text (text: STRING_GENERAL) is
+	process_generic_text (text: STRING_GENERAL)
 			-- Process a dot.
 		local
 			format: CELL2 [STRING_32, STRING_32];
@@ -945,7 +945,7 @@ feature -- Text processing
 			end
 		end
 
-	process_indexing_tag_text (text: STRING_GENERAL) is
+	process_indexing_tag_text (text: STRING_GENERAL)
 			-- Process tag in indexing clause.
 		local
 			format: CELL2 [STRING_32, STRING_32];
@@ -964,7 +964,7 @@ feature -- Text processing
 			end
 		end
 
-	process_local_text (text: STRING_GENERAL) is
+	process_local_text (text: STRING_GENERAL)
 			-- Process local symbol `text'.
 		local
 			format: CELL2 [STRING_32, STRING_32];
@@ -983,7 +983,7 @@ feature -- Text processing
 			end
 		end
 
-	process_number_text (text: STRING_GENERAL) is
+	process_number_text (text: STRING_GENERAL)
 			-- Process manifest number constant `text'.
 		local
 			format: CELL2 [STRING_32, STRING_32];
@@ -1002,7 +1002,7 @@ feature -- Text processing
 			end
 		end
 
-	process_assertion_tag_text (text: STRING_GENERAL) is
+	process_assertion_tag_text (text: STRING_GENERAL)
 			-- Process assertion tag `text'.
 		local
 			format: CELL2 [STRING_32, STRING_32]
@@ -1021,7 +1021,7 @@ feature -- Text processing
 			end
 		end
 
-	process_multiple_spaces (s: STRING_32) is
+	process_multiple_spaces (s: STRING_32)
 			-- Process sequences of 2 or more spaces.
 		local
 			format: CELL2 [STRING_32, STRING_32]
@@ -1064,7 +1064,7 @@ feature -- Text processing
 			end
 		end
 
-	process_string_text (text: STRING_GENERAL; link: STRING_GENERAL) is
+	process_string_text (text: STRING_GENERAL; link: STRING_GENERAL)
 			-- Process literal string `text'.
 		local
 			format: CELL2 [STRING_32, STRING_32]
@@ -1095,7 +1095,7 @@ feature -- Text processing
 			end
 		end
 
-	process_reserved_word_text (text: STRING_GENERAL) is
+	process_reserved_word_text (text: STRING_GENERAL)
 			-- Process literal string `text'.
 		local
 			format: CELL2 [STRING_32, STRING_32];
@@ -1114,7 +1114,7 @@ feature -- Text processing
 			end
 		end
 
-	process_menu_text (text, link: STRING_GENERAL) is
+	process_menu_text (text, link: STRING_GENERAL)
 			-- Process literal string `text'.
 		local
 			format: CELL2 [STRING_32, STRING_32]
@@ -1139,7 +1139,7 @@ feature -- Text processing
 			end
 		end
 
-	process_class_menu_text (text, link: STRING_GENERAL) is
+	process_class_menu_text (text, link: STRING_GENERAL)
 			-- Process literal string `text'.
 		local
 			format: CELL2 [STRING_32, STRING_32]
@@ -1170,7 +1170,7 @@ feature {NONE} -- Implementation
 	keyword_table: HASH_TABLE [STRING_32, STRING_32]
 			-- Pairs of [substitute, keyword].
 
-	image_append (s: STRING_32) is
+	image_append (s: STRING_32)
 			-- Append `s' to `image' after replacing keywords
 			-- from `keyword_table'. The default keyword ("$") is not recognized anymore.
 		local
@@ -1208,19 +1208,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dollar_code: INTEGER is
+	dollar_code: INTEGER
 			-- Charactor code for '$'
 		once
 			Result := ('$').code
 		end
 
-	os_separator: STRING_32 is
+	os_separator: STRING_32
 		once
 			create Result.make (1)
 			Result.append_character (operating_environment.directory_separator)
 		end
 
-	relative_to_base (rel_filename: STRING_32): STRING_32 is
+	relative_to_base (rel_filename: STRING_32): STRING_32
 		do
 			create Result.make_from_string (base_path)
 			if not base_path.is_empty then
@@ -1235,7 +1235,7 @@ feature {NONE} -- Implementation
 invariant
 	image_not_void: image /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Ancestor to all errors/warnings defined in the compiler.
 		
@@ -26,7 +26,7 @@ inherit
 
 feature {ERROR_TRACER} -- Formatting
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `error_window'.
 		require
@@ -36,7 +36,7 @@ feature {ERROR_TRACER} -- Formatting
 
 feature -- Output
 
-	trace (a_text_formatter: TEXT_FORMATTER) is
+	trace (a_text_formatter: TEXT_FORMATTER)
 			-- Display full error message in `a_text_formatter'.
 		require
 			valid_st: a_text_formatter /= Void;
@@ -46,7 +46,7 @@ feature -- Output
 			build_explain (a_text_formatter);
 		end;
 
-	trace_single_line (a_text_formatter: TEXT_FORMATTER) is
+	trace_single_line (a_text_formatter: TEXT_FORMATTER)
 			-- Display short error, single line message in `a_text_formatter'.
 		require
 			valid_st: a_text_formatter /= Void;
@@ -56,7 +56,7 @@ feature -- Output
 			print_single_line_error_message (a_text_formatter)
 		end
 
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		require
 			valid_st: a_text_formatter /= Void
@@ -84,7 +84,7 @@ feature {NONE} -- Printing for single lines
 			a_text_formatter.add_space
 		end
 
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		require
 			valid_st: a_text_formatter /= Void
@@ -153,7 +153,7 @@ feature {NONE} -- Printing for single lines
 
 feature {NONE} -- Print for multiple lines
 
-	print_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Display error in `a_text_formatter'.
 		require
 			valid_st: a_text_formatter /= Void
@@ -172,7 +172,7 @@ feature {NONE} -- Print for multiple lines
 			print_short_help (a_text_formatter);
 		end;
 
-	frozen print_short_help (a_text_formatter: TEXT_FORMATTER) is
+	frozen print_short_help (a_text_formatter: TEXT_FORMATTER)
 			-- Display help in `a_text_formatter'.
 		require
 			valid_st: a_text_formatter /= Void
@@ -219,7 +219,7 @@ feature {NONE} -- Print for multiple lines
 
 feature {NONE} -- Implementation
 
-	frozen print_context_of_error (a_context_class: CLASS_C; a_text_formatter: TEXT_FORMATTER) is
+	frozen print_context_of_error (a_context_class: CLASS_C; a_text_formatter: TEXT_FORMATTER)
 			-- Display the line number in `a_text_formatter'.
 		require
 			valid_line: line > 0
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Output
 
-	display_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING) is
+	display_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING)
 			-- Display `a_line' in `a_text_formatter'. It translates `%T' accordingly to `a_text_formatter' specification
 			-- which is to call `add_indent'.
 		require
@@ -295,7 +295,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	display_syntax_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING) is
+	display_syntax_line (a_text_formatter: TEXT_FORMATTER; a_line: STRING)
 			-- Display `a_line' which does like `display_line' but with an additional
 			-- arrowed line that points out to `column' where syntax issue is located.
 		require
@@ -348,7 +348,7 @@ feature {NONE} -- Output
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

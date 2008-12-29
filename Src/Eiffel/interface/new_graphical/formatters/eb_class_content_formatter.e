@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display hierarchy information or feature information concerning a compiled class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ inherit
 
 feature -- Formatting
 
-	format is
+	format
 			-- Refresh `widget'.
 		do
 			if associated_class /= Void and then selected and then displayed and then actual_veto_format_result then
@@ -50,7 +50,7 @@ feature -- Formatting
 
 feature -- Access
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Graphical representation of the information provided.
 		do
 			if associated_class = Void or browser = Void then
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Setting
 
-	reset_display is
+	reset_display
 			-- Clear all graphical output.
 		do
 			if browser /= Void then
@@ -70,7 +70,7 @@ feature -- Setting
 			end
 		end
 
-	set_stone (new_stone: CLASSI_STONE) is
+	set_stone (new_stone: CLASSI_STONE)
 			-- Associate current formatter with class contained in `a_stone'.
 		local
 			a_stone: CLASSC_STONE
@@ -88,7 +88,7 @@ feature -- Setting
 			end
 		end
 
-	set_class (a_class: CLASS_C) is
+	set_class (a_class: CLASS_C)
 			-- Associate current formatter with `a_class'.
 		do
 			associated_class := a_class
@@ -102,40 +102,40 @@ feature -- Setting
 			class_set: (a_class /= Void and then a_class.has_feature_table) implies (a_class = associated_class)
 		end
 
-	setup_viewpoint is
+	setup_viewpoint
 			-- Setup viewpoint for formatting.
 		do
 		end
 
 feature -- Status report
 
-	line_numbers_allowed: BOOLEAN is False
+	line_numbers_allowed: BOOLEAN = False
 		-- Does it make sense to show line numbers in Current?
 
-	is_dotnet_formatter: BOOLEAN is True
+	is_dotnet_formatter: BOOLEAN = True
 			-- Is Current able to format .NET class texts?
 
-	has_breakpoints: BOOLEAN is False
+	has_breakpoints: BOOLEAN = False
 		-- Should `Current' display breakpoints?
 
-	is_class_feature_formatter: BOOLEAN is
+	is_class_feature_formatter: BOOLEAN
 			-- Is current a class feature formatter?
 		do
 		end
 
-	is_inheritance_formatter: BOOLEAN is
+	is_inheritance_formatter: BOOLEAN
 			-- Is current a class inheritance (ancestor/descendant) formatter?
 		do
 		end
 
-	is_reference_formatter: BOOLEAN is
+	is_reference_formatter: BOOLEAN
 			-- Is current a class reference (supplier/client) formatter?
 		do
 		end
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recyclable
 		do
 			Precursor {EB_CLASS_INFO_FORMATTER}
@@ -144,33 +144,33 @@ feature {NONE} -- Recyclable
 
 feature{NONE} -- Implementation
 
-	generate_result is
+	generate_result
 			-- Generate result for display
 		require
 			associated_class_attached: associated_class /= Void
 		deferred
 		end
 
-	domain_generator: QL_DOMAIN_GENERATOR is
+	domain_generator: QL_DOMAIN_GENERATOR
 			-- Domain generator to generate result
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion of current formatter
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	start_class: QL_CLASS is
+	start_class: QL_CLASS
 			-- Start class
 		deferred
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

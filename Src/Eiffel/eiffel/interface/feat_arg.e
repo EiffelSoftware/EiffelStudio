@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Arguments of a FEATURE_I"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -59,7 +59,7 @@ create {FEAT_ARG}
 
 feature {NONE} -- Implementation
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Arrays creation
 		do
 			make_filled (n)
@@ -71,7 +71,7 @@ feature -- Access
 	argument_names: SPECIAL [INTEGER]
 			-- Argument names. Index in `Names_heap' table.
 
-	item_id (i: INTEGER): INTEGER is
+	item_id (i: INTEGER): INTEGER
 			-- Name of argument at position `i'.
 		require
 			index_positive: i >= 1
@@ -82,7 +82,7 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
-	item_name (i: INTEGER): STRING is
+	item_name (i: INTEGER): STRING
 			-- Name of argument at position `i'.
 		require
 			index_positive: i >= 1
@@ -94,7 +94,7 @@ feature -- Access
 			Result_not_empty: not Result.is_empty
 		end
 
-	argument_position_id (arg_id: INTEGER; a_start_position: INTEGER): INTEGER is
+	argument_position_id (arg_id: INTEGER; a_start_position: INTEGER): INTEGER
 		require
 			arg_id_not_void: arg_id >= 0
 			valid_start_position: a_start_position >= 1
@@ -106,7 +106,7 @@ feature -- Access
 			not_found_or_found: Result = 0 or else (Result >= 1 and then Result <= count)
 		end
 
-	pattern_types: ARRAY [TYPE_A] is
+	pattern_types: ARRAY [TYPE_A]
 			-- Pattern types of arguments
 		local
 			l_area: SPECIAL [TYPE_A]
@@ -128,7 +128,7 @@ feature -- Access
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Clone
 		do
 			Precursor {ARRAYED_LIST} (other)
@@ -137,7 +137,7 @@ feature -- Duplication
 
 feature -- Element change
 
-	put_name (id: INTEGER; i: INTEGER) is
+	put_name (id: INTEGER; i: INTEGER)
 			-- Record argument name `s'.
 		require
 			index_small_enough: i <= count
@@ -147,7 +147,7 @@ feature -- Element change
 
 feature -- Checking
 
-	check_types (feat_table: FEATURE_TABLE; f: FEATURE_I) is
+	check_types (feat_table: FEATURE_TABLE; f: FEATURE_I)
 			-- Check like types in arguments and instantiate arguments
 		require
 			good_argument: not (feat_table = Void or f = Void)
@@ -178,7 +178,7 @@ feature -- Checking
 			end
 		end
 
-	check_type_validity (a_context_class: CLASS_C; a_feature: FEATURE_I; a_checker: TYPE_A_CHECKER; a_check_for_obsolete: BOOLEAN) is
+	check_type_validity (a_context_class: CLASS_C; a_feature: FEATURE_I; a_checker: TYPE_A_CHECKER; a_check_for_obsolete: BOOLEAN)
 			-- Check like types in arguments and instantiate arguments
 		require
 			a_context_class_not_void: a_context_class /= Void
@@ -209,7 +209,7 @@ feature -- Checking
 			end
 		end
 
-	check_expanded (associated_class: CLASS_C f: FEATURE_I) is
+	check_expanded (associated_class: CLASS_C f: FEATURE_I)
 			-- Check expanded validity rules
 		require
 			good_argument: not (associated_class = Void or f = Void)
@@ -264,7 +264,7 @@ feature -- Checking
 			end
 		end
 
-	solve_types (feat_tbl: FEATURE_TABLE f: FEATURE_I) is
+	solve_types (feat_tbl: FEATURE_TABLE f: FEATURE_I)
 			-- Evaluates argument types in the context of `feat_tbl'.
 			-- | Take care of possible anchored types.
 		local
@@ -289,7 +289,7 @@ feature -- Checking
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- All the types are still in the system
 		local
 			type_a: TYPE_A
@@ -309,7 +309,7 @@ feature -- Status report
 			end
 		end
 
-	same_interface (other: FEAT_ARG): BOOLEAN is
+	same_interface (other: FEAT_ARG): BOOLEAN
 			-- Has the other argument list the same interface than the
 			-- current one ?
 		require
@@ -334,7 +334,7 @@ feature -- Status report
 
 feature -- Debugging
 
-	trace is
+	trace
 		local
 			l_area: SPECIAL [TYPE_A]
 			i, nb: INTEGER
@@ -354,7 +354,7 @@ feature -- Debugging
 
 feature {FEATURE_I}
 
-	api_args: E_FEATURE_ARGUMENTS is
+	api_args: E_FEATURE_ARGUMENTS
 		local
 			i, c: INTEGER
 			args: ARRAYED_LIST [STRING]
@@ -377,7 +377,7 @@ feature {FEATURE_I}
 invariant
 	argument_names_not_void: argument_names /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

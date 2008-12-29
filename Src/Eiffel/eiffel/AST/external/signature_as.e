@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that contains an external signature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (args: like arguments; ret: EXTERNAL_TYPE_AS) is
+	initialize (args: like arguments; ret: EXTERNAL_TYPE_AS)
 			-- Create SIGNATURE_AS node
 		do
 			arguments := args
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Transformation
 
-	arguments_id_array: ARRAY [INTEGER] is
+	arguments_id_array: ARRAY [INTEGER]
 			-- Array representation of `arguments'
 		local
 			list: like arguments
@@ -56,14 +56,14 @@ feature -- Transformation
 			end
 		end
 
-	return_type_id: INTEGER is
+	return_type_id: INTEGER
 		do
 			if return_type /= Void then
 				Result := return_type.value_id
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

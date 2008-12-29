@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Byte code for reverse assignment
@@ -13,7 +13,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_reverse_b (Current)
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_info (a_info: like info) is
+	set_info (a_info: like info)
 			-- Set `info' to `a_info'.
 		require
 			a_info_not_void: a_info /= Void
@@ -39,13 +39,13 @@ feature -- Settings
 
 feature -- Enlarging
 
-	enlarged: REVERSE_BL is
+	enlarged: REVERSE_BL
 			-- Enlarge current node.	
 		do
 			create Result.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is an UML view for a client supplier link."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -52,7 +52,7 @@ create {UML_CLIENT_SUPPLIER_FIGURE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a UML_CLIENT_SUPPLIER_FIGURE.
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE}
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			is_label_shown := True
 		end
 
-	make_with_model (a_model: ES_CLIENT_SUPPLIER_LINK) is
+	make_with_model (a_model: ES_CLIENT_SUPPLIER_LINK)
 			-- Create an UML_CLIENT_SUPPLIER_FIGURE with `a_model'.
 		do
 			default_create
@@ -108,7 +108,7 @@ feature -- Status report
 
 feature -- Access
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml node representing `Current's state.
 		do
 			Result := Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (node)
@@ -117,7 +117,7 @@ feature -- Access
 			Result.put_last (xml_routines.xml_node (Result, "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
 		end
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (node)
@@ -132,7 +132,7 @@ feature -- Access
 			end
 		end
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := "UML_CLIENT_SUPPLIER_FIGURE"
@@ -140,7 +140,7 @@ feature -- Access
 
 feature -- Element change
 
-	hide_label is
+	hide_label
 			-- Hide label.
 		do
 			name_label.hide
@@ -148,7 +148,7 @@ feature -- Element change
 			request_update
 		end
 
-	show_label is
+	show_label
 			-- Show label.
 		do
 			name_label.show
@@ -156,7 +156,7 @@ feature -- Element change
 			request_update
 		end
 
-	set_line_width (a_line_width: like line_width) is
+	set_line_width (a_line_width: like line_width)
 			-- Set `line_width' to `a_line_width'.
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (a_line_width)
@@ -164,7 +164,7 @@ feature -- Element change
 			real_line_width := a_line_width
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Set `foreground_color' to `a_color'.
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (a_color)
@@ -173,7 +173,7 @@ feature -- Element change
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
-	update is
+	update
 			-- Some properties of `Current' may have changed.
 		local
 			p1, p2: EV_COORDINATE
@@ -201,7 +201,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 feature {EV_MODEL_GROUP} -- Transformation
 
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 
 	name_group: EV_MODEL_GROUP
 
-	set_aggregate_figure_position is
+	set_aggregate_figure_position
 			-- Set `aggregate_figure' `a_distance' away from `end_point'.
 		local
 			an_angle: DOUBLE
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 			old_angle := an_angle
 		end
 
-	on_is_aggregated_change is
+	on_is_aggregated_change
 			-- `model'.`is_aggregated' was changed.
 		do
 			if model.is_aggregated then
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_name_group_position_out_of_intersection (label_bbox, other_bbox: EV_RECTANGLE; p, q: EV_COORDINATE) is
+	set_name_group_position_out_of_intersection (label_bbox, other_bbox: EV_RECTANGLE; p, q: EV_COORDINATE)
 			-- Set position of `name_label' such that `label_bbox' does not intersect with `other_bbox'
 			-- and `point' position of `name_group' is on the line from `p' to `q'.
 		require
@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 			name_group.set_point_position (as_integer (nx) + 5, as_integer (ny))
 		end
 
-	retrieve_preferences is
+	retrieve_preferences
 			-- Retrieve preferences when changed.
 		do
 			name_label.set_identified_font (uml_client_label_font)
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 			set_line_width (uml_client_line_width)
 		end
 
-	set_name_label_text (a_text: STRING) is
+	set_name_label_text (a_text: STRING)
 			-- Set `name_label'.`text' to `a_text'.
 		local
 			l_features: LIST [FEATURE_AS]
@@ -405,7 +405,7 @@ invariant
 	foreground_color_not_void: foreground_color /= Void
 	aggregate_figure_not_void: aggregate_figure /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

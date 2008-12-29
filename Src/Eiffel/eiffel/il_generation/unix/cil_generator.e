@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Special object responsible for generating IL byte code"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,25 +17,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make (deg_output: DEGREE_OUTPUT) is
+	make (deg_output: DEGREE_OUTPUT)
 			-- Generate a COM+ assembly.
 		do
 		end
 
 feature -- Generation
 
-	generate is
+	generate
 			-- Generate a .NET assembly
 		do
 		end
 
-	deploy is
+	deploy
 			-- Copy local assemblies if needed to `Generation_directory/Assemblies' and
 			-- copy configuration file to load local assemblies.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

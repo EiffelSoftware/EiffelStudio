@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Facilities to handle breakpoints adding in flat/short formats"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature -- Execution
 
-	execute (a_target_feat: E_FEATURE) is
+	execute (a_target_feat: E_FEATURE)
 			-- Format feature_as and make all items
 			-- clickable with class `c' as context
 		local
@@ -48,7 +48,7 @@ feature {NONE}
 	added_breakpoint: BOOLEAN
 			-- Was a break point added?
 
-	put_breakable is
+	put_breakable
 			-- Create a breakable mark.
 		do
 			breakpoint_index := breakpoint_index + 1
@@ -58,7 +58,7 @@ feature {NONE}
 			end
 		end
 
-	emit_tabs is
+	emit_tabs
 			-- Add the good number of tabulations to the text.
 		do
 			if added_breakpoint then
@@ -69,7 +69,7 @@ feature {NONE}
 			Precursor {FEAT_TEXT_FORMATTER_DECORATOR}
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

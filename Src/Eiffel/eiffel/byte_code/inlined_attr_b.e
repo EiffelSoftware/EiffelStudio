@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class INLINED_ATTR_B
@@ -11,7 +11,7 @@ inherit
 
 feature
 
-	fill_from (a: ATTRIBUTE_B) is
+	fill_from (a: ATTRIBUTE_B)
 		do
 			parent := a.parent
 			attribute_name_id := a.attribute_name_id;
@@ -20,17 +20,17 @@ feature
 			type := a.type;
 		end
 
-	enlarged: INLINED_ATTR_B is
+	enlarged: INLINED_ATTR_B
 		do
 			Result := Current
 		end
 
-	Current_register: INLINED_CURRENT_B is
+	Current_register: INLINED_CURRENT_B
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

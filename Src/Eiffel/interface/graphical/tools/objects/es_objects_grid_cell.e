@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			EV_GRID Text label that may be interactively edited by the user via a text field.
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Action
 
-	deactivate is
+	deactivate
 			-- Cleanup from previous call to activate.
 		do
 			if text_label /= Void then
@@ -58,7 +58,7 @@ feature -- Action
 
 feature {NONE} -- Implementation
 
-	update_popup_dimensions (a_popup: EV_POPUP_WINDOW) is
+	update_popup_dimensions (a_popup: EV_POPUP_WINDOW)
 			-- Update dimensions and positioning for `a_popup'.
 		require
 			a_popup_not_void: a_popup /= Void
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			a_popup.set_height (text_height)
 		end
 
-	handle_key (a_key: EV_KEY) is
+	handle_key (a_key: EV_KEY)
 			-- Handle the Escape key for cancelling activation.
 		require
 			a_key_not_void: a_key /= Void
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 	user_cancelled_activation: BOOLEAN
 		-- Did the user cancel the activation using the Esc key?
 
-	activate_action (popup_window: EV_POPUP_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
 		do
 			create text_label
@@ -126,14 +126,14 @@ feature {NONE} -- Implementation
 			popup_window.show_actions.extend (agent initialize_actions)
 		end
 
-	initialize_actions is
+	initialize_actions
 			-- Setup the action sequences when the item is shown.
 		do
 			user_cancelled_activation := False
 			text_label.key_press_actions.extend (agent handle_key)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

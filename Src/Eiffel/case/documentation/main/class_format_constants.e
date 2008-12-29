@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for use with CLASS_FORMAT."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,33 +13,33 @@ inherit
 
 feature -- Constants
 
-	cf_Chart: INTEGER is 1
+	cf_Chart: INTEGER = 1
 			-- Chart format. Textual descriptions of ancestors, constraints, etc.
 
-	cf_Diagram: INTEGER is 2
+	cf_Diagram: INTEGER = 2
 			-- Diagram format. Graphical view.
 
-	cf_Clickable: INTEGER is 3
+	cf_Clickable: INTEGER = 3
 			-- Clickable format.
 
-	cf_Flat: INTEGER is 4
+	cf_Flat: INTEGER = 4
 			-- Flat format.
 
-	cf_Short: INTEGER is 5
+	cf_Short: INTEGER = 5
 			-- Short format.
 
-	cf_Flatshort: INTEGER is 6
+	cf_Flatshort: INTEGER = 6
 			-- Flat/short format.
 
 feature -- Access
 
-	all_class_formats: INTEGER_INTERVAL is
+	all_class_formats: INTEGER_INTERVAL
 			-- `cf_Chart' |..| `cf_Flatshort'.
 		do
 			Result := cf_Chart |..| cf_Flatshort
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

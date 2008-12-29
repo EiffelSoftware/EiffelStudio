@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to show the profile tool."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu entry associated with `Current'.
 		do
 			Result := Interface_names.m_Profile_tool
@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	execute
 		local
 --			p_win: EB_PROFILE_WINDOW
 			wizard_manager: EB_PROFILER_WIZARD_MANAGER
@@ -42,7 +42,7 @@ feature -- Execution
 			create wizard_manager.make_and_launch (window_manager.last_focused_development_window.window)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

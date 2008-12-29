@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {ES_TEST_WIZARD_NEW_CLASS_WINDOW}."
 	author: ""
 	date: "$Date$"
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			on_after_initialize
 		end
 
-	build_class_name (a_parent: EV_BOX) is
+	build_class_name (a_parent: EV_BOX)
 			-- Initialize `class_name'.
 		local
 			l_label: EV_LABEL
@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 			a_parent.disable_item_expand (class_name_error_label)
 		end
 
-	build_class_tree (a_parent: EV_BOX) is
+	build_class_tree (a_parent: EV_BOX)
 			-- Initialize `class_tree'
 		local
 			l_hbox: EV_HORIZONTAL_BOX
@@ -437,7 +437,7 @@ feature {NONE} -- Internationalization
 invariant
 	cluster_valid_implies_attached: is_cluster_valid implies (wizard_information.cluster_cache /= Void and
 		wizard_information.path_cache /= Void)
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

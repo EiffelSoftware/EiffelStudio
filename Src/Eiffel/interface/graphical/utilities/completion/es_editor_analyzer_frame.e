@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Encapsulates a completion stack frame, containing stacked local data.
 		]"
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation: Internal cache
 invariant
 	--non_circular_parent: has_parent implies parent /= Void and then not is_parented_to_current (parent)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

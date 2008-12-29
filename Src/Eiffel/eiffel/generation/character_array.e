@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Array of character used for storing interpreted datas."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Allocate `n' characters
 		require
 			valid_n: n >= 0
@@ -35,7 +35,7 @@ feature {CHARACTER_ARRAY} -- Access
 
 feature -- Store
 
-	store (file: RAW_FILE) is
+	store (file: RAW_FILE)
 			-- Store C array in `file'.
 		require
 			good_argument: file /= Void
@@ -46,7 +46,7 @@ feature -- Store
 
 feature -- Resizing
 
-	resize (n: INTEGER) is
+	resize (n: INTEGER)
 			-- Reallocation for `n' characters
 		require
 			valid_n: n >= 0 and n > count
@@ -63,7 +63,7 @@ feature -- Resizing
 
 feature -- Debug
 
-	trace is
+	trace
 			-- Debug purpose
 		local
 			i: INTEGER
@@ -83,7 +83,7 @@ feature -- Debug
 
 feature {NONE} -- Implementation
 
-	internal_store (an_area: like area; nb_items: INTEGER; a_file: FILE) is
+	internal_store (an_area: like area; nb_items: INTEGER; a_file: FILE)
 			-- Store first `nb_items' of `an_area' into `a_file'.
 		require
 			an_area_not_void: an_area /= Void
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 			ca_store ($an_area, nb_items, a_file.file_pointer)
 		end
 
-	internal_copy (a_source, a_target: like area; nb_items, pos: INTEGER) is
+	internal_copy (a_source, a_target: like area; nb_items, pos: INTEGER)
 			-- Copy first `nb_items' of `a_source' area into `a_target'
 			-- area starting at index `pos'.
 		require
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External features
 
-	ca_store (ptr: POINTER; siz: INTEGER; fil: POINTER) is
+	ca_store (ptr: POINTER; siz: INTEGER; fil: POINTER)
 		external
 			"C"
 		end
@@ -119,7 +119,7 @@ feature {NONE} -- External features
 invariant
 	area_exists: area /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

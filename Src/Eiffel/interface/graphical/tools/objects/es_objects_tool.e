@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Tool descriptor for the debugger's object analyer tool.
 	]"
@@ -18,7 +18,7 @@ create {NONE}
 
 feature {DEBUGGER_MANAGER} -- Access
 
-	disable_refresh is
+	disable_refresh
 			-- Disable refresh
 		do
 			if is_tool_instantiated	then
@@ -26,7 +26,7 @@ feature {DEBUGGER_MANAGER} -- Access
 			end
 		end
 
-	enable_refresh is
+	enable_refresh
 			-- Disable refresh
 		do
 			if is_tool_instantiated then
@@ -34,7 +34,7 @@ feature {DEBUGGER_MANAGER} -- Access
 			end
 		end
 
-	record_grids_layout is
+	record_grids_layout
 			-- Record grid's layout
 		do
 			if
@@ -45,7 +45,7 @@ feature {DEBUGGER_MANAGER} -- Access
 			end
 		end
 
-	update_cleaning_delay (ms: INTEGER_32) is
+	update_cleaning_delay (ms: INTEGER_32)
 			-- Set cleaning delay to object grids
 		do
 			if
@@ -93,7 +93,7 @@ feature {NONE} -- Factory
 			Result.set_debugger_manager (debugger_manager)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text fragment based on a buffer"
 	author: ""
 	date: "$Date$"
@@ -15,7 +15,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_text: like text; a_new_text_function: like new_text_function; a_text_validity_function: like text_validity_function; a_buffer: like buffer) is
+	make (a_text: like text; a_new_text_function: like new_text_function; a_text_validity_function: like text_validity_function; a_buffer: like buffer)
 			-- Initialize `text' with `a_text', `new_text_function' with `a_new_text_function',
 			-- `text_validity_function' with `a_text_validity_function' and `buffer' with `a_buffer'.
 		require
@@ -32,7 +32,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	new_text: like text is
+	new_text: like text
 			-- New text which will replace `text'
 		do
 			if new_text_function /= Void then
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_replacement_prepared: BOOLEAN is
+	is_replacement_prepared: BOOLEAN
 			-- Is replacement prepared?
 		do
 			Result := buffer.is_initialized
@@ -65,7 +65,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_text (a_text: like text) is
+	set_text (a_text: like text)
 			-- Set `text' with `a_text'
 		require
 			a_text_attached: a_text /= Void
@@ -78,7 +78,7 @@ feature -- Setting
 			normalized_text_internal_set: normalized_text_internal = Void
 		end
 
-	set_buffer (a_buffer: like buffer) is
+	set_buffer (a_buffer: like buffer)
 			-- Set `buffer' with `a_buffer'.
 		require
 			a_buffer_attached: a_buffer /= Void
@@ -88,7 +88,7 @@ feature -- Setting
 			buffer_set: buffer = a_buffer
 		end
 
-	set_new_text_function (a_func: like new_text_function) is
+	set_new_text_function (a_func: like new_text_function)
 			-- Set `new_text_function' with `a_func'.
 		do
 			new_text_function := a_func
@@ -96,7 +96,7 @@ feature -- Setting
 			new_text_function_set: new_text_function = a_func
 		end
 
-	prepare_before_replacement is
+	prepare_before_replacement
 			-- Prepare replacement.
 		do
 			buffer.initialize
@@ -104,7 +104,7 @@ feature -- Setting
 			buffer_initialized: buffer.is_initialized
 		end
 
-	dispose_after_replacement is
+	dispose_after_replacement
 			-- Dispose after replacement
 		do
 			buffer.dispose

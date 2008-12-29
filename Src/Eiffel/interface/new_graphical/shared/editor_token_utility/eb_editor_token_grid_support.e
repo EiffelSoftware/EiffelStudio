@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Supports for editor token grid.
 					Functonalites:
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_grid (a_grid: like grid) is
+	make_with_grid (a_grid: like grid)
 			-- Initialize `grid' with `a_grid'.
 		do
 			Precursor {EVS_GRID_PND_SUPPORT} (a_grid)
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	color_or_font_change_actions: ACTION_SEQUENCE [TUPLE] is
+	color_or_font_change_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when color or font in editor changes
 		do
 			if color_or_font_change_actions_internal = Void then
@@ -61,7 +61,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	grid_row_height_for_tokens (a_preferenced_font_used: BOOLEAN): INTEGER is
+	grid_row_height_for_tokens (a_preferenced_font_used: BOOLEAN): INTEGER
 			-- Suitable row height of grid to display editor tokens (Taken heading pixmap height into consideration)
 			-- If `a_preferenced_font_used' is True, use fonts specified in preferences for editors,
 			-- otherwise use default font.
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Pick and drop support for grid items
 
-	on_pick_start_from_grid_pickable_item (a_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT) is
+	on_pick_start_from_grid_pickable_item (a_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT)
 			-- Action performed when pick on `a_item'.
 			-- `a_grid_support' is responsible for managing pick and drop for `a_item'.
 		require
@@ -110,7 +110,7 @@ feature -- Pick and drop support for grid items
 			end
 		end
 
-	on_pick_ended_from_grid_pickable_item (a_item: EV_GRID_ITEM) is
+	on_pick_ended_from_grid_pickable_item (a_item: EV_GRID_ITEM)
 			-- Action performed when pick ends
 		local
 			l_item: ES_GRID_PICKABLE_ITEM
@@ -131,7 +131,7 @@ feature -- Pick and drop support for grid items
 
 feature -- Setting
 
-	synchronize_scroll_behavior_with_editor is
+	synchronize_scroll_behavior_with_editor
 			-- Sychronize scroll behavior with editor.
 		local
 			l_change_agent: like on_scroll_behavior_change_agent
@@ -143,7 +143,7 @@ feature -- Setting
 			editor_preferences.scrolling_common_line_count_preference.change_actions.extend (l_change_agent)
 		end
 
-	desynchronize_scroll_behavior_with_editor is
+	desynchronize_scroll_behavior_with_editor
 			-- Desychronize scroll behavior with editor.
 			-- Note: Make sure that this feature gets called after use, otherwise memory leak may occur.
 		local
@@ -155,7 +155,7 @@ feature -- Setting
 			editor_preferences.scrolling_common_line_count_preference.change_actions.prune_all (l_change_agent)
 		end
 
-	synchronize_color_or_font_change_with_editor is
+	synchronize_color_or_font_change_with_editor
 			-- Synchronize color or font with editor.
 		local
 			l_change_agent: like on_color_or_font_change_agent
@@ -181,7 +181,7 @@ feature -- Setting
 			end
 		end
 
-	desynchronize_color_or_font_change_with_editor is
+	desynchronize_color_or_font_change_with_editor
 			-- Desychronize color or font change with editor.
 			-- Note: Make sure that this feature gets called after use, otherwise memory leak may occur.
 		local
@@ -196,7 +196,7 @@ feature -- Setting
 			preferences.class_browser_data.even_row_background_color_preference.change_actions.prune_all (l_change_agent)
 		end
 
-	enable_ctrl_right_click_to_open_new_window is
+	enable_ctrl_right_click_to_open_new_window
 			-- Enable that Ctrl+Right click will open a new development window to display stone conatined in current pointer hovered editor token.
 		do
 			if not grid.pointer_button_press_actions.has (on_pointer_right_click_agent) then
@@ -204,13 +204,13 @@ feature -- Setting
 			end
 		end
 
-	disable_ctrl_right_click_to_open_new_window is
+	disable_ctrl_right_click_to_open_new_window
 			-- Disable that Ctrl+Right click will open a new development window to display stone conatined in current pointer hovered editor token.
 		do
 			grid.pointer_button_press_actions.prune_all (on_pointer_right_click_agent)
 		end
 
-	enable_grid_item_pnd_support is
+	enable_grid_item_pnd_support
 			-- Enable pick and drop on individual editor token.
 			-- This will overwrite the currently set `item_pebble_function'.
 			-- Actions in `pick_start_actions' will be invoked when pick starts and
@@ -221,7 +221,7 @@ feature -- Setting
 			pick_end_actions.extend (agent on_pick_ended_from_grid_pickable_item)
 		end
 
-	set_context_menu_factory_function (a_fun: like context_menu_factory_function) is
+	set_context_menu_factory_function (a_fun: like context_menu_factory_function)
 			-- Set `context_menu_factory_function' with `a_fun'.
 		do
 			context_menu_factory_function := a_fun
@@ -231,7 +231,7 @@ feature -- Setting
 
 feature{NONE} -- Actions
 
-	on_color_or_font_change is
+	on_color_or_font_change
 			-- Action to be performed when color or font in editor changes
 		do
 			if not color_or_font_change_actions.is_empty then
@@ -239,7 +239,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_scroll_behavior_change is
+	on_scroll_behavior_change
 			-- Action to be performed when scroll behavior changes
 		do
 			grid.scrolling_behavior.set_mouse_wheel_scroll_full_page (editor_preferences.mouse_wheel_scroll_full_page)
@@ -247,7 +247,7 @@ feature{NONE} -- Actions
 			grid.scrolling_behavior.set_scrolling_common_line_count (editor_preferences.scrolling_common_line_count)
 		end
 
-	on_pointer_right_click (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_right_click (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Action to be performed when pointer right click on `grid'
 			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.
 		local
@@ -275,7 +275,7 @@ feature{NONE} -- Implementation
 	on_pointer_right_click_agent_internal: like on_pointer_right_click_agent
 			-- Implementation of `on_pointer_right_click_agent'
 
-	on_color_or_font_change_agent: PROCEDURE [ANY, TUPLE] is
+	on_color_or_font_change_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_color_or_font_change'
 		do
 			if on_color_or_font_change_agent_internal = Void then
@@ -286,7 +286,7 @@ feature{NONE} -- Implementation
 			Result_attached: Result /= Void
 		end
 
-	on_scroll_behavior_change_agent: PROCEDURE [ANY, TUPLE] is
+	on_scroll_behavior_change_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_scroll_behavior_change'
 		do
 			if on_scroll_behavior_change_agent_internal = Void then
@@ -297,7 +297,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	on_pointer_right_click_agent: PROCEDURE [ANY, TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]] is
+	on_pointer_right_click_agent: PROCEDURE [ANY, TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]]
 			-- Agent of `on_pointer_right_click'
 		do
 			if on_pointer_right_click_agent_internal = Void then
@@ -311,7 +311,7 @@ feature{NONE} -- Implementation
 	context_menu_factory_function: FUNCTION [ANY, TUPLE, EB_CONTEXT_MENU_FACTORY]
 			-- Context menu factory agent.
 
-	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
 			-- Context menu handler.
 		local
 			l_factory: EB_CONTEXT_MENU_FACTORY
@@ -338,7 +338,7 @@ feature {NONE} -- Memory Management
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

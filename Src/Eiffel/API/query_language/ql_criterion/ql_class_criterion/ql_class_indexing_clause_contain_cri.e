@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Criterion to test if indexing clause of a class contain certain text"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature{NONE} -- Implementation
 
-	indexing_clause_contain_text (a_indexing_clause: INDEXING_CLAUSE_AS; a_match_list: LEAF_AS_LIST): BOOLEAN is
+	indexing_clause_contain_text (a_indexing_clause: INDEXING_CLAUSE_AS; a_match_list: LEAF_AS_LIST): BOOLEAN
 			-- Is `a_indexing_clause' contain text `text'?
 			-- Text of `a_indexing_clause' will be retrieved from `a_match_list'.
 		require
@@ -45,13 +45,13 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	roundtrip_pure_eiffel_parser: EIFFEL_PARSER is
+	roundtrip_pure_eiffel_parser: EIFFEL_PARSER
 			-- Pure Eiffel parser
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
 		end
 
-	roundtrip_il_eiffel_parser: EIFFEL_PARSER is
+	roundtrip_il_eiffel_parser: EIFFEL_PARSER
 			-- IL Eiffel parser.
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
@@ -60,7 +60,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	class_ast (a_item: QL_CLASS): CLASS_AS is
+	class_ast (a_item: QL_CLASS): CLASS_AS
 			-- CLASS_AS of `a_item'.
 		local
 			l_retried: BOOLEAN
@@ -82,7 +82,7 @@ feature{NONE} -- Implementation
 			retry
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

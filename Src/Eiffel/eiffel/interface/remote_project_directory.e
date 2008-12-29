@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Directory for an EiffelStudio project.%
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_project_location: like project_location) is
+	make (a_project_location: like project_location)
 			-- Create a remote project directory object.
 		require
 			a_project_location_not_void: a_project_location /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	name: STRING is
+	name: STRING
 			-- Name for remote project.
 		do
 			Result := project_location.location
@@ -54,19 +54,19 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_has_precompiled_preobj (b: BOOLEAN) is
+	set_has_precompiled_preobj (b: BOOLEAN)
 			-- Set `has_precompiled_preobj' to `b'.
 		do
 			has_precompiled_preobj := b
 		end
 
-	set_system_name (n: STRING) is
+	set_system_name (n: STRING)
 			-- Set `system_name' to `n'
 		do
 			system_name := n
 		end
 
-	set_il_generation (v: BOOLEAN) is
+	set_il_generation (v: BOOLEAN)
 			-- Set `il_generation' to `v'.
 		do
 			il_generation := v
@@ -74,7 +74,7 @@ feature -- Status setting
 			il_generation_set: il_generation = v
 		end
 
-	set_msil_generation_type (s: STRING) is
+	set_msil_generation_type (s: STRING)
 			-- Set `msil_generation_type' to `s'
 		require
 			non_void_s: s /= Void
@@ -85,7 +85,7 @@ feature -- Status setting
 			msil_generation_type_set: s.is_equal (msil_generation_type)
 		end
 
-	set_is_precompile_finalized (v: BOOLEAN) is
+	set_is_precompile_finalized (v: BOOLEAN)
 			-- Set `is_precompile_finalize' to `v'
 		do
 			is_precompile_finalized := v
@@ -93,7 +93,7 @@ feature -- Status setting
 			is_precompile_finalized_set: is_precompile_finalized = v
 		end
 
-	set_line_generation (b: BOOLEAN) is
+	set_line_generation (b: BOOLEAN)
 			-- Sets `line_generation' to `b'
 		do
 			line_generation := b
@@ -106,7 +106,7 @@ feature -- Access
 	project_location: PROJECT_DIRECTORY
 			-- Info about remote project location
 
-	compilation_path: DIRECTORY_NAME is
+	compilation_path: DIRECTORY_NAME
 			-- Path of the COMP directory
 		do
 			Result := project_location.compilation_path
@@ -114,7 +114,7 @@ feature -- Access
 			compilation_path_not_void: Result /= Void
 		end
 
-	project_epr_location: FILE_NAME is
+	project_epr_location: FILE_NAME
 			-- Full name of the file where the
 			-- workbench is stored
 		do
@@ -123,7 +123,7 @@ feature -- Access
 			project_epr_location_not_void: Result /= Void
 		end
 
-	project_epr_file: PROJECT_EIFFEL_FILE is
+	project_epr_file: PROJECT_EIFFEL_FILE
 			-- File where the workbench is stored
 		do
 			Result := project_location.project_file
@@ -131,7 +131,7 @@ feature -- Access
 			project_epr_file_not_void: Result /= Void
 		end
 
-	precomp_eif_file: PROJECT_EIFFEL_FILE is
+	precomp_eif_file: PROJECT_EIFFEL_FILE
 			-- File where the precompilation information is stored
 		do
 			create Result.make (project_location.precompilation_file_name)
@@ -139,7 +139,7 @@ feature -- Access
 			precomp_eif_file_not_void: Result /= Void
 		end
 
-	precomp_il_info_file (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
+	precomp_il_info_file (a_use_optimized_precompile: BOOLEAN): FILE_NAME
 			-- File where the il debug info for the precompiled is stored
 		do
 			if a_use_optimized_precompile then
@@ -153,7 +153,7 @@ feature -- Access
 			precomp_il_info_file_not_void: Result /= Void
 		end
 
-	precompiled_preobj: FILE_NAME is
+	precompiled_preobj: FILE_NAME
 			-- Full name of `preobj' object file
 		do
 			create Result.make_from_string (project_location.workbench_path)
@@ -162,7 +162,7 @@ feature -- Access
 			precompiled_preobj_not_void: Result /= Void
 		end
 
-	precompiled_driver: FILE_NAME is
+	precompiled_driver: FILE_NAME
 			-- Full name of the precompilation driver
 		do
 			create Result.make_from_string (project_location.workbench_path)
@@ -171,7 +171,7 @@ feature -- Access
 			precompiled_driver_not_void: Result /= Void
 		end
 
-	assembly_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
+	assembly_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME
 			-- Full name of assembly driver.
 		do
 			if a_use_optimized_precompile then
@@ -185,7 +185,7 @@ feature -- Access
 			assembly_driver_not_void: Result /= Void
 		end
 
-	assembly_helper_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
+	assembly_helper_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME
 			-- Full name of assembly driver.
 		do
 			if a_use_optimized_precompile then
@@ -199,7 +199,7 @@ feature -- Access
 			assembly_herlp_driver_not_void: Result /= Void
 		end
 
-	assembly_debug_info (a_use_optimized_precompile: BOOLEAN): FILE_NAME is
+	assembly_debug_info (a_use_optimized_precompile: BOOLEAN): FILE_NAME
 			-- Full name of assembly pdb.
 		do
 			if a_use_optimized_precompile then
@@ -230,7 +230,7 @@ feature -- Access
 
 feature -- Check
 
-	check_version_number (precomp_id: INTEGER)is
+	check_version_number (precomp_id: INTEGER)
 			-- Check the version number of current directory.
 		require
 			for_precompilation: precomp_id > 0
@@ -262,7 +262,7 @@ feature -- Check
 			end
 		end;
 
-	check_precompiled is
+	check_precompiled
 			-- Check that `Current' is a valid precompiled
 			-- project.
 		do
@@ -272,7 +272,7 @@ feature -- Check
 			check_file (project_location.precompilation_file_name);
 		end
 
-	check_optional (a_use_optimized_precompile: BOOLEAN) is
+	check_optional (a_use_optimized_precompile: BOOLEAN)
 			-- Check that `Current' is ready to be used for execution.
 		do
 				-- EIFGEN/W_code/driver and EIFGEN/W_code/preobj.o
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			-- Are we checking a precompile?
 			-- If not, we must be checking dle stuff
 
-	check_project_directory is
+	check_project_directory
 			-- Check that `Current' is a valid remote
 			-- project directory.
 		do
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	check_directory (a_directory: STRING) is
+	check_directory (a_directory: STRING)
 			-- Check readability of directory of name
 			-- `rn' relative to Current.
 		require
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	check_file (n: STRING) is
+	check_file (n: STRING)
 			-- Check readability of file of name
 			-- `rn' relative to Current.
 		require
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	check_precompiled_optional (rn: STRING) is
+	check_precompiled_optional (rn: STRING)
 			-- Check that `rn' is a valid path.
 		require
 			rn_not_void: rn /= Void
@@ -391,7 +391,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	date_string (a_date: INTEGER): STRING is
+	date_string (a_date: INTEGER): STRING
 			-- String representation of `a_date'
 		external
 			"C"
@@ -402,7 +402,7 @@ feature {NONE} -- Externals
 invariant
 	project_location_not_void: project_location /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

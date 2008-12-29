@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents a code template metadata section.
 	]"
@@ -98,7 +98,7 @@ feature -- Visitor
 			a_visitor.process_code_metadata (Current)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Tool profile kind types for determining applicablity of presence within the EiffelStudio UI for
 		different profile configurations.
@@ -42,7 +42,7 @@ feature -- Constants
 	debugger_uuid_string: STRING = "E1FFE101-BA42-4E7A-803B-1A1235EA88C8"
 			-- Debugger tool string UUID.
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

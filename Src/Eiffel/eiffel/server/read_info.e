@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information required to read in a file of the EIFGEN/COMP directory."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,19 +20,19 @@ feature -- Access
 
 feature -- Update
 
-	set_position (i: INTEGER) is
+	set_position (i: INTEGER)
 			-- Assign `i' to `offset'.
 		do
 			position := i;
 		end;
 
-	set_object_count (i: INTEGER) is
+	set_object_count (i: INTEGER)
 			-- Assign `i' to `object_count'.
 		do
 			object_count := i;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

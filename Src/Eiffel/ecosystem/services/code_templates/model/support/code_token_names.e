@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A dictionary of code token reserved names.
 	]"
@@ -16,7 +16,7 @@ feature -- Token values
 
 	selection_token_name: !STRING_8 = "selection"
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

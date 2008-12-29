@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		An EiffelStudio base implementation for all tools implementing a derviation of an event list tool. The tool is based on the 
 		ecosystem event list service {EVENT_LIST_S}.
@@ -226,7 +226,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	do_default_action (a_row: EV_GRID_ROW) is
+	do_default_action (a_row: EV_GRID_ROW)
 			-- Performs a default actions for a given row.
 			--
 			-- `a_row': The row the user requested an action to be performed on.
@@ -255,7 +255,7 @@ feature {NONE} -- Basic operations
 		do
 		end
 
-	selected_text: STRING_32 is
+	selected_text: STRING_32
 			-- Retrieves selected item's text
 		local
 			i, j, l_column_count, l_row_count, l_column_selected_count: INTEGER
@@ -705,7 +705,7 @@ feature {NONE} -- Sort handling
 			grid_wrapper.enable_copy
 		end
 
-	frozen sorting_row_comparer (a_row, a_other_row: EV_GRID_ROW; a_order: INTEGER_32; a_column: INTEGER): BOOLEAN is
+	frozen sorting_row_comparer (a_row, a_other_row: EV_GRID_ROW; a_order: INTEGER_32; a_column: INTEGER): BOOLEAN
 			-- Agent function used to determine row order.
 			--
 			-- `a_row': The primary row to check.
@@ -729,7 +729,7 @@ feature {NONE} -- Sort handling
 			end
 		end
 
-	compare_rows (a_row, a_other_row: EV_GRID_ROW; a_column: INTEGER): BOOLEAN is
+	compare_rows (a_row, a_other_row: EV_GRID_ROW; a_column: INTEGER): BOOLEAN
 			-- Compares two rows from the local grid and returns an index based on their comparative result.
 			--
 			-- Note: Basic implementation handles both string and integer string checking. Items with special
@@ -771,7 +771,7 @@ feature {NONE} -- Sort handling
 			asymmetric: Result implies not compare_rows (a_other_row, a_row, a_column)
 		end
 
-	frozen sort_handler (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EV_GRID_ROW]) is
+	frozen sort_handler (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EV_GRID_ROW])
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
@@ -1024,7 +1024,7 @@ feature {NONE} -- Events
 			item_count_small_enought: destory_old_items_automatically implies item_count <= maximum_item_count
 		end
 
-	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I) is
+	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- <Precursor>
 		local
 			l_grid: like grid_events
@@ -1117,7 +1117,7 @@ feature {NONE} -- Events
 			a_event_find_event_row: is_initialized and then is_appliable_event (a_event_item) implies find_event_row (a_event_item) /= Void
 		end
 
-	on_grid_events_item_pointer_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_item: EV_GRID_ITEM) is
+	on_grid_events_item_pointer_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_item: EV_GRID_ITEM)
 			-- Called when the user double clicks the grid
 		do
 			if a_item /= Void and then a_item.row /= Void then
@@ -1128,7 +1128,7 @@ feature {NONE} -- Events
 
 feature {NONE} -- Factory
 
-	create_widget: ES_GRID is
+	create_widget: ES_GRID
 			-- Create a new container widget upon request
 		do
 			create {ES_EDITOR_TOKEN_GRID}Result
@@ -1167,7 +1167,7 @@ feature {NONE} -- Internal implementation cache
 invariant
 	grid_events_attached: is_initialized implies grid_events /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory for configuration objects, used by the compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,55 +23,55 @@ inherit
 
 feature
 
-	new_class (a_file_name: STRING; a_group: CLUSTER_I; a_path: STRING; a_classname: STRING): EIFFEL_CLASS_I is
+	new_class (a_file_name: STRING; a_group: CLUSTER_I; a_path: STRING; a_classname: STRING): EIFFEL_CLASS_I
 			-- Create a `CONF_CLASS' object.
 		do
 			create Result.make (a_file_name, a_group, a_path, a_classname, Current)
 		end
 
-	new_class_assembly (a_name, a_dotnet_name: STRING; an_assembly: ASSEMBLY_I; a_position: INTEGER): EXTERNAL_CLASS_I is
+	new_class_assembly (a_name, a_dotnet_name: STRING; an_assembly: ASSEMBLY_I; a_position: INTEGER): EXTERNAL_CLASS_I
 			-- Create a `CONF_CLASS_ASSEMBLY' object.
 		do
 			create Result.make_assembly_class (a_name, a_dotnet_name, an_assembly, a_position, Current)
 		end
 
-	new_class_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: CLUSTER_I; a_base_location: CONF_DIRECTORY_LOCATION): PARTIAL_EIFFEL_CLASS_I is
+	new_class_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: CLUSTER_I; a_base_location: CONF_DIRECTORY_LOCATION): PARTIAL_EIFFEL_CLASS_I
 			-- Create a `CONF_CLASS_PARTIAL' object.
 		do
 			create Result.make_from_partial (a_partial_classes, a_group, a_base_location, Current)
 		end
 
-	new_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CLUSTER_I is
+	new_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CLUSTER_I
 			-- Create a `CONF_CLUSTER' object.
 		do
 			create Result.make (a_name, a_directory, a_target)
 		end
 
-	new_test_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): TEST_CLUSTER_I is
+	new_test_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): TEST_CLUSTER_I
 			-- Create a `CONF_CLUSTER' object.
 		do
 			create Result.make (a_name, a_directory, a_target)
 		end
 
-	new_override (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): OVERRIDE_I is
+	new_override (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): OVERRIDE_I
 			-- Create a `CONF_OVERRIDE' object.
 		do
 			create Result.make (a_name, a_directory, a_target)
 		end
 
-	new_physical_assembly (a_consumed: CONSUMED_ASSEMBLY; a_cache_path: DIRECTORY_NAME; a_target: CONF_TARGET): ASSEMBLY_I is
+	new_physical_assembly (a_consumed: CONSUMED_ASSEMBLY; a_cache_path: DIRECTORY_NAME; a_target: CONF_TARGET): ASSEMBLY_I
 			-- Create a `CONF_PHYSICAL_ASSEMBLY' object.
 		do
 			create Result.make_from_consumed (a_consumed, a_cache_path, a_target)
 		end
 
-	new_assertions: ASSERTION_I is
+	new_assertions: ASSERTION_I
 			-- Create a `CONF_ASSERTIONS' object.
 		do
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

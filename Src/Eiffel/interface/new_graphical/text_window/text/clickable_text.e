@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Clickable editor for Eiffel Code.
 			All text areas in EiffelStudio but the main editor use direct instance of this class.
@@ -56,7 +56,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize the text.
 		do
 			Precursor {EDITABLE_TEXT}
@@ -74,19 +74,19 @@ feature -- Access
 
 feature -- Feature click tool
 
-	enable_feature_click is
+	enable_feature_click
 			-- enable feature click tool		
 		do
 			use_feature_click_tool := True
 		end
 
-	disable_feature_click is
+	disable_feature_click
 			-- disable feature click tool					
 		do
 			use_feature_click_tool := False
 		end
 
-	set_feature_for_click (feat: E_FEATURE) is
+	set_feature_for_click (feat: E_FEATURE)
 			-- initialize feature click tool with feature `feat'
 		do
 			if feature_click_tool= Void then
@@ -97,7 +97,7 @@ feature -- Feature click tool
 			end
 		end
 
-	feature_click_enabled: BOOLEAN is
+	feature_click_enabled: BOOLEAN
 			-- do we use feature click tool?
 		do
 			Result := use_feature_click_tool and then feature_click_tool /= Void and then feature_click_tool.can_analyze_current_class
@@ -108,7 +108,7 @@ feature -- Feature click tool
 
 feature -- Pick and drop
 
-	stone_at (cursr: like cursor): STONE is
+	stone_at (cursr: like cursor): STONE
 		require
 			cursor_exists: cursr /= Void
 		do
@@ -124,7 +124,7 @@ feature -- Pick and drop
 
 feature -- Compatibility
 
-	set_position, go_to (a_position: INTEGER) is
+	set_position, go_to (a_position: INTEGER)
 			-- move the cursor to the `a_position'-th character in text.
 		require
 			position_valid: a_position > 0
@@ -139,7 +139,7 @@ feature -- Compatibility
 
 feature {EB_CLICKABLE_EDITOR} -- Load Text handling
 
-	start_processing (append: BOOLEAN) is
+	start_processing (append: BOOLEAN)
 			-- Start processing text.
 		do
 			reading_text_finished := false
@@ -148,7 +148,7 @@ feature {EB_CLICKABLE_EDITOR} -- Load Text handling
 			end
 		end
 
-	end_processing is
+	end_processing
 			-- End processing text.
 		do
 			if first_line = Void then
@@ -174,7 +174,7 @@ feature {EB_CLICKABLE_EDITOR} -- Load Text handling
 
 feature -- Load Text handling
 
-	reset_text is
+	reset_text
 			-- Actions to be performed before a new text is processed.
 		do
 			Precursor {EDITABLE_TEXT}
@@ -183,7 +183,7 @@ feature -- Load Text handling
 
 feature -- Initialization
 
-	load_string (a_string: STRING) is
+	load_string (a_string: STRING)
 			-- scan `a_string' and fill the object with resulting
 			-- lines and tokens
 		do
@@ -191,7 +191,7 @@ feature -- Initialization
 			Precursor {EDITABLE_TEXT} (a_string)
 		end
 
-	select_line (l_num: INTEGER) is
+	select_line (l_num: INTEGER)
 			-- select the `l_num'-th line in text
 			-- Cursor is positioned at end of selection.
 			-- Selection cursor is positioned at beginning of selection.
@@ -208,7 +208,7 @@ feature -- Initialization
 			selection_cursor_positioned: selection_cursor.y_in_lines = l_num and selection_cursor.x_in_characters = 1
 		end
 
-	select_token (l_line: INTEGER; l_col: INTEGER) is
+	select_token (l_line: INTEGER; l_col: INTEGER)
 			-- Selects a single token on line `a_line' at character position `l_col'
 		require
 			l_line_large_enough: l_line > 0
@@ -231,7 +231,7 @@ feature -- Initialization
 
 feature -- Load Text handling
 
-	process_new_line is
+	process_new_line
 			-- When processing a new line, we see if we are going to process rest of lines on idle.
 		do
 			process_new_line_internal
@@ -239,7 +239,7 @@ feature -- Load Text handling
 
 feature {NONE} -- Load Text handling
 
-	process_new_line_internal is
+	process_new_line_internal
 			-- Process new line.
 		do
 			line_read := line_read + 1
@@ -270,7 +270,7 @@ feature {NONE} -- Load Text handling
 			eol_reached := false
 		end
 
-	on_text_loaded is
+	on_text_loaded
 			-- Initialize feature click tool after text loading.
 		do
 			Precursor {EDITABLE_TEXT}
@@ -280,19 +280,19 @@ feature {NONE} -- Load Text handling
 			end
 		end
 
-	abort_idle_processing is
+	abort_idle_processing
 			-- Stop text processing done during idle actions.
 		do
 			Precursor {EDITABLE_TEXT}
 		end
 
-	after_reading_idle_action is
+	after_reading_idle_action
 			-- action performed on idle when text reading is finished.
 		do
 			Precursor {EDITABLE_TEXT}
 		end
 
-	new_line_from_lexer (line_image: STRING): like line is
+	new_line_from_lexer (line_image: STRING): like line
 			-- <precursor>
 		do
 			if line_image.is_empty then
@@ -303,7 +303,7 @@ feature {NONE} -- Load Text handling
 			end
 		end
 
-	end_processing_internal is
+	end_processing_internal
 			-- For running on idle
 		local
 			l_create_cursor: BOOLEAN
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 	last_processed_line: like line
 			-- last line processed while reading a TEXT_FORMATTER
 
-	editor_preferences: EB_EDITOR_DATA is
+	editor_preferences: EB_EDITOR_DATA
 			-- Eiffel editor preferences
 		once
 			Result := preferences.editor_data
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 
 feature {EB_EDITOR} -- Multi editor support
 
-	set_lexer (a_lexer: like lexer) is
+	set_lexer (a_lexer: like lexer)
 			-- Set lexer.
 		do
 			internal_lexer := a_lexer
@@ -349,7 +349,7 @@ feature {EB_EDITOR} -- Multi editor support
 			internal_lexer_set: internal_lexer = a_lexer
 		end
 
-	lexer: EDITOR_SCANNER is
+	lexer: EDITOR_SCANNER
 			-- Lexer
 		do
 			if internal_lexer /= Void then
@@ -375,11 +375,11 @@ feature {NONE} -- Private status
 
 feature {NONE} -- Private Constants
 
-	from_string: INTEGER is 1
+	from_string: INTEGER = 1
 
-	from_text: INTEGER is 2;
+	from_text: INTEGER = 2;
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

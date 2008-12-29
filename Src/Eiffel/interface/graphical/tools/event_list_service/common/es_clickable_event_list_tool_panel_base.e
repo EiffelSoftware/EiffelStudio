@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A specialized event list service-based {EVENT_LIST_SERVICE_I} tool that support clickable items and tools tips.
 	]"
@@ -148,7 +148,7 @@ feature {NONE} -- Factory
 			result_attached: Result /= Void
 		end
 
-	create_clickable_tooltip (a_lines: LIST [EIFFEL_EDITOR_LINE]; a_item: EV_GRID_ITEM; a_row: EV_GRID_ROW): EB_EDITOR_TOKEN_TOOLTIP is
+	create_clickable_tooltip (a_lines: LIST [EIFFEL_EDITOR_LINE]; a_item: EV_GRID_ITEM; a_row: EV_GRID_ROW): EB_EDITOR_TOKEN_TOOLTIP
 			-- Creates a new clickable tool tip with the context of `a_lines' and attaches itself it `a_item'
 			--
 			-- Note: If `a_item' already had a tool tip created for it, no new tool tip will be created but the same
@@ -192,7 +192,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Basic operations
 
-	frozen request_show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER) is
+	frozen request_show_context_menu (a_item: EV_GRID_ITEM; a_x: INTEGER; a_y: INTEGER)
 			-- <Precursor>
 		do
 			if {l_item: EB_GRID_EDITOR_TOKEN_ITEM} a_item then
@@ -274,7 +274,7 @@ feature {NONE} -- Internal implementation cache
 			-- Cached version of `grid_token_support'
 			-- Note: Do not use directly!
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

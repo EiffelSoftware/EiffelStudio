@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Enlarged access to Current
@@ -18,40 +18,40 @@ feature
 	parent: NESTED_BL;
 			-- Parent of access
 	
-	set_parent (p: NESTED_BL) is
+	set_parent (p: NESTED_BL)
 			-- Assign `p' to `parent'
 		do
 			parent := p;
 		end;
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Do nothing
 		do
 		end;
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' the "Current" entity ?
 		do
 			Result := r.is_current;
 		end;
 
-	analyze is
+	analyze
 			-- Mark current as used
 		do
 			context.mark_current_used
 		end;
 
-	generate is
+	generate
 			-- Do nothing
 		do
 		end;
 
-	free_register is
+	free_register
 			-- Do nothing
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

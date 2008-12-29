@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display the callers of a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like manager; a_flag: like flag) is
+	make (a_manager: like manager; a_flag: like flag)
 			-- Create callers formatter associated with `a_manager' and which only
 			-- look for `a_flag' type callers.
 		require
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Properties
 
-	symbol: ARRAY [EV_PIXMAP] is
+	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		do
 			Result := internal_symbol
@@ -79,7 +79,7 @@ feature -- Properties
 			end
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representation of the command.
 		do
 			inspect
@@ -96,7 +96,7 @@ feature -- Properties
 	feature_cmd: E_SHOW_CALLERS
 			-- Feature command that can generate the information.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Identifier of `Current' in menus.
 		do
 			inspect flag
@@ -115,13 +115,13 @@ feature -- Properties
  	browser: EB_CLASS_BROWSER_CALLER_CALLEE_VIEW
  			-- Browser
 
-	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING]
 			-- Generator to generate proper `displayer' for Current formatter
 		do
 			Result := [agent displayer_generators.new_feature_caller_displayer, displayer_generators.feature_caller_displayer]
 		end
 
-	sorting_status_preference: STRING_PREFERENCE is
+	sorting_status_preference: STRING_PREFERENCE
 			-- Preference to store last sorting orders of Current formatter
 		do
 			Result := preferences.class_browser_data.caller_sorting_order_preference
@@ -132,7 +132,7 @@ feature {NONE} -- Properties
 	internal_symbol: like symbol
 			-- Once per object storage for `symbol.
 
-	capital_command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL
 			-- Name of the command.
 		do
 			inspect flag
@@ -145,7 +145,7 @@ feature {NONE} -- Properties
 			end
 		end
 
-	post_fix: STRING is
+	post_fix: STRING
 			-- String symbol of the command, used as an extension when saving.
 		do
 			inspect flag
@@ -158,7 +158,7 @@ feature {NONE} -- Properties
 			end
 		end
 
-	is_dotnet_formatter: BOOLEAN is
+	is_dotnet_formatter: BOOLEAN
 			-- Is Current able to format .NET XML types?
 		do
 			Result := True
@@ -166,10 +166,10 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Implementation
 
-	has_breakpoints: BOOLEAN is False
+	has_breakpoints: BOOLEAN = False
 			-- Should breakpoints be shown in Current?
 
-	result_data: QL_FEATURE_DOMAIN is
+	result_data: QL_FEATURE_DOMAIN
 			-- Result for Current formatter
 		local
 			l_worker: E_SHOW_CALLERS
@@ -181,25 +181,25 @@ feature {NONE} -- Implementation
 			Result := l_worker.features
 		end
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion of current formatter
 		do
 		end
 
-	rebuild_browser is
+	rebuild_browser
 			-- Rebuild `browser'.
 		do
 			browser.set_flag (flag)
 		end
 
-	generate_result is
+	generate_result
 			-- Generate result for display
 		do
 			Precursor
 			browser.set_reference_type_name (command_name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

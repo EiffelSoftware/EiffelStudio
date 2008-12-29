@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Test run result type enumeration
 					Some helper functions about result type
@@ -13,24 +13,24 @@ class
 
 feature -- Enmueration
 
-	default_type: INTEGER is 0
+	default_type: INTEGER = 0
 			-- Not run yet
 
-	failed: INTEGER is 1
+	failed: INTEGER = 1
 			-- Failed
 			-- This means test has been successfully launched, but the test result not expected.
 
-	passed: INTEGER is 2
+	passed: INTEGER = 2
 			-- Passed
 
-	error: INTEGER is 3
+	error: INTEGER = 3
 			-- Error
 			-- This means test has not been successfully lanuched.
 			-- Maybe due to parse error in eweasel tcf file, etc.
 
 feature -- Query
 
-	is_need_correct (a_type: INTEGER): BOOLEAN is
+	is_need_correct (a_type: INTEGER): BOOLEAN
 			-- If `a_type' need to be fixed?
 		require
 			valid: is_valid (a_type)
@@ -38,7 +38,7 @@ feature -- Query
 			Result := (a_type = failed) or (a_type = error)
 		end
 
-	result_to_string (a_value: INTEGER): STRING_GENERAL is
+	result_to_string (a_value: INTEGER): STRING_GENERAL
 			-- Convert a value to string
 		require
 			valid: is_valid (a_value)
@@ -60,7 +60,7 @@ feature -- Query
 
 feature -- Contract support
 
-	is_valid (a_type: INTEGER): BOOLEAN is
+	is_valid (a_type: INTEGER): BOOLEAN
 			-- If `a_type' valid?
 		do
 			Result := 	a_type = default_type or
@@ -71,31 +71,31 @@ feature -- Contract support
 
 feature {NONE} -- Implementation
 
-	not_run_yet_string: STRING_GENERAL is
+	not_run_yet_string: STRING_GENERAL
 			-- Not run yet string
 		do
 			Result := interface_names.t_not_run_yet
 		end
 
-	failed_string: STRING_GENERAL is
+	failed_string: STRING_GENERAL
 			-- Failed string
 		do
 			Result := interface_names.t_failed
 		end
 
-	passed_string: STRING_GENERAL is
+	passed_string: STRING_GENERAL
 			-- Passed string
 		do
 			Result := interface_names.t_passed
 		end
 
-	error_string: STRING_GENERAL is
+	error_string: STRING_GENERAL
 			-- Error string
 		do
 			Result := interface_names.t_error
 		end
 
-	interface_names: INTERFACE_NAMES is
+	interface_names: INTERFACE_NAMES
 			-- Interface names instance
 		local
 			l_constants: SHARED_BENCH_NAMES
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			Result := l_constants.names
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

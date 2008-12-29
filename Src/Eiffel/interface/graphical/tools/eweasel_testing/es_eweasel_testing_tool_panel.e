@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Testing tool main control panel.
 						
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	build_tool_interface (a_grid: ES_GRID) is
+	build_tool_interface (a_grid: ES_GRID)
 			-- <Precursor>
 		local
 			l_box: EV_BOX
@@ -79,14 +79,14 @@ feature {NONE} -- Initialization
 			set: test_case_grid = a_grid
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- <Precursor>
 		do
 			Precursor {ES_CLICKABLE_EVENT_LIST_TOOL_PANEL_BASE} (a_docking_manager)
 			content.set_long_title (interface_names.t_testing_experimental)
 		end
 
-	on_after_initialized is
+	on_after_initialized
 			-- <Precursor>
 			-- Build own interface after base interface created
 		local
@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	init_event_list_service is
+	init_event_list_service
 			-- Initilaize event list service
 		local
 			l_service: EVENT_LIST_S
@@ -118,7 +118,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	on_event_list_item_added (a_service: EVENT_LIST_S; a_event_list_item: EVENT_LIST_ITEM_I) is
+	on_event_list_item_added (a_service: EVENT_LIST_S; a_event_list_item: EVENT_LIST_ITEM_I)
 			-- Handle evetn list added actions
 		local
 			l_contexts: ES_EWEASEL_TESTING_EVENT_LIST_CONTEXTS
@@ -134,7 +134,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	populate_event_grid_row_items (a_event_item: EVENT_LIST_ITEM_I; a_row: EV_GRID_ROW) is
+	populate_event_grid_row_items (a_event_item: EVENT_LIST_ITEM_I; a_row: EV_GRID_ROW)
 			-- <Precursor>
 		do
 			if {l_test_case_item: EVENT_LIST_TEST_CASE_ITEM} a_event_item then
@@ -148,7 +148,7 @@ feature {NONE} -- Initialization
 			test_case_grid_manager.update_buttons_sensitivity
 		end
 
-	do_default_action (a_row: EV_GRID_ROW) is
+	do_default_action (a_row: EV_GRID_ROW)
 			-- <Precursor>
 		local
 			l_class_stone: CLASSI_STONE
@@ -164,7 +164,7 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	unit_test_manager: !ES_EWEASEL_EXECUTION_MANAGER is
+	unit_test_manager: !ES_EWEASEL_EXECUTION_MANAGER
 			-- Manager of manual unit test.
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -173,7 +173,7 @@ feature -- Query
 			Result := l_shared.manager
 		end
 
-	test_case_grid_manager: ES_EWEASEL_TEST_CASE_GRID_MANAGER is
+	test_case_grid_manager: ES_EWEASEL_TEST_CASE_GRID_MANAGER
 			-- Manager of `test_case_grid'
 		do
 			Result := internal_test_case_grid_manager
@@ -192,14 +192,14 @@ feature -- Query
 
 feature -- Command
 
-	reset is
+	reset
 			-- Clear last test run data
 		do
 			set_progress_proportion (0, 0)
 			test_case_grid_manager.reset
 		end
 
-	set_progress_proportion (a_already_run, a_total: INTEGER) is
+	set_progress_proportion (a_already_run, a_total: INTEGER)
 			-- Set progress bar with `a_proportion'
 		require
 			valid: a_already_run >= 0 and a_total >= 0 and a_already_run <= a_total
@@ -229,7 +229,7 @@ feature -- Command
 
 feature {ES_EWEASEL_EXECUTION_MANAGER} -- Command
 
-	set_progress_proportion_completed is
+	set_progress_proportion_completed
 			-- Set progress proportion completed
 		local
 			l_bar: like progress_bar
@@ -242,7 +242,7 @@ feature {ES_EWEASEL_EXECUTION_MANAGER} -- Command
 
 feature {ES_EWEASEL_TEST_CASE_GRID_MANAGER} -- Command
 
-	set_error_label_with (a_value: INTEGER) is
+	set_error_label_with (a_value: INTEGER)
 			-- Set `errors_label' text with `a_value'
 		require
 			non_negative: a_value >= 0
@@ -254,7 +254,7 @@ feature {ES_EWEASEL_TEST_CASE_GRID_MANAGER} -- Command
 			errors_label.set_text (l_string)
 		end
 
-	set_failure_label_with (a_value: INTEGER) is
+	set_failure_label_with (a_value: INTEGER)
 			-- Set `failures_label' text with `a_value'
 		require
 			non_negative: a_value >= 0
@@ -268,7 +268,7 @@ feature {ES_EWEASEL_TEST_CASE_GRID_MANAGER} -- Command
 
 feature {NONE}	-- Implementation
 
-	is_appliable_event (a_item: EVENT_LIST_ITEM_I): BOOLEAN is
+	is_appliable_event (a_item: EVENT_LIST_ITEM_I): BOOLEAN
 			-- Redefine
 		local
 			l_tester: ES_EWEASEL_TEST_CASE_FINDER
@@ -283,19 +283,19 @@ feature {NONE}	-- Implementation
 			end
 		end
 
-	runs_string: STRING_GENERAL is
+	runs_string: STRING_GENERAL
 			-- String used by `runs_label'
 		do
 			Result := interface_names.l_runs
 		end
 
-	errors_string: STRING_GENERAL is
+	errors_string: STRING_GENERAL
 			-- String used by `errors_label'
 		do
 			Result := interface_names.b_errors
 		end
 
-	failures_string: STRING_GENERAL is
+	failures_string: STRING_GENERAL
 			-- String used by `failures_label'
 		do
 			Result := interface_names.l_failures
@@ -444,7 +444,7 @@ feature {NONE} -- Factory
 			Result.put_last (create {SD_TOOL_BAR_WIDGET_ITEM}.make (l_vbox))
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

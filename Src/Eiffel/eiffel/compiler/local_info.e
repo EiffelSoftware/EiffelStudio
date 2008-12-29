@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Info about local variable of a feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ feature -- Access
 			-- Is local variable used?
 			-- Set during type checking.
 
-	actual_type: TYPE_A is
+	actual_type: TYPE_A
 			-- Actual type of `type'.
 		require
 			type_exists: type /= Void
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_position (i: INTEGER) is
+	set_position (i: INTEGER)
 			-- Assign `i' to `position'.
 		require
 			valid_index: i > 0
@@ -41,19 +41,19 @@ feature -- Setting
 			position_set: position = i
 		end
 
-	set_type (t: TYPE_A) is
+	set_type (t: TYPE_A)
 			-- Assign `t' to `type'.
 		do
 			type := t
 		end
 
-	set_is_used (v: like is_used) is
+	set_is_used (v: like is_used)
 			-- Assign `v' to `is_used'.
 		do
 			is_used := v
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

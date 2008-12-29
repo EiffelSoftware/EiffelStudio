@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when the creation type of an instruction %
@@ -19,14 +19,14 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is
+	subcode: INTEGER
 		do
 			Result := 1
 		end
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build the error message
 		do
 			if target_name /= Void then
@@ -36,7 +36,7 @@ feature -- Output
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects that edit a breakpoint..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 	refresh_now_delayer: ES_DELAYED_ACTION
 
-	request_refresh_now is
+	request_refresh_now
 		do
 			if refresh_now_delayer = Void then
 				create refresh_now_delayer.make (agent refresh_now, 300)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			refresh_now_delayer.request_call
 		end
 
-	refresh_now is
+	refresh_now
 		do
 			if refresh_now_delayer /= Void then
 				refresh_now_delayer.cancel_request
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- User interface initialization
 
-	build_dialog_interface (a_container: EV_VERTICAL_BOX) is
+	build_dialog_interface (a_container: EV_VERTICAL_BOX)
 			-- Builds the dialog's user interface.
 			--
 			-- `a_container': The dialog's container where the user interface elements should be extended
@@ -159,7 +159,7 @@ feature -- Properties
 	breakpoint_index: INTEGER
 			-- Associated Breakpoint's breakable index.
 
-	associated_breakpoint: BREAKPOINT is
+	associated_breakpoint: BREAKPOINT
 			-- Associated Breakpoint.
 		local
 			bm: BREAKPOINTS_MANAGER
@@ -176,19 +176,19 @@ feature -- Properties
 
 feature -- behavior
 
-	switch_to_context_tab is
+	switch_to_context_tab
 			-- Switch to "Context" tab
 		do
 			noteb.select_item (noteb.i_th (1))
 		end
 
-	switch_to_when_hits_tab is
+	switch_to_when_hits_tab
 			-- Switch to "When hits" tab	
 		do
 			noteb.select_item (noteb.i_th (2))
 		end
 
-	focus_widget (w: EV_WIDGET) is
+	focus_widget (w: EV_WIDGET)
 			-- Focus `w' is possible
 		do
 			if
@@ -200,7 +200,7 @@ feature -- behavior
 			end
 		end
 
-	focus_condition_panel is
+	focus_condition_panel
 			-- Focus "condition" panel
 		do
 			switch_to_context_tab
@@ -208,14 +208,14 @@ feature -- behavior
 			focus_widget (condition_expression_tf)
 		end
 
-	focus_hit_count_panel is
+	focus_hit_count_panel
 			-- Focus "hit count" panel	
 		do
 			switch_to_context_tab
 			focus_widget (hit_count_panel)
 		end
 
-	focus_when_hits_panel is
+	focus_when_hits_panel
 			-- Focus "when hits" panel
 		do
 			switch_to_when_hits_tab
@@ -224,13 +224,13 @@ feature -- behavior
 
 feature {NONE} -- Helpers
 
-	register_input_widget (aw: EV_WIDGET) is
+	register_input_widget (aw: EV_WIDGET)
 			-- Register `aw' as an input widget
 		do
 			suppress_confirmation_key_close  (aw)
 		end
 
-	new_panel_container (a_text: STRING_GENERAL; a_collapsable: BOOLEAN): EV_FRAME is
+	new_panel_container (a_text: STRING_GENERAL; a_collapsable: BOOLEAN): EV_FRAME
 			-- Create a new panel container for `a_text',
 			-- and make it collapsable if `a_collapsable' is True
 		do
@@ -253,7 +253,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	new_tags_field (a_inc_bp: BOOLEAN): EVS_TAGS_FIELD is
+	new_tags_field (a_inc_bp: BOOLEAN): EVS_TAGS_FIELD
 			-- New TAGS_FIELD
 		do
 			create Result
@@ -276,19 +276,19 @@ feature {NONE} -- Helpers
 			register_input_widget (Result.text_field)
 		end
 
-	extend_non_expandable_to (b: EV_BOX; w: EV_WIDGET) is
+	extend_non_expandable_to (b: EV_BOX; w: EV_WIDGET)
 			-- Extend `w' to `b', and disable expand
 		do
 			extend_to (b, w, False)
 		end
 
-	extend_expandable_to (b: EV_BOX; w: EV_WIDGET) is
+	extend_expandable_to (b: EV_BOX; w: EV_WIDGET)
 			-- Extend `w' to `b', and disable expand
 		do
 			extend_to (b, w, True)
 		end
 
-	extend_to (b: EV_BOX; w: EV_WIDGET; is_expandable: BOOLEAN) is
+	extend_to (b: EV_BOX; w: EV_WIDGET; is_expandable: BOOLEAN)
 			-- Extend `w' to `b', and keep expand enabled (default)
 		do
 			b.extend (w)
@@ -297,7 +297,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	add_toggle_status_on_check_button (a_cb: EV_CHECK_BUTTON; a_ws: ARRAY [EV_WIDGET]; a_cell: EV_CELL; a_wi: EV_WIDGET) is
+	add_toggle_status_on_check_button (a_cb: EV_CHECK_BUTTON; a_ws: ARRAY [EV_WIDGET]; a_cell: EV_CELL; a_wi: EV_WIDGET)
 			-- When `a_cb' is selected, depending of its status
 			-- show/hide `a_wi'
 			-- disable_/enable_sensitive on `a_ws' items
@@ -341,7 +341,7 @@ feature {NONE} -- Helpers
 			)
 		end
 
-	set_focus_within_crollable_area (w: EV_WIDGET; scroll: EV_SCROLLABLE_AREA) is
+	set_focus_within_crollable_area (w: EV_WIDGET; scroll: EV_SCROLLABLE_AREA)
 		do
 			if
 				scroll /= Void and then
@@ -353,7 +353,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	toggle_show_hide_widget (a_show_text: STRING_GENERAL; a_hide_text: STRING_GENERAL; a_link: EVS_LINK_LABEL; a_w: EV_WIDGET) is
+	toggle_show_hide_widget (a_show_text: STRING_GENERAL; a_hide_text: STRING_GENERAL; a_link: EVS_LINK_LABEL; a_w: EV_WIDGET)
 		do
 			if a_w.is_displayed then
 				a_w.hide
@@ -366,12 +366,12 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Operations
 
-	vertical_scrollbar_width: INTEGER is
+	vertical_scrollbar_width: INTEGER
 		once
 			Result := (create {EV_VERTICAL_SCROLL_BAR}).minimum_width
 		end
 
-	horizontal_scrollbar_height: INTEGER is
+	horizontal_scrollbar_height: INTEGER
 		once
 			Result := (create {EV_HORIZONTAL_SCROLL_BAR}).minimum_height
 		end
@@ -384,7 +384,7 @@ feature {NONE} -- Operations
 	details_index_lb: EV_LABEL
 	details_tags_tf: like new_tags_field
 
-	build_operations_panel is
+	build_operations_panel
 		local
 			f: EV_FRAME
 			vb: EV_VERTICAL_BOX
@@ -450,7 +450,7 @@ feature {NONE} -- Condition
 	condition_is_true_rb, condition_has_changed_rb: EV_RADIO_BUTTON
 	condition_continue_on_failure_cb: EV_CHECK_BUTTON
 
-	build_condition_panel is
+	build_condition_panel
 		local
 			f: EV_FRAME
 			vb: EV_VERTICAL_BOX
@@ -520,7 +520,7 @@ feature {NONE} -- Hit count
 	hit_count_condition_combo_items: ARRAY [EV_LIST_ITEM]
 	hit_count_condition_value_tf: EV_TEXT_FIELD
 
-	build_hit_count_panel is
+	build_hit_count_panel
 		local
 			f: EV_FRAME
 			vb: EV_VERTICAL_BOX
@@ -625,7 +625,7 @@ feature {NONE} -- When hits
 					]
 				]
 
-	when_hits_actions_entries_has (t: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]): BOOLEAN is
+	when_hits_actions_entries_has (t: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]): BOOLEAN
 			-- Does `when_hits_actions_entries' has an item of type `t' ?
 		require
 			t_not_void: t /= Void
@@ -642,7 +642,7 @@ feature {NONE} -- When hits
 			end
 		end
 
-	build_when_hits_panel is
+	build_when_hits_panel
 		local
 			f: EV_FRAME
 			body: EV_VERTICAL_BOX
@@ -731,7 +731,7 @@ feature {NONE} -- When hits
 			when_hits_panel_not_void: when_hits_panel /= Void
 		end
 
-	when_hits_print_message_menu (aw: EV_WIDGET; atf: EV_TEXT_FIELD) is
+	when_hits_print_message_menu (aw: EV_WIDGET; atf: EV_TEXT_FIELD)
 		local
 			m: EV_MENU
 			mi: EV_MENU_ITEM
@@ -781,7 +781,7 @@ feature {NONE} -- When hits
 
 feature -- change
 
-	set_stone (a_bp_stone: BREAKABLE_STONE) is
+	set_stone (a_bp_stone: BREAKABLE_STONE)
 			-- Fill current with data from `a_bp_stone'
 		require
 			a_bp_stone_not_void: a_bp_stone /= Void
@@ -796,7 +796,7 @@ feature -- change
 			fill_data
 		end
 
-	fill_data is
+	fill_data
 		local
 			p: EV_PIXMAP
 			f: E_FEATURE
@@ -923,7 +923,7 @@ feature -- change
 			end
 		end
 
-	insert_when_hits_action_entry (wh_a: BREAKPOINT_WHEN_HITS_ACTION_I; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN) is
+	insert_when_hits_action_entry (wh_a: BREAKPOINT_WHEN_HITS_ACTION_I; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN)
 		local
 			t: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]
 		do
@@ -933,7 +933,7 @@ feature -- change
 			end
 		end
 
-	insert_when_hits_action_entry_for_type (wh_a: BREAKPOINT_WHEN_HITS_ACTION_I; wh_atype: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN) is
+	insert_when_hits_action_entry_for_type (wh_a: BREAKPOINT_WHEN_HITS_ACTION_I; wh_atype: TYPE [BREAKPOINT_WHEN_HITS_ACTION_I]; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN)
 		require
 			wh_atype_not_void: wh_atype /= Void
 			wh_a_related_to_wh_atype: wh_a /= Void implies ((create {INTERNAL}).type_of (wh_a)).is_equal (wh_atype)
@@ -988,7 +988,7 @@ feature -- change
 			end
 		end
 
-	insert_when_hits_action_print_message_entry (a: BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN) is
+	insert_when_hits_action_print_message_entry (a: BREAKPOINT_WHEN_HITS_ACTION_PRINT_MESSAGE; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN)
 		local
 			cl: EV_CELL
 			cb: EV_CHECK_BUTTON
@@ -1071,7 +1071,7 @@ feature -- change
 			cb.enable_select
 		end
 
-	insert_when_hits_action_change_breakpoints_status_entry (a: BREAKPOINT_WHEN_HITS_ACTION_CHANGE_BREAKPOINTS_STATUS; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN) is
+	insert_when_hits_action_change_breakpoints_status_entry (a: BREAKPOINT_WHEN_HITS_ACTION_CHANGE_BREAKPOINTS_STATUS; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN)
 		local
 			cb: EV_CHECK_BUTTON
 			on_rb, off_rb: EV_RADIO_BUTTON
@@ -1149,7 +1149,7 @@ feature -- change
 			cb.enable_select
 		end
 
-	insert_when_hits_action_reset_hits_count_entry (a: BREAKPOINT_WHEN_HITS_ACTION_RESET_HIT_COUNT; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN) is
+	insert_when_hits_action_reset_hits_count_entry (a: BREAKPOINT_WHEN_HITS_ACTION_RESET_HIT_COUNT; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN)
 		local
 			cb: EV_CHECK_BUTTON
 			tf: like new_tags_field
@@ -1209,7 +1209,7 @@ feature -- change
 			cb.enable_select
 		end
 
-	insert_when_hits_action_execution_recording_entry (a: BREAKPOINT_WHEN_HITS_ACTION_EXECUTION_RECORDING; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN) is
+	insert_when_hits_action_execution_recording_entry (a: BREAKPOINT_WHEN_HITS_ACTION_EXECUTION_RECORDING; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN)
 		local
 			cb: EV_CHECK_BUTTON
 			start_rb, stop_rb: EV_RADIO_BUTTON
@@ -1272,7 +1272,7 @@ feature -- change
 			cb.enable_select
 		end
 
-	insert_when_hits_action_change_assertion_checking_entry (a: BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN) is
+	insert_when_hits_action_change_assertion_checking_entry (a: BREAKPOINT_WHEN_HITS_ACTION_CHANGE_ASSERTION_CHECKING; box: EV_VERTICAL_BOX; a_has_focus: BOOLEAN)
 		local
 			cb: EV_CHECK_BUTTON
 			disable_rb, restore_rb: EV_RADIO_BUTTON
@@ -1338,12 +1338,12 @@ feature -- change
 
 feature -- Action
 
-	error_background_color: EV_COLOR is
+	error_background_color: EV_COLOR
 		once
 			create Result.make_with_8_bit_rgb (255, 210, 210)
 		end
 
-	notify_error_on_text_field (a_tf: EV_TEXT_FIELD) is
+	notify_error_on_text_field (a_tf: EV_TEXT_FIELD)
 			--
 		local
 			col: EV_COLOR
@@ -1357,7 +1357,7 @@ feature -- Action
 				)
 		end
 
-	hit_count_reset is
+	hit_count_reset
 			-- Reset hit count
 		local
 			bp: BREAKPOINT
@@ -1371,7 +1371,7 @@ feature -- Action
 			end
 		end
 
-	on_ok is
+	on_ok
 		local
 			bp: BREAKPOINT
 			loc: BREAKPOINT_LOCATION
@@ -1528,7 +1528,7 @@ feature -- Action
 			end
 		end
 
-	on_reset is
+	on_reset
 		do
 			veto_close
 			when_hits_actions_entries.wipe_out
@@ -1536,13 +1536,13 @@ feature -- Action
 			fill_data
 		end
 
-	on_cancel is
+	on_cancel
 		do
 		end
 
 feature -- Access
 
-	Breakpoint_pixmaps_factory: BREAKPOINT_PIXMAPS_FACTORY is
+	Breakpoint_pixmaps_factory: BREAKPOINT_PIXMAPS_FACTORY
 		once
 			create Result
 		end
@@ -1559,26 +1559,26 @@ feature -- Access
 			Result := interface_names.m_breakpoints_tool
 		end
 
-	buttons: DS_SET [INTEGER] is
+	buttons: DS_SET [INTEGER]
 			-- Set of button id's for dialog
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		once
 			Result := dialog_buttons.reset_ok_cancel_buttons
 		end
 
-	default_button: INTEGER is
+	default_button: INTEGER
 			-- The dialog's default action button
 		once
 			Result := dialog_buttons.ok_button
 		end
 
-	default_cancel_button: INTEGER is
+	default_cancel_button: INTEGER
 			-- The dialog's default cancel button
 		once
 			Result := dialog_buttons.cancel_button
 		end
 
-	default_confirm_button: INTEGER is
+	default_confirm_button: INTEGER
 			-- The dialog's default confirm button
 		once
 			Result := dialog_buttons.ok_button
@@ -1587,7 +1587,7 @@ feature -- Access
 	is_size_and_position_remembered: BOOLEAN = False
 			-- Indicates if the size and position information is remembered for the dialog	
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

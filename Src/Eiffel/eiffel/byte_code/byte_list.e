@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- List used in the byte code generation.
@@ -27,7 +27,7 @@ create
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_byte_list (Current)
@@ -35,7 +35,7 @@ feature -- Visitor
 
 feature -- Code analyzis
 
-	analyze is
+	analyze
 			-- Loop over `list' and analyze each item
 		local
 			l_area: SPECIAL [T]
@@ -54,7 +54,7 @@ feature -- Code analyzis
 
 feature -- C generation
 
-	generate is
+	generate
 			-- Loop over `list' and generate each item
 		local
 			l_area: SPECIAL [T]
@@ -73,7 +73,7 @@ feature -- C generation
 
 feature -- Tree enlargment
 
-	enlarge_tree is
+	enlarge_tree
 			-- Loop ovet `list' and enlarges each item
 		local
 			l_area: SPECIAL [T]
@@ -98,7 +98,7 @@ feature -- Tree enlargment
 
 feature -- Array optimization
 
-	assigns_to (n: INTEGER): BOOLEAN is
+	assigns_to (n: INTEGER): BOOLEAN
 		local
 			l_area: SPECIAL [T]
 			i, nb: INTEGER
@@ -114,7 +114,7 @@ feature -- Array optimization
 			end
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		local
 			l_area: SPECIAL [T]
 			i, nb: INTEGER
@@ -130,7 +130,7 @@ feature -- Array optimization
 			end
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		local
 			l_area: SPECIAL [T]
 			i, nb: INTEGER
@@ -146,7 +146,7 @@ feature -- Array optimization
 			end
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		local
 			l_area: SPECIAL [T]
 			i, nb: INTEGER
@@ -165,7 +165,7 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		local
 			l_area: SPECIAL [T]
 			i, nb: INTEGER
@@ -181,7 +181,7 @@ feature -- Inlining
 			end
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		local
 			l_area: SPECIAL [T]
 			i, nb: INTEGER
@@ -198,7 +198,7 @@ feature -- Inlining
 			end
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		local
 			l_area: SPECIAL [T]
 			i, nb: INTEGER
@@ -217,7 +217,7 @@ feature -- Inlining
 
 feature -- Convenience
 
-	remove_voids: like Current is
+	remove_voids: like Current
 		local
 			nbr_void: INTEGER
 			l_area, r_area: SPECIAL [T]
@@ -261,7 +261,7 @@ feature -- Convenience
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

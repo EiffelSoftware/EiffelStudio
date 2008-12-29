@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Builder which build all EB_DEVELOPMENT_WINDOW menus."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Command
 
-	build_menus is
+	build_menus
 			-- Build all menus displayed in the development window.
 		do
 				-- Build each menu
@@ -36,7 +36,7 @@ feature -- Command
 			build_menu_bar
 		end
 
-	build_debug_menu is
+	build_debug_menu
 			-- Build the `Debug' menu through the debugger_manager.
 		local
 			l_conv_mit: EB_COMMAND_MENU_ITEM
@@ -63,7 +63,7 @@ feature -- Command
 			-- develop_window.menus.update_debug_menu
 		end
 
-	build_refactoring_menu is
+	build_refactoring_menu
 			-- Create and build `refactoring_menu'.
 		local
 			l_command_menu_item: EB_COMMAND_MENU_ITEM
@@ -98,7 +98,7 @@ feature -- Command
 			refactoring_menu_created: develop_window.menus.refactoring_menu /= Void
 		end
 
-	build_menu_bar is
+	build_menu_bar
 			-- Build the menu bar
 		local
 			l_mb: EV_MENU_BAR
@@ -140,7 +140,7 @@ feature -- Command
 			develop_window.estudio_debug_cmd.attach_window (develop_window.window)
 		end
 
-	build_toolbar_menu: EV_MENU is
+	build_toolbar_menu: EV_MENU
 			-- Create and build a sub menu `toolbar_menu'.
 		local
 			command_menu_item: EB_COMMAND_CHECK_MENU_ITEM
@@ -164,7 +164,7 @@ feature -- Command
 			end
 		end
 
-	attach_customized_tools (a_tools: LIST [EB_TOOL]) is
+	attach_customized_tools (a_tools: LIST [EB_TOOL])
 			-- Attach `a_tools' into tools list menu.
 		require
 			a_tools_attached: a_tools /= Void
@@ -175,7 +175,7 @@ feature -- Command
 
 feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
-	build_file_menu is
+	build_file_menu
 			-- Build the file menu.
 		local
 			l_file_menu: EV_MENU
@@ -262,7 +262,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			develop_window.menus.file_menu.extend (l_command_menu_item)
 		end
 
-	build_class_info_menu: EV_MENU is
+	build_class_info_menu: EV_MENU
 			-- Build the class format sub-menu.
 		local
 			l_form: EB_CLASS_INFO_FORMATTER
@@ -296,7 +296,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			end
 		end
 
-	build_feature_info_menu: EV_MENU is
+	build_feature_info_menu: EV_MENU
 			-- Build the feature format sub-menu.
 		local
 			l_form: EB_FEATURE_INFO_FORMATTER
@@ -317,7 +317,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			end
 		end
 
-	build_edit_menu is
+	build_edit_menu
 			-- Create and build `edit_menu'
 		local
 			l_command_menu_item: EB_COMMAND_MENU_ITEM
@@ -661,7 +661,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			develop_window.menus.edit_menu.extend (l_sub_menu)
 		end
 
-	build_view_menu is
+	build_view_menu
 			-- Build the view menu.
 		local
 			l_menu_sep: EV_MENU_SEPARATOR
@@ -735,7 +735,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			set_docking_library_menu
 		end
 
-	build_favorites_menu is
+	build_favorites_menu
 			-- Build the favorites menu
 		local
 			l_conv_cst: CLASSI_STONE
@@ -761,7 +761,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			auto_recycle (develop_window.menus.favorites_menu)
 		end
 
-	build_project_menu is
+	build_project_menu
 			-- Build the project menu.
 		local
 			l_command_menu_item: EB_COMMAND_MENU_ITEM
@@ -891,7 +891,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			end
 		end
 
-	build_tools_menu is
+	build_tools_menu
 			-- Create and build `tools_menu'
 		local
 			l_command_menu_item: EB_COMMAND_MENU_ITEM
@@ -969,7 +969,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			rebuild_tools_menu
 		end
 
-	rebuild_tools_menu is
+	rebuild_tools_menu
 			-- Refresh the list of external commands.
 		local
 			l_ms: LIST [EB_COMMAND_MENU_ITEM]
@@ -1008,7 +1008,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			end
 		end
 
-	tools_layout_menu: EV_MENU is
+	tools_layout_menu: EV_MENU
 			-- Tools docking layout menu
 		local
 			l_new_menu_item: EB_COMMAND_MENU_ITEM
@@ -1032,7 +1032,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			not_void: Result /= Void
 		end
 
-	docking_lock_menu: EV_MENU is
+	docking_lock_menu: EV_MENU
 			-- Submenu for docking lock
 		local
 			l_new_menu_item: EB_COMMAND_MENU_ITEM
@@ -1054,7 +1054,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			not_void: Result /= Void
 		end
 
-	editor_area_manipulation_menu: EV_MENU is
+	editor_area_manipulation_menu: EV_MENU
 			-- Submenu for editor area manipulation
 		local
 			l_new_menu_item: EB_COMMAND_MENU_ITEM
@@ -1086,7 +1086,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			not_void: Result /= Void
 		end
 
-	editor_font_zoom_menu: EV_MENU is
+	editor_font_zoom_menu: EV_MENU
 			-- Submenu for editor font zoom manipulation
 		local
 			l_new_menu_item: EB_COMMAND_MENU_ITEM
@@ -1110,7 +1110,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			not_void: Result /= Void
 		end
 
-	tool_list_menu: EV_MENU is
+	tool_list_menu: EV_MENU
 			-- Build toolbar corresponding to available left panels.
 		local
 			l_customized_tools: LIST [EB_TOOL]
@@ -1157,7 +1157,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			end
 		end
 
-	build_window_menu is
+	build_window_menu
 			-- Create and build `edit_menu'
 		do
 			develop_window.menus.set_window_menu (develop_window.window_manager.new_menu)
@@ -1166,7 +1166,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			window_menu_created: is_window_menu_created
 		end
 
-	build_help_menu is
+	build_help_menu
 			-- Create and build `help_menu'
 		local
 			l_menu_item: EV_MENU_ITEM
@@ -1210,7 +1210,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			help_menu_created: is_help_menu_created
 		end
 
-	fill_show_menu_for_tool (a_menu: EV_MENU; a_tool: EB_TOOL) is
+	fill_show_menu_for_tool (a_menu: EV_MENU; a_tool: EB_TOOL)
 			-- Fill `a_menu' with the list of explorer bar iten `a_list'.
 		local
 			l_menu_item: EB_COMMAND_MENU_ITEM
@@ -1227,7 +1227,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			end
 		end
 
-	insert_show_tool_menu_item (a_menu: EV_MENU; a_tool: TYPE [ES_TOOL [EB_TOOL]]) is
+	insert_show_tool_menu_item (a_menu: EV_MENU; a_tool: TYPE [ES_TOOL [EB_TOOL]])
 			-- Inserts a menu item for showing a tool.
 			--
 			-- `a_menu': The menu to insert a generated menu item into.
@@ -1256,13 +1256,13 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 
 feature {NONE} -- Agents for editor
 
-	current_editor: EB_SMART_EDITOR is
+	current_editor: EB_SMART_EDITOR
 			-- Current editor
 		do
 			Result := develop_window.editors_manager.current_editor
 		end
 
-	editor_replace is
+	editor_replace
 			-- Replace in current editor.
 		do
 			if current_editor /= Void then
@@ -1270,7 +1270,7 @@ feature {NONE} -- Agents for editor
 			end
 		end
 
-	editor_indent_selection is
+	editor_indent_selection
 			-- Indent selection in current editor.
 		do
 			if current_editor /= Void then
@@ -1278,7 +1278,7 @@ feature {NONE} -- Agents for editor
 			end
 		end
 
-	editor_unindent_selection is
+	editor_unindent_selection
 			-- Unindent selection in current editor.
 		do
 			if current_editor /= Void then
@@ -1286,7 +1286,7 @@ feature {NONE} -- Agents for editor
 			end
 		end
 
-	editor_set_selection_case (a_case: BOOLEAN) is
+	editor_set_selection_case (a_case: BOOLEAN)
 			-- Set selection case in current editor.
 		do
 			if current_editor /= Void then
@@ -1294,7 +1294,7 @@ feature {NONE} -- Agents for editor
 			end
 		end
 
-	editor_comment_selection is
+	editor_comment_selection
 			-- Comment selection in current editor.
 		do
 			if current_editor /= Void then
@@ -1302,7 +1302,7 @@ feature {NONE} -- Agents for editor
 			end
 		end
 
-	editor_uncomment_selection is
+	editor_uncomment_selection
 			-- Uncomment selection in current editor.
 		do
 			if current_editor /= Void then
@@ -1310,7 +1310,7 @@ feature {NONE} -- Agents for editor
 			end
 		end
 
-	editor_embed_in_block (a_string: STRING; post_pos: INTEGER) is
+	editor_embed_in_block (a_string: STRING; post_pos: INTEGER)
 			-- Embed `a_string' in current editor.
 		require
 			a_string_not_void: a_string /= Void
@@ -1321,7 +1321,7 @@ feature {NONE} -- Agents for editor
 			end
 		end
 
-	editor_complete_feature_name is
+	editor_complete_feature_name
 			-- Complete feature name in current editor.
 		do
 			if current_editor /= Void then
@@ -1329,7 +1329,7 @@ feature {NONE} -- Agents for editor
 			end
 		end
 
-	editor_complete_class_name is
+	editor_complete_class_name
 			-- Complete class name in current editor.
 		do
 			if current_editor /= Void then
@@ -1339,13 +1339,13 @@ feature {NONE} -- Agents for editor
 
 feature -- Contract support
 
-	is_window_menu_created: BOOLEAN is
+	is_window_menu_created: BOOLEAN
 			-- If window menu created?
 		do
 			Result := develop_window.menus.window_menu /= Void
 		end
 
-	is_help_menu_created: BOOLEAN is
+	is_help_menu_created: BOOLEAN
 			-- If help menu created?
 		do
 			Result := develop_window.menus.help_menu /= Void
@@ -1353,7 +1353,7 @@ feature -- Contract support
 
 feature -- Docking library menu items
 
-	set_docking_library_menu is
+	set_docking_library_menu
 			-- Setup docking library notebook tab and title bar's menu items
 		local
 			l_shared: SD_SHARED
@@ -1368,7 +1368,7 @@ feature -- Docking library menu items
 			end
 		end
 
-	docking_menu_item (a_content: SD_CONTENT; a_with_separtor: BOOLEAN): ARRAYED_LIST [EV_MENU_ITEM] is
+	docking_menu_item (a_content: SD_CONTENT; a_with_separtor: BOOLEAN): ARRAYED_LIST [EV_MENU_ITEM]
 			-- Docking library menu items agent
 		local
 			l_new_menu_item: EV_MENU_ITEM
@@ -1427,7 +1427,7 @@ feature -- Docking library menu items
 			end
 		end
 
-	append_file_location_menu (a_content: SD_CONTENT; a_list: LIST [EV_MENU_ITEM]; a_dev_window: EB_DEVELOPMENT_WINDOW) is
+	append_file_location_menu (a_content: SD_CONTENT; a_list: LIST [EV_MENU_ITEM]; a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Depend on `a_content', add two file path menu entries to `a_list' if possible
 		require
 			not_void: a_content /= Void
@@ -1493,7 +1493,7 @@ feature -- Docking library menu items
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

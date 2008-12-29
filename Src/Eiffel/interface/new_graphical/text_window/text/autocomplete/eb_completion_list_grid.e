@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid support editor token rendering, and internal item text pick and drop"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialization
 		do
 			Precursor
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	on_pick_ended (a_item: EV_ABSTRACT_PICK_AND_DROPABLE) is
+	on_pick_ended (a_item: EV_ABSTRACT_PICK_AND_DROPABLE)
 			-- Action performed when pick ends
 		local
 			l_item: EB_GRID_EDITOR_TOKEN_ITEM
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 			last_picked_item_not_attached: last_picked_item = Void
 		end
 
-	on_pick (a_item: EV_GRID_ITEM): ANY is
+	on_pick (a_item: EV_GRID_ITEM): ANY
 			-- Action performed when pick on `a_item'.
 		local
 			l_item: EB_GRID_EDITOR_TOKEN_ITEM
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Error for invalid parent type: different generic derivations
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (c: CLASS_C; t1, t2: CL_TYPE_A; l: LOCATION_AS) is
+	make (c: CLASS_C; t1, t2: CL_TYPE_A; l: LOCATION_AS)
 			-- Create error object for class `c' with offending
 			-- parent types `t1' and `t2' at location `l'.
 		require
@@ -48,15 +48,15 @@ feature {NONE} -- Creation
 
 feature -- Error code
 
-	code: STRING is "ECMA-VHPR";
+	code: STRING = "ECMA-VHPR";
 			-- Error code
 
-	subcode: INTEGER is 5
+	subcode: INTEGER = 5
 			-- Error subcode
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -76,7 +76,7 @@ feature {NONE} -- Data
 	parent_type_2: CL_TYPE_A;
 			-- Parent type involved in the error
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

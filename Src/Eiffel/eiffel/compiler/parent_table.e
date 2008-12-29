@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Parent table to generate
@@ -31,14 +31,14 @@ feature
 	is_expanded : BOOLEAN;
 			-- Is type expanded?
 
-	make is
+	make
 
 		do
 			array_make (1, Init_size)
 			crnt_pos := 1
 		end
 
-	init (tid, gcount : INTEGER; is_exp : BOOLEAN) is
+	init (tid, gcount : INTEGER; is_exp : BOOLEAN)
 			-- Initialization for id `tid' with `gcount' generics;
 			-- Classname is `cname', `is_exp' is expandedness status.
 		require
@@ -56,7 +56,7 @@ feature
 			cursor_reset: crnt_pos = 1
 		end;
 
-	append_type (ptype : CL_TYPE_A) is
+	append_type (ptype : CL_TYPE_A)
 			-- Append type `ptype' to list of parent types.
 		require
 			valid_type: ptype /= Void
@@ -69,7 +69,7 @@ feature
 			crnt_pos := crnt_pos + 1
 		end;
 
-	generate (buffer: GENERATION_BUFFER; final_mode : BOOLEAN; a_class_type: CLASS_TYPE) is
+	generate (buffer: GENERATION_BUFFER; final_mode : BOOLEAN; a_class_type: CLASS_TYPE)
 			-- Generates the current parent table
 		require
 			valid_file: buffer /= Void
@@ -142,7 +142,7 @@ feature
 			buffer.put_string ("};%N");
 		end;
 
-	make_byte_code (ba: BYTE_ARRAY; a_class_type: CLASS_TYPE) is
+	make_byte_code (ba: BYTE_ARRAY; a_class_type: CLASS_TYPE)
 			-- Generate byte code
 		local
 			i, n: INTEGER;
@@ -187,15 +187,15 @@ feature
 
 feature {NONE}  -- Implementation
 
-	Init_size : INTEGER is 64
+	Init_size : INTEGER = 64
 				-- Initial size of array
-	Increment : INTEGER is 32
+	Increment : INTEGER = 32
 				-- Size increment
 
 	crnt_pos : INTEGER;
 				-- Cursor position for appending data
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

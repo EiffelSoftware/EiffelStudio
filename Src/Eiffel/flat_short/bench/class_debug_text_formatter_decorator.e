@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature
 
-	init_uncompiled_feature_context (a_source_class: CLASS_C; feature_as: FEATURE_AS) is
+	init_uncompiled_feature_context (a_source_class: CLASS_C; feature_as: FEATURE_AS)
 			-- Initialize Current context to analyze
 			-- uncompiled feature ast `feature_as'.
 			-- This ast is not in the feature table (ie has
@@ -36,7 +36,7 @@ feature
 		end
 
 	init_feature_context (source, target: FEATURE_I;
-				feature_as: FEATURE_AS) is
+				feature_as: FEATURE_AS)
 			-- Initialize Current context to analyze
 			-- `source' and `target' features.
 			-- Use `feature_as' to set up locals.
@@ -51,7 +51,7 @@ feature {NONE}
 	added_breakpoint: BOOLEAN
 			-- Was a break point added?
 
-	put_breakable is
+	put_breakable
 			-- Create a breakable mark.
 		do
 			breakpoint_index := breakpoint_index + 1
@@ -64,7 +64,7 @@ feature {NONE}
 			end
 		end
 
-	emit_tabs is
+	emit_tabs
 			-- Add the good number of tabulations to the text.
 		do
 			if added_breakpoint then
@@ -75,7 +75,7 @@ feature {NONE}
 			Precursor {TEXT_FORMATTER_DECORATOR}
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Attribute description of generic type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,13 +18,13 @@ feature -- Access
 	type_i: TYPE_A
 		-- Type having some generic parameters	
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 			-- Sk value
 		do
 			Result := {SK_CONST}.sk_ref
 		end
 
-	level: INTEGER is
+	level: INTEGER
 			-- Sort level
 		do
 			Result := reference_level
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_type_i (t: like type_i) is
+	set_type_i (t: like type_i)
 			-- Assign `t' to `type_i'.
 		require
 			t_not_void: t /= Void
@@ -44,7 +44,7 @@ feature -- Settings
 
 feature -- Comparisons
 
-	same_as (other: ATTR_DESC): BOOLEAN is
+	same_as (other: ATTR_DESC): BOOLEAN
 			-- Is `other' equal to Current ?
 		local
 			other_generic: GENERIC_DESC
@@ -55,7 +55,7 @@ feature -- Comparisons
 			end
 		end
 
-	identical_types (otype : TYPE_A) : BOOLEAN is
+	identical_types (otype : TYPE_A) : BOOLEAN
 			-- Are `type_i' and `otype' identical?
 		do
 			if type_i = Void then
@@ -70,12 +70,12 @@ feature -- Comparisons
 
 feature -- Status report
 
-	has_formal: BOOLEAN is True
+	has_formal: BOOLEAN = True
 			-- Has the current description a formal generic one ?
 
 feature -- Instantiation
 
-	instantiation_in (class_type: CLASS_TYPE): ATTR_DESC is
+	instantiation_in (class_type: CLASS_TYPE): ATTR_DESC
 			-- Instantiation of the current description in		
 			-- `class_type'.
 		local
@@ -128,7 +128,7 @@ feature -- Instantiation
 
 feature -- Code generation
 
-	generate_code (buffer: GENERATION_BUFFER) is
+	generate_code (buffer: GENERATION_BUFFER)
 			-- Useless
 		do
 			buffer.put_string ({SK_CONST}.sk_ref_string);
@@ -136,7 +136,7 @@ feature -- Code generation
 
 feature -- Helper
 
-	update_description (a: ATTR_DESC; a_type: TYPE_A) is
+	update_description (a: ATTR_DESC; a_type: TYPE_A)
 			-- Update the `type_i' from `a' with `a_type' if `a' is
 			-- either an expanded or a reference.
 		require
@@ -157,7 +157,7 @@ feature -- Helper
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

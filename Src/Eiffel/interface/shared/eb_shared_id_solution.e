@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Identifier solution for group, folder, class and feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ feature -- Access names
 			-- Last names extracted from ids when retrieving XXX_of_id
 			-- It is possible not valid in the system if XXX_of_id returns void.
 
-	last_folder_name: STRING is
+	last_folder_name: STRING
 			-- The outer most folder name in `last_folder_path' if possible
 			-- Void if no folder name can be retrieved from `last_folder_path'.
 		local
@@ -42,7 +42,7 @@ feature -- Access names
 
 feature -- Access (Target)
 
-	id_of_target (a_target: CONF_TARGET): STRING is
+	id_of_target (a_target: CONF_TARGET): STRING
 			-- UUID of `a_target'
 		require
 			a_target_not_void: a_target /= Void
@@ -55,7 +55,7 @@ feature -- Access (Target)
 			result_not_void: Result /= Void
 		end
 
-	target_of_id (a_id: STRING): CONF_TARGET is
+	target_of_id (a_id: STRING): CONF_TARGET
 			-- Target of `a_id'
 		require
 			a_id_not_void: a_id /= Void
@@ -93,7 +93,7 @@ feature -- Access (Target)
 
 feature -- Access (Group)
 
-	id_of_group (a_group: CONF_GROUP): STRING is
+	id_of_group (a_group: CONF_GROUP): STRING
 			-- Identifier of `a_group'
 			-- target_uuid + name_sep + group_name
 			-- Assembly: assembly + name_sep + ph + name_sep + assemblyID
@@ -124,7 +124,7 @@ feature -- Access (Group)
 			result_not_void: Result /= Void
 		end
 
-	group_of_id (a_id: STRING): CONF_GROUP is
+	group_of_id (a_id: STRING): CONF_GROUP
 			-- Group of `a_id'
 		require
 			a_id_not_void: a_id /= Void
@@ -158,7 +158,7 @@ feature -- Access (Group)
 
 feature -- Access (Folder)
 
-	id_of_folder (a_folder: EB_FOLDER): STRING is
+	id_of_folder (a_folder: EB_FOLDER): STRING
 			-- Id of `a_folder'
 			-- `id_of_group' + `name_sep' + path
 		require
@@ -174,7 +174,7 @@ feature -- Access (Folder)
 			result_not_void: Result /= Void
 		end
 
-	folder_of_id (a_id: STRING): EB_FOLDER is
+	folder_of_id (a_id: STRING): EB_FOLDER
 			-- Folder of `a_id'
 		require
 			a_id_not_void: a_id /= Void
@@ -199,7 +199,7 @@ feature -- Access (Folder)
 
 feature -- Access (Class)
 
-	id_of_class (a_class: CONF_CLASS): STRING is
+	id_of_class (a_class: CONF_CLASS): STRING
 			-- Unique id of a class in the system
 			-- `id_of_group' + `name_sep' + class_name
 		require
@@ -215,7 +215,7 @@ feature -- Access (Class)
 			result_not_void: Result /= Void
 		end
 
-	class_of_id (a_id: STRING): CONF_CLASS is
+	class_of_id (a_id: STRING): CONF_CLASS
 			-- Class of `a_id'
 		require
 			a_id_not_void: a_id /= Void
@@ -236,7 +236,7 @@ feature -- Access (Class)
 
 feature -- Access (Feature)
 
-	feature_of_id (a_id: STRING): E_FEATURE is
+	feature_of_id (a_id: STRING): E_FEATURE
 			-- Class of `a_id'
 		require
 			a_id_not_void: a_id /= Void
@@ -259,7 +259,7 @@ feature -- Access (Feature)
 			end
 		end
 
-	id_of_feature (a_feature: E_FEATURE): STRING is
+	id_of_feature (a_feature: E_FEATURE): STRING
 			-- Unique id of a feature in the system
 			-- `id_of_class'(associate class) + name_sep + feature_name
 		require
@@ -275,7 +275,7 @@ feature -- Access (Feature)
 			result_not_void: Result /= Void
 		end
 
-	id_of_feature_ast (a_class: CONF_CLASS; a_ast: FEATURE_AS): STRING is
+	id_of_feature_ast (a_class: CONF_CLASS; a_ast: FEATURE_AS): STRING
 			-- Unique id of a feature in the system
 			-- `id_of_class'(associate class) + name_sep + feature_name
 		require
@@ -289,7 +289,7 @@ feature -- Access (Feature)
 
 feature -- ID modification
 
-	substitute_target_uuid (a_id: STRING; a_target_uuid: STRING): STRING is
+	substitute_target_uuid (a_id: STRING; a_target_uuid: STRING): STRING
 			-- Substitute uuid of `a_id' to `a_target_uuid'.
 		require
 			a_id_not_void: a_id /= Void
@@ -322,7 +322,7 @@ feature -- ID modification
 			end
 		end
 
-	substitute_target_name (a_id: STRING; a_target_name: STRING): STRING is
+	substitute_target_name (a_id: STRING; a_target_name: STRING): STRING
 			-- Substitute target name of `a_id' to `a_target_name'.
 		require
 			a_id_not_void: a_id /= Void
@@ -359,7 +359,7 @@ feature -- ID modification
 			end
 		end
 
-	substitute_group (a_id: STRING; a_group_name: STRING): STRING is
+	substitute_group (a_id: STRING; a_group_name: STRING): STRING
 			-- Substitute group name of `a_id' to `a_group_name'.
 		require
 			a_id_not_void: a_id /= Void
@@ -398,7 +398,7 @@ feature -- ID modification
 
 feature -- UUID generation
 
-	generate_uuid: STRING is
+	generate_uuid: STRING
 			-- Generate uuid
 		do
 			Result := uuid_gen.generate_uuid.out
@@ -408,7 +408,7 @@ feature -- UUID generation
 
 feature -- Querry
 
-	id_valid (a_id: !STRING): BOOLEAN is
+	id_valid (a_id: !STRING): BOOLEAN
 			-- Does `a_id' represent an existing item in the system?
 		local
 			l_type: like most_possible_type_of_id
@@ -431,7 +431,7 @@ feature -- Querry
 			end
 		end
 
-	possible_name_of_id (a_id: !STRING): !STRING is
+	possible_name_of_id (a_id: !STRING): !STRING
 			-- Extracted name from `a_id'
 			-- Despite of id type, the last section is extracted as name.
 			-- Target id is not appliable.
@@ -448,7 +448,7 @@ feature -- Querry
 			end
 		end
 
-	most_possible_type_of_id (a_id: !STRING): NATURAL is
+	most_possible_type_of_id (a_id: !STRING): NATURAL
 			-- Most possible type of the given `a_id'
 			-- target, group, folder, class or feature.
 			-- This querry can not distinguish folder and class.
@@ -481,7 +481,7 @@ feature -- Querry
 			end
 		end
 
-	id_type_valid (a_id_type: NATURAL): BOOLEAN is
+	id_type_valid (a_id_type: NATURAL): BOOLEAN
 			-- Is `a_id_type' valid?
 		do
 			if a_id_type <= max_type and a_id_type > min_type then
@@ -491,34 +491,34 @@ feature -- Querry
 
 feature -- ID type
 
-	target_type: NATURAL is 1
-	group_type: NATURAL is 2
-	folder_type: NATURAL is 3
-	class_type: NATURAL is 4
-	feature_type: NATURAL is 5
-	min_type: NATURAL is once Result := target_type end
-	max_type: NATURAL is once Result := feature_type end
+	target_type: NATURAL = 1
+	group_type: NATURAL = 2
+	folder_type: NATURAL = 3
+	class_type: NATURAL = 4
+	feature_type: NATURAL = 5
+	min_type: NATURAL once Result := target_type end
+	max_type: NATURAL once Result := feature_type end
 
 feature {NONE} -- Access
 
-	target_id_sections: INTEGER is 2
+	target_id_sections: INTEGER = 2
 
-	group_id_sections: INTEGER is
+	group_id_sections: INTEGER
 		once
 			Result := target_id_sections + 1
 		end
 
-	folder_id_sections: INTEGER is
+	folder_id_sections: INTEGER
 		once
 			Result := group_id_sections + 1
 		end
 
-	class_id_sections: INTEGER is
+	class_id_sections: INTEGER
 		once
 			Result := group_id_sections + 1
 		end
 
-	feature_id_sections: INTEGER is
+	feature_id_sections: INTEGER
 		once
 			Result := class_id_sections + 1
 		end
@@ -533,26 +533,26 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation. Encoding/Decoding
 
-	name_sep: CHARACTER is '@'
+	name_sep: CHARACTER = '@'
 			-- Name separator
 
-	escape_char: CHARACTER is '%%'
+	escape_char: CHARACTER = '%%'
 
-	place_holder_string: STRING is "ph"
+	place_holder_string: STRING = "ph"
 
-	assembly_prefix: STRING is "assembly"
+	assembly_prefix: STRING = "assembly"
 
-	name_sep_code: NATURAL_32 is
+	name_sep_code: NATURAL_32
 		once
 			Result := name_sep.natural_32_code
 		end
 
-	escape_char_code: NATURAL_32 is
+	escape_char_code: NATURAL_32
 		once
 			Result := escape_char.natural_32_code
 		end
 
-	hex_strings: ARRAY [STRING] is
+	hex_strings: ARRAY [STRING]
 		once
 			Result := <<
 			    "%%00", "%%01", "%%02", "%%03", "%%04", "%%05", "%%06", "%%07",
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation. Encoding/Decoding
   			>>
   		end
 
-	encode (a_string: STRING): STRING is
+	encode (a_string: STRING): STRING
 			-- Encode `a_string' so that it does not contain `name_sep'.
 		require
 			a_string_not_void: a_string /= Void
@@ -626,7 +626,7 @@ feature {NONE} -- Implementation. Encoding/Decoding
 			Result_not_contain_name_sep: not Result.has (name_sep)
 		end
 
-	decode (a_string: STRING): STRING is
+	decode (a_string: STRING): STRING
 			-- Decode `a_string' to be original one.
 		require
 			a_string_not_void: a_string /= Void
@@ -657,7 +657,7 @@ feature {NONE} -- Implementation. Encoding/Decoding
 			result_not_void: Result /= Void
 		end
 
-	natural_of_code (hc, lc: NATURAL_32): NATURAL_32 is
+	natural_of_code (hc, lc: NATURAL_32): NATURAL_32
 			-- Natural that comprises of charactors whose code are `hc' and `lc'
 		do
 			if ('a').natural_32_code <= hc and then hc <= ('f').natural_32_code then
@@ -677,13 +677,13 @@ feature {NONE} -- Implementation
 	strings: LIST [STRING]
 			-- Strings splitted
 
-	uuid_gen: UUID_GENERATOR is
+	uuid_gen: UUID_GENERATOR
 			-- UUID generator
 		once
 			create Result
 		end
 
-	reset_names is
+	reset_names
 			-- Reset last names.
 		do
 			last_target_uuid := Void
@@ -693,7 +693,7 @@ feature {NONE} -- Implementation
 			last_feature_name := Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

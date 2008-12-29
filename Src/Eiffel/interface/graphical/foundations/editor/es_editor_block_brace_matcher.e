@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Supports Eiffel block brace match scanning functionality in the editor.
 		]"
@@ -69,7 +69,7 @@ feature -- Status report
 				Precursor {ES_EDITOR_KEYWORD_BRACE_MATCHER} (a_token, a_line)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

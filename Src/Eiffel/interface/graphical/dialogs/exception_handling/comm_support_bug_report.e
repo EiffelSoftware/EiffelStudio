@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					The data used for filling a bug report.
 					See: https://www2.eiffel.com/support/protected/problem_report_form.aspx (login required)
@@ -64,7 +64,7 @@ feature -- Query
 
 feature -- Command
 
-	set_synopsis (a_synopsis: STRING_GENERAL) is
+	set_synopsis (a_synopsis: STRING_GENERAL)
 			-- Set `synopsis' with `a_synopsis'
 		require
 			a_synopsis_attached: a_synopsis /= Void
@@ -75,7 +75,7 @@ feature -- Command
 			synopsis_set: synopsis.is_equal (a_synopsis)
 		end
 
-	set_description (a_description: STRING_GENERAL) is
+	set_description (a_description: STRING_GENERAL)
 			-- Set `description' with `a_description'
 		require
 			a_description_attached: a_description /= Void
@@ -86,7 +86,7 @@ feature -- Command
 			description_set: description.is_equal (a_description)
 		end
 
-	set_release (a_release: STRING_GENERAL) is
+	set_release (a_release: STRING_GENERAL)
 			-- Set `release' with `a_release'.
 		require
 			a_release_attached: a_release /= Void
@@ -97,7 +97,7 @@ feature -- Command
 			release_set: release.is_equal (a_release)
 		end
 
-	set_environment (a_environment: STRING_GENERAL) is
+	set_environment (a_environment: STRING_GENERAL)
 			-- Set `environment' with `a_environment'
 		require
 			a_environment_attached: a_environment /= Void
@@ -108,7 +108,7 @@ feature -- Command
 			environment_set: environment.is_equal (a_environment)
 		end
 
-	set_to_reproduce (a_to_reproduce: STRING_GENERAL) is
+	set_to_reproduce (a_to_reproduce: STRING_GENERAL)
 			-- Set `to_reproduce' with `a_to_reproduce'
 		require
 			a_to_reproduce_attached: a_to_reproduce /= Void
@@ -139,18 +139,18 @@ feature -- Command
 
 feature -- Enumeration
 
-	severity_critical: INTEGER is 1
+	severity_critical: INTEGER = 1
 			-- Severtiy critical
 
-	severtiy_serious: INTEGER is 2
+	severtiy_serious: INTEGER = 2
 			-- Severity serious
 
-	severity_non_critical: INTEGER is 3
+	severity_non_critical: INTEGER = 3
 			-- Severity non-critical
 
 feature -- Contract support
 
-	is_severity_valid (a_value: INTEGER): BOOLEAN is
+	is_severity_valid (a_value: INTEGER): BOOLEAN
 			-- If `a_value' a valid severity value?
 		do
 			Result := a_value = severity_critical or a_value = severtiy_serious or a_value = severity_non_critical
@@ -164,7 +164,7 @@ invariant
 	release_attached: release /= Void
 	not_release_is_empty: not release.is_empty
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

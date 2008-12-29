@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Extractor used to eis entry from a piece of note/indexing clause"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 											source: STRING_32;
 											tags: ARRAY [STRING_32];
 											id: STRING;
-											others: HASH_TABLE [STRING_32, STRING_32]]) is
+											others: HASH_TABLE [STRING_32, STRING_32]])
 			-- Fill `a_eis_tuple' from `a_key' and `a_value'.
 			-- There is still problem of the attached type for tuples.
 		require
@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	eis_entry_from_index (a_index: !INDEX_AS; a_eis_id: ?STRING): ?EIS_ENTRY is
+	eis_entry_from_index (a_index: !INDEX_AS; a_eis_id: ?STRING): ?EIS_ENTRY
 			-- EIS entry from `a_clause'
 		local
 			l_index_list: EIFFEL_LIST [ATOMIC_AS]
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	eis_entry_from_conf_note (a_note: HASH_TABLE [STRING, STRING]; l_id: !STRING): ?EIS_ENTRY is
+	eis_entry_from_conf_note (a_note: HASH_TABLE [STRING, STRING]; l_id: !STRING): ?EIS_ENTRY
 			-- EIS entry from conf note element.
 		local
 			l_others: !HASH_TABLE [STRING_32, STRING_32]
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_tags (a_tag_string: !STRING): !ARRAYED_LIST [!STRING_32] is
+	parse_tags (a_tag_string: !STRING): !ARRAYED_LIST [!STRING_32]
 			-- Parse `a_tag_string' into an array.
 			-- tag string should be in the form of "tag1, tag2, tag3"
 		do
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_others (a_others_string: !STRING_32): !HASH_TABLE [STRING_32, STRING_32] is
+	parse_others (a_others_string: !STRING_32): !HASH_TABLE [STRING_32, STRING_32]
 			-- Parse `a_others_string' into an array.
 			-- others string should be in the form of
 			-- "other1=value1, other2=value2, other3=value3"
@@ -231,13 +231,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implemetation
 
-	attribute_regex_matcher: !RX_PCRE_MATCHER is
+	attribute_regex_matcher: !RX_PCRE_MATCHER
 		once
 			create Result.make
 			Result.compile ("^(\w+)=(.*)$")
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

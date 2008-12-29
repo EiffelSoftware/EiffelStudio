@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Data structure for checking feature adaptation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (old_feats: INHERIT_FEAT; new_feat: FEATURE_I) is
+	make (old_feats: INHERIT_FEAT; new_feat: FEATURE_I)
 			-- Creation
 		require
 			good_argument: not (old_feats = Void or else new_feat = Void)
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid_old_features (old_feats: like old_features): BOOLEAN is
+	is_valid_old_features (old_feats: like old_features): BOOLEAN
 			-- Is `old_feats' valid for current Context?
 			-- Redefined in JOIN.
 		require
@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Checking
 
-	check_adaptation (feat_tbl: FEATURE_TABLE) is
+	check_adaptation (feat_tbl: FEATURE_TABLE)
 			-- Chec adaptation with computed new feature table `feat_tbl'.
 		require
 			good_context: not (new_feature = Void or else old_features = Void)
@@ -50,7 +50,7 @@ feature -- Checking
 	check_redeclaration (feat_tbl, old_tbl: FEATURE_TABLE
 			pattern_list: LIST [INTEGER]
 			origin_table: ORIGIN_TABLE)
-		is
+		
 			-- Check adaptation with computed new feature table `feat_tbl'.
 		do
 			-- Do nothing
@@ -58,7 +58,7 @@ feature -- Checking
 
 feature -- Debugging
 
-	trace is
+	trace
 		do
 			io.error.put_string ("Adapted feature: ")
 			io.error.put_string (new_feature.feature_name)
@@ -73,7 +73,7 @@ invariant
 	new_feature_exists: new_feature /= Void
 	deferred_to_join: is_valid_old_features (old_features)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

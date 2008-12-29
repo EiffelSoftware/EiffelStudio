@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Event list which has data about a test case run result
 																			]"
@@ -18,19 +18,19 @@ create
 
 feature {NONE} -- Redefine
 
-	is_valid_data (a_data: ANY): BOOLEAN is
+	is_valid_data (a_data: ANY): BOOLEAN
 			-- Redefine
 		do
 			Result := {l_test: ES_EWEASEL_TEST_RESULT_ITEM} a_data
 		end
 
-	description: STRING_32 is
+	description: STRING_32
 			-- Redefine
 		do
 			Result := "Event list which has data about a test case run result"
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

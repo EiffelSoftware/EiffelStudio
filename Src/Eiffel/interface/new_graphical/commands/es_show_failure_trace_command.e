@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Show failure trace in {ES_TESTING_RESULT_TOOL_PANEL}'s grid command
 																								]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like manager) is
+	make (a_manager: like manager)
 			-- Creation method
 		do
 			manager := a_manager
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	execute is
+	execute
 			-- <Precursor>
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -37,7 +37,7 @@ feature -- Command
 			l_shared.manager.testing_result_tool.test_run_result_grid_manager.show_all_failure_traces (not is_selected)
 		end
 
-	enable_select is
+	enable_select
 			-- Enable selected all managed tool bar buttons
 		local
 			l_list: like managed_sd_toolbar_items
@@ -58,7 +58,7 @@ feature -- Command
 
 feature -- Query
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- <Precursor>
 		do
 			if not managed_sd_toolbar_items.is_empty then
@@ -68,37 +68,37 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := tooltip
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.testing_see_failure_trace_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.testing_see_failure_trace_icon_buffer
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 		do
 			Result := "see_failure_trace"
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := interface_names.t_See_failure_trace
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 
 	manager: !ES_EWEASEL_EXECUTION_MANAGER;
 			-- eweasel chief manager		
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

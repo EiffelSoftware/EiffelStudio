@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Editor tokens are created and put into last line."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create {NONE}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			create last_line.make_empty_line
 		end
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- New line
 
-	new_line is
+	new_line
 			-- Create new `last_line'
 		do
 			create last_line.make_empty_line
@@ -75,7 +75,7 @@ feature -- Token operator
 
 feature -- Text processing
 
-	process_basic_text (t: STRING_GENERAL) is
+	process_basic_text (t: STRING_GENERAL)
 			-- Process default basic text `t'.
 		local
 			tok: EDITOR_TOKEN_TEXT
@@ -104,7 +104,7 @@ feature -- Text processing
 			end
 		end
 
-	process_string_text (t: STRING_GENERAL; url: STRING_GENERAL) is
+	process_string_text (t: STRING_GENERAL; url: STRING_GENERAL)
 			-- Process default basic text `t'.
 		local
 			tok: EDITOR_TOKEN_STRING
@@ -138,7 +138,7 @@ feature -- Text processing
 			end
 		end
 
-	process_comment_text (t: STRING_GENERAL; url: STRING_GENERAL) is
+	process_comment_text (t: STRING_GENERAL; url: STRING_GENERAL)
 			-- Process comment text.
 		local
 			tok: EDITOR_TOKEN_COMMENT
@@ -152,7 +152,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_quoted_text (t: STRING_GENERAL) is
+	process_quoted_text (t: STRING_GENERAL)
 			-- Process the quoted `t' within a comment.
 		local
 			tok: EDITOR_TOKEN_COMMENT
@@ -161,13 +161,13 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_new_line is
+	process_new_line
 			-- Process new line text `t'.
 		do
 			new_line
 		end
 
-	process_indentation (a_indent_depth: INTEGER) is
+	process_indentation (a_indent_depth: INTEGER)
 			-- Process indentation `t'.
 		local
 			tok: EDITOR_TOKEN_TABULATION
@@ -178,7 +178,7 @@ feature -- Text processing
 			end
 		end
 
-	process_symbol_text (t: STRING_GENERAL) is
+	process_symbol_text (t: STRING_GENERAL)
 			-- Process symbol text.
 		local
 			tok: EDITOR_TOKEN_OPERATOR
@@ -187,7 +187,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
+	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process keyword text.
 		local
 			tok: EDITOR_TOKEN_KEYWORD
@@ -201,7 +201,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
 			-- Process class name text `t'.
 		local
 			tok: EDITOR_TOKEN_CLUSTER
@@ -219,7 +219,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end;
 
-	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN) is
+	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
 			-- Process class name text `t'.
 		local
 			tok: EDITOR_TOKEN_CLASS
@@ -247,7 +247,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET) is
+	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET)
 			-- Process target name text `text'.
 		local
 			tok: EDITOR_TOKEN_TARGET
@@ -259,12 +259,12 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN) is
+	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
 		do
 			process_feature_text_internal (text, a_feature, a_quote)
 		end
 
-	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN) is
+	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN)
 		local
 			tok: EDITOR_TOKEN_TEXT
 			stone: BREAKABLE_STONE
@@ -275,7 +275,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C) is
+	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C)
 		local
 			tok: EDITOR_TOKEN_FEATURE
 			stone: FEATURE_NAME_STONE
@@ -288,7 +288,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER) is
+	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER)
 			-- Process breakpoint.
 		local
 			stone: BREAKABLE_STONE
@@ -297,13 +297,13 @@ feature -- Text processing
 			last_line.breakpoint_token.set_pebble (stone)
 		end
 
-	process_padded is
+	process_padded
 			-- Process padded item at start of non breakpoint line.
 		do
 			-- Do nothing... The text is now padded by default.
 		end
 
-	process_after_class (a_class: CLASS_C) is
+	process_after_class (a_class: CLASS_C)
 			-- Process after class text `t'.
 		do
 			process_comment_text (" -- class ", Void)
@@ -311,13 +311,13 @@ feature -- Text processing
 			process_new_line
 		end
 
-	process_operator_text (t: STRING_GENERAL; a_feature: E_FEATURE) is
+	process_operator_text (t: STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process operator text.
 		do
 			process_operator_text_internal (t, a_feature)
 		end
 
-	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C) is
+	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C)
 			-- Process address text.
 		local
 			tok: EDITOR_TOKEN_OBJECT
@@ -331,7 +331,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_error_text (t: STRING_GENERAL; a_error: ERROR) is
+	process_error_text (t: STRING_GENERAL; a_error: ERROR)
 			-- Process error text.
 		local
 			tok: EDITOR_TOKEN_ERROR_CODE
@@ -343,7 +343,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_feature_error (text: STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER) is
+	process_feature_error (text: STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER)
 			-- Process error text.
 		local
 			tok: EDITOR_TOKEN_FEATURE
@@ -355,7 +355,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C) is
+	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
 			-- Process class syntax text.
 		local
 			tok: EDITOR_TOKEN_CLASS
@@ -367,7 +367,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_assertion_tag_text (t: STRING_GENERAL) is
+	process_assertion_tag_text (t: STRING_GENERAL)
 			-- Process string text `t'.
 		local
 			tok: EDITOR_TOKEN_TAG
@@ -377,7 +377,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_indexing_tag_text (t: STRING_GENERAL) is
+	process_indexing_tag_text (t: STRING_GENERAL)
 			-- Process string text `t'.
 		local
 			tok: EDITOR_TOKEN_TAG
@@ -387,7 +387,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_generic_text (t: STRING_GENERAL) is
+	process_generic_text (t: STRING_GENERAL)
 			-- Process string text `t'.
 		local
 			tok: EDITOR_TOKEN_GENERIC
@@ -396,7 +396,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_character_text (t: STRING_GENERAL) is
+	process_character_text (t: STRING_GENERAL)
 			-- Process string text `t'.
 		local
 			tok: EDITOR_TOKEN_CHARACTER
@@ -405,7 +405,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_local_text (t: STRING_GENERAL) is
+	process_local_text (t: STRING_GENERAL)
 			-- Process string text `t'.
 		local
 			tok: EDITOR_TOKEN_LOCAL
@@ -414,7 +414,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_number_text (t: STRING_GENERAL) is
+	process_number_text (t: STRING_GENERAL)
 			-- Process string text `t'.
 		local
 			tok: EDITOR_TOKEN_NUMBER
@@ -423,7 +423,7 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_reserved_word_text (t: STRING_GENERAL) is
+	process_reserved_word_text (t: STRING_GENERAL)
 			-- Process string text `t'.
 		local
 			tok: EDITOR_TOKEN_RESERVED
@@ -432,12 +432,12 @@ feature -- Text processing
 			last_line.append_token (tok)
 		end
 
-	process_filter_item (text: STRING_GENERAL; a_before: BOOLEAN) is
+	process_filter_item (text: STRING_GENERAL; a_before: BOOLEAN)
 			-- Process information on filter `text'.
 		do
 		end
 
-	process_feature_dec_item (text: STRING_GENERAL; is_before: BOOLEAN) is
+	process_feature_dec_item (text: STRING_GENERAL; is_before: BOOLEAN)
 			-- Process feature dec information.
 		local
 			tok: EDITOR_TOKEN_FEATURE_START
@@ -449,12 +449,12 @@ feature -- Text processing
 			end
 		end
 
-	process_before_class (a_class: CLASS_C) is
+	process_before_class (a_class: CLASS_C)
 			-- Process before class `a_class'.
 		do
 		end
 
-	process_ast (a_name: STRING_GENERAL; a_ast: AST_EIFFEL; a_written_class: CLASS_C; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER]; a_for_feature_invocation: BOOLEAN; a_cursor, a_x_cursor: EV_POINTER_STYLE) is
+	process_ast (a_name: STRING_GENERAL; a_ast: AST_EIFFEL; a_written_class: CLASS_C; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER]; a_for_feature_invocation: BOOLEAN; a_cursor, a_x_cursor: EV_POINTER_STYLE)
 			-- Process `a_ast' from `a_written_class'.
 			-- `a_name' is displayed name for `a_ast'.
 			-- `a_appearance' is new appearance (font, text color and background color) associated with `a_name', if Void, default values will be used.
@@ -486,7 +486,7 @@ feature -- Text processing
 			last_line.append_token (l_ast_token)
 		end
 
-	process_warning (a_warning_message: STRING_GENERAL; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER]) is
+	process_warning (a_warning_message: STRING_GENERAL; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER])
 			-- Process warning message `a_warning_message' with appearance `a_appearance'.
 		require
 			a_warning_message_attached: a_warning_message /= Void
@@ -494,7 +494,7 @@ feature -- Text processing
 			process_ast (a_warning_message, Void, Void, a_appearance, False, Void, Void)
 		end
 
-	process_compiled_line (a_name: STRING_GENERAL; a_line_number: INTEGER; a_class_c: CLASS_C; a_selected: BOOLEAN) is
+	process_compiled_line (a_name: STRING_GENERAL; a_line_number: INTEGER; a_class_c: CLASS_C; a_selected: BOOLEAN)
 			-- Process `a_name' which represents a line of a class.
 		require
 			a_name_attached: a_name /= Void
@@ -508,7 +508,7 @@ feature -- Text processing
 			last_line.append_token (l_token)
 		end
 
-	process_uncompiled_line (a_name: STRING_GENERAL; a_line_number: INTEGER; a_class_i: CLASS_I; a_selected: BOOLEAN) is
+	process_uncompiled_line (a_name: STRING_GENERAL; a_line_number: INTEGER; a_class_i: CLASS_I; a_selected: BOOLEAN)
 			-- Process `a_name' which represents a line of a class.
 		require
 			a_name_attached: a_name /= Void
@@ -522,25 +522,25 @@ feature -- Text processing
 			last_line.append_token (l_token)
 		end
 
-	add_new_line is
+	add_new_line
 			-- Add new line.
 		do
 			process_new_line
 		end
 
-	add (s: STRING_GENERAL) is
+	add (s: STRING_GENERAL)
 			-- Add basic string.
 		do
 			process_basic_text (s)
 		end
 
-	add_string (s: STRING_GENERAL) is
+	add_string (s: STRING_GENERAL)
 			-- Add string.
 		do
 			process_string_text (s, Void)
 		end
 
-	process_folder_text (a_folder_name: STRING_GENERAL; a_path: STRING_GENERAL; a_group: CONF_GROUP) is
+	process_folder_text (a_folder_name: STRING_GENERAL; a_path: STRING_GENERAL; a_group: CONF_GROUP)
 			-- Process folder text.
 			-- `a_folder_name' is the name of the folder,
 			-- `a_path' is the path in which `a_folder_name' exist, so for example,
@@ -561,11 +561,11 @@ feature -- Text processing
 
 feature {NONE} -- Initialisations and File status
 
-	new_line_32: CHARACTER is '%N'
+	new_line_32: CHARACTER = '%N'
 
 	eol_reached: BOOLEAN;
 
-	process_feature_text_internal (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN) is
+	process_feature_text_internal (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
 		local
 			tok: EDITOR_TOKEN_FEATURE
 			feature_start: EDITOR_TOKEN_FEATURE_START
@@ -610,7 +610,7 @@ feature {NONE} -- Initialisations and File status
 			end
 		end
 
-	process_operator_text_internal (t: STRING_GENERAL; a_feature: E_FEATURE) is
+	process_operator_text_internal (t: STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process operator text.
 		local
 			tok: EDITOR_TOKEN
@@ -660,7 +660,7 @@ feature {NONE} -- Initialisations and File status
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

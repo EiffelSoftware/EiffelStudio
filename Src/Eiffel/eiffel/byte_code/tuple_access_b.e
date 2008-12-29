@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tuple access."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tuple_type: like tuple_type; a_pos: like position) is
+	make (a_tuple_type: like tuple_type; a_pos: like position)
 			-- New tuple access at position `a_pos' whose type is `a_type'.
 		require
 			a_tuple_type_not_void: a_tuple_type /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_tuple_access_b (Current)
@@ -51,10 +51,10 @@ feature -- Visitor
 
 feature -- Access
 
-	read_only: BOOLEAN is False
+	read_only: BOOLEAN = False
 			-- Is Result a read-only entity ?
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Type of current tuple access.
 		do
 			if source /= Void then
@@ -67,7 +67,7 @@ feature -- Access
 	tuple_type: TUPLE_TYPE_A
 			-- Type of tuple on which access is done.
 
-	tuple_element_type: TYPE_A is
+	tuple_element_type: TYPE_A
 			-- Type of element of tuple we are accessing.
 		do
 			Result := tuple_type.generics.item (position)
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_line_number (lnr : INTEGER) is
+	set_line_number (lnr : INTEGER)
 			-- Assign `lnr' to `line_number'.
 		do
 			line_number := lnr
@@ -93,7 +93,7 @@ feature -- Settings
 			line_number_set: line_number = lnr
 		end
 
-	set_source (a_expr: like source) is
+	set_source (a_expr: like source)
 			-- Assign `a_expr' to `source'.
 		require
 			a_expr_not_void: a_expr /= Void
@@ -105,7 +105,7 @@ feature -- Settings
 
 feature -- Comparison
 
-	same (other: ACCESS_B): BOOLEAN is
+	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		local
 			l_other: like Current
@@ -116,27 +116,27 @@ feature -- Comparison
 
 feature -- IL code generation
 
-	is_fast_as_local: BOOLEAN is True
+	is_fast_as_local: BOOLEAN = True
 			-- Is expression calculation as fast as loading a local?
 			-- (This is not true for once functions, but there is not enough information to figure it out.)
 
 feature -- Array optimization
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			if source /= Void then
 				Result := source.calls_special_features (array_desc)
 			end
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			if source /= Void then
 				Result := source.is_unsafe
 			end
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 			if source /= Void then
@@ -146,13 +146,13 @@ feature -- Array optimization
 
 feature -- Byte code generation
 
-	assign_code: CHARACTER is
+	assign_code: CHARACTER
 			-- Assignment code
 		once
 			Result := {BYTE_CONST}.bc_rassign
 		end
 
-	expanded_assign_code: CHARACTER is
+	expanded_assign_code: CHARACTER
 			-- Expanded assignment code
 		once
 			Result := {BYTE_CONST}.bc_rexp_assign
@@ -160,7 +160,7 @@ feature -- Byte code generation
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			if source /= Void then
 				Result := 1 + source.size
@@ -169,7 +169,7 @@ feature -- Inlining
 			end
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current
 			if source /= Void then
@@ -177,7 +177,7 @@ feature -- Inlining
 			end
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			if source /= Void then
@@ -187,7 +187,7 @@ feature -- Inlining
 
 feature -- Code generation
 
-	enlarged: TUPLE_ACCESS_BL is
+	enlarged: TUPLE_ACCESS_BL
 			-- <Precursor>
 		do
 			create Result.make (tuple_type, position)
@@ -200,7 +200,7 @@ invariant
 	tuple_type_not_void: tuple_type /= Void
 	position_positive: position > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

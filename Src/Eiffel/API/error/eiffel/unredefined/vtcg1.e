@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when a feature type violates the constrained genericity %
 			%validity rule."
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 
 	VTCG
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

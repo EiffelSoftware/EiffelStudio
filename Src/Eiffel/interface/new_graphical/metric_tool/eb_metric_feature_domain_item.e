@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Feature metric domain item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,13 +27,13 @@ create
 
 feature -- Access
 
-	associated_class_domain_item: EB_METRIC_CLASS_DOMAIN_ITEM is
+	associated_class_domain_item: EB_METRIC_CLASS_DOMAIN_ITEM
 			-- Class item for associated class of current feature
 		do
 			create Result.make (id_of_class (e_feature.associated_class.lace_class.config_class))
 		end
 
-	written_class_domain_item: EB_METRIC_CLASS_DOMAIN_ITEM is
+	written_class_domain_item: EB_METRIC_CLASS_DOMAIN_ITEM
 			-- Class item for written class of current feature
 		do
 			create Result.make (id_of_class (e_feature.written_class.lace_class.config_class))
@@ -41,13 +41,13 @@ feature -- Access
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_feature_domain_item (Current)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

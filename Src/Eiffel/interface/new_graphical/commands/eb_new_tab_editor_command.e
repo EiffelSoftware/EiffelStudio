@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to create a new tab editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature -- Initialization
 
-	make (dev_window: EB_DEVELOPMENT_WINDOW) is
+	make (dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Creation method.
 		require
 			dev_window_attached: dev_window /= Void
@@ -55,7 +55,7 @@ feature -- Initialization
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Create new tab.
 		do
 			creating_empty_tab := True
@@ -63,13 +63,13 @@ feature -- Execution
 			creating_empty_tab := False
 		end
 
-	execute_with_stone (a_stone: STONE) is
+	execute_with_stone (a_stone: STONE)
 			-- Execute with `a_stone'.
 		do
 			execute_with_stone_content (a_stone, Void)
 		end
 
-	execute_with_stone_content (a_stone: STONE; a_content: SD_CONTENT) is
+	execute_with_stone_content (a_stone: STONE; a_content: SD_CONTENT)
 			-- Create a new tab which stone is `a_stone' and create at side of `a_content' if exists.
 		local
 			l_editor : EB_SMART_EDITOR
@@ -95,7 +95,7 @@ feature -- Execution
 
 feature -- Items
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- New toolbar item for dockable toolbar.
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}(display_text)
@@ -103,7 +103,7 @@ feature -- Items
 			Result.drop_actions.set_veto_pebble_function (agent editors_manager.stone_acceptable)
 		end
 
-	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- New mini toolbar item.
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
@@ -113,43 +113,43 @@ feature -- Items
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := interface_names.m_new_tab
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.new_document_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.new_document_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := interface_names.f_new_tab
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text for the toolbar button.
 		do
 			Result := interface_names.b_new_tab
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := interface_names.f_new_tab
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 		do
@@ -161,13 +161,13 @@ feature {NONE} -- Implementation
 	creating_empty_tab: BOOLEAN
 			-- Creating empty tab?
 
-	editors_manager: EB_EDITORS_MANAGER is
+	editors_manager: EB_EDITORS_MANAGER
 			-- Editors manager.
 		do
 			Result := development_window.editors_manager
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

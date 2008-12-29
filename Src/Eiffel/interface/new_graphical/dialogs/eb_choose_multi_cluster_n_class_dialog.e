@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to choose multi classes and clusters"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_factory: EB_CONTEXT_MENU_FACTORY) is
+	make (a_factory: EB_CONTEXT_MENU_FACTORY)
 			-- Initialize the dialog.			
 		do
 			default_create
@@ -47,14 +47,14 @@ feature {NONE} -- Initialization
 			prepare (a_factory)
 		end
 
-	make_with_targets (a_factory: EB_CONTEXT_MENU_FACTORY) is
+	make_with_targets (a_factory: EB_CONTEXT_MENU_FACTORY)
 			-- Initialize the dialog and make sure targets are displayed in current dialog.
 		do
 			show_targets := True
 			make (a_factory)
 		end
 
-	prepare (a_factory: EB_CONTEXT_MENU_FACTORY) is
+	prepare (a_factory: EB_CONTEXT_MENU_FACTORY)
 			-- Create the controls and setup the layout
 		local
 			buttons_box: EV_HORIZONTAL_BOX
@@ -111,7 +111,7 @@ feature -- Access
 	show_targets: BOOLEAN
 			-- Will targets be shown in curernt dialog?
 
-	class_name: STRING is
+	class_name: STRING
 			-- class selected by the user, if any.
 		require
 			selected: selected
@@ -124,7 +124,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_class_add_action (action: like on_class_add) is
+	set_class_add_action (action: like on_class_add)
 			-- set class add action
 		require
 			action_not_void: action /= Void
@@ -132,7 +132,7 @@ feature -- Element Change
 			on_class_add := action
 		end
 
-	set_cluster_add_action (action: like on_cluster_add) is
+	set_cluster_add_action (action: like on_cluster_add)
 			-- set cluster add action
 		require
 			action_not_void: action /= Void
@@ -140,14 +140,14 @@ feature -- Element Change
 			on_cluster_add := action
 		end
 
-	set_folder_add_action (action: like on_folder_add) is
+	set_folder_add_action (action: like on_folder_add)
 		require
 			action_not_void: action /= Void
 		do
 			on_folder_add := action
 		end
 
-	set_target_add_action (action: like on_target_add) is
+	set_target_add_action (action: like on_target_add)
 			-- Set `on_target_add' with `action'.
 		require
 			a_action_attached: action /= Void
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Vision2 events
 
-	on_add is
+	on_add
 			-- add a do add operations to object.
 		require
 			on_class_add_set: on_class_add /= Void
@@ -211,7 +211,7 @@ feature {NONE} -- Vision2 events
 
 	on_target_add: PROCEDURE [ANY, TUPLE [CONF_TARGET]]
 
-	on_ok is
+	on_ok
 			-- Terminate the dialog and clear the selection.
 		do
 			selected := False
@@ -225,7 +225,7 @@ feature {NONE} -- Vision2 events
 							y_tilt: DOUBLE;
 							pression: DOUBLE;
 							x_abs: INTEGER;
-							y_abs: INTEGER ) is
+							y_abs: INTEGER )
 			-- Call on_ok through an agent compatible with double click actions.
 		do
 			on_ok
@@ -239,7 +239,7 @@ feature {NONE} -- Controls
 	ok_button: EV_BUTTON;
 			-- "Ok" button.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

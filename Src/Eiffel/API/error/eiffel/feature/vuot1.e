@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when an Object-Test Local name clashes with feature name, local, etc."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (c: AST_CONTEXT; n: ID_AS) is
+	make (c: AST_CONTEXT; n: ID_AS)
 			-- Create error object.
 		require
 			c_attached: c /= Void
@@ -29,10 +29,10 @@ feature {NONE} -- Creation
 
 feature -- Error properties
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER = 1;
 			-- Subcode of error
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

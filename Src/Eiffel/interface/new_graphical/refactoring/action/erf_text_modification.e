@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This allows undoable text modifications."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,13 +26,13 @@ inherit
 
 feature -- Status report
 
-	text_managed: BOOLEAN is
+	text_managed: BOOLEAN
 			-- Is the text prepared?
 		do
 			Result := text /= Void
 		end
 
-	undo_managed: BOOLEAN is
+	undo_managed: BOOLEAN
 			-- Are there undo informations associated?
 		do
 			Result := undo_redo /= void
@@ -43,7 +43,7 @@ feature -- Status report
 
 feature -- Prepare/Commit
 
-	prepare is
+	prepare
 			-- Prepare the text for edit.
 		require
 			not_undo_managed: not undo_managed	-- We can't prepare if we have already undo informations
@@ -57,7 +57,7 @@ feature -- Prepare/Commit
 			not_modified: not is_modified
 		end
 
-	commit is
+	commit
 			-- Commit text modifications.
 		require
 			text_managed: text_managed
@@ -94,7 +94,7 @@ feature -- Prepare/Commit
 
 feature -- Element change
 
-	load_text is
+	load_text
 			-- Load the text.
 		require
 			not_text_managed: not text_managed
@@ -103,14 +103,14 @@ feature -- Element change
 			text_managed: text_managed
 		end
 
-	save_text is
+	save_text
 			-- Save the text.
 		require
 			text_managed: text_managed
 		deferred
 		end
 
-	discard_text is
+	discard_text
 			-- Discard the text.
 		require
 			text_managed: text_managed
@@ -123,7 +123,7 @@ feature -- Element change
 			not_modified: not is_modified
 		end
 
-	discard_undo is
+	discard_undo
 			-- Discard the undo informations.
 		local
 			file: RAW_FILE
@@ -139,7 +139,7 @@ feature -- Element change
 			not_undo_managed: not undo_managed
 		end
 
-	set_changed_text (a_text: STRING_32) is
+	set_changed_text (a_text: STRING_32)
 			-- Set the changed text.
 		require
 			text_managed: text_managed
@@ -153,7 +153,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	undo is
+	undo
 			-- Undo the actions.
 		local
 			diff: DIFF_TEXT
@@ -179,7 +179,7 @@ feature -- Basic operations
 			end
 		end
 
-	redo is
+	redo
 			-- Redo the actions.
 		local
 			diff: DIFF_TEXT
@@ -207,7 +207,7 @@ feature -- Basic operations
 
 feature -- Removal
 
-	destroy is
+	destroy
 			-- Called before the object is destroyed.
 		do
 			if undo_managed then
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 invariant
 	modified_needs_text_managed: is_modified implies text_managed
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

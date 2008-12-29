@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A feature-level AST-augmented Eiffel code class text modifier.
 	]"
@@ -62,7 +62,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Query
 
-	find_actual_context_feature (a_feature: !like context_feature; a_class: !like context_class): !like context_feature is
+	find_actual_context_feature (a_feature: !like context_feature; a_class: !like context_class): !like context_feature
 			-- Locates the actual context feature given a class.
 			--
 			-- `a_feature': The feature to resolve an actual feature for.
@@ -119,7 +119,7 @@ feature {NONE} -- Factory
 			create Result.make (l_class, context_feature, l_text)
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "About Dialog, displaying general information about $EiffelGraphicalCompiler$"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		local
 			eiffel_image: EV_PIXMAP
 			eiffel_text_box: EV_VERTICAL_BOX
@@ -136,7 +136,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	registration_info: STRING is
+	registration_info: STRING
 			-- Clause in the about dialog concerning the license.
 		do
 			create Result.make (50)
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constant strings
 
-	t_version_info: STRING is
+	t_version_info: STRING
 		once
 			create Result.make (100)
 			Result.append (Interface_names.t_Project)
@@ -162,7 +162,7 @@ feature {NONE} -- Constant strings
 			end
 		end
 
-	t_Copyright_info: STRING is
+	t_Copyright_info: STRING
 		local
 			c_date: C_DATE
 		once
@@ -172,7 +172,7 @@ feature {NONE} -- Constant strings
 				%All rights reserved"
 		end
 
-	t_info: STRING is
+	t_info: STRING
 		once
 			create Result.make (500)
 			Result.append (
@@ -186,7 +186,7 @@ feature {NONE} -- Constant strings
 			)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

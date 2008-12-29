@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"View with information about a class."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature -- Docking issues
 
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Attach to docking manager
 		do
 			build_docking_content (a_docking_manager)
@@ -41,13 +41,13 @@ feature -- Access
 	stone: CLASSI_STONE
 			-- Stone
 
-	predefined_formatters: like formatters is
+	predefined_formatters: like formatters
 			-- Predefined formatters
 		do
 			Result := develop_window.managed_class_formatters
 		end
 
-	no_target_message: STRING_GENERAL is
+	no_target_message: STRING_GENERAL
 			-- Message to be displayed in `output_line' when no stone is set
 		do
 			Result := Interface_names.l_Not_in_system_no_info
@@ -121,7 +121,7 @@ feature {ES_CLASS_TOOL} -- Element change
 
 feature -- Status setting
 
-	set_stone (new_stone: STONE) is
+	set_stone (new_stone: STONE)
 			-- Send a stone to class formatters.
 		local
 			fst: FEATURE_STONE
@@ -173,7 +173,7 @@ feature -- Status setting
 			end
 		end
 
-	pop_default_formatter is
+	pop_default_formatter
 			-- Pop the default class formatter.
 		local
 			real_index: INTEGER
@@ -191,7 +191,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	enable_dotnet_formatters (a_flag: BOOLEAN) is
+	enable_dotnet_formatters (a_flag: BOOLEAN)
 			-- Set sensitivity of formatters to 'a_flag'.
 		local
 			l_done: BOOLEAN
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	drop_stone (st: like stone) is
+	drop_stone (st: like stone)
 			-- Set `st' in the stone manager and pop up the feature view if it is a feature stone.
 		local
 			fst: FEATURE_STONE
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL is
+	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL
 			-- Decide which tool to display.
 		local
 			fs: FEATURE_STONE
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

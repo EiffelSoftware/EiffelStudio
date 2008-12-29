@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel call stack for the stopped application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -65,7 +65,7 @@ create {EIFFEL_CALL_STACK_DOTNET}
 
 feature -- Properties
 
-	stack_depth: INTEGER is
+	stack_depth: INTEGER
 			-- Current call stack depth.
 		do
 			-- FIXME jfiat: this is count for now ... but fix this !
@@ -77,7 +77,7 @@ feature -- Properties
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER; tid: like thread_id) is
+	make (n: INTEGER; tid: like thread_id)
 			-- Fill `where' with the `n' first call stack elements.
 			-- `where' is left empty if there is an error.
 			-- Retrieve the whole call stack if `n' = -1.
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			reload (n)
 		end
 
-	make_empty (tid: like thread_id) is
+	make_empty (tid: like thread_id)
 			-- Initialize only the first call stack element.
 		do
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Creating Empty Eiffel Stack%N"); end
@@ -105,7 +105,7 @@ feature -- Properties
 
 feature {APPLICATION_STATUS} -- Restricted access
 
-	reload (n: INTEGER) is
+	reload (n: INTEGER)
 			--
 		local
 			call: CALL_STACK_ELEMENT
@@ -303,7 +303,7 @@ feature {APPLICATION_STATUS} -- Restricted access
 
 feature -- cleaning
 
-	clean is
+	clean
 			-- Clean stored data
 		local
 			cse_d: CALL_STACK_ELEMENT_DOTNET
@@ -323,7 +323,7 @@ feature -- cleaning
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

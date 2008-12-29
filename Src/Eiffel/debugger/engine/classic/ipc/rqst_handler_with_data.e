@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 deferred
@@ -19,7 +19,7 @@ feature {NONE} -- parsing features
 	position: INTEGER;
 			-- Position in parsed string
 
-	reset_parsing is
+	reset_parsing
 		do
 			position := 1
 		end
@@ -36,12 +36,12 @@ feature {NONE} -- parsing features
 	last_pointer: POINTER
 			-- Last parsed integer token						
 
-	tokens_count: INTEGER is
+	tokens_count: INTEGER
 		do
 			Result := detail.occurrences ('%U') + 1
 		end
 
-	read_string is
+	read_string
 			-- Parse string token.
 		require
 			-- position < detail.count and
@@ -59,7 +59,7 @@ feature {NONE} -- parsing features
 			position := i + 1;
 		end
 
-	index_of (c: CHARACTER; pos: INTEGER): INTEGER is
+	index_of (c: CHARACTER; pos: INTEGER): INTEGER
 			-- position of first occurrence of c
 			-- after pos (included). 0 if none
 			--| should be in string
@@ -79,7 +79,7 @@ feature {NONE} -- parsing features
 			end
 		end
 
-	read_integer is
+	read_integer
 			-- Parse integer token.
 		do
 			read_string
@@ -93,14 +93,14 @@ feature {NONE} -- parsing features
 --			last_integer_64 := last_string.to_integer_64;
 --		end
 
-	read_pointer is
+	read_pointer
 			-- Parse integer token.
 		do
 			read_string
 			last_pointer := hex_to_pointer (last_string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Stone representing a compiled Eiffel class."
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: CLASS_C) is
+	make (a_class: CLASS_C)
 			-- Copy all information from argument
 			-- OR KEEP A REFERENCE?
 		require
@@ -38,21 +38,21 @@ feature -- Properties
 
 	e_class: CLASS_C
 
-	group: CONF_GROUP is
+	group: CONF_GROUP
 		do
 			if {c: like e_class} e_class then
 				Result := c.group
 			end
 		end
 
-	class_name: STRING is
+	class_name: STRING
 		do
 			if {c: like e_class} e_class then
 				Result := c.name
 			end
 		end
 
-	class_i: CLASS_I is
+	class_i: CLASS_I
 		do
 			if {c: like e_class} e_class then
 				Result := c.lace_class
@@ -61,19 +61,19 @@ feature -- Properties
 
 feature -- Access
 
-	stone_signature: STRING is
+	stone_signature: STRING
 		do
 			if {c: like e_class} e_class then
 				Result := c.class_signature
 			end
 		end
 
-	history_name: STRING_GENERAL is
+	history_name: STRING_GENERAL
 		do
 			Result := Interface_names.s_Class_stone.as_string_32 + stone_signature
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 			-- Display class name, class' cluster and class location in
 			-- window title bar.
 		do
@@ -93,7 +93,7 @@ feature -- Access
 			end
 		end
 
-	file_name: STRING is
+	file_name: STRING
 			-- The one from CLASSC
 		do
 			if e_class /= Void then
@@ -103,7 +103,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is `Current' a valid stone?
 		do
 			Result := e_class /= Void and then e_class.is_valid and then
@@ -112,7 +112,7 @@ feature -- Status report
 
 feature -- Synchronization
 
-	synchronized_stone: CLASSI_STONE is
+	synchronized_stone: CLASSI_STONE
 			-- Clone of `Current' stone after a recompilation
 			-- (May be Void if not valid anymore. It may also be a
 			-- classi_stone if the class is not compiled anymore)
@@ -130,7 +130,7 @@ feature -- Synchronization
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

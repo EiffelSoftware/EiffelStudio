@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Perform type checking for debugger's expression evaluator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Settings
 
-	reset is
+	reset
 			-- Reset all attributes to their default value
 		do
 			Precursor {AST_FEATURE_CHECKER_GENERATOR}
@@ -35,7 +35,7 @@ feature -- Properties
 
 feature -- Type checking
 
-	expression_type_check_and_code (a_feature: FEATURE_I; an_exp: EXPR_AS) is
+	expression_type_check_and_code (a_feature: FEATURE_I; an_exp: EXPR_AS)
 			-- Type check `an_exp' in the context of `a_feature'.
 		require
 			an_exp_not_void: an_exp /= Void
@@ -78,7 +78,7 @@ feature -- Type checking
 			end
 		end
 
-	expression_or_instruction_type_check_and_code (a_feature: FEATURE_I; an_ast: AST_EIFFEL) is
+	expression_or_instruction_type_check_and_code (a_feature: FEATURE_I; an_ast: AST_EIFFEL)
 			-- Type check `an_ast' in the context of `a_feature'.
 		require
 			an_ast_not_void: an_ast /= Void
@@ -121,7 +121,7 @@ feature -- Type checking
 			end
 		end
 
-	type_a_from_type_as (a_type_as: TYPE_AS): TYPE_A is
+	type_a_from_type_as (a_type_as: TYPE_AS): TYPE_A
 			-- TYPE_A related to `a_type_as'.
 		do
 			reset
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			Result := Void
 		end
 
-	check_type (a_type: TYPE_AS) is
+	check_type (a_type: TYPE_AS)
 			-- Evaluate `a_type' into a TYPE_A instance if valid.
 			-- If not valid, raise a compiler error and return Void.
 		local
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_un_old_as (l_as: UN_OLD_AS) is
+	process_un_old_as (l_as: UN_OLD_AS)
 		local
 			b: BOOLEAN
 		do
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
+	process_access_feat_as (l_as: ACCESS_FEAT_AS)
 		local
 			l_dbg_err: DBG_EXPRESSION_TYPE_CHECKER_ERROR
 		do
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

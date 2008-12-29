@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Basic metric used in EiffelStudio"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,19 +22,19 @@ create
 
 feature -- Status report
 
-	is_result_domain_available: BOOLEAN is
+	is_result_domain_available: BOOLEAN
 			-- After metric calculation, can we get the last generated domain
 			-- for detail display?
 		do
 			Result := unit.scope /= Void
 		end
 
-	is_basic: BOOLEAN is True
+	is_basic: BOOLEAN = True
 			-- Is current a basic metric?
 
 feature -- Metric calculation
 
-	value (a_scope: EB_METRIC_DOMAIN): QL_QUANTITY_DOMAIN is
+	value (a_scope: EB_METRIC_DOMAIN): QL_QUANTITY_DOMAIN
 			-- Value of current metric calculated over `a_scope'
 		local
 			l_dummy_domain: QL_DOMAIN
@@ -84,7 +84,7 @@ feature -- Metric calculation
 
 feature -- Setting
 
-	set_criteria (a_criteria: like criteria) is
+	set_criteria (a_criteria: like criteria)
 			-- Set `criteria' with `a_criteria'.
 		do
 			criteria := a_criteria
@@ -94,7 +94,7 @@ feature -- Setting
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_basic_metric (Current)
@@ -102,7 +102,7 @@ feature -- Process
 
 feature{NONE} -- Implementation
 
-	metric: QL_METRIC is
+	metric: QL_METRIC
 			-- Query language metric used to calculation result
 		do
 			Result := metric_factory.metric (unit)
@@ -113,7 +113,7 @@ feature{NONE} -- Implementation
 	internal_value: DOUBLE
 			-- Internal value used when current metric is being calculated
 
-	calculate_domain (a_metric: QL_METRIC; a_domain: QL_DOMAIN) is
+	calculate_domain (a_metric: QL_METRIC; a_domain: QL_DOMAIN)
 			-- Calculate `a_metric' value for `a_domain'.
 			-- Added calculated value into `internal_value'.
 			-- If `is_fill_domain_enabled' store generated domain into `last_result_domain'.
@@ -139,7 +139,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	evaluated_criteria (a_criteria: like criteria): QL_CRITERION is
+	evaluated_criteria (a_criteria: like criteria): QL_CRITERION
 			-- Evaluated query language criterion from `criteria'
 		local
 			l_scope: QL_SCOPE
@@ -159,7 +159,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	current_application_target_domain: QL_TARGET_DOMAIN is
+	current_application_target_domain: QL_TARGET_DOMAIN
 			-- Current application target domain
 		do
 			create Result.make
@@ -168,7 +168,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Byte code for deferred features
@@ -14,17 +14,17 @@ inherit
 
 feature
 
-	is_deferred: BOOLEAN is True;
+	is_deferred: BOOLEAN = True;
 			-- Is the current byte code a byte code for deferred
 			-- features ?
 
-	make_body_code (ba: BYTE_ARRAY; a_generator: MELTED_GENERATOR) is
+	make_body_code (ba: BYTE_ARRAY; a_generator: MELTED_GENERATOR)
 			-- Generate byte code for the feature body.
 		do
 			ba.append (Bc_deferred);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

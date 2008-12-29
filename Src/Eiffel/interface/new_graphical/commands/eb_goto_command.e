@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to open goto dialog for editor line access."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Status report
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- Is the operation possible?
 		do
 			Result := editor.is_editable
@@ -27,7 +27,7 @@ feature -- Status report
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute the operation
 		do
 			editor.redo
@@ -35,36 +35,36 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING is
+	menu_name: STRING
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Goto
 		end
 
-	pixmap: ARRAY [EV_PIXMAP] is
+	pixmap: ARRAY [EV_PIXMAP]
 			-- Pixmaps representing the command (one for the
 			-- gray version, one for the color version).
 		do
 			Result := Pixmaps.Icon_redo
 		end
 
-	tooltip: STRING is
+	tooltip: STRING
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Redo
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description for this command.
 		do
 			Result := Interface_names.e_Redo
 		end
 
-	name: STRING is "Redo";
+	name: STRING = "Redo";
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

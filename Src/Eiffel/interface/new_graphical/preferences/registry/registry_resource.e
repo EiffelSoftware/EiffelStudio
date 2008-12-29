@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects used as translator between WEL and bench formats for a resource."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 	
-	make (s: STRING; root_resource: WEL_REGISTRY_KEY_VALUE) is
+	make (s: STRING; root_resource: WEL_REGISTRY_KEY_VALUE)
 			-- initialization
 		require
 			not_void: root_resource /= Void
@@ -25,7 +25,7 @@ feature -- Initialization
 			update_value
 		end
 
-	make_from_resource (r: RESOURCE) is
+	make_from_resource (r: RESOURCE)
 			-- initialization
 		require
 			not_void: r /= Void
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Implementation
 
-	update_value is
+	update_value
 			-- Gets the appropriate resource from `key_value'
 			-- if the type is unknown, it is assumed to be a string.
 		local
@@ -118,7 +118,7 @@ feature -- Implementation
 			end
 		end
 
-	update_key_value is
+	update_key_value
 			-- Gets the appropriate resource from `key_value'
 			-- if the type is unknown, it is assumed to be a string.
 		do
@@ -128,7 +128,7 @@ feature -- Implementation
 feature {NONE} -- Constants
 
 	string_type, color_type, integer_type,
-	font_type, boolean_type, array_type: INTEGER is unique
+	font_type, boolean_type, array_type: INTEGER = unique
 
 feature -- Implementation
 
@@ -139,7 +139,7 @@ invariant
 	REGISTRY_RESOURCE_contains_something: value /= Void or key_value /= Void
 	REGISTRY_RESOURCE_consistency: name /= Void and not name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

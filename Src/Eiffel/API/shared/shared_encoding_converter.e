@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared encoding converter."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	encoding_converter: ?ENCODING_CONVERTER is
+	encoding_converter: ?ENCODING_CONVERTER
 			-- Encoding converter
 		do
 			Result := encoding_converter_cell.item
@@ -18,7 +18,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_encoding_converter (a_converter: like encoding_converter) is
+	set_encoding_converter (a_converter: like encoding_converter)
 			-- Set `encoding_converter' with `a_converter'
 		do
 			encoding_converter_cell.put (a_converter)
@@ -26,13 +26,13 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	encoding_converter_cell: CELL [ENCODING_CONVERTER] is
+	encoding_converter_cell: CELL [ENCODING_CONVERTER]
 			-- Cell to hold the converter.
 		once
 			create Result.put (Void)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a binary AND criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature -- Process
 
-	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+	process (a_criterion_visitor: QL_CRITERION_VISITOR)
 			-- Process Current using `a_criterion_visitor'.
 		do
 			a_criterion_visitor.process_and_criterion (Current)
@@ -28,7 +28,7 @@ feature -- Process
 
 feature -- Status report
 
-	has_inclusive_intrinsic_domain: BOOLEAN is
+	has_inclusive_intrinsic_domain: BOOLEAN
 			-- Does current criterion has a domain by default?
 		do
 				-- If one of `left' and `right' (and two of course) has inclusive intrinsic domain,
@@ -66,7 +66,7 @@ feature -- Status report
 			good_result: Result implies (left.has_inclusive_intrinsic_domain or else right.has_inclusive_intrinsic_domain)
 		end
 
-	has_exclusive_intrinsic_domain: BOOLEAN is
+	has_exclusive_intrinsic_domain: BOOLEAN
 			-- Does current criterion has an exclusive intrinsic domain?
 		do
 				-- If both `left' and `right' has exclusive intrinsic domain, then
@@ -85,7 +85,7 @@ feature -- Status report
 
 feature{NONE} -- Implementation
 
-	intrinsic_domain_internal: like intrinsic_domain is
+	intrinsic_domain_internal: like intrinsic_domain
 			-- Intrinsic domain
 		require
 			intrinsic_domain_exists: has_intrinsic_domain
@@ -144,7 +144,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 		
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

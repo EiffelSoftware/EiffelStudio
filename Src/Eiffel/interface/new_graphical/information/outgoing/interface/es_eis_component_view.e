@@ -1,4 +1,4 @@
-indexing
+note
 	description: "View of list of EIS details"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -103,7 +103,7 @@ feature -- HELP_CONTEXT_I, Access
 
 feature -- Operation
 
-	display is
+	display
 			-- Display EIS entries in `eis_grid'.
 		do
 			wipe_out
@@ -111,20 +111,20 @@ feature -- Operation
 			setup_grid_from_component
 		end
 
-	wipe_out is
+	wipe_out
 			-- Wipe out current view.
 		do
 			eis_grid.wipe_out
 		end
 
-	destroy is
+	destroy
 			-- Destroy the view
 			-- Leave the EIS grid along.
 		do
 			recycle
 		end
 
-	refresh_grid is
+	refresh_grid
 			-- Refresh the grid, sort according to session data if needed.
 		do
 			if not extracted_entries.is_empty then
@@ -137,7 +137,7 @@ feature -- Operation
 			eis_grid.redraw
 		end
 
-	refresh_grid_without_sorting is
+	refresh_grid_without_sorting
 			-- Refresh the grid without sorting.
 		do
 			eis_grid.remove_and_clear_all_rows
@@ -145,7 +145,7 @@ feature -- Operation
 			eis_grid.redraw
 		end
 
-	rebuild_and_refresh_grid is
+	rebuild_and_refresh_grid
 			-- Rebuild table from the component and refresh the grid.
 		do
 			eis_grid.remove_and_clear_all_rows
@@ -153,20 +153,20 @@ feature -- Operation
 			eis_grid.redraw
 		end
 
-	create_new_entry is
+	create_new_entry
 			-- Create new EIS entry based on current component at the last row.
 			-- Default to do nothing.
 		do
 		end
 
-	delete_selected_entries is
+	delete_selected_entries
 			-- Delete selected entries.
 		do
 		end
 
 feature {NONE} -- Sorting
 
-	new_sorter: DS_QUICK_SORTER [EIS_ENTRY] is
+	new_sorter: DS_QUICK_SORTER [EIS_ENTRY]
 			-- New sorter
 		local
 			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [EIS_ENTRY]
@@ -175,7 +175,7 @@ feature {NONE} -- Sorting
 			create Result.make (l_agent_sorter)
 		end
 
-	sort_entry (u, v: EIS_ENTRY): BOOLEAN is
+	sort_entry (u, v: EIS_ENTRY): BOOLEAN
 			-- Compare u, v.
 		require
 			u_not_void: u /= Void
@@ -280,13 +280,13 @@ feature {NONE} -- Sorting
 
 feature -- Query
 
-	is_help_available: BOOLEAN is
+	is_help_available: BOOLEAN
 			--
 		do
 			Result := Precursor {HELP_CONTEXT_I} and then not eis_grid.selected_rows.is_empty
 		end
 
-	same_view (a_view: like Current): BOOLEAN is
+	same_view (a_view: like Current): BOOLEAN
 			-- Is current view focusing the same component as `a_view'?
 		do
 			if a_view /= Void then
@@ -296,14 +296,14 @@ feature -- Query
 			end
 		end
 
-	component_editable: BOOLEAN is
+	component_editable: BOOLEAN
 			-- Is component editable?
 		do
 		end
 
 feature {NONE} -- Initialization
 
-	setup_base_grid is
+	setup_base_grid
 			-- Setup basic attributes of the displaying grid.
 		local
 			l_grid: like eis_grid
@@ -334,7 +334,7 @@ feature {NONE} -- Initialization
 			register_action (l_grid.column (column_others).header_item.pointer_button_press_actions, agent on_grid_header_click (column_others, ?, ?, ?, ?, ?, ?, ?, ?))
 		end
 
-	setup_grid_from_component is
+	setup_grid_from_component
 			-- Fill data into the displaying grid from given `component'.
 		do
 			create extracted_entries.make_from_array (new_extractor.eis_entries.linear_representation)
@@ -346,7 +346,7 @@ feature {NONE} -- Initialization
 			extracted_entries_not_void: extracted_entries /= Void
 		end
 
-	compute_grid_rows is
+	compute_grid_rows
 			-- Compute number of grid rows
 		local
 			l_total_row: INTEGER
@@ -363,14 +363,14 @@ feature {NONE} -- Initialization
 									(not new_entry_possible implies eis_grid.row_count = extracted_entries.count)
 		end
 
-	new_extractor: !ES_EIS_EXTRACTOR is
+	new_extractor: !ES_EIS_EXTRACTOR
 			-- Create extractor
 		deferred
 		end
 
 feature {NONE} -- Events
 
-	on_grid_header_click (a_column_index: INTEGER; a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
+	on_grid_header_click (a_column_index: INTEGER; a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32)
 			-- On pointer pressed on grid header
 		local
 			l_session: SESSION_I
@@ -391,7 +391,7 @@ feature {NONE} -- Events
 			refresh_grid
 		end
 
-	on_key_released (ev_key: EV_KEY) is
+	on_key_released (ev_key: EV_KEY)
 			-- On `en_key' released
 		do
 			if ev_key.code = {EV_KEY_CONSTANTS}.key_enter then
@@ -411,7 +411,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_pointer_double_pressed (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER) is
+	on_pointer_double_pressed (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER)
 			-- process mouse click in the list
 		do
 			if new_entry_possible and then eis_grid.row (eis_grid.row_count).is_selected then
@@ -421,7 +421,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_item_display (a_column, a_row: INTEGER): EV_GRID_ITEM is
+	on_item_display (a_column, a_row: INTEGER): EV_GRID_ITEM
 			-- On item expose.
 		local
 			l_eis_entry: !EIS_ENTRY
@@ -473,7 +473,7 @@ feature {NONE} -- Events
 			eis_grid.request_columns_auto_resizing
 		end
 
-	activate_item (a_item: EV_GRID_ITEM) is
+	activate_item (a_item: EV_GRID_ITEM)
 			-- Activate editable item.
 		require
 			a_item_not_void: a_item /= Void
@@ -487,27 +487,27 @@ feature {NONE} -- Events
 
 feature {NONE} -- Item callbacks
 
-	on_name_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_name_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On name changed
 		do
 		end
 
-	on_protocol_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_protocol_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On protocol changed
 		do
 		end
 
-	on_source_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_source_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On source changed
 		do
 		end
 
-	on_tags_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_tags_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On tags changed
 		do
 		end
 
-	on_others_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_others_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On others changed
 		do
 		end
@@ -517,7 +517,7 @@ feature {ES_EIS_COMPONENT_VIEW} -- Access
 	component: !G
 			-- The focusing component
 
-	background_color_of_entry (a_entry: !EIS_ENTRY): EV_COLOR is
+	background_color_of_entry (a_entry: !EIS_ENTRY): EV_COLOR
 			-- Background color of `a_entry'
 		do
 		end
@@ -530,7 +530,7 @@ feature {NONE} -- Access
 	extracted_entries: DS_ARRAYED_LIST [EIS_ENTRY]
 			-- Cached list of entries to display
 
-	sorting_column: INTEGER is
+	sorting_column: INTEGER
 			-- Sorting column
 		local
 			l_session: SESSION_I
@@ -547,7 +547,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	descend_order: BOOLEAN is
+	descend_order: BOOLEAN
 			-- Descend? Or ascend order
 			-- Default is ascend
 		local
@@ -566,7 +566,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Recycling
 
-	internal_recycle is
+	internal_recycle
 			-- <Precursor>
 		do
 		end
@@ -583,7 +583,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Validation
 
-	is_name_valid (a_name: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN is
+	is_name_valid (a_name: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_name' be changed in `a_item'?
 		do
 			if {lt_entry: EIS_ENTRY}a_item.row.data then
@@ -591,7 +591,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	is_protocol_valid (a_protocol: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN is
+	is_protocol_valid (a_protocol: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_protocol' be changed in `a_item'?
 		do
 			if {lt_entry: EIS_ENTRY}a_item.row.data then
@@ -599,7 +599,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	is_source_valid (a_source: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN is
+	is_source_valid (a_source: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_source' be changed in `a_item'?
 		do
 			if {lt_entry: EIS_ENTRY}a_item.row.data then
@@ -607,7 +607,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	is_tags_valid (a_tags: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN is
+	is_tags_valid (a_tags: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_tags' be changed in `a_item'?
 		do
 			if {lt_entry: EIS_ENTRY}a_item.row.data then
@@ -615,7 +615,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-	is_others_valid (a_others: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN is
+	is_others_valid (a_others: STRING_32; a_item: EV_GRID_EDITABLE_ITEM): BOOLEAN
 			-- Can `a_others' be changed in `a_item'?
 		do
 			if {lt_entry: EIS_ENTRY}a_item.row.data then
@@ -623,14 +623,14 @@ feature {NONE} -- Validation
 			end
 		end
 
-	entry_editable (a_entry: !EIS_ENTRY): BOOLEAN is
+	entry_editable (a_entry: !EIS_ENTRY): BOOLEAN
 			-- If `a_entry' is editable through current view?
 		do
 		end
 
 feature {NONE} -- Grid items
 
-	name_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM is
+	name_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM
 			-- Grid item of name from an EIS entry.
 		local
 			l_name: STRING_32
@@ -651,7 +651,7 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	protocol_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM is
+	protocol_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM
 			-- Grid item of protocol from an EIS entry.
 		local
 			l_protocol: STRING_32
@@ -672,7 +672,7 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	source_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM is
+	source_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM
 			-- Grid item of source from an EIS entry.
 		local
 			l_source: STRING_32
@@ -693,7 +693,7 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	tags_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM is
+	tags_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM
 			-- Grid item of tags from an EIS entry.
 		local
 			l_tags: STRING_32
@@ -711,7 +711,7 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	others_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM is
+	others_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM
 			-- Grid item of others from an EIS entry.
 		local
 			l_others: !STRING_32
@@ -729,7 +729,7 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	location_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM is
+	location_item_from_eis_entry (a_entry: !EIS_ENTRY): !EV_GRID_ITEM
 			-- Grid item of location from an EIS entry
 		local
 			l_type: NATURAL
@@ -770,7 +770,7 @@ feature {NONE} -- Grid items
 			end
 		end
 
-	new_listable_item: !EB_GRID_LISTABLE_CHOICE_ITEM is
+	new_listable_item: !EB_GRID_LISTABLE_CHOICE_ITEM
 			-- New listable item
 		do
 			create Result
@@ -782,7 +782,7 @@ feature {NONE} -- Grid items
 
 feature {NONE} -- Location token
 
-	target_editor_token_for_location (a_item: CONF_TARGET): !ES_GRID_LIST_ITEM is
+	target_editor_token_for_location (a_item: CONF_TARGET): !ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
@@ -807,7 +807,7 @@ feature {NONE} -- Location token
 			end
 		end
 
-	group_editor_token_for_location (a_item: CONF_GROUP): !ES_GRID_LIST_ITEM is
+	group_editor_token_for_location (a_item: CONF_GROUP): !ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
@@ -832,7 +832,7 @@ feature {NONE} -- Location token
 			end
 		end
 
-	folder_editor_token_for_location (a_item: EB_FOLDER): !ES_GRID_LIST_ITEM is
+	folder_editor_token_for_location (a_item: EB_FOLDER): !ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: EB_GRID_LISTABLE_CHOICE_ITEM
@@ -857,7 +857,7 @@ feature {NONE} -- Location token
 			end
 		end
 
-	class_editor_token_for_location (a_item: CLASS_I): !ES_GRID_LIST_ITEM is
+	class_editor_token_for_location (a_item: CLASS_I): !ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		local
 			l_editable_item: !EB_GRID_LISTABLE_CHOICE_ITEM
@@ -882,7 +882,7 @@ feature {NONE} -- Location token
 			end
 		end
 
-	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING): !ES_GRID_LIST_ITEM is
+	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING): !ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		require
 			a_item_void_implies_a_name_not_void: a_item = Void implies a_name /= Void
@@ -919,13 +919,13 @@ feature {NONE} -- Location token
 
 feature {NONE} -- Pixmap component
 
-	target_pixmap_component: !ES_GRID_PIXMAP_COMPONENT is
+	target_pixmap_component: !ES_GRID_PIXMAP_COMPONENT
 			-- Target pixmap component
 		do
 			create Result.make (pixmaps.icon_pixmaps.folder_target_icon)
 		end
 
-	group_pixmap_component (a_group: CONF_GROUP): !ES_GRID_PIXMAP_COMPONENT is
+	group_pixmap_component (a_group: CONF_GROUP): !ES_GRID_PIXMAP_COMPONENT
 			-- Group pixmap component
 		require
 			a_group_not_void: a_group /= Void
@@ -933,19 +933,19 @@ feature {NONE} -- Pixmap component
 			create Result.make (icon_factory.pixmap_from_group (a_group))
 		end
 
-	folder_pixmap_component: !ES_GRID_PIXMAP_COMPONENT is
+	folder_pixmap_component: !ES_GRID_PIXMAP_COMPONENT
 			-- Folder pixmap component
 		do
 			create Result.make (pixmaps.icon_pixmaps.folder_blank_icon)
 		end
 
-	class_pixmap_component (a_class: CLASS_I): !ES_GRID_PIXMAP_COMPONENT is
+	class_pixmap_component (a_class: CLASS_I): !ES_GRID_PIXMAP_COMPONENT
 			-- Class pixmap component
 		do
 			create Result.make (icon_factory.pixmap_from_class_i (a_class))
 		end
 
-	feature_pixmap_component (a_feature: E_FEATURE): !ES_GRID_PIXMAP_COMPONENT is
+	feature_pixmap_component (a_feature: E_FEATURE): !ES_GRID_PIXMAP_COMPONENT
 			-- Feature pixmap component
 		require
 			a_feature_not_void: a_feature /= Void
@@ -953,7 +953,7 @@ feature {NONE} -- Pixmap component
 			create Result.make (icon_factory.pixmap_from_e_feature (a_feature))
 		end
 
-	uncompiled_feature_pixmap_component: !ES_GRID_PIXMAP_COMPONENT is
+	uncompiled_feature_pixmap_component: !ES_GRID_PIXMAP_COMPONENT
 			-- Uncompiled feature pixmap component
 		do
 			create Result.make (pixmaps.icon_pixmaps.feature_obsolete_routine_icon)
@@ -975,7 +975,7 @@ feature {NONE} -- Column constants
 	column_others: INTEGER = 6
 	numbers_of_column: INTEGER = 6;
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

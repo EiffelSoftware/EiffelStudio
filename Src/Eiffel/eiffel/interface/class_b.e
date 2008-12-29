@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Internal description of a basic class such as INTEGER, BOOLEAN etc.."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (l: like original_class) is
+	make (l: like original_class)
 			-- <Precursor>
 		do
 			Precursor {EIFFEL_CLASS_C} (l)
@@ -29,12 +29,12 @@ feature {NONE} -- Initialization
 
 feature
 
-	is_basic: BOOLEAN is True
+	is_basic: BOOLEAN = True
 			-- Is the current class a basic class ?
 
 feature {CLASS_TYPE_AS} -- Actual class type
 
-	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp: BOOLEAN; is_sep: BOOLEAN): CL_TYPE_A is
+	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp: BOOLEAN; is_sep: BOOLEAN): CL_TYPE_A
 			-- Actual type of `current depending on the context in which it is declared
 			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
 			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
@@ -50,7 +50,7 @@ feature {CLASS_TYPE_AS} -- Actual class type
 
 feature -- Validity
 
-	check_validity is
+	check_validity
 			-- Check validity of a simple type reference class.
 		local
 			skelet: SKELETON
@@ -104,7 +104,7 @@ feature -- Validity
 invariant
 	is_expanded: is_expanded
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

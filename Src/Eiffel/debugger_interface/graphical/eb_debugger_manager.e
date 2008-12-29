@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared object that manages all debugging actions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -66,7 +66,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			Precursor
@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			window_manager.add_observer (Current)
 		end
 
-	initialize is
+	initialize
 		local
 			pbool: BOOLEAN_PREFERENCE
 			prefs: EB_DEBUGGER_DATA
@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 			pbool.typed_change_actions.extend (agent dump_value_factory.set_debug_output_evaluation_enabled)
 		end
 
-	init_commands is
+	init_commands
 			-- Create a new project toolbar.
 		local
 			l_cmd: EB_STANDARD_CMD
@@ -318,22 +318,22 @@ feature -- Properties
 
 feature -- Settings
 
-	dialog_data: EB_DIALOGS_DATA is
+	dialog_data: EB_DIALOGS_DATA
 		do
 			Result := eb_preferences.dialog_data
 		end
 
-	misc_shortcut_data: EB_MISC_SHORTCUT_DATA is
+	misc_shortcut_data: EB_MISC_SHORTCUT_DATA
 		do
 			Result := eb_preferences.misc_shortcut_data
 		end
 
-	debug_tool_data: EB_DEBUG_TOOL_DATA is
+	debug_tool_data: EB_DEBUG_TOOL_DATA
 		do
 			Result := eb_preferences.debug_tool_data
 		end
 
-	confirm_ignore_all_breakpoints_preference_string: STRING is
+	confirm_ignore_all_breakpoints_preference_string: STRING
 			-- <Precursor>
 		local
 			prefs: EB_DIALOGS_DATA
@@ -344,7 +344,7 @@ feature -- Settings
 			end
 		end
 
-	refresh_breakpoints_tool is
+	refresh_breakpoints_tool
 			-- Refresh breakpoint tool if needed.
 		do
 			if debugging_window /= Void then
@@ -551,7 +551,7 @@ feature -- Output visitor
 
 feature -- tools management
 
-	refresh_objects_grids is
+	refresh_objects_grids
 			-- Refresh objects grids
 			-- most likely due to display parameters changes
 		do
@@ -559,14 +559,14 @@ feature -- tools management
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.refresh)
 		end
 
-	record_objects_grids_layout is
+	record_objects_grids_layout
 			-- Record objects grids layout
 		do
 			objects_tool.record_grids_layout
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.record_grid_layout)
 		end
 
-	new_toolbar (a_recycler: EB_RECYCLABLE): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
+	new_toolbar (a_recycler: EB_RECYCLABLE): ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- Toolbar containing all debugging commands.
 		require
 			a_recycler_not_void: a_recycler /= Void
@@ -587,7 +587,7 @@ feature -- tools management
 			end
 		end
 
-	new_debug_menu (a_recycler: EB_RECYCLABLE): EV_MENU is
+	new_debug_menu (a_recycler: EB_RECYCLABLE): EV_MENU
 			-- Generate a menu that can be displayed in development windows.
 		require
 			a_recycler_not_void: a_recycler /= Void
@@ -729,7 +729,7 @@ feature -- tools management
 --| 3) edit feature, feature evaluation
 		end
 
-	new_debugging_tools_menu: EV_MENU is
+	new_debugging_tools_menu: EV_MENU
 			-- New debugging tools menu.
 		do
 			create Result.make_with_text (Interface_names.m_Tools)
@@ -738,7 +738,7 @@ feature -- tools management
 			Result /= Void
 		end
 
-	update_debugging_tools_menu_from (w: EB_DEVELOPMENT_WINDOW) is
+	update_debugging_tools_menu_from (w: EB_DEVELOPMENT_WINDOW)
 			-- Update the debugging_tools_menu related to `w'	
 		require
 			w /= Void
@@ -832,7 +832,7 @@ feature -- tools management
 			end
 		end
 
-	update_all_debugging_tools_menu is
+	update_all_debugging_tools_menu
 			-- Update all debugging_tools_menu in all development windows
 		do
 			if update_all_debugging_tools_menu_delayed_action = Void then
@@ -854,7 +854,7 @@ feature -- tools management
 	update_all_debugging_tools_menu_delayed_action: ES_DELAYED_ACTION
 			-- Delayed action for effective `update_all_debugging_tools_menu'
 
-	show_call_stack_tool is
+	show_call_stack_tool
 			-- Show call stack tool if any.
 		do
 			if call_stack_tool /= Void and raised then
@@ -862,7 +862,7 @@ feature -- tools management
 			end
 		end
 
-	show_thread_tool is
+	show_thread_tool
 			-- Show thread tool if any.
 		do
 			if threads_tool /= Void and raised then
@@ -870,7 +870,7 @@ feature -- tools management
 			end
 		end
 
-	show_objects_tool is
+	show_objects_tool
 			-- Show object tool if any.
 		do
 			if objects_tool /= Void and raised then
@@ -878,7 +878,7 @@ feature -- tools management
 			end
 		end
 
-	show_object_viewer_tool is
+	show_object_viewer_tool
 			-- Show object viewer tool if any.
 		do
 			if object_viewer_tool /= Void and raised then
@@ -886,7 +886,7 @@ feature -- tools management
 			end
 		end
 
-	show_new_or_hidden_watch_tool is
+	show_new_or_hidden_watch_tool
 			-- Show a hidden watch tool if any.
 			-- If all shown, show next one.
 		local
@@ -928,7 +928,7 @@ feature -- tools management
 			end
 		end
 
-	create_and_show_new_watch_tool is
+	create_and_show_new_watch_tool
 			-- Create a new watch tool attached to current debugging window
 		do
 			if debugging_window /= Void then
@@ -937,7 +937,7 @@ feature -- tools management
 			end
 		end
 
-	create_new_watch_tool_tabbed_with (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: EB_TOOL) is
+	create_new_watch_tool_tabbed_with (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: EB_TOOL)
 			-- Create a new watch tool and set it tabbed with `a_tool'
 			-- if `a_tool' is not Void
 			-- Note: the new watch tool is not shown yet.
@@ -962,7 +962,7 @@ feature -- tools management
 
 feature -- Windows observer
 
-	on_window_removed (a_item: EB_WINDOW) is
+	on_window_removed (a_item: EB_WINDOW)
 			-- `a_item' has been removed.
 		do
 				-- We don't care the last window,
@@ -983,7 +983,7 @@ feature -- Windows observer
 
 feature -- Events helpers
 
-	create_events_handler is
+	create_events_handler
 			-- Create `events_handler'
 		do
 			set_events_handler (create {EB_DEBUGGER_EVENTS_HANDLER}.make (agent debugging_window))
@@ -1005,7 +1005,7 @@ feature -- Status report
 
 feature -- Output
 
-	debugger_output_message (m: STRING_GENERAL) is
+	debugger_output_message (m: STRING_GENERAL)
 		do
 			check output_manager /= Void end
 			output_manager.start_processing (True)
@@ -1014,7 +1014,7 @@ feature -- Output
 			output_manager.end_processing
 		end
 
-	debugger_warning_message (m: STRING_GENERAL) is
+	debugger_warning_message (m: STRING_GENERAL)
 		do
 			if ev_application = Void then
 				Precursor (m)
@@ -1023,7 +1023,7 @@ feature -- Output
 			end
 		end
 
-	debugger_error_message (m: STRING_GENERAL) is
+	debugger_error_message (m: STRING_GENERAL)
 		do
 			if ev_application = Void then
 				Precursor (m)
@@ -1032,29 +1032,29 @@ feature -- Output
 			end
 		end
 
-	debugger_status_message (m: STRING_GENERAL) is
+	debugger_status_message (m: STRING_GENERAL)
 		do
 			if m.index_of_code (('%N').natural_32_code, 1) = 0 then
 				window_manager.display_message (m)
 			end
 		end
 
-	display_application_status is
+	display_application_status
 		do
 			output_manager.display_application_status
 		end
 
-	display_system_info	is
+	display_system_info
 		do
 			output_manager.display_system_info
 		end
 
-	display_debugger_info (param: DEBUGGER_EXECUTION_PARAMETERS) is
+	display_debugger_info (param: DEBUGGER_EXECUTION_PARAMETERS)
 		do
 			text_formatter_visitor.append_debugger_information (Current, param, output_manager)
 		end
 
-	display_system_status is
+	display_system_status
 		do
 			if
 				debugging_window /= Void
@@ -1069,12 +1069,12 @@ feature -- Output
 
 feature -- Change
 
-	set_error_message (s: STRING) is
+	set_error_message (s: STRING)
 		do
 			eb_set_error_message (s)
 		end
 
-	toggle_display_breakpoints is
+	toggle_display_breakpoints
 			-- Show breakpoints tool
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
@@ -1085,7 +1085,7 @@ feature -- Change
 			end
 		end
 
-	display_breakpoints (show_tool_if_closed: BOOLEAN) is
+	display_breakpoints (show_tool_if_closed: BOOLEAN)
 			-- Show the list of breakpoints (set and disabled) in the output manager.
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
@@ -1098,7 +1098,7 @@ feature -- Change
 			end
 		end
 
-	last_focused_development_window (create_if_void: BOOLEAN): EB_DEVELOPMENT_WINDOW is
+	last_focused_development_window (create_if_void: BOOLEAN): EB_DEVELOPMENT_WINDOW
 		do
 			Result := window_manager.last_focused_development_window
 			if Result = Void and create_if_void then
@@ -1106,7 +1106,7 @@ feature -- Change
 			end
 		end
 
-	refresh_commands (a_window: EB_DEVELOPMENT_WINDOW) is
+	refresh_commands (a_window: EB_DEVELOPMENT_WINDOW)
 			-- Refresh commands with their interfaces/shortcuts.
 		require
 			a_window_not_void: a_window /= Void
@@ -1147,7 +1147,7 @@ feature -- Change
 
 feature -- Status setting
 
-	force_debug_mode (a_save_tools_layout: BOOLEAN) is
+	force_debug_mode (a_save_tools_layout: BOOLEAN)
 			-- Force debug mode
 		do
 			debug_mode_forced := True
@@ -1156,7 +1156,7 @@ feature -- Status setting
 			end
 		end
 
-	unforce_debug_mode is
+	unforce_debug_mode
 			-- unForce debug mode
 		require
 			debug_mode_forced = True
@@ -1170,7 +1170,7 @@ feature -- Status setting
 			end
 		end
 
-	update_execution_replay is
+	update_execution_replay
 			-- Update execution replay commands and widgets
 		local
 			xr: BOOLEAN
@@ -1221,7 +1221,7 @@ feature -- Status setting
 			end
 		end
 
-	activate_execution_replay_mode (b: BOOLEAN) is
+	activate_execution_replay_mode (b: BOOLEAN)
 			-- Activate or Deactivate execution replay mode
 		local
 			levlim: INTEGER
@@ -1253,7 +1253,7 @@ feature -- Status setting
 			end
 		end
 
-	set_debugging_window (a_window: EB_DEVELOPMENT_WINDOW) is
+	set_debugging_window (a_window: EB_DEVELOPMENT_WINDOW)
 			-- Associate `Current' with `a_window'.
 		do
 			if not raised then
@@ -1261,7 +1261,7 @@ feature -- Status setting
 			end
 		end
 
-	set_maximum_stack_depth (nb: INTEGER) is
+	set_maximum_stack_depth (nb: INTEGER)
 			-- Set the maximum number of stack elements to be displayed to `nb'.
 		local
 			pos: INTEGER
@@ -1295,7 +1295,7 @@ feature -- Status setting
 			end
 		end
 
-	on_compile_start is
+	on_compile_start
 			-- A new compilation has started. Kill any debugged application and gray out all run* commands.
 		do
 			if application_is_executing then
@@ -1311,7 +1311,7 @@ feature -- Status setting
 			assertion_checking_handler_cmd.disable_sensitive
 		end
 
-	on_compile_stop is
+	on_compile_stop
 			-- A compilation is over. Make all run* commands sensitive.
 		do
 			if is_msil_dll_system then
@@ -1328,7 +1328,7 @@ feature -- Status setting
 			end
 		end
 
-	raise is
+	raise
 			-- Make the debug tools appear in `debugging_window'.
 			-- Save tools layout.
 		do
@@ -1338,7 +1338,7 @@ feature -- Status setting
 			ev_application.process_graphical_events
 		end
 
-	raise_saving_layout (a_save: BOOLEAN) is
+	raise_saving_layout (a_save: BOOLEAN)
 			-- Make the debug tools appear in `debugging_window'.
 			-- If `a_save' True, then save tools layout, otherwise not save.
 		require
@@ -1455,7 +1455,7 @@ feature -- Status setting
 			raised
 		end
 
-	unraise is
+	unraise
 			-- Make the debug tools disappear from `a_window'.
 		require
 			debugger_raised: raised
@@ -1508,7 +1508,7 @@ feature -- Status setting
 			not raised
 		end
 
-	reset_tools is
+	reset_tools
 			-- Reset tools to free unused data
 		do
 			threads_tool.reset
@@ -1526,7 +1526,7 @@ feature -- Status setting
 			end
 		end
 
-	set_stone (st: STONE) is
+	set_stone (st: STONE)
 			-- Propagate `st' to tools.
 		local
 			propagate_stone: BOOLEAN
@@ -1546,7 +1546,7 @@ feature -- Status setting
 			end
 		end
 
-	change_current_thread_id (tid: like application_current_thread_id) is
+	change_current_thread_id (tid: like application_current_thread_id)
 			-- Set Current thread id to `tid'
 		local
 			tid_changed: BOOLEAN
@@ -1559,7 +1559,7 @@ feature -- Status setting
 			end
 		end
 
-	enable_exiting_eiffel_studio is
+	enable_exiting_eiffel_studio
 			-- Set `is_exiting_eiffel_studio' with true.
 		do
 			is_exiting_eiffel_studio := True
@@ -1567,7 +1567,7 @@ feature -- Status setting
 
 feature {NONE} -- Raise/unraise notification
 
-	popup_switching_mode is
+	popup_switching_mode
 		local
 			l_popup: ES_POPUP_TRANSITION_WINDOW
 			l_message: !STRING_32
@@ -1591,7 +1591,7 @@ feature {NONE} -- Raise/unraise notification
 			end
 		end
 
-	unpopup_switching_mode is
+	unpopup_switching_mode
 		do
 			if switching_mode_popup /= Void then
 				switching_mode_popup.hide
@@ -1604,7 +1604,7 @@ feature {NONE} -- Raise/unraise notification
 
 feature -- Debugging events
 
-	process_breakpoint (bp: BREAKPOINT): BOOLEAN is
+	process_breakpoint (bp: BREAKPOINT): BOOLEAN
 		do
 			Result := Precursor (bp)
 			if debugging_window /= Void then
@@ -1612,7 +1612,7 @@ feature -- Debugging events
 			end
 		end
 
-	resume_application is
+	resume_application
 			-- Quickly relaunch the application.
 		require
 			stopped: safe_application_is_stopped
@@ -1627,7 +1627,7 @@ feature -- Debugging events
 			end
 		end
 
-	launch_stone (st: STONE) is
+	launch_stone (st: STONE)
 			-- Set `st' in the debugging window as the new stone.
 		do
 			record_objects_grids_layout
@@ -1650,7 +1650,7 @@ feature -- Debugging events
 			end
 		end
 
-	on_application_before_launching is
+	on_application_before_launching
 			-- Application is about to be launched.
 		do
 			Precursor
@@ -1659,7 +1659,7 @@ feature -- Debugging events
 			breakpoints_manager.notify_breakpoints_changes
 		end
 
-	on_application_launched is
+	on_application_launched
 			-- Application has just been launched.
 		local
 			feat_tool: ES_FEATURE_RELATION_TOOL
@@ -1702,7 +1702,7 @@ feature -- Debugging events
 			end
 		end
 
-	on_application_just_stopped is
+	on_application_just_stopped
 			-- Application was just stopped (by a breakpoint, ...).
 		local
 			st: CALL_STACK_STONE
@@ -1775,7 +1775,7 @@ feature -- Debugging events
 			end
 		end
 
-	on_overflow_detected is
+	on_overflow_detected
 			-- OVERFLOW detected
 		do
 			--| Fixme: we might try to prevent debugging tools to refresh before poping up this dialog...				
@@ -1792,7 +1792,7 @@ feature -- Debugging events
 				)
 		end
 
-	on_application_before_resuming is
+	on_application_before_resuming
 		do
 			Precursor
 			toggle_exec_replay_mode_cmd.reset
@@ -1800,7 +1800,7 @@ feature -- Debugging events
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.record_grid_layout)
 		end
 
-	on_application_resumed is
+	on_application_resumed
 			-- Application was resumed after a stop.
 		do
 			Precursor
@@ -1849,7 +1849,7 @@ feature -- Debugging events
 			end
 		end
 
-	on_debugging_terminated (was_executing: BOOLEAN) is
+	on_debugging_terminated (was_executing: BOOLEAN)
 			-- Application just quit.
 			-- This application means the debuggee.
 		do
@@ -1909,7 +1909,7 @@ feature -- Debugging events
 			Precursor (was_executing)
 		end
 
-	first_valid_call_stack_stone: CALL_STACK_STONE is
+	first_valid_call_stack_stone: CALL_STACK_STONE
 			-- Stone of the first call stack valid for EiffelStudio.
 		require
 			Stopped: safe_application_is_stopped
@@ -1937,7 +1937,7 @@ feature -- Debugging events
 
 feature {NONE} -- Breakpoints events
 
-	on_breakpoints_change_event is
+	on_breakpoints_change_event
 		do
 			Precursor
 			display_breakpoints (False)
@@ -1946,7 +1946,7 @@ feature {NONE} -- Breakpoints events
 
 feature -- Application change
 
-	set_execution_ignoring_breakpoints (b: like execution_ignoring_breakpoints) is
+	set_execution_ignoring_breakpoints (b: like execution_ignoring_breakpoints)
 			-- <Precursor>
 		local
 			was_ignoring_bp: BOOLEAN
@@ -1958,7 +1958,7 @@ feature -- Application change
 			end
 		end
 
-	activate_execution_replay_recording (b: BOOLEAN) is
+	activate_execution_replay_recording (b: BOOLEAN)
 			-- Activate or Deactivate execution recording
 		local
 			was_enabled: BOOLEAN
@@ -1998,14 +1998,14 @@ feature -- Application change
 			end
 		end
 
-	disable_assertion_checking is
+	disable_assertion_checking
 			-- Disable assertion checking
 		do
 			Precursor
 			assertion_checking_handler_cmd.set_select (True)
 		end
 
-	restore_assertion_checking is
+	restore_assertion_checking
 			-- Enable assertion checking	
 		do
 			Precursor
@@ -2021,7 +2021,7 @@ feature {NONE} -- Implementation
 
 	new_std_cmd (a_menu_name: STRING_GENERAL; a_pixmap: EV_PIXMAP;
 					a_shortcut_pref: SHORTCUT_PREFERENCE; a_use_acc: BOOLEAN;
-					a_action: PROCEDURE [ANY, TUPLE]): EB_STANDARD_CMD is
+					a_action: PROCEDURE [ANY, TUPLE]): EB_STANDARD_CMD
 		local
 			l_cmd: EB_STANDARD_CMD
 			l_acc: EV_ACCELERATOR
@@ -2045,12 +2045,12 @@ feature {NONE} -- Implementation
 	objects_split_proportion: REAL
 			-- Position of the splitter inside the object tool.
 
-	enable_commands_on_project_created is
+	enable_commands_on_project_created
 			-- Enable commands when a new project has been created (not yet compiled)
 		do
 		end
 
-	enable_commands_on_project_loaded is
+	enable_commands_on_project_loaded
 			-- Enable commands when a new project has been created and compiled
 		do
 			rt_extension_available := eiffel_system.system.rt_extension_class /= Void and then
@@ -2062,7 +2062,7 @@ feature {NONE} -- Implementation
 			assertion_checking_handler_cmd.disable_sensitive
 		end
 
-	enable_debugging_commands is
+	enable_debugging_commands
 		do
 			if is_msil_dll_system then
 				disable_debugging_commands (True)
@@ -2091,7 +2091,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	disable_commands_on_project_unloaded is
+	disable_commands_on_project_unloaded
 			-- Disable commands when a project has been closed.
 		do
 			clear_bkpt.disable_sensitive
@@ -2110,7 +2110,7 @@ feature {NONE} -- Implementation
 			exception_handler_cmd.disable_sensitive
 		end
 
-	disable_debugging_commands (full: BOOLEAN) is
+	disable_debugging_commands (full: BOOLEAN)
 			-- Disable commands related to debugging.
 			-- If `full' disable also commands for manipulating breakpoints.
 		do
@@ -2133,7 +2133,7 @@ feature {NONE} -- Implementation
 			object_storage_management_cmd.disable_sensitive
 		end
 
-	change_critical_stack_depth is
+	change_critical_stack_depth
 			-- Display a dialog that lets the user change the critical stack depth.
 		require
 			not_running: not application_is_executing or else application_is_stopped
@@ -2223,7 +2223,7 @@ feature {NONE} -- Implementation
 	show_all_radio: EV_RADIO_BUTTON
 			-- Radio button that indicates that stack overflows shouldn't be detected.
 
-	close_dialog is
+	close_dialog
 			-- Close `dialog' without doing anything.
 		do
 			dialog.destroy
@@ -2232,7 +2232,7 @@ feature {NONE} -- Implementation
 			show_all_radio := Void
 		end
 
-	accept_dialog is
+	accept_dialog
 			-- Close `dialog' and change the critical stack depth.
 		local
 			nb: INTEGER
@@ -2251,7 +2251,7 @@ feature {NONE} -- Implementation
 			set_critical_stack_depth (nb)
 		end
 
-	initialize_debugging_window is
+	initialize_debugging_window
 			-- Set `debugging_window' with window requesting a debug session.
 		do
 			if debugging_window = Void then
@@ -2261,7 +2261,7 @@ feature {NONE} -- Implementation
 			debugging_window_set: debugging_window /= Void
 		end
 
-	show_watch_tool_preference: SHORTCUT_PREFERENCE is
+	show_watch_tool_preference: SHORTCUT_PREFERENCE
 			-- Show watch tool preference
 		do
 			Result := misc_shortcut_data.shortcuts.item ("show_watch_tool")
@@ -2269,14 +2269,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Memory management
 
-	recycle_items_from_window is
+	recycle_items_from_window
 			-- Disconnect possible items and `debugging_window'.
 		do
 		end
 
 feature {NONE} -- MSIL system implementation
 
-	is_msil_dll_system: BOOLEAN is
+	is_msil_dll_system: BOOLEAN
 			-- Is a MSIL DLL system ?
 		do
 			Result := Eiffel_project.initialized
@@ -2285,10 +2285,10 @@ feature {NONE} -- MSIL system implementation
 					and then equal (Eiffel_system.System.msil_generation_type, dll_type)
 		end
 
-	dll_type: STRING is "dll";
+	dll_type: STRING = "dll";
 			-- DLL type constant for MSIL system
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

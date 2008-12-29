@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Byte code for conditional instruction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_if_b (Current)
@@ -49,31 +49,31 @@ feature -- Access
 
 feature -- Settings
 
-	set_condition (c: like condition) is
+	set_condition (c: like condition)
 			-- Assign `c' to `condition'.
 		do
 			condition := c
 		end
 
-	set_compound (c: like compound) is
+	set_compound (c: like compound)
 			-- Assign `c' to `compound'.
 		do
 			compound := c
 		end
 
-	set_elsif_list (e: like elsif_list) is
+	set_elsif_list (e: like elsif_list)
 			-- Assign `e' to `elsif_list'.
 		do
 			elsif_list := e
 		end
 
-	set_else_part (e: like else_part) is
+	set_else_part (e: like else_part)
 			-- Assign `e' to `elsif_list'.
 		do
 			else_part := e
 		end
 
-	set_end_location (e: like end_location) is
+	set_end_location (e: like end_location)
 			-- Set `end_location' with `e'.
 		require
 			e_not_void: e /= Void
@@ -83,7 +83,7 @@ feature -- Settings
 			end_location_set: end_location = e
 		end
 
-	need_enlarging: BOOLEAN is
+	need_enlarging: BOOLEAN
 			-- Does current need to be modified for improved code generation?
  		do
 				-- Made `need_enlarging' return True in final mode. This enables us to implement
@@ -92,7 +92,7 @@ feature -- Settings
 			Result := context.final_mode
 		end
 
-	enlarged: INSTR_B is
+	enlarged: INSTR_B
 			-- Enlarge the tree to get more attributes and return the
 			-- new enlarged tree node.
 		local
@@ -237,7 +237,7 @@ feature -- Settings
 			end
 		end
 
-	enlarge_tree is
+	enlarge_tree
 			-- Enlarge the if construct
 		do
 			condition := condition.enlarged
@@ -252,7 +252,7 @@ feature -- Settings
 			end
 		end
 
-	find_assign_result is
+	find_assign_result
 			-- Find all terminal assignments made to Result
 		do
 			if compound /= Void then
@@ -269,7 +269,7 @@ feature -- Settings
 			end
 		end
 
-	last_all_in_result: BOOLEAN is
+	last_all_in_result: BOOLEAN
 			-- Are all the exit points in the function assignments
 			-- in a Result entity ?
 		do
@@ -300,7 +300,7 @@ feature -- Settings
 					not context.has_invariant
 		end
 
-	analyze is
+	analyze
 			-- Builds a proper context (for C code).
 		do
 			context.init_propagation
@@ -318,7 +318,7 @@ feature -- Settings
 			end
 		end
 
-	generate is
+	generate
 			-- Generate C code in `buffer'.
 		local
 			buf: GENERATION_BUFFER
@@ -355,7 +355,7 @@ feature -- Settings
 			generate_closing_brakets
 		end
 
-	generate_closing_brakets is
+	generate_closing_brakets
 			-- Generate one closing braket for each generated elsif
 		local
 			i: INTEGER
@@ -378,7 +378,7 @@ feature -- Settings
 
 feature -- Array optimization
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (i: INTEGER): BOOLEAN
 		do
 			Result :=
 				(compound /= Void and then compound.assigns_to (i)) or else
@@ -386,7 +386,7 @@ feature -- Array optimization
 				(elsif_list /= Void and then elsif_list.assigns_to (i))
 		end
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := condition.calls_special_features (array_desc) or else
 				(compound /= Void and then compound.calls_special_features (array_desc)) or else
@@ -394,7 +394,7 @@ feature -- Array optimization
 				(elsif_list /= Void and then elsif_list.calls_special_features (array_desc))
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := condition.is_unsafe or else
 				(compound /= Void and then compound.is_unsafe) or else
@@ -402,7 +402,7 @@ feature -- Array optimization
 				(elsif_list /= Void and then elsif_list.is_unsafe)
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 			condition := condition.optimized_byte_node
@@ -419,7 +419,7 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := 1 + condition.size
 			if compound /= Void then
@@ -433,7 +433,7 @@ feature -- Inlining
 			end
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current
 			condition := condition.pre_inlined_code
@@ -448,7 +448,7 @@ feature -- Inlining
 			end
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			condition := condition.inlined_byte_code
@@ -463,7 +463,7 @@ feature -- Inlining
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

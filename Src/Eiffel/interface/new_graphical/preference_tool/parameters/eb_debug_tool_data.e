@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All shared attributes specific to the debugger"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {EB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -29,13 +29,13 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 
-	last_saved_stack_path: STRING is
+	last_saved_stack_path: STRING
 			-- Last saved stack path.
 		do
 			Result := last_saved_stack_path_preference.value
 		end
 
-	default_expanded_view_size: INTEGER is
+	default_expanded_view_size: INTEGER
 			-- Default size for expanded view dialog
 		do
 			Result := default_expanded_view_size_preference.value
@@ -44,25 +44,25 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 			end
 		end
 
-	show_text_in_project_toolbar: BOOLEAN is
+	show_text_in_project_toolbar: BOOLEAN
 			-- Show selected text in the project toolbar?
 		do
 			Result := show_text_in_project_toolbar_preference.value
 		end
 
-	show_all_text_in_project_toolbar: BOOLEAN is
+	show_all_text_in_project_toolbar: BOOLEAN
 			-- Show all selected text in the project toolbar?
 		do
 			Result := show_all_text_in_project_toolbar_preference.value
 		end
 
-	project_toolbar_layout: ARRAY [STRING] is
+	project_toolbar_layout: ARRAY [STRING]
 			-- Toolbar organization
 		do
 			Result := project_toolbar_layout_preference.value
 		end
 
-	local_vs_object_proportion: REAL is
+	local_vs_object_proportion: REAL
 			-- What ratio should we have between the locals tree
 			-- and the objects tree in the object tool?
 		local
@@ -77,62 +77,62 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Value
 			end
 		end
 
-	set_local_vs_object_proportion (r: REAL) is
+	set_local_vs_object_proportion (r: REAL)
 		do
 			local_vs_object_proportion_preference.set_value (r.out)
 		end
 
-	expanded_display_bgcolor: EV_COLOR is
+	expanded_display_bgcolor: EV_COLOR
 		do
 			Result := expanded_display_bgcolor_preference.value
 		end
 
-	number_of_watch_tools: INTEGER is
+	number_of_watch_tools: INTEGER
 		do
 			Result := number_of_watch_tools_preference.value
 		end
 
-	delay_before_cleaning_objects_grid: INTEGER is
+	delay_before_cleaning_objects_grid: INTEGER
 		do
 			Result := delay_before_cleaning_objects_grid_preference.value
 		end
 
-	row_highlight_background_color: EV_COLOR is
+	row_highlight_background_color: EV_COLOR
 		do
 			Result := row_highlight_background_color_preference.value
 		end
 
-	unsensitive_foreground_color: EV_COLOR is
+	unsensitive_foreground_color: EV_COLOR
 		do
 			Result := unsensitive_foreground_color_preference.value
 		end
 
-	row_replayable_background_color: EV_COLOR is
+	row_replayable_background_color: EV_COLOR
 		do
 			Result := row_replayable_background_color_preference.value
 		end
 
-	select_call_stack_level_on_double_click: BOOLEAN is
+	select_call_stack_level_on_double_click: BOOLEAN
 		do
 			Result := select_call_stack_level_on_double_click_preference.value
 		end
 
-	is_stack_grid_layout_managed: BOOLEAN is
+	is_stack_grid_layout_managed: BOOLEAN
 		do
 			Result := is_stack_grid_layout_managed_preference.value
 		end
 
-	is_debugged_grid_layout_managed: BOOLEAN is
+	is_debugged_grid_layout_managed: BOOLEAN
 		do
 			Result := is_debugged_grid_layout_managed_preference.value
 		end
 
-	is_watches_grids_layout_managed: BOOLEAN is
+	is_watches_grids_layout_managed: BOOLEAN
 		do
 			Result := is_watches_grids_layout_managed_preference.value
 		end
 
-	display_agent_details: BOOLEAN is
+	display_agent_details: BOOLEAN
 		do
 			Result := display_agent_details_preference.value
 		end
@@ -167,7 +167,7 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 
 	objects_tool_layout_preference: ARRAY_PREFERENCE
 
-	grid_column_layout_preference_for (grid_name: STRING): STRING_PREFERENCE is
+	grid_column_layout_preference_for (grid_name: STRING): STRING_PREFERENCE
 		local
 			l_manager: EB_PREFERENCE_MANAGER
 		do
@@ -180,7 +180,7 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 			end
 		end
 
-	grid_column_layout_preferences: HASH_TABLE [STRING_PREFERENCE, STRING] is
+	grid_column_layout_preferences: HASH_TABLE [STRING_PREFERENCE, STRING]
 		once
 			create Result.make (3)
 			Result.compare_objects
@@ -188,7 +188,7 @@ feature {EB_SHARED_PREFERENCES, ES_DOCKABLE_TOOL_PANEL} -- Preference
 
 feature -- Toolbar Convenience
 
-	retrieve_project_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
+	retrieve_project_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- Retreive the project toolbar using the available commands in `command_pool'
 		do
 			Result := retrieve_toolbar_items (command_pool, project_toolbar_layout_preference.value)
@@ -201,7 +201,7 @@ feature -- Toolbar Convenience
 			end
 		end
 
-	save_project_toolbar (project_toolbar: ARRAYED_SET [SD_TOOL_BAR_ITEM]) is
+	save_project_toolbar (project_toolbar: ARRAYED_SET [SD_TOOL_BAR_ITEM])
 			-- Save the project toolbar `project_toolbar' layout/status into the preferences.
 			-- Call `save_preferences' to have the changes actually saved.
 		do
@@ -219,37 +219,37 @@ feature -- Toolbar Convenience
 
 feature -- Preference Strings
 
-	last_saved_stack_path_string: STRING is "debugger.last_saved_stack_path"
-	main_splitter_position_string: STRING is "debugger.main_splitter_position"
-	local_vs_object_proportion_string: STRING is "debugger.proportion"
-	left_debug_layout_string: STRING is "debugger.left_debug_layout"
-	right_debug_layout_string: STRING is "debugger.right_debug_layout"
-	expanded_display_bgcolor_string: STRING is "debugger.colors.expanded_display_background_color"
-	grid_background_color_string: STRING is "debugger.colors.grid_background_color"
-	grid_foreground_color_string: STRING is "debugger.colors.grid_foreground_color"
-	row_highlight_background_color_string: STRING is "debugger.colors.row_highlight_background_color"
-	unsensitive_foreground_color_string: STRING is "debugger.colors.unsensitive_foreground_color"
-	row_replayable_background_color_string: STRING is "debugger.colors.row_replayable_background_color"
-	number_of_watch_tools_string: STRING is "debugger.number_of_watch_tools"
-	delay_before_cleaning_objects_string: STRING is "debugger.delay_before_cleaning_objects_grid"
-	select_call_stack_level_on_double_click_string: STRING is "debugger.select_call_stack_level_on_double_click"
-	is_stack_grid_layout_managed_string: STRING is "debugger.stack_grid_layout_managed"
-	is_debugged_grid_layout_managed_string: STRING is "debugger.debugged_grid_layout_managed"
-	is_watches_grids_layout_managed_string: STRING is "debugger.watches_grids_layout_managed"
-	objects_tool_layout_string: STRING is "debugger.objects_tool_layout"
-	watch_tools_layout_string: STRING is "debugger.watch_tools_layout"
-	display_agent_details_string: STRING is "debugger.display_agent_details"
-	grid_column_layout_prefix: STRING is "debugger.grid_column_layout_"
-	project_toolbar_layout_string: STRING is "debugger.project_toolbar_layout"
-	show_text_in_project_toolbar_string: STRING is "debugger.show_text_in_project_toolbar"
-	show_all_text_in_project_toolbar_string: STRING is "debugger.show_all_text_in_project_toolbar"
-	default_expanded_view_size_string: STRING is "debugger.default_expanded_view_size"
-	move_up_watch_expression_shortcut_string: STRING is "debugger.shortcuts.move_up_watch_expression"
-	move_down_watch_expression_shortcut_string: STRING is "debugger.shortcuts.move_down_watch_expression"
+	last_saved_stack_path_string: STRING = "debugger.last_saved_stack_path"
+	main_splitter_position_string: STRING = "debugger.main_splitter_position"
+	local_vs_object_proportion_string: STRING = "debugger.proportion"
+	left_debug_layout_string: STRING = "debugger.left_debug_layout"
+	right_debug_layout_string: STRING = "debugger.right_debug_layout"
+	expanded_display_bgcolor_string: STRING = "debugger.colors.expanded_display_background_color"
+	grid_background_color_string: STRING = "debugger.colors.grid_background_color"
+	grid_foreground_color_string: STRING = "debugger.colors.grid_foreground_color"
+	row_highlight_background_color_string: STRING = "debugger.colors.row_highlight_background_color"
+	unsensitive_foreground_color_string: STRING = "debugger.colors.unsensitive_foreground_color"
+	row_replayable_background_color_string: STRING = "debugger.colors.row_replayable_background_color"
+	number_of_watch_tools_string: STRING = "debugger.number_of_watch_tools"
+	delay_before_cleaning_objects_string: STRING = "debugger.delay_before_cleaning_objects_grid"
+	select_call_stack_level_on_double_click_string: STRING = "debugger.select_call_stack_level_on_double_click"
+	is_stack_grid_layout_managed_string: STRING = "debugger.stack_grid_layout_managed"
+	is_debugged_grid_layout_managed_string: STRING = "debugger.debugged_grid_layout_managed"
+	is_watches_grids_layout_managed_string: STRING = "debugger.watches_grids_layout_managed"
+	objects_tool_layout_string: STRING = "debugger.objects_tool_layout"
+	watch_tools_layout_string: STRING = "debugger.watch_tools_layout"
+	display_agent_details_string: STRING = "debugger.display_agent_details"
+	grid_column_layout_prefix: STRING = "debugger.grid_column_layout_"
+	project_toolbar_layout_string: STRING = "debugger.project_toolbar_layout"
+	show_text_in_project_toolbar_string: STRING = "debugger.show_text_in_project_toolbar"
+	show_all_text_in_project_toolbar_string: STRING = "debugger.show_all_text_in_project_toolbar"
+	default_expanded_view_size_string: STRING = "debugger.default_expanded_view_size"
+	move_up_watch_expression_shortcut_string: STRING = "debugger.shortcuts.move_up_watch_expression"
+	move_down_watch_expression_shortcut_string: STRING = "debugger.shortcuts.move_down_watch_expression"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -319,7 +319,7 @@ invariant
 
 	display_agent_details_preference_not_void: display_agent_details_preference /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

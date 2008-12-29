@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Rewrite `append_replace_all_to_string' in RX_PCRE_REGULAR_EXPRESSION. 
 					Insert an agent that can aquire positions when replacing all.
@@ -23,7 +23,7 @@ create
 	
 feature -- Change agent
 
-	set_on_new_position_yielded (a_procedure: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]]) is
+	set_on_new_position_yielded (a_procedure: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]])
 			-- set `on_new_opsition_yielded'
 		require
 			a_procedure_not_void: a_procedure /= Void
@@ -33,7 +33,7 @@ feature -- Change agent
 
 feature -- Replacement
 
-	append_replace_all_to_string (a_string, a_replacement: STRING) is
+	append_replace_all_to_string (a_string, a_replacement: STRING)
 			-- Append to `a_string' a substring of `subject' between `subject_start'
 			-- and `subject_end' where the whole matched string has been repeatedly
 			-- replaced by `a_replacement'. All occurrences of \n\ in `a_replacement'
@@ -65,7 +65,7 @@ feature {NONE} -- Agent
 
 	on_new_position_yielded: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER]];
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

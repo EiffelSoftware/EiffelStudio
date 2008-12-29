@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects that help doing update/real_update mecanism"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,14 +15,14 @@ inherit
 
 feature -- Access
 
-	debugger_manager: DEBUGGER_MANAGER is
+	debugger_manager: DEBUGGER_MANAGER
 			-- Associated debugger manager
 		deferred
 		end
 
 feature -- Update access
 
-	frozen request_update is
+	frozen request_update
 			-- Request an update, this should call update only
 			-- once per debugging "operation"
 			-- This is to avoid computing twice the data
@@ -33,7 +33,7 @@ feature -- Update access
 			end
 		end
 
-	frozen update is
+	frozen update
 			-- Update now or on idle
 		local
 			dbg_stopped: BOOLEAN
@@ -50,7 +50,7 @@ feature -- Update access
 
 feature {NONE} -- update
 
-	on_update_when_application_is_executing (dbg_stopped: BOOLEAN) is
+	on_update_when_application_is_executing (dbg_stopped: BOOLEAN)
 			-- Update when debugging
 			-- To redefine for adaptation			
 		require
@@ -58,7 +58,7 @@ feature {NONE} -- update
 		deferred
 		end
 
-	on_update_when_application_is_not_executing is
+	on_update_when_application_is_not_executing
 			-- Update when not debugging
 			-- To redefine for adaptation			
 		require
@@ -66,7 +66,7 @@ feature {NONE} -- update
 		deferred
 		end
 
-	real_update (arg_is_stopped: BOOLEAN) is
+	real_update (arg_is_stopped: BOOLEAN)
 			-- Display current execution status.
 		require
 			last_real_update_id_updated: last_real_update_id = Debugger_manager.debugging_operation_id
@@ -88,14 +88,14 @@ feature {NONE} -- Implementation Properties
 
 feature {NONE} -- Implementation status
 
-	frozen update_already_done: BOOLEAN is
+	frozen update_already_done: BOOLEAN
 			-- Update already done,
 			-- this means the last update was done for current debugging operation id
 		do
 			Result := debugger_manager.debugging_operation_id = last_real_update_id
 		end
 
-	frozen real_update_allowed (dbg_was_stopped: BOOLEAN): BOOLEAN is
+	frozen real_update_allowed (dbg_was_stopped: BOOLEAN): BOOLEAN
 			-- Is real_update allowed ?
 			--| This is to prevent graphical operation to be done during
 			--| dotnet debugger callback notification
@@ -108,14 +108,14 @@ feature {NONE} -- Implementation status
 			end
 		end
 
-	frozen is_real_update_on_idle_processing: BOOLEAN is
+	frozen is_real_update_on_idle_processing: BOOLEAN
 			-- Is a real update on idle currently processing on the system?
 			--| this is to prevent conflict between dotnet debugger thread graphical thread.
 		do
 			Result := real_update_on_idle_processing_cell.item
 		end
 
-	frozen real_update_on_idle_processing_cell: CELL [BOOLEAN] is
+	frozen real_update_on_idle_processing_cell: CELL [BOOLEAN]
 			-- Keep info that a real update on idle is processing (or not) in the system.
 			-- we keep this per thread for now.
 		once
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation status
 
 feature {NONE} -- Implementation change
 
-	frozen process_real_update_on_idle (a_dbg_stopped: BOOLEAN) is
+	frozen process_real_update_on_idle (a_dbg_stopped: BOOLEAN)
 			-- Call `real_update' on idle action
 		do
 			real_update_on_idle_called_on_stopped := a_dbg_stopped
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation change
 			debugger_manager.add_idle_action (update_on_idle_agent)
 		end
 
-	frozen cancel_process_real_update_on_idle is
+	frozen cancel_process_real_update_on_idle
 			-- cancel any calls to `real_update' on idle action	
 		do
 			real_update_on_idle_called_on_stopped := False
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation change
 			end
 		end
 
-	frozen real_update_on_idle is
+	frozen real_update_on_idle
 			-- Call the real_update if allowed, otherwise postpone it on next idle
 		local
 			l_dbg_is_stopped: BOOLEAN
@@ -164,14 +164,14 @@ feature {NONE} -- Implementation change
 			end
 		end
 
-	frozen reset_update_on_idle is
+	frozen reset_update_on_idle
 			-- Reset update on idle
 		do
 			cancel_process_real_update_on_idle
 			last_real_update_id := 0
 		end
 
-	frozen postpone_real_update_on_next_idle (a_dbg_stopped: BOOLEAN) is
+	frozen postpone_real_update_on_next_idle (a_dbg_stopped: BOOLEAN)
 			-- Postpone on next idle
 		do
 			debug ("update_on_idle")
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation change
 			process_real_update_on_idle (a_dbg_stopped)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

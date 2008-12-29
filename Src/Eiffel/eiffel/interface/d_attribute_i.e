@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an inherited attribute which is unselected"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,13 +21,13 @@ feature
 	access_in: INTEGER
 			-- Access class id
 
-	set_access_in (i: INTEGER) is
+	set_access_in (i: INTEGER)
 			-- Assign `i' to `access_in'
 		do
 			access_in := i
 		end
 
-	replicated (in: INTEGER): FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I
 			-- Replication
 		local
 			rep: RD1_ATTRIBUTE_I
@@ -39,14 +39,14 @@ feature
 			Result := rep
 		end; -- replicated
 
-	selected: D_ATTRIBUTE_I is
+	selected: D_ATTRIBUTE_I
 			-- <Precursor>
 		do
 			create Result.make
 			Result.transfer_from (Current)
 		end
 
-	unselected (i: INTEGER): FEATURE_I is
+	unselected (i: INTEGER): FEATURE_I
 			-- Unselected feature
 		local
 			rep: RD1_ATTRIBUTE_I
@@ -57,17 +57,17 @@ feature
 			Result := rep
 		end
 
-	transfer_to (f: like Current) is
+	transfer_to (f: like Current)
 			-- Data transfer
 		do
 			Precursor {ATTRIBUTE_I} (f)
 			f.set_access_in (access_in)
 		end
 
-	is_unselected: BOOLEAN is True;
+	is_unselected: BOOLEAN = True;
 			-- Is the feature a non-selected one ?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

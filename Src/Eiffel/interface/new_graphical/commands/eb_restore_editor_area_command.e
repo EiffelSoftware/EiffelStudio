@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Commands that restore whole editor area."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_develop_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_develop_window: EB_DEVELOPMENT_WINDOW)
 			-- Creation method
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}(a_develop_window)
@@ -35,7 +35,7 @@ feature {NONE} -- Initlization
 
 feature -- Query
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu name
 		do
 			Result := interface_names.m_restore_editor_area
@@ -43,7 +43,7 @@ feature -- Query
 
 feature -- Command
 
-	execute is
+	execute
 			-- Execute
 		local
 			l_manager: SD_DOCKING_MANAGER
@@ -56,7 +56,7 @@ feature -- Command
 			update_menu_items_state
 		end
 
-	update_menu_items_state is
+	update_menu_items_state
 			-- Update menu items state
 		do
 			disable_sensitive
@@ -64,7 +64,7 @@ feature -- Command
 			develop_window.commands.minimize_editor_area_command.enable_sensitive
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

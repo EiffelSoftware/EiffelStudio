@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric criterion definition grid"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -52,7 +52,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `scope' with `a_scope'
 		local
 			l_grid_supprot: like new_grid_support
@@ -83,7 +83,7 @@ feature{NONE} -- Initialization
 
 feature -- Basic operation
 
-	resize_column (a_index: INTEGER; a_width: INTEGER) is
+	resize_column (a_index: INTEGER; a_width: INTEGER)
 			-- Resize `a_index'-th column to `a_width' in pixels.
 			-- If `a_width' is 0, resize specified column to its content.
 		require
@@ -103,7 +103,7 @@ feature -- Basic operation
 			end
 		end
 
-	load_criterion (a_criterion: like criterion; a_scope: like scope; a_read_only: BOOLEAN) is
+	load_criterion (a_criterion: like criterion; a_scope: like scope; a_read_only: BOOLEAN)
 			-- Load `a_criterion' in Current.
 			-- `a_read_only' indicates if `a_criterion' loaded in Current is in read-only mode.				
 		require
@@ -129,13 +129,13 @@ feature -- Basic operation
 			is_read_only_set: is_read_only = a_read_only
 		end
 
-	load_undefinable_criteria is
+	load_undefinable_criteria
 			-- Load undefinable criteria such as compliation basic metric.
 		do
 			is_criterion_loaded := True
 		end
 
-	clear_criterion is
+	clear_criterion
 			-- Clear criterion loaded in Current
 		do
 			change_actions.block
@@ -152,7 +152,7 @@ feature -- Basic operation
 			is_read_only_set: not is_read_only
 		end
 
-	add_criterion_row (a_criterion: like criterion; a_row: EV_GRID_ROW; a_before: BOOLEAN; a_selected: BOOLEAN) is
+	add_criterion_row (a_criterion: like criterion; a_row: EV_GRID_ROW; a_before: BOOLEAN; a_selected: BOOLEAN)
 			-- Add a new row containing `a_criterion' before `a_row' if `a_before' is Ture, otherwise,
 			-- after `a_row'. If `a_selected' is True, select newly added row.
 		require
@@ -188,7 +188,7 @@ feature -- Basic operation
 			end
 		end
 
-	remove_criterion_row (a_row: EV_GRID_ROW; a_empty_row_removable: BOOLEAN; a_select_row: BOOLEAN) is
+	remove_criterion_row (a_row: EV_GRID_ROW; a_empty_row_removable: BOOLEAN; a_select_row: BOOLEAN)
 			-- Remove `a_row' from Current.
 			-- If `a_empty_row_removable' is True, remove `a_row' even if it's an empty row.
 			-- If `a_select_row' is True, try to selected the nearest row related to `a_row'
@@ -239,7 +239,7 @@ feature -- Basic operation
 			end
 		end
 
-	move_criterion_row (a_row: EV_GRID_ROW; a_up: BOOLEAN) is
+	move_criterion_row (a_row: EV_GRID_ROW; a_up: BOOLEAN)
 			-- Move `a_row' up if `a_up' is True, otherwise move `a_row' down.
 		require
 			criterion_loaded: is_criterion_loaded
@@ -274,7 +274,7 @@ feature -- Basic operation
 			end
 		end
 
-	indent_criterion_row (a_row: EV_GRID_ROW; a_and: BOOLEAN) is
+	indent_criterion_row (a_row: EV_GRID_ROW; a_and: BOOLEAN)
 			-- Indent `a_row' using "AND" operator if `a_and' is True, otherwise using "OR" operator.
 		require
 			criterion_loaded: is_criterion_loaded
@@ -334,7 +334,7 @@ feature -- Access
 	scope: QL_SCOPE
 			-- Scope in Current
 
-	criterion: EB_METRIC_CRITERION is
+	criterion: EB_METRIC_CRITERION
 			-- Criterion defined in Current
 		require
 			criterion_loaded: is_criterion_loaded
@@ -351,7 +351,7 @@ feature -- Access
 
 feature -- Actions
 
-	on_item_drop (a_item: EV_GRID_ITEM; a_pebble: ANY) is
+	on_item_drop (a_item: EV_GRID_ITEM; a_pebble: ANY)
 			-- Action to be performed when `a_pebble' is dropped on `a_item'
 		local
 			l_source_row: EV_GRID_ROW
@@ -461,7 +461,7 @@ feature -- Actions
 
 feature{NONE} -- Implementation/Actions
 
-	on_pointer_button_release (x, y, button: INTEGER; a_item: EV_GRID_ITEM) is
+	on_pointer_button_release (x, y, button: INTEGER; a_item: EV_GRID_ITEM)
 			-- Action to be performed when pointer released
 		do
 			if button = 3 and then row_to_be_selected /= Void and then row_to_be_selected.parent = Current then
@@ -471,7 +471,7 @@ feature{NONE} -- Implementation/Actions
 			end
 		end
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- Action to be performed when `a_key' is pressed on Current
 		local
 			l_selected_items: LIST [EV_GRID_ITEM]
@@ -496,7 +496,7 @@ feature{NONE} -- Implementation/Actions
 			end
 		end
 
-	on_key_string_pressed (a_string: STRING_32) is
+	on_key_string_pressed (a_string: STRING_32)
 			-- Action to be performed when `a_string' is pressed on Current
 		require
 			a_string_attached: a_string /= Void
@@ -521,7 +521,7 @@ feature{NONE} -- Implementation/Actions
 
 feature{NONE} -- Implementation
 
-	subrow_index (a_parent_row, a_subrow: EV_GRID_ROW): INTEGER is
+	subrow_index (a_parent_row, a_subrow: EV_GRID_ROW): INTEGER
 			-- Subrow index of `a_subrow' in `a_parent_row'.
 			-- Return 0 if `a_subrow' doesn't belong to `a_parent_row'.
 		require
@@ -552,7 +552,7 @@ feature{NONE} -- Implementation
 	row_to_be_selected: EV_GRID_ROW
 			-- Row to be selected when pointer button released
 
-	criterion_pebble (a_item: EV_GRID_ITEM): ANY is
+	criterion_pebble (a_item: EV_GRID_ITEM): ANY
 			-- Pebble from `a_item'.
 		local
 			l_data: EB_METRIC_CRITERION_ROW
@@ -567,7 +567,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	veto_pebble_function (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
+	veto_pebble_function (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN
 			-- Function to decide if `a_pebble' can be dropped on `a_item'
 			-- True value means drop is allowed.
 		local
@@ -599,7 +599,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	is_parent_row (a_source_row, a_dest_row: EV_GRID_ROW): BOOLEAN is
+	is_parent_row (a_source_row, a_dest_row: EV_GRID_ROW): BOOLEAN
 			-- Is `a_dest_row' parent row of `a_source_row'?
 		require
 			a_source_row_attached: a_source_row /= Void
@@ -619,7 +619,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	selected_rows_internal: LIST [EV_GRID_ROW] is
+	selected_rows_internal: LIST [EV_GRID_ROW]
 			-- Selected rows from `select_items'
 		local
 			l_items: LIST [EV_GRID_ITEM]
@@ -655,7 +655,7 @@ feature{NONE} -- Implementation
 invariant
 	change_actions_attached: change_actions /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

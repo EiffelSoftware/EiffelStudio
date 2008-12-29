@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract class for access: Current, Result, local, argument, feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,18 +22,18 @@ inherit
 
 feature -- Access
 
-	parameters: BYTE_LIST [PARAMETER_B] is
+	parameters: BYTE_LIST [PARAMETER_B]
 		do
 			-- no parameters
 		end
 
-	target: ACCESS_B is
+	target: ACCESS_B
 			-- Ourselves as part of a message applied to a target
 		do
 			Result := Current
 		end
 
-	context_type: TYPE_A is
+	context_type: TYPE_A
 			-- Context type of the access (properly instantiated)
 		local
 			a_parent: NESTED_B
@@ -65,13 +65,13 @@ feature -- Access
 			not_result_is_multiconstraint_formal: not Result.is_multi_constrained
 		end
 
-	enlarged: ACCESS_B is
+	enlarged: ACCESS_B
 			-- Redefined only for type check
 		do
 			Result := Current
 		end
 
-	enlarged_on (type_i: TYPE_A): ACCESS_B is
+	enlarged_on (type_i: TYPE_A): ACCESS_B
 			-- Enlarged byte node evaluated in the context of `type_i'.
 		require
 			type_i_not_void: type_i /= Void
@@ -82,7 +82,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	sub_enlarged (p: NESTED_BL): ACCESS_B is
+	sub_enlarged (p: NESTED_BL): ACCESS_B
 			-- Enlarge node and set parent to `p'
 		do
 			Result := enlarged
@@ -91,19 +91,19 @@ feature -- Access
 
 feature -- Status
 
-	read_only: BOOLEAN is
+	read_only: BOOLEAN
 			-- Is the access a read-only one ?
 		do
 			Result := True
 		end
 
-	current_needed_for_access: BOOLEAN is
+	current_needed_for_access: BOOLEAN
 			-- Is current needed for a true access ?
 		do
 			Result := is_predefined implies is_current
 		end
 
-	has_gcable_variable: BOOLEAN is
+	has_gcable_variable: BOOLEAN
 			-- Is the access using a GCable variable ?
 		local
 			expr_b: EXPR_B
@@ -142,7 +142,7 @@ feature -- Status
 			end
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is register `r' used in local access ?
 		local
 			expr: EXPR_B
@@ -165,7 +165,7 @@ feature -- Status
 			end
 		end
 
-	is_single: BOOLEAN is
+	is_single: BOOLEAN
 			-- Is access a single one ?
 		local
 			i, nb: INTEGER
@@ -196,13 +196,13 @@ feature -- Status
 			end
 		end
 
-	is_polymorphic: BOOLEAN is
+	is_polymorphic: BOOLEAN
 			-- Is the access polymorphic ?
 		do
 			Result := False
 		end
 
-	has_one_signature: BOOLEAN is
+	has_one_signature: BOOLEAN
 			-- Is the access always using the same signature regardless of the version
 			-- being called polymorphically?
 		do
@@ -211,7 +211,7 @@ feature -- Status
 
 feature -- Element change
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Propagate register across access
 		do
 			if (register = Void) and not context_type.is_basic then
@@ -233,7 +233,7 @@ feature -- Element change
 
 feature -- Setting
 
-	set_parameters (p: like parameters) is
+	set_parameters (p: like parameters)
 		do
 			-- Do nothing
 		end
@@ -245,7 +245,7 @@ feature -- Setting
 
 feature -- C generation
 
-	print_register is
+	print_register
 			-- Print register or generate if there are no register.
 		do
 			if register /= No_register then
@@ -255,7 +255,7 @@ feature -- C generation
 			end
 		end
 
-	free_register is
+	free_register
 			-- Free register used by last call expression. If No_register was
 			-- propagated, also frees the registers used by target and
 			-- last message.
@@ -268,7 +268,7 @@ feature -- C generation
 			end
 		end
 
-	perused: BOOLEAN is
+	perused: BOOLEAN
 			-- See if the expression we are computing is going to be expanded
 			-- on-line for later perusal: for instance, when computing the
 			-- expression f(g(y), h(x)), the register used by the parameters
@@ -281,7 +281,7 @@ feature -- C generation
 				(parent /= Void and then parent.register = No_register)
 		end
 
-	unanalyze_parameters is
+	unanalyze_parameters
 			-- Undo the analysis on parameters
 		local
 			l_parameters: BYTE_LIST [EXPR_B]
@@ -304,7 +304,7 @@ feature -- C generation
 			end
 		end
 
-	free_param_registers is
+	free_param_registers
 			-- Free registers used by parameters
 		local
 			l_parameters: BYTE_LIST [EXPR_B]
@@ -327,20 +327,20 @@ feature -- C generation
 			end
 		end
 
-	unanalyze is
+	unanalyze
 			-- Undo the analysis
 		do
 			set_register (Void)
 			unanalyze_parameters
 		end
 
-	Current_register: REGISTRABLE is
+	Current_register: REGISTRABLE
 			-- The "Current" entity
 		do
 			Result := Context.Current_register
 		end
 
-	analyze_on (reg: REGISTRABLE) is
+	analyze_on (reg: REGISTRABLE)
 			-- Analyze access on `reg'
 		do
 				-- This will be redefined where needed. By default, run
@@ -348,7 +348,7 @@ feature -- C generation
 			analyze
 		end
 
-	generate is
+	generate
 			-- Generate C code for the access.
 		local
 			buf: GENERATION_BUFFER
@@ -369,17 +369,17 @@ feature -- C generation
 			end
 		end
 
-	generate_on (reg: REGISTRABLE) is
+	generate_on (reg: REGISTRABLE)
 			-- Generate access using `reg' as "Current"
 		do
 		end
 
-	generate_access is
+	generate_access
 			-- Generation of the C code for access
 		do
 		end
 
-	generate_parameters (reg: REGISTRABLE) is
+	generate_parameters (reg: REGISTRABLE)
 			-- Generate code for parameters computation.
 			-- `reg' ("Current") is not used except for
 			-- inlining
@@ -393,18 +393,18 @@ feature -- C generation
 
 feature -- Conveniences
 
-	same (other: ACCESS_B): BOOLEAN is
+	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		deferred
 		end
 
-	is_assignable: BOOLEAN is
+	is_assignable: BOOLEAN
 			-- Can current be assigned to?
 		do
 			Result := is_local or is_current or is_attribute or is_result
 		end
 
-	is_message: BOOLEAN is
+	is_message: BOOLEAN
 			-- is the access a message ?
 		require
 			parent_exists: parent /= Void
@@ -412,17 +412,17 @@ feature -- Conveniences
 			Result := parent.message.canonical = Current
 		end
 
-	is_feature: BOOLEAN is
+	is_feature: BOOLEAN
 			-- Is Current an access to an Eiffel feature ?
 		do
 		end
 
-	is_creatable: BOOLEAN is
+	is_creatable: BOOLEAN
 			-- Can the access be a target of a creation ?
 		do
 		end
 
-	is_first: BOOLEAN is
+	is_first: BOOLEAN
 			-- Is the access the first one in a multi-dot expression ?
 		local
 			p: like parent
@@ -448,7 +448,7 @@ feature -- Conveniences
 
 feature -- Code generation
 
-	argument_types: ARRAY [STRING] is
+	argument_types: ARRAY [STRING]
 			-- Array of C types for the arguments
 		local
 			p: like parameters
@@ -476,26 +476,26 @@ feature -- Code generation
 
 feature -- Byte code generation
 
-	bit_assign_code: CHARACTER is
+	bit_assign_code: CHARACTER
 			-- Bits assignment byte code
 			-- (By default it is the assign_code)
 		do
 			Result := assign_code
 		end
 
-	assign_code: CHARACTER is
+	assign_code: CHARACTER
 			-- Simple assignment byte code
 		do
 			-- Do nothing
 		end
 
-	expanded_assign_code: CHARACTER is
+	expanded_assign_code: CHARACTER
 			-- Expanded assignment byte code
 		do
 			-- Do nothing
 		end
 
-	reverse_code: CHARACTER is
+	reverse_code: CHARACTER
 			-- Reverse assignment byte code	
 		do
 			-- Do nothing
@@ -503,19 +503,19 @@ feature -- Byte code generation
 
 feature -- Array optimization
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 			-- Redefined for type check
 		do
 			Result := Current
 		end
 
-	conforms_to_array_opt: BOOLEAN is
+	conforms_to_array_opt: BOOLEAN
 		do
 			Result := (is_argument or else is_local or else is_result)
 				and then type.conforms_to_array
 		end
 
-	array_descriptor: INTEGER is
+	array_descriptor: INTEGER
 			-- Array description
 			-- argument:<0; Result:0; local:>0
 		do
@@ -523,7 +523,7 @@ feature -- Array optimization
 
 feature -- Multi constraint suport
 
-	set_multi_constraint_static (a_type: TYPE_A) is
+	set_multi_constraint_static (a_type: TYPE_A)
 			-- `formal_multi_constraint_static' to `a_type'
 		do
 			multi_constraint_static := a_type
@@ -536,7 +536,7 @@ feature -- Multi constraint suport
 			--| In the multi constraint there is more then one recipient for a message.
 			--| `multi_constraint_static' states to which type out of the type set exactly it should be sent.
 
-	has_multi_constraint_static: BOOLEAN is
+	has_multi_constraint_static: BOOLEAN
 			-- Does current access send it's message to a multi constraint?
 			-- If true it means that this message is sent to the type represented by `multi_constraint_static'
 		do
@@ -545,13 +545,13 @@ feature -- Multi constraint suport
 
 feature -- Inlining
 
-	inlined_byte_code: ACCESS_B is
+	inlined_byte_code: ACCESS_B
 			-- Redefined for type check
 		do
 			Result := Current
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

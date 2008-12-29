@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface containing a list for which observers can be notified whenever elements are added,
 		removed or modified.

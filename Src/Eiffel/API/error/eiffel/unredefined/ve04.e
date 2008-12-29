@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for invalid parent type: %
@@ -23,20 +23,20 @@ feature -- Properties
 	parent_type: CLASS_TYPE_AS;
 			-- Parent type involved in the error
 
-	code: STRING is "VHPR";
+	code: STRING = "VHPR";
 			-- Error code
 
-	subcode: INTEGER is 3
+	subcode: INTEGER = 3
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_parent_type (p: like parent_type) is
+	set_parent_type (p: like parent_type)
 			-- Assign `o' to `parent_type'.
 		do
 			parent_type := p;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

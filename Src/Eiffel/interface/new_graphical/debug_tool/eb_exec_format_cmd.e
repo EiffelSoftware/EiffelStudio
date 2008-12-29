@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Set execution format."
 	legal: "See notice at end of class."
@@ -35,7 +35,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like eb_debugger_manager) is
+	make (a_manager: like eb_debugger_manager)
 			-- Initialize `Current' and associate it with `a_manager'.
 		do
 			eb_debugger_manager := a_manager
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	launch_with_parameters (a_execution_mode: INTEGER; params: DEBUGGER_EXECUTION_PARAMETERS) is
+	launch_with_parameters (a_execution_mode: INTEGER; params: DEBUGGER_EXECUTION_PARAMETERS)
 			-- Execute with `params' and using mode `a_execution_mode'
 		do
 			if is_sensitive then
@@ -51,7 +51,7 @@ feature -- Execution
 			end
 		end
 
-	execute is
+	execute
 			-- Set the execution format to `stone'.
 		do
 			if is_sensitive then
@@ -64,7 +64,7 @@ feature -- Properties
 	eb_debugger_manager: EB_DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for `Current'.
 		do
 			Result := internal_tooltip
@@ -72,7 +72,7 @@ feature -- Properties
 
 feature -- Access
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new docking toolbar item.
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
@@ -80,14 +80,14 @@ feature -- Access
 			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
 		end
 
-	new_menu_item: EB_COMMAND_MENU_ITEM is
+	new_menu_item: EB_COMMAND_MENU_ITEM
 			-- Create a new menu item
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
 			Result.select_actions.put_front (agent execute_from (Result))
 		end
 
-	new_menu_item_unmanaged: EV_MENU_ITEM is
+	new_menu_item_unmanaged: EV_MENU_ITEM
 			-- Create a new menu item unmanaged.
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
@@ -97,20 +97,20 @@ feature -- Access
 
 feature {NONE} -- Attributes
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-	execution_mode: INTEGER is
+	execution_mode: INTEGER
 			-- Kind of execution performed by `Current'.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	internal_execute (a_execution_mode: INTEGER) is
+	internal_execute (a_execution_mode: INTEGER)
 			-- Execute.
 		do
 			before_internal_execute
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			after_internal_execute
 		end
 
-	internal_launch (a_execution_mode: INTEGER; params: DEBUGGER_EXECUTION_PARAMETERS) is
+	internal_launch (a_execution_mode: INTEGER; params: DEBUGGER_EXECUTION_PARAMETERS)
 			-- Launch.
 		do
 			before_internal_execute
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			after_internal_execute
 		end
 
-	before_internal_execute is
+	before_internal_execute
 			-- before calling internal_execute
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	after_internal_execute is
+	after_internal_execute
 			-- before calling internal_execute
 		do
 			if not eb_debugger_manager.application_is_executing then
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execute_from (widget: EV_CONTAINABLE) is
+	execute_from (widget: EV_CONTAINABLE)
 			-- Set widget's top-level window as the debugging window.
 		local
 			trigger: EV_CONTAINABLE
@@ -216,12 +216,12 @@ feature {NONE} -- Implementation
 			-- Was the command launched through a menu or a toolbar button
 			-- (by opposition to an accelerator)?
 
-	internal_tooltip: STRING_GENERAL is
+	internal_tooltip: STRING_GENERAL
 			-- Basic tooltip (without the key shortcut).
 		deferred
 		end
 
-	button_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	button_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Show the arguments dialog box when the user right clicks the button.
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.right and is_sensitive then
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_execution_parameters_dialog is
+	open_execution_parameters_dialog
 			-- Show the arguments dialog
 		local
 			args_dialog: EB_ARGUMENT_DIALOG
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_exception_handler_dialog is
+	open_exception_handler_dialog
 			-- Show the arguments dialog
 		do
 			if eb_debugger_manager.exception_handler_cmd /= Void then
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,42 +18,42 @@ create
 
 feature -- Access
 
-	effective_evaluate_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; f, realf: FEATURE_I; ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE]; is_static_call: BOOLEAN) is
+	effective_evaluate_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; f, realf: FEATURE_I; ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE]; is_static_call: BOOLEAN)
 		do
 		end
-	effective_evaluate_once_function (f: FEATURE_I) is
+	effective_evaluate_once_function (f: FEATURE_I)
 		do
 		end
 
-	parameters_push (dmp: DUMP_VALUE) is
+	parameters_push (dmp: DUMP_VALUE)
 			-- (export status {DBG_EVALUATOR})
 		do
 		end
-	parameters_push_and_metamorphose (dmp: DUMP_VALUE) is
+	parameters_push_and_metamorphose (dmp: DUMP_VALUE)
 		do
 		end
 
-	create_empty_instance_of (a_type_i: CL_TYPE_A) is
+	create_empty_instance_of (a_type_i: CL_TYPE_A)
 		do
 		end
 
-	create_special_any_instance (a_type_i: CL_TYPE_A; a_count: INTEGER) is
+	create_special_any_instance (a_type_i: CL_TYPE_A; a_count: INTEGER)
 		do
 		end
 
-	dump_value_at_address (addr: DBG_ADDRESS): DUMP_VALUE is
+	dump_value_at_address (addr: DBG_ADDRESS): DUMP_VALUE
 		do
 		end
 
-	address_from_basic_dump_value (a_target: DUMP_VALUE): DBG_ADDRESS is
+	address_from_basic_dump_value (a_target: DUMP_VALUE): DBG_ADDRESS
 		do
 		end
 
-	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE is
+	current_object_from_callstack (cse: EIFFEL_CALL_STACK_ELEMENT): DUMP_VALUE
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

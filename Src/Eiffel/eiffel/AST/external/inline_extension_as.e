@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of a inline external extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature  -- Initialization
 
-	initialize (is_cpp_inline: like is_cpp; use_list: USE_LIST_AS) is
+	initialize (is_cpp_inline: like is_cpp; use_list: USE_LIST_AS)
 			-- Create INLINE_EXTENSION_AS node.
 		do
 			is_cpp := is_cpp_inline
@@ -33,14 +33,14 @@ feature -- Properties
 
 feature -- Get inline extension
 
-	extension_i: INLINE_EXTENSION_I is
+	extension_i: INLINE_EXTENSION_I
 			-- INLINE_EXTENSION_I corresponding to current extension
 		do
 			create Result.make (is_cpp)
 			init_extension_i (Result)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

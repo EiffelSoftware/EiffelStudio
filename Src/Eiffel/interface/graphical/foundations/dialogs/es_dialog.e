@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A base dialog implementation for all dialogs resident in EiffelStudio.
 		
@@ -1095,7 +1095,7 @@ invariant
 	default_cancel_button_is_valid_button_id: buttons.has (default_cancel_button)
 	button_actions_attached: button_actions /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

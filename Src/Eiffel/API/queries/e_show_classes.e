@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to display list of the classes in the%
@@ -21,10 +21,10 @@ create
 
 feature -- Status report
 
-	is_class_displayed: BOOLEAN is True;
+	is_class_displayed: BOOLEAN = True;
 			-- Is classes displayed?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Representation of an eiffel attribute."
@@ -21,7 +21,7 @@ create
 
 feature -- Properties
 
-	is_attribute: BOOLEAN is True
+	is_attribute: BOOLEAN = True
 			-- Is current an attribute?
 
 	is_attribute_with_body: BOOLEAN
@@ -35,7 +35,7 @@ feature -- Properties
 
 feature -- Access
 
-	locals: EIFFEL_LIST [TYPE_DEC_AS] is
+	locals: EIFFEL_LIST [TYPE_DEC_AS]
 		local
 			routine_as: ROUTINE_AS
 		do
@@ -45,7 +45,7 @@ feature -- Access
 			end
 		end
 
-	object_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]] is
+	object_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
 			-- Object test locals mentioned in the routine
 		local
 			routine_as: ROUTINE_AS
@@ -58,7 +58,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	associated_routine_as: ROUTINE_AS is
+	associated_routine_as: ROUTINE_AS
 			-- Associated routine as used to find out locals and object test locals
 		do
 			if body_index > 0 then
@@ -86,7 +86,7 @@ feature -- Setting
 			is_attribute_with_body := b
 		end
 
-	set_type (t: like type; a: like assigner_name) is
+	set_type (t: like type; a: like assigner_name)
 			-- Set `type' to `t' and `assigner_name' to `a'.
 		require
 			valid_t: t /= Void
@@ -98,7 +98,7 @@ feature -- Setting
 			assigner_name_set: assigner_name = a
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

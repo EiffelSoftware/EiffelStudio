@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Margin for use in clickable editor.  Unlike EB_MARGIN this can deal with mouse clicks and breakpoints."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- Build margin drawable area
 		do
 			Precursor {MARGIN_WIDGET}
@@ -40,13 +40,13 @@ feature -- Graphical Interface
 
 feature -- Status Setting
 
-	hide_breakpoints is
+	hide_breakpoints
 			-- Do not show breakpoints even if there are some.
 		do
 			hidden_breakpoints := True
 		end
 
-	show_breakpoints is
+	show_breakpoints
 			-- Show breakpoints if there are some.
 		do
 			hidden_breakpoints := False
@@ -54,7 +54,7 @@ feature -- Status Setting
 
 feature -- Access
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixels calculated based on which tokens should be displayed
 		local
 			l_bptok: EDITOR_TOKEN_BREAKPOINT
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Query
 
-	line_numbers_visible: BOOLEAN is
+	line_numbers_visible: BOOLEAN
 			-- Are line numbers hidden?
 		do
 		    Result := Precursor
@@ -89,7 +89,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 			end
 		end
 
-	pebble_from_x_y (x_pos_with_margin, abs_y_pos: INTEGER): STONE is
+	pebble_from_x_y (x_pos_with_margin, abs_y_pos: INTEGER): STONE
 			-- Stone on (`x_pos', `y_pos').
 			-- Process single click on mouse buttons.			
 		local
@@ -120,7 +120,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 
 feature {NONE} -- Implementation
 
-	draw_line_to_screen (x, y: INTEGER; a_line: EIFFEL_EDITOR_LINE; xline: INTEGER) is
+	draw_line_to_screen (x, y: INTEGER; a_line: EIFFEL_EDITOR_LINE; xline: INTEGER)
 			-- Update display by drawing `line' onto the `editor_drawing_area' directly at co-ordinates x,y.
 		local
  			curr_token	: EDITOR_TOKEN
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Events
 
-	on_mouse_button_event (a_press: BOOLEAN; abs_x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_mouse_button_event (a_press: BOOLEAN; abs_x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Process single click on mouse buttons.			
 		local
 			ln: EIFFEL_EDITOR_LINE
@@ -220,12 +220,12 @@ feature {NONE} -- Events
 
 feature {NONE} -- Implementation
 
-	text_displayed_type: CLICKABLE_TEXT is
+	text_displayed_type: CLICKABLE_TEXT
 			-- Type of `text_panel.text_displayed'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

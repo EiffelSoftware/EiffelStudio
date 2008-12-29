@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents the display of stack and debugged objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	on_before_initialize is
+	on_before_initialize
 			-- <Precursor>
 		do
 			cleaning_delay := preferences.debug_tool_data.delay_before_cleaning_objects_grid
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			Precursor
 		end
 
-	build_tool_interface (a_widget: EV_VERTICAL_BOX) is
+	build_tool_interface (a_widget: EV_VERTICAL_BOX)
 			-- <Precursor>
 		local
 			l_box: EV_HORIZONTAL_BOX
@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 
 		end
 
-	on_after_initialized is
+	on_after_initialized
 			-- <Precursor>
 		do
 			Precursor
@@ -178,7 +178,7 @@ feature {NONE} -- Initialization
 			Result.force_last (debugger_manager.object_storage_management_cmd.new_mini_sd_toolbar_item)
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Build docking content
 		do
 			Precursor {ES_DEBUGGER_DOCKABLE_STONABLE_TOOL_PANEL} (a_docking_manager)
@@ -208,7 +208,7 @@ feature {NONE} -- Factory
 		do
 		end
 
-	create_header_box is
+	create_header_box
 		do
 			create header_box
 		ensure
@@ -217,11 +217,11 @@ feature {NONE} -- Factory
 
 feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 
-	first_grid_id: STRING is "1"
+	first_grid_id: STRING = "1"
 
-	second_grid_id: STRING is "2"
+	second_grid_id: STRING = "2"
 
-	reset_objects_grids_contents_to_default is
+	reset_objects_grids_contents_to_default
 		local
 			lst: LIST [INTEGER]
 		do
@@ -249,7 +249,7 @@ feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 			end
 		end
 
-	objects_grids_contents_to_array: ARRAY [STRING] is
+	objects_grids_contents_to_array: ARRAY [STRING]
 			--
 		local
 			lst: LIST [INTEGER]
@@ -292,7 +292,7 @@ feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 			Result_has_no_void_item: not Result.has (Void)
 		end
 
-	Position_entries: ARRAY [INTEGER] is
+	Position_entries: ARRAY [INTEGER]
 		once
 			Result := <<
 							position_stack,
@@ -307,7 +307,7 @@ feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 	objects_grids: HASH_TABLE [like objects_grid_data, STRING]
 			-- Contains the stack and debugged objects grids
 
-	objects_grid_ids: LIST [STRING] is
+	objects_grid_ids: LIST [STRING]
 			-- Grid id of all the objects_grids
 		local
 			ht: like objects_grids
@@ -324,7 +324,7 @@ feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 			end
 		end
 
-	objects_grid (a_id: STRING): ES_OBJECTS_GRID is
+	objects_grid (a_id: STRING): ES_OBJECTS_GRID
 			-- Objects grid identified by `a_id'.
 		require
 			a_id /= Void
@@ -332,7 +332,7 @@ feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 			Result := objects_grids.item (a_id).grid
 		end
 
-	ids_from_objects_grid (a_id: STRING): LIST [INTEGER] is
+	ids_from_objects_grid (a_id: STRING): LIST [INTEGER]
 			-- Objects grid's contents identified by `a_id'.
 		require
 			a_id /= Void
@@ -343,7 +343,7 @@ feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 	objects_grid_data (a_id: STRING): TUPLE [grid:ES_OBJECTS_GRID; grid_is_empty:BOOLEAN;
 						layout_initialized:BOOLEAN;
 						ids:LIST[INTEGER]; lines:LIST[ES_OBJECTS_GRID_SPECIFIC_LINE]
-					] is
+					]
 			-- Objects grid identified by `a_id'.
 		require
 			a_id /= Void
@@ -355,7 +355,7 @@ feature {ES_OBJECTS_TOOL_LAYOUT_EDITOR} -- Internal properties
 
 feature {NONE} -- Interface
 
-	create_objects_grid (a_name: STRING_GENERAL; a_id: STRING) is
+	create_objects_grid (a_name: STRING_GENERAL; a_id: STRING)
 			-- Create an objects grid named `a_name' and identified by `a_id'
 		local
 			spref: STRING_PREFERENCE
@@ -405,7 +405,7 @@ feature {NONE} -- Interface
 			g.set_configurable_target_menu_handler (agent context_menu_handler (?, ?, ?, ?, g))
 		end
 
-	open_objects_menu (tbi: SD_TOOL_BAR_ITEM) is
+	open_objects_menu (tbi: SD_TOOL_BAR_ITEM)
 			-- Open objects tool menu
 		require
 			is_initialized: is_initialized
@@ -422,7 +422,7 @@ feature {NONE} -- Interface
 			end
 		end
 
-	reset_objects_grids_positions is
+	reset_objects_grids_positions
 			-- Reset Objects tool grids positions
 		local
 			apref: ARRAY_PREFERENCE
@@ -432,7 +432,7 @@ feature {NONE} -- Interface
 			apref.set_value (objects_grids_contents_to_array) --| Should trigger "update"				
 		end
 
-	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_grid: ES_OBJECTS_GRID ) is
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_grid: ES_OBJECTS_GRID )
 			-- Context menu handler
 		do
 			develop_window.menus.context_menu_factory.object_tool_menu (a_menu, a_target_list, a_source, a_pebble, Current, a_grid)
@@ -440,7 +440,7 @@ feature {NONE} -- Interface
 
 feature -- preference
 
-	change_objects_layout_preference_value (ar: ARRAY [STRING]) is
+	change_objects_layout_preference_value (ar: ARRAY [STRING])
 		local
 			apref: ARRAY_PREFERENCE
 		do
@@ -448,7 +448,7 @@ feature -- preference
 			apref.set_value (ar) --| Should trigger "update"
 		end
 
-	refresh_objects_layout_from_preference (p: ARRAY_PREFERENCE) is
+	refresh_objects_layout_from_preference (p: ARRAY_PREFERENCE)
 			-- Refresh the layout using preference `p'
 		local
 			error_occurred: BOOLEAN
@@ -509,7 +509,7 @@ feature -- preference
 			retry
 		end
 
-	save_grids_preferences is
+	save_grids_preferences
 			-- Save grids preferences
 		require
 			is_initialized: is_initialized
@@ -542,7 +542,7 @@ feature -- Access
 
 feature -- Menu
 
-	open_objects_tool_layout_editor is
+	open_objects_tool_layout_editor
 			-- Open layout editor
 		local
 			dlg: ES_OBJECTS_TOOL_LAYOUT_EDITOR
@@ -553,7 +553,7 @@ feature -- Menu
 			dlg.recycle
 		end
 
-	tool_menu (for_tool: BOOLEAN): EV_MENU is
+	tool_menu (for_tool: BOOLEAN): EV_MENU
 			-- Menu for Current tool.
 		local
 			m: EV_MENU
@@ -592,7 +592,7 @@ feature {NONE} -- Notebook item's behavior
 	header_feature_label: EV_LABEL
 			-- Label to display feature information in `header_box'.
 
-	clean_header_box is
+	clean_header_box
 		do
 			if header_box /= Void then
 				header_box.wipe_out
@@ -612,7 +612,7 @@ feature {NONE} -- Notebook item's behavior
 			header_box /= Void implies header_box.count = 0
 		end
 
-	update_header_box (dbg_stopped: BOOLEAN) is
+	update_header_box (dbg_stopped: BOOLEAN)
 		require
 			header_box /= Void
 		local
@@ -705,7 +705,7 @@ feature {NONE} -- Notebook item's behavior
 
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
-	objects_grid_object_line (addr: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE is
+	objects_grid_object_line (addr: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE
 			-- Return managed object located at address `addr'.
 		local
 			found: BOOLEAN
@@ -729,7 +729,7 @@ feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
 feature -- Properties setting
 
-	set_hexadecimal_mode (v: BOOLEAN) is
+	set_hexadecimal_mode (v: BOOLEAN)
 		do
 			from
 				objects_grids.start
@@ -743,7 +743,7 @@ feature -- Properties setting
 
 feature {NONE} -- Row actions	
 
-	on_objects_row_selected (row: EV_GRID_ROW) is
+	on_objects_row_selected (row: EV_GRID_ROW)
 			-- An item in the list of expression was selected.
 		local
 			g: like objects_grid
@@ -756,7 +756,7 @@ feature {NONE} -- Row actions
 			end
 		end
 
-	on_objects_row_deselected (row: EV_GRID_ROW) is
+	on_objects_row_deselected (row: EV_GRID_ROW)
 			-- An item in the list of expression was selected.
 		do
 			remove_debugged_object_cmd.disable_sensitive
@@ -764,7 +764,7 @@ feature {NONE} -- Row actions
 
 feature {NONE} -- event handlers
 
-	on_stone_changed (a_old_stone: ?like stone) is
+	on_stone_changed (a_old_stone: ?like stone)
 			-- Assign `a_stone' as new stone.
 		do
 			debug ("debug_recv")
@@ -779,21 +779,21 @@ feature {NONE} -- event handlers
 
 feature -- Change
 
-	enable_refresh is
+	enable_refresh
 			-- Set `can_refresh' to `True'.
 		do
 				-- FIXME: this should be useless now, to check
 			can_refresh := True
 		end
 
-	disable_refresh is
+	disable_refresh
 			-- Set `can_refresh' to `False'.
 		do
 				-- FIXME: this should be useless now, to check
 			can_refresh := False
 		end
 
-	refresh is
+	refresh
 			-- Refresh current grid
 			--| Could be optimized to refresh only grid's content display ..
 		do
@@ -801,13 +801,13 @@ feature -- Change
 			update
 		end
 
-	set_debugger_manager (a_manager: like debugger_manager) is
+	set_debugger_manager (a_manager: like debugger_manager)
 			-- Affect `a_manager' to `debugger_manager'.
 		do
 			debugger_manager := a_manager
 		end
 
-	show is
+	show
 			-- Show tool.
 		local
 			l_grid: like objects_grid
@@ -822,12 +822,12 @@ feature -- Change
 
 feature {NONE} -- Update
 
-	on_update_when_application_is_executing (dbg_stopped: BOOLEAN) is
+	on_update_when_application_is_executing (dbg_stopped: BOOLEAN)
 			-- Update when debugging
 		do
 		end
 
-	on_update_when_application_is_not_executing is
+	on_update_when_application_is_not_executing
 			-- Update when not debugging
 		do
 			from
@@ -840,7 +840,7 @@ feature {NONE} -- Update
 			end
 		end
 
-	real_update (dbg_was_stopped: BOOLEAN) is
+	real_update (dbg_was_stopped: BOOLEAN)
 			-- Display current execution status.
 			-- dbg_was_stopped is ignore if Application/Debugger is not running
 		local
@@ -921,7 +921,7 @@ feature -- Status report
 
 feature -- Status Setting
 
-	reset_tool is
+	reset_tool
 			-- Reset tool
 		local
 			g: like objects_grid
@@ -962,7 +962,7 @@ feature -- Status Setting
 
 feature {NONE} -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
@@ -972,7 +972,7 @@ feature {NONE} -- Memory management
 
 feature {ES_OBJECTS_TOOL} -- Cleaning timer change
 
-	update_cleaning_delay (ms: INTEGER) is
+	update_cleaning_delay (ms: INTEGER)
 			-- Set cleaning delay to object grids
 		require
 			is_initialized: is_initialized
@@ -996,7 +996,7 @@ feature {ES_OBJECTS_TOOL} -- Cleaning timer change
 			cleaning_delay = ms
 		end
 
-	init_delayed_cleaning_mecanism is
+	init_delayed_cleaning_mecanism
 		local
 			g: like objects_grid
 		do
@@ -1030,7 +1030,7 @@ feature {NONE} -- grid Layout Implementation
 			-- for normal debug usage as it is only cleared immediately before
 			-- being rebuilt, unless the timer period has been exceeded.
 
-	current_stack_class_feature_identification: STRING is
+	current_stack_class_feature_identification: STRING
 		local
 			cse: CALL_STACK_ELEMENT
 		do
@@ -1042,7 +1042,7 @@ feature {NONE} -- grid Layout Implementation
 
 feature {NONE} -- Stack grid Layout Implementation
 
-	initialize_objects_grid_layout (pv: BOOLEAN_PREFERENCE; g: like objects_grid) is
+	initialize_objects_grid_layout (pv: BOOLEAN_PREFERENCE; g: like objects_grid)
 		require
 			not objects_grids.item (g.id).layout_initialized
 			g.layout_manager = Void
@@ -1055,7 +1055,7 @@ feature {NONE} -- Stack grid Layout Implementation
 			objects_grids.item (g.id).layout_initialized := True
 		end
 
-	action_clean_objects_grid (g_id: STRING) is
+	action_clean_objects_grid (g_id: STRING)
 		local
 			t: like objects_grid_data
 		do
@@ -1070,7 +1070,7 @@ feature {NONE} -- Stack grid Layout Implementation
 
 feature -- grid Layout access
 
-	record_grids_layout is
+	record_grids_layout
 		local
 			g: like objects_grid
 			lines: LIST [ES_OBJECTS_GRID_SPECIFIC_LINE]
@@ -1104,14 +1104,14 @@ feature {NONE} -- Commands Implementation
 	remove_debugged_object_cmd: EB_STANDARD_CMD
 			-- Command that is used to remove objects from the tree.
 
-	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND is
+	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND
 		do
 			Result := debugger_manager.object_viewer_cmd
 		end
 
 feature {NONE} -- Implementation
 
-	current_stack_element: CALL_STACK_ELEMENT is
+	current_stack_element: CALL_STACK_ELEMENT
 			-- Stack element currently displayed in `stack_objects_grid'.
 		local
 			l_status: APPLICATION_STATUS
@@ -1130,7 +1130,7 @@ feature {NONE} -- Current objects grid Implementation
 	displayed_objects: LINKED_LIST [ES_OBJECTS_GRID_OBJECT_LINE];
 			-- All displayed objects, their addresses, types and display options.
 
-	add_displayed_objects_to_grid (a_target_grid: ES_OBJECTS_GRID) is
+	add_displayed_objects_to_grid (a_target_grid: ES_OBJECTS_GRID)
 		local
 			item: ES_OBJECTS_GRID_LINE
 		do
@@ -1153,7 +1153,7 @@ feature {NONE} -- Current objects grid Implementation
 
 feature {NONE} -- Impl : Debugged objects grid specifics
 
-	object_stone_dropped_on_grid (a_grid: like objects_grid; st: OBJECT_STONE) is
+	object_stone_dropped_on_grid (a_grid: like objects_grid; st: OBJECT_STONE)
 		local
 			cst: CALL_STACK_STONE
 		do
@@ -1166,7 +1166,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			end
 		end
 
-	grid_veto_pebble_function (a_grid: like objects_grid; a_pebble: ANY): BOOLEAN is
+	grid_veto_pebble_function (a_grid: like objects_grid; a_pebble: ANY): BOOLEAN
 		local
 			ost: OBJECT_STONE
 			cst: CALL_STACK_STONE
@@ -1180,7 +1180,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			end
 		end
 
-	add_debugged_object (a_stone: OBJECT_STONE) is
+	add_debugged_object (a_stone: OBJECT_STONE)
 			-- Add the object represented by `a_stone' to the managed objects.
 		require
 			application_is_running: debugger_manager.application_is_executing
@@ -1244,7 +1244,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			end
 		end
 
-	remove_dropped_debugged_object (ost: OBJECT_STONE) is
+	remove_dropped_debugged_object (ost: OBJECT_STONE)
 		local
 			row: EV_GRID_ROW
 			gline: ES_OBJECTS_GRID_OBJECT_LINE
@@ -1263,7 +1263,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			end
 		end
 
-	remove_selected_debugged_objects is
+	remove_selected_debugged_objects
 		local
 			glines: LIST [ES_OBJECTS_GRID_OBJECT_LINE]
 			line: ES_OBJECTS_GRID_OBJECT_LINE
@@ -1295,7 +1295,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			end
 		end
 
-	remove_debugged_object_line (gline: ES_OBJECTS_GRID_OBJECT_LINE) is
+	remove_debugged_object_line (gline: ES_OBJECTS_GRID_OBJECT_LINE)
 		require
 			gline_not_void: gline /= Void
 		local
@@ -1313,7 +1313,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			end
 		end
 
-	selected_debugged_object_lines: LINKED_LIST [ES_OBJECTS_GRID_OBJECT_LINE] is
+	selected_debugged_object_lines: LINKED_LIST [ES_OBJECTS_GRID_OBJECT_LINE]
 		local
 			row: EV_GRID_ROW
 			rows: ARRAYED_LIST [EV_GRID_ROW]
@@ -1339,7 +1339,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			end
 		end
 
-	is_removable_debugged_object (a_stone: ANY): BOOLEAN is
+	is_removable_debugged_object (a_stone: ANY): BOOLEAN
 		local
 			row: EV_GRID_ROW
 		do
@@ -1352,12 +1352,12 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			end
 		end
 
-	is_removable_debugged_object_row (row: EV_GRID_ROW): BOOLEAN is
+	is_removable_debugged_object_row (row: EV_GRID_ROW): BOOLEAN
 		do
 			Result := row.parent_row = Void
 		end
 
-	is_removable_debugged_object_address (addr: DBG_ADDRESS): BOOLEAN is
+	is_removable_debugged_object_address (addr: DBG_ADDRESS): BOOLEAN
 		do
 			if addr /= Void then
 				from
@@ -1375,13 +1375,13 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 
 feature {NONE} -- Impl : Stack objects grid
 
-	drop_stack_element (st: CALL_STACK_STONE) is
+	drop_stack_element (st: CALL_STACK_STONE)
 			-- Display stack element represented by `st'.
 		do
 			debugger_manager.launch_stone (st)
 		end
 
-	debug_value_key_action (grid: ES_OBJECTS_GRID; k: EV_KEY) is
+	debug_value_key_action (grid: ES_OBJECTS_GRID; k: EV_KEY)
 			-- Actions performed when a key is pressed on a debug_value.
 			-- Handle `Ctrl+C'.
 		local
@@ -1418,7 +1418,7 @@ feature {NONE} -- Impl : Stack objects grid
 
 feature {NONE} -- Debugged objects grid Implementation
 
-	new_specific_line (a_id: INTEGER): ES_OBJECTS_GRID_SPECIFIC_LINE is
+	new_specific_line (a_id: INTEGER): ES_OBJECTS_GRID_SPECIFIC_LINE
 			--
 		do
 			inspect a_id
@@ -1439,7 +1439,7 @@ feature {NONE} -- Debugged objects grid Implementation
 			end
 		end
 
-	init_specific_lines is
+	init_specific_lines
 		local
 			g: like objects_grid
 			gdata: like objects_grid_data
@@ -1520,14 +1520,14 @@ feature {NONE} -- Debugged objects grid Implementation
 
 feature {NONE} -- Constants
 
-	Left_address_delim: STRING is " <"
-	Right_address_delim: STRING is ">";
+	Left_address_delim: STRING = " <"
+	Right_address_delim: STRING = ">";
 
 invariant
 	debugger_manager_not_void: debugger_manager /= Void
 	objects_grids_not_void: (is_initialized and is_interface_usable) implies objects_grids /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

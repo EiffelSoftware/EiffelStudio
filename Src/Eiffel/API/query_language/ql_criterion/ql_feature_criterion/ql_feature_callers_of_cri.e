@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Criterion to test whether or not a feature is caller of another feature
 					
@@ -32,7 +32,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_feature: like criterion_domain; a_caller_type: like caller_type; only_current_version: BOOLEAN) is
+	make (a_feature: like criterion_domain; a_caller_type: like caller_type; only_current_version: BOOLEAN)
 			-- Initialize `criterion_domain' with `a_feature' and `caller_type' with `a_caller_type'.
 			-- if `only_current_version' is True, only find callers of current version of features in `a_feature'.
 		require
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature{QL_DOMAIN} -- Intrinsic domain
 
-	intrinsic_domain: QL_FEATURE_DOMAIN is
+	intrinsic_domain: QL_FEATURE_DOMAIN
 			-- Intrinsic_domain which can be inferred from current criterion
 		local
 			l_feature_list: like feature_list
@@ -120,14 +120,14 @@ feature{QL_DOMAIN} -- Intrinsic domain
 
 feature{NONE} -- Implementation
 
-	find_result is
+	find_result
 			-- Find callers to `criterion_domain'.
 		do
 			find_all_callers (caller_type)
 			is_intrinsic_domain_cached_in_domain_generator := False
 		end
 
-	find_current_callers (l_class: CLASS_C; l_feat: E_FEATURE; a_flag: like caller_type) is
+	find_current_callers (l_class: CLASS_C; l_feat: E_FEATURE; a_flag: like caller_type)
 			-- Show the callers of `l_feat' in `l_class'.
 		require
 			l_class_not_void: l_class /= Void
@@ -201,7 +201,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	find_all_callers (a_flag: like caller_type) is
+	find_all_callers (a_flag: like caller_type)
 			-- Show all the callers of `criterion_domain' and its descendants.
 		local
 			descendants: PART_SORTED_TWO_WAY_LIST [CLASS_C]
@@ -268,7 +268,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	reset is
+	reset
 			-- Reset internal data structure.
 		do
 			Precursor
@@ -307,7 +307,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Evaluate
 
-	is_satisfied_by_internal (a_item: QL_FEATURE): BOOLEAN is
+	is_satisfied_by_internal (a_item: QL_FEATURE): BOOLEAN
 			-- Evaluate `a_item'.
 		local
 			l_invariant_list: like invariant_list
@@ -364,7 +364,7 @@ invariant
 	invariant_callee_valid:
 		(callee_list_for_invariant /= Void and then invariant_list /= Void) implies (callee_list_for_invariant.count = invariant_list.count)
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

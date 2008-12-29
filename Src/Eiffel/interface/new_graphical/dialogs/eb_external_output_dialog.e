@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to display output of an external process."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +28,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize
 		local
 			l_vb: EV_VERTICAL_BOX
@@ -88,7 +88,7 @@ feature {NONE} -- GUI elements
 
 feature -- Update
 
-	set_process (a_process: like process) is
+	set_process (a_process: like process)
 			-- Set `process' to `a_process'.
 		require
 			a_process_not_void: a_process /= Void
@@ -98,7 +98,7 @@ feature -- Update
 			process_set: process = a_process
 		end
 
-	append_text (a_text: STRING) is
+	append_text (a_text: STRING)
 			-- Append `a_text' to the displayed text.
 		local
 			l_txt: like a_text
@@ -111,7 +111,7 @@ feature -- Update
 			end
 		end
 
-	append_in_gui_thread (a_text: STRING) is
+	append_in_gui_thread (a_text: STRING)
 			-- Append `a_text to the displayed text in the gui thread.
 		do
 			mutex.lock
@@ -119,7 +119,7 @@ feature -- Update
 			mutex.unlock
 		end
 
-	hide_in_gui_thread is
+	hide_in_gui_thread
 			-- Hide dialog in the gui thread.
 		do
 			mutex.lock

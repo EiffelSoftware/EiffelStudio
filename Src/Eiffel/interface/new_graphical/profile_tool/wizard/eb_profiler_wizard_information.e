@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Information entered so far by the user in the profiler wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature  {NONE} -- Initialization
 
-	make is
+	make
 			-- Assign default values
 		local
 			filename: FILE_NAME
@@ -62,13 +62,13 @@ feature -- Access
 	workbench_mode: BOOLEAN
 			-- Analyse a system compiled in workbench mode?
 			
-	finalized_mode: BOOLEAN is
+	finalized_mode: BOOLEAN
 			-- Analyse a system compiled in finalized mode?
 		do
 			Result := not workbench_mode
 		end
 
-	generate_execution_profile: BOOLEAN is
+	generate_execution_profile: BOOLEAN
 			-- Generate the execution profile from a Run-time information record?
 		do
 			if workbench_mode then
@@ -78,13 +78,13 @@ feature -- Access
 			end	
 		end
 
-	use_existing_execution_profile: BOOLEAN is
+	use_existing_execution_profile: BOOLEAN
 			-- Use an execution profile?
 		do
 			Result := not generate_execution_profile
 		end
 		
-	existing_profile: FILE_NAME is
+	existing_profile: FILE_NAME
 			-- Existing profile to use, Void if none
 		do
 			if workbench_mode then
@@ -94,7 +94,7 @@ feature -- Access
 			end
 		end
 			
-	runtime_information_record: FILE_NAME is
+	runtime_information_record: FILE_NAME
 			-- Runtime information record to use when generating the execution profile
 		do
 			if workbench_mode then
@@ -104,7 +104,7 @@ feature -- Access
 			end
 		end
 			
-	runtime_information_type: STRING is
+	runtime_information_type: STRING
 			-- Type of profiler used to produce `runtime_information_record'
 			-- (gcc profiler, eiffel profiler, ...)
 		do
@@ -149,10 +149,10 @@ feature -- Access
 	query: STRING
 			-- query input
 
-	default_query: STRING is "calls > 0"
+	default_query: STRING = "calls > 0"
 			-- Default query input
 
-	generation_path: STRING is
+	generation_path: STRING
 			-- Generation path for "profinfo.pfi"
 		do
 			if workbench_mode then
@@ -164,7 +164,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_workbench_mode is
+	set_workbench_mode
 			-- Analyse a system compiled in workbench mode.
 		do
 			workbench_mode := True
@@ -172,7 +172,7 @@ feature -- Element change
 			Result_set: workbench_mode
 		end
 		
-	set_finalized_mode is
+	set_finalized_mode
 			-- Analyse a system compiled in finalized mode.
 		do
 			workbench_mode := False
@@ -180,7 +180,7 @@ feature -- Element change
 			Result_set: finalized_mode
 		end
 		
-	set_generate_execution_profile is
+	set_generate_execution_profile
 			-- Generate the execution profile from a Run-time information record.
 		do
 			if workbench_mode then
@@ -192,7 +192,7 @@ feature -- Element change
 			flag_set: generate_execution_profile
 		end
 
-	set_use_existing_execution_profile (an_existing_profile: FILE_NAME) is
+	set_use_existing_execution_profile (an_existing_profile: FILE_NAME)
 			-- Use the existring execution profile named `an_existing_profile'.
 		require
 			valid_profile: an_existing_profile /= Void
@@ -210,7 +210,7 @@ feature -- Element change
 			profile_set: existing_profile.is_equal (an_existing_profile)
 		end
 		
-	set_runtime_information_record (a_record: FILE_NAME) is
+	set_runtime_information_record (a_record: FILE_NAME)
 			-- Set the Runtime information record to use when generating 
 			-- the execution profile to `a_record'.
 		require
@@ -226,7 +226,7 @@ feature -- Element change
 			runtime_information_set: runtime_information_record.is_equal (a_record)
 		end
 
-	set_runtime_information_type (a_profiler: STRING) is
+	set_runtime_information_type (a_profiler: STRING)
 			-- Set the type of profiler used to produce `runtime_information_record'
 			-- to `a_profiler'.
 		require
@@ -248,7 +248,7 @@ feature -- Element change
 			a_percentage_switch: BOOLEAN;
 			a_time_switch: BOOLEAN;
 			a_descendant_switch: BOOLEAN;
-			a_total_time_switch: BOOLEAN) is
+			a_total_time_switch: BOOLEAN)
 		do
 			name_switch := a_name_switch
 			number_of_calls_switch := a_number_of_calls_switch
@@ -261,14 +261,14 @@ feature -- Element change
 	set_language_switches (
 			a_eiffel_switch: BOOLEAN;
 			a_c_switch: BOOLEAN;
-			a_recursive_switch: BOOLEAN) is
+			a_recursive_switch: BOOLEAN)
 		do
 			eiffel_switch := a_eiffel_switch
 			c_switch := a_c_switch
 			recursive_switch := a_recursive_switch
 		end
 
-	set_query (a_query: STRING) is
+	set_query (a_query: STRING)
 			-- Set query input.
 		require
 			a_query_not_void: a_query /= Void
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 			-- Type of profiler used to produce `runtime_information_record'
 			-- (gcc profiler, eiffel profiler, ...)
 			
-	find_execution_profile (is_workbench_mode: BOOLEAN) : FILE_NAME is
+	find_execution_profile (is_workbench_mode: BOOLEAN) : FILE_NAME
 			-- Find an existing execution profile for the workbench
 			-- compilation mode if `workbench_mode' is set, for the
 			-- finalized mode otherwise.
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

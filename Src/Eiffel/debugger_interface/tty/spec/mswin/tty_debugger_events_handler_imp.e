@@ -1,4 +1,4 @@
-indexing
+note
 	description: "implementation for DEBUGGER_MANAGER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create {TTY_DEBUGGER_EVENTS_HANDLER}
 
 feature {NONE} -- Initialization
 
-	make (a_interface: like interface) is
+	make (a_interface: like interface)
 			-- Initialize current
 		do
 			interface := a_interface
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature {DEBUGGER_EVENTS_HANDLER} -- Access
 
-	process_underlying_toolkit_event_queue is
+	process_underlying_toolkit_event_queue
 		local
 			p: POINTER
 			b: BOOLEAN
@@ -63,7 +63,7 @@ feature {NONE} -- Interface
 
 feature {TTY_DEBUGGER_TIMER} -- Timer Access
 
-	on_timer (id: INTEGER): BOOLEAN is
+	on_timer (id: INTEGER): BOOLEAN
 			-- Wm_timer message.
 		local
 			dbg_timer: TTY_DEBUGGER_TIMER
@@ -77,7 +77,7 @@ feature {TTY_DEBUGGER_TIMER} -- Timer Access
 			end
 		end
 
-	set_timer (a_obj_id: INTEGER; a_interval: INTEGER) is
+	set_timer (a_obj_id: INTEGER; a_interval: INTEGER)
 			-- SetTimer
 		local
 			l_timer_id: INTEGER
@@ -89,7 +89,7 @@ feature {TTY_DEBUGGER_TIMER} -- Timer Access
 			timers.force (a_obj_id, l_timer_id)
 		end
 
-	kill_timer (a_timer_id: INTEGER) is
+	kill_timer (a_timer_id: INTEGER)
 			-- SetTimer
 		do
 			cwin_kill_timer (timer_win32_handle, a_timer_id)
@@ -101,7 +101,7 @@ feature {TTY_DEBUGGER_TIMER} -- Timer Access
 
 feature {NONE} -- Window related externals
 
-	cwin_new_window_handle: POINTER is
+	cwin_new_window_handle: POINTER
 		external
 			"C inline use <windows.h>"
 		alias
@@ -152,14 +152,14 @@ feature {NONE} -- Window related externals
 
 feature {NONE} -- Timer related externals
 
-	Wm_timer: INTEGER is
+	Wm_timer: INTEGER
 		external
 			"C [macro <msg.h>]"
 		alias
 			"WM_TIMER"
 		end
 
-	cwin_set_timer (hwnd: POINTER; a_timer_id: INTEGER; time_out: INTEGER; proc: POINTER): INTEGER is
+	cwin_set_timer (hwnd: POINTER; a_timer_id: INTEGER; time_out: INTEGER; proc: POINTER): INTEGER
 			-- SDK SetTimer
 		external
 			"C [macro <Windows.h>] (HWND, UINT, UINT, TIMERPROC): EIF_POINTER"
@@ -167,7 +167,7 @@ feature {NONE} -- Timer related externals
 			"SetTimer"
 		end
 
-	cwin_kill_timer (hwnd: POINTER; a_timer_id: INTEGER) is
+	cwin_kill_timer (hwnd: POINTER; a_timer_id: INTEGER)
 			-- SDK KillTimer
 		external
 			"C [macro <Windows.h>] (HWND, UINT)"
@@ -175,7 +175,7 @@ feature {NONE} -- Timer related externals
 			"KillTimer"
 		end
 
-	frozen eif_id_any_object (an_id: INTEGER): ANY is
+	frozen eif_id_any_object (an_id: INTEGER): ANY
 			-- Object associated with `an_id'
 		external
 			"C | %"eif_object_id.h%""
@@ -188,14 +188,14 @@ feature {NONE} -- Message related externals
 	reusable_pointer: POINTER
 			-- Reusable pointer to avoid performance issue with GC.
 
-	c_msg_get_message (p: POINTER): INTEGER is
+	c_msg_get_message (p: POINTER): INTEGER
 		external
 			"C inline use <msg.h>"
 		alias
 			"(((MSG *) $p)->message)"
 		end
 
-	c_msg_get_wparam (p: POINTER): POINTER is
+	c_msg_get_wparam (p: POINTER): POINTER
 		external
 			"C inline use <msg.h>"
 		alias
@@ -203,7 +203,7 @@ feature {NONE} -- Message related externals
 		end
 
 	cwin_peek_message (ptr, a_hwnd: POINTER;
-			first_msg, last_msg, flags: INTEGER): BOOLEAN is
+			first_msg, last_msg, flags: INTEGER): BOOLEAN
 			-- SDK PeekMessage
 		external
 			"C [macro <Windows.h>] (MSG *, HWND, UINT, UINT, UINT):%
@@ -230,7 +230,7 @@ feature {NONE} -- Message related externals
 			"DispatchMessage"
 		end
 
-	c_size_of_msg: INTEGER is
+	c_size_of_msg: INTEGER
 		external
 			"C [macro <msg.h>]"
 		alias
@@ -239,15 +239,15 @@ feature {NONE} -- Message related externals
 
 --	Pm_noremove: INTEGER is 0
 
-	Pm_remove: INTEGER is 1
+	Pm_remove: INTEGER = 1
 
 --	Pm_noyield: INTEGER is 2
 
 --	Pm_qs_paint: INTEGER is 0x200000
 
-	Pm_qs_postmessage: INTEGER is 0x980000;
+	Pm_qs_postmessage: INTEGER = 0x980000;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

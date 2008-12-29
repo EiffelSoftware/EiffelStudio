@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Error when target was not specified and there is more than one target in the configuration."
 	legal: "See notice at end of class."
@@ -17,14 +17,14 @@ inherit
 
 feature -- Output
 
-	build_explain (st: TEXT_FORMATTER) is
+	build_explain (st: TEXT_FORMATTER)
 		do
 			st.add_new_line
 			st.add ("No target specified and more than one target.");
 			st.add_new_line
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

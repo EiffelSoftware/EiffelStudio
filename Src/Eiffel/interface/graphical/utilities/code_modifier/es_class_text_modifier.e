@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A general purpose Eiffel code class modifier, associated with an Eiffel class {CLASS_I}.
 	]"
@@ -130,7 +130,7 @@ feature {NONE} -- Status report
 	is_committing: BOOLEAN
 			-- Indicates if modiciations commits are being performed.
 
-	is_editor_text_ready (a_editor: EB_SMART_EDITOR): BOOLEAN is
+	is_editor_text_ready (a_editor: EB_SMART_EDITOR): BOOLEAN
 			-- If `a_editor''s text ready for reading texts?
 		local
 			l_text_displayed: SMART_TEXT
@@ -703,7 +703,7 @@ feature {NONE} -- Factory
 			create Result.make (l_class, l_text)
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

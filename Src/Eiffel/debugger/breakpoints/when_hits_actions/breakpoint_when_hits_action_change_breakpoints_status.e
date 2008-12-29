@@ -1,4 +1,4 @@
-indexing
+note
 	description: "When breakpoint hits change status of set of breakpoints..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -18,13 +18,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tags: ARRAY [STRING_32]; a_status: BOOLEAN) is
+	make (a_tags: ARRAY [STRING_32]; a_status: BOOLEAN)
 		do
 			set_tags (a_tags)
 			set_status (a_status)
 		end
 
-	make_with_string_tags (a_string_tags: STRING_32; a_status: BOOLEAN) is
+	make_with_string_tags (a_string_tags: STRING_32; a_status: BOOLEAN)
 		do
 			set_tags_from_string (a_string_tags)
 			set_status (a_status)
@@ -39,7 +39,7 @@ feature -- Properties
 
 feature -- Change
 
-	set_status (a_status: like status) is
+	set_status (a_status: like status)
 			--
 		do
 			status := a_status
@@ -47,7 +47,7 @@ feature -- Change
 
 feature -- Execute
 
-	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER) is
+	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER)
 		local
 			lst: LIST [BREAKPOINT]
 			bp: BREAKPOINT
@@ -74,7 +74,7 @@ feature -- Execute
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

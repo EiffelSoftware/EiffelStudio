@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte code for Eiffel string (allocated each time)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (v: STRING) is
+	make (v: STRING)
 			-- Assign `v' to `value'.
 		require
 			v_not_void: v /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_string_b (Current)
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Properties
 
-	type: CL_TYPE_A is
+	type: CL_TYPE_A
 			-- String type
 		do
 			if is_dotnet_string then
@@ -56,29 +56,29 @@ feature -- Properties
 			end
 		end
 
-	enlarged: STRING_BL is
+	enlarged: STRING_BL
 			-- Enlarge node
 		do
 			create Result.make (value)
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Register `r' is not used for string value computation
 		do
 		end
 
-	is_simple_expr: BOOLEAN is True
+	is_simple_expr: BOOLEAN = True
 			-- A string is a simple expression
 
-	allocates_memory: BOOLEAN is True
+	allocates_memory: BOOLEAN = True
 			-- Current always allocates memory.
 
-	is_constant_expression: BOOLEAN is True
+	is_constant_expression: BOOLEAN = True
 			-- A string is a constant expression.
 
 feature -- Settings
 
-	set_is_dotnet_string (v: like is_dotnet_string) is
+	set_is_dotnet_string (v: like is_dotnet_string)
 			-- Set `is_dotnet_string' with `v'.
 		do
 			is_dotnet_string := v
@@ -88,7 +88,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation: types
 
-	string_type: CL_TYPE_A is
+	string_type: CL_TYPE_A
 			-- Type of STRING.
 		once
 			create Result.make (System.string_8_id)
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation: types
 			string_type_not_void: Result /= Void
 		end
 
-	system_string_type: CL_TYPE_A is
+	system_string_type: CL_TYPE_A
 			-- Type of SYSTEM_STRING.
 		require
 			il_generation: System.il_generation
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation: types
 invariant
 	value_not_void: value /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

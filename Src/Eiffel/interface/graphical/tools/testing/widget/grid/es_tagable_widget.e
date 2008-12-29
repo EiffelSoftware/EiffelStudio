@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		ES_WIDGET displaying an active collection of TAGABLE_I where the items can be selected.
 	]"

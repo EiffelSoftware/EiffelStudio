@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Sub query used to build a total query to query the profile information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make (c, o, v: STRING) is
+	make (c, o, v: STRING)
 			-- Create a subquery for column `c', with operator `o',
 			-- and specified value `v'.
 		require
@@ -35,22 +35,22 @@ feature -- Initialization
 	
 feature -- Properties
 
-	column: STRING is
+	column: STRING
 		do
 			Result := int_column
 		end
 
-	operator: STRING is
+	operator: STRING
 		do
 			Result := int_operator
 		end
 
-	value: STRING is
+	value: STRING
 		do
 			Result := int_value
 		end
 
-	image: STRING is
+	image: STRING
 		do
 			create Result.make (0)
 			Result.append (column)
@@ -68,7 +68,7 @@ feature {NONE} -- Attributes
 
 	int_value: STRING;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

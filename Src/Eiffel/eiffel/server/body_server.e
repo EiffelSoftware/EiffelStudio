@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server for routines' body indexed by body index."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,19 +19,19 @@ create
 
 feature
 
-	cache: CACHE [FEATURE_AS] is
+	cache: CACHE [FEATURE_AS]
 			-- Cache for routine tables
 		once
 			create Result.make
 		end
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN
 			-- Has current `an_id'?
 		do
 			Result := tmp_ast_server.body_has (an_id) or else Precursor (an_id)
 		end
 
-	item (an_id: INTEGER): FEATURE_AS is
+	item (an_id: INTEGER): FEATURE_AS
 			-- Body of id `an_id'. Look first in the temporary
 			-- body server. It not present, look in itself.
 		do
@@ -41,7 +41,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

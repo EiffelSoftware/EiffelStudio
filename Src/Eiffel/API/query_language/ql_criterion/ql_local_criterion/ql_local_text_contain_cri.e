@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Line criterion to decide whether or not text of a feature local contains a given string"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,13 +26,13 @@ create
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_LOCAL): BOOLEAN is
+	is_satisfied_by (a_item: QL_LOCAL): BOOLEAN
 			-- Evaluate `a_item'.
 		do
 			Result := is_name_same_as (a_item.text)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

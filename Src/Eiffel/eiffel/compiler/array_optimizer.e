@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class ARRAY_OPTIMIZER
@@ -29,7 +29,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			nb: INTEGER
 		do
@@ -47,7 +47,7 @@ feature
 
 feature
 
-	record_array_descendants is
+	record_array_descendants
 		local
 			array_class: CLASS_C
 			ftable: FEATURE_TABLE
@@ -114,7 +114,7 @@ feature {NONE} -- Array optimization
 			-- Set of all the features `lower' and `area' from ARRAY
 			-- and descendants
 
-	record_unsafe_features is
+	record_unsafe_features
 		local
 			a_class: CLASS_C
 			ftable: FEATURE_TABLE
@@ -217,7 +217,7 @@ end
 			mark_alive (a_feature.body_index)
 		end
 
-	record_descendants (a_class: CLASS_C) is
+	record_descendants (a_class: CLASS_C)
 			-- Recursively records `a_class' and its descendants in `descendants'
 		local
 			d: ARRAYED_LIST [CLASS_C]
@@ -268,7 +268,7 @@ end
 
 feature
 
-	process (a_class: CLASS_C; body_index: INTEGER; depend_list: FEATURE_DEPENDANCE) is
+	process (a_class: CLASS_C; body_index: INTEGER; depend_list: FEATURE_DEPENDANCE)
 		local
 			opt_unit: OPTIMIZE_UNIT
 			byte_code: BYTE_CODE
@@ -334,30 +334,30 @@ feature
 
 	current_feature_optimized: BOOLEAN
 
-	set_current_feature_optimized is
+	set_current_feature_optimized
 		do
 			current_feature_optimized := True
 		end
 
 feature -- Contexts
 
-	optimization_context: OPTIMIZATION_CONTEXT is
+	optimization_context: OPTIMIZATION_CONTEXT
 			-- Current loop context
 		do
 			Result := context_stack.item
 		end
 
-	push_optimization_context (c: OPTIMIZATION_CONTEXT) is
+	push_optimization_context (c: OPTIMIZATION_CONTEXT)
 		do
 			context_stack.put (c)
 		end
 
-	pop_optimization_context is
+	pop_optimization_context
 		do
 			context_stack.remove
 		end
 
-	array_item_type (id: INTEGER): TYPE_C is
+	array_item_type (id: INTEGER): TYPE_C
 		local
 			type_a: TYPE_A
 			bc: BYTE_CODE
@@ -391,14 +391,14 @@ feature -- Contexts
 			end
 		end
 
-	generate_plug_declarations (buffer: GENERATION_BUFFER) is
+	generate_plug_declarations (buffer: GENERATION_BUFFER)
 		do
 			generate_feature_table (buffer, "eif_lower_table", lower_rout_id)
 			generate_feature_table (buffer, "eif_area_table", area_rout_id)
 		end
 
 	generate_feature_table (buffer: GENERATION_BUFFER; table_name: STRING
-			rout_id: INTEGER) is
+			rout_id: INTEGER)
 		local
 			entry: POLY_TABLE [ENTRY]
 			temp: STRING
@@ -429,7 +429,7 @@ feature -- Detection of safe/unsafe features
 
 	unsafe_body_indexes: ARRAY [BOOLEAN]
 
-	test_safety (a_feature: FEATURE_I; a_class: CLASS_C) is
+	test_safety (a_feature: FEATURE_I; a_class: CLASS_C)
 			-- Insert the feature in the safe or unsafe set
 			-- depending if it calls unsafe features
 		require
@@ -441,7 +441,7 @@ feature -- Detection of safe/unsafe features
 			end
 		end
 
-	is_safe (dep: DEPEND_UNIT): BOOLEAN is
+	is_safe (dep: DEPEND_UNIT): BOOLEAN
 			-- Can the feature be safely called within an optimized loop?
 		local
 			table: ROUT_TABLE
@@ -483,7 +483,7 @@ feature -- Detection of safe/unsafe features
 
 feature {NONE} -- Detection of safe/unsafe features
 
-	propagate_feature (written_class_id: INTEGER; original_body_index: INTEGER; depend_list: FEATURE_DEPENDANCE) is
+	propagate_feature (written_class_id: INTEGER; original_body_index: INTEGER; depend_list: FEATURE_DEPENDANCE)
 		local
 			depend_unit: DEPEND_UNIT
 			body_index: INTEGER
@@ -514,12 +514,12 @@ feature {NONE} -- Detection of safe/unsafe features
 			end
 		end
 
-	optimization_tables: SEARCH_TABLE [OPTIMIZE_UNIT] is
+	optimization_tables: SEARCH_TABLE [OPTIMIZE_UNIT]
 		do
 			Result := System.optimization_tables
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

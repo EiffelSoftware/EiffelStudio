@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Hash table used for querying pixmap coordinates in matrix"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_values (a_columns, a_rows: INTEGER) is
+	make_with_values (a_columns, a_rows: INTEGER)
 			-- Create lookup table to for matrix pixmap retrieval.
 		require
 			columns_valid: a_columns > 0
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Insert
 
-	add_pixmap (a_column, a_row, a_constant: INTEGER) is
+	add_pixmap (a_column, a_row, a_constant: INTEGER)
 		require
 			valid_column: a_column > 0 and then a_column <= columns
 			valid_row: a_row > 0 and then a_row <= rows
@@ -49,7 +49,7 @@ feature -- Access
 	rows: INTEGER;
 		-- Number of rows used for lookup.	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

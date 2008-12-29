@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric visitor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,28 +11,28 @@ deferred class
 
 feature -- Process
 
-	process_basic_metric (a_basic_metric: EB_METRIC_BASIC) is
+	process_basic_metric (a_basic_metric: EB_METRIC_BASIC)
 			-- Process `a_basic_metric'.
 		require
 			a_basic_metric_attached: a_basic_metric /= Void
 		deferred
 		end
 
-	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR) is
+	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR)
 			-- Process `a_linear_metric'.
 		require
 			a_linear_metric_attached: a_linear_metric /= Void
 		deferred
 		end
 
-	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO) is
+	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO)
 			-- Process `a_ratio_metric'.
 		require
 			a_ratio_metric_attached: a_ratio_metric /= Void
 		deferred
 		end
 
-	process_list (a_list: LIST [EB_METRIC_VISITABLE]) is
+	process_list (a_list: LIST [EB_METRIC_VISITABLE])
 			-- Process `a_list'.
 		require
 			a_list_attached: a_list /= Void
@@ -55,182 +55,182 @@ feature -- Process
 			end
 		end
 
-	process_criterion (a_criterion: EB_METRIC_CRITERION) is
+	process_criterion (a_criterion: EB_METRIC_CRITERION)
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION) is
+	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION)
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION)
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
+	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION)
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION) is
+	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION)
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION) is
+	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION)
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION) is
+	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION)
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION)
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION) is
+	process_external_command_criterion (a_criterion: EB_METRIC_EXTERNAL_COMMAND_CRITERION)
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
+	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION)
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION) is
+	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION)
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	process_or_criterion (a_criterion: EB_METRIC_OR_CRITERION) is
+	process_or_criterion (a_criterion: EB_METRIC_OR_CRITERION)
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
 		deferred
 		end
 
-	process_domain (a_domain: EB_METRIC_DOMAIN) is
+	process_domain (a_domain: EB_METRIC_DOMAIN)
 			-- Process `a_domain'.
 		require
 			a_domain_attached: a_domain /= Void
 		deferred
 		end
 
-	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM) is
+	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_application_target_domain_item (a_item: EB_METRIC_TARGET_DOMAIN_ITEM) is
+	process_application_target_domain_item (a_item: EB_METRIC_TARGET_DOMAIN_ITEM)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_group_domain_item (a_item: EB_METRIC_GROUP_DOMAIN_ITEM) is
+	process_group_domain_item (a_item: EB_METRIC_GROUP_DOMAIN_ITEM)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_folder_domain_item (a_item: EB_METRIC_FOLDER_DOMAIN_ITEM) is
+	process_folder_domain_item (a_item: EB_METRIC_FOLDER_DOMAIN_ITEM)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_class_domain_item (a_item: EB_METRIC_CLASS_DOMAIN_ITEM) is
+	process_class_domain_item (a_item: EB_METRIC_CLASS_DOMAIN_ITEM)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_feature_domain_item (a_item: EB_METRIC_FEATURE_DOMAIN_ITEM) is
+	process_feature_domain_item (a_item: EB_METRIC_FEATURE_DOMAIN_ITEM)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
+	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
+	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
+	process_value_tester (a_item: EB_METRIC_VALUE_TESTER)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
+	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER) is
+	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER) is
+	process_external_command_tester (a_item: EB_METRIC_EXTERNAL_COMMAND_TESTER)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -239,7 +239,7 @@ feature -- Process
 
 feature -- Utility
 
-	safe_process_item (a_item: EB_METRIC_VISITABLE) is
+	safe_process_item (a_item: EB_METRIC_VISITABLE)
 			-- Safe process `a_item'.
 		do
 			if a_item /= Void then
@@ -247,7 +247,7 @@ feature -- Utility
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when a call as an instruction is used as an expression."
@@ -17,20 +17,20 @@ inherit
 
 feature -- Access
 
-	code: STRING is "VKCN"
+	code: STRING = "VKCN"
 			-- Error code
 
 	called_feature: STRING
 			-- Routine being called as an expression
 
-	data_type_string: STRING is
+	data_type_string: STRING
 			-- String representing the kind of error we are handling.
 		deferred
 		end
 
 feature -- Error message
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- <Precursor>
 		do
 			if called_feature /= Void then
@@ -42,7 +42,7 @@ feature -- Error message
 
 feature -- Settings
 
-	set_called_feature (a_feature_name: STRING) is
+	set_called_feature (a_feature_name: STRING)
 			-- Assign `f' to `feature'.
 		require
 			a_feature_name_not_void: a_feature_name /= Void
@@ -52,7 +52,7 @@ feature -- Settings
 			called_feature_not_void: called_feature = a_feature_name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

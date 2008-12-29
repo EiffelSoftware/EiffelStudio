@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_editor: like editor) is
+	make (a_editor: like editor)
 			-- Set `editor' with `a_editor'.
 			-- If `a_rtf', we generate RTF text, or we generate Postscript text.
 		require
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			editor_not_void: editor /= Void
 		end
 
-	visit is
+	visit
 			-- Visit tokens in `editor', and produce `text_for_printing'.
 		local
 			l_text: CLICKABLE_TEXT
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

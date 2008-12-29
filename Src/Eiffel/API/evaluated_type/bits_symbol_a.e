@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actual type for bits_symbol."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create {COMPILER_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make (f: FEATURE_I; c: like bit_count) is
+	make (f: FEATURE_I; c: like bit_count)
 		do
 			make_with_count (c)
 			feature_name_id := f.feature_name_id
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_bits_symbol_a (Current)
@@ -46,7 +46,7 @@ feature -- Properties
 
 	feature_name_id: INTEGER
 
-	feature_name: STRING is
+	feature_name: STRING
 			-- Anchor name
 		do
 			Result := names_heap.item (feature_name_id)
@@ -57,12 +57,12 @@ feature -- Properties
 	current_class_id: INTEGER
 			-- Class declaring current
 
-	is_full_named_type: BOOLEAN is False
+	is_full_named_type: BOOLEAN = False
 			-- Current is not fully named
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := bit_count = other.bit_count and then
@@ -73,7 +73,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_rout_id (a_routine_id: like rout_id) is
+	set_rout_id (a_routine_id: like rout_id)
 			-- Set `rout_id' with `a_routine_id'.
 		require
 			a_routine_id_positive: a_routine_id > 0
@@ -85,7 +85,7 @@ feature -- Setting
 
 feature -- Output
 
-	dump: STRING is
+	dump: STRING
 			-- Dumped trace
 		do
 			create Result.make (9)
@@ -93,14 +93,14 @@ feature -- Output
 			Result.append (names_heap.item (feature_name_id))
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 		do
 			st.process_keyword_text ({SHARED_TEXT_ITEMS}.ti_Bit_class, Void)
 			st.add_space
 			st.add (names_heap.item (feature_name_id))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

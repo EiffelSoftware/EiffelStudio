@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A base for all code template declarations.
 	]"
@@ -85,7 +85,7 @@ feature -- Status report
 invariant
 	not_id_is_empty: is_initialized implies not id.is_empty
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

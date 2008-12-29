@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			An interface implementation to further page navigation, once a context page reference has been
 			located.
@@ -13,14 +13,14 @@ deferred class
 
 feature -- Access
 
-	section: !STRING_GENERAL is
+	section: !STRING_GENERAL
 			-- String representation of the page navigation section locator.
 		deferred
 		ensure
 			section_not_empty: not Result.is_empty
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

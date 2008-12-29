@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a model for a client supplier link."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,14 +24,14 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EIFFEL_CLIENT_SUPPLIER_LINK.
 		do
 			Precursor {EG_LINK}
 			create is_aggregated_changed
 		end
 
-	make_with_classes_and_name (a_client, a_supplier: like client; a_name: like name) is
+	make_with_classes_and_name (a_client, a_supplier: like client; a_name: like name)
 			-- Create a EIFFEL_CLIENT_SUPPLIER_LINK with `a_name'.
 		require
 			a_client_not_void: a_client /= Void
@@ -66,7 +66,7 @@ feature -- Status report
 
 feature -- Status settings
 
-	set_is_aggregated (b: BOOLEAN) is
+	set_is_aggregated (b: BOOLEAN)
 			-- Set `is_aggregated' to `b'.
 		do
 			if b /= is_aggregated then
@@ -80,7 +80,7 @@ feature -- Status settings
 invariant
 	is_aggregated_changed_not_void: is_aggregated_changed /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

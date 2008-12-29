@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a criterion row in basic metric definition panel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_criterion: like criterion; a_row: EV_GRID_ROW; a_grid: like grid; a_readonly: BOOLEAN; a_scope: like scope) is
+	make (a_criterion: like criterion; a_row: EV_GRID_ROW; a_grid: like grid; a_readonly: BOOLEAN; a_scope: like scope)
 			-- Initialize.
 		require
 			a_row_attached: a_row /= Void
@@ -71,7 +71,7 @@ feature{NONE} -- Initialization
 
 feature -- Loading
 
-	load_empty_row (a_row: EV_GRID_ROW) is
+	load_empty_row (a_row: EV_GRID_ROW)
 			-- Load an empty row in `a_row'.
 		require
 			a_row_attached: a_row /= Void
@@ -83,7 +83,7 @@ feature -- Loading
 			bind (a_row)
 		end
 
-	load_valid_criterion_row (a_criterion: like criterion; a_row: EV_GRID_ROW; a_original_criterion: like criterion) is
+	load_valid_criterion_row (a_criterion: like criterion; a_row: EV_GRID_ROW; a_original_criterion: like criterion)
 			-- Load `a_criterion' in `a_row'.
 			-- `a_original_criterion' is the original criterion defined in the same row. This is introduced to maintain some context
 			-- information when we change between same type of criteria.
@@ -153,7 +153,7 @@ feature -- Loading
 			end
 		end
 
-	load_invalid_criterion_row (a_row: EV_GRID_ROW) is
+	load_invalid_criterion_row (a_row: EV_GRID_ROW)
 			-- Load invalid criterion in `a_row'.
 		require
 			a_row_attached: a_row /= Void
@@ -166,28 +166,28 @@ feature -- Loading
 
 feature -- Status report
 
-	is_empty_row: BOOLEAN is
+	is_empty_row: BOOLEAN
 			-- Is current empty?
 			-- i.e., no criterion is specified.
 		do
 			Result := is_in_default_state
 		end
 
-	is_invalid_row: BOOLEAN is
+	is_invalid_row: BOOLEAN
 			-- Is current row invalid?
 			-- i.e., a wrong criterion name is sepcified.
 		do
 			Result := (not is_empty_row) and then not criterion_factory.has_criterion (criterion_name, scope)
 		end
 
-	is_valid_row: BOOLEAN is
+	is_valid_row: BOOLEAN
 			-- Is current row valid?
 			-- i.e., a right criterion name is sepcified.
 		do
 			Result := (not is_empty_row) and then (criterion_factory.has_criterion (criterion_name, scope))
 		end
 
-	is_valid_nary_row: BOOLEAN is
+	is_valid_nary_row: BOOLEAN
 			-- Is current and valid "AND" or "OR" criterion row?
 		do
 			Result := is_valid_row and then is_nary_criterion (criterion_name)
@@ -199,7 +199,7 @@ feature -- Status report
 	is_negation_used: BOOLEAN
 			-- Is negation used?
 
-	is_nary_criterion (a_name: STRING): BOOLEAN is
+	is_nary_criterion (a_name: STRING): BOOLEAN
 			-- Does `a_name' represent an "AND" or "OR" criterion?
 		require
 			a_name_attached: a_name /= Void
@@ -214,7 +214,7 @@ feature -- Status report
 
 feature -- Basic operation
 
-	bind (a_row: EV_GRID_ROW) is
+	bind (a_row: EV_GRID_ROW)
 			-- Bind current criterion in `a_row'.
 		do
 			refresh_criterion_item
@@ -230,7 +230,7 @@ feature -- Basic operation
 			binded_to_grid: is_binded_to_grid
 		end
 
-	resize_grid is
+	resize_grid
 			-- Resize `grid' according to size changes of column.
 		do
 			grid.resize_column (2, 0)
@@ -250,7 +250,7 @@ feature -- Access
 	grid: EB_METRIC_CRITERION_GRID
 			-- Grid in which current is located
 
-	criterion_item: EB_METRIC_CRITERION_GRID_EDITABLE_ITEM is
+	criterion_item: EB_METRIC_CRITERION_GRID_EDITABLE_ITEM
 			-- Item used to display and edit criterion name
 		local
 			l_provider: EB_METRIC_CRITERION_PROVIDER
@@ -286,7 +286,7 @@ feature -- Access
 	parent: like current
 			-- Parent of current row
 
-	criterion: EB_METRIC_CRITERION is
+	criterion: EB_METRIC_CRITERION
 			-- Criterion representing current row
 		local
 			l_nary_metric: EB_METRIC_NARY_CRITERION
@@ -326,10 +326,10 @@ feature -- Access
 			end
 		end
 
-	not_prefix: STRING is "not"
+	not_prefix: STRING = "not"
 			-- Not prefix
 
-	ellipse: STRING is "..."
+	ellipse: STRING = "..."
 			-- Ellipse
 
 	property_item: EV_GRID_ITEM
@@ -343,7 +343,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_parent (a_parent: like parent) is
+	set_parent (a_parent: like parent)
 			-- Set `parent 'with `a_parent'.
 		require
 			a_parent_attached: a_parent /= Void
@@ -353,7 +353,7 @@ feature -- Setting
 			parent_set: parent = a_parent
 		end
 
-	register_subrow (a_row: EB_METRIC_CRITERION_ROW) is
+	register_subrow (a_row: EB_METRIC_CRITERION_ROW)
 			-- Register `a_row' into `subrows'.
 		require
 			a_row_attached: a_row /= Void
@@ -362,7 +362,7 @@ feature -- Setting
 			a_row.set_parent (Current)
 		end
 
-	remove_subrow (a_row: EB_METRIC_CRITERION_ROW) is
+	remove_subrow (a_row: EB_METRIC_CRITERION_ROW)
 			-- Remove `a_row' from `subrows'.	
 		require
 			a_row_attached: a_row /= Void
@@ -372,7 +372,7 @@ feature -- Setting
 
 feature{NONE} -- Actions
 
-	on_criterion_item_activated (a_window: EV_POPUP_WINDOW) is
+	on_criterion_item_activated (a_window: EV_POPUP_WINDOW)
 			-- Action to be performed when `criterion_item' is activated
 		do
 			if is_empty_row then
@@ -384,7 +384,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_criterion_item_deactivated is
+	on_criterion_item_deactivated
 			-- Action to be performed when `criterion_item' is deactivated
 		require
 			bined_to_grid: is_binded_to_grid
@@ -453,7 +453,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_property_item_deactivated is
+	on_property_item_deactivated
 			-- Action to be performed when `property_item' deactivated.
 		do
 			grid.change_actions.call (Void)
@@ -464,7 +464,7 @@ feature{NONE} -- Implementation
 	property_item_deactivated_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_property_item_deactivated'
 
-	insert_empty_row_in_parent is
+	insert_empty_row_in_parent
 			-- Insert an empty row in `parent'
 		local
 			l_row: EB_METRIC_CRITERION_ROW
@@ -493,7 +493,7 @@ feature{NONE} -- Implementation
 	criterion_item_internal: like criterion_item
 			-- Implementation of `criterion_item'
 
-	initialize_row (a_row: EV_GRID_ROW) is
+	initialize_row (a_row: EV_GRID_ROW)
 			-- Initialize `a_row', all subrows.
 		require
 			a_row_attached: a_row /= Void
@@ -563,7 +563,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	refresh_criterion_item is
+	refresh_criterion_item
 			-- Refresh `criterion_item'.
 		local
 			l_text: STRING
@@ -594,7 +594,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap for `criterion_item'
 		local
 			l_criterion: EB_METRIC_CRITERION
@@ -637,7 +637,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	criterion_list: SORTABLE_ARRAY [NAME_FOR_COMPLETION] is
+	criterion_list: SORTABLE_ARRAY [NAME_FOR_COMPLETION]
 			-- List of criterion of `a_scope'
 		local
 			l_name_list: LIST [STRING]
@@ -672,7 +672,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	criterion_name_matcher: WILD_COMPLETION_NAME_MATCHER is
+	criterion_name_matcher: WILD_COMPLETION_NAME_MATCHER
 			-- Wild card name matcher
 		once
 			create Result
@@ -683,7 +683,7 @@ feature{NONE} -- Implementation
 	criterion_list_internal: like criterion_list
 			-- Implementation of `criterion_list'
 
-	criterion_pixmap_from_name (a_name: STRING): EV_PIXMAP is
+	criterion_pixmap_from_name (a_name: STRING): EV_PIXMAP
 			-- Pixmap of criterion named `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -708,7 +708,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	activate_criterion_item is
+	activate_criterion_item
 			-- Activate `criterion_item'.
 		do
 			if not is_read_only then
@@ -721,7 +721,7 @@ feature{NONE} -- Criterion Data Retriever
 	original_criterion: EB_METRIC_CRITERION
 			-- Original criterion from which data is retrieved
 
-	set_original_criterion (a_criterion: like original_criterion) is
+	set_original_criterion (a_criterion: like original_criterion)
 			-- Set `origianl_criterion' with `a_criterion'.
 		do
 			original_criterion := a_criterion
@@ -729,7 +729,7 @@ feature{NONE} -- Criterion Data Retriever
 			original_criterion_set: original_criterion = a_criterion
 		end
 
-	retrieve_data (a_criterion: EB_METRIC_CRITERION) is
+	retrieve_data (a_criterion: EB_METRIC_CRITERION)
 			-- Retrieve data from `original_criterion' and store it in `a_criterion'.
 		require
 			a_acriterion_attached: a_criterion /= Void
@@ -739,7 +739,7 @@ feature{NONE} -- Criterion Data Retriever
 			end
 		end
 
-	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION) is
+	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_domain_criterion: EB_METRIC_DOMAIN_CRITERION
@@ -750,7 +750,7 @@ feature{NONE} -- Criterion Data Retriever
 			end
 		end
 
-	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_caller_callee_criterion: EB_METRIC_CALLER_CALLEE_CRITERION
@@ -772,7 +772,7 @@ feature{NONE} -- Criterion Data Retriever
 			end
 		end
 
-	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
+	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_supplier_client_cri: EB_METRIC_SUPPLIER_CLIENT_CRITERION
@@ -792,7 +792,7 @@ feature{NONE} -- Criterion Data Retriever
 			end
 		end
 
-	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION) is
+	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_text_cri: EB_METRIC_TEXT_CRITERION
@@ -809,7 +809,7 @@ feature{NONE} -- Criterion Data Retriever
 			end
 		end
 
-	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION) is
+	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_path_cri: EB_METRIC_PATH_CRITERION
@@ -820,7 +820,7 @@ feature{NONE} -- Criterion Data Retriever
 			end
 		end
 
-	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION)
 			-- Process `a_criterion'.
 		local
 			l_value_cri: EB_METRIC_VALUE_CRITERION
@@ -838,7 +838,7 @@ feature{NONE} -- Criterion Data Retriever
 			end
 		end
 
-	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
+	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION)
 			-- Process `a_criterion'.
 		do
 		end
@@ -849,7 +849,7 @@ invariant
 	criterion_name_attached: criterion_name /= Void
 	subrows_attached: subrows /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Implementation of multiple inheritance by using multiple inheritance
 		of interfaces. No simple inheritance of implementation is performed
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize generator.
 		do
 			Precursor {CIL_CODE_GENERATOR}
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	is_single_inheritance_implementation: BOOLEAN is False
+	is_single_inheritance_implementation: BOOLEAN = False
 			-- Multiple interface code generation.
 
 	rout_ids_tbl: HASH_TABLE [FEATURE_I, INTEGER]
@@ -57,7 +57,7 @@ feature -- IL Generation
 			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]];
 			type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]];
 			inline_agent_processor: PROCEDURE [CIL_CODE_GENERATOR, TUPLE [FEATURE_I]])
-		is
+		
 			-- Generate IL code for feature in `class_c'.
 		local
 			class_interface: CLASS_INTERFACE
@@ -155,7 +155,7 @@ feature -- IL Generation
 			processed_tbl.wipe_out
 		end
 
-	generate_il_implementation (class_c: CLASS_C; class_type: CLASS_TYPE) is
+	generate_il_implementation (class_c: CLASS_C; class_type: CLASS_TYPE)
 			-- Generate IL code for feature in `class_c'.
 		do
 				-- Initialize context.
@@ -182,7 +182,7 @@ feature -- IL Generation
 
 	generate_il_type_features (class_c: CLASS_C; class_type: CLASS_TYPE;
 			type_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]; type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]])
-		is
+		
 			-- Generate IL code for feature that represents type information of `class_c'.
 		require
 			class_c_not_void: class_c /= Void
@@ -204,7 +204,7 @@ feature -- IL Generation
 			implemented_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, CLASS_TYPE, FEATURE_I]];
 			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
 			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]])
-		is
+		
 			-- Generate IL code for feature in `class_c'.
 		require
 			class_interface_not_void: class_interface /= Void
@@ -240,7 +240,7 @@ feature -- IL Generation
 			class_type: CLASS_TYPE;
 			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
 			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]])
-		is
+		
 			-- Generate IL code for inherited features of `current_class_type'.
 		require
 			class_c_not_void: class_c /= Void
@@ -294,7 +294,7 @@ feature -- IL Generation
 			implemented_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, CLASS_TYPE, FEATURE_I]];
 			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
 			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]])
-		is
+		
 			-- Generate IL code for inherited features of `current_class_type'.
 		require
 			class_c_not_void: class_c /= Void
@@ -373,7 +373,7 @@ feature -- IL Generation
 			end
 		end
 
-	generate_local_feature (feat, inh_feat: FEATURE_I; class_type: CLASS_TYPE; is_replicated: BOOLEAN) is
+	generate_local_feature (feat, inh_feat: FEATURE_I; class_type: CLASS_TYPE; is_replicated: BOOLEAN)
 			-- Generate a feature `feat' implemented in `current_class_type', ie
 			-- generate encapsulation that calls its static implementation.
 		require
@@ -499,7 +499,7 @@ feature -- IL Generation
 			end
 		end
 
-	generate_inherited_feature (feat, inh_feat: FEATURE_I; class_type: CLASS_TYPE) is
+	generate_inherited_feature (feat, inh_feat: FEATURE_I; class_type: CLASS_TYPE)
 			-- Generate a feature `feat' implemented in `class_type', ie generate
 			-- encapsulation that calls its static implementation,
 			-- otherwise parent implementation.
@@ -578,7 +578,7 @@ feature -- IL Generation
 			generate_property (feat, inh_feat, class_type, not l_is_method_impl_generated)
 		end
 
-	mark_as_treated (feat: FEATURE_I) is
+	mark_as_treated (feat: FEATURE_I)
 			-- Add `feat' to `rout_ids_tbl' for each routine ID in `rout_id_set' of `feat'.
 		local
 			rout_id_set: ROUT_ID_SET
@@ -599,7 +599,7 @@ feature -- IL Generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

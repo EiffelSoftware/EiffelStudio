@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Skeleton for EDITOR_EIFFEL_SCANNER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ feature -- Access
 	current_class : CONF_CLASS
 			-- Current class
 
-	current_group : CONF_GROUP is
+	current_group : CONF_GROUP
 			-- Current group
 		do
 			if current_class /= Void then
@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_current_class (a_class : CONF_CLASS) is
+	set_current_class (a_class : CONF_CLASS)
 			-- Set `current_class' with `a_class'
 		do
 			current_class := a_class
@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 
 	tmp_classes : LINKED_SET [CONF_CLASS]
 
-	is_current_group_valid: BOOLEAN is
+	is_current_group_valid: BOOLEAN
 		do
 			Result := current_class /= Void
 			check
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	stone_of_class (a_class: CONF_CLASS): CLASSI_STONE is
+	stone_of_class (a_class: CONF_CLASS): CLASSI_STONE
 			-- Stone of `a_class'
 		require
 			a_class_not_void: a_class /= Void
@@ -68,7 +68,7 @@ feature -- Token factory
 		-- Arguments are assumed as UTF-8 encoding
 		-- Since the scanner only accepts text of UTF-8
 
-	new_space (a_count: INTEGER): EDITOR_TOKEN_SPACE is
+	new_space (a_count: INTEGER): EDITOR_TOKEN_SPACE
 		require
 			a_count_positive: a_count > 0
 		do
@@ -77,7 +77,7 @@ feature -- Token factory
 			result_not_void: Result /= Void
 		end
 
-	new_tabulation (a_count: INTEGER): EDITOR_TOKEN_TABULATION is
+	new_tabulation (a_count: INTEGER): EDITOR_TOKEN_TABULATION
 		require
 			a_count_positive: a_count > 0
 		do
@@ -86,14 +86,14 @@ feature -- Token factory
 			result_not_void: Result /= Void
 		end
 
-	new_eol: EDITOR_TOKEN_EOL is
+	new_eol: EDITOR_TOKEN_EOL
 		do
 			create Result.make
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	new_comment (a_str: STRING): EDITOR_TOKEN_COMMENT is
+	new_comment (a_str: STRING): EDITOR_TOKEN_COMMENT
 		require
 			a_str_not_void: a_str /= Void
 		do
@@ -102,7 +102,7 @@ feature -- Token factory
 			result_not_void: Result /= Void
 		end
 
-	new_text (a_str: STRING): EDITOR_TOKEN_TEXT is
+	new_text (a_str: STRING): EDITOR_TOKEN_TEXT
 		require
 			a_str_not_void: a_str /= Void
 		do
@@ -111,7 +111,7 @@ feature -- Token factory
 			result_not_void: Result /= Void
 		end
 
-	new_operator (a_str: STRING): EDITOR_TOKEN_OPERATOR is
+	new_operator (a_str: STRING): EDITOR_TOKEN_OPERATOR
 		require
 			a_str_not_void: a_str /= Void
 		do
@@ -120,7 +120,7 @@ feature -- Token factory
 			result_not_void: Result /= Void
 		end
 
-	new_keyword (a_str: STRING): EDITOR_TOKEN_KEYWORD is
+	new_keyword (a_str: STRING): EDITOR_TOKEN_KEYWORD
 		require
 			a_str_not_void: a_str /= Void
 		do
@@ -129,7 +129,7 @@ feature -- Token factory
 			result_not_void: Result /= Void
 		end
 
-	new_class (a_str: STRING): EDITOR_TOKEN_CLASS is
+	new_class (a_str: STRING): EDITOR_TOKEN_CLASS
 		require
 			a_str_not_void: a_str /= Void
 		do
@@ -138,7 +138,7 @@ feature -- Token factory
 			result_not_void: Result /= Void
 		end
 
-	new_character (a_str: STRING): EDITOR_TOKEN_CHARACTER is
+	new_character (a_str: STRING): EDITOR_TOKEN_CHARACTER
 		require
 			a_str_not_void: a_str /= Void
 		do
@@ -147,7 +147,7 @@ feature -- Token factory
 			result_not_void: Result /= Void
 		end
 
-	new_string (a_str: STRING): EDITOR_TOKEN_STRING is
+	new_string (a_str: STRING): EDITOR_TOKEN_STRING
 		require
 			a_str_not_void: a_str /= Void
 		do
@@ -156,7 +156,7 @@ feature -- Token factory
 			result_not_void: Result /= Void
 		end
 
-	new_number (a_str: STRING): EDITOR_TOKEN_NUMBER is
+	new_number (a_str: STRING): EDITOR_TOKEN_NUMBER
 		require
 			a_str_not_void: a_str /= Void
 		do
@@ -167,7 +167,7 @@ feature -- Token factory
 
 feature {NONE} -- Encoding conversion
 
-	utf8_to_utf32 (a_string: STRING_8): STRING_32 is
+	utf8_to_utf32 (a_string: STRING_8): STRING_32
 			-- UTF32 to UTF8 conversion, Eiffel implementation.
 		require
 			a_string_not_void: a_string /= Void
@@ -185,7 +185,7 @@ feature {NONE} -- Encoding conversion
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

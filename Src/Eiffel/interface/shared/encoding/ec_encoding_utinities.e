@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ease encoding conversion and others."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Conversion
 
-	convert_to_stream (a_string: STRING_32; a_encoding: ENCODING): STRING_8 is
+	convert_to_stream (a_string: STRING_32; a_encoding: ENCODING): STRING_8
 			-- Convert `a_string' from UTF32 to `a_encoding'.
 			-- Result stream representation.
 		require
@@ -38,7 +38,7 @@ feature -- Conversion
 			Result_not_void: Result /= Void
 		end
 
-	utf8_to_utf32 (a_string: STRING_8): STRING_32 is
+	utf8_to_utf32 (a_string: STRING_8): STRING_32
 			-- Convert `a_string' from UTF-8 to UTF-32.
 		require
 			a_string_not_void: a_string /= Void
@@ -53,7 +53,7 @@ feature -- Conversion
 			a_string_not_void_implies_attached: Result /= Void
 		end
 
-	utf32_to_utf8 (a_string: STRING_32): STRING_8 is
+	utf32_to_utf8 (a_string: STRING_32): STRING_8
 			-- Convert `a_string' from UTF-32 to UTF-8.
 		require
 			a_string_not_void: a_string /= Void
@@ -68,7 +68,7 @@ feature -- Conversion
 			a_string_not_void_implies_attached: Result /= Void
 		end
 
-	utf32_to_utf16_stream (a_string: STRING_32): STRING_8 is
+	utf32_to_utf16_stream (a_string: STRING_32): STRING_8
 			-- Convert `a_string' from UTF-32 to UTF-16 stream.
 		require
 			a_string_not_void: a_string /= Void
@@ -83,7 +83,7 @@ feature -- Conversion
 			a_string_not_void_implies_attached: Result /= Void
 		end
 
-	utf16_stream_to_utf32 (a_string: STRING_8): STRING_32 is
+	utf16_stream_to_utf32 (a_string: STRING_8): STRING_32
 			-- Convert `a_string' from UTF-16 steam to UTF-32.
 		require
 			a_string_not_void: a_string /= Void
@@ -101,7 +101,7 @@ feature -- Conversion
 			a_string_not_void_implies_attached: Result /= Void
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

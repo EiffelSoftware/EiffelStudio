@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelStudio resources, with access facilities"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	resources: RESOURCE_STRUCTURE is
+	resources: RESOURCE_STRUCTURE
 			-- Resources specified by the user
 		once
 			create Result.make_from_location (System_general, Eiffel_preferences)
@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Access
 
-	color_resource_value (s: STRING): EV_COLOR is
+	color_resource_value (s: STRING): EV_COLOR
 			-- Color resource. Can be Void if no color resource called `s' exists.
 		local
 			r: COLOR_RESOURCE
@@ -36,7 +36,7 @@ feature -- Access
 			end
 		end
 
-	secure_color_resource_value (s: STRING; rd, gd, bd: INTEGER): EV_COLOR is
+	secure_color_resource_value (s: STRING; rd, gd, bd: INTEGER): EV_COLOR
 			-- Color value of resource named `s', or rgb color defined by
 			-- `rd', `gd', `bd' if resource does not exist.
 		local
@@ -50,7 +50,7 @@ feature -- Access
 			end
 		end
 
-	font_resource_value (s: STRING): EV_FONT is
+	font_resource_value (s: STRING): EV_FONT
 			-- Font value of resource named `s', or a default font
 			-- if resource does not exist.
 		local
@@ -65,7 +65,7 @@ feature -- Access
 			end
 		end
 
-	secure_font_resource_value (s: STRING; df: STRING): EV_FONT is
+	secure_font_resource_value (s: STRING; df: STRING): EV_FONT
 			-- Font value of resource named `s', or font defined by
 			-- `df' if resource does not exist.
 		local
@@ -80,7 +80,7 @@ feature -- Access
 			end
 		end
 
-	array_resource_value (s: STRING; da: ARRAY [STRING]): ARRAY [STRING] is
+	array_resource_value (s: STRING; da: ARRAY [STRING]): ARRAY [STRING]
 		local
 			r: ARRAY_RESOURCE
 		do
@@ -92,7 +92,7 @@ feature -- Access
 			end
 		end
 
-	integer_resource_value (s: STRING; di: INTEGER): INTEGER is
+	integer_resource_value (s: STRING; di: INTEGER): INTEGER
 		local
 			r: INTEGER_RESOURCE
 		do
@@ -104,7 +104,7 @@ feature -- Access
 			end
 		end
 
-	boolean_resource_value (s: STRING; db: BOOLEAN): BOOLEAN is
+	boolean_resource_value (s: STRING; db: BOOLEAN): BOOLEAN
 		local
 			r: BOOLEAN_RESOURCE
 		do
@@ -116,7 +116,7 @@ feature -- Access
 			end
 		end
 
-	string_resource_value (s: STRING; ds: STRING): STRING is
+	string_resource_value (s: STRING; ds: STRING): STRING
 		local
 			r: STRING_RESOURCE
 		do
@@ -130,7 +130,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_integer (s: STRING; ni: INTEGER) is
+	set_integer (s: STRING; ni: INTEGER)
 		local
 			r: INTEGER_RESOURCE
 		do
@@ -144,7 +144,7 @@ feature -- Setting
 			end
 		end
 
-	set_boolean (s: STRING; nb: BOOLEAN) is
+	set_boolean (s: STRING; nb: BOOLEAN)
 		local
 			r: BOOLEAN_RESOURCE
 		do
@@ -158,7 +158,7 @@ feature -- Setting
 			end
 		end
 
-	set_string (s: STRING; ns: STRING) is
+	set_string (s: STRING; ns: STRING)
 		local
 			r: STRING_RESOURCE
 		do
@@ -172,7 +172,7 @@ feature -- Setting
 			end
 		end
 
-	set_array (a_resource_name: STRING; a_value: ARRAY [STRING]) is
+	set_array (a_resource_name: STRING; a_value: ARRAY [STRING])
 			-- Set the value of `a_resource_name' to `a_value'.
 		local
 			resource_item: ARRAY_RESOURCE
@@ -189,13 +189,13 @@ feature -- Setting
 
 feature -- Basic operations
 
-	save_resources is
+	save_resources
 			-- Commit all changes by saving the registry/.es5rc file.
 		do
 			resources.save
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

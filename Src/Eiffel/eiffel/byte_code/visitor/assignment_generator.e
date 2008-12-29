@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generator for processing assignments."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Status
 
-	is_node_valid (a_node: BYTE_NODE): BOOLEAN is
+	is_node_valid (a_node: BYTE_NODE): BOOLEAN
 			-- Is `a_node' valid for current visitor?
 		local
 			l_access: ACCESS_B
@@ -25,7 +25,7 @@ feature -- Status
 			Result := l_access /= Void and then not l_access.read_only
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

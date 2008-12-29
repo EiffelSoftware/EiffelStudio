@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a quantity scope"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature{QL_SHARED_SCOPES} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			index := quantity_scope_index
@@ -35,7 +35,7 @@ feature{QL_SHARED_SCOPES} -- Initialization
 feature -- Metric support
 
 	basic_scope (a_calculate_function: FUNCTION [ANY, TUPLE [QL_QUANTITY], DOUBLE];
-	                  a_criterion: QL_QUANTITY_CRITERION): QL_METRIC_QUANTITY_BASIC_SCOPE_INFO is
+	                  a_criterion: QL_QUANTITY_CRITERION): QL_METRIC_QUANTITY_BASIC_SCOPE_INFO
 			-- Metric basic scope information that uses `a_calculate_function' and `a_criterion' to calculate metric.
 			-- If `a_calculate_function' or `a_criterion' is Void, default value will be used.
 			-- Default value for `a_calculate_function' is to do counting simply, and for `a_criterion' is a tautology criterion.
@@ -45,24 +45,24 @@ feature -- Metric support
 
 feature -- Access
 
-	domain_generator: QL_QUANTITY_DOMAIN_GENERATOR is
+	domain_generator: QL_QUANTITY_DOMAIN_GENERATOR
 			-- Domain generator for current scope
 		do
 			create Result
 		end
 
-	path_domain_generator (a_item: QL_QUANTITY; a_path: STRING): QL_DOMAIN_GENERATOR is
+	path_domain_generator (a_item: QL_QUANTITY; a_path: STRING): QL_DOMAIN_GENERATOR
 			-- Domain generator for current scope
 		do
 		end
 
-	empty_domain: QL_QUANTITY_DOMAIN is
+	empty_domain: QL_QUANTITY_DOMAIN
 			-- An empty domain whose scope is quantity
 		do
 			create Result.make
 		end
 
-	delayed_domain: QL_DELAYED_QUANTITY_DOMAIN is
+	delayed_domain: QL_DELAYED_QUANTITY_DOMAIN
 			-- An empty delayed domain whose scope is same as current scope
 		do
 			create Result.make
@@ -73,7 +73,7 @@ feature{NONE} -- Implementation
 	criterion_factory: QL_QUANTITY_CRITERION_FACTORY;
 			-- Factory to produce criteria
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

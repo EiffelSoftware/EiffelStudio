@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Refactoring that allows to rename a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature -- Status
 
-	feature_set: BOOLEAN is
+	feature_set: BOOLEAN
 			-- Has the the feature to rename been set?
 		do
 			Result := feature_i /= Void
@@ -34,7 +34,7 @@ feature -- Status
 
 feature -- Element change
 
-	set_feature (a_feature: FEATURE_I) is
+	set_feature (a_feature: FEATURE_I)
 			-- The feature that get's renamed
 		require
 			a_feature_not_void: a_feature /= Void
@@ -46,7 +46,7 @@ feature -- Element change
 
 feature {ERF_CHK_FEATURE_RENAME} -- Element Change from check
 
-	set_affected_classes (an_affected_classes: DS_HASH_SET [CLASS_I]) is
+	set_affected_classes (an_affected_classes: DS_HASH_SET [CLASS_I])
 			-- Set `affected_classes' to `an_affected_classes'.
 		require
 			an_affected_classes_not_void: an_affected_classes /= Void
@@ -56,7 +56,7 @@ feature {ERF_CHK_FEATURE_RENAME} -- Element Change from check
 			affected_classes_set: affected_classes = an_affected_classes
 		end
 
-	set_recursive_descendants (a_recursive_descendants: SEARCH_TABLE [INTEGER]) is
+	set_recursive_descendants (a_recursive_descendants: SEARCH_TABLE [INTEGER])
 			-- Set `recursive_descendants' to `a_recursive_descendants'.
 		require
 			a_recursive_descendants_not_void: a_recursive_descendants /= Void
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 			-- All the classes that are descendants of the class where the feature was modified
 			-- and that didn't undefine or rename the feature completely.
 
-	refactor is
+	refactor
 			-- Do the refactoring changes.
 		require else
 			feature_set: feature_set
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-    ask_run_settings is
+    ask_run_settings
             -- Ask for the settings, that are run specific.
 		require else
 			feature_set: feature_set
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			checks.extend (create {ERF_CHK_FEATURE_RENAME}.make (feature_i, preferences.new_feature_name, Current))
         end
 
-    apply_to_class (a_class: CLASS_I) is
+    apply_to_class (a_class: CLASS_I)
             -- Make the changes in `a_class'.
         require else
         	feature_set: feature_set
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
         	current_actions.extend (l_class_modifier)
         end
 
-    apply_to_project is
+    apply_to_project
             -- Make project global changes (eg. *.ace, create/remove/rename cluster/files, ...).
 		require else
 			feature_set: feature_set
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 	feature_i: FEATURE_I;
 			-- The feature to rename.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

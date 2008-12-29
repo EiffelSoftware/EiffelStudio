@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -9,19 +9,19 @@ deferred class
 
 feature
 
-	close is
+	close
 		deferred
 		end
 		
-	refresh is
+	refresh
 		deferred
 		end
 
-	set_stone (st: STONE) is
+	set_stone (st: STONE)
 		deferred
 		end
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 		deferred
 		end
 

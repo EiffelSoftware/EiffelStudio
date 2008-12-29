@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog used to display extended help concerning a compilation error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,21 +23,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 		end
 
 feature -- Status setting
 
-	execute is
+	execute
 			-- Launch `Current'.
 			-- Pop up an error wizard relative to the last focused development window.
 		do
 			execute_with_text (Interface_names.e_Drop_an_error_stone)
 		end
 
-	execute_with_stone (st: ERROR_STONE) is
+	execute_with_stone (st: ERROR_STONE)
 			-- Pop up a new dialog and display the help text of `st' inside it.
 		do
 			execute_with_text (st.help_text)
@@ -45,46 +45,46 @@ feature -- Status setting
 
 feature -- Status report
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Explanatory text for this command.
 		do
 			Result := Interface_names.e_Display_error_help
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for `Current's toolbar button.
 		do
 			Result := Interface_names.e_Display_error_help
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text for `Current's toolbar button.
 		do
 			Result := Interface_names.b_Display_error_help
 		end
 
-	name: STRING is "Open_help_tool"
+	name: STRING = "Open_help_tool"
 			-- Internal textual representation.
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Image used for `Current's toolbar buttons.
 		do
 			Result := pixmaps.icon_pixmaps.command_error_info_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.command_error_info_icon_buffer
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Text used for menu items for `Current'.
 		do
 			Result := Interface_names.m_Display_error_help
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 	current_editor: SELECTABLE_TEXT_PANEL
 			-- Text in which the explanation texts are put.
 
-	execute_with_text (a_text: STRING) is
+	execute_with_text (a_text: STRING)
 			-- Pop up a new dialog and display `a_text' inside it.
 		do
 			create_new_dialog
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			current_dialog := Void
 		end
 
-	create_new_dialog is
+	create_new_dialog
 			-- Fill `current_dialog' with a newly created dialog.
 		local
 			but: EV_BUTTON
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			valid_editor: current_editor /= Void
 		end
 
-	set_stone (editor: SELECTABLE_TEXT_PANEL; st: ERROR_STONE) is
+	set_stone (editor: SELECTABLE_TEXT_PANEL; st: ERROR_STONE)
 			-- Display the help text associated with `st' in `editor'.
 		require
 			valid_stone: st /= Void
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 			editor.load_text (st.help_text)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

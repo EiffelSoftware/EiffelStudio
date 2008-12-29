@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error in a file in a cluster."
@@ -23,14 +23,14 @@ feature -- Property
 
 feature -- Output
 
-	put_file_name (a_text_formatter: TEXT_FORMATTER) is
+	put_file_name (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("File name: ");
 			a_text_formatter.add (file_name);
 			a_text_formatter.add_new_line;
 		end;
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			put_cluster_name (a_text_formatter);
 			put_file_name (a_text_formatter);
@@ -38,13 +38,13 @@ feature -- Output
 
 feature {AST_LACE, COMPILER_EXPORTER} -- Setting
 
-	set_file_name (s: STRING) is
+	set_file_name (s: STRING)
 			-- Assign `s' to `file_name'.
 		do
 			file_name := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

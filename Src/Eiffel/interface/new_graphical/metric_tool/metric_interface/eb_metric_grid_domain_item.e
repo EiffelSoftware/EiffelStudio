@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a grid domain grid item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature{NONE} -- Implementation
 
-	make (a_domain: EB_METRIC_DOMAIN) is
+	make (a_domain: EB_METRIC_DOMAIN)
 			-- Initialize.
 		require
 			a_domain_attached: a_domain /= Void
@@ -56,7 +56,7 @@ feature{NONE} -- Implementation
 
 feature -- Access
 
-	domain: EB_METRIC_DOMAIN is
+	domain: EB_METRIC_DOMAIN
 			-- Domain contained in Current
 		do
 			create Result.make
@@ -94,7 +94,7 @@ feature -- Status report
 	is_activated: BOOLEAN
 			-- Is Current item activated?
 
-	is_pebble_droppable (a_pebble: ANY): BOOLEAN is
+	is_pebble_droppable (a_pebble: ANY): BOOLEAN
 			-- Can `a_pebble' be dropped on Current?
 		local
 			l_stone: STONE
@@ -115,7 +115,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_domain (a_domain: EB_METRIC_DOMAIN) is
+	set_domain (a_domain: EB_METRIC_DOMAIN)
 			-- Set Current to display `a_domain'.
 		require
 			a_domain_attached: a_domain /= Void
@@ -125,7 +125,7 @@ feature -- Setting
 			change_actions.call (Void)
 		end
 
-	set_value (a_value: like value) is
+	set_value (a_value: like value)
 			-- Set `value' with `a_value'.
 		do
 			value := a_value
@@ -135,7 +135,7 @@ feature -- Setting
 			value_set: value = a_value
 		end
 
-	set_dialog_function (a_func: like dialog_function) is
+	set_dialog_function (a_func: like dialog_function)
 			-- Set `dialog_function' with `a_func'.
 		do
 			dialog_function := a_func
@@ -143,7 +143,7 @@ feature -- Setting
 			dialog_function_set: dialog_function = a_func
 		end
 
-	add_pebble (a_pebble: ANY; a_agent: PROCEDURE [ANY, TUPLE]) is
+	add_pebble (a_pebble: ANY; a_agent: PROCEDURE [ANY, TUPLE])
 			-- Add domain item contained in `a_pebble' if any.
 			-- If `a_pebble' is added successfully, call `a_agent' is it's not Void.
 		local
@@ -177,7 +177,7 @@ feature -- Setting
 			end
 		end
 
-	show_dialog is
+	show_dialog
 			-- Show text editor.
 		require
 			parented: is_parented
@@ -207,7 +207,7 @@ feature -- Setting
 
 feature -- Drop
 
-	drop_pebble (a_pebble: ANY) is
+	drop_pebble (a_pebble: ANY)
 			-- Drop `a_pebble' into Current.
 		local
 			l_domain: like domain
@@ -223,7 +223,7 @@ feature -- Drop
 
 feature {EV_GRID_I} -- Implementation
 
-	activate_action (a_popup_window: EV_POPUP_WINDOW) is
+	activate_action (a_popup_window: EV_POPUP_WINDOW)
 			-- Activate action.
 		local
 			l_hb: EV_HORIZONTAL_BOX
@@ -253,7 +253,7 @@ feature {EV_GRID_I} -- Implementation
 			is_activated: is_activated
 		end
 
-	deactivate is
+	deactivate
 			-- Cleanup from previous call to `activate'.
 		do
 			Precursor
@@ -286,7 +286,7 @@ feature{NONE} -- Implementation
 			-- Domain field used to display domain on activate.
 			-- Void when `Current' isn't being activated.
 
-	ellipsis: EV_PIXMAP is
+	ellipsis: EV_PIXMAP
 			-- Icon for ellipsis
 		do
 			Result := ellipsis_pixmap
@@ -294,7 +294,7 @@ feature{NONE} -- Implementation
 			Result_set: Result /= Void
 		end
 
-	initialize_actions is
+	initialize_actions
 			-- Setup the actions sequences when the item is shown.
 		do
 			button.set_focus
@@ -302,7 +302,7 @@ feature{NONE} -- Implementation
 			button.select_actions.append (ellipsis_actions)
 		end
 
-	focus_lost is
+	focus_lost
 			-- Check if no other element in the popup has the focus.
 		do
 			if is_activated and then not has_focus then
@@ -310,7 +310,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does this property have the focus?
 		require
 			is_activated
@@ -318,7 +318,7 @@ feature{NONE} -- Implementation
 			Result := domain_field.has_focus or button.has_focus
 		end
 
-	on_dialog_ok (a_dialog: EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [G]) is
+	on_dialog_ok (a_dialog: EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [G])
 			-- Action to be performed when "OK" button is pressed in prompted dialog `a_dialog'
 		require
 			a_dialog_attached: a_dialog /= Void
@@ -331,7 +331,7 @@ feature{NONE} -- Implementation
 			dialog_ok_actions.call (Void)
 		end
 
-	on_dialog_cancel (a_dialog: EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [G]) is
+	on_dialog_cancel (a_dialog: EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [G])
 			-- Action to be performed when "Cancel" button in `a_dialog' in prompted dialog `a_dialog'
 		require
 			a_dialog_attached: a_dialog /= Void
@@ -342,13 +342,13 @@ feature{NONE} -- Implementation
 	domain_internal: EB_METRIC_DOMAIN
 			-- Domain contained in Current
 
-	prepare_components is
+	prepare_components
 			-- Prepare components for display.
 		do
 			components_for_domain.do_all (agent append_component)
 		end
 
-	components_for_domain: LIST [ES_GRID_ITEM_COMPONENT] is
+	components_for_domain: LIST [ES_GRID_ITEM_COMPONENT]
 			-- Component list for `domain'
 		local
 			l_domain: like domain_internal
@@ -369,7 +369,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	update_ui is
+	update_ui
 			-- Update UI.
 		local
 			l_items: like components
@@ -394,7 +394,7 @@ invariant
 	domain_internal_attached: domain_internal /= Void
 	change_actions_attached: change_actions /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

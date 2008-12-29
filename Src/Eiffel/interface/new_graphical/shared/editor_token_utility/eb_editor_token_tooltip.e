@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a tooltip in which pick-and-dropable editor tokens are displayed"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ feature{NONE} -- Initialization
 	make (a_enter_actions: like pointer_enter_actions;
 	      a_leave_actions: like pointer_leave_actions;
 	      a_select_actions: like select_actions;
-	      a_destroy_function: like owner_destroy_function) is
+	      a_destroy_function: like owner_destroy_function)
 			-- Initialize agents used for current tooltip.
 			-- See `pointer_enter_actions', `pointer_leave_actions',
 			-- `owner_destroy_function', for more information.
@@ -81,7 +81,7 @@ feature{NONE} -- Initialization
 
 feature -- Status report
 
-	has_tooltip_text: BOOLEAN is
+	has_tooltip_text: BOOLEAN
 			-- Does current tooltip has any text?
 		do
 			Result := tokens.count > 0
@@ -106,7 +106,7 @@ feature -- Status setting
 			remove_overriden_font
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

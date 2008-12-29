@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Commands that maximized whole editor area."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_develop_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_develop_window: EB_DEVELOPMENT_WINDOW)
 			-- Creation method
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}(a_develop_window)
@@ -40,7 +40,7 @@ feature {NONE} -- Initlization
 			update_accelerator (develop_window.window)
 		end
 
-	init_accelerator is
+	init_accelerator
 			-- Initialize accelerator
 		local
 			l_preference: EB_SHARED_PREFERENCES
@@ -55,13 +55,13 @@ feature {NONE} -- Initlization
 
 feature -- Query
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu name
 		do
 			Result := interface_names.m_maximize_editor_area
 		end
 
-	shortcut_string: STRING_GENERAL is
+	shortcut_string: STRING_GENERAL
 			-- <Precurosr>
 		do
 			Result := ("Ctrl+m")
@@ -69,7 +69,7 @@ feature -- Query
 
 feature -- Command
 
-	execute_for_shortcut is
+	execute_for_shortcut
 			-- Execute for keyboard shortcut
 		local
 			l_manager: SD_DOCKING_MANAGER
@@ -83,7 +83,7 @@ feature -- Command
 			end
 		end
 
-	execute is
+	execute
 			-- Execute
 		local
 			l_manager: SD_DOCKING_MANAGER
@@ -96,7 +96,7 @@ feature -- Command
 			update_menu_items_state
 		end
 
-	update_menu_items_state is
+	update_menu_items_state
 			-- Update menu items state
 		do
 			if develop_window.docking_manager.is_editor_area_maximized then
@@ -105,7 +105,7 @@ feature -- Command
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

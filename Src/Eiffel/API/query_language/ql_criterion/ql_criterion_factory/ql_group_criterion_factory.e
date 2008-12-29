@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory to produce criteria with group scope"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create agent_table.make (20)
@@ -68,7 +68,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- New criterion
 
-	new_false_criterion: QL_SIMPLE_GROUP_CRITERION is
+	new_false_criterion: QL_SIMPLE_GROUP_CRITERION
 			-- New criterion that always returns False
 		do
 			create Result.make (agent false_agent, False)
@@ -76,7 +76,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_assembly_criterion: QL_SIMPLE_GROUP_CRITERION is
+	new_is_assembly_criterion: QL_SIMPLE_GROUP_CRITERION
 			-- New criterion to test if a group is assembly
 		do
 			create Result.make (agent is_assembly_agent, True)
@@ -84,7 +84,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_cluster_criterion: QL_SIMPLE_GROUP_CRITERION is
+	new_is_cluster_criterion: QL_SIMPLE_GROUP_CRITERION
 			-- New criterion to test if a group is cluster
 		do
 			create Result.make (agent is_cluster_agent, True)
@@ -92,7 +92,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_compiled_criterion: QL_SIMPLE_GROUP_CRITERION is
+	new_is_compiled_criterion: QL_SIMPLE_GROUP_CRITERION
 			-- New criterion to test if a group is compiled
 		do
 			create Result.make (agent is_compiled_agent, False)
@@ -100,7 +100,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_library_criterion: QL_SIMPLE_GROUP_CRITERION is
+	new_is_library_criterion: QL_SIMPLE_GROUP_CRITERION
 			-- New criterion to test if a group is library
 		do
 			create Result.make (agent is_library_agent, True)
@@ -108,7 +108,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_override_criterion: QL_SIMPLE_GROUP_CRITERION is
+	new_is_override_criterion: QL_SIMPLE_GROUP_CRITERION
 			-- New criterion to test if a group is override
 		do
 			create Result.make (agent is_override_agent, True)
@@ -116,7 +116,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_valid_criterion: QL_SIMPLE_GROUP_CRITERION is
+	new_is_valid_criterion: QL_SIMPLE_GROUP_CRITERION
 			-- New criterion to test if a group is valid
 		do
 			create Result.make (agent is_valid_agent, True)
@@ -124,7 +124,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_used_in_library_criterion: QL_SIMPLE_GROUP_CRITERION is
+	new_is_used_in_library_criterion: QL_SIMPLE_GROUP_CRITERION
 			-- New criterion to test if a group is used in library
 		do
 			create Result.make (agent is_used_in_library_agent, True)
@@ -132,7 +132,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_class_set_criterion: QL_SIMPLE_GROUP_CRITERION is
+	new_is_class_set_criterion: QL_SIMPLE_GROUP_CRITERION
 			-- New criterion to test if classes of a group are set
 		do
 			create Result.make (agent is_class_set_agent, True)
@@ -140,7 +140,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_true_criterion: QL_SIMPLE_GROUP_CRITERION is
+	new_true_criterion: QL_SIMPLE_GROUP_CRITERION
 			-- New criterion that always returns True (tautology criterion)
 		do
 			create Result.make (agent true_agent, False)
@@ -148,7 +148,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_GROUP_NAME_IS_CRI is
+	new_name_is_criterion (a_name: STRING; a_case_sensitive: BOOLEAN; a_matching_strategy: INTEGER): QL_GROUP_NAME_IS_CRI
 			-- New {QL_GROUP_NAME_IS_CRI} criterion.
 		require
 			a_name_attached: a_name /= Void
@@ -158,7 +158,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type is
+	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type
 			-- New value criterion
 		require
 			a_evaluate_value_func_attached: a_evaluate_value_func /= Void
@@ -168,23 +168,23 @@ feature{NONE} -- New criterion
 
 feature -- Criterion index
 
-	c_false: INTEGER is 1
-	c_is_assembly: INTEGER is 2
-	c_is_cluster: INTEGER is 3
-	c_is_compiled: INTEGER is 4
-	c_is_library: INTEGER is 5
-	c_is_override: INTEGER is 6
-	c_true: INTEGER is 7
-	c_name_is: INTEGER is 8
-	c_is_class_set: INTEGER is 9
-	c_is_valid: INTEGER is 10
-	c_is_used_in_library: INTEGER is 11
-	c_value_of_metric_is: INTEGER is 12
-	c_is_satisfied_by: INTEGER is 13
+	c_false: INTEGER = 1
+	c_is_assembly: INTEGER = 2
+	c_is_cluster: INTEGER = 3
+	c_is_compiled: INTEGER = 4
+	c_is_library: INTEGER = 5
+	c_is_override: INTEGER = 6
+	c_true: INTEGER = 7
+	c_name_is: INTEGER = 8
+	c_is_class_set: INTEGER = 9
+	c_is_valid: INTEGER = 10
+	c_is_used_in_library: INTEGER = 11
+	c_value_of_metric_is: INTEGER = 12
+	c_is_satisfied_by: INTEGER = 13
 
 feature{NONE} -- Implementation
 
-	false_agent (a_item: QL_GROUP): BOOLEAN is
+	false_agent (a_item: QL_GROUP): BOOLEAN
 			-- Agent that always returns False.
 			-- Require compiled: False
 		require
@@ -193,7 +193,7 @@ feature{NONE} -- Implementation
 		do
 		end
 
-	true_agent (a_item: QL_GROUP): BOOLEAN is
+	true_agent (a_item: QL_GROUP): BOOLEAN
 			-- Agent that always returns True (tautology criterion)
 			-- Require compiled: False
 		require
@@ -203,7 +203,7 @@ feature{NONE} -- Implementation
 			Result := True
 		end
 
-	is_compiled_agent (a_item: QL_GROUP): BOOLEAN is
+	is_compiled_agent (a_item: QL_GROUP): BOOLEAN
 			-- Agent to test if `a_item' is compiled
 			-- Require compiled: False
 		require
@@ -213,14 +213,14 @@ feature{NONE} -- Implementation
 			Result := a_item.is_compiled
 		end
 
-	is_assembly_agent (a_item: QL_GROUP): BOOLEAN is
+	is_assembly_agent (a_item: QL_GROUP): BOOLEAN
 			-- Agent to test if `a_item' is assembly
 			-- Require compiled: True
 		do
 			Result := a_item.group.is_assembly or a_item.group.is_physical_assembly
 		end
 
-	is_cluster_agent (a_item: QL_GROUP): BOOLEAN is
+	is_cluster_agent (a_item: QL_GROUP): BOOLEAN
 			-- Agent to test if `a_item' is cluster
 			-- Require compiled: True
 		require
@@ -230,7 +230,7 @@ feature{NONE} -- Implementation
 			Result := a_item.group.is_cluster
 		end
 
-	is_library_agent (a_item: QL_GROUP): BOOLEAN is
+	is_library_agent (a_item: QL_GROUP): BOOLEAN
 			-- Agent to test if `a_item' is library
 			-- Require compiled: True
 		require
@@ -240,7 +240,7 @@ feature{NONE} -- Implementation
 			Result := a_item.group.is_library
 		end
 
-	is_override_agent (a_item: QL_GROUP): BOOLEAN is
+	is_override_agent (a_item: QL_GROUP): BOOLEAN
 			-- Agent to test if `a_item' is override
 			-- Require compiled: True
 		require
@@ -250,7 +250,7 @@ feature{NONE} -- Implementation
 			Result := a_item.group.is_override
 		end
 
-	is_valid_agent (a_item: QL_GROUP): BOOLEAN is
+	is_valid_agent (a_item: QL_GROUP): BOOLEAN
 			-- Agent to test if `a_item' is valid
 			-- Require compiled: True
 		require
@@ -260,7 +260,7 @@ feature{NONE} -- Implementation
 			Result := a_item.group.is_valid
 		end
 
-	is_used_in_library_agent (a_item: QL_GROUP): BOOLEAN is
+	is_used_in_library_agent (a_item: QL_GROUP): BOOLEAN
 			-- Agent to test if `a_item' is used in library
 			-- Require compiled: True
 		require
@@ -270,7 +270,7 @@ feature{NONE} -- Implementation
 			Result := a_item.group.is_used_in_library
 		end
 
-	is_class_set_agent (a_item: QL_GROUP): BOOLEAN is
+	is_class_set_agent (a_item: QL_GROUP): BOOLEAN
 			-- Agent to test if classes in `a_item' are set
 			-- Require compiled: True
 		require
@@ -280,7 +280,7 @@ feature{NONE} -- Implementation
 			Result := a_item.group.classes_set
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

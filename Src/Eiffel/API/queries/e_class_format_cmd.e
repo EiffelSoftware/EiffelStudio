@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Abstract description for a class format command which%
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	display_feature (f: E_FEATURE; st: TEXT_FORMATTER) is
+	display_feature (f: E_FEATURE; st: TEXT_FORMATTER)
 			-- Display feature `f' defined in class `c'
 			-- to `st'.
 		require
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Execution
 
-	work is
+	work
 			-- Execute Current command.	
 		local
 			l_domain: QL_FEATURE_DOMAIN
@@ -82,12 +82,12 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	any_class: CLASS_C is
+	any_class: CLASS_C
 		once
 			Result := Eiffel_system.any_class.compiled_class
 		end;
 
-	domain_generator: QL_DOMAIN_GENERATOR is
+	domain_generator: QL_DOMAIN_GENERATOR
 			-- Domain generator used in current command
 		do
 			create {QL_FEATURE_DOMAIN_GENERATOR}Result
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	class_name_tester (feature_a, feature_b: QL_FEATURE): BOOLEAN is
+	class_name_tester (feature_a, feature_b: QL_FEATURE): BOOLEAN
 			-- Compare name of `feature_a' and `feature_b'.
 		require
 			feature_a_attached: feature_a /= Void
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

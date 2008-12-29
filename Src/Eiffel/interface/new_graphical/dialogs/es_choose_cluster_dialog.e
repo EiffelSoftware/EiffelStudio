@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to choose a cluster in current system"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -25,21 +25,21 @@ create
 
 feature -- Query
 
-	selected_cluster_and_path: STRING is
+	selected_cluster_and_path: STRING
 			-- Selected cluster name and path
 			-- This value set by `On_ok'
 		do
 			Result := ui_builder.selected_cluster_and_path
 		end
 
-	cluster_id: STRING is
+	cluster_id: STRING
 			-- Cluster ID
 			-- Maybe void if end user not pressed any cluster tree node.
 		do
 			Result := ui_builder.cluster_id
 		end
 
-	 cluster_sub_path: STRING is
+	 cluster_sub_path: STRING
 			-- Cluster sub path.
 			-- Maybe void if end user not pressed any cluster tree node.
 		do
@@ -48,13 +48,13 @@ feature -- Query
 
 feature {NONE} -- Redefine
 
-	icon: EV_PIXEL_BUFFER is
+	icon: EV_PIXEL_BUFFER
 			-- <Precursor>
 		do
 			Result := stock_pixmaps.folder_cluster_icon_buffer
 		end
 
-	prepare (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_container: EV_VERTICAL_BOX) is
+	prepare (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_container: EV_VERTICAL_BOX)
 			-- <Precursor>
 		local
 			controls_box: EV_VERTICAL_BOX
@@ -74,7 +74,7 @@ feature {NONE} -- Redefine
 			Result := Interface_names.t_choose_cluster
 		end
 
-	on_ok is
+	on_ok
 			-- <Precursor>
 		do
 			if not ui_builder.on_ok then
@@ -84,13 +84,13 @@ feature {NONE} -- Redefine
 
 feature {NONE} -- Implementation
 
-	ui_builder: !ES_CHOOSE_CLUSTER_UI_BUILDER is
+	ui_builder: !ES_CHOOSE_CLUSTER_UI_BUILDER
 			-- UI builder
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

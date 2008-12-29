@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An event list service {EVENT_LIST_S} tool to show all errors and warning event items in a single list in the EiffelStudio UI
 	]"
@@ -84,7 +84,7 @@ feature {NONE} -- Iniitalization
 
 feature {NONE} -- User interface initialization
 
-	 build_tool_interface (a_widget: ES_GRID) is
+	 build_tool_interface (a_widget: ES_GRID)
 			-- Builds the tools user interface elements.
 			-- Note: This function is called prior to showing the tool for the first time.
 			--
@@ -521,7 +521,7 @@ feature {NONE} -- Events
 			is_initialized: is_appliable_event (a_event_item) implies is_initialized
 		end
 
-	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I) is
+	on_event_item_removed (a_service: EVENT_LIST_S; a_event_item: EVENT_LIST_ITEM_I)
 			-- <Precursor>
 		local
 			l_applicable: BOOLEAN
@@ -549,7 +549,7 @@ feature {NONE} -- Events
 			is_initialized: is_appliable_event (a_event_item) implies is_initialized
 		end
 
-	on_toogle_errors_button is
+	on_toogle_errors_button
 			-- Called when `errors_button' is selected
 		require
 			is_interface_usable: is_interface_usable
@@ -591,7 +591,7 @@ feature {NONE} -- Events
 			remove_all_selected_event_list_rows
 		end
 
-	on_toogle_warnings_button is
+	on_toogle_warnings_button
 			-- Called when `warnings_button' is selected
 		require
 			is_interface_usable: is_interface_usable
@@ -680,7 +680,7 @@ feature {NONE} -- Events
 			not_is_expanding_all_errors: not is_expanding_all_errors
 		end
 
-	on_expand_event_row (a_row: EV_GRID_ROW) is
+	on_expand_event_row (a_row: EV_GRID_ROW)
 			-- Called when the expand error button is selected.
 			--
 			-- `a_row': The row that was expanded.
@@ -895,7 +895,7 @@ feature {NONE} -- Factory
 
 feature -- User interface manipulation
 
-	show is
+	show
 			-- Redefine
 		local
 			l_width: INTEGER
@@ -957,7 +957,7 @@ feature {NONE} -- User interface manipulation
 			warning_count_set: warning_count = a_count
 		end
 
-	update_tool_title_and_pixmap is
+	update_tool_title_and_pixmap
 			-- Sets the tool's title an pixmap based on the number of items existing in the list
 		local
 			l_title: STRING_32
@@ -1204,7 +1204,7 @@ invariant
 	filter_button_attached: is_initialized implies filter_button /= Void
 	item_count_matches_error_and_warning_count: error_count + warning_count = item_count
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

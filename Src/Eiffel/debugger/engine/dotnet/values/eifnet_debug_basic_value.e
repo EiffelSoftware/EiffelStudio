@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dotnet debug value associated with Basic type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create {DEBUG_VALUE_EXPORTER}
 	
 feature {NONE} -- Redefinition of make
 
-	make (a_referenced_value: like icd_referenced_value; a_sk_type: INTEGER; v: like value) is
+	make (a_referenced_value: like icd_referenced_value; a_sk_type: INTEGER; v: like value)
 		require
 			a_referenced_value_not_void: a_referenced_value /= Void
 		do
@@ -37,7 +37,7 @@ feature {NONE} -- Redefinition of make
 		
 feature -- Access : Redefinition of dump_value
 		
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 			-- (from ABSTRACT_DEBUG_VALUE)
 		do
@@ -47,7 +47,7 @@ feature -- Access : Redefinition of dump_value
 			end
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

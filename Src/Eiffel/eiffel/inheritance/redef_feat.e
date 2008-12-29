@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Process redefined features. Formulate the assertion id set for a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	process (adaptations: LINKED_LIST [FEATURE_ADAPTATION]) is
+	process (adaptations: LINKED_LIST [FEATURE_ADAPTATION])
 			-- Process 'adaptions' to update the assert_id_set for
 			-- redefined features.
 		local
@@ -62,7 +62,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	update_assert_set (features: LINKED_LIST [FEATURE_I]; new_feat: FEATURE_I) is
+	update_assert_set (features: LINKED_LIST [FEATURE_I]; new_feat: FEATURE_I)
 			-- Update assert_id_set of `new_feat' from `features'.
 		require
 			valid_features: features /= Void
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	trace (new_feat: FEATURE_I) is
+	trace (new_feat: FEATURE_I)
 		local
 			assert_set: ASSERT_ID_SET
 			i: INTEGER
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

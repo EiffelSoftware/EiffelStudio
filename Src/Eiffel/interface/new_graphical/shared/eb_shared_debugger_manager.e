@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that are common to several debug facilities."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	eb_debugger_manager: EB_DEBUGGER_MANAGER is
+	eb_debugger_manager: EB_DEBUGGER_MANAGER
 			-- Manager in charge of debugging operations.
 		do
 			Result ?= debugger_manager
@@ -22,7 +22,7 @@ feature -- Access
 			debugger_manager_not_void: debugger_manager /= Void implies Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

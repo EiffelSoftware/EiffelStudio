@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class BIN_XOR_B
@@ -12,7 +12,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_bin_xor_b (Current)
@@ -20,7 +20,7 @@ feature -- Visitor
 
 feature -- Enlarging
 
-	built_in_enlarged: EXPR_B is
+	built_in_enlarged: EXPR_B
 			-- Enlarge node. Try to get rid of useless code if possible.
 		local
 			l_left_val, l_right_val: VALUE_I
@@ -44,10 +44,10 @@ feature -- Enlarging
 
 feature
 
-	is_commutative: BOOLEAN is True;
+	is_commutative: BOOLEAN = True;
 			-- Operation is commutative.
 
-	print_register is
+	print_register
 			-- Print the expression
 		local
 			buf: GENERATION_BUFFER
@@ -60,7 +60,7 @@ feature
 			buf.put_string ("))");
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

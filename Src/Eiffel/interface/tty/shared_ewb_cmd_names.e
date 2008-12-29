@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command names for menu entries."
@@ -11,198 +11,198 @@ class SHARED_EWB_CMD_NAMES
 
 feature {NONE}
 
-	ace_cmd_name: STRING is "config"
+	ace_cmd_name: STRING = "config"
 
-	add_subquery_cmd_name: STRING is "add"
+	add_subquery_cmd_name: STRING = "add"
 
-	ancestors_cmd_name: STRING is "ancestors"
+	ancestors_cmd_name: STRING = "ancestors"
 
-	Arguments_cmd_name: STRING is "arguments"
+	Arguments_cmd_name: STRING = "arguments"
 
-	attributes_cmd_name: STRING is "attributes"
+	attributes_cmd_name: STRING = "attributes"
 
-	aversions_cmd_name: STRING is "aversions"
+	aversions_cmd_name: STRING = "aversions"
 
-	batch_cmd_name: STRING is "batch"
+	batch_cmd_name: STRING = "batch"
 
-	callers_cmd_name: STRING is "callers"
+	callers_cmd_name: STRING = "callers"
 
-	callees_cmd_name: STRING is "callees"
+	callees_cmd_name: STRING = "callees"
 
-	c_compile_cmd_name: STRING is "c_compile"
+	c_compile_cmd_name: STRING = "c_compile"
 			-- Name of command launching C compilation
 
-	change_operator_cmd_name: STRING is "operator"
+	change_operator_cmd_name: STRING = "operator"
 
-	class_cmd_name: STRING is "class"
+	class_cmd_name: STRING = "class"
 
-	class_list_cmd_name: STRING is "classes"
+	class_list_cmd_name: STRING = "classes"
 
-	clean_cmd_name: STRING is "clean"
+	clean_cmd_name: STRING = "clean"
 
-	clients_cmd_name: STRING is "clients"
+	clients_cmd_name: STRING = "clients"
 
-	cluster_hierarchy_cmd_name: STRING is "Cluster hierarchy"
+	cluster_hierarchy_cmd_name: STRING = "Cluster hierarchy"
 
-	clusters_cmd_name: STRING is "clusters"
+	clusters_cmd_name: STRING = "clusters"
 
-	compile_cmd_name: STRING is "compile"
+	compile_cmd_name: STRING = "compile"
 
-	config_cmd_name: STRING is "config"
+	config_cmd_name: STRING = "config"
 
-	Convert_profile_cmd_name: STRING is "convert"
+	Convert_profile_cmd_name: STRING = "convert"
 
-	debug_cmd_name: STRING is "debug"
+	debug_cmd_name: STRING = "debug"
 
-	Defaults_cmd_name: STRING is "defaults"
+	Defaults_cmd_name: STRING = "defaults"
 
-	deferred_cmd_name: STRING is "deferred"
+	deferred_cmd_name: STRING = "deferred"
 
-	descendants_cmd_name: STRING is "descendants"
+	descendants_cmd_name: STRING = "descendants"
 
-	Documentation_cmd_name: STRING is "documentation"
+	Documentation_cmd_name: STRING = "documentation"
 
-	dversions_cmd_name: STRING is "dversions"
+	dversions_cmd_name: STRING = "dversions"
 
-	edit_ace_cmd_name: STRING is "edit"
+	edit_ace_cmd_name: STRING = "edit"
 
-	edit_class_cmd_name: STRING is "edit"
+	edit_class_cmd_name: STRING = "edit"
 
-	exported_cmd_name: STRING is "exported"
+	exported_cmd_name: STRING = "exported"
 
-	externals_cmd_name: STRING is "externals"
+	externals_cmd_name: STRING = "externals"
 
-	f_compile_cmd_name: STRING is "F-compile"
+	f_compile_cmd_name: STRING = "F-compile"
 
-	feature_cmd_name: STRING is "feature"
+	feature_cmd_name: STRING = "feature"
 
-	Featurename_cmd_name: STRING is "featurename"
+	Featurename_cmd_name: STRING = "featurename"
 
-	file_cmd_name: STRING is "file"
+	file_cmd_name: STRING = "file"
 
-	filter_cmd_name: STRING is "filter"
+	filter_cmd_name: STRING = "filter"
 
-	finalize_cmd_name: STRING is "finalize"
+	finalize_cmd_name: STRING = "finalize"
 
-	flat_cmd_name: STRING is "flat"
+	flat_cmd_name: STRING = "flat"
 
-	flatshort_cmd_name: STRING is "flatshort"
+	flatshort_cmd_name: STRING = "flatshort"
 
-	freeze_cmd_name: STRING is "freeze"
+	freeze_cmd_name: STRING = "freeze"
 
-	Generate_cmd_name: STRING is "generate"
+	Generate_cmd_name: STRING = "generate"
 
-	gui_cmd_name: STRING is "gui"
+	gui_cmd_name: STRING = "gui"
 
-	help_cmd_name: STRING is "help"
+	help_cmd_name: STRING = "help"
 
-	homonyms_cmd_name: STRING is "homonyms"
+	homonyms_cmd_name: STRING = "homonyms"
 
-	implementers_cmd_name: STRING is "implementers"
+	implementers_cmd_name: STRING = "implementers"
 
-	indexing_cmd_name: STRING is "indexing"
+	indexing_cmd_name: STRING = "indexing"
 
-	Input_cmd_name: STRING is "input"
+	Input_cmd_name: STRING = "input"
 
-	Language_cmd_name: STRING is "language"
+	Language_cmd_name: STRING = "language"
 
-	library_cmd_name: STRING is "library"
+	library_cmd_name: STRING = "library"
 
-	loop_cmd_name: STRING is "loop"
+	loop_cmd_name: STRING = "loop"
 
-	loop_help_cmd_name: STRING is "help"
+	loop_help_cmd_name: STRING = "help"
 
-	overwrite_old_project_cmd_name: STRING is "overwrite_old_project"
+	overwrite_old_project_cmd_name: STRING = "overwrite_old_project"
 
-	melt_cmd_name: STRING is "melt"
+	melt_cmd_name: STRING = "melt"
 
-	main_cmd_name: STRING is "main"
+	main_cmd_name: STRING = "main"
 
-	modified_cmd_name: STRING is "modifications"
+	modified_cmd_name: STRING = "modifications"
 
-	Number_of_calls_cmd_name: STRING is "calls"
+	Number_of_calls_cmd_name: STRING = "calls"
 
-	once_cmd_name: STRING is "once"
+	once_cmd_name: STRING = "once"
 
-	parent_cmd_name: STRING is "parent menu"
+	parent_cmd_name: STRING = "parent menu"
 
-	Percentage_cmd_name: STRING is "percentage"
+	Percentage_cmd_name: STRING = "percentage"
 
-	precompile_cmd_name: STRING is "precompile"
+	precompile_cmd_name: STRING = "precompile"
 
-	finalized_precompile_cmd_name: STRING is "finalize_precompile"
+	finalized_precompile_cmd_name: STRING = "finalize_precompile"
 
-	Profile_cmd_name: STRING is "profile"
+	Profile_cmd_name: STRING = "profile"
 
-	project_path_cmd_name: STRING is "project_path"
+	project_path_cmd_name: STRING = "project_path"
 
-	project_cmd_name: STRING is "project"
+	project_cmd_name: STRING = "project"
 
-	queries_cmd_name: STRING is "query"
+	queries_cmd_name: STRING = "query"
 
-	quick_melt_cmd_name: STRING is "quick_melt"
+	quick_melt_cmd_name: STRING = "quick_melt"
 
-	quit_cmd_name: STRING is "quit"
+	quit_cmd_name: STRING = "quit"
 
-	reactivate_subquery_cmd_name: STRING is "reactivate"
+	reactivate_subquery_cmd_name: STRING = "reactivate"
 
-	inactivate_subquery_cmd_name: STRING is "inactivate"
+	inactivate_subquery_cmd_name: STRING = "inactivate"
 
-	routines_cmd_name: STRING is "routines"
+	routines_cmd_name: STRING = "routines"
 
-	invariants_cmd_name: STRING is "invariants"
+	invariants_cmd_name: STRING = "invariants"
 
-	creators_cmd_name: STRING is "creators"
+	creators_cmd_name: STRING = "creators"
 
-	run_cmd_name: STRING is "run"
+	run_cmd_name: STRING = "run"
 
-	Self_sec_cmd_name: STRING is "self"
+	Self_sec_cmd_name: STRING = "self"
 
-	short_cmd_name: STRING is "short"
+	short_cmd_name: STRING = "short"
 
-	show_subqueries_cmd_name: STRING is "show"
+	show_subqueries_cmd_name: STRING = "show"
 
-	single_file_compilation_cmd_name: STRING is "class_file.e"
+	single_file_compilation_cmd_name: STRING = "class_file.e"
 
-	statistics_cmd_name: STRING is "statistics"
+	statistics_cmd_name: STRING = "statistics"
 
-	stop_cmd_name: STRING is "stop"
+	stop_cmd_name: STRING = "stop"
 
-	storage_cmd_name: STRING is "store"
+	storage_cmd_name: STRING = "store"
 
-	suppliers_cmd_name: STRING is "suppliers"
+	suppliers_cmd_name: STRING = "suppliers"
 
-	switches_cmd_name: STRING is "switches"
+	switches_cmd_name: STRING = "switches"
 
-	system_cmd_name: STRING is "system"
+	system_cmd_name: STRING = "system"
 
-	target_cmd_name: STRING is "target"
+	target_cmd_name: STRING = "target"
 
-	use_settings_cmd_name: STRING is "use_settings"
+	use_settings_cmd_name: STRING = "use_settings"
 
-	no_library_cmd_name: STRING is "no_library"
+	no_library_cmd_name: STRING = "no_library"
 
-	text_cmd_name: STRING is "text"
+	text_cmd_name: STRING = "text"
 
-	Total_sec_cmd_name: STRING is "total"
+	Total_sec_cmd_name: STRING = "total"
 
-	yank_cmd_name: STRING is "yank"
+	yank_cmd_name: STRING = "yank"
 
-	w_compile_cmd_name: STRING is "W-compile"
+	w_compile_cmd_name: STRING = "W-compile"
 
-	flat_doc_cmd_name: STRING is "Documentation (Flat)"
+	flat_doc_cmd_name: STRING = "Documentation (Flat)"
 
-	flat_short_doc_cmd_name: STRING is "Documentation (Flat/Short)"
+	flat_short_doc_cmd_name: STRING = "Documentation (Flat/Short)"
 
-	short_doc_cmd_name: STRING is "Documentation (Short)"
+	short_doc_cmd_name: STRING = "Documentation (Short)"
 
-	text_doc_cmd_name: STRING is "Documentation (Text)"
+	text_doc_cmd_name: STRING = "Documentation (Text)"
 
-	version_cmd_name: STRING is "version"
+	version_cmd_name: STRING = "version"
 
-	gc_stats_cmd_name: STRING is "gc_stats";
+	gc_stats_cmd_name: STRING = "gc_stats";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

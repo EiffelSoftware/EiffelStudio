@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Combo box to choose a class in the system. Accept wildcards"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,19 +21,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize the dialog with the manager `a_favorites_manager'
 		do
 			default_create
 			prepare
 		end
 
-	prepare is
+	prepare
 			-- Create the controls and setup the layout
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

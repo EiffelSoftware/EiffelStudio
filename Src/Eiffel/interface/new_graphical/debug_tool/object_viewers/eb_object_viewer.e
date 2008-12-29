@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Box containing expanded viewer ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (m: EB_OBJECT_VIEWERS_MANAGER; a_for_tool: BOOLEAN) is
+	make (m: EB_OBJECT_VIEWERS_MANAGER; a_for_tool: BOOLEAN)
 			-- Instanciate Current
 		do
 			is_associated_with_tool := a_for_tool
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			build_widget
 		end
 
-	build_widget is
+	build_widget
 			-- Build widget representing Current viewer
 		deferred
 		end
@@ -43,17 +43,17 @@ feature -- Access
 	is_associated_with_tool: BOOLEAN
 			-- Is Current associated with a viewer tool?
 
-	debugger_manager: DEBUGGER_MANAGER is
+	debugger_manager: DEBUGGER_MANAGER
 			-- Related debugger manager
 		deferred
 		end
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget representing Current viewer component
 		deferred
 		end
 
-	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN is
+	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN
 			-- Is `ost' a valid stone for Current viewer
 			-- if `is_strict' is False, check quickly the validity of the stone
 			-- otherwise check with caution.
@@ -62,7 +62,7 @@ feature -- Access
 		deferred
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of Current viewer
 		deferred
 		end
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Contextual widget
 
-	build_mini_tool_bar is
+	build_mini_tool_bar
 			-- If `mini_tool_bar' is Void, build it otherwise do nothing
 		do
 		end
@@ -80,7 +80,7 @@ feature -- Contextual widget
 	mini_tool_bar: SD_TOOL_BAR
 			-- Mini tool bar widget
 
-	build_tool_bar is
+	build_tool_bar
 			-- If `tool_bar' is Void, build it otherwise do nothing
 		do
 		end
@@ -90,13 +90,13 @@ feature -- Contextual widget
 
 feature -- Change
 
-	set_title (t: STRING_GENERAL) is
+	set_title (t: STRING_GENERAL)
 			-- Set title
 		do
 			title := t
 		end
 
-	set_stone (st: OBJECT_STONE) is
+	set_stone (st: OBJECT_STONE)
 			-- Set stone
 		require
 			stone_valid: is_valid_stone (st, False)
@@ -107,17 +107,17 @@ feature -- Change
 			refresh
 		end
 
-	refresh is
+	refresh
 			-- Refresh output
 		deferred
 		end
 
-	clear is
+	clear
 			-- Clear output
 		deferred
 		end
 
-	reset is
+	reset
 			-- Reset current viewer
 		do
 			clear
@@ -125,25 +125,25 @@ feature -- Change
 
 feature -- Data
 
-	current_object: OBJECT_STONE is
+	current_object: OBJECT_STONE
 			-- Object `Current' is displaying.
 		do
 			Result := viewers_manager.current_object
 		end
 
-	has_object: BOOLEAN is
+	has_object: BOOLEAN
 			-- Has an object been assigned to current?
 		do
 			Result := viewers_manager.has_object
 		end
 
-	retrieve_dump_value	is
+	retrieve_dump_value
 			-- Retrieve dump value
 		do
 			viewers_manager.retrieve_dump_value
 		end
 
-	current_dump_value: DUMP_VALUE is
+	current_dump_value: DUMP_VALUE
 			-- DUMP_VALUE `Current' is displaying.		
 		do
 			Result := viewers_manager.current_dump_value
@@ -156,7 +156,7 @@ feature -- Properties
 
 feature {NONE} -- Implementation
 
-	begin_with (s,t: STRING_GENERAL; ignore_leading_blank: BOOLEAN): BOOLEAN is
+	begin_with (s,t: STRING_GENERAL; ignore_leading_blank: BOOLEAN): BOOLEAN
 			-- Does `s' beging with `t' ?
 			-- if `ignore_leading_blank' is True, ignore leading blank character
 		local
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

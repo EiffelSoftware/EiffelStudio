@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Process external command other processes."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Action
 
-	external_command_action_handler (a_string: STRING): BOOLEAN is
+	external_command_action_handler (a_string: STRING): BOOLEAN
 			-- Action to handle `a_string' as an external command
 			-- Return `True' to claim the command will be handled.
 		local
@@ -81,7 +81,7 @@ feature -- Callback
 
 feature -- Notification
 
-	notify_created_starting_dialog (a_dialog: !EB_STARTING_DIALOG) is
+	notify_created_starting_dialog (a_dialog: !EB_STARTING_DIALOG)
 			-- Notify current `a_dialog' has just been created.
 			-- The dialog will be kept until `notify_created_starting_dialog' is called.
 			-- Be careful doing this, since the dialog will not be GCed
@@ -93,7 +93,7 @@ feature -- Notification
 			starting_dialog_not_void: starting_dialog /= Void
 		end
 
-	notify_closing_starting_dialog is
+	notify_closing_starting_dialog
 			-- Notify current starting dialog has just been destroyed.
 		do
 			starting_dialog := Void
@@ -107,13 +107,13 @@ feature {NONE} -- Implementation
 	starting_dialog: ?EB_STARTING_DIALOG
 			-- Reference to keep starting dialog
 
-	id_solution: EB_SHARED_ID_SOLUTION is
+	id_solution: EB_SHARED_ID_SOLUTION
 			-- Id solution
 		once
 			create Result
 		end
 
-	protocol_regex: RX_PCRE_MATCHER is
+	protocol_regex: RX_PCRE_MATCHER
 			-- Regular expression matcher for parsing incoming command.
 		once
 			create Result.make
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			Result.compile ("<([^>]*)>")
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

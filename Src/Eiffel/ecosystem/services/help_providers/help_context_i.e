@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Abstract interface for implement help context in a help context aware section of EiffelStudio.
 	]"
@@ -59,7 +59,7 @@ feature -- Status report
 			not_help_context_id_is_empty: not help_context_id.is_empty
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a bon view for an eiffel class diagram."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create {BON_CLASS_DIAGRAM}
 
 feature {NONE} -- Initialization
 
-	make (a_graph: like model; a_tool: like context_editor) is
+	make (a_graph: like model; a_tool: like context_editor)
 			-- Initialize as context in `a_tool' showing `a_graph'.
 		require
 			a_graph_not_void: a_graph /= Void
@@ -36,13 +36,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_view_name: STRING is
+	default_view_name: STRING
 			-- Name for the default view.
 		do
 			Result := "DEFAULT:BON"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

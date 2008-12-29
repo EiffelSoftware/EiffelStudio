@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to create a new project"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -96,7 +96,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_blank (a_parent_window: EV_WINDOW) is
+	make_blank (a_parent_window: EV_WINDOW)
 			-- Create a new blank project
 			--
 			-- Note:
@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 			set_title (Interface_names.t_Choose_project_and_directory)
 		end
 
-	make_with_ace (a_parent_window: EV_WINDOW; ace_name: STRING; a_suggested_directory_name: STRING) is
+	make_with_ace (a_parent_window: EV_WINDOW; ace_name: STRING; a_suggested_directory_name: STRING)
 			-- Create a new project using the ace file named `ace_name'.
 			-- and the suggested project directory `dir_name'.
 			--
@@ -148,7 +148,7 @@ feature -- Access
 	success: BOOLEAN
 			-- Was last operation sucessful?
 
-	project_location: STRING is
+	project_location: STRING
 			-- Location for selected project
 		require
 			success: success
@@ -160,13 +160,13 @@ feature -- Access
 
 feature -- Execution
 
-	show_modal_to_parent is
+	show_modal_to_parent
 			-- Show `Current' modal to `parent_window' provided in creation procedure.
 		do
 			show_modal_to_window (parent_window)
 		end
 
-	create_blank_project is
+	create_blank_project
 			-- Create a blank project in directory `directory_name'.
 		local
 			blank_project_builder: BLANK_PROJECT_BUILDER
@@ -254,7 +254,7 @@ feature -- Execution
 			retry
 		end
 
-	select_project_path is
+	select_project_path
 			--  Select a project in directory `directory_name', with ace file
 			-- `ace_file_name'.
 			--
@@ -280,7 +280,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	build_interface is
+	build_interface
 			-- Build the interface
 		local
 			vb, main_vb: EV_VERTICAL_BOX
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 			show_actions.extend (agent on_window_shown)
 		end
 
-	on_window_shown is
+	on_window_shown
 			-- The window has just been shown.
 			-- Set the focus to the first widget and show the beginning of each text field.
 		do
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	browse_directory is
+	browse_directory
 			-- Popup a "select directory" dialog.
 		local
 			dd: EV_DIRECTORY_DIALOG
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation
 			dd.show_modal_to_window (Current)
 		end
 
-	browse_ace_file is
+	browse_ace_file
 			-- Popup a "select file" dialog.
 		local
 			fod: EV_FILE_OPEN_DIALOG
@@ -480,7 +480,7 @@ feature {NONE} -- Implementation
 			fod.show_modal_to_window (Current)
 		end
 
-	check_and_create_directory (a_directory_name: DIRECTORY_NAME) is
+	check_and_create_directory (a_directory_name: DIRECTORY_NAME)
 			-- Check that the directory `a_directory_name' is valid and exists and MODIFY IT if needed.
 			-- If `a_directory_name' is not valid or does not exits, a developper exception is raised.
 		local
@@ -497,7 +497,7 @@ feature {NONE} -- Implementation
 			add_error_message (Warning_messages.w_Invalid_directory_or_cannot_be_created (a_directory_name))
 		end
 
-	create_default_directory_name (project_name: STRING): STRING is
+	create_default_directory_name (project_name: STRING): STRING
 			-- Return the proposed directory for project `project_name'
 		local
 			l_project_location: STRING
@@ -515,14 +515,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Callbacks
 
-	on_cancel is
+	on_cancel
 			-- User has clicked "Cancel"
 		do
 			success := False
 			destroy
 		end
 
-	on_ok is
+	on_ok
 			-- User has clicked "Ok"
 		do
 			if blank_project_creation then
@@ -536,7 +536,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_change_project_name is
+	on_change_project_name
 			-- The user has changed the project name, update the project location
 		local
 			curr_project_location: STRING
@@ -565,7 +565,7 @@ feature {NONE} -- Callbacks
 			old_project_name_set: old_project_name.is_equal (system_name_field.text)
 		end
 
-	retrieve_directory (dialog: EV_DIRECTORY_DIALOG) is
+	retrieve_directory (dialog: EV_DIRECTORY_DIALOG)
 			-- Get callback information from `dialog', then send it to the directory field.
 		local
 			dir_name: STRING
@@ -578,7 +578,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	retrieve_ace_file (dialog: EV_FILE_OPEN_DIALOG) is
+	retrieve_ace_file (dialog: EV_FILE_OPEN_DIALOG)
 			-- Get callback information from `dialog', then send it to the ace file name field.
 		local
 			file_name: STRING
@@ -637,21 +637,21 @@ feature {NONE} -- Vision2 architechture
 
 feature {NONE} -- Constants
 
-	Default_project_name: STRING is "project"
+	Default_project_name: STRING = "project"
 
-	Default_root_class_name: STRING is "APPLICATION"
+	Default_root_class_name: STRING = "APPLICATION"
 
-	Default_root_feature_name: STRING is "make"
+	Default_root_feature_name: STRING = "make"
 
-	Default_root_cluster_name: STRING is "project"
+	Default_root_cluster_name: STRING = "project"
 
-	Invalid_ace_exception: STRING is "Invalid_ace"
+	Invalid_ace_exception: STRING = "Invalid_ace"
 
-	Invalid_directory_exception: STRING is "Invalid_directory"
+	Invalid_directory_exception: STRING = "Invalid_directory"
 
-	Invalid_project_name_exception: STRING is "Invalid_project_name";
+	Invalid_project_name_exception: STRING = "Invalid_project_name";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Parser of file descriptions which allow generation of%
@@ -19,7 +19,7 @@ feature {NONE} -- Formats
 	escape_characters: ARRAY [STRING];
 			-- User-specified escape characters
 
-	read_formats (filename: STRING) is
+	read_formats (filename: STRING)
 			-- Parse `filename' and fill `format_table' with
 			-- the user-specified format.
 		require
@@ -168,7 +168,7 @@ end
 			end
 		end;
 
-	get_next_character is
+	get_next_character
 			-- Go forth one position in the filter file.
 			-- Interprete special characters. Put the
 			-- read character in last_char_read.
@@ -272,7 +272,7 @@ end
 	line_nb: INTEGER;
 			-- Number of the line currently parsed
 
-	syntax_error (message: STRING) is
+	syntax_error (message: STRING)
 			-- Display a warning message.
 		require
 			message_not_void: message /= Void
@@ -302,7 +302,7 @@ invariant
 	escape_characters_not_void:  escape_characters /= Void
 	escape_characters_capacity_valid: escape_characters.capacity > {CHARACTER}.max_value
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

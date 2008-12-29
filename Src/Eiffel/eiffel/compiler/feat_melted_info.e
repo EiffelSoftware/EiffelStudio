@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about external feature recently added to system"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (f: FEATURE_I; associated_class: CLASS_C) is
+	make (f: FEATURE_I; associated_class: CLASS_C)
 			-- Initialization
 		do
 			Precursor {MELTED_INFO} (f, associated_class)
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	enclosing_feature: FEATURE_I
 			-- The feature in which the inline agent (if it is one) is enclosed in
 
-	internal_execution_unit (class_type: CLASS_TYPE): EXECUTION_UNIT is
+	internal_execution_unit (class_type: CLASS_TYPE): EXECUTION_UNIT
 			-- Create new EXECUTION_UNIT corresponding to Current type.
 		do
 			if is_inline_agent then
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			Result.set_type (result_type.adapted_in (class_type).c_type)
 		end
 
-	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I is
+	associated_feature (class_c: CLASS_C; feat_tbl: FEATURE_TABLE): FEATURE_I
 			-- Associated feature
 		local
 			eiffel_class: EIFFEL_CLASS_C
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 invariant
 	valid_enclosing_feature: is_inline_agent implies enclosing_feature /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

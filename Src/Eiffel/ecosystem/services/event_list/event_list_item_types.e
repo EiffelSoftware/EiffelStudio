@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Type identifiers for event list items so code that cannot perform object tests (internal or external)
 		can identify the event list item type.
@@ -25,7 +25,7 @@ feature -- Access
 	testing: NATURAL_8 = 3
 			-- Testing event list item type
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

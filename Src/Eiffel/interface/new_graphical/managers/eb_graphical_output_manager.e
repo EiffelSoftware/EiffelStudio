@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Manager for all output tools. Can be instanciated on the fly."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -75,7 +75,7 @@ inherit
 
 feature -- Basic Operations / Generic purpose
 
-	force_display is
+	force_display
 			-- Make the output tools visible (to ensure the user sees what we print).
 		do
 			from
@@ -90,7 +90,7 @@ feature -- Basic Operations / Generic purpose
 			end
 		end
 
-	scroll_to_end is
+	scroll_to_end
 			-- Make all output tools scroll to the bottom.
 		do
 			from
@@ -103,7 +103,7 @@ feature -- Basic Operations / Generic purpose
 			end
 		end
 
-	clear is
+	clear
 			-- Clear the window.
 		do
 			from
@@ -116,7 +116,7 @@ feature -- Basic Operations / Generic purpose
 			end
 		end
 
-	clear_general is
+	clear_general
 			-- Clear the window.
 		do
 			from
@@ -133,7 +133,7 @@ feature -- Basic Operations / Generic purpose
 
 feature -- Basic Operations / Information message
 
-	display_system_info is
+	display_system_info
 			-- Print information about the current project.
 		local
 			l_error: BOOLEAN
@@ -155,7 +155,7 @@ feature -- Basic Operations / Information message
 			end
 		end
 
-	display_application_status is
+	display_application_status
 			-- Display the status of the application, or "Not running" if
 			-- the application is not running.
 		local
@@ -180,7 +180,7 @@ feature -- Basic Operations / Information message
 
 feature -- Basic Operations / Compiler messages
 
-	start_processing (append: BOOLEAN) is
+	start_processing (append: BOOLEAN)
 			-- Start processing.
 		do
 			from
@@ -193,7 +193,7 @@ feature -- Basic Operations / Compiler messages
 			end
 		end
 
-	end_processing is
+	end_processing
 			-- End processing.
 		do
 			from
@@ -206,13 +206,13 @@ feature -- Basic Operations / Compiler messages
 			end
 		end
 
-	trace_warnings (handler: ERROR_HANDLER) is
+	trace_warnings (handler: ERROR_HANDLER)
 			-- Display warnings messages from `handler'.
 		do
 			--| See {ES_ERROR_DISPLAYER}
 		end
 
-	trace_errors (handler: ERROR_HANDLER) is
+	trace_errors (handler: ERROR_HANDLER)
 			-- Display error messages from `handler'.
 		do
 			--| See {ES_ERROR_DISPLAYER}
@@ -220,20 +220,20 @@ feature -- Basic Operations / Compiler messages
 
 feature -- Element change
 
-	extend (an_output_tool: ES_OUTPUT_TOOL_PANEL) is
+	extend (an_output_tool: ES_OUTPUT_TOOL_PANEL)
 			-- Add this output tool to the list of managed output tools.
 		do
 			managed_output_tools.extend (an_output_tool)
 		end
 
-	prune (an_output_tool: ES_OUTPUT_TOOL_PANEL) is
+	prune (an_output_tool: ES_OUTPUT_TOOL_PANEL)
 			-- Remove this output tool from the list of managed output tools.
 		do
 			managed_output_tools.start
 			managed_output_tools.prune_all (an_output_tool)
 		end
 
-	set_context_group (a_group: like context_group) is
+	set_context_group (a_group: like context_group)
 			-- Set context_group with `a_group'.
 		do
 			Precursor {EB_OUTPUT_MANAGER}(a_group)
@@ -251,25 +251,25 @@ feature -- Element change
 
 feature {NONE} -- Text formatter
 
-	add (s: STRING_GENERAL) is
+	add (s: STRING_GENERAL)
 			-- Add basic text.
 		do
 			process_basic_text (s)
 		end
 
-	add_string (s: STRING_GENERAL) is
+	add_string (s: STRING_GENERAL)
 			-- Add string text.
 		do
 			process_string_text (s, Void)
 		end
 
-	add_new_line is
+	add_new_line
 			-- Add new line.
 		do
 			process_new_line
 		end
 
-	process_basic_text (text: STRING_GENERAL) is
+	process_basic_text (text: STRING_GENERAL)
 			-- Process default basic text `t'.
 		do
 			from
@@ -284,7 +284,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_quoted_text (text: STRING_GENERAL) is
+	process_quoted_text (text: STRING_GENERAL)
 			-- Process the quoted `text' within a comment.
 		do
 			from
@@ -299,7 +299,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL) is
+	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL)
 			-- Process comment text.
 			-- `url' is possible url, which can be void if none.
 		do
@@ -315,7 +315,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN) is
+	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
 			-- Process class name of `a_class'.
 		do
 			from
@@ -330,7 +330,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
 			-- Process cluster name of `a_cluster'.
 		do
 			from
@@ -345,7 +345,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET) is
+	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET)
 			-- Process target name text `text'.
 		do
 			from
@@ -360,7 +360,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C) is
+	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C)
 			-- Process feature name text `text'.
 		do
 			from
@@ -375,7 +375,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN) is
+	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
 			-- Process feature text `text'.
 		do
 			from
@@ -390,7 +390,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN) is
+	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN)
 			-- Process breakpoint index `a_index'.
 		do
 			from
@@ -405,7 +405,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER) is
+	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER)
 			-- Process breakpoint.
 		do
 			from
@@ -420,7 +420,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_padded is
+	process_padded
 			-- Process padded item at start of non breakpoint line.
 		do
 			from
@@ -435,7 +435,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_new_line is
+	process_new_line
 			-- Process new line.
 		do
 			from
@@ -450,7 +450,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_indentation (a_indent_depth: INTEGER) is
+	process_indentation (a_indent_depth: INTEGER)
 			-- Process indentation `t'.
 		do
 			from
@@ -465,7 +465,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_after_class (a_class: CLASS_C) is
+	process_after_class (a_class: CLASS_C)
 			-- Process after class `a_class'.
 		do
 			from
@@ -480,7 +480,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_before_class (a_class: CLASS_C) is
+	process_before_class (a_class: CLASS_C)
 			-- Process before class `a_class'.
 		do
 			from
@@ -495,7 +495,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN) is
+	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN)
 			-- Process filter text `t'.
 		do
 			from
@@ -510,7 +510,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_symbol_text (text: STRING_GENERAL) is
+	process_symbol_text (text: STRING_GENERAL)
 			-- Process symbol text.
 		do
 			from
@@ -525,7 +525,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
+	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process keyword text.
 			-- `a_feature' is possible feature.
 		do
@@ -541,7 +541,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
+	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process operator text.
 			-- `a_feature' can be void.
 		do
@@ -557,7 +557,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C) is
+	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C)
 			-- Process address text.
 		do
 			from
@@ -572,7 +572,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_error_text (text: STRING_GENERAL; a_error: ERROR) is
+	process_error_text (text: STRING_GENERAL; a_error: ERROR)
 			-- Process error text.
 		do
 			from
@@ -587,7 +587,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C) is
+	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
 			-- Process class syntax text.
 		do
 			from
@@ -604,15 +604,15 @@ feature {NONE} -- Text formatter
 
 feature {NONE} -- Implementation / Private attributes
 
-	managed_output_tools: ARRAYED_LIST [ES_OUTPUT_TOOL_PANEL] is
+	managed_output_tools: ARRAYED_LIST [ES_OUTPUT_TOOL_PANEL]
 			-- Managed output tools
-		indexing
+		note
 			once_status: global
 		once
 			create Result.make (10)
 		end
 
-	general_output_tools: ARRAYED_LIST [ES_OUTPUT_TOOL_PANEL] is
+	general_output_tools: ARRAYED_LIST [ES_OUTPUT_TOOL_PANEL]
 			-- General output tool
 		do
 			create Result.make (3)
@@ -627,7 +627,7 @@ feature {NONE} -- Implementation / Private attributes
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

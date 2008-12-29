@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a binary criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_left: like left; a_right: like right) is
+	make (a_left: like left; a_right: like right)
 			-- Initialize `left' with `a_left' and `right' with `a_right'.
 		require
 			a_left_attached: a_left /= Void
@@ -40,7 +40,7 @@ feature -- Criterion
 
 feature -- Setting
 
-	set_left (a_cri: like left) is
+	set_left (a_cri: like left)
 			-- Set `left' with `a_cri'.
 		require
 			a_cri_attached: a_cri /= Void
@@ -50,7 +50,7 @@ feature -- Setting
 			first_set: left = a_cri
 		end
 
-	set_right (a_cri: like right) is
+	set_right (a_cri: like right)
 			-- Set `right' with `a_cri'.
 		require
 			a_cri_attached: a_cri /= Void
@@ -60,7 +60,7 @@ feature -- Setting
 			second_set: right = a_cri
 		end
 
-	set_source_domain (a_domain: like source_domain) is
+	set_source_domain (a_domain: like source_domain)
 			-- Set `source_domain' with `a_domain'.
 		do
 			Precursor (a_domain)
@@ -72,7 +72,7 @@ feature -- Setting
 
 feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Setting
 
-	set_used_in_domain_generator (a_domain_generator: QL_DOMAIN_GENERATOR) is
+	set_used_in_domain_generator (a_domain_generator: QL_DOMAIN_GENERATOR)
 			-- Set `used_in_domain_generator' with
 			-- If `a_domain_generator' is Void, current `used_in_domain_generator' will be removed.
 		do
@@ -86,12 +86,12 @@ feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Setting
 
 feature -- Status report
 
-	is_atomic: BOOLEAN is False
+	is_atomic: BOOLEAN = False
 			-- Is current criterion atomic?
 
 feature -- Process
 
-	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+	process (a_criterion_visitor: QL_CRITERION_VISITOR)
 			-- Process Current using `a_criterion_visitor'.
 		do
 			a_criterion_visitor.process_binary_criterion (Current)
@@ -101,7 +101,7 @@ invariant
 	first_attached: left /= Void
 	second_attached: right /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

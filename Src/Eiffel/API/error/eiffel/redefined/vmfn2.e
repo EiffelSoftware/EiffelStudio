@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for name clash on non-deferred inherited features."
@@ -23,12 +23,12 @@ feature -- Properties
 			-- the same (from the repeated inheritance point of view) or all redefined
 			-- by their parent
 
-	code: STRING is "VMFN";
+	code: STRING = "VMFN";
 			-- Error code
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		local
@@ -69,7 +69,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_features (fs: LINKED_LIST [INHERIT_INFO]) is
+	set_features (fs: LINKED_LIST [INHERIT_INFO])
 			-- Assign `fs' to `features'.
 		require
 			valid_fs: fs /= Void
@@ -105,7 +105,7 @@ feature {COMPILER_EXPORTER}
 			features := features_list
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Mechanism to call an action when a file/pipe is changed.%N%
 				  %GTK Implementation."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create and initialize current to monitor file descriptor `listen_to_pipe_fd'.
 		local
 			l_condition: INTEGER
@@ -42,7 +42,7 @@ feature -- Access
 	action: PROCEDURE [ANY, TUPLE]
 			-- Callback feature called with the file/pipe is changed.
 
-	destroy is
+	destroy
 			-- Clean up `Current'.
 		local
 			l_res: BOOLEAN
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_action (an_action: like action) is
+	set_action (an_action: like action)
 			-- Set `an_action' as callback feature.
 		require
 			an_agent_not_void: an_action /= Void
@@ -76,7 +76,7 @@ feature -- Element change
 			agent_set: action = an_action
 		end
 
-	remove_action is
+	remove_action
 			-- Remove the current action.
 		do
 			action := Void
@@ -86,13 +86,13 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	dispose is
+	dispose
 			-- Clean up `Current'.
 		do
 			destroy
 		end
 
-	on_event (condition: INTEGER) is
+	on_event (condition: INTEGER)
 			-- Call action sequence corresponding to `condition'.
 		local
 			l_call_actions: BOOLEAN
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	add_watch_callback (io_watcher: EB_IO_WATCHER_IMP; handle: INTEGER; condition: INTEGER; connection_id: TYPED_POINTER [NATURAL_32]) is
+	add_watch_callback (io_watcher: EB_IO_WATCHER_IMP; handle: INTEGER; condition: INTEGER; connection_id: TYPED_POINTER [NATURAL_32])
 			-- Set up `on_event' callback for `io_watcher' when an event occurs
 			-- on medium referenced by `handle'.
 		external
@@ -138,7 +138,7 @@ feature {NONE} -- Externals
 			"C signature (EIF_OBJECT, EIF_INTEGER, GIOCondition, gint*) use %"ev_c_util.h%""
 		end
 
-	initialize_c_callback (on_event_address: POINTER) is
+	initialize_c_callback (on_event_address: POINTER)
 			-- Pass `on_event_address' to C side to enable callbacks.
 		external
 			"C inline use %"ev_c_util.h%""
@@ -146,7 +146,7 @@ feature {NONE} -- Externals
 			"eif_on_event = (void (*) (EIF_REFERENCE, EIF_INTEGER)) $on_event_address"
 		end
 
-	file_binary_dopen (fd, how: INTEGER): POINTER is
+	file_binary_dopen (fd, how: INTEGER): POINTER
 			-- File pointer for file of descriptor `fd' in mode `how'
 			-- (which must fit the way `fd' was obtained).
 		external
@@ -155,26 +155,26 @@ feature {NONE} -- Externals
 			"file_binary_dopen"
 		end
 
-	file_close (file: POINTER) is
+	file_close (file: POINTER)
 			-- Close `file'.
 		external
 			"C (FILE *) | %"eif_file.h%""
 		end
 
-	file_fd (file: POINTER): INTEGER is
+	file_fd (file: POINTER): INTEGER
 			-- Operating system's file descriptor
 		external
 			"C (FILE *): EIF_INTEGER | %"eif_file.h%""
 		end
 
-	listen_to_pipe_fd: INTEGER is
+	listen_to_pipe_fd: INTEGER
 		external
 			"C"
 		alias
 			"ewb_pipe_read_fd"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

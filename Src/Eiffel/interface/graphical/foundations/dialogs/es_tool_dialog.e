@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A base dialog implementation for all dialogs resident in EiffelStudio with a tool bar ribbon.
 	]"
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	frozen build_dialog_tool_interface (a_container: EV_VERTICAL_BOX) is
+	frozen build_dialog_tool_interface (a_container: EV_VERTICAL_BOX)
 			-- Builds the dialog's user interface.
 			--
 			-- `a_container': The dialog's container where the user interface elements should be extended
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Clean up
 
-    internal_recycle is
+    internal_recycle
             -- Recycle tool.
         do
             if internal_tool_bar_widget /= Void and internal_tool_bar_widget.item /= Void and then not internal_tool_bar_widget.item.is_destroyed then
@@ -66,7 +66,7 @@ feature {NONE} -- Clean up
             Precursor {ES_DIALOG}
         end
 
-    internal_detach_entities is
+    internal_detach_entities
             -- Detaches objects from their container
         do
             Precursor {ES_DIALOG}
@@ -211,7 +211,7 @@ feature {NONE} -- Internal implementation cache
     internal_right_tool_bar_widget: CELL [like right_tool_bar_widget]
             -- Cached version of `right_tool_bar_widget'
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

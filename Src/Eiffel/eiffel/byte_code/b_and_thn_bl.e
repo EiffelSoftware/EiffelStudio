@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Enlarged byte code for "and then"
@@ -17,13 +17,13 @@ feature
 	register: REGISTRABLE;
 			-- Where result of expression should be stored
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Set `register' to `r'
 		do
 			register := r;
 		end;
 
-	free_register is
+	free_register
 			-- Free register used by expression
 		do
 			if has_call then
@@ -33,7 +33,7 @@ feature
 			end;
 		end;
 
-	print_register is
+	print_register
 			-- Print value of the expression
 		do
 			if has_call then
@@ -43,7 +43,7 @@ feature
 			end;
 		end;
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Propagate register `r' throughout the expression
 		do
 			if has_call then
@@ -60,7 +60,7 @@ feature
 			end;
 		end;
 
-	analyze is
+	analyze
 			-- Analyze expression
 		local
 			l_context: like context
@@ -87,7 +87,7 @@ feature
 			end;
 		end;
 
-	generate is
+	generate
 			-- Generate expression
 		local
 			buf: GENERATION_BUFFER
@@ -122,7 +122,7 @@ feature
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

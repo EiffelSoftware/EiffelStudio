@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cache for storing polymorphic status of call to a certain feature%
 		%with a routine id in the context of a class type id for final mode generation"
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialization
 		do
 			create used.make (system.routine_id_counter.count)
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 
-	poly_table (a_rout_id: INTEGER): POLY_TABLE [ENTRY] is
+	poly_table (a_rout_id: INTEGER): POLY_TABLE [ENTRY]
 			-- Routine table of id `a_rout_id'
 		require
 			a_rout_id_positive: a_rout_id > 0
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Process
 
-	start_degree_minus_3 (count: INTEGER) is
+	start_degree_minus_3 (count: INTEGER)
 			-- Create the data structures which are going to be used at degree -3.
 		do
 			create is_polymorphic_table.make (0, count)
@@ -58,7 +58,7 @@ feature -- Process
 
 feature -- Status
 
-	has_poly_table (a_rout_id: INTEGER): BOOLEAN is
+	has_poly_table (a_rout_id: INTEGER): BOOLEAN
 			-- Do we have an entry for `a_rout_id'?
 		require
 			a_rout_id_positive: a_rout_id > 0
@@ -66,7 +66,7 @@ feature -- Status
 			Result := tmp_poly_server.has (a_rout_id)
 		end
 
-	is_polymorphic (rout_id: INTEGER; class_type: TYPE_A; a_context_type: CLASS_TYPE; used_requested: BOOLEAN): INTEGER is
+	is_polymorphic (rout_id: INTEGER; class_type: TYPE_A; a_context_type: CLASS_TYPE; used_requested: BOOLEAN): INTEGER
 			-- If the entry <`rout_id',`class_type'> is polymorphic, we return
 			-- `min_used' if `used_requested', `min_type_id' otherwise.
 			-- If the entry is not polymorphic we return `-1'.
@@ -180,7 +180,7 @@ feature -- Status
 
 feature -- Element change
 
-	mark_used (rout_id: INTEGER) is
+	mark_used (rout_id: INTEGER)
 			-- Mark routine table of routine id `rout_id' used.
 		require
 			rout_id_not_void: rout_id /= 0
@@ -189,7 +189,7 @@ feature -- Element change
 			used_for_routines.put (True, rout_id)
 		end
 
-	mark_used_for_type (rout_id: INTEGER) is
+	mark_used_for_type (rout_id: INTEGER)
 			-- Mark routine table of routine id `rout_id' used for type description.
 		require
 			rout_id_not_void: rout_id /= 0
@@ -198,7 +198,7 @@ feature -- Element change
 			used_for_types.put (True, rout_id)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Wipe out the structure
 		do
 			min_id_table := Void
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			-- Array of INTEGER which contains for each
 			-- Poly_table its `min_type_id' and `min_used_id'.
 
-	put_value (bool_array: PACKED_BOOLEANS; index: INTEGER; status: BOOLEAN) is
+	put_value (bool_array: PACKED_BOOLEANS; index: INTEGER; status: BOOLEAN)
 			-- Mark feature call to routine represented by `bool_array' with
 			-- `status' polymorphic for `index'.
 		require
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 				get_value (bool_array, index) = is_feature_not_polymorphic
 		end
 
-	get_value (bool_array: PACKED_BOOLEANS; index: INTEGER): INTEGER is
+	get_value (bool_array: PACKED_BOOLEANS; index: INTEGER): INTEGER
 			-- Is feature call to routine represented by `bool_array' polymorphic
 			-- for `index'?
 		require
@@ -275,11 +275,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	is_feature_polymorphic: INTEGER is 3
-	is_feature_not_polymorphic: INTEGER is 2
-	is_feature_not_yet_computed: INTEGER is -1
+	is_feature_polymorphic: INTEGER = 3
+	is_feature_not_polymorphic: INTEGER = 2
+	is_feature_not_yet_computed: INTEGER = -1
 
-	default_size: INTEGER is 200
+	default_size: INTEGER = 200
 			-- Cache size
 
 invariant
@@ -287,7 +287,7 @@ invariant
 	used_for_routines_not_void: used_for_routines /= Void
 	used_for_types_not_void: used_for_types /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

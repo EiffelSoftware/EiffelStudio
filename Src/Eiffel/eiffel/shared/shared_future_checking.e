@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that store all the needed information for the report of generic%N%
 			%constraint validity errors when there are some. It also handles the checking%N%
 			%that cannot be done before degree 3"
@@ -13,7 +13,7 @@ class
 
 feature -- Delayed validity checking
 
-	remaining_validity_checking_list: LINKED_LIST [FUTURE_CHECKING_INFO] is
+	remaining_validity_checking_list: LINKED_LIST [FUTURE_CHECKING_INFO]
 			-- List of the remaining checks that need to be done after
 			-- the degree 4 of the compilation.
 		do
@@ -22,7 +22,7 @@ feature -- Delayed validity checking
 			remaining_validity_checking_list_not_void: Result /= Void
 		end
 
-	add_future_checking (context_class: CLASS_C; p: PROCEDURE [ANY, TUPLE]) is
+	add_future_checking (context_class: CLASS_C; p: PROCEDURE [ANY, TUPLE])
 				-- Gather all information which will enable to check that
 				-- all the declaration of generic classes conforms to the
 				-- generic creation constraint of the generic class.
@@ -111,7 +111,7 @@ feature -- Delayed validity checking
 
 feature {NONE} -- Shared object implementation
 
-	remaining_validity_checking_list_cell: CELL [LINKED_LIST [FUTURE_CHECKING_INFO]] is
+	remaining_validity_checking_list_cell: CELL [LINKED_LIST [FUTURE_CHECKING_INFO]]
 			-- Shared object which contains the `remaining_validity_checking_list'.
 		local
 			t: like remaining_validity_checking_list
@@ -137,7 +137,7 @@ feature {NONE} -- Shared object implementation
 			Result := temp_remaining_validity_checking_list_cell.item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

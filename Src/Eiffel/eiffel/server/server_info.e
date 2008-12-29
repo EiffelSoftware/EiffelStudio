@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about the location of an object in a file%
 				%of the EIFGEN/COMP directory."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ feature
 	file_id: INTEGER;
 			-- Id of the file where associated item is stored
 
-	make (p: INTEGER; i: INTEGER) is
+	make (p: INTEGER; i: INTEGER)
 			-- Initialization
 		require
 			good_position: p >= 0;
@@ -29,7 +29,7 @@ feature
 			file_id := i
 		end;
 
-	trace is
+	trace
 		do
 			io.error.put_string ("SERVER_INFO%Nposition: ");
 			io.error.put_integer (position);
@@ -38,7 +38,7 @@ feature
 			io.error.put_new_line;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

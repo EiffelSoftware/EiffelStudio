@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a row to display a metric in metric import grid"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Implementation
 
-	make (a_metric: like metric) is
+	make (a_metric: like metric)
 			-- Initialize `metric' with `a_metric'.
 		require
 			a_metric_attached: a_metric /= Void
@@ -45,7 +45,7 @@ feature{NONE} -- Implementation
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Current name of `metric'.
 			-- Can be different from `metric'.`name' because new name can be specified to resolve name crash.
 		do
@@ -55,7 +55,7 @@ feature -- Access
 	metric: EB_METRIC
 			-- Metric associated with Current row
 
-	unit: QL_METRIC_UNIT is
+	unit: QL_METRIC_UNIT
 			-- Unit of `metric'
 		do
 			Result := metric.unit
@@ -66,7 +66,7 @@ feature -- Access
 	original_name: STRING
 			-- Original name in `metric'
 
-	description: STRING is
+	description: STRING
 			-- Description of `metric'.
 		do
 			Result := metric.description
@@ -77,7 +77,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	metric_icon: EV_PIXMAP is
+	metric_icon: EV_PIXMAP
 			-- Pixmap used to diplay `metric' according to its type: basic, linear or ratio
 		do
 			Result := pixmap_from_metric (metric)
@@ -97,7 +97,7 @@ feature -- Access
 	name_change_actions: ACTION_SEQUENCE [TUPLE [old_name: STRING; row: EB_METRIC_IMPORT_GRID_ROW]]
 			-- Actions to be performed when text in `name_editable_area' changes
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		local
 			l_name: STRING
@@ -116,7 +116,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_name_crash: BOOLEAN is
+	has_name_crash: BOOLEAN
 			-- Does name crash occur under `name'?
 			-- e.g., is there another metric whose name is `name' already in Current project?
 		require
@@ -127,7 +127,7 @@ feature -- Status report
 			good_result: Result = has_name_crash_internal
 		end
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is `metric' in Current row selected to be imported?
 		do
 			Result := import_checkbox.is_checked
@@ -139,7 +139,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_name_editable_area_text (a_text: STRING) is
+	set_name_editable_area_text (a_text: STRING)
 			-- Set text of `name_editable_area_text' to `a_text'.
 		require
 			a_text_attached: a_text /= Void
@@ -151,7 +151,7 @@ feature -- Setting
 
 feature -- Grid binding
 
-	bind_row (a_row: EV_GRID_ROW; a_existing_metric_exist: BOOLEAN; a_missing_metrics_name: LIST [STRING]; a_unselected_metrics_name: LIST [STRING]) is
+	bind_row (a_row: EV_GRID_ROW; a_existing_metric_exist: BOOLEAN; a_missing_metrics_name: LIST [STRING]; a_unselected_metrics_name: LIST [STRING])
 			-- Bind Current in `a_row'.
 			-- If `a_existing_metric_exist' is True, that is, name crash occurs, `a_row' will be in invalid state.
 			-- `a_missing_metrics_name' is a list of metric names which are referenced by `metric' but not found.
@@ -186,7 +186,7 @@ feature{NONE} -- Implementation
 	old_name: STRING
 			-- Name before `name_editable_area' is activated
 
-	status_item (a_name_crash: BOOLEAN; a_missing_metrics_name: LIST [STRING]; a_unselected_metrics_name: LIST [STRING]): EV_GRID_ITEM is
+	status_item (a_name_crash: BOOLEAN; a_missing_metrics_name: LIST [STRING]; a_unselected_metrics_name: LIST [STRING]): EV_GRID_ITEM
 			-- Status item to be binded in to current row.
 			-- `a_name_crash' indicates if name crash exists.
 			-- `a_missing_metrics_name' is a list of metric names which are referenced by `metric' but not found.
@@ -225,7 +225,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	origianl_metric_name_item: EV_GRID_ITEM is
+	origianl_metric_name_item: EV_GRID_ITEM
 			-- Origianal metric name item
 		local
 			l_str_list: LINKED_LIST [STRING_GENERAL]
@@ -247,7 +247,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	expression_of_metric: STRING_GENERAL is
+	expression_of_metric: STRING_GENERAL
 			-- Expression of `metric'
 			-- For example, if `metric' is linear, expression would like "Expression: 2 * metric1 + 3 * metric2".
 		require
@@ -267,7 +267,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	expression_generator: EB_METRIC_EXPRESSION_GENERATOR is
+	expression_generator: EB_METRIC_EXPRESSION_GENERATOR
 			--  Expression generator		
 		do
 			if expression_generator_internal = Void then
@@ -278,7 +278,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	rich_text_output: EB_METRIC_EXPRESSION_RICH_TEXT_OUTPUT is
+	rich_text_output: EB_METRIC_EXPRESSION_RICH_TEXT_OUTPUT
 			-- Output from `expression_generator' in rich text format
 		do
 			if rich_text_output_internal = Void then
@@ -291,7 +291,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Actions
 
-	on_selection_change (a_checkbox: EV_GRID_CHECKABLE_LABEL_ITEM) is
+	on_selection_change (a_checkbox: EV_GRID_CHECKABLE_LABEL_ITEM)
 			-- Action to be performed when selection status in `import_checkbox' changes
 		require
 			a_checkbox_attached: a_checkbox /= Void
@@ -301,7 +301,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_name_editable_area_activated	(a_popup_window: EV_POPUP_WINDOW) is
+	on_name_editable_area_activated	(a_popup_window: EV_POPUP_WINDOW)
 			-- Action to be performed when `name_editable_area' is activated
 		do
 			old_name := name_editable_area.text.twin
@@ -310,7 +310,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_name_editable_area_deactivated is
+	on_name_editable_area_deactivated
 			-- Action to be performed when `name_editable_area' is deactivated
 		do
 			if not name_editable_area.text.is_case_insensitive_equal (old_name) then
@@ -331,7 +331,7 @@ invariant
 	import_checkbox_attached: import_checkbox /= Void
 	name_change_actions_attached: name_change_actions /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

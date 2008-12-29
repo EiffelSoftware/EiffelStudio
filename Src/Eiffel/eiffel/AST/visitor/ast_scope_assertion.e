@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Detector of local scopes for assertion (postcondition or check instruction)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ feature {AST_EIFFEL} -- Visitor pattern
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

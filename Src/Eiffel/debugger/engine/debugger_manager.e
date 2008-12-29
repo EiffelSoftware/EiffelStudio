@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a debugger"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			can_debug := True
 			set_default_parameters
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 	is_initialized: BOOLEAN
 			-- Is fully initialized ?
 
-	initialize is
+	initialize
 		do
 			if not is_initialized then
 				is_initialized := True
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	initialize_storage is
+	initialize_storage
 			-- Initialize `dbg_storage'
 		require
 			dbg_storage_not_attached: dbg_storage = Void
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			dbg_storage_attached: dbg_storage /= Void
 		end
 
-	set_default_parameters is
+	set_default_parameters
 			-- Set hard coded default parameters values
 		do
 			set_slices (0, 50)
@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 
 feature -- Registering
 
-	register is
+	register
 			-- Register Current, and the shared debugger manager
 		do
 			(create {SHARED_DEBUGGER_MANAGER}).set_debugger_manager (Current)
@@ -90,7 +90,7 @@ feature -- Registering
 
 feature -- Application execution
 
-	create_application is
+	create_application
 			-- Create a debugger session (aka Application Execution)
 		local
 			app: APPLICATION_EXECUTION
@@ -110,7 +110,7 @@ feature -- Application execution
 			end
 		end
 
-	init_application is
+	init_application
 			-- Initialize application environment
 		require
 			application_not_void: application /= Void
@@ -122,7 +122,7 @@ feature -- Application execution
 			end
 		end
 
-	destroy_application is
+	destroy_application
 		do
 			if application_initialized then
 				application.recycle
@@ -134,7 +134,7 @@ feature -- Application execution
 			set_shared_application (Void)
 		end
 
-	set_shared_application (app: like application) is
+	set_shared_application (app: like application)
 		do
 			application := app
 			application_initialized := app /= Void
@@ -155,7 +155,7 @@ feature -- Application execution
 	dbg_storage: DEBUGGER_STORAGE
 			-- Debugger's storage engine
 
-	is_debugging: BOOLEAN is
+	is_debugging: BOOLEAN
 			-- Is debugger currently debugging ?
 		do
 			Result := application_launching_in_progress or application_initialized
@@ -163,7 +163,7 @@ feature -- Application execution
 
 feature -- Output helpers
 
-	debugger_message (m: STRING_GENERAL) is
+	debugger_message (m: STRING_GENERAL)
 			-- Display debugger message `m'
 		require
 			m_not_void: m /= Void
@@ -172,14 +172,14 @@ feature -- Output helpers
 			debugger_status_message (m)
 		end
 
-	debugger_output_message (m: STRING_GENERAL) is
+	debugger_output_message (m: STRING_GENERAL)
 			-- Display debugger message `m' on the output
 		require
 			m_not_void: m /= Void
 		do
 		end
 
-	debugger_warning_message (m: STRING_GENERAL) is
+	debugger_warning_message (m: STRING_GENERAL)
 			-- Display debugger warning message `m'
 		require
 			m_not_void: m /= Void
@@ -187,7 +187,7 @@ feature -- Output helpers
 			debugger_output_message (m)
 		end
 
-	debugger_error_message (m: STRING_GENERAL) is
+	debugger_error_message (m: STRING_GENERAL)
 			-- Display debugger error message `m'
 		require
 			m_not_void: m /= Void
@@ -195,31 +195,31 @@ feature -- Output helpers
 			debugger_output_message (m)
 		end
 
-	debugger_status_message (m: STRING_GENERAL) is
+	debugger_status_message (m: STRING_GENERAL)
 			-- Display debugger message `m' on the status output
 		require
 			m_not_void: m /= Void
 		do
 		end
 
-	display_application_status is
+	display_application_status
 			-- Display application status info
 		do
 		end
 
-	display_system_info	is
+	display_system_info
 			-- Display system info
 		do
 		end
 
-	display_debugger_info (param: DEBUGGER_EXECUTION_PARAMETERS) is
+	display_debugger_info (param: DEBUGGER_EXECUTION_PARAMETERS)
 			-- Display execution parameters information	
 		do
 		end
 
 feature -- Change
 
-	reset_dbg_evaluator is
+	reset_dbg_evaluator
 			-- Reset `dbg_evaluator'
 		do
 			if dbg_evaluator /= Void then
@@ -227,7 +227,7 @@ feature -- Change
 			end
 		end
 
-	set_error_message (s: STRING) is
+	set_error_message (s: STRING)
 		require
 			s /= Void
 		do
@@ -235,7 +235,7 @@ feature -- Change
 
 feature -- Debugger data change		
 
-	load_all_debugger_data is
+	load_all_debugger_data
 			-- Load debug information
 		local
 			rescued: BOOLEAN
@@ -254,7 +254,7 @@ feature -- Debugger data change
 			retry
 		end
 
-	load_breakpoints_data is
+	load_breakpoints_data
 			-- Load breakpoints data
 		local
 			bplst: BREAK_LIST
@@ -290,7 +290,7 @@ feature -- Debugger data change
 			retry
 		end
 
-	load_exceptions_handler_data is
+	load_exceptions_handler_data
 			-- Load exceptions_handler data
 		local
 			loading_rescued: BOOLEAN
@@ -305,7 +305,7 @@ feature -- Debugger data change
 			retry
 		end
 
-	load_profiles_data is
+	load_profiles_data
 			-- Load profiles
 		local
 			prof: like profiles
@@ -326,7 +326,7 @@ feature -- Debugger data change
 			retry
 		end
 
-	save_all_debugger_data is
+	save_all_debugger_data
 			-- Save debug informations into the file `raw_filename'.
 		do
 			save_profiles_data
@@ -334,7 +334,7 @@ feature -- Debugger data change
 			save_exceptions_handler_data
 		end
 
-	save_breakpoints_data is
+	save_breakpoints_data
 			-- Save breakpoints and exceptions_handler data
 		local
 			retried: BOOLEAN
@@ -369,7 +369,7 @@ feature -- Debugger data change
 			retry
 		end
 
-	save_exceptions_handler_data is
+	save_exceptions_handler_data
 			-- Save exceptions_handler data
 		local
 			retried: BOOLEAN
@@ -384,7 +384,7 @@ feature -- Debugger data change
 			retry
 		end
 
-	save_profiles_data is
+	save_profiles_data
 			-- Save profiles
 		local
 			retried: BOOLEAN
@@ -399,7 +399,7 @@ feature -- Debugger data change
 			retry
 		end
 
-	restore_debugger_data is
+	restore_debugger_data
 			-- Restore debugger data
 		do
 			breakpoints_manager.restore
@@ -410,7 +410,7 @@ feature -- Breakpoints management
 	breakpoints_manager: BREAKPOINTS_MANAGER
 			-- Breakpoints manager.
 
-	process_breakpoint (bp: BREAKPOINT): BOOLEAN is
+	process_breakpoint (bp: BREAKPOINT): BOOLEAN
 			-- Process `bp'
 			-- and return True in `a_stopped_execution' if application has to stop.
 		require
@@ -462,7 +462,7 @@ feature -- Breakpoints management
 			Result := bp_reached and not bp_continue
 		end
 
-	computed_breakpoint_message (bp: BREAKPOINT; a_msg: STRING): STRING is
+	computed_breakpoint_message (bp: BREAKPOINT; a_msg: STRING): STRING
 			-- Computed message from breakpoint message `bp.message'.
 		require
 			bp_not_void: bp /= Void
@@ -586,7 +586,7 @@ feature -- Breakpoints management
 			retry
 		end
 
-	clear_breakpoints is
+	clear_breakpoints
 		do
 			if application_is_executing then
 					-- Need to individually remove the breakpoints
@@ -601,7 +601,7 @@ feature -- Breakpoints management
 
 feature {NONE} -- Breakpoints events
 
-	on_breakpoints_change_event is
+	on_breakpoints_change_event
 			-- <Precursor>	
 		do
 				--| For now, let's notify as new breakpoint event
@@ -609,7 +609,7 @@ feature {NONE} -- Breakpoints events
 			on_breakpoints_creation_or_removal_event
 		end
 
-	on_breakpoints_creation_or_removal_event is
+	on_breakpoints_creation_or_removal_event
 			-- <Precursor>
 		do
 			if application_is_executing and then not application_is_stopped then
@@ -638,7 +638,7 @@ feature -- Properties
 
 feature -- Access
 
-	current_execution_parameters: DEBUGGER_EXECUTION_PARAMETERS is
+	current_execution_parameters: DEBUGGER_EXECUTION_PARAMETERS
 			-- Current resolved execution parameters
 		local
 			t: TUPLE [title: STRING_32; params: DEBUGGER_EXECUTION_PARAMETERS]
@@ -653,7 +653,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	resolved_execution_parameters (params: DEBUGGER_EXECUTION_PARAMETERS): DEBUGGER_EXECUTION_PARAMETERS is
+	resolved_execution_parameters (params: DEBUGGER_EXECUTION_PARAMETERS): DEBUGGER_EXECUTION_PARAMETERS
 			-- Resolved execution parameters from `params'
 			-- i.e: check the validity of parameters, and either correct them, of fill with default values.
 		local
@@ -712,12 +712,12 @@ feature -- Status
 	can_debug: BOOLEAN
 			-- Is debugging allowed?
 
-	system_defined: BOOLEAN is
+	system_defined: BOOLEAN
 		do
 			Result := Eiffel_project.system_defined
 		end
 
-	is_classic_project: BOOLEAN is
+	is_classic_project: BOOLEAN
 			-- Is this project a classic system ?
 		require
 			system_defined: Eiffel_project.system_defined
@@ -725,7 +725,7 @@ feature -- Status
 			Result := not is_dotnet_project
 		end
 
-	is_dotnet_project: BOOLEAN is
+	is_dotnet_project: BOOLEAN
 			-- Is this project a dotnet system ?
 		require
 			system_defined: Eiffel_project.system_defined
@@ -805,7 +805,7 @@ feature -- Parameters
 
 feature -- Exception handling
 
-	process_exception: BOOLEAN is
+	process_exception: BOOLEAN
 			-- Exception catched ?
 		require
 			application_is_executing and then application_status.exception_occurred
@@ -825,7 +825,7 @@ feature -- Exception handling
 			end
 		end
 
-	exceptions_handler: DBG_EXCEPTION_HANDLER is
+	exceptions_handler: DBG_EXCEPTION_HANDLER
 			-- Exception handler used during debugging.
 		do
 			Result := internal_exceptions_handler
@@ -847,7 +847,7 @@ feature -- Events/Timers helpers
 	events_handler: DEBUGGER_EVENTS_HANDLER
 			-- Events handler to process debugger's timers.
 
-	set_events_handler (e: like events_handler) is
+	set_events_handler (e: like events_handler)
 			-- Set `events_handler'
 		do
 			if events_handler /= Void and then events_handler /= e then
@@ -858,7 +858,7 @@ feature -- Events/Timers helpers
 			events_handler = e
 		end
 
-	windows_handle: POINTER is
+	windows_handle: POINTER
 		require
 			is_windows_platform: (create {PLATFORM}).is_windows
 			events_handler_not_void: events_handler /= Void
@@ -866,21 +866,21 @@ feature -- Events/Timers helpers
 			Result := events_handler.timer_win32_handle
 		end
 
-	new_timer: DEBUGGER_TIMER is
+	new_timer: DEBUGGER_TIMER
 		require
 			events_handler_not_void: events_handler /= Void
 		do
 			Result := events_handler.new_timer
 		end
 
-	add_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+	add_idle_action (v: PROCEDURE [ANY, TUPLE])
 		require
 			events_handler_not_void: events_handler /= Void
 		do
 			events_handler.add_idle_action (v)
 		end
 
-	remove_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+	remove_idle_action (v: PROCEDURE [ANY, TUPLE])
 		require
 			events_handler_not_void: events_handler /= Void
 		do
@@ -889,14 +889,14 @@ feature -- Events/Timers helpers
 
 feature {DEBUGGER_OBSERVER} -- Observer implementation
 
-	add_observer (o: DEBUGGER_OBSERVER) is
+	add_observer (o: DEBUGGER_OBSERVER)
 		do
 			observers.force (o)
 		ensure
 			o_is_attached: o.is_attached_to (Current)
 		end
 
-	remove_observer (o: DEBUGGER_OBSERVER) is
+	remove_observer (o: DEBUGGER_OBSERVER)
 		require
 			o_is_attached: o.is_attached_to (Current)
 		do
@@ -910,34 +910,34 @@ feature {DEBUGGER_MANAGER} -- Observer implementation
 
 feature -- Settings
 
-	classic_debugger_timeout: INTEGER is
+	classic_debugger_timeout: INTEGER
 			-- Timeout use in IPC protocol between ewb and ecdbgd and application
 			-- if zero use the default value set in runtime
 		do
 			Result := 0 --| Use default settings in runtime
 		end
 
-	classic_debugger_location: STRING is
+	classic_debugger_location: STRING
 			-- Path to ecdbgd executable
 			-- If Void use the default executable located in ISE_EIFFEL ... bin
 		do
 			Result := Void --| Use default settings in runtime
 		end
 
-	classic_close_dbg_daemon_on_end_of_debugging: BOOLEAN is
+	classic_close_dbg_daemon_on_end_of_debugging: BOOLEAN
 			-- Close ecdbgd process after each end of debugging ?
 			-- or keep the same process alive ?
 		do
 			Result := True --| Default behavior for general debugging use
 		end
 
-	confirm_ignore_all_breakpoints_preference_string: STRING is
+	confirm_ignore_all_breakpoints_preference_string: STRING
 			-- Preference string for discardable promt related to ignore all breakpoints command
 		do
 			Result := Void
 		end
 
-	dotnet_keep_stepping_info_non_eiffel_feature: BOOLEAN is
+	dotnet_keep_stepping_info_non_eiffel_feature: BOOLEAN
 			-- Keep stepping into feature including non Eiffel feature (useful to step into agent call) ?
 			-- turning this on will have impact on debugging performance (since most of the time,
 			-- we don't want to step into non eiffel feature)
@@ -945,13 +945,13 @@ feature -- Settings
 			Result := False
 		end
 
-	dotnet_debugger_entries: ARRAY [STRING] is
+	dotnet_debugger_entries: ARRAY [STRING]
 			-- Which dotnet debugger is used?
 		do
 			Result := <<>>
 		end
 
-	is_true_boolean_value (a_string: STRING): BOOLEAN is
+	is_true_boolean_value (a_string: STRING): BOOLEAN
 			-- Boolean preferences associated to `a_string'
 		do
 			Result := False
@@ -959,46 +959,46 @@ feature -- Settings
 
 feature -- Access
 
-	application_status: APPLICATION_STATUS is
+	application_status: APPLICATION_STATUS
 		do
 			if application /= Void then
 				Result := application.status
 			end
 		end
 
-	safe_application_is_stopped: BOOLEAN is
+	safe_application_is_stopped: BOOLEAN
 			-- Is application stopped during execution ?
 		do
 			Result := application_is_executing and then application_is_stopped
 		end
 
-	application_is_executing: BOOLEAN is
+	application_is_executing: BOOLEAN
 		do
 			Result := application_initialized and then application.is_running
 		end
 
-	application_is_stopped: BOOLEAN is
+	application_is_stopped: BOOLEAN
 		require
 			application_is_executing
 		do
 			Result := application.is_stopped
 		end
 
-	application_active_thread_id: like application_current_thread_id is
+	application_active_thread_id: like application_current_thread_id
 		require
 			application_is_executing: application_is_executing
 		do
 			Result := application_status.active_thread_id
 		end
 
-	application_current_thread_id: POINTER is
+	application_current_thread_id: POINTER
 		require
 			application_is_executing: application_is_executing
 		do
 			Result := application_status.current_thread_id
 		end
 
-	environment_variables_table: HASH_TABLE [STRING_32, STRING_32] is
+	environment_variables_table: HASH_TABLE [STRING_32, STRING_32]
 			-- Table of environment variables
 		local
 			l_envs: HASH_TABLE [STRING_GENERAL, STRING_GENERAL]
@@ -1017,7 +1017,7 @@ feature -- Access
 			Result_attached: Result /= Void
 		end
 
-	sorted_comparable_string32_keys_from (env: like environment_variables_table): DS_LIST [STRING_32] is
+	sorted_comparable_string32_keys_from (env: like environment_variables_table): DS_LIST [STRING_32]
 		local
 			k: STRING_32
 			l_comp: KL_COMPARABLE_COMPARATOR [STRING_32]
@@ -1044,7 +1044,7 @@ feature -- Access
 
 feature -- Expression evaluation
 
-	expression_evaluation (a_expr: STRING): DUMP_VALUE is
+	expression_evaluation (a_expr: STRING): DUMP_VALUE
 			-- Expression evaluation's result for `a_expr' in current context
 			-- (note: Result = Void implies an error occurred)
 		require
@@ -1068,7 +1068,7 @@ feature -- Expression evaluation
 
 feature -- Helpers
 
-	current_debugging_feature_as: FEATURE_AS is
+	current_debugging_feature_as: FEATURE_AS
 			-- Debugging feature.
 		local
 			f: E_FEATURE
@@ -1079,7 +1079,7 @@ feature -- Helpers
 			end
 		end
 
-	current_debugging_breakable_index: INTEGER is
+	current_debugging_breakable_index: INTEGER
 			-- Debugging feature.
 		do
 			if safe_application_is_stopped and then not application.current_call_stack_is_empty then
@@ -1087,7 +1087,7 @@ feature -- Helpers
 			end
 		end
 
-	current_debugging_feature: E_FEATURE is
+	current_debugging_feature: E_FEATURE
 			-- Debugging feature.
 		local
 			ecse: EIFFEL_CALL_STACK_ELEMENT
@@ -1100,7 +1100,7 @@ feature -- Helpers
 			end
 		end
 
-	current_debugging_class_c: CLASS_C is
+	current_debugging_class_c: CLASS_C
 			-- Debugging feature.
 		local
 			ecse: EIFFEL_CALL_STACK_ELEMENT
@@ -1119,7 +1119,7 @@ feature -- Bridge to compiler data
 
 feature {NONE} -- Bridge to compiler data implementation
 
-	compute_class_c_data is
+	compute_class_c_data
 		require
 			defined: Eiffel_project.system_defined
 			compiler_data_void: compiler_data = Void
@@ -1129,7 +1129,7 @@ feature {NONE} -- Bridge to compiler data implementation
 			compiler_data_not_void: compiler_data /= Void
 		end
 
-	reset_class_c_data is
+	reset_class_c_data
 		do
 			compiler_data := Void
 		ensure
@@ -1138,7 +1138,7 @@ feature {NONE} -- Bridge to compiler data implementation
 
 feature -- Change
 
-	update_rt_extension_available is
+	update_rt_extension_available
 			-- Update value of `rt_extension_available'
 		do
 				--| Check if RT_EXTENSION is available
@@ -1147,7 +1147,7 @@ feature -- Change
 							cl_i.is_compiled
 		end
 
-	change_current_thread_id (tid: like application_current_thread_id) is
+	change_current_thread_id (tid: like application_current_thread_id)
 			-- Set Current thread id to `tid'
 		local
 			s: APPLICATION_STATUS
@@ -1160,14 +1160,14 @@ feature -- Change
 			end
 		end
 
-	set_slices (i,j: INTEGER) is
+	set_slices (i,j: INTEGER)
 			-- set minimum and maximum slices
 		do
 			min_slice := i
 			max_slice := j
 		end
 
-	set_displayed_string_size (i: like displayed_string_size) is
+	set_displayed_string_size (i: like displayed_string_size)
 			-- Set `displayed_string_size' to `i'.
 		require
 			positive_i_or_all_string: i > 0 or i = -1
@@ -1177,7 +1177,7 @@ feature -- Change
 			set: displayed_string_size = i
 		end
 
-	set_interrupt_number (a_nbr: like interrupt_number) is
+	set_interrupt_number (a_nbr: like interrupt_number)
 			-- Set `interrupt_number' to `a_nbr'.
 		require
 			non_negative_nbr: a_nbr >= 0
@@ -1187,7 +1187,7 @@ feature -- Change
 			set: interrupt_number = a_nbr
 		end
 
-	set_critical_stack_depth (d: INTEGER) is
+	set_critical_stack_depth (d: INTEGER)
 			-- Call stack depth at which we warn the user against a possible stack overflow.
 			-- -1 never warns the user.
 		require
@@ -1199,7 +1199,7 @@ feature -- Change
 			end
 		end
 
-	set_maximum_stack_depth (nb: INTEGER) is
+	set_maximum_stack_depth (nb: INTEGER)
 			-- Set the maximum number of stack elements to be displayed to `nb'.
 		require
 			valid_nb: nb = -1 or nb > 0
@@ -1207,7 +1207,7 @@ feature -- Change
 			maximum_stack_depth := nb
 		end
 
-	set_max_evaluation_duration (v: like max_evaluation_duration) is
+	set_max_evaluation_duration (v: like max_evaluation_duration)
 			-- Set `max_evaluation_duration' with `v'.
 		do
 			max_evaluation_duration := v
@@ -1215,7 +1215,7 @@ feature -- Change
 			max_evaluation_duration_set: max_evaluation_duration = v
 		end
 
-	enable_debug is
+	enable_debug
 			-- Allow debugging.
 		do
 			can_debug := True
@@ -1223,7 +1223,7 @@ feature -- Change
 			can_debug
 		end
 
-	disable_debug is
+	disable_debug
 			-- Disallow debugging.
 		do
 			can_debug := False
@@ -1233,19 +1233,19 @@ feature -- Change
 
 feature -- Application change
 
-	do_not_stop_at_breakpoints is
+	do_not_stop_at_breakpoints
 			-- Ignore breakpoints
 		do
 			set_execution_ignoring_breakpoints (True)
 		end
 
-	stop_at_breakpoints is
+	stop_at_breakpoints
 			-- Stop at breakpoints
 		do
 			set_execution_ignoring_breakpoints (False)
 		end
 
-	set_execution_ignoring_breakpoints (b: like execution_ignoring_breakpoints) is
+	set_execution_ignoring_breakpoints (b: like execution_ignoring_breakpoints)
 			-- Set `execution_ignoring_breakpoints'
 		do
 			if execution_ignoring_breakpoints /= b then
@@ -1263,7 +1263,7 @@ feature -- Application change
 			end
 		end
 
-	activate_execution_replay_recording (b: BOOLEAN) is
+	activate_execution_replay_recording (b: BOOLEAN)
 			-- Activate or Deactivate execution replay recording
 		local
 			r: BOOLEAN
@@ -1281,19 +1281,19 @@ feature -- Application change
 			end
 		end
 
-	set_catcall_detection_in_console (b: BOOLEAN) is
+	set_catcall_detection_in_console (b: BOOLEAN)
 			-- set catcall detection mode in console
 		do
 			set_catcall_detection_mode (b, not exceptions_handler.catcall_debugger_warning_disabled)
 		end
 
-	set_catcall_detection_in_debugger (b: BOOLEAN) is
+	set_catcall_detection_in_debugger (b: BOOLEAN)
 			-- set catcall detection mode in debugger
 		do
 			set_catcall_detection_mode (not exceptions_handler.catcall_console_warning_disabled, b)
 		end
 
-	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN) is
+	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN)
 		do
 			if {exc_hld: like exceptions_handler} exceptions_handler then
 				if exc_hld.catcall_console_warning_disabled /= not a_console then
@@ -1309,7 +1309,7 @@ feature -- Application change
 			end
 		end
 
-	safe_update_catcall_detection_mode is
+	safe_update_catcall_detection_mode
 			-- Update catcall detection mode
 		require
 			application_initialized: application_initialized
@@ -1327,7 +1327,7 @@ feature -- Application change
 			end
 		end
 
-	update_catcall_detection_mode is
+	update_catcall_detection_mode
 			-- pdate catcall detection mode
 		require
 			safe_application_is_stopped: safe_application_is_stopped
@@ -1337,7 +1337,7 @@ feature -- Application change
 			end
 		end
 
-	disable_assertion_checking is
+	disable_assertion_checking
 			-- Disable assertion checking
 		require
 			safe_application_is_stopped: safe_application_is_stopped
@@ -1357,7 +1357,7 @@ feature -- Application change
 			debugger_status_message (s)
 		end
 
-	restore_assertion_checking is
+	restore_assertion_checking
 			-- Enable assertion checking	
 		require
 			safe_application_is_stopped: safe_application_is_stopped
@@ -1380,7 +1380,7 @@ feature -- Application change
 
 feature -- Compilation events
 
-	on_project_recompiled (is_successful: BOOLEAN) is
+	on_project_recompiled (is_successful: BOOLEAN)
 		do
 			if is_successful then
 				if
@@ -1402,7 +1402,7 @@ feature -- Debugging events
 			-- Debugging operation id, to dentify the current status
 			--| Note: might need to move this to APPLICATION_* classes
 
-	incremente_debugging_operation_id is
+	incremente_debugging_operation_id
 		do
 			if debugging_operation_id < {NATURAL_32}.max_value then
 				debugging_operation_id := debugging_operation_id + 1
@@ -1411,7 +1411,7 @@ feature -- Debugging events
 			end
 		end
 
-	on_application_before_launching is
+	on_application_before_launching
 		local
 			bl: BREAK_LIST
 			bploc: BREAKPOINT_LOCATION
@@ -1472,7 +1472,7 @@ feature -- Debugging events
 			application_prelaunching_actions.call (Void)
 		end
 
-	on_application_initialized is
+	on_application_initialized
 			-- Application is launched but stopped at the entry point for now
 			--| just before the resume. The state should not be considered as a valid stopped state
 			--| but this can be used to intialized extra application parameters
@@ -1480,7 +1480,7 @@ feature -- Debugging events
 			update_catcall_detection_mode
 		end
 
-	on_application_launched is
+	on_application_launched
 		local
 			s: STRING_GENERAL
 		do
@@ -1503,7 +1503,7 @@ feature -- Debugging events
 			display_application_status
 		end
 
-	on_application_before_paused is
+	on_application_before_paused
 		do
 			debug("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_before_stopped %N")
@@ -1517,7 +1517,7 @@ feature -- Debugging events
 			end
 		end
 
-	on_application_paused is
+	on_application_paused
 		require
 			app_is_executing: safe_application_is_stopped
 		do
@@ -1525,7 +1525,7 @@ feature -- Debugging events
 			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_paused (Current))
 		end
 
-	on_application_debugger_update is
+	on_application_debugger_update
 		require
 			app_is_executing: safe_application_is_stopped
 		do
@@ -1533,7 +1533,7 @@ feature -- Debugging events
 			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_debugger_update (Current))
 		end
 
-	on_application_just_stopped is
+	on_application_just_stopped
 		require
 			app_is_executing: safe_application_is_stopped
 		do
@@ -1547,7 +1547,7 @@ feature -- Debugging events
 			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_stopped (Current))
 		end
 
-	on_application_before_resuming is
+	on_application_before_resuming
 		require
 			app_is_executing: safe_application_is_stopped
 		do
@@ -1556,7 +1556,7 @@ feature -- Debugging events
 			end
 		end
 
-	on_application_resumed is
+	on_application_resumed
 		require
 			app_is_executing: application_is_executing and then not application_is_stopped
 		do
@@ -1574,7 +1574,7 @@ feature -- Debugging events
 			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_resumed (Current))
 		end
 
-	frozen on_application_quit is
+	frozen on_application_quit
 		local
 			was_executing: BOOLEAN
 		do
@@ -1607,7 +1607,7 @@ feature -- Debugging events
 			end
 		end
 
-	on_debugging_terminated (was_executing: BOOLEAN) is
+	on_debugging_terminated (was_executing: BOOLEAN)
 			-- Called at the very end of debuggging session
 			-- after `on_application_quit'
 		local
@@ -1640,7 +1640,7 @@ feature -- Actions
 
 feature -- One time action
 
-	add_on_stopped_action (p: PROCEDURE [ANY, TUPLE [DEBUGGER_MANAGER]]; is_kamikaze: BOOLEAN) is
+	add_on_stopped_action (p: PROCEDURE [ANY, TUPLE [DEBUGGER_MANAGER]]; is_kamikaze: BOOLEAN)
 			-- Add `p' to `stopped_actions' with `p'.
 		require
 			p_not_void: p /= Void
@@ -1652,7 +1652,7 @@ feature -- One time action
 			end
 		end
 
-	add_on_update_action (p: PROCEDURE [ANY, TUPLE [DEBUGGER_MANAGER]]; is_kamikaze: BOOLEAN) is
+	add_on_update_action (p: PROCEDURE [ANY, TUPLE [DEBUGGER_MANAGER]]; is_kamikaze: BOOLEAN)
 			-- Add `p' to `stopped_actions' with `p'.
 		require
 			p_not_void: p /= Void
@@ -1666,7 +1666,7 @@ feature -- One time action
 
 feature -- Debuggee Objects management
 
-	release_object_references (kobjs: LIST [DBG_ADDRESS]) is
+	release_object_references (kobjs: LIST [DBG_ADDRESS])
 		local
 			st: APPLICATION_STATUS
 		do
@@ -1685,7 +1685,7 @@ feature -- Debuggee Objects management
 
 feature -- Logger
 
-	log_message (s: STRING_32) is
+	log_message (s: STRING_32)
 			-- Log message `s'
 		require
 			s_not_empty: s /= Void and then s.count > 0
@@ -1695,7 +1695,7 @@ feature -- Logger
 
 feature {APPLICATION_EXECUTION} -- specific implementation
 
-	Character_routines: CHARACTER_ROUTINES is
+	Character_routines: CHARACTER_ROUTINES
 		once
 			create Result
 		end
@@ -1711,7 +1711,7 @@ invariant
 	application_initialized_not_void: application_initialized implies application /= Void
 	application_associated_to_current: application /= Void implies application.debugger_manager = Current
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

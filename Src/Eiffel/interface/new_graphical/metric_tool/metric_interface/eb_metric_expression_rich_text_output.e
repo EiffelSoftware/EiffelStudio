@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a generated metric expression in rich text format"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create {LINKED_LIST [STRING_GENERAL]} text_list.make
@@ -33,7 +33,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	string_representation: STRING_GENERAL is
+	string_representation: STRING_GENERAL
 			-- String representation of generated output
 		local
 			l_list: LIST [STRING_GENERAL]
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Operations
 
-	load_expression (a_text: EV_RICH_TEXT) is
+	load_expression (a_text: EV_RICH_TEXT)
 			-- Load `text_list' and `format_list' in `a_text'.
 		local
 			l_text_list: like text_list
@@ -81,7 +81,7 @@ feature -- Operations
 
 feature -- Result operations
 
-	wipe_out is
+	wipe_out
 			-- Wipe out all generated output.
 		do
 			text_list.wipe_out
@@ -93,14 +93,14 @@ feature -- Result operations
 
 feature{EB_METRIC_EXPRESSION_GENERATOR}
 
-	prepare_output is
+	prepare_output
 			-- Prepare output.
 		do
 		end
 
 feature -- Metric element output
 
-	put_metric_name (a_metric_name: STRING) is
+	put_metric_name (a_metric_name: STRING)
 			-- Display metric name of `a_metric_name'.
 		do
 			if metric_manager.is_metric_calculatable (a_metric_name) then
@@ -115,7 +115,7 @@ feature -- Metric element output
 			end
 		end
 
-	put_criterion_name (a_criterion: EB_METRIC_CRITERION) is
+	put_criterion_name (a_criterion: EB_METRIC_CRITERION)
 			-- Display name of `a_criterion'.
 		do
 			if a_criterion.is_name_valid then
@@ -133,7 +133,7 @@ feature -- Metric element output
 			end
 		end
 
-	put_string (a_string: STRING_GENERAL) is
+	put_string (a_string: STRING_GENERAL)
 			-- Display `a_string'.
 		local
 			l_str: STRING_32
@@ -144,43 +144,43 @@ feature -- Metric element output
 			safe_put (l_str, string_format)
 		end
 
-	put_operator (a_operator: STRING_GENERAL) is
+	put_operator (a_operator: STRING_GENERAL)
 			-- Display `a_operator', such as "+", "-".
 		do
 			safe_put (a_operator, operator_format)
 		end
 
-	put_double (a_double: DOUBLE) is
+	put_double (a_double: DOUBLE)
 			-- Display `a_double'.
 		do
 			safe_put (a_double.out.as_string_32, number_format)
 		end
 
-	put_integer (a_integer: INTEGER) is
+	put_integer (a_integer: INTEGER)
 			-- Display `a_integer'.
 		do
 			safe_put (a_integer.out.as_string_32, number_format)
 		end
 
-	put_keyword (a_keyword: STRING_GENERAL) is
+	put_keyword (a_keyword: STRING_GENERAL)
 			-- Display `a_keyword'.
 		do
 			safe_put (a_keyword, keyword_format)
 		end
 
-	put_error (a_error_msg: STRING_GENERAL) is
+	put_error (a_error_msg: STRING_GENERAL)
 			-- Display error message `a_error_msg'.
 		do
 			safe_put (a_error_msg, error_format)
 		end
 
-	put_normal_text (a_text: STRING_GENERAL) is
+	put_normal_text (a_text: STRING_GENERAL)
 			-- Display normal text `a_text'.
 		do
 			safe_put (a_text, normal_format)
 		end
 
-	put_domain_item (a_domain_item: EB_METRIC_DOMAIN_ITEM; a_format: EV_CHARACTER_FORMAT) is
+	put_domain_item (a_domain_item: EB_METRIC_DOMAIN_ITEM; a_format: EV_CHARACTER_FORMAT)
 			-- Display `a_domain_item' in `a_format' f `a_domain_item' is valid,
 			-- otherwise display `a_domain_item' in `error_format'.
 		require
@@ -193,31 +193,31 @@ feature -- Metric element output
 			end
 		end
 
-	put_target_domain_item (a_target_item: EB_METRIC_TARGET_DOMAIN_ITEM) is
+	put_target_domain_item (a_target_item: EB_METRIC_TARGET_DOMAIN_ITEM)
 			-- Display `a_target_item'.
 		do
 			put_domain_item (a_target_item, target_format)
 		end
 
-	put_group_domain_item (a_group_item: EB_METRIC_GROUP_DOMAIN_ITEM) is
+	put_group_domain_item (a_group_item: EB_METRIC_GROUP_DOMAIN_ITEM)
 			-- Display `a_group_item'.
 		do
 			put_domain_item (a_group_item, group_format)
 		end
 
-	put_folder_domain_item (a_folder_item: EB_METRIC_FOLDER_DOMAIN_ITEM) is
+	put_folder_domain_item (a_folder_item: EB_METRIC_FOLDER_DOMAIN_ITEM)
 			-- Display `a_folder_item'.
 		do
 			put_domain_item (a_folder_item, folder_format)
 		end
 
-	put_class_domain_item (a_class_item: EB_METRIC_CLASS_DOMAIN_ITEM) is
+	put_class_domain_item (a_class_item: EB_METRIC_CLASS_DOMAIN_ITEM)
 			-- Display `a_class_item'.
 		do
 			put_domain_item (a_class_item, class_format)
 		end
 
-	put_feature_domain_item (a_feature_item: EB_METRIC_FEATURE_DOMAIN_ITEM) is
+	put_feature_domain_item (a_feature_item: EB_METRIC_FEATURE_DOMAIN_ITEM)
 			-- Display `a_feature_item'.
 		do
 			if a_feature_item.is_valid then
@@ -231,19 +231,19 @@ feature -- Metric element output
 			end
 		end
 
-	put_delayed_domain_item (a_delayed_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
+	put_delayed_domain_item (a_delayed_item: EB_METRIC_DELAYED_DOMAIN_ITEM)
 			-- Display `a_delayed_item'.
 		do
 			put_domain_item (a_delayed_item, delayed_format)
 		end
 
-	put_modifier (a_modifier: STRING_GENERAL) is
+	put_modifier (a_modifier: STRING_GENERAL)
 			-- Display modifier `a_modifier'.
 		do
 			safe_put (a_modifier, modifier_format)
 		end
 
-	put_warning (a_warning_msg: STRING_GENERAL) is
+	put_warning (a_warning_msg: STRING_GENERAL)
 			-- Display warning message `a_warning_msg'.
 		do
 			safe_put (a_warning_msg, warning_format)
@@ -251,7 +251,7 @@ feature -- Metric element output
 
 feature{NONE} -- Implementation
 
-	safe_put (a_text: STRING_GENERAL; a_format: EV_CHARACTER_FORMAT) is
+	safe_put (a_text: STRING_GENERAL; a_format: EV_CHARACTER_FORMAT)
 			-- Put `a_text' whose format is `a_format' into `text_list' and `format_list'
 			-- only if `a_text' is not empty.
 		require
@@ -321,7 +321,7 @@ feature{NONE} -- Formats
 	warning_format: EV_CHARACTER_FORMAT
 			-- Format for warning message
 
-	regenerate_formats is
+	regenerate_formats
 			-- Regenerate formats for different kinds of display elements.
 		local
 			l_background_color: EV_COLOR
@@ -371,7 +371,7 @@ invariant
 	delayed_format_attached: delayed_format /= Void
 	error_format_attached: error_format /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

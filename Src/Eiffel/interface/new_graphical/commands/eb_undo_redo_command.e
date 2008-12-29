@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to perform an undo/redo operation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ feature {NONE} -- initialization
 
 feature -- Execution
 
-	accelerator_execute is
+	accelerator_execute
 			-- Execute command if neccessary when called via an accelerator
 		do
 			if editor /= Void and then editor.has_focus and then is_sensitive then
@@ -40,7 +40,7 @@ feature -- Execution
 
 feature -- Basic operations
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 			do
 				start_observer
@@ -48,14 +48,14 @@ feature -- Basic operations
 				Result := Precursor (display_text)
 			end
 
-	new_menu_item: EB_COMMAND_MENU_ITEM is
+	new_menu_item: EB_COMMAND_MENU_ITEM
 			-- Create a new menu entry for this command.
 		do
 			start_observer
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
 		end
 
-	new_menu_item_unmanaged: EV_MENU_ITEM is
+	new_menu_item_unmanaged: EV_MENU_ITEM
 			-- Create a new menu entry for this command.
 		do
 			start_observer
@@ -64,7 +64,7 @@ feature -- Basic operations
 
 feature {NONE} -- recycle
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle Current
 		local
 			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation / Observer pattern
 	observer_started: BOOLEAN
 			-- The observer has been set up.
 
-	start_observer is
+	start_observer
 			-- Start observing the stack
 		do
 			if not observer_started then
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation / Observer pattern
 
 feature {NONE} -- Implementation
 
-	editor: EB_EDITOR is
+	editor: EB_EDITOR
 			-- Editor corresponding to Current
 		do
 			Result := target.editors_manager.current_editor
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 --			Result := editor.history
 --		end
 
-	on_changed is
+	on_changed
 			-- The undo/redo stack has changed.
 		local
 			sensitive: BOOLEAN
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

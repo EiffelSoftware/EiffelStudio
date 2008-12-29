@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_list (a_list: LIST [EIFFEL_CLASS_FIGURE])  is
+	make_with_list (a_list: LIST [EIFFEL_CLASS_FIGURE])
 			--
 		do
 			classes := a_list
@@ -25,14 +25,14 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone.
 			-- Default is Void, meaning no cursor is associated with `Current'.
 		do
 		end
 
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 			-- Default is Void, meaning no cursor is associated with `Current'.
@@ -44,21 +44,21 @@ feature  -- Access
 	classes: LIST [EIFFEL_CLASS_FIGURE]
 			-- Classes transported with this stone.
 
-	stone_signature: STRING is
+	stone_signature: STRING
 			-- Short string to describe Current
 			-- (basically the name of the stoned object).
 		do
 			Result := "List of classes"
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 			-- String to describe Current
 			-- (as it may be described in the title of a development window).
 		do
 			Result := stone_signature
 		end
 
-	history_name: STRING is
+	history_name: STRING
 			-- Name used in the history list,
 			-- (By default, it is the stone_signature
 			-- and a string to describe the type of stone (Class, feature,...)).
@@ -77,7 +77,7 @@ feature  -- Access
 --			valid_stone: Result /= Void implies Result.is_valid
 --		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

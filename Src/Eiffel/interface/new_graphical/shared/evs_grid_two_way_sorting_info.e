@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a two-way sorting infomation object"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_comparator: like comparator; a_current_order: INTEGER) is
+	make (a_comparator: like comparator; a_current_order: INTEGER)
 			-- Initialize `comparator' with `a_comparator' and `current_order' with `a_current_order'.
 		require
 			a_comparator_attached: a_comparator /= Void
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Sort order change
 
-	next_sort_order (a_current_order: INTEGER): INTEGER is
+	next_sort_order (a_current_order: INTEGER): INTEGER
 			-- Next sort order
 		do
 			if a_current_order = ascending_order then
@@ -53,7 +53,7 @@ feature -- Sort order change
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

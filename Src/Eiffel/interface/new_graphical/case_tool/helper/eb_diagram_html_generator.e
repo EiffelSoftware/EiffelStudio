@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that generate an html file representing a diagram%N%
 			% , to be included in html documentation"
 	legal: "See notice at end of class."
@@ -46,7 +46,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_for_documentation (a_cluster: CONF_GROUP; a_view: STRING; doc: DOCUMENTATION) is
+	make_for_documentation (a_cluster: CONF_GROUP; a_view: STRING; doc: DOCUMENTATION)
 			-- Initialize for `a_cluster' and `doc'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			initialize
 		end
 
-	make_for_wizard (a_cluster: CONF_GROUP) is
+	make_for_wizard (a_cluster: CONF_GROUP)
 			-- Initialize for `a_cluster'.
 			-- Does not allow calls to `execute'.
 		require
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			cluster := a_cluster
 		end
 
-	initialize is
+	initialize
 			-- Build `diagram'.
 		do
 			create {BON_CLUSTER_DIAGRAM} diagram.make_without_interactions (create {ES_CLUSTER_GRAPH})
@@ -90,11 +90,11 @@ feature {NONE} -- Access
 
 	world_cell: EIFFEL_FIGURE_WORLD_CELL
 
-	border: INTEGER is 5
+	border: INTEGER = 5
 
 feature {EB_DOCUMENTATION_WIZARD} -- Basic operations
 
-	available_views: LINKED_LIST [STRING] is
+	available_views: LINKED_LIST [STRING]
 			-- Names of available views of `cluster'.
 		local
 			l_parser: XM_EIFFEL_PARSER
@@ -138,7 +138,7 @@ feature {EB_DOCUMENTATION_WIZARD} -- Basic operations
 
 feature {DOCUMENTATION} -- Basic operations
 
-	execute is
+	execute
 			-- Write diagram for `cluster' in `target_file_name'.
 		local
 			png_format: EV_PNG_FORMAT
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 	target_file_name: FILE_NAME
 			-- Output file for generated diagram.
 
-	diagram_file_name: FILE_NAME is
+	diagram_file_name: FILE_NAME
 			-- Where views for `diagram' are stored.	
 		do
 			create Result.make_from_string (Eiffel_system.context_diagram_path)
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			Result.add_extension ("xml")
 		end
 
-	form_code: STRING is
+	form_code: STRING
 			-- For html-stylesheet format.
 		do
 			Result := "<FORM ONSUBMIT=%"go_to('" +
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 				%</TR></TABLE></FORM>%N"
 		end
 
-	table_code: STRING is
+	table_code: STRING
 			-- For html format.
 		do
 			Result := "<TABLE BORDER=%"1%" ALIGN=%"CENTER%"><TR>%N%
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 				base_path + "/cluster_hierarchy.html%">Cluster hierarchy</A></TD></TR></TABLE>%N"
 		end
 
-	image_map (cd: EIFFEL_CLUSTER_DIAGRAM): STRING is
+	image_map (cd: EIFFEL_CLUSTER_DIAGRAM): STRING
 			-- HTML image map for `cd'.
 			-- Class bubbles are links to html class charts.
 			-- Empty space inside clusters are links to html cluster charts.
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			Result.append ("</map>%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

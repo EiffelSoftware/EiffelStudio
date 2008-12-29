@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A feature contract text modifier for changing contracts on features.
 	]"
@@ -38,7 +38,7 @@ feature {NONE} -- Factory
 			Result := Precursor {ES_FEATURE_TEXT_AST_MODIFIER}
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to execute an external wizard to create a new project"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_file (a_filename: FILE_NAME) is
+	make_with_file (a_filename: FILE_NAME)
 			-- Load the command from the description file named
 			-- `a_filename'.
 			--
@@ -73,7 +73,7 @@ feature -- Access
 	target_platform: STRING
 			-- Target platform for this wizard: "all" for all platform, "windows" for windows, ...
 
-	target_platform_supported: BOOLEAN is
+	target_platform_supported: BOOLEAN
 			-- Is the target platform supported by the current platform?
 		do
 			Result := target_platform.is_equal ("all") or else target_platform.is_case_insensitive_equal (eiffel_layout.platform_abstraction)
@@ -81,13 +81,13 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' to `a_name'.
 		do
 			name := a_name
 		end
 
-	set_description (a_description: STRING) is
+	set_description (a_description: STRING)
 			-- Set `description' to `a_description'.
 		do
 			description := a_description
@@ -95,7 +95,7 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 
-	wrap_word (a_string: STRING; a_margin: INTEGER): STRING is
+	wrap_word (a_string: STRING; a_margin: INTEGER): STRING
 			-- Return a copy of `a_string', with a maximum of `a_margin' characters per line.
 		local
 			original: STRING
@@ -117,12 +117,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Additional_parameters: STRING is
+	Additional_parameters: STRING
 		do
 			Result := "Ace=%"<ACE>%"%NDirectory=%"<DIRECTORY>%"%NCompilation=%"<COMPILATION>%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

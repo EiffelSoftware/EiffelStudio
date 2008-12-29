@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Toolbar button for a toolbarable toolbar command."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_command: EB_TOOLBARABLE_COMMAND) is
+	make (a_command: EB_TOOLBARABLE_COMMAND)
 			-- Creation method
 		local
 			l_recyclable: EB_RECYCLABLE
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Cleaning
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the button has became useless
 		do
 			command.managed_sd_toolbar_items.prune_all (Current)
@@ -56,7 +56,7 @@ feature -- Cleaning
 			-- pick_actions.wipe_out
 		end
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- <Precursor>
 		do
 			command := Void
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 	command: EB_TOOLBARABLE_COMMAND;
 			-- command associated with Current.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

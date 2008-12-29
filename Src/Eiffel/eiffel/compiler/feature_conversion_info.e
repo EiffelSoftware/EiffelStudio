@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Store information to be used when a conversion occurs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_from (a_source_type, a_target_type: TYPE_A; a_class: CLASS_C; a_feat: FEATURE_I) is
+	make_from (a_source_type, a_target_type: TYPE_A; a_class: CLASS_C; a_feat: FEATURE_I)
 			-- Information about conversion from `a_source_type' to `a_target_type' using
 			-- a `a_feat' from `a_class' routine of `a_target_type'.
 		require
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			conversion_class_id_set: conversion_class_id = a_class.class_id
 		end
 
-	make_to (a_source_type, a_target_type: TYPE_A; a_class: CLASS_C; a_feat: FEATURE_I) is
+	make_to (a_source_type, a_target_type: TYPE_A; a_class: CLASS_C; a_feat: FEATURE_I)
 			-- Information about conversion from `a_source_type' to `a_target_type' using
 			-- a `a_feat' from `a_class' routine of `a_source_type'.
 		require
@@ -81,12 +81,12 @@ feature -- Access
 
 feature -- Status report
 
-	has_depend_unit: BOOLEAN is True
+	has_depend_unit: BOOLEAN = True
 			-- Current conversion has an associated depend unit.
 
 feature -- Properties
 
-	depend_unit: DEPEND_UNIT is
+	depend_unit: DEPEND_UNIT
 			-- Associated depend unit used for incrementality
 		do
 			create Result.make (conversion_class_id, conversion_feature)
@@ -94,13 +94,13 @@ feature -- Properties
 
 feature -- Byte code generation
 
-	byte_node (an_expr: EXPR_B): EXPR_B is
+	byte_node (an_expr: EXPR_B): EXPR_B
 			-- Generate byte node needed to convert `an_expr' to the expected type
 		do
 			Result := byte_code_factory.convert_byte_node (an_expr, Current)
 		end
 
-	byte_code_factory: BYTE_CODE_FACTORY is
+	byte_code_factory: BYTE_CODE_FACTORY
 			-- Factory to create conversion byte node
 		once
 			create Result
@@ -111,7 +111,7 @@ invariant
 	conversion_feature_not_void: conversion_feature /= Void
 	conversion_class_id_non_negative: conversion_class_id > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

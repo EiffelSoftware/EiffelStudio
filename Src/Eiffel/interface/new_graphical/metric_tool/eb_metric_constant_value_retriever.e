@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a constant value retriever"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_value: like value) is
+	make (a_value: like value)
 			-- Initialize `value' with `a_value'.
 		do
 			set_value (a_value)
@@ -32,19 +32,19 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	value (a_ql_domain: QL_DOMAIN): DOUBLE is
+	value (a_ql_domain: QL_DOMAIN): DOUBLE
 			-- Retrieved value
 		do
 			Result := value_internal
 		end
 
-	value_with_domain (a_domain: EB_METRIC_DOMAIN): DOUBLE is
+	value_with_domain (a_domain: EB_METRIC_DOMAIN): DOUBLE
 			-- Retrieved value
 		do
 			Result := value_internal
 		end
 
-	visitable_name: STRING_GENERAL is
+	visitable_name: STRING_GENERAL
 			-- Name of current visitable item
 		do
 			Result := metric_names.l_constant_value
@@ -55,12 +55,12 @@ feature -- Access
 
 feature -- Status report
 
-	is_retrievable: BOOLEAN is True
+	is_retrievable: BOOLEAN = True
 			-- Is `value' retrievable?
 
 feature -- Setting
 
-	set_value (a_value: like value) is
+	set_value (a_value: like value)
 			-- Set `value' with `a_value'.
 		do
 			value_internal := a_value
@@ -70,13 +70,13 @@ feature -- Setting
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_constant_value_retriever (Current)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

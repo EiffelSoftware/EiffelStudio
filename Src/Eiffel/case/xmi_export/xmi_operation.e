@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information on an operation of the system for XMI export"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make_op (id: INTEGER; id_r: INTEGER; n: STRING; t: XMI_TYPE) is
+	make_op (id: INTEGER; id_r: INTEGER; n: STRING; t: XMI_TYPE)
 			-- Initialization of `Current'.
 		do
 			xmi_id := id
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_argument (a: XMI_ARGUMENT) is
+	add_argument (a: XMI_ARGUMENT)
 			-- Adds `a' to `arguments'.
 		require
 			new_argument_not_void: a /= Void
@@ -48,7 +48,7 @@ feature -- Element change
 
 feature -- Actions
 
-	code: STRING is
+	code: STRING
 			-- XMI representation of the attribute.
 		local
 			xmi_class: XMI_CLASS
@@ -119,7 +119,7 @@ feature -- Actions
 				%            </Foundation.Core.Operation>%N")
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

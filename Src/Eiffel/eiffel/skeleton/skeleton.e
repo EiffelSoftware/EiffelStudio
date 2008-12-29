@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- List of attribute sorted by category or skeleton of a class type (instance
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER; a_class_type: CLASS_TYPE) is
+	make (n: INTEGER; a_class_type: CLASS_TYPE)
 			-- Create a specific skeleton corresponding to a certain CLASS_TYPE
 		require
 			n_non_negative: n >= 0
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Update
 
-	update is
+	update
 			-- Sort `area' so that skeleton goes from the lowest level
 			-- to the higher level. Precompute the count of each type
 			-- of attributes.
@@ -76,7 +76,7 @@ feature -- Access
 	has_expanded: BOOLEAN
 			-- Does skeleton have an expanded attribute?
 
-	item: ATTR_DESC is
+	item: ATTR_DESC
 			-- Access `position'-th element.
 		require
 			good_range: position >= 0 and then position < count
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation: Access
 
 feature -- Status Report
 
-	has_references: BOOLEAN is
+	has_references: BOOLEAN
 			-- Does current have some references (i.e. true reference,
 			-- fake references for referencing expanded objects)
 		do
@@ -105,7 +105,7 @@ feature -- Status Report
 
 feature -- Comparison
 
-	equiv (old_skeletons: ARRAY [SKELETON]; other: SKELETON): BOOLEAN is
+	equiv (old_skeletons: ARRAY [SKELETON]; other: SKELETON): BOOLEAN
 			-- Is the current skeleton equivalent to `other'?
 			-- For expanded attribute, we use the old version of its
 			-- associated skeleton (stored in old_skeletons which is indexed
@@ -199,7 +199,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	extend (v: ATTR_DESC) is
+	extend (v: ATTR_DESC)
 			-- Extend Current with `v' after `position'.
 		do
 			area.put (v, position)
@@ -209,20 +209,20 @@ feature -- Element change
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to the first position.
 		do
 			position := 0
 		end
 
-	forth is
+	forth
 			-- Move to next position; if no next position,
 			-- ensure that `exhausted' will be true.
 		do
 			position := position + 1
 		end;
 
-	go_to (pos: INTEGER) is
+	go_to (pos: INTEGER)
 			-- Move cursor until `pos'
 		do
 			position := pos
@@ -230,37 +230,37 @@ feature -- Cursor movement
 
 feature -- Status
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 			-- Is there an item in current skeleton?
 		do
 			Result := count = 0
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid cursor position to the right of cursor?
 		do
 			Result := position >= count
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is cursor position a valid one?
 		do
 			Result := position < 0 or else position >= count
 		end
 
-	first: ATTR_DESC is
+	first: ATTR_DESC
 		do
 			Result := area.item (0)
 		end
 
-	has_feature_id (feature_id: INTEGER): BOOLEAN is
+	has_feature_id (feature_id: INTEGER): BOOLEAN
 			-- Has the skeleton an attribute of feature id `feature_id' ?
 		do
 			search_feature_id (feature_id);
 			Result := not (position = count);
 		end;
 
-	search_feature_id (feature_id: INTEGER) is
+	search_feature_id (feature_id: INTEGER)
 			-- Search an attribute description fo feature id `feature_id'
 		require
 			not empty
@@ -289,13 +289,13 @@ feature -- Status
 			end
 		end
 
-	nb_reference: INTEGER is
+	nb_reference: INTEGER
 			-- Numer of reference attributes
 		do
 			Result := nb_attributes.item (reference_level)
 		end;
 
-	nb_character: INTEGER is
+	nb_character: INTEGER
 			-- Number of character and boolean attributes
 		local
 			l_nb_attributes: like nb_attributes
@@ -307,7 +307,7 @@ feature -- Status
 				l_nb_attributes.item (natural_8_level)
 		end;
 
-	nb_integer_16: INTEGER is
+	nb_integer_16: INTEGER
 			-- Number of integer 16 bits attributes
 		local
 			l_nb_attributes: like nb_attributes
@@ -317,7 +317,7 @@ feature -- Status
 				l_nb_attributes.item (natural_16_level)
 		end
 
-	nb_integer_32: INTEGER is
+	nb_integer_32: INTEGER
 			-- Number of integer 32 bits attributes
 		local
 			l_nb_attributes: like nb_attributes
@@ -328,19 +328,19 @@ feature -- Status
 				l_nb_attributes.item (wide_char_level)
 		end;
 
-	nb_real_32: INTEGER is
+	nb_real_32: INTEGER
 			-- Number of real attributes
 		do
 			Result := nb_attributes.item (real_32_level)
 		end;
 
-	nb_pointer: INTEGER is
+	nb_pointer: INTEGER
 			-- Number of pointer attributes
 		do
 			Result := nb_attributes.item (pointer_level)
 		end;
 
-	nb_integer_64: INTEGER is
+	nb_integer_64: INTEGER
 			-- Number of integer 64 bits attributes
 		local
 			l_nb_attributes: like nb_attributes
@@ -350,37 +350,37 @@ feature -- Status
 				l_nb_attributes.item (natural_64_level)
 		end
 
-	nb_real_64: INTEGER is
+	nb_real_64: INTEGER
 			-- Number of real 64 bits attributes
 		do
 			Result := nb_attributes.item (real_64_level)
 		end;
 
-	nb_bits: INTEGER is
+	nb_bits: INTEGER
 			-- Number of bits attribute
 		do
 			Result := nb_attributes.item (bits_level)
 		end;
 
-	nb_expanded: INTEGER is
+	nb_expanded: INTEGER
 			-- Number of expanded attributes
 		do
 			Result := nb_attributes.item (expanded_level)
 		end;
 
-	go_expanded is
+	go_expanded
 			-- Go to the expanded
 		do
 			goto (Expanded_level);
 		end;
 
-	go_bits is
+	go_bits
 			-- Go to the bits attribute
 		do
 			goto (Bits_level);
 		end;
 
-	goto (level: INTEGER) is
+	goto (level: INTEGER)
 			-- Position the cursor to the first reference of level `level'.
 		require
 			level >= Reference_level and then level <= Expanded_level
@@ -400,7 +400,7 @@ feature -- Status
 			position := i
 		end;
 
-	generate_size (buffer: GENERATION_BUFFER; as_macro: BOOLEAN) is
+	generate_size (buffer: GENERATION_BUFFER; as_macro: BOOLEAN)
 			-- Generate the size of current skeleton in `buffer'.
 		require
 			good_argument: buffer /= Void;
@@ -486,13 +486,13 @@ feature -- Status
 			end
 		end
 
-	generate_workbench_size (buffer: GENERATION_BUFFER) is
+	generate_workbench_size (buffer: GENERATION_BUFFER)
 			-- Generate size of the skeleton in workbench mode.
 		do
 			buffer.put_integer (workbench_size);
 		end;
 
-	workbench_size: INTEGER is
+	workbench_size: INTEGER
 			-- Size of the current skeleton in workbench mode
 		local
 			expanded_desc: EXPANDED_DESC;
@@ -550,7 +550,7 @@ feature -- Status
 			end
 		end
 
-	generate_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER; is_in_attr_table, as_macro: BOOLEAN) is
+	generate_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER; is_in_attr_table, as_macro: BOOLEAN)
 			-- Generate offset for attribute of feature id `feature_id'
 			-- in `buffer'.
 		require
@@ -561,7 +561,7 @@ feature -- Status
 			generate (buffer, is_in_attr_table, as_macro);
 		end;
 
-	generate_i_th_reference_offset (buffer: GENERATION_BUFFER; i: INTEGER; as_macro: BOOLEAN) is
+	generate_i_th_reference_offset (buffer: GENERATION_BUFFER; i: INTEGER; as_macro: BOOLEAN)
 			-- Generate offset for reference attribute at position `i' in `buffer'.
 		require
 			good_argument: buffer /= Void;
@@ -580,7 +580,7 @@ feature -- Status
 			end
 		end;
 
-	generate_workbench_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER) is
+	generate_workbench_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER)
 			-- Generate offset for attribute of feature id `feature_id'
 			-- in `buffer' in workbench mode only.
 		require
@@ -591,7 +591,7 @@ feature -- Status
 			buffer.put_integer (workbench_offset);
 		end;
 
-	generate (buffer: GENERATION_BUFFER; is_in_attr_table, as_macro: BOOLEAN) is
+	generate (buffer: GENERATION_BUFFER; is_in_attr_table, as_macro: BOOLEAN)
 			-- Generate offset of the attribute at the current position
 		require
 			not_off: not off;
@@ -838,7 +838,7 @@ feature -- Status
 			position := index
 		end;
 
-	workbench_offset: INTEGER is
+	workbench_offset: INTEGER
 			-- Offset of the attribute at the current position in
 			-- workbench mode
 		require
@@ -970,7 +970,7 @@ feature -- Status
 
 feature -- Skeleton byte code
 
-	make_names_byte_code (ba: BYTE_ARRAY) is
+	make_names_byte_code (ba: BYTE_ARRAY)
 			-- Generate attribute names in `ba'.
 		require
 			good_argument: ba /= Void
@@ -990,7 +990,7 @@ feature -- Skeleton byte code
 			end;
 		end;
 
-	make_rout_id_array (ba: BYTE_ARRAY) is
+	make_rout_id_array (ba: BYTE_ARRAY)
 			-- Generate routine id array in `ba'.
 		require
 			good_argument: ba /= Void
@@ -1010,7 +1010,7 @@ feature -- Skeleton byte code
 			end;
 		end;
 
-	make_type_byte_code (ba: BYTE_ARRAY) is
+	make_type_byte_code (ba: BYTE_ARRAY)
 			-- Generate meta-type array byte code
 		require
 			good_argument: ba /= Void
@@ -1030,7 +1030,7 @@ feature -- Skeleton byte code
 			end;
 		end;
 
-	make_gen_type_byte_code (ba: BYTE_ARRAY) is
+	make_gen_type_byte_code (ba: BYTE_ARRAY)
 			-- Generate full type array byte code
 		require
 			good_argument: ba /= Void
@@ -1053,13 +1053,13 @@ feature -- Skeleton byte code
 			end;
 		end;
 
-	make_size_byte_code (ba: BYTE_ARRAY) is
+	make_size_byte_code (ba: BYTE_ARRAY)
 			-- Generate datas for evaluation of the skeleton size
 		do
 			ba.append_integer (workbench_size);
 		end;
 
-	make_offset_byte_code (ba: BYTE_ARRAY; feature_id: INTEGER) is
+	make_offset_byte_code (ba: BYTE_ARRAY; feature_id: INTEGER)
 			-- Generate byte code description of the feature of
 			-- feature `feature_id' in `ba'.
 		require
@@ -1071,7 +1071,7 @@ feature -- Skeleton byte code
 			ba.append_integer (workbench_offset);
 		end;
 
-	generate_name_array is
+	generate_name_array
 			-- Generate static C array of attributes names in the
 			-- skeleton file.
 		require
@@ -1098,7 +1098,7 @@ feature -- Skeleton byte code
 			buffer.put_string ("};%N%N")
 		end
 
-	generate_type_array is
+	generate_type_array
 			-- Generate static C array of attributes type codes in the
 			-- skeleton file.
 		require
@@ -1125,7 +1125,7 @@ feature -- Skeleton byte code
 			buffer.put_string ("};%N%N");
 		end;
 
-	generate_generic_type_arrays is
+	generate_generic_type_arrays
 			-- Generate static C arrays of attributes full type codes in the
 			-- skeleton file.
 		require
@@ -1170,7 +1170,7 @@ feature -- Skeleton byte code
 			buffer.put_string ("};%N%N");
 		end;
 
-	generate_offset_array is
+	generate_offset_array
 			-- Generate static C array of attributes offset table pointers.
 		require
 			not empty;
@@ -1200,7 +1200,7 @@ feature -- Skeleton byte code
 			buffer.put_string ("};%N%N");
 		end;
 
-	generate_rout_id_array is
+	generate_rout_id_array
 			-- Generate static C array of attributes routine ids
 		require
 			not empty;
@@ -1228,7 +1228,7 @@ feature -- Skeleton byte code
 
 feature {SKELETON} -- Convenience
 
-	definition_buffer: GENERATION_BUFFER is
+	definition_buffer: GENERATION_BUFFER
 			-- Buffer used to generate the definition of a size/offsets.
 		once
 			create Result.make (64)
@@ -1236,7 +1236,7 @@ feature {SKELETON} -- Convenience
 			definition: Result /= Void
 		end
 
-	insert_in_buffer (buffer, a_def_buffer: GENERATION_BUFFER; as_macro: BOOLEAN) is
+	insert_in_buffer (buffer, a_def_buffer: GENERATION_BUFFER; as_macro: BOOLEAN)
 			-- Insert `a_macro_buffer' definition into `buffer' if `as_macro', otherwise `a_def_buffer'.
 		require
 			buffer_not_void: buffer /= Void
@@ -1274,7 +1274,7 @@ feature {SKELETON} -- Convenience
 
 feature {NONE} -- Implementation of quick sort algorithm
 
-	quick_sort (min, max: INTEGER) is
+	quick_sort (min, max: INTEGER)
 			-- Apply `quick_sort' algorithm.
 			-- If `max' < `min' then it stops.
 		local
@@ -1287,7 +1287,7 @@ feature {NONE} -- Implementation of quick sort algorithm
 			end
 		end
 
-	partition_quick_sort  (min, max: INTEGER): INTEGER is
+	partition_quick_sort  (min, max: INTEGER): INTEGER
 			-- Apply `quick_sort' algorithm to position [`min'..`max']
 		require
 			correct_bounds: min <= max
@@ -1345,20 +1345,20 @@ feature {NONE} -- Implementation of quick sort algorithm
 
 feature {NONE} -- Externals
 
-	eif_chroff(nb_ref: INTEGER): INTEGER is
+	eif_chroff(nb_ref: INTEGER): INTEGER
 			-- Offset of first character after `nb_ref' references
 		external
 			"C use %"eif_offset.h%""
 		end;
 
-	eif_i16off(nb_ref, nb_char: INTEGER): INTEGER is
+	eif_i16off(nb_ref, nb_char: INTEGER): INTEGER
 			-- Offset of first integer 16 bits after `nb_ref' references,
 			-- and `nb_char' characters
 		external
 			"C use %"eif_offset.h%""
 		end;
 
-	eif_i32off(nb_ref, nb_char, nb_int16: INTEGER): INTEGER is
+	eif_i32off(nb_ref, nb_char, nb_int16: INTEGER): INTEGER
 			-- Offset of first integer 32 bits after `nb_ref' references,
 			-- `nb_char' characters and `nb_int16' integers.
 		external
@@ -1367,14 +1367,14 @@ feature {NONE} -- Externals
 			"eif_lngoff"
 		end;
 
-	eif_r32off (nb_ref, nb_char, nb_int16, nb_int32: INTEGER): INTEGER is
+	eif_r32off (nb_ref, nb_char, nb_int16, nb_int32: INTEGER): INTEGER
 			-- Offset of first real 32 bits after `nb_ref' references,
 			-- `nb_char' characters, `nb_int16' integers and `nb_int32' integers
 		external
 			"C use %"eif_offset.h%""
 		end;
 
-	eif_ptroff (nb_ref, nb_char, nb_int16, nb_int32, nb_r32: INTEGER): INTEGER is
+	eif_ptroff (nb_ref, nb_char, nb_int16, nb_int32, nb_r32: INTEGER): INTEGER
 			-- Offset of first pointer after `nb_ref' references,
 			-- `nb_char' characters, `nb_int16' integers, `nb_int32' integers
 			-- and `nb_r32' reals
@@ -1382,7 +1382,7 @@ feature {NONE} -- Externals
 			"C use %"eif_offset.h%""
 		end;
 
-	eif_i64off (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr: INTEGER): INTEGER is
+	eif_i64off (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr: INTEGER): INTEGER
 			-- Offset of first pointer after `nb_ref' references,
 			-- `nb_char' characters, `nb_int16' integers, `nb_int32' integers,
 			-- `nb_r32' reals and `nb_ptr' pointers.
@@ -1390,7 +1390,7 @@ feature {NONE} -- Externals
 			"C use %"eif_offset.h%""
 		end;
 
-	eif_r64off (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr, nb_int64: INTEGER): INTEGER is
+	eif_r64off (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr, nb_int64: INTEGER): INTEGER
 			-- Offset of first pointer after `nb_ref' references,
 			-- `nb_char' characters, `nb_int16' integers, `nb_int32' integers,
 			-- `nb_r32' reals, `nb_ptr' pointers and `nb_int64' integers.
@@ -1398,7 +1398,7 @@ feature {NONE} -- Externals
 			"C use %"eif_offset.h%""
 		end;
 
-	eif_objsiz (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr, nb_int64, nb_r64: INTEGER): INTEGER is
+	eif_objsiz (nb_ref, nb_char, nb_int16, nb_int32, nb_r32, nb_ptr, nb_int64, nb_r64: INTEGER): INTEGER
 			-- Size of an object having `nb_ref' references,
 			-- `nb_char' characters, `nb_int16' integers, `nb_int32' integers,
 			-- `nb_r32' reals, `nb_ptr' pointers, `nb_int64' integers and `nb_r64' reals
@@ -1406,7 +1406,7 @@ feature {NONE} -- Externals
 			"C use %"eif_offset.h%""
 		end;
 
-	bitoff (bit_val: INTEGER): INTEGER is
+	bitoff (bit_val: INTEGER): INTEGER
 			-- Size of a bit object of size `bit_val'
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -1414,7 +1414,7 @@ feature {NONE} -- Externals
 			"BITOFF"
 		end;
 
-	chracs (n: INTEGER): INTEGER is
+	chracs (n: INTEGER): INTEGER
 			-- Size of `n' characters
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -1422,7 +1422,7 @@ feature {NONE} -- Externals
 			"CHRACS"
 		end;
 
-	refacs (n: INTEGER): INTEGER is
+	refacs (n: INTEGER): INTEGER
 			-- Size of `n' references
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -1430,7 +1430,7 @@ feature {NONE} -- Externals
 			"REFACS"
 		end;
 
-	i16acs (n: INTEGER): INTEGER is
+	i16acs (n: INTEGER): INTEGER
 			-- size of `n' integers 16 bits.
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -1438,7 +1438,7 @@ feature {NONE} -- Externals
 			"I16ACS"
 		end
 
-	i32acs (n: INTEGER): INTEGER is
+	i32acs (n: INTEGER): INTEGER
 			-- Size of `n' integers 32 bits
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -1446,7 +1446,7 @@ feature {NONE} -- Externals
 			"LNGACS"
 		end;
 
-	i64acs (n: INTEGER): INTEGER is
+	i64acs (n: INTEGER): INTEGER
 			-- Size of `n' integers 64 bits
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -1454,7 +1454,7 @@ feature {NONE} -- Externals
 			"I64ACS"
 		end;
 
-	r32acs (n: INTEGER): INTEGER is
+	r32acs (n: INTEGER): INTEGER
 			-- Size of `n' reals
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -1462,7 +1462,7 @@ feature {NONE} -- Externals
 			"R32ACS"
 		end;
 
-	ptracs (n: INTEGER): INTEGER is
+	ptracs (n: INTEGER): INTEGER
 			-- Size of `n' pointers
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -1470,7 +1470,7 @@ feature {NONE} -- Externals
 			"PTRACS"
 		end;
 
-	r64acs (n: INTEGER): INTEGER is
+	r64acs (n: INTEGER): INTEGER
 			-- Size of `n' reals 64 bits
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -1478,7 +1478,7 @@ feature {NONE} -- Externals
 			"R64ACS"
 		end;
 
-	ovhsiz: INTEGER is
+	ovhsiz: INTEGER
 			-- Size of the object header
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -1489,7 +1489,7 @@ feature {NONE} -- Externals
 invariant
 	class_type_not_void: class_type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

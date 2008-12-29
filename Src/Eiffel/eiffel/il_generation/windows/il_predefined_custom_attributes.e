@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Predefined custom attributes blobls."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Predefined custom attributes
 
-	not_cls_compliant_ca: MD_CUSTOM_ATTRIBUTE is
+	not_cls_compliant_ca: MD_CUSTOM_ATTRIBUTE
 			-- Blob for not CLS compliant attribute
 		once
 			create Result.make
@@ -20,7 +20,7 @@ feature -- Predefined custom attributes
 			not_cls_compliant_ca_not_void: Result /= Void
 		end
 
-	cls_compliant_ca: MD_CUSTOM_ATTRIBUTE is
+	cls_compliant_ca: MD_CUSTOM_ATTRIBUTE
 			-- Blob for CLS compliant attribute
 		once
 			create Result.make
@@ -30,7 +30,7 @@ feature -- Predefined custom attributes
 			cls_compliant_ca_not_void: Result /= Void
 		end
 
-	eiffel_non_consumable_ca: MD_CUSTOM_ATTRIBUTE is
+	eiffel_non_consumable_ca: MD_CUSTOM_ATTRIBUTE
 			-- Blob for non-Eiffel consumable attribute
 		once
 			create Result.make
@@ -40,7 +40,7 @@ feature -- Predefined custom attributes
 			eiffel_non_consumable_ca_not_void: Result /= Void
 		end
 
-	not_com_visible_ca: MD_CUSTOM_ATTRIBUTE is
+	not_com_visible_ca: MD_CUSTOM_ATTRIBUTE
 			-- Blob for not COM Visible attribute.
 		once
 			create Result.make
@@ -50,7 +50,7 @@ feature -- Predefined custom attributes
 			not_com_visible_ca_not_void: Result /= Void
 		end
 
-	empty_ca: MD_CUSTOM_ATTRIBUTE is
+	empty_ca: MD_CUSTOM_ATTRIBUTE
 			-- Blob for custom attributes without argument.
 		once
 			create Result.make
@@ -59,7 +59,7 @@ feature -- Predefined custom attributes
 			empty_ca_not_void: Result /= Void
 		end
 
-	enabled_debuggable_ca: MD_CUSTOM_ATTRIBUTE is
+	enabled_debuggable_ca: MD_CUSTOM_ATTRIBUTE
 			-- Blob for not CLS compliant attribute
 		once
 			create Result.make
@@ -70,7 +70,7 @@ feature -- Predefined custom attributes
 			not_cls_compliant_ca_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

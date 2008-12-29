@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Create a PARENT_C instance from a PARENT_AS one."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ inherit
 
 feature -- Status report
 
-	compiled_parent (a_system: SYSTEM_I; a_class: CLASS_C; a_parent: PARENT_AS; a_is_non_conforming: BOOLEAN): PARENT_C is
+	compiled_parent (a_system: SYSTEM_I; a_class: CLASS_C; a_parent: PARENT_AS; a_is_non_conforming: BOOLEAN): PARENT_C
 			-- Compiled version of a parent. The second pass needs:
 			-- 1. Internal name for features, that means infix/prefix
 			--	features must have a string name
@@ -53,7 +53,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation: Reset
 
-	reset is
+	reset
 		do
 			Precursor {AST_EXPORT_STATUS_GENERATOR}
 			last_parent_c := Void
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Implementation
 
-	process_parent_as (l_as: PARENT_AS) is
+	process_parent_as (l_as: PARENT_AS)
 		local
 			l_renaming_c: HASH_TABLE [RENAMING, INTEGER]
 			l_rename_pair: RENAME_AS
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_export_item_as (l_as: EXPORT_ITEM_AS) is
+	process_export_item_as (l_as: EXPORT_ITEM_AS)
 		do
 			l_as.clients.process (Current)
 			check
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			l_as.features.process (Current)
 		end
 
-	process_feature_list_as (l_as: FEATURE_LIST_AS) is
+	process_feature_list_as (l_as: FEATURE_LIST_AS)
 		local
 			l_feature_name_id: INTEGER
 			l_vlel3: VLEL3
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_all_as (l_as: ALL_AS) is
+	process_all_as (l_as: ALL_AS)
 		local
 			l_vlel1: VLEL1
 		do
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	search_table (l_as: PARENT_AS; clause: EIFFEL_LIST [FEATURE_NAME]; flag: INTEGER): SEARCH_TABLE [INTEGER] is
+	search_table (l_as: PARENT_AS; clause: EIFFEL_LIST [FEATURE_NAME]; flag: INTEGER): SEARCH_TABLE [INTEGER]
 			-- Conversion of `clause' into a search table
 		require
 			l_as_not_void: l_as /= Void
@@ -236,11 +236,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	Redef: INTEGER is 1
-	Undef: INTEGER is 2
-	Selec: INTEGER is 3;
+	Redef: INTEGER = 1
+	Undef: INTEGER = 2
+	Selec: INTEGER = 3;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

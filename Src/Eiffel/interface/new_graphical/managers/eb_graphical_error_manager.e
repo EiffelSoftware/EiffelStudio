@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that helps displaying error message"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	display_error_message (a_relative_window: EV_WINDOW) is
+	display_error_message (a_relative_window: EV_WINDOW)
 			-- Display error message relative to `a_relative_window'.
 		require
 			a_relative_windows_not_void: a_relative_window /= Void
@@ -61,13 +61,13 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	set_catch_exception (new_state: BOOLEAN) is
+	set_catch_exception (new_state: BOOLEAN)
 			-- Set `catch_exception' to `new_state'.
 		do
 			catch_exception := new_state
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

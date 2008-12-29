@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scopes in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Scopes
 
-	quantity_scope: QL_QUANTITY_SCOPE is
+	quantity_scope: QL_QUANTITY_SCOPE
 			-- Quantity scope
 		once
 			create Result.make
@@ -19,7 +19,7 @@ feature -- Scopes
 			good_result: Result /= Void
 		end
 
-	target_scope: QL_TARGET_SCOPE is
+	target_scope: QL_TARGET_SCOPE
 			-- Target scope
 		once
 			create Result.make
@@ -27,7 +27,7 @@ feature -- Scopes
 			good_result: Result /= Void
 		end
 
-	group_scope: QL_GROUP_SCOPE is
+	group_scope: QL_GROUP_SCOPE
 			-- Group scope
 		once
 			create Result.make
@@ -35,7 +35,7 @@ feature -- Scopes
 			good_result: Result /= Void
 		end
 
-	class_scope: QL_CLASS_SCOPE is
+	class_scope: QL_CLASS_SCOPE
 			-- Class scope
 		once
 			create Result.make
@@ -43,7 +43,7 @@ feature -- Scopes
 			good_result: Result /= Void
 		end
 
-	feature_scope: QL_FEATURE_SCOPE is
+	feature_scope: QL_FEATURE_SCOPE
 			-- Feature scope
 		once
 			create Result.make
@@ -51,7 +51,7 @@ feature -- Scopes
 			good_result: Result /= Void
 		end
 
-	line_scope: QL_LINE_SCOPE is
+	line_scope: QL_LINE_SCOPE
 			-- Line scope
 		once
 			create Result.make
@@ -59,7 +59,7 @@ feature -- Scopes
 			good_result: Result /= Void
 		end
 
-	generic_scope: QL_GENERIC_SCOPE is
+	generic_scope: QL_GENERIC_SCOPE
 			-- Class generic scope
 		once
 			create Result.make
@@ -67,7 +67,7 @@ feature -- Scopes
 			good_result: Result /= Void
 		end
 
-	local_scope: QL_LOCAL_SCOPE is
+	local_scope: QL_LOCAL_SCOPE
 			-- Feature local variable scope
 		once
 			create Result.make
@@ -75,7 +75,7 @@ feature -- Scopes
 			good_result: Result /= Void
 		end
 
-	argument_scope: QL_ARGUMENT_SCOPE is
+	argument_scope: QL_ARGUMENT_SCOPE
 			-- Feature argument scope
 		once
 			create Result.make
@@ -83,7 +83,7 @@ feature -- Scopes
 			good_result: Result /= Void
 		end
 
-	assertion_scope: QL_ASSERTION_SCOPE is
+	assertion_scope: QL_ASSERTION_SCOPE
 			-- Assertion scope
 		once
 			create Result.make
@@ -91,7 +91,7 @@ feature -- Scopes
 			good_result: Result /= Void
 		end
 
-	scopes: LIST [QL_SCOPE] is
+	scopes: LIST [QL_SCOPE]
 			-- List of all supported scopes
 		once
 			create {ARRAYED_LIST [QL_SCOPE]} Result.make (10)
@@ -109,7 +109,7 @@ feature -- Scopes
 			result_attached: Result /= Void
 		end
 
-	scope_table: HASH_TABLE [QL_SCOPE, STRING] is
+	scope_table: HASH_TABLE [QL_SCOPE, STRING]
 			-- Table of all supported scopes
 		local
 			l_scopes: like scopes
@@ -126,7 +126,7 @@ feature -- Scopes
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid list item in which editor tokens are displayed"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_tokens: LIST [EDITOR_TOKEN]; a_leading_padding: INTEGER) is
+	make (a_tokens: LIST [EDITOR_TOKEN]; a_leading_padding: INTEGER)
 			-- Initialize.
 		require
 			a_tokens_attached: a_tokens /= Void
@@ -33,13 +33,13 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Required width in pixel of Current component
 		do
 			Result := editor_token_text.required_width
 		end
 
-	required_height: INTEGER is
+	required_height: INTEGER
 			-- Required height in pixel of Current component
 		do
 			Result := editor_token_text.required_height
@@ -48,7 +48,7 @@ feature -- Access
 	leading_padding: INTEGER
 			-- Padding in pixels before the first editor token
 
-	overriden_fonts: SPECIAL [EV_FONT] is
+	overriden_fonts: SPECIAL [EV_FONT]
 			-- Overriden fonts
 			-- Void if overriden fonts are not set.
 		do
@@ -57,7 +57,7 @@ feature -- Access
 
 feature{ES_GRID_LIST_ITEM} -- Drawing
 
-	display (a_drawable: EV_DRAWABLE; a_x, a_y: INTEGER; a_max_width, a_max_height: INTEGER) is
+	display (a_drawable: EV_DRAWABLE; a_x, a_y: INTEGER; a_max_width, a_max_height: INTEGER)
 			-- Draw Current component in `a_drawable' starting from (`a_x', `a_y').
 			-- The maximum width and height in pixel for Current is `a_max_width' and `a_max_height' respectively.
 		local
@@ -80,7 +80,7 @@ feature{ES_GRID_LIST_ITEM} -- Drawing
 
 feature -- Setting
 
-	set_overriden_fonts (a_fonts: SPECIAL [EV_FONT]; a_height: INTEGER) is
+	set_overriden_fonts (a_fonts: SPECIAL [EV_FONT]; a_height: INTEGER)
 			-- Set overriden fonts and according height used to display Current instead default fonts for editor tokens.
 		do
 			editor_token_text.set_overriden_font (a_fonts, a_height)
@@ -88,14 +88,14 @@ feature -- Setting
 
 feature{NONE} -- Impelementation
 
-	token_index_at_position (a_x, a_y: INTEGER): INTEGER is
+	token_index_at_position (a_x, a_y: INTEGER): INTEGER
 			-- Token item index in `editor_token_text' at position (`a_x', `a_y')
 			-- Zero means that no editor token is at position (`a_x', `a_y').
 		do
 			Result := editor_token_text.token_index_at_position (a_x - leading_padding, a_y)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

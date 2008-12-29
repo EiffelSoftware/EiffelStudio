@@ -1,4 +1,4 @@
-indexing
+note
 	description: "CLASSI_STONEs that originate from a CLASS_FIGURE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_figure: EIFFEL_CLASS_FIGURE) is
+	make (a_figure: EIFFEL_CLASS_FIGURE)
 			-- Initialize with `a_figure'.
 		do
 			make_with_class_i (a_figure.model.class_i)
@@ -31,7 +31,7 @@ feature -- Access
 	source: EIFFEL_CLASS_FIGURE;
 			-- Source this stone was picked from.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

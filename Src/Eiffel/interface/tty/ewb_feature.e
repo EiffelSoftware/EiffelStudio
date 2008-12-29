@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Abstract notion of command selected from feature batch menu"
@@ -31,7 +31,7 @@ inherit
 
 feature -- Initialization
 
-	make (cn, fn, filter: STRING) is
+	make (cn, fn, filter: STRING)
 			-- Initialize Current with class_name `class_name',
 			-- feature_name `feature_name', and filter `filter_name'.
 		require
@@ -51,7 +51,7 @@ feature -- Properties
 	feature_name: STRING;
 			-- Feature_name for current menu selection
 
-	want_compiled_class (class_i: CLASS_I): BOOLEAN is
+	want_compiled_class (class_i: CLASS_I): BOOLEAN
 			-- Does current menu selection want `class_i" to be compiled?
 			-- (Yes it does)
 		do
@@ -60,7 +60,7 @@ feature -- Properties
 
 feature {NONE} -- Implementation property
 
-	associated_cmd: E_FEATURE_CMD is
+	associated_cmd: E_FEATURE_CMD
 			-- Associated feature command to be executed
 			-- after successfully retrieving the feature_i
 		deferred
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation property
 
 feature {NONE} -- Implementation
 
-	loop_action is
+	loop_action
 		do
 			command_line_io.get_class_name;
 			class_name := command_line_io.last_input;
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			check_arguments_and_execute
 		end;
 
-	execute is
+	execute
 		do
 			if class_name = Void then
 				command_line_io.get_class_name;
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			feature_name_cleared: feature_name = Void
 		end
 
-	process_compiled_class (e_class: CLASS_C) is
+	process_compiled_class (e_class: CLASS_C)
 			-- Retrieve feature from `class_c' with
 			-- `feature_name' and execute associated command.
 		local
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			feature_name := Void;
 		end;
 
-	process_feature (e_feature: E_FEATURE; e_class: CLASS_C) is
+	process_feature (e_feature: E_FEATURE; e_class: CLASS_C)
 			-- Process feature `feature_i' defined in `class_c'.
 		require
 			valid_e_feature: e_feature /= Void;
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			output_window.put_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

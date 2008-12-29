@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object browser expanded viewer  ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Implementation
 
-	build_widget is
+	build_widget
 		local
 			vb: EV_VERTICAL_BOX
 			viewerborder: EV_VERTICAL_BOX
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
  			set_title (name)
 		end
 
-	build_slices_cmd is
+	build_slices_cmd
 		do
 			if slices_cmd = Void then
 				create slices_cmd.make (Current)
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_mini_tool_bar is
+	build_mini_tool_bar
 		do
 			build_slices_cmd
 			if mini_tool_bar = Void then
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 		do
 			Result := Interface_names.t_viewer_object_browser_title
 		end
@@ -112,13 +112,13 @@ feature -- Access
 
 feature -- Access
 
-	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN is
+	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN
 			-- Is `st' valid stone for Current?
 		do
 			Result := {st: OBJECT_STONE} a_stone
 		end
 
-	objects_grid_object_line (add: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE is
+	objects_grid_object_line (add: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE
 		do
 			if has_object and viewer.row_count > 0 then
 				if current_object.object_address.is_equal (add) then
@@ -129,7 +129,7 @@ feature -- Access
 
 feature -- Change
 
-	refresh is
+	refresh
 			-- Recompute the displayed text.
 		do
 			viewer.record_layout
@@ -151,7 +151,7 @@ feature -- Change
 			viewer.restore_layout
 		end
 
-	destroy is
+	destroy
 			-- Destroy Current
 		do
 			reset
@@ -163,23 +163,23 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
-	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND is
+	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND
 		do
 			Result := Eb_debugger_manager.object_viewer_cmd
 		end
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 		do
 			Result := True
 		end
 
-	clear is
+	clear
 			-- Clean current data, useless if dialog closed or destroyed
 		do
 			viewer.set_row_count_to (0)
 		end
 
-	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
 			-- Context menu handler
 		local
 			l_dev_window: EB_DEVELOPMENT_WINDOW
@@ -192,19 +192,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Event handling
 
-	on_stone_dropped (st: OBJECT_STONE) is
+	on_stone_dropped (st: OBJECT_STONE)
 			-- A stone was dropped in the editor. Handle it.
 		do
 			set_stone (st)
 		end
 
-	close_action is
+	close_action
 			-- Close dialog
 		do
 			destroy
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

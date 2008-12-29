@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Warning that a pre or post compile action could not be executed successfully."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_command: STRING) is
+	make (a_command: STRING)
 			-- Create.
 		require
 			a_command_not_void: a_command /= Void
@@ -34,7 +34,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: TEXT_FORMATTER) is
+	build_explain (st: TEXT_FORMATTER)
 		do
 			st.add_new_line
 			st.add ("Action could not be executed successfully:");
@@ -43,7 +43,7 @@ feature -- Output
 			st.add_new_line;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

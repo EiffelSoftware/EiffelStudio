@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main abstract class for Graphic mode in EiffelStudio."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	compiler_initialization is
+	compiler_initialization
 			-- Various initialization of the compiler
 		local
 			l_compiler_setting: SETTABLE_COMPILER_OBJECTS
@@ -146,7 +146,7 @@ feature {NONE} -- Initialization
 			eiffel_layout_not_void: eiffel_layout /= Void
 		end
 
-	initialize_debugger	is
+	initialize_debugger
 			-- Various initialization of the debugger
 		local
 			dbg: DEBUGGER_MANAGER
@@ -165,7 +165,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation (preparation of all widgets)
 
-	prepare (an_app: EV_APPLICATION) is
+	prepare (an_app: EV_APPLICATION)
 			-- Build graphical compiler
 		require
 			an_app_not_void: an_app /= Void
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			end
 		end
 
-	display_starting_dialog is
+	display_starting_dialog
 			-- Show the starting dialog letting the user choose where
 			-- his project is (or will be).
 		local
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 
 feature {NONE} -- Exception handling
 
-	handle_exception (a_exception: EXCEPTION) is
+	handle_exception (a_exception: EXCEPTION)
 			-- Handle the exception `a_exception'
 		do
 				-- Attempt to salvage any open files
@@ -276,7 +276,7 @@ feature {NONE} -- Exception handling
 			clean_exit (a_exception.exception_trace)
 		end
 
-	parent_for_dialog: EV_WINDOW is
+	parent_for_dialog: EV_WINDOW
 			-- Retrieve or create a parent for `show_modal_to_window'	
 		local
 			dev_window: EB_DEVELOPMENT_WINDOW
@@ -289,7 +289,7 @@ feature {NONE} -- Exception handling
 			end
 		end
 
-	try_to_save_files is
+	try_to_save_files
 			-- In case of a crash, try to make a backup of all edited files.
 		local
 			retried: BOOLEAN
@@ -332,7 +332,7 @@ feature {NONE} -- Exception handling
 			retry
 		end
 
-	clean_exit (trace: STRING) is
+	clean_exit (trace: STRING)
 			-- Perform clean quit of $EiffelGraphicalCompiler$
 		local
 			l_dialog: ES_EXCEPTION_DIALOG
@@ -355,7 +355,7 @@ feature {NONE} -- Factory
 			result_attached: Result /= Void
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

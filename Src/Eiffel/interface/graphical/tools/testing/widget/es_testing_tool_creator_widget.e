@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Widget showing status and control buttons for an {EIFFEL_TEST_FACTORY_I}
 	]"
@@ -73,7 +73,7 @@ feature {NONE} -- Internationalization
 	t_extractor_title: !STRING = "Extraction"
 	t_creator_title: !STRING = "New manual tests"
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

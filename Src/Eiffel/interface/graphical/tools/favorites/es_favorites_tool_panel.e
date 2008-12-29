@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Tool to view the favorites"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor; a_favorites_manager: EB_FAVORITES_MANAGER) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor; a_favorites_manager: EB_FAVORITES_MANAGER)
 			-- Make a new favorites tool.
 		require
 			a_manager_exists: a_manager /= Void
@@ -38,13 +38,13 @@ feature {NONE} -- Initialization
 			tool_descriptor_set: tool_descriptor = a_tool
 		end
 
-	build_interface is
+	build_interface
 			-- Build all the tool's widgets.
 		do
 			-- The widget has already been created, so do nothing.
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Build docking content.
 		local
 			l_tree: EB_FAVORITES_TREE
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			content.drop_actions.extend (agent on_drop)
 		end
 
-	build_mini_toolbar is
+	build_mini_toolbar
 			-- Build `mini_toolbar'
 		local
 			sd: SD_TOOL_BAR
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Attach to docking manager
 		do
 			build_docking_content (a_docking_manager)
@@ -89,7 +89,7 @@ feature -- Initialization
 
 feature -- Access
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget representing Current
 		do
 			Result := favorites_manager.widget
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Command
 
-	show is
+	show
 			-- Show tool.
 		local
 			w: EV_WIDGET
@@ -111,7 +111,7 @@ feature -- Command
 
 feature -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
@@ -124,7 +124,7 @@ feature -- Memory management
 
 feature {NONE} -- Implementation
 
-	on_drop (a_stone: STONE) is
+	on_drop (a_stone: STONE)
 			-- Set focus to content.
 		do
 			content.set_focus
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 	favorites_manager: EB_FAVORITES_MANAGER;
 			-- Associated favorites manager.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

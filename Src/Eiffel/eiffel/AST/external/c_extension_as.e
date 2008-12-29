@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of a C external extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,7 +19,7 @@ create
 
 feature {EXTERNAL_FACTORY} -- Initialization
 
-	initialize (sig: SIGNATURE_AS; use_list: USE_LIST_AS) is
+	initialize (sig: SIGNATURE_AS; use_list: USE_LIST_AS)
 			-- Create a new C_EXTENSION_AS node
 		do
 			if sig /= Void then
@@ -35,7 +35,7 @@ feature {EXTERNAL_FACTORY} -- Initialization
 
 feature -- Get the C extension
 
-	extension_i: C_EXTENSION_I is
+	extension_i: C_EXTENSION_I
 			-- C_EXTENSION_I corresponding to current extension
 		do
 			create Result
@@ -44,7 +44,7 @@ feature -- Get the C extension
 
 feature {NONE} -- Implementation
 
-	parse_special_part is
+	parse_special_part
 			-- Parse the special part
 			--| By default, it is empty
 		local
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

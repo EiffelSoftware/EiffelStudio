@@ -1,4 +1,4 @@
-indexing
+note
 	description: "name and type information of a feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialisation
 
-	make (a_name_index, a_type_index: INTEGER) is
+	make (a_name_index, a_type_index: INTEGER)
 		do
 			name_index := a_name_index
 			type_index := a_type_index
@@ -31,12 +31,12 @@ feature {NONE} -- Initialisation
 			
 feature -- Access
 
-	tag_id: INTEGER is 12
+	tag_id: INTEGER = 12
 			
 	name_index: INTEGER
 	type_index: INTEGER
 			
-	close is
+	close
 		do
 			create bc.make_size (Int_16_size * 2 + Int_8_size)
 			append_tag_info (bc)
@@ -45,19 +45,19 @@ feature -- Access
 			Precursor
 		end
 			
-	emit (file: RAW_FILE) is
+	emit (file: RAW_FILE)
 		do
 			bc.emit (file)
 		end
 			
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
 			Result := same_type (other) and then name_index = other.name_index and type_index = other.type_index
 		end
 
-	out: STRING is
+	out: STRING
 		do
 			Result := "Name&Type= " + name_index.out + ", " + type_index.out + "%N";
 		end
@@ -70,7 +70,7 @@ invariant
 			
 	closed_implies_bc_exists: is_closed implies bc /= Void
 						
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

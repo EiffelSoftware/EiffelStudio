@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Window holding a project tool"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -136,7 +136,7 @@ create {EB_DEVELOPMENT_WINDOW_DIRECTOR}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation method.
 		do
 			create commands.make (Current)
@@ -159,7 +159,7 @@ feature {NONE} -- Initialization
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
 
-	set_save_cmd (a_cmd: like save_cmd) is
+	set_save_cmd (a_cmd: like save_cmd)
 			-- Set `save_cmd'
 		do
 			save_cmd := a_cmd
@@ -167,7 +167,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
 			set: save_cmd = a_cmd
 		end
 
-	set_save_all_cmd (a_cmd: like save_all_cmd) is
+	set_save_all_cmd (a_cmd: like save_all_cmd)
 			-- Set `save_all_cmd'
 		do
 			save_all_cmd := a_cmd
@@ -177,7 +177,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle all.
 		local
 			l_session_manager: SERVICE_CONSUMER [SESSION_MANAGER_S]
@@ -275,7 +275,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	group: CONF_GROUP is
+	group: CONF_GROUP
 			-- Group of current class. Void if none.
 		local
 			classi_stone: CLASSI_STONE
@@ -291,7 +291,7 @@ feature -- Access
 			end
 		end
 
-	class_name: STRING is
+	class_name: STRING
 			-- Name of the current class, Void if none.
 		local
 			class_stone: CLASSI_STONE
@@ -368,13 +368,13 @@ feature -- Access
 	frozen window_id: NATURAL_32
 			-- Unique window identifier, used to reference a window without having to hold a reference to it
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := window_id.as_integer_32
 		end
 
-	selected_formatter: EB_CLASS_TEXT_FORMATTER is
+	selected_formatter: EB_CLASS_TEXT_FORMATTER
 			-- Current selected formatter
 		local
 			l_end : BOOLEAN
@@ -403,7 +403,7 @@ feature {NONE} -- Access
 
 	frozen window_id_counter: CELL [NATURAL_32]
 			-- Counter for generating unique window id's
-		indexing
+		note
 			once_status: global
 		once
 			create Result.put (1)
@@ -422,7 +422,7 @@ feature -- Querys
 
 feature -- Settings
 
-	set_docking_manager (a_manager: SD_DOCKING_MANAGER) is
+	set_docking_manager (a_manager: SD_DOCKING_MANAGER)
 			-- Set `docking_manager'
 		do
 			docking_manager := a_manager
@@ -430,7 +430,7 @@ feature -- Settings
 			set: docking_manager = a_manager
 		end
 
-	set_editors_manager (a_manager: like editors_manager) is
+	set_editors_manager (a_manager: like editors_manager)
 			-- Set `editors_manager'
 		do
 			editors_manager := a_manager
@@ -440,7 +440,7 @@ feature -- Settings
 
 feature -- Status setting
 
-	set_focus_to_main_editor is
+	set_focus_to_main_editor
 			-- Set focus to main current editor.
 		do
 			if editors_manager /= Void and then editors_manager.current_editor /= Void then
@@ -450,7 +450,7 @@ feature -- Status setting
 
 feature -- Window Settings
 
-	set_initialized is
+	set_initialized
 			-- Set `initialized' to True.
 		do
 			initialized := True
@@ -458,7 +458,7 @@ feature -- Window Settings
 
 feature -- Window Properties
 
-	changed: BOOLEAN is
+	changed: BOOLEAN
 			-- Has something been changed and not yet been saved?
 		do
 			if editors_manager.current_editor /= Void then
@@ -472,13 +472,13 @@ feature -- Window Properties
 			Result := editors_manager.changed
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Does `Current's text is empty?
 		do
 			Result := editors_manager = Void or else editors_manager.current_editor = Void or else editors_manager.current_editor.is_empty
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text representing Current
 		do
 			if editors_manager.current_editor /= Void then
@@ -486,7 +486,7 @@ feature -- Window Properties
 			end
 		end
 
-	encoding: ENCODING is
+	encoding: ENCODING
 			-- Encoding in which text is saved.
 		do
 			if editors_manager.current_editor /= Void then
@@ -494,13 +494,13 @@ feature -- Window Properties
 			end
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing Current window.
 		do
 			Result := pixmaps.icon_pixmaps.general_dialog_icon
 		end
 
-	close_focusing_content is
+	close_focusing_content
 			-- Close focusing content.
 		local
 			l_content: SD_CONTENT
@@ -541,7 +541,7 @@ feature -- Window Properties
 
 feature -- Update
 
-	synchronize is
+	synchronize
 			-- Synchronize stones.
 		local
 			st: STONE
@@ -635,19 +635,19 @@ feature -- Update
 			tools.search_tool.rebuild_scope_list
 		end
 
-	synchronize_routine_tool_to_default is
+	synchronize_routine_tool_to_default
 			-- Synchronize the editor tool to the debug format.
 		do
 			--| FIXME ARNAUD: To be implemented
 		end
 
-	clear_object_tool is
+	clear_object_tool
 			-- Clear the contents of the object tool if shown.
 		do
 			--| FIXME ARNAUD: To be implemented
 		end
 
-	update_eis_system is
+	update_eis_system
 			-- Update EIS storage and the tool if needed.
 		do
 			if {l_info_tool_commander: !ES_INFORMATION_TOOL_COMMANDER_I} shell_tools.tool ({ES_INFORMATION_TOOL}) then
@@ -662,7 +662,7 @@ feature -- Stone process
 	stone: STONE
 			-- Current stone
 
-	toggle_unified_stone is
+	toggle_unified_stone
 			-- Change the stone management mode.
 		do
 			set_unified_stone (not unified_stone)
@@ -676,7 +676,7 @@ feature -- Stone process
 			end
 		end
 
-	set_stone (a_stone: STONE) is
+	set_stone (a_stone: STONE)
 			-- Change the currently focused stone.
 		local
 			l_warning: ES_DISCARDABLE_WARNING_PROMPT
@@ -711,7 +711,7 @@ feature -- Stone process
 			update_save_symbol
 		end
 
-	set_stone_after_first_check (a_stone: STONE) is
+	set_stone_after_first_check (a_stone: STONE)
 			-- Display text associated with `a_stone', if any and if possible
 		local
 			l_checker: EB_STONE_FIRST_CHECKER
@@ -722,7 +722,7 @@ feature -- Stone process
 			end
 		end
 
-	force_stone (s: STONE) is
+	force_stone (s: STONE)
 			-- make `s' the new value of `stone', and
 			-- change the display accordingly. Try to
 			-- extract a class from `s' whenever possible.
@@ -735,7 +735,7 @@ feature -- Stone process
 			end
 		end
 
-	refresh is
+	refresh
 			-- Synchronize clickable elements with text, if possible.
 		do
 	--| FIXME ARNAUD
@@ -753,7 +753,7 @@ feature -- Stone process
 			tools.refresh
 		end
 
-	refresh_all_commands is
+	refresh_all_commands
 			-- Refresh all commands with their accelerators into the window and related interfaces.
 		local
 			l_toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
@@ -827,7 +827,7 @@ feature -- Stone process
 			shortcut_manager.propagate_accelerators (Current)
 		end
 
-	refresh_external_commands is
+	refresh_external_commands
 			-- Refresh external commands.
 		local
 			l_external_command: ARRAY [EB_EXTERNAL_COMMAND]
@@ -850,7 +850,7 @@ feature -- Stone process
 			end
 		end
 
-	quick_refresh_editors is
+	quick_refresh_editors
 			-- Redraw editors' drawing area.
 		do
 			if editors_manager.current_editor /= Void then
@@ -863,7 +863,7 @@ feature -- Stone process
 			tools.features_relation_tool.quick_refresh_editor
 		end
 
-	quick_refresh_margins is
+	quick_refresh_margins
 			-- Redraw the main editor's drawing area.
 		do
 			if editors_manager.current_editor /= Void then
@@ -878,7 +878,7 @@ feature -- Stone process
 
 feature -- Position provider
 
-	position: like position_internal is
+	position: like position_internal
 			-- Currently shown text position in the editor
 		do
 			if editors_manager.current_editor /= Void then
@@ -886,7 +886,7 @@ feature -- Position provider
 			end
 		end
 
-	pos_container: like pos_container_internal is
+	pos_container: like pos_container_internal
 			-- Current selected formatter
 		do
 			Result := selected_formatter
@@ -894,7 +894,7 @@ feature -- Position provider
 
 feature -- Resource Update
 
-	update_viewpoints is
+	update_viewpoints
 			-- Update viewpoints
 		local
 			l_formatter: EB_FORMATTER
@@ -921,17 +921,17 @@ feature -- Resource Update
 			end
 		end
 
-	register is
+	register
 			-- Register to preferences we want notification of.
 		do
 		end
 
-	unregister is
+	unregister
 			-- unregister to preferences we want notification of.
 		do
 		end
 
-	reset is
+	reset
 			-- Reset the window contents
 		do
 			Precursor
@@ -942,7 +942,7 @@ feature -- Resource Update
 	--| END FIXME
 		end
 
-	syntax_is_correct: BOOLEAN is
+	syntax_is_correct: BOOLEAN
 			-- Current editor was successfully parsed?
 		do
 			if editors_manager.current_editor /= Void then
@@ -952,14 +952,14 @@ feature -- Resource Update
 			end
 		end
 
-	save_before_compiling is
+	save_before_compiling
 			-- save the text but do not update clickable positions
 		do
 			save_only := True
 			save_all
 		end
 
-	perform_check_before_save is
+	perform_check_before_save
 			-- Perform any pre-save operations/checks
 		do
 			-- FIXIT: temp comment by larry
@@ -969,7 +969,7 @@ feature -- Resource Update
 			end
 		end
 
-	perform_check_before_save_with (a_editor: EB_SMART_EDITOR) is
+	perform_check_before_save_with (a_editor: EB_SMART_EDITOR)
 			-- Perform any pre-save operations with `a_editor'
 		require
 			a_editor_not_void: a_editor /= Void
@@ -990,19 +990,19 @@ feature -- Resource Update
 			end
 		end
 
-	continue_save is
+	continue_save
 			-- Continue saving
 		do
 			check_passed := True
 		end
 
-	cancel_save is
+	cancel_save
 			-- Cancel saving
 		do
 			check_passed := False
 		end
 
-	process is
+	process
 			-- process the user entry in the address bar
 		local
 			l_class_stone: CLASSI_STONE
@@ -1018,7 +1018,7 @@ feature -- Resource Update
 			end
 		end
 
-	save_and (an_action: PROCEDURE [ANY, TUPLE]) is
+	save_and (an_action: PROCEDURE [ANY, TUPLE])
 			-- Save and `an_actions'.
 		local
 			save_dialog: EB_CONFIRM_SAVE_DIALOG
@@ -1032,14 +1032,14 @@ feature -- Resource Update
 			end
 		end
 
-	set_classi_changed (a_class: CLASS_C) is
+	set_classi_changed (a_class: CLASS_C)
 			-- Change a_class in shared project.
 		do
 			Eiffel_project.Workbench.change_class (a_class.original_class)
 		end
 
 
-	on_before_text_saved is
+	on_before_text_saved
 			-- Notify the editor that the text is about to be saved.
 		local
 			l_editor: EB_SMART_EDITOR
@@ -1058,7 +1058,7 @@ feature -- Resource Update
 			end
 		end
 
-	on_text_saved is
+	on_text_saved
 			-- Notify the editor that the text has been saved
 		local
 			str: STRING_32
@@ -1095,7 +1095,7 @@ feature -- Resource Update
 			text_edited := False
 		end
 
-	disable_editors_command is
+	disable_editors_command
 			-- Disable `a_command'.
 		require
 			editors_manager_not_void: editors_manager /= Void
@@ -1119,7 +1119,7 @@ feature -- Resource Update
 
 feature -- Window management
 
-	give_focus is
+	give_focus
 			-- Give the focus to the address manager.
 		do
 			if address_manager.widget.is_displayed then
@@ -1127,14 +1127,14 @@ feature -- Window management
 			end
 		end
 
-	save_layout is
+	save_layout
 			-- Store layout of `current'.
 		do
 				-- Commit saves
 			preferences.preferences.save_preferences
 		end
 
-	save_layout_to_session: EB_DEVELOPMENT_WINDOW_SESSION_DATA is
+	save_layout_to_session: EB_DEVELOPMENT_WINDOW_SESSION_DATA
 			-- Save session data of `Current' to session object `a_session'.
 			-- This is project data session, not for all projects.
 		local
@@ -1197,7 +1197,7 @@ feature -- Window management
 			not_void: Result /= Void
 		end
 
-	save_editors_to_session_data (a_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA) is
+	save_editors_to_session_data (a_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA)
 			-- Save editor number, open classes and open clusters.
 		local
 			l_open_classes: HASH_TABLE [STRING, STRING]
@@ -1217,7 +1217,7 @@ feature -- Window management
 	docking_layout_manager: EB_DOCKING_LAYOUT_MANAGER
 			-- Docking layout manager
 
-	close_all_tools is
+	close_all_tools
 			-- Close all tools.
 		local
 			l_tools: ARRAYED_LIST [SD_CONTENT]
@@ -1243,7 +1243,7 @@ feature -- Tools & Controls
 			-- Allow user to enter the name
 			-- of the class he wants to edit.
 
-	project_manager: EB_PROJECT_MANAGER is
+	project_manager: EB_PROJECT_MANAGER
 			-- Project manager associated to the project the user is working on.
 		do
 			Result := Eiffel_project.manager
@@ -1261,7 +1261,7 @@ feature -- Tools & Controls
 	unified_stone: BOOLEAN
 			-- Is the stone common with the context tool or not?
 
-	link_tools: BOOLEAN is
+	link_tools: BOOLEAN
 			-- Are tools linked?
 		do
 			Result := preferences.development_window_data.link_tools
@@ -1275,7 +1275,7 @@ feature -- Tools & Controls
 
 feature -- Multiple editor management
 
-	update_paste_cmd is
+	update_paste_cmd
 			-- Update `editor_paste_cmd'. To be performed when an editor grabs the focus.
 		do
 			if update_paste_cmd_agent = Void then
@@ -1310,7 +1310,7 @@ feature {EB_EDITORS_MANAGER, EB_STONE_CHECKER} -- Tabbed editor
 	is_dropping_on_editor: BOOLEAN
 			-- Is pick and droping on an editor?
 
-	set_dropping_on_editor (a_dropping: BOOLEAN) is
+	set_dropping_on_editor (a_dropping: BOOLEAN)
 			-- Set `Is dropping_on_editor' with `a_dropping'.
 		do
 			is_dropping_on_editor := a_dropping
@@ -1318,7 +1318,7 @@ feature {EB_EDITORS_MANAGER, EB_STONE_CHECKER} -- Tabbed editor
 
 feature {ES_FEATURES_TOOL_PANEL, ES_FEATURES_GRID, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Feature Clauses
 
-	set_feature_locating (a_locating: BOOLEAN) is
+	set_feature_locating (a_locating: BOOLEAN)
 			-- Set `feature_locating' with `a_locating'.
 		do
 			feature_locating := a_locating
@@ -1329,7 +1329,7 @@ feature {ES_FEATURES_TOOL_PANEL, ES_FEATURES_GRID, EB_STONE_CHECKER, EB_DEVELOPM
 
 feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window management / Implementation
 
-	destroy_imp is
+	destroy_imp
 			-- Destroy window.
 		do
 				-- To avoid reentrance
@@ -1379,7 +1379,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			end
 		end
 
-	save_size is
+	save_size
 			-- Save window size.
 		do
 			if not window.is_minimized then
@@ -1391,7 +1391,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			end
 		end
 
-	save_position is
+	save_position
 			-- Save window position.
 		do
 			if not window.is_minimized then
@@ -1403,7 +1403,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			end
 		end
 
-	save_window_data is
+	save_window_data
 			-- Save Window size, position and states
 		local
 			l_develop_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA
@@ -1428,7 +1428,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			end
 		end
 
-	 save_window_state is
+	 save_window_state
 	 		-- Save window state information to preference data.
 	 	local
 	 		l_debugger_manager: EB_DEBUGGER_MANAGER
@@ -1442,7 +1442,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 
 feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implementation
 
-	set_stone_after_check (a_stone: STONE) is
+	set_stone_after_check (a_stone: STONE)
 			-- Set stone after check
 		local
 			l_checker: EB_STONE_CHECKER
@@ -1463,7 +1463,7 @@ feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implemen
 	is_destroying: BOOLEAN
 			-- Is `current' being currently destroyed?
 
-	all_editor_closed is
+	all_editor_closed
 			-- All editor closed.
 		do
 			if editors_manager.editors.count <= 0 then
@@ -1486,7 +1486,7 @@ feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implemen
 
 feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Internal issues with EB_STONE_CHECKER
 
-	is_text_loaded: BOOLEAN is
+	is_text_loaded: BOOLEAN
 			-- Text is loaded in current editor?
 		do
 			if editors_manager.current_editor /= Void then
@@ -1496,7 +1496,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			end
 		end
 
-	set_feature_stone_already_processed (a_bool: like feature_stone_already_processed) is
+	set_feature_stone_already_processed (a_bool: like feature_stone_already_processed)
 			-- Set `feature_stone_already_processed'
 		do
 			feature_stone_already_processed := a_bool
@@ -1508,7 +1508,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			-- Is the processed stone a feature stone and has it
 			-- been already processed by the editor ?
 
-	set_text_saved (a_bool: like text_saved) is
+	set_text_saved (a_bool: like text_saved)
 			-- Set `text_saved'
 		do
 			text_saved := a_bool
@@ -1519,7 +1519,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 	text_saved: BOOLEAN
 			-- has the user chosen to save the file
 
-	set_during_synchronization (a_bool: BOOLEAN) is
+	set_during_synchronization (a_bool: BOOLEAN)
 			-- Set `during_synchronization'
 		do
 			during_synchronization := a_bool
@@ -1530,7 +1530,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 	during_synchronization: BOOLEAN
 			-- Are we during a resynchronization?
 
-	update_formatters is
+	update_formatters
 			-- Give a correct sensitivity to formatters.
 		local
 			cist: CLASSI_STONE
@@ -1584,7 +1584,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			end
 		end
 
-	scroll_to_feature (feat_as: E_FEATURE; displayed_class: CLASS_I) is
+	scroll_to_feature (feat_as: E_FEATURE; displayed_class: CLASS_I)
 			-- highlight the feature correspnding to `feat_as' in the class represented by `displayed_class'
 		require
 			class_is_not_void: displayed_class /= Void
@@ -1637,7 +1637,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			end
 		end
 
-	scroll_to_ast (a_ast: AST_EIFFEL; displayed_class: CLASS_I; a_selected: BOOLEAN) is
+	scroll_to_ast (a_ast: AST_EIFFEL; displayed_class: CLASS_I; a_selected: BOOLEAN)
 			-- Scroll to `a_ast' in `displayed_class'.
 			-- If `a_selected' is True, select region of `a_ast'.
 		local
@@ -1659,7 +1659,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			scroll_to_selection ([begin_index - offset.start_offset, end_index - offset.end_offset + 1], a_selected)
 		end
 
-	scroll_to_selection (a_selection: TUPLE [pos_start, pos_end: INTEGER]; a_selected: BOOLEAN) is
+	scroll_to_selection (a_selection: TUPLE [pos_start, pos_end: INTEGER]; a_selected: BOOLEAN)
 			-- Scroll to the region of `a_selection'.
 			-- If `a_selected' is True, `a_selection' is selected.
 		require
@@ -1672,7 +1672,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 			end
 		end
 
-	relative_location_offset (a_location: TUPLE [a_start_pos: INTEGER; a_end_pos: INTEGER]; a_displayed_class: CLASS_I): TUPLE [related_start_pos: INTEGER; related_end_pos: INTEGER] is
+	relative_location_offset (a_location: TUPLE [a_start_pos: INTEGER; a_end_pos: INTEGER]; a_displayed_class: CLASS_I): TUPLE [related_start_pos: INTEGER; related_end_pos: INTEGER]
 			-- Relative editor location offset (the number of all '%R' removed) of `a_location' in context of `a_displayed_class'
 		require
 			a_location_attached: a_location /= Void
@@ -1706,7 +1706,7 @@ feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -
 
 feature {EB_DEVELOPMENT_WINDOW_PART, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER} -- Implementation
 
-	update_save_symbol is
+	update_save_symbol
 			-- Update save symbol.
 		do
 			Precursor {EB_FILEABLE}
@@ -1743,7 +1743,7 @@ feature {EB_DEVELOPMENT_WINDOW_PART, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WIND
 	is_stone_external: BOOLEAN
 			-- Does 'stone' contain a .NET consumed type?
 
-	enable_dotnet_formatters is
+	enable_dotnet_formatters
 			-- Enable only the .NET class text formatters.
 		local
 			l_formatters: like managed_main_formatters
@@ -1770,7 +1770,7 @@ feature {EB_DEVELOPMENT_WINDOW_PART, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WIND
 	saved_cursor: CURSOR
 			-- Saved cursor position for displaying the stack.
 
-	terminate_external_command_and_destroy is
+	terminate_external_command_and_destroy
 			-- Terminate running external command and destroy.
 		do
 			process_manager.terminate_external_command
@@ -1779,14 +1779,14 @@ feature {EB_DEVELOPMENT_WINDOW_PART, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WIND
 			external_command_not_running: not process_manager.is_external_command_running
 		end
 
-	save_and_destroy is
+	save_and_destroy
 			-- Save text then destroy.
 		do
 			save_text
 			destroy
 		end
 
-	force_destroy is
+	force_destroy
 			-- Destroy without asking.
 		do
 			confirmed := True
@@ -1802,7 +1802,7 @@ feature {EB_DEVELOPMENT_WINDOW_PART, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WIND
 
 feature {NONE} -- Recycle
 
-	recycle_formatters is
+	recycle_formatters
 			-- Recycle formatters
 		do
 			from
@@ -1852,13 +1852,13 @@ feature {NONE} -- Recycle
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initliazed by EB_DEVELOPMENT_WINDOW_BUILDER
 
-	show_dynamic_library_dialog is
+	show_dynamic_library_dialog
 			-- Create a new dynamic library window and display it.
 		do
 			Window_manager.create_dynamic_lib_window
 		end
 
-	send_stone_to_context is
+	send_stone_to_context
 			-- Send current stone to the context tool.
 			-- Send current targeting feature to context tool if possible.
 			-- Used by `send_stone_to_context_cmd'.
@@ -1892,7 +1892,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initliazed by EB_DEVELOPMENT_WINDOW_B
 feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			EB_DEVELOPMENT_WINDOW_MAIN_BUILDER, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Implementation: Editor commands
 
-	refresh_cursor_position is
+	refresh_cursor_position
 			-- Display the current cursor position in the status bar.
 		local
 			l, c, v: INTEGER
@@ -1911,7 +1911,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			status_bar.set_cursor_position (l, c, v)
 		end
 
-	refresh_context_info is
+	refresh_context_info
 			-- Refresh address bar and features tool to relect
 			-- where in the code the cursor is located.
 		local
@@ -1943,7 +1943,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			end
 		end
 
-	set_editing_location_by_feature (a_feature_name: FEATURE_NAME) is
+	set_editing_location_by_feature (a_feature_name: FEATURE_NAME)
 			-- Set editing location, feature tool and combo box changes according to `a_feature_name'.
 		local
 			l_efeature: E_FEATURE
@@ -1980,7 +1980,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			end
 		end
 
-	seek_item_in_feature_tool (a_feature: E_FEATURE) is
+	seek_item_in_feature_tool (a_feature: E_FEATURE)
 			-- Seek and select item contains data of `a_feature' in features tool.
 			-- If `a_feature' is void, deselect item in features tool.
 		do
@@ -1991,7 +1991,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			end
 		end
 
-	search is
+	search
 			-- Search some text in the focused editor.
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
@@ -2002,7 +2002,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			end
 		end
 
-	goto is
+	goto
 			-- Display a dialog to select a line to go to in the editor.
 		local
 			ed: EB_EDITOR
@@ -2016,13 +2016,13 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			end
 		end
 
-	toggle_line_number_display is
+	toggle_line_number_display
 			-- Toggle line number display on/off in editor
 		do
 			preferences.editor_data.show_line_numbers_preference.set_value (not preferences.editor_data.show_line_numbers)
 		end
 
-	find_next is
+	find_next
 			-- Find the next occurrence of the search text.
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
@@ -2037,7 +2037,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			end
 		end
 
-	find_previous is
+	find_previous
 			-- Find the previous occurrence of the search text.
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
@@ -2052,7 +2052,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			end
 		end
 
-	find_next_selection is
+	find_next_selection
 			-- Find the next occurrence of the selection.
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
@@ -2063,7 +2063,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			end
 		end
 
-	find_previous_selection is
+	find_previous_selection
 			-- Find the next occurrence of the selection.
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
@@ -2074,14 +2074,14 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			end
 		end
 
-	toggle_formatting_marks is
+	toggle_formatting_marks
 			-- Show/Hide formatting marks in the editor and update related menu item.
 		do
 			editors_manager.toggle_formatting_marks
 			refresh_toggle_formatting_marks_command
 		end
 
-	refresh_toggle_formatting_marks_command is
+	refresh_toggle_formatting_marks_command
 			-- Refresh toggle formatting marks menu item.
 		do
 			if editors_manager.show_formatting_marks then
@@ -2093,7 +2093,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 
 feature -- Implementation: Editor commands
 
-	select_all is
+	select_all
 			-- Select the whole text in the focused editor.
 		local
 			l_editor: EB_EDITOR
@@ -2106,7 +2106,7 @@ feature -- Implementation: Editor commands
 
 feature {EB_ON_SELECTION_COMMAND} -- Commands
 
-	cut_selection is
+	cut_selection
 			-- Cut the selection in the current editor.
 		local
 			l_editor: EB_CLICKABLE_EDITOR
@@ -2117,7 +2117,7 @@ feature {EB_ON_SELECTION_COMMAND} -- Commands
 			end
 		end
 
-	copy_selection is
+	copy_selection
 			-- Cut the selection in the current editor.
 		local
 			l_editor: EB_CLICKABLE_EDITOR
@@ -2130,7 +2130,7 @@ feature {EB_ON_SELECTION_COMMAND} -- Commands
 
 feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implementation / Menus
 
-	set_undo_accelerator (a_accelerator: like undo_accelerator) is
+	set_undo_accelerator (a_accelerator: like undo_accelerator)
 			-- Set `undo_accelerator'
 		do
 			undo_accelerator := a_accelerator
@@ -2141,7 +2141,7 @@ feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implementation / Menus
 	undo_accelerator: EV_ACCELERATOR
 			-- Accelerator for Ctrl+Z
 
-	set_redo_accelerator (a_accelerator: like redo_accelerator) is
+	set_redo_accelerator (a_accelerator: like redo_accelerator)
 			-- Set `redo_accelerator'
 		do
 			redo_accelerator := a_accelerator
@@ -2154,7 +2154,7 @@ feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implementation / Menus
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 
-	set_tools_initialized (a_bool: like tools_initialized) is
+	set_tools_initialized (a_bool: like tools_initialized)
 			-- Set `tools_initialized'
 		do
 			tools_initialized := a_bool
@@ -2162,7 +2162,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			set: tools_initialized = a_bool
 		end
 
-	set_toolbars_area (a_area: like toolbars_area) is
+	set_toolbars_area (a_area: like toolbars_area)
 			-- Set `toolbars_area'
 		do
 			toolbars_area := a_area
@@ -2170,7 +2170,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			set: toolbars_area = a_area
 		end
 
-	set_view_points_combo (a_view_points_combo: like view_points_combo) is
+	set_view_points_combo (a_view_points_combo: like view_points_combo)
 			-- Set `view_points_combo'
 		do
 			view_points_combo := a_view_points_combo
@@ -2178,7 +2178,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			set: view_points_combo = a_view_points_combo
 		end
 
-	set_managed_class_formatters (a_formatters: like managed_class_formatters) is
+	set_managed_class_formatters (a_formatters: like managed_class_formatters)
 			-- Set `managed_class_formatters'
 		do
 			managed_class_formatters := a_formatters
@@ -2186,7 +2186,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			set: managed_class_formatters = a_formatters
 		end
 
-	set_managed_feature_formatters (a_formatters: like managed_feature_formatters) is
+	set_managed_feature_formatters (a_formatters: like managed_feature_formatters)
 			-- Set `managed_feature_formatters'
 		do
 			managed_feature_formatters := a_formatters
@@ -2194,7 +2194,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			set: managed_feature_formatters = a_formatters
 		end
 
-	set_managed_main_formatters (a_formatters: like managed_main_formatters) is
+	set_managed_main_formatters (a_formatters: like managed_main_formatters)
 			-- Set `managed_main_formatters'
 		do
 			managed_main_formatters := a_formatters
@@ -2202,7 +2202,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			set: managed_main_formatters = a_formatters
 		end
 
-	set_managed_dependency_formatters (a_formatters: like managed_dependency_formatters) is
+	set_managed_dependency_formatters (a_formatters: like managed_dependency_formatters)
 			-- Set `managed_dependency_formatters'
 		do
 			managed_dependency_formatters := a_formatters
@@ -2210,7 +2210,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			set: managed_dependency_formatters = a_formatters
 		end
 
-	set_container (a_container: like container) is
+	set_container (a_container: like container)
 			-- Set `container'
 		do
 			container := a_container
@@ -2218,7 +2218,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			set: container = a_container
 		end
 
-	set_panel (a_panel: like panel) is
+	set_panel (a_panel: like panel)
 			-- Set `panel'
 		do
 			panel := a_panel
@@ -2226,7 +2226,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			set: panel = a_panel
 		end
 
-	set_status_bar (a_bar: like status_bar) is
+	set_status_bar (a_bar: like status_bar)
 			-- Set `status_bar'
 		do
 			status_bar := a_bar
@@ -2234,7 +2234,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			set: status_bar = a_bar
 		end
 
-	set_window (a_window: like window) is
+	set_window (a_window: like window)
 			-- Set `window'
 		do
 			window := a_window
@@ -2242,7 +2242,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 			set: window = a_window
 		end
 
-	on_viewpoint_changed is
+	on_viewpoint_changed
 			-- Switch viewpoint.
 		local
 			l_formatter: EB_CLASS_TEXT_FORMATTER
@@ -2261,7 +2261,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART} -- EB_DEVELOPMENT_WINDOW_MENU_BUILDER issues
 
-	destroy is
+	destroy
 			-- check if current text has been saved and destroy
 		do
 			if Window_manager.development_windows_count > 1 and then process_manager.is_external_command_running and then Current = external_output_manager.target_development_window then
@@ -2285,7 +2285,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART} -- EB_DEVELO
 			end
 		end
 
-	set_command_controller (a_controller: like command_controller) is
+	set_command_controller (a_controller: like command_controller)
 			-- Set `command_controller'
 		do
 			command_controller := a_controller
@@ -2293,7 +2293,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART} -- EB_DEVELO
 			set: command_controller = a_controller
 		end
 
-	set_show_dynamic_lib_tool (a_cmd: like show_dynamic_lib_tool) is
+	set_show_dynamic_lib_tool (a_cmd: like show_dynamic_lib_tool)
 			-- Set `show_dynamic_lib_tool'
 		do
 			show_dynamic_lib_tool := a_cmd
@@ -2303,7 +2303,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART} -- EB_DEVELO
 
 feature {EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} --EB_DEVELOPMENT_WINDOW_DIRECTOR issues.
 
-	set_unified_stone (a_bool: like unified_stone) is
+	set_unified_stone (a_bool: like unified_stone)
 			-- Set `unified_stone'
 		do
 			unified_stone := a_bool
@@ -2314,7 +2314,7 @@ feature {EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRE
 			set: unified_stone = a_bool
 		end
 
-	set_history_manager (a_manager: like history_manager) is
+	set_history_manager (a_manager: like history_manager)
 			-- Set `history_manager'
 		do
 			history_manager := a_manager
@@ -2322,7 +2322,7 @@ feature {EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRE
 			set: history_manager = a_manager
 		end
 
-	set_address_manager (a_manager: like address_manager) is
+	set_address_manager (a_manager: like address_manager)
 			-- Set `address_manager'
 		do
 			address_manager := a_manager
@@ -2330,7 +2330,7 @@ feature {EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRE
 			set: address_manager = a_manager
 		end
 
-	set_view_points (a_view_points: like view_points_combo) is
+	set_view_points (a_view_points: like view_points_combo)
 			-- Set `view_points_combo'
 		do
 			view_points_combo := a_view_points
@@ -2338,7 +2338,7 @@ feature {EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRE
 			set: view_points_combo = a_view_points
 		end
 
-	set_initialized_for_builder (a_bool: like initialized) is
+	set_initialized_for_builder (a_bool: like initialized)
 			-- Set `initialized'
 		do
 			initialized := a_bool
@@ -2346,7 +2346,7 @@ feature {EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRE
 			set: initialized = a_bool
 		end
 
-	set_is_destroying (a_bool: like is_destroying) is
+	set_is_destroying (a_bool: like is_destroying)
 			-- Set `is_destroying'
 		do
 			is_destroying := a_bool
@@ -2372,7 +2372,7 @@ feature{EB_TOOL, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT
 
 feature{EB_TOOL, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_MENU_BUILDER}
 
-	execute_show_favorites is
+	execute_show_favorites
 			-- Show `favorites_tool' if it is closed, close
 			-- it in the opposite case.
 		do
@@ -2381,7 +2381,7 @@ feature{EB_TOOL, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT
 
 feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Execution
 
-	save_and_switch_formatter (a_formatter: EB_FORMATTER) is
+	save_and_switch_formatter (a_formatter: EB_FORMATTER)
 			-- Save the file before switching bewteen main formatters when the file is not saved.
 		require
 			a_formatter_not_void: a_formatter /= Void
@@ -2398,7 +2398,7 @@ feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Execution
 feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEBUGGER_MANAGER, EB_WINDOW_MANAGER,
 		EB_NEW_DEVELOPMENT_WINDOW_COMMAND} -- Access
 
-	development_window_data: EB_DEVELOPMENT_WINDOW_DATA is
+	development_window_data: EB_DEVELOPMENT_WINDOW_DATA
 			-- Meta data describing `Current'.
 		do
 			Result := preferences.development_window_data
@@ -2426,7 +2426,7 @@ feature -- Parts
 
 feature {EB_DEVELOPMENT_WINDOW_PART}
 
-	set_text_edited (a_bool: like text_edited) is
+	set_text_edited (a_bool: like text_edited)
 			-- Set `text_edited'
 		do
 			text_edited := a_bool
@@ -2434,7 +2434,7 @@ feature {EB_DEVELOPMENT_WINDOW_PART}
 			set: text_edited = a_bool
 		end
 
-	set_context_refreshing_timer (a_timer: like context_refreshing_timer) is
+	set_context_refreshing_timer (a_timer: like context_refreshing_timer)
 			-- Set `context_refreshing_timer'
 		do
 			context_refreshing_timer := a_timer
@@ -2481,7 +2481,7 @@ invariant
 	ui_attached: not is_recycled implies ui /= Void
 	window_id_positive: window_id > 0
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

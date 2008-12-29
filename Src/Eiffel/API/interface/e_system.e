@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Representation of an Eiffel system."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize the system.
 		do
 			create sub_clusters.make (3);
@@ -38,20 +38,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- System name specified in Lace file
 		do
 			Result := System.name
 		end;
 
-	document_path: DIRECTORY_NAME is
+	document_path: DIRECTORY_NAME
 			-- Path specified for the documents directory for classes.
 			-- Void result implies no document generation
 		do
 			Result := System.document_path
 		end;
 
-	context_diagram_path: DIRECTORY_NAME is
+	context_diagram_path: DIRECTORY_NAME
 			-- Path where context diagrams should be stored.
 		local
 			d: DIRECTORY
@@ -64,7 +64,7 @@ feature -- Access
 			end
 		end
 
-	document_file_name: FILE_NAME is
+	document_file_name: FILE_NAME
 			-- File name specified for the cluster text generation
 			-- Void result implies no document generation
 		do
@@ -76,78 +76,78 @@ feature -- Access
 
 feature -- Access
 
-	Any_class: CLASS_I is
+	Any_class: CLASS_I
 			-- class ANY
 		once
 			Result := System.any_class
 		end;
 
-	Boolean_class: CLASS_I is
+	Boolean_class: CLASS_I
 			-- Class BOOLEAN
 		once
 			Result := System.boolean_class
 		end;
 
-	Character_class: CLASS_I is
+	Character_class: CLASS_I
 			-- Class CHARACTER
 		once
 			Result := System.character_8_class
 		end;
 
-	Integer_class: CLASS_I is
+	Integer_class: CLASS_I
 			-- Class INTEGER
 		once
 			Result := System.integer_32_class
 		end;
 
-	Real_class: CLASS_I is
+	Real_class: CLASS_I
 			-- Class REAL
 		once
 			Result := System.real_32_class
 		end;
 
-	Double_class: CLASS_I is
+	Double_class: CLASS_I
 			-- Class DOUBLE
 		once
 			Result := System.real_64_class
 		end;
 
-	Pointer_class: CLASS_I is
+	Pointer_class: CLASS_I
 			-- Class POINTER
 		once
 			Result := System.pointer_class
 		end;
 
-	String_class: CLASS_I is
+	String_class: CLASS_I
 			-- Class STRING
 		once
 			Result := System.string_8_class
 		end;
 
-	Array_class: CLASS_I is
+	Array_class: CLASS_I
 		once
 			Result := System.array_class
 		end;
 
-	Special_class: CLASS_I is
+	Special_class: CLASS_I
 			-- Class SPECIAL
 		once
 			Result := System.special_class
 		end;
 
-	Bit_class: CLASS_I is
+	Bit_class: CLASS_I
 			-- Class BIT_REF
 		once
 			Result := System.bit_class
 		end;
 
-	number_of_classes: INTEGER is
+	number_of_classes: INTEGER
 			-- Number of compiled classes in the system
 		do
 			Result := System.classes.count
 		end;
 
-	class_of_id (i: INTEGER): CLASS_C is
+	class_of_id (i: INTEGER): CLASS_C
 			-- Eiffel Class of id `i'
 		require
 			valid_id: valid_class_id (i)
@@ -155,13 +155,13 @@ feature -- Access
 			Result := System.class_of_id (i)
 		end;
 
-	valid_class_id (i: INTEGER): BOOLEAN is
+	valid_class_id (i: INTEGER): BOOLEAN
 			-- Is the class_type dynamic id `i' valid?
 		do
 			Result := System.classes.valid_index (i)
 		end;
 
-	application_name (workbench_mode: BOOLEAN): FILE_NAME is
+	application_name (workbench_mode: BOOLEAN): FILE_NAME
 			-- Get the full qualified name of the application
 			-- For workbench-mode application `compile_type' is true
 		require
@@ -181,7 +181,7 @@ feature -- Access
 			end
 		end;
 
-	is_precompiled: BOOLEAN is
+	is_precompiled: BOOLEAN
 			-- Is the System precompiled?
 		do
 			Result := workbench.system /= Void and then workbench.System.is_precompiled
@@ -189,13 +189,13 @@ feature -- Access
 
 feature {COMPILER_EXPORTER}
 
-	valid_dynamic_id (i: INTEGER): BOOLEAN is
+	valid_dynamic_id (i: INTEGER): BOOLEAN
 			-- Is the class_type dynamic id `i' valid?
 		do
 			Result := System.class_types.valid_index (i)
 		end;
 
-	class_of_dynamic_id (i: INTEGER; a_is_final: BOOLEAN): CLASS_C is
+	class_of_dynamic_id (i: INTEGER; a_is_final: BOOLEAN): CLASS_C
 			-- Eiffel Class of dynamic id `i'
 		require
 			positive_i: i >= 0;
@@ -209,7 +209,7 @@ feature {COMPILER_EXPORTER}
 			end
 		end;
 
-	type_of_dynamic_id (i: INTEGER; a_is_final: BOOLEAN): CLASS_TYPE is
+	type_of_dynamic_id (i: INTEGER; a_is_final: BOOLEAN): CLASS_TYPE
 			-- Class type of dynamic id `id'
 		require
 			positive_i: i >= 0;
@@ -229,7 +229,7 @@ feature {COMPILER_EXPORTER}
 
 feature {COMPILER_EXPORTER} -- Element change
 
-	add_sub_cluster (c: CLUSTER_I) is
+	add_sub_cluster (c: CLUSTER_I)
 			-- Add cluster `c' to `sub_clusters.
 		require
 			valid_c: c /= Void;
@@ -240,7 +240,7 @@ feature {COMPILER_EXPORTER} -- Element change
 
 feature {COMPILER_EXPORTER} -- Removal
 
-	wipe_out_sub_clusters is
+	wipe_out_sub_clusters
 			-- Wipe out the sub_cluster list.
 		do
 			sub_clusters.wipe_out
@@ -252,7 +252,7 @@ invariant
 
 	sub_clusters_exists: sub_clusters /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

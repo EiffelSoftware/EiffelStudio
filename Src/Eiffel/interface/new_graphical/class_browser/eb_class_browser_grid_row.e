@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A grid row in class browser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Access
 	browser: EB_CLASS_BROWSER_GRID_VIEW [ANY]
 			-- Broswer in which current row is displayed
 
-	class_stone (a_class: CLASS_C): STONE is
+	class_stone (a_class: CLASS_C): STONE
 			-- Class stone for `a_class'
 		require
 			a_class_attached: a_class /= Void
@@ -36,7 +36,7 @@ feature -- Access
 			create{CLASSC_STONE} Result.make (a_class)
 		end
 
-	feature_stone (a_feature: E_FEATURE): STONE is
+	feature_stone (a_feature: E_FEATURE): STONE
 			-- Feature stone associated with Current item
 		require
 			a_feature_attached: a_feature /= Void
@@ -44,7 +44,7 @@ feature -- Access
 			create{FEATURE_STONE} Result.make (a_feature)
 		end
 
-	cluster_stone (a_group: CONF_GROUP): STONE is
+	cluster_stone (a_group: CONF_GROUP): STONE
 			-- Cluster stone from `a_group'
 		require
 			a_group_attached: a_group /= Void
@@ -52,7 +52,7 @@ feature -- Access
 			create{CLUSTER_STONE} Result.make (a_group)
 		end
 
-	ql_feature_comment (a_feature: QL_FEATURE): LIST [EDITOR_TOKEN] is
+	ql_feature_comment (a_feature: QL_FEATURE): LIST [EDITOR_TOKEN]
 			-- Editor token representation of comment of `a_feature'
 		require
 			a_feature_attached: a_feature /= Void
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_browser (a_browser: like browser) is
+	set_browser (a_browser: like browser)
 			-- Set `browser' with `a_browser'.
 		require
 			a_browser_attached: a_browser /= Void
@@ -77,7 +77,7 @@ feature -- Setting
 
 feature -- Row expanding
 
-	expand_parent_row_recursively (a_grid_row: EV_GRID_ROW) is
+	expand_parent_row_recursively (a_grid_row: EV_GRID_ROW)
 			-- Expand parent rows of `a_grid_row' recursively.
 		require
 			a_grid_row_attached: a_grid_row /= Void
@@ -96,7 +96,7 @@ feature -- Row expanding
 
 feature -- General tooltip
 
-	new_general_tooltip (a_item: EB_GRID_EDITOR_TOKEN_ITEM; a_veto_function: FUNCTION [ANY, TUPLE, BOOLEAN]): EB_EDITOR_TOKEN_TOOLTIP is
+	new_general_tooltip (a_item: EB_GRID_EDITOR_TOKEN_ITEM; a_veto_function: FUNCTION [ANY, TUPLE, BOOLEAN]): EB_EDITOR_TOKEN_TOOLTIP
 			-- New general tooltip for `a_item'.
 			-- `a_veto_function' is the function to decide if display of the tooltip should be vetoed.
 		require
@@ -109,7 +109,7 @@ feature -- General tooltip
 			result_attached: Result /= Void
 		end
 
-	setup_general_tooltip (a_text_function: FUNCTION [ANY, TUPLE, LIST [EDITOR_TOKEN]]; a_tooltip: EB_EDITOR_TOKEN_TOOLTIP) is
+	setup_general_tooltip (a_text_function: FUNCTION [ANY, TUPLE, LIST [EDITOR_TOKEN]]; a_tooltip: EB_EDITOR_TOKEN_TOOLTIP)
 			-- Set `a_tooltip' and `a_tooltip' will get its text from `a_text_function'.
 		require
 			a_text_function_attached: a_text_function /= Void
@@ -129,7 +129,7 @@ feature{NONE} -- Implementation
 
 	setup_feature_signature_item (a_item: EB_GRID_EDITOR_TOKEN_ITEM; a_feature: E_FEATURE; a_text_tokens: LIST [EDITOR_TOKEN];
 								  a_image: STRING; a_tooltip_veto_function: FUNCTION [ANY, TUPLE, BOOLEAN];
-								  a_comment_agent: FUNCTION [ANY, TUPLE, LIST [EDITOR_TOKEN]]) is
+								  a_comment_agent: FUNCTION [ANY, TUPLE, LIST [EDITOR_TOKEN]])
 			-- Setup `a_item' to display information `a_feature' in its full signature form whose text comes from `a_text_tokens'.
 			-- `a_image' is the string used in grid search.
 			-- `a_tooltip_veto_function' decides if tooltip display for `a_item' is vetoed.
@@ -154,7 +154,7 @@ feature{NONE} -- Implementation
 
 	setup_class_item_with_short_signature (a_item: EB_GRID_EDITOR_TOKEN_ITEM; a_class_c: CLASS_C; a_text_tokens: LIST [EDITOR_TOKEN]; a_image: STRING;
 										   a_tooltip_veto_function: FUNCTION [ANY, TUPLE, BOOLEAN];
-										   a_full_signature_function: FUNCTION [ANY, TUPLE, LIST [EDITOR_TOKEN]]) is
+										   a_full_signature_function: FUNCTION [ANY, TUPLE, LIST [EDITOR_TOKEN]])
 			-- Setup `a_item' to display information about `a_class_c' in short generic form whose text comes from `a_text_tokens'.
 			-- `a_image' is the string used in grid search.
 			-- `a_tooltip_veto_function' is used to decide if tooltip display for `a_class_c' is vetoed.
@@ -181,7 +181,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	should_class_tooltip_be_displayed (a_class: CLASS_C): BOOLEAN is
+	should_class_tooltip_be_displayed (a_class: CLASS_C): BOOLEAN
 			-- Should tooltip for `a_class' be display?
 		require
 			a_class_attached: a_class /= Void
@@ -200,7 +200,7 @@ feature{NONE} -- Implementation
 invariant
 	browser_attached: browser /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

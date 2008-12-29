@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A EiffelStudio discardable confirmation prompt that requests user saves modified files prior to compiling.
 	]"
@@ -81,7 +81,7 @@ feature {NONE} -- User interface initialization
 			end
 		end
 
-	populate_row (a_class: CLASS_I; a_row: EV_GRID_ROW) is
+	populate_row (a_class: CLASS_I; a_row: EV_GRID_ROW)
 			-- Populates a row with the information from a given class
 			--
 			-- `a_class': Class interface used to populate the grid row
@@ -113,7 +113,7 @@ invariant
 	not_class_list_is_empty: not class_list.is_empty
 	class_list_contains_attached_items: not class_list.has (Void)
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

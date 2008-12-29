@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Description of a supplier
@@ -18,7 +18,7 @@ feature
 	supplier_id: INTEGER;
 			-- Supplier
 
-	supplier: CLASS_C is
+	supplier: CLASS_C
 			-- Corresponding class of id `supplier_id'
 		do
 			Result := System.class_of_id (supplier_id)
@@ -27,13 +27,13 @@ feature
 	occurrence: INTEGER;
 			-- Occurrence of the supplier in the class
 
-	set_occurrence (i: INTEGER) is
+	set_occurrence (i: INTEGER)
 			-- Assign `i' to `occurrence'.
 		do
 			occurrence := i;
 		end;
 
-	make (cl_id: like supplier_id) is
+	make (cl_id: like supplier_id)
 			-- Initialization
 		require
 			good_argument: cl_id > 0
@@ -42,13 +42,13 @@ feature
 			occurrence := 1
 		end;
 
-	add_occurrence is
+	add_occurrence
 			-- Increment `occurrence' of 1.
 		do
 			occurrence := occurrence + 1;
 		end;
 
-	remove_occurrence is
+	remove_occurrence
 			-- Decrement `occurrence' of 1.
 		require
 			good_occurrence: occurrence >= 1;
@@ -56,7 +56,7 @@ feature
 			occurrence := occurrence - 1;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

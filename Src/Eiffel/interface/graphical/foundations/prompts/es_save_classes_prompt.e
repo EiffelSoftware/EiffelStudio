@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A EiffelStudio confirmation prompt that requests user saves modified classes in EiffelStudio.
 	]"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Population
 
-	populate_row (a_entity: CLASS_I; a_row: EV_GRID_ROW) is
+	populate_row (a_entity: CLASS_I; a_row: EV_GRID_ROW)
 			-- <Precursor>
 		local
 --			l_item: EB_GRID_EDITOR_TOKEN_ITEM
@@ -57,7 +57,7 @@ feature {NONE} -- Population
 			a_row.set_item (1, l_item)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

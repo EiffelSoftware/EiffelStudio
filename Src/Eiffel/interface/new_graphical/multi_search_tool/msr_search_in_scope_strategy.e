@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Use to search in whatever object that contains data."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ feature -- Initialization
 	make (a_keyword: like keyword;
 			a_range: like surrounding_text_range;
 			widget: like scope_container;
-			only_compiled_class: like only_compiled_class_searched) is
+			only_compiled_class: like only_compiled_class_searched)
 			-- Make with a scope container, a list for example
 		require
 			widget_not_void: widget /= Void
@@ -42,25 +42,25 @@ feature -- Initialization
 
 feature	-- Status report
 
-	is_scope_container_set: BOOLEAN is
+	is_scope_container_set: BOOLEAN
 			-- Is container set?
 		do
 			Result:= (scope_container /= Void)
 		end
 
-	is_search_prepared: BOOLEAN is
+	is_search_prepared: BOOLEAN
 			-- Is search prepared?
 		do
 			Result := True
 		end
 
-	is_subcluster_searched: BOOLEAN is
+	is_subcluster_searched: BOOLEAN
 			-- Are subclusters searched?
 		do
 			Result := is_subcluster_searched_internal
 		end
 
-	only_compiled_class_searched: BOOLEAN is
+	only_compiled_class_searched: BOOLEAN
 			-- Only compiled class are searched?
 		do
 			Result := only_compiled_class_searched_internal
@@ -68,7 +68,7 @@ feature	-- Status report
 
 feature -- Basic operation
 
-	launch is
+	launch
 			-- Launching searching.
 		local
 			l_list: EV_LIST
@@ -144,7 +144,7 @@ feature -- Basic operation
 			item_matched.start
 		end
 
-	reset_all is
+	reset_all
 			-- Reset all.
 		do
 			Precursor
@@ -153,7 +153,7 @@ feature -- Basic operation
 
 feature -- Element change.
 
-	set_subcluster_searched (a_bool: BOOLEAN) is
+	set_subcluster_searched (a_bool: BOOLEAN)
 			-- If set subclusters in `cluster_i' are searched.
 		do
 			is_subcluster_searched_internal := a_bool
@@ -176,7 +176,7 @@ feature -- Implementation
 	only_compiled_class_searched_internal: BOOLEAN;
 			-- Only compiled class are searched?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

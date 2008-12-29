@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Like types that have not been evaluated (has not gone past Degree 4)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_string: like dump) is
+	make (a_string: like dump)
 			-- Initialize `anchor' to `a_string'
 		require
 			non_void_string: a_string /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			set: anchor.is_equal (a_string)
 		end
 
-	make_current is
+	make_current
 			-- Initialize `anchor' to `Current'.
 		do
 			make (Like_current)
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_unevaluated_like_type (Current)
@@ -60,7 +60,7 @@ feature -- Access
 	anchor_name_id: INTEGER
 			-- Id of `anchor' in `names_heap'.
 
-	anchor: STRING is
+	anchor: STRING
 			-- Anchor name
 		do
 			Result := names_heap.item (anchor_name_id)
@@ -71,19 +71,19 @@ feature -- Status report
 	is_like_current: BOOLEAN
 			-- Is Current like Current?
 
-	has_associated_class: BOOLEAN is False
+	has_associated_class: BOOLEAN = False
 			-- Does Current have associated class?
 
 feature -- Access
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Class associated to the current type
 		do
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := anchor_name_id = other.anchor_name_id and then
@@ -94,7 +94,7 @@ feature -- Comparison
 
 feature -- Output
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 			-- Append Current type to `st'.
 		do
 			if has_attached_mark then
@@ -107,7 +107,7 @@ feature -- Output
 			st.add (anchor)
 		end
 
-	dump: STRING is
+	dump: STRING
 		do
 			create Result.make_empty
 			if has_attached_mark then
@@ -121,14 +121,14 @@ feature -- Output
 
 feature {TYPE_A} -- Helpers
 
-	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 			-- An unevaluated type is never valid.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		local
 			o: UNEVALUATED_LIKE_TYPE
@@ -139,36 +139,36 @@ feature {NONE} -- Implementation
 				has_same_attachment_marks (o)
 		end
 
-	shared_create_info, create_info: CREATE_INFO is
+	shared_create_info, create_info: CREATE_INFO
 			-- Byte code information for entity type creation
 		do
 		end
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
 			-- Does Current conform to `other' in `a_context_class'?
 		do
 		end
 
-	instantiation_in (type: TYPE_A; written_id: INTEGER): like Current is
+	instantiation_in (type: TYPE_A; written_id: INTEGER): like Current
 		do
 		end
 
-	instantiated_in (class_type: TYPE_A): like Current is
+	instantiated_in (class_type: TYPE_A): like Current
 		do
 		end
 
-	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current is
+	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): like Current
 		do
 		end
 
-	Like_current: STRING is "Current"
+	Like_current: STRING = "Current"
 			-- String constant for `Current'.
 
 invariant
 	non_void_anchor: anchor /= Void
 	is_like_current_implies_current_anchor: is_like_current implies anchor.is_equal (Like_current)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

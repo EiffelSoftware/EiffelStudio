@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base class for a refactoring"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ inherit
 
 feature {ERF_REFACTORING} -- Initialization
 
-	make (an_undo_stack: STACK [LIST [ERF_ACTION]]; a_preference: PREFERENCES) is
+	make (an_undo_stack: STACK [LIST [ERF_ACTION]]; a_preference: PREFERENCES)
 			-- Create
 		require
 			an_undo_stack_not_void: an_undo_stack /= Void
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Basic actions
 
-	execute is
+	execute
 			-- Execute the refactoring
 		local
 			all_checks_ok: BOOLEAN
@@ -120,7 +120,7 @@ feature -- Basic actions
 
 feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW} -- Callbacks
 
-	add_window_to_open_classes (a_window: EB_DEVELOPMENT_WINDOW) is
+	add_window_to_open_classes (a_window: EB_DEVELOPMENT_WINDOW)
 			-- Add `a_window' to open classes.
 		local
 			class_name: STRING
@@ -134,7 +134,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW} -- Callbacks
 			end
 		end
 
-	refresh_window (a_window: EB_DEVELOPMENT_WINDOW; a_class: CLASS_I) is
+	refresh_window (a_window: EB_DEVELOPMENT_WINDOW; a_class: CLASS_I)
 			-- Refresh `a_window' to show the content of a_class.
 		local
 			class_stone: CLASSI_STONE
@@ -146,7 +146,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW} -- Callbacks
 -- TODO: Change this stuff to use the query interface that will be created
 feature {NONE} -- Implementation convenience
 
-	descendant_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I] is
+	descendant_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I]
 			-- Get all descendant classes of `a_class'.
 		require
 			compiled_class: a_class.is_compiled
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation convenience
 			Result_not_void: Result /= Void
 		end
 
-	client_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I] is
+	client_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I]
 			-- Get all client classes of `a_class'.
 		require
 			compiled_class: a_class.is_compiled
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation convenience
 			Result_not_void: Result /= Void
 		end
 
-	recursive_client_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I] is
+	recursive_client_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I]
 			-- Get all client classes of `a_class' or a descendant of `a_class'.
 		require
 			compiled_class: a_class.is_compiled
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation convenience
 			Result_not_void: Result /= Void
 		end
 
-	usage_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I] is
+	usage_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I]
 			-- Get all classes that somehow use `a_class' directly or indirectly.
 		require
 			compiled_class: a_class.is_compiled
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation convenience
 
 feature {NONE} -- undo handling
 
-	rollback is
+	rollback
 			-- Rollback the changes and remove the undo information
 		local
 			compiler_check: ERF_COMPILATION_SUCCESSFUL
@@ -262,7 +262,7 @@ feature {NONE} -- undo handling
 			compiler_check.execute
 		end
 
-	commit is
+	commit
 			-- Add the undo information to the undo stack.
 		require
 			success: success
@@ -272,12 +272,12 @@ feature {NONE} -- undo handling
 
 feature {NONE} -- Implementation
 
-	refactor is
+	refactor
 			-- Do the refactoring changes.
 		do
 		end
 
-	ask_run_settings is
+	ask_run_settings
 			-- Ask for the settings, that are run specific.
 		do
 		end
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 	status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 			-- The status bar to show progress.
 
-	check_successful (c: ERF_CHECK): BOOLEAN is
+	check_successful (c: ERF_CHECK): BOOLEAN
 			-- Was `c' successful?
 		require
 			c_not_void: c /= Void
@@ -317,7 +317,7 @@ invariant
 	open_classes_not_void: open_classes /= Void
 	checks_not_void: checks /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

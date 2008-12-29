@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Warning for unreferenced local variable within a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: like associated_class; a_feat: FEATURE_I) is
+	make (a_class: like associated_class; a_feat: FEATURE_I)
 			-- New instance of unused local warnings in `a_feat' from `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -53,7 +53,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		local
 			l_name: STRING
 			l_type: TYPE_A
@@ -95,7 +95,7 @@ feature -- Output
 			a_text_formatter.set_context_group (l_group)
 		end
 
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
 			if {l_class: !like associated_class} associated_class and then {l_feature: !like associated_feature} associated_feature and then {l_formatter: !TEXT_FORMATTER} a_text_formatter then
@@ -107,7 +107,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		local
 			l_locals: like unused_locals
@@ -136,7 +136,7 @@ feature {NONE} -- Output
 
 feature {COMPILER_EXPORTER}
 
-	add_unused_local (s: STRING; t: TYPE_A) is
+	add_unused_local (s: STRING; t: TYPE_A)
 			-- Extend `unused_locals' with unused local `s' of type `t'.
 		require
 			s_not_void: s /= Void
@@ -152,7 +152,7 @@ invariant
 	associated_feature_not_void: associated_feature /= Void
 	unused_locals_not_void: unused_locals /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

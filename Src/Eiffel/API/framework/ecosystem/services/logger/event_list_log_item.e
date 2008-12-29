@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An implementation of an logger service ({LOGGER_SERVICE_I}) item for logged messages.
 	]"
@@ -63,7 +63,7 @@ invariant
 	description_attached: description /= Void
 	not_description_is_empty: not description.is_empty
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

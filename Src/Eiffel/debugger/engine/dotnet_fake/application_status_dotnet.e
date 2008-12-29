@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Class stack creation
 
-	new_callstack_with (a_tid: like current_thread_id; a_stack_max_depth: INTEGER): like current_call_stack is
+	new_callstack_with (a_tid: like current_thread_id; a_stack_max_depth: INTEGER): like current_call_stack
 			-- Get Eiffel Callstack with a maximum depth of `a_stack_max_depth'
 			-- for thread `a_tid'.
 		do
@@ -25,22 +25,22 @@ feature -- Class stack creation
 
 feature -- Values
 
-	current_call_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET is
+	current_call_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET
 		do
 		end
 
-	refresh_current_thread_id is
+	refresh_current_thread_id
 		do
 		end
 
-	exception_module_name: STRING_32 is do end
-	exception_il_type_name: STRING_32 is do end
+	exception_module_name: STRING_32 do end
+	exception_il_type_name: STRING_32 do end
 
-	exception_handled: BOOLEAN is False
+	exception_handled: BOOLEAN = False
 
 
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

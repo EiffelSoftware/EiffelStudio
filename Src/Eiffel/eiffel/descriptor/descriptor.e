@@ -1,4 +1,4 @@
-indexing
+note
 	description: "General notion of class descriptor indexed by class id.%
 				%A descriptor is associated with one class type,%
 				%is keyed by the class id's of the origin parent%
@@ -35,7 +35,7 @@ create
 
 feature
 
-	make (ct: CLASS_TYPE; s: INTEGER) is
+	make (ct: CLASS_TYPE; s: INTEGER)
 			-- Create a descriptor of size `s'.
 		do
 			class_type := ct;
@@ -50,7 +50,7 @@ feature
 
 feature
 
-	set_invariant_entry (e: ENTRY) is
+	set_invariant_entry (e: ENTRY)
 		do
 			invariant_entry ?= e
 		end;
@@ -59,7 +59,7 @@ feature
 
 feature -- Generation
 
-	generate is
+	generate
 			-- Generate descriptor table and initialization
 			-- function of current class type.
 		local
@@ -106,7 +106,7 @@ feature -- Generation
 			descriptor_file.close
 		end;
 
-	descriptor_generate (buffer: GENERATION_BUFFER; id_string: STRING) is
+	descriptor_generate (buffer: GENERATION_BUFFER; id_string: STRING)
 			-- C code of corresponding to run-time
 			-- structure of Current descriptor
 		require
@@ -141,7 +141,7 @@ feature -- Generation
 			buffer.put_string (once "%N};%N")
 		end;
 
-	descriptor_generate_generic (buffer : GENERATION_BUFFER; id_string: STRING) is
+	descriptor_generate_generic (buffer : GENERATION_BUFFER; id_string: STRING)
 			-- C code for generic type arrays.
 		require
 			buffer_not_void: buffer /= Void
@@ -160,7 +160,7 @@ feature -- Generation
 			buffer.put_string ("%N")
 		end;
 
-	descriptor_generate_precomp (buffer: GENERATION_BUFFER; id_string: STRING) is
+	descriptor_generate_precomp (buffer: GENERATION_BUFFER; id_string: STRING)
 			-- C code of corresponding to run-time
 			-- structure of Current precompiled descriptor
 		require
@@ -210,7 +210,7 @@ feature -- Generation
 			buffer.put_string ("}%N");
 		end;
 
-	generate_init_function (buffer: GENERATION_BUFFER; id_string: STRING) is
+	generate_init_function (buffer: GENERATION_BUFFER; id_string: STRING)
 			-- C code of initialization function of Current
 			-- descriptor
 		local
@@ -268,7 +268,7 @@ feature -- Generation
 			buffer.put_string ("}%N")
 		end;
 
-	table_size: INTEGER is
+	table_size: INTEGER
 			-- Number of entries in the descriptor table
 		do
 			Result := 1;
@@ -280,7 +280,7 @@ feature -- Generation
 
 feature -- Melting
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Append byte code of Current descriptor
 			-- Format:
 			--    1) Id of class type (short)
@@ -323,7 +323,7 @@ feature -- Melting
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

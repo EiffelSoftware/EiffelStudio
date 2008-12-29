@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An EiffelStudio debugging tool panel.
 	]"
@@ -15,7 +15,7 @@ inherit
 
 feature {ES_DEBUGGER_STONABLE_TOOL, ES_DEBUGGING_UPDATE_ON_IDLE_TOOL} -- Status
 
-	is_visible: BOOLEAN is
+	is_visible: BOOLEAN
 			-- Is panel visible ?
 		do
 			Result := content /= Void and then content.is_visible
@@ -23,24 +23,24 @@ feature {ES_DEBUGGER_STONABLE_TOOL, ES_DEBUGGING_UPDATE_ON_IDLE_TOOL} -- Status
 
 feature {ES_DEBUGGER_STONABLE_TOOL, ES_DEBUGGING_UPDATE_ON_IDLE_TOOL, DEBUGGER_MANAGER} -- Access
 
-	reset_tool is
+	reset_tool
 			-- Reset tool
 		deferred
 		end
 
-	refresh is
+	refresh
 			-- Refresh tool
 		deferred
 		end
 
 feature -- Access
 
-	content: SD_CONTENT is
+	content: SD_CONTENT
 			-- Docking content
 		deferred
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

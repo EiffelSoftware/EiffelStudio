@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Communicates with the support site to permit the submission of a bug report.
 	]"
@@ -54,7 +54,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	fill_bug_report (a_last_html: STRING_GENERAL; a_report: COMM_SUPPORT_BUG_REPORT) is
+	fill_bug_report (a_last_html: STRING_GENERAL; a_report: COMM_SUPPORT_BUG_REPORT)
 			-- Filling a bug report after login.
 		require
 			is_support_accessible: is_support_accessible
@@ -87,7 +87,7 @@ feature {NONE} -- Basic operations
 			perfom_final_submit (support_url (l_final_url_location, True), post_string_for_final_submit (l_view_state, l_validation))--, "Referer: " + "https://www2.eiffel.com" + l_final_url_location)
 		end
 
-	perform_preview (a_last_html: STRING_GENERAL; a_report: COMM_SUPPORT_BUG_REPORT): STRING_GENERAL is
+	perform_preview (a_last_html: STRING_GENERAL; a_report: COMM_SUPPORT_BUG_REPORT): STRING_GENERAL
 			-- Post bug report data, then we can go to the bug report preview page.
 		require
 			is_support_accessible: is_support_accessible
@@ -119,7 +119,7 @@ feature {NONE} -- Basic operations
 			result_attached: Result /= Void
 		end
 
-	 perfom_final_submit (a_target_url: STRING_GENERAL; a_post_url_string: STRING_GENERAL) is
+	 perfom_final_submit (a_target_url: STRING_GENERAL; a_post_url_string: STRING_GENERAL)
 	 		-- Performs final step of submitting a bug report.
 	 	require
 			is_support_accessible: is_support_accessible
@@ -194,7 +194,7 @@ feature {NONE} -- Html contents
 			Result := l_result_html.string
 		end
 
-	final_submit_page_content (a_final_sutmit_page: STRING): STRING_GENERAL is
+	final_submit_page_content (a_final_sutmit_page: STRING): STRING_GENERAL
 			-- Raw HTML content of final bug report submit confirm page.
 		require
 			not_void: curl_hnd /= default_pointer
@@ -215,7 +215,7 @@ feature {NONE} -- Html contents
 
 feature {NONE}
 
-	 setopt_with_form (a_data: CURL_STRING; a_formpost: CURL_FORM) is
+	 setopt_with_form (a_data: CURL_STRING; a_formpost: CURL_FORM)
 	 		-- Set options with `a_formpost'.
 	 	require
 	 		not_void_and_exists: a_formpost /= Void and then a_formpost.is_exists
@@ -227,7 +227,7 @@ feature {NONE}
 			curl.setopt_form (curl_hnd, {CURL_OPT_CONSTANTS}.curlopt_httppost, a_formpost)
 		end
 
-	form_for_bug_report (a_view_state_value: STRING_GENERAL; a_event_validation_value: STRING_GENERAL; a_event_target: STRING_GENERAL; a_report: COMM_SUPPORT_BUG_REPORT): CURL_FORM is
+	form_for_bug_report (a_view_state_value: STRING_GENERAL; a_event_validation_value: STRING_GENERAL; a_event_target: STRING_GENERAL; a_report: COMM_SUPPORT_BUG_REPORT): CURL_FORM
 			-- Create a form for bug report submit.
 		require
 			not_void: a_view_state_value /= Void
@@ -287,7 +287,7 @@ feature {NONE}
 			not_void: Result /= Void
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

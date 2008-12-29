@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an external procedure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	init_arg (argument_as: EIFFEL_LIST [TYPE_DEC_AS]; a_context_class: CLASS_C) is
+	init_arg (argument_as: EIFFEL_LIST [TYPE_DEC_AS]; a_context_class: CLASS_C)
 			-- Initialization of arguments.
 		local
 			l_inline_ext: INLINE_EXTENSION_I
@@ -43,7 +43,7 @@ feature -- Initialization
 
 feature -- Duplication
 
-	duplicate: like Current is
+	duplicate: like Current
 			-- Duplicate current external feature.
 		do
 			Result := Precursor {PROCEDURE_I}
@@ -57,7 +57,7 @@ feature -- Attributes for externals
 
 feature -- Routines for externals
 
-	make, set_extension (e: like extension) is
+	make, set_extension (e: like extension)
 			-- Assign `e' to `extension'.
 		require
 			e_not_void: e /= Void
@@ -69,7 +69,7 @@ feature -- Routines for externals
 
 feature -- Incrementality
 
-	freezing_equiv (other: FEATURE_I): BOOLEAN is
+	freezing_equiv (other: FEATURE_I): BOOLEAN
 			-- is `Current' equivalent to `other' as far as freezing is concerned?
 		local
 			other_ext: EXTERNAL_I
@@ -87,14 +87,14 @@ feature -- Incrementality
 			end
 		end
 
-	equiv (other: FEATURE_I): BOOLEAN is
+	equiv (other: FEATURE_I): BOOLEAN
 		do
 			Result := Precursor {PROCEDURE_I} (other) and then freezing_equiv (other)
 		end
 
 feature
 
-	external_alias_name_id: INTEGER is
+	external_alias_name_id: INTEGER
 			-- Alias for the external
 		do
 			Result := extension.alias_name_id
@@ -103,7 +103,7 @@ feature
 	encapsulated: BOOLEAN;
 			-- Has the feature some assertion declared ?
 
-	set_renamed_name_id (a_id: INTEGER; alias_id: INTEGER) is
+	set_renamed_name_id (a_id: INTEGER; alias_id: INTEGER)
 			-- Assign `id' to `feature_name_id'.
 		do
 			if external_alias_name_id = 0 then
@@ -112,7 +112,7 @@ feature
 			Precursor {PROCEDURE_I} (a_id, alias_id)
 		end
 
-	set_encapsulated (b: BOOLEAN) is
+	set_encapsulated (b: BOOLEAN)
 			-- Assign `b' to `encapsulated'.
 		do
 			encapsulated := b;
@@ -133,19 +133,19 @@ feature
 			--end;
 		end;
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN
 			-- Is the feature an external one ?
 		do
 			Result := True;
 		end;
 
-	external_alias_name: STRING is
+	external_alias_name: STRING
 			-- External alias name if any.
 		do
 			Result := Names_heap.item (external_alias_name_id)
 		end
 
-	external_name_id: INTEGER is
+	external_name_id: INTEGER
 			-- External_name ID
 		do
 			Result := external_alias_name_id
@@ -154,7 +154,7 @@ feature
 			end
 		end
 
-	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B is
+	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B
 			-- Byte code access for current feature
 		local
 			external_b: EXTERNAL_B;
@@ -180,7 +180,7 @@ feature
 			Result := external_b
 		end
 
-	transfer_to (other: like Current) is
+	transfer_to (other: like Current)
 			-- Transfer datas from Current into `other'
 		do
 			Precursor {PROCEDURE_I} (other);
@@ -188,7 +188,7 @@ feature
 			other.set_extension (extension);
 		end;
 
-	transfer_from (other: like Current) is
+	transfer_from (other: like Current)
 			-- Transfer data from `other' into Current
 		do
 			Precursor {PROCEDURE_I} (other);
@@ -196,7 +196,7 @@ feature
 			set_extension (other.extension);
 		end;
 
-	replicated (in: INTEGER): FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I
 			-- Replication
 		local
 			rep: R_EXTERNAL_I
@@ -215,7 +215,7 @@ feature
 			Result.transfer_from (Current)
 		end
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I
 			-- Unselected feature
 		local
 			unselect: D_EXTERNAL_I
@@ -226,7 +226,7 @@ feature
 			Result := unselect;
 		end;
 
-	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
+	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER)
 				-- Generate feature written in `class_type' in `buffer'.
 		local
 			byte_code: BYTE_CODE
@@ -255,7 +255,7 @@ feature
 
 feature {NONE} -- Api
 
-	update_api (f: E_ROUTINE) is
+	update_api (f: E_ROUTINE)
 			-- Update the attributes of api feature `f'.
 		do
 			Precursor {PROCEDURE_I} (f)
@@ -265,7 +265,7 @@ feature {NONE} -- Api
 invariant
 	extension_not_void: extension /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

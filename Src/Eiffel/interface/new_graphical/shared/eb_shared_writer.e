@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared writers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	token_writer: EB_EDITOR_TOKEN_GENERATOR is
+	token_writer: EB_EDITOR_TOKEN_GENERATOR
 			-- Editor token writer used to generate `tokens'
 		once
 			create Result.make
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Font tables
 
-	label_font_table: SPECIAL [EV_FONT] is
+	label_font_table: SPECIAL [EV_FONT]
 			-- Label font substitute for editor fonts.
 		local
 			l_bold_font: EV_FONT
@@ -41,13 +41,13 @@ feature -- Font tables
 			Result.put (l_bold_font, preferences.editor_data.keyword_font_id)
 		end
 
-	label_font_height: INTEGER is
+	label_font_height: INTEGER
 			-- Height in pixel of `label_font_table'
 		do
 			Result := (create {EVS_UTILITY}).grid_row_height_for_fonts (label_font_table)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

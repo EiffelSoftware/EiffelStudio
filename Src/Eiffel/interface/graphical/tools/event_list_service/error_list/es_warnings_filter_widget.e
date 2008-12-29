@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A widget for the Errors and Warnings tool to filter warnings.
 	]"
@@ -317,7 +317,7 @@ feature -- Actions
 
 feature {ES_ERROR_LIST_TOOL_PANEL} -- Action handlers
 
-	on_shown is
+	on_shown
 			-- Called when widget is display
 		require
 			is_displayed: is_displayed
@@ -341,7 +341,7 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_grid_key_release (a_key: EV_KEY) is
+	on_grid_key_release (a_key: EV_KEY)
 			-- Called after a key has been released
 			--
 			-- `a_key': Key that was released
@@ -377,7 +377,7 @@ invariant
 	grid_warnings_attached: grid_warnings /= Void
 	filter_changed_actions_attached: filter_changed_actions /= Void
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

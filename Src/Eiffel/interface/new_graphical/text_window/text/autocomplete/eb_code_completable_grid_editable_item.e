@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Editable grid item that contains code completable text field."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_completion_possibilities_provider (a_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER) is
+	set_completion_possibilities_provider (a_provider: EB_COMPLETION_POSSIBILITIES_PROVIDER)
 			-- Set `completion_possibilities_provider'.
 		require
 			a_provider_not_void: a_provider /= Void
@@ -46,7 +46,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	activate_action (popup_window: EV_POPUP_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
 		do
 			Precursor {EV_GRID_EDITABLE_ITEM} (popup_window)
@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	verify_popup_window_focus (a_popup_window: EV_POPUP_WINDOW) is
+	verify_popup_window_focus (a_popup_window: EV_POPUP_WINDOW)
 			-- Verify focus on popup window.
 			--| FIXME: Have to call `show' to maintain focus on Unix. Vision2 GTK issue.
 		do
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

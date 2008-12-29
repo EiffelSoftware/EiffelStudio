@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for wrong number of generic parameter for an argument type."
@@ -18,9 +18,9 @@ inherit
 	
 feature -- Properties
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER = 2;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

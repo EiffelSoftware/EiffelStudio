@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Enlarged access to an argument
@@ -18,18 +18,18 @@ feature
 	parent: NESTED_BL;
 			-- Parent of access
 
-	set_parent (p: NESTED_BL) is
+	set_parent (p: NESTED_BL)
 			-- Set `parent' to `p'
 		do
 			parent := p;
 		end;
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Do nothing
 		do
 		end;
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' the same as us ?
 		local
 			argument_b: ARGUMENT_B;
@@ -42,14 +42,14 @@ feature
 			end;
 		end;
 
-	fill_from (l: ARGUMENT_B) is
+	fill_from (l: ARGUMENT_B)
 			-- Fill in node from local `l'
 		do
 			position := l.position;
 			multi_constraint_static := l.multi_constraint_static
 		end;
 
-	analyze is
+	analyze
 			-- Compute an index in the local variable array if type is pointer
 		do
 			if c_type.is_pointer then
@@ -57,17 +57,17 @@ feature
 			end;
 		end;
 
-	generate is
+	generate
 			-- Do nothing
 		do
 		end;
 
-	free_register is
+	free_register
 			-- Do nothing
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Validator of creation procedures that ensures they set all the attributes as required."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -328,7 +328,7 @@ feature {AST_EIFFEL} -- Visitor: compound
 			end
 		end
 
-	process_case_as (a: CASE_AS) is
+	process_case_as (a: CASE_AS)
 		do
 			a.interval.process (Current)
 			process_compound (a.compound)
@@ -450,7 +450,7 @@ feature {NONE} -- Access
 	bodies: STACK [INTEGER_32];
 			-- Bodies that are being processed
 
-indexing
+note
 	copyright:	"Copyright (c) 2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a compiled class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -102,7 +102,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (l: like original_class) is
+	make (l: like original_class)
 			-- Creation of Current class
 		require
 			good_argument: l /= Void
@@ -126,12 +126,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_eiffel_class_c: BOOLEAN is
+	is_eiffel_class_c: BOOLEAN
 			-- Is `Current' an EIFFEL_CLASS_C?
 		do
 		end
 
-	is_external_class_c: BOOLEAN is
+	is_external_class_c: BOOLEAN
 			-- Is `Current' an EXTERNAL_CLASS_C?
 		do
 		end
@@ -148,14 +148,14 @@ feature -- Access
 			Result_set: Result = (a_formal_position >= 1 and then a_formal_position <= generics.count)
 		end
 
-	eiffel_class_c: EIFFEL_CLASS_C is
+	eiffel_class_c: EIFFEL_CLASS_C
 			-- `Current' as `EIFFEL_CLASS_C'.
 		require
 			is_eiffel_class_c: is_eiffel_class_c
 		do
 		end
 
-	external_class_c: EXTERNAL_CLASS_C is
+	external_class_c: EXTERNAL_CLASS_C
 			-- `Current' as `EXTERNAL_CLASS_C'.
 		require
 			is_external_class_c: is_external_class_c
@@ -175,7 +175,7 @@ feature -- Access
 			-- again, even if the class didn't textually changed
 			-- (i.e `changed' is set to False) ?
 
-	changed3: BOOLEAN is
+	changed3: BOOLEAN
 			-- Has the compiler to make a type check on the class ?
 			-- At beginning of the third pass, if the class is marked
 			-- `changed', the compiler produces byte code and type check
@@ -196,7 +196,7 @@ feature -- Access
 	changed4: BOOLEAN
 			-- Has the class a new class type, or changed its generics?
 
-	is_generic: BOOLEAN is
+	is_generic: BOOLEAN
 			-- Is current class generic?
 		do
 			Result := generics /= Void
@@ -204,7 +204,7 @@ feature -- Access
 			result_is_generic: Result implies (generics /= Void)
 		end
 
-	is_removable: BOOLEAN is
+	is_removable: BOOLEAN
 			-- May current class be removed from system?
 		do
 				-- It should not be precompiled, nor already removed from system.
@@ -214,13 +214,13 @@ feature -- Access
 	is_in_system: BOOLEAN
 			-- Is current class part of system (i.e. precompiled and used)?
 
-	is_modifiable: BOOLEAN is
+	is_modifiable: BOOLEAN
 			-- Is current class not part of a precompiled library?
 		do
 			Result := not is_precompiled
 		end
 
-	is_debuggable: BOOLEAN is
+	is_debuggable: BOOLEAN
 			-- Is the class able to be debugged?
 			-- (not if it doesn't have class types)
 		do
@@ -233,24 +233,24 @@ feature -- Access
 	is_used_as_expanded: BOOLEAN
 			-- Is `Current' used as an expanded class ?
 
-	is_special: BOOLEAN is
+	is_special: BOOLEAN
 			-- Is class SPECIAL?
 		do
 			-- Do nothing
 		end
 
-	is_tuple: BOOLEAN is
+	is_tuple: BOOLEAN
 			-- Is class TUPLE?
 		do
 
 		end
 
-	is_typed_pointer: BOOLEAN is
+	is_typed_pointer: BOOLEAN
 			-- Is class TYPED_POINTER?
 		do
 		end
 
-	is_native_array: BOOLEAN is
+	is_native_array: BOOLEAN
 			-- Is class a NATIVE_ARRAY class?
 		do
 		end
@@ -292,13 +292,13 @@ feature -- Access
 	skeleton: GENERIC_SKELETON
 			-- Attributes skeleton
 
-	changed: BOOLEAN is
+	changed: BOOLEAN
 			-- Is the class syntactically changed ?
 		do
 			Result := original_class.changed
 		end
 
-	already_compiled: BOOLEAN is
+	already_compiled: BOOLEAN
 			-- Has the class already been compiled before the current
 			-- compilation ?
 		do
@@ -323,7 +323,7 @@ feature -- Access: CLI implementation
 
 feature -- Status report
 
-	is_warning_enabled (a_warning: STRING): BOOLEAN is
+	is_warning_enabled (a_warning: STRING): BOOLEAN
 			-- Is `a_warning' set for Current?
 		require
 			a_warning_not_void: a_warning /= Void
@@ -331,13 +331,13 @@ feature -- Status report
 			Result := lace_class.options.is_warning_enabled (a_warning)
 		end
 
-	apply_msil_application_optimizations: BOOLEAN is
+	apply_msil_application_optimizations: BOOLEAN
 			-- Should MSIL application optimizations be applied?
 		do
 			Result := False
 		end
 
-	has_external_ancestor_class: BOOLEAN is
+	has_external_ancestor_class: BOOLEAN
 			-- Does current class have an external ancestor which is a class (not interface)?
 		local
 			p: like parents_classes
@@ -365,7 +365,7 @@ feature -- Status report
 
 feature -- Action
 
-	record_precompiled_class_in_system is
+	record_precompiled_class_in_system
 		do
 		end
 
@@ -378,7 +378,7 @@ feature -- Conformance dependencies
 			-- Classes which depend on Current's conformance
 			-- to some other class.
 
-	add_dep_class (a_class : CLASS_C) is
+	add_dep_class (a_class : CLASS_C)
 			-- Add `a_class' to `conf_dep_classes'
 			-- Do nothing if already there.
 		require
@@ -432,7 +432,7 @@ feature -- Conformance dependencies
 			has_dep_class : has_dep_class (a_class)
 		end
 
-	remove_dep_class (a_class : CLASS_C) is
+	remove_dep_class (a_class : CLASS_C)
 			-- Remove `a_class' from `conf_dep_classes'
 		require
 			not_void : a_class /= Void
@@ -445,7 +445,7 @@ feature -- Conformance dependencies
 			removed : not has_dep_class (a_class)
 		end
 
-	has_dep_class (a_class: CLASS_C): BOOLEAN is
+	has_dep_class (a_class: CLASS_C): BOOLEAN
 			-- Is `a_class' in `conf_dep_classes'?
 		require
 			not_void : a_class /= Void
@@ -461,7 +461,7 @@ feature -- Conformance dependencies
 					and then loc_tab.item (topid)
 		end
 
-	reset_dep_classes is
+	reset_dep_classes
 			-- Update `conf_dep_classes' with removed classes.
 		local
 			a_class: CLASS_C
@@ -486,7 +486,7 @@ feature -- Conformance dependencies
 
 feature -- Building conformance table
 
-	fill_conformance_table is
+	fill_conformance_table
 			-- Fill the conformance table. All the class processed
 			-- during second pass must see their conformance table
 			-- processed/re-processed by this routine.
@@ -504,7 +504,7 @@ feature -- Building conformance table
 			build_conformance_table_of (Current)
 		end
 
-	build_conformance_table_of (cl: CLASS_C) is
+	build_conformance_table_of (cl: CLASS_C)
 			-- Build recursively the conformance table of class `cl.
 		require
 			good_argument: cl /= Void
@@ -529,7 +529,7 @@ feature -- Building conformance table
 
 feature -- Expanded rules validity
 
-	check_expanded is
+	check_expanded
 			-- Check the expanded validity rule.
 			-- Pass 2 must be done on all the classes
 			-- (the creators must be up to date)
@@ -589,7 +589,7 @@ end
 
 feature -- Third pass: byte code production and type check
 
-	record_suppliers (feature_i: FEATURE_I; dependances: CLASS_DEPENDANCE) is
+	record_suppliers (feature_i: FEATURE_I; dependances: CLASS_DEPENDANCE)
 			-- Record suppliers of `feature_i' and insert it in `dependances'.
 		require
 			feature_i_not_void: feature_i /= Void
@@ -618,7 +618,7 @@ feature -- Third pass: byte code production and type check
 			inserted: feature_i.body_index /= 0 implies dependances.has (feature_i.body_index)
 		end
 
-	update_suppliers (new_suppliers: like suppliers) is
+	update_suppliers (new_suppliers: like suppliers)
 			-- Update the supplier list with `new_suppliers'.
 		require
 			good_argument: new_suppliers /= Void
@@ -652,7 +652,7 @@ feature -- Third pass: byte code production and type check
 
 feature -- Generation
 
-	pass4 is
+	pass4
 			-- Generation of C files for each type associated to the current
 			-- class
 			--|Don't forget to modify also `generate_workbench_files' when modifying
@@ -662,7 +662,7 @@ feature -- Generation
 
 feature -- Setting
 
-	set_assembly_info (a: like assembly_info) is
+	set_assembly_info (a: like assembly_info)
 			-- Set `assembly_info' with `a'.
 		require
 			a_not_void: a /= Void
@@ -674,33 +674,33 @@ feature -- Setting
 
 feature -- Melting
 
-	melt is
+	melt
 			-- Melt changed features.
 		require
 			good_context: has_features_to_melt
 		do
 		end
 
-	update_execution_table is
+	update_execution_table
 			-- Update execution table.
 		require
 			good_context: has_features_to_melt
 		do
 		end
 
-	has_features_to_melt: BOOLEAN is
+	has_features_to_melt: BOOLEAN
 			-- Has the current class features to melt ?
 		do
 		end
 
-	melt_all is
+	melt_all
 			-- Melt all the features written in the class
 		do
 		end
 
 feature -- Skeleton processing
 
-	init_process_skeleton (old_skeletons: ARRAY [SKELETON]) is
+	init_process_skeleton (old_skeletons: ARRAY [SKELETON])
 			-- Fill `old_skeletons' with old skeleton of class types in `types'.
 		require
 			old_skeletons_not_void: old_skeletons /= Void
@@ -719,7 +719,7 @@ feature -- Skeleton processing
 			end
 		end
 
-	process_skeleton (old_skeletons: ARRAY [SKELETON]) is
+	process_skeleton (old_skeletons: ARRAY [SKELETON])
 			-- Type skeleton processing: If skeleton of a class type changed,
 			-- it must be re-processed and marked `is_changed'.
 		require
@@ -792,7 +792,7 @@ feature {NONE} -- Class initialization
 
 	similar_parents
 			(a_old_parents, a_new_parents: EIFFEL_LIST [PARENT_AS]): TUPLE [previous_types_remain: BOOLEAN; parents_removed: BOOLEAN]
-		is
+		
 			-- First element of tuple: Does `a_new_parents' include all types used in
 			-- `a_old_parents' and no type has been removed from `a_old_parents'.
 			-- Second element of tuple: was a parent type of `a_old_parents' removed from
@@ -877,7 +877,7 @@ feature {NONE} -- Class initialization
 
 feature -- Class initialization
 
-	init_class_interface is
+	init_class_interface
 			-- Initialize `class_interface' accordingly to current class
 			-- definition.
 		require
@@ -890,7 +890,7 @@ feature -- Class initialization
 
 feature {NONE} -- Private access
 
-	Any_type: CL_TYPE_A is
+	Any_type: CL_TYPE_A
 			-- Default parent type
 		once
 			create Result.make (System.any_id)
@@ -898,7 +898,7 @@ feature {NONE} -- Private access
 			any_type_not_void: Result /= Void
 		end
 
-	Any_type_attached: CL_TYPE_A is
+	Any_type_attached: CL_TYPE_A
 			-- Default parent type when it is attached by default
 		once
 			create Result.make (System.any_id)
@@ -907,7 +907,7 @@ feature {NONE} -- Private access
 			any_type_not_void: Result /= Void
 		end
 
-	Any_parent: PARENT_C is
+	Any_parent: PARENT_C
 			-- Default compiled parent
 		once
 			create Result
@@ -918,7 +918,7 @@ feature {NONE} -- Private access
 
 feature
 
-	update_syntactical_relations (old_syntactical_suppliers: like syntactical_suppliers) is
+	update_syntactical_relations (old_syntactical_suppliers: like syntactical_suppliers)
 			-- Remove syntactical client/supplier relations and take
 			-- care of possible removed classes
 		local
@@ -960,7 +960,7 @@ feature
 			end
 		end
 
-	remove_relations is
+	remove_relations
 			-- Remove client/supplier and parent/descendant relations
 			-- of the current class.
 		require
@@ -987,7 +987,7 @@ feature
 			local_suppliers.wipe_out
 		end
 
-	remove_parent_relations is
+	remove_parent_relations
 			-- Remove parent/descendant relations of the Current class
 		require
 			parents_exists: parents_classes /= Void
@@ -1018,7 +1018,7 @@ feature
 			end
 		end
 
-	mark_class (marked_classes: SEARCH_TABLE [INTEGER]) is
+	mark_class (marked_classes: SEARCH_TABLE [INTEGER])
 			-- Mark the class as used in the system
 			-- and propagate to the suppliers
 			-- Used by remove_useless_classes in SYSTEM_I
@@ -1039,7 +1039,7 @@ feature
 			end
 		end
 
-	check_generics is
+	check_generics
 			-- Check validity formal generic parameter declaration.
 			-- Validity rule VCFG (page 52)
 		require
@@ -1047,7 +1047,7 @@ feature
 		do
 		end
 
-	check_generic_parameters is
+	check_generic_parameters
 			-- Check validity formal generic parameter declaration.
 			-- Validity rule VCFG1 (page 52)
 		require
@@ -1055,7 +1055,7 @@ feature
 		do
 		end
 
-	check_creation_constraint_genericity is
+	check_creation_constraint_genericity
 			-- Check validity of creation constraint genericity
 			-- I.e. that the specified creation procedures does exist
 			-- in the constraint class.
@@ -1064,14 +1064,14 @@ feature
 		do
 		end
 
-	check_constraint_genericity is
+	check_constraint_genericity
 			-- Check validity of constraint genericity
 		require
 			generics_exists: is_generic
 		do
 		end
 
-	check_constraint_renaming is
+	check_constraint_renaming
 			-- Check validity of renaming
 			-- Requires feature tables!!
 		do
@@ -1079,7 +1079,7 @@ feature
 
 feature -- Parent checking
 
-	fill_parents (a_old_class_info, a_class_info: CLASS_INFO) is
+	fill_parents (a_old_class_info, a_class_info: CLASS_INFO)
 			-- Initialization of the parent types `parents': put
 			-- the default parent HERE if needed. Calculates also the
 			-- lists `descendants'. Since the routine `check_suppliers'
@@ -1333,7 +1333,7 @@ feature -- Parent checking
 			computed_parents_not_void: computed_parents /= Void
 		end
 
-	check_parents is
+	check_parents
 			-- Check generical parents
 		require
 			parents_not_void: parents /= Void
@@ -1457,7 +1457,7 @@ feature -- Parent checking
 			parents_set: parents /= Void
 		end
 
-	remove_types is
+	remove_types
 			-- Removes all types from system
 		do
 			if has_types then
@@ -1478,7 +1478,7 @@ feature -- Parent checking
 
 feature -- Supplier checking
 
-	check_that_root_class_is_not_deferred is
+	check_that_root_class_is_not_deferred
 		-- Check non-genericity of root class
 		local
 			l_vsrt3: VSRT3
@@ -1491,7 +1491,7 @@ feature -- Supplier checking
 			end
 		end
 
-	check_root_class_creators (a_creator: STRING; a_type: CL_TYPE_A) is
+	check_root_class_creators (a_creator: STRING; a_type: CL_TYPE_A)
 			-- Check creation procedures of root class
 			--
 			-- Note: if `a_creator' is empty and default_create is a valid creation procedure in `Current',
@@ -1574,7 +1574,7 @@ feature -- Supplier checking
 			Error_handler.checksum
 		end
 
-	Array_of_string: GEN_TYPE_A is
+	Array_of_string: GEN_TYPE_A
 			-- Type ARRAY [STRING]
 		local
 			array_generics: ARRAY [TYPE_A]
@@ -1595,7 +1595,7 @@ feature -- Supplier checking
 
 feature -- Order relation for inheritance and topological sort
 
-	simple_conform_to (other: CLASS_C): BOOLEAN is
+	simple_conform_to (other: CLASS_C): BOOLEAN
 			-- Is `other' an ancestor of Current?
 		require
 			good_argument: other /= Void
@@ -1610,7 +1610,7 @@ feature -- Order relation for inheritance and topological sort
 						-- Check conformance table
 		end
 
-	inherits_from (other: CLASS_C): BOOLEAN is
+	inherits_from (other: CLASS_C): BOOLEAN
 			-- Is `other' a conforming/non-conforming ancestor of `Current'?
 			-- Returns True if `other' is `Current'.
 		require
@@ -1623,7 +1623,7 @@ feature -- Order relation for inheritance and topological sort
 			end
 		end
 
-	conform_to (other: CLASS_C): BOOLEAN is
+	conform_to (other: CLASS_C): BOOLEAN
 			-- Is `other' a conforming ancestor of Current ?
 		require
 			good_argument: other /= Void
@@ -1651,7 +1651,7 @@ feature -- Order relation for inheritance and topological sort
 			end
 		end
 
-	valid_creation_procedure (fn: STRING): BOOLEAN is
+	valid_creation_procedure (fn: STRING): BOOLEAN
 			-- Is `fn' a valid creation procedure ?
 		require
 			good_argument: fn /= Void
@@ -1671,7 +1671,7 @@ feature -- Order relation for inheritance and topological sort
 
 feature -- Propagation
 
-	recompile_syntactical_clients is
+	recompile_syntactical_clients
 			-- Order relation on classes
 		local
 			class_i: CLASS_I
@@ -1697,7 +1697,7 @@ feature -- Propagation
 
 feature -- Convenience features
 
-	set_changed (b: BOOLEAN) is
+	set_changed (b: BOOLEAN)
 			-- Mark the associated lace class changed.
 		do
 			original_class.set_changed (b)
@@ -1705,7 +1705,7 @@ feature -- Convenience features
 			changed_set: changed = b
 		end
 
-	set_changed2 (b: BOOLEAN) is
+	set_changed2 (b: BOOLEAN)
 			-- Assign `b' to `changed2'.
 		do
 			changed2 := b
@@ -1713,7 +1713,7 @@ feature -- Convenience features
 			changed2_set: changed2 = b
 		end
 
-	set_changed3a (b: BOOLEAN) is
+	set_changed3a (b: BOOLEAN)
 			-- Assign `b' to `changed3a'.
 		do
 			changed3a := b
@@ -1721,7 +1721,7 @@ feature -- Convenience features
 			changed3a_set: changed3a = b
 		end
 
-	set_need_type_check (b: like need_type_check) is
+	set_need_type_check (b: like need_type_check)
 			-- Assign `b' to `need_type_check'.
 		do
 			need_type_check := b
@@ -1729,7 +1729,7 @@ feature -- Convenience features
 			need_type_check_set: need_type_check = b
 		end
 
-	set_changed4 (b: BOOLEAN) is
+	set_changed4 (b: BOOLEAN)
 			-- Assign `b' to `changed4'.
 		do
 			changed4 := b
@@ -1737,7 +1737,7 @@ feature -- Convenience features
 			changed4_set: changed4 = b
 		end
 
-	set_has_unique is
+	set_has_unique
 			-- Set `has_unique' to True
 		do
 			has_unique := True
@@ -1745,7 +1745,7 @@ feature -- Convenience features
 			has_unique_set: has_unique
 		end
 
-	set_has_expanded is
+	set_has_expanded
 			-- Set `has_expanded' to True
 		do
 			has_expanded := True
@@ -1753,7 +1753,7 @@ feature -- Convenience features
 			has_expanded_set: has_expanded
 		end
 
-	set_is_in_system (v: BOOLEAN) is
+	set_is_in_system (v: BOOLEAN)
 			-- Set `is_in_system' to `v'.
 		require
 			not_precompiling: not Compilation_modes.is_precompiling
@@ -1763,14 +1763,14 @@ feature -- Convenience features
 			is_in_system_set: is_in_system = v
 		end
 
-	set_is_used_as_expanded is
+	set_is_used_as_expanded
 		do
 			is_used_as_expanded := True
 		ensure
 			is_used_as_expanded_set: is_used_as_expanded
 		end
 
-	set_invariant_feature (f: INVARIANT_FEAT_I) is
+	set_invariant_feature (f: INVARIANT_FEAT_I)
 			-- Set `invariant_feature' with `f'.
 		do
 			invariant_feature := f
@@ -1778,7 +1778,7 @@ feature -- Convenience features
 			invariant_feature_set: invariant_feature = f
 		end
 
-	set_skeleton (s: GENERIC_SKELETON) is
+	set_skeleton (s: GENERIC_SKELETON)
 			-- Assign `s' to `skeleton'.
 		do
 			skeleton := s
@@ -1786,7 +1786,7 @@ feature -- Convenience features
 			skeleton_set: skeleton = s
 		end
 
-	set_convert_to (c: like convert_to) is
+	set_convert_to (c: like convert_to)
 			-- Assign `c' to `convert_to'.
 		do
 			convert_to := c
@@ -1794,7 +1794,7 @@ feature -- Convenience features
 			convert_to_set: convert_to = c
 		end
 
-	set_convert_from (c: like convert_from) is
+	set_convert_from (c: like convert_from)
 			-- Assign `c' to `convert_from'.
 		do
 			convert_from := c
@@ -1802,7 +1802,7 @@ feature -- Convenience features
 			convert_from_set: convert_from = c
 		end
 
-	set_creators (c: like creators) is
+	set_creators (c: like creators)
 			-- Assign `c' to `creators'.
 		do
 			creators := c
@@ -1810,7 +1810,7 @@ feature -- Convenience features
 			creators_set: creators = c
 		end
 
-	set_visible_table_size (i: INTEGER) is
+	set_visible_table_size (i: INTEGER)
 			-- Assign `i' to `visible_table_size'
 		require
 			i_positive: i >= 0
@@ -1820,7 +1820,7 @@ feature -- Convenience features
 			visible_table_size_set: visible_table_size = i
 		end
 
-	set_is_single (v: BOOLEAN) is
+	set_is_single (v: BOOLEAN)
 			-- Set `is_single' with `v'
 		do
 			is_single := v
@@ -1828,7 +1828,7 @@ feature -- Convenience features
 			is_single_set: is_single = v
 		end
 
-	add_descendant (c: CLASS_C) is
+	add_descendant (c: CLASS_C)
 			-- Insert class `c' into the descendant list
 		require
 			good_argument: c /= Void
@@ -1843,7 +1843,7 @@ feature -- Convenience features
 			inserted: direct_descendants.has (c)
 		end
 
-	external_name: STRING is
+	external_name: STRING
 			-- External name
 		local
 			l_vis: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]]
@@ -1859,7 +1859,7 @@ feature -- Convenience features
 			external_name_in_upper: Result.as_upper.is_equal (Result)
 		end
 
-	assertion_level: ASSERTION_I is
+	assertion_level: ASSERTION_I
 			-- Assertion level of the class
 		do
 			if System.in_final_mode then
@@ -1877,44 +1877,44 @@ feature -- Convenience features
 			assertion_level_not_void: Result /= Void
 		end
 
-	trace_level: OPTION_I is
+	trace_level: OPTION_I
 			-- Trace level of the class
 		do
 			Result := lace_class.trace_level
 		end
 
-	profile_level: OPTION_I is
+	profile_level: OPTION_I
 			-- Profile level of the class
 		do
 			Result := lace_class.profile_level
 		end
 
-	optimize_level: OPTIMIZE_I is
+	optimize_level: OPTIMIZE_I
 			-- Optimization level
 		do
 			Result := lace_class.optimize_level
 		end
 
-	debug_level: DEBUG_I is
+	debug_level: DEBUG_I
 			-- Debug level
 		do
 			Result := lace_class.debug_level
 		end
 
-	visible_level: VISIBLE_I is
+	visible_level: VISIBLE_I
 			-- Visible level
 		do
 			Result := lace_class.visible_level
 		end
 
-	is_full_class_checking: BOOLEAN is
+	is_full_class_checking: BOOLEAN
 			-- Do we perform a flat checking on the class, i.e. checking
 			-- inherited routines in the context of the descendant class?
 		do
 			Result := lace_class.is_full_class_checking
 		end
 
-	is_cat_call_detection: BOOLEAN is
+	is_cat_call_detection: BOOLEAN
 			-- Do we perform cat-call detection on all feature calls?
 		do
 			Result := lace_class.is_cat_call_detection
@@ -1922,7 +1922,7 @@ feature -- Convenience features
 
 feature -- Actual class type
 
-	constraint_actual_type: CL_TYPE_A is
+	constraint_actual_type: CL_TYPE_A
 			-- Actual type of class where all formals are replaced by their constraint.
 		local
 			i, count: INTEGER
@@ -1947,7 +1947,7 @@ feature -- Actual class type
 			constraint_actual_type_not_void: Result /= Void
 		end
 
-	actual_type: CL_TYPE_A is
+	actual_type: CL_TYPE_A
 			-- Actual type of the class
 		local
 			i, nb: INTEGER
@@ -1984,7 +1984,7 @@ feature -- Actual class type
 
 feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual class type
 
-	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp, is_sep: BOOLEAN): CL_TYPE_A is
+	partial_actual_type (gen: ARRAY [TYPE_A]; is_exp, is_sep: BOOLEAN): CL_TYPE_A
 			-- Actual type of `current depending on the context in which it is declared
 			-- in CLASS_TYPE_AS. That is to say, it could have generics `gen' but not
 			-- be a generic class. It simplifies creation of `CL_TYPE_A' instances in
@@ -2013,7 +2013,7 @@ feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual
 
 feature -- Incrementality
 
-	insert_changed_feature (feature_name_id: INTEGER) is
+	insert_changed_feature (feature_name_id: INTEGER)
 			-- Insert feature `feature_name_id' in `changed_features'.
 		require
 			good_argument: feature_name_id > 0
@@ -2028,7 +2028,7 @@ end
 			changed_features.put (feature_name_id)
 		end
 
-	constraint (i: INTEGER): TYPE_A is
+	constraint (i: INTEGER): TYPE_A
 			-- I-th constraint of the class
 		require
 			generics_exists: is_generic
@@ -2044,7 +2044,7 @@ end
 			constraint_not_void: Result /= Void
 		end
 
-	constraint_if_possible (i: INTEGER): TYPE_A is
+	constraint_if_possible (i: INTEGER): TYPE_A
 			-- I-th constraint of the class
 		require
 			generics_exists: is_generic
@@ -2062,7 +2062,7 @@ end
 			end
 		end
 
-	constraints (i: INTEGER): TYPE_SET_A is
+	constraints (i: INTEGER): TYPE_SET_A
 			-- I-th constraint set of the class
 		require
 			generics_exists: is_generic
@@ -2078,7 +2078,7 @@ end
 			constraint_not_void: Result /= Void
 		end
 
-	constraints_if_possible (i: INTEGER): TYPE_SET_A is
+	constraints_if_possible (i: INTEGER): TYPE_SET_A
 			-- I-th constraint set of the class
 		require
 			generics_exists: is_generic
@@ -2153,7 +2153,7 @@ end
 			Result_not_void_and_not_empty: Result /= Void and not Result.is_empty
 		end
 
-	update_instantiator1 is
+	update_instantiator1
 			-- Ensure that parents classes have a proper generic derivation
 			-- matching needs of current class which has syntactically
 			-- been changed.
@@ -2187,7 +2187,7 @@ end
 			end
 		end
 
-	init_types is
+	init_types
 			-- Standard initialization of attribute `types' for non
 			-- generic classes.
 		require
@@ -2206,7 +2206,7 @@ end
 			end
 		end
 
-	update_types (data: CL_TYPE_A) is
+	update_types (data: CL_TYPE_A)
 			-- Update `types' with `data'.
 		require
 			good_argument: data /= Void
@@ -2247,14 +2247,14 @@ end
 
 feature {NONE} -- Incrementality
 
-	derivations: DERIVATIONS is
+	derivations: DERIVATIONS
 		once
 			Result := instantiator.derivations
 		ensure
 			derivations_not_void: Result /= Void
 		end
 
-	register_type (data: CL_TYPE_A): CLASS_TYPE is
+	register_type (data: CL_TYPE_A): CLASS_TYPE
 			-- Ensure that `data' has an associated class type by creating
 			-- a new class type descriptor if it is not already created;
 			-- return the associated class type.
@@ -2278,7 +2278,7 @@ feature {NONE} -- Incrementality
 			data_is_registered: types.has_type (Void, data)
 		end
 
-	register_new_type (data: CL_TYPE_A): CLASS_TYPE is
+	register_new_type (data: CL_TYPE_A): CLASS_TYPE
 			-- Register new type `data' and return the corresponding descriptor.
 		require
 			data_attached: data /= Void
@@ -2304,7 +2304,7 @@ end
 			data_is_registered: types.has_type (Void, data)
 		end
 
-	register_generic_type (data: GEN_TYPE_A; n: INTEGER): CLASS_TYPE is
+	register_generic_type (data: GEN_TYPE_A; n: INTEGER): CLASS_TYPE
 			-- Ensure that `data' has an associated class type by creating
 			-- a new class type descriptor if it is not already created;
 			-- return the associated class type. Register all the types
@@ -2354,7 +2354,7 @@ end
 			end
 		end
 
-	new_type (data: CL_TYPE_A): CLASS_TYPE is
+	new_type (data: CL_TYPE_A): CLASS_TYPE
 			-- New class type for current class
 		do
 			create Result.make (data)
@@ -2366,7 +2366,7 @@ end
 			new_type_not_void: Result /= Void
 		end
 
-	update_filter_types (new_class_type: CLASS_TYPE) is
+	update_filter_types (new_class_type: CLASS_TYPE)
 			-- Update all types associated with `filters' using `new_class_type'.
 		require
 			new_class_type_not_void: new_class_type /= Void
@@ -2406,7 +2406,7 @@ end
 
 feature {CLASS_C} -- Incrementality
 
-	update_filter_anchored_types (new_class_type: CLASS_TYPE) is
+	update_filter_anchored_types (new_class_type: CLASS_TYPE)
 			-- Update all anchored types associated with `filters' using `new_class_type'.
 		require
 			new_class_type_not_void: new_class_type /= Void
@@ -2450,7 +2450,7 @@ feature {CLASS_C} -- Incrementality
 
 feature -- Meta-type
 
-	meta_type (class_type: CLASS_TYPE): CLASS_TYPE is
+	meta_type (class_type: CLASS_TYPE): CLASS_TYPE
 			-- Associated class type of Current class in the context
 			-- of descendant type `class_type'.
 		require
@@ -2492,7 +2492,7 @@ feature -- Meta-type
 
 feature -- Validity class
 
-	check_validity is
+	check_validity
 			-- Special classes validity check.
 		local
 			l_feature: FEATURE_I
@@ -2542,7 +2542,7 @@ feature -- Validity class
 
 feature -- default_rescue routine
 
-	default_rescue_feature: FEATURE_I is
+	default_rescue_feature: FEATURE_I
 			-- The version of `default_rescue' from ANY.
 			-- Void if ANY has not been compiled yet or
 			-- does not possess the feature.
@@ -2555,7 +2555,7 @@ feature -- default_rescue routine
 
 feature -- default_create routine
 
-	default_create_feature : FEATURE_I is
+	default_create_feature : FEATURE_I
 			-- The version of `default_create' from ANY.
 			-- Void if ANY has not been compiled yet or
 			-- does not posess the feature or class is deferred.
@@ -2565,7 +2565,7 @@ feature -- default_create routine
 			Result := feature_table.feature_of_rout_id (System.default_create_rout_id)
 		end
 
-	allows_default_creation : BOOLEAN is
+	allows_default_creation : BOOLEAN
 			-- Can an instance of this class be
 			-- created with 'default_create'?
 		require
@@ -2585,7 +2585,7 @@ feature -- default_create routine
 
 feature -- Dead code removal
 
-	mark_visible (remover: REMOVER) is
+	mark_visible (remover: REMOVER)
 			-- Dead code removal from the visible features
 		require
 			visible_level.has_visible
@@ -2593,7 +2593,7 @@ feature -- Dead code removal
 			visible_level.mark_visible (remover, feature_table)
 		end
 
-	has_visible: BOOLEAN is
+	has_visible: BOOLEAN
 			-- Has the class some visible features
 		do
 			Result := visible_level.has_visible
@@ -2604,7 +2604,7 @@ feature -- Dead code removal
 
 feature -- Cecil
 
-	generate_cecil (generated_wrappers: DS_HASH_SET [STRING]) is
+	generate_cecil (generated_wrappers: DS_HASH_SET [STRING])
 			-- Generate cecil table for a class having visible features
 		require
 			has_visible: has_visible
@@ -2618,7 +2618,7 @@ feature -- Cecil
 
 feature -- Invariant feature
 
-	has_invariant: BOOLEAN is
+	has_invariant: BOOLEAN
 			-- Has the current class an invariant clause ?
 		do
 			Result := invariant_feature /= Void
@@ -2626,7 +2626,7 @@ feature -- Invariant feature
 
 feature -- Process the creation feature
 
-	process_creation_feature is
+	process_creation_feature
 			-- Assign `default_create' creation procedure (if applicable) to
 			-- `creation_feature'.
 		require
@@ -2639,7 +2639,7 @@ feature -- Process the creation feature
 			end
 		end
 
-	insert_changed_assertion (a_feature: FEATURE_I) is
+	insert_changed_assertion (a_feature: FEATURE_I)
 			-- Insert `a_feature' in the melted set
 		do
 			add_feature_to_melted_set (a_feature)
@@ -2648,7 +2648,7 @@ feature -- Process the creation feature
 
 feature {NONE} -- Implementation
 
-	add_feature_to_melted_set (f: FEATURE_I) is
+	add_feature_to_melted_set (f: FEATURE_I)
 		local
 			melt_set: like melted_set
 			melted_info: MELTED_INFO
@@ -2667,12 +2667,12 @@ feature {NONE} -- Implementation
 			melt_set.force (melted_info)
 		end
 
-	Melted_set_chunk: INTEGER is 20
+	Melted_set_chunk: INTEGER = 20
 			-- Size of `melted_set' which contains melted features.
 
 feature -- Initialization
 
-	initialize (l: like original_class) is
+	initialize (l: like original_class)
 			-- Initialization of Current.
 		require
 			good_argument: l /= Void
@@ -2700,7 +2700,7 @@ feature -- Properties
 			--
 			-- See `lace_class' for example.
 
-	lace_class: like original_class is
+	lace_class: like original_class
 			-- Lace class (takes overriding into account)
 			--
 			-- e.g. Class in cluster c1 and in override o1
@@ -2750,7 +2750,7 @@ feature -- Properties
 	need_new_parents: BOOLEAN
 			-- Does Current need to recompute `parents' and `computed_parents'?
 
-	number_of_ancestors: INTEGER is
+	number_of_ancestors: INTEGER
 			-- Number of direct and indirect ancestor of Current. If repeated inheritance
 			-- parents are counted twice.
 		do
@@ -2900,7 +2900,7 @@ feature -- Properties
 			-- Is class an IL enum type?
 			-- Useful to perform call optimization on enum type in FEATURE_B.
 
-	is_basic: BOOLEAN is
+	is_basic: BOOLEAN
 			-- Is class basic?
 		do
 		end
@@ -2914,7 +2914,7 @@ feature -- Properties
 	is_frozen: BOOLEAN
 			-- Is class frozen, ie we cannot inherit from it?
 
-	is_optimized_as_frozen: BOOLEAN is
+	is_optimized_as_frozen: BOOLEAN
 			-- Although class might not be marked `is_frozen' we may want to consider it as frozen
 			-- for the code generation.
 		do
@@ -2925,7 +2925,7 @@ feature -- Properties
 			-- Is class an external one?
 			-- If yes, we do not generate it.
 
-	is_true_external: BOOLEAN is
+	is_true_external: BOOLEAN
 			-- Is class an instance of EXTERNAL_CLASS_C?
 			-- If yes, we do not generate it.
 		do
@@ -2941,13 +2941,13 @@ feature -- Properties
 	assembly_custom_attributes: BYTE_LIST [BYTE_NODE]
 			-- Associated custom attributes for assembly if any.
 
-	name: STRING is
+	name: STRING
 			-- Class name
 		do
 			Result := lace_class.name
 		end
 
-	external_class_name: STRING is
+	external_class_name: STRING
 			-- External class name.
 		do
 			if private_external_name /= Void then
@@ -2957,7 +2957,7 @@ feature -- Properties
 			end
 		end
 
-	text: STRING is
+	text: STRING
 			-- Class text
 		require
 			valid_file_name: file_name /= Void
@@ -2970,7 +2970,7 @@ feature -- Properties
 			end
 		end
 
-	constraint_classes (a_formal_dec: FORMAL_DEC_AS) : ARRAY [CLASS_C] is
+	constraint_classes (a_formal_dec: FORMAL_DEC_AS) : ARRAY [CLASS_C]
 			-- Computed constraint classes for every formal of the current class.
 			-- Only class types are put into this cache so every item in the cache is error free.
 			-- All other positions are void especially those of formals.
@@ -3008,7 +3008,7 @@ feature -- Properties
 			constraint_classes_not_void: Result /= Void
 		end
 
-	constraint_renaming (a_formal_dec: FORMAL_DEC_AS): ARRAY [RENAMING_A] is
+	constraint_renaming (a_formal_dec: FORMAL_DEC_AS): ARRAY [RENAMING_A]
 			-- Computed renamings for every formal of the current class.
 			-- Only sane renamings are put into this cache so every item in the cache is error free.
 			-- All other positions are void especially those of formal constraints as they are not allowed to have renamings.
@@ -3053,7 +3053,7 @@ feature {NONE} -- Implementation: Properties
 	formal_constraint_cache: TUPLE [
 			constraint_classes: ARRAY [CLASS_C];
 			constraint_renaming: ARRAY [RENAMING_A]]
-		is
+		
 			-- For easy type checking of `constraint_cache'.
 		do
 		end
@@ -3068,7 +3068,7 @@ feature {NONE} -- Implementation: Properties
 
 feature -- IL code generation
 
-	il_data_name: STRING is
+	il_data_name: STRING
 			-- IL class name of class data
 		require
 			not_is_external: not is_external
@@ -3091,7 +3091,7 @@ feature -- IL code generation
 			result_not_void: Result /= Void
 		end
 
-	set_il_name is
+	set_il_name
 			-- Store basic information that will help us reconstruct
 			-- a complete name.
 		require
@@ -3113,12 +3113,12 @@ feature {NONE} -- IL code generation
 	precompiled_class_name: STRING
 			-- Name of this class when it is precompiled
 
-	data_prefix: STRING is "Data"
+	data_prefix: STRING = "Data"
 			-- Prefix in a name of class data
 
 feature -- status
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value corresponds to `class_id'.
 		do
 			Result := class_id
@@ -3126,7 +3126,7 @@ feature -- status
 
 feature {CLASS_I} -- Settings
 
-	set_original_class (cl: like original_class) is
+	set_original_class (cl: like original_class)
 			-- Assign `cl' to `lace_class'.
 		require
 			cl_not_void: cl /= Void
@@ -3139,7 +3139,7 @@ feature {CLASS_I} -- Settings
 
 feature -- Access
 
-	has_multi_constraints (i: INTEGER): BOOLEAN is
+	has_multi_constraints (i: INTEGER): BOOLEAN
 			-- Does i-th generic parameter have multiple constraints?
 		require
 			has_generics: generics /= Void
@@ -3151,7 +3151,7 @@ feature -- Access
 			Result := l_formal_dec.has_multi_constraints
 		end
 
-	is_fully_deferred: BOOLEAN is
+	is_fully_deferred: BOOLEAN
 			-- Are parents of current class either ANY or a fully deferred class?
 			-- Does current class contain only deferred features?
 		require
@@ -3196,7 +3196,7 @@ feature -- Access
 			end
 		end
 
-	name_in_upper: STRING is
+	name_in_upper: STRING
 			-- Class name in upper case
 		do
 			Result := name
@@ -3204,7 +3204,7 @@ feature -- Access
 			name_in_upper_not_void: Result /= Void
 		end
 
-	ast: CLASS_AS is
+	ast: CLASS_AS
 			-- Associated AST structure
 		do
 			if Tmp_ast_server.has (class_id) then
@@ -3216,7 +3216,7 @@ feature -- Access
 			non_void_result_if: has_ast implies Result /= Void
 		end
 
-	invariant_ast: INVARIANT_AS is
+	invariant_ast: INVARIANT_AS
 			-- Associated invariant AST structure
 		do
 			if invariant_feature /= Void then
@@ -3224,20 +3224,20 @@ feature -- Access
 			end
 		end
 
-	has_types: BOOLEAN is
+	has_types: BOOLEAN
 			-- Are there any generic instantiations of Current
 			-- in the system or is Current a non generic class?
 		do
 			Result := (types /= Void) and then (not types.is_empty)
 		end
 
-	is_obsolete: BOOLEAN is
+	is_obsolete: BOOLEAN
 			-- Is Current feature obsolete?
 		do
 			Result := obsolete_message /= Void
 		end
 
-	feature_with_name_id (a_feature_name_id: INTEGER): E_FEATURE is
+	feature_with_name_id (a_feature_name_id: INTEGER): E_FEATURE
 			-- Feature whose internal name is `n'
 		require
 			valid_a_feature_name_id: a_feature_name_id > 0
@@ -3251,7 +3251,7 @@ feature -- Access
 			end
 		end
 
-	feature_with_id (a_feature_id: ID_AS): E_FEATURE is
+	feature_with_id (a_feature_id: ID_AS): E_FEATURE
 			-- Feature whose internal name is `n'
 		require
 			valid_a_feature_id: a_feature_id /= Void
@@ -3265,7 +3265,7 @@ feature -- Access
 			end
 		end
 
-	frozen feature_with_name (n: STRING): E_FEATURE is
+	frozen feature_with_name (n: STRING): E_FEATURE
 			-- Feature whose internal name is `n'
 		require
 			valid_n: n /= Void
@@ -3279,7 +3279,7 @@ feature -- Access
 			end
 		end
 
-	feature_with_rout_id (rout_id: INTEGER): E_FEATURE is
+	feature_with_rout_id (rout_id: INTEGER): E_FEATURE
 			-- Feature whose routine id `rout_id'.
 		require
 			valid_rout_id: rout_id /= 0
@@ -3293,7 +3293,7 @@ feature -- Access
 			end
 		end
 
-	feature_with_body_index (a_body_index: INTEGER): E_FEATURE is
+	feature_with_body_index (a_body_index: INTEGER): E_FEATURE
 			-- Feature whose body index is `a_body_index'.
 		require
 			a_body_index_non_negative: a_body_index >= 0
@@ -3307,7 +3307,7 @@ feature -- Access
 			end
 		end
 
-	feature_with_feature_id (a_feature_id: INTEGER): E_FEATURE is
+	feature_with_feature_id (a_feature_id: INTEGER): E_FEATURE
 			-- Feature whose feature id `a_feature_id.
 		require
 			feature_id_non_negative: a_feature_id >= 0
@@ -3321,7 +3321,7 @@ feature -- Access
 			end
 		end
 
-	feature_of_body_index (a_body_index: INTEGER): FEATURE_I is
+	feature_of_body_index (a_body_index: INTEGER): FEATURE_I
 			-- Feature whose body index is `a_body_index'.
 		require
 			a_body_index_non_negative: a_body_index >= 0
@@ -3330,7 +3330,7 @@ feature -- Access
 			Result := feature_table.feature_of_body_index (a_body_index)
 		end
 
-	feature_of_rout_id (a_routine_id: INTEGER): FEATURE_I is
+	feature_of_rout_id (a_routine_id: INTEGER): FEATURE_I
 			-- Feature whose routine_id is `a_routine_id'.
 			-- Look into `feature_table', `generic_features' and
 			-- `anchored_features'.
@@ -3385,7 +3385,7 @@ feature -- Access
 			end
 		end
 
-	feature_of_rout_id_set (rout_id_set: ROUT_ID_SET): FEATURE_I is
+	feature_of_rout_id_set (rout_id_set: ROUT_ID_SET): FEATURE_I
 			-- Feature with routine ID `rout_id'.
 		require
 			rout_id_set_not_void: rout_id_set /= Void
@@ -3404,7 +3404,7 @@ feature -- Access
 			end
 		end
 
-	feature_of_feature_id (a_feature_id: INTEGER): FEATURE_I is
+	feature_of_feature_id (a_feature_id: INTEGER): FEATURE_I
 			-- Feature whose feature_id is `a_feature_id'.
 			-- Look into `feature_table', `generic_features' and
 			-- `anchored_features'.
@@ -3451,7 +3451,7 @@ feature -- Access
 			end
 		end
 
-	feature_of_name_id (a_name_id: INTEGER): FEATURE_I is
+	feature_of_name_id (a_name_id: INTEGER): FEATURE_I
 			-- Feature whose feature_id is `a_feature_id'.
 			-- Look into `feature_table', `generic_features' and
 			-- `anchored_features'.
@@ -3462,7 +3462,7 @@ feature -- Access
 			Result := feature_table.item_id (a_name_id)
 		end
 
-	api_feature_table: E_FEATURE_TABLE is
+	api_feature_table: E_FEATURE_TABLE
 			-- Feature table for current class
 			--| Can be Void when `feature_table' has not yet
 			--| been computed (for example, error at degree 5).
@@ -3472,7 +3472,7 @@ feature -- Access
 			end
 		end
 
-	once_functions: SORTED_TWO_WAY_LIST [E_FEATURE] is
+	once_functions: SORTED_TWO_WAY_LIST [E_FEATURE]
 			-- List of once functions.
 		local
 			f_table: FEATURE_TABLE
@@ -3499,7 +3499,7 @@ feature -- Access
 			result_sorted: Result.sorted
 		end
 
-	once_routines: SORTED_TWO_WAY_LIST [E_FEATURE] is
+	once_routines: SORTED_TWO_WAY_LIST [E_FEATURE]
 			-- List of once features (functions and procedures).
 		local
 			f_table: FEATURE_TABLE
@@ -3526,7 +3526,7 @@ feature -- Access
 			result_sorted: Result.sorted
 		end
 
-	constant_features: SORTED_TWO_WAY_LIST [E_CONSTANT] is
+	constant_features: SORTED_TWO_WAY_LIST [E_CONSTANT]
 			-- List of constant features.
 		local
 			f_table: FEATURE_TABLE
@@ -3557,7 +3557,7 @@ feature -- Access
 			result_sorted: Result.sorted
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the current class valid?
 			-- (After a compilation Current may become
 			-- invalid)
@@ -3566,7 +3566,7 @@ feature -- Access
 				and then System.class_of_id (class_id) = Current
 		end
 
-	written_in_features: LIST [E_FEATURE] is
+	written_in_features: LIST [E_FEATURE]
 			-- List of features defined in current class
 		require
 			has_feature_table: has_feature_table
@@ -3584,7 +3584,7 @@ feature -- Access
 
 feature -- Precompilation Access
 
-	is_precompiled: BOOLEAN is
+	is_precompiled: BOOLEAN
 			-- Is class precompiled?
 		do
 			Result := System.class_counter.is_precompiled (class_id)
@@ -3592,13 +3592,13 @@ feature -- Precompilation Access
 
 feature -- Server Access
 
-	has_ast: BOOLEAN is
+	has_ast: BOOLEAN
 			-- Does Current class have an AST structure?
 		do
 			Result := Ast_server.has (class_id) or else Tmp_ast_server.has (class_id)
 		end
 
-	group: CONF_GROUP is
+	group: CONF_GROUP
 			-- Cluster to which the class belongs to
 		do
 			Result := lace_class.group
@@ -3606,7 +3606,7 @@ feature -- Server Access
 			group_not_void: Result /= Void
 		end
 
-	file_name: STRING is
+	file_name: STRING
 			-- File name of the class
 		do
 			Result := lace_class.file_name.string
@@ -3615,7 +3615,7 @@ feature -- Server Access
 			file_name_is_string: Result.same_type ("")
 		end
 
-	file_is_readable: BOOLEAN is
+	file_is_readable: BOOLEAN
 			-- Is file with `file_name' readable?
 		local
 			f: PLAIN_TEXT_FILE
@@ -3626,7 +3626,7 @@ feature -- Server Access
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Order relation on classes
 		do
 			Result := topological_id < other.topological_id
@@ -3634,7 +3634,7 @@ feature -- Comparison
 
 feature -- Output
 
-	class_signature: STRING is
+	class_signature: STRING
 			-- Signature of class
 		local
 			formal_dec: FORMAL_DEC_AS
@@ -3667,7 +3667,7 @@ feature -- Output
 			class_signature_not_void: Result /= Void
 		end
 
-	append_header (a_text_formatter: TEXT_FORMATTER) is
+	append_header (a_text_formatter: TEXT_FORMATTER)
 			-- Append class header to `a_text_formatter'.
 		do
 			if is_expanded then
@@ -3684,7 +3684,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-	append_signature (a_text_formatter: TEXT_FORMATTER; a_with_deferred_symbol: BOOLEAN) is
+	append_signature (a_text_formatter: TEXT_FORMATTER; a_with_deferred_symbol: BOOLEAN)
 			-- Append the signature of current class in `a_text_formatter'. If `a_with_deferred_symbol'
 			-- then add a `*' to the class name.
 		require
@@ -3693,7 +3693,7 @@ feature -- Output
 			append_signature_internal (a_text_formatter, a_with_deferred_symbol, False)
 		end
 
-	append_short_signature (a_text_formatter: TEXT_FORMATTER; a_with_deferred_symbol: BOOLEAN) is
+	append_short_signature (a_text_formatter: TEXT_FORMATTER; a_with_deferred_symbol: BOOLEAN)
 			-- Append short signature of current class in `a_text_formatter'.
 			-- Short signature is to use "..." to replace constrained generic type, so
 			-- class {HASH_TABLE [G, H -> HASHABLE]} becomes {HASH_TABLE [G, H -> ...]}.
@@ -3705,7 +3705,7 @@ feature -- Output
 			append_signature_internal (a_text_formatter, a_with_deferred_symbol, True)
 		end
 
-	append_name (a_text_formatter: TEXT_FORMATTER) is
+	append_name (a_text_formatter: TEXT_FORMATTER)
 			-- Append the name ot the current class in `a_text_formatter'
 		require
 			non_void_st: a_text_formatter /= Void
@@ -3715,7 +3715,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_main_parent (cl: like main_parent) is
+	set_main_parent (cl: like main_parent)
 			-- Assign `cl' to `main_parent'.
 		require
 			cl_not_void: cl /= Void
@@ -3726,7 +3726,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			main_parent_set: main_parent = cl
 		end
 
-	set_number_of_features (n: like number_of_features) is
+	set_number_of_features (n: like number_of_features)
 			-- Assign `n' to `number_of_features'.
 		do
 			number_of_features := n
@@ -3734,7 +3734,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			number_of_features_set: number_of_features = n
 		end
 
-	set_topological_id (i: INTEGER) is
+	set_topological_id (i: INTEGER)
 			-- Assign `i' to `topological_id'.
 		do
 			topological_id := i
@@ -3742,7 +3742,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			topological_id_set: topological_id = i
 		end
 
-	set_is_deferred (b: BOOLEAN) is
+	set_is_deferred (b: BOOLEAN)
 			-- Assign `b' to `is_deferred'.
 		do
 			is_deferred := b
@@ -3750,7 +3750,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			is_deferred_set: is_deferred = b
 		end
 
-	set_is_expanded (b: BOOLEAN) is
+	set_is_expanded (b: BOOLEAN)
 			-- Assign `b' to `is_expanded'.
 		do
 			is_expanded := b
@@ -3758,7 +3758,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			is_expanded_set: is_expanded = b
 		end
 
-	set_is_enum (b: BOOLEAN) is
+	set_is_enum (b: BOOLEAN)
 			-- Assign `b' to `is_enum'.
 		require
 			il_generation: System.il_generation
@@ -3768,7 +3768,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			is_enum_set: is_enum = b
 		end
 
-	set_suppliers (s: like suppliers) is
+	set_suppliers (s: like suppliers)
 			-- Assign `s' to `suppliers'.
 		do
 			suppliers := s
@@ -3776,7 +3776,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			suppliers_set: suppliers = s
 		end
 
-	set_generics (g: like generics) is
+	set_generics (g: like generics)
 			-- Assign `g' to `generics'.
 		do
 			generics := g
@@ -3788,7 +3788,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			generics_set: generics = g
 		end
 
-	set_obsolete_message (m: like obsolete_message) is
+	set_obsolete_message (m: like obsolete_message)
 			-- Set `obsolete_message' to `m'.
 		do
 			obsolete_message := m
@@ -3796,7 +3796,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			obsolete_message_set: obsolete_message = m
 		end
 
-	set_generic_features (f: like generic_features) is
+	set_generic_features (f: like generic_features)
 			-- Set `generic_features' to `f'.
 		require
 			f_not_void: f /= Void
@@ -3816,7 +3816,7 @@ feature -- Genericity
 			constraint_cache_void: constraint_cache = Void
 		end
 
-	formal_at_position (n: INTEGER): TYPE_FEATURE_I is
+	formal_at_position (n: INTEGER): TYPE_FEATURE_I
 			-- Find first TYPE_FEATURE_I in `generic_features' that
 			-- matches position `n'.
 		require
@@ -3848,7 +3848,7 @@ feature -- Genericity
 			result_not_void: Result /= Void
 		end
 
-	update_generic_features is
+	update_generic_features
 			-- Update `generic_features' with information of Current.
 		require
 			parents_not_void: parents /= Void
@@ -4020,7 +4020,7 @@ feature -- Genericity
 
 feature {NONE} -- Genericity
 
-	extend_generic_features (an_item: TYPE_FEATURE_I) is
+	extend_generic_features (an_item: TYPE_FEATURE_I)
 			-- Insert `an_item' in `generic_features'. If `generic_features'
 			-- is not yet created, creates it.
 		require
@@ -4058,7 +4058,7 @@ feature {NONE} -- Genericity
 
 feature -- Anchored types
 
-	update_anchors is
+	update_anchors
 			-- Update `anchored_features' with information of Current.
 		require
 			il_generation: System.il_generation
@@ -4170,7 +4170,7 @@ feature -- Anchored types
 			anchored_features := l_anchored_features
 		end
 
-	extend_type_set (r_id: INTEGER) is
+	extend_type_set (r_id: INTEGER)
 			-- Extend `type_set' with `r_id'. If `type_set' is
 			-- not yet created, creates it.
 		require
@@ -4198,7 +4198,7 @@ feature -- Implementation
 			-- Meta-class types associated to the class: it contains
 			-- only one type if the class is not generic
 
-	feature_named (n: STRING): FEATURE_I is
+	feature_named (n: STRING): FEATURE_I
 			-- Feature whose internal name is `n'
 		require
 			n_not_void: n /= Void
@@ -4216,14 +4216,14 @@ feature -- Implementation
 
 feature -- Implementation
 
-	set_current_feature_table (a_tbl: like feature_table) is
+	set_current_feature_table (a_tbl: like feature_table)
 		do
 			current_feature_table := a_tbl
 		ensure
 			current_feature_table_set: current_feature_table = a_tbl
 		end
 
-	set_previous_feature_table (a_tbl: like feature_table) is
+	set_previous_feature_table (a_tbl: like feature_table)
 		do
 			previous_feature_table := a_tbl
 		ensure
@@ -4232,7 +4232,7 @@ feature -- Implementation
 
 	previous_feature_table, current_feature_table: FEATURE_TABLE
 
-	feature_table: FEATURE_TABLE is
+	feature_table: FEATURE_TABLE
 			-- Compiler feature table
 		require
 			has_feature_table: has_feature_table
@@ -4245,7 +4245,7 @@ feature -- Implementation
 			valid_result: Result /= Void
 		end
 
-	has_feature_table: BOOLEAN is
+	has_feature_table: BOOLEAN
 			-- Has Current a feature table
 		do
 			Result := current_feature_table /= Void or previous_feature_table /= Void
@@ -4261,7 +4261,7 @@ feature {NONE} -- Implementation
 
 feature {DEGREE_5} -- Degree 5
 
-	add_to_degree_5 is
+	add_to_degree_5
 			-- Add current class to Degree 5.
 		do
 			degree_5_needed := True
@@ -4269,7 +4269,7 @@ feature {DEGREE_5} -- Degree 5
 			added: degree_5_needed
 		end
 
-	remove_from_degree_5 is
+	remove_from_degree_5
 			-- Remove current class from Degree 5.
 		do
 			degree_5_needed := False
@@ -4286,7 +4286,7 @@ feature {DEGREE_5} -- Degree 5
 			-- Does current class need to be
 			-- parsed during Degree 5?
 
-	set_parsing_needed (b: BOOLEAN) is
+	set_parsing_needed (b: BOOLEAN)
 			-- Set `parsing_needed' to `b'.
 		do
 			parsing_needed := b
@@ -4296,7 +4296,7 @@ feature {DEGREE_5} -- Degree 5
 
 feature {DEGREE_4, NAMED_TUPLE_TYPE_A} -- Degree 4
 
-	add_to_degree_4 is
+	add_to_degree_4
 			-- Add current class to Degree 4.
 		do
 			degree_4_needed := True
@@ -4304,7 +4304,7 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A} -- Degree 4
 			added: degree_4_needed
 		end
 
-	remove_from_degree_4 is
+	remove_from_degree_4
 			-- Remove current class from Degree 4.
 		do
 			degree_4_needed := False
@@ -4331,7 +4331,7 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A} -- Degree 4
 	supplier_status_modified: BOOLEAN
 			-- Has the status of a supplier changed?
 
-	set_degree_4_processed is
+	set_degree_4_processed
 			-- Set `degree_4_processed' to True.
 		do
 			degree_4_processed := True
@@ -4339,7 +4339,7 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A} -- Degree 4
 			degree_4_processed_set: degree_4_processed
 		end
 
-	set_expanded_modified is
+	set_expanded_modified
 			-- Set `expanded_modifed' to True.
 		do
 			expanded_modified := True
@@ -4347,7 +4347,7 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A} -- Degree 4
 			expanded_modified_set: expanded_modified
 		end
 
-	set_deferred_modified is
+	set_deferred_modified
 			-- Set `deferred_modified' to True.
 		do
 			deferred_modified := True
@@ -4355,7 +4355,7 @@ feature {DEGREE_4, NAMED_TUPLE_TYPE_A} -- Degree 4
 			deferred_modified_set: deferred_modified
 		end
 
-	set_supplier_status_modified is
+	set_supplier_status_modified
 			-- Set `supplier_status_modified' to True.
 		do
 			supplier_status_modified := True
@@ -4374,7 +4374,7 @@ feature {DEGREE_4, DEGREE_3} -- Used by degree 4 and 3 to compute new assertions
 	assert_prop_list: LINKED_LIST [INTEGER]
 			-- List of routine ids to be propagated
 
-	set_assertion_prop_list (l: like assert_prop_list) is
+	set_assertion_prop_list (l: like assert_prop_list)
 			-- Set `assert_prop_list' to `l'.
 		do
 			assert_prop_list := l
@@ -4397,7 +4397,7 @@ feature {DEGREE_4, ORIGIN_TABLE, AST_FEATURE_REPLICATION_GENERATOR} -- Used by d
 
 feature {DEGREE_3} -- Degree 3
 
-	add_to_degree_3 is
+	add_to_degree_3
 			-- Add current class to Degree 3.
 			-- Set `finalization_needed' to True
 		require
@@ -4410,7 +4410,7 @@ feature {DEGREE_3} -- Degree 3
 			finalization_needed_set: finalization_needed
 		end
 
-	remove_from_degree_3 is
+	remove_from_degree_3
 			-- Remove current class from Degree 3.
 		do
 			degree_3_needed := False
@@ -4424,7 +4424,7 @@ feature {DEGREE_3} -- Degree 3
 
 feature {DEGREE_2} -- Degree 2
 
-	add_to_degree_2 is
+	add_to_degree_2
 			-- Add current class to Degree 2.
 		require
 			not_a_true_external_class: not is_true_external
@@ -4434,7 +4434,7 @@ feature {DEGREE_2} -- Degree 2
 			added: degree_2_needed
 		end
 
-	remove_from_degree_2 is
+	remove_from_degree_2
 			-- Remove current class from Degree 2.
 		do
 			degree_2_needed := False
@@ -4448,7 +4448,7 @@ feature {DEGREE_2} -- Degree 2
 
 feature {DEGREE_1} -- Degree 1
 
-	add_to_degree_1 is
+	add_to_degree_1
 			-- Add current class to Degree 1.
 		require
 			not_a_true_external_class: not is_true_external
@@ -4458,7 +4458,7 @@ feature {DEGREE_1} -- Degree 1
 			added: degree_1_needed
 		end
 
-	remove_from_degree_1 is
+	remove_from_degree_1
 			-- Remove current class from Degree 1.
 		do
 			degree_1_needed := False
@@ -4472,7 +4472,7 @@ feature {DEGREE_1} -- Degree 1
 
 feature {DEGREE_MINUS_1, IL_GENERATOR} -- Degree -1
 
-	add_to_degree_minus_1 is
+	add_to_degree_minus_1
 			-- Add current class to Degree -1.
 		require
 			not_a_true_external_class: not is_true_external
@@ -4482,7 +4482,7 @@ feature {DEGREE_MINUS_1, IL_GENERATOR} -- Degree -1
 			added: degree_minus_1_needed
 		end
 
-	remove_from_degree_minus_1 is
+	remove_from_degree_minus_1
 			-- Remove current class from Degree -1.
 		do
 			degree_minus_1_needed := False
@@ -4500,7 +4500,7 @@ feature -- Degree -2/-3
 			-- Does current class need to be processed for
 			-- finalization?
 
-	set_finalization_needed (v: BOOLEAN) is
+	set_finalization_needed (v: BOOLEAN)
 			-- Assign `finalization_needed' with `v'.
 		do
 			finalization_needed := v
@@ -4510,7 +4510,7 @@ feature -- Degree -2/-3
 
 feature -- output
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- Generate a nice representation of Current to be seen
 			-- in debugger.
 		local
@@ -4526,7 +4526,7 @@ feature -- output
 
 feature {CLASS_C} -- Implementation
 
-	inherits_from_internal (other: CLASS_C): BOOLEAN is
+	inherits_from_internal (other: CLASS_C): BOOLEAN
 			-- Is `other' a conforming/non-conforming ancestor of `Current'?
 		require
 			good_argument: other /= Void
@@ -4553,7 +4553,7 @@ feature {NONE} -- Implementation
 			-- Number added at end of C file corresponding to generated
 			-- feature table. Initialized by default to -1.
 
-	append_signature_internal (a_text_formatter: TEXT_FORMATTER; a_with_deferred_symbol: BOOLEAN; a_short: BOOLEAN) is
+	append_signature_internal (a_text_formatter: TEXT_FORMATTER; a_with_deferred_symbol: BOOLEAN; a_short: BOOLEAN)
 			-- Append the signature of current class in `a_text_formatter'. If `a_with_deferred_symbol'
 			-- then add a `*' to the class name.
 			-- If `a_short', use "..." to replace constrained generic type.
@@ -4609,7 +4609,7 @@ invariant
 	-- True after proper initialization of Current instance.
 	-- has_ast: has_ast
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

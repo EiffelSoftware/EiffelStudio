@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {TEST_EXTRACTOR_CONF_I}."
 	author: ""
 	date: "$Date$"

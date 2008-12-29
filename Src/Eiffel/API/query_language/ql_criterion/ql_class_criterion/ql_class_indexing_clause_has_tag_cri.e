@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Criterion to test if indexing clause of a class has an indexing with a given tag"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature{NONE} -- Implementation
 
-	indexing_clause_has_tag (a_indexing_clause: INDEXING_CLAUSE_AS): BOOLEAN is
+	indexing_clause_has_tag (a_indexing_clause: INDEXING_CLAUSE_AS): BOOLEAN
 			-- Does `a_indexing_clause' contain a tag named `tag'?
 		require
 			a_indexing_clause_attached: a_indexing_clause /= Void
@@ -39,20 +39,20 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	roundtrip_pure_eiffel_parser: EIFFEL_PARSER is
+	roundtrip_pure_eiffel_parser: EIFFEL_PARSER
 			-- Pure Eiffel parser
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_LIGHT_FACTORY})
 		end
 
-	roundtrip_il_eiffel_parser: EIFFEL_PARSER is
+	roundtrip_il_eiffel_parser: EIFFEL_PARSER
 			-- IL Eiffel parser.
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_LIGHT_FACTORY})
 			Result.set_il_parser
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a reordering (identified by open_map content) of a feature"
 	author: ""
 	date: "$Date$"
@@ -18,7 +18,7 @@ create
 
 feature --Initialization
 
-	make (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]; a_frozen_age: INTEGER) is
+	make (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]; a_frozen_age: INTEGER)
 		require
 			open_map_not_void: a_open_map /= Void
 		do
@@ -33,7 +33,7 @@ feature --Access
 
 	open_map: ARRAYED_LIST [INTEGER]
 
-	set_attributes (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER]) is
+	set_attributes (a_is_target_closed: BOOLEAN; a_open_map: ARRAYED_LIST [INTEGER])
 		require
 			open_map_not_void: a_open_map /= Void
 		do
@@ -43,12 +43,12 @@ feature --Access
 
 	frozen_age: INTEGER
 
-	set_frozen_age (a_frozen_age: INTEGER) is
+	set_frozen_age (a_frozen_age: INTEGER)
 		do
 			frozen_age := a_frozen_age
 		end
 
-	is_valid_for (a_feature: FEATURE_I): BOOLEAN is
+	is_valid_for (a_feature: FEATURE_I): BOOLEAN
 		do
 			if open_map.count = 0 then
 				Result := True
@@ -59,7 +59,7 @@ feature --Access
 
 feature --Compare
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 		local
 			n: INTEGER
 		do
@@ -83,7 +83,7 @@ feature --Compare
 			Result := Result.hash_code
 		end
 
-	is_equal (other: FEATURE_REORDERING): BOOLEAN is
+	is_equal (other: FEATURE_REORDERING): BOOLEAN
 		do
 			if open_map.is_empty and other.open_map.is_empty
 			then
@@ -108,7 +108,7 @@ feature --Compare
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:"Actual type like Current."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_like_current (Current)
@@ -39,13 +39,13 @@ feature -- Properties
 	actual_type: LIKE_CURRENT
 			-- Actual type of the anchored type in a given class
 
-	deep_actual_type: TYPE_A is
+	deep_actual_type: TYPE_A
 			-- <Precursor>
 		do
 			Result := conformance_type.deep_actual_type
 		end
 
-	context_free_type: like Current is
+	context_free_type: like Current
 			-- <Precursor>
 		do
 			create Result
@@ -55,27 +55,27 @@ feature -- Properties
 	conformance_type: TYPE_A
 			-- Type of the anchored type as specified in `set_actual_type'
 
-	has_associated_class: BOOLEAN is
+	has_associated_class: BOOLEAN
 			-- Does Current have an associated class?
 		do
 			Result := conformance_type /= Void and then conformance_type.has_associated_class
 		end
 
-	has_associated_class_type (a_context_type: TYPE_A): BOOLEAN is
+	has_associated_class_type (a_context_type: TYPE_A): BOOLEAN
 			-- Does Current have an associated class?
 		do
 			Result := conformance_type /= Void and then conformance_type.has_associated_class_type (a_context_type)
 		end
 
-	is_class_valid: BOOLEAN is
+	is_class_valid: BOOLEAN
 		do
 			Result := conformance_type /= Void and then conformance_type.is_class_valid
 		end
 
-	has_like_current, is_like_current: BOOLEAN is True
+	has_like_current, is_like_current: BOOLEAN = True
 			-- Is the current type an anchored type on Current ?
 
-	is_explicit: BOOLEAN is False
+	is_explicit: BOOLEAN = False
 			-- Is type fixed at compile time without anchors or formals?
 			--| Ideally, it is explicit if at runtime there is no descendants and
 			--| that conformance_type is also explicit (to prevent case
@@ -87,7 +87,7 @@ feature -- Properties
 			--| generating `dftype' instead which cannot be used in static array
 			--| type initialization.
 
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- Is type expanded?
 		do
 			if conformance_type /= Void then
@@ -95,7 +95,7 @@ feature -- Properties
 			end
 		end
 
-	is_reference: BOOLEAN is
+	is_reference: BOOLEAN
 			-- Is type reference?
 		do
 			if conformance_type /= Void then
@@ -103,7 +103,7 @@ feature -- Properties
 			end
 		end
 
-	is_tuple: BOOLEAN is
+	is_tuple: BOOLEAN
 			-- Is type reference?
 		do
 			if conformance_type /= Void then
@@ -111,19 +111,19 @@ feature -- Properties
 			end
 		end
 
-	is_external: BOOLEAN is False
+	is_external: BOOLEAN = False
 			-- Is type external?
 
-	is_none: BOOLEAN is False
+	is_none: BOOLEAN = False
 			-- Is current actual type NONE?
 
-	is_type_set: BOOLEAN is
+	is_type_set: BOOLEAN
 			-- <Precursor>
 		do
 			Result := conformance_type /= Void and then conformance_type.is_type_set
 		end
 
-	is_basic: BOOLEAN is
+	is_basic: BOOLEAN
 			-- Is the current actual type a basic one?
 		do
 			if conformance_type /= Void then
@@ -131,7 +131,7 @@ feature -- Properties
 			end
 		end
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		local
 			l: LIKE_CURRENT
@@ -142,29 +142,29 @@ feature -- Properties
 			end
 		end
 
-	good_generics: BOOLEAN is True
+	good_generics: BOOLEAN = True
 			--| A current type always has the right number of generic parameter.
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 		do
 			Result := {SHARED_HASH_CODE}.other_code
 		end
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Associated class
 		do
 			Result := conformance_type.associated_class
 		end
 
-	associated_class_type (a_context_type: TYPE_A): CLASS_TYPE is
+	associated_class_type (a_context_type: TYPE_A): CLASS_TYPE
 			-- Associated class
 		do
 			Result := conformance_type.associated_class_type (a_context_type)
 		end
 
-	generics: ARRAY [TYPE_A] is
+	generics: ARRAY [TYPE_A]
 			-- Actual generic types
 		do
 			if conformance_type /= Void then
@@ -172,13 +172,13 @@ feature -- Access
 			end
 		end
 
-	description: GENERIC_DESC is
+	description: GENERIC_DESC
 		do
 			create Result
 			Result.set_type_i (Current)
 		end
 
-	c_type: TYPE_C is
+	c_type: TYPE_C
 		do
 			if conformance_type /= Void then
 				Result := conformance_type.c_type
@@ -189,7 +189,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := same_as (other)
@@ -197,7 +197,7 @@ feature -- Comparison
 
 feature -- Output
 
-	dump: STRING is
+	dump: STRING
 			-- Dumped trace
 		local
 			actual_dump: STRING
@@ -214,7 +214,7 @@ feature -- Output
 			Result.append (actual_dump)
 		end
 
-	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C) is
+	ext_append_to (st: TEXT_FORMATTER; c: CLASS_C)
 		do
 			st.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_L_bracket)
 			if has_attached_mark then
@@ -232,14 +232,14 @@ feature -- Output
 
 feature -- IL code generation
 
-	minimum_interval_value: INTERVAL_VAL_B is
+	minimum_interval_value: INTERVAL_VAL_B
 		require else
 			valid_type: conformance_type.is_integer or conformance_type.is_natural or conformance_type.is_character
 		do
 			Result := conformance_type.minimum_interval_value
 		end
 
-	maximum_interval_value: INTERVAL_VAL_B is
+	maximum_interval_value: INTERVAL_VAL_B
 		require else
 			valid_type: conformance_type.is_integer or conformance_type.is_natural or conformance_type.is_character
 		do
@@ -251,12 +251,12 @@ feature -- IL code generation
 			Result := conformance_type.heaviest (other)
 		end
 
-	is_optimized_as_frozen: BOOLEAN is
+	is_optimized_as_frozen: BOOLEAN
 		do
 			Result := conformance_type.is_optimized_as_frozen
 		end
 
-	is_generated_as_single_type: BOOLEAN is
+	is_generated_as_single_type: BOOLEAN
 			-- Is associated type generated as a single type or as an interface type and
 			-- an implementation type.
 		do
@@ -265,13 +265,13 @@ feature -- IL code generation
 
 feature -- Generic conformance
 
-	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16 is
+	generated_id (final_mode: BOOLEAN; a_context_type: TYPE_A): NATURAL_16
 			-- Id of a `like xxx'.
 		do
 			Result := {SHARED_GEN_CONF_LEVEL}.like_current_type
 		end
 
-	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; a_context_type: TYPE_A) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; a_context_type: TYPE_A)
 			-- Generate mode dependent sequence of type id's
 			-- separated by commas. `use_info' is true iff
 			-- we generate code for a creation instruction.
@@ -283,7 +283,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A) is
+	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_context_type: TYPE_A)
 		do
 			if use_info then
 				create_info.generate_cid_array (buffer, final_mode, idx_cnt)
@@ -292,7 +292,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL) is
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL)
 		do
 			if use_info then
 				create_info.generate_cid_init (buffer, final_mode, idx_cnt, a_level)
@@ -301,7 +301,7 @@ feature -- Generic conformance
 			end
 		end
 
-	make_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN; a_context_type: TYPE_A) is
+	make_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN; a_context_type: TYPE_A)
 		do
 			if use_info then
 				create_info.make_type_byte_code (ba)
@@ -310,7 +310,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN) is
+	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info: BOOLEAN)
 			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
 		do
@@ -320,7 +320,7 @@ feature -- Generic conformance
 
 feature {TYPE_A} -- Helpers
 
-	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 			-- Is current type valid?
 		do
 				-- If no `conformance_type' is specified, then `like Current' makes sense.
@@ -328,13 +328,13 @@ feature {TYPE_A} -- Helpers
 			Result := conformance_type = Void or else conformance_type.internal_is_valid_for_class (a_class)
 		end
 
-	internal_generic_derivation (a_level: INTEGER_32): TYPE_A is
+	internal_generic_derivation (a_level: INTEGER_32): TYPE_A
 		do
 				-- We keep the same level since we are merely forwarding the call.
 			Result := conformance_type.internal_generic_derivation (a_level)
 		end
 
-	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER_32): BOOLEAN is
+	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER_32): BOOLEAN
 		do
 				-- We keep the same level since we are merely forwarding the call.
 			Result := conformance_type.internal_same_generic_derivation_as (current_type, other, a_level)
@@ -342,21 +342,21 @@ feature {TYPE_A} -- Helpers
 
 feature {COMPILER_EXPORTER} -- Modification
 
-	set_actual_type (a: TYPE_A) is
+	set_actual_type (a: TYPE_A)
 			-- Assign `a' to `conformance_type'.
 		do
 			conformance_type := a.to_other_immediate_attachment (Current)
 			actual_type := Current
 		end
 
-	set_attached_mark is
+	set_attached_mark
 			-- Mark type declaration as having an explicit attached mark.
 		do
 			Precursor
 			conformance_type := conformance_type.to_other_immediate_attachment (Current)
 		end
 
-	set_detachable_mark is
+	set_detachable_mark
 			-- Set class type declaration as having an explicit detachable mark.
 		do
 			Precursor
@@ -398,7 +398,7 @@ feature {COMPILER_EXPORTER} -- Duplication
 
 feature {COMPILER_EXPORTER} -- Primitives
 
-	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
+	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		do
@@ -422,13 +422,13 @@ feature {COMPILER_EXPORTER} -- Primitives
 			Result := type.intrinsic_type.to_other_attachment (Current)
 		end
 
-	adapted_in, skeleton_adapted_in (a_class_type: CLASS_TYPE): CL_TYPE_A is
+	adapted_in, skeleton_adapted_in (a_class_type: CLASS_TYPE): CL_TYPE_A
 			-- Instantiation of Current in context of `other'.
 		do
 			Result := a_class_type.type
 		end
 
-	instantiated_in (class_type: TYPE_A): TYPE_A is
+	instantiated_in (class_type: TYPE_A): TYPE_A
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
@@ -447,7 +447,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			Result := Result.to_other_attachment (Current)
 		end
 
-	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): LIKE_CURRENT is
+	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): LIKE_CURRENT
 		do
 			if a_ancestor /= a_descendant then
 				create Result
@@ -458,26 +458,26 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	create_info, shared_create_info: CREATE_CURRENT is
+	create_info, shared_create_info: CREATE_CURRENT
 			-- Byte code information for entity type creation
 		once
 			create Result
 		end
 
-	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN is
+	conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
 			-- Does `Current' conform to `other'?
 		do
 			Result := other.is_like_current or else conformance_type.conform_to (a_context_class, other.conformance_type)
 		end
 
-	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN is
+	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN
 			-- Does current convert to `a_target_type' in `a_context_class'?
 			-- Update `last_conversion_info' of AST_CONTEXT.
 		do
 			Result := conformance_type.convert_to (a_context_class, a_target_type)
 		end
 
-	meta_type: LIKE_CURRENT is
+	meta_type: LIKE_CURRENT
 			-- Meta type.
 		do
 				-- Because `like Current' could possibly means a basic type
@@ -488,7 +488,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			Result.set_actual_type (conformance_type.meta_type)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

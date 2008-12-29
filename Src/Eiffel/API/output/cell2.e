@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Cells containing two items."
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization
 
-	make (v: like item1; u: like item2) is
+	make (v: like item1; u: like item2)
 			-- Make `v' and `u' the cell's items.
 		do
 			item1 := v;
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Element change
 
-	put2, replace2 (u: like item2) is
+	put2, replace2 (u: like item2)
 			-- Make `u' the second cell's item.
 		do
 			item2 := u
@@ -51,7 +51,7 @@ feature -- Element change
 			item2_inserted: item2 = u
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

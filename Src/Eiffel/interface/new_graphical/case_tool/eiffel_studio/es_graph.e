@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base class graphs showing a representation of eiffel code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EIFFEL_GRAPH.
 		local
 			l_comparer: AGENT_BASED_EQUALITY_TESTER [like link_type]
@@ -61,7 +61,7 @@ feature -- Access
 			-- Container of `Current'.
 			-- Used to access surface on which `Current' is displayed.
 
-	class_of_id (a_id: STRING): ES_CLASS is
+	class_of_id (a_id: STRING): ES_CLASS
 			-- Class of `a_id'
 		require
 			a_id_not_void: a_id /= Void
@@ -83,7 +83,7 @@ feature -- Access
 			end
 		end
 
-	class_from_interface (class_i: CLASS_I): ARRAYED_LIST [ES_CLASS] is
+	class_from_interface (class_i: CLASS_I): ARRAYED_LIST [ES_CLASS]
 			-- Representation of `class_i', Void if none exists.
 		require
 			class_i_not_void: class_i /= Void
@@ -110,7 +110,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	top_level_clusters : ARRAYED_LIST [ES_CLUSTER] is
+	top_level_clusters : ARRAYED_LIST [ES_CLUSTER]
 			-- Top level clusters.
 		local
 			l_clusters : like clusters
@@ -135,7 +135,7 @@ feature -- Access
 			top_level_clusters_not_void: Result /= Void
 		end
 
-	top_level_classes : ARRAYED_LIST [ES_CLASS] is
+	top_level_classes : ARRAYED_LIST [ES_CLASS]
 			-- Top level classes.
 		local
 			l_classes: like nodes
@@ -160,7 +160,7 @@ feature -- Access
 			top_level_classes_not_void: Result /= Void
 		end
 
-	possible_linkable_node (a_class: ES_CLASS): ARRAYED_LIST [ES_CLASS] is
+	possible_linkable_node (a_class: ES_CLASS): ARRAYED_LIST [ES_CLASS]
 			-- Possible linkable node within `a_cluster'
 			-- Top level nodes of `a_cluster' and top level nodes of its libraries.
 		require
@@ -239,7 +239,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	cluster_from_interface (a_group: CONF_GROUP): ARRAYED_LIST [ES_CLUSTER] is
+	cluster_from_interface (a_group: CONF_GROUP): ARRAYED_LIST [ES_CLUSTER]
 			-- Representation of `a_group', Void if none exists.
 		require
 			a_group_not_void: a_group /= Void
@@ -266,7 +266,7 @@ feature -- Access
 			cluster_from_interface_not_void: Result /= Void
 		end
 
-	inheritance_link_connecting (a_descendant, an_ancestor: EG_LINKABLE): ES_INHERITANCE_LINK is
+	inheritance_link_connecting (a_descendant, an_ancestor: EG_LINKABLE): ES_INHERITANCE_LINK
 			-- Inheritance link connection `a_descendant' with `an_ancestor' if any.
 		require
 			a_descendant_not_void: a_descendant /= Void
@@ -281,7 +281,7 @@ feature -- Access
 			end
 		end
 
-	client_supplier_link_connecting (a_client, a_supplier: EG_LINKABLE): ES_CLIENT_SUPPLIER_LINK is
+	client_supplier_link_connecting (a_client, a_supplier: EG_LINKABLE): ES_CLIENT_SUPPLIER_LINK
 			-- Client supplier link connecting `a_client' with `a_supplier' if any.
 		require
 			a_client_not_void: a_client /= Void
@@ -298,7 +298,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_node (a_node: ES_CLASS) is
+	add_node (a_node: ES_CLASS)
 			-- Add `a_node' to the model.
 		local
 			class_i: CLASS_I
@@ -308,7 +308,7 @@ feature -- Element change
 			class_name_to_node_lookup.put (a_node, lookup_name_of_class (class_i))
 		end
 
-	add_node_relations (a_node: ES_CLASS) is
+	add_node_relations (a_node: ES_CLASS)
 			-- Add relations of `a_node'
 		require
 			a_node_not_void: a_node /= Void
@@ -321,14 +321,14 @@ feature -- Element change
 			end
 		end
 
-	remove_node (a_node: ES_CLASS) is
+	remove_node (a_node: ES_CLASS)
 			-- Remove `a_node' from the model.
 		do
 			Precursor {EG_GRAPH} (a_node)
 			class_name_to_node_lookup.remove (lookup_name_of_class (a_node.class_i))
 		end
 
-	add_link (a_link: EG_LINK) is
+	add_link (a_link: EG_LINK)
 			-- Add `a_link' to the model.
 		local
 			eil: ES_INHERITANCE_LINK
@@ -345,7 +345,7 @@ feature -- Element change
 			end
 		end
 
-	remove_link (a_link: EG_LINK) is
+	remove_link (a_link: EG_LINK)
 			-- Remove `a_link' from the model.
 		local
 			eil: ES_INHERITANCE_LINK
@@ -364,7 +364,7 @@ feature -- Element change
 
 feature {ES_DIAGRAM_TOOL_PANEL} -- Synchronization
 
-	synchronize is
+	synchronize
 			-- Contexts need to be updated because of recompilation
 			-- or similar action that needs resynchronization.
 		local
@@ -414,7 +414,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Synchronization
 
 feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 
-	add_classes_relations is
+	add_classes_relations
 			-- Add relation between classes in `Current'.
 		local
 			l_classes: like nodes
@@ -439,7 +439,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			end
 		end
 
-	add_clusters_relations is
+	add_clusters_relations
 			-- Add relation between clusters in `Current'.
 		local
 			l_clusters: like clusters
@@ -462,7 +462,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			end
 		end
 
-	add_children_relations (a_cluster: ES_CLUSTER; a_parent: ES_CLUSTER) is
+	add_children_relations (a_cluster: ES_CLUSTER; a_parent: ES_CLUSTER)
 			-- Add all `a_cluster''s childrens appear in top level of `a_parent'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -523,7 +523,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			end
 		end
 
-	add_parent_relations (a_cluster: ES_CLUSTER; a_parent: ES_CLUSTER) is
+	add_parent_relations (a_cluster: ES_CLUSTER; a_parent: ES_CLUSTER)
 			-- Add `a_cluster' to possible `a_parent'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -577,7 +577,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			end
 		end
 
-	add_ancestor_relations (a_class: ES_CLASS) is
+	add_ancestor_relations (a_class: ES_CLASS)
 			-- Add links to ancestors classes of `a_class' in the graph.
 		require
 			a_class_not_void: a_class /= Void
@@ -619,7 +619,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			end
 		end
 
-	add_descendant_relations (a_class: ES_CLASS) is
+	add_descendant_relations (a_class: ES_CLASS)
 			-- Add links to descendants of `a_class' in the graph.
 		require
 			a_class_not_void: a_class /= Void
@@ -661,7 +661,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			end
 		end
 
-	add_client_relations (a_class: ES_CLASS) is
+	add_client_relations (a_class: ES_CLASS)
 			-- Add links to classes in the graph that are clients of `a_class'
 		require
 			a_class_not_void: a_class /= Void
@@ -691,7 +691,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			end
 		end
 
-	add_supplier_relations (a_class: ES_CLASS) is
+	add_supplier_relations (a_class: ES_CLASS)
 			-- Add links to classes in the graph that are suppliers of `a_class'.
 		local
 			cf: ES_CLASS
@@ -720,7 +720,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 
 feature {CLASS_TEXT_MODIFIER} -- Status report
 
-	next_feature_name_number: INTEGER is
+	next_feature_name_number: INTEGER
 			-- Number to append to next created feature.
 		do
 			Result := feature_name_number
@@ -732,7 +732,7 @@ feature {CLASS_TEXT_MODIFIER} -- Status report
 
 feature {NONE} -- Implementation
 
-	lookup_name_of_class (a_class: CLASS_I): STRING is
+	lookup_name_of_class (a_class: CLASS_I): STRING
 			-- Unique lookup name of `a_class'
 		require
 			a_class_not_void: a_class /= Void
@@ -742,7 +742,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	remove_unneeded_items is
+	remove_unneeded_items
 			-- Remove all EIFFEL_ITEMS in `Current' with is_needed_on_diagram False.
 		local
 			l_nodes: like nodes
@@ -807,7 +807,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	synchronize_clusters (a_progress_bar: EB_PERCENT_PROGRESS_BAR) is
+	synchronize_clusters (a_progress_bar: EB_PERCENT_PROGRESS_BAR)
 			-- Synchronize all clusters in `Current'.
 		local
 			l_clusters: like flat_clusters
@@ -830,7 +830,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	synchronize_classes (a_progress_bar: EB_PERCENT_PROGRESS_BAR) is
+	synchronize_classes (a_progress_bar: EB_PERCENT_PROGRESS_BAR)
 			-- Synchronize all classes in `Current'.
 		local
 			l_classes: like flat_nodes
@@ -853,7 +853,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	synchronize_links (a_progress_bar: EB_PERCENT_PROGRESS_BAR) is
+	synchronize_links (a_progress_bar: EB_PERCENT_PROGRESS_BAR)
 			-- Synchronize all links in `Current'.
 		local
 			l_links: like flat_links
@@ -876,12 +876,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	explore_relations is
+	explore_relations
 			-- Explore relations.
 		deferred
 		end
 
-	top_most_scope (a_cluster: ES_CLUSTER): ES_CLUSTER is
+	top_most_scope (a_cluster: ES_CLUSTER): ES_CLUSTER
 			-- Possible top most cluster in the graph that contains dependent relations among classes in `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -909,7 +909,7 @@ feature {NONE} -- Implementation
 	client_supplier_links_lookup: DS_HASH_TABLE [ES_CLIENT_SUPPLIER_LINK, like link_type]
 			-- Lookup tables to speed up `client_supplier_link_connecting'.
 
-	link_comparer (u, v: like link_type): BOOLEAN is
+	link_comparer (u, v: like link_type): BOOLEAN
 			-- Comparison agent used in `client_supplier_links_lookup' and in
 			-- `inheritance_links_lookup'.
 		require
@@ -919,12 +919,12 @@ feature {NONE} -- Implementation
 			Result := (u.left = v.left) and (u.right = v.right)
 		end
 
-	link_type: TUPLE [left: EG_LINKABLE; right: EG_LINKABLE] is
+	link_type: TUPLE [left: EG_LINKABLE; right: EG_LINKABLE]
 			-- For typing purposes only
 		do
 		end
 
-	node_type: ES_CLASS is
+	node_type: ES_CLASS
 			-- Type of nodes in `nodes'.
 		do
 		end
@@ -935,7 +935,7 @@ invariant
 	inheritance_links_lookup_not_void: inheritance_links_lookup /= Void
 	client_supplier_links_lookup_not_void: client_supplier_links_lookup /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

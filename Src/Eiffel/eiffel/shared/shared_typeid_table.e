@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Access to a correpondance table of new type id and old type id: it is
@@ -10,14 +10,14 @@ class SHARED_TYPEID_TABLE
 	
 feature {NONE}
 
-	Type_id_table: ARRAY [INTEGER] is
+	Type_id_table: ARRAY [INTEGER]
 			-- Correpondance of type id: index the old one, output
 			-- the new one.
 		once
 			create Result.make (1, 1);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

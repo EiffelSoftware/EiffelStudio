@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EIS background system visitor."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create.
 		do
 			create targets_done.make (5)
@@ -72,7 +72,7 @@ feature -- Operation
 
 feature -- Query
 
-	full_visited: BOOLEAN is
+	full_visited: BOOLEAN
 			-- Has the system been fully visited?
 		do
 			Result := background_procedures.is_empty
@@ -80,7 +80,7 @@ feature -- Query
 
 feature -- Visit nodes
 
-	process_target (a_target: CONF_TARGET) is
+	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		local
 			l_conf_tuple: TUPLE [t_notable: CONF_NOTABLE; t_procedure: PROCEDURE [ANY, TUPLE]]
@@ -94,7 +94,7 @@ feature -- Visit nodes
 			background_procedures.extend (l_procedure)
 		end
 
-	process_library (a_library: CONF_LIBRARY) is
+	process_library (a_library: CONF_LIBRARY)
 			-- Visit `a_library'.
 		do
 			if a_library.library_target /= Void then
@@ -102,7 +102,7 @@ feature -- Visit nodes
 			end
 		end
 
-	process_precompile (a_precompile: CONF_PRECOMPILE) is
+	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Visit `a_precompile'.
 		do
 			if a_precompile.library_target /= Void then
@@ -110,13 +110,13 @@ feature -- Visit nodes
 			end
 		end
 
-	process_cluster (a_cluster: CONF_CLUSTER) is
+	process_cluster (a_cluster: CONF_CLUSTER)
 			-- Visit `a_cluster'.
 		do
 			retrieve_from_group (a_cluster)
 		end
 
-	process_override (an_override: CONF_OVERRIDE) is
+	process_override (an_override: CONF_OVERRIDE)
 			-- Visit `an_override'.
 		do
 			retrieve_from_group (an_override)
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 	targets_done: SEARCH_TABLE [UUID]
 			-- Lookup for libraries we already handled.
 
-	retrieve_recursively (a_target: CONF_TARGET) is
+	retrieve_recursively (a_target: CONF_TARGET)
 			-- Retrieve classes recursively from `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_from_group (a_group: CONF_GROUP) is
+	retrieve_from_group (a_group: CONF_GROUP)
 			-- Retrieve classes from `a_group'.
 		require
 			a_group_not_void: a_group /= Void
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	process_notable_only_conf (a_tuple: TUPLE [t_notable: CONF_NOTABLE; t_procedure: PROCEDURE [ANY, TUPLE]]) is
+	process_notable_only_conf (a_tuple: TUPLE [t_notable: CONF_NOTABLE; t_procedure: PROCEDURE [ANY, TUPLE]])
 			-- Process configuration node of `a_target'
 		require
 			a_tuple_filed: a_tuple.t_notable /= Void and then a_tuple.t_procedure /= Void
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			background_procedures_not_has: not background_procedures.has (a_tuple.t_procedure)
 		end
 
-	process_class_internal (a_tuple: TUPLE [t_class: CONF_CLASS; t_procedure: PROCEDURE [ANY, TUPLE]]) is
+	process_class_internal (a_tuple: TUPLE [t_class: CONF_CLASS; t_procedure: PROCEDURE [ANY, TUPLE]])
 			-- Process `a_tuple.t_class'.
 			-- Remove `a_tuple.t_procedure' from `background_procedures' and
 			-- Put next background procedure into idle actions.
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 	background_procedures: !LINKED_LIST [PROCEDURE [ANY, TUPLE]];
 			-- All managed background procedures.
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

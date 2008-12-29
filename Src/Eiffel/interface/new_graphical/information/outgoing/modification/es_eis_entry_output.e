@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EIS entry to code"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Operation
 
-	process (a_entry: !EIS_ENTRY) is
+	process (a_entry: !EIS_ENTRY)
 			-- Start process `a_entry'
 		local
 			l_output: STRING_32
@@ -100,7 +100,7 @@ feature -- Status report
 
 feature -- Status change
 
-	set_is_for_conf (a_b: BOOLEAN) is
+	set_is_for_conf (a_b: BOOLEAN)
 			-- Set `is_for_conf' with `a_b'
 		do
 			is_for_conf := a_b
@@ -116,7 +116,7 @@ feature -- Access
 	last_output_conf: HASH_TABLE [STRING, STRING]
 			-- Last output of conf note.
 
-	tags_as_code (a_entry: !EIS_ENTRY): !STRING_32 is
+	tags_as_code (a_entry: !EIS_ENTRY): !STRING_32
 			-- Tags as a string of code.
 			-- Unquoted
 		local
@@ -145,7 +145,7 @@ feature -- Access
 			end
 		end
 
-	others_as_code (a_entry: !EIS_ENTRY): !STRING_32 is
+	others_as_code (a_entry: !EIS_ENTRY): !STRING_32
 			-- Others as string of code.
 			-- Quoted
 		local
@@ -185,7 +185,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	quoted_string (a_string: STRING_32): !STRING_32 is
+	quoted_string (a_string: STRING_32): !STRING_32
 			-- Quoted `a_string'
 		require
 			a_string_not_void: a_string /= Void
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 		end
 
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

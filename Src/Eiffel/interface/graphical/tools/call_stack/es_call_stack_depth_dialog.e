@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to change the maximum call stack depth"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,14 +22,14 @@ convert
 
 feature {NONE} -- Initialization
 
-	make_with_debugger (a_debugger: DEBUGGER_MANAGER) is
+	make_with_debugger (a_debugger: DEBUGGER_MANAGER)
 			-- Instanciate Current with `a_debugger'
 		do
 			debugger_manager := a_debugger
 			make
 		end
 
-	build_dialog_interface (a_container: EV_VERTICAL_BOX) is
+	build_dialog_interface (a_container: EV_VERTICAL_BOX)
 			-- Builds the dialog's user interface.
 			--
 			-- `a_container': The dialog's container where the user interface elements should be extended
@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 			rb2.enable_select
 		end
 
-	on_shown is
+	on_shown
 			-- Called once the foundation widget has been shown.
 		do
 			element_nb.set_focus
@@ -114,12 +114,12 @@ feature -- Properties
 
 feature -- Actions
 
-	on_cancel is
+	on_cancel
 			-- Close `dialog' without doing anything.
 		do
 		end
 
-	on_ok is
+	on_ok
 			-- Close `dialog' without doing anything.
 		local
 			nb: INTEGER
@@ -149,32 +149,32 @@ feature -- Access
 			Result := interface_names.t_Set_stack_depth
 		end
 
-	buttons: DS_SET [INTEGER] is
+	buttons: DS_SET [INTEGER]
 			-- Set of button id's for dialog
 			-- Note: Use {ES_DIALOG_BUTTONS} or `dialog_buttons' to determine the id's correspondance.
 		once
 			Result := dialog_buttons.ok_cancel_buttons
 		end
 
-	default_button: INTEGER is
+	default_button: INTEGER
 			-- The dialog's default action button
 		do
 			Result := dialog_buttons.cancel_button
 		end
 
-	default_cancel_button: INTEGER is
+	default_cancel_button: INTEGER
 			-- The dialog's default cancel button
 		do
 			Result := dialog_buttons.cancel_button
 		end
 
-	default_confirm_button: INTEGER is
+	default_confirm_button: INTEGER
 			-- The dialog's default confirm button		
 		do
 			Result := dialog_buttons.cancel_button
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

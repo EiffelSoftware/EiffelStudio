@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Version of FCW that only allows for queries."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	set_default_editor is
+	set_default_editor
 		do
 			proc_button.disable_sensitive
 			create {EB_ATTRIBUTE_EDITOR} feature_editor
@@ -34,14 +34,14 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_type (s: STRING) is
+	set_type (s: STRING)
 			-- Create a supplier of type `s'.
 			-- (Could disable user selection...)
 		do
 			feature_editor.set_type (s)
 		end
 
-	set_name_number (a_number: INTEGER) is
+	set_name_number (a_number: INTEGER)
 			-- Assign `a_number' to `name_number'.
 		do
 			feature_editor.set_name_number (a_number)
@@ -51,7 +51,7 @@ feature -- Status setting
 
 feature {CLASS_TEXT_MODIFIER} -- Status setting
 
-	enable_expanded_needed is
+	enable_expanded_needed
 			-- Set `expanded_needed' to `True' in `feature_editor'.
 		do
 			feature_editor.enable_expanded_needed
@@ -59,7 +59,7 @@ feature {CLASS_TEXT_MODIFIER} -- Status setting
 
 feature -- Access
 
-	feature_type: STRING is
+	feature_type: STRING
 			-- Return type if attribute or function.
 		do
 			Result := feature_editor.type
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 
 	feature_editor: EB_QUERY_EDITOR
 
-	on_proc_select is
+	on_proc_select
 			-- User selected "procedure".
 		do
 			check
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

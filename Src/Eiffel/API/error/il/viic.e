@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Associated XML file of an external class is unreadable."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: like class_c) is
+	make (a_class: like class_c)
 			-- Create instance of current with `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -36,12 +36,12 @@ feature -- Access
 
 feature -- Properties
 
-	code: STRING is "VIIC"
+	code: STRING = "VIIC"
 		-- Error code
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Display error message
 		do
 			a_text_formatter.add ("Could not analyze .NET class ")
@@ -50,7 +50,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

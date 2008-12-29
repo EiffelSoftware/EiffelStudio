@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Value retriever to get metric value over a given domain"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature{NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Process instances of classes with no creation clause.
 			-- (Default: do nothing.)
 		do
@@ -35,7 +35,7 @@ feature{NONE} -- Initialization
 			create input_domain.make
 		end
 
-	make (a_metric_name: like metric_name; a_input_domain: like input_domain) is
+	make (a_metric_name: like metric_name; a_input_domain: like input_domain)
 			-- Initialization `metric_name' with `a_metric_name' and `input_domain' with `a_input_domain'.
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -56,7 +56,7 @@ feature -- Access
 	input_domain: EB_METRIC_DOMAIN
 			-- Input domain
 
-	value (a_ql_domain: QL_DOMAIN): DOUBLE is
+	value (a_ql_domain: QL_DOMAIN): DOUBLE
 			-- Retrieved value			
 		local
 			l_metric: EB_METRIC
@@ -94,7 +94,7 @@ feature -- Access
 			end
 		end
 
-	value_with_domain (a_domain: EB_METRIC_DOMAIN): DOUBLE is
+	value_with_domain (a_domain: EB_METRIC_DOMAIN): DOUBLE
 			-- Retrieved value.
 			-- This is used in metric archive warning checking.
 			-- `a_domain' is the input domain used to calculate metric archive node.
@@ -113,7 +113,7 @@ feature -- Access
 
 		end
 
-	visitable_name: STRING_GENERAL is
+	visitable_name: STRING_GENERAL
 			-- Name of current visitable item
 		do
 			Result := metric_names.visitable_name (metric_names.l_metric_value, metric_name)
@@ -121,7 +121,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_retrievable: BOOLEAN is
+	is_retrievable: BOOLEAN
 			-- Is `value' retrievable?
 		do
 			Result := metric_manager.is_metric_calculatable (metric_name) and then input_domain.is_valid
@@ -140,7 +140,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_has_metric_status_checked (b: BOOLEAN) is
+	set_has_metric_status_checked (b: BOOLEAN)
 			-- Set `has_metric_status_check' with `b'.
 		do
 			has_metric_status_checked := b
@@ -148,7 +148,7 @@ feature -- Setting
 			has_metric_status_checked_set: has_metric_status_checked = b
 		end
 
-	set_metric_has_delayed_domain_item (b: BOOLEAN) is
+	set_metric_has_delayed_domain_item (b: BOOLEAN)
 			-- Set `metric_has_delayed_domain_item' with `b'.
 		do
 			metric_has_delayed_domain_item := b
@@ -156,7 +156,7 @@ feature -- Setting
 			metric_has_delayed_domain_item_set: metric_has_delayed_domain_item = b
 		end
 
-	set_metric_name (a_name: like metric_name) is
+	set_metric_name (a_name: like metric_name)
 			-- Set `metric_name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -166,7 +166,7 @@ feature -- Setting
 			metric_name_set: metric_name.is_equal (a_name)
 		end
 
-	set_input_domain (a_domain: like input_domain) is
+	set_input_domain (a_domain: like input_domain)
 			-- Set `input_domain' with `a_domain'.
 		require
 			a_domain_attached: a_domain /= Void
@@ -176,7 +176,7 @@ feature -- Setting
 			input_domain_set: input_domain = a_domain
 		end
 
-	set_is_external_delayed_domain_used (b: BOOLEAN) is
+	set_is_external_delayed_domain_used (b: BOOLEAN)
 			-- Set `is_external_delayed_domain_used' with `b'.
 		do
 			is_external_delayed_domain_used := b
@@ -184,7 +184,7 @@ feature -- Setting
 			is_external_delayed_domain_used_set: is_external_delayed_domain_used = b
 		end
 
-	set_metric_value (a_value: DOUBLE) is
+	set_metric_value (a_value: DOUBLE)
 			-- Set `metric_value' with `a_value'.
 		do
 			metric_value := a_value
@@ -194,7 +194,7 @@ feature -- Setting
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_metric_value_retriever (Current)
@@ -202,7 +202,7 @@ feature -- Process
 
 feature{NONE} -- Implementation
 
-	check_metric_status is
+	check_metric_status
 			-- Check status of metric whose name is `metric_name'
 			-- to know if that metric doesn't rely on any delayed domain item.
 		require
@@ -231,7 +231,7 @@ invariant
 	metric_name_attached: metric_name /= Void
 	input_domain_attached: input_domain /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

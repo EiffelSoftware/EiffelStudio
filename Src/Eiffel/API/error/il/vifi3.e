@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when an expanded class inherits  classes that are either%
 		%external classes or that inherit from external classes."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (c: like class_c; parents: like parent_classes) is
+	make (c: like class_c; parents: like parent_classes)
 			-- Create error for class `c' with offfending parent classes `parents'.
 		require
 			c_not_void: c /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	subcode: INTEGER is 3
+	subcode: INTEGER = 3
 			-- Identifier for VIFI error.
 
 	parent_classes: LIST [CLASS_C]
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Display error message
 		do
 			check
@@ -67,7 +67,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

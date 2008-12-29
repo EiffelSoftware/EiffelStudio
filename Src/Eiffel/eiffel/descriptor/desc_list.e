@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- List of descriptors of a class (CLASS_C).
@@ -42,7 +42,7 @@ create {DESC_LIST}
 
 feature -- Creation
 
-	make (c: CLASS_C) is
+	make (c: CLASS_C)
 			-- Initialize descriptor list of class
 			-- `c', and initialize the size of the
 			-- individual descriptors to `s'.
@@ -85,7 +85,7 @@ feature
 
 feature -- Insertion
 
-	put_invariant (f: INVARIANT_FEAT_I) is
+	put_invariant (f: INVARIANT_FEAT_I)
 		local
 			u: ENTRY
 			local_class_types: TYPE_LIST
@@ -111,7 +111,7 @@ feature -- Insertion
 			end
 		end
 
-	put (r_id: INTEGER; f: FEATURE_I) is
+	put (r_id: INTEGER; f: FEATURE_I)
 			-- Insert the routine id `r_id' into the descriptors
 			-- of `base_class', and associate it with the feature `f'.
 			--|The (routine_id, FEATURE_I) pair is inserted into
@@ -185,7 +185,7 @@ feature -- Insertion
 
 feature -- Melting
 
-	melt is
+	melt
 			-- Melt the list of descriptors
 			-- Format:
 			--    1) Number of descriptors (short)
@@ -224,7 +224,7 @@ feature -- Melting
 			Tmp_m_desc_server.put (md)
 		end
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Append the byte code of each individual
 			-- descriptor to `ba'
 		local
@@ -246,7 +246,7 @@ feature -- Melting
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

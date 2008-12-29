@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an editor token text block (may be multi-line) which is not used in an editor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make_from_editor_line (a_line: EIFFEL_EDITOR_LINE) is
+	make_from_editor_line (a_line: EIFFEL_EDITOR_LINE)
 			-- Initialize `tokens' with `a_line'.
 		require
 			a_line_attached: a_line /= Void
@@ -32,7 +32,7 @@ feature{NONE} -- Initialization
 
 feature -- Token operation
 
-	set_tokens (a_tokens: LIST [EDITOR_TOKEN]) is
+	set_tokens (a_tokens: LIST [EDITOR_TOKEN])
 			-- Set `tokens' with `a_tokens'.
 		require
 			a_tokens_attached: a_tokens /= Void
@@ -64,7 +64,7 @@ feature -- Token operation
 
 feature -- Setting
 
-	enable_text_wrap is
+	enable_text_wrap
 			-- Enable text wrap.
 		do
 			lock_update
@@ -76,7 +76,7 @@ feature -- Setting
 			text_wrap_enabled: is_text_wrap_enabled
 		end
 
-	disable_text_wrap is
+	disable_text_wrap
 			-- disable text wrap.
 		do
 			lock_update
@@ -88,7 +88,7 @@ feature -- Setting
 			text_wrap_disabled: not is_text_wrap_enabled
 		end
 
-	set_overriden_font (a_font: like overriden_fonts; a_height: INTEGER) is
+	set_overriden_font (a_font: like overriden_fonts; a_height: INTEGER)
 			-- Set `overriden_fonts' with `a_font' and the according height in pixel.
 		require
 			a_font_attached: a_font /= Void
@@ -104,7 +104,7 @@ feature -- Setting
 			overriden_font_set: overriden_fonts = a_font
 		end
 
-	remove_overriden_font is
+	remove_overriden_font
 			-- Remove `overriden_fonts'.
 		do
 			lock_update
@@ -118,7 +118,7 @@ feature -- Setting
 			overriden_font_removed: overriden_fonts = Void
 		end
 
-	set_overriden_line_height (a_line_height: like overriden_line_height) is
+	set_overriden_line_height (a_line_height: like overriden_line_height)
 			-- Set `overriden_line_height' with `a_line_height'.
 		require
 			a_line_height_positive: a_line_height > 0
@@ -133,7 +133,7 @@ feature -- Setting
 			overriden_line_height_set: overriden_line_height = a_line_height and is_overriden_line_height_set
 		end
 
-	remove_overriden_line_height is
+	remove_overriden_line_height
 			-- Remove `overriden_line_height'.
 		do
 			lock_update
@@ -171,7 +171,7 @@ feature -- Setting
 			unfocused_selection_color_detached: unfocused_selection_color = Void
 		end
 
-	set_maximum_width (a_width: INTEGER) is
+	set_maximum_width (a_width: INTEGER)
 			-- Set `maximum_width' with `a_width'.
 		require
 			a_width_positive: a_width > 0
@@ -185,7 +185,7 @@ feature -- Setting
 			maximum_width_set: maximum_width = a_width
 		end
 
-	set_maximum_height (a_height: INTEGER) is
+	set_maximum_height (a_height: INTEGER)
 			-- Set `maximum_height' with `a_height'.
 		require
 			a_height_positive: a_height > 0
@@ -199,7 +199,7 @@ feature -- Setting
 			maximum_height_set: maximum_height = a_height
 		end
 
-	set_maximum_size (a_width: INTEGER; a_height: INTEGER) is
+	set_maximum_size (a_width: INTEGER; a_height: INTEGER)
 			-- Set `maximum_width' with `a_width' and `maximum_height' with `a_height'.
 		require
 			a_width_non_negative: a_width >= 0
@@ -216,7 +216,7 @@ feature -- Setting
 			maximum_tooltip_height_set: maximum_height = a_height
 		end
 
-	set_x_offset (a_offset: INTEGER) is
+	set_x_offset (a_offset: INTEGER)
 			-- Set `x_offset' with `a_offset'.			
 		do
 			lock_update
@@ -228,7 +228,7 @@ feature -- Setting
 			x_offset_set: x_offset = a_offset
 		end
 
-	set_y_offset (a_offset: INTEGER) is
+	set_y_offset (a_offset: INTEGER)
 			-- Set `y_offset' with `a_offset'.			
 		do
 			lock_update
@@ -240,7 +240,7 @@ feature -- Setting
 			y_offset_set: y_offset = a_offset
 		end
 
-	set_x_y_offset (a_x_offset, a_y_offset: INTEGER) is
+	set_x_y_offset (a_x_offset, a_y_offset: INTEGER)
 			-- Set `x_offset' with `a_x_offset' and `y_offset' with `a_y_offset'.
 		do
 			lock_update
@@ -254,7 +254,7 @@ feature -- Setting
 			y_offset_set: y_offset = a_y_offset
 		end
 
-	invalidate is
+	invalidate
 			-- Invalidate current so position recalculation is forced.
 		do
 			is_position_up_to_date := False
@@ -264,7 +264,7 @@ feature -- Setting
 
 feature -- Status report
 
-	is_overriden_font_set: BOOLEAN is
+	is_overriden_font_set: BOOLEAN
 			-- Will `overriden_fonts' be used instead of those fonts which are stored in editor tokens?
 		do
 			Result := overriden_fonts /= Void
@@ -279,7 +279,7 @@ feature -- Status report
 			-- Is text wrap enabled?
 			-- Has effect if `maximum_width' is set and some lines in `tokens' needs more room than `maximum_width'.
 
-	is_maximum_width_set: BOOLEAN is
+	is_maximum_width_set: BOOLEAN
 			-- Is `maximum_width' set?
 		do
 			Result := maximum_width > 0
@@ -287,7 +287,7 @@ feature -- Status report
 			good_result: (Result implies maximum_width > 0) and (not Result implies maximum_width = 0)
 		end
 
-	is_maximum_height_set: BOOLEAN is
+	is_maximum_height_set: BOOLEAN
 			-- Is `maximum_height' set?
 		do
 			Result := maximum_height > 0
@@ -300,7 +300,7 @@ feature -- Status report
 
 feature -- Display
 
-	display_within_region (x, y, a_width, a_height: INTEGER; a_drawable: EV_DRAWABLE; a_selected_token_index: INTEGER; a_focus: BOOLEAN) is
+	display_within_region (x, y, a_width, a_height: INTEGER; a_drawable: EV_DRAWABLE; a_selected_token_index: INTEGER; a_focus: BOOLEAN)
 			-- Dispaly only `tokens' which intersect with region defined by `x', `y', `a_width' and `a_height' using `a_drawable'.
 			-- `a_selected_token_index' indicates that token should be displayed in its selected status.
 			-- `a_focus' indicates whether `tokens' has focus or not.
@@ -376,7 +376,7 @@ feature -- Display
 			end
 		end
 
-	display (x, y: INTEGER; a_drawable: EV_DRAWABLE; a_selected_token_index: INTEGER; a_focus: BOOLEAN) is
+	display (x, y: INTEGER; a_drawable: EV_DRAWABLE; a_selected_token_index: INTEGER; a_focus: BOOLEAN)
 			-- Display `tokens' at position (x, y) using `a_drawable'.
 			-- `a_selected_token_index' indicates that token should be displayed in its selected status.
 			-- `a_focus' indicates whether `tokens' has focus or not.
@@ -421,7 +421,7 @@ feature -- Display
 			end
 		end
 
-	display_selected (x, y: INTEGER; a_drawable: EV_DRAWABLE; a_focus: BOOLEAN) is
+	display_selected (x, y: INTEGER; a_drawable: EV_DRAWABLE; a_focus: BOOLEAN)
 			-- Display `tokens' at position (x, y) using `a_drawable' in selected mode.
 			-- `a_selected_token_index' indicates that token should be displayed in its selected status.
 			-- `a_focus' indicates whether `tokens' has focus or not.
@@ -543,7 +543,7 @@ feature -- Access
 	unfocused_selection_color: EV_COLOR
 			-- Overriden unfocused selection color
 
-	tokens: LINKED_LIST [EDITOR_TOKEN] is
+	tokens: LINKED_LIST [EDITOR_TOKEN]
 			-- `tokens' stored in list
 		do
 			if internal_tokens = Void then
@@ -554,7 +554,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	token_position: LINKED_LIST [EV_RECTANGLE] is
+	token_position: LINKED_LIST [EV_RECTANGLE]
 			-- Position information of every token in `tokens'
 		do
 			if internal_token_position = Void then
@@ -565,7 +565,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	string_representation: STRING_32 is
+	string_representation: STRING_32
 			-- String representation of current
 		local
 			l_cursor: CURSOR
@@ -597,7 +597,7 @@ feature -- Access
 
 feature -- Measure
 
-	actual_line_height: INTEGER is
+	actual_line_height: INTEGER
 			-- Actual line height
 			-- It takes both `line_height' and `overriden_line_height' into account.
 		do
@@ -612,7 +612,7 @@ feature -- Measure
 				(not is_overriden_line_height_set implies Result = line_height)
 		end
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Required width in pixel to fully display `tokens'
 		require
 			tokens_attached: tokens /= Void
@@ -653,7 +653,7 @@ feature -- Measure
 			Result := internal_required_width
 		end
 
-	required_height: INTEGER is
+	required_height: INTEGER
 			-- Required width in pixel to fully display `tokens'
 		require
 			tokens_attached: tokens /= Void
@@ -711,7 +711,7 @@ feature -- Measure
 			end
 		end
 
-	token_index_at_position (x, y: INTEGER): INTEGER is
+	token_index_at_position (x, y: INTEGER): INTEGER
 			-- Index of item in `tokens' whose region contains position (x, y)
 			-- 0 if no item in `tokens' satisfies this condition.
 		local
@@ -741,7 +741,7 @@ feature -- Measure
 			result_correct: Result > 0 implies (Result <= token_position.count and then token_position.i_th (Result).has_x_y (x, y))
 		end
 
-	pebble (a_index: INTEGER): ANY is
+	pebble (a_index: INTEGER): ANY
 			-- Pebble of item at position `a_index'.
 		do
 			if a_index >= 1 and a_index <= adapted_tokens.count then
@@ -751,7 +751,7 @@ feature -- Measure
 
 feature{NONE} -- Display
 
-	display_token (x, y: INTEGER; a_token: EDITOR_TOKEN; a_drawable: EV_DRAWABLE) is
+	display_token (x, y: INTEGER; a_token: EDITOR_TOKEN; a_drawable: EV_DRAWABLE)
 			-- Display `a_token' at position (x, y) using `a_drawable'.
 		require
 			a_token_attached: a_token /= Void
@@ -765,7 +765,7 @@ feature{NONE} -- Display
 			end
 		end
 
-	display_selected_token (x, y: INTEGER; a_token: EDITOR_TOKEN; a_focus: BOOLEAN; a_drawable: EV_DRAWABLE) is
+	display_selected_token (x, y: INTEGER; a_token: EDITOR_TOKEN; a_focus: BOOLEAN; a_drawable: EV_DRAWABLE)
 			-- Display `a_token' at position (x, y) in its selected state.
 			-- `a_focus' indicates whether `a_token' has focus or not.
 		require
@@ -802,7 +802,7 @@ feature{NONE} -- Display
 
 feature{NONE} -- Implementation
 
-	actual_token_font (a_token: EDITOR_TOKEN): EV_FONT is
+	actual_token_font (a_token: EDITOR_TOKEN): EV_FONT
 			-- Actual used font for `a_token'.
 			-- Will take `overriden_fonts' into account.
 		require
@@ -834,7 +834,7 @@ feature{NONE} -- Implementation
 	internal_required_width: INTEGER
 			-- Internal `required_width'
 
-	adapted_tokens: like tokens is
+	adapted_tokens: like tokens
 			-- Adapted tokesn for ellipsis display
 		do
 			if adapted_tokens_internal = Void then
@@ -848,7 +848,7 @@ feature{NONE} -- Implementation
 	adapted_tokens_internal: like adapted_tokens
 			-- Implementation of `adapted_tokens'
 
-	update_position is
+	update_position
 			-- Update width information and relative position in every token in `tokens'.
 		local
 			l_tokens: like tokens
@@ -1013,7 +1013,7 @@ feature{NONE} -- Implementation
 			data_valid: token_position.count = adapted_tokens.count
 		end
 
-	splited_token_with_ellipsis (a_token: EDITOR_TOKEN; a_position: EV_RECTANGLE; a_max_width: INTEGER): TUPLE [splited_token: EDITOR_TOKEN; splited_token_position: EV_RECTANGLE; ellipsis_token_positon: EV_RECTANGLE] is
+	splited_token_with_ellipsis (a_token: EDITOR_TOKEN; a_position: EV_RECTANGLE; a_max_width: INTEGER): TUPLE [splited_token: EDITOR_TOKEN; splited_token_position: EV_RECTANGLE; ellipsis_token_positon: EV_RECTANGLE]
 			-- Split `a_token' into former part and latter part, and remove the latter part
 			-- so there is enough space to display ellipsis "..." after the former part
 			-- according to position `a_position' for `a_token' and max width allowed `a_max_width'.
@@ -1073,7 +1073,7 @@ feature{NONE} -- Implementation
 						  (Result.ellipsis_token_positon /= Void)
 		end
 
-	ellipsis_token: EDITOR_TOKEN_SYMBOL is
+	ellipsis_token: EDITOR_TOKEN_SYMBOL
 			-- Editor token for "..."
 		do
 			create Result.make (interface_names.l_ellipsis)
@@ -1105,7 +1105,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

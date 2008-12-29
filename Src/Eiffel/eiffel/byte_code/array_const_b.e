@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte code for manifest arrays"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make (e: like expressions; t: like type; i: like info) is
+	make (e: like expressions; t: like type; i: like info)
 			-- New instance of ARRAY_CONST_B initialized with `e' and `t'.
 		require
 			e_not_void: e /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialize
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_array_const_b (Current)
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Status report
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is register `r' used in local access ?
 		local
 			expr: EXPR_B
@@ -92,10 +92,10 @@ feature -- Status report
 			end
 		end
 
-	allocates_memory: BOOLEAN is True;
+	allocates_memory: BOOLEAN = True;
 			-- Current allocates memory.
 
-	has_call: BOOLEAN is
+	has_call: BOOLEAN
 			-- Does current contain a call?
 		local
 			expr: EXPR_B
@@ -114,7 +114,7 @@ feature -- Status report
 			end
 		end
 
-	is_constant_expression: BOOLEAN is
+	is_constant_expression: BOOLEAN
 			-- Is current array only made of constant expressions?
 		local
 			expr: EXPR_B
@@ -136,13 +136,13 @@ feature -- Status report
 
 feature -- Code generation
 
-	enlarge_tree is
+	enlarge_tree
 			-- Enlarge the expressions.
 		do
 			expressions.enlarge_tree
 		end
 
-	enlarged: ARRAY_CONST_BL is
+	enlarged: ARRAY_CONST_BL
 			-- Enlarge node
 		do
 			create Result.make (expressions, type, info)
@@ -151,17 +151,17 @@ feature -- Code generation
 
 feature -- Array optimization
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := expressions.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := expressions.is_unsafe
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 			expressions := expressions.optimized_byte_node
@@ -169,18 +169,18 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := expressions.size + 1
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current
 			expressions := expressions.pre_inlined_code
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			expressions := expressions.inlined_byte_code
@@ -191,7 +191,7 @@ invariant
 	type_not_void: type /= Void
 	info_not_void: info /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

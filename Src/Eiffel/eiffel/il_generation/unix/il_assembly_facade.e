@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Provides access to IL assembly information, i.e the GAC and local assemblies"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature	-- Initialization
 
-	make is
+	make
 			-- Initialize the assembly interface information
 		do
 			check 
@@ -22,7 +22,7 @@ feature	-- Initialization
 			end
 		end
 		
-	initialize is
+	initialize
 			-- Initialization
 		do
 			check 
@@ -32,7 +32,7 @@ feature	-- Initialization
 
 feature -- Access
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does interface exist?
 		do
 			check
@@ -40,12 +40,12 @@ feature -- Access
 			end
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Find out if some calls can be made.
 		do
 		end
 
-	assembly_name: STRING is
+	assembly_name: STRING
 			-- Name of assembly at 'item'
 		require
 			is_valid: is_valid
@@ -55,7 +55,7 @@ feature -- Access
 			end
 		end
 	
-	assembly_version: STRING is
+	assembly_version: STRING
 			-- Version number of assembly at 'item'
 		require
 			is_valid: is_valid
@@ -65,7 +65,7 @@ feature -- Access
 			end
 		end
 	
-	assembly_culture: STRING is
+	assembly_culture: STRING
 			-- Culture/locale of assembly at 'item'
 		require
 			is_valid: is_valid
@@ -75,7 +75,7 @@ feature -- Access
 			end
 		end
 	
-	assembly_public_key_token: STRING is
+	assembly_public_key_token: STRING
 			-- Public key of assembly at 'item'
 		require
 			is_valid: is_valid
@@ -87,7 +87,7 @@ feature -- Access
 
 feature -- Cursor Movement
 
-	go_i_th (i_th: INTEGER) is
+	go_i_th (i_th: INTEGER)
 			-- Move cursor to 'i_th' position
 		require
 			exists: exists
@@ -97,7 +97,7 @@ feature -- Cursor Movement
 			end
 		end
 
-	start is
+	start
 			-- Move cursor to start of assembly list
 		require
 			exists: exists
@@ -107,7 +107,7 @@ feature -- Cursor Movement
 			end
 		end
 		
-	forth is
+	forth
 			-- Move cursor to next assembly
 		require
 			exists: exists
@@ -119,7 +119,7 @@ feature -- Cursor Movement
 		
 feature -- Status Report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid position to the right of the cursor
 		require
 			exists: exists
@@ -129,7 +129,7 @@ feature -- Status Report
 			end
 		end
 		
-	signed (a_loc: STRING): BOOLEAN is
+	signed (a_loc: STRING): BOOLEAN
 			-- Is assembly at 'a_loc' signed?
 		require
 			location_not_void: a_loc /= Void
@@ -141,7 +141,7 @@ feature -- Status Report
 			end
 		end
 		
-	get_assembly_info_from_assembly (a_loc: STRING) is
+	get_assembly_info_from_assembly (a_loc: STRING)
 			-- Retrieve assembly information structure for assembly at
 			-- location 'a_loc' and make 'item' result
 		require
@@ -154,7 +154,7 @@ feature -- Status Report
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Utility functions for working with {ES_TOOL}
 	]"
@@ -153,7 +153,7 @@ feature -- Query
 			result_consistent: Result.is_equal (tool_associated_path (a_tool))
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

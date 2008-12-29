@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a debugger's data"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Preparation
 
-	prepare_for_storage is
+	prepare_for_storage
 			-- Prepare for upcoming storage
 		do
 			--| do nothing by default
@@ -19,7 +19,7 @@ feature -- Preparation
 
 feature -- Duplication
 
-	duplication: like Current is
+	duplication: like Current
 			-- Duplicate `Current'
 		do
 			Result := deep_twin
@@ -27,7 +27,7 @@ feature -- Duplication
 			duplication_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an output tool which contains a text field"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature -- Accelerator
 
-	is_accelerator_matched (a_key: EV_KEY; a_accelerator: EV_ACCELERATOR): BOOLEAN is
+	is_accelerator_matched (a_key: EV_KEY; a_accelerator: EV_ACCELERATOR): BOOLEAN
 			-- Does `a_accelerator' match current keyboard status?
 		require
 			a_key_attached: a_key /= Void
@@ -43,7 +43,7 @@ feature -- Accelerator
 
 feature -- Access
 
-	output_text: EV_TEXT is
+	output_text: EV_TEXT
 			-- Text pane used to display output
 		do
 			if internal_output_text = Void then
@@ -58,7 +58,7 @@ feature -- Access
 	source_encoding: ENCODING
 			-- Source encoding of process output
 
-	locale_combo: EV_COMBO_BOX is
+	locale_combo: EV_COMBO_BOX
 			-- Combo box to display locale list
 		do
 			if locale_combo_internal = Void then
@@ -77,7 +77,7 @@ feature -- Access
 
 feature{NONE} -- Actions
 
-	on_key_presses_in_output (a_key: EV_KEY) is
+	on_key_presses_in_output (a_key: EV_KEY)
 			-- Action to be performed when key pressed on text field
 		require
 			a_key_attached: a_key /= Void
@@ -92,7 +92,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_encoding_change is
+	on_encoding_change
 			-- Action to be peroformed when selected encoding changes
 		local
 			l_locale: I18N_LOCALE
@@ -111,7 +111,7 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Implementation
 
-	ctrl_c: EV_ACCELERATOR is
+	ctrl_c: EV_ACCELERATOR
 			-- Ctrl + C accelerator
 		once
 			create Result.make_with_key_combination (create{EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_c), True, False, False)
@@ -119,7 +119,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	ctrl_a: EV_ACCELERATOR is
+	ctrl_a: EV_ACCELERATOR
 			-- Ctrl + A accelerator
 		once
 			create Result.make_with_key_combination (create{EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_a), True, False, False)
@@ -130,7 +130,7 @@ feature{NONE} -- Implementation
 	internal_output_text: like output_text
 			-- Implementation of `output_text'
 
-	locale_table: HASH_TABLE [STRING_GENERAL, STRING] is
+	locale_table: HASH_TABLE [STRING_GENERAL, STRING]
 			-- Table of locales: [locale_displayed_name, locale_id]
 		do
 			if locale_table_internal = Void then
@@ -143,7 +143,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	locale_id_table: HASH_TABLE [STRING, STRING_32] is
+	locale_id_table: HASH_TABLE [STRING, STRING_32]
 			-- Table of locale ids: [locale_id, locale_displayed_name]
 		local
 			l_locale_table: like locale_table
@@ -175,7 +175,7 @@ feature{NONE} -- Implementation
 
 feature -- Process
 
-	process_block_text (text_block: EB_PROCESS_IO_DATA_BLOCK) is
+	process_block_text (text_block: EB_PROCESS_IO_DATA_BLOCK)
 			-- Print `text_block' on `console'.
 		local
 			str: STRING
@@ -193,7 +193,7 @@ feature -- Process
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

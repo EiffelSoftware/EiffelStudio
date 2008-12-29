@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Class which allows entering a value corresponding to a data."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (new_caller: PREFERENCE_WINDOW) is
+	make (new_caller: PREFERENCE_WINDOW)
 			-- Create a new selection box associated with `new_caller'
 		require
 			caller_exists: new_caller /= Void
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	display (new_resource: like resource) is
+	display (new_resource: like resource)
 			-- Display Current with content 'new_resource'.
 		do
 			resource := new_resource
@@ -41,7 +41,7 @@ feature -- Basic operations
 			end
 		end
 
-	change_dialog: EV_DIALOG is
+	change_dialog: EV_DIALOG
 			-- Dialog to change the value.
 		do
 			if internal_change_dialog = Void then
@@ -55,7 +55,7 @@ feature -- Basic operations
 			Result := internal_change_dialog
 		end
 			
-	destroy is
+	destroy
 			-- Destroy all graphical objects.
 		do
 			if internal_change_dialog /= Void then
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 	caller: PREFERENCE_WINDOW
 			-- Caller
 
-	update_resource is
+	update_resource
 			-- Update resource
 		do
 			if observer_manager.get_data_observer (resource) /= Void then
@@ -91,14 +91,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_change_item_widget is
+	build_change_item_widget
 				-- Create and setup `change_item_widget'.
 		deferred
 		ensure
 			widget_created: change_item_widget /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

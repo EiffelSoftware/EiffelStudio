@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A object declaration for replacement in a selected template, like a literal ({CODE_LITERAL_DECLARATION}) but uses type conformance.
 	]"
@@ -62,7 +62,7 @@ feature -- Visitor
 invariant
 	not_must_conform_to_is_empty: is_initialized implies not must_conform_to.is_empty
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

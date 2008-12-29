@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Placement of class bubbles in a EIFFEL_WORLD."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize `table'.
 		do
 			create table.make (20)
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_spacing (horizontal, vertical: INTEGER) is
+	set_spacing (horizontal, vertical: INTEGER)
 			-- Set `horizontal_spacing' to `horizontal' and `vertical_spacing' to `vertical'.
 		do
 			horizontal_spacing := horizontal
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 	vertical_scaled_spacing: INTEGER
 	horizontal_scaled_spacing: INTEGER
 
-	row: ARRAYED_LIST [EG_LINKABLE_FIGURE] is
+	row: ARRAYED_LIST [EG_LINKABLE_FIGURE]
 			-- To use `like row'.
 		do
 				-- Never called.
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE) is
+	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE)
 			-- arrange `linkables' that are elements of `clusters' at `level'.
 		local
 			bcf: EIFFEL_CLUSTER_FIGURE
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 	classes: ARRAYED_LIST [EG_LINKABLE_FIGURE]
 			-- Classes in linkables currently layouted.
 
-	set_clusters_and_classes (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]) is
+	set_clusters_and_classes (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE])
 			-- Build list `clusters' and `classes'.
 		require
 			linkables_not_void: linkables /= Void
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			classes_not_void: classes /= Void
 		end
 
-	has_cluster: BOOLEAN is
+	has_cluster: BOOLEAN
 			-- Is `clusters' not empty?
 		require
 			clusters_not_void: clusters /= Void
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 			Result := not clusters.is_empty
 		end
 
-	has_classes: BOOLEAN is
+	has_classes: BOOLEAN
 			-- Is `classes' not empty?
 		require
 			classes_not_void: classes /= Void
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			Result := not classes.is_empty
 		end
 
-	arrange_by_size is
+	arrange_by_size
 			-- Place figures such that space is
 			-- not wasted in the diagram.
 		local
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_linkable_figure (lf: EG_LINKABLE_FIGURE) is
+	add_linkable_figure (lf: EG_LINKABLE_FIGURE)
 			-- Add `lf' in any row/column not caring about links.
 		local
 			r: like row
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			r.extend (lf)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical dimension in pixels of current placement.
 		local
 			i: INTEGER
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	row_height (r: like row): INTEGER is
+	row_height (r: like row): INTEGER
 			-- Height in pixels of `r'.
 		do
 			if r /= Void then
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal dimension of widest row.
 		local
 			max_widths: ARRAYED_LIST [INTEGER]
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	max_x_widths: ARRAYED_LIST [INTEGER] is
+	max_x_widths: ARRAYED_LIST [INTEGER]
 			-- Array of maximum bubles width to line them up vertically and horizontally.
 			-- | Result is a list from 1 to max column count where each entry is the max width of this column.
 		local
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	row_width (r: like row): INTEGER is
+	row_width (r: like row): INTEGER
 			-- Width in pixels of `r'.
 		do
 			if r /= Void then
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	smallest_row: like row is
+	smallest_row: like row
 			-- Row with smallest width.
 		local
 			w: INTEGER
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	arrange_by_generation is
+	arrange_by_generation
 			-- Place class bubbles so that descendants are always below
 			-- their ancestors.
 		local
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	first_generation: like row is
+	first_generation: like row
 			-- Classes in `figure_set' that have no ancestors
 			-- in same cluster but descendants in same cluster.
 		local
@@ -381,7 +381,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	next_generation (r: like row): like row is
+	next_generation (r: like row): like row
 			-- Direct descendants of `r' in same cluster.
 		local
 			l_links: ARRAYED_LIST [EG_LINK_FIGURE]
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_ancestor_in_same_cluster (linkable: EG_LINKABLE_FIGURE): BOOLEAN is
+	has_ancestor_in_same_cluster (linkable: EG_LINKABLE_FIGURE): BOOLEAN
 			-- Does `linkable' have an ancestor in the same cluster?
 		require
 			linkable_not_void: linkable /= Void
@@ -448,7 +448,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_descendant_in_same_cluster (linkable: EG_LINKABLE_FIGURE): BOOLEAN is
+	has_descendant_in_same_cluster (linkable: EG_LINKABLE_FIGURE): BOOLEAN
 			-- Does `linkable' have an descendant in the same cluster?
 		require
 			linkable_not_void: linkable /= Void
@@ -475,7 +475,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_from_table (r: like row) is
+	remove_from_table (r: like row)
 			-- Remove any class in `r' if present from `table'.
 		local
 			tr: like row
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	arrange_clients is
+	arrange_clients
 			-- Place class bubbles that are linked to diagram classes
 			-- only by client/supplier links.
 		local
@@ -514,7 +514,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has (lf: EG_LINKABLE_FIGURE): BOOLEAN is
+	has (lf: EG_LINKABLE_FIGURE): BOOLEAN
 			-- Does `table' contain `lf'?
 		require
 			lf_not_void: lf /= Void
@@ -532,7 +532,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execute is
+	execute
 			-- Perform the actual placement.
 		local
 			cur_x, cur_y: INTEGER
@@ -576,7 +576,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	center_rows is
+	center_rows
 			-- Add void elements in `table' in order to center rows.
 			-- Applies only for class views.
 		local
@@ -603,7 +603,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	largest_row_width: INTEGER is
+	largest_row_width: INTEGER
 			-- Number of figures in largest row of `table'.
 		do
 			from
@@ -617,7 +617,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

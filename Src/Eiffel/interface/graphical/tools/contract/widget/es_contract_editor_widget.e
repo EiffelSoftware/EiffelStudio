@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A widget used to view and edit (when not the class is not read-only) contracts, given a context {ES_CONTRACT_EDITOR_CONTEXT} object.
 	]"
@@ -654,7 +654,7 @@ feature -- Actions
 
 feature {NONE} -- Population
 
-	populate_contracts_row (a_class: !CLASS_I; a_row: !EV_GRID_ROW; a_context: !like context) is
+	populate_contracts_row (a_class: !CLASS_I; a_row: !EV_GRID_ROW; a_context: !like context)
 			-- Populates a inherited read-only grid row for a given class.
 			--
 			-- `a_class': Current class where the context feature resides.
@@ -1127,7 +1127,7 @@ feature {NONE} -- Internal implementation cache
 			-- Cached version of `context_contracts'
 			-- Note: Do not use directly!
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

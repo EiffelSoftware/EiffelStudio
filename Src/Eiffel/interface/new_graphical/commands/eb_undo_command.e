@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to perform an undo operation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Status report
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- Is the operation possible?
 		do
 			if editor /= Void then
@@ -31,7 +31,7 @@ feature -- Status report
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute the undo/redo operation
 		do
 			if editor /= Void then
@@ -41,47 +41,47 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Undo
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_undo_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_undo_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Undo
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_Undo
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := Interface_names.e_Undo
 		end
 
-	name: STRING is "Undo";
+	name: STRING = "Undo";
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Enlarged access to Result
@@ -25,7 +25,7 @@ feature
 	type: TYPE_A
 			-- Result type
 
-	make (t: like type) is
+	make (t: like type)
 			-- Initialization
 		require
 			good_argument: t /= Void
@@ -33,7 +33,7 @@ feature
 			type := t;
 		end;
 
-	set_parent (p: NESTED_BL) is
+	set_parent (p: NESTED_BL)
 			-- Set `parent' to `p'
 		do
 			parent := p;
@@ -41,12 +41,12 @@ feature
 
 feature -- C code generation
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Do nothing
 		do
 		end;
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' the "Result" entity ?
 		do
 			Result := r.is_result;
@@ -57,12 +57,12 @@ feature -- C code generation
 		do
 		end
 
-	free_register is
+	free_register
 			-- Do nothing
 		do
 		end;
 
-	print_register is
+	print_register
 			-- Print "Result"
 		local
 			type_i: TYPE_A;
@@ -78,7 +78,7 @@ feature -- C code generation
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

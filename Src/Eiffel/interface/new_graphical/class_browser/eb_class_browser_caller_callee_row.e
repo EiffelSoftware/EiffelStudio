@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A grid row used in grid feature_item/related_feature view"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_browser: like browser; a_feature: like feature_item; a_related_feature: like related_feature; a_row_type: INTEGER; a_for_caller: BOOLEAN) is
+	make (a_browser: like browser; a_feature: like feature_item; a_related_feature: like related_feature; a_row_type: INTEGER; a_for_caller: BOOLEAN)
 			-- Initialize Current row.
 		require
 			a_browser_attached: a_browser /= Void
@@ -56,7 +56,7 @@ feature -- Access
 	starting_column_index: INTEGER
 			-- Index for the first item in Current row
 
-	item (a_index: INTEGER): EV_GRID_ITEM is
+	item (a_index: INTEGER): EV_GRID_ITEM
 			-- The `a_index'-th grid item in Current row
 		require
 			a_index_valid: a_index >= starting_column_index and then a_index <= starting_column_index + 2
@@ -71,13 +71,13 @@ feature -- Access
 
 feature -- Access/Row type
 
-	compact_feature_row: INTEGER is 1
-	class_row: INTEGER is 2
-	feature_name_row: INTEGER is 3
+	compact_feature_row: INTEGER = 1
+	class_row: INTEGER = 2
+	feature_name_row: INTEGER = 3
 
 feature -- Status report
 
-	is_row_type_valid (a_row_type: like row_type): BOOLEAN is
+	is_row_type_valid (a_row_type: like row_type): BOOLEAN
 			-- Is `a_row_type' valid?
 		do
 			Result := a_row_type = compact_feature_row or else
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_feature_item (a_feature_item: like feature_item) is
+	set_feature_item (a_feature_item: like feature_item)
 			-- Set `feature_item' with `a_feature_item'.
 		require
 			a_feature_item_attached: a_feature_item /= Void
@@ -103,7 +103,7 @@ feature -- Setting
 			feature_item_set: feature_item = a_feature_item
 		end
 
-	set_related_feature (a_related_feature: like related_feature) is
+	set_related_feature (a_related_feature: like related_feature)
 			-- Set `related_feature' with `a_related_feature'.
 		do
 			related_feature := a_related_feature
@@ -111,7 +111,7 @@ feature -- Setting
 			related_feature_set: related_feature = a_related_feature
 		end
 
-	set_image (a_image: like image) is
+	set_image (a_image: like image)
 			-- Set `image' with `a_image'.
 		require
 			a_image_attached: a_image /= Void
@@ -121,7 +121,7 @@ feature -- Setting
 			image_set: image /= Void and then image.is_equal (a_image)
 		end
 
-	set_row_type (a_row_type: like row_type) is
+	set_row_type (a_row_type: like row_type)
 			-- Set `row_type' with `a_row_type'.
 		do
 			row_type := a_row_type
@@ -129,7 +129,7 @@ feature -- Setting
 			row_type_set: row_type = a_row_type
 		end
 
-	set_is_for_caller (b: BOOLEAN) is
+	set_is_for_caller (b: BOOLEAN)
 			-- Set `is_for_caller' with `b'.
 		do
 			is_for_caller := b
@@ -137,7 +137,7 @@ feature -- Setting
 			is_for_caller_set: is_for_caller = b
 		end
 
-	set_starting_column_index (a_index: INTEGER) is
+	set_starting_column_index (a_index: INTEGER)
 			-- Set `starting_column_index' with `a_index'.
 		do
 			starting_column_index := a_index
@@ -145,7 +145,7 @@ feature -- Setting
 			starting_column_index_set: starting_column_index = a_index
 		end
 
-	set_flag (a_flag: like flag) is
+	set_flag (a_flag: like flag)
 			-- Set `flag' with `a_flag'.
 		do
 			flag := a_flag
@@ -153,7 +153,7 @@ feature -- Setting
 			flag_set: flag = a_flag
 		end
 
-	bind_reference_position_item is
+	bind_reference_position_item
 			-- Bind reference position item into grid.
 		do
 			if not has_position_calculated then
@@ -164,7 +164,7 @@ feature -- Setting
 			end
 		end
 
-	calculate_reference_position is
+	calculate_reference_position
 			-- Calculate reference (callers/callees) positions for `feature_item' and display them in another grid item.
 		local
 			l_accessor_visitor: like accessor_visitor
@@ -196,7 +196,7 @@ feature -- Setting
 			end
 		end
 
-	accessor_visitor: EB_ACCESSED_FEATURE_VISITOR is
+	accessor_visitor: EB_ACCESSED_FEATURE_VISITOR
 			-- Visitor to calculate reference positions
 		once
 			create Result.make
@@ -206,7 +206,7 @@ feature -- Setting
 
 feature -- Grid binding
 
-	bind_row (a_grid_row: EV_GRID_ROW; a_column_index: INTEGER; a_force_reference_calculation: BOOLEAN) is
+	bind_row (a_grid_row: EV_GRID_ROW; a_column_index: INTEGER; a_force_reference_calculation: BOOLEAN)
 			-- Bind Current row into `grid' starting from column indexed by `a_column_index'.
 			-- If `a_force_reference_calculation' is True, referenced position grid item will be binded also.
 		local
@@ -231,7 +231,7 @@ feature -- Grid binding
 
 feature{NONE} -- Implementation/Text
 
-	compact_feature_name_text (a_feature: QL_FEATURE): like grid_item_text is
+	compact_feature_name_text (a_feature: QL_FEATURE): like grid_item_text
 			-- compact text for `a_feature'.
 			-- For example: "item from LINKED_LIST"
 		require
@@ -250,7 +250,7 @@ feature{NONE} -- Implementation/Text
 			result_attached: Result /= Void
 		end
 
-	class_name_text (a_class: CLASS_C): like grid_item_text is
+	class_name_text (a_class: CLASS_C): like grid_item_text
 			-- Text for name of `a_class'.
 		require
 			a_class_attached: a_class /= Void
@@ -264,7 +264,7 @@ feature{NONE} -- Implementation/Text
 			result_attached: Result /= Void
 		end
 
-	feature_name_text (a_feature: QL_FEATURE): like grid_item_text is
+	feature_name_text (a_feature: QL_FEATURE): like grid_item_text
 			-- Text for name of `a_feature'
 		require
 			a_feature_attached: a_feature /= Void
@@ -280,7 +280,7 @@ feature{NONE} -- Implementation/Text
 
 feature{NONE} -- Implementation/Data
 
-	grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
+	grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			-- Grid item to be displayed
 		local
 			l_grid_item: like grid_item_internal
@@ -311,7 +311,7 @@ feature{NONE} -- Implementation/Data
 			stone_set: Result.stone /= Void
 		end
 
-	grid_item_pixmap: EV_PIXMAP is
+	grid_item_pixmap: EV_PIXMAP
 			-- Pixmap for `grid_item'
 		do
 			inspect
@@ -327,7 +327,7 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	feature_pixmap (a_feature: QL_FEATURE): EV_PIXMAP is
+	feature_pixmap (a_feature: QL_FEATURE): EV_PIXMAP
 			-- Pixmap for `a_feature'
 		require
 			a_feature_attached: a_feature /= Void
@@ -341,7 +341,7 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	grid_item_text: LIST [EDITOR_TOKEN] is
+	grid_item_text: LIST [EDITOR_TOKEN]
 			-- Text for `grid_item'
 		do
 			inspect
@@ -360,7 +360,7 @@ feature{NONE} -- Implementation/Data
 	grid_item_internal: like grid_item
 			-- Implementation of `grid_item'
 
-	from_string: STRING_32 is
+	from_string: STRING_32
 			-- String " from "
 		do
 			Result := interface_names.l_from_padded.twin
@@ -370,7 +370,7 @@ feature{NONE} -- Implementation/Data
 
 feature{NONE} -- Implementation
 
-	setup_image is
+	setup_image
 			-- Setup `image' according to `feature_item', `related_feature' and `row_type'.
 		local
 			l_image: like image
@@ -395,7 +395,7 @@ feature{NONE} -- Implementation
 			image_attached: image /= Void
 		end
 
-	set_has_position_calculated (b: BOOLEAN) is
+	set_has_position_calculated (b: BOOLEAN)
 			-- Set `has_position_calculated' with `b'.
 		do
 			has_position_calculated := b
@@ -405,7 +405,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Actions
 
-	create_accessor_grid_item (a_accessors: LIST [TUPLE [a_ast: AST_EIFFEL; a_class: CLASS_C]]) is
+	create_accessor_grid_item (a_accessors: LIST [TUPLE [a_ast: AST_EIFFEL; a_class: CLASS_C]])
 			-- Create grid item to display `a_ccessors'.
 		require
 			a_accessors_attached: a_accessors /= Void
@@ -432,7 +432,7 @@ feature{NONE} -- Actions
 	accessor_grid_item: EV_GRID_ITEM
 			-- Grid item to display accessors for `related_feature'
 
-	accessor_grid_item_component (a_index: INTEGER; a_accessor: AST_EIFFEL; a_written_class: CLASS_C): ES_GRID_ITEM_COMPONENT is
+	accessor_grid_item_component (a_index: INTEGER; a_accessor: AST_EIFFEL; a_written_class: CLASS_C): ES_GRID_ITEM_COMPONENT
 			-- Grid item component for `a_accessor'
 		require
 			a_index_positive: a_index > 0
@@ -476,7 +476,7 @@ invariant
 	feature_item_attached: feature_item /= Void
 	image_attached: image /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

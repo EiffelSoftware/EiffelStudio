@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an No operation on another group criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_GROUP): BOOLEAN is
+	is_satisfied_by (a_item: QL_GROUP): BOOLEAN
 			-- Evaluate `a_item'.
 		do
 			Result := not wrapped_criterion.is_satisfied_by (a_item)
@@ -45,13 +45,13 @@ feature -- Access
 	wrapped_criterion: QL_GROUP_CRITERION
 			-- Criterion to which NOT operation is applied
 
-	intrinsic_domain: QL_GROUP_DOMAIN is
+	intrinsic_domain: QL_GROUP_DOMAIN
 			-- Intrinsic_domain which can be inferred from current criterion
 		do
 			Result := wrapped_criterion.intrinsic_domain
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

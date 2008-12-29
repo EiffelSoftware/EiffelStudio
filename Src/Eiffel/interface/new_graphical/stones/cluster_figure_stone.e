@@ -1,4 +1,4 @@
-indexing
+note
 	description: "CLUSTER_STONEs that originate from a CLUSTER_FIGURE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_figure: EIFFEL_CLUSTER_FIGURE) is
+	make (a_figure: EIFFEL_CLUSTER_FIGURE)
 		do
 			make_with_cluster (a_figure.model.group)
 			source := a_figure
@@ -30,7 +30,7 @@ feature -- Access
 	source: EIFFEL_CLUSTER_FIGURE;
 			-- Source this stone was picked from.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

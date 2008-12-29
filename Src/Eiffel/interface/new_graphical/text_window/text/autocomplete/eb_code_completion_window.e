@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window that displays a text area and a list of possible features for automatic completion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -77,7 +77,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create
 		do
 			Precursor {CODE_COMPLETION_WINDOW}
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			register_accelerator_preference_change_actions
 		end
 
-	build_option_bar: EV_VERTICAL_BOX is
+	build_option_bar: EV_VERTICAL_BOX
 			-- Build option bar
 		local
 			l_hbox: EV_HORIZONTAL_BOX
@@ -170,7 +170,7 @@ feature {NONE} -- Initialization
 			option_bar.extend (remember_size_button)
 		end
 
-	setup_option_buttons is
+	setup_option_buttons
 			-- Setup option buttons according to preference.
 			-- Setup callbacks on option buttons.
 		do
@@ -230,7 +230,7 @@ feature {NONE} -- Initialization
 			preferences.development_window_data.remember_completion_list_size_preference.change_actions.extend (remember_window_size_agent)
 		end
 
-	register_accelerator_preference_change_actions is
+	register_accelerator_preference_change_actions
 		local
 			l_pre: SHORTCUT_PREFERENCE
 		do
@@ -249,7 +249,7 @@ feature {NONE} -- Initialization
 			l_pre.change_actions.extend (setup_accelerators_agent)
 		end
 
-	setup_accelerators is
+	setup_accelerators
 			-- Build accelerators.
 		local
 			l_acc: EV_ACCELERATOR
@@ -278,7 +278,7 @@ feature {NONE} -- Initialization
 			accelerators.extend (l_acc)
 		end
 
-	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
 			-- Context menu handler
 		do
 			if context_menu_factory /= Void then
@@ -292,7 +292,7 @@ feature -- Initialization
 							feature_name: STRING;
 							a_remainder: INTEGER;
 							completion_possibilities: like sorted_names;
-							a_complete_word: BOOLEAN) is
+							a_complete_word: BOOLEAN)
 			-- Initialize to to complete for `feature_name' in `an_editor'.
 		local
 			l_string: STRING
@@ -307,7 +307,7 @@ feature -- Initialization
 	initialize_for_classes (an_editor: like code_completable;
 							class_name: STRING;
 							a_remainder: INTEGER;
-							completion_possibilities: like sorted_names) is
+							completion_possibilities: like sorted_names)
 			-- Initialize to to complete for `class_name' in `an_editor'.
 		do
 			feature_mode := False
@@ -367,24 +367,24 @@ feature -- Status report
 	feature_mode: BOOLEAN
 			-- Is `Current' used to select feature names ?
 
-	scrolling_common_line_count : INTEGER is
+	scrolling_common_line_count : INTEGER
 		do
 			Result := preferences.editor_data.scrolling_common_line_count
 		end
 
-	mouse_wheel_scroll_full_page : BOOLEAN is
+	mouse_wheel_scroll_full_page : BOOLEAN
 		do
 			Result := preferences.editor_data.mouse_wheel_scroll_full_page
 		end
 
-	mouse_wheel_scroll_size: INTEGER is
+	mouse_wheel_scroll_size: INTEGER
 		do
 			Result := preferences.editor_data.mouse_wheel_scroll_size
 		end
 
 feature -- Status change
 
-	show is
+	show
 			-- Show
 		do
 			Precursor {CODE_COMPLETION_WINDOW}
@@ -393,39 +393,39 @@ feature -- Status change
 
 feature {NONE} -- Option Preferences
 
-	filter_completion_list: BOOLEAN is
+	filter_completion_list: BOOLEAN
 		do
 			Result := preferences.editor_data.filter_completion_list
 		end
 
-	show_completion_type: BOOLEAN is
+	show_completion_type: BOOLEAN
 		do
 			Result := preferences.editor_data.show_completion_type
 		end
 
-	show_completion_signature: BOOLEAN is
+	show_completion_signature: BOOLEAN
 		do
 			Result := preferences.editor_data.show_completion_signature
 		end
 
-	show_completion_disambiguated_name: BOOLEAN is
+	show_completion_disambiguated_name: BOOLEAN
 		do
 			Result := preferences.editor_data.show_completion_disambiguated_name
 		end
 
-	show_obsolete_items: BOOLEAN is
+	show_obsolete_items: BOOLEAN
 		do
 			Result := preferences.editor_data.show_completion_obsolete_items
 		end
 
-	remember_window_size: BOOLEAN is
+	remember_window_size: BOOLEAN
 		do
 			Result := preferences.development_window_data.remember_completion_list_size
 		end
 
 feature {NONE} -- Option behaviour
 
-	on_option_changed (a_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
+	on_option_changed (a_button: EV_TOOL_BAR_TOGGLE_BUTTON)
 			-- On option changed
 		require
 			a_button_not_void: a_button /= Void
@@ -474,7 +474,7 @@ feature {NONE} -- Option behaviour
 			a_button.select_actions.resume
 		end
 
-	on_option_button_selected (a_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
+	on_option_button_selected (a_button: EV_TOOL_BAR_TOGGLE_BUTTON)
 			-- On option button selected
 		require
 			a_button_not_void: a_button /= Void
@@ -531,7 +531,7 @@ feature {NONE} -- Option behaviour
 			l_prefernce.change_actions.resume
 		end
 
-	apply_filter_completion_list (a_b: BOOLEAN) is
+	apply_filter_completion_list (a_b: BOOLEAN)
 			-- Apply filtering completion list.
 		local
 			local_name: like name_type
@@ -564,7 +564,7 @@ feature {NONE} -- Option behaviour
 			unlock_update
 		end
 
-	apply_show_return_type (a_b: BOOLEAN) is
+	apply_show_return_type (a_b: BOOLEAN)
 			-- Apply showing return type.
 		local
 			local_index: INTEGER
@@ -600,25 +600,25 @@ feature {NONE} -- Option behaviour
 			unlock_update
 		end
 
-	apply_show_completion_signature (a_b: BOOLEAN) is
+	apply_show_completion_signature (a_b: BOOLEAN)
 			-- Apply showing completion signature.
 		do
 			apply_show_return_type (a_b)
 		end
 
-	apply_show_completion_disambiguated_name (a_b: BOOLEAN) is
+	apply_show_completion_disambiguated_name (a_b: BOOLEAN)
 			-- Apply showing completion disambiguated name.
 		do
 			apply_show_return_type (a_b)
 		end
 
-	apply_show_obsolete_items (a_b: BOOLEAN) is
+	apply_show_obsolete_items (a_b: BOOLEAN)
 			-- Apply showing completion obsolete items.
 		do
 			apply_show_return_type (a_b)
 		end
 
-	apply_remember_window_size (a_b: BOOLEAN) is
+	apply_remember_window_size (a_b: BOOLEAN)
 			-- Apply remembering window size.
 		do
 			lock_update
@@ -634,7 +634,7 @@ feature {NONE} -- Option behaviour
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			preferences.editor_data.filter_completion_list_preference.change_actions.prune_all (filter_completion_list_agent)
@@ -647,7 +647,7 @@ feature {NONE} -- Recyclable
 			choice_list.recycle
 		end
 
-	unregister_accelerator_preference_change_actions is
+	unregister_accelerator_preference_change_actions
 		local
 			l_pre: SHORTCUT_PREFERENCE
 		do
@@ -681,7 +681,7 @@ feature {NONE} -- Recyclable
 
 feature {NONE} -- Implementation
 
-	on_char (character_string: STRING_32) is
+	on_char (character_string: STRING_32)
 			-- Process displayable character key press event.
 		local
 			c: CHARACTER
@@ -721,7 +721,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_key_down (ev_key: EV_KEY) is
+	on_key_down (ev_key: EV_KEY)
 			-- process user input in `choice_list'.
 		do
 			if ev_key /= Void then
@@ -738,7 +738,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	toggle_button (a_button: like filter_button) is
+	toggle_button (a_button: like filter_button)
 			-- Toggle button selection
 		require
 			a_button_not_void: a_button /= Void
@@ -750,7 +750,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_key_released (ev_key: EV_KEY) is
+	on_key_released (ev_key: EV_KEY)
 			-- process user input in `choice_list'.
 		do
 			if ev_key /= Void then
@@ -769,19 +769,19 @@ feature {NONE} -- Implementation
 
 	temp_switching_show_disambiguated_name: BOOLEAN
 
-	rebuild_list_during_matching: BOOLEAN is
+	rebuild_list_during_matching: BOOLEAN
 			-- Should the list be rebuilt according to current match?
 		do
 		    Result := preferences.editor_data.filter_completion_list
 		end
 
-	automatically_complete_words: BOOLEAN is
+	automatically_complete_words: BOOLEAN
 			-- Should completion list automatically complete words.
 		do
 			Result := preferences.editor_data.auto_complete_words
 		end
 
-	close_and_complete is
+	close_and_complete
 			-- close the window and perform completion with selected item
 		do
 			if not choice_list.selected_rows.is_empty then
@@ -798,7 +798,7 @@ feature {NONE} -- Implementation
 			exit
 		end
 
-	exit is
+	exit
 			-- Cancel autocomplete
 		do
 			Precursor
@@ -807,7 +807,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	verify_display is
+	verify_display
 			-- Verify display and focus on current window.
 			-- Resume focus out actions.
 			-- |FIXME: This is a work around on Unix.
@@ -821,7 +821,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	complete_feature is
+	complete_feature
 			-- Complete feature name
 		local
 			local_feature: EB_FEATURE_FOR_COMPLETION
@@ -867,7 +867,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	complete_class is
+	complete_class
 			-- Complete class name
 		local
 			l_row: EV_GRID_ROW
@@ -889,13 +889,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_expanded_row_icon (a_item: EB_GRID_EDITOR_TOKEN_ITEM; a_name: like name_type) is
+	set_expanded_row_icon (a_item: EB_GRID_EDITOR_TOKEN_ITEM; a_name: like name_type)
 			-- Set pixmap of `a_item'.
 		do
 			a_item.set_pixmap (pixmaps.icon_pixmaps.feature_group_icon)
 		end
 
-	resize_window_to_column_width is
+	resize_window_to_column_width
 			-- Resize window to column width
 		local
 			i: INTEGER
@@ -917,7 +917,7 @@ feature {NONE} -- Implementation
 	last_completed_feature_had_arguments: BOOLEAN;
 			-- Did the last inserted completed feature name contain arguments?
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class for refactorings that can be applied to each class in a list."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_undo_stack: STACK [LIST [ERF_ACTION]]; a_preference: PREFERENCES) is
+	make (an_undo_stack: STACK [LIST [ERF_ACTION]]; a_preference: PREFERENCES)
 		do
 			Precursor (an_undo_stack, a_preference)
 			create affected_classes.make (0)
@@ -27,7 +27,7 @@ feature {NONE} -- Implementation
 	affected_classes: DS_HASH_SET [CLASS_I]
 			-- The classes that are affected by this refactoring.
 
-	handle_classes is
+	handle_classes
 			-- Handle all classes in `affected_classes'.
 		local
 			chk_writable: ERF_CLASSES_WRITABLE
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
         	end
 		end
 
-    apply_to_class (a_class: CLASS_I) is
+    apply_to_class (a_class: CLASS_I)
             -- Make the changes in `a_class'.
         require
         	a_class_not_void: a_class /= Void
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 invariant
 	affected_classes_not_void: affected_classes /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

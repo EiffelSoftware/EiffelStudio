@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Class syntax stone."
 	legal: "See notice at end of class."
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_syntax_message: ERROR; c: CLASS_C) is
+	make (a_syntax_message: ERROR; c: CLASS_C)
 		do
 			syntax_message := a_syntax_message
 			cl_make (c)
@@ -53,20 +53,20 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	same_as (other: STONE): BOOLEAN is
+	same_as (other: STONE): BOOLEAN
 			-- Is `Current' identical to `other'?
 		do
 			Result := Precursor {SYNTAX_STONE} (other) and then
 				Precursor {CLASSC_STONE} (other)
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is `Current' meaningful?
 		do
 			Result := Precursor {SYNTAX_STONE} and then Precursor {CLASSC_STONE}
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Editor token that represents an AST node"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make_with_appearance (a_text: STRING_32; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER]) is
+	make_with_appearance (a_text: STRING_32; a_appearance: TUPLE [a_font_id: INTEGER; a_text_color_id: INTEGER; a_background_color_id: INTEGER])
 			-- Initialize.
 		require
 			a_text_attached: a_text /= Void
@@ -43,7 +43,7 @@ feature{NONE} -- Initialization
 
 feature -- Process
 
-	process (a_visitor: TOKEN_VISITOR) is
+	process (a_visitor: TOKEN_VISITOR)
 			-- Visitor
 		do
 			a_visitor.process_editor_token_text (Current)
@@ -51,7 +51,7 @@ feature -- Process
 
 feature -- Color
 
-	text_color_id: INTEGER is
+	text_color_id: INTEGER
 		do
 			if is_new_appearance_set then
 				Result := text_color_id_internal
@@ -60,7 +60,7 @@ feature -- Color
 			end
 		end
 
-	background_color_id: INTEGER is
+	background_color_id: INTEGER
 		do
 			if is_new_appearance_set then
 				Result := background_color_id_internal
@@ -69,7 +69,7 @@ feature -- Color
 			end
 		end
 
-	font_id: INTEGER is
+	font_id: INTEGER
 			-- Font id.
 		do
 			if is_new_appearance_set then
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			-- Is new appearance set?
 			-- If not, Current editor token will use inherited font, text color and background color.
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a BON view for an EIFFEL_CLASS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -58,7 +58,7 @@ create {BON_CLASS_FIGURE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a BON_CLASS_FIGURE
 		local
 			anchor_pix: EV_MODEL_PICTURE
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 			is_default_background_color_used := True
 		end
 
-	make_with_model (a_model: ES_CLASS) is
+	make_with_model (a_model: ES_CLASS)
 			-- Create a BON_CLASS_FIGURE using the `model' `a_model'.
 		require
 			a_model_not_void: a_model /= Void
@@ -127,25 +127,25 @@ feature -- Status report
 
 feature -- Access
 
-	world: EIFFEL_WORLD is
+	world: EIFFEL_WORLD
 			-- World `Current' is part of.
 		do
 			Result ?= Precursor {EIFFEL_CLASS_FIGURE}
 		end
 
-	port_x: INTEGER is
+	port_x: INTEGER
 			-- x position where links are starting.
 		do
 			Result := point_x
 		end
 
-	port_y: INTEGER is
+	port_y: INTEGER
 			-- y position where links are starting.
 		do
 			Result := point_y
 		end
 
-	size: EV_RECTANGLE is
+	size: EV_RECTANGLE
 			-- Size of `Current'.
 		local
 			pax, pay: INTEGER
@@ -155,13 +155,13 @@ feature -- Access
 			create Result.make (pax, pay, ellipse.point_b_x - pax, ellipse.point_b_y - pay)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height in pixels.
 		do
 			Result := ellipse.radius2 * 2
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixels.
 		do
 			Result := ellipse.radius1 * 2
@@ -176,25 +176,25 @@ feature -- Access
 	generics_color: EV_COLOR
 			-- Color for generics.
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			Result := model.name
 		end
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the xml node returned by `xml_element'.
 		do
 			Result := once "BON_CLASS_FIGURE"
 		end
 
-	is_default_bg_color_used_string: STRING is "IS_DEFAULT_BG_COLOR_USED"
-	cluster_name_string: STRING is "CLUSTER_NAME"
-	background_color_string: STRING is "BACKGROUND_COLOR"
-	generics_color_string: STRING is "GENERICS_COLOR"
-	class_name_color_string: STRING is "CLASS_NAME_COLOR"
+	is_default_bg_color_used_string: STRING = "IS_DEFAULT_BG_COLOR_USED"
+	cluster_name_string: STRING = "CLUSTER_NAME"
+	background_color_string: STRING = "BACKGROUND_COLOR"
+	generics_color_string: STRING = "GENERICS_COLOR"
+	class_name_color_string: STRING = "CLASS_NAME_COLOR"
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml element representing `Current's state.
 		local
 			colon_string: STRING
@@ -228,7 +228,7 @@ feature -- Access
 			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (l_model.is_needed_on_diagram)))
 		end
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
 			l_xml_routines: like xml_routines
@@ -261,7 +261,7 @@ feature -- Access
 
 feature -- Status settings
 
-	show_anchor is
+	show_anchor
 			-- Show anchor, if `is_fixed'.
 		do
 			if is_fixed then
@@ -274,7 +274,7 @@ feature -- Status settings
 			fixed_implies_show: is_fixed implies is_anchor_shown
 		end
 
-	hide_anchor is
+	hide_anchor
 			-- Hide anchor.
 		do
 			if anchor.is_show_requested then
@@ -286,7 +286,7 @@ feature -- Status settings
 			anchor_hidden: not is_anchor_shown
 		end
 
-	set_is_fixed (b: BOOLEAN) is
+	set_is_fixed (b: BOOLEAN)
 			-- Set `is_fixed' to `b'.
 		do
 			Precursor {EIFFEL_CLASS_FIGURE} (b)
@@ -299,7 +299,7 @@ feature -- Status settings
 
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_CLASS_FIGURE}
@@ -310,7 +310,7 @@ feature -- Element change
 			preferences.diagram_tool_data.remove_observer (Current)
 		end
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Set `background_color' to `a_color'.
 		do
 			is_default_background_color_used := False
@@ -320,7 +320,7 @@ feature -- Element change
 			set: background_color = a_color
 		end
 
-	set_generics_color (a_color: EV_COLOR) is
+	set_generics_color (a_color: EV_COLOR)
 			-- Set `generics_color' to `a_color'.
 		require
 			a_color_not_void: a_color /= Void
@@ -341,7 +341,7 @@ feature -- Element change
 			set: generics_color = a_color
 		end
 
-	set_class_name_color (a_color: EV_COLOR) is
+	set_class_name_color (a_color: EV_COLOR)
 			-- Set `class_name_color' to `a_color'.
 		require
 			a_color_not_void: a_color /= Void
@@ -362,7 +362,7 @@ feature -- Element change
 			set: class_name_color = a_color
 		end
 
-	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE) is
+	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE)
 			-- Move `p', which is relative to `Current', to a point on the
 			-- edge where the outline intersects a line from the center point
 			-- in direction `an_angle'.
@@ -427,7 +427,7 @@ feature -- Element change
 			p.set_precise (cx + ax, cy - ay)
 		end
 
-	fade_out is
+	fade_out
 			-- Fade out `Current'.
 		do
 			if is_high_quality and then background_color /= Void then
@@ -436,7 +436,7 @@ feature -- Element change
 			is_faded := True
 		end
 
-	fade_in is
+	fade_in
 			-- Fade in `Current'.
 		do
 			if is_high_quality and then background_color /= Void then
@@ -447,7 +447,7 @@ feature -- Element change
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
-	update is
+	update
 			-- Some properties of `Current' may have changed.
 		do
 			is_update_required := False
@@ -455,7 +455,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 feature {EV_MODEL_GROUP} -- Figure group
 
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
@@ -482,7 +482,7 @@ feature {EIFFEL_PROJECTOR} -- Ellipse
 
 feature {NONE} -- Implementation
 
-	set_is_selected (an_is_selected: like is_selected) is
+	set_is_selected (an_is_selected: like is_selected)
 			-- Set `is_selected' to `an_is_selected'.
 		do
 			if is_selected /= an_is_selected then
@@ -504,14 +504,14 @@ feature {NONE} -- Implementation
 	ellipse_radius_2: DOUBLE
 			-- Vertical radius of `ellipse'.
 
-	number_of_figures: INTEGER is 2
+	number_of_figures: INTEGER = 2
 			-- Number of figures used to visualize `Current'.
 			-- (`ellipse', `anchor')
 
 	icon_figures: EV_MODEL_GROUP
 			-- Optional icon for class types deferred, effective, persistent, interfaced.
 
-	icon_spacing: INTEGER is 2
+	icon_spacing: INTEGER = 2
 			-- Space in pixel between icons in `icon_figures'.
 
 	name_labels: EV_MODEL_GROUP
@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 	anchor: EV_MODEL_GROUP
 			-- Anchor indicating that `Current' `is_fixed'.
 
-	set_bon_icons is
+	set_bon_icons
 			-- Examine the properties of the class and add `icon_figures'.
 		require
 			model_not_void: model /= Void
@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-	set_name_label_text (a_text: STRING) is
+	set_name_label_text (a_text: STRING)
 			-- Set texts in `name_labels'.
 			-- | With line wrap at `max_class_name_length'.
 		local
@@ -637,7 +637,7 @@ feature {NONE} -- Implementation
 			update_information_positions
 		end
 
-	set_generics is
+	set_generics
 			-- Set text in `generics_label'.
 			-- | With line wrap at `max_generics_name_length'.
 		local
@@ -736,7 +736,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-	update_information_positions is
+	update_information_positions
 			-- Set positions of `name_labels', `bon_icons' and `generics_label'.
 		local
 			ibbox, nbbox, gbbox: EV_RECTANGLE
@@ -784,7 +784,7 @@ feature {NONE} -- Implementation
 			update_radius
 		end
 
-	update_radius is
+	update_radius
 			-- Update `ellipse_radius_1' and `ellipse_radius_2'.
 		local
 			l_min_size: EV_RECTANGLE
@@ -832,7 +832,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_ellipse_properties is
+	set_ellipse_properties
 			-- Set properties of ellipse.
 		require
 			ellipse_not_void: ellipse /= Void
@@ -854,7 +854,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_generics_properties is
+	set_generics_properties
 			-- Set properties of `generics_label' according to generics properties.
 		local
 			txt: EV_MODEL_TEXT
@@ -870,7 +870,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	assign_generics_properties_to_text (a_text: EV_MODEL_TEXT) is
+	assign_generics_properties_to_text (a_text: EV_MODEL_TEXT)
 			-- Set propertis of `a_text' according to generics properties.
 		require
 			a_text /= Void
@@ -879,7 +879,7 @@ feature {NONE} -- Implementation
 			a_text.set_foreground_color (generics_color)
 		end
 
-	set_class_name_properties is
+	set_class_name_properties
 			-- Set properties of `name_labels' according to name properties.
 		local
 			txt: EV_MODEL_TEXT
@@ -895,7 +895,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	assign_class_name_properties_to_text (a_text: EV_MODEL_TEXT) is
+	assign_class_name_properties_to_text (a_text: EV_MODEL_TEXT)
 			-- Set properties of `a_text' according to name properties.
 		require
 			a_text /= Void
@@ -904,7 +904,7 @@ feature {NONE} -- Implementation
 			a_text.set_foreground_color (class_name_color)
 		end
 
-	low_quality_fill_color: EV_COLOR is
+	low_quality_fill_color: EV_COLOR
 			-- Fill color for low quality ellipse.
 		once
 			create Result.make_with_rgb (1, 1, 1)
@@ -912,7 +912,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	set_is_high_quality (a_high_quality: like is_high_quality) is
+	set_is_high_quality (a_high_quality: like is_high_quality)
 			-- Set `is_high_quality' to `a_high_quality'.
 		do
 			if is_high_quality /= a_high_quality then
@@ -931,7 +931,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	preferences_changed is
+	preferences_changed
 			-- User changed values of interest in preferences.
 		do
 			retrieve_preferences
@@ -941,7 +941,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-	retrieve_preferences is
+	retrieve_preferences
 			-- Retrive preferences from shared resources.
 		do
 			if model = Void or else model.is_compiled then
@@ -960,7 +960,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
@@ -974,7 +974,7 @@ invariant
 	name_labels_not_void: name_labels /= Void
 	generics_label_not_void: generics_label /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

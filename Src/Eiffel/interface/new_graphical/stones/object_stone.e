@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Stone representing an object address."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (addr: DBG_ADDRESS; a_name: STRING_32; dclass: CLASS_C) is
+	make (addr: DBG_ADDRESS; a_name: STRING_32; dclass: CLASS_C)
 		require
 			not_addr_void: addr /= Void and then not addr.is_void
 			dclass_exists: dclass /= Void
@@ -53,21 +53,21 @@ feature -- Properties
 
 feature -- Access
 
-	stone_cursor: EV_POINTER_STYLE is
+	stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
 			Result := Cursors.cur_Object
 		end
 
-	x_stone_cursor: EV_POINTER_STYLE is
+	x_stone_cursor: EV_POINTER_STYLE
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
 			Result := Cursors.cur_X_object
 		end
 
-	stone_signature: STRING is
+	stone_signature: STRING
 		do
 			create Result.make (0)
 			Result.append (name)
@@ -77,7 +77,7 @@ feature -- Access
 			Result.append (object_address.output)
 		end
 
-	history_name: STRING_GENERAL is
+	history_name: STRING_GENERAL
 			-- Name used in the history list
 		do
 			create {STRING_32}Result.make (0)
@@ -89,14 +89,14 @@ feature -- Access
 			Result.append ("]")
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 		do
 			Result := history_name
 		end
 
 feature -- Status setting
 
-	set_associated_ev_item (item: EV_ANY) is
+	set_associated_ev_item (item: EV_ANY)
 			-- Associate `Current' with a tree item in the object tree.
 		do
 			ev_item := item
@@ -104,7 +104,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	same_as (other: STONE): BOOLEAN is
+	same_as (other: STONE): BOOLEAN
 			-- Do `Current' and `other' reference the same object?
 		local
 			o: like Current
@@ -119,7 +119,7 @@ feature -- Status report
 			end
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is `Current' a valid stone?
 		do
 			if
@@ -141,7 +141,7 @@ invariant
 	address_exists: object_address /= Void
 	dynamic_class_exists: dynamic_class /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

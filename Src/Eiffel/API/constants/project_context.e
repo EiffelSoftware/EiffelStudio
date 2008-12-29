@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Directories management for an Eiffel project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,19 +9,19 @@ class PROJECT_CONTEXT
 
 feature -- Eiffel Project Directories
 
-	Precompilation_directories: HASH_TABLE [REMOTE_PROJECT_DIRECTORY,INTEGER] is
+	Precompilation_directories: HASH_TABLE [REMOTE_PROJECT_DIRECTORY,INTEGER]
 			-- Shared precompilation directories, indexed by precompilation ids
 		once
 			create Result.make (5)
 		end
 
-	Precompilation_driver: FILE_NAME is
+	Precompilation_driver: FILE_NAME
 			-- Full name of the precompilation driver used
 		once
 			create Result.make
 		end
 
-	project_location: PROJECT_DIRECTORY is
+	project_location: PROJECT_DIRECTORY
 			-- Store various locations for a project.
 		once
 			create Result.make ("Invalid_location", "Invalid_target")
@@ -29,7 +29,7 @@ feature -- Eiffel Project Directories
 			project_location_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

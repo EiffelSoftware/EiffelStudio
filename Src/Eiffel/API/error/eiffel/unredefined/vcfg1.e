@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for a formal generic name as a class name %
@@ -19,10 +19,10 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VCFG";
+	code: STRING = "VCFG";
 			-- Error code
 
-	subcode: INTEGER is
+	subcode: INTEGER
 		do
 			Result := 1;
 		end;
@@ -32,7 +32,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			if formal_name /= Void then
 				a_text_formatter.add ("Parameter name: ");
@@ -43,13 +43,13 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_formal_name (s: STRING) is
+	set_formal_name (s: STRING)
 			-- Assign `s' to `formal_name'.
 		do
 			formal_name := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

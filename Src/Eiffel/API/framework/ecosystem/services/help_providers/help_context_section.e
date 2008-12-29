@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			A default implementation of {HELP_CONTEXT_SECTION_I} to further page navigation, once a context
 			page reference has been located.
@@ -51,7 +51,7 @@ feature -- Element change
 invariant
 	not_section_is_empty: not section.is_empty
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

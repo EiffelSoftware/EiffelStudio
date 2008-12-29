@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of a DLL extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (t, i: INTEGER; n: like name) is
+	make (t, i: INTEGER; n: like name)
 			-- Initialize DLL_EXTENSION_I
 		require
 			t_valid_type: t = dll32_type or t = dllwin32_type
@@ -50,10 +50,10 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_dll: BOOLEAN is True
+	is_dll: BOOLEAN = True
 			-- Current is a DLL external
 
-	need_encapsulation: BOOLEAN is True
+	need_encapsulation: BOOLEAN = True
 			-- We always need to call encapsulation.
 
 feature -- Properties
@@ -69,7 +69,7 @@ feature -- Properties
 
 feature -- Comparison
 
-	same_as (other: like Current): BOOLEAN is
+	same_as (other: like Current): BOOLEAN
 		do
 			Result := Precursor {EXTERNAL_EXT_I} (other) and then
 				(name.is_equal (other.name) and type = other.type and index = other.index)
@@ -77,7 +77,7 @@ feature -- Comparison
 
 feature -- Code generation
 
-	generate_body (dll_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+	generate_body (dll_byte_code: EXT_BYTE_CODE; a_result: RESULT_B)
 			-- Generate encapsulation to C/C++ dll external `macro_byte_code'.
 		do
 			inspect
@@ -91,7 +91,7 @@ feature -- Code generation
 
 feature {NONE} -- Internal generation
 
-	generate_dll_body (dll_byte_code: EXT_BYTE_CODE; a_result: RESULT_B; is_win_32: BOOLEAN) is
+	generate_dll_body (dll_byte_code: EXT_BYTE_CODE; a_result: RESULT_B; is_win_32: BOOLEAN)
 			-- Generate body for an external of type dllwin32
 		require
 			dll_byte_code_not_void: dll_byte_code /= Void
@@ -197,7 +197,7 @@ feature {NONE} -- Internal generation
 			buf.put_new_line
 		end
 
-	stdcall: STRING is "__stdcall"
+	stdcall: STRING = "__stdcall"
 			-- Special call type used to call certain function in DLLS.
 			-- E.g. most of the Win32 API are using this kind of calling
 			-- mechanism.
@@ -205,7 +205,7 @@ feature {NONE} -- Internal generation
 invariant
 	name_not_void: name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

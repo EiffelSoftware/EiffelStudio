@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of a violation of the constrained %
 				%genericity validity rule."
 	legal: "See notice at end of class."
@@ -36,7 +36,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C) is
+	build_explain (a_text_formatter: TEXT_FORMATTER; a_context_class: CLASS_C)
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
 			a_context_class_not_void: a_context_class /= Void
@@ -97,31 +97,31 @@ feature {COMPILER_EXPORTER} -- Setting
 			set: unmatched_creation_constraints = a_unmatched_creation_constraints
 		end
 
-	set_actual_type_set (t: TYPE_SET_A) is
+	set_actual_type_set (t: TYPE_SET_A)
 			-- Assign `t' to `type1'.
 		do
 			actual_type_set := t
 		end
 
-	set_constraint_types (t: TYPE_SET_A) is
+	set_constraint_types (t: TYPE_SET_A)
 			-- Assign `t' to `type2'.
 		do
 			c_type := t
 		end
 
-	set_type (t: GEN_TYPE_A) is
+	set_type (t: GEN_TYPE_A)
 			-- Assign `t' to `type'.
 		do
 			type := t
 		end
 
-	set_formal_number (i: INTEGER) is
+	set_formal_number (i: INTEGER)
 			-- Assign `i' to `formal_number'.
 		do
 			formal_number := i
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

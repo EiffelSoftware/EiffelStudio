@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects that represent a cell"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			Precursor
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	initialize_actions is
+	initialize_actions
 			-- Setup the actions sequences when the item is shown.
 		do
 			Precursor
@@ -49,7 +49,7 @@ feature -- Query
 			end
 		end
 
-	activate_action (popup_window: EV_POPUP_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -73,7 +73,7 @@ feature -- Query
 			is_activated := True
 		end
 
-	deactivate is
+	deactivate
 			-- Cleanup from previous call to activate.
 		do
 			Precursor
@@ -99,7 +99,7 @@ feature -- Properties
 
 feature -- Change
 
-	set_button_action (v: like button_action) is
+	set_button_action (v: like button_action)
 		do
 			button_action := v
 		end
@@ -122,7 +122,7 @@ feature {NONE} -- Impl
 			Result := text_label.has_focus or (button /= Void and then button.has_focus)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

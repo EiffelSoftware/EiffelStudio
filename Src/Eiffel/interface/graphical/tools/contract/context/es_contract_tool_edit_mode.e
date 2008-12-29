@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Various edit modes for the contract edition tool {ES_CONTRACT_TOOL}.
 	]"
@@ -34,7 +34,7 @@ feature -- Query
 				a_mode = invariants)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

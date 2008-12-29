@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An object represent one end of an association between classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 	
-	make (id: INTEGER; n: STRING; a_type: XMI_TYPE; a_ordered, a_multiple: BOOLEAN) is
+	make (id: INTEGER; n: STRING; a_type: XMI_TYPE; a_ordered, a_multiple: BOOLEAN)
 			-- Initialization of `Current'.
 		require
 			type_not_void: a_type /= void
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Actions
 
-	code: STRING is
+	code: STRING
 			-- XMI representation of the attribute.
 		local
 			xmi_class: XMI_CLASS
@@ -89,7 +89,7 @@ feature -- Actions
 				%				   </Foundation.Core.AssociationEnd>%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

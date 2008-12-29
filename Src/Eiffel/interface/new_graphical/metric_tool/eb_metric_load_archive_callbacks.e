@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that loads metric archives"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make_with_factory (a_factory: like factory) is
+	make_with_factory (a_factory: like factory)
 			-- Initialize `factory' with `a_factory'.
 		require
 			a_factory_attached: a_factory /= Void
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Setting
 
-	wipe_out_archive is
+	wipe_out_archive
 			-- Wipe out `archive'.
 		do
 			archive.wipe_out
@@ -63,7 +63,7 @@ feature -- Setting
 
 feature{NONE} -- Callbacks
 
-	on_start_tag_finish is
+	on_start_tag_finish
 			-- End of start tag.
 		do
 			inspect
@@ -87,7 +87,7 @@ feature{NONE} -- Callbacks
 			current_attributes.clear_all
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 		do
 			inspect
@@ -116,14 +116,14 @@ feature{NONE} -- Callbacks
 			current_tag.remove
 		end
 
-	on_content (a_content: STRING) is
+	on_content (a_content: STRING)
 			-- Text content.
 		do
 		end
 
 feature{NONE} -- Process
 
-	process_metric_archive_node is
+	process_metric_archive_node
 			-- Process "metric" definition list node.
 		local
 			l_type: INTEGER
@@ -199,7 +199,7 @@ feature{NONE} -- Implementation
 	current_archive_node: EB_METRIC_ARCHIVE_NODE
 			-- Current archive node
 
-	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER] is
+	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
 		local
 			l_trans: HASH_TABLE [INTEGER, STRING]
@@ -251,7 +251,7 @@ feature{NONE} -- Implementation
 			Result.force (l_trans, t_metric_value)
 		end
 
-	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER] is
+	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER]
 			-- Mapping of possible attributes of tags.
 		local
 			l_attr: HASH_TABLE [INTEGER, STRING]
@@ -311,7 +311,7 @@ feature{NONE} -- Implementation
 			Result.force (l_attr, t_metric_value)
 		end
 
-	element_index_table: HASH_TABLE [INTEGER, STRING] is
+	element_index_table: HASH_TABLE [INTEGER, STRING]
 			-- Table of indexes of supported elements indexed by element name.
 		once
 			create Result.make (1)
@@ -324,7 +324,7 @@ feature{NONE} -- Implementation
 			Result.put (t_metric_value, n_metric_value)
 		end
 
-	metric_type_id_from_name (a_type_name: STRING): INTEGER is
+	metric_type_id_from_name (a_type_name: STRING): INTEGER
 			-- Metric type id for type name `a_type_name'.
 			-- Nonzero if `a_type_name' is a valid name, 0 otherwise.
 		require
@@ -348,7 +348,7 @@ invariant
 	current_domain_attached: current_domain /= Void
 	domain_receiver_stack_attached: domain_receiver_stack /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

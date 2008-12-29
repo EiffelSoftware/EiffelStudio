@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to execute an external wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_location: DIRECTORY_NAME) is
+	make (a_location: DIRECTORY_NAME)
 			-- Create a new external wizard located in `a_location'.
 			--
 			-- Note: `a_location' should contains a directory `resources',
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute the wizard
 		local
 			temp_filename: FILE_NAME
@@ -84,7 +84,7 @@ feature -- Execution
 			end
 		end
 
-	Additional_parameters: STRING is
+	Additional_parameters: STRING
 			-- Additional parameters
 		deferred
 		end
@@ -97,7 +97,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	launch_wizard (callback_filename: STRING) is
+	launch_wizard (callback_filename: STRING)
 			-- Launch the wizard using the file `callback_filename' as callback.
 		local
 			wizard_exec_filename: FILE_NAME
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			wait_for_finish (callback_filename)
 		end
 
-	wait_for_finish (callback_filename: STRING) is
+	wait_for_finish (callback_filename: STRING)
 			-- Wait for the end of the Wizard, and collect the results.
 		local
 			retry_count: INTEGER
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	wait is
+	wait
 			-- Wait for one second (but process events) and return.
 		local
 			i: INTEGER
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	analyse_line (a_line: STRING): ARRAY [STRING] is
+	analyse_line (a_line: STRING): ARRAY [STRING]
 			-- Separate a line "Name=Value" into an array of 2 elements.
 			-- The first element contains the name in lower case, the second
 			-- contains the value.
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	adjust_string (a_string: STRING): STRING is
+	adjust_string (a_string: STRING): STRING
 			-- Remove any blank character and quote at beginning and
 			-- and of the string.
 		do
@@ -232,7 +232,7 @@ feature {NONE} -- Private attributes
 	location: DIRECTORY_NAME;
 			-- Location of this wizard.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

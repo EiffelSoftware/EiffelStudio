@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Search in a CONF_GROUP"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 	make (a_keyword: like keyword;
 			a_range: like surrounding_text_range;
 			a_group: like group;
-			only_compiled_class: like only_compiled_class_searched) is
+			only_compiled_class: like only_compiled_class_searched)
 			-- Initialization with a group.
 		require
 			a_group_not_void: a_group /= Void
@@ -36,19 +36,19 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_group_set: BOOLEAN is
+	is_group_set: BOOLEAN
 			-- Is `group' set?
 		do
 			Result := (group /= Void)
 		end
 
-	is_subgroup_searched: BOOLEAN is
+	is_subgroup_searched: BOOLEAN
 			-- Are subgroups in `group' searched?
 		do
 			Result := is_subgroup_searched_internal
 		end
 
-	is_search_prepared: BOOLEAN is
+	is_search_prepared: BOOLEAN
 			-- Is search prepared?
 		do
 			Result := Precursor and is_group_set
@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_subgroup_searched (a_bool: BOOLEAN) is
+	set_subgroup_searched (a_bool: BOOLEAN)
 			-- If set subgroups in `group' are searched.
 		do
 			is_subgroup_searched_internal := a_bool
@@ -67,7 +67,7 @@ feature -- Element change
 
 feature -- Basic operatioin
 
-	launch is
+	launch
 			-- Launch searching.
 		local
 			classes: HASH_TABLE [CONF_CLASS, STRING]
@@ -183,7 +183,7 @@ feature -- Basic operatioin
 			end
 		end
 
-	reset_all is
+	reset_all
 			-- Reset all
 		do
 			Precursor
@@ -195,7 +195,7 @@ feature -- Basic operatioin
 
 feature -- Element change
 
-	set_group (a_group: CONF_GROUP) is
+	set_group (a_group: CONF_GROUP)
 			-- Set `group' to a_group.
 		do
 			group := a_group
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

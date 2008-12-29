@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "IL Full-name Conflict when two classes of system have same full-name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_list: SEARCH_TABLE [CLASS_C]; a_full_name: STRING) is
+	make (a_list: SEARCH_TABLE [CLASS_C]; a_full_name: STRING)
 			-- Create error which collects all classes of `a_list'
 			-- sharing same `a_full_name'.
 		require
@@ -38,7 +38,7 @@ feature -- Access
 	full_name: STRING
 			-- Full name on which there is a conflict.
 
-	file_name: STRING is
+	file_name: STRING
 			-- No associated file name
 		do
 
@@ -46,12 +46,12 @@ feature -- Access
 
 feature -- Properties
 
-	code: STRING is "VIFC"
+	code: STRING = "VIFC"
 		-- Error code
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Display error message
 		do
 			a_text_formatter.add ("Following classes have same IL full name `")
@@ -70,7 +70,7 @@ feature -- Output
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

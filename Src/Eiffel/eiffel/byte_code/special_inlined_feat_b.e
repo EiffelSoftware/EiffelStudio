@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Special inlining for SPECIAL classes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Generation
 
-	generate_parameters (gen_reg: REGISTRABLE) is
+	generate_parameters (gen_reg: REGISTRABLE)
 			-- Generate inlined routines.
 		local
 			buf: like buffer
@@ -96,7 +96,7 @@ feature -- Generation
 
 feature {NONE} -- Status report
 
-	is_expanded_with_references: BOOLEAN is
+	is_expanded_with_references: BOOLEAN
 			-- Is current type of generic parameter G in SPECIAL [G] is
 			-- expanded with references?
 		local
@@ -108,7 +108,7 @@ feature {NONE} -- Status report
 			end
 		end
 
-	generic_type: TYPE_A is
+	generic_type: TYPE_A
 				-- Extract type of generic parameter G in SPECIAL [G].
 			local
 				l_special_type: GEN_TYPE_A
@@ -135,7 +135,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Implementation
 
-	generate_item (gen_reg: REGISTRABLE) is
+	generate_item (gen_reg: REGISTRABLE)
 			-- Generate inlined version of `item'.
 		require
 			gen_reg_not_void: gen_reg /= Void
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-	generate_item_address (gen_reg: REGISTRABLE) is
+	generate_item_address (gen_reg: REGISTRABLE)
 			-- Generate inlined version of `item_address'.
 		require
 			gen_reg_not_void: gen_reg /= Void
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-	generate_put (gen_reg: REGISTRABLE) is
+	generate_put (gen_reg: REGISTRABLE)
 			-- Generate inlined version of `put'.
 		require
 			gen_reg_not_void: gen_reg /= Void
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-	generate_move (gen_reg: REGISTRABLE; is_overlapping: BOOLEAN) is
+	generate_move (gen_reg: REGISTRABLE; is_overlapping: BOOLEAN)
 			-- Generate inlined version of `move_data' and `overlapping_move'.
 		require
 			gen_reg_not_void: gen_reg /= Void
@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-	generate_copy_data (gen_reg: REGISTRABLE) is
+	generate_copy_data (gen_reg: REGISTRABLE)
 			-- Generate inlined version of `copy_data'.
 		require
 			gen_reg_not_void: gen_reg /= Void
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-	generate_clear_all (gen_reg: REGISTRABLE) is
+	generate_clear_all (gen_reg: REGISTRABLE)
 			-- Generate inlined version of `clear_all'.
 		require
 			gen_reg_not_void: gen_reg /= Void
@@ -516,7 +516,7 @@ feature {NONE} -- Implementation
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

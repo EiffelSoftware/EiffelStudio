@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of an IL enum extension."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			--
 		do
 			type := Enum_field_type
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_value (v: like value) is
+	set_value (v: like value)
 			-- Set `value' with `v'.
 		do
 			value := v
@@ -40,14 +40,14 @@ feature -- Settings
 			value_set: value = v
 		end
 
-	same_as (other: like Current): BOOLEAN is
+	same_as (other: like Current): BOOLEAN
 		do
 			Result := Precursor (other) and then ((value = Void and other.value = Void) or else (value.is_equivalent (other.value)))
 		end
 
 feature -- IL code generation
 
-	generate_call (is_polymorphic: BOOLEAN) is
+	generate_call (is_polymorphic: BOOLEAN)
 			-- Generate external feature call on Current.
 		do
 			value.generate_il
@@ -56,7 +56,7 @@ feature -- IL code generation
 invariant
 	type_is_enum: type = Enum_field_type
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

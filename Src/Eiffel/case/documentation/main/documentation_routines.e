@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Routines intended for use by DOCUMENTATION."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Status setting
 
-	set_excluded_indexing_items (l: LINEAR [STRING]) is
+	set_excluded_indexing_items (l: LINEAR [STRING])
 			-- Assign `l' to `excluded_indexing_items'.
 		do
 			excluded_indexing_items := l
@@ -33,7 +33,7 @@ feature -- Access
 	excluded_indexing_items: LINEAR [STRING]
 			-- Indexing items not to include in HTML meta clause.
 
-	index_text (a_text_formatter: TEXT_FORMATTER) is
+	index_text (a_text_formatter: TEXT_FORMATTER)
 			-- Generate documentation index as structured text.
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
@@ -62,7 +62,7 @@ feature -- Access
 			a_text_formatter.process_filter_item (f_class_declaration, false)
 		end
 
-	class_list_text (du: DOCUMENTATION_UNIVERSE; a_text_formatter: TEXT_FORMATTER) is
+	class_list_text (du: DOCUMENTATION_UNIVERSE; a_text_formatter: TEXT_FORMATTER)
 			-- Generate documentation class list from `du.classes' as structured text.
 		require
 			du_not_void: du /= Void
@@ -85,7 +85,7 @@ feature -- Access
 			a_text_formatter.process_filter_item (f_class_declaration, false)
 		end
 
-	cluster_list_text (du: DOCUMENTATION_UNIVERSE; a_text_formatter:TEXT_FORMATTER)  is
+	cluster_list_text (du: DOCUMENTATION_UNIVERSE; a_text_formatter:TEXT_FORMATTER)
 			-- Generate documentation cluster list from `du.clusters' as structured text.
 		require
 			du_not_void: du /= Void
@@ -108,7 +108,7 @@ feature -- Access
 			a_text_formatter.process_filter_item (f_class_declaration, false)
 		end
 
-	cluster_hierarchy_text (du: DOCUMENTATION_UNIVERSE; a_text_formatter: TEXT_FORMATTER)  is
+	cluster_hierarchy_text (du: DOCUMENTATION_UNIVERSE; a_text_formatter: TEXT_FORMATTER)
 			-- Generate documentation cluster hierarchy as structured text.
 			-- Do not generate leafs of clusters that are not generated as described by `du'.
 			-- Add links to diagrams if `diagrams' is True.
@@ -157,7 +157,7 @@ feature -- Access
 	group_index_text (
 		group: CONF_GROUP;
 		class_list: DS_ARRAYED_LIST [CONF_CLASS];
-		diagrams: BOOLEAN; a_text_formatter: TEXT_FORMATTER) is
+		diagrams: BOOLEAN; a_text_formatter: TEXT_FORMATTER)
 			-- Generate documentation group index for `group'.
 			-- Add links to diagrams if `diagrams' is True.
 		require
@@ -256,7 +256,7 @@ feature -- Access
 			a_text_formatter.process_filter_item (f_class_declaration, false)
 		end
 
-	class_chart_text (class_c: CLASS_C; a_text_formatter: TEXT_FORMATTER) is
+	class_chart_text (class_c: CLASS_C; a_text_formatter: TEXT_FORMATTER)
 			-- Generate documentation class chart for `class_c' as structured text.
 		require
 			class_c_not_void: class_c /= Void
@@ -307,7 +307,7 @@ feature -- Access
 			current_class := Void
 		end
 
-	class_relations_text (class_c: CLASS_C; a_text_formatter: TEXT_FORMATTER) is
+	class_relations_text (class_c: CLASS_C; a_text_formatter: TEXT_FORMATTER)
 			-- Generate documentation class relations for `class_c' as structured text.
 		require
 			class_c_not_void: class_c /= Void
@@ -329,7 +329,7 @@ feature -- Access
 			a_text_formatter.process_filter_item (f_class_declaration, false)
 		end
 
-	class_text (class_C: CLASS_C; flat, short: BOOLEAN; a_text_formatter: TEXT_FORMATTER) is
+	class_text (class_C: CLASS_C; flat, short: BOOLEAN; a_text_formatter: TEXT_FORMATTER)
 			-- Generate documentation class text for `class_c' as structured text.
 		require
 			class_c_not_void: class_c /= Void
@@ -353,7 +353,7 @@ feature -- Access
 
 feature -- Routines
 
-	append_general_info (text: TEXT_FORMATTER; class_i: CLASS_I) is
+	append_general_info (text: TEXT_FORMATTER; class_i: CLASS_I)
 			-- Append "General" item for class charts.
 		local
 			creators: HASH_TABLE [EXPORT_I, STRING]
@@ -401,7 +401,7 @@ feature -- Routines
 			text.add_new_line
 		end
 
-	append_class_constraints (text: TEXT_FORMATTER; class_c: CLASS_C) is
+	append_class_constraints (text: TEXT_FORMATTER; class_c: CLASS_C)
 			-- Append to `text', all invariant tags.
 		local
 			ast: INVARIANT_AS
@@ -436,7 +436,7 @@ feature -- Routines
 			end
 		end
 
-	append_creators (text: TEXT_FORMATTER; class_c: CLASS_C) is
+	append_creators (text: TEXT_FORMATTER; class_c: CLASS_C)
 			-- Append creators list.
 		local
 			cr: HASH_TABLE [EXPORT_I, STRING]
@@ -458,7 +458,7 @@ feature -- Routines
 			end
 		end
 
-	append_cluster_list (text: TEXT_FORMATTER; cluster_list: DS_ARRAYED_LIST [CONF_GROUP]) is
+	append_cluster_list (text: TEXT_FORMATTER; cluster_list: DS_ARRAYED_LIST [CONF_GROUP])
 		local
 			l_cluster: CONF_GROUP
 		do
@@ -475,7 +475,7 @@ feature -- Routines
 			end
 		end
 
-	append_feature_list (text: TEXT_FORMATTER; f_list: LINEAR [E_FEATURE]) is
+	append_feature_list (text: TEXT_FORMATTER; f_list: LINEAR [E_FEATURE])
 			-- Append list of feature with signatures to `ctxt'.
 		local
 			f: E_FEATURE
@@ -505,7 +505,7 @@ feature -- Routines
 			end
 		end
 
-	feature_tooltip (f: E_FEATURE): STRING is
+	feature_tooltip (f: E_FEATURE): STRING
 			-- Get a descriptive comment on the origin of `f'.
 		local
 			wc: CLASS_C
@@ -538,7 +538,7 @@ feature -- Routines
 
 feature {NONE} -- Implementation
 
-	append_class_list (text: TEXT_FORMATTER; class_list: DS_ARRAYED_LIST [CONF_CLASS]; desc: BOOLEAN) is
+	append_class_list (text: TEXT_FORMATTER; class_list: DS_ARRAYED_LIST [CONF_CLASS]; desc: BOOLEAN)
 			-- Append to `ctxt.text', formatted `class_list'.
 			-- Depending on `desc', include descriptions.
 		local
@@ -575,7 +575,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_cluster_hierarchy_leaf (text: TEXT_FORMATTER; du: DOCUMENTATION_UNIVERSE; a_group: CONF_GROUP; indent: INTEGER) is
+	append_cluster_hierarchy_leaf (text: TEXT_FORMATTER; du: DOCUMENTATION_UNIVERSE; a_group: CONF_GROUP; indent: INTEGER)
 		local
 			n: INTEGER
 			subs: DS_ARRAYED_LIST [CONF_CLUSTER]
@@ -599,7 +599,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_string_multilined (text: TEXT_FORMATTER; s: STRING) is
+	add_string_multilined (text: TEXT_FORMATTER; s: STRING)
 			-- Append `s' to `text' using the multilined formatting.
 		local
 			sb: STRING
@@ -642,7 +642,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_info_item (text: TEXT_FORMATTER; tag: STRING) is
+	append_info_item (text: TEXT_FORMATTER; tag: STRING)
 			-- Append `tag': `content' to `text'.
 		do
 			text.add_indent
@@ -651,7 +651,7 @@ feature {NONE} -- Implementation
 			text.add_space
 		end
 
-	append_feature_chart_item (text: TEXT_FORMATTER; fl: LIST [E_FEATURE]; a_title: STRING) is
+	append_feature_chart_item (text: TEXT_FORMATTER; fl: LIST [E_FEATURE]; a_title: STRING)
 			-- Append class ancestors for `class_c' to `text'.
 		do
 			if not fl.is_empty then
@@ -662,7 +662,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_comment (text: TEXT_FORMATTER; comment: STRING) is
+	append_comment (text: TEXT_FORMATTER; comment: STRING)
 			-- Append `comment' to `text'.
 		local
 			n, prev: INTEGER
@@ -690,7 +690,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Indexing clauses
 
-	html_meta_for_class (a_class: CONF_CLASS): STRING is
+	html_meta_for_class (a_class: CONF_CLASS): STRING
 			-- Generate string with list of HTML META tags
 			-- describing the indexing clause of `a_class'.
 		require
@@ -706,7 +706,7 @@ feature {NONE} -- Indexing clauses
 			Result.append (indexes_to_html_meta (l_class_i.compiled_class.ast.bottom_indexes, "Eiffel class"))
 		end
 
-	html_meta_for_cluster (cluster_i: CONF_GROUP): STRING is
+	html_meta_for_cluster (cluster_i: CONF_GROUP): STRING
 			-- Generate strings of HTML meta data.
 		require
 			cluster_i_not_void: cluster_i /= Void
@@ -714,13 +714,13 @@ feature {NONE} -- Indexing clauses
 			Result := indexes_to_html_meta_group (cluster_i, "Eiffel cluster")
 		end
 
-	html_meta_for_system: STRING is
+	html_meta_for_system: STRING
 			-- Generate strings of HTML meta data.
 		do
 			Result := indexing_tuple_to_string ("keywords", "Eiffel system")
 		end
 
-	indexes_to_html_meta_group (a_group: CONF_GROUP; added_keywords: STRING): STRING is
+	indexes_to_html_meta_group (a_group: CONF_GROUP; added_keywords: STRING): STRING
 			-- Convert `a_group' to a big string of HTML meta data.
 		local
 			content, t: STRING
@@ -764,7 +764,7 @@ feature {NONE} -- Indexing clauses
 			end
 		end
 
-	indexes_to_html_meta (indexes: EIFFEL_LIST [INDEX_AS]; added_keywords: STRING): STRING is
+	indexes_to_html_meta (indexes: EIFFEL_LIST [INDEX_AS]; added_keywords: STRING): STRING
 			-- Convert `indexes' to a big string of HTML meta data.
 		local
 			content, t: STRING
@@ -804,7 +804,7 @@ feature {NONE} -- Indexing clauses
 			end
 		end
 
-	indexing_tuple_to_string (tag, content: STRING): STRING is
+	indexing_tuple_to_string (tag, content: STRING): STRING
 			-- Create HTML meta string.
 		do
 			create Result.make (20)
@@ -815,7 +815,7 @@ feature {NONE} -- Indexing clauses
 			Result.append ("%">%N")
 		end
 
-	indexes_to_table (indexes: EIFFEL_LIST [INDEX_AS]): HASH_TABLE [STRING, STRING] is
+	indexes_to_table (indexes: EIFFEL_LIST [INDEX_AS]): HASH_TABLE [STRING, STRING]
 			-- Table of [content, tag].
 		local
 			t: STRING
@@ -844,7 +844,7 @@ feature {NONE} -- Indexing clauses
 			end
 		end
 
-	indexing_item_as_string (c: CLASS_I; s: STRING): STRING is
+	indexing_item_as_string (c: CLASS_I; s: STRING): STRING
 		local
 			ic: HASH_TABLE [STRING, STRING]
 		do
@@ -862,7 +862,7 @@ feature {NONE} -- Indexing clauses
 
 feature {NONE} -- Implementation
 
-	safe_conforms_to (f: E_FEATURE; conf: CLASS_C): BOOLEAN is
+	safe_conforms_to (f: E_FEATURE; conf: CLASS_C): BOOLEAN
 			-- Is the return type of `f' a descendant of `conf'?
 			-- `f' may be any feature. Returns `False' if not a function.
 		require
@@ -882,7 +882,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Action_sequence_class: CLASS_C is
+	Action_sequence_class: CLASS_C
 			-- Compiled class ACTION_SEQUENCE.
 		local
 			cl: LIST [CLASS_I]
@@ -893,13 +893,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Any_class: CLASS_C is
+	Any_class: CLASS_C
 			-- Compiled class ANY.
 		once
 			Result := Eiffel_system.any_class.compiled_class
 		end
 
-	display_feature (f: E_FEATURE; class_c: CLASS_C): BOOLEAN is
+	display_feature (f: E_FEATURE; class_c: CLASS_C): BOOLEAN
 			-- Should feature be included in feature list for `class_c'?
 		do
 			Result :=
@@ -910,19 +910,19 @@ feature {NONE} -- Implementation
 
 feature  -- Menu bars
 
-	insert_global_menu_bar (text: TEXT_FORMATTER; d, l, h: BOOLEAN) is
+	insert_global_menu_bar (text: TEXT_FORMATTER; d, l, h: BOOLEAN)
 			-- Append a menu bar to `text'.
 		deferred
 		end
 
-	insert_class_menu_bar (text: TEXT_FORMATTER; class_name: STRING) is
+	insert_class_menu_bar (text: TEXT_FORMATTER; class_name: STRING)
 			-- Append a menu bar to `text'.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	type_of_group (a_group: CONF_GROUP): STRING is
+	type_of_group (a_group: CONF_GROUP): STRING
 			-- String representation of type of `a_group'
 		require
 			a_group_not_void: a_group /= Void
@@ -938,7 +938,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

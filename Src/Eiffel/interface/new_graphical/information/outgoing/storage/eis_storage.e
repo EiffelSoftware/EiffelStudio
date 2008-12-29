@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Storage of EIS, access to servers"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialization
 		do
 			make_observer_manager
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Retrieve and save
 
-	retrieve_from_file is
+	retrieve_from_file
 			-- Retrieve storage from file	
 		local
 			l_tuple: TUPLE [tag_server: like tag_server; entry_server: like entry_server]
@@ -105,7 +105,7 @@ feature -- Retrieve and save
 
 feature -- Element change
 
-	register_entry (a_entry: !EIS_ENTRY; a_component_id: !STRING) is
+	register_entry (a_entry: !EIS_ENTRY; a_component_id: !STRING)
 			-- Register an entry from the storage
 			-- Syncronize servers
 			-- `a_component_id' is the class EIS id when `a_entry' is written in a feature
@@ -138,7 +138,7 @@ feature -- Element change
 			end
 		end
 
-	deregister_entry (a_entry: !EIS_ENTRY; a_component_id: !STRING) is
+	deregister_entry (a_entry: !EIS_ENTRY; a_component_id: !STRING)
 			-- Deregister an entry from the storage
 			-- Syncronize servers
 			-- `a_component_id' is the class EIS id when `a_entry' is written in a feature
@@ -175,7 +175,7 @@ feature -- Element change
 			end
 		end
 
-	register_entries_of_component_id (a_entries: !SEARCH_TABLE [!EIS_ENTRY]; a_component_id: !STRING) is
+	register_entries_of_component_id (a_entries: !SEARCH_TABLE [!EIS_ENTRY]; a_component_id: !STRING)
 			-- Deregister entries of `a_component_id'.
 			-- Syncronize servers
 		do
@@ -196,7 +196,7 @@ feature -- Element change
 			end
 		end
 
-	deregister_entries_of_component_id (a_component_id: !STRING) is
+	deregister_entries_of_component_id (a_component_id: !STRING)
 			-- Deregister entries of `a_component_id'.
 			-- Syncronize servers
 		local
@@ -218,7 +218,7 @@ feature -- Element change
 			end
 		end
 
-	clean_up is
+	clean_up
 			-- Clean up the storage, remove garbage information
 		local
 			l_entries: HASH_TABLE [!SEARCH_TABLE [!EIS_ENTRY], !STRING]
@@ -278,7 +278,7 @@ feature {NONE} -- Access
 	internal_entry_server: like entry_server;
 			-- Internal entry server
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

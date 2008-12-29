@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stonable tool in ES."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like develop_window; a_tool: like tool_descriptor) is
+	make (a_manager: like develop_window; a_tool: like tool_descriptor)
 			-- Initialization
 		do
 			Precursor {EB_TOOL} (a_manager, a_tool)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle tool.
 		local
 			l_notifier: SERVICE_CONSUMER [FILE_NOTIFIER_S]
@@ -53,7 +53,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	stone: STONE is
+	stone: STONE
 			-- Stone representing Current
 		deferred
 		end
@@ -72,7 +72,7 @@ feature {NONE} -- Access
 
 feature -- Status setting
 
-	show is
+	show
 			-- Show the tool
 		do
 			Precursor {EB_TOOL}
@@ -85,7 +85,7 @@ feature -- Status report
 			-- Is `last_stone' processed?
 			-- i.e., has `last_stone' been displayed in formatters of Current tool?
 
-	is_stone_valid (a_stone: STONE): BOOLEAN is
+	is_stone_valid (a_stone: STONE): BOOLEAN
 			-- Is `a_stone' valid to set?
 		do
 			Result := True
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Element change
 
-	force_last_stone is
+	force_last_stone
 			-- Force that `last_stone' is displayed in formatters in Current view
 		do
 			if not is_last_stone_processed then
@@ -103,7 +103,7 @@ feature -- Element change
 			last_stone_processed: is_last_stone_processed
 		end
 
-	set_stone (new_stone: STONE) is
+	set_stone (new_stone: STONE)
 			-- Make `new_stone' the new value of stone.
 		require
 			is_stone_valid: is_stone_valid (new_stone)
@@ -121,7 +121,7 @@ feature {NONE} -- Event handlers
 
 feature {NONE} -- Implementation
 
-	set_last_stone (a_stone: like last_stone) is
+	set_last_stone (a_stone: like last_stone)
 			-- Set `last_stone' with `a_stone'.
 		local
 			l_notifier: SERVICE_CONSUMER [FILE_NOTIFIER_S]
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 				(last_monitored_stone = Void or else last_monitored_stone = ({FILED_STONE}) #? a_stone)
 		end
 
-	set_is_last_stone_processed (b: BOOLEAN) is
+	set_is_last_stone_processed (b: BOOLEAN)
 			-- Set `is_last_stone_processed' with `b'.
 		do
 			is_last_stone_processed := b
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			is_last_stone_processed_set: is_last_stone_processed = b
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

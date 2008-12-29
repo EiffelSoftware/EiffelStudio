@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Menu representing all the recent opened projects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_recent_projects_manager: EB_RECENT_PROJECTS_MANAGER) is
+	make (a_recent_projects_manager: EB_RECENT_PROJECTS_MANAGER)
 			-- Initialization: build the widget and the menu.
 		do
 				-- Setup the manager.
@@ -48,13 +48,13 @@ feature {NONE} -- Initialization
 
 feature {EB_RECENT_PROJECTS_MANAGER} -- Observer pattern
 
-	on_update is
+	on_update
 			-- the list of recent projects has changed.
 		do
 			update
 		end
 
-	update is
+	update
 			-- (Re)build the menu.
 		local
 			recent_projects: ARRAYED_LIST [STRING]
@@ -80,7 +80,7 @@ feature {EB_RECENT_PROJECTS_MANAGER} -- Observer pattern
 
 feature {NONE} -- Recycle
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the object is no more used.
 		do
 			recent_projects_manager.remove_observer (Current)
@@ -94,13 +94,13 @@ feature {NONE} -- Implementation
 
 feature -- Obsolete
 
-	clean_up is
+	clean_up
 		obsolete "use `recycle' instead"
 		do
 			recycle
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

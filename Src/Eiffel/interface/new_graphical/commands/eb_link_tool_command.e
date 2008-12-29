@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to change links layout."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize default values.
 		do
 			create accelerator.make_with_key_combination (
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Perform on the whole diagram.
 		local
 			l_all_saved_edges: like all_saved_edges
@@ -71,7 +71,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_with_link_stone (a_stone: LINK_STONE) is
+	execute_with_link_stone (a_stone: LINK_STONE)
 			-- Change `a_stone' layout as the user wants.
 		local
 			lf: EIFFEL_LINK_FIGURE
@@ -107,7 +107,7 @@ feature -- Basic operations
 			end
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON
 			-- Create a new sd toolbar button for this command.
 		do
 			create Result.make (Current)
@@ -119,7 +119,7 @@ feature -- Basic operations
 
 feature {EB_LINK_TOOL_DIALOG} -- Implementation
 
-	on_dialog_closed is
+	on_dialog_closed
 			-- The user made his mind.
 		local
 			lf: EIFFEL_LINK_FIGURE
@@ -187,7 +187,7 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 			link_tool_dialog.destroy
 		end
 
-	project is
+	project
 			-- Call the projector.
 		do
 			tool.projector.project
@@ -195,7 +195,7 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 
 feature -- Access
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			if current_button.is_selected then
@@ -210,25 +210,25 @@ feature {NONE} -- Implementation
 	current_stone: LINK_STONE
 			-- Last dropped stone.
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.diagram_force_right_angles_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.diagram_force_right_angles_icon_buffer
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name of the menu entry
 		do
 			Result := Interface_names.m_diagram_link_tool
 		end
 
-	name: STRING is "Link_tool"
+	name: STRING = "Link_tool"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 	saved_edges: LIST [EG_EDGE]
 			-- Backup of previous link midpoints.
 
-	all_saved_edges: LIST [TUPLE [EIFFEL_LINK_FIGURE, LIST [EG_EDGE]]] is
+	all_saved_edges: LIST [TUPLE [EIFFEL_LINK_FIGURE, LIST [EG_EDGE]]]
 			--
 		local
 			l_edges: LIST [EG_LINK_FIGURE]
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	undo_apply_right_angles (edge_lists: like all_saved_edges) is
+	undo_apply_right_angles (edge_lists: like all_saved_edges)
 			--
 		local
 			l_item: TUPLE [figure: EIFFEL_LINK_FIGURE; edges: LIST [EG_EDGE]]
@@ -287,7 +287,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Implementation
 	current_button: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON;
 			-- Current toggle button.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

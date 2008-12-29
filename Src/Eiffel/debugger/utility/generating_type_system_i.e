@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that helps to manage ANY.generating_type feature ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,21 +19,21 @@ inherit
 
 feature -- Access
 
-	generating_type_feature_name: STRING is "generating_type"
+	generating_type_feature_name: STRING = "generating_type"
 
-	generating_type_feature_i (c: CLASS_C): FEATURE_I is
+	generating_type_feature_i (c: CLASS_C): FEATURE_I
 			-- Generating_type feature related to class `c'.
 		do
 			Result := c.feature_of_rout_id (generating_type_feature.rout_id_set.first)
 		end
 		
-	generating_type_class: CLASS_C is
+	generating_type_class: CLASS_C
 			-- Class that provides the `generating_type' interface
 		do
 			Result := Eiffel_system.system.any_class.compiled_class
 		end
 
-	generating_type_feature: FEATURE_I is
+	generating_type_feature: FEATURE_I
 			-- feature_i that corresponds to {ANY}.generating_type.
 		do
 			if
@@ -45,13 +45,13 @@ feature -- Access
 			Result := internal_generating_type_feature.item
 		end
 
-	internal_generating_type_feature: CELL [FEATURE_I] is
+	internal_generating_type_feature: CELL [FEATURE_I]
 			-- Last computed `generating_type_feature'.
 		once
 			create Result.put (Void)
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

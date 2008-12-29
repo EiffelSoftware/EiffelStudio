@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when a class name is not found in the surrounding universe."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,12 +19,12 @@ feature -- Properties
 	class_name: STRING
 			-- Class name not found
 
-	code: STRING is "VTCT"
+	code: STRING = "VTCT"
 			-- Error code
 
 feature -- Status report
 
-	less_than (other: VTCT): BOOLEAN is
+	less_than (other: VTCT): BOOLEAN
 			-- Is `Current' less than `other'?
 		require
 			other_not_void: other /= Void
@@ -34,7 +34,7 @@ feature -- Status report
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -47,7 +47,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		do
 			Precursor (a_text_formatter)
@@ -61,7 +61,7 @@ feature {NONE} -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_class_name (s: STRING) is
+	set_class_name (s: STRING)
 			-- Assign `s' to `class_name'.
 		require
 			s_not_void: s /= Void
@@ -71,7 +71,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			class_name_set: class_name /= Void
 		end
 
-	set_dotnet_class_name (s: STRING) is
+	set_dotnet_class_name (s: STRING)
 			-- Assign `s' to `class_name'.
 		require
 			s_not_void: s /= Void
@@ -81,7 +81,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			class_name_set: class_name = s
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to select docking layout names for saving.."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_dev_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Creation method.
 		do
 			default_create
@@ -33,7 +33,7 @@ feature {NONE} -- Initlization
 			key_press_actions.extend (agent on_key_press)
 		end
 
-	init_widgets is
+	init_widgets
 			-- Initilalize widgets.
 		local
 			l_h_box: EV_HORIZONTAL_BOX
@@ -110,7 +110,7 @@ feature {NONE} -- Initlization
 			show_actions.extend_kamikaze (agent text_for_name.set_focus)
 		end
 
-	init_layout_items is
+	init_layout_items
 			-- Initlialize layout list items.
 		local
 			l_item: EV_LIST_ITEM
@@ -130,7 +130,7 @@ feature {NONE} -- Initlization
 
 feature {NONE} -- Implementation functions
 
-	on_key_press (a_key: EV_KEY) is
+	on_key_press (a_key: EV_KEY)
 			-- Handle key press actions.
 		do
 			inspect
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_text_change is
+	on_text_change
 			-- On `text_for_name' texts changed
 		local
 			l_list: EV_LIST_ITEM
@@ -176,13 +176,13 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_cancel is
+	on_cancel
 			-- On `cancel' button pressed.
 		do
 			destroy
 		end
 
-	on_ok is
+	on_ok
 			-- On `ok' button pressed.
 		local
 			l_str: STRING_GENERAL
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_overwirte_and_destory (a_name: STRING_GENERAL) is
+	on_overwirte_and_destory (a_name: STRING_GENERAL)
 			-- Handle overwrite and destory actions.
 		local
 			l_result: BOOLEAN
@@ -214,14 +214,14 @@ feature {NONE} -- Implementation functions
 			destroy
 		end
 
-	on_list_select is
+	on_list_select
 			-- Handle list select actions.
 		do
 			text_for_name.set_text (list_for_existing_layouts.selected_item.text)
 			text_for_name.set_caret_position (list_for_existing_layouts.selected_item.text.count + 1)
 		end
 
-	on_list_key_press (a_key: EV_KEY) is
+	on_list_key_press (a_key: EV_KEY)
 			-- Hanlde list key press actions
 		do
 			inspect
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_list_double_press is
+	on_list_double_press
 			--
 		do
 			if list_for_existing_layouts.selected_item /= Void then
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_text_key_press (a_key: EV_KEY) is
+	on_text_key_press (a_key: EV_KEY)
 			-- Handle key press actions.
 		do
 			inspect
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	show_last_error is
+	show_last_error
 			-- Show last exception error
 		local
 			l_information: ES_PROMPT_PROVIDER
@@ -299,10 +299,10 @@ feature {NONE} -- Implementation
 	ok, cancel: EV_BUTTON
 			-- Ok, cancel buttons.
 
-	list_minimum_height: INTEGER is 200;
+	list_minimum_height: INTEGER = 200;
 			-- Minimum height for `list_for_existing_layouts'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

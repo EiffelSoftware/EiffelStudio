@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of a routine beeing exported."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 	
 feature -- Initialization
 
-	make (ec: CLASS_C; ecr: E_FEATURE; ef: E_FEATURE)  is
+	make (ec: CLASS_C; ecr: E_FEATURE; ef: E_FEATURE)
 			-- Creation of an exported feature
 			--| By default there is no alias name and no index
 		do
@@ -48,7 +48,7 @@ feature -- Attributes
 
 feature -- Access.
 
-	feature_id: INTEGER is
+	feature_id: INTEGER
 			-- Routine id of exported feature.
 		do
 			Result := routine.feature_id
@@ -56,7 +56,7 @@ feature -- Access.
 			valid_result: Result > 0
 		end
 
-	exported_name: STRING is
+	exported_name: STRING
 			-- The name under which this feature is exported.
 		do
 			if has_alias then
@@ -68,7 +68,7 @@ feature -- Access.
 			end
 		end
 
-	synchronize is
+	synchronize
 			-- Update `Current' after a compilation.
 			-- Try to update the class and features.
 		do
@@ -82,19 +82,19 @@ feature -- Access.
 
 feature -- Status
 
-	has_index: BOOLEAN is
+	has_index: BOOLEAN
 			-- Does `Current' specify an `index'?
 		do
 			Result := index > 0
 		end
 
-	has_alias: BOOLEAN is
+	has_alias: BOOLEAN
 			-- Does Current specify an `alias_name'?
 		do
 			Result := alias_name /= Void and then not alias_name.is_empty
 		end
 
-	has_call_type: BOOLEAN is
+	has_call_type: BOOLEAN
 			-- Does Current specify a `call_type'?
 		do
 			Result := call_type /= Void and then not call_type.is_empty
@@ -102,7 +102,7 @@ feature -- Status
 
 feature -- Settings
 
-	set_compiled_class (c: CLASS_C) is
+	set_compiled_class (c: CLASS_C)
 			-- Set `c' to `compiled_class'.
 		do
 			compiled_class := c
@@ -110,7 +110,7 @@ feature -- Settings
 			compiled_class_set: compiled_class = c
 		end
 
-	set_creation_routine (c: E_FEATURE) is
+	set_creation_routine (c: E_FEATURE)
 			-- Set `c' to `creation_routine'.
 		do
 			creation_routine := c
@@ -118,7 +118,7 @@ feature -- Settings
 			creation_routine_set: creation_routine = c
 		end
 
-	set_routine (r: E_FEATURE) is
+	set_routine (r: E_FEATURE)
 			-- Set `c' to `routine'.
 		do
 			routine := r
@@ -126,7 +126,7 @@ feature -- Settings
 			routine_set: routine = r
 		end
 
-	set_index (v: INTEGER) is
+	set_index (v: INTEGER)
 			-- Set `v' to `index'
 			--| Windows specific for DLLs.
 			--| Has no effect on Unix systems.
@@ -136,14 +136,14 @@ feature -- Settings
 			index_set: index = v
 		end
 
-	remove_index is
+	remove_index
 			-- Remove the index.
 			--| In fact, set it to 0 so that it is ignored when the .c file is generated.
 		do
 			index := 0
 		end
 
-	set_alias_name (name: STRING) is
+	set_alias_name (name: STRING)
 			-- Set `name' to `alias_name'.
 		require
 			name_not_void: name /= Void
@@ -154,13 +154,13 @@ feature -- Settings
 			alias_name_set: alias_name /= Void and then alias_name.is_equal (name)
 		end
 
-	remove_alias_name is
+	remove_alias_name
 			-- Discard the current alias name if any.
 		do
 			alias_name := Void
 		end
 
-	set_call_type (name: STRING) is
+	set_call_type (name: STRING)
 			-- Set `name' to `call_type'.
 		require
 			name_not_void: name /= Void
@@ -171,13 +171,13 @@ feature -- Settings
 			call_type_set: call_type /= Void and then call_type.is_equal (name)
 		end
 
-	remove_call_type is
+	remove_call_type
 			-- Discard the current value of `call_type' if any.
 		do
 			call_type := Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

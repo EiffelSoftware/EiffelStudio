@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Component to let the user create routines."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Create as function/procedure wizard.
 		local
 			vb, fake_vb: EV_VERTICAL_BOX
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			add_label ("end", 2)
 		end
 
-	routine_is_part: EV_HORIZONTAL_BOX is
+	routine_is_part: EV_HORIZONTAL_BOX
 			-- Procedure: "[!!]): is"
 			-- Function: "[!!]): <typefield> is"
 		require
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			argument_button_added: Result.has (add_argument_button)
 		end
 
-	build_body_type_box is
+	build_body_type_box
 			-- Create radio group with "do", "once" and "deferred".
 		local
 			tab: EV_CELL
@@ -127,13 +127,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 			-- Is current selected body "deferred"?
 		do
 			Result := body_type_label.text.is_equal ("deferred")
 		end
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN
 			-- Is current selected body "external"?
 		do
 			Result := body_type_label.text.is_equal ("external")
@@ -141,13 +141,13 @@ feature -- Status report
 
 feature -- Access
 
-	add_argument is
+	add_argument
 			-- Add an argument to `argument_list'.
 		do
 			on_new_argument
 		end
 
-	i_th_argument (i: INTEGER): EB_ARGUMENT_SELECTOR is
+	i_th_argument (i: INTEGER): EB_ARGUMENT_SELECTOR
 		do
 			Result ?= argument_list.i_th (i)
 		end
@@ -156,7 +156,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_name_number (a_number: INTEGER) is
+	set_name_number (a_number: INTEGER)
 			-- Assign `a_number' to `name_number'.
 		do
 			name_number := a_number
@@ -167,7 +167,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	arguments_code: STRING is
+	arguments_code: STRING
 			-- Arguments as text. Empty if no arguments.
 		local
 			asc: EB_ARGUMENT_SELECTOR
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	routine_code: STRING is
+	routine_code: STRING
 			-- Code of routine without signature.
 		do
 			Result := require_code
@@ -210,19 +210,19 @@ feature {NONE} -- Implementation
 			Result.append ("%T%Tend%N%N")
 		end
 
-	require_code: STRING is
+	require_code: STRING
 			-- Code for precondition.
 		do
 			Result := code_for_field (require_field, "require")
 		end
 
-	local_code: STRING is
+	local_code: STRING
 			-- Code for local symbol declaration.
 		do
 			Result := code_for_field (local_field, "local")
 		end
 
-	body_code: STRING is
+	body_code: STRING
 			-- Code for routine body.
 		do
 			if body_field.text.is_empty then
@@ -236,13 +236,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	ensure_code: STRING is
+	ensure_code: STRING
 			-- Code for postcondition.
 		do
 			Result := code_for_field (ensure_field, "ensure")
 		end
 
-	code_for_field (f: EV_TEXT_FIELD; kw: STRING): STRING is
+	code_for_field (f: EV_TEXT_FIELD; kw: STRING): STRING
 			-- Code for routine part `f' with keyword `kw'.
 		local
 			l_text: STRING
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_new_argument is
+	on_new_argument
 			-- Add argument selector to `argument_list'.
 		local
 			asc: EB_ARGUMENT_SELECTOR
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			asc.name_field.set_focus
 		end
 
-	on_argument_removed (arg: EB_ARGUMENT_SELECTOR) is
+	on_argument_removed (arg: EB_ARGUMENT_SELECTOR)
 			-- Remove `arg' from `argument_list'.
 		require
 			argument_exists: arg /= Void
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 			argument_removed: not argument_list.has (arg)
 		end
 
-	on_body_change (new_body: STRING) is
+	on_body_change (new_body: STRING)
 			-- User selected different routine body type.
 		do
 			if new_body.is_equal ("deferred") then
@@ -328,7 +328,7 @@ feature {EB_FEATURE_EDITOR} -- Access
 	body_field: EV_TEXT_FIELD
 	ensure_field: EV_TEXT_FIELD;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

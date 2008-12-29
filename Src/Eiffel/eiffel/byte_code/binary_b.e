@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte node for a binary operation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_left: like left; a_right: like right) is
+	make (a_left: like left; a_right: like right)
 			-- Create new BIN_EQ_BL instance with `a_left' and `a_right'.
 		require
 			a_left_not_void: a_left /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	init (a: CALL_ACCESS_B) is
+	init (a: CALL_ACCESS_B)
 			-- Initializes node
 		do
 			access := a
@@ -60,7 +60,7 @@ feature -- Access
 			-- Type of `right' expression as described in
 			-- class text, used for metamorphosis of basic type.
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Type of the infixed feature
 		do
 			Result := context.real_type (access.type)
@@ -68,19 +68,19 @@ feature -- Access
 
 feature -- Settings
 
-	set_left (l: EXPR_B) is
+	set_left (l: EXPR_B)
 			-- Assign `l' to `left'.
 		do
 			left := l
 		end
 
-	set_right (r: EXPR_B) is
+	set_right (r: EXPR_B)
 			-- Assign `r' to `right'.
 		do
 			right := r
 		end
 
-	set_attachment (a: like attachment) is
+	set_attachment (a: like attachment)
 			-- Set `attachment' to `a'.
 		do
 			attachment := a
@@ -90,7 +90,7 @@ feature -- Settings
 
 feature -- Status report
 
-	is_simple_expr: BOOLEAN is
+	is_simple_expr: BOOLEAN
 			-- Is the current expression a simple one ?
 			-- Definition: an expression <E> is simple if the assignment
 			-- target := <E> is generated as such in C when "target" is a
@@ -99,46 +99,46 @@ feature -- Status report
 			Result := left.is_simple_expr and right.is_simple_expr
 		end
 
-	is_commutative: BOOLEAN is
+	is_commutative: BOOLEAN
 			-- Is the operation commutative ?
 		do
 		end
 
-	is_simple: BOOLEAN is
+	is_simple: BOOLEAN
 			-- Is the operation a simple one (C's point of view).
 			-- Definition: An operation X is simple for C if it can be
 			-- combined in affectation under the shortcut X=.
 		do
 		end
 
-	is_additive: BOOLEAN is
+	is_additive: BOOLEAN
 			-- Is the operation additive (i.e. + or -) ?
 		do
 		end
 
-	is_built_in: BOOLEAN is
+	is_built_in: BOOLEAN
 			-- Is the current binary operator a built-in one ?
 		deferred
 		end
 
-	has_gcable_variable: BOOLEAN is
+	has_gcable_variable: BOOLEAN
 			-- Is the expression using a GCable variable ?
 		do
 			Result := left.has_gcable_variable or right.has_gcable_variable
 		end
 
-	has_call: BOOLEAN is
+	has_call: BOOLEAN
 			-- Is the expression using a call ?
 		do
 			Result := left.has_call or right.has_call
 		end
 
-	allocates_memory: BOOLEAN is
+	allocates_memory: BOOLEAN
 		do
 			Result := left.allocates_memory or right.allocates_memory
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' used in the expression ?
 		do
 			Result := left.used (r) or right.used (r)
@@ -146,7 +146,7 @@ feature -- Status report
 
 feature -- Code generation
 
-	nested_b: NESTED_B is
+	nested_b: NESTED_B
 		local
 			access_expr: ACCESS_EXPR_B
 			p: PARAMETER_B
@@ -182,7 +182,7 @@ feature -- Code generation
 			access.set_parameters (param)
 		end
 
-	enlarged: EXPR_B is
+	enlarged: EXPR_B
 			-- Enlarge the left and right handsides
 		do
 			if not is_built_in then
@@ -193,7 +193,7 @@ feature -- Code generation
 			end
 		end
 
-	built_in_enlarged: EXPR_B is
+	built_in_enlarged: EXPR_B
 			-- Binary op enlarged node
 		do
 			left := left.enlarged
@@ -204,7 +204,7 @@ feature -- Code generation
 
 feature -- C code generation
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Propagate a register in expression.
 		do
 			if r = No_register or not used (r) then
@@ -225,21 +225,21 @@ feature -- C code generation
 			end
 		end
 
-	free_register is
+	free_register
 			-- Free registers used by the expression
 		do
 			left.free_register
 			right.free_register
 		end
 
-	analyze is
+	analyze
 			-- Analyze expression
 		do
 			left.analyze
 			right.analyze
 		end
 
-	unanalyze is
+	unanalyze
 			-- Undo the previous analysis
 		local
 			void_register: REGISTER
@@ -249,24 +249,24 @@ feature -- C code generation
 			set_register (void_register)
 		end
 
-	generate is
+	generate
 			-- Generate expression
 		do
 			left.generate
 			right.generate
 		end
 
-	generate_plus_plus is
+	generate_plus_plus
 			-- Generate things like ++ or --
 		do
 		end; -- generate_plus_plus
 
-	generate_simple is
+	generate_simple
 			-- Generate operator followed by assignment
 		do
 		end; -- generate_simple
 
-	print_register is
+	print_register
 			-- Print expression value
 		local
 			buf: GENERATION_BUFFER
@@ -280,7 +280,7 @@ feature -- C code generation
 			buf.put_character (')')
 		end
 
-	generate_operator (a_buffer: GENERATION_BUFFER) is
+	generate_operator (a_buffer: GENERATION_BUFFER)
 			-- Generate operator in C
 		require
 			a_buffer_not_void: a_buffer /= Void
@@ -289,21 +289,21 @@ feature -- C code generation
 
 feature -- Array optimization
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := left.calls_special_features (array_desc) or else
 				right.calls_special_features (array_desc) or else
 				access.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 				-- Use the nested form of the byte code (the type resolution
 				-- does not work otherwise)
 			Result := nested_b.is_unsafe
 		end
 
-	optimized_byte_node: EXPR_B is
+	optimized_byte_node: EXPR_B
 		do
 			Result := Current
 			left := left.optimized_byte_node
@@ -313,12 +313,12 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := 1 + right.size + left.size
 		end
 
-	pre_inlined_code: EXPR_B is
+	pre_inlined_code: EXPR_B
 		do
 			if not is_built_in then
 				Result := nested_b.pre_inlined_code
@@ -329,7 +329,7 @@ feature -- Inlining
 			end
 		end
 
-	inlined_byte_code: EXPR_B is
+	inlined_byte_code: EXPR_B
 		do
 			if not is_built_in then
 				Result := nested_b.inlined_byte_code
@@ -340,7 +340,7 @@ feature -- Inlining
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

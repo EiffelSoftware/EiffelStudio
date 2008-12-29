@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor to check accessors for a given feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize Current.
 		do
 			create {LINKED_LIST [TUPLE [AST_EIFFEL, CLASS_C, BOOLEAN]]} accessors.make
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_flag (a_flag: like flag) is
+	set_flag (a_flag: like flag)
 			-- Set `flag' with `a_flag'.
 		do
 			flag := a_flag
@@ -68,7 +68,7 @@ feature -- Setting
 
 feature -- Process
 
-	find_accessors (a_callee: QL_FEATURE; a_caller: QL_FEATURE) is
+	find_accessors (a_callee: QL_FEATURE; a_caller: QL_FEATURE)
 			-- Find `a_callee' from `a_caller' and store results in `accessors'.
 		require
 			a_callee_attached: a_callee /= Void
@@ -98,7 +98,7 @@ feature -- Process
 			end
 		end
 
-	setup_ancestor_class_id_table (a_class_c: CLASS_C) is
+	setup_ancestor_class_id_table (a_class_c: CLASS_C)
 			-- Setup `ancestor_class_id_set' with ancestors of `a_class_c'.
 		require
 			a_class_c_attached: a_class_c /= Void
@@ -135,7 +135,7 @@ feature{NONE} -- Implementation
 	e_feature: E_FEATURE
 			-- Eiffel feature whose accessors are to be found
 
-	is_accessor (a_feature: E_FEATURE; a_class_id: INTEGER; a_feature_name: STRING): BOOLEAN is
+	is_accessor (a_feature: E_FEATURE; a_class_id: INTEGER; a_feature_name: STRING): BOOLEAN
 			-- Is feature named `a_feature_name' whose associated class id is `a_class_id' a accessor of `a_feature'?
 		require
 			a_feature_attached: a_feature /= Void
@@ -162,7 +162,7 @@ feature{NONE} -- Implementation
 
 feature -- Accessor checking
 
-	check_accessor (a_feature: like e_feature; l_as: ACCESS_FEAT_AS) is
+	check_accessor (a_feature: like e_feature; l_as: ACCESS_FEAT_AS)
 			-- Check if `l_as' is an accessor of `a_feature'.
 			-- If it is, store `l_as' into `accessors'.
 		require
@@ -174,7 +174,7 @@ feature -- Accessor checking
 			end
 		end
 
-	check_accessor_for_routine_creation (l_as: ROUTINE_CREATION_AS) is
+	check_accessor_for_routine_creation (l_as: ROUTINE_CREATION_AS)
 			-- Check if `l_as' accesses `e_feature'.
 			-- If it is, store `l_as' into `accessors'.
 		do
@@ -186,7 +186,7 @@ feature -- Accessor checking
 			end
 		end
 
-	check_accessor_for_operators (a_feature: like e_feature; a_class_id: INTEGER; a_feature_name: STRING; a_ast: AST_EIFFEL) is
+	check_accessor_for_operators (a_feature: like e_feature; a_class_id: INTEGER; a_feature_name: STRING; a_ast: AST_EIFFEL)
 			-- Process binary or unary operators associated with class id `a_class_id', name `a_feature_name'.
 			-- `a_ast' is the AST node for that operator.
 		require
@@ -201,7 +201,7 @@ feature -- Accessor checking
 			end
 		end
 
-	check_accessor_for_assertions (a_source_domain: QL_DOMAIN; a_immediate: BOOLEAN) is
+	check_accessor_for_assertions (a_source_domain: QL_DOMAIN; a_immediate: BOOLEAN)
 			-- Check accessors in assertions from `a_source_domain'.
 			-- `a_immediate' indicates if assertions should be immediate or not.
 		require
@@ -222,13 +222,13 @@ feature -- Accessor checking
 
 feature{NONE} -- Implementation/Process
 
-	process_access_feat_as (l_as: ACCESS_FEAT_AS) is
+	process_access_feat_as (l_as: ACCESS_FEAT_AS)
 		do
 			check_accessor (e_feature, l_as)
 			Precursor (l_as)
 		end
 
-	process_access_assert_as (l_as: ACCESS_ASSERT_AS) is
+	process_access_assert_as (l_as: ACCESS_ASSERT_AS)
 		local
 			l_feature: like e_feature
 			l_ancestor_feature: like e_feature
@@ -244,7 +244,7 @@ feature{NONE} -- Implementation/Process
 			Precursor (l_as)
 		end
 
-	process_assertion (a_assertion: QL_ASSERTION) is
+	process_assertion (a_assertion: QL_ASSERTION)
 			-- Process `a_assertion'.
 		require
 			a_assertion_attached: a_assertion /= Void
@@ -253,26 +253,26 @@ feature{NONE} -- Implementation/Process
 			a_assertion.ast.process (Current)
 		end
 
-	process_routine_creation_as (l_as: ROUTINE_CREATION_AS) is
+	process_routine_creation_as (l_as: ROUTINE_CREATION_AS)
 		do
 			check_accessor_for_routine_creation (l_as)
 			Precursor (l_as)
 		end
 
-	process_tagged_as (l_as: TAGGED_AS) is
+	process_tagged_as (l_as: TAGGED_AS)
 		do
 			if l_as.expr /= Void then
 				l_as.expr.process (Current)
 			end
 		end
 
-	process_binary_as (l_as: BINARY_AS) is
+	process_binary_as (l_as: BINARY_AS)
 		do
 			check_accessor_for_operators (e_feature, l_as.class_id, l_as.infix_function_name, l_as.operator_ast)
 			Precursor (l_as)
 		end
 
-	process_unary_as (l_as: UNARY_AS) is
+	process_unary_as (l_as: UNARY_AS)
 		local
 			l_feature_name: STRING
 		do
@@ -283,19 +283,19 @@ feature{NONE} -- Implementation/Process
 			Precursor (l_as)
 		end
 
-	process_static_access_as (l_as: STATIC_ACCESS_AS) is
+	process_static_access_as (l_as: STATIC_ACCESS_AS)
 		do
 			check_accessor (e_feature, l_as)
 			Precursor (l_as)
 		end
 
-	process_bracket_as (l_as: BRACKET_AS) is
+	process_bracket_as (l_as: BRACKET_AS)
 		do
 			check_accessor_for_operators (e_feature, l_as.class_id, "[]", l_as)
 			Precursor (l_as)
 		end
 
-	process_like_id_as (l_as: LIKE_ID_AS) is
+	process_like_id_as (l_as: LIKE_ID_AS)
 		local
 			l_ancestor_feature: E_FEATURE
 			l_old_last_class_c: CLASS_C
@@ -320,7 +320,7 @@ feature{NONE} -- Implementation/Process
 			check_accessor_for_operators (l_e_feature, l_e_feature_associated_class_id, l_as.anchor.name, l_as.anchor)
 		end
 
-	process_assign_as (l_as: ASSIGN_AS) is
+	process_assign_as (l_as: ASSIGN_AS)
 		local
 			l_flag_stack: like flag_stack
 		do
@@ -331,7 +331,7 @@ feature{NONE} -- Implementation/Process
 			l_as.source.process (Current)
 		end
 
-	process_creation_as (l_as: CREATION_AS) is
+	process_creation_as (l_as: CREATION_AS)
 		local
 			l_flag_stack: like flag_stack
 		do
@@ -343,7 +343,7 @@ feature{NONE} -- Implementation/Process
 			safe_process (l_as.call)
 		end
 
-	process_interval_as (l_as: INTERVAL_AS) is
+	process_interval_as (l_as: INTERVAL_AS)
 		local
 			l_atom: ATOMIC_AS
 		do
@@ -367,7 +367,7 @@ feature{NONE} -- Implementation
 	flag_stack: LINKED_STACK [like flag]
 			-- Stack of flags
 
-	set_last_class_c (a_class: like last_class_c) is
+	set_last_class_c (a_class: like last_class_c)
 			-- Set `last_class_c' with `a_class'.
 		do
 			last_class_c := a_class
@@ -375,7 +375,7 @@ feature{NONE} -- Implementation
 			last_class_c_set: last_class_c = a_class
 		end
 
-	ancestor_version_with_different_name (a_feature: E_FEATURE; a_class_id: INTEGER): E_FEATURE is
+	ancestor_version_with_different_name (a_feature: E_FEATURE; a_class_id: INTEGER): E_FEATURE
 			-- Ancestor feature (version from class whose id is `a_class_id') of `a_feature' with a different name
 		require
 			a_feature_attached: a_feature /= Void
@@ -408,7 +408,7 @@ invariant
 	accessors_attached: accessors /= Void
 	ancestor_class_id_set_attached: ancestor_class_id_set /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

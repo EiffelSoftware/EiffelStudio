@@ -1,4 +1,4 @@
-indexing
+note
 	description: "VFAV error detected at parsing time."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Creation
 
-	make (f: FEATURE_NAME) is
+	make (f: FEATURE_NAME)
 			-- Create error object.
 		require
 			feature_name_not_void: f /= Void
@@ -39,12 +39,12 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	code: STRING is "VFAV"
+	code: STRING = "VFAV"
 			-- Error code
 
 feature -- Output
 
-	trace (a_text_formatter: TEXT_FORMATTER) is
+	trace (a_text_formatter: TEXT_FORMATTER)
 			-- Debug purpose
 		do
 			initialize_output
@@ -74,7 +74,7 @@ feature -- Output
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

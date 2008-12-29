@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server file controler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			create cache.make
 			create files.make (0, Chunk)
@@ -36,7 +36,7 @@ feature {NONE} -- Status report
 			--| i.e. only in final mode were we don't need to preserve files
 			--| since there is no incrementality here
 
-	Chunk: INTEGER is 50
+	Chunk: INTEGER = 50
 			-- Array chunk
 
 feature -- Status report
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Update
 
-	set_remove_right_away (v: BOOLEAN) is
+	set_remove_right_away (v: BOOLEAN)
 			-- Set `v' to `remove_right_away'
 		do
 			remove_right_away := v
@@ -62,7 +62,7 @@ feature -- Update
 
 feature -- Ids creation
 
-	compute_new_id is
+	compute_new_id
 			-- Compute a new server file id and assign it to `last_computed_id'.
 		local
 			local_files: like removed_files
@@ -92,7 +92,7 @@ end
 
 feature -- File operations
 
-	remove_file (f: SERVER_FILE) is
+	remove_file (f: SERVER_FILE)
 			-- Remove file from Current
 		require
 			good_argument: f /= Void
@@ -112,7 +112,7 @@ feature -- File operations
 			end
 		end
 
-	remove_useless_files is
+	remove_useless_files
 			-- Remove all empty files from disk
 		do
 				-- Delete files from disk which are already not used
@@ -127,7 +127,7 @@ feature -- File operations
 				end)
 		end
 
-	file_of_id (i: INTEGER): SERVER_FILE is
+	file_of_id (i: INTEGER): SERVER_FILE
 			-- File of id `i'.
 		require
 			i_positive: i > 0
@@ -140,7 +140,7 @@ feature -- File operations
 			end
 		end
 
-	open_file (f: SERVER_FILE) is
+	open_file (f: SERVER_FILE)
 			-- Open file `f'.
 		require
 			good_argument: f /= Void
@@ -159,7 +159,7 @@ feature -- File operations
 			is_open: f.is_open
 		end
 
-	close_file (f: SERVER_FILE) is
+	close_file (f: SERVER_FILE)
 			-- Close file `f'
 		require
 			f_not_void: f /= Void
@@ -173,7 +173,7 @@ feature -- File operations
 			not_in_cache: not cache.has_id (f.file_id)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Empty the cache
 		do
 			from
@@ -189,7 +189,7 @@ feature -- File operations
 
 feature -- Status report
 
-	is_readable: BOOLEAN is
+	is_readable: BOOLEAN
 			-- Are the server files readable?
 		do
 			Result := files.for_all (agent (a_file: SERVER_FILE): BOOLEAN
@@ -199,7 +199,7 @@ feature -- Status report
 				end)
 		end
 
-	is_writable: BOOLEAN is
+	is_writable: BOOLEAN
 			-- Are the server files readable and writable?
 		do
 			Result := files.for_all (agent (a_file: SERVER_FILE): BOOLEAN
@@ -216,7 +216,7 @@ feature -- Status report
 				end)
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Do the server files exist?
 		do
 			Result := files.for_all (agent (a_file: SERVER_FILE): BOOLEAN
@@ -227,7 +227,7 @@ feature -- Status report
 
 feature -- Initialization
 
-	init is
+	init
 			-- Update the path names of the various server files.
 		do
 			files.do_all (agent (a_file: SERVER_FILE)
@@ -240,7 +240,7 @@ feature -- Initialization
 
 feature -- Merging
 
-	append (other: like Current) is
+	append (other: like Current)
 			-- Append `other' to `Current'.
 			-- Used when merging precompilations.
 		require
@@ -259,7 +259,7 @@ feature -- SERVER_FILE sizes
 
 	block_size: INTEGER
 
-	set_block_size (s: INTEGER) is
+	set_block_size (s: INTEGER)
 		do
 			block_size := s
 		end
@@ -269,7 +269,7 @@ invariant
 	removed_files_not_void: removed_files /= Void
 	file_counter_not_void: file_counter /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A dialog use to recieve user inputs in order to populate a specified code template.
 	]"
@@ -417,7 +417,7 @@ feature {NONE} -- Action handlers
 			update_code_result
 		end
 
-	on_text_focused (a_sender: !EV_TEXT_FIELD; a_id: !STRING) is
+	on_text_focused (a_sender: !EV_TEXT_FIELD; a_id: !STRING)
 			-- Called when the user focuses to a text field
 		require
 			not_a_sender_is_destroyed: not a_sender.is_destroyed
@@ -472,7 +472,7 @@ feature {NONE} -- Internal implementation cache
 			-- Cached version of `code_symbol_table'
 			-- Note: Do not use directly!
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

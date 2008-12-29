@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 					Describes a breakpoint's key. It is by its `body_index' 
 				  	and its `breakable_line_number' (line number in stop points view).
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (a_location: BREAKPOINT_LOCATION) is
+	make (a_location: BREAKPOINT_LOCATION)
 			-- Create a breakpoint at location `a_location'
 		require
 			valid_location: a_location /= Void and then not a_location.is_corrupted
@@ -32,7 +32,7 @@ feature {NONE} -- Creation
 			location := a_location
 		end
 
-	make_hidden (a_location: BREAKPOINT_LOCATION) is
+	make_hidden (a_location: BREAKPOINT_LOCATION)
 			-- Create a hidden breakpoint at location `a_location'
 		do
 			is_hidden := True
@@ -41,7 +41,7 @@ feature {NONE} -- Creation
 
 feature -- Comparison
 
-	same_breakpoint_key (other: like Current): BOOLEAN is
+	same_breakpoint_key (other: like Current): BOOLEAN
 			-- Is `other' equal to `Current'?
 			-- `other' equals to `Current' if they represent
 			-- the same physical breakpoint, in other words they
@@ -66,7 +66,7 @@ feature -- Properties
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code for breakpoint.
 		do
 			Result := Precursor
@@ -102,7 +102,7 @@ feature -- Access
 invariant
 	location_not_void: location /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

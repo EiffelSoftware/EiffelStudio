@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Make it easier to read shortcut preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	initialize_shortcuts_prefs (a_manager: EB_PREFERENCE_MANAGER) is
+	initialize_shortcuts_prefs (a_manager: EB_PREFERENCE_MANAGER)
 			-- Initialize shortcuts.  Create with default values stored in `default_shortcut_actions'.
 		require
 			a_manager_not_void: a_manager /= Void
@@ -52,21 +52,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	shortcuts: HASH_TABLE [SHORTCUT_PREFERENCE, STRING] is
+	shortcuts: HASH_TABLE [SHORTCUT_PREFERENCE, STRING]
 			-- Shortcuts
 		deferred
 		ensure
 			shortcuts_not_void: Result /= Void
 		end
 
-	default_shortcut_actions: ARRAYED_LIST [TUPLE [actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]; group: MANAGED_SHORTCUT_GROUP]] is
+	default_shortcut_actions: ARRAYED_LIST [TUPLE [actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]; group: MANAGED_SHORTCUT_GROUP]]
 			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString) & shortcut group
 		deferred
 		ensure
 			default_shortcut_actions_not_void: Result /= Void
 		end
 
-	update is
+	update
 			-- Action called when updating preferences.
 		do
 			shortcut_manager.update_commands
@@ -88,7 +88,7 @@ feature -- Shortcut group
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

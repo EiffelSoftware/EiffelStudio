@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Special object responsible for generating IL system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (deg_output: DEGREE_OUTPUT) is
+	make (deg_output: DEGREE_OUTPUT)
 			-- Generate an IL program.
 		require
 			deg_output_not_void: deg_output /= Void
@@ -19,17 +19,17 @@ feature {NONE} -- Initialization
 
 feature -- Generation
 
-	generate is
+	generate
 			-- Generate an IL assembly.
 		deferred
 		end
 
-	deploy is
+	deploy
 			-- Copy any necessary files to EIFGEN/W_code or EIFGEN/F_code.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

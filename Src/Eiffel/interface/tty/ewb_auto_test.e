@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {EWB_AUTO_TEST}."
 	author: ""
 	date: "$Date$"
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_arguments (a_arguments: LINKED_LIST [STRING]) is
+	make_with_arguments (a_arguments: LINKED_LIST [STRING])
 			-- Initialize `auto_test_arguments' with `a_arguments'.
 		require
 			a_arguments_attached: a_arguments /= Void
@@ -25,31 +25,31 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	name: STRING is
+	name: STRING
 		do
 			Result := "AutoTest"
 		end
 
-	help_message: STRING_GENERAL is
+	help_message: STRING_GENERAL
 		do
 			Result := "AutoTest"
 		end
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 		do
 			Result := 'e'
 		end
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Action performed when invoked from the
 			-- command line.
 		do
 			io.put_string ("AutoTest is only available in graphical version of EiffelStudio.%N%N")
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Warning for obsolete features."
@@ -22,12 +22,12 @@ create
 
 feature -- Properties
 
-	code: STRING is
+	code: STRING
 		do
 			Result := "Obsolete Call"
 		end;
 
-	help_file_name: STRING is
+	help_file_name: STRING
 		do
 			Result := "OBS_CALL"
 		end;
@@ -37,7 +37,7 @@ feature -- Properties
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := classes_defined and then
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		local
 			m: STRING
 		do
@@ -79,7 +79,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
 			if {l_class: !like associated_class} associated_class and then {l_feature: !like associated_feature} associated_feature and then {l_formatter: !TEXT_FORMATTER} a_text_formatter then
@@ -91,7 +91,7 @@ feature -- Output
 
 feature {NONE} -- Output
 
-	print_single_line_error_message_extended (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message_extended (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		local
 			l_message: STRING_8
@@ -112,7 +112,7 @@ feature {NONE} -- Output
 
 feature -- Setting
 
-	set_obsolete_feature (f: FEATURE_I) is
+	set_obsolete_feature (f: FEATURE_I)
 			-- Assign `f' to `obsolete_feature'
 		require
 			valid_f: f /= Void
@@ -120,7 +120,7 @@ feature -- Setting
 			obsolete_feature := f.api_feature (f.written_in)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

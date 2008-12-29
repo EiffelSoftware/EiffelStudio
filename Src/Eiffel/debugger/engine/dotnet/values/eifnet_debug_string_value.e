@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dotnet debug value associated with String value"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value) is
+	make (a_referenced_value: like icd_referenced_value; a_prepared_value: like icd_value)
 			-- 	Set `value' to `v'.
 		require
 			a_prepared_value_not_void: a_prepared_value /= Void
@@ -65,20 +65,20 @@ feature {NONE} -- Initialization
 
 feature -- get
 
-	get_truncated_string_value (a_size: INTEGER) is
+	get_truncated_string_value (a_size: INTEGER)
 			-- Get the `a_size' first character of the full string value
 			-- store this truncated string into `string_value'
 		do
 			string_value := icd_value_info.value_to_truncated_string (a_size)
 		end
 
-	get_icd_string_value is
+	get_icd_string_value
 			-- Get `icd_string_value'
 		do
 			icd_string_value := icd_value_info.interface_debug_string_value
 		end
 
-	release_icd_string_value is
+	release_icd_string_value
 			-- Release `icd_string_value'
 		do
 			icd_string_value.clean_on_dispose
@@ -99,7 +99,7 @@ feature -- Access
 			Result := length.as_integer_32
 		end
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 			-- Find corresponding CLASS_C to type represented by `value'.
 		once
 			Result := debugger_manager.compiler_data.system_string_class_c
@@ -107,7 +107,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		do
 			Result := Debugger_manager.Dump_value_factory.new_string_for_dotnet_value (Current)
@@ -115,20 +115,20 @@ feature -- Access
 
 feature -- Change
 
-	reset_children is
+	reset_children
 		do
 			attributes := Void
 		end
 
 feature {NONE} -- Output
 
-	output_value: STRING_32 is
+	output_value: STRING_32
 			-- A STRING representation of the value of `Current'.
 		do
 			Result := string_value
 		end
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 			-- Return a string representing `Current'.
 		do
 			create Result.make (40)
@@ -139,7 +139,7 @@ feature {NONE} -- Output
 
 feature -- Output	
 
-	expandable: BOOLEAN is
+	expandable: BOOLEAN
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 		local
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
@@ -151,7 +151,7 @@ feature -- Output
 			end
 		end
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
@@ -164,7 +164,7 @@ feature -- Output
 
 	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
 
-	kind: INTEGER is
+	kind: INTEGER
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		do
@@ -179,7 +179,7 @@ feature -- Output
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

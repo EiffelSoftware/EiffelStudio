@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstraction of a status bar"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Status setting
 
-	display_message (mess: STRING_GENERAL) is
+	display_message (mess: STRING_GENERAL)
 			-- Display a one-line message.
 		require
 			one_line_message: mess /= Void and then (not mess.as_string_8.has ('%N') and not mess.as_string_8.has ('%R'))
@@ -22,7 +22,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	message: STRING_32 is
+	message: STRING_32
 			-- Currently displayed message.
 		deferred
 		ensure
@@ -31,7 +31,7 @@ feature -- Status report
 
 feature -- Access
 
-	widget: EV_STATUS_BAR is
+	widget: EV_STATUS_BAR
 			-- Widget that represents `Current'.
 		deferred
 		ensure
@@ -39,7 +39,7 @@ feature -- Access
 			constant: Result = widget
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

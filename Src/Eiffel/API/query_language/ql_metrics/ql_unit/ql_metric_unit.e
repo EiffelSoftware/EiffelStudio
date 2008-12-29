@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a unit used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Initialize `name' with `a_name'.
 		require
 			a_name_valid: a_name /= Void and then not a_name.is_empty
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_scope_unit: BOOLEAN is
+	is_scope_unit: BOOLEAN
 			-- Is current scope related to a scope directly?
 			-- This is necessary in metrics calculation.
 			-- If a unit is related to a scope, you can specify a criterion to it, such as in the following query:
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_scope (a_scope: like scope) is
+	set_scope (a_scope: like scope)
 			-- Set `scope' with `a_scope'.
 		require
 			a_scope_attached: a_scope /= Void
@@ -71,7 +71,7 @@ feature -- Setting
 			scope_set: scope = a_scope
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

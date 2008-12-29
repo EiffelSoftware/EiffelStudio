@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class INLINED_CURRENT_B
@@ -14,21 +14,21 @@ inherit
 
 feature
 
-	enlarged: INLINED_CURRENT_B is
+	enlarged: INLINED_CURRENT_B
 		do
 			Result := Current
 		end
 
-	is_inlined_current: BOOLEAN is True
+	is_inlined_current: BOOLEAN = True
 			-- Current is the inlined current register.
 
-	is_current: BOOLEAN is
+	is_current: BOOLEAN
 			-- `is_current' is used for dtype optimization
 			-- hence it should return false for inlined code
 		do
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' the "Current" entity ?
 		do
 			Result := r.is_inlined_current
@@ -36,32 +36,32 @@ feature
 
 feature -- Register and code generation
 
-	Current_register: INLINED_CURRENT_B is
+	Current_register: INLINED_CURRENT_B
 		once
 			create Result
 		end
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Do nothing
 		do
 		end;
 
-	analyze is
+	analyze
 			-- Do nothing
 		do
 		end;
 
-	generate is
+	generate
 			-- Do nothing
 		do
 		end;
 
-	free_register is
+	free_register
 			-- Do nothing
 		do
 		end;
 
-	print_register is
+	print_register
 		local
 			inlined_feature: INLINED_FEAT_B
 			context_class_type: CLASS_TYPE
@@ -88,13 +88,13 @@ feature -- Register and code generation
 			Context.set_inlined_current_register (current_reg)
 		end;
 
-	register_name: STRING is
+	register_name: STRING
 		do
 			--Result := Context.current_register.register_name
 			Result := System.remover.inliner.inlined_feature.current_reg.register_name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Info about access to a local variable of a feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_local_b (Current)
@@ -37,16 +37,16 @@ feature
 	read_only: BOOLEAN = False
 			-- Is the access only a read-only one ?
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Local type
 		do
 			Result := context.byte_code.locals.item (position)
 		end
 
-	is_predefined: BOOLEAN is True
+	is_predefined: BOOLEAN = True
 			-- Is Current a predefined entity?
 
-	is_local: BOOLEAN is
+	is_local: BOOLEAN
 			-- Is Current an access to a local variable?
 		do
 			Result := True
@@ -59,7 +59,7 @@ feature
 			Result := True
 		end
 
-	same (other: ACCESS_B): BOOLEAN is
+	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		local
 			local_b: LOCAL_B
@@ -70,13 +70,13 @@ feature
 			end
 		end
 
-	enlarged: LOCAL_B is
+	enlarged: LOCAL_B
 			-- Enlarge current node
 		do
 			create {LOCAL_BL} Result.make (Current)
 		end
 
-	register_name: STRING is
+	register_name: STRING
 			-- The "loc<num>" string
 		do
 			create Result.make (10)
@@ -84,7 +84,7 @@ feature
 			Result.append (position.out)
 		end
 
-	print_register is
+	print_register
 			-- Print local
 		do
 			buffer.put_string (register_name)
@@ -97,25 +97,25 @@ feature -- IL code generation
 
 feature -- Byte code generation
 
-	bit_assign_code: CHARACTER is
+	bit_assign_code: CHARACTER
 			-- Bits assignment code
 		do
 			Result := {BYTE_CONST}.bc_lbit_assign
 		end
 
-	assign_code: CHARACTER is
+	assign_code: CHARACTER
 			-- Simple assignment code
 		do
 			Result := {BYTE_CONST}.bc_lassign
 		end
 
-	expanded_assign_code: CHARACTER is
+	expanded_assign_code: CHARACTER
 			-- Expanded assignment code
 		do
 			Result := {BYTE_CONST}.bc_lexp_assign
 		end
 
-	reverse_code: CHARACTER is
+	reverse_code: CHARACTER
 			-- Reverse assignment code
 		do
 			Result := {BYTE_CONST}.bc_lreverse
@@ -123,19 +123,19 @@ feature -- Byte code generation
 
 feature -- Array optimization
 
-	assigns_to (i: INTEGER): BOOLEAN is
+	assigns_to (i: INTEGER): BOOLEAN
 		do
 			Result := position = - i
 		end
 
-	array_descriptor: INTEGER is
+	array_descriptor: INTEGER
 		do
 			Result := -position
 		end
 
 feature -- Inlining
 
-	pre_inlined_code: INLINED_LOCAL_B is
+	pre_inlined_code: INLINED_LOCAL_B
 		do
 			create Result
 			Result.fill_from (Current)
@@ -143,7 +143,7 @@ feature -- Inlining
 
 feature -- Setting
 
-	set_position (i: INTEGER) is
+	set_position (i: INTEGER)
 			-- Assign `i' to `position'.
 		require
 			valid_index: i > 0
@@ -153,7 +153,7 @@ feature -- Setting
 			position_set: position = i
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

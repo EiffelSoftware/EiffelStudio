@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory to produce criteria with group scope"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create agent_table.make (3)
@@ -53,7 +53,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- New criterion
 
-	new_false_criterion: QL_SIMPLE_QUANTITY_CRITERION is
+	new_false_criterion: QL_SIMPLE_QUANTITY_CRITERION
 			-- New criterion that always returns False.
 		do
 			create Result.make (agent false_agent, False)
@@ -61,7 +61,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_is_compiled_criterion: QL_SIMPLE_QUANTITY_CRITERION is
+	new_is_compiled_criterion: QL_SIMPLE_QUANTITY_CRITERION
 			-- New criterion to test if a target is compiled
 		do
 			create Result.make (agent is_compiled_agent, False)
@@ -69,7 +69,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_true_criterion: QL_SIMPLE_QUANTITY_CRITERION is
+	new_true_criterion: QL_SIMPLE_QUANTITY_CRITERION
 			-- New criterion that always returns True (tautology criterion)
 		do
 			create Result.make (agent true_agent, False)
@@ -77,7 +77,7 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type is
+	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type
 			-- New value criterion
 		require
 			a_evaluate_value_func_attached: a_evaluate_value_func /= Void
@@ -87,15 +87,15 @@ feature{NONE} -- New criterion
 
 feature -- Criterion index
 
-	c_false: INTEGER is 1
-	c_true: INTEGER is 2
-	c_is_compiled: INTEGER is 3
-	c_value_of_metric_is: INTEGER is 4
-	c_is_satisfied_by: INTEGER is 5
+	c_false: INTEGER = 1
+	c_true: INTEGER = 2
+	c_is_compiled: INTEGER = 3
+	c_value_of_metric_is: INTEGER = 4
+	c_is_satisfied_by: INTEGER = 5
 
 feature{NONE} -- Implementation
 
-	false_agent (a_item: QL_QUANTITY): BOOLEAN is
+	false_agent (a_item: QL_QUANTITY): BOOLEAN
 			-- Agent that always returns False.
 			-- Require compiled: False
 		require
@@ -104,7 +104,7 @@ feature{NONE} -- Implementation
 		do
 		end
 
-	true_agent (a_item: QL_QUANTITY): BOOLEAN is
+	true_agent (a_item: QL_QUANTITY): BOOLEAN
 			-- Agent that always returns True (tautology criterion)
 			-- Require compiled: False
 		require
@@ -114,7 +114,7 @@ feature{NONE} -- Implementation
 			Result := True
 		end
 
-	is_compiled_agent (a_item: QL_QUANTITY): BOOLEAN is
+	is_compiled_agent (a_item: QL_QUANTITY): BOOLEAN
 			-- Agent to test if `a_item' is compiled
 			-- Require compiled: False
 		require
@@ -124,7 +124,7 @@ feature{NONE} -- Implementation
 			Result := a_item.is_compiled
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

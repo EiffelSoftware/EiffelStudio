@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an attribute of a class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ feature
 	extension: IL_EXTENSION_I
 			-- Deferred external information
 
-	new_rout_entry: ROUT_ENTRY is
+	new_rout_entry: ROUT_ENTRY
 			-- New routine unit
 		do
 			create Result
@@ -68,7 +68,7 @@ feature
 			end
 		end
 
- 	new_attr_entry: ATTR_ENTRY is
+ 	new_attr_entry: ATTR_ENTRY
  			-- New attribute unit
  		do
  			create Result
@@ -79,7 +79,7 @@ feature
  			end
  		end
 
-	undefinable: BOOLEAN is
+	undefinable: BOOLEAN
 			-- Is an attribute undefinable ?
 		do
 			-- Do nothing
@@ -108,7 +108,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_has_function_origin (b: BOOLEAN) is
+	set_has_function_origin (b: BOOLEAN)
 			-- Assign `b' to `has_function_origin'.
 		do
 			feature_flags := feature_flags.set_bit_with_mask (b, has_function_origin_mask)
@@ -116,7 +116,7 @@ feature -- Status setting
 			has_function_origin_set: has_function_origin = b
 		end
 
-	set_has_body (b: BOOLEAN) is
+	set_has_body (b: BOOLEAN)
 			-- Assign `b' to `has_body_mask'.
 		do
 			feature_flags := feature_flags.set_bit_with_mask (b, has_body_mask)
@@ -126,7 +126,7 @@ feature -- Status setting
 
 feature -- Element Change
 
-	set_extension (an_extension: like extension) is
+	set_extension (an_extension: like extension)
 			-- Set `extension' with `an_extension'.
 		require
 			an_extension_not_void: an_extension /= Void
@@ -136,20 +136,20 @@ feature -- Element Change
 			extension_set: extension = an_extension
 		end
 
-	set_type (t: like type; a: like assigner_name_id) is
+	set_type (t: like type; a: like assigner_name_id)
 			-- Assign `t' to `type' and `a' to `assigner_name_id'.
 		do
 			type := t
 			assigner_name_id := a
 		end
 
-	new_rout_id: INTEGER is
+	new_rout_id: INTEGER
 			-- New routine id for attribute
 		do
 			Result := Routine_id_counter.next_attr_id
 		end
 
-	check_expanded (class_c: CLASS_C) is
+	check_expanded (class_c: CLASS_C)
 			-- Check the expanded validity rules
 		local
 			vlec: VLEC
@@ -170,7 +170,7 @@ feature -- Element Change
 			end
 		end
 
-	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B is
+	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN): ACCESS_B
 			-- Byte code access for current feature
 		local
 			attribute_b: ATTRIBUTE_B
@@ -202,7 +202,7 @@ feature -- Element Change
 			end
 		end
 
-	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
+	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER)
 			-- Generate feature written in `class_type' in `buffer'.
 		require else
 			valid_file: buffer /= Void
@@ -341,7 +341,7 @@ feature -- Element Change
 			end
 		end
 
-	generate_attribute_access (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER; cur: STRING) is
+	generate_attribute_access (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER; cur: STRING)
 			-- Generates attribute access.
 			-- [Redecalaration of a function into an attribute]
 		local
@@ -412,7 +412,7 @@ feature -- Element Change
 			buffer.put_character(')')
 		end
 
-	replicated (in: INTEGER): FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I
 			-- Replication
 		local
 			rep: R_ATTRIBUTE_I
@@ -426,14 +426,14 @@ feature -- Element Change
 			Result := rep
 		end
 
-	selected: ATTRIBUTE_I is
+	selected: ATTRIBUTE_I
 			-- Selected attribute
 		do
 			create Result.make
 			Result.transfer_from (Current)
 		end
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I
 			-- Unselected attribute
 		local
 			s: D_ATTRIBUTE_I
@@ -444,7 +444,7 @@ feature -- Element Change
 			Result := s
 		end
 
-	transfer_to (other: like Current) is
+	transfer_to (other: like Current)
 			-- Transfer data from `Current' to `other'.
 		do
 			Precursor {ENCAPSULATED_I} (other)
@@ -453,7 +453,7 @@ feature -- Element Change
 			extension := other.extension
 		end
 
-	transfer_from (other: like Current) is
+	transfer_from (other: like Current)
 			-- Transfer data from `Current' to `other'.
 		do
 			Precursor {ENCAPSULATED_I} (other)
@@ -464,7 +464,7 @@ feature -- Element Change
 			extension := other.extension
 		end
 
-	melt (exec: EXECUTION_UNIT) is
+	melt (exec: EXECUTION_UNIT)
 			-- Melt an attribute
 		local
 			melted_feature: MELT_FEATURE
@@ -553,7 +553,7 @@ feature -- Element Change
 
 feature {NONE} -- Implementation
 
-	new_api_feature: E_ATTRIBUTE is
+	new_api_feature: E_ATTRIBUTE
 			-- API feature creation
 		do
 			create Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
@@ -561,7 +561,7 @@ feature {NONE} -- Implementation
 			Result.set_is_attribute_with_body (has_body)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

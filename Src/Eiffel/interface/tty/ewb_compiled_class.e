@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Abstract notion of command selected from class batch menu%
@@ -19,14 +19,14 @@ inherit
 
 feature {NONE} -- Properties
 
-	want_compiled_class (class_i: CLASS_I): BOOLEAN is
+	want_compiled_class (class_i: CLASS_I): BOOLEAN
 			-- Does current menu selection want `class_i' to be compiled?
 			-- (True)
 		do
 			Result := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

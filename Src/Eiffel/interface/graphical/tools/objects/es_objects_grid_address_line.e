@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE}
 
-	make_with_address (add: DBG_ADDRESS; dtype: CLASS_C; g: like parent_grid) is
+	make_with_address (add: DBG_ADDRESS; dtype: CLASS_C; g: like parent_grid)
 		require
 			add /= Void
 		do
@@ -37,7 +37,7 @@ feature {NONE}
 			set_object_address (add)
 		end
 
-	make_with_call_stack_element (elem: EIFFEL_CALL_STACK_ELEMENT; g: like parent_grid) is
+	make_with_call_stack_element (elem: EIFFEL_CALL_STACK_ELEMENT; g: like parent_grid)
 			-- Initialize `Current' and associate it with object
 			-- represented by `elem'.
 		require
@@ -46,7 +46,7 @@ feature {NONE}
 			make_with_address (elem.object_address, elem.dynamic_class, g)
 		end
 
-	make_with_dump_value (dumpvalue: DUMP_VALUE; g: like parent_grid) is
+	make_with_dump_value (dumpvalue: DUMP_VALUE; g: like parent_grid)
 			-- Initialize `Current' and associate it with object
 			-- represented by `elem'.
 		require
@@ -58,7 +58,7 @@ feature {NONE}
 
 feature -- Recycling
 
-	reset is
+	reset
 			-- Recycle data
 			-- in order to free special data (for instance dotnet references)
 		do
@@ -68,7 +68,7 @@ feature -- Recycling
 
 feature -- Properties
 
-	object_name: STRING_32 is
+	object_name: STRING_32
 		do
 			Result := title
 		end
@@ -77,28 +77,28 @@ feature -- Properties
 
 	object_dynamic_class: CLASS_C
 
-	object_spec_capacity: INTEGER is
+	object_spec_capacity: INTEGER
 		do
 			Result := debugger_manager.object_manager.special_object_capacity_at_address (object_address)
 		end
 
 feature -- Query
 
-	has_attributes_values: BOOLEAN is
+	has_attributes_values: BOOLEAN
 		do
 			if {oadd: like object_address} object_address and then is_valid_object_address (oadd) then
 				Result := debugger_manager.object_manager.object_at_address_has_attributes (oadd)
 			end
 		end
 
-	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		do
 			if {oadd: like object_address} object_address and then is_valid_object_address (oadd) then
 				Result := debugger_manager.object_manager.sorted_attributes_at_address (oadd, object_spec_lower, object_spec_upper)
 			end
 		end
 
-	sorted_once_routines: LIST [E_FEATURE] is
+	sorted_once_routines: LIST [E_FEATURE]
 			-- <Precursor>	
 		do
 			if {cl: like object_dynamic_class} object_dynamic_class then
@@ -106,7 +106,7 @@ feature -- Query
 			end
 		end
 
-	sorted_constant_features: LIST [E_CONSTANT] is
+	sorted_constant_features: LIST [E_CONSTANT]
 			-- <Precursor>
 		do
 			if {cl: like object_dynamic_class} object_dynamic_class then
@@ -114,7 +114,7 @@ feature -- Query
 			end
 		end
 
-	object_value: STRING_32 is
+	object_value: STRING_32
 			-- Full ouput representation for related object
 		do
 			if last_dump_value = Void then
@@ -123,7 +123,7 @@ feature -- Query
 			Result := last_dump_value.output_for_debugger
 		end
 
-	object_type_representation: STRING is
+	object_type_representation: STRING
 			-- Full ouput representation for related object
 		do
 			if last_dump_value = Void then
@@ -132,14 +132,14 @@ feature -- Query
 			Result := last_dump_value.generating_type_representation (generating_type_evaluation_enabled)
 		end
 
-	get_last_dump_value is
+	get_last_dump_value
 		do
 			last_dump_value := associated_dump_value
 		ensure
 			last_dump_value /= Void
 		end
 
-	associated_dump_value: DUMP_VALUE is
+	associated_dump_value: DUMP_VALUE
 		do
 			Result := internal_associated_dump_value
 			if Result = Void then
@@ -152,7 +152,7 @@ feature -- Query
 
 feature -- Graphical changes
 
-	compute_grid_display is
+	compute_grid_display
 		do
 			if row /= Void and not compute_grid_display_done then
 				compute_grid_display_done := True
@@ -180,7 +180,7 @@ feature -- Graphical changes
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

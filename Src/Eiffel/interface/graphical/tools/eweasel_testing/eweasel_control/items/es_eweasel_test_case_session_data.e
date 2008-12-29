@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Test case session data which can be used for store.
 						The information include current set of test case classes.
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_prefered_count: INTEGER) is
+	make (a_prefered_count: INTEGER)
 			-- Creation method
 			-- `a_prefered_count' is the size of `all_test_cases' will be first initialized
 		require
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	append_test_cases (a_list: !ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM]) is
+	append_test_cases (a_list: !ARRAYED_LIST [ES_EWEASEL_TEST_CASE_ITEM])
 			-- Append `a_list' to current
 			-- This feature will append items in `a_list' as saving state.
 		local
@@ -57,7 +57,7 @@ feature -- Command
 
 feature -- Query
 
-	all_running_test_cases: like all_test_cases is
+	all_running_test_cases: like all_test_cases
 			-- All test cases data for running
 			-- This feature will copy items in `all_test_case'
 			-- and convert them to running state.
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			-- All test cases
 
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

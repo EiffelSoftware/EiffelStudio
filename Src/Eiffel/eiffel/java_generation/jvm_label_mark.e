@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					  Representation of a JVM Label Mark.
 					  A `JVM_LABEL_MARK' points to a `JVM_LABEL'.
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialisation
 
-	make (a_label: JVM_LABEL; pos: INTEGER) is
+	make (a_label: JVM_LABEL; pos: INTEGER)
 			-- `a_label' is the symbolic target position
 			-- `pos' is the byte code position (starting at 1) in the
 			-- methods byte code where the target will be written to.
@@ -49,7 +49,7 @@ feature -- Access
 			-- method's byte code. Exactly at this point the jump offset
 			-- will be written at.
 			
-	jump_offset: INTEGER is
+	jump_offset: INTEGER
 			-- relative jump offset.
 			-- If the `Result' is positive it means we will jump forward.
 			-- If the `Result' is negative it means we will jump backwards.
@@ -65,7 +65,7 @@ invariant
 	label_not_void: label /= Void
 	byte_code_position_valid: byte_code_position > 0
 																	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

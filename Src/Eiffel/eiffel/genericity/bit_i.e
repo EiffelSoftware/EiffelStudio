@@ -1,4 +1,4 @@
-indexing
+note
 	description: "C type for bits."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (count: like size) is
+	make (count: like size)
 			-- Initialize new instance of BIT_I with `count' bits
 		do
 			size := count
@@ -34,41 +34,41 @@ feature -- Access
 	size: INTEGER
 			-- Bit size
 
-	level: INTEGER is
+	level: INTEGER
 			-- Internal code for generation
 		do
 			Result := {SHARED_C_LEVEL}.C_ref
 		end
 
-	tuple_code: NATURAL_8 is
+	tuple_code: NATURAL_8
 			-- Code for TUPLE type
 		do
 			Result := {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
 		end
 
-	element_type: INTEGER_8 is
+	element_type: INTEGER_8
 		do
 			Result := {MD_SIGNATURE_CONSTANTS}.element_type_class
 		end
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 		do
 			Result := {SK_CONST}.sk_bit + size
 		end
 
-	c_string: STRING is "EIF_REFERENCE"
+	c_string: STRING = "EIF_REFERENCE"
 			-- String generated for the type.
 
-	typed_field: STRING is "it_r"
+	typed_field: STRING = "it_r"
 			-- Value field of a C structure corresponding to this type
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code for current type
 		do
 			Result := {SHARED_HASH_CODE}.bit_code | size
 		end
 
-	new_attribute_description: BITS_DESC is
+	new_attribute_description: BITS_DESC
 			-- Type description for skeleton
 		do
 			create Result
@@ -77,15 +77,15 @@ feature -- Access
 
 feature -- Status report
 
-	is_bit: BOOLEAN is True
+	is_bit: BOOLEAN = True
 			-- Is the type a long type ?
 
-	is_pointer: BOOLEAN is True
+	is_pointer: BOOLEAN = True
 			-- Is the type a pointer type ?
 
 feature -- Byte code generation
 
-	make_default_byte_code (ba: BYTE_ARRAY) is
+	make_default_byte_code (ba: BYTE_ARRAY)
 			-- Generate default value of basic type on stack.
 		do
 			ba.append ({BYTE_CONST}.Bc_create)
@@ -95,14 +95,14 @@ feature -- Byte code generation
 
 feature -- C code generation
 
-	generate_typed_tag (buffer: GENERATION_BUFFER) is
+	generate_typed_tag (buffer: GENERATION_BUFFER)
 			-- Generate tag of C structure "EIF_TYPED_VALUE" associated
 			-- to the current C type in `buffer'.
 		do
 			buffer.put_string ("type = SK_REF")
 		end
 
-	generate_sk_value (buffer: GENERATION_BUFFER) is
+	generate_sk_value (buffer: GENERATION_BUFFER)
 			-- Generate SK value associated to current C type in `buffer'.
 		do
 			buffer.put_string ({SK_CONST}.sk_bit_string)
@@ -111,7 +111,7 @@ feature -- C code generation
 			buffer.put_integer (size)
 		end
 
-	generate_default_value (buffer : GENERATION_BUFFER) is
+	generate_default_value (buffer : GENERATION_BUFFER)
 			-- Generate default value associated to current basic type.
 		do
 			buffer.put_string ("RTLB(")
@@ -123,7 +123,7 @@ feature {NONE} -- Constants
 
 	uint32_string_cast: STRING = "(uint32) ";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

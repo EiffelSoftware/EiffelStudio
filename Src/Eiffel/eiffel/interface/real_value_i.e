@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Representation of a DOUBLE constant in source code. Name of class is
 		not the best one since it is confusion that it is called REAL where it handles DOUBLE.
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_real_64 (d: like real_64_value) is
+	make_real_64 (d: like real_64_value)
 			-- Create instance of current with `real_64_value' set to `d'.
 		do
 			real_64_value := d
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			is_real_64: is_real_64
 		end
 
-	make_real_32 (r: like real_32_value) is
+	make_real_32 (r: like real_32_value)
 			-- Create instance of current with `real_32_value' set to `r'.
 		do
 			real_32_value := r
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := (is_real_64 = other.is_real_64) and
@@ -62,19 +62,19 @@ feature -- Access
 
 feature -- Status report
 
-	is_real: BOOLEAN is True
+	is_real: BOOLEAN = True
 			-- Is current constant a real constant (regardless of its implementation size)?
 
 	is_real_64: BOOLEAN
 			-- Is the current constant a double one?
 
-	is_real_32: BOOLEAN is
+	is_real_32: BOOLEAN
 			-- Is current constant a real one?
 		do
 			Result := not is_real_64
 		end
 
-	valid_type (t: TYPE_A): BOOLEAN is
+	valid_type (t: TYPE_A): BOOLEAN
 			-- Is the current value compatible with `t' ?
 		do
 			Result := t.is_real_32 or t.is_real_64
@@ -82,7 +82,7 @@ feature -- Status report
 
 feature -- Settings
 
-	set_real_type (t: TYPE_A) is
+	set_real_type (t: TYPE_A)
 			-- Update current value accordingly to context `t'.
 		local
 			l_is_real_64: BOOLEAN
@@ -104,7 +104,7 @@ feature -- Settings
 
 feature -- Unary operators
 
-	unary_minus: VALUE_I is
+	unary_minus: VALUE_I
 			-- Apply `-' operator to Current.
 		do
 			if is_real_64 then
@@ -116,7 +116,7 @@ feature -- Unary operators
 
 feature -- Code generation
 
-	generate (buffer: GENERATION_BUFFER) is
+	generate (buffer: GENERATION_BUFFER)
 			-- Generate value in `buffer'.
 		local
 			l_buf: like buffer
@@ -150,7 +150,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_il is
+	generate_il
 			-- Generate IL code for real constant value.
 		do
 			if is_real_64 then
@@ -160,7 +160,7 @@ feature -- Code generation
 			end
 		end
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a real constant value
 		do
 			if is_real_64 then
@@ -174,7 +174,7 @@ feature -- Code generation
 
 feature -- Output
 
-	dump: STRING is
+	dump: STRING
 			-- Textual representation of `real_64_value'.
 		do
 			if is_real_64 then
@@ -187,7 +187,7 @@ feature -- Output
 invariant
 	is_real_64_or_real_32: is_real_64 = not is_real_32
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

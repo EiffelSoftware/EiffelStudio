@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor to rename metrics"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_old_name, a_new_name: STRING) is
+	make (a_old_name, a_new_name: STRING)
 			-- Initialize `old_metric_name' with `a_old_name' and
 			-- `new_metric_name' with `a_new_name'.
 		require
@@ -39,7 +39,7 @@ feature{NONE} -- Initialization
 
 feature -- Process
 
-	process_metric (a_metric: EB_METRIC) is
+	process_metric (a_metric: EB_METRIC)
 			-- Process `a_metric'.
 		require
 			a_metric_attached: a_metric /= Void
@@ -58,7 +58,7 @@ feature -- Access
 
 feature{NONE} -- Process
 
-	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR) is
+	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR)
 			-- Process `a_linear_metric'.
 		local
 			l_variable_metric: LIST [STRING]
@@ -79,20 +79,20 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO) is
+	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO)
 			-- Process `a_ratio_metric'.
 		do
 			replace_name (a_ratio_metric.numerator_metric_name, agent a_ratio_metric.set_numerator_metric_name)
 			replace_name (a_ratio_metric.denominator_metric_name, agent a_ratio_metric.set_denominator_metric_name)
 		end
 
-	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION)
 			-- Process `a_criterion'.
 		do
 			replace_name (a_criterion.metric_name, agent a_criterion.set_metric_name)
 		end
 
-	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		do
 			replace_name (a_item.metric_name, agent a_item.set_metric_name)
@@ -100,7 +100,7 @@ feature{NONE} -- Process
 
 feature{NONE} -- Implementation
 
-	replace_name (a_old_name: STRING; a_name_setter: PROCEDURE [ANY, TUPLE [STRING]]) is
+	replace_name (a_old_name: STRING; a_name_setter: PROCEDURE [ANY, TUPLE [STRING]])
 			-- If `a_old_name' is considered to be the same as `old_metric_name',
 			-- invoke `a_name_setter' to set `new_metric_name'.
 		require
@@ -116,7 +116,7 @@ invariant
 	old_metric_name_attached: old_metric_name /= Void
 	new_metric_name_attached: new_metric_name /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

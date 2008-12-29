@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract notion of a command associated with a target"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target) is
+	make (a_target: like target)
 			-- Initialize the command with target `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			target_set: equal (a_target, target)
 		end
 
-	initialize is
+	initialize
 			-- Initialize default values.
 		do
 		end
@@ -42,7 +42,7 @@ feature -- Properties
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			target := Void
@@ -55,7 +55,7 @@ feature {NONE} -- Recyclable
 invariant
 	target_not_void: not is_recycled implies target /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

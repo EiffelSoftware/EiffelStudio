@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Viewpoint area used in class and feature tool"
 	author: ""
 	date: "$Date$"
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	viewpoints: EB_VIEWPOINT_COMBO_BOX is
+	viewpoints: EB_VIEWPOINT_COMBO_BOX
 			-- Viewpoints selection combo box
 		do
 			if viewpoints_internal = Void then
@@ -28,7 +28,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	viewpoint_area: EV_WIDGET is
+	viewpoint_area: EV_WIDGET
 			-- Area for `viewpoints'
 		local
 			l_hor: EV_HORIZONTAL_BOX
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Actions
 
-	on_context_change is
+	on_context_change
 			-- Action to be performed when `viewpoints' changes
 		deferred
 		end
@@ -69,7 +69,7 @@ feature{NONE} -- Implementation
 	viewpoint_area_internal: like viewpoint_area;
 			-- Implementation of `viewpoint_area'	
 
-	update_viewpoints (a_class_c: CLASS_C) is
+	update_viewpoints (a_class_c: CLASS_C)
 			-- Update `viewpoints' with information in `a_class_c'.
 		do
 			if a_class_c = Void then
@@ -83,7 +83,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	show_viewpoint_area is
+	show_viewpoint_area
 			-- Show `viewpoint_area'.
 			-- `viewpoint_area' is only shown when it has renamed context.
 		do
@@ -96,7 +96,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	hide_viewpoint_area is
+	hide_viewpoint_area
 			-- Hide `viewpoint_area'.
 		do
 			viewpoint_area.hide

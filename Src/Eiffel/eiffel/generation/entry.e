@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Abstract description of an entry in a routine table (instance of
@@ -23,7 +23,7 @@ inherit
 
 feature -- comparison
 
-	is_less alias "<" (other: ENTRY): BOOLEAN is
+	is_less alias "<" (other: ENTRY): BOOLEAN
 			-- Is `other' greater than Current?
 		do
 			Result := type_id < other.type_id
@@ -37,13 +37,13 @@ feature -- from ENTRY
 	type: TYPE_A
 			-- Result type fo the entry
 
-	set_type_id (i: INTEGER) is
+	set_type_id (i: INTEGER)
 			-- Assign `i' to `type_id'.
 		do
 			type_id := i;
 		end;
 
-	set_type (t: TYPE_A) is
+	set_type (t: TYPE_A)
 			-- Assign `t' to `type'.
 		do
 			type := t;
@@ -51,12 +51,12 @@ feature -- from ENTRY
 
 feature -- for dead code removal
 
-	is_attribute: BOOLEAN is
+	is_attribute: BOOLEAN
 			-- is the feature_i associated an attribute ?
 		do
 		end
 
-	is_deferred: BOOLEAN is
+	is_deferred: BOOLEAN
 			-- Is the feature_i associated a deferred routine?
 		do
 		end
@@ -64,7 +64,7 @@ feature -- for dead code removal
 	feature_id: INTEGER
 			-- feature id of the feature associated to the entry
 
-	set_feature_id (i: INTEGER) is
+	set_feature_id (i: INTEGER)
 		do
 			feature_id := i
 		end
@@ -77,13 +77,13 @@ feature -- Previously in POLY_UNIT
 	type_a: TYPE_A
 			-- Result type of the polymorphic entry
 
-	set_class_id (i: INTEGER) is
+	set_class_id (i: INTEGER)
 			-- Assign `i' to `class_id'
 		do
 			class_id := i
 		end
 
-	set_type_a (t: TYPE_A) is
+	set_type_a (t: TYPE_A)
 			-- Assign `t' to `type_a'.
 		do
 			type_a := t
@@ -91,14 +91,14 @@ feature -- Previously in POLY_UNIT
 
 feature -- previously in POLY_UNIT
 
-	entry (class_type: CLASS_TYPE): ENTRY is
+	entry (class_type: CLASS_TYPE): ENTRY
 			-- Entry in a poly-table for final mode
 		require
 			class_type_not_void: class_type /= Void
 		deferred
 		end;
 
-	feature_type (class_type: CLASS_TYPE): TYPE_A is
+	feature_type (class_type: CLASS_TYPE): TYPE_A
 			-- Type id of the result type in `class_type'.
 		require
 			good_argument: class_type /= Void
@@ -117,7 +117,7 @@ feature -- previously in POLY_UNIT
 
 feature -- updates
 
-	update (class_type: CLASS_TYPE) is
+	update (class_type: CLASS_TYPE)
 			-- Enlarged current entry to manage correctly polymorphism with generics.
 		require
 			class_type_not_void: class_type /= Void
@@ -128,12 +128,12 @@ feature -- updates
 
 feature -- from ENTRY
 
-	used: BOOLEAN is
+	used: BOOLEAN
 			-- Is the entry used ?
 		deferred
 		end;
 
-	static_feature_type_id: INTEGER is
+	static_feature_type_id: INTEGER
 			-- Type id of the Result type
 		local
 			l_context_type: CL_TYPE_A
@@ -144,13 +144,13 @@ feature -- from ENTRY
 			end
 		end
 
-	generated_static_feature_type_id (buffer: GENERATION_BUFFER) is
+	generated_static_feature_type_id (buffer: GENERATION_BUFFER)
 			-- Textual representation of type id of the Result type
 		do
 			buffer.put_static_type_id (static_feature_type_id)
 		end;
 
-	feature_type_id: INTEGER is
+	feature_type_id: INTEGER
 			-- Type id of the Result type
 		local
 			l_context_type: CL_TYPE_A
@@ -161,7 +161,7 @@ feature -- from ENTRY
 			end
 		end
 
-	needs_extended_info: BOOLEAN is
+	needs_extended_info: BOOLEAN
 			-- Is `type' a type which needs more data to be resolved at run-time?
 			--| Currently it is only generics, formals, anchors and types which are attached.
 			--| We exclude expanded types since they are by default attached and thus only have
@@ -171,7 +171,7 @@ feature -- from ENTRY
 				({l_attached_type: ATTACHABLE_TYPE_A} type and then not type.is_expanded and then l_attached_type.is_attached)
 		end
 
-	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN) is
+	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN)
 			-- Generate list of type id's of generic type
 			-- separated by commas.
 		require
@@ -180,7 +180,7 @@ feature -- from ENTRY
 			type.generate_cid (buffer, final_mode, False, system.class_type_of_id (type_id).type)
 		end
 
-	make_gen_type_byte_code (ba: BYTE_ARRAY) is
+	make_gen_type_byte_code (ba: BYTE_ARRAY)
 			-- Make byte code for type of current entry.
 		require
 			is_generic : needs_extended_info
@@ -195,7 +195,7 @@ feature -- Status report
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

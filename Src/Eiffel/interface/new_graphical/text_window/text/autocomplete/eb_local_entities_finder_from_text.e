@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that build the list of local variables and arguments corresponding to a location in a class text"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- initialize `Current'.
 		do
 			create found_entities.make (2)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	build_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN; a_class_c: CLASS_C) is
+	build_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN; a_class_c: CLASS_C)
 			-- Build list of locals and argument types (`found_entities') corresponding to a position
 			-- in a text defined by `line' and `token'.		
 		do
@@ -57,7 +57,7 @@ feature -- Basic Operations
 			search_for_return_type
 		end
 
-	reset is
+	reset
 			-- Wipe lists out .
 		do
 			has_return_type := False
@@ -72,7 +72,7 @@ feature -- Basic Operations
 
 feature -- Access
 
-	found_names: LINKED_LIST [STRING_32] is
+	found_names: LINKED_LIST [STRING_32]
 			-- List of found entity names.
 		local
 			id_list: IDENTIFIER_LIST
@@ -106,7 +106,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	set_up_parser (a_class: CLASS_C) is
+	set_up_parser (a_class: CLASS_C)
 			-- Set up formal generic parameters for `entity_declaration_parser'.
 		local
 			formal_dec_list: EIFFEL_LIST [FORMAL_DEC_AS]
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_local_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN) is
+	build_local_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN)
 			-- Build list of local types corresponding to a position a text defined by `line' and `token'.
 			-- Resulting local nodes will be put in `found_locals_list'.
 		require
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	build_argument_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN) is
+	build_argument_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN)
 			-- Build list of argument types corresponding to a position a text defined by `line' and `token'.
 			-- Resulting local nodes will be put in `found_arguments_list'.
 		require
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	build_return_type (line: EDITOR_LINE; token: EDITOR_TOKEN) is
+	build_return_type (line: EDITOR_LINE; token: EDITOR_TOKEN)
 			-- Attempts to locate a return type for the feature where `token' resides
 		local
 			retried: BOOLEAN
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 
 	found_end_of_class_name: BOOLEAN
 
-	search_for_local_clause is
+	search_for_local_clause
 			-- Try to set `internal_token' and `internal_line' so that they point to
 			-- the local clause that correspond to their initial value.
 			-- set `found_local_keyword' to True if successful
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	search_for_arguments is
+	search_for_arguments
 			-- Try to set `internal_token' and `internal_line' so that they point to
 			-- the beginning of the argument list of the feature that correspond to their initial value.
 			-- set `found_arguments' to True if successful
@@ -373,7 +373,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	search_for_return_type is
+	search_for_return_type
 			-- Examines the editor tokens to attempt to infer if the feature
 		local
 			stop: BOOLEAN
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	local_string: STRING_32 is
+	local_string: STRING_32
 			-- Build a string of locals starting at `internal_line' and `internal_token'.
 			-- Results will be of form `local ...locals..'
 		local
@@ -450,7 +450,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	arguments_string: STRING_32 is
+	arguments_string: STRING_32
 			-- Build a string of locals starting at `internal_line' and `internal_token'.
 			-- Results will be of form `local ...locals..'
 		local
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_stopping (tok: EDITOR_TOKEN): BOOLEAN is
+	is_stopping (tok: EDITOR_TOKEN): BOOLEAN
 			-- Should we stop list building if we encounter `tok'?
 		do
 			if look_for_locals then
@@ -501,7 +501,7 @@ feature {NONE} -- Implementation
 	look_for_locals: BOOLEAN
 			-- Looking for locals (not arguments)?
 
-	go_to_end_of_class_name is
+	go_to_end_of_class_name
 			-- If `internal_token' and `internal_line' point to the beginning of a class name.
 			-- modify them so that they point to the end of the name.
 			-- Set `found_end_of_class_name' to True if successful.
@@ -563,7 +563,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	go_to_next_non_blank_token is
+	go_to_next_non_blank_token
 			-- Starting from `internal_token' and `internal_line', move forward to the first next text token.
 		do
 			from
@@ -584,7 +584,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	go_to_previous_non_blank_token is
+	go_to_previous_non_blank_token
 			-- Starting from `internal_token' and `internal_line', move backward to the first previous text token.
 		do
 			from
@@ -612,7 +612,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_skippable (a_token: EDITOR_TOKEN): BOOLEAN is
+	is_skippable (a_token: EDITOR_TOKEN): BOOLEAN
 			-- Can we skip this token?
 		do
 			if a_token = Void then
@@ -627,7 +627,7 @@ invariant
 	found_entities_not_void: found_entities /= Void
 	found_arguments_list_not_void: found_arguments_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

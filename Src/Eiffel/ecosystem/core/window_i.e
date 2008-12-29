@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface for interacting with shell tool windows or dialogs.
 	]"
@@ -13,7 +13,7 @@ deferred class
 inherit
 	USABLE_I
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

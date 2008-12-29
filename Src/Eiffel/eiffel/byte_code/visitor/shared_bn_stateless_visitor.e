@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Collections of stateless BYTE_NODE visitors."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Byte code generators
 
-	melted_generator: MELTED_GENERATOR is
+	melted_generator: MELTED_GENERATOR
 			-- Generator for melted code.
 		once
 			create Result
@@ -18,7 +18,7 @@ feature -- Byte code generators
 			melted_generator_not_void: Result /= Void
 		end
 
-	melted_assignment_generator: MELTED_ASSIGNMENT_GENERATOR is
+	melted_assignment_generator: MELTED_ASSIGNMENT_GENERATOR
 			-- Generator assignments for melted code.
 		once
 			create Result
@@ -26,7 +26,7 @@ feature -- Byte code generators
 			melted_assignment_generator_not_void: Result /= Void
 		end
 
-	attribute_assignment_detector: ATTRIBUTE_ASSIGNMENT_DETECTOR is
+	attribute_assignment_detector: ATTRIBUTE_ASSIGNMENT_DETECTOR
 			-- Visitor to checker whether the byte nodes perform an attachement to an attribute.
 		once
 			create Result
@@ -36,7 +36,7 @@ feature -- Byte code generators
 
 feature -- IL code generators
 
-	cil_node_generator: IL_NODE_GENERATOR is
+	cil_node_generator: IL_NODE_GENERATOR
 			-- Generator for CIL code.
 		once
 			create Result
@@ -44,7 +44,7 @@ feature -- IL code generators
 			cil_node_generator_not_void: Result /= Void
 		end
 
-	cil_access_address_generator: IL_ACCESS_ADDRESS_GENERATOR is
+	cil_access_address_generator: IL_ACCESS_ADDRESS_GENERATOR
 			-- Generator for loading address of an ACCESS_B node.
 		once
 			create Result
@@ -52,7 +52,7 @@ feature -- IL code generators
 			cil_access_address_generator_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

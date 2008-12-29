@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Displays class's creation procedures in output_window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Properties
 
-    associated_cmd: E_SHOW_CREATORS is
+    associated_cmd: E_SHOW_CREATORS
             -- Associated class command to be executed
             -- after successfully retrieving the compiled
             -- class
@@ -28,7 +28,7 @@ feature {NONE} -- Properties
 			create Result
         end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

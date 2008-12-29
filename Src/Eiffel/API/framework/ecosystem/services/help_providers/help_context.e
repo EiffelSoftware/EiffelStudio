@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Bulk implementation for {HELP_CONTEXT_I} making it easy to identify if help is available using Void-safe attached types.
 	]"
@@ -54,7 +54,7 @@ feature -- Status report
 			help_context_attached: Result implies help_context /= Void
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

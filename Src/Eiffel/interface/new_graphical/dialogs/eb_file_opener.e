@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to open a file, and display warnings in case of errors"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_parent (caller: EB_FILE_OPENER_CALLBACK; fn: STRING; parent_window: EV_WINDOW) is
+	make_with_parent (caller: EB_FILE_OPENER_CALLBACK; fn: STRING; parent_window: EV_WINDOW)
 			-- Initialize with parent window `a_parent'
 		local
 			warning_message: STRING_GENERAL
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

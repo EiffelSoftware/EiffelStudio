@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Access to an argument
@@ -17,7 +17,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_argument_b (Current)
@@ -28,34 +28,34 @@ feature
 	position: INTEGER;
 			-- Position of the argument.
 
-	set_position (i: INTEGER) is
+	set_position (i: INTEGER)
 			-- Set `position' to `i'
 		do
 			position := i;
 		end;
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Argument type
 		do
 			Result := context.byte_code.arguments.item (position);
 		end;
 
-	is_predefined: BOOLEAN is True
+	is_predefined: BOOLEAN = True
 			-- Is Current a predefined entity ?
 
-	is_argument: BOOLEAN is
+	is_argument: BOOLEAN
 			-- Is Current an access to an argument ?
 		do
 			Result := True
 		end
 
-	is_local: BOOLEAN is False;
+	is_local: BOOLEAN = False;
 			-- Is Current an access to a local variable ?
 
-	is_creatable: BOOLEAN is False;
+	is_creatable: BOOLEAN = False;
 			-- Can an access to an argument be the taget of a creation ?
 
-	same (other: ACCESS_B): BOOLEAN is
+	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		local
 			argument_b: ARGUMENT_B;
@@ -66,7 +66,7 @@ feature
 			end;
 		end;
 
-	enlarged: ARGUMENT_B is
+	enlarged: ARGUMENT_B
 			-- Enlarge current node
 		local
 			arg_bl: ARGUMENT_BL
@@ -76,7 +76,7 @@ feature
 			Result := arg_bl
 		end;
 
-	register_name: STRING is
+	register_name: STRING
 			-- The "arg<num>" string
 		do
 			create Result.make (10)
@@ -89,7 +89,7 @@ feature
 			Result.append (position.out);
 		end;
 
-	print_register is
+	print_register
 			-- Print argument
 		do
 			buffer.put_string (register_name)
@@ -97,25 +97,25 @@ feature
 
 feature -- IL code generation
 
-	is_fast_as_local: BOOLEAN is true
+	is_fast_as_local: BOOLEAN = true
 			-- Is expression calculation as fast as loading a local?
 
 feature -- Array optimization
 
-	array_descriptor: INTEGER is
+	array_descriptor: INTEGER
 		do
 			Result := position
 		end
 
 feature -- Inlining
 
-	pre_inlined_code: INLINED_ARG_B is
+	pre_inlined_code: INLINED_ARG_B
 		do
 			create Result;
 			Result.fill_from (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -19,7 +19,7 @@ feature
 			-- Class after which possible redefinitions of
 			-- `a_feature' have to be traversed also
 
-	make (f: FEATURE_I; c: CLASS_C) is
+	make (f: FEATURE_I; c: CLASS_C)
 			-- Initialization
 		require
 			good_feature: f /= Void;
@@ -30,7 +30,7 @@ feature
 			static_class := c
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

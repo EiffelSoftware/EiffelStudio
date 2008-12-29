@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about C patterns"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (p: like pattern) is
+	make (p: like pattern)
 		require
 			p_not_void: p /= Void
 		do
@@ -36,7 +36,7 @@ feature -- Access
 	c_pattern_id: INTEGER
 			-- Pattern id
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code
 		do
 			Result := pattern.hash_code
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_c_pattern_id (i: INTEGER) is
+	set_c_pattern_id (i: INTEGER)
 			-- Assign `i' to `c_pattern_id'.
 		do
 			c_pattern_id := i
@@ -52,7 +52,7 @@ feature -- Settings
 			c_pattern_id_set: c_pattern_id = i
 		end
 
-	set_pattern (p: C_PATTERN) is
+	set_pattern (p: C_PATTERN)
 		require
 			p_not_void: p /= Void
 		do
@@ -63,7 +63,7 @@ feature -- Settings
 
 feature -- Comparison
 
-	is_equal (other: C_PATTERN_INFO): BOOLEAN is
+	is_equal (other: C_PATTERN_INFO): BOOLEAN
             -- Is `other' equal to Current ?
         do
             Result := pattern.is_equal (other.pattern)
@@ -71,7 +71,7 @@ feature -- Comparison
 
 feature -- Code generation
 
-	generate_pattern (buffer: GENERATION_BUFFER) is
+	generate_pattern (buffer: GENERATION_BUFFER)
 			-- Generate pattern for interface between C generated code
 			-- and the interpreter
 		require
@@ -83,7 +83,7 @@ feature -- Code generation
 invariant
 	pattern_exists: pattern /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

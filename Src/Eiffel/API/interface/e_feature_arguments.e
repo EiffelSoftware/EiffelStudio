@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Representation of feature arguments."
@@ -27,7 +27,7 @@ feature -- Property
 
 feature -- Setting
 
-	set_argument_names (n: like argument_names) is
+	set_argument_names (n: like argument_names)
 			-- Set `argument_names' to `n'.
 		require
 			valid_n: n /= Void
@@ -39,7 +39,7 @@ feature -- Setting
 
 feature -- Element change
 
-	put_i_th (type: TYPE_A; i: INTEGER) is
+	put_i_th (type: TYPE_A; i: INTEGER)
 			-- Put `type' at `i' position.
 		require
 			valid_type: type /= Void
@@ -47,7 +47,7 @@ feature -- Element change
 			list_put_i_th (type, i)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Special optimization on calls where target is a basic type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ inherit
 
 feature -- Access
 
-	has (feat: FEATURE_B; target_type: CL_TYPE_A): BOOLEAN is
+	has (feat: FEATURE_B; target_type: CL_TYPE_A): BOOLEAN
 			-- Does Current have `feat.feature_name_id'?
 		require
 			valid_feat: feat /= Void
@@ -97,7 +97,7 @@ feature -- Access code
 
 feature -- Status
 
-	valid_function_type (type: INTEGER): BOOLEAN is
+	valid_function_type (type: INTEGER): BOOLEAN
 			-- Is `f' a valid function type supported by Current.
 		do
 			Result := type >= min_type_id and type <= max_type_id
@@ -107,7 +107,7 @@ feature -- Status
 
 feature -- IL code generation
 
-	generate_il (a_generator: IL_NODE_GENERATOR; feat: FEATURE_B; type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B]) is
+	generate_il (a_generator: IL_NODE_GENERATOR; feat: FEATURE_B; type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B])
 			-- Generate IL code sequence that will be used with basic types.
 		require
 			a_generator_not_void: a_generator /= Void
@@ -321,7 +321,7 @@ feature -- IL code generation
 
 feature {NONE} -- C and Byte code corresponding Eiffel function calls
 
-	basic_type_table: HASH_TABLE [INTEGER, INTEGER] is
+	basic_type_table: HASH_TABLE [INTEGER, INTEGER]
 		once
 			create Result.make (100)
 			Result.put (is_equal_type, is_equal_name_id)
@@ -401,67 +401,67 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 
 feature -- Fast access to feature name
 
-	min_type_id: INTEGER is 1
-	unused_1: INTEGER is 1
-	set_item_type: INTEGER is 2
-	out_type: INTEGER is 3
-	hash_code_type: INTEGER is 4
-	max_type: INTEGER is 5
-	min_type: INTEGER is 6
-	abs_type: INTEGER is 7
-	generator_type: INTEGER is 8
-	to_integer_32_type: INTEGER is 9
-	offset_type: INTEGER is 10
-	default_type: INTEGER is 11
-	bit_and_type: INTEGER is 12
-	bit_or_type: INTEGER is 13
-	bit_xor_type: INTEGER is 14
-	bit_not_type: INTEGER is 15
-	bit_shift_left_type: INTEGER is 16
-	bit_shift_right_type: INTEGER is 17
-	bit_test_type: INTEGER is 18
-	zero_type: INTEGER is 19
-	one_type: INTEGER is 20
-	memory_move: INTEGER is 21
-	memory_copy: INTEGER is 22
-	memory_set: INTEGER is 23
-	to_integer_8_type: INTEGER is 24
-	to_integer_16_type: INTEGER is 25
-	to_integer_64_type: INTEGER is 26
-	is_equal_type: INTEGER is 27
-	to_real_32_type: INTEGER is 28
-	to_character_8_type: INTEGER is 29
-	From_integer_to_enum_type: INTEGER is 30
-	From_enum_to_integer_type: INTEGER is 31
-	is_digit_type: INTEGER is 32
-	to_real_64_type: INTEGER is 33
-	three_way_comparison_type: INTEGER is 34
-	to_natural_8_type: INTEGER is 35
-	to_natural_16_type: INTEGER is 36
-	to_natural_32_type: INTEGER is 37
-	to_natural_64_type: INTEGER is 38
-	twin_type: INTEGER is 39
-	as_integer_8_type: INTEGER is 40
-	as_integer_16_type: INTEGER is 41
-	as_integer_32_type: INTEGER is 42
-	as_integer_64_type: INTEGER is 43
-	as_natural_8_type: INTEGER is 44
-	as_natural_16_type: INTEGER is 45
-	as_natural_32_type: INTEGER is 46
-	as_natural_64_type: INTEGER is 47
-	lower_type: INTEGER is 48
-	upper_type: INTEGER is 49
-	is_lower_type: INTEGER is 50
-	is_upper_type: INTEGER is 51
-	set_bit_type: INTEGER is 52
-	set_bit_with_mask_type: INTEGER is 53
-	to_character_32_type: INTEGER is 54
-	as_attached_type: INTEGER is 55
-	max_type_id: INTEGER is 55
+	min_type_id: INTEGER = 1
+	unused_1: INTEGER = 1
+	set_item_type: INTEGER = 2
+	out_type: INTEGER = 3
+	hash_code_type: INTEGER = 4
+	max_type: INTEGER = 5
+	min_type: INTEGER = 6
+	abs_type: INTEGER = 7
+	generator_type: INTEGER = 8
+	to_integer_32_type: INTEGER = 9
+	offset_type: INTEGER = 10
+	default_type: INTEGER = 11
+	bit_and_type: INTEGER = 12
+	bit_or_type: INTEGER = 13
+	bit_xor_type: INTEGER = 14
+	bit_not_type: INTEGER = 15
+	bit_shift_left_type: INTEGER = 16
+	bit_shift_right_type: INTEGER = 17
+	bit_test_type: INTEGER = 18
+	zero_type: INTEGER = 19
+	one_type: INTEGER = 20
+	memory_move: INTEGER = 21
+	memory_copy: INTEGER = 22
+	memory_set: INTEGER = 23
+	to_integer_8_type: INTEGER = 24
+	to_integer_16_type: INTEGER = 25
+	to_integer_64_type: INTEGER = 26
+	is_equal_type: INTEGER = 27
+	to_real_32_type: INTEGER = 28
+	to_character_8_type: INTEGER = 29
+	From_integer_to_enum_type: INTEGER = 30
+	From_enum_to_integer_type: INTEGER = 31
+	is_digit_type: INTEGER = 32
+	to_real_64_type: INTEGER = 33
+	three_way_comparison_type: INTEGER = 34
+	to_natural_8_type: INTEGER = 35
+	to_natural_16_type: INTEGER = 36
+	to_natural_32_type: INTEGER = 37
+	to_natural_64_type: INTEGER = 38
+	twin_type: INTEGER = 39
+	as_integer_8_type: INTEGER = 40
+	as_integer_16_type: INTEGER = 41
+	as_integer_32_type: INTEGER = 42
+	as_integer_64_type: INTEGER = 43
+	as_natural_8_type: INTEGER = 44
+	as_natural_16_type: INTEGER = 45
+	as_natural_32_type: INTEGER = 46
+	as_natural_64_type: INTEGER = 47
+	lower_type: INTEGER = 48
+	upper_type: INTEGER = 49
+	is_lower_type: INTEGER = 50
+	is_upper_type: INTEGER = 51
+	set_bit_type: INTEGER = 52
+	set_bit_with_mask_type: INTEGER = 53
+	to_character_32_type: INTEGER = 54
+	as_attached_type: INTEGER = 55
+	max_type_id: INTEGER = 55
 
 feature {NONE} -- IL code generation
 
-	generate_il_operation_code (op: INTEGER; is_natural: BOOLEAN) is
+	generate_il_operation_code (op: INTEGER; is_natural: BOOLEAN)
 			-- Make byte code for call on bit operations from INTEGER.
 		do
  			inspect
@@ -485,7 +485,7 @@ feature {NONE} -- IL code generation
 			end
 		end
 
-	generate_hash_code (type: CL_TYPE_A) is
+	generate_hash_code (type: CL_TYPE_A)
 			-- Generate hash-code for current basic type at top of evaluation stack.
 		require
 			type_not_void: type /= Void
@@ -505,7 +505,7 @@ feature {NONE} -- IL code generation
 			end
 		end
 
-	generate_three_way_comparison (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_A; a_expr: EXPR_B) is
+	generate_three_way_comparison (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_A; a_expr: EXPR_B)
 			-- Generate three_way_comparison computation for basic type objects
 			-- at top of evaluation stack.
 		require
@@ -566,7 +566,7 @@ feature {NONE} -- IL code generation
 			il_generator.mark_label (l_end_label)
 		end
 
-	generate_set_item (a_generator: IL_NODE_GENERATOR; feat: FEATURE_B; type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B]) is
+	generate_set_item (a_generator: IL_NODE_GENERATOR; feat: FEATURE_B; type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B])
 			-- Generate IL code sequence that will be used with basic types.
 		require
 			a_generator_not_void: a_generator /= Void
@@ -609,7 +609,7 @@ feature {NONE} -- IL code generation
 			end
 		end
 
-	generate_set_bit (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B]) is
+	generate_set_bit (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B])
 			-- Generate IL code sequence for `set_bit'
 		require
 			a_generator_not_void: a_generator /= Void
@@ -666,7 +666,7 @@ feature {NONE} -- IL code generation
 			il_generator.generate_local (l_result)
 		end
 
-	generate_set_bit_with_mask (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B]) is
+	generate_set_bit_with_mask (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B])
 			-- Generate IL code sequence for `set_bit'
 		require
 			a_generator_not_void: a_generator /= Void
@@ -721,14 +721,14 @@ feature {NONE} -- IL code generation
 
 feature {NONE} -- Type information
 
-	boolean_type: INTEGER is 1
-	character_type: INTEGER is 2
-	integer_type: INTEGER is 3
-	pointer_type: INTEGER is 4
-	real_32_type: INTEGER is 5
-	real_64_type: INTEGER is 6
-	any_type: INTEGER is 7
-	unknown_type: INTEGER is 8
+	boolean_type: INTEGER = 1
+	character_type: INTEGER = 2
+	integer_type: INTEGER = 3
+	pointer_type: INTEGER = 4
+	real_32_type: INTEGER = 5
+	real_64_type: INTEGER = 6
+	any_type: INTEGER = 7
+	unknown_type: INTEGER = 8
 			-- Constant defining type
 
 	is_signed_integer: BOOLEAN
@@ -738,7 +738,7 @@ feature {NONE} -- Type information
 	is_wide: BOOLEAN
 			-- Is `character_type' returned by `type_of' a WIDE_CHARACTER?
 
-	type_of (t: CL_TYPE_A): INTEGER is
+	type_of (t: CL_TYPE_A): INTEGER
 			-- Returns corresponding type constants to `t'.
 		require
 			t_not_void: t /= Void
@@ -788,7 +788,7 @@ feature {NONE} -- Type information
 invariant
 	il_generation: System.il_generation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

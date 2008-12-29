@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common routines for building text messages for system information, errors and warnings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature -- Access
 
-	display_error_error (st: TEXT_FORMATTER) is
+	display_error_error (st: TEXT_FORMATTER)
 			-- Message telling that an error occurred while displaying the errors.
 		do
 			st.add ("Exception occurred while displaying error message.")
@@ -38,7 +38,7 @@ feature -- Access
 			st.add_new_line
 		end
 
-	display_error_list (st: TEXT_FORMATTER; error_list: LINKED_LIST [ERROR]) is
+	display_error_list (st: TEXT_FORMATTER; error_list: LINKED_LIST [ERROR])
 			-- Display the content of `error_list' in `st'.
 		do
 			from
@@ -56,7 +56,7 @@ feature -- Access
 			end
 		end
 
-	display_warning_list (st: TEXT_FORMATTER; warning_list: LINKED_LIST [WARNING]) is
+	display_warning_list (st: TEXT_FORMATTER; warning_list: LINKED_LIST [WARNING])
 			-- Display the content of `warning_list' in `st'.
 		do
 			from
@@ -74,13 +74,13 @@ feature -- Access
 			end
 		end
 
-	display_separation_line (st: TEXT_FORMATTER) is
+	display_separation_line (st: TEXT_FORMATTER)
 		do
 			st.add ("-------------------------------------------------------------------------------")
 			st.add_new_line
 		end
 
-	display_additional_info (st: TEXT_FORMATTER) is
+	display_additional_info (st: TEXT_FORMATTER)
 			-- Additional system information.
 		local
 			degree_nbr: INTEGER
@@ -102,7 +102,7 @@ feature -- Access
 			st.add_new_line
 		end
 
-	welcome_info (a_formatter: TEXT_FORMATTER) is
+	welcome_info (a_formatter: TEXT_FORMATTER)
 			-- Information text on how to launch $EiffelGraphicalCompiler$.
 		do
 			a_formatter.add_new_line
@@ -114,7 +114,7 @@ feature -- Access
 			a_formatter.add_new_line
 		end
 
-	structured_system_info (a_formatter: TEXT_FORMATTER): BOOLEAN is
+	structured_system_info (a_formatter: TEXT_FORMATTER): BOOLEAN
 			-- Information text about current project.
 		do
 			if Eiffel_project.system /= Void then
@@ -125,7 +125,7 @@ feature -- Access
 			end
 		end
 
-	error_summary (error_count: INTEGER; a_formatter: TEXT_FORMATTER) is
+	error_summary (error_count: INTEGER; a_formatter: TEXT_FORMATTER)
 			-- Message telling error summary.
 		local
 			l_conjunctive,
@@ -142,7 +142,7 @@ feature -- Access
 			a_formatter.add_new_line
 		end
 
-	warning_summary (warning_count: INTEGER; a_formatter: TEXT_FORMATTER) is
+	warning_summary (warning_count: INTEGER; a_formatter: TEXT_FORMATTER)
 			-- Message telling warning summary.
 		local
 			l_conjunctive,
@@ -159,7 +159,7 @@ feature -- Access
 			a_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

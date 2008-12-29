@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Binary expression byte code for a possible numeric expression
@@ -10,13 +10,13 @@ inherit
 
 feature
 
-	is_built_in: BOOLEAN is
+	is_built_in: BOOLEAN
 			-- Is the current binary operator a built-in one ?
 		do
 			Result := real_type (left.type).is_numeric
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

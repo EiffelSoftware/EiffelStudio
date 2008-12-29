@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A code template render engine symbol table, for code token replacements.
 	]"
@@ -140,7 +140,7 @@ feature {NONE} -- Internal implementation cache
 			-- Cached version of `value_changed_events'
 			-- Note: Do not use directly!
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

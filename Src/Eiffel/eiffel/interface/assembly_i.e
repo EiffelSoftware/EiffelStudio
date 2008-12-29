@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an assembly."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Access
 
-	full_name: STRING is
+	full_name: STRING
 			-- Output name of Current
 		do
 			create Result.make (64)
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Output
 
-	format (a_text_formatter: TEXT_FORMATTER) is
+	format (a_text_formatter: TEXT_FORMATTER)
 			-- Output name of Current in `a_text_formatter'.
 		require
 			st_not_void: a_text_formatter /= Void
@@ -61,7 +61,7 @@ feature -- Output
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

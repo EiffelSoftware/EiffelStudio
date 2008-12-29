@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error for join rule when argument number is not the same."
@@ -29,12 +29,12 @@ feature -- Properties
 	new_feature: E_FEATURE;
 			-- Joined feature
 
-	code: STRING is "VDJR";
+	code: STRING = "VDJR";
 			-- Error code
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Output
 
-	print_signatures (a_text_formatter: TEXT_FORMATTER) is
+	print_signatures (a_text_formatter: TEXT_FORMATTER)
 		local
 			oclass, nclass: CLASS_C
 		do
@@ -67,14 +67,14 @@ feature -- Output
 			a_text_formatter.add_new_line;
 		end;
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Different numbers of arguments");
 			a_text_formatter.add_new_line;
 			print_signatures (a_text_formatter);
 		end;
 
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
 			if {l_formatter: !TEXT_FORMATTER} a_text_formatter and then {l_feature: !like new_feature} new_feature and then {l_class: !like class_c} class_c then
@@ -86,7 +86,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	init (old_feat, new_feat: FEATURE_I) is
+	init (old_feat, new_feat: FEATURE_I)
 			-- Initialization
 		require
 			not (old_feat = Void or else new_feat = Void);
@@ -96,7 +96,7 @@ feature {COMPILER_EXPORTER}
 			new_feature := new_feat.api_feature (new_feat.written_in);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

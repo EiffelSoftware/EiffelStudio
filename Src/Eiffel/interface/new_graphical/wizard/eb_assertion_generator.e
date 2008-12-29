@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generates a list of possible assertion given a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	assertions (a_id, a_type: STRING): LIST [STRING] is
+	assertions (a_id, a_type: STRING): LIST [STRING]
 			-- Possible assertions for feature with name `a_id' and `a_type'.
 		require
 			a_id_not_void: a_id /= Void
@@ -43,7 +43,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	is_expanded (a_type: STRING): BOOLEAN is
+	is_expanded (a_type: STRING): BOOLEAN
 			-- Should a non-void assertion for `a_type' be generated?
 		local
 			cl: LIST [CLASS_I]
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_integer (a_type: STRING): BOOLEAN is
+	is_integer (a_type: STRING): BOOLEAN
 			-- Is `a_type' an integer type?
 		local
 			l: STRING
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 				l.is_equal ("integer") or l.is_equal ("integer_64")
 		end
 
-	is_pointer (a_type: STRING): BOOLEAN is
+	is_pointer (a_type: STRING): BOOLEAN
 			-- Is `a_type' a pointer type?
 		local
 			l: STRING
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			Result := l.is_equal ("pointer")
 		end
 
-	is_character (a_type: STRING): BOOLEAN is
+	is_character (a_type: STRING): BOOLEAN
 			-- Is `a_type' a character type?
 		local
 			l: STRING
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			Result := l.is_equal ("character") or l.is_equal ("wide_character")
 		end
 
-	is_real (a_type: STRING): BOOLEAN is
+	is_real (a_type: STRING): BOOLEAN
 			-- Is `a_type' a floating point type?
 		local
 			l: STRING
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			Result := l.is_equal ("real") or l.is_equal ("double")
 		end
 
-	is_string (a_type: STRING): BOOLEAN is
+	is_string (a_type: STRING): BOOLEAN
 			-- Is `a_type' a string type?
 		local
 			l: STRING
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			Result := l.is_equal ("string")
 		end
 
-	reference_assertions (a_attribute: STRING): LINKED_LIST [STRING] is
+	reference_assertions (a_attribute: STRING): LINKED_LIST [STRING]
 			-- Possible assertions for reference types.
 		require
 			a_attribute_not_void: a_attribute /= Void
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	pointer_assertions (a_attribute: STRING): LINKED_LIST [STRING] is
+	pointer_assertions (a_attribute: STRING): LINKED_LIST [STRING]
 			-- Possible assertions for POINTER.
 		require
 			a_attribute_not_void: a_attribute /= Void
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	integer_assertions (a_attribute: STRING): LINKED_LIST [STRING] is
+	integer_assertions (a_attribute: STRING): LINKED_LIST [STRING]
 			-- Possible assertions for INTEGER(_*).
 		require
 			a_attribute_not_void: a_attribute /= Void
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	real_assertions (a_attribute: STRING): LINKED_LIST [STRING] is
+	real_assertions (a_attribute: STRING): LINKED_LIST [STRING]
 			-- Possible assertions for REAL and DOUBLE.
 		require
 			a_attribute_not_void: a_attribute /= Void
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	character_assertions (a_attribute: STRING): LINKED_LIST [STRING] is
+	character_assertions (a_attribute: STRING): LINKED_LIST [STRING]
 			-- Possible assertions for (WIDE_)CHARACTER.
 		require
 			a_attribute_not_void: a_attribute /= Void
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	string_assertions (a_attribute: STRING): LINKED_LIST [STRING] is
+	string_assertions (a_attribute: STRING): LINKED_LIST [STRING]
 			-- Possible assertions for STRING.
 		require
 			a_attribute_not_void: a_attribute /= Void
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

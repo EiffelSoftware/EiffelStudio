@@ -1,4 +1,4 @@
-indexing
+note
 	description: "External command tester, used to test if output/error a process matchs given expected output/error"
 	author: ""
 	date: "$Date$"
@@ -30,7 +30,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_command: like command) is
+	make (a_command: like command)
 			-- Initialize.
 		require
 			a_command_attached: a_command /= Void
@@ -44,7 +44,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	visitable_name: STRING_GENERAL is
+	visitable_name: STRING_GENERAL
 			-- Name of current visitable item
 		do
 			Result := metric_names.l_external_command_tester
@@ -99,7 +99,7 @@ feature -- Status report
 	is_error_as_file: BOOLEAN
 			-- Does error specified in `error' represent a file_name?
 
-	is_command_specified: BOOLEAN is
+	is_command_specified: BOOLEAN
 			-- Is `command' specified?
 		local
 			l_cmd: like command
@@ -112,7 +112,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_command (a_command: like command) is
+	set_command (a_command: like command)
 			-- Set `command' with `a_command'.
 		require
 			a_command_attached: a_command /= Void
@@ -122,7 +122,7 @@ feature -- Setting
 			command_set: command /= Void and then command.is_equal (a_command)
 		end
 
-	set_working_directory (a_working_directory: like working_directory) is
+	set_working_directory (a_working_directory: like working_directory)
 			-- Set `working_directory' with `a_working_directory'.
 		require
 			a_working_directory_attached: a_working_directory /= Void
@@ -132,7 +132,7 @@ feature -- Setting
 			working_directory_set: working_directory /= Void and then working_directory.is_equal (a_working_directory)
 		end
 
-	set_input (a_input: like input) is
+	set_input (a_input: like input)
 			-- Set `input' with `a_input'.
 		require
 			a_input_attached: a_input /= Void
@@ -142,7 +142,7 @@ feature -- Setting
 			input_set: input /= Void and then input.is_equal (a_input)
 		end
 
-	set_output (a_output: like output) is
+	set_output (a_output: like output)
 			-- Set `output' with `a_output'.
 		require
 			a_output_attached: a_output /= Void
@@ -152,7 +152,7 @@ feature -- Setting
 			output_set: output /= Void and then output.is_equal (a_output)
 		end
 
-	set_error (a_error: like error) is
+	set_error (a_error: like error)
 			-- Set `error' with `a_error'.
 		require
 			a_error_attached: a_error /= Void
@@ -162,7 +162,7 @@ feature -- Setting
 			error_set: error /= Void and then error.is_equal (a_error)
 		end
 
-	set_exit_code (a_code: INTEGER) is
+	set_exit_code (a_code: INTEGER)
 			-- Set `exit_code' with `a_code'.
 		do
 			exit_code := a_code
@@ -170,7 +170,7 @@ feature -- Setting
 			exit_code_set: exit_code = a_code
 		end
 
-	set_is_output_enabled (b: BOOLEAN) is
+	set_is_output_enabled (b: BOOLEAN)
 			-- Set `is_output_enabled' with `b'.
 		do
 			is_output_enabled := b
@@ -178,7 +178,7 @@ feature -- Setting
 			is_output_enabled_set: is_output_enabled = b
 		end
 
-	set_is_error_enabled (b: BOOLEAN) is
+	set_is_error_enabled (b: BOOLEAN)
 			-- Set `is_error_enabled' with `b'.
 		do
 			is_error_enabled := b
@@ -186,7 +186,7 @@ feature -- Setting
 			is_error_enabled_set: is_error_enabled = b
 		end
 
-	set_is_error_redirected_to_output (b: BOOLEAN) is
+	set_is_error_redirected_to_output (b: BOOLEAN)
 			-- Set `is_error_redirected_to_output' with `b'.
 		do
 			is_error_redirected_to_output := b
@@ -194,7 +194,7 @@ feature -- Setting
 			is_error_redirectory_to_output_set: is_error_redirected_to_output = b
 		end
 
-	set_is_exit_code_enabled (b: BOOLEAN) is
+	set_is_exit_code_enabled (b: BOOLEAN)
 			-- Set `is_exit_code_enabled' with `b'.
 		do
 			is_exit_code_enabled := b
@@ -202,7 +202,7 @@ feature -- Setting
 			is_exit_code_enabled_set: is_exit_code_enabled = b
 		end
 
-	set_input_as_file (b: BOOLEAN) is
+	set_input_as_file (b: BOOLEAN)
 			-- Set `is_input_as_file' with `b'.
 		do
 			is_input_as_file := b
@@ -210,7 +210,7 @@ feature -- Setting
 			is_input_as_file_set: is_input_as_file = b
 		end
 
-	set_output_as_file (b: BOOLEAN) is
+	set_output_as_file (b: BOOLEAN)
 			-- Set `is_output_as_file' with `b'.
 		do
 			is_output_as_file := b
@@ -218,7 +218,7 @@ feature -- Setting
 			is_output_as_file_set: is_output_as_file = b
 		end
 
-	set_error_as_file (b: BOOLEAN) is
+	set_error_as_file (b: BOOLEAN)
 			-- Set `is_error_as_file' with `b'.
 		do
 			is_error_as_file := b
@@ -226,7 +226,7 @@ feature -- Setting
 			is_error_as_file_set: is_error_as_file = b
 		end
 
-	set_criterion (a_criterion: like criterion) is
+	set_criterion (a_criterion: like criterion)
 			-- Set `criterion' with `a_criterion'.
 		do
 			criterion := a_criterion
@@ -236,7 +236,7 @@ feature -- Setting
 
 feature{EB_METRIC_EXTERNAL_COMMAND_CRITERION} -- External command evaluation
 
-	evaluate (a_item: QL_ITEM): BOOLEAN is
+	evaluate (a_item: QL_ITEM): BOOLEAN
 			-- Launch `command' to tester if its output, error match `output' and `error'.
 		require
 			a_item_attached: a_item /= Void
@@ -399,7 +399,7 @@ feature{EB_METRIC_EXTERNAL_COMMAND_CRITERION} -- External command evaluation
 
 feature{NONE} -- Implementation
 
-	file_content (a_file: STRING): STRING is
+	file_content (a_file: STRING): STRING
 			-- Content of file `a_file'
 		require
 			a_file_attached: a_file /= Void
@@ -418,7 +418,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	on_output_from_process (a_output: STRING; a_record: BOOLEAN) is
+	on_output_from_process (a_output: STRING; a_record: BOOLEAN)
 			-- Action to be performed when `a_output' comes from launched process
 			-- If `a_record' is True, store `a_output' otherwise throw it away.
 		require
@@ -429,7 +429,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	on_error_from_process (a_error: STRING; a_record: BOOLEAN) is
+	on_error_from_process (a_error: STRING; a_record: BOOLEAN)
 			-- Action to be performed when `a_error' comes from launched process
 			-- If `a_record' is True, store `a_error' otherwise throw it away.
 		require
@@ -440,7 +440,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	replaced_text (a_text: STRING; a_replacer: EB_TEXT_REPLACER; a_fragment_list: LIST [EB_TEXT_FRAGMENT]): STRING is
+	replaced_text (a_text: STRING; a_replacer: EB_TEXT_REPLACER; a_fragment_list: LIST [EB_TEXT_FRAGMENT]): STRING
 			-- Return replaced text (using `a_replacer') from `a_text', and store found text fragments into `a_fragment_list'.
 		require
 			a_text_attached: a_text /= Void
@@ -460,7 +460,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	text_fragments_from_text (a_text: STRING): LIST [EB_TEXT_FRAGMENT] is
+	text_fragments_from_text (a_text: STRING): LIST [EB_TEXT_FRAGMENT]
 			-- Text fragments from `a_text'
 		require
 			a_text_attached: a_text /= Void
@@ -477,7 +477,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	fragment_factory: EB_METRIC_COMMAND_FRAGMENT_FACTORY is
+	fragment_factory: EB_METRIC_COMMAND_FRAGMENT_FACTORY
 			-- Fractory go generate fragments
 		do
 			if fragment_factory_internal = Void then
@@ -491,7 +491,7 @@ feature{NONE} -- Implementation
 	fragment_factory_internal: like fragment_factory
 			-- Implementation of `fragment_factory'
 
-	command_scanner: EB_COMMAND_SCANNER is
+	command_scanner: EB_COMMAND_SCANNER
 			-- Scanner to scanner `command'
 		do
 			if command_scanner_internal = Void then
@@ -513,7 +513,7 @@ feature{NONE} -- Implementation
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_external_command_tester (Current)
@@ -521,7 +521,7 @@ feature -- Process
 
 feature{NONE} -- Implementation
 
-	remove_new_line_characters (a_string: STRING) is
+	remove_new_line_characters (a_string: STRING)
 			-- Remove new line characters in `a_string'.
 		require
 			a_string_attached: a_string /= Void

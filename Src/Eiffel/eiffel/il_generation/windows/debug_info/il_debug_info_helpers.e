@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects that help computing file name for IL debug info"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Query
 
-	is_entry_point (a_feat: FEATURE_I): BOOLEAN is
+	is_entry_point (a_feat: FEATURE_I): BOOLEAN
 			-- Is `a_feat' the entry point ?
 		require
 			feat_not_void: a_feat /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- IL info file names
 
-	Il_info_file_name: FILE_NAME is
+	Il_info_file_name: FILE_NAME
 			-- Filename for IL info storage used to load data
 			-- in the context, we load workbench information
 			-- in finalized we generate each time all IL code
@@ -57,7 +57,7 @@ feature {NONE} -- IL info file names
 			end
 		end
 
-	Workbench_il_info_file_name: FILE_NAME is
+	Workbench_il_info_file_name: FILE_NAME
 			-- Filename for Workbench IL info storage
 		do
 			create Result.make_from_string (project_location.workbench_path)
@@ -65,7 +65,7 @@ feature {NONE} -- IL info file names
 			Result.add_extension (Il_info_extension)
 		end
 
-	Final_il_info_file_name: FILE_NAME is
+	Final_il_info_file_name: FILE_NAME
 			-- Filename for Final IL info storage
 		once
 			create Result.make_from_string (project_location.final_path)
@@ -75,51 +75,51 @@ feature {NONE} -- IL info file names
 
 feature {NONE} -- File name data From compiler world
 
-	workbench_module_directory_path_name: STRING is
+	workbench_module_directory_path_name: STRING
 			-- Directory path where module are located
 		do
 			Result := project_location.workbench_path
 		end
 
-	finalized_module_directory_path_name: STRING is
+	finalized_module_directory_path_name: STRING
 			-- Directory path where module are located
 		do
 			Result := project_location.final_path
 		end
 
-	workbench_assembly_directory_path_name: STRING is
+	workbench_assembly_directory_path_name: STRING
 			-- Directory path where assemblies are located
 			-- that is also valid for precompilation assemblies
 		do
 			Result := project_location.workbench_assemblies_path
 		end
 
-	finalized_assembly_directory_path_name: STRING is
+	finalized_assembly_directory_path_name: STRING
 			-- Directory path where assemblies are located
 			-- that is also valid for precompilation assemblies
 		do
 			Result := project_location.final_assemblies_path
 		end
 
-	precompilation_module_name (a_system_name: STRING): STRING is
+	precompilation_module_name (a_system_name: STRING): STRING
 		do
 			Result := a_system_name + ".dll"
 		end
 
-	workbench_precompilation_module_filename (a_system_name: STRING): FILE_NAME is
+	workbench_precompilation_module_filename (a_system_name: STRING): FILE_NAME
 		do
 			create Result.make_from_string (workbench_assembly_directory_path_name)
 			Result.set_file_name (precompilation_module_name (a_system_name))
 		end
 
-	finalized_precompilation_module_filename (a_system_name: STRING): FILE_NAME is
+	finalized_precompilation_module_filename (a_system_name: STRING): FILE_NAME
 			-- Finalized precompilation module file name for `a_system_name'.
 		do
 			create Result.make_from_string (finalized_assembly_directory_path_name)
 			Result.set_file_name (precompilation_module_name (a_system_name))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

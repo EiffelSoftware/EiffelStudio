@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to exit the application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ inherit
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Exit application. Ask the user to save unsaved files and ask for
 			-- confirmation on exit.
 		local
@@ -76,7 +76,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	set_already_confirmed (b: BOOLEAN) is
+	set_already_confirmed (b: BOOLEAN)
 			-- Set a flag saying a confirmation dialog was already displayed => do not ask again.
 		do
 			already_confirmed := b
@@ -84,7 +84,7 @@ feature -- Status setting
 
 feature {EB_WINDOW_MANAGER} -- Exit methods.
 
-	ask_confirmation is
+	ask_confirmation
 			-- Display a confirmation dialog box
 		local
 			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
@@ -101,7 +101,7 @@ feature {EB_WINDOW_MANAGER} -- Exit methods.
 
 feature {NONE} -- Callbacks
 
-	exit_application is
+	exit_application
 			-- Exit the application
 			-- This application means Eiffel Studio.
 		local
@@ -158,7 +158,7 @@ feature {NONE} -- Callbacks
 			ev_application.destroy
 		end
 
-	confirm_stop_debug is
+	confirm_stop_debug
 			-- Exit application. Ask the user to kill the debugger if it is running
 		local
 			l_confirm: ES_QUESTION_PROMPT
@@ -176,7 +176,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	confirm_and_exit is
+	confirm_and_exit
 			-- Ask to save files, to confirm if necessary and exit.
 		local
 			l_exit_save_prompt: ES_SAVE_CLASSES_PROMPT
@@ -198,7 +198,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	save_and_exit is
+	save_and_exit
 			-- Save all windows and exit.
 		local
 			l_error: ES_ERROR_PROMPT
@@ -213,7 +213,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	stop_compilation_and_exit is
+	stop_compilation_and_exit
 			-- Interrupt the current compilation.
 		require
 			Workbench.is_compiling
@@ -223,7 +223,7 @@ feature {NONE} -- Callbacks
 
 feature {NONE} -- Attributes
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name used in menu entry
 		do
 			Result := Interface_names.m_Exit_project
@@ -233,7 +233,7 @@ feature {NONE} -- Attributes
 			-- Has the user already said he DID want to exit?
 			--| We shouldn't ask again then.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

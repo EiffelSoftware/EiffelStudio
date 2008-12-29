@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An overridden version of {EIFFEL_ENV} to specify the application name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ feature -- Access
 			-- Application name.
 			-- Note: hopefully EIFFEL_ENV will be update to read the application name!
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

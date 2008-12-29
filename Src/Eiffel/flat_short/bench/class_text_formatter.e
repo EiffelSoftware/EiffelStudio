@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Formats Eiffel class text."
@@ -40,7 +40,7 @@ feature -- Properties
 	feature_clause_order: ARRAY [STRING]
 			-- Array of orderd feature clause comments
 
-	is_flat: BOOLEAN is
+	is_flat: BOOLEAN
 			-- Is the format doing a flat?
 		do
 			Result := not is_short
@@ -50,14 +50,14 @@ feature -- Properties
 
 feature -- Setting
 
-	set_documentation (a_doc: like documentation) is
+	set_documentation (a_doc: like documentation)
 			-- Set `is_for_documentation'
 		do
 			is_for_documentation := true
 			documentation := a_doc
 		end
 
-	set_is_short is
+	set_is_short
 			-- Set `is_short' to True.
 		do
 			is_short := True
@@ -65,7 +65,7 @@ feature -- Setting
 			is_short: is_short
 		end;
 
-	set_order_same_as_text is
+	set_order_same_as_text
 			-- Set ordered_same_as_text_bool to True.
 		do
 			ordered_same_as_text := True
@@ -73,7 +73,7 @@ feature -- Setting
 			ordered_same_as_text: ordered_same_as_text
 		end;
 
-	set_one_class_only is
+	set_one_class_only
 			-- Set current_class_only to True.
 		do
 			is_one_class_only := True;
@@ -81,7 +81,7 @@ feature -- Setting
 			is_one_class_only: is_one_class_only
 		end;
 
-	set_feature_clause_order (fco: like feature_clause_order) is
+	set_feature_clause_order (fco: like feature_clause_order)
 			-- Set `feature_clause_order' to `fco'.
 		require
 			not_orded_same_as_text: not ordered_same_as_text
@@ -93,7 +93,7 @@ feature -- Setting
 
 feature -- Output
 
-	format (e_class: CLASS_C; a_formatter: TEXT_FORMATTER) is
+	format (e_class: CLASS_C; a_formatter: TEXT_FORMATTER)
 			-- Format text for eiffel class `e_class'.
 		require
 			valid_e_class: e_class /= Void
@@ -126,7 +126,7 @@ feature -- Output
 			error := f.execution_error
 		end;
 
-	format_invariants (e_class: CLASS_C; a_formatter: TEXT_FORMATTER) is
+	format_invariants (e_class: CLASS_C; a_formatter: TEXT_FORMATTER)
 			-- Format invariants for eiffel class `e_class'.
 		require
 			valid_e_class: e_class /= Void
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 
 	documentation: DOCUMENTATION_ROUTINES;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

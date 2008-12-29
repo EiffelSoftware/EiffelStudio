@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Access to all the Eiffel tables
@@ -11,7 +11,7 @@ inherit
 	
 feature {NONE}
 
-	Eiffel_table: EIFFEL_HISTORY is
+	Eiffel_table: EIFFEL_HISTORY
 			-- Array of data tables for the final Eiffel executable. This
 			-- might contain at an index `rout_id' either a routine table
 			-- (instance of ROUT_TABLE) or an attribute offset table (instance
@@ -20,7 +20,7 @@ feature {NONE}
 			create Result.make
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

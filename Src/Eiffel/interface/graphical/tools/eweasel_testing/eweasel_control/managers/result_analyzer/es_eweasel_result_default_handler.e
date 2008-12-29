@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Default hanlder for eweasel output.
 						This handler is the LAST one hanlde eweasel output.
@@ -42,7 +42,7 @@ feature {NONE} -- Redefine
 			not_void: Result /= Void
 		end
 
-	process_imp (a_lines: LIST [STRING]): ES_EWEASEL_TEST_RESULT_ITEM is
+	process_imp (a_lines: LIST [STRING]): ES_EWEASEL_TEST_RESULT_ITEM
 			-- Redefine
 		local
 			l_first_line: STRING
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 	is_on_exit: BOOLEAN
 			-- If exiting eweasel?
 
-	eweasel_unknow_result: STRING_GENERAL is
+	eweasel_unknow_result: STRING_GENERAL
 			-- String for unhandled eweasel output
 		local
 			l_shared: SHARED_BENCH_NAMES
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			valid: Result /= Void and then not Result.is_empty
 		end
 
-	first_non_empty_line (a_lines: LIST [STRING]): STRING is
+	first_non_empty_line (a_lines: LIST [STRING]): STRING
 			-- Find first non empty string item in `a_lines'
 			-- Result void if not found
 		local
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract notion of a command for the editor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,19 +23,19 @@ create
 
 feature -- Status setting
 
-	set_needs_editable (ed: BOOLEAN) is
+	set_needs_editable (ed: BOOLEAN)
 			-- Tell the command it requires the editor to be editable.
 		do
 			needs_editable := ed
 		end
 
-	set_is_for_main_editors (a_b: BOOLEAN) is
+	set_is_for_main_editors (a_b: BOOLEAN)
 			-- Set `is_for_main_editor' with `a_b'.
 		do
 			is_for_main_editor := a_b
 		end
 
-	update_status is
+	update_status
 			-- Enable or disable `Current'.
 		do
 			if is_loaded then
@@ -63,28 +63,28 @@ feature -- Status report
 
 feature -- observer pattern
 
-	on_text_fully_loaded is
+	on_text_fully_loaded
 			-- make the command sensitive
 		do
 			is_loaded := True
 			update_status
 		end
 
-	on_text_reset is
+	on_text_reset
 			-- make the command sensitive
 		do
 			is_loaded := False
 			update_status
 		end
 
-	on_editable is
+	on_editable
 			-- Editor has become editable.
 		do
 			is_editable := True
 			update_status
 		end
 
-	on_not_editable is
+	on_not_editable
 			-- Editor is no longer editable.
 		do
 			is_editable := False
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 	is_editable: BOOLEAN;
 			-- Is the current text editable?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

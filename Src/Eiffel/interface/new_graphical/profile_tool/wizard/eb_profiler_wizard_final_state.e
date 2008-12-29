@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Final state of the wizard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,13 +17,13 @@ create
 
 feature -- Access
 
-	display_state_text is
+	display_state_text
 		do
 			title.set_text ("Completing the Profiler Wizard")
 			message.set_text ("You have specified the following settings:..")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

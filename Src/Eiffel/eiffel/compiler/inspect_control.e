@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Controler of multi-branch instruction"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,7 +51,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (inspect_expression_type: TYPE_A) is
+	make (inspect_expression_type: TYPE_A)
 			-- Create controller for inspect instruction with `inspect_expression_type'.
 		require
 			inspect_expression_type_not_void: inspect_expression_type /= Void
@@ -102,7 +102,7 @@ feature {NONE} -- State
 
 feature -- Processing
 
-	process_interval (interval: INTERVAL_AS; a_code_inherited: BOOLEAN) is
+	process_interval (interval: INTERVAL_AS; a_code_inherited: BOOLEAN)
 			-- Check type validity of `interval' and make byte code available
 			-- in `last_interval_byte_node' if possible.
 		require
@@ -153,7 +153,7 @@ feature -- Processing
 
 feature {STATIC_ACCESS_AS} -- Visitor
 
-	process_static_access_as (l_as: STATIC_ACCESS_AS) is
+	process_static_access_as (l_as: STATIC_ACCESS_AS)
 		local
 			feature_i: FEATURE_I
 			constant_i: CONSTANT_I
@@ -216,7 +216,7 @@ feature {STATIC_ACCESS_AS} -- Visitor
 
 feature {ID_AS} -- Visitor
 
-	process_id_as (l_as: ID_AS) is
+	process_id_as (l_as: ID_AS)
 		local
 			feature_i: FEATURE_I
 			constant_i: CONSTANT_I
@@ -251,7 +251,7 @@ feature {ID_AS} -- Visitor
 
 feature {CHAR_AS} -- Visitor
 
-	process_char_as (l_as: CHAR_AS) is
+	process_char_as (l_as: CHAR_AS)
 		do
 			if type.is_character then
 				create {CHAR_VAL_B} last_inspect_value.make (l_as.value)
@@ -262,7 +262,7 @@ feature {CHAR_AS} -- Visitor
 
 feature {INTEGER_CONSTANT} -- Visitor
 
-	process_integer_as (l_as: INTEGER_CONSTANT) is
+	process_integer_as (l_as: INTEGER_CONSTANT)
 		do
 			if l_as.valid_type (type) then
 				last_inspect_value := l_as.inspect_value (type)
@@ -273,7 +273,7 @@ feature {INTEGER_CONSTANT} -- Visitor
 
 feature {NONE} -- Implementation
 
-	report_veen (identifier: ID_AS) is
+	report_veen (identifier: ID_AS)
 			-- Report unknown `identifier'.
 		require
 			identifier_not_void: identifier /= Void
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 			error_handler.insert_error (veen)
 		end
 
-	report_vomb2 (value: ATOMIC_AS) is
+	report_vomb2 (value: ATOMIC_AS)
 			-- Report that `value' does not match inspect expression `type'.
 		require
 			value_not_void: value /= Void
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 			error_handler.insert_error (vomb2)
 		end
 
-	process_inspect_value (bound: ATOMIC_AS) is
+	process_inspect_value (bound: ATOMIC_AS)
 			-- Chack inspect value `bound' for validity and make its byte code
 			-- available in `last_inspect_value' if possible.
 		require
@@ -363,7 +363,7 @@ invariant
 	unique_names_not_void: unique_names /= Void
 	intervals_not_void: intervals /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

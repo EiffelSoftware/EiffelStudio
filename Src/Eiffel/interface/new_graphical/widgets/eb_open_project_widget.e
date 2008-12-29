@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Widget to open an existing project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -61,7 +61,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window: like parent_window) is
+	make (a_window: like parent_window)
 			-- Initialize current using `a_window' as top most parent.
 		require
 			a_window_not_void: a_window /= Void
@@ -83,7 +83,7 @@ feature -- Access
 	parent_window: EV_WINDOW
 			-- Top level window containing `widget'.
 
-	select_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+	select_actions: EV_GRID_ROW_ACTION_SEQUENCE
 			-- Actions being triggered when an item is selected.
 		do
 			Result := projects_list.row_select_actions
@@ -91,7 +91,7 @@ feature -- Access
 			select_actions_not_void: Result /= Void
 		end
 
-	deselect_actions: EV_GRID_ROW_ACTION_SEQUENCE is
+	deselect_actions: EV_GRID_ROW_ACTION_SEQUENCE
 			-- Actions being triggered when an item is deselected.
 		do
 			Result := projects_list.row_deselect_actions
@@ -101,19 +101,19 @@ feature -- Access
 
 feature -- Status report
 
-	has_selected_item: BOOLEAN is
+	has_selected_item: BOOLEAN
 			-- Does current has a selected item?
 		do
 			Result := not projects_list.selected_rows.is_empty
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Does current contain some existing project?
 		do
 			Result := projects_list.row_count = 0
 		end
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Did we encounter an error while trying to parse a config file?
 		do
 			Result := last_state.has_system_error or last_state.has_missing_target_error
@@ -121,7 +121,7 @@ feature -- Status report
 
 feature -- Status Setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make object sensitive to user input.
 		do
 			sensitive_container.enable_sensitive
@@ -129,7 +129,7 @@ feature -- Status Setting
 			remove_project_button.enable_sensitive
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make object non-sensitive to user input.
 		do
 			sensitive_container.disable_sensitive
@@ -138,7 +138,7 @@ feature -- Status Setting
 			last_selected_row := Void
 		end
 
-	remove_selection is
+	remove_selection
 			-- Unselect currently selected item if any.
 		do
 			projects_list.remove_selection
@@ -148,7 +148,7 @@ feature -- Status Setting
 			disable_sensitive
 		end
 
-	set_focus is
+	set_focus
 			-- Set focus to `projects_list'.
 		do
 			if not is_empty then
@@ -158,7 +158,7 @@ feature -- Status Setting
 
 feature -- Actions
 
-	open_project is
+	open_project
 			-- Open selected project and perform action selected in `action_combo'.
 		require
 			not_has_error: not has_error
@@ -264,7 +264,7 @@ feature {NONE} -- State information
 	last_selected_row: EV_GRID_ROW
 			-- Last selected row of control.
 
-	selected_target: STRING_32 is
+	selected_target: STRING_32
 			-- Selected target if any, empty string otherwise.
 		local
 			l_item: EV_GRID_CHOICE_ITEM
@@ -282,7 +282,7 @@ feature {NONE} -- State information
 			selected_target_not_void: Result /= Void
 		end
 
-	selected_path: STRING_32 is
+	selected_path: STRING_32
 			-- Path of selected configuration if any, empty string otherwise.
 		local
 			l_item: EV_GRID_LABEL_ITEM
@@ -302,7 +302,7 @@ feature {NONE} -- State information
 
 feature {NONE} -- Initialization
 
-	build_interface is
+	build_interface
 			-- Build interface for choosing a project.
 		local
 			open_project_vb: EV_VERTICAL_BOX
@@ -446,7 +446,7 @@ feature {NONE} -- Initialization
 			fill_projects_list
 		end
 
-	fill_projects_list is
+	fill_projects_list
 			-- Fill `projects_list' with recently open projects.
 		require
 			is_empty: is_empty
@@ -512,7 +512,7 @@ feature {NONE} -- Initialization
 			projects_list_created: projects_list /= Void
 		end
 
-	insert_new_project (a_project_file: STRING; a_row_index: INTEGER) is
+	insert_new_project (a_project_file: STRING; a_row_index: INTEGER)
 			-- Create an empty new row for `a_project_file' in `projects_list'.
 		require
 			a_project_file_not_void: a_project_file /= Void
@@ -546,7 +546,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	update_project (a_row: EV_GRID_ROW; is_initializing, is_new_selection, is_new_action: BOOLEAN) is
+	update_project (a_row: EV_GRID_ROW; is_initializing, is_new_selection, is_new_action: BOOLEAN)
 			-- Update project associated to `a_row'.
 			-- If `is_initializing', read the last saved options and display them,
 			--   otherwise use the last settings made by user.
@@ -728,7 +728,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_targets (a_item: EV_GRID_CHOICE_ITEM) is
+	update_targets (a_item: EV_GRID_CHOICE_ITEM)
 			-- Fill `a_item' with targets of `a_config'.
 		require
 			a_item_not_void: a_item /= Void
@@ -765,7 +765,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	available_targets (a_config: CONF_SYSTEM): DS_ARRAYED_LIST [STRING] is
+	available_targets (a_config: CONF_SYSTEM): DS_ARRAYED_LIST [STRING]
 			-- List of targets of `a_config'.
 		require
 			a_config_not_void: a_config /= Void
@@ -789,7 +789,7 @@ feature {NONE} -- Implementation
 			available_targets_not_void: Result /= Void
 		end
 
-	fill_locations is
+	fill_locations
 			-- Fill `location_combo' with last locations for currently selected target for `last_state.system'.
 		require
 			not_has_error: not has_error
@@ -839,7 +839,7 @@ feature {NONE} -- Implementation
 			location_combo.change_actions.resume
 		end
 
-	read_user_options (a_file_path: STRING) is
+	read_user_options (a_file_path: STRING)
 			-- Read user data for project of path `a_file_path'.
 		require
 			a_file_path_not_void: a_file_path /= Void
@@ -855,7 +855,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_projects_list is
+	save_projects_list
 			-- Save current list of projects directly to preferences.
 		local
 			l_item: EV_GRID_LABEL_ITEM
@@ -883,7 +883,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Actions
 
-	open_existing_project_not_listed is
+	open_existing_project_not_listed
 			-- Open a non listed existing project
 		local
 			fod: EB_FILE_OPEN_DIALOG
@@ -906,7 +906,7 @@ feature {NONE} -- Actions
 			fod.show_modal_to_window (parent_window)
 		end
 
-	edit_selected_project is
+	edit_selected_project
 			-- Edit selected project.
 		require
 			not_is_empty: not is_empty
@@ -950,7 +950,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	remove_project_from_list is
+	remove_project_from_list
 			-- Remove selected project from `project_lists'.
 		require
 			not_is_empty: not is_empty
@@ -978,7 +978,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	file_choice_callback (a_dlg: EB_FILE_OPEN_DIALOG) is
+	file_choice_callback (a_dlg: EB_FILE_OPEN_DIALOG)
 			-- This is a callback from the name chooser.
 			-- We get the project name and then insert it to the list of projects.
 		require
@@ -1051,7 +1051,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_project_selected (a_row: EV_GRID_ROW) is
+	on_project_selected (a_row: EV_GRID_ROW)
 			-- Update content with selected project `a_project_path'.
 		require
 			a_row_not_void: a_row /= Void
@@ -1070,7 +1070,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_location_changed is
+	on_location_changed
 			-- Perform location validation.
 		local
 			l_location: STRING
@@ -1086,7 +1086,7 @@ feature {NONE} -- Actions
 			on_location_selected
 		end
 
-	on_location_selected is
+	on_location_selected
 			-- Update interface when location changed.
 		require
 			has_selected_item: has_selected_item
@@ -1099,7 +1099,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_action_selected is
+	on_action_selected
 			-- Update interface when action changed.
 		do
 			if not is_empty and has_selected_item then
@@ -1107,7 +1107,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_target_selected (a_row: EV_GRID_ROW) is
+	on_target_selected (a_row: EV_GRID_ROW)
 			-- Update interface when new target has been selected.
 		require
 			a_row_not_void: a_row /= Void
@@ -1126,14 +1126,14 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_clean_button_selected is
+	on_clean_button_selected
 			-- Remember last state chosen by user. It is necessary to restore the state in case he chose
 			-- `precompile_action_item' and decide to choose something else after.
 		do
 			last_clean_state := clean_button.is_selected
 		end
 
-	on_choose_target (a_item: EV_GRID_CHOICE_ITEM) is
+	on_choose_target (a_item: EV_GRID_CHOICE_ITEM)
 			-- Activate the combo enabling user to choose project's target
 		require
 			a_item_not_void: a_item /= Void
@@ -1144,7 +1144,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_double_click (x, y: INTEGER) is
+	on_double_click (x, y: INTEGER)
 			-- Open currently selected project if valid.
 		local
 			l_row: EV_GRID_ROW
@@ -1160,7 +1160,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- Action when user press a key in `projects_list'.
 			-- At the moment only handle F4 to enable user to chose a target if more than one is available
 			-- for currently selected project.
@@ -1178,7 +1178,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	add_location is
+	add_location
 			-- Add new location to combobox.
 			-- Select a new location.
 		local
@@ -1215,7 +1215,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Convenience
 
-	is_file_readable (a_file_name: STRING): BOOLEAN is
+	is_file_readable (a_file_name: STRING): BOOLEAN
 			-- Does file of path `a_file_name' exist and is readable?
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -1227,9 +1227,9 @@ feature {NONE} -- Convenience
 			Result := l_file.exists and then l_file.is_readable
 		end
 
-	name_column_index: INTEGER is 1
-	target_column_index: INTEGER is 2
-	path_column_index: INTEGER is 3
+	name_column_index: INTEGER = 1
+	target_column_index: INTEGER = 2
+	path_column_index: INTEGER = 3
 			-- Index in grid for each column.
 
 	extra_space_in_combo: INTEGER = 32
@@ -1255,7 +1255,7 @@ invariant
 	edit_project_button_not_void: edit_project_button /= Void
 	remove_project_button_not_void: remove_project_button /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

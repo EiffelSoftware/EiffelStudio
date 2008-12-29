@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Implementation of {TEST_PROJECT_HELPER_I} used for batch environment.
 	]"

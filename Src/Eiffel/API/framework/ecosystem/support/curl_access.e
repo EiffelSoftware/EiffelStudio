@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Access to rudamentry function of cURL.
 	]"
@@ -79,7 +79,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Helpers
 
-	frozen curl: CURL_EASY_EXTERNALS is
+	frozen curl: CURL_EASY_EXTERNALS
 			-- Access to easy cURL external API.
 		once
 			create Result
@@ -89,7 +89,7 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Basic operations
 
-	perform is
+	perform
 			-- Perform a cURL action.
 		require
 			is_accessible: is_accessible
@@ -116,7 +116,7 @@ feature {NONE} -- Basic operations
 			plus_replaced: not Result.has_substring ("+")
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

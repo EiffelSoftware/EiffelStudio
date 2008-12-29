@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Window to edit the preferences"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 	delayed_resources: LINKED_LIST [STRING]
 
-	make is
+	make
 			-- Initialize
 		local
 			main_box: EV_VERTICAL_BOX
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			right_list.set_column_width (right_list.width - right_list.column_width (1) - 2, 2)
 		end
 
-	make_then_direct_to (folder_name: STRING) is
+	make_then_direct_to (folder_name: STRING)
 			-- Popup the Preference Window with category corresponding to `category_name'.
 		require
 			name_possible: folder_name /= Void and then resources.has_folder (folder_name)
@@ -130,7 +130,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	destroy is
+	destroy
 			-- Destroy the window
 		do
 				-- Destroy the selection windows as well
@@ -144,14 +144,14 @@ feature -- Command
 
 feature {SELECTION_BOX} -- Update
 
-	update (a_resource: RESOURCE) is
+	update (a_resource: RESOURCE)
 			-- Update Current.
 		do
 			update_delayed_resources (a_resource)
 			fill_right_list (left_list.selected_item)
 		end
 
-	update_selected (a_resource: RESOURCE) is
+	update_selected (a_resource: RESOURCE)
 			-- Update the value of the selected right item.
 		local
 			sel: RESOURCE_LIST_ITEM
@@ -168,7 +168,7 @@ feature {SELECTION_BOX} -- Update
 
 feature {NONE} -- Execution
 
-	on_right_list_focus_out is
+	on_right_list_focus_out
 			-- Clear the edition window when the right list lose the focus.
 		do
 			if current_edition_window /= Void then
@@ -181,7 +181,7 @@ feature {NONE} -- Execution
 			end
 		end
 		
-	on_right_list_column_resize (a_column: INTEGER) is
+	on_right_list_column_resize (a_column: INTEGER)
 			-- A column in the right list has been resized
 		local
 			column2_width: INTEGER
@@ -206,13 +206,13 @@ feature {NONE} -- Execution
 			end
 		end
 		
-	on_right_list_deselect (l_item: EV_MULTI_COLUMN_LIST_ROW) is
+	on_right_list_deselect (l_item: EV_MULTI_COLUMN_LIST_ROW)
 			-- Unselected value
 		do
 			clear
 		end
 		
-	on_right_list_select (l_item: EV_MULTI_COLUMN_LIST_ROW) is
+	on_right_list_select (l_item: EV_MULTI_COLUMN_LIST_ROW)
 			-- Allows change to a value.
 		local
 			it: RESOURCE_LIST_ITEM
@@ -259,7 +259,7 @@ feature {NONE} -- Execution
 			current_edition_window.show_relative_to_window (Current)
 		end
 		
-	on_window_move_and_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_window_move_and_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Window has moved, resized, ...
 		local
 			column2_width: INTEGER
@@ -272,7 +272,7 @@ feature {NONE} -- Execution
 			end
 		end
 		
-	apply_changes is
+	apply_changes
 			-- Apply changes.
 		local
 			wd: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
@@ -298,7 +298,7 @@ feature {NONE} -- Execution
 			resources.save
 		end
 
-	on_reinitialize is
+	on_reinitialize
 			-- Load the defaults.
 		do
 			resources.load_defaults
@@ -307,7 +307,7 @@ feature {NONE} -- Execution
 			fill_list
 		end
 
-	on_close is
+	on_close
 			-- Close button has been pushed: apply the changes then close
 			-- the Preferences Window.
 		do
@@ -317,7 +317,7 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Implementation - Fill Lists
 
-	recurse_expand (it: EV_TREE_NODE; a_depth: INTEGER) is
+	recurse_expand (it: EV_TREE_NODE; a_depth: INTEGER)
 			-- Recursively expand `it'. if `a_depth' is set
 			-- to zero, it only `it' but not its children.
 		require
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation - Fill Lists
 			end
 		end
 
-	fill_list is
+	fill_list
 			-- Fill Left tree.
 		local
  			it: EV_TREE_ITEM
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation - Fill Lists
 			recurse_expand (it, 1)
 		end
 
-	folder_item (folder: RESOURCE_FOLDER): EV_TREE_ITEM is
+	folder_item (folder: RESOURCE_FOLDER): EV_TREE_ITEM
 			-- Fill Left branch.
 		require
 			folder_exists: folder /= Void
@@ -404,7 +404,7 @@ feature {NONE} -- Implementation - Fill Lists
 			Result_exists: Result /= Void
 		end
 
-	fill_right_list (t_item: EV_TREE_NODE) is
+	fill_right_list (t_item: EV_TREE_NODE)
 			-- Fill right list
 		local
 			it: RESOURCE_LIST_ITEM
@@ -449,7 +449,7 @@ feature {NONE} -- Implementation - Fill Lists
 
 feature {NONE} -- Implementation
 
-	update_delayed_resources (a_resource: RESOURCE) is
+	update_delayed_resources (a_resource: RESOURCE)
 			-- Update `delayed_resources' with `a_resource'.
 		local
 			delayed_resource_name: STRING
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_buttons_box: EV_HORIZONTAL_BOX is
+	build_buttons_box: EV_HORIZONTAL_BOX
 			-- Create and return the box containing the buttons
 		local
 			close_button: EV_BUTTON
@@ -483,7 +483,7 @@ feature {NONE} -- Implementation
 			Result.disable_item_expand (close_button)
 		end
 
-	clear is
+	clear
 			-- Hide the edition window if displayed
 		do
 			if current_edition_window /= Void and then current_edition_window.is_displayed then
@@ -521,7 +521,7 @@ feature {NONE} -- Private attributes
 	inside_on_resize_right_list_column: BOOLEAN;
 			-- Are we in the middle of `on_resize_right_list_column'?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

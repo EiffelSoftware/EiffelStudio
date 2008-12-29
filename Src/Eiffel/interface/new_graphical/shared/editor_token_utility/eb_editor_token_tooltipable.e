@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a tooltip in which drop-and-pickable editor tokens are displayed"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -61,7 +61,7 @@ inherit
 
 feature -- Access
 
-	required_tooltip_width: INTEGER is
+	required_tooltip_width: INTEGER
 			-- Required width in pixel to display tooltip
 			-- If `max_tooltip_width' is larger than this, `max_tooltip_width' will be used when
 			-- tooltip is displayed.
@@ -69,7 +69,7 @@ feature -- Access
 			Result := required_width + border_line_width * 2 + left_border + right_border
 		end
 
-	required_tooltip_height: INTEGER is
+	required_tooltip_height: INTEGER
 			-- Required height in pixel to display tooltip
 			-- If `max_tooltip_height' is larger than this, `max_tooltip_height' will be used when
 			-- tooltip is displayed.
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_tooltip_text (a_tokens: LIST [EDITOR_TOKEN]) is
+	set_tooltip_text (a_tokens: LIST [EDITOR_TOKEN])
 			-- Set `tokens' with `a_tokens'.
 			-- If `a_tokens' is Void or an empty list, this feature will disable tooltip after set `tokens' with an empty editor token list.
 		require else
@@ -92,7 +92,7 @@ feature -- Setting
 			end
 		end
 
-	set_tooltip_maximum_width (a_width: INTEGER) is
+	set_tooltip_maximum_width (a_width: INTEGER)
 			-- Set `maximum_width' with `a_width'.
 		do
 			lock_update
@@ -102,7 +102,7 @@ feature -- Setting
 			try_call_setting_change_actions
 		end
 
-	set_tooltip_maximum_height (a_height: INTEGER) is
+	set_tooltip_maximum_height (a_height: INTEGER)
 			-- Set `maximum_height' with `a_height'.
 		do
 			lock_update
@@ -112,7 +112,7 @@ feature -- Setting
 			try_call_setting_change_actions
 		end
 
-	set_tooltip_maximum_size (a_width: INTEGER; a_height: INTEGER) is
+	set_tooltip_maximum_size (a_width: INTEGER; a_height: INTEGER)
 			-- Set `maximum_width' with `a_width' and `maximum_height' with `a_height'.
 		do
 			lock_update
@@ -130,7 +130,7 @@ feature{NONE} -- Token position
 	last_picked_item_index: INTEGER
 			-- Index of last picked item in `token_tooltip'
 
-	set_last_picked_item_index (a_index: INTEGER) is
+	set_last_picked_item_index (a_index: INTEGER)
 			-- Set `last_picked_item_index' with `a_index'.
 		require
 		do
@@ -141,7 +141,7 @@ feature{NONE} -- Token position
 
 feature{NONE} -- Implementation
 
-	tooltip_widget: EV_WIDGET is
+	tooltip_widget: EV_WIDGET
 			-- Widget of current tooltip
 		do
 			if drawing_area = Void then
@@ -161,7 +161,7 @@ feature{NONE} -- Implementation
 	drawing_area: EV_DRAWING_AREA
 			-- Drawing area to draw tooltip
 
-	actual_tooltip_width: INTEGER is
+	actual_tooltip_width: INTEGER
 			-- Actual width in pixel of tooltip
 		local
 			l_max, l_required: INTEGER
@@ -175,7 +175,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	actual_tooltip_height: INTEGER is
+	actual_tooltip_height: INTEGER
 			-- Actual height in pixel of tooltip
 		local
 			l_max, l_required: INTEGER
@@ -189,7 +189,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	editor_token_pebble_at_position (x, y: INTEGER): ANY is
+	editor_token_pebble_at_position (x, y: INTEGER): ANY
 			-- Pebble of editor token at position (x, y).
 			-- Return Void if no token is available at position (x, y).
 		require
@@ -207,7 +207,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	on_pick_start (x, y: INTEGER) is
+	on_pick_start (x, y: INTEGER)
 			-- Action to be performed when pick from tooltip window starts
 		require
 			tooltip_enabled: is_tooltip_enabled
@@ -230,7 +230,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	on_pick_end (a_pickable: EV_ABSTRACT_PICK_AND_DROPABLE) is
+	on_pick_end (a_pickable: EV_ABSTRACT_PICK_AND_DROPABLE)
 			-- Action to be performed when pick from tooltip ends
 		require
 			tooltip_enabled: is_tooltip_enabled
@@ -250,7 +250,7 @@ feature{NONE} -- Implementation
 			last_picked_item_index_reset: last_picked_item_index = 0
 		end
 
-	adjust_tooltip_layout (should_redraw: BOOLEAN) is
+	adjust_tooltip_layout (should_redraw: BOOLEAN)
 			-- Adjust tooltip layout according to changes such as border color/width, maximum height/width...
 			-- If `should_redraw' is True, redraw whole tooltip region after adjustment.
 		do
@@ -265,7 +265,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	redraw_tooltip_portion (x, y, a_width, a_height: INTEGER) is
+	redraw_tooltip_portion (x, y, a_width, a_height: INTEGER)
 			-- Redraw tooltip portion in region defined by `x', `y', `a_width' and `a_height'.
 		local
 			l_editor_bg_color, l_editor_fg_color: EV_COLOR
@@ -296,7 +296,7 @@ feature{NONE} -- Implementation
 			Result := (create {EV_STOCK_COLORS}).white
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

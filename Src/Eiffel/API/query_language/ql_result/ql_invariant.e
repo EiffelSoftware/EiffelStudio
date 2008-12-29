@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents a class invariant (compared to feature item that represents a real feature)
 					item used in Eiffel query language
@@ -29,7 +29,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_class: like class_c; a_written_class: like written_class) is
+	make (a_class: like class_c; a_written_class: like written_class)
 			-- Initialize `class_c' with `a_class_c' and `written_class' with `a_wirtten_class_c'.
 		require
 			a_class_attached: a_class /= Void
@@ -43,7 +43,7 @@ feature{NONE} -- Initialization
 			a_written_class_set: written_class = a_written_class
 		end
 
-	make_with_parent (a_class: like class_c; a_written_class: like written_class; a_parent: QL_ITEM) is
+	make_with_parent (a_class: like class_c; a_written_class: like written_class; a_parent: QL_ITEM)
 			-- Initialize `class_c' with `a_class_c', `written_class' with `a_wirtten_class_c' and
 			-- `parent' with `a_parent'.
 		require
@@ -62,7 +62,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of current item
 		once
 			Result := "invariant"
@@ -70,7 +70,7 @@ feature -- Access
 			good_result: Result /= Void and then Result.is_equal ("invariant")
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description of current item
 		do
 			Result := ""
@@ -78,7 +78,7 @@ feature -- Access
 			no_description_attached_to_invariant: Result.is_equal ("")
 		end
 
-	class_i: CLASS_I is
+	class_i: CLASS_I
 			-- CLASS_I object associated with current item
 		do
 			Result := class_c.lace_class
@@ -87,7 +87,7 @@ feature -- Access
 	class_c: CLASS_C
 			-- Associated class with current feature
 
-	ast: INVARIANT_AS is
+	ast: INVARIANT_AS
 			-- AST node associated with current feature
 		do
 			check written_class.has_invariant end
@@ -97,7 +97,7 @@ feature -- Access
 	written_class: like class_c
 			-- CLASS_C in which current invariant is written
 
-	path_name_marker: QL_PATH_MARKER is
+	path_name_marker: QL_PATH_MARKER
 			-- Marker for `path_name'
 		do
 			Result := feature_path_marker
@@ -105,7 +105,7 @@ feature -- Access
 			good_result: Result = feature_path_marker
 		end
 
-	e_feature: E_FEATURE is
+	e_feature: E_FEATURE
 			-- Feature associated with Current
 		do
 			check
@@ -117,13 +117,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_real_feature: BOOLEAN is False
+	is_real_feature: BOOLEAN = False
 			-- Is current a real feature?
 
-	is_invariant_feature: BOOLEAN is True
+	is_invariant_feature: BOOLEAN = True
 			-- Is current an class invariant?
 
-	is_immediate: BOOLEAN is
+	is_immediate: BOOLEAN
 			-- Is current invariant immediate?
 		do
 			Result := class_c.class_id = written_class.class_id
@@ -133,7 +133,7 @@ feature -- Status report
 
 feature -- Visit
 
-	process (a_visitor: QL_VISITOR) is
+	process (a_visitor: QL_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_invariant (Current)
@@ -143,7 +143,7 @@ invariant
 	written_class_attached: written_class /= Void
 	parent_valid: parent /= Void implies parent.is_class and parent.is_valid_domain_item and parent.is_compiled
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

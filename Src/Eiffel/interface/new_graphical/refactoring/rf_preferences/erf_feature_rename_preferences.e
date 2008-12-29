@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All preferences for the feature rename refactoring."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,19 +16,19 @@ inherit
 
 feature -- Value
 
-	new_feature_name: STRING is
+	new_feature_name: STRING
 			-- The new name of the feature.
 		do
 			Result := new_feature_name_preference.value
 		end
 
-	update_comments: BOOLEAN is
+	update_comments: BOOLEAN
 			-- Should the occurance of the class name in comments be changed?
 		do
 			Result := update_comments_preference.value
 		end
 
-	update_strings: BOOLEAN is
+	update_strings: BOOLEAN
 			-- Should the occurance of the class name in strings be changed?
 		do
 			Result := update_strings_preference.value
@@ -36,7 +36,7 @@ feature -- Value
 
 feature -- Change value
 
-	set_new_feature_name (a_name: STRING) is
+	set_new_feature_name (a_name: STRING)
 			-- Set the new feature name.
 		require
 			a_name_not_void: a_name /= void
@@ -44,13 +44,13 @@ feature -- Change value
 			new_feature_name_preference.set_value (a_name)
 		end
 
-	set_update_comments (a_value: BOOLEAN) is
+	set_update_comments (a_value: BOOLEAN)
 			-- Set the update comments flag.
 		do
 			update_comments_preference.set_value (a_value)
 		end
 
-	set_update_strings (a_value: BOOLEAN) is
+	set_update_strings (a_value: BOOLEAN)
 			-- Set the update strings flag.
 		do
 			update_strings_preference.set_value (a_value)
@@ -64,13 +64,13 @@ feature {NONE} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	new_feature_name_string: STRING is "tools.refactoring.feature_rename.new_feature_name"
-	update_comments_string: STRING is "tools.refactoring.feature_rename.update_comments"
-	update_strings_string: STRING is "tools.refactoring.feature_rename.update_strings"
+	new_feature_name_string: STRING = "tools.refactoring.feature_rename.new_feature_name"
+	update_comments_string: STRING = "tools.refactoring.feature_rename.update_comments"
+	update_strings_string: STRING = "tools.refactoring.feature_rename.update_strings"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -94,7 +94,7 @@ invariant
 	update_comments_preference_not_void: update_comments_preference /= Void
 	update_strings_preference_not_void: update_strings_preference /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Facilities to receive DEBUG_VALUEs from application.
 		Those volues might be arguments, local entities or once function result.
@@ -25,7 +25,7 @@ inherit
 
 feature	{} -- Initialization of the C/Eiffel interface
 
-	init_recv_c is
+	init_recv_c
 			-- Pass routine addresses to C.
 		once
 			c_pass_recv_routines ($set_nat8, $set_nat16, $set_nat32, $set_nat64,
@@ -35,91 +35,91 @@ feature	{} -- Initialization of the C/Eiffel interface
 				$set_bits, $set_error, $set_exception_ref, $set_void)
 		end
 
-	set_error is
+	set_error
 			-- An error occurred.
 		do
 			error := True
 		end
 
-	set_nat8 (v: NATURAL_8) is
+	set_nat8 (v: NATURAL_8)
 			-- Receive an integer value.
 		do
 			create {DEBUG_BASIC_VALUE [NATURAL_8]} item.make (sk_uint8, v)
 		end
 
-	set_nat16 (v: NATURAL_16) is
+	set_nat16 (v: NATURAL_16)
 			-- Receive an integer value.
 		do
 			create {DEBUG_BASIC_VALUE [NATURAL_16]} item.make (sk_uint16, v)
 		end
 
-	set_nat32 (v: NATURAL_32) is
+	set_nat32 (v: NATURAL_32)
 			-- Receive an integer value.
 		do
 			create {DEBUG_BASIC_VALUE [NATURAL_32]} item.make (sk_uint32, v)
 		end
 
-	set_nat64 (v: NATURAL_64) is
+	set_nat64 (v: NATURAL_64)
 			-- Receive an integer value.
 		do
 			create {DEBUG_BASIC_VALUE [NATURAL_64]} item.make (sk_uint64, v)
 		end
 
-	set_int8 (v: INTEGER_8) is
+	set_int8 (v: INTEGER_8)
 			-- Receive an integer value.
 		do
 			create {DEBUG_BASIC_VALUE [INTEGER_8]} item.make (sk_int8, v)
 		end
 
-	set_int16 (v: INTEGER_16) is
+	set_int16 (v: INTEGER_16)
 			-- Receive an integer value.
 		do
 			create {DEBUG_BASIC_VALUE [INTEGER_16]} item.make (sk_int16, v)
 		end
 
-	set_int32 (v: INTEGER) is
+	set_int32 (v: INTEGER)
 			-- Receive an integer value.
 		do
 			create {DEBUG_BASIC_VALUE [INTEGER]} item.make (sk_int32, v)
 		end
 
-	set_int64 (v: INTEGER_64) is
+	set_int64 (v: INTEGER_64)
 			-- Receive an integer value.
 		do
 			create {DEBUG_BASIC_VALUE [INTEGER_64]} item.make (sk_int64, v)
 		end
 
-	set_bool (v: BOOLEAN) is
+	set_bool (v: BOOLEAN)
 			-- Receive a boolean value.
 		do
 			create {DEBUG_BASIC_VALUE [BOOLEAN]} item.make (sk_bool, v)
 		end
 
-	set_char (v: CHARACTER) is
+	set_char (v: CHARACTER)
 			-- Receive a character value.
 		do
 			create {CHARACTER_VALUE} item.make (sk_char, v)
 		end
 
-	set_wchar (v: WIDE_CHARACTER) is
+	set_wchar (v: WIDE_CHARACTER)
 			-- Receive a character value.
 		do
 			create {CHARACTER_32_VALUE} item.make (sk_wchar, v)
 		end
 
-	set_real (v: REAL) is
+	set_real (v: REAL)
 			-- Receive a real value.
 		do
 			create {DEBUG_BASIC_VALUE [REAL]} item.make (sk_real32 , v)
 		end
 
-	set_double (v: DOUBLE) is
+	set_double (v: DOUBLE)
 			-- Receive a double value.
 		do
 			create {DEBUG_BASIC_VALUE [DOUBLE]} item.make (sk_real64, v)
 		end
 
-	set_ref (ref: POINTER; type: INTEGER) is
+	set_ref (ref: POINTER; type: INTEGER)
 			-- Receive a reference value.
 		local
 			cl: CLASS_C
@@ -144,7 +144,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 			end
 		end
 
-	set_exception_ref (ref: POINTER; type: INTEGER) is
+	set_exception_ref (ref: POINTER; type: INTEGER)
 			-- Receive a exception reference value.
 		local
 			rf: REFERENCE_VALUE
@@ -158,19 +158,19 @@ feature	{} -- Initialization of the C/Eiffel interface
 			create {EXCEPTION_DEBUG_VALUE} item.make_with_value (rf)
 		end
 
-	set_point (v: POINTER) is
+	set_point (v: POINTER)
 			-- Receive a pointer value.
 		do
 			create {DEBUG_BASIC_VALUE [POINTER]} item.make (sk_pointer ,v)
 		end
 
-	set_bits (ref: POINTER; size: INTEGER)  is
+	set_bits (ref: POINTER; size: INTEGER)
 			-- Receive a bit value.
 		do
 			create {BITS_VALUE} item.make (ref, size)
 		end
 
-	set_void is
+	set_void
 			-- Set `item' to Void.
 		do
 			item := Void
@@ -178,7 +178,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 
 feature -- Reset
 
-	reset_recv_value is
+	reset_recv_value
 		do
 			item := Void
 			error := False
@@ -198,7 +198,7 @@ feature -- internal
 	item: ABSTRACT_DEBUG_VALUE
 			-- Last received value.
 
-	exception_item: EXCEPTION_DEBUG_VALUE is
+	exception_item: EXCEPTION_DEBUG_VALUE
 			-- Last received exception value.
 		require
 			is_exception: is_exception
@@ -208,7 +208,7 @@ feature -- internal
 			item_is_exception_value: (item /= Void) implies (Result /= Void)
 		end
 
-	recv_value (c: like Current) is
+	recv_value (c: like Current)
 		require
 			c_not_void: c /= Void
 		do
@@ -218,7 +218,7 @@ feature -- internal
 
 feature {NONE} -- External routines
 
-	c_recv_value (c: like Current) is
+	c_recv_value (c: like Current)
 				-- Check: C/ipc/ewb/ewb_dumped.c	
 		external
 			"C"
@@ -228,13 +228,13 @@ feature {NONE} -- External routines
 			d_nat8, d_nat16, d_nat32, d_nat64,
 			d_int8, d_int16, d_int32, d_int64, d_bool, d_char, d_wchar, d_real, d_double,
 			d_ref, d_point, d_bits, d_error, d_exception_ref, d_void: POINTER)
-		is
+		
 				-- Check: C/ipc/ewb/ewb_dumped.c
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

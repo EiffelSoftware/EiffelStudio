@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants needed for generating JVM Byte Code"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,50 +13,50 @@ inherit
 				
 feature {ANY} -- Access flags for Java Byte code files
 			
-	Acc_public: INTEGER is 0x0001
-	Acc_final: INTEGER is 0x0010
-	Acc_super: INTEGER is 0x0020
-	Acc_interface: INTEGER is 0x0200
-	Acc_abstract: INTEGER is 0x0400
-	Acc_static: INTEGER is 0x0008
-	Acc_transient: INTEGER is 0x0080
-	Acc_volatile: INTEGER is 0x0040
-	Acc_protected: INTEGER is 0x0004
-	Acc_private: INTEGER is 0x0002
+	Acc_public: INTEGER = 0x0001
+	Acc_final: INTEGER = 0x0010
+	Acc_super: INTEGER = 0x0020
+	Acc_interface: INTEGER = 0x0200
+	Acc_abstract: INTEGER = 0x0400
+	Acc_static: INTEGER = 0x0008
+	Acc_transient: INTEGER = 0x0080
+	Acc_volatile: INTEGER = 0x0040
+	Acc_protected: INTEGER = 0x0004
+	Acc_private: INTEGER = 0x0002
 			
 feature {ANY} -- Type sizes 
 			
-	Int_8_size: INTEGER is 1
+	Int_8_size: INTEGER = 1
 			
-	Int_16_size: INTEGER is 2
+	Int_16_size: INTEGER = 2
 			
-	Int_32_size: INTEGER is 4
+	Int_32_size: INTEGER = 4
 			
-	Int_64_size: INTEGER is 8
+	Int_64_size: INTEGER = 8
 			
-	Double_size: INTEGER is 8
+	Double_size: INTEGER = 8
 			
-	Float_size: INTEGER is 4
+	Float_size: INTEGER = 4
 			
 feature {ANY} -- JVM types
-	void_type: INTEGER is 0
-	object_type: INTEGER is 1
-	int_type: INTEGER is 2
-	long_type: INTEGER is 3
-	float_type: INTEGER is 4
-	double_type: INTEGER is 5
-	short_type: INTEGER is 6
-	bool_type: INTEGER is 7
-	char_type: INTEGER is 8
-	byte_type: INTEGER is 9
+	void_type: INTEGER = 0
+	object_type: INTEGER = 1
+	int_type: INTEGER = 2
+	long_type: INTEGER = 3
+	float_type: INTEGER = 4
+	double_type: INTEGER = 5
+	short_type: INTEGER = 6
+	bool_type: INTEGER = 7
+	char_type: INTEGER = 8
+	byte_type: INTEGER = 9
 			
-	valid_jvm_type (a_jvm_type: INTEGER): BOOLEAN is
+	valid_jvm_type (a_jvm_type: INTEGER): BOOLEAN
 			-- is `a_jvm_type' a valid jvm type ?
 		do
 			Result := a_jvm_type >= 0 and a_jvm_type <= 9
 		end
 	
-	jvm_type_to_stack_size (a_jvm_type: INTEGER): INTEGER is
+	jvm_type_to_stack_size (a_jvm_type: INTEGER): INTEGER
 			-- takes a *_type from above and gives you the number of
 			-- words a value of this type would take on the stack.
 			-- note: unfortunatly the JVM has an untyped stack. that 
@@ -86,7 +86,7 @@ feature {ANY} -- JVM types
 			end
 		end
 				
-	il_kind_to_jvm_type (il_kind: INTEGER): INTEGER is
+	il_kind_to_jvm_type (il_kind: INTEGER): INTEGER
 			-- converts a il kind constant (see il_* in IL_CONST) to jvm type ids
 			-- (see in Current *_type)
 		require
@@ -114,7 +114,7 @@ feature {ANY} -- JVM types
 				end
 			end
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

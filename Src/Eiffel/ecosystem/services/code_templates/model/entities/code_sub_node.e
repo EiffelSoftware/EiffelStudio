@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A parentable code node, for all code template nodes with the exception of the code template definition node {CODE_TEMPLATE_DEFINITION}.
 	]"
@@ -67,7 +67,7 @@ feature {CODE_NODE} -- Element change
 			is_initialized: is_initialized
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

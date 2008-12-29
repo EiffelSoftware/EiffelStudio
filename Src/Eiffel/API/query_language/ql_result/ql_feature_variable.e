@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a feature argument or a local variable used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: like parent; a_written_class: like written_class) is
+	make (a_name: STRING; a_parent: like parent; a_written_class: like written_class)
 			-- Initialize `name' with `a_name' and `parent' with `a_parent'.
 		require
 			a_name_attached: a_name /= Void
@@ -37,7 +37,7 @@ feature{NONE} -- Initialization
 			parent_set: parent = a_parent
 		end
 
-	make_with_ast (a_name: STRING; a_ast: like ast; a_parent: like parent; a_written_class: like written_class) is
+	make_with_ast (a_name: STRING; a_ast: like ast; a_parent: like parent; a_written_class: like written_class)
 			-- Initialize `ast' with `a_ast' and `parent' with `a_parent'.
 		require
 			a_name_attached: a_name /= Void
@@ -56,7 +56,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -73,7 +73,7 @@ feature -- Access
 	name: STRING
 			-- Name of current item
 
-	ast: TYPE_DEC_AS is
+	ast: TYPE_DEC_AS
 			-- AST node associated with current item
 		do
 			if internal_ast = Void then
@@ -94,12 +94,12 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	retrieve_ast is
+	retrieve_ast
 			-- Retrieve `ast'.
 		deferred
 		end
 
-	type_dec_ast_with_name (a_name: STRING; a_type_dec_list: EIFFEL_LIST [TYPE_DEC_AS]): TYPE_DEC_AS is
+	type_dec_ast_with_name (a_name: STRING; a_type_dec_list: EIFFEL_LIST [TYPE_DEC_AS]): TYPE_DEC_AS
 			-- TYPE_DEC_AS object which has identifier named `a_name' in `a_type_dec_list'.
 			-- Void if no item is named `a_name' in `a_type_dec_list'.
 		require
@@ -135,7 +135,7 @@ feature{NONE} -- Implementation
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -149,7 +149,7 @@ invariant
 	parent_attached: parent /= Void and then parent.is_valid_domain_item
 	parent_is_real_feature: parent.is_real_feature
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information on a feature of the system for XMI export"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Initialization
 
-	make (id: INTEGER; n: STRING; t: XMI_TYPE) is
+	make (id: INTEGER; n: STRING; t: XMI_TYPE)
 			-- Initialization of `Current'.
 		do
 			xmi_id := id
@@ -37,19 +37,19 @@ feature -- Properties
 
 feature -- Status setting
 
-	set_public is
+	set_public
 			-- Set `Current' export status to public.
 		do
 			is_public := true
 		end
 
-	set_protected is
+	set_protected
 			-- Set `Current' export status to protected.
 		do
 			is_protected := true
 		end
 
-	set_private is
+	set_private
 			-- Set `Current' export status to private.
 		do
 			is_private := true
@@ -63,7 +63,7 @@ feature -- Access
 	name: STRING;
 			-- Name of `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

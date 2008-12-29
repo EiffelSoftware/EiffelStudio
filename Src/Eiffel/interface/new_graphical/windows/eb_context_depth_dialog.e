@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows that allow the user to set Client/Supplier/Ancestor/Descendants Depth"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_for_class_view is
+	make_for_class_view
 			-- Build the dialog box for a class view.
 		local
 			l: EV_LABEL
@@ -155,7 +155,7 @@ feature {NONE} -- Initialization
 			disable_user_resize
 		end
 
-	make_for_cluster_view is
+	make_for_cluster_view
 			-- Build the dialog box for a cluster view.
 		local
 			l: EV_LABEL
@@ -249,7 +249,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	preset_for_class_view (cd: EIFFEL_CLASS_DIAGRAM) is
+	preset_for_class_view (cd: EIFFEL_CLASS_DIAGRAM)
 			-- Assign text fields with current values.
 		require
 			is_for_class_view: is_for_class_view
@@ -296,7 +296,7 @@ feature -- Initialization
 				supplier_depth = cd.model.supplier_depth
 		end
 
-	preset_for_cluster_view (cd: EIFFEL_CLUSTER_DIAGRAM) is
+	preset_for_cluster_view (cd: EIFFEL_CLUSTER_DIAGRAM)
 			-- Assign text fields with current values.
 		require
 			is_for_cluster_view: not is_for_class_view
@@ -358,13 +358,13 @@ feature -- Status report
 	subcluster_depth: INTEGER
 			-- Subcluster depth typed by the user.
 
-	all_classes_of_cluster: BOOLEAN is
+	all_classes_of_cluster: BOOLEAN
 			-- Was `cb_all' checked?
 		do
 			Result := cb_all.is_selected
 		end
 
-	only_classes_of_cluster: BOOLEAN is
+	only_classes_of_cluster: BOOLEAN
 			-- Was `cb_only' checked?
 		do
 			Result := cb_only.is_selected
@@ -387,7 +387,7 @@ feature {NONE} -- Implementation
 	cb_only, cb_all: EV_CHECK_BUTTON
 			-- Check buttons for options regarding clusters (on class views).
 
-	ok_action is
+	ok_action
 			-- Close dialog and store chosen values.
 		do
 			if is_for_class_view then
@@ -415,50 +415,50 @@ feature {NONE} -- Implementation
 			destroy
 		end
 
-	cancel_action is
+	cancel_action
 			-- Close dialog.
 		do
 			cancelled := True
 			destroy
 		end
 
-	set_ancestor_depth (d: INTEGER) is
+	set_ancestor_depth (d: INTEGER)
 			-- Assign `d' to `ancestor_depth'
 		do
 			ancestor_depth := d
 		end
 
-	set_descendant_depth (d: INTEGER) is
+	set_descendant_depth (d: INTEGER)
 			-- Assign `d' to `descendant_depth'
 		do
 			descendant_depth := d
 		end
 
-	set_client_depth (d: INTEGER) is
+	set_client_depth (d: INTEGER)
 			-- Assign `d' to `client_depth'
 		do
 			client_depth := d
 		end
 
-	set_supplier_depth (d: INTEGER) is
+	set_supplier_depth (d: INTEGER)
 			-- Assign `d' to `supplier_depth'
 		do
 			supplier_depth := d
 		end
 
-	set_supercluster_depth (d: INTEGER) is
+	set_supercluster_depth (d: INTEGER)
 			-- Assign `d' to `supercluster_depth'
 		do
 			supercluster_depth := d
 		end
 
-	set_subcluster_depth (d: INTEGER) is
+	set_subcluster_depth (d: INTEGER)
 			-- Assign `d' to `subcluster_depth'
 		do
 			subcluster_depth := d
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

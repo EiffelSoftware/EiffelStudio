@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Access to Current
@@ -16,7 +16,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_current_b (Current)
@@ -24,19 +24,19 @@ feature -- Visitor
 
 feature
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Current type
 		once
 			create {LIKE_CURRENT} Result
 		end
 
-	is_current: BOOLEAN is
+	is_current: BOOLEAN
 			-- This is an access to Current
 		do
 			Result := True
 		end
 
-	same (other: ACCESS_B): BOOLEAN is
+	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		local
 			current_b: CURRENT_B;
@@ -45,7 +45,7 @@ feature
 			Result := current_b /= Void
 		end;
 
-	enlarged: CURRENT_B is
+	enlarged: CURRENT_B
 			-- Enlarges the tree to get more attributes and returns the
 			-- new enlarged tree node.
 		do
@@ -53,13 +53,13 @@ feature
 			create {CURRENT_BL} Result;
 		end;
 
-	register_name: STRING is
+	register_name: STRING
 			-- The "Current" string
 		once
 			Result := "Current";
 		end;
 
-	print_register is
+	print_register
 			-- Print "Current" register
 		do
 			context.buffer.put_string (register_name)
@@ -67,17 +67,17 @@ feature
 
 feature -- IL code generation
 
-	is_fast_as_local: BOOLEAN is true
+	is_fast_as_local: BOOLEAN = true
 			-- Is expression calculation as fast as loading a local?
 
 feature -- Inlining
 
-	pre_inlined_code: CURRENT_B is
+	pre_inlined_code: CURRENT_B
 		do
 			create {INLINED_CURRENT_B} Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

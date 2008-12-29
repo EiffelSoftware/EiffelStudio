@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Byte code constant for debug level
 		These values have to match with those in run-time file update.h.
@@ -13,12 +13,12 @@ class
 
 feature -- Access
 
-	Db_no:		CHARACTER is 'n';
-	Db_yes:		CHARACTER is 'y';
-	Db_tag:		CHARACTER is 't';
-	Db_unnamed:	CHARACTER is 'u';
+	Db_no:		CHARACTER = 'n';
+	Db_yes:		CHARACTER = 'y';
+	Db_tag:		CHARACTER = 't';
+	Db_unnamed:	CHARACTER = 'u';
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

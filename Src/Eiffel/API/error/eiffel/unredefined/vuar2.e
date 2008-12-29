@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error for a feature call: type mismatch on one argument."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER = 2;
 
 	argument_name: STRING;
 			-- Name of the involved argument
@@ -33,7 +33,7 @@ feature -- Properties
 
 feature -- Status report
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := Precursor and then
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
 		local
@@ -88,30 +88,30 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_argument_name (n: STRING) is
+	set_argument_name (n: STRING)
 			-- Assign `n' to `argument_name'.
 		do
 			argument_name := n;
 		end;
 
-	set_argument_position (i: INTEGER) is
+	set_argument_position (i: INTEGER)
 		do
 			argument_position := i
 		end;
 
-	set_formal_type (t: TYPE_A) is
+	set_formal_type (t: TYPE_A)
 			-- Assign `t' to `formal_type'.
 		do
 			formal_type := t;
 		end;
 
-	set_actual_type (a: TYPE_A) is
+	set_actual_type (a: TYPE_A)
 			-- Assign `a' to `actual_type'.
 		do
 			actual_type := a;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

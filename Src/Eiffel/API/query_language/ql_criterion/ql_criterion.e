@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents a criterion in Eiffel query lanagage
 					
@@ -61,7 +61,7 @@ inherit
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: like item_type): BOOLEAN is
+	is_satisfied_by (a_item: like item_type): BOOLEAN
 			-- Evaluate `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -71,35 +71,35 @@ feature -- Evaluate
 
 feature -- Status report
 
-	require_compiled: BOOLEAN is
+	require_compiled: BOOLEAN
 			-- Does current criterion require a compiled item?
 		deferred
 		end
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current ciretrion
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	is_atomic: BOOLEAN is
+	is_atomic: BOOLEAN
 			-- Is current criterion atomic?
 		do
 			Result := True
 		end
 
-	has_inclusive_intrinsic_domain: BOOLEAN is
+	has_inclusive_intrinsic_domain: BOOLEAN
 			-- Does current criterion has a domain by default?
 		do
 		end
 
-	has_exclusive_intrinsic_domain: BOOLEAN is
+	has_exclusive_intrinsic_domain: BOOLEAN
 			-- Does current criterion has an exclusive intrinsic domain?
 		do
 		end
 
-	has_intrinsic_domain: BOOLEAN is
+	has_intrinsic_domain: BOOLEAN
 			-- Does current criterion has an intrinsic domain (either inclusive or exclusive)?
 		do
 			Result := has_inclusive_intrinsic_domain or has_exclusive_intrinsic_domain
@@ -110,7 +110,7 @@ feature -- Status report
 
 feature -- Logic operations
 
-	infix "and" (other: QL_CRITERION): QL_CRITERION is
+	infix "and" (other: QL_CRITERION): QL_CRITERION
 			-- Boolean conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -119,14 +119,14 @@ feature -- Logic operations
 			Result_not_void: Result /= Void
 		end
 
-	prefix "not": QL_CRITERION is
+	prefix "not": QL_CRITERION
 			-- Negation
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	infix "or" (other: QL_CRITERION): QL_CRITERION is
+	infix "or" (other: QL_CRITERION): QL_CRITERION
 			-- Boolean disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -137,7 +137,7 @@ feature -- Logic operations
 
 feature -- Access
 
-	compiled_criterion: QL_CRITERION is
+	compiled_criterion: QL_CRITERION
 			-- A criterion which takes `require_compiled' into account
 		deferred
 		ensure
@@ -158,7 +158,7 @@ feature -- Access
 			-- try to find all classes in "target" and then check if it satisfied by criterion "is_deferred",
 			-- if so, the domain generator will put this class in newly generated domain.
 
-	domain_generator (a_enable_fill_domain: BOOLEAN; a_apply_current: BOOLEAN): QL_DOMAIN_GENERATOR is
+	domain_generator (a_enable_fill_domain: BOOLEAN; a_apply_current: BOOLEAN): QL_DOMAIN_GENERATOR
 			-- Domain generator in which current criterion can be used
 			-- If `a_enable_fill_domain' is True, return a generator with `fill_domain_enabled' set to True.
 			-- If `a_apply_current' is True, return a generator with `criterion' set to Current.
@@ -167,7 +167,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	intrinsic_domain: QL_DOMAIN is
+	intrinsic_domain: QL_DOMAIN
 			-- Intrinsic_domain which can be inferred from current criterion
 		require
 			source_domain_attached: source_domain /= Void
@@ -185,7 +185,7 @@ feature -- Access
 
 feature{QL_CRITERION, QL_DOMAIN_GENERATOR} -- Setting
 
-	set_source_domain (a_domain: like source_domain) is
+	set_source_domain (a_domain: like source_domain)
 			-- Set `source_domain' with `a_domain'.
 		require
 			a_domain_attached: a_domain /= Void
@@ -197,7 +197,7 @@ feature{QL_CRITERION, QL_DOMAIN_GENERATOR} -- Setting
 
 feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Setting
 
-	set_used_in_domain_generator (a_domain_generator: QL_DOMAIN_GENERATOR) is
+	set_used_in_domain_generator (a_domain_generator: QL_DOMAIN_GENERATOR)
 			-- Set `used_in_domain_generator' with
 			-- If `a_domain_generator' is Void, current `used_in_domain_generator' will be removed.
 		do
@@ -208,7 +208,7 @@ feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Setting
 
 feature -- Process
 
-	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+	process (a_criterion_visitor: QL_CRITERION_VISITOR)
 			-- Process Current using `a_criterion_visitor'.
 		require
 			a_criterion_visitor_attached: a_criterion_visitor /= Void
@@ -218,7 +218,7 @@ feature -- Process
 
 feature{NONE} -- Implementation
 
-	setup_domain_generator (a_generator: QL_DOMAIN_GENERATOR; a_enable_fill_domain: BOOLEAN; a_apply_current: BOOLEAN) is
+	setup_domain_generator (a_generator: QL_DOMAIN_GENERATOR; a_enable_fill_domain: BOOLEAN; a_apply_current: BOOLEAN)
 			-- Setup `a_generator'.
 			-- If `a_enable_fill_domain' is True, return a generator with `fill_domain_enabled' set to True.
 			-- If `a_apply_current' is True, return a generator with `criterion' set to Current.
@@ -235,7 +235,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	item_type: QL_ITEM is
+	item_type: QL_ITEM
 			-- Anchor type
 		do
 		end
@@ -247,7 +247,7 @@ invariant
 		(has_inclusive_intrinsic_domain implies not has_exclusive_intrinsic_domain) and
 		(has_exclusive_intrinsic_domain implies not has_inclusive_intrinsic_domain)
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

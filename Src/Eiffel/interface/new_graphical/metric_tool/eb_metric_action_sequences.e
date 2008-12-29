@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Action sequences used in metric tool"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	compile_start_actions: ACTION_SEQUENCE [TUPLE] is
+	compile_start_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when Eiffel compilation starts
 		do
 			if compile_start_actions_internal = Void then
@@ -22,7 +22,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	compile_stop_actions: ACTION_SEQUENCE [TUPLE] is
+	compile_stop_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when Eiffel compilation stops
 		do
 			if compile_stop_actions_internal = Void then
@@ -33,7 +33,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	metric_evaluation_start_actions: ACTION_SEQUENCE [TUPLE [ANY]] is
+	metric_evaluation_start_actions: ACTION_SEQUENCE [TUPLE [ANY]]
 			-- Actions to be performed when metric evaluation starts.
 			-- The only argument maybe the metric tool panel from which
 			-- metric evaluation starts (if used in graphical mode)
@@ -46,7 +46,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	metric_evaluation_stop_actions: ACTION_SEQUENCE [TUPLE [ANY]] is
+	metric_evaluation_stop_actions: ACTION_SEQUENCE [TUPLE [ANY]]
 			-- Actions to be performed when metric evaluation stops.
 			-- The only argument maybe the metric tool panel from which
 			-- metric evaluation stops (if used in graphical mode)
@@ -59,7 +59,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	archive_calculation_start_actions: ACTION_SEQUENCE [TUPLE [ANY]] is
+	archive_calculation_start_actions: ACTION_SEQUENCE [TUPLE [ANY]]
 			-- Actions to be performed when metric archive calculation starts.
 			-- The only argument maybe the metric tool panel from which
 			-- metric archive calculation starts (if used in graphical mode)
@@ -72,7 +72,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	archive_calculation_stop_actions: ACTION_SEQUENCE [TUPLE [ANY]] is
+	archive_calculation_stop_actions: ACTION_SEQUENCE [TUPLE [ANY]]
 			-- Actions to be performed when metric archive calculation stops.
 			-- The only argument maybe the metric tool panel from which
 			-- metric archive calculation stops (if used in graphical mode)
@@ -85,7 +85,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	metric_loaded_actions: ACTION_SEQUENCE [TUPLE] is
+	metric_loaded_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when metrics are loaded from files.
 		do
 			if metric_loaded_actions_internal = Void then
@@ -96,7 +96,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	project_load_actions: ACTION_SEQUENCE [TUPLE] is
+	project_load_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when project loaded
 		do
 			if project_load_actions_internal = Void then
@@ -107,7 +107,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	project_unload_actions: ACTION_SEQUENCE [TUPLE] is
+	project_unload_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when project unloaded
 		do
 			if project_unload_actions_internal = Void then
@@ -118,7 +118,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	history_recalculation_start_actions: ACTION_SEQUENCE [TUPLE [ANY]] is
+	history_recalculation_start_actions: ACTION_SEQUENCE [TUPLE [ANY]]
 			-- Action to be performed when metric history recalculation starts.
 			-- The only argument maybe the metric tool panel from which
 			-- metric history recalculation starts (if used in graphical mode)
@@ -129,7 +129,7 @@ feature -- Access
 			Result := history_recalculation_start_actions_internal
 		end
 
-	history_recalculation_stop_actions: ACTION_SEQUENCE [TUPLE [ANY]] is
+	history_recalculation_stop_actions: ACTION_SEQUENCE [TUPLE [ANY]]
 			-- Action to be performed when metric history recalculation stops.
 			-- The only argument maybe the metric tool panel from which
 			-- metric history recalculation stops (if used in graphical mode)
@@ -140,7 +140,7 @@ feature -- Access
 			Result := history_recalculation_stop_actions_internal
 		end
 
-	metric_renamed_actions: ACTION_SEQUENCE [TUPLE [a_old_name: STRING; a_new_name: STRING]] is
+	metric_renamed_actions: ACTION_SEQUENCE [TUPLE [a_old_name: STRING; a_new_name: STRING]]
 			-- Actions to be performed when a metric name changed from `a_old_name' to `a_new_name'.
 		do
 			if metric_renamed_actions_internal = Void then
@@ -201,7 +201,7 @@ invariant
 	history_recalculation_stop_actions_attached: history_recalculation_stop_actions /= Void
 	metric_renamed_actions_attached: metric_renamed_actions /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

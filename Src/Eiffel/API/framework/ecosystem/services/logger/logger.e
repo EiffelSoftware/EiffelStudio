@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A service for logging interal messages in EiffelStudio.
 	]"
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Clean up
 
-	safe_dispose (a_disposing: BOOLEAN) is
+	safe_dispose (a_disposing: BOOLEAN)
 			-- <Precursor>
 		local
 			l_service: like event_list_service
@@ -240,7 +240,7 @@ feature {NONE} -- Factory
 invariant
 	log_cache_count_small_enought: log_cache.count <= log_cache_length
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

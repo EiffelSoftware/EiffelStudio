@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actual type for pointer type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize new instance of POINTER_A.
 		do
 			make (associated_class.class_id)
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_pointer_a (Current)
@@ -35,10 +35,10 @@ feature -- Visitor
 
 feature -- Property
 
-	is_pointer: BOOLEAN is True
+	is_pointer: BOOLEAN = True
 			-- Is the current type a pointer type ?
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Class POINTER
 		once
 			Result := System.pointer_class.compiled_class
@@ -46,19 +46,19 @@ feature -- Property
 
 feature {COMPILER_EXPORTER}
 
-	c_type: POINTER_I is
+	c_type: POINTER_I
 			-- Pointer C type
 		do
 			Result := pointer_c_type
 		end
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		do
 			Result := same_type (other)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

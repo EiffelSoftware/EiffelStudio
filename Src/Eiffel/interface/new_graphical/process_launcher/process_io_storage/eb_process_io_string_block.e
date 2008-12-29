@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that stores a block of data into a STRING object"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (str: STRING; from_error: BOOLEAN; is_last_one: BOOLEAN) is
+	make (str: STRING; from_error: BOOLEAN; is_last_one: BOOLEAN)
 			-- Store `str' into `Current' object.
 			-- `from_error' indicates whether `str' comes from error stream
 			-- from process.
@@ -36,19 +36,19 @@ feature{NONE} -- Initialization
 
 feature  -- Status reporting
 
-	data: ANY is
+	data: ANY
 			--
 		do
 			Result := string_buffer
 		end
 
-	string_representation: STRING is
+	string_representation: STRING
 			--
 		do
 			Result := string_buffer
 		end
 
-	count: INTEGER is
+	count: INTEGER
 		-- Length of stored data in bytes.
 		do
 			Result := string_buffer.count
@@ -61,7 +61,7 @@ feature{NONE} -- Implementation
 invariant
 	string_buffer_not_void: string_buffer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

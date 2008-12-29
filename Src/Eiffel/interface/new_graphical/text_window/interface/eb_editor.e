@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A basic editor for EiffelStudio"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -74,26 +74,26 @@ create
 
 feature {NONE} -- Initialization
 
-	 make is
+	 make
 			-- Initialize the editor.
 		do
 			default_create
 			register_documents
 		end
 
-	initialize_editor_context is
+	initialize_editor_context
 			-- Here initialize editor contextual settings.  For example, set location of cursor pixmaps.
 		do
 			set_cursors (create {EB_EDITOR_CURSORS})
 		end
 
-	register_documents is
+	register_documents
 	 		-- Register known document types with this editor
 	 	do
 	 		register_document ("e", eiffel_class)
 	 	end
 
-	 eiffel_class: DOCUMENT_CLASS is
+	 eiffel_class: DOCUMENT_CLASS
 	         -- Eiffel class
 	   	once
 			create Result.make ("eiffel", "e", Void)
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 
 feature -- Warning messages display
 
-	display_not_editable_warning_message is
+	display_not_editable_warning_message
 				-- display warning message : text is not editable...
 		local
 			wm: STRING_32
@@ -124,7 +124,7 @@ feature -- Warning messages display
 			end
 		end
 
-	show_warning_message (a_message: STRING_GENERAL) is
+	show_warning_message (a_message: STRING_GENERAL)
 			-- show `a_message' in a dialog window		
 		do
 			(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (a_message, reference_window, Void)
@@ -140,7 +140,7 @@ feature -- Access
 
 feature -- Docking
 
-	set_docking_content (a_content: SD_CONTENT) is
+	set_docking_content (a_content: SD_CONTENT)
 			-- Set `docking_content' with `a_content' and associate `widget' to `a_content'.
 		require
 			a_content_attached: a_content /= Void
@@ -155,7 +155,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_is_main_editor (a_b: BOOLEAN) is
+	set_is_main_editor (a_b: BOOLEAN)
 			-- Set `is_main_editor' with `a_b'.
 		do
 			is_main_editor := a_b
@@ -163,7 +163,7 @@ feature -- Status setting
 
 feature -- Text Loading
 
-	load_file (a_filename: STRING) is
+	load_file (a_filename: STRING)
 	        -- Load contents of `a_filename'
 		local
 	--	    test_file, test_file_2: RAW_FILE
@@ -204,7 +204,7 @@ feature -- Text Loading
 --			end
   	  	end
 
-	load_text (s: STRING_GENERAL) is
+	load_text (s: STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_d_class : DOCUMENT_CLASS
@@ -223,7 +223,7 @@ feature -- Text Loading
 			Precursor {EDITABLE_TEXT_PANEL} (s)
 		end
 
-	check_document_modifications_and_reload is
+	check_document_modifications_and_reload
 			-- Check if current stone is changed and reload.
 		local
 			l_question: ES_QUESTION_PROMPT
@@ -263,7 +263,7 @@ feature -- Stonable
 	stone : STONE
 			-- Stone representing Current
 
-	set_stone (a_stone: STONE) is
+	set_stone (a_stone: STONE)
 			-- Make `s' the new value of stone.
 			-- Changes display as a consequence, to preserve the fact
 			-- that the tool displays the content of the stone
@@ -276,7 +276,7 @@ feature -- Stonable
 			stone_attached: stone = a_stone
 		end
 
-	refresh_stone is
+	refresh_stone
 			-- Synchronize Current with `stone'.
 		do
 
@@ -284,13 +284,13 @@ feature -- Stonable
 
 feature {NONE} -- Memory Management
 
-	internal_recycle is
+	internal_recycle
 			-- Destroy `Current'.
 		do
 			Precursor {EDITABLE_TEXT_PANEL}
 		end
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- <Precursor>
 		do
 			dev_window := Void
@@ -301,7 +301,7 @@ feature {NONE} -- Memory Management
 
 feature {EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Edition Operations on text
 
-	comment_selection is
+	comment_selection
 			-- Comment selected lines if possible.
 		do
 			if is_editable and then not is_empty then
@@ -310,7 +310,7 @@ feature {EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_
 			end
 		end
 
-	uncomment_selection is
+	uncomment_selection
 			-- Uncomment selected lines if possible.
 		do
 			if is_editable and then not is_empty then
@@ -321,7 +321,7 @@ feature {EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_
 
 feature {NONE} -- Retrieving backup
 
-	ask_if_opens_backup is
+	ask_if_opens_backup
 			-- Display a dialog asking the user whether he wants to open
 			-- the original file or the backup one, and set `open_backup' accordingly.
 		local
@@ -337,7 +337,7 @@ feature {NONE} -- Retrieving backup
 
 feature {NONE} -- Implementation
 
-	reference_window: EV_WINDOW is
+	reference_window: EV_WINDOW
 			-- Window which error dialogs will be shown relative to.
 		do
 			if internal_reference_window /= Void then
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

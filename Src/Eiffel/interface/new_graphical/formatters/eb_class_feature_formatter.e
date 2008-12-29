@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display feature information concerning a compiled class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,13 +25,13 @@ feature -- Access
 	browser: EB_CLASS_BROWSER_FLAT_VIEW
 			-- Browser
 
-	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING]
 			-- Generator to generate proper `displayer' for Current formatter
 		do
 			Result := [agent displayer_generators.new_class_feature_displayer, displayer_generators.class_feature_displayer]
 		end
 
-	sorting_status_preference: STRING_PREFERENCE is
+	sorting_status_preference: STRING_PREFERENCE
 			-- Preference to store last sorting orders of Current formatter
 		do
 			Result := preferences.class_browser_data.class_flat_view_sorting_order_preference
@@ -39,12 +39,12 @@ feature -- Access
 
 feature -- Status report
 
-	is_class_feature_formatter: BOOLEAN is True
+	is_class_feature_formatter: BOOLEAN = True
 			-- Is current a class feature formatter?
 
 feature -- Setting
 
-	set_focus is
+	set_focus
 			-- Set focus to current formatter.
 		do
 			if browser /= Void then
@@ -54,7 +54,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	generate_result is
+	generate_result
 			-- Generate result for display
 		local
 			l_class: QL_CLASS
@@ -77,7 +77,7 @@ feature{NONE} -- Implementation
 			retry
 		end
 
-	domain_generator: QL_DOMAIN_GENERATOR is
+	domain_generator: QL_DOMAIN_GENERATOR
 			-- Domain generator to generate result				
 		do
 			create {QL_FEATURE_DOMAIN_GENERATOR}Result
@@ -87,12 +87,12 @@ feature{NONE} -- Implementation
 			Result.disable_distinct_item
 		end
 
-	start_class: QL_CLASS is
+	start_class: QL_CLASS
 			-- Start class
 		do
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

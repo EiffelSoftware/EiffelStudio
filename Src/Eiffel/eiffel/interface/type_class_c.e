@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation for TYPE [G] class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature
 
-	check_validity is
+	check_validity
 			-- Check validity of class TYPE
 		local
 			special_error: SPECIAL_ERROR
@@ -36,7 +36,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

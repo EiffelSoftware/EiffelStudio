@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to save a file. Used by the development window and the dynamic lib window"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ create
 
 feature -- Initialization
 
-	make (a_manager: like target) is
+	make (a_manager: like target)
 			-- Create a formatter associated with `a_manager'.
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
@@ -61,7 +61,7 @@ feature -- Initialization
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Save a file with the chosen name.
 		local
 			compileok: BOOLEAN
@@ -99,65 +99,65 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Save_new
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_save_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_save_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Save
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_Save
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Save
 		end
 
-	name: STRING is "Save_file"
+	name: STRING = "Save_file"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-	on_text_edited (directly_edited: BOOLEAN) is
+	on_text_edited (directly_edited: BOOLEAN)
 			-- make the command sensitive
 		do
 			enable_sensitive
 		end
 
-	on_text_reset is
+	on_text_reset
 			-- make the command insensitive
 		do
 			disable_sensitive
 		end
 
-	on_text_back_to_its_last_saved_state is
+	on_text_back_to_its_last_saved_state
 			-- make the command insensitive
 		do
 			disable_sensitive
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

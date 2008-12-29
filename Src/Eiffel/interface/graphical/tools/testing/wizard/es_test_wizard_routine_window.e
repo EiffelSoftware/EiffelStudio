@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {ES_TEST_WIZARD_ROUTINE_WINDOW}."
 	author: ""
 	date: "$Date$"
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			on_after_initialize
 		end
 
-	build_test_name (a_parent: EV_BOX) is
+	build_test_name (a_parent: EV_BOX)
 			-- Initialize `class_name'.
 		local
 			l_label: EV_LABEL
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 			a_parent.disable_item_expand (l_hb)
 		end
 
-	build_class_feature_tree (a_parent: EV_BOX) is
+	build_class_feature_tree (a_parent: EV_BOX)
 			-- Initizialize `class_tree' and `feature_tree'.
 		local
 			l_layouts: EV_LAYOUT_CONSTANTS
@@ -231,7 +231,7 @@ feature {NONE} -- Status setting
 			l_res := select_feature_recursive (a_feature, feature_tree)
 		end
 
-	select_feature_recursive (a_feature: E_FEATURE; a_list: EV_TREE_NODE_LIST): BOOLEAN is
+	select_feature_recursive (a_feature: E_FEATURE; a_list: EV_TREE_NODE_LIST): BOOLEAN
 			-- Select corresponding feature in list of tree items recursively.
 			--
 			-- `a_feature': Feature to be selected.
@@ -321,7 +321,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_validate_tag_list (a_list: !STRING_32): !TUPLE [BOOLEAN, ?STRING_32] is
+	on_validate_tag_list (a_list: !STRING_32): !TUPLE [BOOLEAN, ?STRING_32]
 			-- Called when `tag_list' content needs to be validated
 		local
 			l_list: STRING
@@ -531,7 +531,7 @@ feature {NONE} -- Implementation: feature tree
 			retry
 		end
 
-	build_tree_folder (n: STRING; fl: EIFFEL_LIST [FEATURE_AS]; a_class: CLASS_C): EV_TREE_ITEM is
+	build_tree_folder (n: STRING; fl: EIFFEL_LIST [FEATURE_AS]; a_class: CLASS_C): EV_TREE_ITEM
 			-- Build the tree node corresponding to feature clause named `n'.
 			-- Modified from {EB_FEATURES_TREE}, now the class replaced by {ES}
 		require
@@ -614,7 +614,7 @@ feature {NONE} -- Implementation: feature tree
 			end
 		end
 
-	feature_name (a_ef: E_FEATURE): STRING is
+	feature_name (a_ef: E_FEATURE): STRING
 			-- Feature name of `a_ef' depending of the signature displayed or not.
 		require
 			a_ef_not_void: a_ef /= Void
@@ -638,7 +638,7 @@ feature {NONE} -- Internationalization
 	e_invalid_tag2: STRING = "Tags must have the form%N%N"
 	e_invalid_tag3: STRING = "%N%Nwhere tokens can contain letters, numbers or any of "
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

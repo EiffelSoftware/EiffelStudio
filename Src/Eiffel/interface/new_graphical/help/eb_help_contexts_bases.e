@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base addresses for help contexts URLs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,51 +8,51 @@ class
 
 feature -- Access
 
-	Hc_root: INTEGER is 1
+	Hc_root: INTEGER = 1
 			-- Base URL id for the root of the documentation
 
-	Hc_libraries: INTEGER is 2
+	Hc_libraries: INTEGER = 2
 			-- Base URL id for the root of the libraries documentation
 
-	Hc_guided_tour: INTEGER is 3
+	Hc_guided_tour: INTEGER = 3
 			-- Base URL id for the root of the eiffelstudio guided tour
 
-	Hc_eiffelstudio: INTEGER is 4
+	Hc_eiffelstudio: INTEGER = 4
 			-- Base URL id for the root of the eiffelstudio documentation
 
-	Hc_reference: INTEGER is 5
+	Hc_reference: INTEGER = 5
 			-- Base URL id for the root of the eiffelstudio reference
 
-	Hc_how_to_s: INTEGER is 6
+	Hc_how_to_s: INTEGER = 6
 			-- Base URL id for the root of the eiffelstudio how to's
 
-	Hc_profile_window: INTEGER is 7
+	Hc_profile_window: INTEGER = 7
 			-- Base URL id for all profiler related help
 
-	Hc_development_window: INTEGER is 8
+	Hc_development_window: INTEGER = 8
 			-- Base URL id for generic development window help
 
-	Hc_dynamic_lib_window: INTEGER is 9
+	Hc_dynamic_lib_window: INTEGER = 9
 			-- Base URL id for dynamic library window help
 
-	Hc_editor_window: INTEGER is 10
+	Hc_editor_window: INTEGER = 10
 			-- Base URL id for editor window help
 
-	Root_index: STRING is "index.html"
+	Root_index: STRING = "index.html"
 			-- Default help file for a given base
 
-	url_extension: STRING is ".html"
+	url_extension: STRING = ".html"
 			-- URL extension
 
 feature -- Status Report
 
-	is_valid_base_id (a_base_id: INTEGER): BOOLEAN is
+	is_valid_base_id (a_base_id: INTEGER): BOOLEAN
 			-- Is `a_base_id' a valid base identifier?
 		do
 			Result := bases_table.has (a_base_id)
 		end
 
-	is_valid_url (a_url: STRING): BOOLEAN is
+	is_valid_url (a_url: STRING): BOOLEAN
 			-- Does `a_url' have a valid URL syntax?
 		local
 			i: INTEGER
@@ -71,7 +71,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	base_url (a_base_id: INTEGER): STRING is
+	base_url (a_base_id: INTEGER): STRING
 			-- Convert base id `a_base_id' into a URL.
 		require
 			valid_base_id: is_valid_base_id (a_base_id)
@@ -83,7 +83,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	bases_table: HASH_TABLE [STRING, INTEGER] is
+	bases_table: HASH_TABLE [STRING, INTEGER]
 			-- Context help bases table
 		local
 			ref_url: STRING
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			Result.put ("/", Hc_root)
 		end
 
-	is_valid_base (a_base: like base_url): BOOLEAN is
+	is_valid_base (a_base: like base_url): BOOLEAN
 			-- Does `a_base' have a valid base syntax?
 		local
 			i: INTEGER
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 			Result := Result and then a_base.item (i) = '/'
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

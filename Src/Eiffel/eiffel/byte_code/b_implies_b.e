@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Byte code for semi-strict "implies"
@@ -14,7 +14,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_bin_implies_b (Current)
@@ -22,7 +22,7 @@ feature -- Visitor
 
 feature
 
-	built_in_enlarged: EXPR_B is
+	built_in_enlarged: EXPR_B
 			-- Enlarge node. Try to get rid of useless code if possible.
 		local
 			l_b_implies_bl: B_IMPLIES_BL
@@ -63,7 +63,7 @@ feature
 			end
 		end
 
-	print_register is
+	print_register
 			-- Print the expression
 		local
 			buf: GENERATION_BUFFER
@@ -76,7 +76,7 @@ feature
 			buf.put_string ("))");
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

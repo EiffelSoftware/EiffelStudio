@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Utility class for presisting and resurrecting stones from a session.
 	]"
@@ -111,7 +111,7 @@ feature -- Basic operations
 			raise_events_unchanged: raise_events = old raise_events
 		end
 
-	frozen persist_stone (a_session: !SESSION_I; a_base_id: !STRING; a_stone: ?STONE) is
+	frozen persist_stone (a_session: !SESSION_I; a_base_id: !STRING; a_stone: ?STONE)
 			-- Stores a stone's reference information in the given session, for later resurrection.
 			--| Note: Do *not* store the stone object in the session! This will include too much data.
 			--
@@ -291,7 +291,7 @@ feature {NONE} -- Specifics
 			end
 		end
 
-	persist_classi_stone (a_session: !SESSION_I; a_base_id: !STRING; a_stone: ?CLASSI_STONE) is
+	persist_classi_stone (a_session: !SESSION_I; a_base_id: !STRING; a_stone: ?CLASSI_STONE)
 			-- Stores a stone's reference information in the given session, for later resurrection.
 			-- Note: Do *not* store the stone object in the session! This will include too much data.
 			--
@@ -380,7 +380,7 @@ feature {NONE} -- Constants
 	class_name_session_id: !STRING = "class_name"
 	group_name_session_id: !STRING = "group_name"
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

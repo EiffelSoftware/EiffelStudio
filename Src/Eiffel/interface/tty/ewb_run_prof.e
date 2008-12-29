@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Run the specified query."
@@ -23,12 +23,12 @@ inherit
 
 feature {NONE} -- Execute
 
-	loop_action is
+	loop_action
 		do
 			execute;
 		end;
 
-	execute is
+	execute
 		local
 			executer: E_SHOW_PROFILE_QUERY;
 			st: YANK_WINDOW
@@ -70,13 +70,13 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Implementation
 
-	any_active_query: BOOLEAN is
+	any_active_query: BOOLEAN
 			-- Are there any active subqueries?
 		do
 			Result := profiler_query.subqueries.count >= 1;
 		end;
 
-	create_profiler_query is
+	create_profiler_query
 			-- Creates `profiler_query'.
 		do
 			create profiler_query
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			profiler_query.set_subquery_operators (subquery_operators);
 		end;
 
-	create_profiler_options is
+	create_profiler_options
 			-- Creates `profiler_options'.
 		do
 			create profiler_options;
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			profiler_options.set_language_names (language_names);
 		end;
 
-	print_active_query (st: TEXT_FORMATTER) is
+	print_active_query (st: TEXT_FORMATTER)
 		do
 			from
 				st.add_string (ewb_names.query);
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

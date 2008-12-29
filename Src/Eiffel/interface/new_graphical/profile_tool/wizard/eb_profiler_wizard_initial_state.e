@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Initial State for the profiler wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,19 +25,19 @@ create
 
 feature -- basic Operations
 
-	proceed_with_current_info is 
+	proceed_with_current_info 
 		do
 			proceed_with_new_state(create {EB_PROFILER_WIZARD_FIRST_STATE}.make (wizard_information))
 		end
 
-	display_state_text is
+	display_state_text
 			-- Dispay the text for the current state.
 		do
 			title.set_text (Interface_names.wt_Profiler_welcome)
 			message.set_text (Interface_names.wb_Profiler_welcome)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

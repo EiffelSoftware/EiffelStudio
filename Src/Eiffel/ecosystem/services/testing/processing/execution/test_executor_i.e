@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An interface of an executor taking a list of tests and queues them to later be run and determined
 		whether the implementation under test has passed or failed the test.
@@ -52,7 +52,7 @@ feature {NONE} -- Query
 
 		end
 
-	frozen is_test_executable (a_test: !TEST_I): BOOLEAN is
+	frozen is_test_executable (a_test: !TEST_I): BOOLEAN
 			-- Can test instance be executed by `Current'?
 			--
 			-- `a_test': Test to be executed.

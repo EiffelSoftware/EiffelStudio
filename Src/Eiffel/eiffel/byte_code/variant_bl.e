@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Byte code for instruction inside an enalarged loop variant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,13 +28,13 @@ feature
 	new_register: REGISTRABLE
 			-- Register in which new value of variant is kept
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Assign `r' to `register'
 		do
 			register := r
 		end
 
-	analyze is
+	analyze
 			-- Analyze variant
 		do
 			get_register			-- Assignment in register
@@ -47,7 +47,7 @@ feature
 			expr.free_register
 		end
 
-	generate is
+	generate
 			-- Generate variant initializations
 		local
 			buf: GENERATION_BUFFER
@@ -94,7 +94,7 @@ feature
 			buf.put_character ('}')
 		end
 
-	print_register is
+	print_register
 			-- Generate variant tests
 		local
 			buf: GENERATION_BUFFER
@@ -151,28 +151,28 @@ feature
 			buf.put_character ('}')
 		end
 
-	free_register is
+	free_register
 			-- Free registers used by the invariant
 		do
 			new_register.free_register;
 			register.free_register;
 		end;
 
-	unanalyze is
+	unanalyze
 			-- Undo the analysis
 		do
 			expr.unanalyze
 			set_register (Void)
 		end
 
-	fill_from (v: VARIANT_B) is
+	fill_from (v: VARIANT_B)
 			-- Fill in current node
 		do
 			tag := v.tag
 			expr := v.expr.enlarged
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

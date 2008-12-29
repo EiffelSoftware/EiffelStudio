@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitable items in metrics"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,14 +11,14 @@ deferred class
 
 feature -- Access
 
-	visitable_name: STRING_GENERAL is
+	visitable_name: STRING_GENERAL
 			-- Name of current visitable item
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	identical_new_instance: like Current is
+	identical_new_instance: like Current
 			-- Identical new instance of Current.
 			-- Void if error occurs.
 		local
@@ -40,14 +40,14 @@ feature -- Access
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		require
 			a_visitor_attached: a_visitor /= Void
 		deferred
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

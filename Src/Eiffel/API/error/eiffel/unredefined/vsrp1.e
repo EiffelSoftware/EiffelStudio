@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error if root type is not a stand-alone type."
@@ -18,10 +18,10 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VSRP";
+	code: STRING = "VSRP";
 			-- Error code
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER = 1;
 			-- Sub code of error
 
 		root_type: CL_TYPE_A;
@@ -29,7 +29,7 @@ feature -- Properties
 
 feature	-- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Root type: ")
 			root_type.append_to  (a_text_formatter)
@@ -38,7 +38,7 @@ feature	-- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_root_type (a_root_type: like root_type) is
+	set_root_type (a_root_type: like root_type)
 			-- Assign `a_root_type' to `root_type'.
 		require
 			a_valid_root_type: a_root_type /= Void
@@ -46,7 +46,7 @@ feature {COMPILER_EXPORTER}
 			root_type := a_root_type;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

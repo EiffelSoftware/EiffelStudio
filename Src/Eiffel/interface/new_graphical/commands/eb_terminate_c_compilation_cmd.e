@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that defines a menu item and a toolbar item of Terminate C Compilation function."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,21 +25,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 		end
 
 feature -- Status setting
 
-	execute is
+	execute
 			-- Launch `Current'.
 			-- Pop up an error wizard relative to the last focused development window.
 		do
 			internal_execute
 		end
 
-	execute_with_stone (st: ERROR_STONE)  is
+	execute_with_stone (st: ERROR_STONE)
 			--
 		do
 			internal_execute
@@ -47,46 +47,46 @@ feature -- Status setting
 
 feature -- Status report
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Explanatory text for this command.
 		do
 			Result := Interface_names.e_Terminate_c_compilation
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for `Current's toolbar button.
 		do
 			Result := Interface_names.b_Terminate_c_compilation
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text for `Current's toolbar button.
 		do
 			Result := Interface_names.b_Terminate_c_compilation
 		end
 
-	name: STRING is "Terminate C compilation"
+	name: STRING = "Terminate C compilation"
 			-- Internal textual representation.
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Image used for `Current's toolbar buttons.
 		do
 			Result := Void
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			-- Currently there is no pixel buffer for this command.
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Text used for menu items for `Current'.
 		do
 			Result := Interface_names.b_Terminate_c_compilation
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
@@ -98,7 +98,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	internal_execute is
+	internal_execute
 			-- Teminate running c compilation
 		do
 			if process_manager.is_c_compilation_running then
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

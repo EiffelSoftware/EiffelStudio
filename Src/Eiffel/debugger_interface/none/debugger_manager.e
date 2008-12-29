@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,29 +14,29 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 		end
 
 feature -- File access
 
-	load_debugger_data is
+	load_debugger_data
 			-- Load debug information (so far only the breakpoints)
 		do
 		end
 
-	save_debugger_data is
+	save_debugger_data
 			-- Save debug information (so far only the breakpoints)
 		do
 		end
 
 feature -- Events
 
-	on_project_recompiled (is_successful: BOOLEAN) is
+	on_project_recompiled (is_successful: BOOLEAN)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

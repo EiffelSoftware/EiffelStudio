@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		Error when incremental compilation cannot be done because instances of MD_STRONG_NAME
 		cannot be created properly, i.e. `exists' query returns True.
@@ -17,22 +17,22 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VIAC"
+	code: STRING = "VIAC"
 		-- Error code
 
-	file_name: STRING is
+	file_name: STRING
 			-- No associated file name
 		do
 		end
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- No need for an error message.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Observer objects used in Eiffel Query Language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,14 +11,14 @@ deferred class
 
 feature -- Notification
 
-	update (a_observable: QL_OBSERVABLE; a_data: ANY) is
+	update (a_observable: QL_OBSERVABLE; a_data: ANY)
 			-- Notification from `a_observable' indicating that `a_data' changed.
 		deferred
 		end
 
 feature -- Actions
 
-	actions: ACTION_SEQUENCE [TUPLE] is
+	actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed every time after `update' is been called.
 		do
 			if internal_actions = Void then
@@ -37,7 +37,7 @@ feature{NONE} -- Implementation
 invariant
 	actions_attached: actions /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

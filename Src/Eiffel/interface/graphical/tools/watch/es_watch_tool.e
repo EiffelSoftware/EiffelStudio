@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Tool descriptor for the debugger's custom object watch tool.
 	]"
@@ -21,7 +21,7 @@ create {NONE}
 
 feature -- Access
 
-	tool_title: STRING_GENERAL is
+	tool_title: STRING_GENERAL
 			-- Panel's title
 		do
 			if is_tool_instantiated then
@@ -29,7 +29,7 @@ feature -- Access
 			end
 		end
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Has focus
 		do
 			if is_tool_instantiated then
@@ -39,7 +39,7 @@ feature -- Access
 
 feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Access
 
-	disable_refresh is
+	disable_refresh
 			-- Disable refresh
 		do
 			if is_tool_instantiated then
@@ -47,7 +47,7 @@ feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Access
 			end
 		end
 
-	enable_refresh is
+	enable_refresh
 			-- Disable refresh
 		do
 			if is_tool_instantiated then
@@ -55,7 +55,7 @@ feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Access
 			end
 		end
 
-	record_grid_layout is
+	record_grid_layout
 			-- Record grid's layout
 		do
 			if
@@ -66,7 +66,7 @@ feature {DEBUGGER_MANAGER, ES_WATCH_TOOL_PANEL} -- Access
 			end
 		end
 
-	prepare_for_debug is
+	prepare_for_debug
 			-- Remove obsolete expressions from `Current'.		
 		do
 			if
@@ -120,7 +120,7 @@ feature {NONE} -- Factory
 			debugger_manager.update_all_debugging_tools_menu
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

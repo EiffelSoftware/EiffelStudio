@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to setup customized tool"
 	author: ""
 	date: "$Date$"
@@ -15,7 +15,7 @@ create
 
 feature{NONE} -- Initializatioin
 
-	user_initialization is
+	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -31,19 +31,19 @@ feature{NONE} -- Initializatioin
 
 feature -- Access
 
-	name_of_item (a_item: EB_CUSTOMIZED_TOOL_DESP): STRING_GENERAL is
+	name_of_item (a_item: EB_CUSTOMIZED_TOOL_DESP): STRING_GENERAL
 			-- Name of `a_item'
 		do
 			Result := a_item.name
 		end
 
-	item_grid_column_count: INTEGER is
+	item_grid_column_count: INTEGER
 			-- Number of columns in `item_grid'
 		do
 			Result := 1
 		end
 
-	new_item: EB_CUSTOMIZED_TOOL_DESP is
+	new_item: EB_CUSTOMIZED_TOOL_DESP
 			-- New item used when adding new item
 		local
 			l_descriptor: EB_CUSTOMIZED_TOOL_DESP
@@ -57,7 +57,7 @@ feature -- Access
 
 feature{NONE} -- Actions
 
-	on_name_change (a_new_data: STRING_32; a_descriptor: EB_CUSTOMIZED_TOOL_DESP) is
+	on_name_change (a_new_data: STRING_32; a_descriptor: EB_CUSTOMIZED_TOOL_DESP)
 			-- Action to be performed when `a_new_data' changes.
 			-- Invoke `a_setter' to set this new data.
 			-- After setting, invoke `a_referesh' to refresh Current dialog if `a_refresher' is not Void.
@@ -73,7 +73,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_data_change (a_new_data: STRING_32; a_setter: PROCEDURE [ANY, TUPLE [STRING]]; a_refresher: PROCEDURE [ANY, TUPLE]) is
+	on_data_change (a_new_data: STRING_32; a_setter: PROCEDURE [ANY, TUPLE [STRING]]; a_refresher: PROCEDURE [ANY, TUPLE])
 			-- Action to be performed when `a_new_data' changes.
 			-- Invoke `a_setter' to set this new data.
 			-- After setting, invoke `a_referesh' to refresh Current dialog if `a_refresher' is not Void.
@@ -88,7 +88,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_handlers_change (a_handlers: HASH_TABLE [STRING, STRING]; a_descriptor: EB_CUSTOMIZED_TOOL_DESP) is
+	on_handlers_change (a_handlers: HASH_TABLE [STRING, STRING]; a_descriptor: EB_CUSTOMIZED_TOOL_DESP)
 			-- Action to be performed when handlers of `a_descriptor' changes.
 		require
 			a_handlers_attached: a_handlers /= Void
@@ -108,13 +108,13 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Implementation/Data
 
-	default_icon_pixmap: EV_PIXMAP is
+	default_icon_pixmap: EV_PIXMAP
 			-- Default icon pixmap for `items'
 		do
 			Result := pixmaps.icon_pixmaps.diagram_export_to_png_icon
 		end
 
-	new_item_name: STRING is
+	new_item_name: STRING
 			-- Base for new created items
 		do
 			Result := "New tool #"
@@ -126,7 +126,7 @@ feature{NONE} -- Implementation/Data
 	handler_dialog: EB_STONE_HANDLER_DIALOG
 			-- Dialog to setup stone handler
 
-	data_from_row (a_row: EV_GRID_ROW): EB_CUSTOMIZED_TOOL_DESP is
+	data_from_row (a_row: EV_GRID_ROW): EB_CUSTOMIZED_TOOL_DESP
 			-- Data from `a_row'.
 		do
 			Result ?= a_row.data
@@ -134,7 +134,7 @@ feature{NONE} -- Implementation/Data
 
 feature{NONE} -- Implementation
 
-	load_descriptors is
+	load_descriptors
 			-- Load descriptors retrieved from `items_getter' into Current.
 			-- Keep a copy of retrieved descriptors so modification done in Current dialog don't mess up the source.
 		local
@@ -154,13 +154,13 @@ feature{NONE} -- Implementation
 			set_has_changed (False)
 		end
 
-	setup_item_grid is
+	setup_item_grid
 			-- Setup `item_grid'.
 		do
 			item_grid.column (1).set_title (interface_names.t_tool_name)
 		end
 
-	bind_item_row (a_descriptor: EB_CUSTOMIZED_TOOL_DESP; a_grid_row: EV_GRID_ROW) is
+	bind_item_row (a_descriptor: EB_CUSTOMIZED_TOOL_DESP; a_grid_row: EV_GRID_ROW)
 			-- Bind `a_descriptor' in `a_grid_row'.
 		local
 			l_item: EV_GRID_LABEL_ITEM
@@ -174,12 +174,12 @@ feature{NONE} -- Implementation
 			a_grid_row.set_item (1, l_item)
 		end
 
-	resize_item_grid is
+	resize_item_grid
 			-- Resize `item_grid'.
 		do
 		end
 
-	bind_property_grid (a_descriptor: EB_CUSTOMIZED_TOOL_DESP) is
+	bind_property_grid (a_descriptor: EB_CUSTOMIZED_TOOL_DESP)
 			-- Load information of `a_descriptor' in `property_grid'.
 		local
 			l_grid: like property_grid
@@ -220,7 +220,7 @@ feature{NONE} -- Implementation
 			l_name.enable_select
 		end
 
-	refresh_grid_for_descriptor (a_descriptor: EB_CUSTOMIZED_TOOL_DESP) is
+	refresh_grid_for_descriptor (a_descriptor: EB_CUSTOMIZED_TOOL_DESP)
 			-- Refresh grid item for `a_descriptor'.
 		local
 			l_grid_row: EV_GRID_ROW
@@ -239,7 +239,7 @@ feature{NONE} -- Implementation
 			item_grid.row_deselect_actions.resume
 		end
 
-	handler_display_function (a_handler_table: HASH_TABLE [STRING, STRING]): STRING_32 is
+	handler_display_function (a_handler_table: HASH_TABLE [STRING, STRING]): STRING_32
 			-- String representation of handlers given by `a_handler_table'
 		require
 			a_handler_table_attached: a_handler_table /= Void
@@ -283,7 +283,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	stone_table: HASH_TABLE [STRING_32, STRING] is
+	stone_table: HASH_TABLE [STRING_32, STRING]
 			-- Stone table [Stone display name, stone name]
 		do
 			if stone_table_internal = Void then
@@ -302,7 +302,7 @@ feature{NONE} -- Implementation
 	stone_table_internal: like stone_table
 			-- Implementation of `stone_table'
 
-	available_tools: LIST [TUPLE [a_tool_name: STRING_GENERAL; a_tool_id: STRING]] is
+	available_tools: LIST [TUPLE [a_tool_name: STRING_GENERAL; a_tool_id: STRING]]
 			-- List of available tools
 			-- Those that have been removed in Current dialog are not taken into consideration.
 		local

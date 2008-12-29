@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Search in a text file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Basic operations
 
-	launch is
+	launch
 			-- Launch searching.
 		local
 			file : PLAIN_TEXT_FILE
@@ -79,7 +79,7 @@ feature -- Basic operations
 			item_matched_internal.start
 		end
 
-	reset_all is
+	reset_all
 			-- Reset all
 		do
 			Precursor
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

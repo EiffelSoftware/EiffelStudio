@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create {APPLICATION_EXECUTION}
 
 feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 
-	set_top_level is -- (n: STRING; obj: STRING; ot, dt, offs, reas: INTEGER) is
+	set_top_level -- (n: STRING; obj: STRING; ot, dt, offs, reas: INTEGER) is
 			-- Set the various attributes identifying current
 			-- position in source code.
 		local
@@ -73,7 +73,7 @@ feature {APPLICATION_STATUS_EXPORTER} -- Initialization
 
 feature -- Update
 
-	exception_handled: BOOLEAN is
+	exception_handled: BOOLEAN
 			-- Last Exception is handled ?
 			-- if True => first chance
 			-- if False => The execution will terminate after.
@@ -83,7 +83,7 @@ feature -- Update
 			Result := Eifnet_debugger.last_exception_is_handled
 		end
 
-	exception_module_name: STRING_32 is
+	exception_module_name: STRING_32
 			-- Exception module name
 		require
 			exception_occurred: exception_occurred
@@ -93,7 +93,7 @@ feature -- Update
 			end
 		end
 
-	exception_il_type_name: STRING_8 is
+	exception_il_type_name: STRING_8
 			-- Exception IL type name
 		require
 			exception_occurred: exception_occurred
@@ -108,7 +108,7 @@ feature -- Update
 			end
 		end
 
-	update_on_pre_stopped_state is
+	update_on_pre_stopped_state
 			-- Update data before the application is really stopped
 		do
 			if exception_occurred then
@@ -118,7 +118,7 @@ feature -- Update
 			end
 		end
 
-	update_on_stopped_state is
+	update_on_stopped_state
 			-- Update data once the application is really stopped
 		do
 			if exception_occurred and is_stopped then
@@ -135,7 +135,7 @@ feature -- Values
 
 feature -- Changes
 
-	set_is_evaluating (b: BOOLEAN) is
+	set_is_evaluating (b: BOOLEAN)
 			-- set is_evaluating to `b'
 		do
 			is_evaluating := b
@@ -144,14 +144,14 @@ feature -- Changes
 
 feature -- Thread info
 
-	set_current_thread_id (tid: like current_thread_id) is
+	set_current_thread_id (tid: like current_thread_id)
 			-- Set current thread ID.
 		do
 			Precursor {APPLICATION_STATUS} (tid)
 			Eifnet_debugger.info.set_last_icd_thread_id (tid)
 		end
 
-	refresh_current_thread_id is
+	refresh_current_thread_id
 		local
 			dbg_info: EIFNET_DEBUGGER_INFO
 			edti: EIFNET_DEBUGGER_THREAD_INFO
@@ -168,7 +168,7 @@ feature -- Thread info
 			end
 		end
 
-	thread_name	(a_id: like current_thread_id): STRING is
+	thread_name	(a_id: like current_thread_id): STRING
 		local
 			dbg_info: EIFNET_DEBUGGER_INFO
 		do
@@ -181,7 +181,7 @@ feature -- Thread info
 			end
 		end
 
-	thread_priority	(a_id: like current_thread_id): INTEGER is
+	thread_priority	(a_id: like current_thread_id): INTEGER
 		local
 			dbg_info: EIFNET_DEBUGGER_INFO
 		do
@@ -198,7 +198,7 @@ feature -- Call stack related
 
 	current_call_stack: EIFFEL_CALL_STACK_DOTNET
 
-	clean_current_call_stack is
+	clean_current_call_stack
 			-- Clean Eiffel callstack data
 		do
 			if current_call_stack /= Void then
@@ -208,14 +208,14 @@ feature -- Call stack related
 
 feature {NONE} -- CallStack Impl
 
-	new_callstack_with (a_tid: like current_thread_id; a_stack_max_depth: INTEGER): like current_call_stack is
+	new_callstack_with (a_tid: like current_thread_id; a_stack_max_depth: INTEGER): like current_call_stack
 			-- Get Eiffel Callstack with a maximum depth of `a_stack_max_depth'
 			-- for thread `a_tid'.
 		do
 			create Result.make (a_stack_max_depth, a_tid)
 		end
 
-	current_call_stack_element: CALL_STACK_ELEMENT is
+	current_call_stack_element: CALL_STACK_ELEMENT
 			-- Current call stack element being displayed
 		local
 			ccs: EIFFEL_CALL_STACK_DOTNET
@@ -230,7 +230,7 @@ feature {NONE} -- CallStack Impl
 
 feature -- Values
 
-	current_call_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET is
+	current_call_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET
 			-- Current call stack element being displayed
 		do
 			Result ?= current_call_stack_element
@@ -238,7 +238,7 @@ feature -- Values
 
 feature -- Reason for stopping
 
-	set_reason (val: like reason) is
+	set_reason (val: like reason)
 			-- Set reason of stopped state
 		do
 			reason := val
@@ -246,32 +246,32 @@ feature -- Reason for stopping
 			valid_reason
 		end
 
-	set_reason_as_break is
+	set_reason_as_break
 		do
 			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_break)
 		end
 
-	set_reason_as_interrupt is
+	set_reason_as_interrupt
 		do
 			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_interrupt)
 		end
 
-	set_reason_as_raise is
+	set_reason_as_raise
 		do
 			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_raise)
 		end
 
-	set_reason_as_viol is
+	set_reason_as_viol
 		do
 			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_viol)
 		end
 
-	set_reason_as_update_breakpoints is
+	set_reason_as_update_breakpoints
 		do
 			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_update_breakpoint)
 		end
 
-	set_reason_as_step is
+	set_reason_as_step
 		do
 			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_step)
 		end
@@ -284,7 +284,7 @@ feature {APPLICATION_EXECUTION_DOTNET} -- Constants
 	Exception_il_type_name_key: STRING = "il_type_name"
 			-- Key used to fetch exception other info for IL type name
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

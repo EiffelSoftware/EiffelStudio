@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Domain generator to perform domain transformation eigther between the same type of domains, or between
 					different type of domains.
@@ -123,7 +123,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_criterion: like criterion; a_enable_fill_domain: BOOLEAN) is
+	make (a_criterion: like criterion; a_enable_fill_domain: BOOLEAN)
 			-- Initialize `criterion' with `a_criterion' and `is_fill_domain_enabled' with `a_enable_fill_domain'.
 		do
 			set_criterion (a_criterion)
@@ -137,7 +137,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	reset_domain is
+	reset_domain
 			-- Reset `domain' to its empty status.
 		do
 			domain.content.wipe_out
@@ -145,7 +145,7 @@ feature -- Setting
 			domain_reset: domain.is_empty
 		end
 
-	set_criterion (a_criterion: like criterion) is
+	set_criterion (a_criterion: like criterion)
 			-- Set `criterion' with `a_criterion'.
 			-- If `a_criterion' is Void, current criterion in this domain generator
 			-- will be removed.
@@ -170,7 +170,7 @@ feature -- Setting
 			internal_actual_criterion_reset: internal_actual_criterion = Void
 		end
 
-	enable_fill_domain is
+	enable_fill_domain
 			-- Enable that newly generated domain will be filled with satisfied items.
 		do
 			is_fill_domain_enabled := True
@@ -178,7 +178,7 @@ feature -- Setting
 			fill_domain_enabled: is_fill_domain_enabled
 		end
 
-	disable_fill_domain is
+	disable_fill_domain
 			-- Disable that newly generated domain will be filled with satisfied items.
 		do
 			is_fill_domain_enabled := False
@@ -186,7 +186,7 @@ feature -- Setting
 			fill_domain_disabled: not is_fill_domain_enabled
 		end
 
-	enable_distinct_item is
+	enable_distinct_item
 			-- Enable distinct item in `domain'.
 			-- Note: Enable ditinct item may slow down domain generation.
 		do
@@ -195,7 +195,7 @@ feature -- Setting
 			distinct_item_enabled: is_distinct_required
 		end
 
-	disable_distinct_item is
+	disable_distinct_item
 			-- Disable distinct item in `domain'.
 		do
 			distinct_required_cell.put (False)
@@ -210,7 +210,7 @@ feature -- Status report
 			-- will it be inserted into `domain'?
 			-- Default: False
 
-	is_distinct_required: BOOLEAN is
+	is_distinct_required: BOOLEAN
 			-- Does distinct items in `domain' required?
 		do
 			Result := distinct_required_cell.item
@@ -218,7 +218,7 @@ feature -- Status report
 
 feature -- Access
 
-	item_satisfied_actions: ACTION_SEQUENCE [TUPLE[like item_type]] is
+	item_satisfied_actions: ACTION_SEQUENCE [TUPLE[like item_type]]
 			-- Actions to be performed when a new item (which is satisfied by current `criterion') is generated
 		do
 			if actions_internal = Void then
@@ -232,14 +232,14 @@ feature -- Access
 	criterion: QL_CRITERION
 			-- Criterion used when generating new items
 
-	domain: QL_DOMAIN is
+	domain: QL_DOMAIN
 			-- Generated domain
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current generator
 		deferred
 		ensure
@@ -248,7 +248,7 @@ feature -- Access
 
 feature -- Domain visit
 
-	process_domain (a_item: QL_DOMAIN) is
+	process_domain (a_item: QL_DOMAIN)
 			-- Process `a_item'.
 		local
 			l_criterion: like criterion
@@ -291,13 +291,13 @@ feature -- Domain visit
 
 feature{NONE} -- Criterion visit
 
-	process_intrinsic_domain_criterion (a_cri: QL_INTRINSIC_DOMAIN_CRITERION) is
+	process_intrinsic_domain_criterion (a_cri: QL_INTRINSIC_DOMAIN_CRITERION)
 			-- Process `a_cri'.
 		do
 			process_domain_criterion (a_cri)
 		end
 
-	process_domain_criterion (a_cri: QL_DOMAIN_CRITERION) is
+	process_domain_criterion (a_cri: QL_DOMAIN_CRITERION)
 			-- Process `a_cri'.
 		local
 			l_delayed_domain: QL_DELAYED_DOMAIN
@@ -317,7 +317,7 @@ feature{NONE} -- Criterion visit
 			end
 		end
 
-	process_item (a_item: QL_VISITABLE) is
+	process_item (a_item: QL_VISITABLE)
 			-- Process `a_item'.
 		do
 			Precursor (a_item)
@@ -328,7 +328,7 @@ feature{NONE} -- Implementation
 	actions_internal: like item_satisfied_actions
 			-- Implementation of `item_satisfied_actions'
 
-	actual_criterion: like criterion is
+	actual_criterion: like criterion
 			-- Actual criterion used when generating items
 		do
 			if internal_actual_criterion = Void then
@@ -353,21 +353,21 @@ feature{NONE} -- Implementation
 	internal_actual_criterion: like criterion
 			-- Implementation of `actual_criterion'
 
-	tautology_criterion: like criterion is
+	tautology_criterion: like criterion
 			-- Tautology criterion
 		deferred
 		ensure
 			good_result: Result /= Void
 		end
 
-	compiled_criterion: like criterion is
+	compiled_criterion: like criterion
 			-- A criterion that only compiled items can satisfy
 		deferred
 		ensure
 			good_result: Result /= Void
 		end
 
-	evaluate_item (a_item: like item_type) is
+	evaluate_item (a_item: like item_type)
 			-- Evaluate `a_item' using `actual_criterion'.
 			-- If `actual_criterion' is satisfied by `a_item', put `a_item' in `domain' and call `item_satisfied_actions'.
 		require
@@ -385,7 +385,7 @@ feature{NONE} -- Implementation
 
 feature{QL_CRITERION} -- Implementation/Criterion interaction
 
-	temp_domain: like domain is
+	temp_domain: like domain
 			-- Temporary domain used to store candidate items from relation criterion such as "ancestor_is", "descendant_is"
 		deferred
 		end
@@ -397,7 +397,7 @@ feature{QL_CRITERION} -- Implementation/Criterion interaction
 
 feature{NONE} -- Implementation
 
-	process_groups_from_target (a_target: CONF_TARGET; a_parent: QL_ITEM; a_action: PROCEDURE [ANY, TUPLE [QL_GROUP]]) is
+	process_groups_from_target (a_target: CONF_TARGET; a_parent: QL_ITEM; a_action: PROCEDURE [ANY, TUPLE [QL_GROUP]])
 			-- Iterate through groups in `a_target' and call `a_action' for every group.
 		require
 			a_target_attached: a_target /= Void
@@ -426,7 +426,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	process_classes_from_group (a_group: CONF_GROUP; a_parent: QL_ITEM; a_action: PROCEDURE [ANY, TUPLE [QL_CLASS]]) is
+	process_classes_from_group (a_group: CONF_GROUP; a_parent: QL_ITEM; a_action: PROCEDURE [ANY, TUPLE [QL_CLASS]])
 			-- For every class in `a_group', call `a_action'.
 		require
 			a_group_attached: a_group /= Void
@@ -468,7 +468,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	process_feature_from_class (a_class: QL_CLASS; a_real_feature_action: PROCEDURE [ANY, TUPLE [QL_REAL_FEATURE]]; a_invariant_action: PROCEDURE [ANY, TUPLE [QL_INVARIANT]]) is
+	process_feature_from_class (a_class: QL_CLASS; a_real_feature_action: PROCEDURE [ANY, TUPLE [QL_REAL_FEATURE]]; a_invariant_action: PROCEDURE [ANY, TUPLE [QL_INVARIANT]])
 			-- Iterate through features in `a_class' and call `a_real_feature_action' for every real feature,
 			-- call `a_invariant_action' for every invariant feature.
 		require
@@ -521,7 +521,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	record_ancestors_of_class (a_class: CLASS_C; a_ancestors: LIST [CLASS_C]) is
+	record_ancestors_of_class (a_class: CLASS_C; a_ancestors: LIST [CLASS_C])
 			-- Record all ancestores of `a_class' in `a_ancestors' .
 		require
 			class_not_void: a_class /= Void
@@ -554,7 +554,7 @@ feature{NONE} -- Implementation
 	is_setting_new_criterion: BOOLEAN
 			-- Is setting new criterion	
 
-	distinct_required_cell: CELL [BOOLEAN] is
+	distinct_required_cell: CELL [BOOLEAN]
 			-- Cell to hold a flag to indicate whether or not distinct items in `domain' is required
 		once
 			create Result.put (False)
@@ -568,7 +568,7 @@ feature{NONE} -- Implementation
 	temp_domain_internal: like temp_domain
 			-- Implementation of `temp_domain'
 
-	process_temp_domain is
+	process_temp_domain
 			-- Process `temp_domain'.
 		local
 			l_domain: like domain
@@ -582,7 +582,7 @@ feature{NONE} -- Implementation
 
 feature{QL_DOMAIN_GENERATOR, QL_CRITERION} -- Action
 
-	on_item_satisfied_by_criterion (a_item: like item_type; a_interval_actions_applied: BOOLEAN) is
+	on_item_satisfied_by_criterion (a_item: like item_type; a_interval_actions_applied: BOOLEAN)
 			-- Action to be performed when `a_item' is satisfied by `criterion'
 			-- If not `a_interval_actions_applied', `check_interval_tick_actions' will be called.
 		require
@@ -609,7 +609,7 @@ invariant
 	actual_criterion_attached: actual_criterion /= Void
 	tautology_criterion_attached: tautology_criterion /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server for melted feature tables indexed by static type id."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Access
 
-	cache: CACHE [MELTED_FEATURE_TABLE] is
+	cache: CACHE [MELTED_FEATURE_TABLE]
 			-- Cache for routine tables
 		once
 			create Result.make
@@ -24,13 +24,13 @@ feature -- Access
 feature -- Server size configuration
 
 
-	Chunk: INTEGER is 200
+	Chunk: INTEGER = 200
 			-- Size of a HASH_TABLE block
 
 invariant
 	cache_not_void: cache /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

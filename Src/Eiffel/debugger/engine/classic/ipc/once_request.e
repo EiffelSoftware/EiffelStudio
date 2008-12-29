@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Request for once functions' result
@@ -30,7 +30,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			old_make (Rqst_inspect)
 			init_recv_c
@@ -38,7 +38,7 @@ feature -- Initialization
 
 	address: STRING
 
-	already_called (once_routine: FEATURE_I): BOOLEAN is
+	already_called (once_routine: FEATURE_I): BOOLEAN
 			-- Has `once_routine' already been called?
 		require
 			exists: once_routine /= Void
@@ -99,7 +99,7 @@ end
 			end
 		end
 
-	once_result (once_routine: FEATURE_I): ABSTRACT_DEBUG_VALUE is
+	once_result (once_routine: FEATURE_I): ABSTRACT_DEBUG_VALUE
 			-- Result of `once_routine'
 		require
 			exists: once_routine /= Void
@@ -119,7 +119,7 @@ end
 
 feature -- Implementation
 
-	once_data (once_routine: FEATURE_I): ABSTRACT_DEBUG_VALUE is
+	once_data (once_routine: FEATURE_I): ABSTRACT_DEBUG_VALUE
 			-- Fetched data related to `once_routine'
 			-- first if it has already been called
 			-- then if it failed
@@ -261,7 +261,7 @@ feature -- Implementation
 			Result /= Void
 		end
 
-	once_index (once_routine: FEATURE_I): INTEGER is
+	once_index (once_routine: FEATURE_I): INTEGER
 			-- Index used in runtime to retrieve once information.
 		local
 			l_index: INTEGER
@@ -298,7 +298,7 @@ feature -- Implementation
 
 feature -- Last fetched values
 
-	clear_last_values is
+	clear_last_values
 		do
 			last_is_called := False
 			last_failed := False
@@ -314,14 +314,14 @@ feature -- Last fetched values
 
 	last_result: ABSTRACT_DEBUG_VALUE
 
-	last_exception_meaning: STRING is
+	last_exception_meaning: STRING
 		do
 			Result := exception_code_meaning (last_exception_code)
 		end
 
 feature -- Recycling
 
-	recycle is
+	recycle
 		do
 			reset_recv_value
 			clear_last_values
@@ -330,12 +330,12 @@ feature -- Recycling
 
 feature -- Impl
 
-	exception_tag_from_code (a_code: INTEGER): STRING is
+	exception_tag_from_code (a_code: INTEGER): STRING
 		do
 			Result := exception_code_meaning (a_code)
 		end
 
-	Once_indexes: HASH_TABLE [INTEGER, INTEGER] is
+	Once_indexes: HASH_TABLE [INTEGER, INTEGER]
 			-- Once indexes cached during the debugging session.
 		once
 			create Result.make (10)
@@ -343,7 +343,7 @@ feature -- Impl
 
 feature -- Contract support
 
-	feature_i (f: E_FEATURE): FEATURE_I is
+	feature_i (f: E_FEATURE): FEATURE_I
 			-- Return the feature_i associated to `f'.
 			--| For contract support only.
 		require
@@ -352,7 +352,7 @@ feature -- Contract support
 			Result := f.associated_feature_i
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

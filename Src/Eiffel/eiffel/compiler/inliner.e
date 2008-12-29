@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class INLINER
@@ -16,7 +16,7 @@ create
 
 feature
 
-	make is
+	make
 		local
 			nb: INTEGER
 		do
@@ -43,7 +43,7 @@ feature {NONE}
 
 feature -- Current inlined feature
 
-	set_inlined_feature (bc: INLINED_FEAT_B) is
+	set_inlined_feature (bc: INLINED_FEAT_B)
 		do
 			inlined_feature := bc
 		end
@@ -57,19 +57,19 @@ feature  -- Status
 
 	current_feature_inlined: BOOLEAN;
 
-	set_current_feature_inlined is
+	set_current_feature_inlined
 		do
 			current_feature_inlined := True
 		end
 
-	reset is
+	reset
 		do
 			current_feature_inlined := False
 		end
 
 feature -- Conversion
 
-	bindex_cid_table: HASH_TABLE [INTEGER, INTEGER] is
+	bindex_cid_table: HASH_TABLE [INTEGER, INTEGER]
 			-- Table with `body_index' as keys and `class_id' as items.
 		once
 			Result := Depend_server.bindex_cid_table
@@ -77,7 +77,7 @@ feature -- Conversion
 
 feature -- Status
 
-	inline (a_return_type: TYPE_A; body_index: INTEGER): BOOLEAN is
+	inline (a_return_type: TYPE_A; body_index: INTEGER): BOOLEAN
 			-- Can we inline `f' ?
 		require
 			is_inlining_enabled: inlining_on
@@ -101,7 +101,7 @@ feature -- Status
 
 feature {NONE} -- Implementation
 
-	can_be_inlined (a_return_type: TYPE_A; body_index: INTEGER): BOOLEAN is
+	can_be_inlined (a_return_type: TYPE_A; body_index: INTEGER): BOOLEAN
 			-- Tell us if we can inline the code corresponding to `body_index'
 		require
 			a_return_type_not_void: a_return_type /= Void
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used in DUMP_VALUE and its clients to value the types"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,34 +11,34 @@ class
 
 feature -- Type identifiant in context of DUMP_VALUE
 
-	Type_unknown		: INTEGER is 0
-	Type_boolean		: INTEGER is 1
-	Type_character_8	: INTEGER is 2
-	Type_character_32 	: INTEGER is 3
+	Type_unknown		: INTEGER = 0
+	Type_boolean		: INTEGER = 1
+	Type_character_8	: INTEGER = 2
+	Type_character_32 	: INTEGER = 3
 
-	Type_integer_8		: INTEGER is 4
-	Type_integer_16		: INTEGER is 5
-	Type_integer_32		: INTEGER is 6
-	Type_integer_64		: INTEGER is 7
+	Type_integer_8		: INTEGER = 4
+	Type_integer_16		: INTEGER = 5
+	Type_integer_32		: INTEGER = 6
+	Type_integer_64		: INTEGER = 7
 
-	Type_natural_8		: INTEGER is 8
-	Type_natural_16		: INTEGER is 9
-	Type_natural_32		: INTEGER is 10
-	Type_natural_64		: INTEGER is 11
+	Type_natural_8		: INTEGER = 8
+	Type_natural_16		: INTEGER = 9
+	Type_natural_32		: INTEGER = 10
+	Type_natural_64		: INTEGER = 11
 
-	Type_real_32		: INTEGER is 12
-	Type_real_64		: INTEGER is 13
-	Type_bits			: INTEGER is 14
-	Type_pointer		: INTEGER is 15
+	Type_real_32		: INTEGER = 12
+	Type_real_64		: INTEGER = 13
+	Type_bits			: INTEGER = 14
+	Type_pointer		: INTEGER = 15
 
-	Type_object			: INTEGER is 16
-	Type_manifest_string: INTEGER is 17
-	Type_string_dotnet	: INTEGER is 18
-	Type_expanded_object: INTEGER is 19
-	Type_exception		: INTEGER is 20
-	Type_procedure_return: INTEGER is 21;
+	Type_object			: INTEGER = 16
+	Type_manifest_string: INTEGER = 17
+	Type_string_dotnet	: INTEGER = 18
+	Type_expanded_object: INTEGER = 19
+	Type_exception		: INTEGER = 20
+	Type_procedure_return: INTEGER = 21;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

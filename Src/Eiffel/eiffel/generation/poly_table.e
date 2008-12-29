@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Abstract representation of a routine-or-attribute offset table for
 		the final Eiffel executable.
@@ -72,7 +72,7 @@ inherit
 
 feature -- Initialization
 
-	make (routine_id: INTEGER) is
+	make (routine_id: INTEGER)
 			-- Create table with associated `routine_id'
 		do
 			rout_id := routine_id
@@ -83,7 +83,7 @@ feature -- Initialization
 			pattern_id := -2
 		end
 
-	create_block (n: INTEGER) is
+	create_block (n: INTEGER)
 			-- Create an array of `n' elements.
 		require
 			large_enough: n > 0
@@ -91,7 +91,7 @@ feature -- Initialization
 			array_make (1, n)
 		end
 
-	extend_block (n: INTEGER) is
+	extend_block (n: INTEGER)
 			-- Extend current to `n' elements.
 		require
 			large_enough: n > 0
@@ -104,12 +104,12 @@ feature -- Initialization
 
 feature
 
-	new_entry (f: FEATURE_I; c: INTEGER): ENTRY is
+	new_entry (f: FEATURE_I; c: INTEGER): ENTRY
 			-- New entry corresponding to `f' in class of class ID `c'
 		deferred
 		end
 
-	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN is
+	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN
 			-- Is the table polymorphic from entry indexed by `a_type' to
 			-- the maximum entry id ?
 		require
@@ -118,22 +118,22 @@ feature
 		deferred
 		end
 
-	write is
+	write
 			-- Generate table using writer.
 		deferred
 		end
 
-	write_for_type is
+	write_for_type
 			-- Generate table for type description.
 		deferred
 		end
 
-	item: T is
+	item: T
 		do
 			Result := array_item (position)
 		end
 
-	min_type_id: INTEGER is
+	min_type_id: INTEGER
 			-- Minimum effecitve type id of the table ?
 		require
 			not is_empty
@@ -141,7 +141,7 @@ feature
 			Result := array_item (lower).type_id
 		end
 
-	max_type_id: INTEGER is
+	max_type_id: INTEGER
 			-- Maximum type id of the table ?
 		require
 			not is_empty
@@ -149,7 +149,7 @@ feature
 			Result := array_item (max_position).type_id
 		end
 
-	min_used: INTEGER is
+	min_used: INTEGER
 			-- Minimum used type id ?
 		require
 			not_empty: count > 0
@@ -171,7 +171,7 @@ feature
 			end
 		end
 
-	max_used: INTEGER is
+	max_used: INTEGER
 			-- Minimum used type id ?
 		require
 			not_empty: count > 0
@@ -193,7 +193,7 @@ feature
 			end
 		end
 
-	used: BOOLEAN is
+	used: BOOLEAN
 			-- Is the table effectively used ?
 		local
 			i, nb: INTEGER
@@ -221,13 +221,13 @@ feature
 			--| Currently it is only checked for ROUT_TABLE we could possibly do
 			--| the same for ATTR_TABLE.
 
-	has_one_signature: BOOLEAN is
+	has_one_signature: BOOLEAN
 			-- Is the table only containing features with the same signature?
 		do
 			Result := pattern_id >= 0
 		end
 
-	goto (type_id: INTEGER) is
+	goto (type_id: INTEGER)
 			-- Move cursor to the first entry of type_id `type_id'
 			-- associated to an effective class (non-deferred).
 		require
@@ -236,7 +236,7 @@ feature
 			position := binary_search (type_id)
 		end
 
-	goto_used (type_id: INTEGER) is
+	goto_used (type_id: INTEGER)
 			-- Move cursor to the first entry of type_id `type_id'
 			-- associated to an used effective class (non-deferred).
 		require
@@ -255,7 +255,7 @@ feature
 			position := i
 		end
 
-	goto_used_from_position (a_pos: INTEGER) is
+	goto_used_from_position (a_pos: INTEGER)
 			-- Move cursor to the first entry after position `a_pos'
 			-- associated to an used effective class (non-deferred).
 		require
@@ -275,7 +275,7 @@ feature
 			position := i
 		end
 
-	has_one_type: BOOLEAN is
+	has_one_type: BOOLEAN
 			-- Is the type table not polymorphic ?
 		require
 			not_empty: not is_empty
@@ -304,7 +304,7 @@ feature
 			end
 		end
 
-	generate_type_table (writer: TABLE_GENERATOR) is
+	generate_type_table (writer: TABLE_GENERATOR)
 			-- Generate the associated type table in final mode.
 		local
 			i, j, k, nb, index: INTEGER
@@ -453,13 +453,13 @@ feature
 			buffer.put_three_character ('%N', '}', '%N')
 		end
 
-	is_routine_table: BOOLEAN is
+	is_routine_table: BOOLEAN
 			-- Is the current table a routine table ?
 		do
 			-- Do nothing
 		end
 
-	is_attribute_table: BOOLEAN is
+	is_attribute_table: BOOLEAN
 			-- Is the current table an attribute table ?
 		do
 			-- Do nothing
@@ -467,22 +467,22 @@ feature
 
 feature -- Iteration
 
-	start is
+	start
 		do
 			position := lower
 		end
 
-	forth is
+	forth
 		do
 			position := position + 1
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 		do
 			Result := (position > max_position)
 		end
 
-	go_to (pos: INTEGER) is
+	go_to (pos: INTEGER)
 		do
 			position := pos
 		end
@@ -493,14 +493,14 @@ feature -- Iteration
 	max_position: INTEGER
 			-- Position of the last item
 
-	first: T is
+	first: T
 		do
 			Result := array_item (lower)
 		end
 
 feature -- Insertion
 
-	extend (v: T) is
+	extend (v: T)
 			-- Add `v' to the end of `Current'.
 		do
 			max_position := max_position + 1
@@ -517,7 +517,7 @@ feature -- Insertion
 			is_deferred_set: not v.is_deferred implies not is_deferred
 		end
 
-	merge (other: like Current) is
+	merge (other: like Current)
 			-- Put `other' into Current
 		local
 			tmp: ARRAY [T]
@@ -596,7 +596,7 @@ feature -- Insertion
 
 feature -- Status
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is there an element?
 		do
 			Result := max_position = 0
@@ -647,7 +647,7 @@ feature -- Status
 
 feature -- Sort
 
-	sort is
+	sort
 			-- Sort Current object in ascending order.
 		do
 			if max_position > 0 then
@@ -657,7 +657,7 @@ feature -- Sort
 
 feature {NONE} -- Implementation of quick sort algorithm
 
-	quick_sort (min, max: INTEGER) is
+	quick_sort (min, max: INTEGER)
 			-- Apply `quick sort' algorithm
 			-- If `max' < `min' then it stops
 		local
@@ -670,7 +670,7 @@ feature {NONE} -- Implementation of quick sort algorithm
 			end
 		end
 
-	partition_quick_sort  (min, max: INTEGER): INTEGER is
+	partition_quick_sort  (min, max: INTEGER): INTEGER
 			-- Apply `quick_sort' algorithm to position [`min'..`max']
 		require
 			correct_bounds: min <= max
@@ -727,7 +727,7 @@ feature {NONE} -- Implementation of quick sort algorithm
 
 feature {NONE} -- Implementation
 
-	binary_search (type_id: INTEGER): INTEGER is
+	binary_search (type_id: INTEGER): INTEGER
 			-- Return position where `type_id' is in POLY_TABLE.
 		local
 			i, j, m: INTEGER
@@ -752,7 +752,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	increase_size (n: INTEGER) is
+	increase_size (n: INTEGER)
 			-- Increase the current array of `n' elements.
 		do
 			area := area.aliased_resized_area (count + n)
@@ -761,32 +761,32 @@ feature {NONE} -- Implementation
 
 feature {POLY_TABLE} -- Special data
 
-	tmp_poly_table: ARRAY [ENTRY] is
+	tmp_poly_table: ARRAY [ENTRY]
 			-- Contain a copy of Current during a merge
 		deferred
 		ensure
 			tmp_poly_table_not_void: Result /= Void
 		end
 
-	bad_cast_but_valid (e: POINTER): T is
+	bad_cast_but_valid (e: POINTER): T
 		external
 			"C macro use %"eif_eiffel.h%""
 		alias
 			"(EIF_REFERENCE)"
 		end
 
-	increase_tmp_size (n: INTEGER) is
+	increase_tmp_size (n: INTEGER)
 			-- Increase the current array of `n' elements.
 		do
 			tmp_poly_table.make (1, tmp_poly_table.upper + (1 + n // Block_size) * Block_size)
 		end
 
-	Block_size: INTEGER is 50
+	Block_size: INTEGER = 50
 			-- Size of a block of `tmp_poly_table'.
 
 feature {NONE} -- Implementation
 
-	generate_loop_type_id_initialization (buffer: GENERATION_BUFFER; a_table_name: STRING; a_type_id, a_lower, a_upper: INTEGER) is
+	generate_loop_type_id_initialization (buffer: GENERATION_BUFFER; a_table_name: STRING; a_type_id, a_lower, a_upper: INTEGER)
 			-- Generate code to initialize current array with `a_routine_name'. Generate a
 			-- loop if `a_lower' is different from `a_upper'.
 		require
@@ -818,7 +818,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

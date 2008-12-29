@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface of a processor performing tasks for a test suite. For example, this includes executing
 		a number of tests or creating new tests.
@@ -61,7 +61,7 @@ feature -- Status report
 			result_implies_project_initialized: Result implies test_suite.is_project_initialized
 		end
 
-	is_ready: BOOLEAN is
+	is_ready: BOOLEAN
 			-- Can `Current' start performing a task for test suite?
 			--
 			-- `a_test_suite': Test suite which launches `Current'.

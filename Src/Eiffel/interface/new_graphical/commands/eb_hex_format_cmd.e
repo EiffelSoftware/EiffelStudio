@@ -1,4 +1,4 @@
-indexing
+note
 	description: ""
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make (a_callback: like command_call_back) is
+	make (a_callback: like command_call_back)
 			-- Initialize `Current' and associate it with `tool'.
 		do
 			command_call_back := a_callback
@@ -32,31 +32,31 @@ feature -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			--| No big pixmap is required for this command.
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			--| No big pixmap is required for this command.
 		end
 
-	mini_pixmap: EV_PIXMAP is
+	mini_pixmap: EV_PIXMAP
 			-- Pixmap representing the command for mini toolbars.
 		do
 			Result := pixmaps.mini_pixmaps.debugger_show_hex_value_icon
 		end
 
-	mini_pixel_buffer: EV_PIXEL_BUFFER is
+	mini_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command for mini toolbars.
 		do
 			Result := pixmaps.mini_pixmaps.debugger_show_hex_value_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.e_switch_num_format_to_hex
@@ -69,13 +69,13 @@ feature -- Status report
 	command_call_back: PROCEDURE [ANY, TUPLE [BOOLEAN]]
 			-- Call back procedure to execute current
 
-	name: STRING is
+	name: STRING
 			-- Name of the command.
 		do
 			Result := Interface_names.e_Switch_num_formating
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description of the command.
 		do
 			Result := Interface_names.l_Switch_num_format_desc
@@ -83,7 +83,7 @@ feature -- Status report
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Remove an object from `tool'.
 		do
 			if command_call_back /= Void then
@@ -98,7 +98,7 @@ feature -- Execution
 
 feature -- Basic operations
 
-	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON is
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON
 			-- Create a new sd mini toolbar button for this command.
 		do
 			create Result.make (Current)
@@ -116,7 +116,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	is_button_selected: BOOLEAN is
+	is_button_selected: BOOLEAN
 			-- Is button selected?
 		do
 			if toggle_button /= Void then
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	change_tooltip (a_tooltip: STRING_GENERAL) is
+	change_tooltip (a_tooltip: STRING_GENERAL)
 			-- Change tooltip on button.
 		require
 			a_tooltip_not_void: a_tooltip /= Void
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 
 	sd_toggle_button: EB_SD_COMMAND_TOOL_BAR_TOGGLE_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

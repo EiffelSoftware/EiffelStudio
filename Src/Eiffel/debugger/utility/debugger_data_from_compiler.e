@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents data from compiler..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		local
 			sys: SYSTEM_I
@@ -189,7 +189,7 @@ feature -- Access
 
 feature -- Specific access
 
-	internal_class_c: CLASS_C is
+	internal_class_c: CLASS_C
 			--
 		local
 			lst: LIST [CLASS_I]
@@ -212,7 +212,7 @@ feature -- Specific access
 			Result_not_Void: Result /= Void
 		end
 
-	ise_runtime_class_c: CLASS_C is
+	ise_runtime_class_c: CLASS_C
 			-- ISE_RUNTIME class (for dotnet)
 		local
 			lst: LIST [CLASS_I]
@@ -244,7 +244,7 @@ feature {NONE} -- Once per object
 	opo_internal_class_c: like internal_class_c
 	opo_ise_runtime_class_c: like ise_runtime_class_c
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

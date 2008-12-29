@@ -1,4 +1,4 @@
-indexing
+note
 	description: "View to display caller/callee information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_dev_window: like development_window; a_drop_actions: like drop_actions; a_for_caller: BOOLEAN) is
+	make (a_dev_window: like development_window; a_drop_actions: like drop_actions; a_for_caller: BOOLEAN)
 			-- Initialize.
 		require
 			a_dev_window_attached: a_dev_window /= Void
@@ -38,7 +38,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Widget of a control bar through which, certain control can be performed upon current view
 		do
 			if control_tool_bar = Void then
@@ -58,7 +58,7 @@ feature -- Access
 	version_count: INTEGER
 			-- Number of versions for caller/callee
 
-	reference_type_name: STRING_GENERAL is
+	reference_type_name: STRING_GENERAL
 			-- Name of reference type, such as caller, callee.
 		do
 			Result := reference_type_name_internal
@@ -86,7 +86,7 @@ feature -- Status report
 	is_for_caller: BOOLEAN
 			-- Is Current view to display caller information?
 
-	is_for_callee: BOOLEAN is
+	is_for_callee: BOOLEAN
 			-- Is Current view to display callee information?
 		do
 			Result := not is_for_caller
@@ -96,7 +96,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_version_count (a_version_count: INTEGER) is
+	set_version_count (a_version_count: INTEGER)
 			-- Set `version_count' with `a_version_count'.
 		do
 			version_count := a_version_count
@@ -104,7 +104,7 @@ feature -- Setting
 			version_count_set: version_count = a_version_count
 		end
 
-	set_reference_type_name (a_name: like reference_type_name) is
+	set_reference_type_name (a_name: like reference_type_name)
 			-- Set `reference_type_name' with `a_name'.
 		do
 			reference_type_name_internal := a_name
@@ -113,7 +113,7 @@ feature -- Setting
 			end
 		end
 
-	set_row_count (a_row_count: INTEGER) is
+	set_row_count (a_row_count: INTEGER)
 			-- Set `row_count' with `a_row_count'.
 		do
 			row_count := a_row_count
@@ -121,7 +121,7 @@ feature -- Setting
 			row_count_set: row_count = a_row_count
 		end
 
-	set_flag (a_flag: like flag) is
+	set_flag (a_flag: like flag)
 			-- Set `flag' with `a_flag'.
 		do
 			flag := a_flag
@@ -131,7 +131,7 @@ feature -- Setting
 
 feature -- Grind binding
 
-	provide_result is
+	provide_result
 			-- Provide result displayed in Current view.
 		do
 			fill_rows
@@ -142,7 +142,7 @@ feature -- Grind binding
 			enable_auto_sort_order_change
 		end
 
-	fill_rows is
+	fill_rows
 			-- Fill rows with `data'.
 		local
 			l_data: like data
@@ -227,7 +227,7 @@ feature -- Grind binding
 			set_row_count (l_row_count)
 		end
 
-	build_row_table (a_node: EB_TREE_NODE [like row_type]) is
+	build_row_table (a_node: EB_TREE_NODE [like row_type])
 			-- Build `row_table'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_TREE_NODE [like row_type]]
@@ -246,7 +246,7 @@ feature -- Grind binding
 			end
 		end
 
-	bind_grid is
+	bind_grid
 			-- Bind `data' into `grid'.
 		local
 			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_TREE_NODE [like row_type]]
@@ -286,7 +286,7 @@ feature -- Grind binding
 			end
 		end
 
-	calculate_required_width_of_first_column is
+	calculate_required_width_of_first_column
 			-- Calculate required width in pixel of first column and store it in `required_width_of_first_column'.
 		local
 			l_row_count: INTEGER
@@ -337,7 +337,7 @@ feature -- Grind binding
 	required_width_of_first_column: INTEGER
 			-- Required width in pixel of first column
 
-	bind_level (a_level_index: INTEGER; a_node: EB_TREE_NODE [like row_type]; a_grid_row: EV_GRID_ROW; a_recursive: BOOLEAN) is
+	bind_level (a_level_index: INTEGER; a_node: EB_TREE_NODE [like row_type]; a_grid_row: EV_GRID_ROW; a_recursive: BOOLEAN)
 			-- Bind data in `a_node' whose level index is `a_level_index' in `a_grid_row'.
 			-- If `a_recursive' is True, bind `children' of `a_node recursively.
 			-- If `a_grid_row' is Void, insert as base row in `grid'.
@@ -378,7 +378,7 @@ feature -- Grind binding
 
 feature{NONE} -- Actions
 
-	on_item_pressed (a_y: INTEGER; a_x: INTEGER; a_button: INTEGER; a_item: EV_GRID_ITEM) is
+	on_item_pressed (a_y: INTEGER; a_x: INTEGER; a_button: INTEGER; a_item: EV_GRID_ITEM)
 			-- Action to be performed when `a_item' is selected
 		local
 			l_caller_callee_item: EB_CLASS_BROWSER_CALLER_CALLEE_ROW
@@ -393,7 +393,7 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Implementation
 
-	item_to_put_in_editor: EV_GRID_ITEM is
+	item_to_put_in_editor: EV_GRID_ITEM
 			-- Grid item which may contain a stone to put into editor
 			-- Void if no satisfied item is found.			
 		do
@@ -403,7 +403,7 @@ feature{NONE} -- Implementation
 	data: QL_FEATURE_DOMAIN
 			-- Data to be displayed in current view
 
-	new_node (a_feature, a_related_feature: QL_FEATURE; a_row_type: INTEGER): EB_TREE_NODE [like row_type] is
+	new_node (a_feature, a_related_feature: QL_FEATURE; a_row_type: INTEGER): EB_TREE_NODE [like row_type]
 			-- New caller/callee row of type `a_row_type' representing `a_feature' and `a_related_feature'
 		require
 			a_feature_attached: a_feature /= Void
@@ -422,7 +422,7 @@ feature{NONE} -- Implementation
 			-- Table of rows
 			-- [data row, row index]
 
-	dynamic_grid_item_function (a_x, a_y: INTEGER): EV_GRID_ITEM is
+	dynamic_grid_item_function (a_x, a_y: INTEGER): EV_GRID_ITEM
 			-- Grid item at position (`a_x', `a_y')
 		local
 			l_row: EB_CLASS_BROWSER_CALLER_CALLEE_ROW
@@ -455,7 +455,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	select_all is
+	select_all
 			-- Select all items in `grid'.
 		local
 			l_columns: ARRAYED_LIST [INTEGER]
@@ -467,7 +467,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/Sorting
 
-	row_order_tester (a_row, b_row: like row_type; a_order: INTEGER): BOOLEAN is
+	row_order_tester (a_row, b_row: like row_type; a_order: INTEGER): BOOLEAN
 			-- Tester to decide the oder of `a_row' and `b_row' according sorting order `a_order'
 		require
 			a_row_attached: a_row /= Void
@@ -490,7 +490,7 @@ feature{NONE} -- Implementation/Sorting
 			end
 		end
 
-	first_row_item: EV_GRID_ITEM is
+	first_row_item: EV_GRID_ITEM
 			-- Grid item for first row
 		local
 			l_item: EB_GRID_EDITOR_TOKEN_ITEM
@@ -510,7 +510,7 @@ feature{NONE} -- Implementation/Sorting
 
 feature{NONE} -- Initialization
 
-	build_grid is
+	build_grid
 			-- Build `grid'.
 		do
 			create grid
@@ -546,7 +546,7 @@ feature{NONE} -- Initialization
 			levels_column_table.put ((<<1, 2, 3>>).linear_representation, 1)
 		end
 
-	build_sortable_and_searchable is
+	build_sortable_and_searchable
 			-- Build facilities to support sort and search
 		local
 			l_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [like row_type]
@@ -572,7 +572,7 @@ feature{NONE} -- Initialization
 invariant
 	row_table_attached: row_table /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

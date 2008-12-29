@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for a call to a local ar an argument with parameters."
@@ -21,20 +21,20 @@ feature -- Properties
 	access: ACCESS_INV_AS;
 			-- Access to an argument or a local
 
-	code: STRING is "VUEX";
+	code: STRING = "VUEX";
 			-- Error code
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER = 1;
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_access (a: like access) is
+	set_access (a: like access)
 			-- Assign `a' to `access'.
 		do
 			access := a;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

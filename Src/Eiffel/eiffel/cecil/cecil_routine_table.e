@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Hash table of visible routines."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- C code generation
 
-	generate (buffer: GENERATION_BUFFER; a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING]) is
+	generate (buffer: GENERATION_BUFFER; a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING])
 			-- Generate required tables.
 		require
 			buffer_attached: buffer /= Void
@@ -47,7 +47,7 @@ feature -- C code generation
 			end
 		end
 
-	generate_address_table (buffer: GENERATION_BUFFER; a_class_type: CLASS_TYPE; is_final: BOOLEAN) is
+	generate_address_table (buffer: GENERATION_BUFFER; a_class_type: CLASS_TYPE; is_final: BOOLEAN)
 			-- Generate table of function pointers.
 		local
 			i, nb: INTEGER
@@ -111,7 +111,7 @@ end;
 			buffer.put_string ("};%N%N");
 		end;
 
-	generate_wrappers (buffer: GENERATION_BUFFER; a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING]) is
+	generate_wrappers (buffer: GENERATION_BUFFER; a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING])
 			-- Generate wrappers to be called via CECIL.
 		require
 			buffer_attached: buffer /= Void
@@ -254,7 +254,7 @@ end;
 			end
 		end
 
-	generate_workbench (buffer: GENERATION_BUFFER; class_id: INTEGER) is
+	generate_workbench (buffer: GENERATION_BUFFER; class_id: INTEGER)
 			-- Generate workbench feature id array
 		local
 			i, nb: INTEGER;
@@ -284,7 +284,7 @@ end;
 			buffer.put_string ("};%N%N");
 		end;
 
-	generate_precomp_workbench (buffer: GENERATION_BUFFER; class_id: INTEGER) is
+	generate_precomp_workbench (buffer: GENERATION_BUFFER; class_id: INTEGER)
 			-- Generate workbench routine id array.
 			-- (Used when the class is precompiled.)
 		local
@@ -315,7 +315,7 @@ end;
 			buffer.put_string ("};%N%N");
 		end;
 
-	generate_name_table (buffer: GENERATION_BUFFER; id: INTEGER) is
+	generate_name_table (buffer: GENERATION_BUFFER; id: INTEGER)
 			-- Generate name table in `buffer'.
 		require
 			good_argument: buffer /= Void;
@@ -348,10 +348,10 @@ end;
 
 feature {NONE} -- Implementation
 
-	cecil_suffix: STRING is "C";
+	cecil_suffix: STRING = "C";
 			-- Suffix for wrapper functions
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

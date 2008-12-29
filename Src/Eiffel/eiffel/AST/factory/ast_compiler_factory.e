@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory for compiler which generates descendants of certain AST classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -70,7 +70,7 @@ inherit
 
 feature -- Access
 
-	new_array_as (exp: EIFFEL_LIST [EXPR_AS]; l_as, r_as: SYMBOL_AS): COMPILER_ARRAY_AS is
+	new_array_as (exp: EIFFEL_LIST [EXPR_AS]; l_as, r_as: SYMBOL_AS): COMPILER_ARRAY_AS
 			-- New COMPILER_ARRAY_AS
 		do
 			if exp /= Void then
@@ -78,7 +78,7 @@ feature -- Access
 			end
 		end
 
-	new_bits_as (v: INTEGER_AS; b_as: KEYWORD_AS): BITS_AS is
+	new_bits_as (v: INTEGER_AS; b_as: KEYWORD_AS): BITS_AS
 			-- New BITS AST node
 		local
 			l_vtbt: VTBT_SIMPLE
@@ -108,7 +108,7 @@ feature -- Access
 			s: SUPPLIERS_AS;
 			o: STRING_AS;
 			ed: KEYWORD_AS): CLASS_AS
-		is
+		
 			-- New CLASS AST node
 		do
 			if n /= Void and s /= Void and (co = Void or else not co.is_empty) and ed /= Void then
@@ -122,7 +122,7 @@ feature -- Access
 			end
 		end
 
-	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS): CLASS_TYPE_AS
 		do
 			if n /= Void then
 				if g /= Void then
@@ -133,7 +133,7 @@ feature -- Access
 			end
 		end
 
-	set_expanded_class_type (a_type: TYPE_AS; is_expanded: BOOLEAN; s_as: KEYWORD_AS) is
+	set_expanded_class_type (a_type: TYPE_AS; is_expanded: BOOLEAN; s_as: KEYWORD_AS)
 		do
 			Precursor {AST_FACTORY} (a_type, is_expanded, s_as)
 			if is_expanded then
@@ -145,7 +145,7 @@ feature -- Access
 			end
 		end
 
-	new_debug_as (k: DEBUG_KEY_LIST_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS is
+	new_debug_as (k: DEBUG_KEY_LIST_AS; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS
 		local
 			l_str: STRING
 		do
@@ -167,7 +167,7 @@ feature -- Access
 			end
 		end
 
-	new_expr_address_as (e: EXPR_AS; a_as, l_as, r_as: SYMBOL_AS): EXPR_ADDRESS_AS is
+	new_expr_address_as (e: EXPR_AS; a_as, l_as, r_as: SYMBOL_AS): EXPR_ADDRESS_AS
 		do
 			if not system.address_expression_allowed then
 				error_handler.insert_error (create {SYNTAX_ERROR}.init (eiffel_parser))
@@ -176,7 +176,7 @@ feature -- Access
 			end
 		end
 
-	new_external_lang_as (l: STRING_AS): COMPILER_EXTERNAL_LANG_AS is
+	new_external_lang_as (l: STRING_AS): COMPILER_EXTERNAL_LANG_AS
 			-- New EXTERNAL_LANGUAGE AST node
 		do
 			if l /= Void then
@@ -184,7 +184,7 @@ feature -- Access
 			end
 		end
 
-	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS; next_pos: INTEGER): FEATURE_AS is
+	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS; next_pos: INTEGER): FEATURE_AS
 			-- New FEATURE AST node
 		local
 			feature_name: FEATURE_NAME
@@ -302,7 +302,7 @@ feature -- Access
 			end
 		end
 
-	new_formal_dec_as (f: FORMAL_AS; c: CONSTRAINT_LIST_AS; cf: EIFFEL_LIST [FEATURE_NAME]; c_as: SYMBOL_AS; ck_as, ek_as: KEYWORD_AS): FORMAL_CONSTRAINT_AS is
+	new_formal_dec_as (f: FORMAL_AS; c: CONSTRAINT_LIST_AS; cf: EIFFEL_LIST [FEATURE_NAME]; c_as: SYMBOL_AS; ck_as, ek_as: KEYWORD_AS): FORMAL_CONSTRAINT_AS
 			-- New FORMAL_DECLARATION AST node
 		do
 			if f /= Void then
@@ -310,7 +310,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT is
+	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -319,7 +319,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT is
+	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -328,7 +328,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_octal_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT is
+	new_integer_octal_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -337,7 +337,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_binary_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT is
+	new_integer_binary_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -366,7 +366,7 @@ feature -- Access for Erros
 
 feature {NONE} -- Validation
 
-	validate_integer_real_type (a_psr: EIFFEL_PARSER_SKELETON; a_type: TYPE_AS; buffer: STRING; for_integer: BOOLEAN) is
+	validate_integer_real_type (a_psr: EIFFEL_PARSER_SKELETON; a_type: TYPE_AS; buffer: STRING; for_integer: BOOLEAN)
 			-- New integer value.
 		local
 			l_type: TYPE_A
@@ -418,7 +418,7 @@ feature {NONE} -- Validation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

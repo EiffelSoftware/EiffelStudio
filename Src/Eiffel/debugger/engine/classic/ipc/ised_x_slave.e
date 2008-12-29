@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Listener to the daemon to execute corresponding request"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Initialization
 
-	init_connection (old_style: BOOLEAN) is
+	init_connection (old_style: BOOLEAN)
 			-- Connect with ised and watch for inputs from ised.
 		local
 			err: INTEGER
@@ -50,7 +50,7 @@ feature -- Initialization
 			retry
 		end
 
-	clean_connection is
+	clean_connection
 		do
 			disable_server_mode
 			if io_watcher /= Void then
@@ -64,14 +64,14 @@ feature -- Initialization
 	connection_failed: BOOLEAN
 			-- Did last `init_connection' failed ?
 
-	create_handler is
+	create_handler
 			-- Create an IO handler to listen to ebench
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Serve request from ised.
 		local
 			rqst_hdlr: RQST_HANDLER
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			-- the user change the status of a breakpoint while the
 			-- debugged application is running)
 
-	pass_adresses is
+	pass_adresses
 			-- Create all possible kinds of RQST_HANDLER that the outside could
 			-- send on the pipe `Listen_to_const', and pass the corresponding
 			-- addresses to C so that C can set the proper object.
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			create stopped_handler.make
 		end
 
-	reset_adresses is
+	reset_adresses
 		do
 			if stopped_handler /= Void then
 				stopped_handler.reset_addresses
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_init_connect (perror: TYPED_POINTER[INTEGER]) is
+	c_init_connect (perror: TYPED_POINTER[INTEGER])
 			-- Initialize the connection
 		external
 			"C signature (int*)"
@@ -141,7 +141,7 @@ feature {NONE} -- Externals
 			"init_connection"
 		end
 
-	c_clean_connect is
+	c_clean_connect
 			-- Initialize the connection
 		external
 			"C signature ()"
@@ -149,13 +149,13 @@ feature {NONE} -- Externals
 			"clean_connection"
 		end
 
-	request_handler: RQST_HANDLER is
+	request_handler: RQST_HANDLER
 			-- Return the correct RequestHandler at run-time.
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

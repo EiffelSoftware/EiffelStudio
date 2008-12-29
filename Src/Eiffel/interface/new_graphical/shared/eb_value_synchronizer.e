@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Synchronizer for a value
 					This class will synchronize a value with all registered hosts.
@@ -32,7 +32,7 @@ create
 
 feature{NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Process instances of classes with no creation clause.
 			-- (Default: do nothing.)
 		do
@@ -41,7 +41,7 @@ feature{NONE} -- Initialization
 			host_hash_code_internal := 1
 		end
 
-	make_with_value (a_value: G) is
+	make_with_value (a_value: G)
 			-- Initialize `current_value' with `a_value'.
 		do
 			default_create
@@ -50,7 +50,7 @@ feature{NONE} -- Initialization
 			current_value_set: is_value_equal (current_value, a_value)
 		end
 
-	make_with_host (a_host: ANY; a_host_agents: like host_agents_type) is
+	make_with_host (a_host: ANY; a_host_agents: like host_agents_type)
 			-- Initialize Current and register `a_host' whose host agents are` a_host_agents' and
 			-- make sure Current is synchronized with `a_host'.
 		require
@@ -87,7 +87,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_value_synchronized: BOOLEAN is
+	is_value_synchronized: BOOLEAN
 			-- Is value from all registered value hosts synchronized?
 		local
 			l_agents: like hosts_agents
@@ -109,7 +109,7 @@ feature -- Status report
 			l_agents.go_to (l_cursor)
 		end
 
-	is_host_agent_valid (a_host_agents: like host_agents_type): BOOLEAN is
+	is_host_agent_valid (a_host_agents: like host_agents_type): BOOLEAN
 			-- Are agents in `a_host_agents' valid?
 		require
 			a_host_agents_attached: a_host_agents /= Void
@@ -125,7 +125,7 @@ feature -- Status report
 					  					 a_host_agents.setter /= Void)
 		end
 
-	has_host_registered (a_host: ANY): BOOLEAN is
+	has_host_registered (a_host: ANY): BOOLEAN
 			-- Has `a_host' registered already?
 		require
 			a_host_attached: a_host /= Void
@@ -148,7 +148,7 @@ feature -- Status report
 
 feature -- Synchronization
 
-	on_value_change_from (a_host: ANY) is
+	on_value_change_from (a_host: ANY)
 			-- Action to be performed when value from value in `a_host' changes
 			-- This feature is invoked from some value host, and it is responsible to notify all other
 			-- value host to synchronize.
@@ -185,7 +185,7 @@ feature -- Synchronization
 
 feature -- Setting
 
-	set_value_equality_tester (a_tester: like value_equality_tester) is
+	set_value_equality_tester (a_tester: like value_equality_tester)
 			-- Set `value_equality_tester' with `a_tester'.
 		do
 			value_equality_tester := a_tester
@@ -195,7 +195,7 @@ feature -- Setting
 
 feature -- Host registration
 
-	register_host (a_host: ANY; a_host_agents: like host_agents_type; a_force_synchronize: BOOLEAN) is
+	register_host (a_host: ANY; a_host_agents: like host_agents_type; a_force_synchronize: BOOLEAN)
 			-- Register `a_host' whose synchronization agents are `a_host_agents' into Current.
 			-- If `a_force_synchronize' is True, force other registered hosts to synchronize their value with `a_host'.
 			-- If `a_force_synchronize' is False, use `current_value' to synchronize `a_host'.
@@ -225,7 +225,7 @@ feature -- Host registration
 					(not a_force_synchronize implies is_value_equal (old current_value, a_host_agents.getter.item (Void))))
 		end
 
-	deregister_host (a_host: ANY) is
+	deregister_host (a_host: ANY)
 			-- Deregister `a_host'.
 		require
 			a_host_attached: a_host /= Void
@@ -242,7 +242,7 @@ feature -- Host registration
 			agents_removed: not hosts_agents.has (old hash_code_of_registered_host (a_host))
 		end
 
-	wipe_out_hosts is
+	wipe_out_hosts
 			-- Deregister all hosts.
 		local
 			l_hosts: like hosts
@@ -267,7 +267,7 @@ feature -- Host registration
 
 feature{NONE} -- Implementation
 
-	hash_code_for_host (a_host: ANY): INTEGER is
+	hash_code_for_host (a_host: ANY): INTEGER
 			-- Hash code for `a_host'.
 		require
 			a_host_attached: a_host /= Void
@@ -285,13 +285,13 @@ feature{NONE} -- Implementation
 			-- Agents used for every host to sychronize value.
 			-- [[register, deregister, getter, setter], host hash code]
 
-	is_value_equal (a_value, b_value: G): BOOLEAN is
+	is_value_equal (a_value, b_value: G): BOOLEAN
 			-- Is `a_value' equal to `b_value'?
 		do
 			Result := equal (a_value, b_value)
 		end
 
-	actual_value_tester: like value_equality_tester is
+	actual_value_tester: like value_equality_tester
 			-- Actual value tester
 		do
 			Result := value_equality_tester
@@ -302,7 +302,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	set_value (a_value: G) is
+	set_value (a_value: G)
 			-- Set `current_value' with `a_value'.
 		do
 			if not is_value_equal (a_value, current_value) then
@@ -315,7 +315,7 @@ feature{NONE} -- Implementation
 	host_hash_code_internal: INTEGER
 			-- Internal hash code for new host
 
-	hash_code_of_registered_host (a_host: ANY): INTEGER is
+	hash_code_of_registered_host (a_host: ANY): INTEGER
 			-- Hash code of `a_host'
 		require
 			a_host_attached: a_host /= Void
@@ -341,7 +341,7 @@ feature{NONE} -- Implementation
 			l_hosts.go_to (l_cursor)
 		end
 
-	agents_of_host (a_host: ANY): like host_agents_type is
+	agents_of_host (a_host: ANY): like host_agents_type
 			-- Agents for `a_host'.
 		require
 			a_host_attached: a_host /= Void

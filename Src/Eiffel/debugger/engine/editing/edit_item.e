@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared feature between editing an attribute and editing a local variable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ feature -- Status
 
 feature -- Commands
 
-	work is
+	work
 		do
 				-- initialize attributes
 			status := Application.status
@@ -102,7 +102,7 @@ feature -- Commands
 			end
 		end
 
-	go_on(new_value: OBJECT_STONE) is
+	go_on(new_value: OBJECT_STONE)
 			-- Set `dest_stone' to `new_value': Record the
 			-- object that will be used as new value when
 			-- modifying the item.
@@ -120,7 +120,7 @@ feature -- Commands
 
 feature {NONE} -- Implementation
 
-	modify_item is
+	modify_item
 			-- modify the item `item'
 			-- (2nd part of the request)
 		local
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	receive_ack is
+	receive_ack
 		local
 			error_code: INTEGER
 		do
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display_error_message(error_code: INTEGER) is
+	display_error_message(error_code: INTEGER)
 		do
 			io.put_string("The item was not modified due to an error or a wrong permission%N")
 			io.put_string("(modifying expanded attributes is not authorized)%N%N")
@@ -233,22 +233,22 @@ feature {NONE} -- Implementation
 
 feature {EDIT_ITEM} -- Deferred features
 
-	generic_modify_item is
+	generic_modify_item
 			-- Send the 1st part of the 'modify-item' request.
 		deferred
 		end
 
-	start_feature is
+	start_feature
 			-- What to do to initialize the modification of an item.
 		deferred
 		end
 
-	update_display is
+	update_display
 			-- update windows which content may be out-of-date.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

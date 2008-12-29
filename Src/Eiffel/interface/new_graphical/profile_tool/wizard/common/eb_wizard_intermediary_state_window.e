@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window which displays a state which is neither final nor initial."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {NONE} -- Basic Operations
 
-	display is
+	display
 			-- Display Current state.
 		do 
 			build_frame
@@ -22,7 +22,7 @@ feature {NONE} -- Basic Operations
 			build
 		end
 
-	build_frame is
+	build_frame
 			-- Build widgets
 		require
 			main_box_empty: main_box.count = 0
@@ -162,7 +162,7 @@ feature {EB_WIZARD_INTERMEDIARY_STATE_WINDOW} -- Implementation
 
 	message_box: EV_HORIZONTAL_BOX;		-- Box where is displayed the description of current state (gray bkground).
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

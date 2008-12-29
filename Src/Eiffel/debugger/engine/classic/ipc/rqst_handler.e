@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			General response to a request from ised to workbench.
 		]"
@@ -13,7 +13,7 @@ inherit
 
 feature
 
-	execute is
+	execute
 			-- Execute Current action as
 			-- requested by ised.
 		deferred
@@ -27,18 +27,18 @@ feature
 
 feature -- Eiffel/C interface.
 
-	pass_addresses is
+	pass_addresses
 			-- Pass addresses from Current to C.
 		do
 			rqst_handler_to_c (Current, request_type, $set)
 		end
 
-	reset_addresses is
+	reset_addresses
 		do
 			rqst_handler_to_c (Void, request_type, Default_pointer)
 		end
 
-	set (s: like detail) is
+	set (s: like detail)
 			-- Assign `s' to `detail'
 		do
 			detail := s
@@ -46,13 +46,13 @@ feature -- Eiffel/C interface.
 
 feature {NONE} -- external
 
-	rqst_handler_to_c (a: like Current; i: like request_type; f: POINTER)  is
+	rqst_handler_to_c (a: like Current; i: like request_type; f: POINTER)
 			-- Pass addresses to C.
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

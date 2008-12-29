@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Server for pre and post conditions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make (count: INTEGER) is
+	make (count: INTEGER)
 			-- Initialize Current assertion server with
 			-- features from feature_table `f' that is exported to
 			-- `client'.
@@ -27,13 +27,13 @@ feature -- Initialization
 			create feature_adapter_table.make (count)
 		end
 
-	make_for_class_only is
+	make_for_class_only
 			-- Initialize structures for processing one class.
 		do
 			create feature_adapter_table.make (0)
 		end
 
-	make_for_feature (f: FEATURE_I; ast: FEATURE_AS) is
+	make_for_feature (f: FEATURE_I; ast: FEATURE_AS)
 			-- Initialize structures for processing feature `f'
 			-- with ast structure `ast'.
 		require
@@ -107,7 +107,7 @@ feature -- Properties
 
 feature -- Element change
 
-	register_adapter (feat_adapter: FEATURE_ADAPTER) is
+	register_adapter (feat_adapter: FEATURE_ADAPTER)
 			-- Register adapter `feat_adapter'.
 		require
 			valid_adapter: feat_adapter /= Void
@@ -117,7 +117,7 @@ feature -- Element change
 			end
 		end
 
-	update_current_assertion (feat_adapter: FEATURE_ADAPTER) is
+	update_current_assertion (feat_adapter: FEATURE_ADAPTER)
 			-- Update `current_assertion' from `feat_adapter'.
 		require
 			valid_adapter: feat_adapter /= Void
@@ -188,7 +188,7 @@ feature -- Element change
 			end
 		end
 
-	reset_current_assertion is
+	reset_current_assertion
 			-- Reset `current_assertion' to Void.
 		do
 			current_assertion := Void
@@ -196,7 +196,7 @@ feature -- Element change
 
 feature -- Debug
 
-	trace is
+	trace
 		do
 			io.error.put_string ("*** Feature Table ***%N")
 			from
@@ -211,7 +211,7 @@ feature -- Debug
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

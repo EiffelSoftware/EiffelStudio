@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Item for EB_FAVORITES, This item describes a folder %
 				  %and contains a set of folders and classes."
 	legal: "See notice at end of class."
@@ -32,7 +32,7 @@ create {EB_FAVORITES_FOLDER}
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST) is
+	make (a_name: STRING; a_parent: EB_FAVORITES_ITEM_LIST)
 			-- Initialize Current with `name' set to `a_name' and
 			-- with parent `a_parent'.
 		do
@@ -51,28 +51,28 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	associated_stone: STONE is
+	associated_stone: STONE
 			-- No stone for a favorite folder.
 		do
 		end
 
 feature -- Status
 
-	is_folder: BOOLEAN is True
+	is_folder: BOOLEAN = True
 			-- Is the current item a folder ?
 
-	is_class: BOOLEAN is
+	is_class: BOOLEAN
 			-- Is the current item a class ?
 		do
 			Result := False
 		end
 
-	is_feature: BOOLEAN is False
+	is_feature: BOOLEAN = False
 			-- Is the current item a feature ?
 
 feature -- Element change
 
-	set_name (a_new_name: STRING) is
+	set_name (a_new_name: STRING)
 			-- Rename the current folder to `a_new_name'.
 		require
 			valid_new_name: a_new_name /= Void and then not a_new_name.is_empty
@@ -82,14 +82,14 @@ feature -- Element change
 			name_set: name.is_equal (a_new_name)
 		end
 
-	refresh is
+	refresh
 			-- Refresh this item.
 		do
 		end
 
 feature -- Basic operations
 
-	has_recursive_child (other: EB_FAVORITES_ITEM): BOOLEAN is
+	has_recursive_child (other: EB_FAVORITES_ITEM): BOOLEAN
 			-- Is `other' a recursive child of `Current'?
 		local
 			conv_folder: EB_FAVORITES_FOLDER
@@ -112,13 +112,13 @@ feature -- Basic operations
 
 feature -- Graphical interface
 
-	mouse_cursor: EV_POINTER_STYLE is
+	mouse_cursor: EV_POINTER_STYLE
 			-- mouse pointer representing a class.
 		once
 			Result := Cursors.cur_Favorites_folder
 		end
 
-	Xmouse_cursor: EV_POINTER_STYLE is
+	Xmouse_cursor: EV_POINTER_STYLE
 			-- mouse pointer representing a class.
 		once
 			Result := Cursors.cur_X_Favorites_folder
@@ -126,13 +126,13 @@ feature -- Graphical interface
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

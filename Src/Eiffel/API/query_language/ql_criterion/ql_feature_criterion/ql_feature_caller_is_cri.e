@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Criterion to test whether or not a feature is called by another feature
 
@@ -33,7 +33,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_feature: like criterion_domain; a_callee_type: like callee_type; only_current_version: BOOLEAN) is
+	make (a_feature: like criterion_domain; a_callee_type: like callee_type; only_current_version: BOOLEAN)
 			-- Initialize `criterion_domain' with `a_feature' and `calle_type' with `a_callee_type'.
 			-- if `only_current_version' is True, only find callees of current version of features in `a_feature'.
 		require
@@ -55,7 +55,7 @@ feature -- Status report
 
 feature{QL_DOMAIN} -- Intrinsic domain
 
-	intrinsic_domain: QL_FEATURE_DOMAIN is
+	intrinsic_domain: QL_FEATURE_DOMAIN
 			-- Intrinsic_domain which can be inferred from current criterion
 		local
 			l_feature_list: like feature_list
@@ -114,14 +114,14 @@ feature{QL_DOMAIN} -- Intrinsic domain
 
 feature{NONE} -- Implementation
 
-	find_result is
+	find_result
 			-- Find callers to `criterion_domain'.
 		do
 			find_all_callees (callee_type)
 			is_intrinsic_domain_cached_in_domain_generator := False
 		end
 
-	find_current_callees (l_feat: E_FEATURE; a_flag: like callee_type) is
+	find_current_callees (l_feat: E_FEATURE; a_flag: like callee_type)
 			-- Find callees of `l_feat'.
 		require
 			l_feat_not_void: l_feat /= Void
@@ -166,7 +166,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	find_all_callees (a_flag: like callee_type) is
+	find_all_callees (a_flag: like callee_type)
 			-- Find all callees from every feature in `criterion_domain'.
 		local
 			descendants: PART_SORTED_TWO_WAY_LIST [CLASS_C]
@@ -232,7 +232,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	reset is
+	reset
 			-- Reset internal data structure.
 		do
 			Precursor
@@ -271,7 +271,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Evaluate
 
-	is_satisfied_by_internal (a_item: QL_FEATURE): BOOLEAN is
+	is_satisfied_by_internal (a_item: QL_FEATURE): BOOLEAN
 			-- Evaluate `a_item'.
 		local
 			l_invariant_list: like invariant_list
@@ -330,7 +330,7 @@ invariant
 	feature_callee_valid:
 		(callee_list_for_feature /= Void and then feature_list /= Void) implies (callee_list_for_feature.count = feature_list.count)
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

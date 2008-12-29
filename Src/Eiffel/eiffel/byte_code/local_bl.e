@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Enlarged access to a local."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,18 +37,18 @@ feature
 	type: TYPE_A
 			-- Local variable type
 
-	set_parent (p: NESTED_BL) is
+	set_parent (p: NESTED_BL)
 			-- Set `parent' to `p'
 		do
 			parent := p;
 		end;
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Do nothing
 		do
 		end;
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' the same as us ?
 		local
 			local_b: LOCAL_B;
@@ -61,7 +61,7 @@ feature
 			end;
 		end;
 
-	analyze is
+	analyze
 			-- Mark local as used
 		do
 			context.mark_local_used (position)
@@ -75,12 +75,12 @@ feature
 		do
 		end
 
-	free_register is
+	free_register
 			-- Do nothing
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

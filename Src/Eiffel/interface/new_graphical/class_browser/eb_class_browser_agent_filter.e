@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class browser filter which used an agent to perform its filtering ability"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_function: like selection_function) is
+	make (a_function: like selection_function)
 			-- Initialized `selection_function' with `a_function'.
 		do
 			set_selection_function (a_function)
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_selected (a_data: G; a_context: EB_CLASS_BROWSER_FILTER_CONTEXT [G]; a_viewer: EB_CLASS_BROWSER_GRID_VIEW [ANY]): BOOLEAN is
+	is_selected (a_data: G; a_context: EB_CLASS_BROWSER_FILTER_CONTEXT [G]; a_viewer: EB_CLASS_BROWSER_GRID_VIEW [ANY]): BOOLEAN
 			-- Can `a_data' come through Current filter?
 			-- True means that `a_data' can be displayed in `a_viewer', False means it should be appressed.
 			-- `a_viewer' is the view to from which Current filter is used.
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_selection_function (a_function: like selection_function ) is
+	set_selection_function (a_function: like selection_function )
 			-- Set `selection_function' with `a_function'.
 		require
 			a_function_attached: a_function /= Void
@@ -55,7 +55,7 @@ feature -- Setting
 invariant
 	selection_function_attached: selection_function /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

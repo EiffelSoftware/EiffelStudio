@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a UML view for a eiffel class graph."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create {UML_CLASS_DIAGRAM}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an UML_CLASS_DIAGRAM.
 		do
 			Precursor {EIFFEL_CLASS_DIAGRAM}
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			is_right_angles := True
 		end
 
-	make (a_graph: like model; a_tool: like context_editor) is
+	make (a_graph: like model; a_tool: like context_editor)
 			-- Initialize as context in `a_tool' showing `a_graph'.
 		require
 			a_graph_not_void: a_graph /= Void
@@ -47,13 +47,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_view_name: STRING is
+	default_view_name: STRING
 			-- Name for the default view.
 		do
 			Result := "DEFAULT:UML"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

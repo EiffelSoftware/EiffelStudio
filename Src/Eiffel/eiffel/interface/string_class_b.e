@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Compiled class STRING"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature
 
-	check_validity is
+	check_validity
 			-- Check validity of class STRING
 		local
 			set_count_feat: FEATURE_I;
@@ -101,7 +101,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	make_signature: DYN_PROC_I is
+	make_signature: DYN_PROC_I
 			-- Required signature for feature `make' of class STRING
 		local
 			args: FEAT_ARG;
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			Result.set_feature_name_id (Names_heap.make_name_id, 0)
 		end;
 
-	area_type: GEN_TYPE_A is
+	area_type: GEN_TYPE_A
 			-- Type SPECIAL [CHARACTER]
 		local
 			gen: ARRAY [TYPE_A]
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			area_type_not_void: area_type /= Void
 		end
 
-	set_count_signature: DYN_PROC_I is
+	set_count_signature: DYN_PROC_I
 			-- Required signature for `set_count' of class STRING
 		local
 			args: FEAT_ARG;
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			Result.set_feature_name_id (Names_heap.set_count_name_id, 0)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

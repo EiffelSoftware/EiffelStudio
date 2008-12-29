@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Errors when a named argument appears more than once."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: like context_class; a_feature: FEATURE_I; a_creation_type: like creation_type; a_name: like named_argument) is
+	make (a_class: like context_class; a_feature: FEATURE_I; a_creation_type: like creation_type; a_name: like named_argument)
 			-- Create new error because incorrect custom attribute creation
 			-- of type `a_creation_type' in `a_class'.
 		require
@@ -48,12 +48,12 @@ feature -- Access
 
 feature -- Properties
 
-	subcode: INTEGER is 4
+	subcode: INTEGER = 4
 			-- Subcode of error.
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Display error message
 		do
 			a_text_formatter.add ("Type of custom attribute being created: ")
@@ -68,7 +68,7 @@ invariant
 	creation_type_not_void: creation_type /= Void
 	named_argument_not_void: named_argument /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

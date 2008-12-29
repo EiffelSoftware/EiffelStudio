@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Holds the list of include files to be generated for a given class
@@ -9,12 +9,12 @@ class
 
 feature
 
-	shared_include_queue: SEARCH_TABLE [INTEGER] is
+	shared_include_queue: SEARCH_TABLE [INTEGER]
 		once
 			create Result.make (10)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

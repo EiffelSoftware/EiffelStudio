@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object keeping the execution profiles' data..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 		require
 			n_non_negative: n >= 0
 		do
@@ -29,7 +29,7 @@ feature -- Access
 	last_profile_name: STRING_32
 			-- Last profile's name
 
-	last_profile: like profile is
+	last_profile: like profile
 			-- Last profile details
 		do
 			if last_profile_name /= Void then
@@ -37,7 +37,7 @@ feature -- Access
 			end
 		end
 
-	profile (a_name: like last_profile_name): TUPLE [name: like last_profile_name; params: DEBUGGER_EXECUTION_PARAMETERS] is
+	profile (a_name: like last_profile_name): TUPLE [name: like last_profile_name; params: DEBUGGER_EXECUTION_PARAMETERS]
 			-- Profile indexed by `a_name'
 		require
 			a_name_not_void: a_name /= Void
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Element change
 
-	force (new: DEBUGGER_EXECUTION_PARAMETERS; key: STRING_32) is
+	force (new: DEBUGGER_EXECUTION_PARAMETERS; key: STRING_32)
 			-- Update Current so that `new' will be the item associated
 			-- with `key'.
 		do
@@ -75,7 +75,7 @@ feature -- Element change
 			end
 		end
 
-	set_last_profile (v: like profile) is
+	set_last_profile (v: like profile)
 			-- Set `last_profile_name' related to `v'
 		do
 			if v = Void then
@@ -87,7 +87,7 @@ feature -- Element change
 			end
 		end
 
-	set_last_profile_by_name (n: like last_profile_name) is
+	set_last_profile_by_name (n: like last_profile_name)
 			-- Set `last_profile_name' to `n'
 		do
 			if n /= Void and then has (n) then
@@ -99,7 +99,7 @@ feature -- Element change
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Reset all items to default values; reset status.
 		do
 			internal_storage.wipe_out
@@ -107,7 +107,7 @@ feature -- Removal
 
 feature -- Cursor movement
 
-	has (key: like last_profile_name): BOOLEAN is
+	has (key: like last_profile_name): BOOLEAN
 			-- Has profile named `key' ?
 			-- move cursor to found profile if any
 		local
@@ -136,13 +136,13 @@ feature -- Cursor movement
 			found_at_position: Result implies (internal_storage.item /= Void and then internal_storage.item.name.is_equal (key))
 		end
 
-	start is
+	start
 			-- Bring cursor to first position.
 		do
 			internal_storage.start
 		end
 
-	forth is
+	forth
 			-- Advance cursor to next occupied position,
 			-- or `off' if no such position remains.
 		require
@@ -151,13 +151,13 @@ feature -- Cursor movement
 			internal_storage.forth
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is cursor past last item?
 		do
 			Result := internal_storage.after
 		end
 
-	item_for_iteration: DEBUGGER_EXECUTION_PARAMETERS is
+	item_for_iteration: DEBUGGER_EXECUTION_PARAMETERS
 			-- Element at current iteration position
 		require
 			not_off: not after
@@ -165,7 +165,7 @@ feature -- Cursor movement
 			Result := internal_storage.item.params
 		end
 
-	key_for_iteration: STRING_32 is
+	key_for_iteration: STRING_32
 			-- Key at current iteration position
 		require
 			not_off: not after
@@ -173,7 +173,7 @@ feature -- Cursor movement
 			Result := internal_storage.item.name
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items.
 		do
 			Result := internal_storage.count
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 invariant
 	internal_storage_not_void: internal_storage /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

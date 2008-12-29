@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to select scopes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature{NONE} -- Implementation
 
-	make (a_add_scope_action: like add_scope_action) is
+	make (a_add_scope_action: like add_scope_action)
 			-- Initialize `add_scope_action' with `a_add_scope_action'.
 		require
 			a_add_scope_action_attached: a_add_scope_action /= Void
@@ -44,7 +44,7 @@ feature{NONE} -- Implementation
 
 feature -- Dialog display
 
-	show (a_window: EV_WINDOW) is
+	show (a_window: EV_WINDOW)
 			-- Show dialog.
 			-- If `a_window' is attached, show dialog relative to `a_window'.
 		do
@@ -57,7 +57,7 @@ feature -- Dialog display
 			end
 		end
 
-	hide is
+	hide
 			-- Hide dialog.
 		do
 			if not class_dialog.is_destroyed and then class_dialog.is_displayed then
@@ -67,7 +67,7 @@ feature -- Dialog display
 
 feature -- Status report
 
-	is_displayed: BOOLEAN is
+	is_displayed: BOOLEAN
 			-- Is dialog displayed?
 		do
 			Result := class_dialog.is_displayed
@@ -75,7 +75,7 @@ feature -- Status report
 			good_result: Result = class_dialog.is_displayed
 		end
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 			-- Is dialog destroyed?
 		do
 			Result := class_dialog.is_destroyed
@@ -85,7 +85,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_add_scope_action (a_action: like add_scope_action) is
+	set_add_scope_action (a_action: like add_scope_action)
 			-- Set `add_scope_action' with `a_action'.
 		require
 			a_action_attached: a_action /= Void
@@ -105,7 +105,7 @@ feature{NONE} -- Implementation
 	class_dialog: EB_CHOOSE_MULTI_CLUSTER_N_CLASS_DIALOG
 			-- Class tree dialog
 
-	on_add_class (a_class_i: CLASS_I) is
+	on_add_class (a_class_i: CLASS_I)
 			-- Action to be performed when a class is added.
 		require
 			a_class_i_attached: a_class_i /= Void
@@ -113,7 +113,7 @@ feature{NONE} -- Implementation
 			add_scope_action.call ([create{CLASSI_STONE}.make (a_class_i)])
 		end
 
-	on_add_cluster (a_group: CONF_GROUP) is
+	on_add_cluster (a_group: CONF_GROUP)
 			-- Action to be performed when a group is added.
 		require
 			a_group_attached: a_group /= Void
@@ -121,7 +121,7 @@ feature{NONE} -- Implementation
 			add_scope_action.call ([create{CLUSTER_STONE}.make (a_group)])
 		end
 
-	on_add_folder (a_folder: EB_FOLDER) is
+	on_add_folder (a_folder: EB_FOLDER)
 			-- Action to be performed when a folder is added.
 		require
 			a_folder_attached: a_folder /= Void
@@ -129,7 +129,7 @@ feature{NONE} -- Implementation
 			add_scope_action.call ([create{CLUSTER_STONE}.make_subfolder (a_folder.cluster, a_folder.path, a_folder.name)])
 		end
 
-	on_add_target (a_target: CONF_TARGET) is
+	on_add_target (a_target: CONF_TARGET)
 			-- Action to be performed when `a_target' is added.
 		require
 			a_target_attached: a_target /= Void
@@ -141,7 +141,7 @@ invariant
 	add_scope_action_attached: add_scope_action /= Void
 	class_dialog_attached: class_dialog /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

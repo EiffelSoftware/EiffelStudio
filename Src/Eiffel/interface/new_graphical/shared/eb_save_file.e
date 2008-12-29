@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class to save a file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	load (a_file_name: STRING): STRING is
+	load (a_file_name: STRING): STRING
 			-- Load the text from `a_file_name'
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -65,7 +65,7 @@ feature -- Basic operations
 
 		end
 
-	save (a_file_name: STRING; a_text: STRING_GENERAL; a_encoding: ENCODING) is
+	save (a_file_name: STRING; a_text: STRING_GENERAL; a_encoding: ENCODING)
 			-- Save `a_text' into `a_file_name'. Creates file if it doesn't already exist.
 			-- `a_text' should be in UTF-32 encoding.
 		require
@@ -166,7 +166,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	robust_delete (a_file: FILE) is
+	robust_delete (a_file: FILE)
 			-- More robust version of `delete'. If deletion is not successful, we abandon.
 		require
 			a_file_ok: a_file /= Void
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	robust_rename (a_file: FILE; a_new_name: STRING) is
+	robust_rename (a_file: FILE; a_new_name: STRING)
 			-- More robust version of change_name, which tries multiple times before giving up.
 		require
 			a_file_ok: a_file /= Void
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	file_save_as (a_text: STRING_GENERAL; a_encoding: ENCODING) is
+	file_save_as (a_text: STRING_GENERAL; a_encoding: ENCODING)
 			-- Save `a_text' in a file.
 		local
 			fsd: EB_FILE_SAVE_DIALOG
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			l_save_file.save (a_fsd.file_name, a_text, a_encoding)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

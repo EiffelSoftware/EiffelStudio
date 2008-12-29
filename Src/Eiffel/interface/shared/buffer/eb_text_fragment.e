@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text fragment. A text fragment can be replaced by another string"
 	author: ""
 	date: "$Date$"
@@ -15,7 +15,7 @@ feature -- Access
 	text: STRING
 			-- Text to be replaced
 
-	text_count: INTEGER is
+	text_count: INTEGER
 			-- Length of `text'
 		do
 			Result := text.count
@@ -26,7 +26,7 @@ feature -- Access
 	location: INTEGER
 			-- The start position of `text' in original text
 
-	new_text: like text is
+	new_text: like text
 			-- New text which will replace `text'
 		require
 			prepared: is_replacement_prepared
@@ -35,7 +35,7 @@ feature -- Access
 			good_result: Result /= Void
 		end
 
-	normalized_text: like text is
+	normalized_text: like text
 			-- Normalized representation of `text'.
 			-- For example, all letters are in lower case, heading and trailing space removed.
 		do
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_text_valid (a_text: like text): BOOLEAN is
+	is_text_valid (a_text: like text): BOOLEAN
 			-- Is `a_text' valid to be put into current replacer?
 		require
 			a_text_attached: a_text /= Void
@@ -80,14 +80,14 @@ feature -- Status report
 				(text_validity_function = Void implies Result)
 		end
 
-	is_replacement_prepared: BOOLEAN is
+	is_replacement_prepared: BOOLEAN
 			-- Is replacement prepared?
 		deferred
 		end
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := location < other.location
@@ -95,7 +95,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_location (a_location: INTEGER) is
+	set_location (a_location: INTEGER)
 			-- Set `location' with `a_location'.
 		do
 			location := a_location
@@ -103,7 +103,7 @@ feature -- Setting
 			location_set: location = a_location
 		end
 
-	set_normalized_text_function (a_func: like normalized_text_function) is
+	set_normalized_text_function (a_func: like normalized_text_function)
 			-- Set `normalized_text_function' with `a_func'.
 		do
 			normalized_text_function := a_func
@@ -111,7 +111,7 @@ feature -- Setting
 			normalized_text_function_set: normalized_text_function = a_func
 		end
 
-	set_text_validity_function (a_func: like text_validity_function) is
+	set_text_validity_function (a_func: like text_validity_function)
 			-- Set `text_validity_function' with `a_func'.
 		do
 			text_validity_function := a_func
@@ -119,7 +119,7 @@ feature -- Setting
 			text_validity_function_set: text_validity_function = a_func
 		end
 
-	prepare_before_replacement is
+	prepare_before_replacement
 			-- Prepare replacement.
 		require
 			not_prepared: not is_replacement_prepared
@@ -128,7 +128,7 @@ feature -- Setting
 			prepared: is_replacement_prepared
 		end
 
-	safe_prepare_before_replacement is
+	safe_prepare_before_replacement
 			-- If not `is_replacement_prepared', invoke `prepare_before_replacement',
 			-- otherwise, do nothing.
 		do
@@ -139,7 +139,7 @@ feature -- Setting
 			prepared: is_replacement_prepared
 		end
 
-	dispose_after_replacement is
+	dispose_after_replacement
 			-- Dispose after replacement
 		require
 			prepared: is_replacement_prepared
@@ -148,7 +148,7 @@ feature -- Setting
 			not_prepared: not is_replacement_prepared
 		end
 
-	safe_dispose_after_replacement is
+	safe_dispose_after_replacement
 			-- If `is_replacement_prepared', invoke `dispose_after_replacement',
 			-- otherwise, do nothing.
 		do
@@ -159,7 +159,7 @@ feature -- Setting
 			not_prepared: not is_replacement_prepared
 		end
 
-	set_data (a_data: like data) is
+	set_data (a_data: like data)
 			-- Set `data' with `a_data'.
 		do
 			data := a_data
@@ -172,7 +172,7 @@ feature{NONE} -- Implementation
 	normalized_text_internal: like normalized_text
 			-- Implementation of `normalized_text'
 
-	set_normalized_text_internal (a_text: like normalized_text_internal) is
+	set_normalized_text_internal (a_text: like normalized_text_internal)
 			-- Set `normalized_text_internal' with `a_text'.
 		do
 			normalized_text_internal := a_text
@@ -184,7 +184,7 @@ invariant
 	text_attached: text /= Void
 	text_valid: is_text_valid (text)
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

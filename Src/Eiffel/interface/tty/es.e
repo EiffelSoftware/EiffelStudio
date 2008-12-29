@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Batch compiler without invoking the -loop. This is the root%
 		%class for the personal version (which does allow c compilation)."
@@ -56,7 +56,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialization
 		local
 			l_layout: ES_EIFFEL_LAYOUT
@@ -100,14 +100,14 @@ feature -- Initialization
 			l_eifgen_init.dispose
 		end
 
-	initialize is
+	initialize
 			-- Initialize batch compiler
 		do
 				-- Initialize compiler encoding converter.
 			(create {SHARED_ENCODING_CONVERTER}).set_encoding_converter (create {EC_ENCODING_CONVERTER})
 		end
 
-	execute is
+	execute
 			-- Analyze the command line options and
 			-- execute the appropriate command.
 		local
@@ -325,7 +325,7 @@ feature -- Properties
 	is_gc_stats_enabled: BOOLEAN
 			-- Will compiler display some GC timing at the end of a compilation?
 
-	help_messages: HASH_TABLE [STRING_GENERAL, STRING] is
+	help_messages: HASH_TABLE [STRING_GENERAL, STRING]
 			-- Help message table
 		once
 			create Result.make (35)
@@ -367,7 +367,7 @@ feature -- Properties
 			add_help_special_cmds
 		end
 
-	loop_cmd: EWB_LOOP is
+	loop_cmd: EWB_LOOP
 			-- Loop command
 		do
 			create Result
@@ -375,13 +375,13 @@ feature -- Properties
 
 feature -- Access
 
-	is_precompiled_option: BOOLEAN is
+	is_precompiled_option: BOOLEAN
 			-- Is the current option `precompile'?
 		do
 			Result := option.is_equal ("-precompile")
 		end
 
-	is_precompiled_licensed_option: BOOLEAN is
+	is_precompiled_licensed_option: BOOLEAN
 			-- Is the current option `precompile_licensed'?
 		do
 			Result := option.is_equal ("-precompile_licensed")
@@ -389,7 +389,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_file (filename: STRING) is
+	set_file (filename: STRING)
 			-- Set the output_window file to `filename'.
 		do
 			create output_window.make (filename)
@@ -409,7 +409,7 @@ feature -- Setting
 
 feature -- Output
 
-	print_option_error is
+	print_option_error
 			-- Print the correct usage of ewb.
 		do
 			localized_print (argument (0))
@@ -417,7 +417,7 @@ feature -- Output
 			print_usage
 		end
 
-	print_usage is
+	print_usage
 			-- Print the usage of command line options.
 		do
 			localized_print (ewb_names.usage)
@@ -450,13 +450,13 @@ feature -- Output
 				%%T-gc_stats]%N")
 		end
 
-	print_version is
+	print_version
 			-- Print Version Number
 		do
 			localized_print ("ISE " + Workbench_name + " version " + Version_number + "%N")
 		end
 
-	print_help is
+	print_help
 			-- Print the help.
 		local
 			command_list: SORTED_TWO_WAY_LIST [STRING]
@@ -490,7 +490,7 @@ feature -- Output
 			end
 		end
 
-	print_one_help (opt: STRING; txt: STRING_GENERAL) is
+	print_one_help (opt: STRING; txt: STRING_GENERAL)
 		do
 			io.put_string ("%T-")
 			io.put_string (opt)
@@ -499,7 +499,7 @@ feature -- Output
 			io.put_string (".%N")
 		end
 
-	print_gc_statistics is
+	print_gc_statistics
 			-- Display some GC statistics if `is_gc_stats_enabled'.
 		local
 			l_mem: MEMORY
@@ -573,12 +573,12 @@ feature -- Output
 
 feature -- Update
 
-	add_usage_special_cmds is
+	add_usage_special_cmds
 		do
 			io.put_string ("-freeze | %N%T-finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |%N%T")
 		end
 
-	add_help_special_cmds is
+	add_help_special_cmds
 		do
 			help_messages.put (freeze_help, freeze_cmd_name)
 			help_messages.put (precompile_help, precompile_cmd_name)
@@ -586,7 +586,7 @@ feature -- Update
 			Help_messages.put (c_compile_help, c_compile_cmd_name)
 		end
 
-	analyze_options is
+	analyze_options
 			-- Analyze the options entered by the user.
 		do
 					-- Default Project Options
@@ -608,7 +608,7 @@ feature -- Update
 			end
 		end
 
-	analyze_one_option is
+	analyze_one_option
 			-- Analyze current option.
 		local
 			cn, fn: STRING
@@ -1258,7 +1258,7 @@ feature -- Update
 			current_option := current_option + 1
 		end
 
-	process_special_options is
+	process_special_options
 			-- Process the special option.
 		local
 			keep: BOOLEAN
@@ -1293,7 +1293,7 @@ feature -- Update
 
 feature {NONE} -- Externals
 
-	 enable_automatic_output_flushing is
+	 enable_automatic_output_flushing
 			-- Set `compiler_need_flush' to `1' so that all output are not
 			-- buffered.
 		external
@@ -1304,7 +1304,7 @@ feature {NONE} -- Externals
 
 feature {NONE} -- Onces
 
-	command_line_io: COMMAND_LINE_IO is
+	command_line_io: COMMAND_LINE_IO
 		once
 			create Result
 		end
@@ -1320,7 +1320,7 @@ feature {NONE} -- Implementation
 	config_file_name, target_name, project_path: STRING;
 			-- Name of the config file, target and path where project will be compiled.
 
-	is_eiffel_class_file_name (a_filename: STRING): BOOLEAN is
+	is_eiffel_class_file_name (a_filename: STRING): BOOLEAN
 			-- Is `a_filename' an Eiffel class file?
 			-- This checks if the filename has an 'e' extension.
 		require
@@ -1333,7 +1333,7 @@ feature {NONE} -- Implementation
 			Result := l_extension.is_equal ("." + eiffel_extension)
 		end
 
-	print_memory_value (a_value: NATURAL_64) is
+	print_memory_value (a_value: NATURAL_64)
 			-- Display `a_value' on screen.
 		local
 			l_real_64: REAL_64
@@ -1362,7 +1362,7 @@ feature {NONE} -- Implementation
 			io.put_string (l_unit)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

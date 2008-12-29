@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base core for all EiffelStudio foundations windows and tool panels.
 	]"
@@ -106,7 +106,7 @@ feature {NONE} -- Internal action handlers
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

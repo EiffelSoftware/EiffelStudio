@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that shows a legend with all cluster names in diagram and allows to colorize all classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -43,7 +43,7 @@ create {EIFFEL_CLUSTER_LEGEND}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a EIFFEL_CLUSTER_LEGEND
 		local
 			id_pixmap: EV_IDENTIFIED_PIXMAP
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			create pin_actions
 		end
 
-	make_with_world (a_world: like display_world) is
+	make_with_world (a_world: like display_world)
 			-- Create an EIFFEL_CLUSTER_LEGEND displaying clusters in `a_world'.
 		require
 			a_world_not_void: a_world /= Void
@@ -109,7 +109,7 @@ feature -- Access
 
 feature -- Element change
 
-	update is
+	update
 			-- Actualize cluster legend.
 		do
 			wipe_out
@@ -131,7 +131,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	build_table is
+	build_table
 			-- Build `cluster_color_table'.
 		local
 			l_nodes: LIST [EG_LINKABLE_FIGURE]
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_legend is
+	build_legend
 			-- Build legend from `cluster_color_table'.
 		local
 			colors: ARRAYED_LIST [TUPLE [color: EV_COLOR; user_count: INTEGER]]
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	include_bon_class (a_class: BON_CLASS_FIGURE) is
+	include_bon_class (a_class: BON_CLASS_FIGURE)
 			-- Include color of `a_class' into `cluster_color_table'.
 		require
 			a_class_not_void: a_class /= Void
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_color (a_colors: ARRAYED_LIST [TUPLE [EV_COLOR, INTEGER]]; a_color: EV_COLOR) is
+	add_color (a_colors: ARRAYED_LIST [TUPLE [EV_COLOR, INTEGER]]; a_color: EV_COLOR)
 			-- Add `a_color' to `a_colors'.
 		require
 			a_colors_not_void: a_colors /= Void
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_position is
+	update_position
 			-- Update position of `border' and `colorize_button'.
 		local
 			bbox: like bounding_box
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 			pin_button.set_point_position (border.point_b_x - 43, border.point_a_y + 1)
 		end
 
-	cluster_pebble (cluster_name: STRING): CLUSTER_STONE is
+	cluster_pebble (cluster_name: STRING): CLUSTER_STONE
 			-- Return stone for cluster with `cluster_name' if any.
 		local
 			cluster_i: CLUSTER_I
@@ -281,13 +281,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_start_move is
+	on_start_move
 			-- User started to move `Current'.
 		do
 			display_world.bring_to_front (Current)
 		end
 
-	on_colorize (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_colorize (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- User pressed `colorize_button'.
 		local
 			class_list: ARRAYED_LIST [BON_CLASS_FIGURE]
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	change_color_all (classes: LIST [BON_CLASS_FIGURE]; color_table: HASH_TABLE [EV_COLOR, STRING]) is
+	change_color_all (classes: LIST [BON_CLASS_FIGURE]; color_table: HASH_TABLE [EV_COLOR, STRING])
 			-- Change color of `classes' according to `color_table'.
 		require
 			classes_exist: classes /= Void
@@ -374,7 +374,7 @@ feature {NONE} -- Implementation
 			display_world.context_editor.projector.project
 		end
 
-	change_font (cf: BON_CLASS_FIGURE; a_color: EV_COLOR) is
+	change_font (cf: BON_CLASS_FIGURE; a_color: EV_COLOR)
 			-- Change color of class figure names in order to
 			-- keep them readable.
 		require
@@ -401,7 +401,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	color_with_number (a_nb: INTEGER): EV_COLOR is
+	color_with_number (a_nb: INTEGER): EV_COLOR
 			-- Return color with `a_nb'.
 		require
 			a_nb_larger_zero: a_nb > 0
@@ -446,18 +446,18 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	random: RANGED_RANDOM is
+	random: RANGED_RANDOM
 		once
 			create Result.make
 		end
 
-	random_color_table: HASH_TABLE [EV_COLOR, INTEGER] is
+	random_color_table: HASH_TABLE [EV_COLOR, INTEGER]
 			-- Table of numbers and colors.
 		once
 			create Result.make (10)
 		end
 
-	colorize_button: EV_MODEL_GROUP is
+	colorize_button: EV_MODEL_GROUP
 			-- Button to colorize all classes at once.
 		local
 			colorize_border: EV_MODEL_RECTANGLE
@@ -519,7 +519,7 @@ feature {NONE} -- Implementation pin
 
 	closed_pin: EV_MODEL_PICTURE
 
-	on_pin (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_pin (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- User pressed `pin_button'.
 		do
 			pin_button.wipe_out
@@ -534,7 +534,7 @@ feature {NONE} -- Implementation pin
 			pin_actions.call (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

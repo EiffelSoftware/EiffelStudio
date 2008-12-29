@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text formatter for all text output formatting."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	context_group: CONF_GROUP is
+	context_group: CONF_GROUP
 			-- Context group, i.e. can be used to retrive renamed name.
 		do
 			Result := internal_context_group
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_context_group (a_group: like context_group) is
+	set_context_group (a_group: like context_group)
 			-- Set `context_group' with `a_group'.
 		do
 			internal_context_group := a_group
@@ -38,40 +38,32 @@ feature -- Element change
 
 feature -- Operation
 
-	start_processing (append: BOOLEAN) is
+	start_processing (append: BOOLEAN)
 			-- Start processing.
 		do
 		end
 
-	end_processing is
+	end_processing
 			-- End processing.
 		do
 		end
 
 feature -- Process
 
-	process_basic_text (text: STRING_GENERAL) is
+	process_basic_text (text: STRING_GENERAL)
 			-- Process default basic text `t'.
 		require
 			text_not_void: text /= Void
 		deferred
 		end
 
-	process_character_text (text: STRING_GENERAL) is
+	process_character_text (text: STRING_GENERAL)
 			-- Process string text `t'.
 		do
 			process_basic_text (text)
 		end
 
-	process_generic_text (text: STRING_GENERAL) is
-			-- Process string text `t'.
-		require
-			text_not_void: text /= Void
-		do
-			process_basic_text (text)
-		end
-
-	process_indexing_tag_text (text: STRING_GENERAL) is
+	process_generic_text (text: STRING_GENERAL)
 			-- Process string text `t'.
 		require
 			text_not_void: text /= Void
@@ -79,7 +71,7 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_local_text (text: STRING_GENERAL) is
+	process_indexing_tag_text (text: STRING_GENERAL)
 			-- Process string text `t'.
 		require
 			text_not_void: text /= Void
@@ -87,7 +79,7 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_number_text (text: STRING_GENERAL) is
+	process_local_text (text: STRING_GENERAL)
 			-- Process string text `t'.
 		require
 			text_not_void: text /= Void
@@ -95,14 +87,22 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_quoted_text (text: STRING_GENERAL) is
+	process_number_text (text: STRING_GENERAL)
+			-- Process string text `t'.
+		require
+			text_not_void: text /= Void
+		do
+			process_basic_text (text)
+		end
+
+	process_quoted_text (text: STRING_GENERAL)
 			-- Process the quoted `text' within a comment.
 		require
 			text_not_void: text /= Void
 		deferred
 		end
 
-	process_assertion_tag_text (text: STRING_GENERAL) is
+	process_assertion_tag_text (text: STRING_GENERAL)
 			-- Process string text `t'.
 		require
 			text_not_void: text /= Void
@@ -110,7 +110,7 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_string_text (text: STRING_GENERAL; link: STRING_GENERAL) is
+	process_string_text (text: STRING_GENERAL; link: STRING_GENERAL)
 			-- Process string text `text'.
 			-- possible `link', can be void.
 		require
@@ -119,7 +119,7 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_reserved_word_text (text: STRING_GENERAL) is
+	process_reserved_word_text (text: STRING_GENERAL)
 			-- Process string text `t'.
 		require
 			text_not_void: text /= Void
@@ -127,7 +127,7 @@ feature -- Process
 			process_basic_text (text)
 		end
 
-	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL) is
+	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL)
 			-- Process comment text.
 			-- `url' is possible url, which can be void if none.
 		require
@@ -135,21 +135,21 @@ feature -- Process
 		deferred
 		end
 
-	process_difference_text_item (text: STRING_GENERAL) is
+	process_difference_text_item (text: STRING_GENERAL)
 			-- Process difference text text.
 		require
 			text_not_void: text /= Void
 		do
 		end
 
-	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN) is
+	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN)
 			-- Process class name of `a_class'.
 		require
 			a_class_not_void: a_class /= Void
 		deferred
 		end
 
-	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN)
 			-- Process cluster name of `a_cluster'.
 		require
 			text_not_void: text /= Void
@@ -157,7 +157,7 @@ feature -- Process
 		deferred
 		end
 
-	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET) is
+	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET)
 			-- Process target name text `text'.
 		require
 			text_not_void: text /= Void
@@ -165,14 +165,14 @@ feature -- Process
 		deferred
 		end
 
-	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C) is
+	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C)
 			-- Process feature name text `text'.
 		require
 			text_not_void: text /= Void
 		deferred
 		end
 
-	process_feature_error (text: STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER) is
+	process_feature_error (text: STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER)
 			-- Process error feature text.
 		require
 			text_not_void: text /= Void
@@ -181,7 +181,7 @@ feature -- Process
 			process_feature_text (text, a_feature, false)
 		end
 
-	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN) is
+	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN)
 			-- Process feature text `text'.
 		require
 			text_not_void: text /= Void
@@ -189,57 +189,57 @@ feature -- Process
 		deferred
 		end
 
-	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN) is
+	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN)
 			-- Process breakpoint index `a_index'.
 		require
 			a_feature_not_void: a_feature /= Void
 		deferred
 		end
 
-	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER) is
+	process_breakpoint (a_feature: E_FEATURE; a_index: INTEGER)
 			-- Process breakpoint.
 		require
 			a_feature_not_void: a_feature /= Void
 		deferred
 		end
 
-	process_padded is
+	process_padded
 			-- Process padded item at start of non breakpoint line.
 		deferred
 		end
 
-	process_new_line is
+	process_new_line
 			-- Process new line.
 		deferred
 		end
 
-	process_indentation (a_indent_depth: INTEGER) is
+	process_indentation (a_indent_depth: INTEGER)
 			-- Process indentation `t'.
 		deferred
 		end
 
-	process_after_class (a_class: CLASS_C) is
+	process_after_class (a_class: CLASS_C)
 			-- Process after class `a_class'.
 		require
 			a_class_not_void: a_class /= Void
 		deferred
 		end
 
-	process_before_class (a_class: CLASS_C) is
+	process_before_class (a_class: CLASS_C)
 			-- Process before class `a_class'.
 		require
 			a_class_not_void: a_class /= Void
 		deferred
 		end
 
-	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN) is
+	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN)
 			-- Process filter text `text'.
 		require
 			text_not_void: text /= Void
 		deferred
 		end
 
-	process_tooltip_item (a_tooltip: STRING_GENERAL; is_before: BOOLEAN) is
+	process_tooltip_item (a_tooltip: STRING_GENERAL; is_before: BOOLEAN)
 			-- Process tooltip text `a_tooltip'.
 		require
 			a_tooltip_not_void: a_tooltip /= Void
@@ -247,7 +247,7 @@ feature -- Process
 			process_filter_item (a_tooltip, is_before)
 		end
 
-	process_feature_dec_item (a_feature_name: STRING_GENERAL; is_before: BOOLEAN) is
+	process_feature_dec_item (a_feature_name: STRING_GENERAL; is_before: BOOLEAN)
 			-- Process feature dec.
 		require
 			a_feature_name_not_void: a_feature_name /= Void
@@ -255,14 +255,14 @@ feature -- Process
 			process_filter_item (a_feature_name, is_before)
 		end
 
-	process_symbol_text (text: STRING_GENERAL) is
+	process_symbol_text (text: STRING_GENERAL)
 			-- Process symbol text.
 		require
 			text_not_void: text /= Void
 		deferred
 		end
 
-	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
+	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process keyword text.
 			-- `a_feature' is possible feature.
 		require
@@ -270,7 +270,7 @@ feature -- Process
 		deferred
 		end
 
-	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
+	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE)
 			-- Process operator text.
 			-- `a_feature' can be void.
 		require
@@ -278,14 +278,14 @@ feature -- Process
 		deferred
 		end
 
-	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C) is
+	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C)
 			-- Process address text.
 		require
 			a_address_attached: a_address /= Void
 		deferred
 		end
 
-	process_error_text (text: STRING_GENERAL; a_error: ERROR) is
+	process_error_text (text: STRING_GENERAL; a_error: ERROR)
 			-- Process error text.
 		require
 			text_not_void: text /= Void
@@ -293,7 +293,7 @@ feature -- Process
 		deferred
 		end
 
-	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C) is
+	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: ERROR; a_class: CLASS_C)
 			-- Process class syntax text.
 		require
 			text_not_void: text /= Void
@@ -302,23 +302,23 @@ feature -- Process
 		deferred
 		end
 
-	process_column_text (a_column_number: INTEGER) is
+	process_column_text (a_column_number: INTEGER)
 			-- Process `a_column_number'.
 		do
 		end
 
-	process_call_stack_item (level_number: INTEGER; display: BOOLEAN) is
+	process_call_stack_item (level_number: INTEGER; display: BOOLEAN)
 			-- Process the current callstack text.
 		do
 		end
 
-	process_menu_text (text, link: STRING_GENERAL) is
+	process_menu_text (text, link: STRING_GENERAL)
 			-- Process menu item. This is only useful for generation to
 			-- formats that support hyperlinking.
 		do
 		end
 
-	process_class_menu_text (text, link: STRING_GENERAL) is
+	process_class_menu_text (text, link: STRING_GENERAL)
 			-- Process class menu item. This is only useful for generation to
 			-- formats that support hyperlinking.
 		do
@@ -327,7 +327,7 @@ feature -- Process
 
 feature {NONE} -- Implementation
 
-	indentation (a_indent_depth: INTEGER): STRING is
+	indentation (a_indent_depth: INTEGER): STRING
 			-- Indentation of `a_indent_depth'
 		local
 			i: INTEGER
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	text_quoted (text: STRING_GENERAL): STRING_GENERAL is
+	text_quoted (text: STRING_GENERAL): STRING_GENERAL
 			-- Quote `text'.
 		require
 			text_not_void: text /= Void
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 			text_quoted_not_void: Result /= Void
 		end
 
-	is_keyword (text: STRING_GENERAL): BOOLEAN is
+	is_keyword (text: STRING_GENERAL): BOOLEAN
 			-- Is `text' a keyword?
 		require
 			valid_text: text /= Void and then not text.is_empty
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	is_symbol (text: STRING_GENERAL): BOOLEAN is
+	is_symbol (text: STRING_GENERAL): BOOLEAN
 			-- Is `text' a symbol?
 		require
 			valid_text: text /= Void and then not text.is_empty
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 
 feature -- Text operator
 
-	add_char (c: CHARACTER_32) is
+	add_char (c: CHARACTER_32)
 			-- Add `c'.
 		local
 			l_s: STRING_32
@@ -385,57 +385,57 @@ feature -- Text operator
 			process_character_text (l_s)
 		end
 
-	add_new_line is
+	add_new_line
 			-- Add new line.
 		do
 			process_new_line
 		end
 
-	add_string (s: STRING_GENERAL) is
+	add_string (s: STRING_GENERAL)
 			-- Add `s'.
 		do
 			process_basic_text (s)
 		end
 
-	add_local (s: STRING_GENERAL) is
+	add_local (s: STRING_GENERAL)
 			-- Add `s' as a local.
 		do
 			process_local_text (s)
 		end
 
-	add_int (i: INTEGER) is
+	add_int (i: INTEGER)
 			-- Put `i' at current position.
 		do
 			process_number_text (i.out)
 		end
 
-	add_group (e_cluster: CONF_GROUP; str: STRING_GENERAL) is
+	add_group (e_cluster: CONF_GROUP; str: STRING_GENERAL)
 			-- Put `e_cluster' with string representation
 			-- `str' at current position.
 		do
 			process_cluster_name_text (str, e_cluster, false)
 		end
 
-	add_before_class (e_class: CLASS_C) is
+	add_before_class (e_class: CLASS_C)
 			-- Put `e_class' at current position.
 		do
 			process_before_class (e_class)
 		end
 
-	add_end_class (e_class: CLASS_C) is
+	add_end_class (e_class: CLASS_C)
 			-- Put `e_class' at current position.
 		do
 			process_after_class (e_class)
 		end
 
-	add_classi (class_i: CLASS_I; str: STRING_GENERAL) is
+	add_classi (class_i: CLASS_I; str: STRING_GENERAL)
 			-- Put `class_i' with string representation
 			-- `str' at current position.
 		do
 			process_class_name_text (str, class_i, false)
 		end
 
-	add_class (class_i: CLASS_I) is
+	add_class (class_i: CLASS_I)
 			-- Append class item.
 		local
 			l_name: STRING
@@ -453,34 +453,34 @@ feature -- Text operator
 			process_class_name_text (l_name, class_i, false)
 		end
 
-	add_error (error: ERROR; str: STRING_GENERAL) is
+	add_error (error: ERROR; str: STRING_GENERAL)
 			-- Put `error' with string representation
 			-- `str' at current position.
 		do
 			process_error_text (str, error)
 		end
 
-	add_feature (feat: E_FEATURE; str: STRING_GENERAL) is
+	add_feature (feat: E_FEATURE; str: STRING_GENERAL)
 			-- Put feature `feat' with string
 			-- representation `str' at current position.
 		do
 			process_feature_text (str, feat, false)
 		end
 
-	add_breakpoint_index (feat: E_FEATURE; indx: INTEGER; has_cond: BOOLEAN) is
+	add_breakpoint_index (feat: E_FEATURE; indx: INTEGER; has_cond: BOOLEAN)
 			-- Put `index'-th breakpoint of feature `feat' with integer
 			-- representation `index' at current position.
 		do
 			process_breakpoint_index (feat, indx, has_cond)
 		end
 
-	add_feature_name (f_name: STRING_GENERAL; e_class: CLASS_C) is
+	add_feature_name (f_name: STRING_GENERAL; e_class: CLASS_C)
 			-- Put feature name `f_name' defined in `e_class'.
 		do
 			process_feature_name_text (f_name, e_class)
 		end
 
-	add_sectioned_feature_name (e_feature: E_FEATURE) is
+	add_sectioned_feature_name (e_feature: E_FEATURE)
 			-- Put feature name of `e_feature', taking reserved words into consideration.
 		local
 			l_is_prefix_infix: BOOLEAN
@@ -509,49 +509,49 @@ feature -- Text operator
 			end
 		end
 
-	add_quoted_text (s: STRING_GENERAL) is
+	add_quoted_text (s: STRING_GENERAL)
 			-- Put `s' at current position.
 		do
 			process_quoted_text (s)
 		end
 
-	add_comment (s: STRING_GENERAL) is
+	add_comment (s: STRING_GENERAL)
 			-- Add simple comment `s'.
 		do
 			process_comment_text (s, Void)
 		end
 
-	add_address (address: STRING_GENERAL; a_name: STRING_GENERAL; e_class: CLASS_C) is
+	add_address (address: STRING_GENERAL; a_name: STRING_GENERAL; e_class: CLASS_C)
 			-- Put `address' for `e_class'.
 		do
 			process_address_text (address, a_name, e_class)
 		end
 
-	add_indent is
+	add_indent
 			-- Add an indentation.
 		do
 			process_indentation (1)
 		end
 
-	add_indents (nr: INTEGER) is
+	add_indents (nr: INTEGER)
 			-- Add `nr' indentations.
 		do
 			process_indentation (nr)
 		end
 
-	add_class_syntax (syn: ERROR; e_class: CLASS_C; str: STRING_GENERAL) is
+	add_class_syntax (syn: ERROR; e_class: CLASS_C; str: STRING_GENERAL)
 			-- Put `syn' for `e_class'.
 		do
 			process_cl_syntax (str, syn, e_class)
 		end
 
-	add_column_number (column_num: INTEGER) is
+	add_column_number (column_num: INTEGER)
 			-- Add column number `column_num' to current.
 		do
 			process_column_text (column_num)
 		end
 
-	add_feature_error (feat: E_FEATURE; str: STRING_GENERAL; a_line: INTEGER) is
+	add_feature_error (feat: E_FEATURE; str: STRING_GENERAL; a_line: INTEGER)
 			-- Put error of feature `feat', named `str' and located at `a_line'.
 		do
 			process_feature_error (str, feat, a_line)
@@ -559,7 +559,7 @@ feature -- Text operator
 
 feature {NONE} -- Implementation
 
-	separate_string (s: STRING_GENERAL; for_comment: BOOLEAN) is
+	separate_string (s: STRING_GENERAL; for_comment: BOOLEAN)
 			-- Separate `s' into parts and add them to `Current'.
 			-- Mostly for manifest strings and comments.
 		do
@@ -572,7 +572,7 @@ feature {NONE} -- Implementation
 			comment_scanner.scan
 		end
 
-	comment_scanner: COMMENT_SCANNER is
+	comment_scanner: COMMENT_SCANNER
 			-- Scanner for comment and manifest string
 		once
 			create Result.make_with_text_formatter (Current, seperate_comment)
@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 	seperate_comment: BOOLEAN
 			-- Seperate comment into words?
 
-	reset_phrase (p: STRING_GENERAL; for_comment: BOOLEAN) is
+	reset_phrase (p: STRING_GENERAL; for_comment: BOOLEAN)
 			-- Add comment `p' and wipe out `p'.
 		require
 			p_not_void: p /= Void
@@ -609,7 +609,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_quoted_item (text: STRING_GENERAL; quote: BOOLEAN) is
+	process_quoted_item (text: STRING_GENERAL; quote: BOOLEAN)
 			-- Process quoted `s' according to its type.
 		local
 			l_feature: E_FEATURE
@@ -642,7 +642,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	comment_context_class : CLASS_C is
+	comment_context_class : CLASS_C
 			-- Current class for comment context.
 		do
 			Result := eiffel_system.system.current_class
@@ -651,7 +651,7 @@ feature {NONE} -- Implementation
 	internal_context_group: like context_group;
 			-- Internal context group
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when a class performs incorrect inheritance of external classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (cl: CLASS_C) is
+	make (cl: CLASS_C)
 			-- Create error in class `cl'.
 		require
 			cl_not_void: cl /= Void
@@ -28,13 +28,13 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	code: STRING is "VIFI"
+	code: STRING = "VIFI"
 		-- Error code
 
 invariant
 	class_c_not_void: class_c /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

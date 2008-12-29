@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (p: POINTER) is -- ; icdth_id: INTEGER) is
+	make (p: POINTER) -- ; icdth_id: INTEGER) is
 			-- Initialize Current
 		require
 			icd_thread_pointer_not_null: p /= Default_pointer
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Cleaning
 
-	clean is
+	clean
 			-- Clean data
 		do
 				-- FIXME jfiat: TODO
@@ -48,7 +48,7 @@ feature -- Cleaning
 			clean_pending_steppers
 		end
 
-	clean_pending_steppers is
+	clean_pending_steppers
 			-- Clean pending_steppers
 		local
 			s: ICOR_DEBUG_STEPPER
@@ -68,7 +68,7 @@ feature -- Cleaning
 
 feature -- Access
 
-	refresh_thread_details is
+	refresh_thread_details
 			-- Get again thread details
 		do
 			thread_details_fetched := False
@@ -77,7 +77,7 @@ feature -- Access
 			get_thread_details
 		end
 
-	get_thread_details is
+	get_thread_details
 			-- Get the thread details
 			-- i.e: name, priority and so on ...
 		local
@@ -134,19 +134,19 @@ feature -- Access
 			thread_details_fetched
 		end
 
-	get_thread_name is
+	get_thread_name
 			-- Get thread's name
 		do
 			get_thread_details
 		end
 
-	get_thread_priority is
+	get_thread_priority
 			-- Get thread's priority
 		do
 			get_thread_details
 		end
 
-	icd_thread: ICOR_DEBUG_THREAD is
+	icd_thread: ICOR_DEBUG_THREAD
 		do
 			Result := opo_icd_thread
 			if Result = Void then
@@ -158,7 +158,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	new_stepper: ICOR_DEBUG_STEPPER is
+	new_stepper: ICOR_DEBUG_STEPPER
 			--
 		local
 			l_frame: ICOR_DEBUG_FRAME
@@ -197,7 +197,7 @@ feature -- Access
 
 feature -- Change
 
-	add_icd_stepper (p: POINTER) is
+	add_icd_stepper (p: POINTER)
 			-- Add pointer to Stepper
 			--
 			-- Nota: call AddRef before adding it
@@ -211,14 +211,14 @@ feature -- Change
 			pending_steppers.put (s, p)
 		end
 
-	has_icd_stepper (p: POINTER): BOOLEAN is
+	has_icd_stepper (p: POINTER): BOOLEAN
 		require
 			p /= Default_pointer
 		do
 			Result := pending_steppers.has (p)
 		end
 
-	remove_icd_stepper (p: POINTER) is
+	remove_icd_stepper (p: POINTER)
 		require
 			p /= Default_pointer
 			has_icd_stepper: has_icd_stepper (p)
@@ -267,7 +267,7 @@ feature -- Properties
 
 feature -- Disposable
 
-	dispose is
+	dispose
 		local
 			n: INTEGER
 		do
@@ -278,7 +278,7 @@ feature -- Disposable
 			last_icd_func_eval := Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

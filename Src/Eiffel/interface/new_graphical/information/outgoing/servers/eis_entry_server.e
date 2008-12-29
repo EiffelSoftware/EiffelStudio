@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server to hold and manage eis entries"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- <precursor>
 			-- Create entries.
 		do
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature {EIS_STORAGE} -- Element change
 
-	register_entry (a_entry: !H; a_id: !G): BOOLEAN is
+	register_entry (a_entry: !H; a_id: !G): BOOLEAN
 			-- Retrister an entry
 			-- Return True if an entry is really registered.
 		local
@@ -53,7 +53,7 @@ feature {EIS_STORAGE} -- Element change
 			end
 		end
 
-	deregister_entry (a_entry: !H; a_id: !G): BOOLEAN is
+	deregister_entry (a_entry: !H; a_id: !G): BOOLEAN
 			-- Deretrister an entry
 			-- Return True if an entry is really deregistered.
 		local
@@ -74,13 +74,13 @@ feature {EIS_STORAGE} -- Element change
 			end
 		end
 
-	register_entries_of_id (a_entries: !SEARCH_TABLE [!H]; a_id: !G) is
+	register_entries_of_id (a_entries: !SEARCH_TABLE [!H]; a_id: !G)
 			-- Deregister entries of `a_id'.
 		do
 			entries.force (a_entries, a_id)
 		end
 
-	deregister_entries_of_id (a_id: !G) is
+	deregister_entries_of_id (a_id: !G)
 			-- Deregister entries of `a_id'.
 		do
 			if {lt_entries: like entries}entries then
@@ -88,7 +88,7 @@ feature {EIS_STORAGE} -- Element change
 			end
 		end
 
-	register_component (a_id: !G) is
+	register_component (a_id: !G)
 			-- Register `a_id' with no entry.
 		do
 			if {lt_entries: like entries}entries then
@@ -98,7 +98,7 @@ feature {EIS_STORAGE} -- Element change
 
 feature -- Access
 
-	entries_of_id (a_id: !G): ?SEARCH_TABLE [!H] is
+	entries_of_id (a_id: !G): ?SEARCH_TABLE [!H]
 			-- EIS entries of `a_id'
 			-- Do not change directly.
 			-- Only for querying.
@@ -118,7 +118,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

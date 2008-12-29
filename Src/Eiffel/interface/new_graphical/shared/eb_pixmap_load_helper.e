@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Pixmap file loading helper"
 	author: ""
 	date: "$Date$"
@@ -9,7 +9,7 @@ class
 
 feature -- Loading
 
-	loaded_pixmap_from_file (a_file: STRING; a_default_pixmap: EV_PIXMAP; a_default_buffer: EV_PIXEL_BUFFER): TUPLE [a_pixmap: EV_PIXMAP; a_buffer: EV_PIXEL_BUFFER] is
+	loaded_pixmap_from_file (a_file: STRING; a_default_pixmap: EV_PIXMAP; a_default_buffer: EV_PIXEL_BUFFER): TUPLE [a_pixmap: EV_PIXMAP; a_buffer: EV_PIXEL_BUFFER]
 			-- Loaded pixmap as well as its pixel buffer from `a_file'.
 			-- If loading failed, `a_buffer' will be `a_default_buffer' if set, otherwise `a_buffer' will be Void;
 			-- and `a_pixmap' will be `a_default_pixmap' if set, otherwise `a_pixmap' will be Void too.

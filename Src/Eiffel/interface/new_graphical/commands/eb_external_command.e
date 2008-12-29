@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A command that calls an external executable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,7 +51,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (w: EV_WINDOW) is
+	make (w: EV_WINDOW)
 			-- Initialize `Current'.
 			-- Pop up a dialog modal to `w' to let the user initialize `Current'
 		require
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 			external_output_manager.synchronize_command_list (Current)
 		end
 
-	make_from_new_command_line (w:EV_WINDOW; cmd_line: STRING) is
+	make_from_new_command_line (w:EV_WINDOW; cmd_line: STRING)
 			-- Use command line indicated by `cmd_line' to make a new
 			-- external command object.
 		require
@@ -113,7 +113,7 @@ feature {NONE} -- Initialization
 			external_output_manager.synchronize_command_list (Current)
 		end
 
-	make_from_string (a_command: STRING) is
+	make_from_string (a_command: STRING)
 			-- Create with `a_command'
 		require
 			command_not_void: a_command /= Void
@@ -150,7 +150,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_and_run_only (cmd: STRING; dir: STRING) is
+	make_and_run_only (cmd: STRING; dir: STRING)
 			-- Create for running `cmd' in directory `dir'.
 			-- Do not save external command and its working directory to preference.
 		require
@@ -164,7 +164,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	write_to_preference is
+	write_to_preference
 			-- Write `Current' external command to preference.
 		local
 			i: INTEGER
@@ -187,7 +187,7 @@ feature -- Basic operations
 
 feature{NONE} -- Command substitution
 
-	show_warning_dialog (msg: STRING_GENERAL) is
+	show_warning_dialog (msg: STRING_GENERAL)
 			-- Show a warning dialog to display `msg'.
 		do
 			prompts.show_warning_prompt (msg, Void, Void)
@@ -195,7 +195,7 @@ feature{NONE} -- Command substitution
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Launch the external command that is linked to `Current', if possible.
 		local
 			cl: STRING
@@ -291,7 +291,7 @@ feature -- Execution
 
 feature -- Properties
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Representation of `Current' in menus.
 		do
 			create {STRING_32}Result.make (name.count + 15)
@@ -315,7 +315,7 @@ feature -- Properties
 
 feature -- Status setting
 
-	edit_properties (w: EV_WINDOW) is
+	edit_properties (w: EV_WINDOW)
 			-- Pop up a dialog, modal to `w', that lets the user
 			-- edit the properties of `Current' (menu name, called command and index)
 		require
@@ -345,7 +345,7 @@ feature -- Status setting
 			external_output_manager.synchronize_command_list (Current)
 		end
 
-	setup_managed_shortcut (l_accelerators: ARRAY [EV_ACCELERATOR]) is
+	setup_managed_shortcut (l_accelerators: ARRAY [EV_ACCELERATOR])
 			-- Setup `accelerator' and `managed_shortcut'
 		require
 			l_accelerators_not_void: l_accelerators /= Void
@@ -359,7 +359,7 @@ feature -- Status setting
 
 feature{ES_CONSOLE_TOOL_PANEL} -- Status setting
 
-	set_command (cmd: STRING) is
+	set_command (cmd: STRING)
 			-- Set `external_command' with `cmd'.
 		require
 			cmd_not_void: cmd /= Void
@@ -370,7 +370,7 @@ feature{ES_CONSOLE_TOOL_PANEL} -- Status setting
 			external_command_set: external_command.is_equal (cmd)
 		end
 
-	set_working_directory (dir: STRING) is
+	set_working_directory (dir: STRING)
 			-- Set `working_directory' with `dir'.
 		do
 			if dir /= Void then
@@ -384,7 +384,7 @@ feature{ES_CONSOLE_TOOL_PANEL} -- Status setting
 				((dir = Void) implies working_directory = Void)
 		end
 
-	set_accelerator (accel: EV_ACCELERATOR) is
+	set_accelerator (accel: EV_ACCELERATOR)
 			-- Set `accelerator' to `accel'.
 		do
 			accelerator := accel
@@ -392,7 +392,7 @@ feature{ES_CONSOLE_TOOL_PANEL} -- Status setting
 
 feature -- Status report
 
-	resource: STRING is
+	resource: STRING
 			-- Save `Current's information to a string representation.
 		do
 			create Result.make (menu_name.count + external_command.count + 10)
@@ -413,7 +413,7 @@ feature -- Status report
 			valid: valid_resource (Result)
 		end
 
-	valid_resource (r: STRING): BOOLEAN is
+	valid_resource (r: STRING): BOOLEAN
 			-- Is `r' a valid resource representation of an external command?
 		require
 			not_void_resource: r /= Void
@@ -421,7 +421,7 @@ feature -- Status report
 			Result := r.occurrences (separator) = 3
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is `Current' a valid command?
 		do
 			Result := index >= 0 and
@@ -450,10 +450,10 @@ feature {NONE} -- Widgets
 
 feature {NONE} -- Implementation
 
-	separator: CHARACTER is '['
+	separator: CHARACTER = '['
 			-- Separator in resource representation.
 
-	commands: ARRAY [EB_EXTERNAL_COMMAND] is
+	commands: ARRAY [EB_EXTERNAL_COMMAND]
 			-- Abstract representation of external commands.
 		do
 			Result := (create {EB_EXTERNAL_COMMANDS_EDITOR}.make).commands
@@ -461,7 +461,7 @@ feature {NONE} -- Implementation
 
 	dir_dlg: EV_DIRECTORY_DIALOG
 
-	create_directory_dialog is
+	create_directory_dialog
 			--
 		do
 			create dir_dlg.make_with_title (interface_names.t_select_working_directory)
@@ -469,7 +469,7 @@ feature {NONE} -- Implementation
 			dir_dlg.show_modal_to_window (dialog)
 		end
 
-	on_directory_dialog_ok is
+	on_directory_dialog_ok
 			--
 		do
 			if dir_dlg /= Void then
@@ -480,7 +480,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	create_dialog is
+	create_dialog
 			-- Initialize `dialog' and all widgets.
 		local
 			hb, hb1: EV_HORIZONTAL_BOX
@@ -577,7 +577,7 @@ feature {NONE} -- Implementation
 			dialog.show_actions.extend (agent name_field.set_focus)
 		end
 
-	on_ok is
+	on_ok
 			-- User pressed OK in `dialog'.
 			-- Try to update `Current's status.
 		local
@@ -599,7 +599,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	destroy_dialog is
+	destroy_dialog
 			-- Destroy all widgets.
 		do
 			check
@@ -618,7 +618,7 @@ feature {NONE} -- Implementation
 	old_index: INTEGER;
 			-- Index of `Current' before we edited its properties.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

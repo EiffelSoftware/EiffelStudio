@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Third page of new unit test wizard
 
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_info: like wizard_information) is
+	make (an_info: like wizard_information)
 			-- <Precursor>
 		do
 			wizard_information := an_info
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 			update_ui_with_wizard_information
 		end
 
-	update_next_button_sensitivity (a_force_disable: BOOLEAN) is
+	update_next_button_sensitivity (a_force_disable: BOOLEAN)
 			-- Update next button sensitivity base on current wizard information
 		local
 			l_enable_next: BOOLEAN
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	left_align_widgets is
+	left_align_widgets
 			-- Make sure `test_case_name', check boxs, `class_name' and `class_under_test' are correctly left aligned.
 		require
 			ready: test_case_name_label /= Void and class_name_label /= Void and class_under_test_label /= Void
@@ -376,7 +376,7 @@ feature {NONE}	-- Agents
 			end
 		end
 
-	on_valid_test_case_name (a_string: !STRING_32): !TUPLE [BOOLEAN, STRING_32] is
+	on_valid_test_case_name (a_string: !STRING_32): !TUPLE [BOOLEAN, STRING_32]
 			-- Valid test case name `a_string'
 		local
 			l_valid: BOOLEAN
@@ -416,7 +416,7 @@ feature {NONE}	-- Agents
 			end
 		end
 
-	on_valid_class_name (a_string: !STRING_32): !TUPLE [BOOLEAN, STRING_32] is
+	on_valid_class_name (a_string: !STRING_32): !TUPLE [BOOLEAN, STRING_32]
 			-- Valid class name `a_string'
 		local
 			l_valid: BOOLEAN
@@ -455,25 +455,25 @@ feature {NONE}	-- Agents
 			end
 		end
 
-	on_run_before_all_selected is
+	on_run_before_all_selected
 			-- Handle select actions of `on_before_all_test_runs'
 		do
 			wizard_information.set_run_before_all_selected (on_before_all_test_runs.is_selected)
 		end
 
-	on_run_after_all_selected is
+	on_run_after_all_selected
 			-- Handle select actions of `on_after_all_test_runs'
 		do
 			wizard_information.set_run_after_all_selected (on_after_all_test_runs.is_selected)
 		end
 
-	on_run_before_each_selected is
+	on_run_before_each_selected
 			-- Handle select actions of `on_before_test_run'
 		do
 			wizard_information.set_run_before_each_selected (on_before_test_run.is_selected)
 		end
 
-	on_run_after_each_selected is
+	on_run_after_each_selected
 			-- Handle select actions of `on_after_test_run'
 		do
 			wizard_information.set_run_after_each_selected (on_after_test_run.is_selected)
@@ -502,7 +502,7 @@ feature {NONE} -- UI widgets
 	class_under_test: EB_CODE_COMPLETABLE_TEXT_FIELD
 			-- Text field for class under test.
 
-	build_text_field is
+	build_text_field
 			-- Create `class_under_test'
 		local
 			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
@@ -524,7 +524,7 @@ feature {NONE} -- UI widgets
 	test_case_name_label, class_name_label, class_under_test_label: EV_LABEL
 			-- Labels
 
-	root_group: CONF_GROUP is
+	root_group: CONF_GROUP
 			-- Group of code completion
 		require
 			valid: wizard_information.is_valid
@@ -571,13 +571,13 @@ feature {NONE} -- Query
 			end
 		end
 
-	title_string: STRING_GENERAL is
+	title_string: STRING_GENERAL
 			-- Title string
 		do
 			Result := interface_names.t_new_unit_test_case
 		end
 
-	message_string: STRING_GENERAL is
+	message_string: STRING_GENERAL
 			-- Message string
 		do
 			Result := interface_names.t_Enter_name_of_the_unit_test
@@ -592,7 +592,7 @@ feature {NONE} -- Query
 	wizard_information: ES_NEW_UNIT_TEST_WIZARD_INFORMATION;
 			-- <Precursor>
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

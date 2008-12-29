@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		""
@@ -15,10 +15,10 @@ inherit
 
 feature -- Property
 
-	code: STRING is "VOMB";
+	code: STRING = "VOMB";
 			-- Error code
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

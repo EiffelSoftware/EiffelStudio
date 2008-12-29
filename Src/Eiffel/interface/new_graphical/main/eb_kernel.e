@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Core of the application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create and map the first window: the system window.
 		local
 			compiler: ES_BATCH
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			--prof_setting.start_profiling
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

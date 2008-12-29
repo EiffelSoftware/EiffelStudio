@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cancel any current project executions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	 default_create is
+	 default_create
 	 		-- Make and initialize command.
 	 	local
 	 		l_shortcut: SHORTCUT_PREFERENCE
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute the command.
 		do
 			Degree_output.user_has_requested_cancellation
@@ -51,13 +51,13 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := interface_names.B_cancel
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

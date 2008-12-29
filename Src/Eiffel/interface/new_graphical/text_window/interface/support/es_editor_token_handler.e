@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base handler for performing idle actions on editor tokens in a EiffelStudio custom widget based editor {EB_CUSTOM_WIDGETTED_EDITOR}.
 	]"
@@ -162,7 +162,7 @@ invariant
 	editor_is_interface_usable: is_interface_usable implies editor.is_interface_usable
 	last_token_handled_attached: is_active implies last_token_handled /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

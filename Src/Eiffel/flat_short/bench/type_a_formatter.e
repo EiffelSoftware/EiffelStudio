@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Process a TYPE_A for formatting in a TEXT_FORMATTER_DECORATOR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Formatting
 
-	format (a_formatter: TEXT_FORMATTER_DECORATOR; a_type: TYPE_A) is
+	format (a_formatter: TEXT_FORMATTER_DECORATOR; a_type: TYPE_A)
 			-- Format `a_type' using `a_formatter'.
 		require
 			a_formatter_not_void: a_formatter /= Void
@@ -34,7 +34,7 @@ feature -- Formatting
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is current object valid prior to a call to one of the process routines?
 		do
 			Result := ctxt /= Void
@@ -47,50 +47,50 @@ feature {NONE} -- Implementation
 
 feature {TYPE_A} -- Visitors
 
-	process_bits_a (a_type: BITS_A) is
+	process_bits_a (a_type: BITS_A)
 			-- Process `a_type'.
 		do
 			ctxt.process_string_text ("BIT ", Void)
 			ctxt.process_string_text (a_type.bit_count.out, Void)
 		end
 
-	process_bits_symbol_a (a_type: BITS_SYMBOL_A) is
+	process_bits_symbol_a (a_type: BITS_SYMBOL_A)
 			-- Process `a_type'.
 		do
 			process_bits_a (a_type)
 		end
 
-	process_boolean_a (a_type: BOOLEAN_A) is
+	process_boolean_a (a_type: BOOLEAN_A)
 			-- Process `a_type'.
 		do
 			process_cl_type_a (a_type)
 		end
 
-	process_character_a (a_type: CHARACTER_A) is
+	process_character_a (a_type: CHARACTER_A)
 			-- Process `a_type'.
 		do
 			process_cl_type_a (a_type)
 		end
 
-	process_cl_type_a (a_type: CL_TYPE_A) is
+	process_cl_type_a (a_type: CL_TYPE_A)
 			-- Process `a_type'.
 		do
 			ctxt.put_classi (a_type.associated_class.lace_class)
 		end
 
-	process_renamed_type_a (a_type: RENAMED_TYPE_A [TYPE_A]) is
+	process_renamed_type_a (a_type: RENAMED_TYPE_A [TYPE_A])
 			-- Process `a_type'.
 		do
 			ctxt.process_string_text (a_type.dump, Void)
 		end
 
-	process_formal_a (a_type: FORMAL_A) is
+	process_formal_a (a_type: FORMAL_A)
 			-- Process `a_type'.
 		do
 			ctxt.process_generic_text (ctxt.formal_name (a_type.position))
 		end
 
-	process_gen_type_a (a_type: GEN_TYPE_A) is
+	process_gen_type_a (a_type: GEN_TYPE_A)
 			-- Process `a_type'.
 		local
 			i, count: INTEGER
@@ -118,121 +118,121 @@ feature {TYPE_A} -- Visitors
 			end
 		end
 
-	process_integer_a (a_type: INTEGER_A) is
+	process_integer_a (a_type: INTEGER_A)
 			-- Process `a_type'.
 		do
 			process_cl_type_a (a_type)
 		end
 
-	process_like_argument (a_type: LIKE_ARGUMENT) is
+	process_like_argument (a_type: LIKE_ARGUMENT)
 			-- Process `a_type'.
 		do
 			ctxt.process_string_text (a_type.dump, Void)
 		end
 
-	process_like_current (a_type: LIKE_CURRENT) is
+	process_like_current (a_type: LIKE_CURRENT)
 			-- Process `a_type'.
 		do
 			ctxt.process_string_text (a_type.dump, Void)
 		end
 
-	process_like_feature (a_type: LIKE_FEATURE) is
+	process_like_feature (a_type: LIKE_FEATURE)
 			-- Process `a_type'.
 		do
 			ctxt.process_string_text (a_type.dump, Void)
 		end
 
-	process_manifest_integer_a (a_type: MANIFEST_INTEGER_A) is
+	process_manifest_integer_a (a_type: MANIFEST_INTEGER_A)
 			-- Process `a_type'.
 		do
 			process_cl_type_a (a_type)
 		end
 
-	process_manifest_natural_64_a (a_type: MANIFEST_NATURAL_64_A) is
+	process_manifest_natural_64_a (a_type: MANIFEST_NATURAL_64_A)
 			-- Process `a_type'.
 		do
 			process_cl_type_a (a_type)
 		end
 
-	process_named_tuple_type_a (a_type: NAMED_TUPLE_TYPE_A) is
+	process_named_tuple_type_a (a_type: NAMED_TUPLE_TYPE_A)
 			-- Process `a_type'.
 		do
 			process_gen_type_a (a_type)
 		end
 
-	process_native_array_type_a (a_type: NATIVE_ARRAY_TYPE_A) is
+	process_native_array_type_a (a_type: NATIVE_ARRAY_TYPE_A)
 			-- Process `a_type'.
 		do
 			process_gen_type_a (a_type)
 		end
 
-	process_natural_a (a_type: NATURAL_A) is
+	process_natural_a (a_type: NATURAL_A)
 			-- Process `a_type'.
 		do
 			process_cl_type_a (a_type)
 		end
 
-	process_none_a (a_type: NONE_A) is
+	process_none_a (a_type: NONE_A)
 			-- Process `a_type'.
 		do
 			ctxt.process_string_text (a_type.dump, Void)
 		end
 
-	process_open_type_a (a_type: OPEN_TYPE_A) is
+	process_open_type_a (a_type: OPEN_TYPE_A)
 			-- Process `a_type'.
 		do
 			ctxt.process_string_text ("?", Void)
 		end
 
-	process_pointer_a (a_type: POINTER_A) is
+	process_pointer_a (a_type: POINTER_A)
 			-- Process `a_type'.
 		do
 			process_cl_type_a (a_type)
 		end
 
-	process_real_32_a (a_type: REAL_32_A) is
+	process_real_32_a (a_type: REAL_32_A)
 			-- Process `a_type'.
 		do
 			process_cl_type_a (a_type)
 		end
 
-	process_real_64_a (a_type: REAL_64_A) is
+	process_real_64_a (a_type: REAL_64_A)
 			-- Process `a_type'.
 		do
 			process_cl_type_a (a_type)
 		end
 
-	process_tuple_type_a (a_type: TUPLE_TYPE_A) is
+	process_tuple_type_a (a_type: TUPLE_TYPE_A)
 			-- Process `a_type'.
 		do
 			process_gen_type_a (a_type)
 		end
 
-	process_typed_pointer_a (a_type: TYPED_POINTER_A) is
+	process_typed_pointer_a (a_type: TYPED_POINTER_A)
 			-- Process `a_type'.
 		do
 			process_gen_type_a (a_type)
 		end
 
-	process_unevaluated_bits_symbol_a (a_type: UNEVALUATED_BITS_SYMBOL_A) is
+	process_unevaluated_bits_symbol_a (a_type: UNEVALUATED_BITS_SYMBOL_A)
 			-- Process `a_type'.
 		do
 			ctxt.process_string_text (a_type.dump, Void)
 		end
 
-	process_unevaluated_like_type (a_type: UNEVALUATED_LIKE_TYPE) is
+	process_unevaluated_like_type (a_type: UNEVALUATED_LIKE_TYPE)
 			-- Process `a_type'.
 		do
 			ctxt.process_string_text (a_type.dump, Void)
 		end
 
-	process_void_a (a_type: VOID_A) is
+	process_void_a (a_type: VOID_A)
 			-- Process `a_type'.
 		do
 			ctxt.process_string_text (a_type.dump, Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

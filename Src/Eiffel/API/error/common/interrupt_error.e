@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error that interrupts a compilation."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (a_during: like is_during_compilation) is
+	make (a_during: like is_during_compilation)
 			-- Initialize current with `a_during'.
 		do
 			is_during_compilation := a_during
@@ -37,13 +37,13 @@ feature -- Status report
 
 feature -- Output
 
-	code: STRING is
+	code: STRING
 			-- Interrupt code
 		do
 			Result := "INTERRUPT"
 		end;
 
-	help_file_name: STRING is
+	help_file_name: STRING
 			-- File name for the interrupt message
 		do
 			if is_during_compilation then
@@ -53,7 +53,7 @@ feature -- Output
 			end
 		end
 
-	file_name: STRING is
+	file_name: STRING
 			-- No associated file name
 		do
 
@@ -61,7 +61,7 @@ feature -- Output
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `error_window'.
 		do
@@ -69,7 +69,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

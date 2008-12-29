@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Given a CLICKABLE_AST node, return the associated CLASS_I instance it represents."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature -- Queries
 
-	associated_eiffel_class (a_class_i: CLASS_I; a_node: CLICKABLE_AST): CLASS_I is
+	associated_eiffel_class (a_class_i: CLASS_I; a_node: CLICKABLE_AST): CLASS_I
 		require
 			a_class_i_not_void: a_class_i /= Void
 			a_node_not_void: a_node /= Void
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 	last_class: CLASS_I
 			-- Last computed class
 
-	process_precursor_as (l_as: PRECURSOR_AS) is
+	process_precursor_as (l_as: PRECURSOR_AS)
 		do
 			check
 				reference_class_not_void: reference_class /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			last_class := Universe.safe_class_named (l_as.parent_base_class.class_name.name, reference_class.group)
 		end
 
-	process_class_type_as (l_as: CLASS_TYPE_AS) is
+	process_class_type_as (l_as: CLASS_TYPE_AS)
 		do
 			check
 				reference_class_not_void: reference_class /= Void
@@ -62,12 +62,12 @@ feature {NONE} -- Implementation
 			last_class := Universe.safe_class_named (l_as.class_name.name, reference_class.group)
 		end
 
-	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS) is
+	process_generic_class_type_as (l_as: GENERIC_CLASS_TYPE_AS)
 		do
 			process_class_type_as (l_as)
 		end
 
-	process_class_as (l_as: CLASS_AS) is
+	process_class_as (l_as: CLASS_AS)
 		do
 			check
 				reference_class_not_void: reference_class /= Void
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			last_class := Universe.safe_class_named (l_as.class_name.name, reference_class.group)
 		end
 
-	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS) is
+	process_named_tuple_type_as (l_as: NAMED_TUPLE_TYPE_AS)
 		do
 			check
 				reference_class_not_void: reference_class /= Void
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			last_class := Universe.safe_class_named (l_as.class_name.name, reference_class.group)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

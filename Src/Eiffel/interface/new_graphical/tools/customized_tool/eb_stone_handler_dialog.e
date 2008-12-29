@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to setup stone handlers for customized tools"
 	author: ""
 	date: "$Date$"
@@ -32,7 +32,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_tool_name: like tool_name; a_tools: like tools; a_stone_table: like stone_table) is
+	make (a_tool_name: like tool_name; a_tools: like tools; a_stone_table: like stone_table)
 			-- Initialize `tool_name' with `a_tool_name'.
 		require
 			a_tool_name_attached: a_tool_name /= Void
@@ -59,7 +59,7 @@ feature{NONE} -- Initialization
 			set_has_binded (False)
 		end
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			l_tool_bar: EV_TOOL_BAR
@@ -139,7 +139,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_has_changed (b: BOOLEAN) is
+	set_has_changed (b: BOOLEAN)
 			-- Set `has_changed' with `b'.
 		do
 			has_changed := b
@@ -147,7 +147,7 @@ feature -- Setting
 			has_changed_set: has_changed = b
 		end
 
-	set_has_binded (b: BOOLEAN) is
+	set_has_binded (b: BOOLEAN)
 			-- Set `has_binded' with `b'.
 		do
 			has_binded := b
@@ -155,7 +155,7 @@ feature -- Setting
 			has_binded_set: has_binded = b
 		end
 
-	set_tool_name (a_name: like tool_name) is
+	set_tool_name (a_name: like tool_name)
 			-- Set `tool_name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -165,7 +165,7 @@ feature -- Setting
 			tool_name_set: tool_name /= Void
 		end
 
-	set_tools (a_tools: like tools) is
+	set_tools (a_tools: like tools)
 			-- Set `tools' with `a_tools'.
 		require
 			a_tools_attached: a_tools /= Void
@@ -175,7 +175,7 @@ feature -- Setting
 			tools_set: tools /= Void
 		end
 
-	set_stone_table (a_stone_table: like stone_table) is
+	set_stone_table (a_stone_table: like stone_table)
 			-- Set `stone_table' with `a_stone_table'.
 		require
 			a_stone_table_attached: a_stone_table /= Void
@@ -187,7 +187,7 @@ feature -- Setting
 
 feature{NONE} -- Actions
 
-	on_show is
+	on_show
 			-- Action to be performed when Current dialog is shown
 		do
 			set_has_binded (False)
@@ -200,7 +200,7 @@ feature{NONE} -- Actions
 			grid.set_focus
 		end
 
-	on_ok_pressed is
+	on_ok_pressed
 			-- Action to be performed when "OK" button is pressed
 		do
 			if has_changed then
@@ -208,7 +208,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_add_handler is
+	on_add_handler
 			-- Action to be performed to add a stone handler
 		local
 			l_grid_row: EV_GRID_ROW
@@ -225,7 +225,7 @@ feature{NONE} -- Actions
 			set_has_changed (True)
 		end
 
-	on_remove_handler is
+	on_remove_handler
 			-- Action to be performed to remove selected stone handler
 		local
 			l_selected_rows: LIST [EV_GRID_ROW]
@@ -257,7 +257,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_tool_selection_change (a_choice_item: EV_GRID_CHOICE_ITEM) is
+	on_tool_selection_change (a_choice_item: EV_GRID_CHOICE_ITEM)
 			-- Action to be performed when tool choice changes
 		require
 			a_choice_item_valid: a_choice_item /= Void and then a_choice_item.is_parented
@@ -269,7 +269,7 @@ feature{NONE} -- Actions
 			set_has_changed (True)
 		end
 
-	on_stone_selection_change (a_choice_item: EV_GRID_CHOICE_ITEM) is
+	on_stone_selection_change (a_choice_item: EV_GRID_CHOICE_ITEM)
 			-- Action to be performed when stone choice changes
 		require
 			a_choice_item_valid: a_choice_item /= Void and then a_choice_item.is_parented
@@ -281,13 +281,13 @@ feature{NONE} -- Actions
 			set_has_changed (True)
 		end
 
-	on_row_selected (a_row: EV_GRID_ROW) is
+	on_row_selected (a_row: EV_GRID_ROW)
 			-- Action to be performed when `a_row' is selected.			
 		do
 			remove_button.enable_sensitive
 		end
 
-	on_row_deselected (a_row: EV_GRID_ROW) is
+	on_row_deselected (a_row: EV_GRID_ROW)
 			-- Action to be performed when `a_row' is deselected.			
 		do
 			if grid.selected_rows.is_empty then
@@ -295,13 +295,13 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_item_selected (a_item: EV_GRID_ITEM) is
+	on_item_selected (a_item: EV_GRID_ITEM)
 			-- Action to be performed when `a_item' is selected.
 		do
 			remove_button.enable_sensitive
 		end
 
-	on_item_deselected (a_item: EV_GRID_ITEM) is
+	on_item_deselected (a_item: EV_GRID_ITEM)
 			-- Action to be performed when `a_item' is deselected.
 		do
 			if grid.selected_items.is_empty then
@@ -309,7 +309,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- Action to be performed if `a_key' is pressed in `item_grid'
 		require
 			a_key_attached: a_key /= Void
@@ -330,7 +330,7 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Implementation/Data
 
-	value_from_grid: like value is
+	value_from_grid: like value
 			-- Value retrieved from `grid'
 		local
 			l_value: like value
@@ -359,7 +359,7 @@ feature{NONE} -- Implementation/Data
 			Result := l_value
 		end
 
-	stone_grid_item (a_selected_stone_name: STRING_32): EV_GRID_CHOICE_ITEM is
+	stone_grid_item (a_selected_stone_name: STRING_32): EV_GRID_CHOICE_ITEM
 			-- Grid item to provide a stone list
 		local
 			l_selected_name: STRING_GENERAL
@@ -376,7 +376,7 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	sorted_stone_names: LIST [STRING_GENERAL] is
+	sorted_stone_names: LIST [STRING_GENERAL]
 			-- List or ascendingly sorted stone names
 		local
 			l_sorted: SORTED_TWO_WAY_LIST [STRING_GENERAL]
@@ -398,7 +398,7 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	sorted_tool_names: LIST [STRING_GENERAL] is
+	sorted_tool_names: LIST [STRING_GENERAL]
 			-- List or ascendingly sorted tool names
 		local
 			l_sorted: SORTED_TWO_WAY_LIST [STRING_GENERAL]
@@ -420,7 +420,7 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	tool_grid_item (a_tool_id: STRING): EV_GRID_CHOICE_ITEM is
+	tool_grid_item (a_tool_id: STRING): EV_GRID_CHOICE_ITEM
 			-- Grid item to provide a tool list
 		local
 			l_selected_name: STRING_GENERAL
@@ -437,7 +437,7 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	initialize_internal is
+	initialize_internal
 			-- Initialize internal data structure.
 		local
 			l_names: EB_CUSTOMIZED_FORMATTER_XML_CONSTANTS
@@ -507,7 +507,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/Sorting
 
-	stone_name_tester (a_item, b_item: TUPLE [a_tool_name: STRING; a_stone_name: STRING]; a_order: INTEGER): BOOLEAN is
+	stone_name_tester (a_item, b_item: TUPLE [a_tool_name: STRING; a_stone_name: STRING]; a_order: INTEGER): BOOLEAN
 			-- Tester to decide order between `a_item' and `b_item'.
 		require
 			a_item_valid: a_item /= Void and then a_item.a_stone_name /= Void
@@ -520,7 +520,7 @@ feature{NONE} -- Implementation/Sorting
 			end
 		end
 
-	tool_name_tester (a_item, b_item: TUPLE [a_tool_name: STRING; a_stone_name: STRING]; a_order: INTEGER): BOOLEAN is
+	tool_name_tester (a_item, b_item: TUPLE [a_tool_name: STRING; a_stone_name: STRING]; a_order: INTEGER): BOOLEAN
 			-- Tester to decide order between `a_item' and `b_item'.
 		require
 			a_item_valid: a_item /= Void and then a_item.a_tool_name /= Void
@@ -533,7 +533,7 @@ feature{NONE} -- Implementation/Sorting
 			end
 		end
 
-	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [TUPLE [STRING, STRING]]) is
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [TUPLE [STRING, STRING]])
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
@@ -577,7 +577,7 @@ feature{NONE} -- Implementation/Sorting
 
 feature{NONE} -- Implementaion
 
-	bind_grid is
+	bind_grid
 			-- Bind `grid'.
 		local
 			l_grid: like grid
@@ -604,7 +604,7 @@ feature{NONE} -- Implementaion
 			end
 		end
 
-	bind_row (a_stone_name: STRING; a_tool_id: STRING; a_grid_row: EV_GRID_ROW) is
+	bind_row (a_stone_name: STRING; a_tool_id: STRING; a_grid_row: EV_GRID_ROW)
 			-- Bind `a_stone_name' and `a_tool_id' in `a_grid_row'.
 		require
 			a_stone_name_attached: a_stone_name /= Void

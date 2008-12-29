@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when an argument type violates the constrained %
 				%genericity validity rule in arguments."
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class VTCG2
 inherit
 	VTCG3
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

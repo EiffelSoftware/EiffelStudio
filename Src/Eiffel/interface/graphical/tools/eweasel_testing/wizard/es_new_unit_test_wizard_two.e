@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Second page of new unit test wizard
 
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_info: like wizard_information) is
+	make (an_info: like wizard_information)
 			-- <Precursor>
 		do
 			wizard_information := an_info
@@ -34,14 +34,14 @@ feature {NONE} -- Redefine
 	wizard_information: ES_NEW_UNIT_TEST_WIZARD_INFORMATION
 			-- <Precursor>
 
-	display_state_text is
+	display_state_text
 			-- <Precursor>
 		do
 			title.set_text (interface_names.t_select_cluster)
 			subtitle.set_text (interface_names.l_please_select)
 		end
 
-	proceed_with_current_info is
+	proceed_with_current_info
 			-- <Precursor>
 		do
 			if wizard_information.is_cluster_valid then
@@ -88,7 +88,7 @@ feature {NONE} -- Redefine
 
 feature {NONE} -- Wizard UI Implementation
 
-	on_cluster_changed is
+	on_cluster_changed
 			--  Just after end user choosed one cluster, we record it
 		local
 			l_cluster_name_and_path: TUPLE [a_cluster_id: STRING_8; a_cluster_sub_path: STRING_8]
@@ -117,7 +117,7 @@ feature {NONE} -- Wizard UI Implementation
 			update_next_button_state
 		end
 
-	update_next_button_state is
+	update_next_button_state
 			-- Update next button state base on current information
 		do
 			if wizard_information.is_cluster_valid then
@@ -127,7 +127,7 @@ feature {NONE} -- Wizard UI Implementation
 			end
 		end
 
-	update_ui_with_wizard_information is
+	update_ui_with_wizard_information
 			-- Update ui with wizard information
 		local
 			l_path: STRING
@@ -144,13 +144,13 @@ feature {NONE} -- Wizard UI Implementation
 			end
 		end
 
-	ui_builder: !ES_CHOOSE_CLUSTER_UI_BUILDER is
+	ui_builder: !ES_CHOOSE_CLUSTER_UI_BUILDER
 			-- UI builder
 		once
 			create Result
 		end
 
-	uodate_ui_with_wizard_information is
+	uodate_ui_with_wizard_information
 			-- Update ui state with wizard information if possible
 		local
 			l_full_cluster: STRING
@@ -172,7 +172,7 @@ feature {NONE} -- Wizard UI Implementation
 	label: EV_LABEL
 			-- Label to show current selected cluster
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

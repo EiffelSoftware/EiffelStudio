@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to undo diagram commands."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize default values.
 		local
 			l_shortcut: MANAGED_SHORTCUT
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Perform operation.
 		do
 			if is_sensitive then
@@ -47,7 +47,7 @@ feature -- Basic operations
 
 feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Accelerator action
 
-	on_ctrl_z is
+	on_ctrl_z
 			-- Undo last action if possible and if the diagram
 			-- has the focus.
 		do
@@ -58,29 +58,29 @@ feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Accelerator action
 
 feature {NONE} -- Implementation
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_undo_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_undo_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_undo
 		end
 
-	name: STRING is "Undo_command";
+	name: STRING = "Undo_command";
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte code associated to agent creation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_routine_creation_b (Current)
@@ -28,7 +28,7 @@ feature  -- Initialization
 	init (cl_type: like class_type; cl_id: INTEGER; f: FEATURE_I;
 		  r_type : GEN_TYPE_A; args : TUPLE_CONST_B;
 		  omap_bc: ARRAY_CONST_B; a_omap: ARRAYED_LIST [INTEGER]
-		  a_is_inline_agent, a_is_target_closed, a_is_precompiled, a_is_basic: BOOLEAN) is
+		  a_is_inline_agent, a_is_target_closed, a_is_precompiled, a_is_basic: BOOLEAN)
 			-- Initialization
 		require
 			valid_type: cl_type /= Void
@@ -71,7 +71,7 @@ feature  -- Initialization
 	set_ids (cl_type : like class_type; cl_id, o_cl_id, r_id, f_id, r_origin, r_offset: INTEGER;
 			 r_type : GEN_TYPE_A; args : TUPLE_CONST_B;
 			 omap_bc: ARRAY_CONST_B; a_omap: ARRAYED_LIST [INTEGER]
-			 a_is_inline_agent, a_is_target_closed, a_is_precompile, a_is_basic: BOOLEAN) is
+			 a_is_inline_agent, a_is_target_closed, a_is_precompile, a_is_basic: BOOLEAN)
 			-- Set ids and type
 		require
 			valid_class_type: cl_type /= Void
@@ -145,10 +145,10 @@ feature -- Attributes
 
 feature -- Status report
 
-	allocates_memory: BOOLEAN is True
+	allocates_memory: BOOLEAN = True
 			-- Current always allocates memory.
 
-	has_gcable_variable: BOOLEAN is
+	has_gcable_variable: BOOLEAN
 			-- Is the expression using a GCable variable ?
 		do
 			if arguments /= Void then
@@ -160,7 +160,7 @@ feature -- Status report
 			end
 		end
 
-	has_call: BOOLEAN is
+	has_call: BOOLEAN
 			-- Is the expression using a call ?
 		do
 			if arguments /= Void then
@@ -172,7 +172,7 @@ feature -- Status report
 			end
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 		do
 			if arguments /= Void then
 				Result := arguments.used (r)
@@ -183,7 +183,7 @@ feature -- Status report
 			end
 		end
 
-	enlarged: ROUTINE_CREATION_BL is
+	enlarged: ROUTINE_CREATION_BL
 			-- Enlarge node
 		local
 			omap_enl: ARRAY_CONST_B
@@ -206,14 +206,14 @@ feature -- Status report
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 				-- Inlining will not be done if the feature
 				-- has a creation instruction
 			Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

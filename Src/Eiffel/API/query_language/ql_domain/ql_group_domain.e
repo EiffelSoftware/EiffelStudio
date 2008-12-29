@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a group domain"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature -- Access
 
-	content: LIST [QL_GROUP] is
+	content: LIST [QL_GROUP]
 			-- Content of current domain
 		do
 			Result := Current
@@ -39,7 +39,7 @@ feature -- Access
 			good_result: Result = Current
 		end
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current domain			
 		do
 			Result := group_scope
@@ -47,7 +47,7 @@ feature -- Access
 			good_result: Result = group_scope
 		end
 
-	domain_generator: QL_GROUP_DOMAIN_GENERATOR is
+	domain_generator: QL_GROUP_DOMAIN_GENERATOR
 			-- Domain generator which can generate domains of same type as Current domain
 		do
 			create Result
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_group_domain: BOOLEAN is
+	is_group_domain: BOOLEAN
 			-- Is current a group domain?
 		do
 			Result := True
@@ -63,7 +63,7 @@ feature -- Status report
 
 feature -- Preparation and cleanup
 
-	prepare_before_new_domain_generation is
+	prepare_before_new_domain_generation
 			-- Prepare before new domain generation.
 		do
 			Precursor
@@ -72,7 +72,7 @@ feature -- Preparation and cleanup
 			class_table_is_empty: class_table.is_empty
 		end
 
-	cleanup_after_new_domain_generation is
+	cleanup_after_new_domain_generation
 			-- Clean up after new domain generation.
 		do
 			Precursor
@@ -83,7 +83,7 @@ feature -- Preparation and cleanup
 
 feature -- Removal
 
-	clear_cache is
+	clear_cache
 			-- Clear cache information.
 			-- cache information is used for optimization.
 		do
@@ -94,28 +94,28 @@ feature -- Removal
 
 feature -- Set operation
 
-	union (other: like Current): like Current is
+	union (other: like Current): like Current
 			-- An new domain containing all the elements from both `Current' and `other'.
 		do
 			create Result.make
 			internal_union (Result, other)
 		end
 
-	intersect (other: like Current): like Current is
+	intersect (other: like Current): like Current
 			-- A new domain containing all the elements that are in both `Current' and `other'.
 		do
 			create Result.make
 			internal_intersect (Result, other)
 		end
 
-	minus (other: like Current): like Current is
+	minus (other: like Current): like Current
 			-- A new domain containing all the elements of `Current', with the elements from `other' removed.
 		do
 			create Result.make
 			internal_complement (Result, other)
 		end
 
-	distinct: like Current is
+	distinct: like Current
 			-- A new domain which only contain distinct items in Current		
 		do
 			create Result.make
@@ -124,7 +124,7 @@ feature -- Set operation
 
 feature{QL_CRITERION} -- Implementation for default criterion domain		
 
-	class_item_from_current_domain (a_class: CONF_CLASS): QL_CLASS is
+	class_item_from_current_domain (a_class: CONF_CLASS): QL_CLASS
 			-- If `a_class' is included in current domain, return the item,
 			-- otherwise return Void.
 		local
@@ -166,7 +166,7 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			go_to (l_cursor)
 		end
 
-	feature_item_from_current_domain (e_feature: E_FEATURE): QL_FEATURE is
+	feature_item_from_current_domain (e_feature: E_FEATURE): QL_FEATURE
 			-- If `e_feature' is included in current domain, return the item,
 			-- otherwise return Void.
 		local
@@ -178,7 +178,7 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			end
 		end
 
-	invariant_item_from_current_domain (a_class_c: CLASS_C): QL_FEATURE is
+	invariant_item_from_current_domain (a_class_c: CLASS_C): QL_FEATURE
 			-- If invariant part of `a_class_c' is included in current domain,
 			-- then return an QL_FEATURE object representing this invariant part, otherwise,
 			-- return Void.		
@@ -197,7 +197,7 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 
 feature{NONE} -- Type ancher
 
-	class_table: HASH_TABLE [HASH_TABLE [QL_CLASS, CONF_CLASS], CONF_GROUP] is
+	class_table: HASH_TABLE [HASH_TABLE [QL_CLASS, CONF_CLASS], CONF_GROUP]
 			-- Table of classes in a group.
 			-- Key is the group, value is a hash table containing all classes in that group.
 		do
@@ -215,7 +215,7 @@ feature{NONE} -- Type ancher
 	item_type: QL_GROUP;
 			-- Anchor type for items in current domain
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

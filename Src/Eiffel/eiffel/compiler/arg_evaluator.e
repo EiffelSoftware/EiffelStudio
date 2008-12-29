@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Evalauator of argument type
@@ -14,25 +14,25 @@ feature
 	argument_name: STRING
 			-- Argument name involved in error
 
-	set_argument_name (s: STRING) is
+	set_argument_name (s: STRING)
 			-- Assign `s' to `argument_name'.
 		do
 			argument_name := s
 		end
 
-	new_error: VTAT1A is
+	new_error: VTAT1A
 			-- New error message
 		do
 			create Result
 		end
 
-	update (error_msg: VTAT1A) is
+	update (error_msg: VTAT1A)
 			-- Update error message
 		do
 			error_msg.set_argument_name (argument_name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

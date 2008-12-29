@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class which encapsulates the information relative to a resource category."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,44 +14,44 @@ create
 
 feature -- Initialization
 
-	make (imp: RESOURCE_FOLDER_I) is
+	make (imp: RESOURCE_FOLDER_I)
 		do
 			implementation := imp
 		end
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Id of Current, it is unique.
 		do
 			Result := implementation.name
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description of Current.
 		do
 			Result := implementation.description
 		end
 
-	icon: STRING is
+	icon: STRING
 			-- Icon name of Current if any, Void otherwise
 		do
 			Result := implementation.icon
 		end
 
-	is_visible: BOOLEAN is
+	is_visible: BOOLEAN
 			-- Should this folder be displayed?
 		do
 			Result := implementation.is_visible
 		end
 
-	resource_list: LINKED_LIST [RESOURCE] is
+	resource_list: LINKED_LIST [RESOURCE]
 			-- List of resources.
 		do
 			Result := implementation.resource_list
 		end
 
-	child_list: LINKED_LIST [RESOURCE_FOLDER] is
+	child_list: LINKED_LIST [RESOURCE_FOLDER]
 			-- List of Categories.
 		local
 			child_list_i: LINKED_LIST [RESOURCE_FOLDER_I]
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 
 	implementation: RESOURCE_FOLDER_I;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

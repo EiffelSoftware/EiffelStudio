@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared access to BYTE_CONTEXT which is a context used for code generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,13 +9,13 @@ class SHARED_BYTE_CONTEXT
 
 feature -- Access
 
-	Context: BYTE_CONTEXT is
+	Context: BYTE_CONTEXT
 			-- Context for byte code processing
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

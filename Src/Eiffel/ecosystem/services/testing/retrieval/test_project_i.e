@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface managing eiffel tests defined in classes of an eiffel project.
 		
@@ -69,7 +69,7 @@ feature -- Status report
 			result_implies_project_compiled: Result implies eiffel_project.successful
 		end
 
-	is_class_in_project (a_class: !EIFFEL_CLASS_I): BOOLEAN is
+	is_class_in_project (a_class: !EIFFEL_CLASS_I): BOOLEAN
 			-- Does `a_class' belong to `eiffel_project'?
 			--
 			-- `a_class': Class for which it should be determined whether it exists in `eiffel_project'.
@@ -81,7 +81,7 @@ feature -- Status report
 			Result := eiffel_project.universe.safe_class_named (a_class.name, a_class.cluster) /= Void
 		end
 
-	is_test_class (a_class: !EIFFEL_CLASS_I): BOOLEAN is
+	is_test_class (a_class: !EIFFEL_CLASS_I): BOOLEAN
 			-- Does `Current' recognize `a_class' as a valid test class?
 			--
 			-- `a_class': Class for which it should be determined whether it is a test class.
@@ -118,7 +118,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	synchronize is
+	synchronize
 			-- Synchronize `tests' with test classes found in `eiffel_project'.
 			--
 			-- Note: this is usually automatically invoked after compilation.
@@ -207,7 +207,7 @@ feature -- Element change
 			not_registered: not is_locator_registered (a_locator)
 		end
 
-	add_test_cluster (a_name, a_path: !STRING; a_parent: ?CONF_CLUSTER) is
+	add_test_cluster (a_name, a_path: !STRING; a_parent: ?CONF_CLUSTER)
 			-- Add a new testing cluster to `eiffel_project'. Instance of new cluster will be available through
 			-- `last_created_cluster'
 			--

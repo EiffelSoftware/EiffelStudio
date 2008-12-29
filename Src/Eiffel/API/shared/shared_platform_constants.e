@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared object to know what is the computer%
 				%where ebench is running."
 	legal: "See notice at end of class."
@@ -11,13 +11,13 @@ class
 
 feature -- Access
 
-	Platform_constants: PLATFORM_CONSTANTS is
+	Platform_constants: PLATFORM_CONSTANTS
 			-- To get on what kind of computer we are running
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description : "[
 			Objects that control a few EV_GRID_ROW behavior (at the ROW level).
 			to be linked with ES_OBJECT_GRID.
@@ -24,7 +24,7 @@ create
 
 feature -- Change
 
-	reset_row_actions is
+	reset_row_actions
 		do
 			expand_action := Void
 			collapse_action := Void
@@ -37,7 +37,7 @@ feature -- Properties
 
 feature -- Settings
 
-	set_data (v: like data) is
+	set_data (v: like data)
 		do
 			data := v
 		ensure
@@ -46,11 +46,11 @@ feature -- Settings
 
 feature -- Pebble
 
-	item_pebble_details (i: INTEGER): TUPLE [pebble: ANY; accept_cursor: EV_POINTER_STYLE; deny_cursor: EV_POINTER_STYLE] is
+	item_pebble_details (i: INTEGER): TUPLE [pebble: ANY; accept_cursor: EV_POINTER_STYLE; deny_cursor: EV_POINTER_STYLE]
 		do
 		end
 
-	item_pebble (i: INTEGER): ANY is
+	item_pebble (i: INTEGER): ANY
 		local
 			t: like item_pebble_details
 		do
@@ -60,7 +60,7 @@ feature -- Pebble
 			end
 		end
 
-	item_pnd_accept_cursor (i: INTEGER): EV_POINTER_STYLE is
+	item_pnd_accept_cursor (i: INTEGER): EV_POINTER_STYLE
 		require
 			item_pebble (i) /= Void
 		local
@@ -72,7 +72,7 @@ feature -- Pebble
 			end
 		end
 
-	item_pnd_deny_cursor (i: INTEGER): EV_POINTER_STYLE is
+	item_pnd_deny_cursor (i: INTEGER): EV_POINTER_STYLE
 		require
 			item_pebble (i) /= Void
 		local
@@ -84,19 +84,19 @@ feature -- Pebble
 			end
 		end
 
-	pebble: ANY is
+	pebble: ANY
 		do
 			Result := item_pebble (0)
 		end
 
-	pnd_accept_cursor: EV_POINTER_STYLE is
+	pnd_accept_cursor: EV_POINTER_STYLE
 		require
 			pebble /= Void
 		do
 			Result := item_pnd_accept_cursor (0)
 		end
 
-	pnd_deny_cursor: EV_POINTER_STYLE is
+	pnd_deny_cursor: EV_POINTER_STYLE
 		require
 			pebble /= Void
 		do
@@ -105,38 +105,38 @@ feature -- Pebble
 
 feature -- Change
 
-	set_expand_action (a: like expand_action) is
+	set_expand_action (a: like expand_action)
 		do
 			expand_action := a
 		end
 
-	set_collapse_action (a: like collapse_action) is
+	set_collapse_action (a: like collapse_action)
 		do
 			collapse_action := a
 		end
 
-	set_key_pressed_action (a: like key_pressed_action) is
+	set_key_pressed_action (a: like key_pressed_action)
 		do
 			key_pressed_action := a
 		end
 
 feature -- Actions
 
-	call_expand_action (r: EV_GRID_ROW) is
+	call_expand_action (r: EV_GRID_ROW)
 		do
 			if expand_action /= Void then
 				expand_action.call ([r])
 			end
 		end
 
-	call_collapse_action (r: EV_GRID_ROW) is
+	call_collapse_action (r: EV_GRID_ROW)
 		do
 			if collapse_action /= Void then
 				collapse_action.call ([r])
 			end
 		end
 
-	call_key_pressed_action (k: EV_KEY) is
+	call_key_pressed_action (k: EV_KEY)
 		do
 			if key_pressed_action /= Void then
 				key_pressed_action.call ([k])
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 	key_pressed_action: PROCEDURE [ANY, TUPLE [EV_KEY]];
 			-- Action to be perform on key pressed.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

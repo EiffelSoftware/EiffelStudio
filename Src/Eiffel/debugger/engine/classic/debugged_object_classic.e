@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object being debugged."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create {DEBUGGED_OBJECT_MANAGER}
 
 feature {NONE} -- Creation
 
-	make (addr: like object_address; sp_lower, sp_upper: INTEGER) is
+	make (addr: like object_address; sp_lower, sp_upper: INTEGER)
 			-- Make debugged object with hector address `addr'
 			-- with upper and lower bounds `sp_lower' and `sp_upper'.
 			-- (At this stage we do not know if addr is a special object
@@ -51,7 +51,7 @@ feature {NONE} -- Creation
 			max_capacity := rqst.max_capacity
 		end
 
-	make_with_class (addr: like object_address; a_class: CLASS_C) is
+	make_with_class (addr: like object_address; a_class: CLASS_C)
 			-- Make debugged object with hector address `addr' and
 			-- ensure that `dtype' and `class_type' will default to `a_class'.
 			-- To ensure consistency, class associated to `addr' should
@@ -78,13 +78,13 @@ feature {NONE} -- Creation
 
 feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 
-	reset is
+	reset
 			-- Reset internal data
 		do
 			attributes := Void
 		end
 
-	refresh (sp_lower, sp_upper: INTEGER) is
+	refresh (sp_lower, sp_upper: INTEGER)
 		local
 			rqst: ATTR_REQUEST
 		do
@@ -107,7 +107,7 @@ feature -- Properties
 	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE];
 			-- Attributes of object being inspected (sorted by name)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

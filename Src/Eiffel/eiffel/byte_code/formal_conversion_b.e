@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Conversion if needed of an expanded to its associated reference type %
 		%in assignment of a formal to a type whose formal type's constraint conforms."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_expr: EXPR_B; a_type: like type; a_is_boxing: BOOLEAN) is
+	make (an_expr: EXPR_B; a_type: like type; a_is_boxing: BOOLEAN)
 			-- New BOX_B instance which converts value of `an_expr' into
 			-- a box version of `a_type'.
 		require
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_formal_conversion_b (Current)
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Status report
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is register `r' used in local or forthcomming dot calls ?
 		do
 			Result := expr.used (r)
@@ -73,13 +73,13 @@ feature -- C code generation
 	register: REGISTRABLE
 			-- Register used to store metamorphosed value
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Assign `r' to `register'
 		do
 			register := r
 		end
 
-	analyze is
+	analyze
 			-- Analyze expression
 		do
 			expr.analyze
@@ -91,21 +91,21 @@ feature -- C code generation
 			end
 		end
 
-	unanalyze is
+	unanalyze
 			-- Undo the analysis of the expression
 		do
 			expr.unanalyze
 			register := Void
 		end
 
-	enlarged: like Current is
+	enlarged: like Current
 			-- Enlarge current
 		do
 			expr := expr.enlarged
 			Result := Current
 		end
 
-	generate is
+	generate
 			-- Generate expression
 		local
 			l_type, l_expr_type: TYPE_A
@@ -136,7 +136,7 @@ feature -- C code generation
 			end
 		end
 
-	print_register is
+	print_register
 			-- Print expression value
 		do
 			if
@@ -151,7 +151,7 @@ feature -- C code generation
 
 feature -- Inlining
 
-	pre_inlined_code: FORMAL_CONVERSION_B is
+	pre_inlined_code: FORMAL_CONVERSION_B
 			-- Modified byte code for inlining.
 		do
 			create Result.make (expr.pre_inlined_code, context.real_type (type), is_boxing)
@@ -159,7 +159,7 @@ feature -- Inlining
 
 feature {BYTE_NODE_VISITOR} -- Convenience
 
-	is_conversion_needed (a_source, a_target: TYPE_A): BOOLEAN is
+	is_conversion_needed (a_source, a_target: TYPE_A): BOOLEAN
 			-- Is conversion needed from `a_source' to `a_target'?
 		require
 			a_source_not_void: a_source /= Void
@@ -172,7 +172,7 @@ invariant
 	expr_not_void: expr /= Void
 	type_not_void: type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

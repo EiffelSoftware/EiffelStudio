@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to clear debugging information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,25 +34,25 @@ inherit
 
 feature -- Access
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- What is printed in the customize dialog.
 		do
 			Result := Interface_names.f_Clear_breakpoints
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Pop-up help on buttons.
 		do
 			Result := description
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text for toolbar button
 		do
 			Result := Interface_names.b_bkpt_remove
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new docking toolbar button for `Current'.
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
@@ -62,7 +62,7 @@ feature -- Access
 			Result.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 		end
 
-	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for `Current'.
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
@@ -72,42 +72,42 @@ feature -- Access
 			Result.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu entry corresponding tp `Current'.
 		do
 			Result := Interface_names.m_Clear_breakpoints
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Icon for `Current'.
 		do
 			Result := pixmaps.icon_pixmaps.breakpoints_delete_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.breakpoints_delete_icon_buffer
 		end
 
-	mini_pixmap: EV_PIXMAP is
+	mini_pixmap: EV_PIXMAP
 			-- Icon for `Current'.
 		do
 			Result := pixmaps.mini_pixmaps.general_delete_icon
 		end
 
-	mini_pixel_buffer: EV_PIXEL_BUFFER is
+	mini_pixel_buffer: EV_PIXEL_BUFFER
 			-- Icon for `Current'.
 		do
 			Result := pixmaps.mini_pixmaps.general_delete_icon_buffer
 		end
 
-	name: STRING is "Clear_bkpt"
+	name: STRING = "Clear_bkpt"
 			-- Name of `Current' to identify it.
 
 feature -- Events
 
-	drop_breakable (bs: BREAKABLE_STONE) is
+	drop_breakable (bs: BREAKABLE_STONE)
 			-- Process breakable stone
 		local
 			index: INTEGER
@@ -128,7 +128,7 @@ feature -- Events
 			end
 		end
 
-	drop_feature (fs: FEATURE_STONE) is
+	drop_feature (fs: FEATURE_STONE)
 			-- Process feature stone.
 		local
 			f: E_FEATURE
@@ -145,7 +145,7 @@ feature -- Events
 			end
 		end
 
-	drop_class (cs: CLASSC_STONE) is
+	drop_class (cs: CLASSC_STONE)
 			-- Process class stone.
 		local
 			conv_fst: FEATURE_STONE
@@ -164,7 +164,7 @@ feature -- Events
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute with confirmation dialog.
 		local
 			l_question: ES_DISCARDABLE_QUESTION_PROMPT
@@ -184,19 +184,19 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	quick_refresh_on_class_drop (unused: CLASSC_STONE) is
+	quick_refresh_on_class_drop (unused: CLASSC_STONE)
 			-- Quick refresh all windows.
 		do
 			Window_manager.synchronize_all_about_breakpoints
 		end
 
-	quick_refresh_on_brk_drop (unused: BREAKABLE_STONE) is
+	quick_refresh_on_brk_drop (unused: BREAKABLE_STONE)
 			-- Quick refresh all windows.
 		do
 			Window_manager.synchronize_all_about_breakpoints
 		end
 
-	clear_breakpoints (include_hidden: BOOLEAN) is
+	clear_breakpoints (include_hidden: BOOLEAN)
 			-- Execute with confirmation dialog.
 		do
 			if include_hidden then
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to display the homonyms of a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Properties
 
-	symbol: ARRAY [EV_PIXMAP] is
+	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
@@ -40,13 +40,13 @@ feature -- Properties
 			Result.put (pixmaps.icon_pixmaps.feature_homonyms_icon, 2)
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Graphical representation of the command.
 		once
 			Result := pixmaps.icon_pixmaps.feature_homonyms_icon_buffer
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showhomonyms
@@ -55,13 +55,13 @@ feature -- Properties
 	browser: EB_FEATURE_BROWSER_GRID_VIEW
 			-- Browser
 
-	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING]
 			-- Generator to generate proper `displayer' for Current formatter
 		do
 			Result := [agent displayer_generators.new_feature_displayer, displayer_generators.feature_displayer]
 		end
 
-	sorting_status_preference: STRING_PREFERENCE is
+	sorting_status_preference: STRING_PREFERENCE
 			-- Preference to store last sorting orders of Current formatter
 		do
 			Result := preferences.class_browser_data.feature_view_sorting_order_preference
@@ -69,16 +69,16 @@ feature -- Properties
 
 feature {NONE} -- Properties
 
-	capital_command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL
 			-- Name of the command.
 		do
 			Result := Interface_names.l_Homonyms
 		end
 
-	post_fix: STRING is "hom"
+	post_fix: STRING = "hom"
 			-- String symbol of the command, used as an extension when saving.
 
-	is_dotnet_formatter: BOOLEAN is
+	is_dotnet_formatter: BOOLEAN
 			-- Is Current able to format .NET XML types?
 		do
 			Result := True
@@ -86,7 +86,7 @@ feature {NONE} -- Properties
 
 feature -- Formatting
 
-	format is
+	format
 			-- Refresh `widget'.
 		local
 			l_warning: ES_DISCARDABLE_WARNING_PROMPT
@@ -115,7 +115,7 @@ feature -- Formatting
 
 feature {NONE} -- Implementation
 
-	confirm_generate is
+	confirm_generate
 			-- The user DOES want to generate the homonyms.
 		do
 			confirmed := True
@@ -124,16 +124,16 @@ feature {NONE} -- Implementation
 	confirmed: BOOLEAN
 			-- Did the user confirm he wanted to generate the homonyms?
 
-	has_breakpoints: BOOLEAN is False;
+	has_breakpoints: BOOLEAN = False;
 			-- Should breakpoints be shown in Current?
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion of current formatter
 		do
 			create {QL_FEATURE_NAME_IS_CRI}Result.make_with_setting (associated_feature.name, False, {QL_NAME_CRITERION}.identity_matching_strategy)
 		end
 
-	rebuild_browser is
+	rebuild_browser
 			-- Rebuild `browser'.
 		do
 			browser.set_is_branch_id_used (False)
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			browser.rebuild_interface
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

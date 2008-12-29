@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract representation of a feature that can be encapsulated"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize an encapsulated feature.
 		do
 			set_is_require_else (True)
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	can_be_encapsulated: BOOLEAN is True
+	can_be_encapsulated: BOOLEAN = True
 			-- Current feature can be encapsulated (eg attribute or
 			-- constant definition with a deferred routine)
 
@@ -34,7 +34,7 @@ feature -- Access
 			-- Class id where an equivalent feature has to be generated
 			-- `0' means no need for an encapsulation
 
-	generation_class_id: INTEGER is
+	generation_class_id: INTEGER
 			-- Id of the class where the feature has to be generated in
 		do
 			if generate_in /= 0 then
@@ -46,13 +46,13 @@ feature -- Access
 
 feature -- Status
 
-	to_melt_in (a_class: CLASS_C): BOOLEAN is
+	to_melt_in (a_class: CLASS_C): BOOLEAN
 			-- Has the current feature in class `a_class" ?
 		do
 			Result := to_generate_in (a_class)
 		end
 
-	to_generate_in (a_class: CLASS_C): BOOLEAN is
+	to_generate_in (a_class: CLASS_C): BOOLEAN
 			-- Has the current feature in class `a_class" ?
 		do
 			Result := a_class.class_id = generate_in
@@ -60,7 +60,7 @@ feature -- Status
 
 feature -- Element change
 
-	transfer_to (other: like Current) is
+	transfer_to (other: like Current)
 			-- Transfer data from `Current' to `other'.
 		do
 			Precursor {FEATURE_I} (other)
@@ -69,7 +69,7 @@ feature -- Element change
 			end
 		end
 
-	transfer_from (other: like Current) is
+	transfer_from (other: like Current)
 			-- Transfer data from `Current' to `other'.
 		do
 			Precursor {FEATURE_I} (other)
@@ -80,7 +80,7 @@ feature -- Element change
 
 feature -- Setting
 
-	set_generate_in (class_id: INTEGER) is
+	set_generate_in (class_id: INTEGER)
 			-- Assign `class_id' to `generate_in'.
 		require
 			valid_class_id: class_id > 0
@@ -90,7 +90,7 @@ feature -- Setting
 			generate_in_set: generate_in = class_id
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

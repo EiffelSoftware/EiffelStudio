@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An initialization provider to initialize all services used by the Eiffel Compiler.
 	]"
@@ -48,7 +48,7 @@ feature {NONE} -- Factory
 			result_is_interface_usable: Result /= Void implies Result.is_interface_usable
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

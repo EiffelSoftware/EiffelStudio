@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when an Object-Test Local name clashes with a name of some other Object Test in the same feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,10 +30,10 @@ feature {NONE} -- Creation
 
 feature -- Error properties
 
-	subcode: INTEGER_32 is 3;
+	subcode: INTEGER_32 = 3;
 			-- Subcode of error
 
-indexing
+note
 	copyright: "Copyright (c) 2007, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A descriptor shim for all debugger tools, requiring access to the active debugger manager {ES_DEBUGGER_MANAGER}.
 	]"
@@ -30,7 +30,7 @@ feature {DEBUGGER_MANAGER, EB_TOOL} -- Access
 			Precursor {ES_DEBUGGING_UPDATE_ON_IDLE_TOOL}
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

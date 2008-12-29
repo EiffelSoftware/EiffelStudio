@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					UI builder which can build cluster choosing related widgets
 					Including a cluster tree and a combo box
@@ -13,7 +13,7 @@ class
 
 feature -- Command
 
-	prepare (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_container: EV_BOX) is
+	prepare (a_context_menu_factory: EB_CONTEXT_MENU_FACTORY; a_container: EV_BOX)
 			-- Build UI widgets in `a_container'
 		require
 			not_void: a_context_menu_factory /= Void
@@ -51,7 +51,7 @@ feature -- Command
 			a_container.extend (l_controls_box)
 		end
 		
-	on_ok: BOOLEAN is
+	on_ok: BOOLEAN
 			-- Terminate the dialog.
 			-- Result False means we got wrong cluster information
 		local
@@ -130,7 +130,7 @@ feature {NONE} -- Agents
 							y_tilt: DOUBLE;
 							pression: DOUBLE;
 							x_abs: INTEGER;
-							y_abs: INTEGER ) is
+							y_abs: INTEGER )
 			-- Call on_ok through an agent compatible with double click actions.
 		local
 			l_result: BOOLEAN
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

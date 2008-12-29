@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for a custom attribute where value is not a constant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: like context_class; a_feature: FEATURE_I) is
+	make (a_class: like context_class; a_feature: FEATURE_I)
 			-- Create new error because incorrect custom attribute creation
 			-- of type `a_creation_type' in `a_class'.
 		require
@@ -34,19 +34,19 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	subcode: INTEGER is 2
+	subcode: INTEGER = 2
 			-- Subcode of error.
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Display error message
 		do
 			a_text_formatter.add ("Value provided for custom attribute is not constant.")
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

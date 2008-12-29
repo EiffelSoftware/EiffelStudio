@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formatter that displays the text of a feature with no analysis."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like manager) is
+	make (a_manager: like manager)
 			-- Create a formatter associated with `a_manager'.
 		do
 			Precursor {EB_FEATURE_TEXT_FORMATTER} (a_manager)
@@ -41,10 +41,10 @@ feature -- Access
 
 feature -- Properties
 
-	editable: BOOLEAN is False
+	editable: BOOLEAN = False
 			-- Can the generated text be edited?
 
-	symbol: ARRAY [EV_PIXMAP] is
+	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		once
 			create Result.make (1, 2)
@@ -52,13 +52,13 @@ feature -- Properties
 			Result.put (pixmaps.icon_pixmaps.view_editor_feature_icon, 2)
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representation of the command.
 		once
 			Result := pixmaps.icon_pixmaps.view_editor_feature_icon_buffer
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showtext_new
@@ -66,7 +66,7 @@ feature -- Properties
 
 feature -- Formatting
 
-	format is
+	format
 			-- Refresh `widget'.
 		do
 			if selected and then associated_feature /= Void and then associated_feature.is_valid and then displayed and then actual_veto_format_result then
@@ -91,7 +91,7 @@ feature -- Formatting
 
 feature -- Status setting
 
-	set_associated_feature (a_feature: E_FEATURE) is
+	set_associated_feature (a_feature: E_FEATURE)
 			-- Associate `Current' with `a_feature'.
 		do
 			associated_feature := a_feature
@@ -102,18 +102,18 @@ feature {NONE} -- Properties
 	feature_cmd: E_SHOW_ROUTINE_FLAT
 			-- Just needed for compatibility, do not use.
 
-	capital_command_name: STRING_GENERAL is
+	capital_command_name: STRING_GENERAL
 			-- Name of the command.
 		do
 			Result := interface_names.l_Basic_text
 		end
 
-	post_fix: STRING is "txt"
+	post_fix: STRING = "txt"
 			-- String symbol of the command, used as an extension when saving.
 
 feature {NONE} -- Implementation
 
-	generate_text is
+	generate_text
 			-- Create `formatted_text'.
 		local
 			retried: BOOLEAN
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	create_feature_cmd is
+	create_feature_cmd
 			-- Create `feature_cmd'.
 		require else
 			True
@@ -142,10 +142,10 @@ feature {NONE} -- Implementation
 			create feature_cmd
 		end
 
-	has_breakpoints: BOOLEAN is False;
+	has_breakpoints: BOOLEAN = False;
 			-- Should breakpoints be shown in Current?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

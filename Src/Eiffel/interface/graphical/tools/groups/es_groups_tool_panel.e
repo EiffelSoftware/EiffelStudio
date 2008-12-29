@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tool to view the cluster hierarchy"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,21 +34,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW; a_tool: like tool_descriptor)
 			-- Make a new cluster tool.
 		do
 			window := a_manager
 			Precursor (a_manager, a_tool)
 		end
 
-	build_interface is
+	build_interface
 			-- Build all the tool's widgets.
 		do
 			create widget.make (window.menus.context_menu_factory)
 			widget.associate_with_window (window)
 		end
 
-	build_mini_toolbar is
+	build_mini_toolbar
 			-- Build associated tool bar
 		local
 			sep: SD_TOOL_BAR_SEPARATOR
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			toolbar_exists: mini_toolbar /= Void
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 		do
 			Precursor {EB_TOOL} (a_docking_manager)
 			check content_not_void : content /= Void end
@@ -113,7 +113,7 @@ feature -- Access
 
 feature -- Command
 
-	show is
+	show
 			-- Show tool.
 		do
 			Precursor {EB_TOOL}
@@ -124,7 +124,7 @@ feature -- Command
 
 feature -- Status setting
 
-	set_stone (st: STONE) is
+	set_stone (st: STONE)
 			-- A stone was dropped in `Current's parent.
 			-- Maybe we should enable `show_current_class_cluster_cmd'.
 		do
@@ -135,7 +135,7 @@ feature -- Status setting
 			end
 		end
 
-	synchronize is
+	synchronize
 			-- The system was recompiled, update `Current'.
 		do
 			if Workbench.is_already_compiled and not widget.is_empty then
@@ -145,7 +145,7 @@ feature -- Status setting
 			end
 		end
 
-	on_project_loaded is
+	on_project_loaded
 			-- A project has been created or loaded. Enable the locate command if necessary.
 		do
 			if Workbench.is_already_compiled and not widget.is_empty then
@@ -155,7 +155,7 @@ feature -- Status setting
 			end
 		end
 
-	on_project_unloaded is
+	on_project_unloaded
 			-- The current project has been unloaded. Disable the locate command if necessary.
 		do
 			show_current_class_cluster_cmd.disable_sensitive
@@ -163,7 +163,7 @@ feature -- Status setting
 
 feature {NONE} -- Memory management
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
@@ -177,7 +177,7 @@ feature {NONE} -- Memory management
 
 feature -- Implementation
 
-	show_class (st: CLASSI_STONE) is
+	show_class (st: CLASSI_STONE)
 			-- Display the class relative to `st' in the cluster tree.
 		do
 			widget.show_class (st.class_i)
@@ -186,7 +186,7 @@ feature -- Implementation
 			end
 		end
 
-	show_group (st: CLUSTER_STONE) is
+	show_group (st: CLUSTER_STONE)
 			-- Display the class relative to `st' in the cluster tree.
 		do
 			widget.show_subfolder (st.group, st.path)
@@ -197,7 +197,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	show_current_class_cluster is
+	show_current_class_cluster
 			-- Highlight currently edited object in the cluster tree.
 		local
 			conv_class: CLASSI_STONE
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

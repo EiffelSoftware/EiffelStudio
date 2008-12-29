@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "All shared attributes specific to the development window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,59 +10,59 @@ deferred class
 
 feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Value
 
-	maximized_width, width: INTEGER is
+	maximized_width, width: INTEGER
 			-- Width for the development window
 		deferred
 		end
 
-	maximized_height, height: INTEGER is
+	maximized_height, height: INTEGER
 			-- Height for the development window
 		deferred
 		end
 
-	maximized_x_position, x_position: INTEGER is
+	maximized_x_position, x_position: INTEGER
 			-- X position for development windows
 		deferred
 		end
 
-	maximized_y_position, y_position: INTEGER is
+	maximized_y_position, y_position: INTEGER
 			-- Y position for development windows
 		deferred
 		end
 
-	is_maximized: BOOLEAN is
+	is_maximized: BOOLEAN
 			-- Is the development window maximized?
 		deferred
 		end
 
-	is_minimized: BOOLEAN is
+	is_minimized: BOOLEAN
 			-- Is the development window minimized?
 		deferred
 		end
 
-	is_force_debug_mode: BOOLEAN is
+	is_force_debug_mode: BOOLEAN
 			-- Is the development window force debug mode?
 		deferred
 		end
 
-	context_unified_stone: BOOLEAN is
+	context_unified_stone: BOOLEAN
 			-- Is the context tool linked?
 		deferred
 		end
 
-	general_toolbar_layout: ARRAY [STRING] is
+	general_toolbar_layout: ARRAY [STRING]
 			-- Toolbar organization
 		deferred
 		end
 
-	refactoring_toolbar_layout: ARRAY [STRING] is
+	refactoring_toolbar_layout: ARRAY [STRING]
 			-- Toolbar organization
 		deferred
 		end
 
 feature -- Element change
 
-	save_size (a_width, a_height: INTEGER) is
+	save_size (a_width, a_height: INTEGER)
 			-- Save width and height of window.
 		deferred
 		ensure
@@ -70,7 +70,7 @@ feature -- Element change
 			height_set: height = a_height
 		end
 
-	save_position (a_x, a_y: INTEGER) is
+	save_position (a_x, a_y: INTEGER)
 			-- Save position of window.
 		deferred
 		ensure
@@ -78,7 +78,7 @@ feature -- Element change
 			y_position_set: y_position = a_y
 		end
 
-	save_maximized_size (a_width, a_height: INTEGER) is
+	save_maximized_size (a_width, a_height: INTEGER)
 			-- Save width and height of window when maximized.
 		deferred
 		ensure
@@ -86,7 +86,7 @@ feature -- Element change
 			maximized_height_set: maximized_height = a_height
 		end
 
-	save_maximized_position (a_x, a_y: INTEGER) is
+	save_maximized_position (a_x, a_y: INTEGER)
 			-- Save position of window when maximized.
 		deferred
 		ensure
@@ -94,7 +94,7 @@ feature -- Element change
 			maximized_y_position_set: maximized_y_position = a_y
 		end
 
-	save_window_state (a_minimized, a_maximized: BOOLEAN) is
+	save_window_state (a_minimized, a_maximized: BOOLEAN)
 			-- Save the window state of the window.
 		require
 			states_valid: (a_minimized or a_maximized) implies a_maximized /= a_minimized
@@ -103,7 +103,7 @@ feature -- Element change
 			states_set: is_maximized = a_maximized and is_minimized = a_minimized
 		end
 
-	save_force_debug_mode (a_bool: BOOLEAN) is
+	save_force_debug_mode (a_bool: BOOLEAN)
 			-- Save if `is_force_debug_mode'
 		deferred
 		ensure
@@ -112,28 +112,28 @@ feature -- Element change
 
 feature -- Basic operations
 
-	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
+	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- Retreive the general toolbar using the available commands in `command_pool'
 		deferred
 		end
 
-	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
+	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- Retreive the refactoring toolbar using the available commands in `command_pool'
 		deferred
 		end
 
 feature -- Data Ids for SESSION_MANAGER
 
-	development_window_data_id: STRING_8 is "com.eiffel.develop_window_data"
+	development_window_data_id: STRING_8 = "com.eiffel.develop_window_data"
 			-- Session data id for {EB_DEVELOPMENT_WINDOW_SESSION_DATA}.
 
-	development_window_project_data_id: STRING_8 is "com.eiffel.develop_window_project_data"
+	development_window_project_data_id: STRING_8 = "com.eiffel.develop_window_project_data"
 			-- Session data id for {EB_DEVELOPMENT_WINDOW_SESSION_DATA} for one project.		
 
-	development_window_count_id: STRING_8 is "com_eiffel.develop_window_count"
+	development_window_count_id: STRING_8 = "com_eiffel.develop_window_count"
 			-- Session data id for how many {EB_DEVELOPMENT_WINDOW} exists in the session.
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

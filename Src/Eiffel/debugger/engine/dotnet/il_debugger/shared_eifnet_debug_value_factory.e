@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Accessor to EIFNET_DEBUG_VALUE_FACTORY"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,14 +15,14 @@ inherit
 
 feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Initialization
 
-	Edv_factory: EIFNET_DEBUG_VALUE_FACTORY is
+	Edv_factory: EIFNET_DEBUG_VALUE_FACTORY
 		once
 			create Result
 		end
 
 feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Bridge
 
-	debug_value_from_icdv (a_icd: ICOR_DEBUG_VALUE; a_stat_class: CLASS_C): EIFNET_ABSTRACT_DEBUG_VALUE is
+	debug_value_from_icdv (a_icd: ICOR_DEBUG_VALUE; a_stat_class: CLASS_C): EIFNET_ABSTRACT_DEBUG_VALUE
 			-- Bridge to EIFNET_DEBUG_VALUE_FACTORY.debug_value_from
 			-- a_stat_class is the static class of a_icd
 		require
@@ -33,7 +33,7 @@ feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Bridge
 			Result /= Void
 		end
 
-	error_value (a_name: STRING; a_mesg: STRING): DUMMY_MESSAGE_DEBUG_VALUE is
+	error_value (a_name: STRING; a_mesg: STRING): DUMMY_MESSAGE_DEBUG_VALUE
 		do
 			create Result.make_with_name (a_name)
 			Result.set_message (a_mesg)
@@ -41,7 +41,7 @@ feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Bridge
 			Result /= Void
 		end
 
-	exception_value (a_name: STRING; a_tag: STRING_GENERAL; a_value: ABSTRACT_DEBUG_VALUE): EXCEPTION_DEBUG_VALUE is
+	exception_value (a_name: STRING; a_tag: STRING_GENERAL; a_value: ABSTRACT_DEBUG_VALUE): EXCEPTION_DEBUG_VALUE
 		do
 			if {arv: ABSTRACT_REFERENCE_VALUE} a_value then
 				create Result.make_with_value (arv)
@@ -55,7 +55,7 @@ feature {SHARED_EIFNET_DEBUG_VALUE_FACTORY} -- Bridge
 			Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

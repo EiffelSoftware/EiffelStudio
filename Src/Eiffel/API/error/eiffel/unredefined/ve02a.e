@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when an argument of a redeclaration is expanded %
@@ -22,13 +22,13 @@ feature -- Properties
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_argument_number (i: INTEGER) is
+	set_argument_number (i: INTEGER)
 			-- Assign `i' to `argument_number'.
 		do
 			argument_number := i;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

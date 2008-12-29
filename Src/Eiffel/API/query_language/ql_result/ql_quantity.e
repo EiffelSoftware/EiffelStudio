@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a quantity item used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make_with_value (a_value: like value) is
+	make_with_value (a_value: like value)
 			-- Initialize `value' with `a_value'.
 		do
 			set_value (a_value)
@@ -33,7 +33,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	set_value (a_value: like value) is
+	set_value (a_value: like value)
 			-- Set `value' with `a_value'.
 		do
 			value := a_value
@@ -46,7 +46,7 @@ feature -- Access
 	value: DOUBLE
 			-- Value of current quantity item
 
-	name: STRING is
+	name: STRING
 			-- Name of current item
 		do
 			create Result.make (0)
@@ -55,7 +55,7 @@ feature -- Access
 			good_result: Result /= Void and then not Result.is_empty
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description of current item
 		do
 			Result := ""
@@ -63,7 +63,7 @@ feature -- Access
 			no_description_attached_to_quantity: Result.is_equal ("")
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code of current
 		do
 			if internal_hash_code = 0 then
@@ -74,14 +74,14 @@ feature -- Access
 			good_result: Result = internal_hash_code and internal_hash_code = value.hash_code
 		end
 
-	wrapped_domain: QL_QUANTITY_DOMAIN is
+	wrapped_domain: QL_QUANTITY_DOMAIN
 			-- A domain which has current as the only item
 		do
 			create Result.make
 			Result.content.extend (Current)
 		end
 
-	path_name_marker: QL_PATH_MARKER is
+	path_name_marker: QL_PATH_MARKER
 			-- Marker for `path_name'
 		do
 			Result := quantity_path_marker
@@ -89,7 +89,7 @@ feature -- Access
 			good_result: Result = quantity_path_marker
 		end
 
-	parent_with_real_path: QL_ITEM is
+	parent_with_real_path: QL_ITEM
 			-- Parent item of Current with real path.
 			-- Real path means that every parent is physically determined.
 		do
@@ -97,14 +97,14 @@ feature -- Access
 
 feature -- Status report
 
-	is_compiled: BOOLEAN is False
+	is_compiled: BOOLEAN = False
 			-- Is Current item compiled?
 
-	is_valid_domain_item: BOOLEAN is True
+	is_valid_domain_item: BOOLEAN = True
 			-- Is current a valid item that is fully attached in a domain?
 			-- True as return value means every ancestors of current item is a valid domain item.
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current
 		do
 			Result := quantity_scope
@@ -114,7 +114,7 @@ feature -- Status report
 
 feature -- Visit
 
-	process (a_visitor: QL_VISITOR) is
+	process (a_visitor: QL_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_quantity (Current)
@@ -122,7 +122,7 @@ feature -- Visit
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -134,7 +134,7 @@ feature -- Comparison
 invariant
 	parent_not_attached: parent = Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Run time value representing a character."
@@ -26,7 +26,7 @@ create {DEBUG_VALUE_EXPORTER}
 
 feature -- Access
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		local
 			val: ANY
@@ -41,7 +41,7 @@ feature -- Access
 
 feature {NONE} -- Output
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 			-- Return a string representing `Current'.
 		do
 			create Result.make (30)
@@ -55,18 +55,18 @@ feature {NONE} -- Output
 
 feature {NONE} -- Constants
 
-	Equal_slash: STRING is " = /"
-	Slash_colon: STRING is "/ : %'"
-	Quote: STRING is "%'";
+	Equal_slash: STRING = " = /"
+	Slash_colon: STRING = "/ : %'"
+	Quote: STRING = "%'";
 
 feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 
-	debug_value_type_id: INTEGER is
+	debug_value_type_id: INTEGER
 		do
 			Result := character_value_id
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

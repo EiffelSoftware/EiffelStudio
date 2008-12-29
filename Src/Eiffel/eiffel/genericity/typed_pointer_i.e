@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Typed version of POINTER_I"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: TYPE_C) is
+	make (a_type: TYPE_C)
 			-- New instance of type based on a class of id `an_id' and with
 			-- `a_type' as generic parameter.
 		require
@@ -34,13 +34,13 @@ feature -- Access
 	type: TYPE_C
 			-- Actual type of TYPED_POINTER_I.
 
-	element_type: INTEGER_8 is
+	element_type: INTEGER_8
 			-- Pointer element type
 		do
 			Result := {MD_SIGNATURE_CONSTANTS}.Element_type_byref
 		end
 
-	c_string: STRING is
+	c_string: STRING
 			-- String generated for the type.
 		local
 			l_str: STRING
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_as (other: TYPE_C): BOOLEAN is
+	same_as (other: TYPE_C): BOOLEAN
 			-- Is Current same as other?
 		do
 			if {l_other: !like Current} other then
@@ -65,7 +65,7 @@ feature -- Comparison
 invariant
 	type_not_void: type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

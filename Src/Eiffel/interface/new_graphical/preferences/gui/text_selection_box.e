@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Text Selection Box."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Display
 	
-	display (new_resource: like resource) is
+	display (new_resource: like resource)
 			-- Display Current with title 'txt' and content 'new_value'.
 		local
 			tmpstr: STRING
@@ -48,7 +48,7 @@ feature -- Display
 
 feature {NONE} -- Command
 
-	update_changes is
+	update_changes
 			-- Commit the changes.
 		local
 			int: INTEGER_RESOURCE
@@ -87,14 +87,14 @@ feature {NONE} -- Command
 
 feature {NONE} -- Implementation
 
-	build_change_item_widget is
+	build_change_item_widget
 			-- Create and setup `change_item_widget'.
 		do
 			create change_item_widget
 			change_item_widget.change_actions.extend (agent update_changes)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error in Object-Test Local declaration."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,12 +22,12 @@ inherit
 
 feature -- Error properties
 
-	code: STRING is "VUOT"
+	code: STRING = "VUOT"
 			-- Error code
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Object-Test Local: ")
 			a_text_formatter.add (local_name)
@@ -41,7 +41,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Modification
 
-	set_local_name (id: INTEGER) is
+	set_local_name (id: INTEGER)
 			-- Assign name extracted from name ID `id' to `local_name'.
 		require
 			valid_id: id >= 1
@@ -49,7 +49,7 @@ feature {NONE} -- Modification
 			local_name := Names_heap.item (id)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

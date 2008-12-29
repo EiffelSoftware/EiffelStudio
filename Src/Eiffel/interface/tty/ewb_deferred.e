@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Displays deferred routines in output_window."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Properties
 
-	associated_cmd: E_SHOW_DEFERRED_ROUTINES is
+	associated_cmd: E_SHOW_DEFERRED_ROUTINES
 			-- Associated class command to be executed
 			-- after successfully retrieving the compiled
 			-- class
@@ -31,7 +31,7 @@ feature {NONE} -- Properties
 			create Result
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

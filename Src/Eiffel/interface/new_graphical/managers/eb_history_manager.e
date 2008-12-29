@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Facilities to manage the history of a development window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_owner: EB_HISTORY_OWNER) is
+	make (a_owner: EB_HISTORY_OWNER)
 			   -- Initialization
 		local
 			max_size: INTEGER
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	active: STONE is
+	active: STONE
 			-- Active item. Void if history is empty or current stone is invalid.
 		do
 			if not is_empty then
@@ -60,13 +60,13 @@ feature -- Access
 --			not_empty_iff_result_not_void: (not is_empty) = (Result /= Void)
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of elements in the history
 		do
 			Result := history.count
 		end
 
-	list: LIST [STONE] is
+	list: LIST [STONE]
 			-- Linear representation of the history.
 		do
 			Result := history
@@ -90,7 +90,7 @@ feature -- Access
 	forth_command: EB_HISTORY_FORTH_COMMAND
 			-- Command to go forth in the history
 
-	new_menu: EB_HISTORY_MANAGER_MENU is
+	new_menu: EB_HISTORY_MANAGER_MENU
 			-- Menu representing the history, automatically
 			-- recycled when Current will be recycled.
 		do
@@ -100,13 +100,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is the history empty?
 		do
 			Result := (history.count = 0)
 		end
 
-	is_back_possible: BOOLEAN is
+	is_back_possible: BOOLEAN
 			-- Is the operation `back' possible?
 			-- Yes iff `active_index' > 1 and there is one stone before that is not `Void'.
 		local
@@ -132,7 +132,7 @@ feature -- Status report
 --			found: Result implies (cur + 1 < index_active and history.i_th (cur + 1) /= void)
 		end
 
-	is_forth_possible: BOOLEAN is
+	is_forth_possible: BOOLEAN
 			-- Is the operation `forth' possible?
 		local
 			valid_found: BOOLEAN
@@ -157,13 +157,13 @@ feature -- Status report
 --			found: Result implies (cur - 1 > index_active and history.i_th (cur - 1) /= void)
 		end
 
-	is_go_i_th_possible (i: INTEGER): BOOLEAN is
+	is_go_i_th_possible (i: INTEGER): BOOLEAN
 			-- Is the operation `go_i_th (i)' possible?
 		do
 			Result := (not is_empty) and (i >= 1) and (i <= count)
 		end
 
-	has (a_stone: STONE): BOOLEAN is
+	has (a_stone: STONE): BOOLEAN
 			-- Does current has `a_stone'?
 		local
 			l_history: like history
@@ -186,7 +186,7 @@ feature -- Status report
 
 feature -- Element change
 
-	back is
+	back
 			-- go back in the history
 		require
 			operation_possible: is_back_possible
@@ -220,7 +220,7 @@ feature -- Element change
 			end
 		end
 
-	forth is
+	forth
 			-- go forward in the history
 		require
 			operation_possible: is_forth_possible
@@ -255,7 +255,7 @@ feature -- Element change
 			end
 		end
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Go to level `i' of history. 1 stands for the begginning
 			-- of the history, `count' for the most recently stone added
 			-- to history.
@@ -279,7 +279,7 @@ feature -- Element change
 			end
 		end
 
-	navigate_to (a_stone: STONE) is
+	navigate_to (a_stone: STONE)
 			-- Navigate to `a_stone'.
 		require
 			has_a_stone: has (a_stone)
@@ -315,7 +315,7 @@ feature -- Element change
 			active_is_a_stone: a_stone.same_as (active)
 		end
 
-	extend (a_stone: STONE) is
+	extend (a_stone: STONE)
 			-- Add `a_stone' to the right of `active'. Remove everything
 			-- after `active'.
 		local
@@ -389,7 +389,7 @@ feature -- Element change
 --			stone_is_active: equal (a_stone, active)
 		end
 
-	synchronize is
+	synchronize
 			-- Replace all invalid stones with `Void' in the history.
 			-- Should be called after each compilation.
 		local
@@ -413,7 +413,7 @@ feature -- Element change
 
 feature {EB_HISTORY_MANAGER_OBSERVER} -- Observer pattern / Registration
 
-	add_observer (an_observer: EB_HISTORY_MANAGER_OBSERVER) is
+	add_observer (an_observer: EB_HISTORY_MANAGER_OBSERVER)
 			-- Add `an_observer' to the list of observers for Current.
 		require
 			valid_observer: an_observer /= Void
@@ -424,7 +424,7 @@ feature {EB_HISTORY_MANAGER_OBSERVER} -- Observer pattern / Registration
 			observers.extend (an_observer)
 		end
 
-	remove_observer (an_observer: EB_HISTORY_MANAGER_OBSERVER) is
+	remove_observer (an_observer: EB_HISTORY_MANAGER_OBSERVER)
 			-- Remove `an_observer' to the list of observers for Current.
 		require
 			valid_observer: an_observer /= Void
@@ -436,7 +436,7 @@ feature {EB_HISTORY_MANAGER_OBSERVER} -- Observer pattern / Registration
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			target := Void
@@ -444,7 +444,7 @@ feature {NONE} -- Recyclable
 
 feature {NONE} -- Observer pattern / Implementation
 
-	notify_observers (a_notification_code: INTEGER; a_stone: STONE; a_position: INTEGER) is
+	notify_observers (a_notification_code: INTEGER; a_stone: STONE; a_position: INTEGER)
 			-- The history or the active position has changed.
 		do
 			if observers /= Void then
@@ -471,10 +471,10 @@ feature {NONE} -- Observer pattern / Implementation
 	observers: ARRAYED_LIST [EB_HISTORY_MANAGER_OBSERVER]
 			-- All observers for Current.
 
-	notify_move: INTEGER is 0
-	notify_add: INTEGER is 1
-	notify_remove: INTEGER is 2
-	notify_changed: INTEGER is 3
+	notify_move: INTEGER = 0
+	notify_add: INTEGER = 1
+	notify_remove: INTEGER = 2
+	notify_changed: INTEGER = 3
 
 feature {NONE} -- Implementation
 
@@ -484,7 +484,7 @@ feature {NONE} -- Implementation
 	index_active: INTEGER
 			-- Index of the active item.
 
-	build_display_lists is
+	build_display_lists
 			-- Generate the *_display_list according to the history state.
 		local
 			already_displayed: BOOLEAN
@@ -583,13 +583,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	max_display_size: INTEGER is
+	max_display_size: INTEGER
 			-- Maximum number of items displayed in the history (in the address combo boxes).
 		do
 			Result := preferences.development_window_data.max_history_size
 		end
 
-	fresh_active_position is
+	fresh_active_position
 			-- Fresh active stone position
 		do
 			if active /= Void then
@@ -606,7 +606,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

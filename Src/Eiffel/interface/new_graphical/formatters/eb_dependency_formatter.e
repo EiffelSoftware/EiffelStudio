@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dependency formatter"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ feature -- Access
 	browser: EB_CLASS_BROWSER_DEPENDENCY_VIEW
 			-- Browser used to display dependency results
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Graphical representation of the information provided.
 		do
 			if stone = Void or browser = Void then
@@ -42,7 +42,7 @@ feature -- Access
 			end
 		end
 
-	final_stone_from_stone (a_stone: STONE): STONE is
+	final_stone_from_stone (a_stone: STONE): STONE
 			-- Final stone from `a_stone'.
 			-- This feature can turn a feature stone into a class stone which cantains associated class of that feature.
 		require
@@ -61,13 +61,13 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING]
 			-- Generator to generate proper `displayer' for Current formatter
 		do
 			Result := [ agent displayer_generators.new_dependency_displayer, displayer_generators.dependency_displayer]
 		end
 
-	sorting_status_preference: STRING_PREFERENCE is
+	sorting_status_preference: STRING_PREFERENCE
 			-- Preference to store last sorting orders of Current formatter
 		do
 			Result := preferences.class_browser_data.dependency_view_sorting_order_preference
@@ -75,19 +75,19 @@ feature -- Access
 
 feature -- Properties
 
-	is_dotnet_formatter: BOOLEAN is True
+	is_dotnet_formatter: BOOLEAN = True
 			-- Is Current able to format .NET class texts?
 
 	is_dotnet_mode: BOOLEAN
 			-- Is Current class a .NET class? 		
 
-	line_numbers_allowed: BOOLEAN is False
+	line_numbers_allowed: BOOLEAN = False
 			-- Does it make sense to show line numbers in Current?	
 
-	has_breakpoints: BOOLEAN is False
+	has_breakpoints: BOOLEAN = False
 		-- Should `Current' display breakpoints?
 
-	is_stone_valid (a_stone: STONE): BOOLEAN is
+	is_stone_valid (a_stone: STONE): BOOLEAN
 			-- Is `a_stone' valid for current formatter?
 		local
 			l_target_stone: TARGET_STONE
@@ -107,7 +107,7 @@ feature -- Properties
 			end
 		end
 
-	element_name: STRING is
+	element_name: STRING
 			-- name of associated element in current formatter.
 			-- For exmaple, if a class stone is associated to current, `element_name' would be the class name.
 		do
@@ -118,7 +118,7 @@ feature -- Properties
 
 feature -- Status setting
 
-	set_dotnet_mode (a_flag: BOOLEAN) is
+	set_dotnet_mode (a_flag: BOOLEAN)
 			-- Set whether formatting in .NET mode to 'a_flag'
 		do
 			is_dotnet_mode := a_flag
@@ -126,7 +126,7 @@ feature -- Status setting
 			mode_is_flag: is_dotnet_mode = a_flag
 		end
 
-	set_stone (new_stone: STONE) is
+	set_stone (new_stone: STONE)
 			-- Associate current formatter with stone contained in `new_stone'.
 		do
 			force_stone (new_stone)
@@ -141,7 +141,7 @@ feature -- Status setting
 			ensure_display_in_widget_owner
 		end
 
-	set_focus is
+	set_focus
 			-- Set focus to current formatter.
 		do
 			if browser /= Void then
@@ -149,14 +149,14 @@ feature -- Status setting
 			end
 		end
 
-	setup_viewpoint is
+	setup_viewpoint
 			-- Setup viewpoint for formatting.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	veto_pebble_function (a_any: ANY): BOOLEAN is
+	veto_pebble_function (a_any: ANY): BOOLEAN
 			-- Veto pebble function
 		local
 			l_stone: STONE
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	reset_display is
+	reset_display
 			-- Clear all graphical output.
 		do
 			if browser /= Void then
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	temp_header: STRING_GENERAL is
+	temp_header: STRING_GENERAL
 			-- Temporary header displayed during the format processing.
 		local
 			l_str: STRING_GENERAL
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			Result := interface_names.l_temp_header_dependency (command_name, l_str)
 		end
 
-	header: STRING_GENERAL is
+	header: STRING_GENERAL
 			-- Header displayed when current formatter is selected.
 		do
 			if stone /= Void then
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_domain_from_stone: QL_CLASS_DOMAIN is
+	class_domain_from_stone: QL_CLASS_DOMAIN
 			-- Query language class domain from `stone'.
 		require
 			stone_attached: stone /= Void
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	dependency_criterion (a_domain: QL_DOMAIN): QL_CLASS_CRITERION is
+	dependency_criterion (a_domain: QL_DOMAIN): QL_CLASS_CRITERION
 			-- Criterion to filter dependency classes
 		require
 			stone_attached: stone /= Void
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	generate_result is
+	generate_result
 			-- Generate result.
 		require
 			stone_attached: stone /= Void
@@ -317,7 +317,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

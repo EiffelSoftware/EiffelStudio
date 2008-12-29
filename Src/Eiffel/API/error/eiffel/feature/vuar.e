@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for a feature call."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,11 +17,11 @@ feature -- Properties
 
 	called_feature: E_FEATURE
 
-	code: STRING is "VUAR"
+	code: STRING = "VUAR"
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Output
 
-	print_called_feature (a_text_formatter: TEXT_FORMATTER) is
+	print_called_feature (a_text_formatter: TEXT_FORMATTER)
 		local
 			a_class: CLASS_C
 		do
@@ -45,7 +45,7 @@ feature -- Output
 
 feature -- Setting
 
-	set_called_feature (f: FEATURE_I; class_id: INTEGER) is
+	set_called_feature (f: FEATURE_I; class_id: INTEGER)
 		require
 			valid_f: f /= Void
 			valid_class_id: class_id > 0
@@ -55,7 +55,7 @@ feature -- Setting
 			called_feature_not_void: called_feature /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

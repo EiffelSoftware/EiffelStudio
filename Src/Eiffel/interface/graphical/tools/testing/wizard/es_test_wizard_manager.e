@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {ES_TEST_WIZARD_MANAGER}."
 	author: ""
 	date: "$Date$"
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	wizard_title: STRING_32 is
+	wizard_title: STRING_32
 			-- <Precursor>
 		do
 			Result := locale_formatter.translation ("New eiffel test")

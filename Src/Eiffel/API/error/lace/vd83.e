@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Warning that a setting could not be changed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_setting, an_old_value, a_new_value: STRING) is
+	make (a_setting, an_old_value, a_new_value: STRING)
 			-- Create.
 		require
 			a_setting_not_void: a_setting /= Void
@@ -44,7 +44,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (st: TEXT_FORMATTER) is
+	build_explain (st: TEXT_FORMATTER)
 		do
 			st.add_new_line
 			st.add ("Value of a setting could not be changed because the system is already compiled or uses a precompile: ");
@@ -56,7 +56,7 @@ feature -- Output
 			st.add_new_line;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

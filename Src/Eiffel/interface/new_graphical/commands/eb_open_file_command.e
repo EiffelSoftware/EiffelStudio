@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to open a file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -59,7 +59,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize default values.
 		do
 			create accelerator.make_with_key_combination (
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-	execute is
+	execute
 			-- Open a file.
 		local
 			csd: EB_CONFIRM_SAVE_DIALOG
@@ -87,29 +87,29 @@ feature -- Basic operation
 
 feature -- Properties
 
-	menu_name: STRING is
+	menu_name: STRING
 		do
 			Result := Interface_names.m_Open_new
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 		do
 			Result := pixmaps.icon_pixmaps.general_open_icon
 		end
 
-	name: STRING is "Open_file"
+	name: STRING = "Open_file"
 
-	description: STRING is
+	description: STRING
 		do
 			Result := Interface_names.e_Open_file
 		end
 
-	tooltip: STRING is
+	tooltip: STRING
 		do
 			Result := description
 		end
 
-	tooltext: STRING is
+	tooltext: STRING
 			-- Text of toolbar button
 		do
 			Result := Interface_names.b_Open
@@ -117,7 +117,7 @@ feature -- Properties
 
 feature {NONE} -- Implementation
 
-	process is
+	process
 		local
 			fod: EB_FILE_OPEN_DIALOG
 		do
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			fod.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 
-	execute_callback (dialog: EB_FILE_OPEN_DIALOG) is
+	execute_callback (dialog: EB_FILE_OPEN_DIALOG)
 			-- Open a file.
 		local
 			fn: FILE_NAME
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	ask_whether_to_open_backup is
+	ask_whether_to_open_backup
 			-- Display a dialog asking the user whether he wants to open
 			-- the original file or the backup one, and set `open_backup' accordingly.
 		local
@@ -231,13 +231,13 @@ feature {NONE} -- Implementation
 			dial.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 
-	open_normal_selected is
+	open_normal_selected
 			-- The open normal button was pushed.
 		do
 			open_backup := False
 		end
 
-	open_backup_selected is
+	open_backup_selected
 			-- The open backup button was pushed.
 		do
 			open_backup := True
@@ -246,10 +246,10 @@ feature {NONE} -- Implementation
 	open_backup: BOOLEAN
 			-- If a backup file is present, indicates whether it should be opened or not.
 
-	allow_external_files_in_ide: BOOLEAN is False;
+	allow_external_files_in_ide: BOOLEAN = False;
 			-- Flag to determine if we can load non-eiffel files in the environment
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

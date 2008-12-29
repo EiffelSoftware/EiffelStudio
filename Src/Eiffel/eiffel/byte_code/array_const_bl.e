@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Enlarged byte code for manifest arrays"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,13 +41,13 @@ feature
 	arg2_register: REGISTER
 			-- Register for 2nd argument of `make'
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Set `register' to `r'.
 		do
 			register := r
 		end
 
-	analyze is
+	analyze
 			-- Analyze expression.
 		local
 			expr: EXPR_B
@@ -80,7 +80,7 @@ feature
 			end
 		end
 
-	unanalyze is
+	unanalyze
 			-- Unanalyze expression.
 		local
 			expr: EXPR_B
@@ -101,7 +101,7 @@ feature
 			arg2_register := Void
 		end
 
-	free_register is
+	free_register
 			-- Free the registers.
 		do
 			Precursor {ARRAY_CONST_B}
@@ -119,7 +119,7 @@ feature
 			end
 		end
 
-	generate is
+	generate
 			-- Generate expression
 		local
 			real_ty: GEN_TYPE_A
@@ -140,7 +140,7 @@ feature
 
 feature {NONE} -- C code generation
 
-	generate_array_creation (workbench_mode: BOOLEAN) is
+	generate_array_creation (workbench_mode: BOOLEAN)
 			-- Generate the object creation of
 			-- manifest array.
 		local
@@ -157,7 +157,7 @@ feature {NONE} -- C code generation
 			info.generate_end (buf)
 		end
 
-	fill_array (target_type: TYPE_A) is
+	fill_array (target_type: TYPE_A)
 			-- Generate the registers for the expressions
 			-- to fill the manifest array.
 		local
@@ -270,7 +270,7 @@ feature {NONE} -- C code generation
 			end
 		end
 
-	generate_final_array_make (real_ty: GEN_TYPE_A)	is
+	generate_final_array_make (real_ty: GEN_TYPE_A)
 				-- Generate code to call the make routine
 				-- of the manifest array in final mode.
 		local
@@ -303,7 +303,7 @@ feature {NONE} -- C code generation
 							<<"EIF_REFERENCE", "EIF_INTEGER", "EIF_INTEGER">>)
 		end;
 
-	generate_wk_array_make (real_ty: GEN_TYPE_A)	is
+	generate_wk_array_make (real_ty: GEN_TYPE_A)
 				-- Generate code to call the make routine
 				-- of the manifest array in workbench mode.
 		local
@@ -357,7 +357,7 @@ feature {NONE} -- C code generation
 			buf.put_string (gc_rparan_semi_c)
 		end;
 
-	generate_array_make_arguments is
+	generate_array_make_arguments
 			-- Generate the arguments for the array creation.
 		local
 			buf: GENERATION_BUFFER
@@ -371,7 +371,7 @@ feature {NONE} -- C code generation
 			buf.put_string ("L);");
 		end;
 
-	item_print_register (expr: EXPR_B; target_type: TYPE_A) is
+	item_print_register (expr: EXPR_B; target_type: TYPE_A)
 			-- Print register for `expr' taking into account
 			-- that its value may be stored in `item_register'.
 		require
@@ -386,7 +386,7 @@ feature {NONE} -- C code generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

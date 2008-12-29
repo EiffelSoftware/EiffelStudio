@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Dumps classes, features and attributes to stdout."
@@ -22,12 +22,12 @@ inherit
 
 feature
 
-	execute is
+	execute
 		do
 			dump_cluster (Universe.all_classes)
 		end
 
-	dump_cluster (cs: DS_HASH_SET [CLASS_I]) is
+	dump_cluster (cs: DS_HASH_SET [CLASS_I])
 		local
 			fd: EWB_DUMP_FEATURES
 			l_class: CLASS_I
@@ -52,7 +52,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

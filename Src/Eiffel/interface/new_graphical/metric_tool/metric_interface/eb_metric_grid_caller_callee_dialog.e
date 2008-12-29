@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to setup caller/callee domain"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			l_ver: EV_VERTICAL_BOX
@@ -58,7 +58,7 @@ feature{NONE} -- Initialization
 
 feature{NONE} -- Action
 
-	on_show is
+	on_show
 			-- Action to be performed when dialog is displayed
 		local
 			l_value: TUPLE[only_current: BOOLEAN]
@@ -74,7 +74,7 @@ feature{NONE} -- Action
 			end
 		end
 
-	on_ok is
+	on_ok
 			-- Ok was pressed.
 		do
 			Precursor
@@ -82,7 +82,7 @@ feature{NONE} -- Action
 			ok_actions.call (Void)
 		end
 
-	on_cancel is
+	on_cancel
 			-- Cancel was pressed.
 		do
 			Precursor
@@ -101,7 +101,7 @@ invariant
 	only_current_version_radio_attached: only_current_version_radio /= Void
 	descendant_version_radio_attached: descendant_version_radio /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

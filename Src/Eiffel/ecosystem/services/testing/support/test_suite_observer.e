@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Observer for events in {TEST_SUITE_S}.
 	]"
@@ -32,7 +32,7 @@ feature {TEST_SUITE_S} -- Events
 		do
 		end
 
-	on_processor_proceeded (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I) is
+	on_processor_proceeded (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
 			-- Called when some processor has proceeded with its task.
 			--
 			-- `a_test_suite': Test suite managing processor.
@@ -60,7 +60,7 @@ feature {TEST_SUITE_S} -- Events
 		do
 		end
 
-	on_processor_stopped (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I) is
+	on_processor_stopped (a_test_suite: !TEST_SUITE_S; a_processor: !TEST_PROCESSOR_I)
 			-- Called when a processor has completely stopped
 			--
 			-- Note: It is not guaranteed that all observers will receive this notification. This is because

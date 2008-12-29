@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Configuration used by test factories to create new eiffel tests
 		

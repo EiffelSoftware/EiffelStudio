@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Tool where information (welcome message, Errors, ...) are displayed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_tool is
+	make_with_tool
 			-- Create a new output tool.
 		local
 			l_f: EV_FRAME
@@ -52,13 +52,13 @@ feature {NONE} -- Initialization
 			create output_display_factory
 		end
 
-	build_interface is
+	build_interface
 			-- Build interface
 		do
 			make_with_tool
 		end
 
-	pixmap_failure: EV_PIXMAP is
+	pixmap_failure: EV_PIXMAP
 			--
 		local
 			l_constants: EB_CONSTANTS
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			Result := l_constants.pixmaps.icon_pixmaps.tool_output_failed_icon
 		end
 
-	pixmap_success: EV_PIXMAP is
+	pixmap_success: EV_PIXMAP
 			-- Pixmap shown when c compilation successed.
 		local
 			l_constants: EB_CONSTANTS
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Attach to docking manager
 		do
 			build_docking_content (a_docking_manager)
@@ -89,7 +89,7 @@ feature -- Initialization
 
 feature -- Clean up
 
-	internal_recycle is
+	internal_recycle
 			-- To be called before destroying this objects
 		do
 			graphical_output_manager.prune (Current)
@@ -104,7 +104,7 @@ feature -- Clean up
 
 feature -- Status setting
 
-	set_parent_notebook (a_notebook: EV_NOTEBOOK) is
+	set_parent_notebook (a_notebook: EV_NOTEBOOK)
 			-- Set `parent_notebok' to `a_notebook'.
 		require
 			a_notebook_non_void: a_notebook /= Void
@@ -113,7 +113,7 @@ feature -- Status setting
 			parent_notebook := a_notebook
 		end
 
-	force_display is
+	force_display
 			-- Jump to this tab and display `explorer_parent'.
 			-- Only if `Current' is in the focused window.
 		do
@@ -125,25 +125,25 @@ feature -- Status setting
 			end
 		end
 
-	scroll_to_end is
+	scroll_to_end
 			-- Scroll the editor to the bottom.
 		do
 			text_area.scroll_to_end_when_ready
 		end
 
-	on_select is
+	on_select
 			-- Display information from the selected formatter.
 		do
 			visible := True
 		end
 
-	on_deselect is
+	on_deselect
 			-- This view is hidden.
 		do
 			visible := False
 		end
 
-	set_focus is
+	set_focus
 			-- Give the focus to the editor.
 		require
 			focusable: widget.is_displayed and widget.is_sensitive
@@ -153,7 +153,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_general: BOOLEAN is
+	is_general: BOOLEAN
 			-- Is general output tool?
 		do
 			Result := true
@@ -176,25 +176,25 @@ feature -- Access
 
 feature -- Basic operation
 
-	quick_refresh_editor is
+	quick_refresh_editor
 			-- Refresh the editor.
 		do
 			text_area.refresh
 		end
 
-	quick_refresh_margin is
+	quick_refresh_margin
 			-- Refresh the editor's margin.
 		do
 			text_area.margin.refresh
 		end
 
-	clear is
+	clear
 			-- Clear window
 		do
 			text_area.clear_window
 		end
 
-	process_errors (errors: LINKED_LIST [ERROR]) is
+	process_errors (errors: LINKED_LIST [ERROR])
 			-- Display contextual error information from `errors'.
 		do
 			if not errors.is_empty then
@@ -204,7 +204,7 @@ feature -- Basic operation
 			end
 		end
 
-	process_warnings (a_warnings: LINKED_LIST [ERROR]) is
+	process_warnings (a_warnings: LINKED_LIST [ERROR])
 			-- Display contextual error information from `warnings'.
 		do
 			if not a_warnings.is_empty then
@@ -214,7 +214,7 @@ feature -- Basic operation
 			end
 		end
 
-	update_pixmap is
+	update_pixmap
 			-- Update pixmap after compilation
 		do
 			if eiffel_project.successful then
@@ -229,13 +229,13 @@ feature {NONE} -- Implementation
 	visible: BOOLEAN
 			-- Are we displayed by `parent_notebook'.
 
-	drop_breakable (st: BREAKABLE_STONE) is
+	drop_breakable (st: BREAKABLE_STONE)
 			-- Inform `Current's manager that a stone concerning breakpoints has been dropped.
 		do
 
 		end
 
-	drop_class (st: CLASSI_STONE) is
+	drop_class (st: CLASSI_STONE)
 			-- Drop `st' in the context tool and pop the `class info' tab.
 		require
 			st_valid: st /= Void
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	drop_feature (st: FEATURE_STONE) is
+	drop_feature (st: FEATURE_STONE)
 			-- Drop `st' in the context tool and pop the `feature info' tab.
 		require
 			st_valid: st /= Void
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			l_feature_tool.set_focus
 		end
 
-	drop_cluster (st: CLUSTER_STONE) is
+	drop_cluster (st: CLUSTER_STONE)
 			-- Drop `st' in the context tool.
 		require
 			st_valid: st /= Void
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 			develop_window.tools.launch_stone (st)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

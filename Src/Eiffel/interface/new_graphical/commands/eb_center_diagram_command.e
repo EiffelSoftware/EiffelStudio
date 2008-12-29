@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to center the diagram on a stone"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Display information about `Current'.
 		local
 			cla_s: CLASSI_STONE
@@ -53,7 +53,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_with_class_stone (a_stone: CLASSI_STONE) is
+	execute_with_class_stone (a_stone: CLASSI_STONE)
 			-- Create a development window and process `a_stone'.
 		do
 			if a_stone.is_valid then
@@ -63,7 +63,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_with_cluster_stone (a_stone: CLUSTER_STONE) is
+	execute_with_cluster_stone (a_stone: CLUSTER_STONE)
 			-- Create a development window and process `a_stone'.
 		do
 			if a_stone.is_valid then
@@ -73,7 +73,7 @@ feature -- Basic operations
 			end
 		end
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text)
@@ -87,7 +87,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	pebble (x, y: INTEGER): STONE is
+	pebble (x, y: INTEGER): STONE
 			-- pebble corresponding to class or cluster currently
 			-- displayed in the context tool.
 		local
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	veto_pebble_fucntion (a_any: ANY): BOOLEAN is
+	veto_pebble_fucntion (a_any: ANY): BOOLEAN
 			-- Veto function
 		local
 			cluster_stone: CLUSTER_STONE
@@ -130,35 +130,35 @@ feature {NONE} -- Implementation
 
 	was_dropped: BOOLEAN
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.diagram_target_cluster_or_class_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.diagram_target_cluster_or_class_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.F_retarget_diagram
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name on corresponding menu items
 		do
 			Result := interface_names.m_center_diagram
 		end
 
-	name: STRING is "Center_diagram"
+	name: STRING = "Center_diagram"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

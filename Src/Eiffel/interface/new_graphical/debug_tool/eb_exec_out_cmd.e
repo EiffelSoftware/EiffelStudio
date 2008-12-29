@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Set execution format so that each breakable points %
@@ -25,7 +25,7 @@ create
 
 feature -- Initialization
 
-	make (a_manager: like eb_debugger_manager) is
+	make (a_manager: like eb_debugger_manager)
 			-- Initialize `Current'.
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
@@ -39,40 +39,40 @@ feature -- Initialization
 
 feature {NONE} -- Attributes
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap for the button.
 		do
 			Result := pixmaps.icon_pixmaps.debug_step_out_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.debug_step_out_icon_buffer
 		end
 
-	name: STRING is "Exec_out"
+	name: STRING = "Exec_out"
 			-- Name of the command.
 
-	internal_tooltip: STRING_GENERAL is
+	internal_tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Exec_out
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed on `Current's buttons.
 		do
 			Result := Interface_names.b_Exec_out
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name used in menu entry
 		once
 			Result := Interface_names.m_Exec_last
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command that can be added in an interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,21 +19,21 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Set `is_sensitive' to `True'.
 		deferred
 		ensure
   			sensitive: is_sensitive
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Set `is_sensitive' to `False'.
 		deferred
 		ensure
 			unsensitive: not is_sensitive
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

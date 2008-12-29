@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents an assertion type
 					Available types are: require, require else, ensure, ensure then, invariant
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Initialize `name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -40,7 +40,7 @@ feature -- Access
 	name: STRING;
 			-- Name of current assertion type
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

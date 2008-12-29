@@ -1,4 +1,4 @@
-indexing
+note
 	description: "String representation expanded viewer  ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Implementation
 
-	build_widget is
+	build_widget
 		local
 			vb: EV_VERTICAL_BOX
 		do
@@ -71,12 +71,12 @@ feature {NONE} -- Implementation
  			set_title (name)
 		end
 
-	default_slice_max_value: INTEGER is
+	default_slice_max_value: INTEGER
 		do
 			Result := preferences.debug_tool_data.default_expanded_view_size
 		end
 
-	build_slices_box is
+	build_slices_box
 			-- Build slices box
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_tool_bar is
+	build_tool_bar
 			-- <Precursor>
 		local
 			l_tb: SD_TOOL_BAR
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_mini_tool_bar is
+	build_mini_tool_bar
 		local
 			l_tb: like mini_tool_bar
 			tbb: SD_TOOL_BAR_BUTTON
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 		do
 			Result := interface_names.t_viewer_string_display
 		end
@@ -232,7 +232,7 @@ feature -- Access
 
 feature -- Change
 
-	set_slices_text (a_lower, a_upper: INTEGER) is
+	set_slices_text (a_lower, a_upper: INTEGER)
 		require
 			slices_box_attached: slices_box /= Void
 		do
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			lst.extend (but)
 		end
 
-	Text_format: EV_CHARACTER_FORMAT is
+	Text_format: EV_CHARACTER_FORMAT
 		once
 			create Result
 			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 			Result.set_font (Preferences.editor_data.font)
 		end
 
-	Limits_format: EV_CHARACTER_FORMAT is
+	Limits_format: EV_CHARACTER_FORMAT
 		once
 			create Result
 			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
@@ -299,14 +299,14 @@ feature {NONE} -- Implementation
 			Result.set_font (Preferences.editor_data.font)
 		end
 
-	No_text_background_color: EV_COLOR is
+	No_text_background_color: EV_COLOR
 		do
 			Result := Preferences.debug_tool_data.expanded_display_bgcolor
 		end
 
 feature -- Slice limits
 
-	set_limits (a_lower, a_upper: INTEGER) is
+	set_limits (a_lower, a_upper: INTEGER)
 			-- Change limits to `a_lower, a_upper' values.
 		local
 			nmin, nmax: INTEGER
@@ -321,12 +321,12 @@ feature -- Slice limits
 			slice_max_ref.set_item (nmax)
 		end
 
-	slice_min: INTEGER is
+	slice_min: INTEGER
 		do
 			Result := slice_min_ref.item
 		end
 
-	slice_max: INTEGER is
+	slice_max: INTEGER
 		do
 			Result := slice_max_ref.item
 		end
@@ -336,7 +336,7 @@ feature -- Slice limits
 
 feature -- Access
 
-	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN is
+	is_valid_stone (a_stone: ANY; is_strict: BOOLEAN): BOOLEAN
 			-- Is `st' valid stone for Current?
 		do
 			Result := {st: OBJECT_STONE} a_stone and then
@@ -345,7 +345,7 @@ feature -- Access
 
 feature -- Change
 
-	refresh is
+	refresh
 			-- Recompute the displayed text.
 		local
 			l_trunc_str: STRING_32
@@ -398,7 +398,7 @@ feature -- Change
 			viewers_manager.refresh_current_viewer
 		end
 
-	destroy is
+	destroy
 			-- Destroy Current
 		do
 			reset
@@ -410,12 +410,12 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 		do
 			Result := True
 		end
 
-	parent_window (w: EV_WIDGET): EV_WINDOW is
+	parent_window (w: EV_WIDGET): EV_WINDOW
 		local
 			p: EV_WIDGET
 		do
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clear is
+	clear
 			-- Clean current data, useless if dialog closed or destroyed
 		do
 			editor.remove_text
@@ -445,19 +445,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Event handling
 
-	return_pressed_in_lower_slice_field is
+	return_pressed_in_lower_slice_field
 			-- Called by `return_actions' of `lower_slice_field'.
 		do
 			upper_slice_field.set_focus
 		end
 
-	return_pressed_in_upper_slice_field is
+	return_pressed_in_upper_slice_field
 			-- Called by `return_actions' of `lower_slice_field'.
 		do
 			set_slice_selected
 		end
 
-	set_slice_selected is
+	set_slice_selected
 			-- Called by `select_actions' of `set_slice_button'.
 		local
 			l_lower, l_upper: INTEGER
@@ -497,7 +497,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	auto_slice_selected is
+	auto_slice_selected
 			-- Called by `select_actions' of `auto_set_slice_button'.
 		do
 			if has_object then
@@ -509,7 +509,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	word_wrap_toggled (but: SD_TOOL_BAR_TOGGLE_BUTTON) is
+	word_wrap_toggled (but: SD_TOOL_BAR_TOGGLE_BUTTON)
 			-- Called by `select_actions' of `but'.
 		local
 			a_word_wrapping_enabled: BOOLEAN
@@ -523,25 +523,25 @@ feature {NONE} -- Event handling
 			update_word_wrap_buttons (a_word_wrapping_enabled)
 		end
 
-	copy_button_selected is
+	copy_button_selected
 			-- Called by `select_actions' of `copy_button'.
 		do
 			Ev_application.clipboard.set_text (editor.text)
 		end
 
-	on_stone_dropped (st: OBJECT_STONE) is
+	on_stone_dropped (st: OBJECT_STONE)
 			-- A stone was dropped in the editor. Handle it.
 		do
 			set_stone (st)
 		end
 
-	close_action is
+	close_action
 			-- Close dialog
 		do
 			destroy
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Third pass controler for a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			Precursor {PASS_CONTROL}
 			create changed_status.make
@@ -38,32 +38,32 @@ feature -- Access
 
 feature -- Settings
 
-	set_invariant_removed (b: BOOLEAN) is
+	set_invariant_removed (b: BOOLEAN)
 			-- Assign `b' to `invariant_removed'.
 		do
 			invariant_removed := b
 		end
 
-	set_invariant_changed (b: BOOLEAN) is
+	set_invariant_changed (b: BOOLEAN)
 			-- Assign `b' to `invariant_changed'.
 		do
 			invariant_changed := b
 		end
 
-	set_removed_features (r: like removed_features) is
+	set_removed_features (r: like removed_features)
 			-- Assign `r' to `removed_features'.
 		do
 			removed_features := r
 		end
 
-	add_changed_status (an_id: INTEGER) is
+	add_changed_status (an_id: INTEGER)
 			-- Add `an_id' to the set of ids for the classes for which the
 			-- expanded or deferred status has changed
 		do
 			changed_status.extend (an_id)
 		end
 
-	update (pass2_control: PASS2_CONTROL) is
+	update (pass2_control: PASS2_CONTROL)
 			-- Update with a second pass controler
 		require
 			good_argument: pass2_control /= Void
@@ -74,7 +74,7 @@ feature -- Settings
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Empty the controller
 		do
 			Precursor {PASS_CONTROL}
@@ -85,7 +85,7 @@ feature -- Removal
 
 feature -- Status report
 
-	empty_intersection (depend_list: FEATURE_DEPENDANCE): BOOLEAN is
+	empty_intersection (depend_list: FEATURE_DEPENDANCE): BOOLEAN
 			-- Is the intersection of `depend_list' and `propagators'
 			-- empty ?
 		require
@@ -94,7 +94,7 @@ feature -- Status report
 			Result := internal_is_empty_intersection (propagators, depend_list)
 		end
 	
-	melted_empty_intersection (depend_list: FEATURE_DEPENDANCE): BOOLEAN is
+	melted_empty_intersection (depend_list: FEATURE_DEPENDANCE): BOOLEAN
 		  	-- Is the intersection of `depend_list' and `melted_propagators'
 			-- empty ?
 		require
@@ -103,7 +103,7 @@ feature -- Status report
 			Result := internal_is_empty_intersection (melted_propagators, depend_list)
 		end
 
-	changed_status_empty_intersection (feature_suppliers: TWO_WAY_SORTED_SET [INTEGER]): BOOLEAN is
+	changed_status_empty_intersection (feature_suppliers: TWO_WAY_SORTED_SET [INTEGER]): BOOLEAN
 			-- Is the intersection of `feature_suppliers' and `changed_status' empty ?
 		require
 			good_argument: feature_suppliers /= Void
@@ -113,7 +113,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	internal_is_empty_intersection (a_propagators: TWO_WAY_SORTED_SET [DEPEND_UNIT]; depend_list: FEATURE_DEPENDANCE): BOOLEAN is
+	internal_is_empty_intersection (a_propagators: TWO_WAY_SORTED_SET [DEPEND_UNIT]; depend_list: FEATURE_DEPENDANCE): BOOLEAN
 		require
 			a_propagators_not_void: a_propagators /= Void
 			depend_list_not_void: depend_list /= Void
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			Result := not Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte code for routine creation expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,13 +30,13 @@ feature
 	register: REGISTRABLE
 			-- Register for array containing the routine object
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Set `register' to `r
 		do
 			register := r
 		end
 
-	unanalyze is
+	unanalyze
 			-- Unanalyze expression
 		do
 			if arguments /= Void then
@@ -48,7 +48,7 @@ feature
 			set_register (Void)
 		end
 
-	analyze is
+	analyze
 			-- Analyze expression
 		do
 			if arguments /= Void then
@@ -61,7 +61,7 @@ feature
 			context.add_dftype_current
 		end
 
-	free_register is
+	free_register
 			-- Free used registers for later use.
 		do
 			Precursor {ROUTINE_CREATION_B}
@@ -73,7 +73,7 @@ feature
 			end
 		end
 
-	generate is
+	generate
 			-- Generate expression
 		local
 			agent_type: CL_TYPE_A
@@ -212,7 +212,7 @@ feature
 			buf.generate_block_close
 		end
 
-	generate_routine_address (optimized, oargs_encapsulated: BOOLEAN) is
+	generate_routine_address (optimized, oargs_encapsulated: BOOLEAN)
 			-- Generate routine address
 		local
 			table_name	: STRING
@@ -262,7 +262,7 @@ feature
 			end
 		end
 
-	generate_current is
+	generate_current
 		do
 			buffer.put_string ("((EIF_TYPED_VALUE *)")
 			arguments.print_register
@@ -270,7 +270,7 @@ feature
 			reference_c_type.generate_typed_field (buffer)
 		end
 
-	generate_precalc_routine_address is
+	generate_precalc_routine_address
 		local
 			l_class_type: CLASS_TYPE
 			l_entry: POLY_TABLE [ENTRY]
@@ -346,7 +346,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

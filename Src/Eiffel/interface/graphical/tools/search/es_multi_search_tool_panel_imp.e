@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface of EB_MULTI_SEARCH_TOOL"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ inherit
 
 feature {NONE} -- Initialize
 
-	build_interface is
+	build_interface
 			-- Build all the tool's widgets.
 		local
 			vbox: EV_VERTICAL_BOX
@@ -187,7 +187,7 @@ feature {NONE} -- Initialize
 			widget := frame
 		end
 
-	build_scope_box: EV_VERTICAL_BOX is
+	build_scope_box: EV_VERTICAL_BOX
 			-- Create and return a box containing scope pad.
 		local
 			vbox: EV_VERTICAL_BOX
@@ -298,14 +298,14 @@ feature {NONE} -- Initialize
 			Result.set_border_width (layout_constants.small_border_size)
 		end
 
-	build_report_box: EV_VERTICAL_BOX is
+	build_report_box: EV_VERTICAL_BOX
 			-- Build report box
 		deferred
 		end
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER, ES_TOOL} -- Initialize
 
-	build_mini_toolbar is
+	build_mini_toolbar
 			-- Build mini tool bar.
 		local
 			l_cmd: ES_SHOW_TOOL_COMMAND
@@ -328,7 +328,7 @@ feature -- EB_TOOL
 	widget: EV_WIDGET
 			-- Widget representing Current
 
-	show_and_set_focus is
+	show_and_set_focus
 			-- Show the search tool and set focus to the search text field
 		require
 			not_void: content /= Void
@@ -347,7 +347,7 @@ feature -- EB_TOOL
 			set_focus_if_possible (keyword_field)
 		end
 
-	show is
+	show
 			-- Show tool.
 		do
 			Precursor {EB_TOOL}
@@ -449,67 +449,67 @@ feature -- Widgets
 
 feature -- Status report
 
-	is_visible: BOOLEAN is
+	is_visible: BOOLEAN
 			-- Can `Current' be seen on screen?
 		do
 			Result := widget.is_displayed
 		end
 
-	reverse : BOOLEAN is
+	reverse : BOOLEAN
 			-- Search upwards?
 		do
 			Result := search_backward_button.is_selected
 		end
 
-	is_whole_project_searched : BOOLEAN is
+	is_whole_project_searched : BOOLEAN
 			-- Is the whole project searched?
 		do
 			Result := whole_project_button.is_selected
 		end
 
-	is_customized : BOOLEAN is
+	is_customized : BOOLEAN
 			-- Is search scoped?
 		do
 			Result := custom_button.is_selected
 		end
 
-	is_case_sensitive: BOOLEAN is
+	is_case_sensitive: BOOLEAN
 			-- Is search case sensitive?
 		do
 			Result := case_sensitive_button.is_selected
 		end
 
-	is_whole_word_matched: BOOLEAN is
+	is_whole_word_matched: BOOLEAN
 			-- Is search whole word matched?
 		do
 			Result := whole_word_button.is_selected
 		end
 
-	is_regular_expression_used: BOOLEAN is
+	is_regular_expression_used: BOOLEAN
 			-- Is regular expression used in search?
 		do
 			Result := use_regular_expression_button.is_selected
 		end
 
-	is_incremental_search: BOOLEAN is
+	is_incremental_search: BOOLEAN
 			-- Is incremental search enabled?
 		do
 			Result := incremental_search_button.is_selected
 		end
 
-	is_sub_cluster_searched: BOOLEAN is
+	is_sub_cluster_searched: BOOLEAN
 			-- Are subclusters searched?
 		do
 			Result := search_subcluster_button.is_selected
 		end
 
-	is_current_editor_searched: BOOLEAN is
+	is_current_editor_searched: BOOLEAN
 			-- Is current editor searched?
 		do
 			Result := current_editor_button.is_selected
 		end
 
-	only_compiled_class_searched: BOOLEAN is
+	only_compiled_class_searched: BOOLEAN
 			-- Only compiled classes are searched?
 		do
 			Result := search_compiled_class_button.is_selected
@@ -517,7 +517,7 @@ feature -- Status report
 
 feature {NONE} -- Destroy behavior.
 
-	save_preferences is
+	save_preferences
 			-- Save preferences. All options' status.
 		local
 			l_pre : EB_SEARCH_TOOL_DATA
@@ -554,7 +554,7 @@ feature {NONE} -- Destroy behavior.
 			preferences.preferences.save_preference (l_pre.init_scope_preference)
 		end
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			save_preferences
@@ -563,7 +563,7 @@ feature {NONE} -- Destroy behavior.
 			Precursor {EB_TOOL}
 		end
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- Recycle all widgets so that we can better detect memory leaks.
 		do
 			scope := Void
@@ -594,17 +594,17 @@ feature {NONE} -- Destroy behavior.
 
 feature {NONE} -- Implementation
 
-	min_width_of_keyword_field: INTEGER is 100
+	min_width_of_keyword_field: INTEGER = 100
 
-	currently_searched: STRING_32 is
+	currently_searched: STRING_32
 		deferred
 		end
 
-	currently_replacing: STRING_32 is
+	currently_replacing: STRING_32
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

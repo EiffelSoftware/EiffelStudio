@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Byte code for strip expression
@@ -18,7 +18,7 @@ create
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_strip_b (Current)
@@ -30,29 +30,29 @@ feature
 			-- Set of attributes feature ids to strip from the current
 			-- type
 
-	make is
+	make
 		do
 			create feature_ids.make
 		end
 
-	type: GEN_TYPE_A is
+	type: GEN_TYPE_A
 			-- Type of byte code strip expression
 		do
 			Result := Instantiator.array_type
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 		do
 		end;
 
-	enlarged: STRIP_BL is
+	enlarged: STRIP_BL
 			-- Enlarge node
 		do
 			create Result;
 			Result.set_feature_ids (feature_ids)
 		end;
 
-	attribute_names: LINKED_LIST [STRING] is
+	attribute_names: LINKED_LIST [STRING]
 			-- Get routine ids.
 		local
 			skeleton: SKELETON;
@@ -76,13 +76,13 @@ feature
 
 feature -- Status report
 
-	is_type_fixed: BOOLEAN is True
+	is_type_fixed: BOOLEAN = True
 			-- Is type of the expression statically fixed,
 			-- so that there is no variation at run-time?
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := feature_ids.count + 1
 		end
@@ -91,7 +91,7 @@ invariant
 
 	set_exists: feature_ids /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

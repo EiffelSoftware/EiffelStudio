@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when a non-deferred class has a deferred feature."
@@ -20,14 +20,14 @@ feature -- Properties
 	deferred_feature: E_FEATURE;
 			-- Deferred feature in non deferred class
 
-	code: STRING is "VCCH";
+	code: STRING = "VCCH";
 			-- Error code
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER = 1;
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		local
@@ -52,7 +52,7 @@ feature -- Output
 			a_text_formatter.add_new_line;
 		end;
 
-	trace_primary_context (a_text_formatter: TEXT_FORMATTER) is
+	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
 		do
 			if {l_formatter: !TEXT_FORMATTER} a_text_formatter and then {l_feature: !like deferred_feature} deferred_feature and then {l_class: !like class_c} class_c then
@@ -82,7 +82,7 @@ feature {NONE} -- Ouput
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_a_feature (f: FEATURE_I) is
+	set_a_feature (f: FEATURE_I)
 			-- Assign `f' to `a_feature'.
 		require
 			valid_f: f /= Void
@@ -90,7 +90,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			deferred_feature := f.api_feature (f.written_in);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

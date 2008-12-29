@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared object that manages all debugging actions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,20 +27,20 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- <Precursor>
 		do
 			initialize_preferences
 			Precursor {DEBUGGER_MANAGER}
 		end
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preferences
 		do
 			create dbg_preferences.make (preferences.preferences)
 		end
 
-	initialize_storage is
+	initialize_storage
 			-- <Precursor>
 		do
 --			create {DEBUGGER_STORAGE_SED} dbg_storage.make (Current)
@@ -52,7 +52,7 @@ feature -- Preferences
 	dbg_preferences: DBG_PREFERENCES
 			-- Debugger preferences
 
-	debugger_data: EB_DEBUGGER_DATA is
+	debugger_data: EB_DEBUGGER_DATA
 			-- Debugger data...
 		do
 			Result := dbg_preferences.debugger_data
@@ -82,7 +82,7 @@ feature -- Settings
 			end
 		end
 
-	classic_debugger_timeout: INTEGER is
+	classic_debugger_timeout: INTEGER
 			-- <Precursor>
 		local
 			prefs: EB_DEBUGGER_DATA
@@ -93,7 +93,7 @@ feature -- Settings
 			end
 		end
 
-	classic_debugger_location: STRING is
+	classic_debugger_location: STRING
 			-- <Precursor>
 		local
 			prefs: EB_DEBUGGER_DATA
@@ -104,7 +104,7 @@ feature -- Settings
 			end
 		end
 
-	classic_close_dbg_daemon_on_end_of_debugging: BOOLEAN is
+	classic_close_dbg_daemon_on_end_of_debugging: BOOLEAN
 			-- <Precursor>
 		local
 			prefs: EB_DEBUGGER_DATA
@@ -115,7 +115,7 @@ feature -- Settings
 			end
 		end
 
-	dotnet_keep_stepping_info_non_eiffel_feature: BOOLEAN is
+	dotnet_keep_stepping_info_non_eiffel_feature: BOOLEAN
 			-- <Precursor>
 		local
 			prefs: EB_DEBUGGER_DATA
@@ -128,7 +128,7 @@ feature -- Settings
 			end
 		end
 
-	dotnet_debugger_entries: ARRAY [STRING] is
+	dotnet_debugger_entries: ARRAY [STRING]
 			-- <Precursor>
 		local
 			prefs: EB_DEBUGGER_DATA
@@ -139,7 +139,7 @@ feature -- Settings
 			end
 		end
 
-	is_true_boolean_value (a_string: STRING): BOOLEAN is
+	is_true_boolean_value (a_string: STRING): BOOLEAN
 			-- <Precursor>
 		do
 			if a_string /= Void then
@@ -149,7 +149,7 @@ feature -- Settings
 
 feature -- Logger
 
-	log_message (s: STRING_32) is
+	log_message (s: STRING_32)
 			-- <Precursor>
 		local
 			l_logger: like logger_service
@@ -177,7 +177,7 @@ feature {NONE} -- Logger
 			-- Cached version of `logger_service'
 			-- Note: Do not use directly!	
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formatter that uses an editor as its display"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	editor: EB_CLICKABLE_EDITOR is
+	editor: EB_CLICKABLE_EDITOR
 			-- Output editor.
 		do
 			if displayer /= Void then
@@ -30,7 +30,7 @@ feature -- Access
 			good_result: displayer /= Void implies Result = displayer.editor
 		end
 
-	new_editor (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): like editor is
+	new_editor (a_dev_window: EB_DEVELOPMENT_WINDOW; a_drop_actions: EV_PND_ACTION_SEQUENCE): like editor
 			-- New Editor
 		do
 			create Result.make (a_dev_window)
@@ -42,13 +42,13 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING] is
+	displayer_generator: TUPLE [any_generator: FUNCTION [ANY, TUPLE, like displayer]; name: STRING]
 			-- Generator to generate proper `displayer' for Current formatter
 		do
 			Result := [agent displayer_generators.new_editor_displayer, displayer_generators.editor_displayer]
 		end
 
-	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Possible area to display a tool bar
 		do
 		end
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_editor_formatter: BOOLEAN is
+	is_editor_formatter: BOOLEAN
 			-- Is Current formatter based on an editor?
 		do
 			Result := True
@@ -66,7 +66,7 @@ feature -- Status report
 
 feature -- Setting
 
-	setup_viewpoint is
+	setup_viewpoint
 			-- Setup viewpoint for formatting.
 		do
 			if viewpoints /= Void and then editor /= Void and then editor.text_displayed /= Void then
@@ -74,7 +74,7 @@ feature -- Setting
 			end
 		end
 
-	set_editor_displayer (a_displayer: like displayer) is
+	set_editor_displayer (a_displayer: like displayer)
 			-- Set `a_displayer' with `a_displayer'.
 		do
 			displayer := a_displayer
@@ -82,7 +82,7 @@ feature -- Setting
 
 feature -- Positioning
 
-	go_to_position is
+	go_to_position
 			-- Save manager position and go to position in `editor' if possible.
 		local
 			l_line_stone: LINE_STONE
@@ -109,7 +109,7 @@ feature -- Positioning
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

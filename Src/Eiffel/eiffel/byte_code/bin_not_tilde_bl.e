@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Node for /~ equality operator for C code generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,25 +29,25 @@ create
 
 feature -- C code generation
 
-	generate_operator (a_buffer: GENERATION_BUFFER) is
+	generate_operator (a_buffer: GENERATION_BUFFER)
 			-- Generate the operator
 		do
 			a_buffer.put_four_character (' ', '!', '=', ' ')
 		end;
 
-	generate_boolean_constant is
+	generate_boolean_constant
 			-- Generate true constant
 		do
 			buffer.put_string ("EIF_TRUE");
 		end;
 
-	generate_negation is
+	generate_negation
 			-- Generate negation of an equality test (if required).
 		do
 			buffer.put_character ('!')
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

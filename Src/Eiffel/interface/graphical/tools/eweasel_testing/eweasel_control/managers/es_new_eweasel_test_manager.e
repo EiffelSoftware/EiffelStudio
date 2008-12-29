@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Manager which control test case files creation.
 					The files including:
@@ -38,7 +38,7 @@ create
 
 feature -- Command
 
-	add_whole_set_of_files is
+	add_whole_set_of_files
 			-- Create a new eweasel unit test directory and files.
 			-- Prepare default conditions
 		do
@@ -46,7 +46,7 @@ feature -- Command
 			add_files
 		end
 
-	set_target_test_case_folder (a_folder_name: like folder_name) is
+	set_target_test_case_folder (a_folder_name: like folder_name)
 			-- Set `target_test_case_folder' with `a_dir'
 		require
 			not_void: a_folder_name /= Void
@@ -57,7 +57,7 @@ feature -- Command
 			set: folder_name = a_folder_name
 		end
 
-	set_wizard_information (a_info: like wizard_information) is
+	set_wizard_information (a_info: like wizard_information)
 			-- Set `wizard_information' with `a_info'
 		require
 			not_void: a_info /= Void
@@ -77,7 +77,7 @@ feature -- Query
 	wizard_information: ES_NEW_UNIT_TEST_WIZARD_INFORMATION
 			-- Wizard information
 
-	full_target_test_case_folder: DIRECTORY_NAME is
+	full_target_test_case_folder: DIRECTORY_NAME
 			-- `folder_name' and full path included
 		require
 			not_void: folder_name /= Void and then not folder_name.is_empty
@@ -86,13 +86,13 @@ feature -- Query
 			Result.extend (folder_name)
 		end
 
-	test_case_root_class_name: STRING is
+	test_case_root_class_name: STRING
 			-- Root eweasel test case Eiffel class name
 		do
 			Result := manager.environment_manager.test_case_root_eiffel_class_name
 		end
 
-	test_case_root_class_file_name: STRING is
+	test_case_root_class_file_name: STRING
 			-- File name of class `test_case_root_class_name'
 		do
 			-- We must use lower class name here.
@@ -102,7 +102,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	add_folder is
+	add_folder
 			-- Create eweasel testing folder
 			-- This feature will gurantee create a fresh new directory
 			-- If `full_target_test_case_folder' already exists before this call,
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			exists: (create {DIRECTORY}.make (full_target_test_case_folder)).exists
 		end
 
-	add_files is
+	add_files
 			-- Add all files of a new eweasel unit test.
 		local
 			l_retry: BOOLEAN
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	create_file (a_file_name: FILE_NAME): IO_MEDIUM  is
+	create_file (a_file_name: FILE_NAME): IO_MEDIUM
 			-- Create a new {IO_MEDIUM} which file name is `a_file_name'
 			-- Callers have to close `Result' themselves
 		require
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			created: (create {RAW_FILE}.make (a_file_name)).exists
 		end
 
-	add_file_ecf is
+	add_file_ecf
 			-- Add Eiffel project config file for test case
 		local
 			l_io: IO_MEDIUM
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			file_created:
 		end
 
-	add_file_tcf is
+	add_file_tcf
 			-- Add eweasel test control file
 		local
 			l_io: IO_MEDIUM
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			file_created:
 		end
 
-	add_file_test_case_eiffel_class is
+	add_file_test_case_eiffel_class
 			-- Add new Eiffel class file for new test case.
 		require
 			not_void: wizard_information /= Void
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			file_created:
 		end
 
-	add_inherit_class (a_file_content: STRING) is
+	add_inherit_class (a_file_content: STRING)
 			-- Add class inherit texts
 		require
 			not_void: a_file_content /= Void
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			replaced: not a_file_content.has_substring (inherit_class_template_string)
 		end
 
-	add_class_comment (a_file_content: STRING) is
+	add_class_comment (a_file_content: STRING)
 			-- Add class comment
 		require
 			not_void: a_file_content /= Void
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			replaced: not a_file_content.has_substring (class_comment_string)
 		end
 
-	add_make_content (a_file_content: STRING) is
+	add_make_content (a_file_content: STRING)
 			-- Add `make' content
 		require
 			not_void: a_file_content /= Void
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			replaced: not a_file_content.has_substring (core_test_in_make_template_string)
 		end
 
-	add_predefined_features (a_file_content: STRING) is
+	add_predefined_features (a_file_content: STRING)
 			-- Added four predefined feature base on `wizard_information'
 		require
 			not_void: a_file_content /= Void
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 			replaced: not a_file_content.has_substring (start_after_test_actions_template_string)
 		end
 
-	add_features_to_test (a_file_content: STRING) is
+	add_features_to_test (a_file_content: STRING)
 			-- Result void if none
 		require
 			not_void: a_file_content /= Void
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 			replaced: not a_file_content.has_substring (features_to_test_template_string)
 		end
 
-	feature_content (a_feature_name: STRING; a_comment: STRING): STRING is
+	feature_content (a_feature_name: STRING; a_comment: STRING): STRING
 			-- Generate feature content of `a_feature_name'
 			-- `a_comment' can be void
 		require
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- File contents
 
-	ecf_content: STRING is
+	ecf_content: STRING
 			-- Default Eiffel config file content.
 		local
 			l_file: RAW_FILE
@@ -474,14 +474,14 @@ feature {NONE} -- File contents
 			not_void: Result /= Void
 		end
 
-	test_name: STRING is
+	test_name: STRING
 			-- Test case name.
 			-- The Result same as test root class name for the moment
 		do
 			Result := wizard_information.test_case_name.as_lower
 		end
 
-	tcf_content: STRING is
+	tcf_content: STRING
 			-- Testing control file content.
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -506,7 +506,7 @@ feature {NONE} -- File contents
 			not_void: Result /= Void
 		end
 
-	eiffel_test_case_class_content: STRING is
+	eiffel_test_case_class_content: STRING
 			-- Default Eiffel test class content.
 			-- Result void if error
 		local
@@ -541,7 +541,7 @@ feature {NONE} -- File contents
 			not_void: Result /= Void
 		end
 
-	class_content_file_name: !FILE_NAME is
+	class_content_file_name: !FILE_NAME
 			-- Class file content file name
 		do
 			create Result.make
@@ -549,7 +549,7 @@ feature {NONE} -- File contents
 			Result.set_file_name ("eiffel_unit_test_class_template.e")
 		end
 
-	ecf_content_file_name: !FILE_NAME is
+	ecf_content_file_name: !FILE_NAME
 			-- Ecf content file name
 		do
 			create Result.make
@@ -557,7 +557,7 @@ feature {NONE} -- File contents
 			Result.set_file_name ("eiffel_unit_test_ecf_template.ecf")
 		end
 
-	notes_content_file_name: !FILE_NAME is
+	notes_content_file_name: !FILE_NAME
 			-- Default note file name.
 		do
 			create Result.make
@@ -565,7 +565,7 @@ feature {NONE} -- File contents
 			Result.set_file_name ("eiffel_unit_test_note_template.txt")
 		end
 
-	tcf_content_file_name: !FILE_NAME is
+	tcf_content_file_name: !FILE_NAME
 			-- Default eweasel tcf file name
 		do
 			create Result.make
@@ -573,7 +573,7 @@ feature {NONE} -- File contents
 			Result.set_file_name ("eiffel_unit_test_tcf_template.txt")
 		end
 
-	run_before_all_string: !STRING is
+	run_before_all_string: !STRING
 			-- Predefined feature name
 		do
 			if {l_string: STRING} interface_names.l_run_before_all then
@@ -583,7 +583,7 @@ feature {NONE} -- File contents
 			end
 		end
 
-	run_after_all_string: !STRING is
+	run_after_all_string: !STRING
 			-- Predefined feature name
 		do
 			if {l_string: STRING} interface_names.l_run_after_all then
@@ -593,7 +593,7 @@ feature {NONE} -- File contents
 			end
 		end
 
-	run_before_each_string: !STRING is
+	run_before_each_string: !STRING
 			-- Predefined feature name
 		do
 			if {l_string: STRING} interface_names.l_run_before_each then
@@ -603,7 +603,7 @@ feature {NONE} -- File contents
 			end
 		end
 
-	run_after_each_string: !STRING is
+	run_after_each_string: !STRING
 			-- Predefined feature name
 		do
 			if {l_string: STRING} interface_names.l_run_after_each then
@@ -613,13 +613,13 @@ feature {NONE} -- File contents
 			end
 		end
 
-	class_comment_string: !STRING is
+	class_comment_string: !STRING
 			-- $ string in template file
 		do
 			create Result.make_from_string ("$CLASS_COMMENT")
 		end
 
-	start_after_test_actions_template_string: !STRING is
+	start_after_test_actions_template_string: !STRING
 			-- $ string in template file
 		do
 			create Result.make_from_string ("$start_after_test_actions")
@@ -643,13 +643,13 @@ feature {NONE} -- File contents
 			create Result.make_from_string ("$core_test_in_make")
 		end
 
-	features_to_test_template_string: !STRING is
+	features_to_test_template_string: !STRING
 			-- $ string in template file
 		do
 			create Result.make_from_string ("$features_to_test")
 		end
 
-	inherit_class_template_string: !STRING is
+	inherit_class_template_string: !STRING
 			-- $ string in template file
 		do
 			create Result.make_from_string ("$INHERIT_CLASS")
@@ -657,7 +657,7 @@ feature {NONE} -- File contents
 
 feature {NONE} -- Utility
 
-	test_feature_name (a_feature_to_test: STRING): !STRING is
+	test_feature_name (a_feature_to_test: STRING): !STRING
 			-- Test feature name for `a_feature_to_test'
 		require
 			not_void: a_feature_to_test /= Void and then not a_feature_to_test.is_empty
@@ -665,7 +665,7 @@ feature {NONE} -- Utility
 			create Result.make_from_string ("test_" + a_feature_to_test)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

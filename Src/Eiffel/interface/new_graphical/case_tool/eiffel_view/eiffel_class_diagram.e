@@ -1,4 +1,4 @@
-indexing
+note
 	description: "BON view for a CLASS_GRAPH."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ create {EIFFEL_CLASS_DIAGRAM}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a EIFFEL_CLASS_GRAPH.
 		do
 			Precursor {EIFFEL_WORLD}
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_WORLD}
@@ -76,13 +76,13 @@ feature -- Element change
 
 feature {ES_DIAGRAM_TOOL_PANEL} -- Save/Restore
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := "EIFFEL_CLASS_DIAGRAM"
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml node representing `Current's state.
 		do
 			node.add_attribute ("NAME", xml_namespace, current_view)
@@ -98,7 +98,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Save/Restore
 			Result := Precursor {EIFFEL_WORLD} (node)
 		end
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
 			ccn, cccn: STRING
@@ -144,7 +144,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Save/Restore
 
 feature {NONE} -- Implementation
 
-	class_from_interface (a_class: CLASS_I): ES_CLASS is
+	class_from_interface (a_class: CLASS_I): ES_CLASS
 			-- Class from interface.
 		require
 			a_class_not_void: a_class /= Void
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_class_drop (a_stone: CLASSI_STONE) is
+	on_class_drop (a_stone: CLASSI_STONE)
 			-- `a_stone' was dropped on `Current'
 			-- Add to diagram if not already present.
 		local
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_new_class_drop (a_stone: CREATE_CLASS_STONE) is
+	on_new_class_drop (a_stone: CREATE_CLASS_STONE)
 			-- `a_stone' was dropped on `Current'
 			-- Display create class dialog and add to diagram.
 		local
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 	is_new_dropped: BOOLEAN
 			-- Is new added class to system dropped by user onto the diagram tool?
 
-	include_new_class (a_class: CLASS_I; a_x, a_y: INTEGER) is
+	include_new_class (a_class: CLASS_I; a_x, a_y: INTEGER)
 			-- Add `a_class' to the diagram if not already present.
 		require
 			a_class_exists: a_class /= Void
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_class_added (a_class: CLASS_I) is
+	on_class_added (a_class: CLASS_I)
 			-- `a_class' was added to the system.
 		local
 			ax, ay: INTEGER
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

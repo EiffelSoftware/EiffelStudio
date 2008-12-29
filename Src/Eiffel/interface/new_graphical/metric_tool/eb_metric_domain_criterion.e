@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Criterion that uses a domain as argument"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_scope: like scope; a_name: STRING) is
+	make (a_scope: like scope; a_name: STRING)
 			-- Initialize `scope' with `a_scope' and `name' with `a_name'.
 		do
 			Precursor (a_scope, a_name)
@@ -38,7 +38,7 @@ feature -- Access
 	domain: EB_METRIC_DOMAIN
 			-- Domain used in current criterion
 
-	new_criterion (a_scope: QL_SCOPE): QL_CRITERION is
+	new_criterion (a_scope: QL_SCOPE): QL_CRITERION
 			-- QL_CRITERION representing current criterion
 		local
 			l_criterion_factory: QL_CRITERION_FACTORY
@@ -67,19 +67,19 @@ feature -- Access
 
 feature -- Status report
 
-	is_parameter_valid: BOOLEAN is
+	is_parameter_valid: BOOLEAN
 			-- Is parameters of current criterion valid?
 			-- Parameter for current is `domain'.
 		do
 			Result := domain.is_valid
 		end
 
-	is_domain_criterion: BOOLEAN is True
+	is_domain_criterion: BOOLEAN = True
 			-- Is current a domain criterion?
 
 feature -- Setting
 
-	set_domain (a_domain: like domain) is
+	set_domain (a_domain: like domain)
 			-- Set `domain' with `a_domain'.
 		require
 			a_domain_attached: a_domain /= Void
@@ -89,7 +89,7 @@ feature -- Setting
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_domain_criterion (Current)
@@ -98,7 +98,7 @@ feature -- Process
 invariant
 	domain_attached: domain /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to display the senders of `current_feature'."
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	features: QL_FEATURE_DOMAIN is
+	features: QL_FEATURE_DOMAIN
 			-- Features as result of Current formatter
 		do
 			if {lt_result: QL_FEATURE_DOMAIN}system_target_domain.new_domain (domain_generator) then
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_all_callers (b: BOOLEAN) is
+	set_all_callers (b: BOOLEAN)
 			-- Set `to_show_all_callers' with `b';
 		do
 			to_show_all_callers := b
@@ -60,7 +60,7 @@ feature -- Status setting
 			show_all_callers_set: to_show_all_callers = b
 		end
 
-	set_flag (a_flag: like flag) is
+	set_flag (a_flag: like flag)
 			-- Set `flag' with `a_flag'.
 		do
 			flag := a_flag
@@ -68,7 +68,7 @@ feature -- Status setting
 			flag_set: flag = a_flag
 		end
 
-	show_callers is
+	show_callers
 			-- Show callers.
 		do
 			is_callee_displayed := False
@@ -76,7 +76,7 @@ feature -- Status setting
 			callers_displayed: not is_callee_displayed
 		end
 
-	show_callees is
+	show_callees
 			-- Show callees.
 		do
 			is_callee_displayed := True
@@ -84,7 +84,7 @@ feature -- Status setting
 			callees_displayed: is_callee_displayed
 		end
 
-	set_current_feature (a_feature: like current_feature) is
+	set_current_feature (a_feature: like current_feature)
 			-- Set `current_feature' with `a_feature'.
 		do
 			current_feature := a_feature
@@ -94,7 +94,7 @@ feature -- Status setting
 
 feature -- Execution
 
-	work is
+	work
 			-- Execute the display of callers.
 		local
 			l_domain: QL_FEATURE_DOMAIN
@@ -155,7 +155,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion used in current command
 		local
 			l_caller_type: like flag
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	domain_generator: QL_DOMAIN_GENERATOR is
+	domain_generator: QL_DOMAIN_GENERATOR
 			-- Domain generator used in current command
 		do
 			create {QL_FEATURE_DOMAIN_GENERATOR}Result
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	feature_name_tester (feature_a, feature_b: QL_FEATURE): BOOLEAN is
+	feature_name_tester (feature_a, feature_b: QL_FEATURE): BOOLEAN
 			-- Compare name of `feature_a' and `feature_b'.
 		local
 			l_callee_a: QL_FEATURE
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

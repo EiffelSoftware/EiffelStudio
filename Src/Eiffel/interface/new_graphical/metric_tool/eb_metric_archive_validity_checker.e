@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric archive validity checker"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_manager: EB_METRIC_MANAGER) is
+	make (a_manager: EB_METRIC_MANAGER)
 			-- Initialize `metric_manager' with `a_manager'.
 		do
 			create delayed_validity_function_stack.make
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Process
 
-	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
+	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE)
 			-- Process `a_item'.
 		do
 			if not has_error then
@@ -50,7 +50,7 @@ feature -- Process
 			end
 		end
 
-	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER)
 			-- Process `a_item'.
 		do
 			if not has_error then
@@ -60,7 +60,7 @@ feature -- Process
 			end
 		end
 
-	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
+	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM)
 			-- Process `a_item'.
 		do
 			if not has_error then
@@ -71,7 +71,7 @@ feature -- Process
 
 feature{NONE} -- Implementation
 
-	actual_delayed_validity_function: like delayed_validity_function is
+	actual_delayed_validity_function: like delayed_validity_function
 			-- Actual `delayed_validity_function' according to current checking context
 		local
 			l_stack: like delayed_validity_function_stack
@@ -82,7 +82,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	delayed_item_validity_from_archive_input (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM): EB_METRIC_ERROR is
+	delayed_item_validity_from_archive_input (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM): EB_METRIC_ERROR
 			-- Validity status of delayed domain item from archive node input domain
 		require
 			a_item_attached:a_item /= Void
@@ -96,7 +96,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	delayed_item_validity_from_metric_value_retriever (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM): EB_METRIC_ERROR is
+	delayed_item_validity_from_metric_value_retriever (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM): EB_METRIC_ERROR
 			-- Validity status of delayed domain item from metric value retriever
 		require
 			a_item_attached:a_item /= Void

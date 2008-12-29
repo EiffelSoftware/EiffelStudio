@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generic notion of basic type value during the execution of the application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create {DBG_EVALUATOR, RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_
 
 feature {NONE} -- Initialization
 
-	make (a_sk_type: INTEGER; v: like value) is
+	make (a_sk_type: INTEGER; v: like value)
 			-- 	Set `value' to `v'.
 		require
 			v_not_void: v /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			value_set: value = v
 		end
 
-	make_attribute (a_sk_type: INTEGER; attr_name: like name; a_class: like e_class; v: like value) is
+	make_attribute (a_sk_type: INTEGER; attr_name: like name; a_class: like e_class; v: like value)
 			-- Set `attr_name' to `name' and `value' to `v'.
 		require
 			not_attr_name_void: attr_name /= Void
@@ -65,7 +65,7 @@ feature -- Access
 	dynamic_class: CLASS_C
 			-- Type represented by `value'.
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		local
 			uint8val: NATURAL_8_REF
@@ -139,13 +139,13 @@ feature -- Access
 
 feature {DEBUG_VALUE_EXPORTER} -- Output
 
-	output_value: STRING_32 is
+	output_value: STRING_32
 			-- Return a string representing `Current'.
 		do
 			Result := value.out
 		end
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 			-- Return a string representing `Current'.
 		do
 			create Result.make (40)
@@ -156,17 +156,17 @@ feature {DEBUG_VALUE_EXPORTER} -- Output
 
 feature -- ouput
 
-	expandable: BOOLEAN is False
+	expandable: BOOLEAN = False
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
 			Result := Void
 		end
 
-	kind: INTEGER is
+	kind: INTEGER
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		do
@@ -175,7 +175,7 @@ feature -- ouput
 
 feature {NONE} -- Setting
 
-	set_dynamic_class is
+	set_dynamic_class
 			-- Set `dynamic_class' to match `sk_type'.
 		require
 			valid_sk_type:
@@ -209,7 +209,7 @@ feature {NONE} -- Setting
 
 feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 
-	debug_value_type_id: INTEGER is
+	debug_value_type_id: INTEGER
 		do
 			Result := debug_basic_value_id
 		end
@@ -217,7 +217,7 @@ feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 invariant
 	dynamic_class_not_void: dynamic_class /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

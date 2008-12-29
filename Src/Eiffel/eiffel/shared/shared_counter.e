@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared access to counters."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,41 +13,41 @@ inherit
 
 feature -- Counters
 
-	Class_counter: CLASS_COUNTER is
+	Class_counter: CLASS_COUNTER
 			-- Counter of classes
 		once
 			Result := System.class_counter
 		end
 
-	Routine_id_counter: ROUTINE_COUNTER is
+	Routine_id_counter: ROUTINE_COUNTER
 			-- Counter for routine ids
 		once
 			Result := System.routine_id_counter
 		end
 	
-	Static_type_id_counter: TYPE_COUNTER is
+	Static_type_id_counter: TYPE_COUNTER
 			-- Counter of instances of CLASS_TYPE
 		once
 			Result := System.static_type_id_counter
 		end
 
-	Body_index_counter: BODY_INDEX_COUNTER is
+	Body_index_counter: BODY_INDEX_COUNTER
 			-- Body index counter
 		once
 			Result := System.body_index_counter
 		end
 
-	Real_body_id_counter: REAL_BODY_ID_COUNTER is
+	Real_body_id_counter: REAL_BODY_ID_COUNTER
 			-- Counter for real body id
 		once
 			Result := System.execution_table.counter
 		end
 
-	Invalid_index: INTEGER is 0xFFFFFFFF;
+	Invalid_index: INTEGER = 0xFFFFFFFF;
 			-- Invalid real body index used to mark
 			-- empty invariants (max BODY_INDEX)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

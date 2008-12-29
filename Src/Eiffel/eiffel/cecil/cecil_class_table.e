@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Hash table of classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- C code generation
 
-	generate is
+	generate
 			-- Generic classes table generation
 		local
 			buffer: GENERATION_BUFFER
@@ -39,7 +39,7 @@ feature -- C code generation
 			wipe_out
 		end
 
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Produce byte code for the current table
 		local
 			l_values: like values
@@ -61,7 +61,7 @@ feature -- C code generation
 
 feature {NONE} -- Convenience
 
-	prepare_entries (for_expanded: BOOLEAN; a_keys: like keys; a_values: like values) is
+	prepare_entries (for_expanded: BOOLEAN; a_keys: like keys; a_values: like values)
 			-- Check where we have entries depending on value of `for_expanded'.
 		require
 			a_keys_not_void: a_keys /= Void
@@ -125,7 +125,7 @@ feature {NONE} -- Convenience
 
 feature {NONE} -- C code generation
 
-	internal_generate (buffer: GENERATION_BUFFER; for_expanded: BOOLEAN) is
+	internal_generate (buffer: GENERATION_BUFFER; for_expanded: BOOLEAN)
 			-- Generic classes table generation.
 		require
 			buffer_not_void: buffer /= Void
@@ -310,7 +310,7 @@ feature {NONE} -- C code generation
 
 feature {NONE} -- Byte code generation
 
-	internal_make_byte_code (ba: BYTE_ARRAY; for_expanded: BOOLEAN) is
+	internal_make_byte_code (ba: BYTE_ARRAY; for_expanded: BOOLEAN)
 			-- Produce byte code for class name array.
 		local
 			i, nb, nb_types: INTEGER
@@ -448,7 +448,7 @@ feature {NONE} -- Byte code generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

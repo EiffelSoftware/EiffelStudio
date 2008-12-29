@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An extended help provider interface {HELP_PROVIDER_I} to augment an implemented help provider with search capabilities.
 	]"
@@ -30,7 +30,7 @@ feature -- Query
 				end)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

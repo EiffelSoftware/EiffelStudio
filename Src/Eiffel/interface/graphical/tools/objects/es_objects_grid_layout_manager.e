@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (a_grid: like grid; a_name: STRING) is
+	make (a_grid: like grid; a_name: STRING)
 		do
 			Precursor {ES_GRID_LAYOUT_MANAGER} (a_grid, a_name)
 			create row_ids.make (10)
@@ -41,14 +41,14 @@ feature -- Properties
 
 feature -- Cleaning
 
-	reset_layout_recorded_values is
+	reset_layout_recorded_values
 		do
 			Precursor
 			row_ids.wipe_out
 			delayed_layout_by_row.wipe_out
 		end
 
-	wipe_out is
+	wipe_out
 		do
 			Precursor
 			clear_delayed_layout_data
@@ -56,7 +56,7 @@ feature -- Cleaning
 
 feature -- Access
 
-	record is
+	record
 		do
 			if enabled then
 				debug ("es_grid_layout")
@@ -66,7 +66,7 @@ feature -- Access
 			end
 		end
 
-	restore is
+	restore
 		do
 			clear_delayed_layout_data
 			Precursor
@@ -74,7 +74,7 @@ feature -- Access
 
 feature {NONE} -- record/restore
 
-	recorded_row_layout (a_row: EV_GRID_ROW): like layout is
+	recorded_row_layout (a_row: EV_GRID_ROW): like layout
 		local
 			line: ES_OBJECTS_GRID_LINE
 		do
@@ -103,7 +103,7 @@ feature {NONE} -- record/restore
 			end
 		end
 
-	restore_row_layout_on_idle (a_row: EV_GRID_ROW; lay: like layout; l_curr_pid: INTEGER) is
+	restore_row_layout_on_idle (a_row: EV_GRID_ROW; lay: like layout; l_curr_pid: INTEGER)
 		local
 			line: ES_OBJECTS_GRID_LINE
 		do
@@ -119,7 +119,7 @@ feature {NONE} -- record/restore
 			end
 		end
 
-	delayed_restore_line_layout (a_row: EV_GRID_ROW; l_curr_pid: INTEGER) is
+	delayed_restore_line_layout (a_row: EV_GRID_ROW; l_curr_pid: INTEGER)
 		local
 			lay: like layout
 		do
@@ -133,7 +133,7 @@ feature {NONE} -- record/restore
 			end
 		end
 
-	restore_row_layout (a_row: EV_GRID_ROW; lay: like layout; on_idle: BOOLEAN; l_pid: INTEGER) is
+	restore_row_layout (a_row: EV_GRID_ROW; lay: like layout; on_idle: BOOLEAN; l_pid: INTEGER)
 		do
 			Precursor {ES_GRID_LAYOUT_MANAGER} (a_row, lay, on_idle, l_pid)
 			if on_idle then
@@ -143,7 +143,7 @@ feature {NONE} -- record/restore
 
 feature {NONE} -- delayed restoring data
 
-	clear_delayed_layout_data is
+	clear_delayed_layout_data
 		do
 			debug ("es_grid_layout")
 				print (":" + name + ": " + generator + ".clear_delayed_layout_data %N")
@@ -155,7 +155,7 @@ feature {NONE} -- delayed restoring data
 			delayed_layout_by_row.wipe_out
 		end
 
-	save_layout_for_row (r: EV_GRID_ROW; lay: like layout) is
+	save_layout_for_row (r: EV_GRID_ROW; lay: like layout)
 		local
 			rid: like row_id
 		do
@@ -167,7 +167,7 @@ feature {NONE} -- delayed restoring data
 			delayed_layout_by_row.force (lay, rid)
 		end
 
-	has_saved_layout_for_row (r: EV_GRID_ROW): BOOLEAN is
+	has_saved_layout_for_row (r: EV_GRID_ROW): BOOLEAN
 		local
 			rid: like row_id
 		do
@@ -177,7 +177,7 @@ feature {NONE} -- delayed restoring data
 			end
 		end
 
-	saved_layout_for_row (r: EV_GRID_ROW; removed_when_fetched: BOOLEAN): like layout is
+	saved_layout_for_row (r: EV_GRID_ROW; removed_when_fetched: BOOLEAN): like layout
 		local
 			rid: like row_id
 		do
@@ -193,7 +193,7 @@ feature {NONE} -- delayed restoring data
 			end
 		end
 
-	remove_saved_layout_for_row (r: EV_GRID_ROW) is
+	remove_saved_layout_for_row (r: EV_GRID_ROW)
 		local
 			rid: like row_id
 		do
@@ -210,7 +210,7 @@ feature {NONE} -- delayed restoring data
 
 	row_ids: ARRAYED_LIST [EV_GRID_ROW]
 
-	row_id (r: EV_GRID_ROW; create_if_not_found: BOOLEAN): INTEGER is
+	row_id (r: EV_GRID_ROW; create_if_not_found: BOOLEAN): INTEGER
 		local
 			s,i: INTEGER
 		do
@@ -243,7 +243,7 @@ feature {NONE} -- delayed restoring data
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

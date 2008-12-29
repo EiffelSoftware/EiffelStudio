@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		" Description of submenu Switches for %
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make_without_help (n: STRING; c: CHARACTER; s: EWB_MENU) is
+	make_without_help (n: STRING; c: CHARACTER; s: EWB_MENU)
 		do
 			name := n;
 			abbreviation := c;
@@ -32,7 +32,7 @@ feature -- Initialization
 
 feature -- Properties
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		local
 			ewb_profile_switch: EWB_PROFILE_SWITCH
 			i: INTEGER
@@ -66,7 +66,7 @@ feature -- Properties
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a graph of classes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tool: like context_editor) is
+	make (a_tool: like context_editor)
 			-- Create a CLASS_GRAPH in `a_tool'.
 		require
 			a_tool_not_void: a_tool /= Void
@@ -65,7 +65,7 @@ feature -- Status report.
 
 feature -- Status settings.
 
-	set_include_all_classes_of_cluster (b: BOOLEAN) is
+	set_include_all_classes_of_cluster (b: BOOLEAN)
 			-- Set `include_all_classes_of_cluster' to `b'.
 		do
 			include_all_classes_of_cluster := b
@@ -73,7 +73,7 @@ feature -- Status settings.
 			set: include_all_classes_of_cluster = b
 		end
 
-	set_include_only_classes_of_cluster (b: BOOLEAN) is
+	set_include_only_classes_of_cluster (b: BOOLEAN)
 			-- Set `include_only_classes_in_cluster' to `b'.
 		do
 			include_only_classes_of_cluster := b
@@ -83,7 +83,7 @@ feature -- Status settings.
 
 feature -- Element change
 
-	set_ancestor_depth (i: INTEGER) is
+	set_ancestor_depth (i: INTEGER)
 			-- Set `ancestor_depth' to `i'.
 		require
 			positive_depth: i >= 0
@@ -93,7 +93,7 @@ feature -- Element change
 			assigned: ancestor_depth = i
 		end
 
-	set_descendant_depth (i: INTEGER) is
+	set_descendant_depth (i: INTEGER)
 			-- Set `descendant_depth' to `i'.
 		require
 			positive_depth: i >= 0
@@ -103,7 +103,7 @@ feature -- Element change
 			assigned: descendant_depth = i
 		end
 
-	set_client_depth (i: INTEGER) is
+	set_client_depth (i: INTEGER)
 			-- Set `client_depth' to `i'.
 		require
 			positive_depth: i >= 0
@@ -113,7 +113,7 @@ feature -- Element change
 			assigned: client_depth = i
 		end
 
-	set_supplier_depth (i: INTEGER) is
+	set_supplier_depth (i: INTEGER)
 			-- Set `supplier_depth' to `i'.
 		require
 			positive_depth: i >= 0
@@ -123,7 +123,7 @@ feature -- Element change
 			assigned: supplier_depth = i
 		end
 
-	set_center_class (a_center_class: like center_class) is
+	set_center_class (a_center_class: like center_class)
 			-- Set `center_class' to `a_center_class'.
 		require
 			a_center_class_not_void: a_center_class /= Void
@@ -133,7 +133,7 @@ feature -- Element change
 			center_class_set: center_class = a_center_class
 		end
 
-	explore_center_class is
+	explore_center_class
 			-- Explore relations according to `center_class'.
 		require
 			center_class_not_void: center_class /= Void
@@ -148,7 +148,7 @@ feature -- Element change
 			remove_unneeded_items
 		end
 
-	set_new_center_class (a_center_class: like center_class) is
+	set_new_center_class (a_center_class: like center_class)
 			-- Set `center_class' to `a_center_class' add not
 			-- relations not yet there, remove relations too
 			-- far away.
@@ -175,7 +175,7 @@ feature -- Element change
 
 feature {ES_DIAGRAM_TOOL_PANEL} -- Synchronization
 
-	synchronize is
+	synchronize
 			-- Contexts need to be updated because of recompilation
 			-- or similar action that needs resynchronization.
 		do
@@ -195,7 +195,7 @@ feature {ES_DIAGRAM_TOOL_PANEL} -- Synchronization
 
 feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 
-	explore_relations is
+	explore_relations
 			-- Explore relations of `center_class'.
 		local
 			nb_of_items: INTEGER
@@ -222,7 +222,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			explore_suppliers (center_class, supplier_depth, True)
 		end
 
-	number_of_ancestors (a_class: CLASS_I; depth: INTEGER): INTEGER is
+	number_of_ancestors (a_class: CLASS_I; depth: INTEGER): INTEGER
 			-- Calculate number of ancestors of `a_class' until `depth' is reached.
 		require
 			a_class_not_void: a_class /= Void
@@ -247,7 +247,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			end
 		end
 
-	explore_ancestors (a_class: CLASS_I; depth: INTEGER; progress_bar: BOOLEAN) is
+	explore_ancestors (a_class: CLASS_I; depth: INTEGER; progress_bar: BOOLEAN)
 			-- Add ancestors of `a_class' until `depth' is reached.
 		require
 			a_class_not_void: a_class /= Void
@@ -282,7 +282,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			end
 		end
 
-	number_of_descendants (a_class: CLASS_I; depth: INTEGER): INTEGER is
+	number_of_descendants (a_class: CLASS_I; depth: INTEGER): INTEGER
 			-- Add descendants of `a_class' until `depth' is reached.
 		require
 			a_class_not_void: a_class /= Void
@@ -306,7 +306,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			end
 		end
 
-	explore_descendants (a_class: CLASS_I; depth: INTEGER; progress_bar: BOOLEAN) is
+	explore_descendants (a_class: CLASS_I; depth: INTEGER; progress_bar: BOOLEAN)
 			-- Add descendants of `a_class' until `depth' is reached.
 		require
 			a_class_not_void: a_class /= Void
@@ -343,7 +343,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			end
 		end
 
-	number_of_clients (a_class: CLASS_I; depth: INTEGER): INTEGER is
+	number_of_clients (a_class: CLASS_I; depth: INTEGER): INTEGER
 			-- Add clients of `a_class' until `depth' is reached.
 		require
 			a_class_not_void: a_class /= Void
@@ -367,7 +367,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			end
 		end
 
-	explore_clients (a_class: ES_CLASS; depth: INTEGER; progress_bar: BOOLEAN) is
+	explore_clients (a_class: ES_CLASS; depth: INTEGER; progress_bar: BOOLEAN)
 			-- Add clients of `a_class' until `depth' is reached.
 		require
 			a_class_not_void: a_class /= Void
@@ -427,7 +427,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			end
 		end
 
-	number_of_suppliers (a_class: CLASS_I; depth: INTEGER): INTEGER is
+	number_of_suppliers (a_class: CLASS_I; depth: INTEGER): INTEGER
 			-- Add suppliers of `a_class' until `depth' is reached.
 		require
 			a_class_not_void: a_class /= Void
@@ -451,7 +451,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			end
 		end
 
-	explore_suppliers (a_class: ES_CLASS; depth: INTEGER; progress_bar: BOOLEAN) is
+	explore_suppliers (a_class: ES_CLASS; depth: INTEGER; progress_bar: BOOLEAN)
 			-- Add suppliers of `a_class' until `depth' is reached.
 		require
 			a_class_not_void: a_class /= Void
@@ -514,7 +514,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			end
 		end
 
-	include_all_classes (cluster_i: CONF_GROUP) is
+	include_all_classes (cluster_i: CONF_GROUP)
 			-- Include all classes in `cluster_i'.
 		require
 			cluster_i_not_void: cluster_i /= Void
@@ -539,7 +539,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 
 feature {NONE} -- Disable relations
 
-	disable_reachable_classes (a_center: ES_CLASS) is
+	disable_reachable_classes (a_center: ES_CLASS)
 			-- Disable needed on diagram for all classes reachable from `a_center'.
 		require
 			a_center_not_void: a_center /= Void
@@ -550,7 +550,7 @@ feature {NONE} -- Disable relations
 			disable_reachable_descendants (a_center, descendant_depth)
 		end
 
-	disable_reachable_clients (a_class: ES_CLASS; a_depth: INTEGER) is
+	disable_reachable_clients (a_class: ES_CLASS; a_depth: INTEGER)
 			-- Disable needed on diagram for all reachable clients from `a_class'.
 		require
 			a_class_not_Void: a_class /= Void
@@ -583,7 +583,7 @@ feature {NONE} -- Disable relations
 			end
 		end
 
-	disable_reachable_suppliers (a_class: ES_CLASS; a_depth: INTEGER) is
+	disable_reachable_suppliers (a_class: ES_CLASS; a_depth: INTEGER)
 			-- Disable needed on diagram for all reachable suppliers from `a_class'.
 		require
 			a_class_not_Void: a_class /= Void
@@ -613,7 +613,7 @@ feature {NONE} -- Disable relations
 
 		end
 
-	disable_reachable_ancestors (a_class: ES_CLASS; a_depth: INTEGER) is
+	disable_reachable_ancestors (a_class: ES_CLASS; a_depth: INTEGER)
 			-- Disable needed on diagram for all reachable ancestors from `a_class'.
 		require
 			a_class_not_Void: a_class /= Void
@@ -642,7 +642,7 @@ feature {NONE} -- Disable relations
 			end
 		end
 
-	disable_reachable_descendants (a_class: ES_CLASS; a_depth: INTEGER) is
+	disable_reachable_descendants (a_class: ES_CLASS; a_depth: INTEGER)
 			-- Disable needed on diagram for all reachable descendants from `a_class'.
 		require
 			a_class_not_Void: a_class /= Void
@@ -671,14 +671,14 @@ feature {NONE} -- Disable relations
 			end
 		end
 
-	disable_class (a_class: ES_CLASS) is
+	disable_class (a_class: ES_CLASS)
 			-- Remove `a_class' and its links
 		do
 			a_class.disable_needed_on_diagram
 			disable_all_links (a_class.internal_links)
 		end
 
-	disable_all_links (a_links: LIST [EG_LINK]) is
+	disable_all_links (a_links: LIST [EG_LINK])
 			-- Disable `is_needed_on_diagram' for all links in `a_links'
 		require
 			a_links_not_void: a_links /= Void
@@ -698,7 +698,7 @@ feature {NONE} -- Disable relations
 			end
 		end
 
-	add_class (a_class: CLASS_I) is
+	add_class (a_class: CLASS_I)
 			-- Include `a_class' in the diagram.
 			-- Add any relations `a_class' may have with
 			-- all items in `class_figures'.
@@ -742,7 +742,7 @@ feature {EIFFEL_CLASS_FIGURE}
 	last_created_classes: ARRAYED_LIST [ES_CLASS]
 			-- Last created classes by `add_class' if not Void.
 
-	reset_last_created_classes is
+	reset_last_created_classes
 			-- Set `last_created_classes' to Void.
 		do
 			last_created_classes := Void
@@ -755,7 +755,7 @@ invariant
 	supplier_depth_positive: supplier_depth >= 0
 	center_class_Void_implies_empty: center_class = Void implies is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to generate documentation for an Eiffel project."
@@ -31,7 +31,7 @@ create
 
 feature -- Initialization
 
-	make_flat (f_name: like filter_name; a_window: like generate_window) is
+	make_flat (f_name: like filter_name; a_window: like generate_window)
 			-- Initialize document generation to flat.
 		require
 			valid_window: a_window /= Void
@@ -41,7 +41,7 @@ feature -- Initialization
 			generate_window := a_window
 		end;
 
-	make_flat_short (f_name: like filter_name; a_window: like generate_window) is
+	make_flat_short (f_name: like filter_name; a_window: like generate_window)
 			-- Initialize document generation to flat_short.
 		require
 			valid_window: a_window /= Void
@@ -51,7 +51,7 @@ feature -- Initialization
 			generate_window := a_window
 		end;
 
-	make_text (f_name: like filter_name; a_window: like generate_window) is
+	make_text (f_name: like filter_name; a_window: like generate_window)
 			-- Initialize document generation to text.
 		require
 			valid_window: a_window /= Void
@@ -61,7 +61,7 @@ feature -- Initialization
 			generate_window := a_window
 		end;
 
-	make_short (f_name: like filter_name; a_window: like generate_window) is
+	make_short (f_name: like filter_name; a_window: like generate_window)
 			-- Initialize document generation to text.
 		require
 			valid_window: a_window /= Void
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_error_window (a_window: like error_window) is
+	set_error_window (a_window: like error_window)
 			-- Set `error_window' to `a_window'.
 		do
 			error_window := a_window
@@ -89,7 +89,7 @@ feature -- Status setting
 			set: error_window = a_window
 		end;
 
-	set_do_parents is
+	set_do_parents
 			-- Set `do_parents' to True;
 		do
 			do_parents := True
@@ -99,7 +99,7 @@ feature -- Status setting
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Show classes in universe
 		local
 			doc: DOCUMENTATION
@@ -147,16 +147,16 @@ feature {NONE} -- Implementation
 	format_type: INTEGER;
 			-- Format type
 
-	flat_short_type: INTEGER is 1
-	short_type: INTEGER is 2
-	flat_type: INTEGER is 3
-	text_type: INTEGER is 4
+	flat_short_type: INTEGER = 1
+	short_type: INTEGER = 2
+	flat_type: INTEGER = 3
+	text_type: INTEGER = 4
 
 	error_window: OUTPUT_WINDOW;
 			-- Output window used to display erros during the
 			-- execution of Current
 
-	append_parents (a_text_formatter: TEXT_FORMATTER; e_class: CLASS_C) is
+	append_parents (a_text_formatter: TEXT_FORMATTER; e_class: CLASS_C)
 			-- Append parents to `a_text_formatter' for `e_class'.
 		require
 			valid_args: a_text_formatter /= Void and then e_class /= Void
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 
 	generate_cluster_list (a_text_formatter: TEXT_FORMATTER;
 				clusters: ARRAYED_LIST [CLUSTER_I];
-				indent: INTEGER) is
+				indent: INTEGER)
 			-- Generate the cluster list for universe to `a_text_formatter'.
 		require
 			valid_st: a_text_formatter /= Void
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	add_tabs (a_text_formatter:TEXT_FORMATTER; i: INTEGER) is
+	add_tabs (a_text_formatter:TEXT_FORMATTER; i: INTEGER)
 			-- Add `i' tabs to `a_text_formatter'.
 		local
 			j: INTEGER
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

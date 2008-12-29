@@ -1,4 +1,4 @@
-indexing
+note
 	description: "View points of a class or a group"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_class (a_class: like conf_class) is
+	make_class (a_class: like conf_class)
 			-- Initialization
 		require
 			a_class_not_void: a_class /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			conf_group_not_void: conf_group = a_class.group
 		end
 
-	make_group (a_group: like conf_group) is
+	make_group (a_group: like conf_group)
 			-- Initialize with `a_group'.
 		require
 			a_group_not_void: a_group /= Void
@@ -51,7 +51,7 @@ feature -- Access
 	view_points: LIST [CONF_GROUP]
 			-- All viewpoints that are available for `conf_group'
 
-	current_viewpoint: CONF_GROUP is
+	current_viewpoint: CONF_GROUP
 			-- Current viewpoint
 		do
 			Result := conf_group
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_conf_class (a_class: like conf_class) is
+	set_conf_class (a_class: like conf_class)
 			-- Set `conf_class' with `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -77,7 +77,7 @@ feature -- Element change
 			conf_group_not_void: conf_group = a_class.group
 		end
 
-	set_conf_group (a_group: like conf_group) is
+	set_conf_group (a_group: like conf_group)
 			-- Set `conf_group' with `a_group'
 		require
 			a_group_not_void: a_group /= Void
@@ -92,7 +92,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	calculate_viewpoints is
+	calculate_viewpoints
 			-- Calculate all viewpoints for `conf_group'
 		require
 			conf_group_not_void: conf_group /= Void
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			view_points_not_void: view_points /= Void
 		end
 
-	calculate_sorted_viewpoints (a_list: ARRAYED_LIST [CONF_VIRTUAL_GROUP]): ARRAYED_LIST [CONF_GROUP] is
+	calculate_sorted_viewpoints (a_list: ARRAYED_LIST [CONF_VIRTUAL_GROUP]): ARRAYED_LIST [CONF_GROUP]
 			-- Compute sorted viewpoints for `a_list'.
 		local
 			l_renamed: BOOLEAN
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			create Result.make_from_array (l_sorted_list)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

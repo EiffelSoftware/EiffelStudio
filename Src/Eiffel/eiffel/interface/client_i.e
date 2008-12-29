@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of an export clause."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (c: like clients; i: like written_in) is
+	make (c: like clients; i: like written_in)
 			-- Initialize current with `c' and `i'.
 		require
 			c_not_void: c /= Void
@@ -56,13 +56,13 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: CLIENT_I): BOOLEAN is
+	is_equal (other: CLIENT_I): BOOLEAN
 			-- Is `other' equal to Current ?
 		do
 			Result := written_in = other.written_in
 		end
 
-	is_less alias "<" (other: CLIENT_I): BOOLEAN is
+	is_less alias "<" (other: CLIENT_I): BOOLEAN
 			-- is `other greater than Current ?
 		do
 			Result := written_in < other.written_in
@@ -70,7 +70,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	written_class: CLASS_C is
+	written_class: CLASS_C
 			-- Class in which Current is written.
 		do
 			Result := System.class_of_id (written_in)
@@ -78,7 +78,7 @@ feature -- Status report
 
 feature -- Query
 
-	valid_for (client: CLASS_C): BOOLEAN is
+	valid_for (client: CLASS_C): BOOLEAN
 			-- Is the client `client' valid for the current client list ?
 		require
 			good_argument: client /= Void
@@ -107,7 +107,7 @@ feature -- Query
 
 feature -- Incrementality
 
-	equiv (other: CLIENT_I): BOOLEAN is
+	equiv (other: CLIENT_I): BOOLEAN
 			-- Is `other' equivalent to Current ?	
 			-- [Result implies "`clients' is a subset of `other.clients'"]
 		require
@@ -130,7 +130,7 @@ feature -- Incrementality
 			end
 		end
 
-	same_as (other: CLIENT_I): BOOLEAN is
+	same_as (other: CLIENT_I): BOOLEAN
 			-- Is `other' the same as Current ?
 		require
 			good_argument: other /= Void
@@ -156,7 +156,7 @@ feature -- Incrementality
 
 feature -- Debug purpose
 
-	trace is
+	trace
 			-- Debug purpose
 		local
 			i, nb: INTEGER
@@ -179,7 +179,7 @@ feature -- Debug purpose
 
 feature -- formatter
 
-	less_restrictive_than (other: like Current): BOOLEAN is
+	less_restrictive_than (other: like Current): BOOLEAN
 		require
 			good_argument: other /= Void
 		local
@@ -208,7 +208,7 @@ invariant
 	clients_not_void: clients /= Void
 	written_in_positive: written_in > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

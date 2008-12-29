@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a view for a FEATURE_SECTION."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -52,7 +52,7 @@ create {FEATURE_SECTION_VIEW}
 
 feature {NONE} -- Initialize
 
-	make (a_fs: like feature_section; a_container: like container) is
+	make (a_fs: like feature_section; a_container: like container)
 			-- Create a FEATURE_SECTION_VIEW showing `a_fs' in `a_container'.
 		require
 			a_fs_not_Void: a_fs /= Void
@@ -154,7 +154,7 @@ feature -- Access
 	is_expanded: BOOLEAN
 			-- Is section expanded?
 
-	world: EG_FIGURE_WORLD is
+	world: EG_FIGURE_WORLD
 			-- World `Current' is part of.
 		do
 			Result ?= Precursor {EV_MODEL_GROUP}
@@ -162,7 +162,7 @@ feature -- Access
 
 feature -- Element change
 
-	expand is
+	expand
 			-- Expand feature section.
 		require
 			is_collabsed: not is_expanded
@@ -178,7 +178,7 @@ feature -- Element change
 			is_expanded: is_expanded
 		end
 
-	collabse is
+	collabse
 			-- Collabse feature section.
 		require
 			is_expanded: is_expanded
@@ -199,14 +199,14 @@ feature {NONE} -- Implementation
 	features_count: INTEGER
 			-- Number of features in section.
 
-	set_features_text_properties (txt: EV_MODEL_TEXT) is
+	set_features_text_properties (txt: EV_MODEL_TEXT)
 			-- Set properties of `txt' according to standarts.
 		do
 			txt.set_identified_font (uml_class_features_font)
 			txt.set_foreground_color (uml_class_features_color)
 		end
 
-	set_section_text_properties (txt: EV_MODEL_TEXT) is
+	set_section_text_properties (txt: EV_MODEL_TEXT)
 			-- Set properties of `txt' according to standarts.
 		do
 			txt.set_identified_font (uml_class_feature_section_font)
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 
 	feature_group: EV_MODEL_GROUP
 
-	on_section_press (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_section_press (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- User pressed on section name.
 		do
 			if is_expanded then
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	disable_pick_and_drop is
+	disable_pick_and_drop
 			-- Disable pick and drop of features.
 		do
 			from
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	enable_pick_and_drop is
+	enable_pick_and_drop
 			-- Enable pick and drop of features.
 		do
 			from
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_preferences is
+	retrieve_preferences
 			-- Retrieve properties from preference.
 		local
 			txt, last_txt: EV_MODEL_TEXT
@@ -287,12 +287,12 @@ feature {NONE} -- Implementation
 			container.request_update
 		end
 
-	on_double_press is
+	on_double_press
 			-- Do nothing, but block the delegation to `container'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

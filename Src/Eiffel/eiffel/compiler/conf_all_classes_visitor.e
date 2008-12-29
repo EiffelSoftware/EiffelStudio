@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Get a list of all classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create.
 		do
 			create classes.make (1000)
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Visit nodes
 
-	process_library (a_library: CONF_LIBRARY) is
+	process_library (a_library: CONF_LIBRARY)
 			-- Visit `a_library'.
 		do
 			if a_library.library_target /= Void then
@@ -47,7 +47,7 @@ feature -- Visit nodes
 			end
 		end
 
-	process_precompile (a_precompile: CONF_PRECOMPILE) is
+	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Visit `a_precompile'.
 		do
 			if a_precompile.library_target /= Void then
@@ -55,7 +55,7 @@ feature -- Visit nodes
 			end
 		end
 
-	process_assembly (an_assembly: CONF_ASSEMBLY) is
+	process_assembly (an_assembly: CONF_ASSEMBLY)
 			-- Visit `an_assembly'.
 		do
 			if an_assembly.classes_set then
@@ -63,7 +63,7 @@ feature -- Visit nodes
 			end
 		end
 
-	process_physical_assembly (a_assembly: CONF_PHYSICAL_ASSEMBLY) is
+	process_physical_assembly (a_assembly: CONF_PHYSICAL_ASSEMBLY)
 			-- Visit `a_assembly'.
 		do
 			if not assemblies_done.has (a_assembly.guid) then
@@ -72,13 +72,13 @@ feature -- Visit nodes
 			end
 		end
 
-	process_cluster (a_cluster: CONF_CLUSTER) is
+	process_cluster (a_cluster: CONF_CLUSTER)
 			-- Visit `a_cluster'.
 		do
 			retrieve_from_group (a_cluster)
 		end
 
-	process_override (an_override: CONF_OVERRIDE) is
+	process_override (an_override: CONF_OVERRIDE)
 			-- Visit `an_override'.
 		do
 			retrieve_from_group (an_override)
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 	assemblies_done: SEARCH_TABLE [STRING]
 			-- Lookup for assemblies we already handled.
 
-	retrieve_recursively (a_target: CONF_TARGET) is
+	retrieve_recursively (a_target: CONF_TARGET)
 			-- Retrieve classes recursively from `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_from_group (a_group: CONF_GROUP) is
+	retrieve_from_group (a_group: CONF_GROUP)
 			-- Retrieve classes from `a_group'.
 		require
 			a_group_not_void: a_group /= Void
@@ -121,7 +121,7 @@ invariant
 	targets_done_not_void: targets_done /= Void
 	assemblies_done_not_void: assemblies_done /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

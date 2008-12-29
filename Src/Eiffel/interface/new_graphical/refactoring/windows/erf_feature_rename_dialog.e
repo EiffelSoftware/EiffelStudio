@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog that let the user edit the name of a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Build interface.
 		local
 			fvb, vb_top, vb, vb_label, vb_text_field: EV_VERTICAL_BOX
@@ -117,13 +117,13 @@ feature -- Status report
 	ok_pressed: BOOLEAN
 			-- Did the user confirm the action?
 
-	comments: BOOLEAN is
+	comments: BOOLEAN
 			-- Replace name in comments?
 		do
 			Result := comments_button.is_selected
 		end
 
-	strings: BOOLEAN is
+	strings: BOOLEAN
 			-- Replace name in strings?
 		do
 			Result := strings_button.is_selected
@@ -137,7 +137,7 @@ feature -- Access
 	cancel_button: EV_BUTTON
 			-- Button with label "Cancel".
 
-	name: STRING is
+	name: STRING
 			-- Class name typed by user.
 		do
 			Result := name_field.text
@@ -145,7 +145,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Assign `a_name' to `name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -159,13 +159,13 @@ feature -- Element change
 			end
 		end
 
-	enable_update_comments is
+	enable_update_comments
 			-- Enable replace comments.
 		do
 			comments_button.enable_select
 		end
 
-	enable_update_strings is
+	enable_update_strings
 			-- Enable replace strings.
 		do
 			strings_button.enable_select
@@ -177,27 +177,27 @@ feature {NONE} -- Implementation
 	name_field: EV_TEXT_FIELD
 	current_name: EV_LABEL
 
-	on_ok_pressed is
+	on_ok_pressed
 			-- The user pressed OK.
 		do
 			ok_pressed := True
 			destroy
 		end
 
-	on_cancel_pressed is
+	on_cancel_pressed
 			-- The user pressed Cancel.
 		do
 			ok_pressed := False
 			destroy
 		end
 
-	on_show is
+	on_show
 			-- Triggered when the dialog is shown.
 		do
 			name_field.set_focus
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

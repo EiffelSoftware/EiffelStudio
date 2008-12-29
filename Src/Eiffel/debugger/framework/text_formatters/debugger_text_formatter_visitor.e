@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Routines for use by classes that need to display debugger related objects in TEXT_FORMATTER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,14 +11,14 @@ class
 
 feature -- Generic
 
-	append_to (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER; indent: INTEGER) is
+	append_to (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER; indent: INTEGER)
 		require
 			v_not_void: v /= Void
 			st_not_void: st /= Void
 		deferred
 		end
 
-	append_type_and_value (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER) is
+	append_type_and_value (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER)
 		require
 			v_not_void: v /= Void
 			st_not_void: st /= Void
@@ -27,7 +27,7 @@ feature -- Generic
 
 feature -- Application status
 
-	append_status (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER) is
+	append_status (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER)
 			-- Display the status of the running application.
 		require
 			appstatus_not_void: appstatus /= Void
@@ -35,7 +35,7 @@ feature -- Application status
 		deferred
 		end
 
-	append_exception (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER) is
+	append_exception (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER)
 			-- Display exception in `st'.		
 		require
 			appstatus_not_void: appstatus /= Void
@@ -46,7 +46,7 @@ feature -- Application status
 
 feature -- Call stack
 
-	append_stack (ecs: EIFFEL_CALL_STACK; st: TEXT_FORMATTER) is
+	append_stack (ecs: EIFFEL_CALL_STACK; st: TEXT_FORMATTER)
 			-- Display callstack in `st'.
 		require
 			ecs_not_void: ecs /= Void
@@ -54,7 +54,7 @@ feature -- Call stack
 		deferred
 		end
 
-	append_arguments (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER) is
+	append_arguments (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER)
 			-- Display the arguments passed to the routine
 			-- associated with Current call.
 		require
@@ -63,7 +63,7 @@ feature -- Call stack
 		deferred
 		end
 
-	append_locals (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER) is
+	append_locals (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER)
 			-- Display the local entities and result (if it exists) of
 			-- the routine associated with Current call.
 		require
@@ -72,7 +72,7 @@ feature -- Call stack
 		deferred
 		end
 
-	append_feature (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER) is
+	append_feature (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER)
 			-- Display information about associated routine.
 		require
 			cse_not_void: cse /= Void
@@ -80,7 +80,7 @@ feature -- Call stack
 		deferred
 		end
 
-	append_debugger_information (dbg: DEBUGGER_MANAGER; param: DEBUGGER_EXECUTION_PARAMETERS; st: TEXT_FORMATTER) is
+	append_debugger_information (dbg: DEBUGGER_MANAGER; param: DEBUGGER_EXECUTION_PARAMETERS; st: TEXT_FORMATTER)
 			-- Display information about debugger
 		require
 			dbg /= Void
@@ -90,7 +90,7 @@ feature -- Call stack
 
 feature {NONE} -- Implementation
 
-	append_tabs (st: TEXT_FORMATTER; indent: INTEGER) is
+	append_tabs (st: TEXT_FORMATTER; indent: INTEGER)
 			-- Append `indent' tabulation character to `st'.
 		require
 			st: st /= Void;
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

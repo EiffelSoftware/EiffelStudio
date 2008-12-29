@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Simple toolbarable and menuable command.%
 				%When using it, do not forget to define all the standardized fields"
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			create execute_agents.make
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_pixmap (new_p: EV_PIXMAP) is
+	set_pixmap (new_p: EV_PIXMAP)
 			-- Define pixmap associated with `Current'.
 		require
 			new_p_non_void: new_p /= Void
@@ -77,7 +77,7 @@ feature -- Status setting
 			pixmap := new_p
 		end
 
-	set_pixel_buffer (a_buffer: EV_PIXEL_BUFFER) is
+	set_pixel_buffer (a_buffer: EV_PIXEL_BUFFER)
 			-- Define pixel buffer associated with `Current'.
 		require
 			a_buffer_not_void: a_buffer /= Void
@@ -85,7 +85,7 @@ feature -- Status setting
 			pixel_buffer := a_buffer
 		end
 
-	set_tooltip (s: like tooltip) is
+	set_tooltip (s: like tooltip)
 			-- Define a new tooltip for `Current', and possibly a new description.
 		do
 			tooltip := s
@@ -94,13 +94,13 @@ feature -- Status setting
 			end
 		end
 
-	set_tooltext (s: like tooltext) is
+	set_tooltext (s: like tooltext)
 			-- Define a new tooltext for `Current' that is displayed
 		do
 			tooltext := s
 		end
 
-	set_description (s: like description) is
+	set_description (s: like description)
 			-- Define a new description for `Current', and possibly a new tooltip.
 		do
 			description := s
@@ -109,7 +109,7 @@ feature -- Status setting
 			end
 		end
 
-	set_accelerator (acc: EV_ACCELERATOR) is
+	set_accelerator (acc: EV_ACCELERATOR)
 			-- Define an accelerator for `Current'.
 		do
 			accelerator := acc
@@ -118,25 +118,25 @@ feature -- Status setting
 			end
 		end
 
-	set_menu_name (s: like menu_name) is
+	set_menu_name (s: like menu_name)
 			-- Define a new menu name for `Current'.
 		do
 			menu_name := s
 		end
 
-	set_name (s: like name) is
+	set_name (s: like name)
 			-- Define a new name for `Current'.
 		do
 			name := s
 		end
 
-	add_agent (a: PROCEDURE [ANY, TUPLE]) is
+	add_agent (a: PROCEDURE [ANY, TUPLE])
 			-- Extend `execute_agents' with `a'.
 		do
 			execute_agents.extend (a)
 		end
 
-	set_mini_pixmap (p: EV_PIXMAP) is
+	set_mini_pixmap (p: EV_PIXMAP)
 			-- Define the pixmap displayed on mini buttons associated to `Current'.
 		do
 			mini_pixmap := p
@@ -150,7 +150,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Call all agents associated with `Current'.
 		do
 			from
@@ -165,13 +165,13 @@ feature -- Basic operations
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			execute_agents.wipe_out
 		end
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- <Precursor>
 		do
 			pixel_buffer := Void
@@ -188,7 +188,7 @@ feature {NONE} -- Recyclable
 			Precursor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

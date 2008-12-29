@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Makefile generation control. The generated Makefile.SH is to be run through
 		/bin/sh to get properly instantiated for a given platform. A partial linking
@@ -51,25 +51,25 @@ feature -- Attributes
 			-- Number of partial object files needed
 			-- for system object files
 
-	Packet_number: INTEGER is 33
+	Packet_number: INTEGER = 33
 			-- Maximum number of files in a single linking phase in Workbench mode.
 
-	Final_packet_number: INTEGER is 50
+	Final_packet_number: INTEGER = 50
 			-- Maximum number of files in a single linking phase in Final mode.
 
-	System_packet_number: INTEGER is 20
+	System_packet_number: INTEGER = 20
 			-- Maximum number of files in a single linking phase
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation
 		do
 			create cecil_rt_basket.make
 			create empty_class_types.make (50)
 		end
 
-	init_objects_baskets is
+	init_objects_baskets
 			-- Create objects baskets.
 		local
 			basket_nb, i: INTEGER
@@ -98,7 +98,7 @@ feature -- Initialization
 			end
 		end
 
-	clear is
+	clear
 			-- Forget the lists
 		do
 			object_baskets := Void
@@ -109,12 +109,12 @@ feature -- Initialization
 
 feature
 
-	run_time: STRING is
+	run_time: STRING
 			-- Run time with which the application must be linked
 		deferred
 		end
 
-	system_name: STRING is
+	system_name: STRING
 			-- Name of executable
 		do
 			Result := System.name
@@ -122,17 +122,17 @@ feature
 
 feature -- Object basket managment
 
-	add_specific_objects is
+	add_specific_objects
 			-- Add objects specific to Current compilation mode.
 		deferred
 		end
 
-	add_eiffel_objects is
+	add_eiffel_objects
 			-- Insert objects files in basket.
 		deferred
 		end
 
-	add_in_primary_system_basket (base_name: STRING) is
+	add_in_primary_system_basket (base_name: STRING)
 		local
 			object_name: STRING
  			string_list: LINKED_LIST [STRING]
@@ -145,7 +145,7 @@ feature -- Object basket managment
  			string_list.forth
 		end
 
-	add_in_system_basket (base_name: STRING; basket_number: INTEGER) is
+	add_in_system_basket (base_name: STRING; basket_number: INTEGER)
 		local
 			object_name: STRING
  			string_list: LINKED_LIST [STRING]
@@ -158,7 +158,7 @@ feature -- Object basket managment
  			string_list.forth
 		end
 
-	add_common_objects is
+	add_common_objects
 			-- Add common objects file
 		do
 			add_in_primary_system_basket (Eplug)
@@ -171,11 +171,11 @@ feature -- Object basket managment
 
 feature -- Cecil
 
-	add_cecil_objects is
+	add_cecil_objects
 		deferred
 		end
 
-	generate_cecil is
+	generate_cecil
 		do
 				-- Cecil run-time macro
 			generate_macro ("RCECIL", cecil_rt_basket)
@@ -226,7 +226,7 @@ feature -- Cecil
 
 feature -- Generate Dynamic Library
 
-	generate_dynamic_lib is
+	generate_dynamic_lib
 		local
 			egc_dynlib_file: STRING
 		do
@@ -288,7 +288,7 @@ feature -- Actual generation
 	make_file: INDENT_FILE
 		-- File in which we are going to generate the Makefile.
 
-	generate is
+	generate
 			-- Generate make files
 		do
 			init_objects_baskets
@@ -345,7 +345,7 @@ feature -- Actual generation
 			cecil_rt_basket.wipe_out
 		end
 
-	generate_il (has_il_cpp: BOOLEAN) is
+	generate_il (has_il_cpp: BOOLEAN)
 			-- Generate make files
 		local
 			basket: LINKED_LIST [STRING]
@@ -389,7 +389,7 @@ feature -- Actual generation
 
 feature -- Sub makefile generation
 
-	generate_sub_makefiles (sub_dir: CHARACTER; baskets: ARRAY [LINKED_LIST [STRING]]) is
+	generate_sub_makefiles (sub_dir: CHARACTER; baskets: ARRAY [LINKED_LIST [STRING]])
 				-- Generate makefile in subdirectories.
 		require
 			baskets_not_void: baskets /= Void
@@ -453,7 +453,7 @@ feature -- Sub makefile generation
 			make_file := old_makefile
 		end
 
-	cleanup_generated_makefiles (sub_dir: CHARACTER; baskets: ARRAY [LINKED_LIST [STRING]]) is
+	cleanup_generated_makefiles (sub_dir: CHARACTER; baskets: ARRAY [LINKED_LIST [STRING]])
 			-- Remove directory when associated baskets is empty.
 		require
 			baskets_not_void: baskets /= Void
@@ -484,18 +484,18 @@ feature -- Sub makefile generation
 
 feature -- Generation, Header
 
-	generate_compilation_rule is
+	generate_compilation_rule
 			-- Generates the .c -> .o compilation rule
 		deferred
 		end
 
-	generate_specific_defines is
+	generate_specific_defines
 			-- Generate specific "-D" flags.
 			-- Do nothing by default.
 		do
 		end
 
-	generate_preamble is
+	generate_preamble
 			-- Generate leading part (directions to /bin/sh)
 		do
 			make_file.put_string ("case $CONFIG in%N'')%N")
@@ -515,7 +515,7 @@ feature -- Generation, Header
 				%$spitshell >Makefile <<!GROK!THIS!%N")
 		end
 
-	generate_sub_preamble (a_directory: STRING) is
+	generate_sub_preamble (a_directory: STRING)
 			-- Generate leading part (directions to /bin/sh)
 			-- for subdirectory Makefiles.
 		require
@@ -538,7 +538,7 @@ feature -- Generation, Header
 				%$spitshell >Makefile <<!GROK!THIS!%N")
 		end
 
-	generate_customization (has_il_cpp: BOOLEAN) is
+	generate_customization (has_il_cpp: BOOLEAN)
 			-- Customize generic Makefile
 		do
 			generate_include_path
@@ -695,7 +695,7 @@ feature -- Generation, Header
 
 feature -- Generation, Object list(s)
 
-	generate_macro (mname: STRING; basket: LINKED_LIST [STRING]) is
+	generate_macro (mname: STRING; basket: LINKED_LIST [STRING])
 			-- Generate a bunch of objects to be put in macro `mname'
 		local
 			size: INTEGER
@@ -729,7 +729,7 @@ feature -- Generation, Object list(s)
 
 feature -- Generation, External archives and object files.
 
-	generate_externals is
+	generate_externals
 			-- Generate declaration fo the external variable
 		local
 			object_file_names: LIST [CONF_EXTERNAL]
@@ -804,7 +804,7 @@ feature -- Generation, External archives and object files.
 			end
 		end
 
-	generate_include_path is
+	generate_include_path
 			-- Generate declaration fo the include_paths
 		local
 			include_paths: LIST [CONF_EXTERNAL_INCLUDE]
@@ -849,7 +849,7 @@ feature -- Generation, External archives and object files.
 			end
 		end
 
-	generate_makefile_names is
+	generate_makefile_names
 		local
 			makefile_names: LIST [CONF_EXTERNAL_MAKE]
 			i, nb: INTEGER
@@ -885,7 +885,7 @@ feature -- Generation, External archives and object files.
 
 feature -- Generation (Linking rules)
 
-	generate_il_dll is
+	generate_il_dll
 			-- Generate rules to produce DLL for IL code generation.
 			--| So far this is a Windows specific code generation.
 		do
@@ -908,7 +908,7 @@ feature -- Generation (Linking rules)
 			make_file.put_new_line
 		end
 
-	generate_executable is
+	generate_executable
 			-- Generate rules to produce executable
 		do
 			make_file.put_string ("all: ")
@@ -929,7 +929,7 @@ feature -- Generation (Linking rules)
 			generate_simple_executable
 		end
 
-	generate_simple_executable is
+	generate_simple_executable
 			-- Generate rule to produce simple executable, linked in
 			-- with `run_time' archive.
 		do
@@ -981,15 +981,15 @@ feature -- Generation (Linking rules)
 			make_file.put_new_line
 		end
 
-	generate_additional_rules is
+	generate_additional_rules
 		do
 		end
 
-	generate_precompile_objects is
+	generate_precompile_objects
 		do
 		end
 
-	generate_system_objects_macros is
+	generate_system_objects_macros
 			-- Generate the system object macros
 			-- (dependencies for final executable).
 		local
@@ -1019,14 +1019,14 @@ feature -- Generation (Linking rules)
 			end
 		end
 
-	generate_objects_macros is
+	generate_objects_macros
 			-- Generate the object macros (dependencies for final executable)
 		do
 				-- Class object files.
 			generate_basket_objects (object_baskets, C_prefix)
 		end
 
-	generate_subdir_names is
+	generate_subdir_names
 			-- Generate the subdirectories' names.
 		local
 			i, nb: INTEGER
@@ -1074,7 +1074,7 @@ feature -- Generation (Linking rules)
 			make_file.put_new_line
 		end
 
-	generate_partial_objects_linking (dir_prefix: CHARACTER; index: INTEGER) is
+	generate_partial_objects_linking (dir_prefix: CHARACTER; index: INTEGER)
 			-- Generate rules to produce partial linking and the
 			-- final executable linked in with `run_time'.
 		do
@@ -1099,7 +1099,7 @@ feature -- Generation (Linking rules)
 			make_file.put_new_line
 		end
 
-	generate_partial_system_objects_dependencies is
+	generate_partial_system_objects_dependencies
 			-- Depencies to update partial system objects in subdirectories.
 		local
 			i, nb: INTEGER
@@ -1218,7 +1218,7 @@ feature -- Generation (Linking rules)
 			end
 		end
 
-	generate_partial_objects_dependencies is
+	generate_partial_objects_dependencies
 			-- Depencies to update partial objects in subdirectories.
 		local
 			i, nb: INTEGER
@@ -1256,7 +1256,7 @@ feature -- Generation (Linking rules)
 
 feature -- Cleaning rules
 
-	generate_main_cleaning is
+	generate_main_cleaning
 			-- Generate "make clean" and "make clobber" in the main Makefile.
 		do
 			make_file.put_string ("clean: sub_clean local_clean%N")
@@ -1281,7 +1281,7 @@ feature -- Cleaning rules
 			make_file.put_string ("%N%T%Tfi; \%N%Tdone%N%N")
 		end
 
-	generate_sub_cleaning is
+	generate_sub_cleaning
 			-- Generate "make clean" and "make clobber" in the sub directories.
 		do
 			make_file.put_string ("clean: local_clean%N")
@@ -1294,7 +1294,7 @@ feature -- Cleaning rules
 
 feature -- Generation, Tail
 
-	generate_ending is
+	generate_ending
 			-- Ends Makefile wrapping scheme
 		do
 			make_file.put_string ("%
@@ -1305,7 +1305,7 @@ feature -- Generation, Tail
 
 feature -- Removal of empty classes
 
-	record_empty_class_type (a_class_type: INTEGER) is
+	record_empty_class_type (a_class_type: INTEGER)
 			-- add `a_class_type' to the set of class types that
 			-- are not generated
 		do
@@ -1314,7 +1314,7 @@ feature -- Removal of empty classes
 
 feature {NONE} -- Implementation
 
-	generate_basket_objects (baskets: ARRAY [LINKED_LIST [STRING]]; dir_prefix: CHARACTER) is
+	generate_basket_objects (baskets: ARRAY [LINKED_LIST [STRING]]; dir_prefix: CHARACTER)
 			-- Generate the object macros in `baskets'.
 		require
 			baskets_not_void: baskets /= Void
@@ -1345,7 +1345,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	safe_recursive_delete (a_dir: STRING) is
+	safe_recursive_delete (a_dir: STRING)
 			-- Delete `a_dir' content.
 		require
 			a_dir_not_void: a_dir /= Void
@@ -1365,7 +1365,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	safe_external_path (a_path: STRING; a_force_quotation: BOOLEAN) is
+	safe_external_path (a_path: STRING; a_force_quotation: BOOLEAN)
 			-- If `a_path' has no white spaces or if `a_force_quotation', add the `"' around it.
 			-- If it has some white spaces, we cannot do anything since it would
 			-- break existing code.
@@ -1394,7 +1394,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	lib_location: STRING is
+	lib_location: STRING
 			-- Location of run-time library files.
 		once
 			if System.uses_ise_gc_runtime then
@@ -1408,7 +1408,7 @@ feature {NONE} -- Constants
 			lib_location_not_void: Result /= Void
 		end
 
-	boehm_library: STRING is
+	boehm_library: STRING
 			-- Addition library if boehm is selected
 		do
 			if not system.uses_ise_gc_runtime and then system.external_runtime.as_lower.is_equal ("boehm") then
@@ -1424,7 +1424,7 @@ feature {NONE} -- Constants
 			boehm_library_has_space_if_not_empty: not Result.is_empty implies Result.item (1) = ' '
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

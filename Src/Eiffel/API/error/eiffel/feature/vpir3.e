@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when an inline agent is declared as external or deferred."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,10 +20,10 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VPIR"
+	code: STRING = "VPIR"
 			-- Error code
 
-	subcode: INTEGER is
+	subcode: INTEGER
 		do
 			Result := 3
 		end
@@ -32,7 +32,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

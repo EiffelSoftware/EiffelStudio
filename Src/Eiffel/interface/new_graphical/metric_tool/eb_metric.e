@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric used in EiffelStudio"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING; a_unit: like unit) is
+	make (a_name: STRING; a_unit: like unit)
 			-- Initialize `name' with `a_name' and `unit' with `a_unit.
 		require
 			a_name_attached: a_name /= Void
@@ -33,7 +33,7 @@ feature{NONE} -- Initialization
 
 feature -- Status report
 
-	is_result_domain_available: BOOLEAN is
+	is_result_domain_available: BOOLEAN
 			-- After metric calculation, can we get the last generated domain
 			-- for detail display?
 		deferred
@@ -47,23 +47,23 @@ feature -- Status report
 			-- Is current metric a predefined one?
 			-- If True, user cannot change the definition of it.
 
-	is_registered: BOOLEAN is
+	is_registered: BOOLEAN
 			-- Is current metric registered?
 		do
 			Result := manager /= Void
 		end
 
-	is_basic: BOOLEAN is
+	is_basic: BOOLEAN
 			-- Is current a basic metric?
 		do
 		end
 
-	is_linear: BOOLEAN is
+	is_linear: BOOLEAN
 			-- Is current a linear metric?
 		do
 		end
 
-	is_ratio: BOOLEAN is
+	is_ratio: BOOLEAN
 			-- Is current a ratio metric?
 		do
 		end
@@ -89,7 +89,7 @@ feature -- Access
 	manager: EB_METRIC_MANAGER
 			-- Metric manager
 
-	direct_referenced_metrics: LIST [STRING] is
+	direct_referenced_metrics: LIST [STRING]
 			-- Name of metrics which are directly referenced by Current
 		local
 			l_reference_visitor: EB_METRIC_REFERENCED_METRIC_VISITOR
@@ -101,7 +101,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	visitable_name: STRING_GENERAL is
+	visitable_name: STRING_GENERAL
 			-- Name of current visitable item
 		do
 			Result := metric_names.visitable_name (metric_names.t_metric, name)
@@ -109,7 +109,7 @@ feature -- Access
 
 feature -- Setting
 
-	enable_filter_result is
+	enable_filter_result
 			-- Enable that result is filtered.
 		do
 			should_result_be_filtered := True
@@ -117,7 +117,7 @@ feature -- Setting
 			result_filter_enabled: should_result_be_filtered
 		end
 
-	disable_filter_result is
+	disable_filter_result
 			-- Disable that result is filtered.
 		do
 			should_result_be_filtered := False
@@ -127,7 +127,7 @@ feature -- Setting
 
 feature -- Metric calculation
 
-	value (a_scope: EB_METRIC_DOMAIN): QL_QUANTITY_DOMAIN is
+	value (a_scope: EB_METRIC_DOMAIN): QL_QUANTITY_DOMAIN
 			-- Value of current metric calculated over `a_scope'
 		require
 			a_scope_attached: a_scope /= Void
@@ -137,7 +137,7 @@ feature -- Metric calculation
 			result_valid: Result.count = 1
 		end
 
-	value_item (a_scope: EB_METRIC_DOMAIN): DOUBLE is
+	value_item (a_scope: EB_METRIC_DOMAIN): DOUBLE
 			-- Value of current metric calculated over `a_scope'.
 		require
 			a_scope_attached: a_scope /= Void
@@ -147,7 +147,7 @@ feature -- Metric calculation
 
 feature -- Setting
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -162,7 +162,7 @@ feature -- Setting
 			name_set: name /= Void and then name.is_equal (a_name)
 		end
 
-	set_description (a_description: STRING) is
+	set_description (a_description: STRING)
 			-- Set `description' with `a_description'.
 		require
 			a_description_attached: a_description /= Void
@@ -177,7 +177,7 @@ feature -- Setting
 			description_set: description /= Void and then description.is_equal (a_description)
 		end
 
-	set_unit (a_unit: like unit) is
+	set_unit (a_unit: like unit)
 			-- Set `unit' with `a_unit'.
 		require
 			a_unit_attached: a_unit /= Void
@@ -187,7 +187,7 @@ feature -- Setting
 			unit_set: unit = a_unit
 		end
 
-	enable_fill_domain is
+	enable_fill_domain
 			-- Enable that newly generated domain will be filled with satisfied items.
 		require
 			is_result_domain_available: is_result_domain_available
@@ -197,7 +197,7 @@ feature -- Setting
 			fill_domain_enabled: is_fill_domain_enabled
 		end
 
-	disable_fill_domain is
+	disable_fill_domain
 			-- Disable that newly generated domain will be filled with satisfied items.
 		do
 			is_fill_domain_enabled := False
@@ -205,7 +205,7 @@ feature -- Setting
 			fill_domain_disabled: not is_fill_domain_enabled
 		end
 
-	set_is_predefined (b: BOOLEAN) is
+	set_is_predefined (b: BOOLEAN)
 			-- Set `is_predefined' with `b'.
 		do
 			is_predefined := b
@@ -213,7 +213,7 @@ feature -- Setting
 			is_predefined_set: is_predefined = b
 		end
 
-	set_metric_manager (a_manager: like manager) is
+	set_metric_manager (a_manager: like manager)
 			-- Set `manager' with `a_manager'.
 		do
 			manager := a_manager
@@ -225,7 +225,7 @@ invariant
 	name_attached: name /= Void
 	unit_attached: unit /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

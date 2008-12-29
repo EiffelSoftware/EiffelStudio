@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Mechanism to call an action when a file/pipe is changed.%N%
 				  %Windows Implementation."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 		local
 			delay: INTEGER
 		do
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	destroy is
+	destroy
 		require
 			is_not_destroyed: not is_destroyed
 		do
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_action (an_action: like action) is
+	set_action (an_action: like action)
 			-- Set `an_action' as callback feature.
 		require
 			an_agent_not_void: an_action /= Void
@@ -75,7 +75,7 @@ feature -- Element change
 			agent_set: action = an_action
 		end
 
-	remove_action is
+	remove_action
 			-- Remove the current action
 		do
 			action := Void
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 	interface: EB_IO_WATCHER
 			-- Platform independent interface.
 
-	call_back is
+	call_back
 			-- Called back by the implementation when the
 			-- file/pipe is changed.
 		require
@@ -102,19 +102,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	win_ioh_make_client (callback_feature: POINTER; obj: like Current; delay: INTEGER) is
+	win_ioh_make_client (callback_feature: POINTER; obj: like Current; delay: INTEGER)
 			-- Make the io handler function
 		external
 			"C"
 		end
 
-	win_ioh_clean_client is
+	win_ioh_clean_client
 			-- Clean the io handler function
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

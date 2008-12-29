@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Wizard to create features and insert them in a specific%N%
 		%feature clause."
@@ -19,13 +19,13 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			Precursor
 			feature_clause_selector.set_clause_name (fc_Element_change)
 		end
 
-	routine_is_part: EV_HORIZONTAL_BOX is
+	routine_is_part: EV_HORIZONTAL_BOX
 			-- Box with `add_argument_button' and "): is".
 		local
 			c: EV_CELL
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING is
+	code: STRING
 			-- Current text of the feature in the wizard.
 		do
 			create Result.make (100)
@@ -53,10 +53,10 @@ feature -- Access
 
 feature -- Status report
 
-	is_procedure: BOOLEAN is True;
+	is_procedure: BOOLEAN = True;
 			-- Is `Current' a procedure editor?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

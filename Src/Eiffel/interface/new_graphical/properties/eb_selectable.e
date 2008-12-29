@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Object that can be selected/deselectable."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,21 +16,21 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_selected is
+	enable_selected
 			-- Set `is_selected' to True.
 		deferred
 		ensure
 			selected: is_selected
 		end
 
-	disable_selected is
+	disable_selected
 			-- Set `is_selected' to False.
 		deferred
 		ensure
 			not_selected: not is_selected
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

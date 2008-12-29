@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Lace parser skeletons"
 	legal: "See notice at end of class."
@@ -43,7 +43,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new Lace parser.
 		do
 			make_lace_scanner
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset Parser before parsing next input source.
 			-- (This routine can be called in wrap before scanning
 			-- another input buffer.)
@@ -62,7 +62,7 @@ feature -- Initialization
 
 feature -- Parsing
 
-	parse_external (a_line: INTEGER; a_file: STRING; a_string: STRING) is
+	parse_external (a_line: INTEGER; a_file: STRING; a_string: STRING)
 			-- Parse external clause text from `a_string' located in `a_file'.
 			-- Make result available in `root_node'.
 			-- An exception is raised if a syntax error is found.
@@ -93,7 +93,7 @@ feature -- Access
 	external_syntax_error: SYNTAX_ERROR
 			-- Current syntax error if any.
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Did an error occcur at last parsing?	
 		do
 			Result := external_syntax_error /= Void
@@ -101,7 +101,7 @@ feature -- Access
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Release unused objects to garbage collector.
 		do
 			root_node := Void
@@ -110,7 +110,7 @@ feature -- Removal
 			root_node_void: root_node = Void
 		end
 
-	clear_all is
+	clear_all
 			-- Clear temporary objects so that they can be collected
 			-- by the garbage collector. (This routine is called by
 			-- `parse' before exiting.)
@@ -123,7 +123,7 @@ feature {NONE} -- Keywords
 
 feature {NONE} -- Error handling
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- A syntax error has been detected.
 		do
 			create external_syntax_error.make (file_line, position, filename, "")
@@ -133,11 +133,11 @@ feature {NONE} -- Error handling
 
 feature {NONE} -- Constants
 
-	Argument_list_initial_size: INTEGER is 9
-	Use_list_initial_size: INTEGER is 3;
+	Argument_list_initial_size: INTEGER = 9
+	Use_list_initial_size: INTEGER = 3;
 			-- Initial capacity for lists
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

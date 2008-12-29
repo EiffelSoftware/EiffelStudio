@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Compiled representation of a parent
@@ -54,7 +54,7 @@ feature
 --			Result := False
 		end
 
-	new_export_for (feature_name_id: INTEGER): EXPORT_I is
+	new_export_for (feature_name_id: INTEGER): EXPORT_I
 			-- New export status for feature named `feature_name_id'.
 			-- Void if none.
 		require
@@ -65,7 +65,7 @@ feature
 			end
 		end
 
-	class_name: STRING is
+	class_name: STRING
 			-- Parent class name
 		require
 			parent_exists: parent /= Void;
@@ -73,62 +73,62 @@ feature
 			Result := parent.name;
 		end;
 
-	set_parent_type (t: like parent_type) is
+	set_parent_type (t: like parent_type)
 			-- Assign `parent_type' to `parent_type'.
 		do
 			parent_type := t;
 		end;
 
-	set_renaming (t: like renaming) is
+	set_renaming (t: like renaming)
 			-- Assign `t' to `renaming'.
 		do
 			renaming := t;
 		end;
 
-	set_redefining (t: like redefining) is
+	set_redefining (t: like redefining)
 			-- Assign `t' to `redefining'.
 		do
 			redefining := t;
 		end;
 
-	set_undefining (t: like undefining) is
+	set_undefining (t: like undefining)
 			-- Assign `t' to `undefining'.
 		do
 			undefining := t
 		end;
 
-	set_selecting (t: like selecting) is
+	set_selecting (t: like selecting)
 			-- Assign `t' to `selecting'.
 		do
 			selecting := t;
 		end;
 
-	set_exports (e: like exports) is
+	set_exports (e: like exports)
 			-- Assign `e' to `exports'.
 		do
 			exports := e;
 		end;
 
-	parent: CLASS_C is
+	parent: CLASS_C
 			-- Parent class
 		do
 			Result := parent_type.associated_class
 		end;
 
-	has_renaming: BOOLEAN is
+	has_renaming: BOOLEAN
 			-- Does `Current' renaming any features?
 		do
 			Result := renaming /= Void and then renaming.count > 0
 		end
 
-	is_renaming (feature_name_id: INTEGER): BOOLEAN is
+	is_renaming (feature_name_id: INTEGER): BOOLEAN
 			-- Is the current parent renaming `feature_name_id'?
 		do
 			Result := 	renaming /= Void
 						and then renaming.has (feature_name_id)
 		end;
 
-	is_redefining (feature_name_id: INTEGER): BOOLEAN is
+	is_redefining (feature_name_id: INTEGER): BOOLEAN
 			-- is the current parent redefining `feature_name_id'?
 		do
 			Result := 	redefining /= Void
@@ -136,19 +136,19 @@ feature
 						redefining.has (feature_name_id)
 		end
 
-	has_redefining: BOOLEAN is
+	has_redefining: BOOLEAN
 			-- Does `Current' redefine any features?
 		do
 			Result := redefining /= Void and then redefining.count > 0
 		end
 
-	has_undefining: BOOLEAN is
+	has_undefining: BOOLEAN
 			-- Does `Current' undefine any features?
 		do
 			Result := undefining /= Void and then undefining.count > 0
 		end
 
-	is_undefining (feature_name_id: INTEGER): BOOLEAN is
+	is_undefining (feature_name_id: INTEGER): BOOLEAN
 			-- Is the current parent undefining `feature_name_id'?
 		do
 			Result :=	undefining /= Void
@@ -156,7 +156,7 @@ feature
 						undefining.has (feature_name_id)
 		end
 
-	is_selecting (feature_name_id: INTEGER): BOOLEAN is
+	is_selecting (feature_name_id: INTEGER): BOOLEAN
 			-- Is the current parent selecting `feature_name_id'?
 		require
 			conforming: not is_non_conforming
@@ -164,7 +164,7 @@ feature
 			Result := selecting /= Void and then selecting.has (feature_name_id)
 		end
 
-	check_validity1 is
+	check_validity1
 			-- Check validity of renamings
 		local
 			parent_table: FEATURE_TABLE
@@ -268,7 +268,7 @@ feature
 			end
 		end
 
-	check_validity2 is
+	check_validity2
 			-- Check validity of the redefine clause and select clause.
 			-- `table' is the feature table produced by the second pass
 		local
@@ -377,7 +377,7 @@ feature
 			end
 		end
 
-	check_validity4 is
+	check_validity4
 			-- Look for useless selections
 		require
 			has_selection: selecting /= Void
@@ -407,7 +407,7 @@ feature
 			end
 		end
 
-	renaming_of (feature_name_id: INTEGER): INTEGER is
+	renaming_of (feature_name_id: INTEGER): INTEGER
 			-- Original name associated to `feature_name_id'
 		require
 			good_argument: feature_name_id > 0
@@ -438,7 +438,7 @@ feature
 
 feature -- Debug
 
-	trace is
+	trace
 		do
 			io.error.put_string ("PARENT_C ")
 			io.error.put_string (class_name)
@@ -480,7 +480,7 @@ feature -- Debug
 			end
 		end
 
-	trace_list (a_list: SEARCH_TABLE [INTEGER]) is
+	trace_list (a_list: SEARCH_TABLE [INTEGER])
 		do
 			from
 				a_list.start
@@ -494,7 +494,7 @@ feature -- Debug
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

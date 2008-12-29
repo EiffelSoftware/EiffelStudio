@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that display tagable items in an ES_GRID.
 	]"
@@ -113,7 +113,7 @@ feature {NONE} -- Access
 
 feature {ES_TAGABLE_TREE_GRID_NODE_CONTAINER} -- Query
 
-	computed_grid_item (a_col_index, a_row_index: INTEGER): EV_GRID_ITEM is
+	computed_grid_item (a_col_index, a_row_index: INTEGER): EV_GRID_ITEM
 			-- Computed grid item at given location
 			--
 			-- Note: this will reset all items in the according row and return the requested item.
@@ -164,7 +164,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	highlight_row (a_row: !EV_GRID_ROW) is
+	highlight_row (a_row: !EV_GRID_ROW)
 			-- Make `a_row' look like it is fully selected.
 		do
 			if grid.has_focus then
@@ -174,13 +174,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	unhighlight_row (a_row: !EV_GRID_ROW) is
+	unhighlight_row (a_row: !EV_GRID_ROW)
 			-- Make `a_row' look like it is not selected.
 		do
 			a_row.set_background_color (grid.background_color)
 		end
 
-	change_focus is
+	change_focus
 			-- Make sure all selected rows have correct background color.
 		do
 			grid.selected_rows.do_all (

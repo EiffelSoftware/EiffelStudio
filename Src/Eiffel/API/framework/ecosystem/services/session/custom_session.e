@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The actual session handling implementation as described by the custom session interface {CUSTOM_SESSION_I}.
 	]"
@@ -47,7 +47,7 @@ feature -- Access
 	file_name: !STRING_8
 			-- File name for the custom session
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

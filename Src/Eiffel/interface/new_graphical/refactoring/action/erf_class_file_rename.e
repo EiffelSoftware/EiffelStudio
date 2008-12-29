@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This allows undoable class file renaming."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_new_name: STRING; a_class: like class_i) is
+	make (a_new_name: STRING; a_class: like class_i)
 			-- Rename the file of `a_class' into `a_new_name'
 			-- (a_new_name is just the file_name without path or extension)
 			-- and update the information in `a_class' accordingly.
@@ -45,14 +45,14 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	undo is
+	undo
 			-- Undo the actions.
 		do
 			Precursor
 			class_i.set_base_name (old_name_ext)
 		end
 
-	redo is
+	redo
 			-- Redo the actions.
 		do
 			Precursor
@@ -75,7 +75,7 @@ invariant
 	old_name_ext_set: old_name_ext /= Void and not old_name_ext.is_empty
 	new_name_ext_set: new_name_ext /= Void and not new_name_ext.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

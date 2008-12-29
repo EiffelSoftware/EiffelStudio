@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a criterion to decide whether or not a class is a supplier of another class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Implementation
 
-	referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C] is
+	referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C]
 			-- A list of classes referenced by `a_class_c'.
 			-- In supplier criterion, it's suppliers of `a_class_c'.
 			-- In client criterion, it's clients of `a_class_c'.
@@ -25,7 +25,7 @@ feature{NONE} -- Implementation
 			Result := a_class_c.suppliers.classes
 		end
 
-	syntactical_referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C] is
+	syntactical_referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C]
 			-- A list of syntactically referened by `a_class_c'.
 			-- In supplier criterion, it's syntactical suppliers of `a_class_c'.
 			-- In client criterion, it's ssyntactical clients of `a_class_c'.
@@ -33,7 +33,7 @@ feature{NONE} -- Implementation
 			Result := a_class_c.syntactical_suppliers
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

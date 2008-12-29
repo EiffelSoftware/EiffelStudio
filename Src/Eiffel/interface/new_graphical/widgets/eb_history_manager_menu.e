@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Menu representing all the opened historys."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_history_manager: EB_HISTORY_MANAGER) is
+	make (a_history_manager: EB_HISTORY_MANAGER)
 			-- Initialization: build the widget and the menu.
 		do
 				-- Setup the manager.
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Element change
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the object is no more used.
 		do
 			history_manager.remove_observer (Current)
@@ -65,7 +65,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Initialization Implementation
 
-	build_menu is
+	build_menu
 			-- build the menu corresponding to `a_favorites'
 		local
 			menu_item: EV_MENU_ITEM
@@ -114,13 +114,13 @@ feature {NONE} -- Initialization Implementation
 
 feature -- Observer pattern
 
-	on_update is
+	on_update
 			-- The history has changed. Refresh `Current'.
 		do
 			build_menu
 		end
 
-	on_item_added (an_item: STONE; index_item: INTEGER) is
+	on_item_added (an_item: STONE; index_item: INTEGER)
 			-- `an_item' has just been added
 		local
 			menu_item: EV_MENU_ITEM
@@ -137,7 +137,7 @@ feature -- Observer pattern
 			extend (menu_item)
 		end
 
-	on_item_removed (an_item: STONE; index_item: INTEGER) is
+	on_item_removed (an_item: STONE; index_item: INTEGER)
 			-- `an_item' has just been removed.
 		do
 				-- Remove the menu item that match `an_item' from the menu.
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 	history_manager: EB_HISTORY_MANAGER;
 			-- Associated history manager
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

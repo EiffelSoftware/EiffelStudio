@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A simple popup window for displaying a widget structure.
 	]"
@@ -125,7 +125,7 @@ invariant
 	widget_is_interface_usable: is_interface_usable and is_initialized implies widget.is_interface_usable
 	widget_has_parent: is_interface_usable and is_initialized implies widget.widget.has_parent
 	
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

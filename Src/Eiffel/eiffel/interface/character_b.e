@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Internal representation of class CHARACTER
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l: like original_class; w: BOOLEAN) is
+	make (l: like original_class; w: BOOLEAN)
 			-- Create instance of CHARACTER_A. If `w' a normal character.
 			-- Otherwise a wide character.
 		do
@@ -35,7 +35,7 @@ feature -- Property
 
 feature -- Access
 
-	actual_type: CHARACTER_A is
+	actual_type: CHARACTER_A
 			-- Actual character type
 		do
 			if is_wide then
@@ -45,7 +45,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

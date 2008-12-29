@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to start the precompilation wizard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ inherit
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Start the precompilation wizard.
 		local
 			command: STRING
@@ -53,13 +53,13 @@ feature {NONE} -- Implementation
 	pixmap: EV_PIXMAP
 			-- Pixmap
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Wizard_precompile
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

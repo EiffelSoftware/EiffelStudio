@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor for performing assignments."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature -- Byte code generation
 
-	generate_assignment (a_ba: BYTE_ARRAY; a_node: BYTE_NODE) is
+	generate_assignment (a_ba: BYTE_ARRAY; a_node: BYTE_NODE)
 			-- Generate assignment on `a_node'.
 		require
 			is_valid: is_valid
@@ -49,7 +49,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	process_attribute_b (a_node: ATTRIBUTE_B) is
+	process_attribute_b (a_node: ATTRIBUTE_B)
 			-- Process `a_node'.
 		local
 			l_instant_context_type: CL_TYPE_A
@@ -69,24 +69,24 @@ feature {NONE} -- Implementation
 			ba.append_uint32_integer (context.real_type (a_node.type).sk_value (context.context_class_type.type))
 		end
 
-	process_local_b (a_node: LOCAL_B) is
+	process_local_b (a_node: LOCAL_B)
 			-- Process `a_node'.
 		do
 			ba.append_short_integer (a_node.position)
 		end
 
-	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B) is
+	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B)
 		do
 			ba.append_short_integer (context.object_test_local_position (a_node))
 		end
 
-	process_result_b (a_node: RESULT_B) is
+	process_result_b (a_node: RESULT_B)
 			-- Process `a_node'.
 		do
 			-- Nothing to be done.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

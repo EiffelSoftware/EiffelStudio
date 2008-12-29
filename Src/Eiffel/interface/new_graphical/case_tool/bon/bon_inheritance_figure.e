@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a view for an EIFFEL_INHERITANCE_LINK"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ create {BON_INHERITANCE_FIGURE}
 
 feature {NONE} -- Initialization
 
-	make_with_model (a_model: ES_INHERITANCE_LINK) is
+	make_with_model (a_model: ES_INHERITANCE_LINK)
 			-- Create a BON_INHERITANCE_FIGURE showing `a_model'.
 		do
 			default_create
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml node representing `Current's state.
 		local
 			l_xml_namespace: like xml_namespace
@@ -82,7 +82,7 @@ feature -- Access
 			Result.put_last (l_xml_routines.xml_node (Result, real_line_width_string, (real_line_width * 100).rounded.out))
 		end
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		do
 			Precursor {EIFFEL_INHERITANCE_FIGURE} (node)
@@ -97,7 +97,7 @@ feature -- Access
 			end
 		end
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := once "BON_INHERITANCE_FIGURE"
@@ -105,14 +105,14 @@ feature -- Access
 
 feature -- Element change
 
-	set_line_width (a_line_width: like line_width) is
+	set_line_width (a_line_width: like line_width)
 			-- Set `line_width' to `a_line_widht'.
 		do
 			Precursor {EIFFEL_INHERITANCE_FIGURE} (a_line_width)
 			real_line_width := a_line_width
 		end
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_INHERITANCE_FIGURE}
@@ -121,7 +121,7 @@ feature -- Element change
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
-	update is
+	update
 			-- Some properties of `Current' may have changed.
 		local
 			an_angle: DOUBLE
@@ -156,7 +156,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 feature {EV_MODEL_GROUP} -- Transformation
 
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 	real_line_width: REAL
 			-- Real line width.
 
-	real_line_width_string: STRING is "REAL_LINE_WIDTH"
+	real_line_width_string: STRING = "REAL_LINE_WIDTH"
 
 	real_arrow_head_size: REAL
 			-- Real size of arrow head.
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 	low_quality_line: EV_MODEL_LINE
 			-- line used if `is_low_quality' is True.
 
-	set_is_high_quality (a_high_quality: like is_high_quality) is
+	set_is_high_quality (a_high_quality: like is_high_quality)
 			-- Set `is_high_quality' to `a_high_quality'.
 		do
 			if is_high_quality /= a_high_quality then
@@ -231,14 +231,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_preferences is
+	retrieve_preferences
 			-- Retrive preferences from shared resources.
 		do
 			set_line_width (bon_inheritance_line_width)
 			set_foreground_color (bon_inheritance_color)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

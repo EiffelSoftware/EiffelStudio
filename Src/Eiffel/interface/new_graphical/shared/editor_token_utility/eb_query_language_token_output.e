@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize Current.
 		do
 			create_default_style
@@ -28,7 +28,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	last_output: LIST [EDITOR_TOKEN] is
+	last_output: LIST [EDITOR_TOKEN]
 			-- Last output
 		do
 			Result := text_internal.twin
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_output_empty: BOOLEAN is
+	is_output_empty: BOOLEAN
 			-- Is output empty?
 		do
 			Result := text_internal.is_empty
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	initialize_last_output is
+	initialize_last_output
 			-- Initialize `last_output' for new output process.
 		do
 			text_internal.wipe_out
@@ -58,7 +58,7 @@ feature -- Basic operations
 
 feature -- Access/Style
 
-	class_style: like default_class_style is
+	class_style: like default_class_style
 			-- Style to print class item
 		do
 			if class_style_internal = Void then
@@ -70,7 +70,7 @@ feature -- Access/Style
 			result_attached: Result /= Void
 		end
 
-	feature_style: like default_feature_style is
+	feature_style: like default_feature_style
 			-- Style to print feature item
 		do
 			if feature_style_internal = Void then
@@ -82,7 +82,7 @@ feature -- Access/Style
 			result_attached: Result /= Void
 		end
 
-	target_style: like default_style is
+	target_style: like default_style
 			-- Style to print target item
 		do
 			Result := default_style
@@ -90,7 +90,7 @@ feature -- Access/Style
 			result_attached: Result /= Void
 		end
 
-	group_style: like default_style is
+	group_style: like default_style
 			-- Style to print group item
 		do
 			Result := default_style
@@ -98,7 +98,7 @@ feature -- Access/Style
 			result_attached: Result /= Void
 		end
 
-	quantity_style: like default_style is
+	quantity_style: like default_style
 			-- Style to print quantity item
 		do
 			Result := default_style
@@ -106,7 +106,7 @@ feature -- Access/Style
 			result_attached: Result /= Void
 		end
 
-	line_style: like default_style is
+	line_style: like default_style
 			-- Style to print line item
 		do
 			Result := default_style
@@ -114,7 +114,7 @@ feature -- Access/Style
 			result_attached: Result /= Void
 		end
 
-	generic_style: like default_style is
+	generic_style: like default_style
 			-- Style to print generic item
 		do
 			Result := default_style
@@ -122,7 +122,7 @@ feature -- Access/Style
 			result_attached: Result /= Void
 		end
 
-	local_style: like default_style is
+	local_style: like default_style
 			-- Style to print local item
 		do
 			Result := default_style
@@ -130,7 +130,7 @@ feature -- Access/Style
 			result_attached: Result /= Void
 		end
 
-	argument_style: like default_style is
+	argument_style: like default_style
 			-- Style to print argument item
 		do
 			Result := default_style
@@ -138,7 +138,7 @@ feature -- Access/Style
 			result_attached: Result /= Void
 		end
 
-	assertion_style: like default_style is
+	assertion_style: like default_style
 			-- Style to print assertion item
 		do
 			Result := default_style
@@ -156,7 +156,7 @@ feature -- Access/Style
 
 feature -- Setting
 
-	set_class_style (a_class_style: like class_style) is
+	set_class_style (a_class_style: like class_style)
 			-- Set `class_style' with `a_class_style'.
 			-- If `a_class_style' is Void, `default_class_style' will be returned when `class_style' is quired.
 		do
@@ -166,7 +166,7 @@ feature -- Setting
 							 (a_class_style = Void) implies (class_style = default_class_style)
 		end
 
-	set_feature_style (a_feature_style: like feature_style) is
+	set_feature_style (a_feature_style: like feature_style)
 			-- Set `feature_style' with `a_feature_style'.
 			-- If `a_feature_style' is Void, `default_feature_style' will be returned when `feature_style' is quired.
 		do
@@ -179,12 +179,12 @@ feature -- Setting
 
 feature{EB_QUERY_LANGUAGE_PRINTER_VISITOR} -- Implementation
 
-	process_separator (a_separator: STRING_32) is
+	process_separator (a_separator: STRING_32)
 			-- Put `a_separator' into the output.
 		do
 		end
 
-	process_folder (a_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP) is
+	process_folder (a_name: STRING_32; a_path: STRING_32; a_group: CONF_GROUP)
 			-- Process folder.
 			-- `a_name' is name of that folder, `a_path' is related path of that folder, such as "/abc/def".
 			-- `a_group' is the group where that folder is located.
@@ -198,13 +198,13 @@ feature{EB_QUERY_LANGUAGE_PRINTER_VISITOR} -- Implementation
 
 feature -- Process
 
-	process_domain (a_item: QL_DOMAIN) is
+	process_domain (a_item: QL_DOMAIN)
 			-- Process `a_item'.
 		do
 			-- Do nothing.
 		end
 
-	process_target (a_item: QL_TARGET) is
+	process_target (a_item: QL_TARGET)
 			-- Process `a_item'.
 		local
 			l_target_style: like target_style
@@ -214,7 +214,7 @@ feature -- Process
 			text_internal.append (l_target_style.text)
 		end
 
-	process_group (a_item: QL_GROUP) is
+	process_group (a_item: QL_GROUP)
 			-- Process `a_item'.
 		local
 			l_group_style: like group_style
@@ -224,7 +224,7 @@ feature -- Process
 			text_internal.append (l_group_style.text)
 		end
 
-	process_class (a_item: QL_CLASS) is
+	process_class (a_item: QL_CLASS)
 			-- Process `a_item'.
 		local
 			l_class_style: like class_style
@@ -234,7 +234,7 @@ feature -- Process
 			text_internal.append (l_class_style.text)
 		end
 
-	process_feature (a_item: QL_FEATURE) is
+	process_feature (a_item: QL_FEATURE)
 			-- Process `a_item'.
 		local
 			l_feature_style: like feature_style
@@ -244,19 +244,19 @@ feature -- Process
 			text_internal.append (l_feature_style.text)
 		end
 
-	process_real_feature (a_item: QL_REAL_FEATURE) is
+	process_real_feature (a_item: QL_REAL_FEATURE)
 			-- Process `a_item'.
 		do
 			process_feature (a_item)
 		end
 
-	process_invariant (a_item: QL_INVARIANT) is
+	process_invariant (a_item: QL_INVARIANT)
 			-- Process `a_item'.
 		do
 			process_feature (a_item)
 		end
 
-	process_quantity (a_item: QL_QUANTITY) is
+	process_quantity (a_item: QL_QUANTITY)
 			-- Process `a_item'.
 		local
 			l_quantity_style: like quantity_style
@@ -266,7 +266,7 @@ feature -- Process
 			text_internal.append (l_quantity_style.text)
 		end
 
-	process_line (a_item: QL_LINE) is
+	process_line (a_item: QL_LINE)
 			-- Process `a_item'.
 		local
 			l_line_style: like line_style
@@ -276,7 +276,7 @@ feature -- Process
 			text_internal.append (l_line_style.text)
 		end
 
-	process_generic (a_item: QL_GENERIC) is
+	process_generic (a_item: QL_GENERIC)
 			-- Process `a_item'.
 		local
 			l_generic_style: like generic_style
@@ -286,7 +286,7 @@ feature -- Process
 			text_internal.append (l_generic_style.text)
 		end
 
-	process_local (a_item: QL_LOCAL) is
+	process_local (a_item: QL_LOCAL)
 			-- Process `a_item'.
 		local
 			l_local_style: like local_style
@@ -296,7 +296,7 @@ feature -- Process
 			text_internal.append (l_local_style.text)
 		end
 
-	process_argument (a_item: QL_ARGUMENT) is
+	process_argument (a_item: QL_ARGUMENT)
 			-- Process `a_item'.
 		local
 			l_argument_style: like argument_style
@@ -306,7 +306,7 @@ feature -- Process
 			text_internal.append (l_argument_style.text)
 		end
 
-	process_assertion (a_item: QL_ASSERTION) is
+	process_assertion (a_item: QL_ASSERTION)
 			-- Process `a_item'.
 		local
 			l_assertion_style: like assertion_style
@@ -316,7 +316,7 @@ feature -- Process
 			text_internal.append (l_assertion_style.text)
 		end
 
-	process_dot_separator is
+	process_dot_separator
 			-- Process dot separator, i.e, put a dot in output.
 		do
 			text_internal.extend (editor_token_for_dot)
@@ -339,7 +339,7 @@ feature{NONE} -- Implementation
 	default_style: EB_SIMPLE_QL_NAME_STYLE
 			-- Default style for query language items other than class and feature
 
-	create_default_class_style is
+	create_default_class_style
 			-- Create `default_class_style'.
 		do
 			create default_class_style
@@ -349,7 +349,7 @@ feature{NONE} -- Implementation
 			default_class_style_attached: default_class_style /= Void
 		end
 
-	create_default_feature_style is
+	create_default_feature_style
 			-- Create `default_feature_style'
 		do
 			create default_feature_style
@@ -362,7 +362,7 @@ feature{NONE} -- Implementation
 			default_feature_style_attached: default_feature_style /= Void
 		end
 
-	create_default_style is
+	create_default_style
 			-- Create `default_style'.
 		do
 			create default_style
@@ -371,7 +371,7 @@ feature{NONE} -- Implementation
 			result_attached: default_style /= Void
 		end
 
-	editor_token_for_dot: EDITOR_TOKEN is
+	editor_token_for_dot: EDITOR_TOKEN
 			-- Editor token reprensentation for dot "."
 		local
 			l_writer: like token_writer

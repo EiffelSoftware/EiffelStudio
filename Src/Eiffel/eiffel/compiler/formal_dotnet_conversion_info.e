@@ -1,4 +1,4 @@
-indexing
+note
 	description: ""
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature -- Byte code generation
 
-	byte_node (an_expr: EXPR_B): EXPR_B is
+	byte_node (an_expr: EXPR_B): EXPR_B
 			-- Generate byte node needed to convert `an_expr' to `target_type'
 		do
 			create {FORMAL_CONVERSION_B} Result.make (an_expr, target_type, True)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

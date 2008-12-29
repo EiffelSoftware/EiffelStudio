@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An EiffelStudio dockable tool window, allowing a context stone to be pushed, base implementation for EiffelStudio tools.
 	]"
@@ -28,7 +28,7 @@ inherit
 
 feature {NONE} -- Initialization: User interface
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
             -- <Precursor>
         do
             Precursor (a_docking_manager)
@@ -291,7 +291,7 @@ feature {NONE} -- Action handlers
 invariant
 	tool_descriptor_is_stonable: is_interface_usable implies (({ES_STONABLE_I}) #? tool_descriptor) /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that helps to manage DEBUG_OUTPUT.debug_output feature ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,11 +19,11 @@ inherit
 
 feature -- Access
 
-	debuggable_class_name: STRING is "DEBUG_OUTPUT"
+	debuggable_class_name: STRING = "DEBUG_OUTPUT"
 
-	debuggable_feature_name: STRING is "debug_output"
+	debuggable_feature_name: STRING = "debug_output"
 
-	debug_output_feature_i (c: CLASS_C): FEATURE_I is
+	debug_output_feature_i (c: CLASS_C): FEATURE_I
 		require
 			class_not_void: c /= Void
 		local
@@ -33,7 +33,7 @@ feature -- Access
 			Result := c.feature_of_rout_id (l_rout_id)
 		end
 
-	debuggable_class: CLASS_C is
+	debuggable_class: CLASS_C
 			-- Class that provides the `debug_output' interface, if any.
 		local
 			cis: LIST [CLASS_I]
@@ -59,7 +59,7 @@ feature -- Access
 			end
 		end
 
-	debug_output_feature: E_FEATURE is
+	debug_output_feature: E_FEATURE
 			-- E_feature that corresponds to {DEBUG_OUTPUT}.debug_output.
 		do
 			if
@@ -71,13 +71,13 @@ feature -- Access
 			Result := internal_debug_output_feature.item
 		end
 
-	internal_debuggable_class: CELL [CLASS_C] is
+	internal_debuggable_class: CELL [CLASS_C]
 			-- Last computed `debuggable_class'.
 		once
 			create Result.put (Void)
 		end
 
-	internal_debug_output_feature: CELL [E_FEATURE] is
+	internal_debug_output_feature: CELL [E_FEATURE]
 			-- Last computed `debug_output_feature'.
 		once
 				--| Fixme: we might want to "update" the feature
@@ -87,7 +87,7 @@ feature -- Access
 			create Result.put (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

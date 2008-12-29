@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {ES_TEST_WIZARD_CLASS_WINDOW}."
 	author: ""
 	date: "$Date$"
@@ -44,7 +44,7 @@ feature {NONE}
 			on_after_initialize
 		end
 
-	build_class_tree (a_parent: EV_BOX) is
+	build_class_tree (a_parent: EV_BOX)
 			-- Initialize `class_tree'
 		local
 			l_layouts: EV_LAYOUT_CONSTANTS
@@ -64,7 +64,7 @@ feature {NONE}
 			a_parent.extend (class_tree)
 		end
 
-	build_feature_clause_selection (a_parent: EV_BOX) is
+	build_feature_clause_selection (a_parent: EV_BOX)
 			-- Initialize feature clause selection.
 		local
 			l_vb: EV_VERTICAL_BOX
@@ -400,7 +400,7 @@ feature {NONE} -- Internationalization
 
 	e_new_feature_clause_name_empty: STRING = "Feature clause name can not be empty."
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

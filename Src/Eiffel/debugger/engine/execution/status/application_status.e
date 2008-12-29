@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Status information about the running application - current routine,%
@@ -26,7 +26,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (app: like application) is
+	make (app: like application)
 			-- Create Current
 		do
 			debug ("debugger_trace")
@@ -43,7 +43,7 @@ feature -- Properties
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize Current
 		do
 			create_kept_objects
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Objects kept from session to session
 
-	create_kept_objects is
+	create_kept_objects
 		do
 			create objects_keeper.make (20)
 			objects_keeper.compare_objects
@@ -60,7 +60,7 @@ feature -- Objects kept from session to session
 
 	objects_keeper: HASH_TABLE [INTEGER, DBG_ADDRESS]
 
-	kept_objects: LIST [DBG_ADDRESS] is
+	kept_objects: LIST [DBG_ADDRESS]
 			-- Objects represented by their address that should be kept during the execution.
 		local
 			objkr: like objects_keeper
@@ -89,12 +89,12 @@ feature -- Objects kept from session to session
 			Result_compare_objects: Result /= Void implies Result.object_comparison
 		end
 
-	clear_kept_objects is
+	clear_kept_objects
 		do
 			objects_keeper.wipe_out
 		end
 
-	keep_object (add: DBG_ADDRESS) is
+	keep_object (add: DBG_ADDRESS)
 			-- Add object identified by `add' to `kept_objects'
 		require
 			address_not_void: add /= Void and then not add.is_void
@@ -109,7 +109,7 @@ feature -- Objects kept from session to session
 			end
 		end
 
-	release_object (add: DBG_ADDRESS) is
+	release_object (add: DBG_ADDRESS)
 		require
 			address_not_empty: add /= Void and then not add.is_void
 --			kept_objects.has (add)
@@ -129,7 +129,7 @@ feature -- Objects kept from session to session
 
 feature -- Call Stack List management
 
-	clear_callstack_data is
+	clear_callstack_data
 			-- Reset `call_stack_list' or create it
 		do
 			if call_stack_list = Void then
@@ -153,14 +153,14 @@ feature -- Call Stack List management
 
 feature -- Callstack
 
-	force_reload_current_call_stack is
+	force_reload_current_call_stack
 			-- reload the call stack from application (after having edited an
 			-- object for example to make sure the modification was successful).
 		do
 			get_callstack (current_thread_id, stack_max_depth, True)
 		end
 
-	reload_current_call_stack is
+	reload_current_call_stack
 			-- reload the call stack from application (after having edited an
 			-- object for example to make sure the modification was successful).
 		do
@@ -169,7 +169,7 @@ feature -- Callstack
 
 feature {NONE} -- CallStack Impl
 
-	get_callstack (a_tid: like current_thread_id; a_stack_max_depth: INTEGER; always_reload: BOOLEAN) is
+	get_callstack (a_tid: like current_thread_id; a_stack_max_depth: INTEGER; always_reload: BOOLEAN)
 			-- Get Eiffel Callstack with a maximum depth of `a_stack_max_depth'
 			-- for thread `a_tid'.
 		local
@@ -187,7 +187,7 @@ feature {NONE} -- CallStack Impl
 			end
 		end
 
-	new_callstack_with (a_tid: like current_thread_id; a_stack_max_depth: INTEGER): like current_call_stack is
+	new_callstack_with (a_tid: like current_thread_id; a_stack_max_depth: INTEGER): like current_call_stack
 		deferred
 		end
 
@@ -231,20 +231,20 @@ feature -- Values
 	exception: EXCEPTION_DEBUG_VALUE
 			-- Associated Exception value.
 
-	set_exception_occurred (b: BOOLEAN) is
+	set_exception_occurred (b: BOOLEAN)
 			-- Set `exception_occurred' to `b'
 		do
 			exception_occurred := b
 		end
 
-	exception_short_description: STRING_32 is
+	exception_short_description: STRING_32
 		do
 			Result := exception.short_description
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	exception_type_name: STRING is
+	exception_type_name: STRING
 			-- Exception class name (if any).
 		require
 			exception_occurred: exception_occurred
@@ -254,7 +254,7 @@ feature -- Values
 			end
 		end
 
-	exception_meaning: STRING_32 is
+	exception_meaning: STRING_32
 			-- Exception tag (if any).
 		do
 			if exception /= Void then
@@ -262,7 +262,7 @@ feature -- Values
 			end
 		end
 
-	exception_message: STRING_32 is
+	exception_message: STRING_32
 			-- Exception message (if any).
 		require
 			exception_occurred: exception_occurred
@@ -272,7 +272,7 @@ feature -- Values
 			end
 		end
 
-	exception_text: STRING_32 is
+	exception_text: STRING_32
 			-- Exception text (if any).
 		require
 			exception_occurred: exception_occurred
@@ -284,13 +284,13 @@ feature -- Values
 
 feature -- Query
 
-	reason_is_overflow: BOOLEAN is
+	reason_is_overflow: BOOLEAN
 			-- Stop reason is Overflow
 		do
 			Result := reason = Pg_overflow
 		end
 
-	reason_is_catcall: BOOLEAN is
+	reason_is_catcall: BOOLEAN
 			-- Stop reason is CatCall	
 		do
 			Result := reason = Pg_catcall
@@ -301,7 +301,7 @@ feature -- Call Stack related
 	current_call_stack: EIFFEL_CALL_STACK
 			-- Current Call Stack regarding Thread Id.
 
-	current_call_stack_depth: INTEGER is
+	current_call_stack_depth: INTEGER
 			-- Stack depth of `current_call_stack'
 		do
 			if current_call_stack /= Void then
@@ -309,12 +309,12 @@ feature -- Call Stack related
 			end
 		end
 
-	has_call_stack_by_thread_id (tid: like current_thread_id): BOOLEAN is
+	has_call_stack_by_thread_id (tid: like current_thread_id): BOOLEAN
 		do
 			Result := call_stack_list.has (tid)
 		end
 
-	get_current_call_stack is
+	get_current_call_stack
 			-- set `current_call_stack' value
 		require
 			current_thread_id_valid: has_call_stack_by_thread_id (current_thread_id)
@@ -329,7 +329,7 @@ feature -- Call Stack related
 
 feature -- Call Stack element related
 
-	current_call_stack_element: CALL_STACK_ELEMENT is
+	current_call_stack_element: CALL_STACK_ELEMENT
 			-- Current call stack element being displayed.
 		local
 			i: INTEGER
@@ -340,7 +340,7 @@ feature -- Call Stack element related
 			end
 		end
 
-	current_eiffel_call_stack_element: EIFFEL_CALL_STACK_ELEMENT is
+	current_eiffel_call_stack_element: EIFFEL_CALL_STACK_ELEMENT
 			-- Current call stack element being displayed
 		do
 			Result ?= current_call_stack.i_th (Application.current_execution_stack_number)
@@ -352,7 +352,7 @@ feature -- Process related access
 
 feature -- Process related change
 
-	set_process_id (pid: INTEGER) is
+	set_process_id (pid: INTEGER)
 			-- Set process id
 		require
 			id_valid: pid > 0
@@ -376,17 +376,17 @@ feature -- Thread related access
 
 	all_thread_ids_count: INTEGER
 
-	thread_name (id: like current_thread_id): STRING is
+	thread_name (id: like current_thread_id): STRING
 		do
 		end
 
-	thread_priority (id: like current_thread_id): INTEGER is
+	thread_priority (id: like current_thread_id): INTEGER
 		do
 		end
 
 feature -- Thread related change
 
-	set_call_stack (tid: like current_thread_id; ecs: like current_call_stack) is
+	set_call_stack (tid: like current_thread_id; ecs: like current_call_stack)
 			-- Associate `ecs' with thread id `tid'
 		require
 			id_valid: tid /= Default_pointer
@@ -397,17 +397,17 @@ feature -- Thread related change
 			get_current_call_stack
 		end
 
-	has_thread_id (tid: like current_thread_id): BOOLEAN is
+	has_thread_id (tid: like current_thread_id): BOOLEAN
 		do
 			Result := all_thread_ids /= Void and then all_thread_ids.has (tid)
 		end
 
-	refresh_current_thread_id is
+	refresh_current_thread_id
 			-- Get fresh value of Thread ID from debugger
 		deferred
 		end
 
-	set_active_thread_id (tid: like current_thread_id) is
+	set_active_thread_id (tid: like current_thread_id)
 			-- Set active thread id
 		require
 			id_valid: has_thread_id (tid)
@@ -418,7 +418,7 @@ feature -- Thread related change
 			active_thread_id := tid
 		end
 
-	set_current_thread_id (tid: like current_thread_id) is
+	set_current_thread_id (tid: like current_thread_id)
 			-- Set current thread id, and refresh `current_call_stack'
 		require
 			id_valid: has_thread_id (tid)
@@ -432,13 +432,13 @@ feature -- Thread related change
 			end
 		end
 
-	switch_to_current_thread_id	is
+	switch_to_current_thread_id
 			-- Switch debugger context thread id to `current_thread_id'.
 		do
 			--| Mainly use for Classical debugger purpose
 		end
 
-	add_thread_id (tid: like current_thread_id) is
+	add_thread_id (tid: like current_thread_id)
 		require
 			all_thread_ids = Void or else not all_thread_ids.has (tid)
 		do
@@ -451,7 +451,7 @@ feature -- Thread related change
 			all_thread_ids.has (tid)
 		end
 
-	remove_thread_id (tid: like current_thread_id) is
+	remove_thread_id (tid: like current_thread_id)
 		require
 			all_thread_ids.has (tid)
 		do
@@ -461,7 +461,7 @@ feature -- Thread related change
 			not all_thread_ids.has (tid)
 		end
 
-	refresh_threads_information is
+	refresh_threads_information
 		do
 			all_thread_ids_count := all_thread_ids.count
 --| FIXME: This is doing nothing, check what we wanted to do with that...			
@@ -476,7 +476,7 @@ feature -- Thread related change
 
 feature {NONE} -- Call stack implementation
 
-	call_stack (tid: like current_thread_id): like current_call_stack is
+	call_stack (tid: like current_thread_id): like current_call_stack
 			-- Call stack associated with thread id `tid'.
 		do
 			Result := call_stack_list.item (tid)
@@ -489,7 +489,7 @@ feature {NONE} -- Call stack implementation
 
 feature -- Access
 
-	valid_reason: BOOLEAN is
+	valid_reason: BOOLEAN
 			-- Is the reason valid for stopping of execution?
 		do
 			Result := reason = Pg_break or else
@@ -508,7 +508,7 @@ feature -- Access
 						(reason = Pg_step)
 		end
 
-	debugged_position_information (fe: E_FEATURE): TUPLE [break_index: INTEGER; fid: INTEGER] is
+	debugged_position_information (fe: E_FEATURE): TUPLE [break_index: INTEGER; fid: INTEGER]
 			-- Information about debugged position
 		do
 			if current_call_stack /= Void then
@@ -528,7 +528,7 @@ feature -- Access
 			end
 		end
 
-	is_at (f_body_index: INTEGER; index: INTEGER): BOOLEAN is
+	is_at (f_body_index: INTEGER; index: INTEGER): BOOLEAN
 			-- Is the program stopped at the given index in the given feature ?
 			-- Returns False when the couple ('f','index') cannot be found on the stack.
 			--         or is on the stack but not currently active.
@@ -561,7 +561,7 @@ feature -- Access
 			end
 		end
 
-	is_top (f_body_index: INTEGER; index: INTEGER): BOOLEAN is
+	is_top (f_body_index: INTEGER; index: INTEGER): BOOLEAN
 			-- Return True if the couple ('f','index') is the top position on the stack,
 			-- Return False if the couple ('f','index') is somewhere else in the stack,
 			-- 		or if the couple ('f','index') is not in the stack.
@@ -585,7 +585,7 @@ feature -- Access
 			end
 		end
 
-	has_valid_call_stack: BOOLEAN is
+	has_valid_call_stack: BOOLEAN
 			-- Has a valid callstack ?
 		do
 			if is_stopped then
@@ -595,13 +595,13 @@ feature -- Access
 			end
 		end
 
-	has_valid_current_eiffel_call_stack_element: BOOLEAN is
+	has_valid_current_eiffel_call_stack_element: BOOLEAN
 			-- Is current call stack element a valid Eiffel Call Stack Element ?
 		do
 			Result := current_eiffel_call_stack_element /= Void
 		end
 
-	has_breakpoint_enabled: BOOLEAN is
+	has_breakpoint_enabled: BOOLEAN
 			-- Has breakpoint enabled at current location ?
 		do
 			if e_feature /= Void then
@@ -620,7 +620,7 @@ feature -- Execution replay
 	replay_level_limit: INTEGER
 			-- Maximum depth which can be replayed
 
-	replayed_depth: INTEGER is
+	replayed_depth: INTEGER
 			-- Current replayed depth
 		do
 			if {rc: like current_replayed_call} current_replayed_call then
@@ -636,7 +636,7 @@ feature -- Execution replay
 	current_replayed_call: REPLAYED_CALL_STACK_ELEMENT
 			-- Top replayed call
 
-	set_replay_recording (b: BOOLEAN) is
+	set_replay_recording (b: BOOLEAN)
 			-- Enable or disable execution replay recording
 		require
 			stop_recording_only_if_not_replaying: b implies not replay_activated
@@ -644,7 +644,7 @@ feature -- Execution replay
 			replay_recording := b
 		end
 
-	set_replay_activated (b: BOOLEAN) is
+	set_replay_activated (b: BOOLEAN)
 			-- Enable or Disable Execution replaying
 		require
 			activate_replay_only_if_recording: b implies replay_recording
@@ -656,7 +656,7 @@ feature -- Execution replay
 			end
 		end
 
-	set_replay_level_limit (d: INTEGER) is
+	set_replay_level_limit (d: INTEGER)
 			-- Set maximum replay level
 		require
 			d_positive_or_zero: d >= 0
@@ -664,19 +664,19 @@ feature -- Execution replay
 			replay_level_limit := d
 		end
 
-	set_replayed_call (d: like replayed_call) is
+	set_replayed_call (d: like replayed_call)
 			-- set current replayed call
 		do
 			replayed_call := d
 		end
 
-	set_current_replayed_call (d: like current_replayed_call) is
+	set_current_replayed_call (d: like current_replayed_call)
 			-- Set `current_replayed_call'
 		do
 			current_replayed_call := d
 		end
 
-	set_catcall_data (v: like catcall_data) is
+	set_catcall_data (v: like catcall_data)
 			-- Set `catcall_data' to `v'
 		do
 			catcall_data := v
@@ -684,19 +684,19 @@ feature -- Execution replay
 
 feature -- Update
 
-	update_on_pre_stopped_state is
+	update_on_pre_stopped_state
 			-- Update data which need update before application is really stopped
 		do
 		end
 
-	update_on_stopped_state is
+	update_on_stopped_state
 			-- Update data which need update after application is really stopped
 		do
 		end
 
 feature -- Setting
 
-	set_is_stopped (b: BOOLEAN) is
+	set_is_stopped (b: BOOLEAN)
 			-- set is_stopped to `b'
 		do
 			if b and then not is_stopped then
@@ -707,7 +707,7 @@ feature -- Setting
 			is_stopped := b
 		end
 
-	set_exception (e: EXCEPTION_DEBUG_VALUE) is
+	set_exception (e: EXCEPTION_DEBUG_VALUE)
 			-- Set exception
 		require
 			exception_occurred: e /= Void implies exception_occurred
@@ -715,7 +715,7 @@ feature -- Setting
 			exception := e
 		end
 
-	set_max_depth (n: INTEGER) is
+	set_max_depth (n: INTEGER)
 			-- Set the maximum number of stack elements that should be retrieved to `n'.
 			-- -1 retrieves all elements.
 		require
@@ -724,7 +724,7 @@ feature -- Setting
 			stack_max_depth := n
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

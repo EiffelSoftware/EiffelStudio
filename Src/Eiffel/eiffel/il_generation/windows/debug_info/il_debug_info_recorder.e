@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects which are recording IL code info at compilation time
 		the concerned information are :
@@ -52,7 +52,7 @@ create {SHARED_IL_DEBUG_INFO_RECORDER}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create `Current'.
 		do
 			create dbg_info_modules.make (50)
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			reset_debugging_live_data
 		end
 
-	reset is
+	reset
 			-- Reset value of Current
 		do
 			dbg_info_modules.wipe_out
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			internal_reset
 		end
 
-	internal_reset is
+	internal_reset
 			-- Reset temporary values
 		do
 			internal_requested_class_tokens.wipe_out
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 
 feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- reset live data
 
-	reset_debugging_live_data is
+	reset_debugging_live_data
 			-- Reset data used during debugging session
 		do
 			if internal_module_key_table = Void then
@@ -104,7 +104,7 @@ feature {CIL_CODE_GENERATOR} -- Access
 	is_recording: BOOLEAN
 			-- Are we inside a recording session ?
 
-	start_recording_session (debug_mode: BOOLEAN) is
+	start_recording_session (debug_mode: BOOLEAN)
 			-- Start recording session.
 		do
 			debug ("debugger_il_info_trace")
@@ -137,7 +137,7 @@ feature {CIL_CODE_GENERATOR} -- Access
 			is_inside_recording_session: is_recording
 		end
 
-	end_recording_session is
+	end_recording_session
 			-- End recording session
 		require
 			is_inside_recording_session: is_recording
@@ -162,7 +162,7 @@ feature {CIL_CODE_GENERATOR} -- Access
 
 feature -- Queries : eStudio data
 
-	implemented_type (a_class_c: CLASS_C; a_class_type: CLASS_TYPE): CLASS_TYPE is
+	implemented_type (a_class_c: CLASS_C; a_class_type: CLASS_TYPE): CLASS_TYPE
 			-- Return CLASS_TYPE from `a_class_c' related to the derivation of `a_class_type'
 		require
 			a_class_c_attached: a_class_c /= Void
@@ -179,7 +179,7 @@ feature -- Queries : eStudio data
 
 feature -- Queries : eStudio data from debugger data
 
-	has_info_about_module (a_module_filename: STRING): BOOLEAN is
+	has_info_about_module (a_module_filename: STRING): BOOLEAN
 			-- Do we have information for Module identified by `a_module_filename' ?
 		require
 			module_filename_valid: a_module_filename /= Void
@@ -188,7 +188,7 @@ feature -- Queries : eStudio data from debugger data
 			Result := info_from_module_if_exists (a_module_filename) /= Void
 		end
 
-	has_class_info_about_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32): BOOLEAN is
+	has_class_info_about_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32): BOOLEAN
 			-- Do we have information for Class identified by `a_module_filename' and `a_class_token' ?
 		require
 			module_filename_valid: a_module_filename /= Void
@@ -203,7 +203,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	has_feature_info_about_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32; a_feature_token: NATURAL_32): BOOLEAN is
+	has_feature_info_about_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32; a_feature_token: NATURAL_32): BOOLEAN
 			-- Do we have information for feature identified by `a_module_filename' , `a_class_token', and `a_feature_token' ?
 		require
 			module_filename_valid: a_module_filename /= Void and then not a_module_filename.is_empty
@@ -218,7 +218,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	class_type_for_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32): CLASS_TYPE is
+	class_type_for_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32): CLASS_TYPE
 			-- CLASS_TYPE identified by `a_module_filename' and `a_class_token'
 		require
 			module_filename_valid: a_module_filename /= Void
@@ -233,7 +233,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	compiled_class_for_class_token_and_module (a_class_token: NATURAL_32; a_module_filename: STRING): CLASS_C is
+	compiled_class_for_class_token_and_module (a_class_token: NATURAL_32; a_module_filename: STRING): CLASS_C
 			-- Compiled CLASS_C identified by `class_token' and `a_module_filename'
 		require
 			class_token_valid: a_class_token > 0
@@ -247,7 +247,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	class_name_for_class_token_and_module (a_class_token: NATURAL_32; a_module_filename: STRING): STRING is
+	class_name_for_class_token_and_module (a_class_token: NATURAL_32; a_module_filename: STRING): STRING
 			-- Class name for CLASS_C identified by `class_token' and `a_module_filename'
 		require
 			class_token_positive: a_class_token > 0
@@ -265,7 +265,7 @@ feature -- Queries : eStudio data from debugger data
 			class_name_ok: Result /= Void and then not Result.is_empty
 		end
 
-	feature_i_by_module_feature_token (a_module_filename: STRING; a_feature_token: NATURAL_32): FEATURE_I is
+	feature_i_by_module_feature_token (a_module_filename: STRING; a_feature_token: NATURAL_32): FEATURE_I
 			-- Feature_i identified by `a_module_filename'  and `a_feature_token'
 			--| Nota: class token is useless
 			--| since in a ICorDebugModule feature_token are unique
@@ -278,7 +278,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	entry_point_feature_i: FEATURE_I is
+	entry_point_feature_i: FEATURE_I
 			-- System entry point feature
 		local
 			l_class: CLASS_C
@@ -294,7 +294,7 @@ feature -- Queries : eStudio data from debugger data
 
 feature -- Access to module name computing
 
-	module_file_name_for_class (a_class_c: CLASS_C): FILE_NAME is
+	module_file_name_for_class (a_class_c: CLASS_C): FILE_NAME
 			-- Computed module file name for `a_class_c'
 		require
 			class_c_not_void: a_class_c /= Void
@@ -348,7 +348,7 @@ feature -- Access to module name computing
 			end
 		end
 
-	module_file_name_for_class_type (a_class_type: CLASS_TYPE): FILE_NAME is
+	module_file_name_for_class_type (a_class_type: CLASS_TYPE): FILE_NAME
 			-- Computed module file name for `a_class_type'
 			--| we use CLASS_TYPE for the precompiled case .
 		require
@@ -405,7 +405,7 @@ feature -- Access to module name computing
 
 feature -- Queries : dotnet data from estudio data
 
-	class_token (a_module_filename: STRING; a_class_type: CLASS_TYPE): NATURAL_32 is
+	class_token (a_module_filename: STRING; a_class_type: CLASS_TYPE): NATURAL_32
 			-- Class token for CLASS_TYPE.
 		local
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
@@ -435,7 +435,7 @@ feature -- Queries : dotnet data from estudio data
 			class_token_positive: Result > 0
 		end
 
-	feature_token_for_feat_and_class_type (a_feat: FEATURE_I; a_class_type: CLASS_TYPE): NATURAL_32 is
+	feature_token_for_feat_and_class_type (a_feat: FEATURE_I; a_class_type: CLASS_TYPE): NATURAL_32
 			-- Feature token identified for `a_feat'
 		require
 			feat_not_void: a_feat /= Void
@@ -449,7 +449,7 @@ feature -- Queries : dotnet data from estudio data
 			end
 		end
 
-	feature_token_for_non_generic (a_feat: FEATURE_I): NATURAL_32 is
+	feature_token_for_non_generic (a_feat: FEATURE_I): NATURAL_32
 			-- Feature token identified for `a_feat'
 		require
 			feat_not_void: a_feat /= Void
@@ -461,7 +461,7 @@ feature -- Queries : dotnet data from estudio data
 			Result := feature_token_for_feat_and_class_type (a_feat, l_class_type)
 		end
 
-	once_feature_tokens_for_feat_and_class (a_feat: FEATURE_I; a_class_c: CLASS_C): TUPLE [NATURAL_32, NATURAL_32, NATURAL_32, NATURAL_32] is
+	once_feature_tokens_for_feat_and_class (a_feat: FEATURE_I; a_class_c: CLASS_C): TUPLE [NATURAL_32, NATURAL_32, NATURAL_32, NATURAL_32]
 			-- `_done' and `_result' Tokens for the once `a_feat'
 		require
 			feat_not_void: a_feat /= Void
@@ -478,7 +478,7 @@ feature -- Queries : dotnet data from estudio data
 
 feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 
-	is_il_offset_related_to_eiffel_line (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): BOOLEAN is
+	is_il_offset_related_to_eiffel_line (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): BOOLEAN
 			-- is a_il_offset related to an Eiffel line index ?
 		require
 			class_type_not_void: a_class_type /= Void
@@ -501,7 +501,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 			end
 		end
 
-	feature_eiffel_breakable_line_for_il_offset (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER is
+	feature_eiffel_breakable_line_for_il_offset (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER
 			-- Corresponding Eiffel Line for `a_il_offset' offset
 		require
 			class_type_not_void: a_class_type /= Void
@@ -545,7 +545,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 			Result := l_breakable_line
 		end
 
-	approximate_feature_breakable_il_offset_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER is
+	approximate_feature_breakable_il_offset_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER
 			-- Approximate IL offset for the il offset `a_current_il_offset'
 			-- previous or current offset if on a breakable point
 		require
@@ -571,7 +571,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 
 	feature_breakable_il_line_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I;
-				a_breakable_line_number: INTEGER): IL_OFFSET_SET is
+				a_breakable_line_number: INTEGER): IL_OFFSET_SET
 			-- IL offset for the bp slot index `a_breakable_line_number'
 			-- Return Void if index out of range
 		require
@@ -595,7 +595,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 		end
 
 	next_feature_breakable_il_range_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I;
-				a_current_il_offset: INTEGER): ARRAY [TUPLE [left: INTEGER; right: INTEGER]] is
+				a_current_il_offset: INTEGER): ARRAY [TUPLE [left: INTEGER; right: INTEGER]]
 			-- IL range offset for the Eiffel line `a_line' in the step next
 		require
 			class_type_not_void: a_class_type /= Void
@@ -643,7 +643,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 
 feature {NONE} -- line debug exploitation
 
-	feature_breakable_il_offsets_sorted_list (a_class_type: CLASS_TYPE; a_feat: FEATURE_I): SORTED_LIST [INTEGER] is
+	feature_breakable_il_offsets_sorted_list (a_class_type: CLASS_TYPE; a_feat: FEATURE_I): SORTED_LIST [INTEGER]
 			-- List of all sorted breakable IL Offset for `a_feat'
 		require
 			class_type_not_void: a_class_type /= Void
@@ -679,7 +679,7 @@ feature {NONE} -- line debug exploitation
 			end
 		end
 
-	feature_breakable_il_offsets (a_class_type: CLASS_TYPE; a_feat: FEATURE_I): ARRAYED_LIST [TUPLE [e_line: INTEGER; il_offset: IL_OFFSET_SET]] is
+	feature_breakable_il_offsets (a_class_type: CLASS_TYPE; a_feat: FEATURE_I): ARRAYED_LIST [TUPLE [e_line: INTEGER; il_offset: IL_OFFSET_SET]]
 			-- List of breakable IL Offset for `a_feat'
 		require
 			class_type_not_void: a_class_type /= Void
@@ -712,7 +712,7 @@ feature {CIL_CODE_GENERATOR} -- Recording context
 	in_interface : BOOLEAN
 			-- is current generated feature is in_interface ?
 
-	set_record_context (a_is_single_class, a_is_attr, a_is_static, a_in_interface: BOOLEAN) is
+	set_record_context (a_is_single_class, a_is_attr, a_is_static, a_in_interface: BOOLEAN)
 			-- Save generation context in order to determine what to record.
 		do
 			is_single_class := a_is_single_class
@@ -723,7 +723,7 @@ feature {CIL_CODE_GENERATOR} -- Recording context
 
 feature {CIL_CODE_GENERATOR} -- line debug recording
 
-	ignore_next_debug_info is
+	ignore_next_debug_info
 			-- Ignore recording of debug info (nop) for next recording
 		do
 			ignoring_next_debug_info := True
@@ -734,7 +734,7 @@ feature {CIL_CODE_GENERATOR} -- line debug recording
 
 	record_ghost_debug_infos (a_class_type: CLASS_TYPE; a_feat: FEATURE_I;
 								a_il_line: INTEGER; a_eiffel_line: INTEGER;
-								a_nb: INTEGER) is
+								a_nb: INTEGER)
 			-- Record potential IL offset stoppable without any IL generation
 			-- this is used for non generated debug clauses
 			-- for enabling estudio to show correct eiffel line.
@@ -756,7 +756,7 @@ feature {CIL_CODE_GENERATOR} -- line debug recording
 			end
 		end
 
-	record_line_info (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_line: INTEGER; a_eiffel_line: INTEGER;) is
+	record_line_info (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_line: INTEGER; a_eiffel_line: INTEGER;)
 			-- Record IL information regarding breakable line
 		require
 			class_type_not_void: a_class_type /= Void
@@ -789,7 +789,7 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 
 	record_once_info_for_class (a_data_class_token,
 					a_once_done_token, a_once_result_token, a_once_exception_token: INTEGER;
-					a_feature: FEATURE_I; a_class_c: CLASS_C) is
+					a_feature: FEATURE_I; a_class_c: CLASS_C)
 			--  Record `_done' `_result' and `_exception' tokens for once `a_once_name' from `a_class_type'.
 		local
 			l_class_types: LIST [CLASS_TYPE]
@@ -827,7 +827,7 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 
 	record_once_info_for_class_type (a_data_class_token: NATURAL_32;
 					a_once_done_token, a_once_result_token, a_once_exception_token: NATURAL_32;
-					a_feature_i: FEATURE_I; a_class_type: CLASS_TYPE) is
+					a_feature_i: FEATURE_I; a_class_type: CLASS_TYPE)
 		require
 			a_feature_i /= Void
 		local
@@ -857,7 +857,7 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 			end
 		end
 
-	record_il_feature_info (a_module: IL_MODULE; a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_class_token, a_feature_token: INTEGER) is
+	record_il_feature_info (a_module: IL_MODULE; a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_class_token, a_feature_token: INTEGER)
 			-- Record feature information : class, feature token, and module name throught the other data.
 		local
 			l_class_token, l_feature_token: NATURAL_32
@@ -886,7 +886,7 @@ feature {NONE} -- Record processing
 	last_class_type_recorded: CLASS_TYPE
 			-- Last recorded class type
 
-	ignore_feature (a_feat: FEATURE_I): BOOLEAN is
+	ignore_feature (a_feat: FEATURE_I): BOOLEAN
 			-- Ignore non Eiffel feature name
 			-- for now, ignore all '^_.*' feature_name
 		require
@@ -900,7 +900,7 @@ feature {NONE} -- Record processing
 		end
 
 	process_il_feature_info_recording (a_module: IL_MODULE; a_class_type: CLASS_TYPE;
-				a_feature: FEATURE_I; a_class_token, a_feature_token: NATURAL_32) is
+				a_feature: FEATURE_I; a_class_token, a_feature_token: NATURAL_32)
 			-- Record feature information regarding token
 		require
 			module_not_void: a_module /= Void
@@ -944,7 +944,7 @@ feature {NONE} -- Record processing
 
 feature {NONE} -- Class Specific info
 
-	internal_record_class_token (a_module: IL_MODULE; a_class_type: CLASS_TYPE; a_class_token: NATURAL_32) is
+	internal_record_class_token (a_module: IL_MODULE; a_class_type: CLASS_TYPE; a_class_token: NATURAL_32)
 			-- Record class information regarding token
 		require
 			module_not_void: a_module /= Void
@@ -955,7 +955,7 @@ feature {NONE} -- Class Specific info
 		end
 
 	internal_record_class_type (a_module_filename: STRING; a_module_name: STRING;
-			a_class_type: CLASS_TYPE; a_class_token: NATURAL_32) is
+			a_class_type: CLASS_TYPE; a_class_token: NATURAL_32)
 				--| New mecanism
 		require
 			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
@@ -986,7 +986,7 @@ feature {CIL_CODE_GENERATOR} -- Cleaning
 	last_class_type_info_cleaned: CLASS_TYPE
 			-- Last cleaned Class Type
 
-	clean_class_type_info_for (a_class_type: CLASS_TYPE) is
+	clean_class_type_info_for (a_class_type: CLASS_TYPE)
 			-- Clean info related to this `a_class_type'.
 		require
 			class_type_not_void: a_class_type /= Void
@@ -1047,7 +1047,7 @@ feature {NONE} -- Debugger Info List Access
 	last_info_from_module: like info_from_module
  			-- Last IL_DEBUG_INFO_FROM_MODULE used
 
-	first_info_from_class_c (a_class_c: CLASS_C): IL_DEBUG_INFO_FROM_CLASS_TYPE is
+	first_info_from_class_c (a_class_c: CLASS_C): IL_DEBUG_INFO_FROM_CLASS_TYPE
 			-- Info from any Class_type	 from `a_class_c'.
 		require
 			class_c_not_void: a_class_c /= Void
@@ -1065,7 +1065,7 @@ feature {NONE} -- Debugger Info List Access
 			end
 		end
 
-	info_from_class_type (a_class_type: CLASS_TYPE; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_CLASS_TYPE is
+	info_from_class_type (a_class_type: CLASS_TYPE; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_CLASS_TYPE
 			-- Info from Class_type
 		require
 			class_type_not_void: a_class_type /= Void
@@ -1090,7 +1090,7 @@ feature {NONE} -- Debugger Info List Access
 			(Result = Void) implies (not a_create_if_not_found)
 		end
 
-	info_from_module_or_create (a_module_filename: STRING; a_module_name: STRING): IL_DEBUG_INFO_FROM_MODULE is
+	info_from_module_or_create (a_module_filename: STRING; a_module_name: STRING): IL_DEBUG_INFO_FROM_MODULE
 			-- Info from Module_filename
 		require
 			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
@@ -1101,7 +1101,7 @@ feature {NONE} -- Debugger Info List Access
 			result_not_void: Result /= Void
 		end
 
-	info_from_module_if_exists (a_module_filename: STRING): IL_DEBUG_INFO_FROM_MODULE is
+	info_from_module_if_exists (a_module_filename: STRING): IL_DEBUG_INFO_FROM_MODULE
 			-- Info from Module_filename
 		require
 			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
@@ -1109,7 +1109,7 @@ feature {NONE} -- Debugger Info List Access
 			Result := info_from_module (a_module_filename, False)
 		end
 
-	info_from_module (a_module_filename: STRING; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_MODULE is
+	info_from_module (a_module_filename: STRING; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_MODULE
 			-- Info from Module_filename
 			--| Should not be called directly anymore,
 			--| use `info_from_module_or_create' or `info_from_module_if_exists'
@@ -1155,21 +1155,21 @@ feature {NONE} -- Debugger Info List
 
 feature {CIL_CODE_GENERATOR, IL_DEBUG_INFO_RECORDER_EXPORTER} -- Persistence
 
-	load_data_for_debugging	is
+	load_data_for_debugging
 			-- Load workbench data (mainly for debugging)
 		do
 			is_recording := False
 			load_workbench_data
 		end
 
-	load_workbench_data is
+	load_workbench_data
 			-- Load workbench data (mainly for debugging)
 		do
 			load (il_info_file_name)
 			last_loading_is_workbench := True
 		end
 
-	load_final_data is
+	load_final_data
 			-- Load final data
 		do
 			load (final_il_info_file_name)
@@ -1182,7 +1182,7 @@ feature {CIL_CODE_GENERATOR, IL_DEBUG_INFO_RECORDER_EXPORTER} -- Persistence
 	load_successful: BOOLEAN
 			-- Is last loading successful ?
 
-	loading_errors_message: STRING is
+	loading_errors_message: STRING
 		do
 			create Result.make (50)
 			Result.append_string (" ERROR while retrieving IL DEBUG INFO data ...%N")
@@ -1205,7 +1205,7 @@ feature {CIL_CODE_GENERATOR, IL_DEBUG_INFO_RECORDER_EXPORTER} -- Persistence
 
 feature {NONE}-- Implementation for save and load task
 
-	save (a_filename_to_save: STRING) is
+	save (a_filename_to_save: STRING)
 			-- Save info into file.
 		local
 			l_object_to_save: IL_DEBUG_INFO_STORAGE
@@ -1233,7 +1233,7 @@ feature {NONE}-- Implementation for save and load task
 			end
 		end
 
-	load (a_il_info_file_name: STRING) is
+	load (a_il_info_file_name: STRING)
 			-- Load info from saved file.
 		require
 			a_il_info_file_name_not_void: a_il_info_file_name /= Void
@@ -1290,7 +1290,7 @@ feature {NONE}-- Implementation for save and load task
 	loading_errors: LINKED_LIST [STRING]
 			-- Loading error messages.
 
-	save_storable_data (d: IL_DEBUG_INFO_STORAGE; a_filename_to_save: STRING) is
+	save_storable_data (d: IL_DEBUG_INFO_STORAGE; a_filename_to_save: STRING)
 			-- Save Storable data
 		require
 			data_valid: d /= Void
@@ -1306,7 +1306,7 @@ feature {NONE}-- Implementation for save and load task
 			l_il_info_file.close
 		end
 
-	import_file_data (a_fn: STRING; a_system_name: STRING; is_from_precompiled: BOOLEAN): BOOLEAN is
+	import_file_data (a_fn: STRING; a_system_name: STRING; is_from_precompiled: BOOLEAN): BOOLEAN
 			-- Add data contained in `a_fn' into current structure
 		local
 			retried: BOOLEAN
@@ -1447,7 +1447,7 @@ feature {NONE}-- Implementation for save and load task
 			retry
 		end
 
-	update_imported_project_info_module (a_project_path: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE) is
+	update_imported_project_info_module (a_project_path: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE)
 			-- Update imported project module name to effective module name.
 		local
 			l_fn: FILE_NAME
@@ -1458,7 +1458,7 @@ feature {NONE}-- Implementation for save and load task
 			a_info_module.update_module_filename (direct_module_key (l_fn))
 		end
 
-	update_imported_precompilation_info_module (a_system_name: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE) is
+	update_imported_precompilation_info_module (a_system_name: STRING; a_info_module: IL_DEBUG_INFO_FROM_MODULE)
 			-- Update imported precompilation module name to effective module name.
 		local
 			l_mod_fn: STRING
@@ -1474,7 +1474,7 @@ feature {NONE}-- Implementation for save and load task
 
 feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Module indexer implementation
 
-	resolved_module_key (a_mod_filename: STRING): STRING is
+	resolved_module_key (a_mod_filename: STRING): STRING
 			-- Lowered and resolved Module key for `a_mod_filename' used for indexation
 		require
 			mod_name_valid: a_mod_filename /= Void and then not a_mod_filename.is_empty
@@ -1488,7 +1488,7 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Module indexer implementation
 
 feature {NONE} -- Module indexer implementation
 
-	direct_module_key (a_mod_filename: STRING): STRING is
+	direct_module_key (a_mod_filename: STRING): STRING
 			-- Module key for `a_mod_filename' used for indexation
 			-- Nota: Only for recording session features
 		require
@@ -1500,7 +1500,7 @@ feature {NONE} -- Module indexer implementation
 			Result_is_lower_case: Result.as_lower.is_equal (Result)
 		end
 
-	internal_module_key (a_mod_key: STRING): STRING is
+	internal_module_key (a_mod_key: STRING): STRING
 			-- Module key used in the internal structure.
 			-- as opposed to external module key
 			-- which comes from dotnet debugger
@@ -1566,7 +1566,7 @@ feature {NONE} -- Module indexer implementation
 			-- Table to make relation between external module name,
 			-- and internal key for module
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

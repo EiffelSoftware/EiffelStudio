@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for cluster."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ feature -- Property
 
 feature -- Output
 
-	put_cluster_name (a_text_formatter: TEXT_FORMATTER) is
+	put_cluster_name (a_text_formatter: TEXT_FORMATTER)
 			-- Display the cluster name
 		do
 			if cluster /= Void then
@@ -32,7 +32,7 @@ feature -- Output
 			end
 		end
 
-	put_cluster_path (a_text_formatter: TEXT_FORMATTER) is
+	put_cluster_path (a_text_formatter: TEXT_FORMATTER)
 			-- Display the cluster path
 		do
 			if cluster.is_assembly or cluster.is_physical_assembly then
@@ -46,7 +46,7 @@ feature -- Output
 
 feature {AST_LACE, COMPILER_EXPORTER}
 
-	set_cluster (c: CONF_GROUP) is
+	set_cluster (c: CONF_GROUP)
 			-- Assign `c' to `cluster'.
 		require
 			c_not_void: c /= Void
@@ -56,7 +56,7 @@ feature {AST_LACE, COMPILER_EXPORTER}
 			cluster_set: cluster = c
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

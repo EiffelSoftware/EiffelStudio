@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information on a class of the system for XMI export"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature --Initialization
 
-	make (id: INTEGER; id_package: INTEGER c: CLASS_C) is
+	make (id: INTEGER; id_package: INTEGER c: CLASS_C)
 			-- Initialization of `Current'
 			-- assign `id' to `xmi_id'
 			-- assign `id_package' to `id_model'
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_subtype (g: XMI_GENERALIZATION): BOOLEAN is
+	is_subtype (g: XMI_GENERALIZATION): BOOLEAN
 			-- Is `Current' subtype of relation `g'?
 		require
 			current_involved_in_g:	generalizations.has (g)
@@ -72,7 +72,7 @@ feature -- Status report
 			result_set:	Result = (g.subtype = Current)
 		end
 
-	is_supertype (g: XMI_GENERALIZATION): BOOLEAN is
+	is_supertype (g: XMI_GENERALIZATION): BOOLEAN
 			-- Is `Current' supertype of relation `g'?
 		require
 			current_involved_in_g:	generalizations.has (g)
@@ -82,7 +82,7 @@ feature -- Status report
 			result_set:	Result = (g.supertype = Current)
 		end
 
-	is_generalized: BOOLEAN is
+	is_generalized: BOOLEAN
 			-- Is `Current' subtype of an item in `generalizations'?
 		do
 			Result := false
@@ -96,7 +96,7 @@ feature -- Status report
 			end
 		end
 
-	is_specialized: BOOLEAN is
+	is_specialized: BOOLEAN
 			-- Is `Current' subtype of an item in `generalizations'?
 		do
 			Result := false
@@ -112,7 +112,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_generalization (g: XMI_GENERALIZATION) is
+	add_generalization (g: XMI_GENERALIZATION)
 			-- Adds `g' to `generalization'.
 		require
 			new_generalization_not_void: g /= Void
@@ -123,7 +123,7 @@ feature -- Element change
 			new_generalization_added: generalizations.has (g)
 		end
 
-	add_feature (f: XMI_FEATURE) is
+	add_feature (f: XMI_FEATURE)
 			-- Adds `f' to `features'.
 		require
 			new_feature_not_void: f /= Void
@@ -135,7 +135,7 @@ feature -- Element change
 
 feature -- Action 
 
-	code: STRING is
+	code: STRING
 			-- XMI representation of the class.
 		local
 			l_association: XMI_ASSOCIATION
@@ -241,7 +241,7 @@ feature -- Action
 				%</Foundation.Core.Class>%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

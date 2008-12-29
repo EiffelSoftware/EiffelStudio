@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Formats .NET XML class text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature {NONE} -- Properties
 
 feature -- Setting
 
-	set_is_flat_short is
+	set_is_flat_short
 			-- Set `is_flat_short' to True.
 		do
 			is_flat_short := True
@@ -37,7 +37,7 @@ feature -- Setting
 
 feature -- Output
 
-	format (e_class: CONSUMED_TYPE; e_classi: CLASS_I; a_formatter: TEXT_FORMATTER) is
+	format (e_class: CONSUMED_TYPE; e_classi: CLASS_I; a_formatter: TEXT_FORMATTER)
 			-- Format text for eiffel class `e_class'.
 		require
 			valid_e_class: e_class /= Void
@@ -53,7 +53,7 @@ feature -- Output
 			error := f.execution_error
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

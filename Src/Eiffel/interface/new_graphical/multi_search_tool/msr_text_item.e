@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent matches in the given text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ feature -- Initialization
 			a_path: like path;
 			a_text: MSR_STRING_ADAPTER;
 			a_start: like start_index;
-			a_end: like end_index) is
+			a_end: like end_index)
 			-- Initialization
 		require
 			name_attached: a_name /= Void
@@ -58,19 +58,19 @@ feature -- Access
 	end_index : INTEGER
 			-- End position of the found text
 
-	start_index_in_unix_text : INTEGER is
+	start_index_in_unix_text : INTEGER
 			-- Start position of the found text, "%R"s are ignored
 		do
 			Result := start_index - percent_r_count
 		end
 
-	end_index_in_unix_text : INTEGER is
+	end_index_in_unix_text : INTEGER
 			-- End position of the found text, "%R"s are ignored
 		do
 			Result := end_index - percent_r_count + text.occurrences ('%R')
 		end
 
-	start_index_in_context_text : INTEGER is
+	start_index_in_context_text : INTEGER
 			-- Start position of `text' in `context_text'
 		do
 			Result := start_index_in_context_text_internal
@@ -81,19 +81,19 @@ feature -- Access
 	context_text : like text
 			-- Text to be presented with surroundings
 
-	line_number : INTEGER is
+	line_number : INTEGER
 			-- Line number of current match in `source_text'
 		do
 			Result := line_number_internal
 		end
 
-	percent_r_count : INTEGER is
+	percent_r_count : INTEGER
 			--  Number of '%R' before text in `source_text'
 		do
 			Result := percent_r_count_internal
 		end
 
-	captured_submatches: ARRAYED_LIST [like text] is
+	captured_submatches: ARRAYED_LIST [like text]
 			-- Submatches
 		do
 			Result := captured_submatches_internal
@@ -105,7 +105,7 @@ feature -- Access
 
 feature {MSR_SEARCH_STRATEGY, MSR_REPLACE_STRATEGY} -- Element Change
 
-	set_start_index (a_start: like start_index) is
+	set_start_index (a_start: like start_index)
 			-- Set `start_index' with `a_start'.
 		require
 			a_start_positive: a_start >= 0
@@ -115,7 +115,7 @@ feature {MSR_SEARCH_STRATEGY, MSR_REPLACE_STRATEGY} -- Element Change
 			start_index_set: start_index = a_start
 		end
 
-	set_end_index (a_end: like start_index) is
+	set_end_index (a_end: like start_index)
 			-- Set `end_index' with `a_end'.
 		require
 			a_end_positive: a_end >= 0
@@ -125,7 +125,7 @@ feature {MSR_SEARCH_STRATEGY, MSR_REPLACE_STRATEGY} -- Element Change
 			end_index_set: end_index = a_end
 		end
 
-	set_text (a_text : like text) is
+	set_text (a_text : like text)
 			-- Set what exactly is found.
 		require
 			a_text_attached: a_text /= Void
@@ -137,7 +137,7 @@ feature {MSR_SEARCH_STRATEGY, MSR_REPLACE_STRATEGY} -- Element Change
 
 feature -- Element Change
 
-	set_context_text (context: like context_text) is
+	set_context_text (context: like context_text)
 			-- Set `context_text' with context.
 		do
 			context_text := replace_RNT_to_space (context)
@@ -146,19 +146,19 @@ feature -- Element Change
 			context_text_contains_no_tabs: not context_text.has ('%T')
 		end
 
-	set_line_number (i: INTEGER) is
+	set_line_number (i: INTEGER)
 			-- Set `line_number' with i.
 		do
 			line_number_internal := i
 		end
 
-	set_percent_r_count (i: INTEGER) is
+	set_percent_r_count (i: INTEGER)
 			-- Set `percent_r_count' with i.
 		do
 			percent_r_count_internal := i
 		end
 
-	set_submatches (strings: like captured_submatches) is
+	set_submatches (strings: like captured_submatches)
 			-- Set `submatches' with strings.
 		require
 			strings_not_void: strings /= Void
@@ -168,7 +168,7 @@ feature -- Element Change
 			start_index_internal_not_void: captured_submatches_internal = strings
 		end
 
-	set_pcre_regex (a_pcre_regex: MSR_RX_PCRE_REGULAR_EXPRESSION) is
+	set_pcre_regex (a_pcre_regex: MSR_RX_PCRE_REGULAR_EXPRESSION)
 			-- Set `pcre_regex' with a_pcre_regex.
 		require
 			a_pcre_regex_not_void: a_pcre_regex /= Void
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 invariant
 	captured_submatches_internal_not_void: captured_submatches_internal /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

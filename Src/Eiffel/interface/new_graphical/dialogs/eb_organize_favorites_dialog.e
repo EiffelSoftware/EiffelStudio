@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Dialog to organize a set of favorites classes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_favorites_manager: EB_FAVORITES_MANAGER) is
+	make (a_favorites_manager: EB_FAVORITES_MANAGER)
 			-- Initialize the dialog with the manager `a_favorites_manager'
 		do
 			favorites_manager := a_favorites_manager
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			prepare
 		end
 
-	prepare is
+	prepare
 			-- Create the controls and setup the layout
 		local
 			button: EV_BUTTON
@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 
 feature {EB_FAVORITES_MANAGER} -- Status Setting
 
-	refresh is
+	refresh
 			-- Update `Current's display.
 		do
 			favorites_tree.refresh
@@ -101,13 +101,13 @@ feature {EB_FAVORITES_MANAGER} -- Status Setting
 
 feature {NONE} -- Implementation
 
-	close is
+	close
 			-- Terminate the dialog
 		do
 			hide
 		end
 
-	remove is
+	remove
 			-- Remove the current selected class.
 		require
 			at_least_one_item_selected: favorites_tree.selected_item /= Void
@@ -121,21 +121,21 @@ feature {NONE} -- Implementation
 			remove_button.disable_sensitive
 		end
 
-	new_favorite_class is
+	new_favorite_class
 			-- Create a new "favorite class" and add it to the
 			-- end of the root list.
 		do
 			favorites_manager.new_favorite_class (Current)
 		end
 
-	create_folder is
+	create_folder
 			-- create a new folder and add it to the end of the
 			-- root list.
 		do
 			favorites_manager.create_folder (Current)
 		end
 
-	move_to_folder is
+	move_to_folder
 			-- Move the selected item to a given folder.
 		require
 			at_least_one_item_selected: favorites_tree.selected_item /= Void
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Vision2 events
 
-	on_selection_change is
+	on_selection_change
 			-- The selection in the tree has changed
 		do
 			if favorites_tree.selected_item /= Void then
@@ -184,7 +184,7 @@ feature {NONE} -- Controls
 	favorites_tree: EB_FAVORITES_TREE;
 			-- Tree representing the favorites
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

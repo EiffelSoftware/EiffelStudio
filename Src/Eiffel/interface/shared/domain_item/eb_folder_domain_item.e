@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Folder doman item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_id: STRING) is
+	make (a_id: STRING)
 			-- Initialize `id' with `a_id'.
 		do
 			Precursor (a_id)
@@ -34,17 +34,17 @@ feature{NONE} -- Initialization
 
 feature -- Status report
 
-	is_folder_item: BOOLEAN is True
+	is_folder_item: BOOLEAN = True
 			-- Is current a folder item?
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Does current represent a valid domain item?
 		do
 			update
 			Result := folder_internal /= Void
 		end
 
-	is_recursive: BOOLEAN is
+	is_recursive: BOOLEAN
 			-- Is search for classes in current folder recursive?
 		do
 			Result := is_recursive_internal
@@ -54,7 +54,7 @@ feature -- Status report
 
 feature -- Access
 
-	domain (a_scope: QL_SCOPE): QL_DOMAIN is
+	domain (a_scope: QL_SCOPE): QL_DOMAIN
 			-- New query lanaguage domain representing current item
 		local
 			l_class_domain_generator: QL_CLASS_DOMAIN_GENERATOR
@@ -65,14 +65,14 @@ feature -- Access
 			Result := query_group_item_from_conf_group (l_folder.cluster).wrapped_domain.new_domain (l_class_domain_generator)
 		end
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- Text of current item
 		do
 			update
 			Result := string_representation_internal
 		end
 
-	folder: EB_FOLDER is
+	folder: EB_FOLDER
 			-- Folder item for current
 		require
 			valid: is_valid
@@ -83,14 +83,14 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	query_language_item: QL_ITEM is
+	query_language_item: QL_ITEM
 			-- Query language item representation of current domain item
 		do
 			update
 			Result := query_language_item_internal
 		end
 
-	group: QL_GROUP is
+	group: QL_GROUP
 			-- Group to which current domain item belongs
 			-- Return the group where current folder is located.
 		do
@@ -99,13 +99,13 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	sorting_order_index: INTEGER is
+	sorting_order_index: INTEGER
 			-- Sorting order index
 		do
 			Result := folder_index
 		end
 
-	item_type_name: STRING_GENERAL is
+	item_type_name: STRING_GENERAL
 			-- Name of type of current item
 		do
 			Result := names.l_folder_domain_item
@@ -113,7 +113,7 @@ feature -- Access
 
 feature -- Setting
 
-	enable_search_for_class_recursive is
+	enable_search_for_class_recursive
 			-- Enable that search for classes in current folder is recursive.
 		do
 			is_recursive_internal := True
@@ -121,7 +121,7 @@ feature -- Setting
 			recursive_search_enabled: is_recursive
 		end
 
-	disable_search_for_class_recursive is
+	disable_search_for_class_recursive
 			-- Disable that search for classes in current folder is recursive.
 		do
 			is_recursive_internal := False
@@ -131,7 +131,7 @@ feature -- Setting
 
 feature{NONE} -- Implemenation
 
-	update is
+	update
 			-- Update status of current item.			
 		do
 			if not is_up_to_date then
@@ -160,7 +160,7 @@ feature{NONE} -- Implemenation
 	query_language_item_internal: like query_language_item;
 			-- Implementation of `query_language_item'
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

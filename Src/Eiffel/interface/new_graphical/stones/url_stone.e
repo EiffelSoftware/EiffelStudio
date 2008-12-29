@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Stone representing a URL."
 	legal: "See notice at end of class."
@@ -14,13 +14,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_link: STRING) is
+	make (a_link: STRING)
 			-- Create with URL `a_link'.
 		do
 			--| FIXME To be implemented
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

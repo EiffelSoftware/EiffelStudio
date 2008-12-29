@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Represents a analyzer's state persistent information.
 		]"
@@ -185,7 +185,7 @@ feature -- Basic operation
 invariant
 	current_line_has_current_token: current_line.has_token (current_token)
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

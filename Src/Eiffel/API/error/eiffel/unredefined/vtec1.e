@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Error when the expanded type is based on a deferred class."
 	legal: "See notice at end of class."
@@ -14,10 +14,10 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER = 1;
 			-- Error subcode
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Facilities for convenient use of the API."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	feature_type_as_class_c (f: E_FEATURE): CLASS_C is
+	feature_type_as_class_c (f: E_FEATURE): CLASS_C
 			-- Associated class of `f.type'.
 			-- Void if not present.
 		local
@@ -22,7 +22,7 @@ feature -- Access
 			end
 		end
 
-	feature_type_as_class_i (f: E_FEATURE): CLASS_I is
+	feature_type_as_class_i (f: E_FEATURE): CLASS_I
 			-- Associated class of `f.type'.
 			-- Void if not present.
 		local
@@ -34,7 +34,7 @@ feature -- Access
 			end
 		end
 
-	class_i_by_name (name: STRING): CLASS_I is
+	class_i_by_name (name: STRING): CLASS_I
 			-- Return class with `name'.
 			-- `Void' if not in system.
 		local
@@ -46,7 +46,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

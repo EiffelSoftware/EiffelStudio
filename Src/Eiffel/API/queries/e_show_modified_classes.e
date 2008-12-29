@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to display modified classes since last compilation."
@@ -19,7 +19,7 @@ create
 
 feature -- Execution
 
-	work is
+	work
 			-- Show universe: clusters in class lists.
 		local
 			groups: ARRAYED_LIST [CONF_GROUP];
@@ -46,7 +46,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	display_a_cluster (a_group: CONF_GROUP) is
+	display_a_cluster (a_group: CONF_GROUP)
 		local
 			sorted_class_names: SORTED_TWO_WAY_LIST [STRING];
 			classes: HASH_TABLE [CONF_CLASS, STRING];
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

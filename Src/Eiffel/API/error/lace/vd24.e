@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when two different basic classes in two clusters."
@@ -23,7 +23,7 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			put_class_name (a_text_formatter);
 			a_text_formatter.add ("First cluster: ");
@@ -36,7 +36,7 @@ feature -- Output
 
 feature {UNIVERSE_I} -- Setting
 
-	set_other_cluster (c: CONF_GROUP) is
+	set_other_cluster (c: CONF_GROUP)
 			-- Assign `c' to `other_cluster'.
 		require
 			c_not_void: c /= Void
@@ -46,7 +46,7 @@ feature {UNIVERSE_I} -- Setting
 			other_cluster_set: other_cluster /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

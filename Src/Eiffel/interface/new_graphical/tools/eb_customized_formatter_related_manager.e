@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manager for customized formatter/tool"
 	author: ""
 	date: "$Date$"
@@ -33,7 +33,7 @@ feature -- Status report
 	is_file_readable: BOOLEAN
 			-- Is file readable when the last time `parse_file' is called?
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Did any error occur?
 		do
 			Result := last_error /= Void
@@ -41,7 +41,7 @@ feature -- Status report
 
 feature -- Storage
 
-	load (a_error_agent: PROCEDURE [ANY, TUPLE]) is
+	load (a_error_agent: PROCEDURE [ANY, TUPLE])
 			-- Load information.
 			-- `a_error_agent' is the agent invoked when error occurs during loading.
 		deferred
@@ -49,14 +49,14 @@ feature -- Storage
 			loaded: is_loaded
 		end
 
-	store is
+	store
 			-- Store information.
 		deferred
 		end
 
 feature -- Setting
 
-	set_is_loaded (b: BOOLEAN) is
+	set_is_loaded (b: BOOLEAN)
 			-- Set `is_loaded' with `b'.
 		do
 			is_loaded := b
@@ -64,7 +64,7 @@ feature -- Setting
 			is_loaded_set: is_loaded = b
 		end
 
-	clear_last_error is
+	clear_last_error
 			-- Clear `last_error'.
 		do
 			last_error := Void
@@ -72,7 +72,7 @@ feature -- Setting
 			not_has_error: not has_error
 		end
 
-	set_is_file_readable (b: BOOLEAN) is
+	set_is_file_readable (b: BOOLEAN)
 			-- Set `is_file_readable' with `b'.
 		do
 			is_file_readable := b
@@ -80,7 +80,7 @@ feature -- Setting
 			is_file_readable_set: is_file_readable = b
 		end
 
-	set_last_error (a_error: like last_error) is
+	set_last_error (a_error: like last_error)
 			-- Set `last_error' with `a_error'.
 		do
 			last_error := a_error
@@ -90,7 +90,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	create_formatter_file_dir (a_path: FILE_NAME) is
+	create_formatter_file_dir (a_path: FILE_NAME)
 			-- Create dir `a_path' if not exists.
 		require
 			a_path_attached: a_path /= Void
@@ -109,7 +109,7 @@ feature{NONE} -- Implementation
 			retry
 		end
 
-	store_in_file (a_descriptors: LIST [G]; a_root_name: STRING; a_xml_generator: FUNCTION [ANY, TUPLE [a_item: G; a_parent: XM_COMPOSITE], XM_ELEMENT]; a_path: FILE_NAME; a_file_name: STRING) is
+	store_in_file (a_descriptors: LIST [G]; a_root_name: STRING; a_xml_generator: FUNCTION [ANY, TUPLE [a_item: G; a_parent: XM_COMPOSITE], XM_ELEMENT]; a_path: FILE_NAME; a_file_name: STRING)
 			-- Store `a_descritpors' in formatter descriptor `a_file_name' in `a_path'.
 			-- If `a_descriptors' doesn't contain any formatter descriptor but formatter file in `a_path exists, remove that file.
 			-- `a_error_agent' will be invoked when error occurs.
@@ -143,7 +143,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/Data
 
-	formatter_file_path (a_base_path: STRING): FILE_NAME is
+	formatter_file_path (a_base_path: STRING): FILE_NAME
 			-- Path for formatter file based on `a_base_path'
 		require
 			a_base_path_attached: a_base_path /= Void
@@ -154,7 +154,7 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	global_file_path: FILE_NAME is
+	global_file_path: FILE_NAME
 			-- Path to store global formatter related file
 		do
 			Result := formatter_file_path (eiffel_layout.user_settings_path)

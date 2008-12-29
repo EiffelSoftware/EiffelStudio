@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Run time value representing of a special object."
@@ -36,7 +36,7 @@ create {DEBUG_VALUE_EXPORTER}
 
 feature {NONE} -- Initialization
 
-	make_set_ref (ref: DBG_ADDRESS; id: INTEGER) is
+	make_set_ref (ref: DBG_ADDRESS; id: INTEGER)
 			-- Create Current as a standalone object
 			-- i.e: not an attribute
 			-- nevertheless at this point we don't have the `capacity'
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_attribute (attr_name: like name; a_class: like e_class;
-						addr: like address; cap: like capacity) is
+						addr: like address; cap: like capacity)
 		require
 			not_attr_name_void: attr_name /= Void;
 			not_addr_void: addr /= Void
@@ -77,12 +77,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 		once
 			Result := Eiffel_system.special_class.compiled_class
 		end
 
-	string_value: STRING_32 is
+	string_value: STRING_32
 			-- If `Current' represents a string then return its value.
 			-- Else return Void.
 		local
@@ -115,7 +115,7 @@ feature -- Access
 			end
 		end
 
-	truncated_raw_string_value (a_size: INTEGER): STRING_32 is
+	truncated_raw_string_value (a_size: INTEGER): STRING_32
 			-- If `Current' represents a string then return its value truncated to `a_size'.
 			-- Else return Void.
 			-- Do not convert special characters to an Eiffel representation.
@@ -199,7 +199,7 @@ feature -- Access
 			raw_string_value_not_void: Result /= Void
 		end
 
-	raw_string_value: STRING_32 is
+	raw_string_value: STRING_32
 			-- If `Current' represents a string then return its value.
 			-- Else return Void.
 			-- Do not convert special characters to an Eiffel representation.
@@ -217,7 +217,7 @@ feature -- Access
 			raw_string_value_not_void: Result /= Void
 		end
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		do
 			Result := Debugger_manager.Dump_value_factory.new_object_value (address, dynamic_class)
@@ -225,7 +225,7 @@ feature -- Access
 
 feature -- Items
 
-	get_items (a_min, a_max: INTEGER) is
+	get_items (a_min, a_max: INTEGER)
 		local
 			rqst: ATTR_REQUEST
 		do
@@ -240,7 +240,7 @@ feature -- Items
 
 feature -- Output
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
@@ -258,7 +258,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	set_hector_addr is
+	set_hector_addr
 			-- Convert the physical addresses received from the application
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 			get_capacity
 		end
 
-	get_capacity is
+	get_capacity
 			-- Get SPECIAL capacity value
 		do
 			if capacity < 0 then
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 invariant
 	items_exists: items_computed implies items /= Void;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

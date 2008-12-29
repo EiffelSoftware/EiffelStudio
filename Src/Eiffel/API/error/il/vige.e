@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "IL Generation error, occurs during IL code generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (description: like error_string) is
+	make (description: like error_string)
 			-- Set `Error_string' with `description'.
 		require
 			non_void_description: description /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			Error_string_set: Error_string = description
 		end
 
-	make_com_error is
+	make_com_error
 			-- Error when .NET COM component is not properly installed.
 		do
 			internal_error_string := "%
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 				%See http://docs.eiffel.com/technologies/dotnet for more details.%N"
 		end
 
-	make_output_in_use (t: STRING) is
+	make_output_in_use (t: STRING)
 			-- Error when trying to delete file `t'.
 		require
 			t_not_void: t /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			internal_error_string := "File: " + t + " is in use.%NSystem compilation aborted.%N"
 		end
 
-	make_pdb_in_use (module_name: STRING) is
+	make_pdb_in_use (module_name: STRING)
 			-- Error when trying to create PDB file associated to module `module_name'.
 		require
 			module_name_not_void: module_name /= Void
@@ -63,30 +63,30 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	code: STRING is
+	code: STRING
 			-- Error code
 		once
 			Result := "VIGE"
 		end
 
-	Error_string: STRING is
+	Error_string: STRING
 			-- Error description
 		do
 			Result := internal_error_string
 		end
 
-	file_name: STRING is
+	file_name: STRING
 			-- No associated file
 		do
 		end
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 		end
 
-	print_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Print error message on output.
 		local
 			i, j: INTEGER
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 invariant
 	internal_error_string_not_void: internal_error_string /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Group dependency view
 					This class is reponsible for displaying client/supplier classes for a given target/group/folder/class.
@@ -48,7 +48,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_dev_window: like development_window; a_drop_actions: like drop_actions) is
+	make (a_dev_window: like development_window; a_drop_actions: like drop_actions)
 			-- Initialize.
 		do
 			Precursor (a_dev_window, a_drop_actions)
@@ -56,7 +56,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Widget of a control bar through which, certain control can be performed upon current view
 		local
 			l_tool_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -97,7 +97,7 @@ feature -- Access
 	post_row_bind_action_table: HASH_TABLE [PROCEDURE [ANY, TUPLE [EV_GRID_ROW]], INTEGER]
 			-- Table of action to be performed after a row whose level index is specified by key of the table has been binded into `grid'.
 
-	syntactical_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
+	syntactical_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toggle button to indicate if syntactical supplier/clients are displayed
 		do
 			if syntactical_button_internal = Void then
@@ -112,7 +112,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	inheritance_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
+	inheritance_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toggle button to indicate if inheritance are displayed
 		do
 			if inheritance_button_internal = Void then
@@ -127,7 +127,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	normal_referenced_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
+	normal_referenced_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toggle button to indicate if normal referenced supplier/clients are displayed
 		do
 			if normal_referenced_button_internal = Void then
@@ -142,7 +142,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	recursive_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
+	recursive_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toggle button to indicate if class search is recursive for folder
 		do
 			if recursive_button_internal = Void then
@@ -159,7 +159,7 @@ feature -- Access
 
 feature -- Status report
 
-	should_tooltip_be_displayed: BOOLEAN is
+	should_tooltip_be_displayed: BOOLEAN
 			-- Should tooltip display be vetoed?
 		do
 			Result := show_tooltip_button.is_selected
@@ -173,7 +173,7 @@ feature -- Status report
 	is_displaying_suppliers: BOOLEAN
 			-- Is view displaying suppliers for the moment?
 
-	is_displaying_clients: BOOLEAN is
+	is_displaying_clients: BOOLEAN
 			-- Is view displaying clients for the moment?
 		do
 			Result := not is_displaying_suppliers
@@ -187,7 +187,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_is_displaying_suppliers (b: BOOLEAN) is
+	set_is_displaying_suppliers (b: BOOLEAN)
 			-- Set `is_displaying_suppliers' with `b'.
 		do
 			is_displaying_suppliers := b
@@ -195,7 +195,7 @@ feature -- Setting
 			is_displaying_suppliers_set: is_displaying_suppliers = b
 		end
 
-	prepare_for_supplier_view (a_name_of_starting_element: STRING) is
+	prepare_for_supplier_view (a_name_of_starting_element: STRING)
 			-- Prepare for display supplier dependency.
 			-- `a_name_of_starting_element' is the name displayed in referenced class column.
 		require
@@ -212,7 +212,7 @@ feature -- Setting
 			is_displaying_suppliers: is_displaying_suppliers
 		end
 
-	prepare_for_client_view (a_name_of_starting_element: STRING) is
+	prepare_for_client_view (a_name_of_starting_element: STRING)
 			-- Prepare for display client dependency.
 			-- `a_name_of_starting_element' is the name displayed in referenced class column.
 		do
@@ -227,7 +227,7 @@ feature -- Setting
 			is_displaying_clients: is_displaying_clients
 		end
 
-	set_has_grid_been_binded_for_current_data (a_binded: BOOLEAN) is
+	set_has_grid_been_binded_for_current_data (a_binded: BOOLEAN)
 			-- Set `has_grid_been_binded_for_current_data' with `a_binded'.
 		do
 			has_grid_been_binded_for_current_data := a_binded
@@ -237,7 +237,7 @@ feature -- Setting
 
 feature{NONE} -- Actions
 
-	on_categorized_folder_changed is
+	on_categorized_folder_changed
 			-- Action to be performed when selection status of `categorized_folder_button' changes
 		do
 			create_index_info
@@ -252,7 +252,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_row_expanded_or_collapsed (a_row: EV_GRID_ROW; a_expanded: BOOLEAN) is
+	on_row_expanded_or_collapsed (a_row: EV_GRID_ROW; a_expanded: BOOLEAN)
 			-- Action to be performed when `a_row' is expanded indicated by True value of `a_expanded' or
 			-- is collapsed indicated by False value of `a_expanded'.
 		require
@@ -280,7 +280,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_retrieve_data is
+	on_retrieve_data
 			-- Action to be performed to retrieve data
 		do
 			is_up_to_date := False
@@ -289,7 +289,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_show_self_dependency_changed is
+	on_show_self_dependency_changed
 			-- Action to be performed when selection status of `show_self_dependency_button' changes
 		do
 			if data /= Void then
@@ -299,7 +299,7 @@ feature{NONE} -- Actions
 
 feature -- Notification
 
-	provide_result is
+	provide_result
 			-- Provide result displayed in Current view.
 		local
 			l_cluster_stone: CLUSTER_STONE
@@ -330,7 +330,7 @@ feature -- Notification
 
 feature -- Sorting
 
-	name_tester (a_row, b_row: EB_CLASS_BROWSER_DEPENDENCY_ROW; a_order: INTEGER): BOOLEAN is
+	name_tester (a_row, b_row: EB_CLASS_BROWSER_DEPENDENCY_ROW; a_order: INTEGER): BOOLEAN
 			-- Tester to decide order between `a_row' and `b_row' according to order `a_order'
 		require
 			a_row_attached: a_row /= Void
@@ -343,7 +343,7 @@ feature -- Sorting
 			end
 		end
 
-	group_name_tester (a_row, b_row: EB_CLASS_BROWSER_DEPENDENCY_ROW; a_order: INTEGER): BOOLEAN is
+	group_name_tester (a_row, b_row: EB_CLASS_BROWSER_DEPENDENCY_ROW; a_order: INTEGER): BOOLEAN
 			-- Tester to decide order between `a_row' an `b_row' as groups according to order `a_order'.
 		require
 			a_row_attached: a_row /= Void
@@ -382,7 +382,7 @@ feature -- Sorting
 			end
 		end
 
-	index_of_group (a_group: QL_GROUP): INTEGER is
+	index_of_group (a_group: QL_GROUP): INTEGER
 			-- Index for `a_group' used in sorting
 			-- This is used when sort client/supplier group column to make sure that cluster is displayed before
 			-- library which is before assembly.
@@ -400,18 +400,18 @@ feature -- Sorting
 
 feature -- Constants
 
-	group_column: INTEGER is 1
-	folder_column: INTEGER is 1
-	referenced_class_column: INTEGER is 2
-	referencer_class_column: INTEGER is 3
-	feature_column: INTEGER is 4
-	feature_list_column: INTEGER is 5
-	position_column: INTEGER is 6
+	group_column: INTEGER = 1
+	folder_column: INTEGER = 1
+	referenced_class_column: INTEGER = 2
+	referencer_class_column: INTEGER = 3
+	feature_column: INTEGER = 4
+	feature_list_column: INTEGER = 5
+	position_column: INTEGER = 6
 			-- Column names
 
 feature{NONE} -- Grid binding
 
-	bind_grid is
+	bind_grid
 			-- Bind `rows' in `grid'.
 		do
 			if grid.row_count > 0 then
@@ -423,7 +423,7 @@ feature{NONE} -- Grid binding
 			bind_row_level (grid.row (1), rows, 1, True)
 		end
 
-	bind_first_row is
+	bind_first_row
 			-- Bind first row in `grid'.
 		require
 			grid_is_empty: grid.row_count = 0
@@ -456,7 +456,7 @@ feature{NONE} -- Grid binding
 			-- `referencer_class_column', `feature_column'.
 			-- Value of that key is the level-index for that column
 
-	create_index_info is
+	create_index_info
 			-- Create `level_starting_column_index' and `level_row_type'
 		local
 			b: BOOLEAN
@@ -516,7 +516,7 @@ feature{NONE} -- Grid binding
 			end
 		end
 
-	should_level_be_expanded (a_level_index: INTEGER): BOOLEAN is
+	should_level_be_expanded (a_level_index: INTEGER): BOOLEAN
 			-- Should level indexed by `a_level_index' be expanded by default?
 		local
 			l_expansion_table: HASH_TABLE [FUNCTION [ANY, TUPLE, BOOLEAN], INTEGER]
@@ -538,7 +538,7 @@ feature{NONE} -- Grid binding
 			end
 		end
 
-	bind_row_level (a_base_row: EV_GRID_ROW; a_level: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_level_index: INTEGER; a_recursive: BOOLEAN) is
+	bind_row_level (a_base_row: EV_GRID_ROW; a_level: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_level_index: INTEGER; a_recursive: BOOLEAN)
 			-- Bind rows.
 		require
 			a_base_row_attached: a_base_row /= Void
@@ -596,7 +596,7 @@ feature{NONE} -- Grid binding
 			end
 		end
 
-	bind_feature_rows (a_row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_referenced_class: QL_CLASS; a_referencer_class: QL_CLASS) is
+	bind_feature_rows (a_row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_referenced_class: QL_CLASS; a_referencer_class: QL_CLASS)
 			-- Bind feature rows in subrows of `a_row_node'.
 			-- `a_row_node' is a node in `rows'.
 		require
@@ -685,7 +685,7 @@ feature{NONE} -- Grid binding
 			try_auto_resize_grid (<<[100, 200, feature_list_column], [100, 500, position_column]>>, False)
 		end
 
-	add_trailer (a_class: QL_CLASS; a_pixmap: EV_PIXMAP; a_text: STRING; a_grid_item: EB_GRID_EDITOR_TOKEN_ITEM)is
+	add_trailer (a_class: QL_CLASS; a_pixmap: EV_PIXMAP; a_text: STRING; a_grid_item: EB_GRID_EDITOR_TOKEN_ITEM)
 			-- Add trailer into `a_grid_item' to display information of `a_class'.	
 			-- The trailer will display pixmap given by `a_pixmap' with tooltip saying `a_text' + name of `a_class'.
 		require
@@ -709,7 +709,7 @@ feature{NONE} -- Grid binding
 			a_grid_item.insert_component (l_trailer, 1)
 		end
 
-	mark_display is
+	mark_display
 			-- Mark rows to be displayed or not to be displayed according to status of `show_self_dependency_button'.
 		require
 			rows_attached: rows /= Void
@@ -823,7 +823,7 @@ feature{NONE} -- Grid binding
 			end
 		end
 
-	mark_display_in_rows (a_row_list: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]; a_depth: INTEGER; a_display: BOOLEAN) is
+	mark_display_in_rows (a_row_list: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]; a_depth: INTEGER; a_display: BOOLEAN)
 			-- Mark `a_row_list' with display status specified in `a_display'.
 			-- Mark subrows deep to `a_depth' of `a_row_list also'.
 			-- For example, if `a_depth' is 1, mark `a_row_list' only, and if 2, mark the first level subrows of `a_row_list', and so on.
@@ -903,7 +903,7 @@ feature{NONE} -- Implementation
 	control_tool_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- Implementation of `control_bar'
 
-	show_self_dependency_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
+	show_self_dependency_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toggle button to turn on/off item path display
 			-- For examples, if we are displaying suppliers for a given group "demo",
 			-- actually we are displaying supplier classes of every class in that group,
@@ -925,7 +925,7 @@ feature{NONE} -- Implementation
 	show_self_dependency_button_internal: like show_self_dependency_button
 			-- Implementation of `show_self_dependency_button'
 
-	categorize_folder_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON is
+	categorize_folder_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
 			-- Toggle button to decide if classes in a given group should be displayed in physical folders where they locates.
 			-- For example, if this button is not selected, the following will be displayed:
 			-- + base
@@ -954,7 +954,7 @@ feature{NONE} -- Implementation
 	categorize_folder_button_internal: like categorize_folder_button
 			-- Implementation of `categorize_folder_button'
 
-	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
+	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN)
 			-- Ensure that `a_item' is visible.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
 		local
@@ -977,7 +977,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	fill_row_level (a_data: EB_TREE_NODE [QL_ITEM]; a_row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_starting_level_index: INTEGER; a_fill_children: BOOLEAN) is
+	fill_row_level (a_data: EB_TREE_NODE [QL_ITEM]; a_row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_starting_level_index: INTEGER; a_fill_children: BOOLEAN)
 			-- Fill items from children of `a_data' into subrows of `a_row_node' staring from level index `a_starting_level_index'.
 			-- If `a_fill_children' is True, fill children of `a_data' recursively.
 		require
@@ -1009,7 +1009,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	set_data_hierarchy (a_data: like data) is
+	set_data_hierarchy (a_data: like data)
 			-- Set `data_hierarchy' with `a_data'. Do not categorize folder.
 		local
 			l_data_hierarchy: like data_hierarchy
@@ -1065,7 +1065,7 @@ feature{NONE} -- Implementation
 			data_hierarchy_attached: data_hierarchy /= Void
 		end
 
-	set_data_hierarchy_with_folder_categorized (a_data: like data) is
+	set_data_hierarchy_with_folder_categorized (a_data: like data)
 			-- Set `data_hierarchy' with `a_data'. Categorize folder.
 		require
 			a_data_attached: a_data /= Void
@@ -1158,7 +1158,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	fill_rows  is
+	fill_rows
 			-- Fill rows with `data'.
 		do
 			rows.children.wipe_out
@@ -1173,7 +1173,7 @@ feature{NONE} -- Implementation
 	classes_in_starting_element: DS_HASH_SET [QL_CLASS]
 			-- Classes in `starting_element'.
 
-	retrieve_classes_in_starting_element is
+	retrieve_classes_in_starting_element
 			-- Retrieve classes in `starting_element' and store them in `classes_in_starting_element'.
 		require
 			data_attached: data /= Void
@@ -1189,7 +1189,7 @@ feature{NONE} -- Implementation
 			classes_in_starting_element_attached: classes_in_starting_element /= Void
 		end
 
-	client_class_set (a_supplier_class: CLASS_C): DS_HASH_SET [CLASS_C] is
+	client_class_set (a_supplier_class: CLASS_C): DS_HASH_SET [CLASS_C]
 			-- Set of client classes of `a_supplier_class'
 		require
 			a_supplier_class_attached: a_supplier_class /= Void
@@ -1207,7 +1207,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	categorized_feature_table (a_class: QL_CLASS): HASH_TABLE [HASH_TABLE [QL_FEATURE, STRING], QL_CLASS] is
+	categorized_feature_table (a_class: QL_CLASS): HASH_TABLE [HASH_TABLE [QL_FEATURE, STRING], QL_CLASS]
 			-- For a class `a_class', return its categorized feature table.
 			-- Value of the returned table is a table of features indexed by feature name.
 			-- Key of that value is the written class where features in value is written.
@@ -1255,7 +1255,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	reversed_called_features (a_called_features: like called_features): like called_features is
+	reversed_called_features (a_called_features: like called_features): like called_features
 			-- Reversed repesentation of `called_features'.
 			-- i.e., the keys are called feature and value is calling features of that key.
 		require
@@ -1289,7 +1289,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	called_features (a_supplier_class: QL_CLASS; a_client_class: QL_CLASS): HASH_TABLE [DS_LIST [QL_FEATURE], QL_FEATURE] is
+	called_features (a_supplier_class: QL_CLASS; a_client_class: QL_CLASS): HASH_TABLE [DS_LIST [QL_FEATURE], QL_FEATURE]
 			-- Called features from `a_client_class' to `a_supplier_class'.
 			-- Key of Result is a feature from `a_client_class', value of that key is a list of features from `a_supplier_class' which are called by the key feature.
 		require
@@ -1369,7 +1369,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	recycle_agents is
+	recycle_agents
 			-- Recycle agents
 		do
 			if categorize_folder_button_internal /= Void then
@@ -1393,7 +1393,7 @@ feature{NONE} -- Implementation
 			Precursor
 		end
 
-	referenced_class_column_name (a_relation_name: STRING_GENERAL; a_name_of_starting_element: STRING_GENERAL): STRING_GENERAL is
+	referenced_class_column_name (a_relation_name: STRING_GENERAL; a_name_of_starting_element: STRING_GENERAL): STRING_GENERAL
 			-- Name of referenced class column in dependency view.
 			-- `a_relation_name' is "client" or "supplier", and `a_name_of_starting_element' is the name of the target/group/folder/class where
 			-- the relation is investigated.
@@ -1406,7 +1406,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	ensure_row_expandable (a_row: EV_GRID_ROW) is
+	ensure_row_expandable (a_row: EV_GRID_ROW)
 			-- Enable `a_row' is expandable.
 		require
 			a_row_attached: a_row /= Void
@@ -1414,7 +1414,7 @@ feature{NONE} -- Implementation
 			a_row.insert_subrow (a_row.subrow_count + 1)
 		end
 
-	expand_row_recursively (a_row: EV_GRID_ROW) is
+	expand_row_recursively (a_row: EV_GRID_ROW)
 			-- Expand `a_row' recursively.
 		local
 			l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
@@ -1431,7 +1431,7 @@ feature{NONE} -- Implementation
 	inheritance_button_internal: like inheritance_button
 			-- Implementation of `inheritance_button'
 
-	is_class_inheritance_related (a_class, b_class: QL_CLASS): BOOLEAN is
+	is_class_inheritance_related (a_class, b_class: QL_CLASS): BOOLEAN
 			-- Are `a_class' and `b_class' related by inheritance relationship?
 			-- i.e.,  `is_displaying_suppliers' is True, is `a_class' an ancestor of `b_class'?
 			-- and if `is_displaying_clients' is True, is `a_class' a descendant of `b_class'?
@@ -1462,7 +1462,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Initialization
 
-	build_grid is
+	build_grid
 			-- Build `grid'.
 		do
 			create grid
@@ -1492,7 +1492,7 @@ feature{NONE} -- Initialization
 			create_index_info
 		end
 
-	build_sortable_and_searchable is
+	build_sortable_and_searchable
 			-- Build facilities to support sort and search
 		local
 			l_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_CLASS_BROWSER_DEPENDENCY_ROW]
@@ -1534,7 +1534,7 @@ feature{NONE} -- Initialization
 
 feature{NONE} -- Implementation/Stone
 
-	item_to_put_in_editor: EV_GRID_ITEM is
+	item_to_put_in_editor: EV_GRID_ITEM
 			-- Grid item which may contain a stone to put into editor
 			-- Void if no satisfied item is found.			
 		local
@@ -1573,7 +1573,7 @@ feature{NONE} -- Implementation/Stone
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

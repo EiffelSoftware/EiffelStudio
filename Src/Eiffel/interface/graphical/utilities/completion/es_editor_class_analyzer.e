@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Processes various known states in the Eiffel editor, using context inference.
 			Current the implementation is specific to building completion local-scoped entities.
@@ -391,7 +391,7 @@ feature {NONE} -- Factory
 			result_is_valid_state_info: a_state.is_valid_state_info (Result)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

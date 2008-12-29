@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Controller of the Eiffel debugger's daemon"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dbg: like debugger_manager) is
+	make (dbg: like debugger_manager)
 		require
 			dbg_not_void: dbg /= Void
 		do
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature {APPLICATION_EXECUTION_CLASSIC} -- Change
 
-	change_debugger_manager (dbg: like debugger_manager) is
+	change_debugger_manager (dbg: like debugger_manager)
 		require
 			dbg_not_void: dbg /= Void
 		do
@@ -65,7 +65,7 @@ feature {APPLICATION_EXECUTION_CLASSIC} -- Change
 
 feature -- Launching
 
-	launch_ec_dbg is
+	launch_ec_dbg
 		require
 			ecdbgd_launched_only_if_not_closed: ec_dbg_launched implies not close_ecdbgd_on_end_of_debugging
 		local
@@ -113,7 +113,7 @@ feature -- Launching
 			end
 		end
 
-	prepare_ec_dbg_launching is
+	prepare_ec_dbg_launching
 			-- Prepare ec before starting Eiffel debugger daemon
 			--| Mainly optimization
 		do
@@ -122,7 +122,7 @@ feature -- Launching
 			Eiffel_system.System.server_controler.wipe_out
 		end
 
-	get_environment is
+	get_environment
 			-- Get environment needed to start the debugger
 		local
 			s: STRING_8
@@ -148,7 +148,7 @@ feature -- Launching
 			end
 		end
 
-	end_of_debugging is
+	end_of_debugging
 			-- Notify the end of debugging
 		do
 			if close_ecdbgd_on_end_of_debugging then
@@ -156,7 +156,7 @@ feature -- Launching
 			end
 		end
 
-	close_ecdbgd is
+	close_ecdbgd
 			-- Close the Eiffel debugger's daemon
 		local
 			r, n: INTEGER
@@ -197,7 +197,7 @@ feature -- Launching
 
 feature -- Status
 
-	is_ecdbgd_alive: BOOLEAN is
+	is_ecdbgd_alive: BOOLEAN
 			-- Is the Eiffel debugger's daemon still alive ?
 		do
 			Result := (c_is_ecdbgd_alive = 1)
@@ -206,12 +206,12 @@ feature -- Status
 	ise_ecdbgd_path: FILE_NAME
 	ise_timeout: INTEGER
 
-	valid_ise_ecdbgd_executable: BOOLEAN is
+	valid_ise_ecdbgd_executable: BOOLEAN
 		do
 			Result := ise_ecdbgd_path /= Void and then valid_executable (ise_ecdbgd_path)
 		end
 
-	close_ecdbgd_on_end_of_debugging: BOOLEAN is
+	close_ecdbgd_on_end_of_debugging: BOOLEAN
 			-- Do we close the Eiffel debugger's daemon
 			-- when the debugging session is terminated ?
 		do
@@ -227,7 +227,7 @@ feature {NONE} -- ecdbgd status
 
 	ecdbgd_alive_checking_timer: DEBUGGER_TIMER
 
-	start_ecdbgd_alive_checking is
+	start_ecdbgd_alive_checking
 		do
 			if ecdbgd_alive_checking_timer = Void then
 				ecdbgd_alive_checking_timer := debugger_manager.new_timer
@@ -236,14 +236,14 @@ feature {NONE} -- ecdbgd status
 			ecdbgd_alive_checking_timer.set_interval (1000)
 		end
 
-	stop_ecdbgd_alive_checking is
+	stop_ecdbgd_alive_checking
 		do
 			if ecdbgd_alive_checking_timer /= Void then
 				ecdbgd_alive_checking_timer.set_interval (0)
 			end
 		end
 
-	check_ecdbgd_alive is
+	check_ecdbgd_alive
 		local
 			retried: BOOLEAN
 			old_delay: INTEGER
@@ -282,12 +282,12 @@ feature {NONE} -- ecdbgd status
 
 feature {NONE} -- Implementation
 
-	create_handler is
+	create_handler
 		do
 			-- Keep this for compatibility with old EiffelStudio
 		end
 
-	valid_executable (fn: FILE_NAME): BOOLEAN is
+	valid_executable (fn: FILE_NAME): BOOLEAN
 			-- Does `fn' represents a valid executable ?
 		local
 			f: RAW_FILE
@@ -298,12 +298,12 @@ feature {NONE} -- Implementation
 
 feature {ANY} -- Constants
 
-	Ise_timeout_varname: STRING is "ISE_TIMEOUT"
-	Ise_ecdbgd_varname: STRING is "ISE_ECDBGD"
+	Ise_timeout_varname: STRING = "ISE_TIMEOUT"
+	Ise_ecdbgd_varname: STRING = "ISE_ECDBGD"
 
 feature {NONE} -- Externals
 
-	c_launch_ecdbgd (pprogn: POINTER; pcmd: POINTER; timeout: INTEGER): INTEGER is
+	c_launch_ecdbgd (pprogn: POINTER; pcmd: POINTER; timeout: INTEGER): INTEGER
 			-- launch classic Eiffel debugger component
 		external
 			"C signature (char* , char* , int ): int"
@@ -311,7 +311,7 @@ feature {NONE} -- Externals
 			"launch_ecdbgd"
 		end
 
-	c_close_ecdbgd (timeout: INTEGER): INTEGER is
+	c_close_ecdbgd (timeout: INTEGER): INTEGER
 			-- close classic Eiffel debugger component
 		external
 			"C signature (int ): int"
@@ -319,14 +319,14 @@ feature {NONE} -- Externals
 			"close_ecdbgd"
 		end
 
-	ipc_current_process_id: INTEGER is
+	ipc_current_process_id: INTEGER
 		external
 			"C"
 		alias
 			"ewb_current_process_id"
 		end
 
-	c_is_ecdbgd_alive: INTEGER is
+	c_is_ecdbgd_alive: INTEGER
 			-- Ask if the Eiffel debugger's daemon is still alive ?
 		external
 			"C signature (): int"
@@ -334,7 +334,7 @@ feature {NONE} -- Externals
 			"is_ecdbgd_alive"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

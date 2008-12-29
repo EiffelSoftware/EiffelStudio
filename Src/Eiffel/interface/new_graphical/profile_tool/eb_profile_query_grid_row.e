@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that hold data about profile data as an intermediary step
 		for subsequent building into an EV_GRID.
@@ -18,7 +18,7 @@ create {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}
 	
 feature {NONE} -- Creation
 
-	make_parent (lower_index, upper_index: INTEGER; a_text: STRING; a_profile_data: PROFILE_DATA; a_type: INTEGER) is
+	make_parent (lower_index, upper_index: INTEGER; a_text: STRING; a_profile_data: PROFILE_DATA; a_type: INTEGER)
 			-- Make as a parent node with attributes.
 		require
 			a_text_not_void: a_text /= Void
@@ -31,7 +31,7 @@ feature {NONE} -- Creation
 			type := a_type
 		end
 		
-	make_node (a_text: STRING; a_profile_data: PROFILE_DATA; a_type: INTEGER) is
+	make_node (a_text: STRING; a_profile_data: PROFILE_DATA; a_type: INTEGER)
 			-- Make as a node with no subrows.
 		require
 			a_text_not_void: a_text /= Void
@@ -126,7 +126,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 	internal_cluster_text_width, internal_class_text_width, internal_feature_text_width, internal_text_width: INTEGER
 		-- Internal values of string widths to enable buffered access.
 	
-	text_width: INTEGER is
+	text_width: INTEGER
 			-- Width of `text' in pixels.
 		do
 			if internal_text_width = 0 then
@@ -137,7 +137,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 			result_non_negative: result >= 0
 		end
 	
-	cluster_text_width: INTEGER is
+	cluster_text_width: INTEGER
 			-- Width of `cluster_text' in pixels.
 		do
 			if internal_cluster_text_width = 0 then
@@ -148,7 +148,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 			result_non_negative: result >= 0
 		end
 		
-	class_text_width: INTEGER is
+	class_text_width: INTEGER
 			-- Width of `class_text' in pixels.
 		do
 			if internal_class_text_width = 0 then
@@ -159,7 +159,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 			result_non_negative: Result >= 0
 		end
 		
-	feature_text_width: INTEGER is
+	feature_text_width: INTEGER
 			-- Width of `feature_text' in pixels.
 		do
 			if internal_feature_text_width = 0 then
@@ -170,13 +170,13 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 			result_non_negative: Result >= 0
 		end
 		
-	drawing_font: EV_FONT is
+	drawing_font: EV_FONT
 			-- Once access to Font used for drawing.
 		once
 			Result := (create {EV_LABEL}).font
 		end
 		
-	is_feature_renamed: BOOLEAN is
+	is_feature_renamed: BOOLEAN
 			-- Is feature represented by `Current' renamed?
 		local
 			eiffel_profile_data: EIFFEL_PROFILE_DATA
@@ -191,7 +191,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW}-- Access
 		
 feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 
-	set_row (a_row: EV_GRID_ROW) is
+	set_row (a_row: EV_GRID_ROW)
 			-- Associated `a_row' with `Current'.
 		require
 			a_row_not_void: a_row /= Void
@@ -201,7 +201,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 			row_set: row = a_row
 		end
 		
-	set_is_expanded (expanded_state: BOOLEAN) is
+	set_is_expanded (expanded_state: BOOLEAN)
 			-- Assign `expanded_state' to `is_expanded'.
 		do
 			is_expanded := expanded_state
@@ -209,7 +209,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 			expanded_state_set: is_expanded = expanded_state
 		end
 
-	set_cluster_class_feature_text (a_cluster, a_class, a_feature: STRING) is
+	set_cluster_class_feature_text (a_cluster, a_class, a_feature: STRING)
 			-- Assign `a_cluster', `a_class' and `a_feature' to `cluster_text',
 			-- `class_text' and `feature_text'.
 		require
@@ -227,7 +227,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 			feature_set: feature_text = a_feature
 		end
 
-	set_grid_items (a_features_grid_item: EV_GRID_DRAWABLE_ITEM; a_calls_grid_item, a_self_grid_item, a_descendents_grid_item, a_total_grid_item, a_percentage_grid_item: EV_GRID_LABEL_ITEM) is
+	set_grid_items (a_features_grid_item: EV_GRID_DRAWABLE_ITEM; a_calls_grid_item, a_self_grid_item, a_descendents_grid_item, a_total_grid_item, a_percentage_grid_item: EV_GRID_LABEL_ITEM)
 			-- Assign grid items to `Current' for retrieval later. This prevents us from having to constantly rebuild grid items as when rebuilding
 			-- the grid, we can just query them. One or more of these passed grid items may be Void if the corresponding column is not displayed.
 		do
@@ -242,7 +242,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 			percentage_grid_item := a_percentage_grid_item
 		end
 
-	set_display_agent (a_display_agent: PROCEDURE [ANY, TUPLE[]]) is
+	set_display_agent (a_display_agent: PROCEDURE [ANY, TUPLE[]])
 			-- Assign `a_display_agent' to `Current'.
 		require
 			a_display_agent_not_void: a_display_agent /= Void
@@ -252,7 +252,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 			display_agent_set: display_agent = a_display_agent
 		end
 
-	set_upper (an_upper: INTEGER) is
+	set_upper (an_upper: INTEGER)
 			-- Assign `an_upper' to `child_node_upper_index'.
 		do
 			child_node_upper_index := an_upper
@@ -260,7 +260,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 			upper_set: child_node_upper_index = an_upper
 		end
 		
-	set_values (a_calls: INTEGER a_self, a_descendents, a_total, a_percentage: REAL) is
+	set_values (a_calls: INTEGER a_self, a_descendents, a_total, a_percentage: REAL)
 			-- Assign `a_calls' to `calls', `a_self' to `self', `a_descendents' to `descendents',
 			-- `a_total' to `total' and `a_percentage' to `percentage'.
 		do
@@ -274,7 +274,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 				descendents = a_descendents and percentage = a_percentage
 		end
 		
-	increase_values (a_calls: INTEGER a_self, a_descendents, a_total, a_percentage: REAL) is
+	increase_values (a_calls: INTEGER a_self, a_descendents, a_total, a_percentage: REAL)
 			-- Increase `calls' by `a_calls', `self' by `a_self', `descendents' by `a_descendents',
 			-- `total' by `a_total' and `percentage' by `a_percentage'.
 		do
@@ -288,7 +288,7 @@ feature {EB_PROFILE_QUERY_WINDOW, EB_PROFILE_QUERY_GRID_ROW} -- Status setting
 				descendents = old descendents + a_descendents and percentage = old percentage + a_percentage
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

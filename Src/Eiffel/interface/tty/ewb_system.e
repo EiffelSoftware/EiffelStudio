@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract notion of system commands with associated commands."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -12,14 +12,14 @@ inherit
 
 feature {NONE}
 
-	associated_cmd: E_OUTPUT_CMD is
+	associated_cmd: E_OUTPUT_CMD
 			-- Associated system command to be executed
 		deferred
 		ensure
 			non_void_result: Result /= Void
 		end
 
-	execute is
+	execute
 		local
 			cmd: like associated_cmd
 			l_text_formatter: TEXT_FORMATTER
@@ -32,7 +32,7 @@ feature {NONE}
 			output_window.put_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

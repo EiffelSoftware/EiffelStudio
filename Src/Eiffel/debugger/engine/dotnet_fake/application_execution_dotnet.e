@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Controls execution of debugged application under dotnet."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,34 +15,34 @@ create {DEBUGGER_MANAGER}
 
 feature {NONE} -- Ancestor facade
 
-	build_status is do end
-	impl_check_assert (b: BOOLEAN): BOOLEAN is do end
-	run_with_env_string (app, args, cwd: STRING; env: STRING_GENERAL) is do end
-	continue_ignoring_kept_objects is do end
-	interrupt is do end
-	notify_breakpoints_change is do end
-	kill is do  end
-	keep_only_objects (kept_objects: LIST [DBG_ADDRESS]) is do end
+	build_status do end
+	impl_check_assert (b: BOOLEAN): BOOLEAN do end
+	run_with_env_string (app, args, cwd: STRING; env: STRING_GENERAL) do end
+	continue_ignoring_kept_objects do end
+	interrupt do end
+	notify_breakpoints_change do end
+	kill do  end
+	keep_only_objects (kept_objects: LIST [DBG_ADDRESS]) do end
 
-	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE is do end
-	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is do  end
-	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] is do  end
+	dump_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): DUMP_VALUE do end
+	debug_value_at_address_with_class (a_addr: DBG_ADDRESS; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE do  end
+	onces_values (flist: LIST [E_FEATURE]; a_addr: DBG_ADDRESS; a_cl: CLASS_C): ARRAY [ABSTRACT_DEBUG_VALUE] do  end
 
-	remote_rt_object: ABSTRACT_DEBUG_VALUE is do end
-	set_application_breakpoint (loc: BREAKPOINT_LOCATION) is do end
-	unset_application_breakpoint (loc: BREAKPOINT_LOCATION) is do end
-	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN) is do end
+	remote_rt_object: ABSTRACT_DEBUG_VALUE do end
+	set_application_breakpoint (loc: BREAKPOINT_LOCATION) do end
+	unset_application_breakpoint (loc: BREAKPOINT_LOCATION) do end
+	set_catcall_detection_mode (a_console, a_dbg: BOOLEAN) do end
 	
 
 feature -- Client facade
 
-	get_exception_value_details (e: EXCEPTION_DEBUG_VALUE; a_details_level: INTEGER) is do end
+	get_exception_value_details (e: EXCEPTION_DEBUG_VALUE; a_details_level: INTEGER) do end
 
-	remote_current_exception_value: EXCEPTION_DEBUG_VALUE is do end
+	remote_current_exception_value: EXCEPTION_DEBUG_VALUE do end
 
-	callback_notification_processing: BOOLEAN is do end
+	callback_notification_processing: BOOLEAN do end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

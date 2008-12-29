@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dependency view panel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Build docking content.
 		do
 			Precursor (a_docking_manager)
@@ -32,13 +32,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	predefined_formatters: like formatters is
+	predefined_formatters: like formatters
 			-- Predefined formatters
 		do
 			Result := develop_window.managed_dependency_formatters
 		end
 
-	no_target_message: STRING_GENERAL is
+	no_target_message: STRING_GENERAL
 			-- Message to be displayed in `output_line' when no stone is set
 		do
 			Result := interface_names.l_no_info_of_element
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_stone_equal (a_stone, b_stone: STONE): BOOLEAN is
+	is_stone_equal (a_stone, b_stone: STONE): BOOLEAN
 			-- Is `a_stone' equal to `b_stone'?
 		require
 			a_stone_attached: a_stone /= Void
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	pop_default_formatter is
+	pop_default_formatter
 			-- Pop the default class formatter.
 		local
 			real_index: INTEGER
@@ -80,14 +80,14 @@ feature -- Status setting
 			(formatters @ real_index).execute
 		end
 
-	close is
+	close
 			-- Redefine
 		do
 			on_deselect
 			Precursor {ES_FORMATTER_TOOL_PANEL_BASE}
 		end
 
-	set_stone (new_stone: STONE) is
+	set_stone (new_stone: STONE)
 			-- Send a stone to formatters.
 		local
 			cst: CLASSC_STONE
@@ -148,7 +148,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL is
+	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL
 			-- Decide which tool to display.
 		local
 			fs: FEATURE_STONE
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	enable_dotnet_formatters (a_flag: BOOLEAN) is
+	enable_dotnet_formatters (a_flag: BOOLEAN)
 			-- Set sensitivity of formatters to 'a_flag'.
 		do
 			from
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	drop_stone (st: STONE) is
+	drop_stone (st: STONE)
 			-- Set `st' in the stone manager and pop up the feature view if it is a feature stone.
 		local
 			fst: FEATURE_STONE
@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

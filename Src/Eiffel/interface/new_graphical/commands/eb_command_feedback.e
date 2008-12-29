@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command that may be linked with a toolbar button and a menu item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Initialization
 
-	set_button (a_button: like button) is
+	set_button (a_button: like button)
 			-- Set `button' to `a_button'.
 		require
 			a_button_non_void: a_button /= Void
@@ -25,7 +25,7 @@ feature -- Initialization
 			properly_set: button = a_button
 		end
 
-	set_sd_button (a_button: like sd_button) IS
+	set_sd_button (a_button: like sd_button)
 			-- Set `a_button' to `sd_button'.
 		require
 			not_void: a_button /= Void
@@ -36,7 +36,7 @@ feature -- Initialization
 			set: sd_button = a_button
 		end
 
-	set_menu_item (a_menu_item: like menu_item) is
+	set_menu_item (a_menu_item: like menu_item)
 			-- Set `menu_item' to `a_menu_item'.
 		require
 			a_menu_item_non_void: a_menu_item /= Void
@@ -49,7 +49,7 @@ feature -- Initialization
 
 feature -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Set both the `associated_button' and
 			-- `associated_menu_entry' to be sensitive.
 		do
@@ -64,7 +64,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Set both the `associated_button' and
 			-- `associated_menu_entry' to be insensitive.
 		do
@@ -90,7 +90,7 @@ feature -- Access
 	menu_item: EV_MENU_ITEM;
 			-- Menu entry in the menu.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

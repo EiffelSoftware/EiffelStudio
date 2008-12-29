@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid list item in which editor tokens are displayed"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	pebble_at_position (a_x, a_y: INTEGER): ANY is
+	pebble_at_position (a_x, a_y: INTEGER): ANY
 			-- Pebble at position (`a_x', `a_y') which is related to Current component
 			-- Void if no pebble is found.
 		local
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Actions
 
-	on_pick (a_x, a_y: INTEGER) is
+	on_pick (a_x, a_y: INTEGER)
 			-- Action to be performed when pick occurs at position (`a_x', `a_y') relative to top-left corner of current item
 		local
 			l_data: like pebble_and_index_at_position
@@ -42,7 +42,7 @@ feature -- Actions
 			end
 		end
 
-	on_pick_ended is
+	on_pick_ended
 			-- Action to be performed when pick-and-drop process ended
 		do
 			set_last_picked_token_index (0)
@@ -57,7 +57,7 @@ feature{NONE} -- Implementation
 	last_picked_token_index: INTEGER
 			-- Index of last picked token
 
-	set_last_picked_token_index (a_index: INTEGER) is
+	set_last_picked_token_index (a_index: INTEGER)
 			-- Set `last_picked_token_index' with `a_index'.
 		do
 			last_picked_token_index := a_index
@@ -65,13 +65,13 @@ feature{NONE} -- Implementation
 			last_picked_token_index_set: last_picked_token_index = a_index
 		end
 
-	token_index_at_position (a_x, a_y: INTEGER): INTEGER is
+	token_index_at_position (a_x, a_y: INTEGER): INTEGER
 			-- Token item index in `editor_token_text' at position (`a_x', `a_y')
 			-- Zero means that no editor token is at position (`a_x', `a_y').
 		deferred
 		end
 
-	pebble_and_index_at_position (a_x, a_y: INTEGER): TUPLE [pebble: ANY; index: INTEGER] is
+	pebble_and_index_at_position (a_x, a_y: INTEGER): TUPLE [pebble: ANY; index: INTEGER]
 			-- Pebble and its token index at position (`a_x', `a_y') which is related to Current component
 			-- Void if no pebble is found.
 		local
@@ -86,7 +86,7 @@ feature{NONE} -- Implementation
 invariant
 	editor_token_text_attached: editor_token_text /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

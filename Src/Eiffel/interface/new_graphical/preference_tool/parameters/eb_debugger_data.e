@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All shared preferences for the debugger."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {EB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -23,13 +23,13 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature {SHARED_COMPILER_PREFERENCES} -- Value
 
-	default_maximum_stack_depth: INTEGER is
+	default_maximum_stack_depth: INTEGER
 			-- 		
 		do
 			Result := default_maximum_stack_depth_preference.value
 		end
 
-	critical_stack_depth: INTEGER is
+	critical_stack_depth: INTEGER
 			-- Call stack depth at which we warn the user against a possible stack overflow.
 		do
 			Result := critical_stack_depth_preference.value
@@ -38,22 +38,22 @@ feature {SHARED_COMPILER_PREFERENCES} -- Value
 			end
 		end
 
-	interrupt_every_n_instructions: INTEGER is
+	interrupt_every_n_instructions: INTEGER
 		do
 			Result := interrupt_every_n_instructions_preference.value
 		end
 
-	debug_output_evaluation_enabled: BOOLEAN is
+	debug_output_evaluation_enabled: BOOLEAN
 		do
 			Result := debug_output_evaluation_enabled_preference.value
 		end
 
-	generating_type_evaluation_enabled: BOOLEAN is
+	generating_type_evaluation_enabled: BOOLEAN
 		do
 			Result := generating_type_evaluation_enabled_preference.value
 		end
 
-	default_displayed_string_size: INTEGER is
+	default_displayed_string_size: INTEGER
 			-- Default size of string to be retrieved from the application
 			-- when debugging (for instance size of `string_value' in ABSTRACT_REFERENCE_VALUE)
 			-- (Default value is 50)
@@ -61,50 +61,50 @@ feature {SHARED_COMPILER_PREFERENCES} -- Value
 			Result := default_displayed_string_size_preference.value
 		end
 
-	min_slice: INTEGER is
+	min_slice: INTEGER
 			-- From which attribute number should special objects be displayed?
 		do
 			Result := min_slice_preference.value
 		end
 
-	max_slice: INTEGER is
+	max_slice: INTEGER
 			-- Up to which attribute number should special objects be displayed?
 		do
 			Result := max_slice_preference.value
 		end
 
-	max_evaluation_duration: INTEGER is
+	max_evaluation_duration: INTEGER
 		do
 			Result := max_evaluation_duration_preference.value
 		end
 
 feature {SHARED_COMPILER_PREFERENCES} -- Classic specific
 
-	close_classic_dbg_daemon_on_end_of_debugging: BOOLEAN is
+	close_classic_dbg_daemon_on_end_of_debugging: BOOLEAN
 			-- Do we close the classic dbg daemon when the debugging is finished ?
 		do
 			Result := close_classic_dbg_daemon_on_end_of_debugging_preference.value
 		end
 
-	classic_debugger_timeout: INTEGER is
+	classic_debugger_timeout: INTEGER
 		do
 			Result := classic_debugger_timeout_preference.value
 		end
 
-	classic_debugger_location: STRING is
+	classic_debugger_location: STRING
 		do
 			Result := classic_debugger_location_preference.value
 		end
 
 feature {SHARED_COMPILER_PREFERENCES} -- Dotnet specific
 
-	keep_stepping_info_dotnet_feature: BOOLEAN is
+	keep_stepping_info_dotnet_feature: BOOLEAN
 			-- Do we keep stepping into dotnet feature or keep out as soon as possible ?
 		do
 			Result := keep_stepping_info_dotnet_feature_preference.value
 		end
 
-	dotnet_debugger: ARRAY [STRING] is
+	dotnet_debugger: ARRAY [STRING]
 			-- .NET debugger to launch
 		do
 			Result := dotnet_debugger_preference.value
@@ -129,24 +129,24 @@ feature {SHARED_COMPILER_PREFERENCES, EB_TOOL, ES_DIALOG} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	critical_stack_depth_string: STRING is "debugger.critical_stack_depth"
-	default_maximum_stack_depth_string: STRING is "debugger.default_maximum_stack_depth"
-	keep_stepping_info_dotnet_feature_string: STRING is "debugger.dotnet.keep_stepping_info_dotnet_feature"
-	dotnet_debugger_string: STRING is "debugger.dotnet_debugger"
-	close_classic_dbg_daemon_on_end_of_debugging_string: STRING is "debugger.classic_debugger.close_dbg_daemon_on_end_of_debugging"
-	classic_debugger_timeout_string: STRING is "debugger.classic_debugger.timeout"
-	classic_debugger_location_string: STRING is "debugger.classic_debugger.debugger_location"
-	interrupt_every_n_instructions_string: STRING is "debugger.interrupt_every_N_instructions"
-	debug_output_evaluation_enabled_string: STRING is "debugger.debug_output_evaluation"
-	generating_type_evaluation_enabled_string: STRING is "debugger.generating_type_evaluation"
-	default_displayed_string_size_string: STRING is "debugger.default_displayed_string_size"
-	min_slice_string: STRING is "debugger.min_slice"
-	max_slice_string: STRING is "debugger.max_slice"
-	max_evaluation_duration_preference_string: STRING is "debugger.max_evaluation_duration"
+	critical_stack_depth_string: STRING = "debugger.critical_stack_depth"
+	default_maximum_stack_depth_string: STRING = "debugger.default_maximum_stack_depth"
+	keep_stepping_info_dotnet_feature_string: STRING = "debugger.dotnet.keep_stepping_info_dotnet_feature"
+	dotnet_debugger_string: STRING = "debugger.dotnet_debugger"
+	close_classic_dbg_daemon_on_end_of_debugging_string: STRING = "debugger.classic_debugger.close_dbg_daemon_on_end_of_debugging"
+	classic_debugger_timeout_string: STRING = "debugger.classic_debugger.timeout"
+	classic_debugger_location_string: STRING = "debugger.classic_debugger.debugger_location"
+	interrupt_every_n_instructions_string: STRING = "debugger.interrupt_every_N_instructions"
+	debug_output_evaluation_enabled_string: STRING = "debugger.debug_output_evaluation"
+	generating_type_evaluation_enabled_string: STRING = "debugger.generating_type_evaluation"
+	default_displayed_string_size_string: STRING = "debugger.default_displayed_string_size"
+	min_slice_string: STRING = "debugger.min_slice"
+	max_slice_string: STRING = "debugger.max_slice"
+	max_evaluation_duration_preference_string: STRING = "debugger.max_evaluation_duration"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences (a_preferences: PREFERENCES) is
+	initialize_preferences (a_preferences: PREFERENCES)
 		require
 			preferences_not_void: a_preferences /= Void
 			-- Initialize preference values.
@@ -188,7 +188,7 @@ invariant
 
 --	_preference_not_void: _preference /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actual type for real 64 bits type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize new instance of REAL_64_A.
 		do
 			make (associated_class.class_id)
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_real_64_a (Current)
@@ -35,18 +35,18 @@ feature -- Visitor
 
 feature -- Property
 
-	is_real_64: BOOLEAN is True
+	is_real_64: BOOLEAN = True
 			-- Is the current type a real 64 bits type ?
 
 feature -- Access
 
-	same_as (other: TYPE_A): BOOLEAN is
+	same_as (other: TYPE_A): BOOLEAN
 			-- Is the current type the same as `other' ?
 		do
 			Result := same_type (other)
 		end
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Class DOUBLE
 		once
 			Result := System.real_64_class.compiled_class
@@ -54,16 +54,16 @@ feature -- Access
 
 feature {COMPILER_EXPORTER}
 
-	is_numeric: BOOLEAN is True
+	is_numeric: BOOLEAN = True
 			-- Is the current type a numeric type ?
 
-	c_type: REAL_64_I is
+	c_type: REAL_64_I
 			-- C type
 		do
 			Result := real64_c_type
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

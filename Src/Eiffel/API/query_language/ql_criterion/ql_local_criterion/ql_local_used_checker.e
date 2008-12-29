@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor to check if a given local is not used"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ feature -- Status report
 
 feature -- Process
 
-	process_ast (a_ast: AST_EIFFEL; a_local_name: STRING) is
+	process_ast (a_ast: AST_EIFFEL; a_local_name: STRING)
 			-- Process `a_ast'.			
 		require
 			a_ast_attached: a_ast /= Void
@@ -43,7 +43,7 @@ feature -- Process
 
 feature{NONE} -- Access
 
-	process_access_id_as (l_as: ACCESS_ID_AS) is
+	process_access_id_as (l_as: ACCESS_ID_AS)
 			-- Process `l_as'.
 		do
 			if not last_is_used then
@@ -55,7 +55,7 @@ feature{NONE} -- Access
 			end
 		end
 
-	process_address_as (l_as: ADDRESS_AS) is
+	process_address_as (l_as: ADDRESS_AS)
 			-- Process `l_as'.
 		do
 			if not last_is_used then
@@ -64,7 +64,7 @@ feature{NONE} -- Access
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EIS list of a given class."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: !CLASS_I; a_eis_grid: !ES_EIS_ENTRY_GRID) is
+	make (a_class: !CLASS_I; a_eis_grid: !ES_EIS_ENTRY_GRID)
 			-- Initialized with `a_conf_notable' and `a_eis_grid'.
 		require
 			a_eis_grid_not_destroyed: not a_eis_grid.is_destroyed
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Operation
 
-	create_new_entry is
+	create_new_entry
 			-- Create new EIS entry in `class_i'.
 		local
 			l_class_modifier: ES_EIS_CLASS_MODIFIER
@@ -76,7 +76,7 @@ feature -- Operation
 			end
 		end
 
-	delete_selected_entries is
+	delete_selected_entries
 			-- <precursor>
 		local
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
@@ -120,7 +120,7 @@ feature -- Operation
 
 feature -- Querry
 
-	component_editable: BOOLEAN is
+	component_editable: BOOLEAN
 			-- Is component editable?
 		do
 			Result := not class_i.is_read_only
@@ -128,7 +128,7 @@ feature -- Querry
 
 feature {NONE} -- Access
 
-	entry_editable (a_entry: !EIS_ENTRY): BOOLEAN is
+	entry_editable (a_entry: !EIS_ENTRY): BOOLEAN
 			-- If `a_entry' is editable through current view?
 		local
 			l_type: NATURAL
@@ -157,7 +157,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Class modification
 
-	modify_entry_in_feature (a_old_entry, a_new_entry: !EIS_ENTRY; a_feature: !E_FEATURE) is
+	modify_entry_in_feature (a_old_entry, a_new_entry: !EIS_ENTRY; a_feature: !E_FEATURE)
 			-- Modify `a_old_entry' with `a_new_entry' in `a_feature'.
 		require
 			a_old_entry_editable: entry_editable (a_old_entry)
@@ -174,7 +174,7 @@ feature {NONE} -- Class modification
 			end
 		end
 
-	modify_entry_in_class (a_old_entry, a_new_entry: !EIS_ENTRY; a_class: !CLASS_I) is
+	modify_entry_in_class (a_old_entry, a_new_entry: !EIS_ENTRY; a_class: !CLASS_I)
 			-- Modify `a_old_entry' with `a_new_entry' in `a_class'.
 		require
 			a_old_entry_editable: entry_editable (a_old_entry)
@@ -191,7 +191,7 @@ feature {NONE} -- Class modification
 			end
 		end
 
-	remove_entry (a_entry: !EIS_ENTRY) is
+	remove_entry (a_entry: !EIS_ENTRY)
 			-- Remove entry in component.
 		require
 			a_entry_editable: entry_editable (a_entry)
@@ -205,7 +205,7 @@ feature {NONE} -- Class modification
 			end
 		end
 
-	remove_entry_in_feature (a_entry: !EIS_ENTRY; a_feature: !E_FEATURE) is
+	remove_entry_in_feature (a_entry: !EIS_ENTRY; a_feature: !E_FEATURE)
 			-- Remove entry in feature.
 		require
 			a_entry_editable: entry_editable (a_entry)
@@ -222,7 +222,7 @@ feature {NONE} -- Class modification
 			end
 		end
 
-	remove_entry_in_class (a_entry: !EIS_ENTRY; a_class: !CLASS_I) is
+	remove_entry_in_class (a_entry: !EIS_ENTRY; a_class: !CLASS_I)
 			-- Remove entry in class.
 		require
 			a_entry_editable: entry_editable (a_entry)
@@ -239,7 +239,7 @@ feature {NONE} -- Class modification
 			end
 		end
 
-	write_entry_in_feature (a_entry: !EIS_ENTRY; a_feature: !E_FEATURE) is
+	write_entry_in_feature (a_entry: !EIS_ENTRY; a_feature: !E_FEATURE)
 			-- Write entry in feature.
 		local
 			l_feature_modifier: ES_EIS_FEATURE_MODIFIER
@@ -258,7 +258,7 @@ feature {NONE} -- Class modification
 			end
 		end
 
-	write_entry_in_class (a_entry: !EIS_ENTRY; a_class: !CLASS_I) is
+	write_entry_in_class (a_entry: !EIS_ENTRY; a_class: !CLASS_I)
 			-- Write entry in class.
 		local
 			l_class_modifier: ES_EIS_CLASS_MODIFIER
@@ -279,7 +279,7 @@ feature {NONE} -- Class modification
 
 feature {NONE} -- Location token
 
-	class_editor_token_for_location (a_item: CLASS_I): !ES_GRID_LIST_ITEM is
+	class_editor_token_for_location (a_item: CLASS_I): !ES_GRID_LIST_ITEM
 			-- Create editor token for loaction accordingly.
 		do
 			if a_item.is_compiled then
@@ -289,7 +289,7 @@ feature {NONE} -- Location token
 			end
 		end
 
-	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING): !ES_GRID_LIST_ITEM is
+	feature_editor_token_for_location (a_item: E_FEATURE; a_name: STRING): !ES_GRID_LIST_ITEM
 			-- Create editor token item for loaction accordingly.
 		do
 			if a_item /= Void then
@@ -299,7 +299,7 @@ feature {NONE} -- Location token
 			end
 		end
 
-	class_feature_editor_token_for_location (a_item: ANY): !ES_GRID_LIST_ITEM is
+	class_feature_editor_token_for_location (a_item: ANY): !ES_GRID_LIST_ITEM
 			-- Create editor token item for loaction accordingly.
 		local
 			l_editable_item: !EB_GRID_LISTABLE_CHOICE_ITEM
@@ -370,13 +370,13 @@ feature {NONE} -- Location token
 
 feature {NONE} -- Implementation
 
-	new_extractor: !ES_EIS_EXTRACTOR is
+	new_extractor: !ES_EIS_EXTRACTOR
 			-- Create extractor
 		do
 			create {ES_EIS_CLASS_EXTRACTOR}Result.make (class_i)
 		end
 
-	background_color_of_entry (a_entry: !EIS_ENTRY): EV_COLOR is
+	background_color_of_entry (a_entry: !EIS_ENTRY): EV_COLOR
 			-- Background color of `a_entry'
 		do
 			if
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	computed_component_id: ?STRING is
+	computed_component_id: ?STRING
 			-- Compute component id
 		do
 			Result := id_solution.id_of_class (class_i.config_class)
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Callbacks
 
-	on_name_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_name_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On name changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
@@ -452,7 +452,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_protocol_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_protocol_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On protocol changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
@@ -490,7 +490,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_source_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_source_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On source changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
@@ -528,7 +528,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_tags_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_tags_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On tags changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
@@ -576,7 +576,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_others_changed (a_item: EV_GRID_EDITABLE_ITEM) is
+	on_others_changed (a_item: EV_GRID_EDITABLE_ITEM)
 			-- On others changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		local
@@ -621,7 +621,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-	on_location_changed (a_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM; a_grid_item: EB_GRID_LISTABLE_CHOICE_ITEM): BOOLEAN is
+	on_location_changed (a_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM; a_grid_item: EB_GRID_LISTABLE_CHOICE_ITEM): BOOLEAN
 			-- On selection changed
 			-- We modify neither the referenced EIS entry when the modification is done.
 		require
@@ -702,7 +702,7 @@ feature {NONE} -- Callbacks
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 				
 				Object is a model for a client supplier link in Eiffel Studio.
@@ -55,7 +55,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_client, a_supplier: ES_CLASS) is
+	make (a_client, a_supplier: ES_CLASS)
 			-- Create a ES_CLIENT_SUPPLIER_LINK connecting `a_client' with `a_supplier'.
 		require
 			a_client_not_void: a_client /= Void
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Element change
 
-	synchronize is
+	synchronize
 			-- Set `features', `name' and `is_aggregated' or remove if no `features'.
 		local
 			a_name: STRING
@@ -112,7 +112,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	is_expanded (a_feature: FEATURE_AS): BOOLEAN is
+	is_expanded (a_feature: FEATURE_AS): BOOLEAN
 			-- Is `a_feature' declared `expanded'?
 		local
 			ct: CLASS_TYPE_AS
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 invariant
 	features_not_void: features /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

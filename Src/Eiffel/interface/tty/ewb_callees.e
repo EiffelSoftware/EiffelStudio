@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Displays the callees of a feature in output_window."
 	legal: "See notice at end of class."
@@ -29,19 +29,19 @@ create
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of current command
 		do
 			Result := callees_cmd_name
 		end
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 			-- Help message for current command
 		do
 			Result := callees_help
 		end
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 			-- Abbreviation for current command
 		do
 			Result := callees_abb
@@ -49,7 +49,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	associated_cmd: E_SHOW_CALLERS is
+	associated_cmd: E_SHOW_CALLERS
 			-- Associated feature command to be executed
 			-- after successfully retrieving the feature_i
 		do
@@ -63,7 +63,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	loop_action is
+	loop_action
 		do
 			command_line_io.get_class_name
 			class_name := command_line_io.last_input
@@ -87,7 +87,7 @@ feature{NONE} -- Implementation
 			check_arguments_and_execute
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

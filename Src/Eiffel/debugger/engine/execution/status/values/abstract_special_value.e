@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ feature -- Items
 	items_computed: BOOLEAN
 			-- `items' already computed in this context ?
 
-	get_items (a_min, a_max: INTEGER) is
+	get_items (a_min, a_max: INTEGER)
 		require
 			items_not_void: items /= Void
 		deferred
@@ -33,7 +33,7 @@ feature -- Items
 			items_computed
 		end
 
-	reset_items is
+	reset_items
 		do
 			if items /= Void then
 				items.wipe_out
@@ -68,19 +68,19 @@ feature -- Properties
 
 feature -- Output
 
-	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	sorted_children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- Return items as childrens.
 		do
 			Result := children
 		end
 
-	expandable: BOOLEAN is
+	expandable: BOOLEAN
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 		do
 			Result := not is_null
 		end
 
-	kind: INTEGER is
+	kind: INTEGER
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		do
@@ -93,7 +93,7 @@ feature -- Output
 
 feature {DEBUG_VALUE_EXPORTER} -- Output
 
-	output_value: STRING_32 is
+	output_value: STRING_32
 			-- Return a string representing `Current'.
 		local
 			str: STRING_32
@@ -110,7 +110,7 @@ feature {DEBUG_VALUE_EXPORTER} -- Output
 			end
 		end
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 			-- Return a string representing `Current'.
 		local
 			ec: CLASS_C;
@@ -133,7 +133,7 @@ feature {DEBUG_VALUE_EXPORTER} -- Output
 
 feature -- Change
 
-	set_sp_bounds (l, u: INTEGER) is
+	set_sp_bounds (l, u: INTEGER)
 			-- Set the bounds for special object inspection.
 		do
 			sp_lower := l
@@ -142,18 +142,18 @@ feature -- Change
 
 feature -- Access
 
-	string_value: STRING_GENERAL is
+	string_value: STRING_GENERAL
 		deferred
 		end
 
 feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 
-	debug_value_type_id: INTEGER is
+	debug_value_type_id: INTEGER
 		do
 			Result := abstract_special_value_id
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

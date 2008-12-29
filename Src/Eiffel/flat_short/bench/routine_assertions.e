@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Pre and Post condition defined in origin feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (feat_adapter: FEATURE_ADAPTER) is
+	make (feat_adapter: FEATURE_ADAPTER)
 			-- Initialize Current assertion
 			-- with assertions from `ast'.
 		require
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			origin := feat_adapter.source_feature
 		end
 
-	make_for_feature (feat: FEATURE_I; ast: FEATURE_AS) is
+	make_for_feature (feat: FEATURE_I; ast: FEATURE_AS)
 			-- Initialize Current with feature `feat'
 			-- and ast structure `ast'.
 		local
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			origin := feat
 		end
 
-	make_for_inline_agent (feat: FEATURE_I; rout_as: ROUTINE_AS) is
+	make_for_inline_agent (feat: FEATURE_I; rout_as: ROUTINE_AS)
 			-- Initialize Current with feature `feat'
 			-- and ast structure `ast'.
 		do
@@ -69,7 +69,7 @@ feature -- Properties
 	origin: FEATURE_I
 			-- Feature where assertions are defined
 
-	written_in: INTEGER is
+	written_in: INTEGER
 			-- Written in id of origin feature
 		require
 			origin_set: origin /= Void
@@ -79,7 +79,7 @@ feature -- Properties
 
 feature -- Output
 
-	format_precondition (ctxt: TEXT_FORMATTER_DECORATOR; hide_breakable_marks: BOOLEAN) is
+	format_precondition (ctxt: TEXT_FORMATTER_DECORATOR; hide_breakable_marks: BOOLEAN)
 			-- Format the precondition. Do not display the breakable mark
 			-- (i.e.: breakpoint slots) if `hide_breakable_marks' is set.
 		local
@@ -99,7 +99,7 @@ feature -- Output
 			end
 		end
 
-	format_postcondition (ctxt: TEXT_FORMATTER_DECORATOR; hide_breakable_marks: BOOLEAN) is
+	format_postcondition (ctxt: TEXT_FORMATTER_DECORATOR; hide_breakable_marks: BOOLEAN)
 			-- Format the precondition. Do not display the breakable mark
 			-- (i.e.: breakpoint slots) if `hide_breakable_marks' is set.
 		local
@@ -121,14 +121,14 @@ feature -- Output
 
 feature -- Debug
 
-	trace is
+	trace
 		do
 			io.error.put_string ("origin feature for assertion: ")
 			io.error.put_string (origin.feature_name)
 			io.error.put_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

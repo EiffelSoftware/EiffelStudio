@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Token that describe an Eiffel string"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Visitor
 
-	process (a_visitor: EIFFEL_TOKEN_VISITOR) is
+	process (a_visitor: EIFFEL_TOKEN_VISITOR)
 			-- Visitor
 		do
 			a_visitor.process_editor_token_cluster (Current)
@@ -35,25 +35,25 @@ feature -- Visitor
 
 feature -- Color
 
-	text_color_id: INTEGER is
+	text_color_id: INTEGER
 		do
 			Result := cluster_text_color_id
 		end
 
-	background_color_id: INTEGER is
+	background_color_id: INTEGER
 		do
 			Result := cluster_background_color_id
 		end
 
 feature {NONE} -- Implementation
 
-	editor_preferences: EB_EDITOR_DATA is
+	editor_preferences: EB_EDITOR_DATA
 			--
 		once
 			Result ?= editor_preferences_cell.item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

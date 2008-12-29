@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help engine, displays help context, GTK implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,13 +20,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 		end
 
 feature -- Access
 
-	application_name: STRING is "ec";
+	application_name: STRING = "ec";
 
 feature -- Status Report
 
@@ -38,7 +38,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	show (a_help_context: EB_HELP_CONTEXT) is
+	show (a_help_context: EB_HELP_CONTEXT)
 			-- Show help with context `a_help_context'.
 		local
 			cmd: STRING
@@ -77,7 +77,7 @@ feature -- Basic Operations
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

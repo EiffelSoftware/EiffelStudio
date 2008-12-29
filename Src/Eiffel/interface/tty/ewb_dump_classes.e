@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Dumps compiled non deferred classed with `default_create' to stdout."
 	legal: "See notice at end of class."
@@ -24,13 +24,13 @@ create
 
 feature
 
-	execute is
+	execute
 			-- Dump class information.
 		do
 			dump_cluster (Universe.all_classes)
 		end
 
-	dump_cluster (cs: DS_HASH_SET [CLASS_I]) is
+	dump_cluster (cs: DS_HASH_SET [CLASS_I])
 			-- Recursive function called by `execute'.
 		local
 			l_class: CLASS_I
@@ -53,7 +53,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Filter to keep a location stack in xml"
 	author: ""
 	date: "$Date$"
@@ -19,7 +19,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize Current
 		do
 			make_null
@@ -37,10 +37,10 @@ feature -- Access
 			-- Connector between every two history item		
 			-- Default is `default_history_connector'
 
-	default_history_connector: STRING is " -> "
+	default_history_connector: STRING = " -> "
 			-- Default `history_connector'
 
-	location: STRING_GENERAL is
+	location: STRING_GENERAL
 			-- Location extracted from `history'.
 		do
 			Result := partial_location (1, history.count)
@@ -48,7 +48,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	partial_location (a_start, a_end: INTEGER): STRING_GENERAL is
+	partial_location (a_start, a_end: INTEGER): STRING_GENERAL
 			-- Location extracted from `histroy' between the `a_start'-th and `a_end'-th element
 		local
 			l_history: like history
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_history_connector (a_connector: like history_connector) is
+	set_history_connector (a_connector: like history_connector)
 			-- Set `history_connector' with `a_connector'.
 		require
 			a_connector_attached: a_connector /= Void
@@ -90,7 +90,7 @@ feature -- Setting
 			history_connector_set: history_connector /= Void and then history_connector.is_equal (a_connector)
 		end
 
-	set_history_item_output_function (a_func: like history_item_output_function) is
+	set_history_item_output_function (a_func: like history_item_output_function)
 			-- Set `history_item_output_function' with `a_func'.
 		do
 			history_item_output_function := a_func
@@ -106,14 +106,14 @@ feature -- History
 
 feature -- Event handler
 
-	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_start_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- Start of start tag.
 		do
 			history.extend (a_local_part)
 			Precursor (a_namespace, a_prefix, a_local_part)
 		end
 
-	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
+	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING)
 			-- End tag.
 		do
 			history.finish
@@ -123,7 +123,7 @@ feature -- Event handler
 
 feature{NONE} -- Implementation
 
-	actual_history_item (a_item: STRING_GENERAL): STRING_GENERAL is
+	actual_history_item (a_item: STRING_GENERAL): STRING_GENERAL
 			-- Actual history item for `a_item' (`history_item_output_function' is used when applicable)
 		require
 			a_item_attached: a_item /= Void

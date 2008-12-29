@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 
 	]"
@@ -61,7 +61,7 @@ feature -- Access
 	message: STRING_GENERAL
 			-- Message from C compiler
 
-	file_name: STRING is
+	file_name: STRING
 			-- Path to file involved in error.
 			-- Could be Void if not a file specific error.
 		do
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_associated_file: BOOLEAN is
+	has_associated_file: BOOLEAN
 			-- Is current relative to a file?
 		do
 			Result := internal_file_name /= Void
@@ -80,14 +80,14 @@ feature -- Status report
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build the error message
 		do
 		end
 
 feature {NONE} -- Output
 
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		do
 			Precursor (a_text_formatter)
@@ -100,7 +100,7 @@ feature {NONE} -- Internal implementation cache
 	internal_file_name: like file_name
 			-- Mutable version of `file_name'
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

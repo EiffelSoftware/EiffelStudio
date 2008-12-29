@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that keep a reference to the debug value indexed by address..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,25 +17,25 @@ create {SHARED_DEBUG_VALUE_KEEPER}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			initialize
 		end
 
 feature {EIFNET_EXPORTER, APPLICATION_EXECUTION_DOTNET, DEBUGGER_MANAGER} -- Operation
 
-	initialize is
+	initialize
 		do
 			create debug_value_kept.make (10)
 			debug_value_kept.compare_objects
 		end
 
-	terminate is
+	terminate
 		do
 			recycle
 		end
 
-	recycle is
+	recycle
 		do
 			if debug_value_kept /= Void then
 				debug_value_kept.wipe_out
@@ -44,7 +44,7 @@ feature {EIFNET_EXPORTER, APPLICATION_EXECUTION_DOTNET, DEBUGGER_MANAGER} -- Ope
 
 feature -- Change
 
-	keep (dv: ABSTRACT_DEBUG_VALUE) is
+	keep (dv: ABSTRACT_DEBUG_VALUE)
 		require
 			dv /= Void
 		local
@@ -56,7 +56,7 @@ feature -- Change
 			end
 		end
 
-	keep_dotnet_value (ddv: EIFNET_ABSTRACT_DEBUG_VALUE) is
+	keep_dotnet_value (ddv: EIFNET_ABSTRACT_DEBUG_VALUE)
 		require
 			ddv /= Void
 		local
@@ -74,7 +74,7 @@ feature -- Change
 
 feature -- Access
 
-	know_about (l_k: DBG_ADDRESS): BOOLEAN is
+	know_about (l_k: DBG_ADDRESS): BOOLEAN
 			-- Has a Debug Value object address by `l_k'
 		do
 			if debug_value_kept /= Void then
@@ -84,7 +84,7 @@ feature -- Access
 			end
 		end
 
-	item (l_k: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE is
+	item (l_k: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE
 			-- Refreshed debug value object address by `l_k'.
 		require
 			know_about (l_k)
@@ -94,7 +94,7 @@ feature -- Access
 			Result /= Void
 		end
 
-	raw_item (l_k: DBG_ADDRESS; a_refresh_requested: BOOLEAN): ABSTRACT_DEBUG_VALUE is
+	raw_item (l_k: DBG_ADDRESS; a_refresh_requested: BOOLEAN): ABSTRACT_DEBUG_VALUE
 			-- Debug Value object address by `l_k'
 			-- refreshed if `a_refresh_requested' is True.
 		require
@@ -110,7 +110,7 @@ feature -- Access
 
 feature {SHARED_DEBUG_VALUE_KEEPER} -- Implementation
 
-	keep_only (l_addresses: LIST [DBG_ADDRESS]) is
+	keep_only (l_addresses: LIST [DBG_ADDRESS])
 			-- Clean all the value except the one from l_addresses
 		local
 			l_add: DBG_ADDRESS
@@ -141,7 +141,7 @@ feature {NONE} -- restricted access
 	debug_value_kept: HASH_TABLE [ABSTRACT_DEBUG_VALUE, DBG_ADDRESS]
 			-- Debug value indexed by `dbg_address'
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

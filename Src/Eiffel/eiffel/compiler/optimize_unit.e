@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Record the features using loops."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make (c_id: INTEGER; b_index: INTEGER) is
+	make (c_id: INTEGER; b_index: INTEGER)
 		do
 			class_id := c_id
 			body_index := b_index
@@ -35,18 +35,18 @@ feature -- Access
 
 feature -- Hashable
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 		do
 			Result := (class_id |<< 16)	+ body_index
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Are `other' and `Current' equal?
 		do
 			Result := body_index = other.body_index and class_id = other.class_id
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

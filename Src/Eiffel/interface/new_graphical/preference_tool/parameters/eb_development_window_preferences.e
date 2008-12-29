@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "All shared attributes specific to the development window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {EB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -36,55 +36,55 @@ feature {EB_PREFERENCES} -- Initialization
 feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 		 EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_BUILDER} -- Value
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width for the development window
 		do
 			Result := width_preference.value
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height for the development window
 		do
 			Result := height_preference.value
 		end
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- X position for development windows
 		do
 			Result := x_position_preference.value
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Y position for development windows
 		do
 			Result := y_position_preference.value
 		end
 
-	maximized_width: INTEGER is
+	maximized_width: INTEGER
 			-- Width for the development window
 		do
 			Result := maximized_width_preference.value
 		end
 
-	maximized_height: INTEGER is
+	maximized_height: INTEGER
 			-- Height for the development window
 		do
 			Result := maximized_height_preference.value
 		end
 
-	maximized_x_position: INTEGER is
+	maximized_x_position: INTEGER
 			-- X position for development windows
 		do
 			Result := maximized_x_position_preference.value
 		end
 
-	maximized_y_position: INTEGER is
+	maximized_y_position: INTEGER
 			-- Y position for development windows
 		do
 			Result := maximized_y_position_preference.value
 		end
 
-	is_maximized: BOOLEAN is
+	is_maximized: BOOLEAN
 			-- Is the development window maximized?
 		do
 			Result := is_maximized_preference.value
@@ -99,105 +99,105 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
 			Result := is_force_debug_mode_preference.value
 		end
 
-	general_toolbar_layout: ARRAY [STRING] is
+	general_toolbar_layout: ARRAY [STRING]
 			-- Toolbar organization
 		do
 			Result := general_toolbar_layout_preference.value
 		end
 
-	refactoring_toolbar_layout: ARRAY [STRING] is
+	refactoring_toolbar_layout: ARRAY [STRING]
 			-- Toolbar organization
 		do
 			Result := refactoring_toolbar_layout_preference.value
 		end
 
-	max_history_size: INTEGER is
+	max_history_size: INTEGER
 			-- Maximum number of items displayed in the history (in the address combo boxes).
 		do
 			Result := max_history_size_preference.value
 		end
 
-	use_animated_icons: BOOLEAN is
+	use_animated_icons: BOOLEAN
 			-- Should window status bar use animated icons?
 		do
 			Result := use_animated_icons_preference.value
 		end
 
-	remember_completion_list_size: BOOLEAN is
+	remember_completion_list_size: BOOLEAN
 			--
 		do
 			Result := remember_completion_list_size_preference.value
 		end
 
-	completion_list_width: INTEGER is
+	completion_list_width: INTEGER
 			--
 		do
 			Result := completion_list_width_preference.value
 		end
 
-	completion_list_height: INTEGER is
+	completion_list_height: INTEGER
 			--
 		do
 			Result := completion_list_height_preference.value
 		end
 
-	progress_bar_color: EV_COLOR is
+	progress_bar_color: EV_COLOR
 			--
 		do
 			Result := progress_bar_color_preference.value
 		end
 
-	ctrl_right_click_receiver: STRING is
+	ctrl_right_click_receiver: STRING
 			--
 		do
 			Result := ctrl_right_click_receiver_preference.selected_value
 		end
 
-	class_completion: BOOLEAN is
+	class_completion: BOOLEAN
 			--
 		do
 			Result := class_completion_preference.value
 		end
 
-	last_browsed_cluster_directory: STRING is
+	last_browsed_cluster_directory: STRING
 			--
 		do
 			Result := last_browsed_cluster_directory_preference.value
 		end
 
-	context_unified_stone: BOOLEAN is
+	context_unified_stone: BOOLEAN
 		do
 			Result := context_unified_stone_preference.value
 		end
 
-	link_tools: BOOLEAN is
+	link_tools: BOOLEAN
 		do
 			Result := link_tools_preference.value
 		end
 
-	graphical_output_disabled: BOOLEAN is
+	graphical_output_disabled: BOOLEAN
 		do
 			Result := graphical_output_disabled_preference.value
 		end
 
-	c_output_panel_prompted: BOOLEAN is
+	c_output_panel_prompted: BOOLEAN
 		do
 			Result := c_output_panel_prompted_preference.value
 		end
 
-	auto_hide_animation_speed: INTEGER is
+	auto_hide_animation_speed: INTEGER
 			-- The speed of auto hide zone animation in milliseconds. 0 to disable animation effect.
 		do
 			Result := auto_hide_animation_speed_preference.value
 		end
 
-	show_all_applicable_docking_indicators: BOOLEAN is
+	show_all_applicable_docking_indicators: BOOLEAN
 			-- If we need to show all feedback indicators when dragging a zone?
 		do
 			Result := show_all_applicable_docking_indicators_preference.value
 		end
 
-	output_tool_prompted: BOOLEAN is
+	output_tool_prompted: BOOLEAN
 			-- If show up output tool if start compiling?
 		do
 			Result := output_tool_prompted_preference.value
@@ -281,7 +281,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 feature -- Element change
 
-	save_size (a_width, a_height: INTEGER) is
+	save_size (a_width, a_height: INTEGER)
 			-- <Precursor>
 		do
 			width_preference.set_value (a_width)
@@ -290,7 +290,7 @@ feature -- Element change
 			preferences.save_preference (height_preference)
 		end
 
-	save_maximized_size (a_width, a_height: INTEGER) is
+	save_maximized_size (a_width, a_height: INTEGER)
 			-- <Precursor>
 		do
 			maximized_width_preference.set_value (a_width)
@@ -299,7 +299,7 @@ feature -- Element change
 			preferences.save_preference (maximized_height_preference)
 		end
 
-	save_window_state (a_minimized, a_maximized: BOOLEAN) is
+	save_window_state (a_minimized, a_maximized: BOOLEAN)
 			-- Save the window state of the window.
 		do
 			is_minimized := a_minimized
@@ -308,7 +308,7 @@ feature -- Element change
 			preferences.save_preference (is_maximized_preference)
 		end
 
-	save_position (a_x, a_y: INTEGER) is
+	save_position (a_x, a_y: INTEGER)
 			-- <Precursor>
 		do
 			x_position_preference.set_value (a_x)
@@ -317,7 +317,7 @@ feature -- Element change
 			preferences.save_preference (y_position_preference)
 		end
 
-	save_maximized_position (a_x, a_y: INTEGER) is
+	save_maximized_position (a_x, a_y: INTEGER)
 			-- <Precursor>
 		do
 			maximized_x_position_preference.set_value (a_x)
@@ -326,13 +326,13 @@ feature -- Element change
 			preferences.save_preference (maximized_y_position_preference)
 		end
 
-	save_force_debug_mode (a_bool: BOOLEAN) is
+	save_force_debug_mode (a_bool: BOOLEAN)
 			-- Save if `is_force_debug_mode'
 		do
 			is_force_debug_mode_preference.set_value (a_bool)
 		end
 
-	save_completion_list_size (a_width, a_height: INTEGER) is
+	save_completion_list_size (a_width, a_height: INTEGER)
 			-- Save the size of the completion list
 		do
 			completion_list_width_preference.set_value (a_width)
@@ -343,13 +343,13 @@ feature -- Element change
 
 feature -- Basic operations
 
-	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
+	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- Retreive the general toolbar using the available commands in `command_pool'
 		do
 			Result := retrieve_toolbar_items (command_pool, general_toolbar_layout)
 		end
 
-	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
+	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM]
 			-- Retreive the refactoring toolbar using the available commands in `command_pool'
 		do
 			Result := retrieve_toolbar_items (command_pool, refactoring_toolbar_layout)
@@ -357,42 +357,42 @@ feature -- Basic operations
 
 feature {NONE} -- Preference Strings
 
-	width_string: STRING is "interface.development_window.width"
-	height_string: STRING is "interface.development_window.height"
-	x_position_string: STRING is "interface.development_window.x_position"
-	y_position_string: STRING is "interface.development_window.y_position"
-	maximized_width_string: STRING is "interface.development_window.maximized_width"
-	maximized_height_string: STRING is "interface.development_window.maximized_height"
-	maximized_x_position_string: STRING is "interface.development_window.maximized_x_position"
-	maximized_y_position_string: STRING is "interface.development_window.maximized_y_position"
-	is_force_debug_mode_string: STRING is "interface.development_window.is_force_debug_mode"
-	is_maximized_string: STRING is "interface.development_window.is_maximized"
-	general_toolbar_layout_string: STRING is "interface.development_window.general_toolbar_layout"
-	refactoring_toolbar_layout_string: STRING is "interface.development_window.refactoring_toolbar_layout"
-	max_history_size_string: STRING is "interface.development_window.maximum_history_size"
-	remember_completion_list_size_string: STRING is "interface.development_window.remember_completion_list_size"
-	completion_list_width_string: STRING is "interface.development_window.completion_list_width"
-	completion_list_height_string: STRING is "interface.development_window.completion_list_height"
-	progress_bar_color_preference_string: STRING is "interface.development_window.progress_bar_color"
-	ctrl_right_click_receiver_string: STRING is "interface.development_window.ctrl_right_click_receiver"
-	class_completion_string: STRING is "interface.development_window.class_completion"
-	last_browsed_cluster_directory_string: STRING is "interface.development_window.last_browsed_cluster_directory"
-	context_unified_stone_string: STRING is "interface.development_window.unified_stone"
-	link_tools_string: STRING is "interface.development_window.link_tools"
-	graphical_output_disabled_string: STRING is "interface.development_window.graphical_output_disabled"
-	use_animated_icons_string: STRING is "interface.development_window.use_animated_icons"
-	c_output_panel_prompted_string: STRING is "interface.development_window.c_output_panel_prompted"
-	auto_hide_animation_speed_string: STRING is "interface.development_window.auto_hide_animation_speed"
-	show_all_applicable_docking_indicators_string: STRING is "interface.development_window.show_all_applicable_docking_indicators"
-	output_tool_prompted_string: STRING is "interface.development_window.output_tool_prompted"
+	width_string: STRING = "interface.development_window.width"
+	height_string: STRING = "interface.development_window.height"
+	x_position_string: STRING = "interface.development_window.x_position"
+	y_position_string: STRING = "interface.development_window.y_position"
+	maximized_width_string: STRING = "interface.development_window.maximized_width"
+	maximized_height_string: STRING = "interface.development_window.maximized_height"
+	maximized_x_position_string: STRING = "interface.development_window.maximized_x_position"
+	maximized_y_position_string: STRING = "interface.development_window.maximized_y_position"
+	is_force_debug_mode_string: STRING = "interface.development_window.is_force_debug_mode"
+	is_maximized_string: STRING = "interface.development_window.is_maximized"
+	general_toolbar_layout_string: STRING = "interface.development_window.general_toolbar_layout"
+	refactoring_toolbar_layout_string: STRING = "interface.development_window.refactoring_toolbar_layout"
+	max_history_size_string: STRING = "interface.development_window.maximum_history_size"
+	remember_completion_list_size_string: STRING = "interface.development_window.remember_completion_list_size"
+	completion_list_width_string: STRING = "interface.development_window.completion_list_width"
+	completion_list_height_string: STRING = "interface.development_window.completion_list_height"
+	progress_bar_color_preference_string: STRING = "interface.development_window.progress_bar_color"
+	ctrl_right_click_receiver_string: STRING = "interface.development_window.ctrl_right_click_receiver"
+	class_completion_string: STRING = "interface.development_window.class_completion"
+	last_browsed_cluster_directory_string: STRING = "interface.development_window.last_browsed_cluster_directory"
+	context_unified_stone_string: STRING = "interface.development_window.unified_stone"
+	link_tools_string: STRING = "interface.development_window.link_tools"
+	graphical_output_disabled_string: STRING = "interface.development_window.graphical_output_disabled"
+	use_animated_icons_string: STRING = "interface.development_window.use_animated_icons"
+	c_output_panel_prompted_string: STRING = "interface.development_window.c_output_panel_prompted"
+	auto_hide_animation_speed_string: STRING = "interface.development_window.auto_hide_animation_speed"
+	show_all_applicable_docking_indicators_string: STRING = "interface.development_window.show_all_applicable_docking_indicators"
+	output_tool_prompted_string: STRING = "interface.development_window.output_tool_prompted"
 
-	estudio_dbg_menu_allowed_string: STRING is "interface.development_window.estudio_dbg_menu_allowed"
-	estudio_dbg_menu_accelerator_allowed_string: STRING is "interface.development_window.estudio_dbg_menu_accelerator_allowed"
-	estudio_dbg_menu_enabled_string: STRING is "interface.development_window.estudio_dbg_menu_enabled"
+	estudio_dbg_menu_allowed_string: STRING = "interface.development_window.estudio_dbg_menu_allowed"
+	estudio_dbg_menu_accelerator_allowed_string: STRING = "interface.development_window.estudio_dbg_menu_accelerator_allowed"
+	estudio_dbg_menu_enabled_string: STRING = "interface.development_window.estudio_dbg_menu_enabled"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -441,7 +441,7 @@ feature {NONE} -- Implementation
 	preferences: PREFERENCES
 			-- Preferences
 
-	update_estudio_dbg_menu is
+	update_estudio_dbg_menu
 			-- Show or hidden the Eiffel Studio Debug menu which is at the right side of the Help menu.
 		do
 			if estudio_dbg_menu_enabled_preference.value then
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_auto_hide_animation_speed_changed is
+	on_auto_hide_animation_speed_changed
 			-- Handle change actions of `auto_hide_animation_speed_preference'.
 		local
 			l_shared: SD_SHARED
@@ -460,7 +460,7 @@ feature {NONE} -- Implementation
 			l_shared.set_auto_hide_tab_slide_timer_interval (auto_hide_animation_speed)
 		end
 
-	on_show_all_applicable_docking_indicators_changed is
+	on_show_all_applicable_docking_indicators_changed
 			-- Handle change actions of `show_all_applicable_docking_indicators_preference'.
 		local
 			l_shared: SD_SHARED
@@ -489,7 +489,7 @@ invariant
 	estudio_dbg_menu_accelerator_allowed_preference_not_void: estudio_dbg_menu_accelerator_allowed_preference /= Void
 	estudio_dbg_menu_enabled_preference_not_void: estudio_dbg_menu_enabled_preference /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

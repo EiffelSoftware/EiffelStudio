@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stone checker used by EB_DEVELOPMENT_WINDOW."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_window: EB_DEVELOPMENT_WINDOW)
 			-- Creation method.
 		require
 			not_void: a_window /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_stone_after_check (a_stone: STONE) is
+	set_stone_after_check (a_stone: STONE)
 			-- First we check `a_stone' then we set stone if possible.
 		do
 				-- the text does not change if the text was saved with syntax errors
@@ -64,7 +64,7 @@ feature -- Command
 
 feature {NONE} -- Implementation functions
 
-	prepare (a_stone: STONE) is
+	prepare (a_stone: STONE)
 			-- Try to assign different kinds of stones.
 		local
 			l_pixmaps: EV_STOCK_PIXMAPS
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation functions
 
 		end
 
-	handle_break_error_ace_external_file_stone (a_stone: STONE) is
+	handle_break_error_ace_external_file_stone (a_stone: STONE)
 			-- Handle `conv_brkstone', `conv_errst', `ef_stone' and `target_stone' if eixst.
 		local
 			bpm: BREAKPOINTS_MANAGER
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	handle_all_class_stones (a_stone: STONE) is
+	handle_all_class_stones (a_stone: STONE)
 			-- Handle all class stones.
 			-- `a_stone' can be new class stone or exists class stone.
 		local
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	check_new_class_stone (a_stone: STONE) is
+	check_new_class_stone (a_stone: STONE)
 			-- Handle `a_stone' which is new class stone.
 		do
 			if new_class_stone /= Void then
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	handle_cluster_stone is
+	handle_cluster_stone
 			-- Handle cluster stone.
 		do
 				-- not a class text : cannot be edited
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	possible_formater is
+	possible_formater
 			-- Do works for formatters.
 		do
 			main_formatter ?= new_class_stone.pos_container
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	handle_class_stone (a_stone: STONE) is
+	handle_class_stone (a_stone: STONE)
 			-- Handle `a_stone' which is a class stone.
 		local
 			l_selection: TUPLE [pos_start, pos_end: INTEGER]
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	set_class_text_if_possible is
+	set_class_text_if_possible
 			-- Call `set_class_text_for_class_stone' if possible.
 		do
 			if conv_classc = Void or else
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	set_class_text_for_class_stone is
+	set_class_text_for_class_stone
 			-- Set class texts for class stone.
 		do
 			if class_text_exists or else new_class_stone.class_i.is_external_class then
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	check_class_stone is
+	check_class_stone
 			-- Handle class stone.
 		do
 			if conv_classc = Void then
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	set_class_text is
+	set_class_text
 			-- Set class text.
 		do
 			if not class_text_exists then
@@ -528,7 +528,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	formatted_context_for_group (a_group: CONF_GROUP; a_path: STRING) is
+	formatted_context_for_group (a_group: CONF_GROUP; a_path: STRING)
 			-- Formatted context representing the list of classes inside `a_group'.
 		require
 			a_group_not_void: a_group /= Void
@@ -879,7 +879,7 @@ feature {NONE} -- Implementation functions
 			current_editor.handle_after_processing
 		end
 
-	select_basic_main_formatter is
+	select_basic_main_formatter
 			-- Ensure that basic text formatter is selected.
 		local
 			l_basic_formatter: EB_FORMATTER
@@ -891,7 +891,7 @@ feature {NONE} -- Implementation functions
 			l_basic_formatter.ensure_display_in_widget_owner
 		end
 
-	refresh_all_tabs (a_stone: STONE) is
+	refresh_all_tabs (a_stone: STONE)
 			-- Refresh all editor tabs
 		require
 			not_void: develop_window /= Void
@@ -929,7 +929,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	refresh_a_tab (a_stone: STONE; a_editor: EB_SMART_EDITOR; a_editor_manager: EB_EDITORS_MANAGER) is
+	refresh_a_tab (a_stone: STONE; a_editor: EB_SMART_EDITOR; a_editor_manager: EB_EDITORS_MANAGER)
 			-- Refresh `a_editor' notebook tab's pixmap and title
 			-- `a_stone' can be void, then this feature will use stone from `a_editor'
 		require
@@ -1081,7 +1081,7 @@ feature {NONE} -- Implementation
 			Result := develop_window.editors_manager.current_editor
 		end
 
-	is_string_started_by (s1, s2: STRING_GENERAL): BOOLEAN is
+	is_string_started_by (s1, s2: STRING_GENERAL): BOOLEAN
 			-- Is `s1' starting by `s2' characters
 		require
 			s2_not_void: s2 /= Void
@@ -1101,7 +1101,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

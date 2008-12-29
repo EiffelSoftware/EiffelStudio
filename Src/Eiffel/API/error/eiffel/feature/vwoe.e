@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when a prefix/infix operator doesn't %
@@ -28,12 +28,12 @@ feature -- Properties
 	op_name: STRING;
 			-- Internal name of the infix/prefix feature
 
-	code: STRING is "VWOE";
+	code: STRING = "VWOE";
 			-- Error code
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
 		do
@@ -68,25 +68,25 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_other_class (o: CLASS_C) is
+	set_other_class (o: CLASS_C)
 			-- Assign `o' to `other_class'.
 		do
 			other_class := o
 		end
 
-	set_other_type_set (a_other_type_set: like other_type_set) is
+	set_other_type_set (a_other_type_set: like other_type_set)
 			-- Assign `a_other_type_set' to `other_type_set'.
 		do
 			other_type_set := a_other_type_set
 		end
 
-	set_op_name (s: STRING) is
+	set_op_name (s: STRING)
 			-- Assign `s' to `op_name'.
 		do
 			op_name := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

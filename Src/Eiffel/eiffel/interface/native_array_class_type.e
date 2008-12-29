@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class type for NATIVE_ARRAY class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ feature -- Access
 	type: NATIVE_ARRAY_TYPE_A
 			-- Type of generic derivation.
 
-	first_generic: TYPE_A is
+	first_generic: TYPE_A
 			-- First generic parameter type
 		require
 			has_generics: type.generics /= Void
@@ -40,7 +40,7 @@ feature -- Access
 			Result := type.generics.item (1)
 		end
 
-	il_type_name: STRING is
+	il_type_name: STRING
 			-- Associated name to current generic derivation.
 			-- E.g. NATIVE_ARRAY [INTEGER] gives `INTEGER []'.
 		require
@@ -52,7 +52,7 @@ feature -- Access
 			Result.append ("[]")
 		end
 
-	il_element_type_name: STRING is
+	il_element_type_name: STRING
 			-- Associated name of element types.
 			-- E.g. NATIVE_ARRAY [INTEGER] gives `INTEGER'.
 		require
@@ -72,7 +72,7 @@ feature -- Access
 			Result.append (l_name)
 		end
 
-	deep_il_element_type: CL_TYPE_A is
+	deep_il_element_type: CL_TYPE_A
 			-- Find actual type of element array.
 			-- I.e. if you have NATIVE_ARRAY [NATIVE_ARRAY [INTEGER]], it
 			-- will return INTEGER.
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- IL code generation
 
-	generate_il_put_preparation (array_type, a_context_type: CL_TYPE_A) is
+	generate_il_put_preparation (array_type, a_context_type: CL_TYPE_A)
 			-- Generate preparation to `put' calls in case of expanded elements.
 		require
 			has_generics: type.generics /= Void
@@ -113,7 +113,7 @@ feature -- IL code generation
 			end
 		end
 
-	generate_il (name_id: INTEGER; array_type, a_context_type: CL_TYPE_A) is
+	generate_il (name_id: INTEGER; array_type, a_context_type: CL_TYPE_A)
 			-- Generate call to `name_id' from NATIVE_ARRAY.
 		require
 			valid_name_id: name_id > 0
@@ -243,7 +243,7 @@ feature -- IL code generation
 			end
 		end
 
-	Object_type: CL_TYPE_A is
+	Object_type: CL_TYPE_A
 			-- Type of SYSTEM_OBJECT.
 		require
 			in_il_generation: system.il_generation
@@ -259,7 +259,7 @@ feature -- IL code generation
 invariant
 	il_generation: System.il_generation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

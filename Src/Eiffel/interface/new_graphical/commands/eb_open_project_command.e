@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to retrieve a stored project."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -66,13 +66,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create the command relative to the last focused window
 		do
 			internal_parent_window := Void
 		end
 
-	make_with_parent (a_window: EV_WINDOW) is
+	make_with_parent (a_window: EV_WINDOW)
 			-- Create the command relative to the parent window `a_window'
 		require
 			a_window_not_void: a_window /= Void
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute_with_file (a_project_file_name: STRING; is_fresh_compilation: BOOLEAN) is
+	execute_with_file (a_project_file_name: STRING; is_fresh_compilation: BOOLEAN)
 			-- Open the specific project named `a_project_file_name'
 		require
 			a_project_file_name_valid: a_project_file_name /= Void
@@ -109,7 +109,7 @@ feature -- Execution
 			end
 		end
 
-	execute is
+	execute
 			-- Popup a dialog for the user to choose the project he wants to open,
 		local
 			l_dialog: EB_OPEN_PROJECT_DIALOG
@@ -120,7 +120,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	parent_window: EV_WINDOW is
+	parent_window: EV_WINDOW
 			-- Parent window.
 		local
 			dev_window: EB_DEVELOPMENT_WINDOW
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 	internal_parent_window: EV_WINDOW
 			-- Parent window if any, Void if none.
 
-	valid_file_name (file_name: STRING): STRING is
+	valid_file_name (file_name: STRING): STRING
 			-- Generate a valid file name from `file_name'
 			--| Useful when the file name is a directory with a
 			--| directory separator at the end.
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

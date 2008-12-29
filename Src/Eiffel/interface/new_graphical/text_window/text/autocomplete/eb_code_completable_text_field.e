@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text field that can conduct auto-completion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- <Precursor>
 		do
 			Precursor
@@ -57,13 +57,13 @@ feature {NONE} -- Initialization
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Access
 
-	current_token_in_line (a_line: EDITOR_LINE): EDITOR_TOKEN is
+	current_token_in_line (a_line: EDITOR_LINE): EDITOR_TOKEN
 			-- Token to the right of the cursor in `a_line'
 		do
 			Result := token_at_position (caret_position, a_line)
 		end
 
-	token_at_position (a_pos: INTEGER; a_line: EDITOR_LINE): EDITOR_TOKEN is
+	token_at_position (a_pos: INTEGER; a_line: EDITOR_LINE): EDITOR_TOKEN
 			-- Token at `a_pos' in `a_line'
 		require
 			a_pos_valid: a_pos >= 1 and a_pos <= text_length + 1
@@ -93,7 +93,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Access
 			token_at_position_not_void: Result /= Void
 		end
 
-	position_in_token: INTEGER is
+	position_in_token: INTEGER
 			-- Cursor position in token.
 		local
 			l_line: EDITOR_LINE
@@ -120,7 +120,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Access
 			end
 		end
 
-	token_position (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): INTEGER is
+	token_position (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): INTEGER
 			-- Token start position.
 			-- a_token should in a_line. Or 0 is returned.
 		require
@@ -148,7 +148,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Access
 			end
 		end
 
-	current_char: CHARACTER_32 is
+	current_char: CHARACTER_32
 			-- Current character, to the right of the cursor.
 		do
 			if text_length > 0 and then caret_position <= text_length then
@@ -158,19 +158,19 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Access
 			end
 		end
 
-	current_line: EDITOR_LINE is
+	current_line: EDITOR_LINE
 			-- Current line.
 		do
 			Result := line_from_lexer
 		end
 
-	selection_start_token_in_line (a_line: EDITOR_LINE): EDITOR_TOKEN is
+	selection_start_token_in_line (a_line: EDITOR_LINE): EDITOR_TOKEN
 			-- Start token in the selection.
 		do
 			Result := token_at_position (selection_start, a_line)
 		end
 
-	selection_end_token_in_line (a_line: EDITOR_LINE) : EDITOR_TOKEN is
+	selection_end_token_in_line (a_line: EDITOR_LINE) : EDITOR_TOKEN
 			-- Token after end of selection.
 		do
 			Result := token_at_position (selection_end, a_line)
@@ -178,10 +178,10 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Access
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Status report
 
-	completing_word: BOOLEAN is true
+	completing_word: BOOLEAN = true
 			-- Has user requested to complete a word.
 
-	end_of_line: BOOLEAN is
+	end_of_line: BOOLEAN
 			-- Is current cursor at the end of line?
 		do
 			if text_length = 0 or else caret_position = text_length + 1 then
@@ -189,9 +189,9 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Status report
 			end
 		end
 
-	allow_tab_selecting: BOOLEAN is false
+	allow_tab_selecting: BOOLEAN = false
 
-	is_focus_back_needed: BOOLEAN is
+	is_focus_back_needed: BOOLEAN
 			-- Should focus be set back after code completion?
 		do
 			Result := not is_destroyed
@@ -199,7 +199,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Status report
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Text operation
 
-	handle_character (a_char: CHARACTER_32) is
+	handle_character (a_char: CHARACTER_32)
 			-- Handle `a_char'
 		do
 			insert_char (a_char)
@@ -208,12 +208,12 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Text operation
 			end
 		end
 
-	handle_extended_ctrled_key (ev_key: EV_KEY) is
+	handle_extended_ctrled_key (ev_key: EV_KEY)
  			-- Process the push on Ctrl + an extended key.
  		do
  		end
 
-	handle_extended_key (ev_key: EV_KEY) is
+	handle_extended_key (ev_key: EV_KEY)
  			-- Process the push on an extended key.
  		do
 			if ev_key.code = 40 then -- Backspace
@@ -265,31 +265,31 @@ feature {NONE} -- Action handlers
 
 feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 
-	block_focus_in_actions is
+	block_focus_in_actions
 			-- Block focus in actions
 		do
 			focus_in_actions.block
 		end
 
-	resume_focus_in_actions is
+	resume_focus_in_actions
 			-- Resume focus in actions
 		do
 			focus_in_actions.resume
 		end
 
-	block_focus_out_actions is
+	block_focus_out_actions
 			-- Block focus out actions.
 		do
 			focus_out_actions.block
 		end
 
-	resume_focus_out_actions is
+	resume_focus_out_actions
 			-- Resume focus out actions.
 		do
 			focus_out_actions.resume
 		end
 
-	calculate_completion_list_x_position: INTEGER is
+	calculate_completion_list_x_position: INTEGER
 			-- Determine the x position to display the completion list
 		local
 			screen: EB_STUDIO_SCREEN
@@ -317,7 +317,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 			Result := Result.max (0)
 		end
 
-	calculate_completion_list_y_position: INTEGER is
+	calculate_completion_list_y_position: INTEGER
 			-- Determine the y position to display the completion list
 		local
 			screen: EB_STUDIO_SCREEN
@@ -376,7 +376,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 			end
 		end
 
-	calculate_completion_list_height: INTEGER is
+	calculate_completion_list_height: INTEGER
 			-- Determine the height the completion should list should have
 		local
 			upper_space,
@@ -429,7 +429,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 			end
 		end
 
-	calculate_completion_list_width: INTEGER is
+	calculate_completion_list_width: INTEGER
 			-- Determine the width the completion list should have			
 		do
 			if preferences.development_window_data.remember_completion_list_size then
@@ -442,7 +442,7 @@ feature {EB_CODE_COMPLETION_WINDOW} -- Interact with code completion window.
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
 
-	save_cursor is
+	save_cursor
 			-- Save cursor position for retrieving.
 		do
 			if saved_cursor_positions = Void then
@@ -451,7 +451,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
 			saved_cursor_positions.put_front (caret_position)
 		end
 
-	retrieve_cursor is
+	retrieve_cursor
 			-- Retrieve cursor position from saving.
 		do
 			if saved_cursor_positions /= Void and then not saved_cursor_positions.is_empty then
@@ -461,7 +461,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
 			end
 		end
 
-	select_region_between_token (a_start_token: EDITOR_TOKEN; a_start_line: EDITOR_LINE; a_end_token: EDITOR_TOKEN; a_end_line: EDITOR_LINE) is
+	select_region_between_token (a_start_token: EDITOR_TOKEN; a_start_line: EDITOR_LINE; a_end_token: EDITOR_TOKEN; a_end_line: EDITOR_LINE)
 			-- Select from the start position of `a_start_token' to the start position of `a_end_token'.
 		local
 			l_line: EDITOR_LINE
@@ -479,37 +479,37 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
 			end
 		end
 
-	show_possible_selection is
+	show_possible_selection
 			-- Show possible selection
 		do
 		end
 
-	disable_selection is
+	disable_selection
 			-- Disable selection
 		do
 			deselect_all
 		end
 
-	go_to_start_of_selection is
+	go_to_start_of_selection
 			-- Move cursor to the start of the selection.
 		do
 			set_caret_position (selection_start)
 		end
 
-	go_to_end_of_selection is
+	go_to_end_of_selection
 			-- Move cursor to the end of the selection.
 		do
 			set_caret_position (selection_end + 1)
 		end
 
-	go_to_start_of_line is
+	go_to_start_of_line
 			-- Move cursor to the start of a line
 			-- where tab switching to next feature argument should function.
 		do
 			set_caret_position (1)
 		end
 
-	go_to_end_of_line is
+	go_to_end_of_line
 			-- Move cursor to the start of a line.
 		do
 			if text_length > 0 then
@@ -517,7 +517,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
 			end
 		end
 
-	go_right_char is
+	go_right_char
 			-- Go to right character.
 		do
 			if text_length > 0 and then caret_position <= text_length then
@@ -525,7 +525,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
 			end
 		end
 
-	go_left_char is
+	go_left_char
 			-- Go to right character.
 		do
 			if text_length > 0 and then caret_position >= 1 then
@@ -533,7 +533,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
 			end
 		end
 
-	move_cursor_to (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE)is
+	move_cursor_to (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE)
 			-- Move cursor to `a_token' which is in `a_line'.
 		do
 			set_caret_position (token_position (a_token, a_line))
@@ -543,7 +543,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Cursor operation and selection
 
 feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Basic operations
 
-	back_delete_char is
+	back_delete_char
 			-- Back delete character.
 		do
 			if text_length > 0 and caret_position > 1 then
@@ -552,7 +552,7 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Basic operations
 			end
 		end
 
-	delete_char is
+	delete_char
 			-- Delete character.
 		do
 			if text_length > 0 and caret_position <= text_length then
@@ -561,21 +561,21 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Basic operations
 			end
 		end
 
-	insert_string (a_str: STRING_32) is
+	insert_string (a_str: STRING_32)
 			-- Insert `a_str' at cursor position.
 		do
 			insert_text (a_str)
 			set_caret_position (caret_position + a_str.count)
 		end
 
-	insert_char (a_char: CHARACTER_32) is
+	insert_char (a_char: CHARACTER_32)
 			-- Insert `a_char' at cursor position.
 		do
 			insert_text (create {STRING_32}.make_filled (a_char, 1))
 			set_caret_position (caret_position + 1)
 		end
 
-	replace_char (a_char: CHARACTER_32) is
+	replace_char (a_char: CHARACTER_32)
 			-- Replace current char with `a_char'.
 		do
 			delete_char
@@ -584,14 +584,14 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Basic operations
 
 feature {NONE} -- History
 
-	history_bind_to_next_item is
+	history_bind_to_next_item
 			-- Do noting.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	can_complete (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN): BOOLEAN is
+	can_complete (a_key: EV_KEY; a_ctrl: BOOLEAN; a_alt: BOOLEAN; a_shift: BOOLEAN): BOOLEAN
 			-- `a_key' can activate text completion?
 		local
 			l_shortcut_pref: SHORTCUT_PREFERENCE
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_keyed_character (a_key: EV_KEY) is
+	remove_keyed_character (a_key: EV_KEY)
 			-- We remove the 'key' character on windows platform.
 			-- On linux the key has not been inserted.
 			-- Fix needed.
@@ -655,7 +655,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_same_key (a_key: EV_KEY; a_char_code: INTEGER): BOOLEAN is
+	is_same_key (a_key: EV_KEY; a_char_code: INTEGER): BOOLEAN
 			-- Is `a_key' a `a_char_code' character?
 		require
 			a_key_not_void: a_key /= Void
@@ -682,7 +682,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	auto_complete_after_dot: BOOLEAN is
+	auto_complete_after_dot: BOOLEAN
 	        -- Should build autocomplete dialog after call on valid target?
 	  	do
 	  	   	Result := preferences.editor_data.auto_auto_complete
@@ -690,13 +690,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Lexer
 
-	scanner: EDITOR_EIFFEL_SCANNER is
+	scanner: EDITOR_EIFFEL_SCANNER
 			--
 		once
 			create Result.make
 		end
 
-	line_from_lexer: EDITOR_LINE is
+	line_from_lexer: EDITOR_LINE
 			-- Editor line from lexer.
 		do
 			if not is_destroyed then
@@ -714,7 +714,7 @@ feature {NONE} -- Lexer
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

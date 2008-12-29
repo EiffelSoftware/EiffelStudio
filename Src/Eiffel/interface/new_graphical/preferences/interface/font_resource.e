@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "A resource value for string resources."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_value: STRING) is
+	make (a_name: STRING; a_value: STRING)
 			-- Initialize Current
 		do
 			name := a_name
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	actual_value: EV_FONT is
+	actual_value: EV_FONT
 			-- Font value
 		local
 			i, j: INTEGER
@@ -55,7 +55,7 @@ feature -- Access
 			Result.preferred_families.extend (faces.substring (i, faces.count))
 		end
 
-	valid_actual_value: EV_FONT is
+	valid_actual_value: EV_FONT
 			-- A non void font value
 		do
 			Result := actual_value
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_value (new_value: STRING) is
+	set_value (new_value: STRING)
 			-- Set `value' to `new_value'.
 		local
 			s: STRING
@@ -98,7 +98,7 @@ feature -- Status Setting
 			end
 		end
 
-	set_actual_value (f: EV_FONT) is
+	set_actual_value (f: EV_FONT)
 			-- Set the value with the wanted font.
 		require
 			valid_font: f /= Void and then not f.is_destroyed
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 
 feature -- Output
 
-	xml_trace: STRING is
+	xml_trace: STRING
 			-- XML representation of current
 		local
 			xml_name, xml_value: STRING
@@ -135,7 +135,7 @@ feature -- Output
 			Result.append ("</FONT></TEXT>")
 		end
 
-	registry_name: STRING is
+	registry_name: STRING
 			-- name of Current in the registry
 		do
 			Result := "EIFFON_" + name
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 
 	actual_faces: ACTIVE_LIST [STRING]
 
-	generate_value is
+	generate_value
 			-- Generate `value' and `faces' according to `actual_faces', `weight', `height', `family' and `shape'.
 		local
 			v: STRING
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			value := v
 		end
 
-	set_shape (s: STRING) is
+	set_shape (s: STRING)
 			-- Set shape according to `s'.
 		require
 			not_void: s /= Void
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_weight (s: STRING) is
+	set_weight (s: STRING)
 			-- Set `weight' according to `s'.
 		require
 			not_void: s /= Void
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_family (s: STRING) is
+	set_family (s: STRING)
 			-- Set `family' according to `s'.
 		require
 			not_void: s /= Void
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_height (s: STRING) is
+	set_height (s: STRING)
 			-- Set `height' according to `s'
 		require
 			not_void: s /= Void
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

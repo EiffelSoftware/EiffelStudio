@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EWB TTY menu."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,13 +26,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_title: STRING_GENERAL) is
+	make (a_title: STRING_GENERAL)
 		do
 			set_entry_disabled_message (ewb_names.entry_disabled)
 			Precursor {TTY_MENU} (a_title)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

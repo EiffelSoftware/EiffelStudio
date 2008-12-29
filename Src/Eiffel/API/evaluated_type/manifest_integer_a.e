@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actual type for integer constant types."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_for_constant (n: like size; possible_types: INTEGER) is
+	make_for_constant (n: like size; possible_types: INTEGER)
 			-- Create instance of INTEGER_A represented by `n' bits
 			-- whose value can also be of a type taken from `possible_types'.
 		require
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_manifest_integer_a (Current)
@@ -51,7 +51,7 @@ feature -- Visitor
 
 feature -- Property
 
-	intrinsic_type: INTEGER_A is
+	intrinsic_type: INTEGER_A
 			-- Real type of current manifest integer.
 			-- To preserve compatibility with ETL2, a manifest
 			-- integer is always at least 32 bits wide.
@@ -64,7 +64,7 @@ feature -- Property
 
 feature {COMPILER_EXPORTER} -- Implementation
 
-	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN is
+	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN
 			-- Does current convert to `a_target_type' in `a_context_class'?
 			-- Update `last_conversion_info' of AST_CONTEXT.
 		local
@@ -118,7 +118,7 @@ invariant
 			natural_8_mask | natural_16_mask | natural_32_mask | natural_64_mask
 		).bit_not = 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

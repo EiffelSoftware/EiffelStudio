@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for generic type for once function."
@@ -18,9 +18,9 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 7;
+	subcode: INTEGER = 7;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

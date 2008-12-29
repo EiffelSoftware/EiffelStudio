@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Displays clusters of the universe in output_window."
@@ -20,13 +20,13 @@ inherit
 
 feature {NONE} -- Implementation
 
-	associated_cmd: E_SHOW_CLUSTERS is
+	associated_cmd: E_SHOW_CLUSTERS
 			-- Associated system command to be executed
 		do
 			create Result.make (output_window)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object handles context menus."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_context_menu_factory (a_factory: like context_menu_factory) is
+	set_context_menu_factory (a_factory: like context_menu_factory)
 			-- Set `context_menu_factory' with `a_factory'.
 		do
 			context_menu_factory := a_factory
@@ -24,12 +24,12 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
 			-- Context menu handler
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

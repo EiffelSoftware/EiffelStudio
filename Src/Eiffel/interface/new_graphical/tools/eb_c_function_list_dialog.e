@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to list all deriviation versions for a class/feature"
 	author: ""
 	date: "$Date$"
@@ -278,7 +278,7 @@ feature{NONE} -- Implementation/Actions
 			end
 		end
 
-	on_key_pressed_on_dialog (a_key: EV_KEY) is
+	on_key_pressed_on_dialog (a_key: EV_KEY)
 			-- Action to be performed when `a_key' is pressed.
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_escape then

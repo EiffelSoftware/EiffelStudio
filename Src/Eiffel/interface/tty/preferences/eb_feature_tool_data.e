@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All shared attributes specific to the feature tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -26,31 +26,31 @@ feature {NONE} -- Initialization
 
 feature -- Value
 
-	show_all_callers: BOOLEAN is
+	show_all_callers: BOOLEAN
 			-- Show all callers (as opposed to local callers) in `callers' form
 		do
 			Result := show_all_callers_preference.value
 		end
 
-	expand_feature_tree: BOOLEAN is
+	expand_feature_tree: BOOLEAN
 			-- Automatically expand the feature tree
 		do
 			Result := expand_feature_tree_preference.value
 		end
 
-	is_signature_enabled: BOOLEAN is
+	is_signature_enabled: BOOLEAN
 			-- Do we display signature of feature ?
 		do
 			Result := is_signature_enabled_preference.value
 		end
 
-	is_alias_enabled: BOOLEAN is
+	is_alias_enabled: BOOLEAN
 			-- Is alias name shown?
 		do
 			Result := is_alias_enabled_preference.value
 		end
 
-	is_assigner_enabled: BOOLEAN is
+	is_assigner_enabled: BOOLEAN
 			-- Is assigner command shown?
 		do
 			Result := is_assigner_enabled_preference.value
@@ -75,16 +75,16 @@ feature {NONE} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	expand_feature_tree_string: STRING is "interface.development_window.expand_feature_tree"
-	show_all_callers_string: STRING is "tools.context_tool.show_all_callers"
+	expand_feature_tree_string: STRING = "interface.development_window.expand_feature_tree"
+	show_all_callers_string: STRING = "tools.context_tool.show_all_callers"
 
-	is_signature_enabled_string: STRING is "interface.development_window.features_tool.is_signature_enabled"
-	is_alias_enabled_string: STRING is "interface.development_window.features_tool.is_alias_enabled"
-	is_assigner_enabled_string: STRING is "interface.development_window.features_tool.is_assigner_enabled"
+	is_signature_enabled_string: STRING = "interface.development_window.features_tool.is_signature_enabled"
+	is_alias_enabled_string: STRING = "interface.development_window.features_tool.is_alias_enabled"
+	is_assigner_enabled_string: STRING = "interface.development_window.features_tool.is_assigner_enabled"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EC_PREFERENCE_MANAGER
@@ -110,7 +110,7 @@ invariant
 	is_alias_enabled_preference_not_void: is_alias_enabled_preference /= Void
 	is_assigner_enabled_preference_not_void: is_assigner_enabled_preference /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

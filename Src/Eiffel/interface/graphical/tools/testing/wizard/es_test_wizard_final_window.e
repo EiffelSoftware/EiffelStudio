@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {ES_TEST_WIZARD_FINAL_WINDOW}."
 	author: ""
 	date: "$Date$"
@@ -95,7 +95,7 @@ feature {NONE} -- Internationalization
 	e_configuration_not_valid: STRING = "The provided settings can not be used to create new tests"
 
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

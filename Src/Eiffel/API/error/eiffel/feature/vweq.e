@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error for invalid equality."
@@ -24,19 +24,19 @@ feature -- Properties
 	right_type: TYPE_A;
 			-- Right type of the equality
 
-	code: STRING is "VWEQ";
+	code: STRING = "VWEQ";
 			-- Error code
 
 feature -- Property
 
-	Error_string: STRING is
+	Error_string: STRING
 		do
 			Result := "Warning"
 		end
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
 		do
@@ -48,7 +48,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER) is
+	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		local
 			l_line: like context_line
@@ -66,17 +66,17 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_right_type (t: TYPE_A) is
+	set_right_type (t: TYPE_A)
 		do
 			right_type := t;
 		end;
 
-	set_left_type (t: TYPE_A) is
+	set_left_type (t: TYPE_A)
 		do
 			left_type := t;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

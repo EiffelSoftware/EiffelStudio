@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server for storing AST indexed by class id"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature -- Access
 
-	cache: CACHE [CLASS_AS] is
+	cache: CACHE [CLASS_AS]
 		-- Cache for routine tables
 		once
 			create Result.make
@@ -23,13 +23,13 @@ feature -- Access
 
 feature -- Server size configuration
 
-	Chunk: INTEGER is 500
+	Chunk: INTEGER = 500
 			-- Size of a HASH_TABLE block
 
 invariant
 	cache_not_void: cache /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

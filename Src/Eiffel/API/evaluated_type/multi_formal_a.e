@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Descripion of a multi formal generic type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Visitor
 
-	process (v: TYPE_A_VISITOR) is
+	process (v: TYPE_A_VISITOR)
 			-- Process current element.
 		do
 			v.process_multi_formal_a (Current)
@@ -27,9 +27,9 @@ feature -- Visitor
 
 feature -- Property
 
-	has_multi_constrained: BOOLEAN is True;
+	has_multi_constrained: BOOLEAN = True;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

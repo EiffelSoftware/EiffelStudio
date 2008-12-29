@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a criterion to decide whether or not an item is compiled"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,10 +20,10 @@ inherit
 
 feature -- Status report
 
-	require_compiled: BOOLEAN is True
+	require_compiled: BOOLEAN = True
 			-- Does current criterion require a compiled item?
 
-	has_inclusive_intrinsic_domain: BOOLEAN is
+	has_inclusive_intrinsic_domain: BOOLEAN
 			-- Does current criterion has a domain by default?
 		do
 			Result := wrapped_criterion.has_inclusive_intrinsic_domain
@@ -31,7 +31,7 @@ feature -- Status report
 			good_result: Result implies wrapped_criterion.has_inclusive_intrinsic_domain
 		end
 
-	has_exclusive_intrinsic_domain: BOOLEAN is
+	has_exclusive_intrinsic_domain: BOOLEAN
 			-- Does current criterion has an exclusive intrinsic domain?
 		do
 			Result := wrapped_criterion.has_exclusive_intrinsic_domain
@@ -41,7 +41,7 @@ feature -- Status report
 
 feature -- Process
 
-	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+	process (a_criterion_visitor: QL_CRITERION_VISITOR)
 			-- Process Current using `a_criterion_visitor'.
 		do
 			a_criterion_visitor.process_compiled_imp_criterion (Current)
@@ -49,7 +49,7 @@ feature -- Process
 
 feature{NONE} -- Implementation
 
-	fill_intrinsic_domain (a_source_domain, a_dest_domain: like intrinsic_domain) is
+	fill_intrinsic_domain (a_source_domain, a_dest_domain: like intrinsic_domain)
 			-- Fill compiled items in `a_source_domain' into `a_dest_domain'.
 		require
 			a_source_domain_attached: a_source_domain /= Void
@@ -77,7 +77,7 @@ feature{NONE} -- Implementation
 			l_source_content.go_to (l_cursor)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

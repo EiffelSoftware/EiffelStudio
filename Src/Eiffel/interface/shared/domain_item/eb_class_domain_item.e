@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class domain item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,10 +22,10 @@ create
 
 feature -- Status report
 
-	is_class_item: BOOLEAN is True
+	is_class_item: BOOLEAN = True
 			-- Is current a class item?
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Does current represent a valid domain item?			
 		do
 			update
@@ -34,20 +34,20 @@ feature -- Status report
 
 feature -- Access
 
-	domain (a_scope: QL_SCOPE): QL_DOMAIN is
+	domain (a_scope: QL_SCOPE): QL_DOMAIN
 			-- New query lanaguage domain representing current item
 		do
 			Result := ql_class.wrapped_domain
 		end
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- Text of current item
 		do
 			update
 			Result := string_representation_internal
 		end
 
-	ql_class: QL_CLASS is
+	ql_class: QL_CLASS
 			-- QL_CLASS object representing current item
 		require
 			valid: is_valid
@@ -56,13 +56,13 @@ feature -- Access
 			Result := query_class_item
 		end
 
-	query_language_item: QL_ITEM is
+	query_language_item: QL_ITEM
 			-- Query language item representation of current domain item
 		do
 			Result := ql_class
 		end
 
-	group: QL_GROUP is
+	group: QL_GROUP
 			-- Group to which current domain item belongs
 			-- Return the group where current class is located.
 		do
@@ -71,13 +71,13 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	sorting_order_index: INTEGER is
+	sorting_order_index: INTEGER
 			-- Sorting order index
 		do
 			Result := class_index
 		end
 
-	item_type_name: STRING_GENERAL is
+	item_type_name: STRING_GENERAL
 			-- Name of type of current item
 		do
 			Result := names.l_class_domain_item
@@ -85,7 +85,7 @@ feature -- Access
 
 feature{NONE} -- Implemenation
 
-	update is
+	update
 			-- Update status of current item.			
 		do
 			if not is_up_to_date then
@@ -115,7 +115,7 @@ feature{NONE} -- Implemenation
 invariant
 	class_exists: is_valid implies conf_class /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 							Ast parser factory for testing tool
 							This factory only analyzes indexing related codes.
@@ -43,19 +43,19 @@ feature {NONE} -- Visitor
 			s: SUPPLIERS_AS;
 			o: STRING_AS;
 			ed: KEYWORD_AS): CLASS_AS
-		is
+		
 			-- <Precursor>
 		do
 			top_indexing := top_ind
 		end
 
-	new_indexing_clause_as (n: INTEGER): INDEXING_CLAUSE_AS is
+	new_indexing_clause_as (n: INTEGER): INDEXING_CLAUSE_AS
 			-- <Precursor>
 		do
 			create Result.make (n)
 		end
 
-	new_index_as (t: ID_AS; i: EIFFEL_LIST [ATOMIC_AS]; c_as: SYMBOL_AS): INDEX_AS is
+	new_index_as (t: ID_AS; i: EIFFEL_LIST [ATOMIC_AS]; c_as: SYMBOL_AS): INDEX_AS
 			-- Create a new INDEX AST node.
 		do
 			if i /= Void then
@@ -63,13 +63,13 @@ feature {NONE} -- Visitor
 			end
 		end
 
-	new_eiffel_list_atomic_as (n: INTEGER): EIFFEL_LIST [ATOMIC_AS] is
+	new_eiffel_list_atomic_as (n: INTEGER): EIFFEL_LIST [ATOMIC_AS]
 			-- <Precursor>
 		do
 			create Result.make (n)
 		end
 
-	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS is
+	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS
 			-- <Precursor>
 		local
 			l_cnt: INTEGER
@@ -82,13 +82,13 @@ feature {NONE} -- Visitor
 			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
 		end
 
-	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): ID_AS is
+	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): ID_AS
 			-- <Precursor>
 		do
 			Result := new_filled_id_as (a_scn)
 		end
 
-	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER): ID_AS is
+	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER): ID_AS
 			-- <Precursor>
 		local
 			l_cnt: INTEGER
@@ -101,7 +101,7 @@ feature {NONE} -- Visitor
 			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

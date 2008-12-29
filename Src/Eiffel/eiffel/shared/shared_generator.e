@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Shared access to generator of routine and attribute offset tables
@@ -10,19 +10,19 @@ inherit
 	
 feature {NONE}
 
-	Attr_generator: ATTR_GENERATOR is
+	Attr_generator: ATTR_GENERATOR
 			-- Generator of attribute tables
 		once
 			create Result
 		end;
 
-	Rout_generator: ROUT_GENERATOR is
+	Rout_generator: ROUT_GENERATOR
 			-- Generator of routine tables
 		once
 			create Result
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

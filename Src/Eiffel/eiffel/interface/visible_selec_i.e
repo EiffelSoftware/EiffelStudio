@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class VISIBLE_SELEC_I
@@ -22,20 +22,20 @@ feature
 	visible_features: SEARCH_TABLE [STRING];
 			-- Visible features
 
-	set_visible_features (t: like visible_features) is
+	set_visible_features (t: like visible_features)
 			-- Assign `t' to `visible_features'.
 		do
 			visible_features := t;
 		end;
 
-	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN is
+	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN
 			-- Is feature name `feat_name' visible in context
 			-- of class `class_id'?
 		do
 			Result := visible_features.has (feat.feature_name);
 		end;
 
-	mark_visible (remover: REMOVER; feat_table: FEATURE_TABLE) is
+	mark_visible (remover: REMOVER; feat_table: FEATURE_TABLE)
 			-- Mark visible features from `feat_table'.
 		local
 			a_feature: FEATURE_I;
@@ -55,10 +55,10 @@ feature
 			end;
 		end;
 
-	has_visible: BOOLEAN is True
+	has_visible: BOOLEAN = True
 			-- Has the current object some visible features ?
 
-	generate_cecil_table (a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING]) is
+	generate_cecil_table (a_class: CLASS_C; generated_wrappers: DS_HASH_SET [STRING])
 			-- Generate cecil table
 		local
 			buffer: GENERATION_BUFFER
@@ -69,7 +69,7 @@ feature
 			cecil_routine_table.generate (buffer, a_class, generated_wrappers)
 		end
 
-	prepare_table (feat_table: FEATURE_TABLE) is
+	prepare_table (feat_table: FEATURE_TABLE)
 			-- Prepate cecil table.
 		local
 			a_feature: FEATURE_I;
@@ -102,7 +102,7 @@ feature
 			end;
 		end;
 
-	trace is
+	trace
 			-- Debug purpose
 		do
 			Precursor {VISIBLE_I}
@@ -118,7 +118,7 @@ feature
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

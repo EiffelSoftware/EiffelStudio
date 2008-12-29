@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that provider completion possiblities for normal use.
 			i.e. EB_CODE_COMPLETABLE_TEXT_FIELD which can auto complete names of features and classes
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	prepare_completion is
+	prepare_completion
 			-- Prepare completion
 		local
 			rescued: BOOLEAN
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			retry
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

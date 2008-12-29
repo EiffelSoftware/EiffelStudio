@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows that allows the user to browse through undoable commands"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Build the dialog box.
 		local
 			vb: EV_VERTICAL_BOX
@@ -93,7 +93,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_strings (a_string_array: INDEXABLE [STRING, INTEGER]) is
+	set_strings (a_string_array: INDEXABLE [STRING, INTEGER])
 			-- Wipe out `feature_list' and re-initialize with an item
 			-- for each of `a_string_array'.
 		do
@@ -101,7 +101,7 @@ feature -- Element change
 			previously_selected_item := action_list.last
 		end
 
-	wipe_out is
+	wipe_out
 			-- Disgard all previous undoable commands.
 		do
 			undo_list.wipe_out
@@ -119,7 +119,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	do_named_undoable (a_name: STRING_GENERAL; action, undo_procedure: ANY) is
+	do_named_undoable (a_name: STRING_GENERAL; action, undo_procedure: ANY)
 			-- Perform `action' and put an undo/redo pair on the undo list.
 			-- Disgard pairs above the current position.
 			-- Update `action_list' as well.
@@ -193,7 +193,7 @@ feature -- Basic operations
 			do_actions.call (Void)
 		end
 
-	register_named_undoable (a_name: STRING_GENERAL; action, undo_procedure: ANY) is
+	register_named_undoable (a_name: STRING_GENERAL; action, undo_procedure: ANY)
 			-- DO NOT perform `action' and put an undo/redo pair on the undo list.
 			-- Disgard pairs above the current position.
 			-- Update `action_list' as well.
@@ -266,7 +266,7 @@ feature -- Basic operations
 			do_actions.call (Void)
 		end
 
-	undo is
+	undo
 			-- Reverse the most recent reversable action.
 		local
 			offset: INTEGER
@@ -295,7 +295,7 @@ feature -- Basic operations
 			is_redo_undoing := False
 		end
 
-	redo is
+	redo
 			-- Reperform the most recently reversed action.
 		local
 			offset: INTEGER
@@ -317,7 +317,7 @@ feature -- Basic operations
 			is_redo_undoing := False
 		end
 
-	remove_last is
+	remove_last
 			-- Remove last undoable action from history.
 			-- Useful when last call to `do_undoable' was not successful.
 		require
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Events
 
-	on_select is
+	on_select
 			-- An action has been selected.
 			-- Undo all younger actions.
 		local
@@ -389,18 +389,18 @@ feature {NONE} -- Events
 			end
 		end
 
-	close_action is
+	close_action
 			-- Close dialog.
 		do
 			hide
 		end
 
-	history_discarded_string: STRING_GENERAL is
+	history_discarded_string: STRING_GENERAL
 		once
 			Result := interface_names.l_history_discarded_string
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

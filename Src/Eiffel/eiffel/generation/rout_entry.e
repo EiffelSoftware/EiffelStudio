@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation for an routine entry in an instance of ROUT_TABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ feature -- Access
 
 feature -- Comparison
 
-	same_as (other: ROUT_ENTRY): BOOLEAN is
+	same_as (other: ROUT_ENTRY): BOOLEAN
 			-- Is `Current' similar to `other'?
 		require
 			other_not_void: other /= Void
@@ -56,19 +56,19 @@ feature -- Comparison
 
 feature -- Settings
 
-	set_body_index (i: INTEGER) is
+	set_body_index (i: INTEGER)
 			-- Assign `i' to `body_index'.
 		do
 			body_index := i
 		end
 
-	set_access_type_id (i: INTEGER) is
+	set_access_type_id (i: INTEGER)
 			-- Assign `i' to `written_type_id'.
 		do
 			access_type_id := i
 		end
 
-	set_pattern_id (i: INTEGER) is
+	set_pattern_id (i: INTEGER)
 			-- Assign `i' to `pattern_id'.
 		require
 			i_positive: i > 0
@@ -78,7 +78,7 @@ feature -- Settings
 			pattern_id_set: pattern_id = i
 		end
 
-	set_is_deferred (v: BOOLEAN) is
+	set_is_deferred (v: BOOLEAN)
 			-- Assign `v' to `is_deferred'.
 		do
 			is_deferred := v
@@ -86,19 +86,19 @@ feature -- Settings
 			is_deferred_set: is_deferred = v
 		end
 
-	set_access_in (i: INTEGER) is
+	set_access_in (i: INTEGER)
 			-- Assign `i' to `written_in'.
 		do
 			access_in := i
 		end
 
-	set_written_in (i: INTEGER) is
+	set_written_in (i: INTEGER)
 			-- Assign `i' to `written_in'.
 		do
 			written_in := i
 		end
 
-	set_is_attribute is
+	set_is_attribute
 			-- Mark this entry an attribute.
 		do
 			is_attribute := True
@@ -108,20 +108,20 @@ feature -- Settings
 
 feature -- previously in ROUT_UNIT
 
-	access_class: CLASS_C is
+	access_class: CLASS_C
 
 			-- Class where the feature can be accessed through its routine ID.
 		do
 			Result := System.class_of_id (access_in)
 		end
 
-	written_class: CLASS_C is
+	written_class: CLASS_C
 			-- Class where the feature is written in
 		do
 			Result := System.class_of_id (written_in)
 		end
 
-	entry (class_type: CLASS_TYPE): ROUT_ENTRY is
+	entry (class_type: CLASS_TYPE): ROUT_ENTRY
 			-- Entry for a routine
 		local
 			l_written_type_id: INTEGER
@@ -159,7 +159,7 @@ end
 
 feature -- update
 
-	update (class_type: CLASS_TYPE) is
+	update (class_type: CLASS_TYPE)
 			-- Update `Current' for `class_type'.
 		local
 			l_access_type_id: INTEGER
@@ -180,7 +180,7 @@ feature -- update
 
 feature -- from ROUT_ENTRY
 
-	used: BOOLEAN is
+	used: BOOLEAN
 			-- Is the entry used ?
 		local
 			remover: REMOVER
@@ -196,24 +196,24 @@ feature -- from ROUT_ENTRY
 			end
 		end
 
-	routine_name: STRING is
+	routine_name: STRING
 			-- Routine name to generate
 		do
 			Result := Encoder.feature_name (access_type_id, body_index)
 		end
 
-	access_class_type: CLASS_TYPE is
+	access_class_type: CLASS_TYPE
 		do
 			Result := System.class_type_of_id (access_type_id)
 		end
 
-	real_body_index: INTEGER is
+	real_body_index: INTEGER
 			-- Real body index
 		do
 			Result := Execution_table.real_body_index (body_index, access_class_type)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

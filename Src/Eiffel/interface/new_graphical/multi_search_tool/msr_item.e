@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that contain one piece of information of result of search or replace"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_name: like class_name; a_path: like path; a_text: MSR_STRING_ADAPTER) is
+	make (a_name: like class_name; a_path: like path; a_text: MSR_STRING_ADAPTER)
 			-- Initialization
 		require
 			name_attached: a_name /= Void
@@ -37,7 +37,7 @@ feature -- Access
 	path : FILE_NAME
 			-- File path `source_text' locates
 
-	source_text: STRING_32 is
+	source_text: STRING_32
 			-- Once searched in this text
 		do
 			Result := source_text_internal.real_string
@@ -48,7 +48,7 @@ feature -- Access
 	data: ANY
 			-- Any data related to current		
 
-	children: DYNAMIC_LIST [MSR_ITEM] is
+	children: DYNAMIC_LIST [MSR_ITEM]
 			-- Children of current item
 		do
 			Result := children_internal
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Measurement
 
-	children_count: INTEGER is
+	children_count: INTEGER
 			-- Number of child items in `children'
 		do
 			Result := children_internal.count
@@ -70,7 +70,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	has_child: BOOLEAN is
+	has_child: BOOLEAN
 			-- If the item has children
 		do
 			Result := children_count > 0
@@ -80,7 +80,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_data (a_data: like data) is
+	set_data (a_data: like data)
 			-- Set `data' with `a_data'.
 		do
 			data := a_data
@@ -88,13 +88,13 @@ feature -- Element change
 			data_set: data = a_data
 		end
 
-	set_date (a_date: INTEGER) is
+	set_date (a_date: INTEGER)
 			-- Set `date' with a_date
 		do
 			date := a_date
 		end
 
-	set_source_text_real_string (a_string: STRING_32) is
+	set_source_text_real_string (a_string: STRING_32)
 			-- Set the actual string of `source_text'.
 		require
 			a_string_attached: a_string /= Void
@@ -105,7 +105,7 @@ feature -- Element change
 			source_text_set: source_text.is_equal (a_string)
 		end
 
-	set_start_index_in_context_text (p_position: INTEGER) is
+	set_start_index_in_context_text (p_position: INTEGER)
 			-- Start position in the present context.
 		require
 			p_position_larger_than_zero: p_position > 0
@@ -115,7 +115,7 @@ feature -- Element change
 
 feature {MSR_SEARCH_TEXT_STRATEGY, MSR_SEARCH_CLASS_STRATEGY} -- Element change
 
-	set_children (a_children: like children_internal) is
+	set_children (a_children: like children_internal)
 			-- Set `children' with `a_children'.
 		require
 			a_children_attached: a_children /= Void
@@ -140,7 +140,7 @@ invariant
 	start_index_in_context_text_internal_than_zero: start_index_in_context_text_internal > 0
 	children_internal_attached: children_internal /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

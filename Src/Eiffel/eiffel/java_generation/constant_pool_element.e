@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common ancestor for constant pool elements"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,12 +17,12 @@ inherit
 
 feature {ANY} -- Access
 
-	tag_id: INTEGER is
+	tag_id: INTEGER
 			-- id of tag, see jvm specs.
 		deferred
 		end
 			
-	out: STRING is
+	out: STRING
 		-- debugging aid
 		do
 			Result := "Unkown CPE with tag=" + tag_id.out + "%N"
@@ -30,13 +30,13 @@ feature {ANY} -- Access
 			
 feature {NONE} -- Implementation
 			
-	append_tag_info (bc: JVM_BYTE_CODE) is
+	append_tag_info (bc: JVM_BYTE_CODE)
 			-- append `tag_id' to `bc'
 		do
 			bc.append_uint_8_from_int (tag_id)
 		end
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

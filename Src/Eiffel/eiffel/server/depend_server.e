@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Server of class dependances for incremental type check indexed by class id."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Initialisation
 
-	make is
+	make
 		-- Creation
 		do
 			Precursor{COMPILER_SERVER}
@@ -27,7 +27,7 @@ feature -- Initialisation
 
 feature -- Access
 
-	cache: CACHE [CLASS_DEPENDANCE] is
+	cache: CACHE [CLASS_DEPENDANCE]
 			-- Cache for routine tables
 		once
 			create Result.make
@@ -37,17 +37,17 @@ feature -- Access
 			-- you give it a body_index and it tells you in which
 			-- class the corresponding feature is written
 
-	remove_correspondance (bindex: INTEGER) is
+	remove_correspondance (bindex: INTEGER)
 		do
 			bindex_cid_table.remove (bindex)
 		end
 
-	add_correspondance (bindex: INTEGER; cid: INTEGER) is
+	add_correspondance (bindex: INTEGER; cid: INTEGER)
 		do
 			bindex_cid_table.put (cid, bindex)
 		end
 
-	item (an_id: INTEGER): CLASS_DEPENDANCE is
+	item (an_id: INTEGER): CLASS_DEPENDANCE
 			-- Class dependance of id 'an_id' . Look first in the temporary
 			-- depend server. It not present, look in itself.
 		do
@@ -57,13 +57,13 @@ feature -- Access
 			end
 		end
 
-	has (an_id: INTEGER): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN
 			-- Is an item of id `an_id' present in the current server?
 		do
 			Result := Precursor (an_id) or else Tmp_depend_server.has (an_id);
 		end
 
-	remove (an_id: INTEGER_32) is
+	remove (an_id: INTEGER_32)
 			-- <Precursor>
 		do
 			tmp_depend_server.remove (an_id)
@@ -72,13 +72,13 @@ feature -- Access
 
 feature -- Server size configuration
 
-	Chunk: INTEGER is 500
+	Chunk: INTEGER = 500
 			-- Size of a HASH_TABLE block
 
 invariant
 	cache_not_void: cache /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

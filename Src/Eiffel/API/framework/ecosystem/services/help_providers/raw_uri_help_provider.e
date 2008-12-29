@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help provider to launch raw URI"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -251,7 +251,7 @@ feature {NONE} -- Variable expansion
 			Result.put ("http://www.eiffelroom.com", "EIFFELROOM")
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

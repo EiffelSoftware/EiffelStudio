@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Call and Access"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ feature -- Access
 	feature_name_id: INTEGER
 			-- Feature name ID of called feature.
 
-	feature_name: STRING is
+	feature_name: STRING
 			-- Feature name called
 		require
 			feature_name_id_set: feature_name_id > 0
@@ -54,13 +54,13 @@ feature -- Access
 	precursor_type : TYPE_A
 			-- Type of parent in a precursor call if any.
 
-	enlarged: CALL_ACCESS_B is
+	enlarged: CALL_ACCESS_B
 			-- Redefined only for changing the return type.
 		do
 			Result := Current
 		end
 
-	enlarged_on (type_i: TYPE_A): CALL_ACCESS_B is
+	enlarged_on (type_i: TYPE_A): CALL_ACCESS_B
 			-- Enlarged byte node evaluated in the context of `type_i'.
 			-- Redefined because we want to change the return type.
 		do
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_precursor_type (p_type : like precursor_type) is
+	set_precursor_type (p_type : like precursor_type)
 			-- Assign `p_type' to `precursor_type'.
 		require
 			p_type_not_void: p_type /= Void
@@ -83,13 +83,13 @@ feature -- Setting
 
 feature -- Byte code generation
 
-	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_A) is
+	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_A)
 			-- Make byte code for special calls.
 		do
 			special_routines.make_byte_code (ba, basic_type)
 		end
 
-	real_feature_id (a_context_type: CL_TYPE_A): INTEGER is
+	real_feature_id (a_context_type: CL_TYPE_A): INTEGER
 			-- The feature ID in INTEGER is not necessarily the same as
 			-- in the INTEGER_REF class. And likewise for other simple types.
 			-- But also for generic derivation which contains an expanded type
@@ -134,22 +134,22 @@ feature -- Byte code generation
 			end
 		end
 
-	basic_register: REGISTRABLE is
+	basic_register: REGISTRABLE
 			-- Register used to store the metamorphosed simple type
 		do
 		end
 
-	is_feature_call: BOOLEAN is
+	is_feature_call: BOOLEAN
 			-- Is access a feature call?
 		do
 		end
 
-	generate_parameters_list is
+	generate_parameters_list
 			-- Only for routines and externals
 		do
 		end
 
-	generate_parameters (reg: REGISTRABLE) is
+	generate_parameters (reg: REGISTRABLE)
 			-- Generate code for parameters computation.
 			-- `reg' ("Current") is not used except for
 			-- inlining
@@ -182,7 +182,7 @@ feature -- Byte code generation
 			end
 		end
 
-	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A) is
+	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)
 			-- Generate access on `reg' in a `typ' context\
 		require
 			reg_not_void: reg /= Void
@@ -190,7 +190,7 @@ feature -- Byte code generation
 		do
 		end
 
-	generate_workbench_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A; result_register: REGISTER) is
+	generate_workbench_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A; result_register: REGISTER)
 			-- Generate feature call in a `typ' context
 			-- in workbench mode.
 		require
@@ -270,7 +270,7 @@ feature -- Byte code generation
 			buf.put_string ("))")
 		end
 
-	generate_workbench_end (result_register: REGISTER) is
+	generate_workbench_end (result_register: REGISTER)
 			-- Generate final portion of C code in workbench mode.
 		require
 			result_register_attached: c_type.is_pointer implies result_register /= Void
@@ -311,13 +311,13 @@ feature -- Byte code generation
 			end
 		end
 
-	special_routines: SPECIAL_FEATURES is
+	special_routines: SPECIAL_FEATURES
 			-- Array containing special routines.
 		once
 			create Result
 		end
 
-	generate_special_feature (reg: REGISTRABLE; basic_type: BASIC_A) is
+	generate_special_feature (reg: REGISTRABLE; basic_type: BASIC_A)
 			-- Generate code for special routines (is_equal, copy ...).
 			-- (Only for feature calls)
 		require
@@ -327,13 +327,13 @@ feature -- Byte code generation
 			special_routines.generate (buffer, basic_type, reg, parameters)
 		end
 
-	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN is
+	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN
 			-- Is feature a special routine of class of `target_type'?
 			-- (Only for feature calls)
 		do
 		end
 
-	do_generate (reg: REGISTRABLE) is
+	do_generate (reg: REGISTRABLE)
 			-- Generate call of feature on `reg'
 		require
 			valid_register: reg /= Void
@@ -374,7 +374,7 @@ feature -- Byte code generation
 			end
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A)
 			-- Generate final portion of C code.
 		require
 			gen_reg_not_void: gen_reg /= Void
@@ -400,7 +400,7 @@ feature -- Byte code generation
 		end
 
 	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_A;
-		basic_type: BASIC_A; buf: GENERATION_BUFFER) is
+		basic_type: BASIC_A; buf: GENERATION_BUFFER)
 			-- Generate final portion of C code.
 		require
 			gen_reg_not_void: gen_reg /= Void
@@ -429,7 +429,7 @@ feature -- Byte code generation
 
 feature {NONE} -- Debug
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			if feature_name_id > 0 then
@@ -441,7 +441,7 @@ feature {NONE} -- Debug
 
 feature {NONE} -- Implementation
 
-	byte_node (f: FEATURE_I; a_context_type: TYPE_A): ACCESS_B is
+	byte_node (f: FEATURE_I; a_context_type: TYPE_A): ACCESS_B
 			-- Byte node for the context feature `f' called on type `a_context_type'
 		require
 			f_not_void: f /= Void
@@ -505,7 +505,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

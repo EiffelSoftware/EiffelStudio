@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The default factory for creating code template model nodes.
 	]"
@@ -151,7 +151,7 @@ feature -- Token factory
 			create Result.make (a_text)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

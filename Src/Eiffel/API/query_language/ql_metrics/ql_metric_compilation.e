@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a metric which will return number of compilation of current system"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize current metric.
 		do
 			set_name (query_language_names.ql_metric_compilation)
@@ -34,7 +34,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	value (a_domain: QL_DOMAIN): QL_QUANTITY_DOMAIN is
+	value (a_domain: QL_DOMAIN): QL_QUANTITY_DOMAIN
 			-- Value of current metric
 		local
 			l_quantity: QL_QUANTITY
@@ -43,7 +43,7 @@ feature -- Access
 			Result := l_quantity.wrapped_domain
 		end
 
-	criteria: LIST [QL_CRITERION] is
+	criteria: LIST [QL_CRITERION]
 			-- List of criteria set to current metric
 		do
 			create {LINKED_LIST [QL_CRITERION]} Result.make
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_criterion (a_criterion: QL_CRITERION) is
+	set_criterion (a_criterion: QL_CRITERION)
 			-- Set criterion used when calculate metric
 			-- A metric can have several basic scopes, and `a_criterion' is only set into
 			-- that scope which has the same scope as `a_criterion'.
@@ -59,13 +59,13 @@ feature -- Setting
 			-- Nothing for a complilation metric
 		end
 
-	remove_criteria is
+	remove_criteria
 			-- Remove all criteria
 		do
 			-- Nothing needs to be done here.
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

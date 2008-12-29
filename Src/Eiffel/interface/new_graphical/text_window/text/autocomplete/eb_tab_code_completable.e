@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that is able to auto complete features or classes. Supports tab selecting function."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ inherit
 
 feature -- Initialize
 
-	initialize_code_complete is
+	initialize_code_complete
 			-- Initialize code completion
 		do
 			Precursor {CODE_COMPLETABLE}
@@ -46,7 +46,7 @@ feature -- Initialize
 
 feature -- Access
 
-	choices: EB_CODE_COMPLETION_WINDOW is
+	choices: EB_CODE_COMPLETION_WINDOW
 			-- Completion choice window for show feature and class completion options.
 		once
 			create Result.make
@@ -60,7 +60,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	current_token_in_line (a_line: like current_line): EDITOR_TOKEN is
+	current_token_in_line (a_line: like current_line): EDITOR_TOKEN
 			-- Token at or behind cursor position
 		require
 			a_line_attached: a_line /= Void
@@ -69,7 +69,7 @@ feature {NONE} -- Access
 			current_token_in_line_not_void: Result /= Void
 		end
 
-	selection_start_token_in_line (a_line: like current_line) : EDITOR_TOKEN is
+	selection_start_token_in_line (a_line: like current_line) : EDITOR_TOKEN
 			-- Start token in the selection.
 		require
 			has_selection: has_selection
@@ -78,7 +78,7 @@ feature {NONE} -- Access
 			selection_start_token_in_line_not_void: Result /= Void
 		end
 
-	selection_end_token_in_line (a_line: like current_line) : EDITOR_TOKEN is
+	selection_end_token_in_line (a_line: like current_line) : EDITOR_TOKEN
 			-- Token after end of selection.
 		require
 			has_selection: has_selection
@@ -87,7 +87,7 @@ feature {NONE} -- Access
 			selection_end_token_in_line_not_void: Result /= Void
 		end
 
-	current_line : EDITOR_LINE is
+	current_line : EDITOR_LINE
 			-- Line of current cursor.
 			-- Every query is not guarenteed the same object.
 		deferred
@@ -95,12 +95,12 @@ feature {NONE} -- Access
 			current_line_not_void: Result /= Void
 		end
 
-	current_char: CHARACTER_32 is
+	current_char: CHARACTER_32
 			-- Current character, to the right of the cursor.
 		deferred
 		end
 
-	context_menu_factory: EB_CONTEXT_MENU_FACTORY is
+	context_menu_factory: EB_CONTEXT_MENU_FACTORY
 			-- Dev window
 		do
 			if window_manager.last_focused_development_window /= Void then
@@ -110,7 +110,7 @@ feature {NONE} -- Access
 
 feature -- Status Change
 
-	set_discard_feature_signature (a_b: like discard_feature_signature) is
+	set_discard_feature_signature (a_b: like discard_feature_signature)
 			-- Set `discard_feature_signature' with `a_b'
 		do
 			discard_feature_signature := a_b
@@ -118,7 +118,7 @@ feature -- Status Change
 			discard_feature_signature_set: discard_feature_signature = a_b
 		end
 
-	set_completing_feature (a_completing_feature: BOOLEAN) is
+	set_completing_feature (a_completing_feature: BOOLEAN)
 			-- Set `completing_feature' with `a_completing_feature'.
 		do
 			completing_feature := a_completing_feature
@@ -128,17 +128,17 @@ feature -- Status Change
 
 feature -- Status report
 
-	has_selection: BOOLEAN is
+	has_selection: BOOLEAN
 			-- Does current have a selection?
 		deferred
 		end
 
-	allow_tab_selecting: BOOLEAN is
+	allow_tab_selecting: BOOLEAN
 			-- Allow tab selecting?
 		deferred
 		end
 
-	is_editable: BOOLEAN is
+	is_editable: BOOLEAN
 			-- Is editable?
 		deferred
 		end
@@ -155,12 +155,12 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	end_of_line: BOOLEAN is
+	end_of_line: BOOLEAN
 			-- Is cursor at the end of the line.
 		deferred
 		end
 
-	start_of_line (a_token: EDITOR_TOKEN; a_line: like current_line): BOOLEAN is
+	start_of_line (a_token: EDITOR_TOKEN; a_line: like current_line): BOOLEAN
 			-- Is `a_token' start of `a_line'?
 		do
 			if a_token /= Void then
@@ -172,37 +172,37 @@ feature {NONE} -- Status report
 
 feature -- Cursor
 
-	go_right_char is
+	go_right_char
 			-- Go to right character.
 		deferred
 		end
 
-	go_to_end_of_selection is
+	go_to_end_of_selection
 			-- Move cursor to the end of selection
 		require
 			has_selection: has_selection
 		deferred
 		end
 
-	go_to_start_of_line is
+	go_to_start_of_line
 			-- Move cursor to the start of a line
 			-- where tab switching to next feature argument should function.
 		deferred
 		end
 
-	go_to_end_of_line is
+	go_to_end_of_line
 			-- Move cursor to the start of a line.
 		deferred
 		end
 
-	go_to_start_of_selection is
+	go_to_start_of_selection
 			-- Move cursor to the start of the selection if possible.
 		require
 			has_selection: has_selection
 		deferred
 		end
 
-	move_cursor_to (a_token: EDITOR_TOKEN; a_line: like current_line)is
+	move_cursor_to (a_token: EDITOR_TOKEN; a_line: like current_line)
 			-- Move cursor to `a_token' which is in `a_line'.
 		require
 			a_token_attached: a_token /= Void
@@ -210,17 +210,17 @@ feature -- Cursor
 		deferred
 		end
 
-	save_cursor is
+	save_cursor
 			-- Save cursor position for retrieving.
 		deferred
 		end
 
-	retrieve_cursor is
+	retrieve_cursor
 			-- Retrieve cursor position from saving.
 		deferred
 		end
 
-	place_post_cursor is
+	place_post_cursor
 			-- Place cursor after completion
 		do
 			tab_action
@@ -228,24 +228,24 @@ feature -- Cursor
 
 feature -- Selection
 
-	disable_selection is
+	disable_selection
 			-- Disable selection
 		deferred
 		end
 
-	show_possible_selection is
+	show_possible_selection
 			-- Show possible selection
 		deferred
 		end
 
-	select_region_between_token (a_start_token: EDITOR_TOKEN; a_start_line: like current_line; a_end_token: EDITOR_TOKEN; a_end_line: like current_line) is
+	select_region_between_token (a_start_token: EDITOR_TOKEN; a_start_line: like current_line; a_end_token: EDITOR_TOKEN; a_end_line: like current_line)
 			-- Select from the start position of `a_start_token' to the start position of `a_end_token'.
 		deferred
 		end
 
 feature -- Tab actions
 
-	tab_action is
+	tab_action
 			-- Process push on tab key when in auto_complete mode.
 			-- Select the closest argument of a feature.
 		local
@@ -337,7 +337,7 @@ feature -- Tab actions
 			end
 		end
 
-	shift_tab_action is
+	shift_tab_action
 			-- Backward `tab_action'
 		local
 			l_line: like current_line
@@ -395,7 +395,7 @@ feature -- Tab actions
 			end
 		end
 
- 	handle_tab_action (a_backwards: BOOLEAN) is
+ 	handle_tab_action (a_backwards: BOOLEAN)
  			-- Handle tab action.
  		do
  			if a_backwards then
@@ -407,7 +407,7 @@ feature -- Tab actions
 
 feature -- Trigger completion
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- If `a_key' can activate text completion, activate it.
 		do
 			if not is_completing then
@@ -422,7 +422,7 @@ feature -- Trigger completion
 
 feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 
-	complete_feature_from_window (cmp: STRING_32; is_feature_signature: BOOLEAN; appended_character: CHARACTER_32; remainder: INTEGER; a_continue_completion: BOOLEAN) is
+	complete_feature_from_window (cmp: STRING_32; is_feature_signature: BOOLEAN; appended_character: CHARACTER_32; remainder: INTEGER; a_continue_completion: BOOLEAN)
 			-- Insert `cmp' in the editor and switch to completion mode.
 			-- If `is_feature_signature' then try to complete arguments and remove the type.
 			-- `appended_character' is a character that should be appended after the feature. '%U' if none.
@@ -466,7 +466,7 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 			end
 		end
 
-	complete_class_from_window (completed: STRING_32; appended_character: CHARACTER_32; remainder: INTEGER) is
+	complete_class_from_window (completed: STRING_32; appended_character: CHARACTER_32; remainder: INTEGER)
 			-- Insert `completed' in the editor.
 		local
 			i: INTEGER
@@ -492,7 +492,7 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 			end
 		end
 
-	complete_feature_call (completed: STRING_32; is_feature_signature: BOOLEAN; appended_character: CHARACTER_32; remainder: INTEGER; a_continue_completion: BOOLEAN) is
+	complete_feature_call (completed: STRING_32; is_feature_signature: BOOLEAN; appended_character: CHARACTER_32; remainder: INTEGER; a_continue_completion: BOOLEAN)
  			-- Finish completion process by inserting the completed expression.
 		local
 			i: INTEGER
@@ -522,7 +522,7 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 			end
 		end
 
-	post_focus_back is
+	post_focus_back
 			-- Preparation before focus is set back.
 		do
 			focus_back_actions.call (Void)
@@ -530,7 +530,7 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 
 feature {NONE} -- Implementation
 
-	show_completion_list is
+	show_completion_list
 			-- Show completion window.
 		do
 			if completing_feature then
@@ -563,7 +563,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	save_window_position (x, y, w, h: INTEGER) is
+	save_window_position (x, y, w, h: INTEGER)
 			-- Save current window position
 		do
 			if preferences.development_window_data.remember_completion_list_size then
@@ -571,7 +571,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	between_seperator (a_token: EDITOR_TOKEN; a_line: like current_line) : BOOLEAN is
+	between_seperator (a_token: EDITOR_TOKEN; a_line: like current_line) : BOOLEAN
 			-- Is cursor before `a_token' between seperators?
 		require
 			a_token_attached: a_token /= Void
@@ -585,7 +585,7 @@ feature {NONE} -- Implementation
 			Result := Result and (l_cur_token = Void or else token_equal (l_cur_token, "(") or token_equal (l_cur_token, ")") or token_equal (l_cur_token, ",") or token_equal (l_cur_token, ";") or l_cur_token = a_line.eol_token)
 		end
 
-	seperator_following (a_line: like current_line) : BOOLEAN is
+	seperator_following (a_line: like current_line) : BOOLEAN
 			-- Is cursor before a seperator?
 		require
 			a_line_attached: a_line /= Void
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation
 			Result := token_equal (l_cur_token, ")") or token_equal (l_cur_token, ",") or token_equal (l_cur_token, ";") or l_cur_token = a_line.eol_token
 		end
 
-	skip_pairs (a_token: EDITOR_TOKEN; a_line: like current_line; a_left: STRING; a_right: STRING): EDITOR_TOKEN is
+	skip_pairs (a_token: EDITOR_TOKEN; a_line: like current_line; a_left: STRING; a_right: STRING): EDITOR_TOKEN
 			-- Skip tokens from `a_token' that are and between pairs of `a_left' and `a_right'.
 			-- i.e "[INETEGER, STRING]" where `a_token' is "[", `a_left' is "[", `a_right' is "]", "]" is returned.
 		require
@@ -628,7 +628,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	skip_pairs_backward (a_token: EDITOR_TOKEN; a_line: like current_line; a_left: STRING; a_right: STRING): EDITOR_TOKEN is
+	skip_pairs_backward (a_token: EDITOR_TOKEN; a_line: like current_line; a_left: STRING; a_right: STRING): EDITOR_TOKEN
 			-- Skip backwards tokens from `a_token' that are and between pairs of `a_left' and `a_right'.
 			-- i.e "[INETEGER, STRING]" where `a_token' is "]", `a_left' is "[", `a_right' is "]", "[" is returned.
 		require
@@ -660,7 +660,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	find_end_token (a_token: EDITOR_TOKEN; a_line: like current_line; a_know_right_brace: BOOLEAN): EDITOR_TOKEN is
+	find_end_token (a_token: EDITOR_TOKEN; a_line: like current_line; a_know_right_brace: BOOLEAN): EDITOR_TOKEN
 			-- Find end token from `a_token' in `a_line' for selection that is triggered by tab.
 		local
 			l_cur_token: EDITOR_TOKEN
@@ -691,7 +691,7 @@ feature {NONE} -- Implementation
 			Result := l_cur_token
 		end
 
-	find_previous_start_token (a_line: like current_line): EDITOR_TOKEN is
+	find_previous_start_token (a_line: like current_line): EDITOR_TOKEN
 			-- Find start token for selection caused by tab action.
 		local
 			l_cur_token: EDITOR_TOKEN
@@ -711,7 +711,7 @@ feature {NONE} -- Implementation
 			Result := l_cur_token
 		end
 
-	find_selection_start_in_selection (a_line: like current_line): EDITOR_TOKEN is
+	find_selection_start_in_selection (a_line: like current_line): EDITOR_TOKEN
 			-- Find in selection start token for selection caused by tab action.
 		require
 			has_selection: has_selection
@@ -732,7 +732,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

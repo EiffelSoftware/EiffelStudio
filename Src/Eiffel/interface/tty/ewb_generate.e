@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Converts the output of the profiler-tool of %
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Execution
 
-	loop_action is
+	loop_action
 		do
 			command_line_io.get_prof_file_name;
 			if command_line_io.last_input.is_empty then
@@ -45,7 +45,7 @@ feature {NONE} -- Execution
 			execute;
 		end;
 
-	execute is
+	execute
 		local
 			prof_converter: CONVERTER_CALLER
 			conf_load: CONFIGURATION_LOADER
@@ -75,7 +75,7 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Implementation
 
-	raise_config_error is
+	raise_config_error
 			-- Explains that an error occurred while loading the
 			-- profiler specific configuration file.
 		do
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			output_window.put_new_line;
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

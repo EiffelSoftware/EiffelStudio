@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a named section of features in a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make_empty (a_name: like name; a_compiled_class: like class_c) is
+	make_empty (a_name: like name; a_compiled_class: like class_c)
 			-- Make a feature section with `a_name' containing no features.
 		require
 			a_name_not_Void: a_name /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 			is_any: is_any
 		end
 
-	make (a_name: like name; a_features: like features; a_compiled_class: like class_c) is
+	make (a_name: like name; a_features: like features; a_compiled_class: like class_c)
 			-- Make a feature section with `a_name' containing `a_features'.
 		require
 			a_name_not_Void: a_name /= Void
@@ -74,7 +74,7 @@ feature -- Access
 	class_c: CLASS_C
 			-- Class `features' are part of.
 
-	first_feature_name: STRING is
+	first_feature_name: STRING
 			-- Name of first feature in `features'.
 		require
 			features_not_empty: not features.is_empty
@@ -93,7 +93,7 @@ feature -- Status report
 	is_any: BOOLEAN
 			-- Are `features' exported to ANY?
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' equal `Current'?
 		do
 			if other.features.is_empty or features.is_empty then
@@ -105,7 +105,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_is_none is
+	enable_is_none
 			-- Set `is_none' to True.
 		do
 			is_none := True
@@ -115,7 +115,7 @@ feature -- Status setting
 			set: is_none and not is_some and not is_any
 		end
 
-	enable_is_some is
+	enable_is_some
 			-- Set `is_some' to True.
 		do
 			is_some := True
@@ -125,7 +125,7 @@ feature -- Status setting
 			set: is_some and not is_any and not is_none
 		end
 
-	enable_is_any is
+	enable_is_any
 			-- Set `is_any' to True.
 		do
 			is_any := True
@@ -140,7 +140,7 @@ invariant
 	features_not_Void: features /= Void
 	only_one_export_status: is_any xor is_some xor is_none
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

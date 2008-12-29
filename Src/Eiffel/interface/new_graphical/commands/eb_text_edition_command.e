@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to perform basic text operations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,25 +18,25 @@ create
 
 feature -- Execution
 
-	cut_selection is
+	cut_selection
 			-- Cut selection into clipboard
 		do
 			tool.text_area.cut_selection
 		end
 
-	copy_selection is
+	copy_selection
 			-- Copy selection into clipboard
 		do
 			tool.text_area.copy_selection
 		end
 
-	paste is
+	paste
 			-- Paste text in clipboard
 		do
 			tool.text_area.paste (tool.text_area.position)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

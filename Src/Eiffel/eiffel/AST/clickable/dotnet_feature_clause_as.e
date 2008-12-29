@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Abstraction of a dotnet feature clause.  Used for formatting .NET type information.
 		Is actually just a list of consumed_entities.
@@ -25,7 +25,7 @@ create {DOTNET_FEATURE_CLAUSE_AS}
 
 feature -- Initialization
 
-	make (a_name: STRING; a_flag: BOOLEAN) is 
+	make (a_name: STRING; a_flag: BOOLEAN) 
 			-- Create with name as 'a_name' and with features 'a_features'.
 		require
 			a_name_not_void: a_name /= Void
@@ -50,7 +50,7 @@ invariant
 	name_not_void: name /= Void
 	name_not_empty: not name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

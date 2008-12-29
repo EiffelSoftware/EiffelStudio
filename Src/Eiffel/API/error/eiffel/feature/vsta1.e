@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when an invalid class type is specified for a static access."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s, f: STRING) is
+	make (s, f: STRING)
 			-- Create new instance of VSTA1 with class name `s'
 			-- and feature name `f'.
 		require
@@ -34,17 +34,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	code: STRING is "VSTA"
+	code: STRING = "VSTA"
 			-- Error code
 			
-	subcode: INTEGER is 1
+	subcode: INTEGER = 1
 
 	class_name, feature_name: STRING
 			-- Class name and feature name of routine on which invalid static access is performed.
 
 feature -- Status report
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := class_name /= Void and feature_name /= Void
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation explain for current error
 			-- in `a_text_formatter'.
 		do
@@ -61,7 +61,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

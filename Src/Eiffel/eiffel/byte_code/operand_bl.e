@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Enlarged open operand
@@ -18,38 +18,38 @@ feature
 	parent: NESTED_BL
 			-- Parent of access
 	
-	set_parent (p: NESTED_BL) is
+	set_parent (p: NESTED_BL)
 			-- Assign `p' to `parent'
 		do
 			parent := p
 		end
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 		do
 			-- Do nothing
 		end
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 		do
 			-- Do nothing
 		end
 
-	generate is
+	generate
 		do
 			-- Do nothing
 		end
 
-	analyze is
+	analyze
 		do
 			-- Do nothing
 		end
 
-	free_register is
+	free_register
 		do
 			-- Do nothing
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

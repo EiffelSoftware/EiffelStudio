@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A full, customizable help context for use in client needed situations. Use {ES_HELP_CONTEXT} for
 		inheritance based help contexts.
@@ -69,7 +69,7 @@ feature -- Status report
 invariant
 	not_help_context_section_is_empty: help_context_section /= Void implies not help_context_section.is_empty
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

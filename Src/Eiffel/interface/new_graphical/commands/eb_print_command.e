@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Command to print an editor content"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -48,7 +48,7 @@ create
 
 feature -- Initialization
 
-	make (a_dev_win: EB_DEVELOPMENT_WINDOW) is
+	make (a_dev_win: EB_DEVELOPMENT_WINDOW)
 			-- Create a formatter associated with `a_manager'.
 		do
 		--	create accelerator.make_with_key_combination (
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Save a file with the chosen name.
 		local
 			printer: EB_PRINTER
@@ -99,53 +99,53 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Print
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_print_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_print_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Print
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_Print
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.e_Print
 		end
 
-	name: STRING is "Print"
+	name: STRING = "Print"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-	on_text_edited (directly_edited: BOOLEAN) is
+	on_text_edited (directly_edited: BOOLEAN)
 			-- Nothing.
 		do
 			--enable_sensitive
 		end
 
-	on_text_loaded is
+	on_text_loaded
 			-- Update the command sensitivity.
 		do
 			if dev_window.is_empty then
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Recyclable
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			dev_window := Void
@@ -168,7 +168,7 @@ feature {NONE} -- implementation
 	saved: BOOLEAN
 			-- If saved?
 
-	save_to_file (a_text: STRING; a_filename: STRING) is
+	save_to_file (a_text: STRING; a_filename: STRING)
 			-- Save `a_text' in `a_filename'.
 		require
 			a_text_not_void: a_text /= Void
@@ -206,13 +206,13 @@ feature {NONE} -- implementation
 
 feature {NONE} -- Implementation
 
-	use_external_editor: BOOLEAN is
+	use_external_editor: BOOLEAN
 			-- Should we use an external editor to print?
 		do
 			Result := preferences.misc_data.use_external_editor
 		end
 
-	external_editor: STRING is
+	external_editor: STRING
 			-- Command line to invoke to use an external editor to print.
 		do
 			Result := preferences.misc_data.print_shell_command
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	generate_temp_name: STRING is
+	generate_temp_name: STRING
 			-- Generate a temporary file name.
 		local
 			prefix_name: STRING
@@ -235,12 +235,12 @@ feature {NONE} -- Externals
 			Result.from_c (p)
 		end
 
-	tempnam (d,p: POINTER): POINTER is
+	tempnam (d,p: POINTER): POINTER
 		external
 			"C | <stdio.h>"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All shared preferences for the Error List tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ feature {NONE} -- Preference Strings
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -58,7 +58,7 @@ invariant
 	preferences_not_void: preferences /= Void
 	expand_errors_preference_attached: expand_errors_preferences /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

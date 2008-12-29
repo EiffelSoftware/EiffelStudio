@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"rror for frozen and deferred feature."
@@ -18,9 +18,9 @@ inherit
 	
 feature -- Properties
 
-	subcode: INTEGER is 4;
+	subcode: INTEGER = 4;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

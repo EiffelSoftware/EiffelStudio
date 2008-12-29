@@ -1,4 +1,4 @@
-indexing
+note
 	description: "To generate pieces of predefined byte code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Convertibility
 
-	convert_byte_node (a_expr: EXPR_B; a_conversion_info: FEATURE_CONVERSION_INFO): EXPR_B is
+	convert_byte_node (a_expr: EXPR_B; a_conversion_info: FEATURE_CONVERSION_INFO): EXPR_B
 			-- Convert byte node `a_expr' to an expression that conforms to `a_conversion.target_type'.
 			-- Register used types and features for dead code removal and incrementality.
 		require
@@ -56,7 +56,7 @@ feature -- Convertibility
 
 feature {NONE} -- Implementation: status report
 
-	is_basic_conversion (a_expr: EXPR_B; a_source_type, a_target_type: TYPE_A; is_from_conversion: BOOLEAN): BOOLEAN is
+	is_basic_conversion (a_expr: EXPR_B; a_source_type, a_target_type: TYPE_A; is_from_conversion: BOOLEAN): BOOLEAN
 			-- Is conversion of `a_source_type' to `a_target_type' basic?
 		require
 			a_expr_not_void: a_expr /= Void
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation: status report
 
 feature {NONE} -- Implementation: Byte node
 
-	basic_conversion_byte_node (a_expr: EXPR_B; a_source_type, a_target_type: TYPE_A; is_from_conversion: BOOLEAN): EXPR_B is
+	basic_conversion_byte_node (a_expr: EXPR_B; a_source_type, a_target_type: TYPE_A; is_from_conversion: BOOLEAN): EXPR_B
 			-- Convert `a_expr' from `a_source_type' to `a_target_type'.
 		require
 			a_expr_not_void: a_expr /= Void
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation: Byte node
 			end
 		end
 
-	to_type_byte_code (a_feat: FEATURE_I; a_target_type: TYPE_A; a_expr: EXPR_B): NESTED_B is
+	to_type_byte_code (a_feat: FEATURE_I; a_target_type: TYPE_A; a_expr: EXPR_B): NESTED_B
 			-- New instance nested call `a_expr.a_feat'
 		require
 			a_feat_not_void: a_feat /= Void
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation: Byte node
 			Result.set_message (l_access)
 		end
 
-	creation_byte_code (a_feat: FEATURE_I; a_source_type, a_target_type: TYPE_A; a_expr: EXPR_B): CREATION_EXPR_B is
+	creation_byte_code (a_feat: FEATURE_I; a_source_type, a_target_type: TYPE_A; a_expr: EXPR_B): CREATION_EXPR_B
 			-- New instance of `create {a_target_type}.a_feat (a_expr)'
 		require
 			a_feat_not_void: a_feat /= Void
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation: Byte node
 
 feature {NONE} -- Implementation: Access
 
-	string_type: CL_TYPE_A is
+	string_type: CL_TYPE_A
 			-- Type of STRING class.
 		once
 			Result := System.string_8_class.compiled_class.actual_type
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation: Access
 			string_type_not_void: Result /= Void
 		end
 
-	system_string_type: CL_TYPE_A is
+	system_string_type: CL_TYPE_A
 			-- Type of STRING class.
 		require
 			is_il_generation: System.il_generation
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation: Access
 			system_string_type_not_void: Result /= Void
 		end
 
-	system_type_type: CL_TYPE_A is
+	system_type_type: CL_TYPE_A
 			-- Type of STRING class.
 		require
 			is_il_generation: System.il_generation
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation: Access
 			system_type_type_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

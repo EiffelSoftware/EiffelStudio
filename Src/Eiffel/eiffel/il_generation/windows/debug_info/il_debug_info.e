@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common information about System used by IL_DEBUG_INFO_XYZ objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,21 +22,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 		end
 
 feature {SHARED_IL_DEBUG_INFO} -- Reset
 
-	reset is
+	reset
 		do
 			internal_class_types := Void
 		end
 
 feature -- Class info
 
-	class_of_id (a_cls_id: INTEGER): CLASS_C is
+	class_of_id (a_cls_id: INTEGER): CLASS_C
 			-- -- Class of id `a_cls_id'
 		require
 			a_cls_id_void: a_cls_id /= 0
@@ -46,7 +46,7 @@ feature -- Class info
 
 feature -- Class Types info
 
-	class_types: ARRAY [CLASS_TYPE] is
+	class_types: ARRAY [CLASS_TYPE]
 			-- List all class types in system indexed using both `implementation_id' and
 			-- `static_type_id'.
 		local
@@ -85,7 +85,7 @@ feature {NONE} -- Class Types info Implementation
 			-- Array of CLASS_TYPE in system indexed by `implementation_id' and
 			-- `static_type_id' of CLASS_TYPE.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Byte node for Void value."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_void_b (Current)
@@ -31,7 +31,7 @@ feature -- Visitor
 
 feature -- Access
 
-	type: TYPE_A is
+	type: TYPE_A
 			-- Expression type.
 		do
 			Result := none_type
@@ -41,16 +41,16 @@ feature -- Access
 
 feature -- Status report
 
-	is_simple_expr: BOOLEAN is True
+	is_simple_expr: BOOLEAN = True
 			-- Void is a simple expression
 
-	is_predefined: BOOLEAN is False
+	is_predefined: BOOLEAN = False
 			-- Void is not predefined
 
-	is_constant_expression: BOOLEAN is True
+	is_constant_expression: BOOLEAN = True
 			-- Void is a constant.
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is register `r' used in local or forthcomming dot calls ?
 		do
 			-- False
@@ -60,18 +60,18 @@ feature -- Status report
 
 feature -- IL code generation
 
-	is_fast_as_local: BOOLEAN is true
+	is_fast_as_local: BOOLEAN = true
 			-- Is expression calculation as fast as loading a local?
 
 feature -- C code generation
 
-	print_register is
+	print_register
 			-- Print Void value.
 		do
 			buffer.put_string ("NULL")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

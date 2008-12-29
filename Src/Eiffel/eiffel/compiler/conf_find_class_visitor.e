@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor that looks for a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_state: like state) is
+	make (a_state: like state)
 			-- Create.
 		do
 			Precursor (a_state)
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Update
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -55,7 +55,7 @@ feature -- Update
 
 feature -- Visit nodes
 
-	process_assembly (an_assembly: CONF_ASSEMBLY) is
+	process_assembly (an_assembly: CONF_ASSEMBLY)
 			-- Visit `an_assembly'.
 		do
 			if an_assembly.classes_set then
@@ -63,7 +63,7 @@ feature -- Visit nodes
 			end
 		end
 
-	process_physical_assembly (a_assembly: CONF_PHYSICAL_ASSEMBLY) is
+	process_physical_assembly (a_assembly: CONF_PHYSICAL_ASSEMBLY)
 			-- Visist `a_assembly'.
 		do
 			if not assemblies_done.has (a_assembly.guid) then
@@ -72,25 +72,25 @@ feature -- Visit nodes
 			end
 		end
 
-	process_library (a_library: CONF_LIBRARY) is
+	process_library (a_library: CONF_LIBRARY)
 			-- Visit `a_library'.
 		do
 			retrieve_recursively (a_library.library_target)
 		end
 
-	process_precompile (a_precompile: CONF_PRECOMPILE) is
+	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Visit `a_precompile'.
 		do
 			retrieve_recursively (a_precompile.library_target)
 		end
 
-	process_cluster (a_cluster: CONF_CLUSTER) is
+	process_cluster (a_cluster: CONF_CLUSTER)
 			-- Visit `a_cluster'.
 		do
 			retrieve_from_group (a_cluster)
 		end
 
-	process_override (an_override: CONF_OVERRIDE) is
+	process_override (an_override: CONF_OVERRIDE)
 			-- Visit `an_override'.
 		do
 			retrieve_from_group (an_override)
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 	assemblies_done: SEARCH_TABLE [STRING]
 			-- Lookup for assemblies where we already searched.
 
-	retrieve_from_group (a_group: CONF_GROUP) is
+	retrieve_from_group (a_group: CONF_GROUP)
 			-- Retrieve classes with `name' from `a_group'.
 		require
 			a_group_not_void: a_group /= Void
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	retrieve_recursively (a_target: CONF_TARGET) is
+	retrieve_recursively (a_target: CONF_TARGET)
 			-- Retrieve classes with `name' recursively from `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -136,7 +136,7 @@ invariant
 	found_classes_not_void: found_classes /= Void
 	targets_done_not_void: targets_done /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Path marker used in Eiffel Query Language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature{NONE} -- Implementation
 
-	make (a_opener: STRING; a_closer: STRING) is
+	make (a_opener: STRING; a_closer: STRING)
 			-- Initialize `opener' with `a_opener' and `closer' with `a_closer'.
 		require
 			a_opener_attached: a_opener /= Void
@@ -31,7 +31,7 @@ feature{NONE} -- Implementation
 
 feature -- Access
 
-	path_name (a_base_name: STRING): STRING is
+	path_name (a_base_name: STRING): STRING
 			-- Path name of `a_base_name'
 		require
 			a_base_name_attached: a_base_name /= Void
@@ -46,7 +46,7 @@ feature -- Access
 			end
 		end
 
-	base_name (a_path_name: STRING): STRING is
+	base_name (a_path_name: STRING): STRING
 			-- Base name from `a_path_name'
 		require
 			a_path_name_attached: a_path_name /= Void
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_equipped_with_marker (a_path_component: STRING): BOOLEAN is
+	is_equipped_with_marker (a_path_component: STRING): BOOLEAN
 			-- If `a_path_component' equipped with current path marker?
 		require
 			a_path_component_attached: a_path_component /= Void
@@ -100,7 +100,7 @@ feature -- Status report
 invariant
 	opener_attached: opener /= Void
 	closer_attached: closer /= Void
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

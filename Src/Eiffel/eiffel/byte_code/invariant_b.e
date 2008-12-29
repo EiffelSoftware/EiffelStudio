@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Block of invariant assertions
@@ -20,7 +20,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_invariant_b (Current)
@@ -39,7 +39,7 @@ feature -- Access
 
 feature {AST_CONTEXT, AST_FEATURE_CHECKER_GENERATOR} -- Modification
 
-	set_byte_list (b: like byte_list) is
+	set_byte_list (b: like byte_list)
 			-- Assign `b' to `byte_list'.
 		do
 			byte_list := b
@@ -47,7 +47,7 @@ feature {AST_CONTEXT, AST_FEATURE_CHECKER_GENERATOR} -- Modification
 			byte_list_set: byte_list = b
 		end
 
-	set_once_manifest_string_count (oms_count: like once_manifest_string_count) is
+	set_once_manifest_string_count (oms_count: like once_manifest_string_count)
 			-- Set `once_manifest_string_count' to `oms_count'.
 		require
 			valid_oms_count: oms_count >= 0
@@ -70,13 +70,13 @@ feature {AST_CONTEXT, AST_FEATURE_CHECKER_GENERATOR} -- Modification
 
 feature
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Associated class
 		do
 			Result := System.class_of_id (class_id)
 		end
 
-	generate_invariant_routine is
+	generate_invariant_routine
 			-- Generate invariant routine
 		require
 			has_invariant: byte_list /= Void
@@ -223,7 +223,7 @@ feature
 invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

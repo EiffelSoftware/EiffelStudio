@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class CHECK_B
@@ -19,7 +19,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_check_b (Current)
@@ -35,13 +35,13 @@ feature -- Access
 
 feature -- Settings
 
-	set_check_list (c: like check_list) is
+	set_check_list (c: like check_list)
 			-- Assign `c' to `chcek_list'.
 		do
 			check_list := c
 		end
 
-	set_end_location (e: like end_location) is
+	set_end_location (e: like end_location)
 			-- Set `end_location' with `e'.
 		require
 			e_not_void: e /= Void
@@ -53,7 +53,7 @@ feature -- Settings
 
 feature -- Code generation
 
-	enlarge_tree is
+	enlarge_tree
 			-- Enlarge the generation tree
 		do
 			if check_list /= Void then
@@ -61,7 +61,7 @@ feature -- Code generation
 			end
 		end
 
-	analyze is
+	analyze
 			-- Analyze the assertions
 		local
 			workbench_mode: BOOLEAN
@@ -80,7 +80,7 @@ feature -- Code generation
 			end
 		end
 
-	generate is
+	generate
 			-- Generate the assertions
 		local
 			workbench_mode: BOOLEAN
@@ -112,18 +112,18 @@ feature -- Code generation
 
 feature -- Array optimization
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := check_list /= Void and then
 						check_list.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := check_list /= Void and then check_list.is_unsafe
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 			if check_list /= Void then
@@ -133,14 +133,14 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			if check_list /= Void then
 				Result := check_list.size
 			end
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current
 			if check_list /= Void then
@@ -148,7 +148,7 @@ feature -- Inlining
 			end
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			if context.final_mode and not system.keep_assertions then
@@ -162,7 +162,7 @@ feature -- Inlining
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

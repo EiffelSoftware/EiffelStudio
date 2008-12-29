@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel query language item that can be visited."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,14 +11,14 @@ deferred class
 
 feature -- Visit
 
-	process (a_visitor: QL_VISITOR) is
+	process (a_visitor: QL_VISITOR)
 			-- Process `a_visitor'.
 		require
 			a_visitor_attached: a_visitor /= Void
 		deferred
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

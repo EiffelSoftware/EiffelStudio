@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Data corresponding to an Eiffel Project's Window management session."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Creation
 
-	default_create is
+	default_create
 			-- Create and initialize session data.
 		do
 			create window_session_data.make (5)
@@ -31,7 +31,7 @@ feature -- Access
 	window_session_data: ARRAYED_LIST [EB_DEVELOPMENT_WINDOW_SESSION_DATA];
 		-- Meta data about each development window used for restoration between project sessions.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

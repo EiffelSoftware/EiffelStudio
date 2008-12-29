@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scanner skeleton class for COMMENT_SCANNER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_text_formatter (a_text_formatter: like text_formatter; a_seperate_comment: BOOLEAN) is
+	make_with_text_formatter (a_text_formatter: like text_formatter; a_seperate_comment: BOOLEAN)
 			-- Initialization
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
@@ -38,14 +38,14 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	reset is
+	reset
 			-- Reset
 		do
 			Precursor {YY_COMPRESSED_SCANNER_SKELETON}
 			reset_last_type
 		end
 
-	set_text_formatter (a_text_formatter: like text_formatter) is
+	set_text_formatter (a_text_formatter: like text_formatter)
 			-- Set `text_formatter' with `a_text_formatter'.
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
@@ -55,7 +55,7 @@ feature -- Element change
 			text_formatter_not_void: text_formatter = a_text_formatter
 		end
 
-	set_for_comment (a_for_comment: BOOLEAN) is
+	set_for_comment (a_for_comment: BOOLEAN)
 			-- Set `for_comment' with `a_for_comment'.
 		do
 			for_comment := a_for_comment
@@ -63,7 +63,7 @@ feature -- Element change
 			for_comment_set: for_comment = a_for_comment
 		end
 
-	set_seperate (a_sep: BOOLEAN) is
+	set_seperate (a_sep: BOOLEAN)
 			-- Set `seperate_comment' with `a_sep'
 		do
 			seperate_comment := a_sep
@@ -71,7 +71,7 @@ feature -- Element change
 			seperate_comment_set: seperate_comment = a_sep
 		end
 
-	set_current_class (a_class: like current_class) is
+	set_current_class (a_class: like current_class)
 			-- Set `a_class' to `current_class'.
 		do
 			current_class := a_class
@@ -94,14 +94,14 @@ feature -- Status report
 
 feature -- Action
 
-	default_action is
+	default_action
 		do
 			-- Nothing to be done
 		end
 
 feature {NONE} -- Implementation
 
-	add_email_tokens is
+	add_email_tokens
 			-- Email address encountered.
 		local
 			l_text : like text
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_url_tokens is
+	add_url_tokens
 			-- URL encountered.
 		local
 			l_text : like text
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_dot_feature is
+	add_dot_feature
 			-- A feature like {CLASS}.feature encountered.
 		local
 			l_text : like text
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_quote_feature is
+	add_quote_feature
 			-- A feature like `feature' encountered.
 		local
 			l_text : like text
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_class (a_with_brace: BOOLEAN) is
+	add_class (a_with_brace: BOOLEAN)
 			-- A class like {CLASS} encountered.
 		local
 			l_text : like text
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_cluster is
+	add_cluster
 			-- A cluster like [cluster] encountered.
 		local
 			l_text : like text
@@ -269,13 +269,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_normal_text is
+	add_normal_text
 			-- Add `text' to `text_formatter'.
 		do
 			add_text (text, False)
 		end
 
-	add_text (a_text: STRING; a_basic_comment: BOOLEAN) is
+	add_text (a_text: STRING; a_basic_comment: BOOLEAN)
 			-- Add `a_text' as normal text.
 		require
 			a_text_not_void: a_text /= Void
@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_buffer is
+	append_buffer
 			-- Append token to `text_formatter'
 		do
 			if not buffer_string.is_empty then
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	buffer_token is
+	buffer_token
 			-- Buffer token.
 		do
 			buffer_string.append (text)
@@ -323,13 +323,13 @@ feature {NONE} -- Helpers
 	last_type: TYPE_A
 			-- Class context where feature should be analysed.
 
-	reset_last_type is
+	reset_last_type
 			-- Reset `last_type'
 		do
 			last_type := Void
 		end
 
-	class_by_name (name: STRING): CLASS_I is
+	class_by_name (name: STRING): CLASS_I
 			-- Return class with `name'. `Void' if not in system.
 		require
 			name_not_void: name /= Void
@@ -343,7 +343,7 @@ feature {NONE} -- Helpers
 			end
 		end
 
-	feature_by_name (name: STRING): E_FEATURE is
+	feature_by_name (name: STRING): E_FEATURE
 			-- Return feature in current class with `name'. `Void' if not in system.
 		local
 			cc: CLASS_C
@@ -379,7 +379,7 @@ feature {NONE} -- Helpers
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

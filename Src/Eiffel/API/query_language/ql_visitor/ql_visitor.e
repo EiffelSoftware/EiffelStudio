@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor to visit Eiffel query language items"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,14 +11,14 @@ deferred class
 
 feature -- Process
 
-	process_domain (a_item: QL_DOMAIN) is
+	process_domain (a_item: QL_DOMAIN)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_item (a_item: QL_VISITABLE) is
+	process_item (a_item: QL_VISITABLE)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
@@ -26,91 +26,91 @@ feature -- Process
 			a_item.process (Current)
 		end
 
-	process_target (a_item: QL_TARGET) is
+	process_target (a_item: QL_TARGET)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_group (a_item: QL_GROUP) is
+	process_group (a_item: QL_GROUP)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_class (a_item: QL_CLASS) is
+	process_class (a_item: QL_CLASS)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_feature (a_item: QL_FEATURE) is
+	process_feature (a_item: QL_FEATURE)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_real_feature (a_item: QL_REAL_FEATURE) is
+	process_real_feature (a_item: QL_REAL_FEATURE)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_invariant (a_item: QL_INVARIANT) is
+	process_invariant (a_item: QL_INVARIANT)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_quantity (a_item: QL_QUANTITY) is
+	process_quantity (a_item: QL_QUANTITY)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_line (a_item: QL_LINE) is
+	process_line (a_item: QL_LINE)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_generic (a_item: QL_GENERIC) is
+	process_generic (a_item: QL_GENERIC)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_local (a_item: QL_LOCAL) is
+	process_local (a_item: QL_LOCAL)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_argument (a_item: QL_ARGUMENT) is
+	process_argument (a_item: QL_ARGUMENT)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-	process_assertion (a_item: QL_ASSERTION) is
+	process_assertion (a_item: QL_ASSERTION)
 			-- Process `a_item'.
 		require
 			a_item_attached: a_item /= Void
 		deferred
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

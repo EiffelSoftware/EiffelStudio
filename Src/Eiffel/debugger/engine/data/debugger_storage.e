@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a debugger"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (m: like manager) is
+	make (m: like manager)
 			-- Instanciate Current with `m' as `manager'
 		do
 			manager := m
@@ -39,22 +39,22 @@ feature -- Access
 
 feature -- Write
 
-	breakpoints_data_to_storage (a_data: like breakpoints_data_from_storage) is
+	breakpoints_data_to_storage (a_data: like breakpoints_data_from_storage)
 			-- Breakpoints data to storage
 		deferred
 		end
 
-	exceptions_handler_data_to_storage (a_data: like exceptions_handler_data_from_storage) is
+	exceptions_handler_data_to_storage (a_data: like exceptions_handler_data_from_storage)
 			-- Exceptions handler data to storage
 		deferred
 		end
 
-	profiles_data_to_storage (a_data: like profiles_data_from_storage) is
+	profiles_data_to_storage (a_data: like profiles_data_from_storage)
 			-- Profiles data to storage
 		deferred
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

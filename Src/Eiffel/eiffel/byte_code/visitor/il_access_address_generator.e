@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate loading of the address for ACCESS_B node."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature -- IL code generation
 
-	generate_il_address (a_code_generator: like il_generator; a_node: ACCESS_B) is
+	generate_il_address (a_code_generator: like il_generator; a_node: ACCESS_B)
 			-- Generate address loading of `a_node'.
 		require
 			a_code_generator_not_Void: a_code_generator /= Void
@@ -44,13 +44,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	process_argument_b (a_node: ARGUMENT_B) is
+	process_argument_b (a_node: ARGUMENT_B)
 			-- Process `a_node'.
 		do
 			il_generator.generate_argument_address (a_node.position)
 		end
 
-	process_attribute_b (a_node: ATTRIBUTE_B) is
+	process_attribute_b (a_node: ATTRIBUTE_B)
 			-- Process `a_node'.
 		local
 			l_cl_type: CL_TYPE_A
@@ -62,30 +62,30 @@ feature {NONE} -- Implementation
 				context.real_type (a_node.type), a_node.attribute_id)
 		end
 
-	process_current_b (a_node: CURRENT_B) is
+	process_current_b (a_node: CURRENT_B)
 			-- Process `a_node'.
 		do
 			il_generator.generate_current_address
 		end
 
-	process_local_b (a_node: LOCAL_B) is
+	process_local_b (a_node: LOCAL_B)
 			-- Process `a_node'.
 		do
 			il_generator.generate_local_address (a_node.position)
 		end
 
-	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B) is
+	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B)
 		do
 			il_generator.generate_local_address (context.object_test_local_position (a_node))
 		end
 
-	process_result_b (a_node: RESULT_B) is
+	process_result_b (a_node: RESULT_B)
 			-- Process `a_node'.
 		do
 			il_generator.generate_result_address
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

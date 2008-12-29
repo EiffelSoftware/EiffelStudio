@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to setup value criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_value_tester_area_shown: BOOLEAN; a_metric_selector_area_shown: BOOLEAN; a_use_external_shown: BOOLEAN) is
+	make (a_value_tester_area_shown: BOOLEAN; a_metric_selector_area_shown: BOOLEAN; a_use_external_shown: BOOLEAN)
 			-- Initialize.
 		do
 			is_value_tester_area_shown := a_value_tester_area_shown
@@ -44,7 +44,7 @@ feature{NONE} -- Initialization
 			default_create
 		end
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			l_ver: EV_VERTICAL_BOX
@@ -149,7 +149,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_context_menu_factory (a_factory: EB_CONTEXT_MENU_FACTORY) is
+	set_context_menu_factory (a_factory: EB_CONTEXT_MENU_FACTORY)
 			-- Set context menu factory.
 		do
 			Precursor {EB_METRIC_GRID_DOMAIN_ITEM_DIALOG}(a_factory)
@@ -169,7 +169,7 @@ feature -- Status report
 
 feature{NONE} -- Actions
 
-	on_show is
+	on_show
 			-- Action to be performed when dialog is displayed
 		local
 			l_value: like value
@@ -199,7 +199,7 @@ feature{NONE} -- Actions
 			value_tester.set_criterion (l_tester)
 		end
 
-	on_ok is
+	on_ok
 			-- Ok was pressed.
 		do
 			Precursor
@@ -207,7 +207,7 @@ feature{NONE} -- Actions
 			ok_actions.call (Void)
 		end
 
-	on_cancel is
+	on_cancel
 			-- Cancel was pressed.
 		do
 			Precursor
@@ -219,7 +219,7 @@ invariant
 	metric_setter_attached: metric_setter /= Void
 	use_external_delayed_domain_checkbox_attached: use_external_delayed_domain_checkbox /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

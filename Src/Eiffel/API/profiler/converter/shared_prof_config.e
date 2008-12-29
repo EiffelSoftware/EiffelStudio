@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Holds the values from the profiler specific configuration file."
@@ -11,55 +11,55 @@ class SHARED_PROF_CONFIG
 
 feature {CONFIGURATION_LOADER} -- Status setting
 
-	set_config_name (s: STRING) is
+	set_config_name (s: STRING)
 			-- Set the config_name to `s'.
 		do
 			configuration_name := s;
 		end;
 
-	set_number_of_columns (i: INTEGER) is
+	set_number_of_columns (i: INTEGER)
 			-- Set the column to `i'.
 		do
 			number_of_columns := i;
 		end;
 
-	set_index_column (i: INTEGER) is
+	set_index_column (i: INTEGER)
 			-- Set the column to `i'.
 		do
 			index_column := i;
 		end;
 
-	set_function_time_column (i: INTEGER) is
+	set_function_time_column (i: INTEGER)
 			-- Set the column to `i'.
 		do
 			function_time_column := i;
 		end;
 
-	set_descendant_time_column (i: INTEGER) is
+	set_descendant_time_column (i: INTEGER)
 			-- Set the column to `i'.
 		do
 			descendant_time_column := i;
 		end;
 
-	set_number_of_calls_column (i: INTEGER) is
+	set_number_of_calls_column (i: INTEGER)
 			-- Set the column to `i'.
 		do
 			number_of_calls_column := i;
 		end;
 
-	set_function_name_column (i: INTEGER) is
+	set_function_name_column (i: INTEGER)
 			-- Set the column to `i'.
 		do
 			function_name_column := i;
 		end;
 
-	set_percentage_column (i: INTEGER) is
+	set_percentage_column (i: INTEGER)
 			-- Set the column to `i'.
 		do
 			percentage_column := i;
 		end;
 
-	set_leading_underscore (b: BOOLEAN) is
+	set_leading_underscore (b: BOOLEAN)
 			-- Set the leading_underscore to `b'.
 		do
 			leading_underscore := b;
@@ -67,52 +67,52 @@ feature {CONFIGURATION_LOADER} -- Status setting
 
 feature -- Status report
 
-	get_config_name: STRING is
+	get_config_name: STRING
 		do
 			Result := configuration_name;
 		end;
 
-	get_number_of_columns: INTEGER is
+	get_number_of_columns: INTEGER
 		do
 			Result := number_of_columns;
 		end;
 
-	get_index_column: INTEGER is
+	get_index_column: INTEGER
 		do
 			Result := index_column;
 		end;
 
-	get_function_time_column: INTEGER is
+	get_function_time_column: INTEGER
 		do
 			Result := function_time_column;
 		end;
 
-	get_descendant_time_column: INTEGER is
+	get_descendant_time_column: INTEGER
 		do
 			Result := descendant_time_column;
 		end;
 
-	get_number_of_calls_column: INTEGER is
+	get_number_of_calls_column: INTEGER
 		do
 			Result := number_of_calls_column;
 		end;
 
-	get_function_name_column: INTEGER is
+	get_function_name_column: INTEGER
 		do
 			Result := function_name_column;
 		end;
 
-	get_percentage_column: INTEGER is
+	get_percentage_column: INTEGER
 		do
 			Result := percentage_column;
 		end;
 
-	get_leading_underscore: BOOLEAN is
+	get_leading_underscore: BOOLEAN
 		do
 			Result := leading_underscore;
 		end;
 	
-	columns_of_interest: INTEGER is
+	columns_of_interest: INTEGER
 			-- How many columns are of interest in the profiler's
 			-- output file.
 		do
@@ -183,7 +183,7 @@ feature {NONE} -- Attributes
 
 feature {PROFILE_CONVERTER} -- Spit Information (for debugging)
 
-	spit_info is
+	spit_info
 		do
 			io.error.put_string ("Name: ");
 			io.error.put_string (configuration_name);
@@ -217,7 +217,7 @@ feature {PROFILE_CONVERTER} -- Spit Information (for debugging)
 			io.error.put_new_line;
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

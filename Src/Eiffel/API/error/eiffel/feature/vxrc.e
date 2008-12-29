@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error when a deferred or an external feature has a rescue clause."
@@ -18,14 +18,14 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VXRC";
+	code: STRING = "VXRC";
 			-- Error code
 
 	is_deferred: BOOLEAN;
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			if is_deferred then
 				a_text_formatter.add ("Kind of routine: deferred")
@@ -37,12 +37,12 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_deferred (b: BOOLEAN) is
+	set_deferred (b: BOOLEAN)
 		do
 			is_deferred := b
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

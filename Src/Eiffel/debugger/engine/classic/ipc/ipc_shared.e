@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Constants for communication control."
@@ -129,7 +129,7 @@ feature {NONE} -- For workbench responses.
 	Rep_stopped: INTEGER				= 6
 	Rep_notified: INTEGER				= 7
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

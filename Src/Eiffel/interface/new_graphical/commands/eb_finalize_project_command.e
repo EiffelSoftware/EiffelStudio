@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to finalize the Eiffel code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize default values.
 		local
 			l_shortcut: SHORTCUT_PREFERENCE
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Callbacks
 
-	ask_for_assertions is
+	ask_for_assertions
 			-- Question the user whether he wants to keep assertions or not.
 			-- If the question is answered with discard, it will come to here aswell.
 		local
@@ -51,7 +51,7 @@ feature -- Callbacks
 			l_confirm.show_on_active_window
 		end
 
-	set_assertion_flag_and_compile (keep_assertions: BOOLEAN) is
+	set_assertion_flag_and_compile (keep_assertions: BOOLEAN)
 		do
 			assertions_included := keep_assertions
 			if
@@ -67,7 +67,7 @@ feature -- Callbacks
 
 feature {NONE} -- Attributes
 
-	c_code_directory: STRING is
+	c_code_directory: STRING
 			-- Directory where the C code is stored.
 		do
 			Result := project_location.final_path
@@ -84,7 +84,7 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Implementation
 
-	confirm_and_compile is
+	confirm_and_compile
 			-- Ask for confirmation if the assertion are to be kept, and
 			-- finalize thereafter.
 		local
@@ -98,13 +98,13 @@ feature {NONE} -- Implementation
 			l_confirm.show_on_active_window
 		end
 
-	set_c_compilation_and_compile (c_comp: BOOLEAN) is
+	set_c_compilation_and_compile (c_comp: BOOLEAN)
 		do
 			start_c_compilation := c_comp
 			ask_for_assertions
 		end
 
-	perform_compilation is
+	perform_compilation
 			-- The real compilation work.
 		do
 				-- If the argument is `warner' the user pressed on "Keep assertions"
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			finalization_error := not Eiffel_project.successful
 		end
 
-	launch_c_compilation is
+	launch_c_compilation
 			-- Launch the C compilation in the background.
 		do
 			if start_c_compilation then
@@ -123,47 +123,47 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for the command.
 		do
 			Result := Interface_names.f_Finalize
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Finalize_new
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.project_finalize_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command
 		do
 			Result := pixmaps.icon_pixmaps.project_finalize_icon_buffer
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Finalize
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_Finalize
 		end
 
-	name: STRING is "Finalize_project";
+	name: STRING = "Finalize_project";
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error when there is two unique with the same name involved %
@@ -19,14 +19,14 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 4;
+	subcode: INTEGER = 4;
 
 	unique_feature: E_FEATURE;
 			-- Unique feature name
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Duplicate name: ");
 			unique_feature.append_name (a_text_formatter);
@@ -47,7 +47,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_unique_feature (f: FEATURE_I) is
+	set_unique_feature (f: FEATURE_I)
 			-- Assign `s' to `unique_name'.
 		require
 			valid_f: f /= Void
@@ -55,7 +55,7 @@ feature {COMPILER_EXPORTER}
 			unique_feature := f.api_feature (f.written_in);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to display once routines of `current_class'."
@@ -21,7 +21,7 @@ create
 
 feature -- Access
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion used in current command
 		local
 			l_factory: like feature_criterion_factory
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Output
 
-	display_feature (f: E_FEATURE; a_text_formatter: TEXT_FORMATTER) is
+	display_feature (f: E_FEATURE; a_text_formatter: TEXT_FORMATTER)
 		local
 			const: E_CONSTANT;
 			ec: CLASS_I;
@@ -67,7 +67,7 @@ feature -- Output
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

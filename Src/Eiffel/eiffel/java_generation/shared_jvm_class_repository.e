@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This is a common heir for accessing the global class repository. Use this class instead of JVM_CLASS_REPOSITORY"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ class
 
 feature {ANY}
 			
-	repository: JVM_CLASS_REPOSITORY is
+	repository: JVM_CLASS_REPOSITORY
 			-- access to the global class factory
 		once
 			create Result.make
@@ -21,7 +21,7 @@ feature {ANY}
 invariant
 	repository_not_void: repository /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

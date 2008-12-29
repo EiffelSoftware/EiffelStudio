@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Encapsulation of an external extension."
 	legal: "See notice at end of class."
@@ -47,65 +47,65 @@ inherit
 
 feature -- Status report
 
-	is_il: BOOLEAN is
+	is_il: BOOLEAN
 			-- Is current external an IL one?
 		do
 		end
 
-	is_cpp: BOOLEAN is
+	is_cpp: BOOLEAN
 		do
 		end
 
-	is_macro: BOOLEAN is
+	is_macro: BOOLEAN
 		do
 		end
 
-	is_dll: BOOLEAN is
+	is_dll: BOOLEAN
 		do
 		end
 
-	is_struct: BOOLEAN is
+	is_struct: BOOLEAN
 		do
 		end
 
-	is_inline: BOOLEAN is
+	is_inline: BOOLEAN
 			-- Is current external an inlined one?
 		do
 		end
 
-	is_built_in: BOOLEAN is
+	is_built_in: BOOLEAN
 			-- Is current external a built_in one?
 		do
 		end
 
-	is_static: BOOLEAN is
+	is_static: BOOLEAN
 			-- Is current external callable statically, i.e. no need for current object?
 		do
 				-- Always true except for non-static built_in.
 			Result := True
 		end
 
-	has_signature: BOOLEAN is
+	has_signature: BOOLEAN
 		do
 			Result := has_arg_list or has_return_type
 		end
 
-	has_arg_list: BOOLEAN is
+	has_arg_list: BOOLEAN
 		do
 			Result := argument_types /= Void
 		end
 
-	has_return_type: BOOLEAN is
+	has_return_type: BOOLEAN
 		do
 			Result := return_type > 0
 		end
 
-	has_include_list: BOOLEAN is
+	has_include_list: BOOLEAN
 		do
 			Result := header_files /= Void
 		end
 
-	need_encapsulation: BOOLEAN is
+	need_encapsulation: BOOLEAN
 			-- Does current external need to be accessed through its encapsulation.
 		do
 			Result := is_blocking_call and System.has_multithreaded
@@ -132,7 +132,7 @@ feature -- Properties
 
 feature -- Convenience
 
-	alias_name: STRING is
+	alias_name: STRING
 			-- Associated name to `alias_name_id'.
 		do
 			Result := Names_heap.item (alias_name_id)
@@ -140,7 +140,7 @@ feature -- Convenience
 
 feature -- Settings
 
-	set_argument_types (a: like argument_types) is
+	set_argument_types (a: like argument_types)
 			-- Assign `a' to `argument_types'.
 		do
 			argument_types := a
@@ -148,7 +148,7 @@ feature -- Settings
 			argument_types_set: argument_types = a
 		end
 
-	set_header_files (h: like header_files) is
+	set_header_files (h: like header_files)
 			-- Assign `h' to `header_files'.
 		do
 			header_files := h
@@ -156,7 +156,7 @@ feature -- Settings
 			header_files_set: header_files = h
 		end
 
-	set_return_type (r: like return_type) is
+	set_return_type (r: like return_type)
 			-- Assign `r' to `return_type'.
 		do
 			return_type := r
@@ -164,7 +164,7 @@ feature -- Settings
 			return_type_set: return_type = r
 		end
 
-	set_alias_name_id (name_id: like alias_name_id) is
+	set_alias_name_id (name_id: like alias_name_id)
 			-- Set `alias_name_id' with `name_id'.
 		require
 			valid_name_id: name_id > 0
@@ -174,7 +174,7 @@ feature -- Settings
 			alias_name_id_set: alias_name_id = name_id
 		end
 
-	set_is_blocking_call (v: like is_blocking_call) is
+	set_is_blocking_call (v: like is_blocking_call)
 			-- Assign `v' to `is_blocking_call'.
 		do
 			is_blocking_call := v
@@ -184,12 +184,12 @@ feature -- Settings
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 		do
 			Result := same_type (other) and then same_as (other)
 		end
 
-	same_as (other: like Current): BOOLEAN is
+	same_as (other: like Current): BOOLEAN
 			-- Is Current the same as `other'?
 		do
 			Result := (return_type = other.return_type and
@@ -203,7 +203,7 @@ feature -- Comparison
 
 feature {NONE} -- Comparison
 
-	array_is_equal (a, o_a: ARRAY [INTEGER]): BOOLEAN is
+	array_is_equal (a, o_a: ARRAY [INTEGER]): BOOLEAN
 			-- Is `o_a' considered equal to `a'?
 		local
 			i, nb: INTEGER
@@ -226,7 +226,7 @@ feature {NONE} -- Comparison
 			end
 		end
 
-	special_is_equal (a, o_a: SPECIAL [INTEGER]): BOOLEAN is
+	special_is_equal (a, o_a: SPECIAL [INTEGER]): BOOLEAN
 			-- Is `o_a' considered equal to `a'?
 		local
 			i, nb: INTEGER
@@ -251,7 +251,7 @@ feature {NONE} -- Comparison
 
 feature -- Code generation
 
-	generate_header_files is
+	generate_header_files
 			-- Generate header files for the extension.
 		local
 			i, nb: INTEGER
@@ -271,7 +271,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_body (a_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+	generate_body (a_byte_code: EXT_BYTE_CODE; a_result: RESULT_B)
 			-- Generate body of current externals with assignement to `a_result'.
 		require
 			a_byte_code_not_void: a_byte_code /= Void
@@ -279,7 +279,7 @@ feature -- Code generation
 		deferred
 		end
 
-	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_protect_argument_for_macros: BOOLEAN) is
+	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_protect_argument_for_macros: BOOLEAN)
 			-- Generate parameters for C extension call. Does not include opening
 			-- and closing paranthesis.
 		require
@@ -326,7 +326,7 @@ feature -- Code generation
 			end
 		end
 
-	generate_i_th_parameter (parameters: BYTE_LIST [EXPR_B]; i: INTEGER) is
+	generate_i_th_parameter (parameters: BYTE_LIST [EXPR_B]; i: INTEGER)
 			-- Print associated register to `i'-th parameter of `parameters' if not Void,
 			-- otherwise print `arg' appended by value of `i'.
 		require
@@ -346,7 +346,7 @@ feature -- Code generation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

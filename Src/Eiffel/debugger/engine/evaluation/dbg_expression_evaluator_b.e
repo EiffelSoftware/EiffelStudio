@@ -1,4 +1,4 @@
-indexing
+note
 	description : "Objects used to evaluate a DBG_EXPRESSION ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -64,7 +64,7 @@ create
 
 feature {NONE} -- helpers
 
-	application_status: APPLICATION_STATUS is
+	application_status: APPLICATION_STATUS
 		require
 			application_is_executing: debugger_manager.application_is_executing
 		do
@@ -92,7 +92,7 @@ feature -- Context
 	context_feature: FEATURE_I
 			-- Feature associated to the context
 
-	Default_context_feature: FEATURE_I is
+	Default_context_feature: FEATURE_I
 			-- Default context feature for `context_feature'
 		once
 			Result := System.Any_class.compiled_class.feature_named ("default_create")
@@ -100,7 +100,7 @@ feature -- Context
 
 feature {DBG_EXPRESSION_EVALUATION} -- Basic operation: Evaluation
 
-	reset_error is
+	reset_error
 			-- <Precursor>
 		do
 			Precursor
@@ -109,7 +109,7 @@ feature {DBG_EXPRESSION_EVALUATION} -- Basic operation: Evaluation
 
 feature {NONE} -- Evaluation
 
-	process_evaluation (keep_assertion_checking: BOOLEAN) is
+	process_evaluation (keep_assertion_checking: BOOLEAN)
 			-- Compute the value of the last message of `Current'.
 		local
 			l_error_occurred: BOOLEAN
@@ -198,14 +198,14 @@ feature {NONE} -- Evaluation
 										)
 		end
 
-	clean_temp_data is
+	clean_temp_data
 			-- Clean temporary data used for evaluation
 		do
 			tmp_result := Void
 			tmp_target := Void
 		end
 
-	process_byte_node_evaluation (keep_assertion_checking: BOOLEAN) is
+	process_byte_node_evaluation (keep_assertion_checking: BOOLEAN)
 			-- Process byte node evaluation
 			-- if `keep_assertion_checking' is False, discard all assertion during evaluation
 		require
@@ -237,7 +237,7 @@ feature {NONE} -- Evaluation
 
 feature {NONE} -- INSTR_B evaluation
 
-	process_instruction_evaluation (a_instr_b: INSTR_B) is
+	process_instruction_evaluation (a_instr_b: INSTR_B)
 		local
 			l_instr_call_b: INSTR_CALL_B
 		do
@@ -251,12 +251,12 @@ feature {NONE} -- INSTR_B evaluation
 
 feature {NONE} -- EXPR_B evaluation
 
-	process_expression_evaluation (a_expr_b: EXPR_B) is
+	process_expression_evaluation (a_expr_b: EXPR_B)
 		do
 			process_expr_b (a_expr_b)
 		end
 
-	standalone_evaluation_expr_b (a_expr_b: EXPR_B): DBG_EVALUATED_VALUE is
+	standalone_evaluation_expr_b (a_expr_b: EXPR_B): DBG_EVALUATED_VALUE
 		require
 			a_expr_b /= Void
 		local
@@ -278,7 +278,7 @@ feature {NONE} -- EXPR_B evaluation
 
 feature {BYTE_NODE} -- Routine visitors
 
-	process_std_byte_code (a_node: STD_BYTE_CODE) is
+	process_std_byte_code (a_node: STD_BYTE_CODE)
 			-- Process `a_node'.
 		do
 			check not_yet_implemented: False end
@@ -286,19 +286,19 @@ feature {BYTE_NODE} -- Routine visitors
 
 feature {BYTE_NODE} -- Visitor
 
-	process_access_expr_b (a_node: ACCESS_EXPR_B) is
+	process_access_expr_b (a_node: ACCESS_EXPR_B)
 			-- Process `a_node'.
 		do
 			process_expr_b (a_node.expr)
 		end
 
-	process_address_b (a_node: ADDRESS_B) is
+	process_address_b (a_node: ADDRESS_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_argument_b (a_node: ARGUMENT_B) is
+	process_argument_b (a_node: ARGUMENT_B)
 			-- Process `a_node'.
 		local
 			dv: ABSTRACT_DEBUG_VALUE
@@ -318,7 +318,7 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_array_const_b (a_node: ARRAY_CONST_B) is
+	process_array_const_b (a_node: ARRAY_CONST_B)
 			-- Process `a_node'.
 		local
 			l_byte_list: LIST [BYTE_NODE]
@@ -412,19 +412,19 @@ feature {BYTE_NODE} -- Visitor
 			tmp_target := l_tmp_target_backup
 		end
 
-	process_assert_b (a_node: ASSERT_B) is
+	process_assert_b (a_node: ASSERT_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_assign_b (a_node: ASSIGN_B) is
+	process_assign_b (a_node: ASSIGN_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
-	process_attribute_b (a_node: ATTRIBUTE_B) is
+	process_attribute_b (a_node: ATTRIBUTE_B)
 			-- Process `a_node'.
 		local
 			cl: CLASS_C
@@ -454,13 +454,13 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_bin_and_b (a_node: BIN_AND_B) is
+	process_bin_and_b (a_node: BIN_AND_B)
 			-- Process `a_node'.
 		do
 			process_bin_and_then_b (a_node)
 		end
 
-	process_bin_and_then_b (a_node: B_AND_THEN_B) is
+	process_bin_and_then_b (a_node: B_AND_THEN_B)
 			-- Process `a_node'.
 		do
 			if a_node.access /= Void then
@@ -470,13 +470,13 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_bin_div_b (a_node: BIN_DIV_B) is
+	process_bin_div_b (a_node: BIN_DIV_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_eq_b (a_node: BIN_EQ_B) is
+	process_bin_eq_b (a_node: BIN_EQ_B)
 			-- Process `a_node'.
 		local
 			o: like operands_for_binary_b
@@ -498,55 +498,55 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_bin_free_b (a_node: BIN_FREE_B) is
+	process_bin_free_b (a_node: BIN_FREE_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_ge_b (a_node: BIN_GE_B) is
+	process_bin_ge_b (a_node: BIN_GE_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_gt_b (a_node: BIN_GT_B) is
+	process_bin_gt_b (a_node: BIN_GT_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_implies_b (a_node: B_IMPLIES_B) is
+	process_bin_implies_b (a_node: B_IMPLIES_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_le_b (a_node: BIN_LE_B) is
+	process_bin_le_b (a_node: BIN_LE_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_lt_b (a_node: BIN_LT_B) is
+	process_bin_lt_b (a_node: BIN_LT_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_minus_b (a_node: BIN_MINUS_B) is
+	process_bin_minus_b (a_node: BIN_MINUS_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_mod_b (a_node: BIN_MOD_B) is
+	process_bin_mod_b (a_node: BIN_MOD_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_ne_b (a_node: BIN_NE_B) is
+	process_bin_ne_b (a_node: BIN_NE_B)
 			-- Process `a_node'.
 		local
 			o: like operands_for_binary_b
@@ -568,19 +568,19 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_bin_not_tilde_b (a_node: BIN_NOT_TILDE_B) is
+	process_bin_not_tilde_b (a_node: BIN_NOT_TILDE_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_or_b (a_node: BIN_OR_B) is
+	process_bin_or_b (a_node: BIN_OR_B)
 			-- Process `a_node'.
 		do
 			process_bin_or_else_b (a_node)
 		end
 
-	process_bin_or_else_b (a_node: B_OR_ELSE_B) is
+	process_bin_or_else_b (a_node: B_OR_ELSE_B)
 			-- Process `a_node'.
 		do
 			if a_node.access /= Void then
@@ -590,73 +590,73 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_bin_plus_b (a_node: BIN_PLUS_B) is
+	process_bin_plus_b (a_node: BIN_PLUS_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_power_b (a_node: BIN_POWER_B) is
+	process_bin_power_b (a_node: BIN_POWER_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_slash_b (a_node: BIN_SLASH_B) is
+	process_bin_slash_b (a_node: BIN_SLASH_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_star_b (a_node: BIN_STAR_B) is
+	process_bin_star_b (a_node: BIN_STAR_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_tilde_b (a_node: BIN_TILDE_B) is
+	process_bin_tilde_b (a_node: BIN_TILDE_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bin_xor_b (a_node: BIN_XOR_B) is
+	process_bin_xor_b (a_node: BIN_XOR_B)
 			-- Process `a_node'.
 		do
 			process_binary_b (a_node)
 		end
 
-	process_bit_const_b (a_node: BIT_CONST_B) is
+	process_bit_const_b (a_node: BIT_CONST_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_bool_const_b (a_node: BOOL_CONST_B) is
+	process_bool_const_b (a_node: BOOL_CONST_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_byte_list (a_node: BYTE_LIST [BYTE_NODE]) is
+	process_byte_list (a_node: BYTE_LIST [BYTE_NODE])
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_case_b (a_node: CASE_B) is
+	process_case_b (a_node: CASE_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_char_const_b (a_node: CHAR_CONST_B) is
+	process_char_const_b (a_node: CHAR_CONST_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_char_val_b (a_node: CHAR_VAL_B) is
+	process_char_val_b (a_node: CHAR_VAL_B)
 			-- Process `a_node'.
 		local
 			c: CHARACTER_32
@@ -667,13 +667,13 @@ feature {BYTE_NODE} -- Visitor
 			create tmp_result.make_with_value (dv)
 		end
 
-	process_check_b (a_node: CHECK_B) is
+	process_check_b (a_node: CHECK_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
-	process_constant_b (a_node: CONSTANT_B) is
+	process_constant_b (a_node: CONSTANT_B)
 			-- Process `a_node'.
 		local
 			l_value_i: VALUE_I
@@ -687,7 +687,7 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_creation_expr_b (a_node: CREATION_EXPR_B) is
+	process_creation_expr_b (a_node: CREATION_EXPR_B)
 			-- Process `a_node'.
 		local
 			retried: BOOLEAN
@@ -755,7 +755,7 @@ feature {BYTE_NODE} -- Visitor
 			retry
 		end
 
-	process_current_b (a_node: CURRENT_B) is
+	process_current_b (a_node: CURRENT_B)
 			-- Process `a_node'.
 		local
 			cse: EIFFEL_CALL_STACK_ELEMENT
@@ -778,31 +778,31 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_custom_attribute_b (a_node: CUSTOM_ATTRIBUTE_B) is
+	process_custom_attribute_b (a_node: CUSTOM_ATTRIBUTE_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
-	process_debug_b (a_node: DEBUG_B) is
+	process_debug_b (a_node: DEBUG_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
-	process_elsif_b (a_node: ELSIF_B) is
+	process_elsif_b (a_node: ELSIF_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
-	process_expr_address_b (a_node: EXPR_ADDRESS_B) is
+	process_expr_address_b (a_node: EXPR_ADDRESS_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_external_b (a_node: EXTERNAL_B) is
+	process_external_b (a_node: EXTERNAL_B)
 			-- Process `a_node'.
 		local
 			fi: FEATURE_I
@@ -876,7 +876,7 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_feature_b (a_node: FEATURE_B) is
+	process_feature_b (a_node: FEATURE_B)
 			-- Process `a_node'.
 		local
 			fi: FEATURE_I
@@ -949,49 +949,49 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_agent_call_b (a_node: AGENT_CALL_B) is
+	process_agent_call_b (a_node: AGENT_CALL_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_formal_conversion_b (a_node: FORMAL_CONVERSION_B) is
+	process_formal_conversion_b (a_node: FORMAL_CONVERSION_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_hector_b (a_node: HECTOR_B) is
+	process_hector_b (a_node: HECTOR_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_if_b (a_node: IF_B) is
+	process_if_b (a_node: IF_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
-	process_inspect_b (a_node: INSPECT_B) is
+	process_inspect_b (a_node: INSPECT_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
-	process_instr_call_b (a_node: INSTR_CALL_B) is
+	process_instr_call_b (a_node: INSTR_CALL_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_instr_list_b (a_node: INSTR_LIST_B) is
+	process_instr_list_b (a_node: INSTR_LIST_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_int64_val_b (a_node: INT64_VAL_B) is
+	process_int64_val_b (a_node: INT64_VAL_B)
 			-- Process `a_node'.
 		local
 			v: INTEGER_64
@@ -1002,7 +1002,7 @@ feature {BYTE_NODE} -- Visitor
 			create tmp_result.make_with_value (dv)
 		end
 
-	process_int_val_b (a_node: INT_VAL_B) is
+	process_int_val_b (a_node: INT_VAL_B)
 			-- Process `a_node'.
 		local
 			v: INTEGER_32
@@ -1013,7 +1013,7 @@ feature {BYTE_NODE} -- Visitor
 			create tmp_result.make_with_value (dv)
 		end
 
-	process_integer_constant (a_node: INTEGER_CONSTANT) is
+	process_integer_constant (a_node: INTEGER_CONSTANT)
 			-- Process `a_node'.
 		local
 			l_type: TYPE_A
@@ -1069,19 +1069,19 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_inv_assert_b (a_node: INV_ASSERT_B) is
+	process_inv_assert_b (a_node: INV_ASSERT_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_invariant_b (a_node: INVARIANT_B) is
+	process_invariant_b (a_node: INVARIANT_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_local_b (a_node: LOCAL_B) is
+	process_local_b (a_node: LOCAL_B)
 			-- Process `a_node'.
 		local
 			dv: ABSTRACT_DEBUG_VALUE
@@ -1098,13 +1098,13 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_loop_b (a_node: LOOP_B) is
+	process_loop_b (a_node: LOOP_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
-	process_nat64_val_b (a_node: NAT64_VAL_B) is
+	process_nat64_val_b (a_node: NAT64_VAL_B)
 			-- Process `a_node'.
 		local
 			v: NATURAL_64
@@ -1115,7 +1115,7 @@ feature {BYTE_NODE} -- Visitor
 			create tmp_result.make_with_value (dv)
 		end
 
-	process_nat_val_b (a_node: NAT_VAL_B) is
+	process_nat_val_b (a_node: NAT_VAL_B)
 			-- Process `a_node'.
 		local
 			v: NATURAL_32
@@ -1127,7 +1127,7 @@ feature {BYTE_NODE} -- Visitor
 			create tmp_result.make_with_value (dv)
 		end
 
-	process_nested_b (a_node: NESTED_B) is
+	process_nested_b (a_node: NESTED_B)
 			-- Process `a_node'.
 		local
 			l_tmp_target_backup: like tmp_target
@@ -1149,13 +1149,13 @@ feature {BYTE_NODE} -- Visitor
 			tmp_target := l_tmp_target_backup
 		end
 
-	process_object_test_b (a_node: OBJECT_TEST_B) is
+	process_object_test_b (a_node: OBJECT_TEST_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
-	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B) is
+	process_object_test_local_b (a_node: OBJECT_TEST_LOCAL_B)
 			-- Process `a_node'.
 		local
 			dv: ABSTRACT_DEBUG_VALUE
@@ -1171,42 +1171,42 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_once_string_b (a_node: ONCE_STRING_B) is
+	process_once_string_b (a_node: ONCE_STRING_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_operand_b (a_node: OPERAND_B) is
+	process_operand_b (a_node: OPERAND_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_parameter_b (a_node: PARAMETER_B) is
+	process_parameter_b (a_node: PARAMETER_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_paran_b (a_node: PARAN_B) is
+	process_paran_b (a_node: PARAN_B)
 			-- Process `a_node'.
 		do
 			process_expr_b (a_node.expr)
 		end
 
-	process_real_const_b (a_node: REAL_CONST_B) is
+	process_real_const_b (a_node: REAL_CONST_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_require_b (a_node: REQUIRE_B) is
+	process_require_b (a_node: REQUIRE_B)
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
-	process_result_b (a_node: RESULT_B) is
+	process_result_b (a_node: RESULT_B)
 			-- Process `a_node'.
 		local
 			dv: ABSTRACT_DEBUG_VALUE
@@ -1228,25 +1228,25 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_retry_b (a_node: RETRY_B) is
+	process_retry_b (a_node: RETRY_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
-	process_reverse_b (a_node: REVERSE_B) is
+	process_reverse_b (a_node: REVERSE_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
-	process_routine_creation_b (a_node: ROUTINE_CREATION_B) is
+	process_routine_creation_b (a_node: ROUTINE_CREATION_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_string_b (a_node: STRING_B) is
+	process_string_b (a_node: STRING_B)
 			-- Process `a_node'.
 		local
 			dv: DUMP_VALUE
@@ -1260,13 +1260,13 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_strip_b (a_node: STRIP_B) is
+	process_strip_b (a_node: STRIP_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_tuple_access_b (a_node: TUPLE_ACCESS_B) is
+	process_tuple_access_b (a_node: TUPLE_ACCESS_B)
 			-- Process `a_node'.
 		local
 			fi: FEATURE_I
@@ -1296,7 +1296,7 @@ feature {BYTE_NODE} -- Visitor
 			end
 		end
 
-	process_tuple_const_b (a_node: TUPLE_CONST_B) is
+	process_tuple_const_b (a_node: TUPLE_CONST_B)
 			-- Process `a_node'.
 		local
 			l_byte_list: LIST [BYTE_NODE]
@@ -1377,7 +1377,7 @@ feature {BYTE_NODE} -- Visitor
 			tmp_target := l_tmp_target_backup
 		end
 
-	process_type_expr_b (a_node: TYPE_EXPR_B) is
+	process_type_expr_b (a_node: TYPE_EXPR_B)
 			-- Process `a_node'.
 		local
 			l_class: CLASS_C
@@ -1402,49 +1402,49 @@ feature {BYTE_NODE} -- Visitor
 			tmp_target := l_tmp_target_backup
 		end
 
-	process_typed_interval_b (a_node: TYPED_INTERVAL_B [INTERVAL_VAL_B]) is
+	process_typed_interval_b (a_node: TYPED_INTERVAL_B [INTERVAL_VAL_B])
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_un_free_b (a_node: UN_FREE_B) is
+	process_un_free_b (a_node: UN_FREE_B)
 			-- Process `a_node'.
 		do
 			process_unary_b (a_node)
 		end
 
-	process_un_minus_b (a_node: UN_MINUS_B) is
+	process_un_minus_b (a_node: UN_MINUS_B)
 			-- Process `a_node'.
 		do
 			a_node.nested_b.process (Current)
 		end
 
-	process_un_not_b (a_node: UN_NOT_B) is
+	process_un_not_b (a_node: UN_NOT_B)
 			-- Process `a_node'.
 		do
 			a_node.nested_b.process (Current)
 		end
 
-	process_un_old_b (a_node: UN_OLD_B) is
+	process_un_old_b (a_node: UN_OLD_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
 		end
 
-	process_un_plus_b (a_node: UN_PLUS_B) is
+	process_un_plus_b (a_node: UN_PLUS_B)
 			-- Process `a_node'.
 		do
 			a_node.nested_b.process (Current)
 		end
 
-	process_variant_b (a_node: VARIANT_B) is
+	process_variant_b (a_node: VARIANT_B)
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
 		end
 
-	process_void_b (a_node: VOID_B) is
+	process_void_b (a_node: VOID_B)
 			-- Process `a_node'.
 		do
 			create tmp_result.make_with_value (Debugger_manager.Dump_value_factory.new_void_value (Void))
@@ -1556,7 +1556,7 @@ feature {NONE} -- Visitor: implementation
 			valid_attached_result: Result /= Void implies Result.cse /= Void and Result.feat /= Void
 		end
 
-	evaluate_value_i (a_value_i: VALUE_I; cl: CLASS_C) is
+	evaluate_value_i (a_value_i: VALUE_I; cl: CLASS_C)
 			-- Evaluate `a_value_i'
 		require
 			a_value_i_not_void: a_value_i /= Void
@@ -1632,7 +1632,7 @@ feature {NONE} -- Visitor: implementation
 			end
 		end
 
-	evaluate_boolean_nested_b (a_node: NESTED_B; a_is_lazy: BOOLEAN; a_lazy_value: BOOLEAN) is
+	evaluate_boolean_nested_b (a_node: NESTED_B; a_is_lazy: BOOLEAN; a_lazy_value: BOOLEAN)
 			-- Evaluate nested expression with boolean expression
 			-- if `a_is_lazy' is True, only evaluate first part
 			-- if first value is `a_lazy_value'
@@ -1672,7 +1672,7 @@ feature {NONE} -- Visitor: implementation
 			tmp_target := l_tmp_target_backup
 		end
 
-	evaluate_creation_expr_b_with_type (a_node: CREATION_EXPR_B; a_type_i: CL_TYPE_A) is
+	evaluate_creation_expr_b_with_type (a_node: CREATION_EXPR_B; a_type_i: CL_TYPE_A)
 			-- Evaluate creation expression, given the type to create `a_type_i'
 		require
 			is_valid: is_valid
@@ -1735,7 +1735,7 @@ feature {NONE} -- Visitor: implementation
 			tmp_target := l_tmp_target_backup
 		end
 
-	parameter_values_from_parameters_b (a_node: BYTE_LIST [EXPR_B]): ARRAYED_LIST [DUMP_VALUE] is
+	parameter_values_from_parameters_b (a_node: BYTE_LIST [EXPR_B]): ARRAYED_LIST [DUMP_VALUE]
 			-- Parameters values for `a_params'
 			-- `a_params' can be Void
 		require
@@ -1764,7 +1764,7 @@ feature {NONE} -- Visitor: implementation
 			a_node_attached_implies_result: a_node /= Void implies Result /= Void
 		end
 
-	parameter_evaluation (a_node: EXPR_B): DBG_EVALUATED_VALUE is
+	parameter_evaluation (a_node: EXPR_B): DBG_EVALUATED_VALUE
 			-- Evaluate `a_node' as a parameter
 		require
 			is_valid: is_valid
@@ -1795,7 +1795,7 @@ feature {NONE} -- Visitor: implementation
 
 feature {NONE} -- Evaluation: implementation
 
-	prepare_dbg_evaluation is
+	prepare_dbg_evaluation
 			-- Initialization before effective evaluation
 		require
 			dbg_evaluator /= Void
@@ -1803,7 +1803,7 @@ feature {NONE} -- Evaluation: implementation
 			dbg_evaluator.set_last_variables (tmp_result)
 		end
 
-	retrieve_dbg_evaluation is
+	retrieve_dbg_evaluation
 			-- Get the effective evaluation's result and info
 		local
 			r: like tmp_result
@@ -1820,7 +1820,7 @@ feature {NONE} -- Evaluation: implementation
 			tmp_result_void_implies_error: tmp_result = Void implies error_occurred
 		end
 
-	evaluate_static_function (f: FEATURE_I; cl: CLASS_C; params: LIST [DUMP_VALUE]) is
+	evaluate_static_function (f: FEATURE_I; cl: CLASS_C; params: LIST [DUMP_VALUE])
 			-- Evaluate static function `f' with parameters `params'
 		require
 			f /= Void
@@ -1835,7 +1835,7 @@ feature {NONE} -- Evaluation: implementation
 			end
 		end
 
-	evaluate_once (f: FEATURE_I) is
+	evaluate_once (f: FEATURE_I)
 			-- Evaluate once function `f'
 			--| in fact, get once function data
 			--| Do not force the evaluation
@@ -1847,7 +1847,7 @@ feature {NONE} -- Evaluation: implementation
 			retrieve_dbg_evaluation
 		end
 
-	evaluate_constant (f: FEATURE_I) is
+	evaluate_constant (f: FEATURE_I)
 			-- Find the value of constant feature `f'.
 		require
 			valid_feature: f /= Void
@@ -1863,7 +1863,7 @@ feature {NONE} -- Evaluation: implementation
 			end
 		end
 
-	evaluate_attribute (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; c: CLASS_C; f: FEATURE_I) is
+	evaluate_attribute (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; c: CLASS_C; f: FEATURE_I)
 			-- Evaluate attribute feature
 		do
 			if a_target /= Void and then a_target.is_void then
@@ -1875,7 +1875,7 @@ feature {NONE} -- Evaluation: implementation
 			end
 		end
 
-	evaluate_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
+	evaluate_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE])
 			-- Evaluate routine `f' with parameters `params'
 		require
 			f /= Void
@@ -1896,7 +1896,7 @@ feature {NONE} -- Evaluation: implementation
 			end
 		end
 
-	evaluate_static_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]) is
+	evaluate_static_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE])
 			-- Evaluate static routine `f' with parameters `params'
 		require
 			f /= Void
@@ -1917,7 +1917,7 @@ feature {NONE} -- Evaluation: implementation
 
 	evaluate_function_with_name (a_target: DUMP_VALUE;
 				a_feature_name, a_external_name: STRING;
-				params: LIST [DUMP_VALUE]) is
+				params: LIST [DUMP_VALUE])
 			-- Evaluate function defined by `a_feature_name'
 		require
 			a_feature_name_not_void: a_feature_name /= Void
@@ -1942,7 +1942,7 @@ feature {NONE} -- Evaluation: implementation
 			end
 		end
 
-	create_empty_instance_of (a_type_i: CL_TYPE_A) is
+	create_empty_instance_of (a_type_i: CL_TYPE_A)
 			-- New empty instance of class represented by `a_type_id'.
 		require
 			a_type_i_not_void: a_type_i /= Void
@@ -1964,7 +1964,7 @@ feature {NONE} -- Evaluation: implementation
 			end
 		end
 
-	create_special_any_instance (a_type_i: CL_TYPE_A; a_count: INTEGER) is
+	create_special_any_instance (a_type_i: CL_TYPE_A; a_count: INTEGER)
 			-- Create new instance of SPECIAL represented by `a_type_id' and `a_count'
 		require
 			a_type_i_not_void: a_type_i /= Void
@@ -1988,7 +1988,7 @@ feature {NONE} -- Evaluation: implementation
 
 feature -- Context: Element change
 
-	init_context_with_current_callstack is
+	init_context_with_current_callstack
 			-- Init context data with values from current callstack
 			-- i.e: current debugging contex	
 		local
@@ -2015,7 +2015,7 @@ feature -- Context: Element change
 			end
 		end
 
-	init_context_address_with_current_callstack is
+	init_context_address_with_current_callstack
 			-- Init context address with data from current callstack
 			-- i.e: current debugging context
 		local
@@ -2029,7 +2029,7 @@ feature -- Context: Element change
 			end
 		end
 
-	set_context_data (f: like context_feature; c: like context_class; ct: like context_class_type) is
+	set_context_data (f: like context_feature; c: like context_class; ct: like context_class_type)
 			-- Set context data related to `f', `c', `ct'
 		local
 			l_reset_byte_node: BOOLEAN
@@ -2077,7 +2077,7 @@ feature -- Context: Element change
 			end
 		end
 
-	display_context_information	is
+	display_context_information
 			-- Display context information in the output
 			-- for debugging purpose only
 		local
@@ -2137,7 +2137,7 @@ feature -- Access
 	byte_node_computed: BOOLEAN
 			-- is byte_node computed?
 
-	byte_node: BYTE_NODE is
+	byte_node: BYTE_NODE
 			-- Byte node related to `expression'
 		do
 			Result := internal_byte_node
@@ -2149,7 +2149,7 @@ feature -- Access
 			end
 		end
 
-	is_boolean_expression (f: FEATURE_I): BOOLEAN is
+	is_boolean_expression (f: FEATURE_I): BOOLEAN
 			-- Is `Current' a boolean query in the context of `f'?
 		local
 			old_context_feature: like context_feature
@@ -2224,7 +2224,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	new_integer_dump_value (i: INTEGER): DUMP_VALUE_BASIC is
+	new_integer_dump_value (i: INTEGER): DUMP_VALUE_BASIC
 			-- New DUMP_VALUE representing an INTEGER value.
 		local
 			dbgm: like debugger_manager
@@ -2233,7 +2233,7 @@ feature {NONE} -- Implementation
 			Result := dbgm.dump_value_factory.new_integer_32_value (i, dbgm.compiler_data.integer_32_class_c)
 		end
 
-	prepare_contexts (cl: CLASS_C; ct: CLASS_TYPE) is
+	prepare_contexts (cl: CLASS_C; ct: CLASS_TYPE)
 			-- Prepare AST shared context  with `cl' and `ct'
 		require
 			cl_not_void: cl /= Void
@@ -2253,7 +2253,7 @@ feature {NONE} -- Implementation
 			Inst_context.set_group (cl.group)
 		end
 
-	get_byte_node is
+	get_byte_node
 			-- get byte node depending of the context
 		require
 			context_feature_not_void: on_context implies context_feature /= Void
@@ -2369,7 +2369,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	byte_node_from_ast (exp: EXPR_AS): like byte_node is
+	byte_node_from_ast (exp: EXPR_AS): like byte_node
 			-- compute expression_byte_node from EXPR_AS `exp'
 		require
 			context_feature_not_void: on_context implies context_feature /= Void
@@ -2429,7 +2429,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	reset_byte_node is
+	reset_byte_node
 			-- Reset `byte_node'
 		do
 			internal_byte_node := Void
@@ -2440,7 +2440,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- OT locals
 
-	add_object_test_locals_info_to_ast_context (f: E_FEATURE) is
+	add_object_test_locals_info_to_ast_context (f: E_FEATURE)
 			-- Add object test locals to the context
 		require
 			f_not_void: f /= Void
@@ -2478,7 +2478,7 @@ feature {NONE} -- OT locals
 
 feature {NONE} -- Compiler helpers
 
-	resolved_real_type_in_context (a_type_i: CL_TYPE_A): CL_TYPE_A is
+	resolved_real_type_in_context (a_type_i: CL_TYPE_A): CL_TYPE_A
 			-- Resolved real type associated with `a_type_i'
 		require
 			a_type_i_not_void: a_type_i /= Void
@@ -2493,7 +2493,7 @@ feature {NONE} -- Compiler helpers
 			Result_not_void: Result /= Void
 		end
 
-	class_c_from_external_b (a_external_b: EXTERNAL_B): CLASS_C is
+	class_c_from_external_b (a_external_b: EXTERNAL_B): CLASS_C
 			-- Class C related to `a_external_b' if exists.
 		require
 			a_expr_b_not_void: a_external_b /= Void
@@ -2511,13 +2511,13 @@ feature {NONE} -- Compiler helpers
 
 feature {NONE} -- Implementation
 
-	dbg_expression_checker: AST_DEBUGGER_EXPRESSION_CHECKER_GENERATOR is
+	dbg_expression_checker: AST_DEBUGGER_EXPRESSION_CHECKER_GENERATOR
 			-- Ast expression checker dedicated for debugger
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Feature redeclaration assigner command should not be
@@ -20,10 +20,10 @@ create {COMPILER_EXPORTER}
 
 feature -- Access
 
-	subcode: INTEGER is 8;
+	subcode: INTEGER = 8;
 			-- Error subcode
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

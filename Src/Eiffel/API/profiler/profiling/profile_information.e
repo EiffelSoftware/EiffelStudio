@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"General information about a profiled run."
@@ -14,7 +14,7 @@ create
 
 feature -- Creation
 
-	make is
+	make
 		do
 			create profile_data.make
 			create cyclic_functions.make
@@ -22,7 +22,7 @@ feature -- Creation
 
 feature -- Adding information
 
-	add_function_to_cycle (function: LANGUAGE_FUNCTION; number: INTEGER) is
+	add_function_to_cycle (function: LANGUAGE_FUNCTION; number: INTEGER)
 			-- Add `function' to cycle with `number'.
 		require
 			valid_cycle: has_cycle (number)
@@ -31,13 +31,13 @@ feature -- Adding information
 			profile_data.add_function_to_cycle (function, number)
 		end
 
-	has_cycle (number: INTEGER): BOOLEAN is
+	has_cycle (number: INTEGER): BOOLEAN
 			-- Is cycle `number' already been profiled?
 		do
 			Result := profile_data.has_cycle (number)
 		end
 
-	set_total_execution_time (new_time: REAL) is
+	set_total_execution_time (new_time: REAL)
 			-- Set total execution time to `new_time').
 		require
 			long_enough: new_time >= 0;
@@ -46,7 +46,7 @@ feature -- Adding information
 			available := true;
 		end;
 
-	insert_eiffel_profiling_data (data: EIFFEL_PROFILE_DATA) is
+	insert_eiffel_profiling_data (data: EIFFEL_PROFILE_DATA)
 			-- Insert `data'
 		require
 			valid_data: data /= Void;
@@ -54,7 +54,7 @@ feature -- Adding information
 			profile_data.insert_eiffel_profiling_data (data);
 		end;
 
-	insert_c_profiling_data (data: C_PROFILE_DATA) is
+	insert_c_profiling_data (data: C_PROFILE_DATA)
 			-- Insert `data'
 		require
 			valid_data: data /= Void;
@@ -62,7 +62,7 @@ feature -- Adding information
 			profile_data.insert_c_profiling_data (data);
 		end;
 
-	insert_cycle_profiling_data (data: CYCLE_PROFILE_DATA) is
+	insert_cycle_profiling_data (data: CYCLE_PROFILE_DATA)
 			-- Insert `data'
 		require
 			valid_cycle: data /= Void;
@@ -70,7 +70,7 @@ feature -- Adding information
 			profile_data.insert_cycle_profiling_data (data);
 		end;
 
-	stop_computation is
+	stop_computation
 			-- Stops computation of the average-attributes.
 		do
 			profile_data.stop_computation;
@@ -78,13 +78,13 @@ feature -- Adding information
 
 feature -- Status report
 
-	is_total_time_available: BOOLEAN is
+	is_total_time_available: BOOLEAN
 			-- May `total_execution_time' be querried?
 		do
 			Result := available;
 		end;
 
-	total_execution_time: REAL is
+	total_execution_time: REAL
 			-- Time spent during the last run.
 		require
 			availble: is_total_time_available;
@@ -92,47 +92,47 @@ feature -- Status report
 			Result := total_exec_time;
 		end;
 
-	number_of_eiffel_features: INTEGER is
+	number_of_eiffel_features: INTEGER
 			-- Number of Eiffel features called
 			-- during the last run.
 		do
 			Result := profile_data.number_of_eiffel_features;
 		end;
 
-	number_of_c_functions: INTEGER is
+	number_of_c_functions: INTEGER
 			-- Number of C functions called during the
 			-- last run.
 		do
 			Result := profile_data.number_of_c_functions;
 		end;
 
-	number_of_cycles: INTEGER is
+	number_of_cycles: INTEGER
 			-- Number of cycles detected during the last run.
 		do
 			Result := profile_data.number_of_cycles;
 		end;
 
-	number_of_cyclic_functions: INTEGER is
+	number_of_cyclic_functions: INTEGER
 			-- Number of C functions that are part of
 			-- of a cycle.
 		do
 			-- BAGGER
 		end;
 
-	number_of_cyclic_features: INTEGER is
+	number_of_cyclic_features: INTEGER
 			-- Number of Eiffel features that are part
 			-- of a call cycle
 		do
 			-- MEER BAGGER
 		end;
 
-	number_of_feature_calls: INTEGER is
+	number_of_feature_calls: INTEGER
 			-- Number of calls to Eiffel features
 		do
 			Result := profile_data.number_of_feature_calls;
 		end;
 
-	number_of_function_calls: INTEGER is
+	number_of_function_calls: INTEGER
 			-- Number of calls to C functions
 		do
 			Result := profile_data.number_of_function_calls;
@@ -143,7 +143,7 @@ feature -- All information
 	profile_data: PROFILE_SET
 		-- Set with all profile information
 
-	set_profile_data (new_data: PROFILE_SET) is
+	set_profile_data (new_data: PROFILE_SET)
 			-- Keep `new_data' as `profile_data'.
 		require
 			no_ghosts: new_data /= Void;
@@ -167,7 +167,7 @@ feature {NONE} -- Attributes
 
 feature {PROFILE_CONVERTER} -- Spit Information for debugging.
 
-	spit_info is
+	spit_info
 			-- Spits all kinds of information about Current.
 			--| For debugging purposes only.
 			--| Will be called from `PROFILE_CONVERTER'.
@@ -185,7 +185,7 @@ feature {PROFILE_CONVERTER} -- Spit Information for debugging.
 			profile_data.spit_info
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

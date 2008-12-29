@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All shared preferences for the Search tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {EB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -26,7 +26,7 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature {EB_SHARED_PREFERENCES} -- Value
 
-	odd_row_background_color: EV_COLOR is
+	odd_row_background_color: EV_COLOR
 			-- Background color of odd rows in class browser
 		do
 			Result := odd_row_background_color_preference.value
@@ -34,7 +34,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			result_attached: Result /= Void
 		end
 
-	even_row_background_color: EV_COLOR is
+	even_row_background_color: EV_COLOR
 			-- Background color of even rows in class browser
 		do
 			Result := even_row_background_color_preference.value
@@ -42,115 +42,115 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			result_attached: Result /= Void
 		end
 
-	is_feature_from_any_shown: BOOLEAN is
+	is_feature_from_any_shown: BOOLEAN
 			-- Are unchanged features from class {ANY} shown?
 		do
 			Result := show_feature_from_any_preference.value
 		end
 
-	is_tooltip_shown: BOOLEAN is
+	is_tooltip_shown: BOOLEAN
 			-- Is tooltip shown?
 		do
 			Result := show_tooltip_preference.value
 		end
 
-	class_flat_view_sorting_order: STRING is
+	class_flat_view_sorting_order: STRING
 			-- String representation of class flat view sorting order
 		do
 			Result := class_flat_view_sorting_order_preference.value
 		end
 
-	class_tree_view_sorting_order: STRING is
+	class_tree_view_sorting_order: STRING
 			-- String representation of class tree view sorting order
 		do
 			Result := class_tree_view_sorting_order_preference.value
 		end
 
-	class_client_view_sorting_order: STRING is
+	class_client_view_sorting_order: STRING
 			-- String representation of class client view sorting order
 		do
 			Result := class_client_view_sorting_order_preference.value
 		end
 
-	feature_view_sorting_order: STRING is
+	feature_view_sorting_order: STRING
 			-- String representation of feature view sorting order
 		do
 			Result := feature_view_sorting_order_preference.value
 		end
 
-	dependency_view_sorting_order: STRING is
+	dependency_view_sorting_order: STRING
 			-- String representation of dependency view sorting order
 		do
 			Result := dependency_view_sorting_order_preference.value
 		end
 
-	is_item_path_shown: BOOLEAN is
+	is_item_path_shown: BOOLEAN
 			-- Is item path shown?
 		do
 			Result := show_item_path_preference.value
 		end
 
-	is_self_dependency_shown: BOOLEAN is
+	is_self_dependency_shown: BOOLEAN
 			-- Is dependency on self shown?
 		do
 			Result := show_self_dependency_preference.value
 		end
 
-	should_referenced_class_be_expanded: BOOLEAN is
+	should_referenced_class_be_expanded: BOOLEAN
 			-- Should referenced classes in dependency view be expanded by default?
 		do
 			Result := expand_referenced_class_preference.value
 		end
 
-	should_referencer_class_be_expanded: BOOLEAN is
+	should_referencer_class_be_expanded: BOOLEAN
 			-- Should referencer classes in dependency view be expanded by default?
 		do
 			Result := expand_referencer_class_preference.value
 		end
 
-	is_class_categorized_in_folder: BOOLEAN is
+	is_class_categorized_in_folder: BOOLEAN
 			-- Should classes be categorized in physical folders where they locates?
 		do
 			Result := categorized_folder_preference.value
 		end
 
-	is_syntactical_class_shown: BOOLEAN is
+	is_syntactical_class_shown: BOOLEAN
 			-- Should syntactical referenced classes be displayed?
 		do
 			Result := syntactical_class_preference.value
 		end
 
-	is_inheritance_class_shown: BOOLEAN is
+	is_inheritance_class_shown: BOOLEAN
 			-- Should inheritance classes be displayed?
 		do
 			Result := inheritance_class_preference.value
 		end
 
-	is_normal_referenced_class_shown: BOOLEAN is
+	is_normal_referenced_class_shown: BOOLEAN
 			-- Should normally referenced classes be displayed?
 		do
 			Result := normal_referenced_class_preference.value
 		end
 
-	is_folder_search_recursive: BOOLEAN is
+	is_folder_search_recursive: BOOLEAN
 			-- Should search for classes in a folder be recursive?
 		do
 			Result := folder_search_recursive_preference.value
 		end
 
-	should_categorized_folder_level_be_expanded: BOOLEAN is
+	should_categorized_folder_level_be_expanded: BOOLEAN
 			-- Should categorized folder level in dependency view be expanded?
 		do
 			Result := expand_categorized_folder_level_preference.value
 		end
 
-	caller_sorting_order: STRING is
+	caller_sorting_order: STRING
 			-- Caller sorting order status
 		do
 			Result := caller_sorting_order_preference.value
 		end
 
-	callee_sorting_order: STRING is
+	callee_sorting_order: STRING
 			-- Caller sorting order status
 		do
 			Result := callee_sorting_order_preference.value
@@ -182,31 +182,31 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	odd_row_background_color_string: STRING is "tools.class_browser.odd_row_background_color"
-	even_row_background_color_string: STRING is "tools.class_browser.even_row_background_color"
-	show_feature_from_any_string: STRING is "tools.class_browser.show_unchanged_feature_from_any"
-	show_tooltip_string: STRING is "tools.class_browser.show_tooltip"
-	class_flat_view_sorting_order_string: STRING is "tools.class_browser.class_flat_view_sorting_order"
-	class_tree_view_sorting_order_string: STRING is "tools.class_browser.class_flat_tree_sorting_order"
-	class_client_view_sorting_order_string: STRING is "tools.class_browser.class_flat_client_sorting_order"
-	feature_view_sorting_order_string: STRING is "tools.class_browser.feature_view_sorting_order"
-	dependency_view_sorting_order_string: STRING is "tools.class_browser.dependency_view_sorting_order"
-	show_item_path_string: STRING is "tools.class_browser.show_item_path"
-	show_self_dependency_string: STRING is "tools.class_browser.show_self_dependency"
-	expand_referenced_class_string: STRING is "tools.class_browser.expand_referenced_class"
-	expand_referencer_class_string: STRING is "tools.class_browser.expand_referencer_class"
-	categorized_folder_string: STRING is "tools.class_browser.classes_categorized_folder"
-	syntactical_class_string: STRING is "tools.class_browser.syntactical_classes"
-	inheritance_class_string: STRING is "tools.class_browser.inheritance_classes"
-	normal_referenced_class_string: STRING is "tools.class_browser.normal_referenced_classes"
-	folder_search_recursive_string: STRING is "tools.class_browser.folder_search_recursive"
-	expand_categorized_folder_level_string: STRING is "tools.class_browser.expand_categorized_folder_level"
-	caller_sorting_order_string: STRING is "tools.class_browser.caller_sorting_order"
-	callee_sorting_order_string: STRING is "tools.class_browser.callee_sorting_order"
+	odd_row_background_color_string: STRING = "tools.class_browser.odd_row_background_color"
+	even_row_background_color_string: STRING = "tools.class_browser.even_row_background_color"
+	show_feature_from_any_string: STRING = "tools.class_browser.show_unchanged_feature_from_any"
+	show_tooltip_string: STRING = "tools.class_browser.show_tooltip"
+	class_flat_view_sorting_order_string: STRING = "tools.class_browser.class_flat_view_sorting_order"
+	class_tree_view_sorting_order_string: STRING = "tools.class_browser.class_flat_tree_sorting_order"
+	class_client_view_sorting_order_string: STRING = "tools.class_browser.class_flat_client_sorting_order"
+	feature_view_sorting_order_string: STRING = "tools.class_browser.feature_view_sorting_order"
+	dependency_view_sorting_order_string: STRING = "tools.class_browser.dependency_view_sorting_order"
+	show_item_path_string: STRING = "tools.class_browser.show_item_path"
+	show_self_dependency_string: STRING = "tools.class_browser.show_self_dependency"
+	expand_referenced_class_string: STRING = "tools.class_browser.expand_referenced_class"
+	expand_referencer_class_string: STRING = "tools.class_browser.expand_referencer_class"
+	categorized_folder_string: STRING = "tools.class_browser.classes_categorized_folder"
+	syntactical_class_string: STRING = "tools.class_browser.syntactical_classes"
+	inheritance_class_string: STRING = "tools.class_browser.inheritance_classes"
+	normal_referenced_class_string: STRING = "tools.class_browser.normal_referenced_classes"
+	folder_search_recursive_string: STRING = "tools.class_browser.folder_search_recursive"
+	expand_categorized_folder_level_string: STRING = "tools.class_browser.expand_categorized_folder_level"
+	caller_sorting_order_string: STRING = "tools.class_browser.caller_sorting_order"
+	callee_sorting_order_string: STRING = "tools.class_browser.callee_sorting_order"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 invariant
 	preferences_not_void: preferences /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of all breakpoints currently set. %
 				 %Breakpoints can be enabled, disabled, or not set. %
 				 %(Breakpoints are equal if they represente the same physical %
@@ -36,13 +36,13 @@ create {BREAK_LIST}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an empty list of break points.
 		do
 			ht_make (50)
 		end
 
-	make_copy_for_saving (lst: like Current) is
+	make_copy_for_saving (lst: like Current)
 		local
 			bp: BREAKPOINT
 		do
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Duplication
 
-	duplication: like Current is
+	duplication: like Current
 			-- <Precursor>
 		do
 			create Result.make_copy_for_saving (Current)
@@ -73,7 +73,7 @@ feature -- Duplication
 
 feature {DEBUGGER_MANAGER,BREAKPOINTS_MANAGER} -- Update after loading
 
-	reload is
+	reload
 			-- Reload after loading breakpoints
 		do
 			from
@@ -86,7 +86,7 @@ feature {DEBUGGER_MANAGER,BREAKPOINTS_MANAGER} -- Update after loading
 			end
 		end
 
-	restore is
+	restore
 			-- reset information about breakpoints set/removed during execution
 		do
 				-- loop on the entire list, and reset the application status of the breakpoint
@@ -101,7 +101,7 @@ feature {DEBUGGER_MANAGER,BREAKPOINTS_MANAGER} -- Update after loading
 			update
 		end
 
-	update is
+	update
 			-- remove breakpoint that no more useful from the hash_table
 			-- see `{BREAKPOINT}.is_useless' for further comments
 		local
@@ -144,7 +144,7 @@ feature {DEBUGGER_MANAGER,BREAKPOINTS_MANAGER} -- Update after loading
 
 feature -- Element change
 
-	add_breakpoint (bp: BREAKPOINT) is
+	add_breakpoint (bp: BREAKPOINT)
 			-- Add the new breakpoint `bp' to the list.
 			-- If a breakpoint is already held in the
 			-- list, the breakpoint is set and activated.
@@ -158,7 +158,7 @@ feature -- Element change
 			end
 		end
 
-	append (other: like Current) is
+	append (other: like Current)
 			-- Add breakpoints held in `other' into `Current'.
 		require
 			other_exists: other /= Void
@@ -175,7 +175,7 @@ feature -- Element change
 
 feature -- Access
 
-	has_location (loc: BREAKPOINT_LOCATION): BOOLEAN is
+	has_location (loc: BREAKPOINT_LOCATION): BOOLEAN
 			-- Has_key associated with `loc' ?
 			-- Set found_item to the found item.
 		do
@@ -187,14 +187,14 @@ feature -- Access
 
 feature -- Comparison
 
-	same_keys (a_search_key, a_key: BREAKPOINT_KEY): BOOLEAN is
+	same_keys (a_search_key, a_key: BREAKPOINT_KEY): BOOLEAN
 			-- Does `a_search_key' equal to `a_key'?
 			--| Default implementation is using `is_equal'.
 		do
 			Result := a_search_key.same_breakpoint_key (a_key)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error handler for Eiffel Query Language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialization
 		do
 			create error_list.make
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Status
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Has error handler detected an error so far?
 		do
 			Result := not error_list.is_empty
@@ -38,7 +38,7 @@ feature -- Status
 
 feature -- Element change
 
-	insert_interrupt_error (a_msg: STRING_GENERAL) is
+	insert_interrupt_error (a_msg: STRING_GENERAL)
 			-- Insert an `interrup_error' so that current query language process
 			-- can be stopped.
 			-- `a_msg' contains a message.
@@ -52,7 +52,7 @@ feature -- Element change
 			raise_error
 		end
 
-	insert_error (e: QL_ERROR) is
+	insert_error (e: QL_ERROR)
 			-- Insert `e' in `error_list'.
 		require
 			good_argument: e /= Void
@@ -61,7 +61,7 @@ feature -- Element change
 			error_list.finish
 		end
 
-	raise_error is
+	raise_error
 			-- Raise an exception.
 		require
 			has_error: has_error
@@ -69,7 +69,7 @@ feature -- Element change
 			raise ("Query language processing error")
 		end
 
-	checksum is
+	checksum
 			-- Check if there are errors in `error_list' and raise
 			-- an error if needed.
 		do
@@ -78,13 +78,13 @@ feature -- Element change
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Empty `error_list'.
 		do
 			error_list.wipe_out
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

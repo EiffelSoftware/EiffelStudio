@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract notion of a command"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ feature -- Access
 	referred_shortcut: MANAGED_SHORTCUT
 			-- A referred managed shortcut.
 
-	shortcut_string: STRING_GENERAL is
+	shortcut_string: STRING_GENERAL
 			-- Shortcut string.
 		do
 			if referred_shortcut /= Void then
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Status report
 
-	shortcut_available: BOOLEAN is
+	shortcut_available: BOOLEAN
 			-- Is shortcut available?
 		do
 			if referred_shortcut /= Void then
@@ -60,7 +60,7 @@ feature -- Status report
 
 feature -- Status Change
 
-	set_referred_shortcut (a_shortcut: like referred_shortcut) is
+	set_referred_shortcut (a_shortcut: like referred_shortcut)
 			-- Set `referred_shortcut' with `a_shortcut'.
 		do
 			referred_shortcut := a_shortcut
@@ -68,7 +68,7 @@ feature -- Status Change
 			referred_shortcut_set: referred_shortcut = a_shortcut
 		end
 
-	update (a_window: EV_WINDOW) is
+	update (a_window: EV_WINDOW)
 			-- Update `accelerator' and interfaces according to `referred_shortcut'.
 		require
 			a_window_not_void: a_window /= Void
@@ -78,7 +78,7 @@ feature -- Status Change
 
 feature {NONE} -- Implementation
 
-	update_accelerator (a_window: EV_WINDOW) is
+	update_accelerator (a_window: EV_WINDOW)
 			-- Change `accelerator' according to `referred_shortcut' and
 			-- update it in `a_window'.
 		require
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	extend_accelerator (a_list: EV_ACCELERATOR_LIST; a_acc: EV_ACCELERATOR) is
+	extend_accelerator (a_list: EV_ACCELERATOR_LIST; a_acc: EV_ACCELERATOR)
 			-- Extend an accelerator into the list.
 		require
 			a_list_not_void: a_list /= Void
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			a_list.extend (a_acc)
 		end
 
-	remove_accelerator_managed_from_list (a_list: EV_ACCELERATOR_LIST) is
+	remove_accelerator_managed_from_list (a_list: EV_ACCELERATOR_LIST)
 			-- Remove any managed accelerator from `a_list'. Also wipe it in `managed_accelerators'.
 		require
 			a_list_not_void: a_list /= Void
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	duplicate_accelerator (a_acc: EV_ACCELERATOR): EV_ACCELERATOR is
+	duplicate_accelerator (a_acc: EV_ACCELERATOR): EV_ACCELERATOR
 			-- Duplicate accelerator.
 		require
 			a_acc_not_void: a_acc /= Void
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	collect_destroyed_accelerators is
+	collect_destroyed_accelerators
 			-- Remove destroyed or unparented accelerators from `managed_accelerators'.
 		local
 			l_accs: like managed_accelerators
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	managed_accelerators: ARRAYED_LIST [EV_ACCELERATOR] is
+	managed_accelerators: ARRAYED_LIST [EV_ACCELERATOR]
 			-- Managed accelerators
 			-- Each accelerator should be taken by one window.
 			-- If current is any once object, destroyed/unparented accelerator might exist.
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 
 	managed_accelerators_internal: like managed_accelerators;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

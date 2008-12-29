@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manager to handle customized formatters"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	change_actions: ACTION_SEQUENCE [TUPLE] is
+	change_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when change occurs
 			-- This maybe because modification through customized formatter setup procedure or
 			-- through metric definition change.
@@ -33,7 +33,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	formatters (a_tool_name: STRING; a_manager: EB_STONABLE): LIST [EB_CUSTOMIZED_FORMATTER] is
+	formatters (a_tool_name: STRING; a_manager: EB_STONABLE): LIST [EB_CUSTOMIZED_FORMATTER]
 			-- Loaded customized formatters whose default tool is `a_tool_name'
 			-- Always create new formatter instances from `formatter_descriptors'.
 		local
@@ -62,7 +62,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	formatter_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP] is
+	formatter_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP]
 			-- List of formatter descriptors loaded by `items_from_file'
 		do
 			if formatter_descriptors_internal = Void then
@@ -71,7 +71,7 @@ feature -- Access
 			Result := formatter_descriptors_internal
 		end
 
-	xml_for_descriptor (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_parent: XM_COMPOSITE): XM_ELEMENT is
+	xml_for_descriptor (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP; a_parent: XM_COMPOSITE): XM_ELEMENT
 			-- Xml element for `a_descriptor'
 		require
 			a_descriptor_attached: a_descriptor /= Void
@@ -131,13 +131,13 @@ feature -- Access
 
 feature -- Status report
 
-	has_formatters: BOOLEAN is
+	has_formatters: BOOLEAN
 			-- Is there any customized formatter loaded?
 		do
 			Result := not formatter_descriptors.is_empty
 		end
 
-	is_formatter_global_scope (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP): BOOLEAN is
+	is_formatter_global_scope (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP): BOOLEAN
 			-- Is formatter defined by `a_descriptor' of global scope?
 		require
 			a_descriptor_attached: a_descriptor /= Void
@@ -145,7 +145,7 @@ feature -- Status report
 			Result := a_descriptor.is_global_scope
 		end
 
-	is_formatter_target_scope (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP): BOOLEAN is
+	is_formatter_target_scope (a_descriptor: EB_CUSTOMIZED_FORMATTER_DESP): BOOLEAN
 			-- Is formatter defined by `a_descriptor' of target scope?
 		require
 			a_descriptor_attached: a_descriptor /= Void
@@ -155,7 +155,7 @@ feature -- Status report
 
 feature -- Setting
 
-	load (a_error_agent: PROCEDURE [ANY, TUPLE]) is
+	load (a_error_agent: PROCEDURE [ANY, TUPLE])
 			-- Load global and target scope formatters.
 			-- `a_error_agent' is the agent invoked when error occurs during loading.
 		local
@@ -174,7 +174,7 @@ feature -- Setting
 			change_actions.call (Void)
 		end
 
-	store is
+	store
 			-- Store formatters in xml files.
 		do
 			if has_formatters then
@@ -182,7 +182,7 @@ feature -- Setting
 			end
 		end
 
-	store_descriptors (a_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP]) is
+	store_descriptors (a_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP])
 			-- Store `a_descriptors' in global or target scope xml files.
 		require
 			a_descriptors_attached: a_descriptors /= Void
@@ -197,7 +197,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation
 
-	load_formatters (a_file: STRING; a_global: BOOLEAN; a_error_agent: PROCEDURE [ANY, TUPLE]) is
+	load_formatters (a_file: STRING; a_global: BOOLEAN; a_error_agent: PROCEDURE [ANY, TUPLE])
 			-- Load formatters contained in file `a_file' and mark loaded formatters as of global scope if `a_global' is True,
 			-- otherwise as of target scope.
 			-- If error occurs, call `a_error_agent'.
@@ -224,7 +224,7 @@ feature{NONE} -- Implementation
 			formatter_descriptors.append (l_descriptors)
 		end
 
-	mark_descriptors (a_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP]; a_global: BOOLEAN) is
+	mark_descriptors (a_descriptors: LIST [EB_CUSTOMIZED_FORMATTER_DESP]; a_global: BOOLEAN)
 			-- Mark descriptors given by `a_descriptors' as of global scope if `a_global' is True,
 			-- otherwise as of target scope.
 		require
@@ -243,10 +243,10 @@ feature{NONE} -- Implementation/Data
 	formatter_descriptors_internal: like formatter_descriptors
 			-- Implementation of `formatter_descriptors'
 
-	formatter_file_name: STRING is "formatters.xml"
+	formatter_file_name: STRING = "formatters.xml"
 			-- File name of formatter definition
 
-	target_formatter_file_path: FILE_NAME is
+	target_formatter_file_path: FILE_NAME
 			-- Path to store target formatter file
 		require
 			system_defined: workbench.universe_defined
@@ -256,13 +256,13 @@ feature{NONE} -- Implementation/Data
 			result_attached: Result /= Void
 		end
 
-	global_formatter_file: STRING is
+	global_formatter_file: STRING
 			-- File to store global customized formatters information
 		do
 			Result := absolute_file_name (global_file_path, formatter_file_name)
 		end
 
-	target_formatter_file: STRING is
+	target_formatter_file: STRING
 			-- File to store target customized formatters information
 		require
 			system_defined: workbench.universe_defined
@@ -273,7 +273,7 @@ feature{NONE} -- Implementation/Data
 	change_actions_internal: like change_actions;
 			-- Implementation of `change_actions'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

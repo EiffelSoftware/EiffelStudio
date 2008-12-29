@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Runs tests in a separate process and reports testing results.
 	]"

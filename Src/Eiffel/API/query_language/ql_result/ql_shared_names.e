@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared names used in Eiffel Query Language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	query_language_names: QL_NAMES is
+	query_language_names: QL_NAMES
 			-- Names used in query language
 		once
 			create Result
@@ -19,7 +19,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

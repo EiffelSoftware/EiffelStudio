@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Enlarged parameter expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ feature -- Access
 	register: REGISTRABLE;
 			-- Register used to store metamorphosed value
 
-	c_type: TYPE_C is
+	c_type: TYPE_C
 			-- C type of the attachment target
 		do
 			Result := real_type (attachment_type).c_type
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Element change
 
-	compute_is_address_needed is
+	compute_is_address_needed
 			-- Compute value for `is_address_needed'.
 		require
 			not_il_generation: not system.il_generation
@@ -57,13 +57,13 @@ feature -- Element change
 
 feature -- Settings
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Assign `r' to `register'
 		do
 			register := r;
 		end;
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Propagate a register in expression.
 		do
 			expression.propagate (r);
@@ -72,7 +72,7 @@ feature -- Settings
 			end;
 		end;
 
-	free_register is
+	free_register
 			-- Free register used by expression
 		do
 			expression.free_register;
@@ -81,7 +81,7 @@ feature -- Settings
 			end;
 		end;
 
-	analyze is
+	analyze
 			-- Analyze expression
 		local
 			l_expression: like expression
@@ -115,14 +115,14 @@ feature -- Settings
 			end
 		end
 
-	unanalyze is
+	unanalyze
 			-- Undo the analysis of the expression
 		do
 			expression.unanalyze;
 			register := Void;
 		end;
 
-	generate is
+	generate
 			-- Generate expression
 		local
 			target_type, source_type: TYPE_A
@@ -146,7 +146,7 @@ feature -- Settings
 			end
 		end
 
-	print_register is
+	print_register
 			-- Print expression value that can be used as an argument to a routine.
 		local
 			target_type, source_type: TYPE_A;
@@ -204,7 +204,7 @@ feature -- Settings
 			end;
 		end;
 
-	print_immediate_register is
+	print_immediate_register
 			-- Print expression value for immediate use,
 			-- not for passing as an argument.
 		do
@@ -215,7 +215,7 @@ feature -- Settings
 			end
 		end
 
-	fill_from (p: PARAMETER_B) is
+	fill_from (p: PARAMETER_B)
 			-- Fill in node from parameter `b'
 		do
 			expression := p.expression.enlarged
@@ -225,7 +225,7 @@ feature -- Settings
 			parent := p.parent
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

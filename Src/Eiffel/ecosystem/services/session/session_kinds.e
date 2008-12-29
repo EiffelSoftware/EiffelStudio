@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Session kind-types for indentification of a session.
 		See {SESSION_I} and {SESSION_MANAGER_S} for more information.
@@ -70,7 +70,7 @@ feature {SESSION_I} -- Constants
 	custom_uuid_string: STRING = "E1FFE104-593B-46C4-BE54-82D0D4C1033F"
 			-- Custom session string UUID.
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

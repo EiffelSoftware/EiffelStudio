@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a supplier/client criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_scope: like scope; a_name: STRING) is
+	make (a_scope: like scope; a_name: STRING)
 			-- Initialize `scope' with `a_scope' and `name' with `a_name'.
 		do
 			Precursor (a_scope, a_name)
@@ -39,7 +39,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	new_criterion (a_scope: QL_SCOPE): QL_CRITERION is
+	new_criterion (a_scope: QL_SCOPE): QL_CRITERION
 			-- QL_CRITERION representing current criterion
 		local
 			l_criterion_factory: QL_CRITERION_FACTORY
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_supplier_client_criterion: BOOLEAN is True
+	is_supplier_client_criterion: BOOLEAN = True
 			-- Is current a criterion for supplier/client classe?
 
 	indirect_referenced_class_retrieved: BOOLEAN
@@ -83,7 +83,7 @@ feature -- Status report
 	is_for_supplier: BOOLEAN
 			-- Is Current criterion for suppiers?
 
-	is_for_client: BOOLEAN is
+	is_for_client: BOOLEAN
 			-- Is Current criterion for clients?
 		do
 			Result := not is_for_supplier
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_indirect_referenced_class_retrieved (b: BOOLEAN) is
+	set_indirect_referenced_class_retrieved (b: BOOLEAN)
 			-- Set `indirect_referenced_class_retrieved' with `b'.
 		do
 			indirect_referenced_class_retrieved := b
@@ -101,7 +101,7 @@ feature -- Setting
 			indirect_referenced_class_retrieved_set: indirect_referenced_class_retrieved = b
 		end
 
-	set_normal_referenced_class_retrieved (b: BOOLEAN) is
+	set_normal_referenced_class_retrieved (b: BOOLEAN)
 			-- Set `normal_referenced_class_retrieved' with `b'.
 		do
 			normal_referenced_class_retrieved := b
@@ -109,7 +109,7 @@ feature -- Setting
 			normal_referenced_class_retrieved_set: normal_referenced_class_retrieved = b
 		end
 
-	set_only_syntactically_referencedd_class_retrieved (b: BOOLEAN) is
+	set_only_syntactically_referencedd_class_retrieved (b: BOOLEAN)
 			-- Set `only_syntactically_referencedd_class_retrieved' with `b'.
 		do
 			only_syntactically_referencedd_class_retrieved := b
@@ -117,7 +117,7 @@ feature -- Setting
 			only_syntactically_referencedd_class_retrieved_set: only_syntactically_referencedd_class_retrieved = b
 		end
 
-	enable_for_supplier is
+	enable_for_supplier
 			-- Enable that Current criterion is for suppliers
 		do
 			is_for_supplier := True
@@ -125,7 +125,7 @@ feature -- Setting
 			is_for_supplier: is_for_supplier
 		end
 
-	enable_for_client is
+	enable_for_client
 			-- Enable that Current criterion is for clients
 		do
 			is_for_supplier := False
@@ -135,13 +135,13 @@ feature -- Setting
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_supplier_client_criterion (Current)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

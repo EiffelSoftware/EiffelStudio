@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Information about a call in the calling stack."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,15 +16,15 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (level: INTEGER; tid: like thread_id) is
+	make (level: INTEGER; tid: like thread_id)
 		do
 		end
 
 feature -- Properties
 
-	is_eiffel_call_stack_element: BOOLEAN is False
+	is_eiffel_call_stack_element: BOOLEAN = False
 
-	current_object: ABSTRACT_DEBUG_VALUE is
+	current_object: ABSTRACT_DEBUG_VALUE
 			-- Current object value
 		do
 		end
@@ -35,11 +35,11 @@ feature -- Properties
 
 feature -- Dotnet Properties
 
-	dotnet_module_name: STRING is
+	dotnet_module_name: STRING
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

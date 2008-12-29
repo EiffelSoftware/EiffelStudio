@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All shared preferences for the Search tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {EB_PREFERENCES} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES)
 			-- Create
 		require
 			preferences_not_void: a_preferences /= Void
@@ -26,55 +26,55 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature -- Value
 
-	init_incremental: BOOLEAN is
+	init_incremental: BOOLEAN
 			-- Incremental search is disabled or not when opening a window.
 		do
 			Result := init_incremental_preference.value
 		end
 
-	init_match_case: BOOLEAN is
+	init_match_case: BOOLEAN
 			-- Match case is disabled or not when opening a window.
 		do
 			Result := init_match_case_preference.value
 		end
 
-	init_use_regular_expression: BOOLEAN is
+	init_use_regular_expression: BOOLEAN
 			-- Regular_expression is disabled or not when opening a window.
 		do
 			Result := init_use_regular_expression_preference.value
 		end
 
-	init_whole_word: BOOLEAN is
+	init_whole_word: BOOLEAN
 			-- Whole_word is disabled or not when opening a window.
 		do
 			Result := init_whole_word_preference.value
 		end
 
-	init_search_backwards: BOOLEAN is
+	init_search_backwards: BOOLEAN
 			-- Search_backwards is disabled or not when opening a window.
 		do
 			Result := init_search_backwards_preference.value
 		end
 
-	init_scope: STRING is
+	init_scope: STRING
 			-- Which scope is going to use when opening a window.
 		do
 			Result := init_scope_preference.selected_value
 		end
 
-	init_only_compiled_classes: BOOLEAN is
+	init_only_compiled_classes: BOOLEAN
 			-- Only compiled classes is disabled or not when opening a window.
 		do
 			Result := init_only_compiled_classes_preference.value
 		end
 
-	init_subclusters: BOOLEAN is
+	init_subclusters: BOOLEAN
 			-- Search subclusters is disabled or not when opening a window.
 		do
 			Result := init_subclusters_preference.value
 		end
 
-	none_result_keyword_field_background_color: EV_COLOR is
+	none_result_keyword_field_background_color: EV_COLOR
 			-- Background color of keyword field, when no result.
 		do
 			Result := none_result_keyword_field_background_color_preference.value
@@ -96,21 +96,21 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	init_incremental_string: STRING is "tools.search_tool.init_incremental"
-	init_match_case_string: STRING is "tools.search_tool.init_match_case"
-	init_use_regular_expression_string: STRING is "tools.search_tool.init_use_regular_expression"
-	init_whole_word_string: STRING is "tools.search_tool.init_whole_word"
-	init_search_backwards_string: STRING is "tools.search_tool.init_search_backwards"
+	init_incremental_string: STRING = "tools.search_tool.init_incremental"
+	init_match_case_string: STRING = "tools.search_tool.init_match_case"
+	init_use_regular_expression_string: STRING = "tools.search_tool.init_use_regular_expression"
+	init_whole_word_string: STRING = "tools.search_tool.init_whole_word"
+	init_search_backwards_string: STRING = "tools.search_tool.init_search_backwards"
 
-	init_scope_string: STRING is "tools.search_tool.init_scope"
-	init_only_compiled_classes_string: STRING is "tools.search_tool.init_only_compiled_classes"
-	init_subclusters_string: STRING is "tools.search_tool.init_subclusters"
+	init_scope_string: STRING = "tools.search_tool.init_scope"
+	init_only_compiled_classes_string: STRING = "tools.search_tool.init_only_compiled_classes"
+	init_subclusters_string: STRING = "tools.search_tool.init_subclusters"
 
-	none_result_keyword_field_background_color_string: STRING is "tools.search_tool.none_result_keyword_field_background_color"
+	none_result_keyword_field_background_color_string: STRING = "tools.search_tool.none_result_keyword_field_background_color"
 
 feature {NONE} -- Implementation
 
-	initialize_preferences is
+	initialize_preferences
 			-- Initialize preference values.
 		local
 			l_manager: EB_PREFERENCE_MANAGER
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 invariant
 	preferences_not_void: preferences /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

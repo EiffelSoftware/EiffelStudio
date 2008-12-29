@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a value that cannot be pre-computed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 		
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to current?
 			-- False since no value cannot be compared.
 		do
@@ -25,10 +25,10 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_no_value: BOOLEAN is True
+	is_no_value: BOOLEAN = True
 			-- Current is a no value.
 
-	valid_type (t: TYPE_A): BOOLEAN is
+	valid_type (t: TYPE_A): BOOLEAN
 			-- Is current value compatible with `t'?
 		do
 			check
@@ -40,7 +40,7 @@ feature -- Status report
 		
 feature -- Generation
 
-	generate (buffer: GENERATION_BUFFER) is
+	generate (buffer: GENERATION_BUFFER)
 			-- Generate current value in `buffer'.
 		do
 			check
@@ -50,7 +50,7 @@ feature -- Generation
 			not_called: False
 		end
 		
-	generate_il is
+	generate_il
 			-- Generate IL code for constant value.
 		do
 			check
@@ -60,7 +60,7 @@ feature -- Generation
 			not_called: False
 		end
 		
-	make_byte_code (ba: BYTE_ARRAY) is
+	make_byte_code (ba: BYTE_ARRAY)
 			-- Generate byte code for a constant value.
 		do
 			check
@@ -72,7 +72,7 @@ feature -- Generation
 
 feature -- Debug
 
-	dump: STRING is
+	dump: STRING
 			-- Dump value.
 		do
 			check
@@ -82,7 +82,7 @@ feature -- Debug
 			not_called: False
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command that can be added in a toolbar."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,34 +21,34 @@ inherit
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		deferred
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer which representing the command.
 		deferred
 		end
 
-	mini_pixmap: EV_PIXMAP is
+	mini_pixmap: EV_PIXMAP
 			-- Pixmap representing the command for mini toolbars.
 		do
 		end
 
-	mini_pixel_buffer: EV_PIXEL_BUFFER is
+	mini_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command for mini toolbars.
 		do
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		deferred
 		ensure
 			valid_result: Result /= Void
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed on the toolbar button.
 		do
 			Result := ""
@@ -56,13 +56,13 @@ feature -- Access
 			valid_result: Result /= Void
 		end
 
-	has_text: BOOLEAN is
+	has_text: BOOLEAN
 			-- Does `Current' show text when displayed
 		do
 			Result := tooltext /= Void and then not tooltext.is_empty
 		end
 
-	is_tooltext_important: BOOLEAN is
+	is_tooltext_important: BOOLEAN
 			-- Is the tooltext important shown when view is 'Selective Text'
 		do
 			Result := False
@@ -75,19 +75,19 @@ feature -- Status Report
 
 feature -- Status setting
 
-	enable_displayed is
+	enable_displayed
 			-- Set `is_displayed' to True.
 		do
 			is_displayed := True
 		end
 
-	disable_displayed is
+	disable_displayed
 			-- Set `is_displayed' to False.
 		do
 			is_displayed := False
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Set `is_sensitive' to True.
 		local
 			sd_toolbar_items: like internal_managed_sd_toolbar_items
@@ -113,7 +113,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Set `is_sensitive' to True.
 		local
 			sd_toolbar_items: like internal_managed_sd_toolbar_items
@@ -138,7 +138,7 @@ feature -- Status setting
 			end
 		end
 
-	update (a_window: EV_WINDOW) is
+	update (a_window: EV_WINDOW)
 			-- Update `accelerator' and interfaces according to `referred_shortcut'.
 		do
 			Precursor {EB_GRAPHICAL_COMMAND} (a_window)
@@ -147,7 +147,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new docking tool bar button for this command.
 		do
 			create Result.make (Current)
@@ -155,7 +155,7 @@ feature -- Basic operations
 			Result.select_actions.extend (agent execute)
 		end
 
-	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON is
+	new_mini_sd_toolbar_item: EB_SD_COMMAND_TOOL_BAR_BUTTON
 			-- Create a new mini toolbar button for this command.
 		require
 			mini_pixmap_not_void: mini_pixmap /= Void
@@ -182,7 +182,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	add_sd_toolbar_item (a_toolbar_item: like new_sd_toolbar_item) is
+	add_sd_toolbar_item (a_toolbar_item: like new_sd_toolbar_item)
 			-- Add `a_sd_toolbar_item' to `managed_sd_toolbar_items'.
 		do
 			managed_sd_toolbar_items.extend (a_toolbar_item)
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			managed_sd_toolbar_items_has_item: managed_sd_toolbar_items.has (a_toolbar_item)
 		end
 
-	initialize_sd_toolbar_item (a_item: EB_SD_COMMAND_TOOL_BAR_BUTTON; display_text: BOOLEAN) is
+	initialize_sd_toolbar_item (a_item: EB_SD_COMMAND_TOOL_BAR_BUTTON; display_text: BOOLEAN)
 			-- Initialize `a_item'
 		require
 			a_item_attached: a_item /= Void
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_sd_toolbar_item (a_toolbar_item: like new_sd_toolbar_item) is
+	remove_sd_toolbar_item (a_toolbar_item: like new_sd_toolbar_item)
 			-- Remove `a_sd_toolbar_item' from `managed_sd_toolbar_items'.
 		require
 			managed_sd_toolbar_items_not_empty: not managed_sd_toolbar_items.is_empty
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 
 feature {EB_SD_COMMAND_TOOL_BAR_BUTTON, EB_DOCKING_LAYOUT_MANAGER} -- Implementaiton
 
-	managed_sd_toolbar_items: ARRAYED_LIST [like new_sd_toolbar_item] is
+	managed_sd_toolbar_items: ARRAYED_LIST [like new_sd_toolbar_item]
 			-- Managed Smart Docking lib tool bar items.
 		do
 			if internal_managed_sd_toolbar_items = Void then
@@ -247,7 +247,7 @@ feature {EB_SD_COMMAND_TOOL_BAR_BUTTON, EB_DOCKING_LAYOUT_MANAGER} -- Implementa
 
 feature {NONE} -- Implementation
 
-	update_tooltips is
+	update_tooltips
 			-- Update tooltips when shortcut is changed.
 		local
 			l_sd_items: like managed_sd_toolbar_items
@@ -279,10 +279,10 @@ feature {NONE} -- Implementation
 
 	internal_managed_sd_toolbar_items: ARRAYED_LIST [like new_sd_toolbar_item]
 
-	Opening_parenthesis: STRING is " ("
-	Closing_parenthesis: STRING is ")";
+	Opening_parenthesis: STRING = " ("
+	Closing_parenthesis: STRING = ")";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

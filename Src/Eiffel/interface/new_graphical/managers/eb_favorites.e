@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Object that encapsulates an organised set of favorite classes %
 				  %The favorites are project-wide."
 	legal: "See notice at end of class."
@@ -36,7 +36,7 @@ create {EB_FAVORITES}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialization.
 		do
 			make (10)
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	make_with_string (a_string: STRING) is
+	make_with_string (a_string: STRING)
 			-- [Re]Initialize the favorites from `a_string'.
 		local
 			analyzed_string: STRING
@@ -84,18 +84,18 @@ feature -- Initialization
 
 feature -- Observer Pattern
 
-	add_observer (a_observer: EB_FAVORITES_OBSERVER) is
+	add_observer (a_observer: EB_FAVORITES_OBSERVER)
 		do
 			observer_list.extend (a_observer)
 		end
 
-	remove_observer (a_observer: EB_FAVORITES_OBSERVER) is
+	remove_observer (a_observer: EB_FAVORITES_OBSERVER)
 		do
 			observer_list.start
 			observer_list.prune_all (a_observer)
 		end
 
-	on_item_added (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
+	on_item_added (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER])
 			-- `a_item' has been added
 			-- `a_item' is situated in the path `a_path'. The first item of the path list
 			-- is a folder situated in the root. If `a_item' is in the root, `a_path' can
@@ -129,7 +129,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_item_removed (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
+	on_item_removed (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER])
 			-- `a_item' has been removed.
 			-- `a_item' is situated in the path `a_path'. The first item of the path list
 			-- is a folder situated in the root. If `a_item' is in the root, `a_path' can
@@ -145,7 +145,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_update is
+	on_update
 			-- The favorites have changed. Recompute the observers.
 		do
 			from
@@ -168,13 +168,13 @@ feature -- Status report
 
 feature -- Element change
 
-	refresh is
+	refresh
 			-- Get rid of all dead classes.
 		do
 			refresh_folder (Current)
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make all observers sensitive.
 		do
 			if not sensitive then
@@ -190,7 +190,7 @@ feature -- Element change
 			end
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make all observers sensitive.
 		do
 			if sensitive then
@@ -208,19 +208,19 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	parent: EB_FAVORITES_ITEM_LIST is
+	parent: EB_FAVORITES_ITEM_LIST
 			-- Parent for Current
 		do
 			Result := Current
 		end
 
-	name: STRING is "Favorites"
+	name: STRING = "Favorites"
 			-- Name of the item.
 
 	is_initialized: BOOLEAN
 			-- Is the class initialized?
 
-	refresh_folder (f: EB_FAVORITES_ITEM_LIST) is
+	refresh_folder (f: EB_FAVORITES_ITEM_LIST)
 			-- Get rid of dead classes among children of `f'.
 		local
 			l_item: EB_FAVORITES_ITEM
@@ -274,13 +274,13 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

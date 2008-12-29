@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Tool where output and error of external commands are displayed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make_with_tool is
+	make_with_tool
 			-- Create a new external output tool.
 		do
 			initialization (develop_window)
@@ -49,7 +49,7 @@ feature{NONE} -- Initialization
 			external_output_manager.extend (Current)
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Build docking content
 		local
 			l_constants: EB_CONSTANTS
@@ -62,7 +62,7 @@ feature{NONE} -- Initialization
 			content.set_short_title (title)
 		end
 
-	initialization (a_tool: EB_DEVELOPMENT_WINDOW) is
+	initialization (a_tool: EB_DEVELOPMENT_WINDOW)
 			-- Initialize interface.
 		local
 			l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
@@ -303,7 +303,7 @@ feature{NONE} -- Initialization
 
 feature -- Docking
 
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Attach to docking manager
 		do
 			build_docking_content (a_docking_manager)
@@ -313,7 +313,7 @@ feature -- Docking
 
 feature -- Basic operation
 
-	synchronize_on_process_starts (cmd_line: STRING) is
+	synchronize_on_process_starts (cmd_line: STRING)
 			-- Synchronize states of relative widgets when process starts.
 		do
 			force_display
@@ -348,7 +348,7 @@ feature -- Basic operation
 			end
 		end
 
-	synchronize_on_process_exits is
+	synchronize_on_process_exits
 			-- Synchronize states of relative widgets when process exits.
 		do
 			run_btn.enable_sensitive
@@ -369,13 +369,13 @@ feature -- Basic operation
 			synchronize_command_list (corresponding_external_command)
 		end
 
-	clear is
+	clear
 			-- Clear window
 		do
 			output_text.set_text ("")
 		end
 
-	print_command_name (name: STRING) is
+	print_command_name (name: STRING)
 			-- Print command `name' to text fielad in command list box.
 		require
 			name_not_null: name /= Void
@@ -383,13 +383,13 @@ feature -- Basic operation
 			cmd_lst.set_text (name)
 		end
 
-	scroll_to_end is
+	scroll_to_end
 			-- Scroll the console to the bottom.
 		do
 			output_text.scroll_to_line (output_text.line_count)
 		end
 
-	set_focus is
+	set_focus
 			-- Give the focus to the editor.		
 		local
 			l_env: EV_ENVIRONMENT
@@ -398,17 +398,17 @@ feature -- Basic operation
 			l_env.application.do_once_on_idle (agent set_focus_on_idle)
 		end
 
-	quick_refresh_editor is
+	quick_refresh_editor
 			-- Refresh the editor.
 		do
 		end
 
-	quick_refresh_margin is
+	quick_refresh_margin
 			-- Refresh the editor's margin.
 		do
 		end
 
-	synchronize_command_list (selected_cmd: EB_EXTERNAL_COMMAND) is
+	synchronize_command_list (selected_cmd: EB_EXTERNAL_COMMAND)
 			-- When external command list is modified through Tools->External Commands...,
 			-- synchronize change in command list in external output tool.
 			-- `selected_cmd', if not Void, indicates the list item which
@@ -466,7 +466,7 @@ feature -- Basic operation
 --			end
 --		end
 
-	show is
+	show
 			-- Show tool.
 		do
 			Precursor {ES_OUTPUT_TOOL_PANEL}
@@ -477,7 +477,7 @@ feature -- Basic operation
 
 feature{NONE} -- Actions
 
-	on_external_cmd_list_key_down (key: EV_KEY) is
+	on_external_cmd_list_key_down (key: EV_KEY)
 			-- Check if user pressed enter key in command list box.
 			-- If so, launch process indicated by text in this command list box.	
 		do
@@ -486,7 +486,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_cmd_lst_text_change  is
+	on_cmd_lst_text_change
 			-- Agent called when text in command list box changed.
 		local
 			str: STRING
@@ -521,7 +521,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_edit_command_detail is
+	on_edit_command_detail
 			-- Called when user selected `edit_cmd_detail_btn' to
 			-- modify command external in detail.
 		local
@@ -556,7 +556,7 @@ feature{NONE} -- Actions
 			develop_window.commands.edit_external_commands_cmd.update_menus_from_outside
 		end
 
-	on_run_process is
+	on_run_process
 			-- Agent called when launching a process
 		local
 			str ,wd: STRING
@@ -582,7 +582,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_input_to_process (str: STRING) is
+	on_input_to_process (str: STRING)
 			-- Called when user press enter in simulated console.
 		do
 			if external_launcher.launched and then not external_launcher.has_exited then
@@ -590,7 +590,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_terminate_process is
+	on_terminate_process
 			-- Agent called when terminate a running process
 		do
 			if external_launcher.launched and then not external_launcher.has_exited then
@@ -598,7 +598,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_send_input_btn_pressed is
+	on_send_input_btn_pressed
 			-- Agent called when user pressed `send_input_btn'
 		local
 			found: BOOLEAN
@@ -642,7 +642,7 @@ feature{NONE} -- Actions
 			input_field.set_text ("")
 		end
 
-	on_key_pressed_in_input_field (key: EV_KEY) is
+	on_key_pressed_in_input_field (key: EV_KEY)
 			-- Agent called when user press enter in `input_field'
 		do
 			if key.code = {EV_KEY_CONSTANTS}.key_enter then
@@ -650,7 +650,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_focus_in_in_cmd_lst is
+	on_focus_in_in_cmd_lst
 			-- Agent called when focus goes to `input_field'
 		local
 			l_env: EV_ENVIRONMENT
@@ -659,7 +659,7 @@ feature{NONE} -- Actions
 			l_env.application.do_once_on_idle (agent on_idle_action_for_cmd_lst)
 		end
 
-	on_idle_action_for_cmd_lst is
+	on_idle_action_for_cmd_lst
 			-- Handle focus issue of `cmd_lst' in idle action.
 		do
 			if last_focus_at_completion_window then
@@ -670,13 +670,13 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_focus_in_completion_window is
+	on_focus_in_completion_window
 			-- Agent called when focus goes to completion window.
 		do
 			last_focus_at_completion_window := True
 		end
 
-	on_save_output_to_file is
+	on_save_output_to_file
 			-- Called when user press Save output button.
 		local
 			save_tool: EB_SAVE_STRING_TOOL
@@ -688,13 +688,13 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_clear_output_window is
+	on_clear_output_window
 			-- Clear `output_text'.
 		do
 			clear
 		end
 
-	on_delete_command is
+	on_delete_command
 			-- Agent when user want to delete an external command.
 		local
 			comm: EB_EXTERNAL_COMMAND
@@ -711,7 +711,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_stone_dropped_at_cmd_list (a_pebble: ANY) is
+	on_stone_dropped_at_cmd_list (a_pebble: ANY)
 			-- Action to be performed when `a_pebble' is dropped at `cmd_lst'
 		local
 			l_classi_stone: CLASSI_STONE
@@ -749,7 +749,7 @@ feature{NONE} -- Actions
 
 feature -- Status reporting
 
-	corresponding_external_command: EB_EXTERNAL_COMMAND is
+	corresponding_external_command: EB_EXTERNAL_COMMAND
 			-- If external command indicated by text in command list box
 			-- already exists, return corresponding EB_EXTERNAL_COMMAND object,
 			-- otherwise return Void.
@@ -785,11 +785,11 @@ feature -- Status reporting
 			end
 		end
 
-	is_general: BOOLEAN is false;
+	is_general: BOOLEAN = false;
 
 feature -- State setting
 
-	display_state (s: STRING_GENERAL; warning: BOOLEAN) is
+	display_state (s: STRING_GENERAL; warning: BOOLEAN)
 			-- Display state `s' in state bar of this output tool
 			-- If this is a `warning' state, display in red color,
 			-- otherwise in black color.
@@ -804,7 +804,7 @@ feature -- State setting
 
 feature{NONE}
 
-	show_warning_dialog (msg: STRING_GENERAL; a_window: EV_WINDOW) is
+	show_warning_dialog (msg: STRING_GENERAL; a_window: EV_WINDOW)
 			-- Show a warning dialog containing message `msg' in `a_window'.
 		require
 			msg_not_void: msg /= Void
@@ -816,7 +816,7 @@ feature{NONE}
 
 feature {NONE} -- Recycle
 
-	internal_recycle is
+	internal_recycle
 			-- To be called before destroying this objects
 		do
 			cmd_lst.destroy
@@ -830,7 +830,7 @@ feature {NONE} -- Recycle
 			Precursor {ES_OUTPUT_TOOL_PANEL}
 		end
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- <Precursor>
 		do
 			widget := Void
@@ -899,7 +899,7 @@ feature {NONE} -- Implementation
 	last_focus_at_completion_window: BOOLEAN
 		-- Did last focus stayed in code completation window?
 
-	set_focus_on_idle is
+	set_focus_on_idle
 			-- Set focus on idle actions.
 		local
 			l_env: EV_ENVIRONMENT
@@ -930,7 +930,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

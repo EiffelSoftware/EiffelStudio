@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Execution unit of an inline agent"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (a_cl_type: CLASS_TYPE; a_enclosing_feature: FEATURE_I) is
+	make (a_cl_type: CLASS_TYPE; a_enclosing_feature: FEATURE_I)
 			-- Initialization
 		require
 			a_cl_type_not_void: a_cl_type /= Void
@@ -33,7 +33,7 @@ feature -- Initialization
 
 feature -- Access
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the execution unit still valid ?
 		local
 			written_type: CLASS_TYPE

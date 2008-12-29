@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Controls access to Microsoft HTML Help, allows to display given urls"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,13 +13,13 @@ feature -- Access
 
 feature -- Status Report
 
-	is_valid_chm_url (a_chm_url: STRING): BOOLEAN is
+	is_valid_chm_url (a_chm_url: STRING): BOOLEAN
 			-- Is `a_chm_url' a valid Microsoft HTML Help URL?
 		do
 			Result := True
 		end
 
-	last_show_successful: BOOLEAN is
+	last_show_successful: BOOLEAN
 			-- Was last call to `show' successful?
 		do
 			Result := help_window_handle /= default_pointer
@@ -27,7 +27,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	show (a_chm_url: STRING) is
+	show (a_chm_url: STRING)
 			-- Display help page page with url `a_chm_url'.
 		require
 			valid_chm_url: is_valid_chm_url (a_chm_url)
@@ -37,7 +37,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Externals
 
-	cwin_html_help (hwnd, pszFile: POINTER; command: INTEGER; data: POINTER): POINTER is
+	cwin_html_help (hwnd, pszFile: POINTER; command: INTEGER; data: POINTER): POINTER
 			-- Help Workshop `HtmlHelp' API.
 		external
 			"C [macro %"Htmlhelp.h%"] (HWND, LPCTSTR, UINT, DWORD_PTR): HWND"
@@ -45,7 +45,7 @@ feature {NONE} -- Externals
 			"HtmlHelp"
 		end
 
-	Hh_display_topic: INTEGER is
+	Hh_display_topic: INTEGER
 			-- Help Workshop HH_DISPLAY_TOPIC constant
 		external
 			"C [macro %"Htmlhelp.h%"]: EIF_INTEGER"
@@ -53,7 +53,7 @@ feature {NONE} -- Externals
 			"HH_DISPLAY_TOPIC"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

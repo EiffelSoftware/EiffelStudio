@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface of an object which stores information about earlier states.
 	]"

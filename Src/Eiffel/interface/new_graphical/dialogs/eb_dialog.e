@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Base implementation for all EiffelStudio dialogs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,14 +24,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Default creation
 		do
 			Precursor {EV_DIALOG}
 			set_icon_pixmap ((create {EB_SHARED_PIXMAPS}).icon_pixmaps.general_dialog_icon)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent file open dialogs which remember their previous directory
 		if the "preferences.dialog_data.file_open_and_save_dialogs_remember_last_directory" preference
@@ -35,7 +35,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_FILE_OPEN_DIALOG_I;
 		-- Responsible for interaction with native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

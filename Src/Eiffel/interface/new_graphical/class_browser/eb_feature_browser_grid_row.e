@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Feature browser row"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_feature: like feature_item; a_branch_id: INTEGER; a_browser: like browser; a_written_class_used: BOOLEAN; a_signature_displayed: BOOLEAN) is
+	make (a_feature: like feature_item; a_branch_id: INTEGER; a_browser: like browser; a_written_class_used: BOOLEAN; a_signature_displayed: BOOLEAN)
 			-- Initialize `feature_item' with `a_feature' and
 			-- `branch_id' with `a_branch_id'.
 			-- `a_written_class_used' indicates if written class of `a_feature' is displayed.
@@ -82,7 +82,7 @@ feature -- Status report
 			-- Is full feature signature displayed?
 			-- If False, just display feature name.
 
-	should_feature_tooltip_be_displayed: BOOLEAN is
+	should_feature_tooltip_be_displayed: BOOLEAN
 			-- Should tooltip displayed be vetoed?
 		do
 			Result := browser.should_tooltip_be_displayed
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_parent (a_parent: like parent) is
+	set_parent (a_parent: like parent)
 			-- Set `parent' with `a_parent'.
 		do
 			parent := a_parent
@@ -115,7 +115,7 @@ feature -- Access
 	browser: EB_FEATURE_BROWSER_GRID_VIEW
 			-- Browser in which current row is contained			
 
-	class_grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
+	class_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			-- Class item
 		do
 			if class_item_internal = Void then
@@ -131,7 +131,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	written_class_grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
+	written_class_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			-- Written class item
 		require
 			writen_class_used: is_written_class_used
@@ -149,7 +149,7 @@ feature -- Access
 			end
 		end
 
-	feature_grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
+	feature_grid_item: EB_GRID_EDITOR_TOKEN_ITEM
 			-- Feature item
 		do
 			if feature_item_internal = Void  then
@@ -170,7 +170,7 @@ feature -- Access
 
 feature -- Grid binding
 
-	bind_row (a_row: EV_GRID_ROW; a_grid: EV_GRID; a_background_color: EV_COLOR; a_height: INTEGER) is
+	bind_row (a_row: EV_GRID_ROW; a_grid: EV_GRID; a_background_color: EV_COLOR; a_height: INTEGER)
 			-- Bind current as a subrow of `a_row' in `a_grid'. if `a_row' is Void, insert a new
 			-- row in `a_grid' directly.
 			-- Set backgroud color of inserted row with `a_background_color',
@@ -222,7 +222,7 @@ feature{NONE} -- Implementation
 	short_written_class_image: STRING
 			-- Image of `feature_item'.`written_class' used in grid search
 
-	complete_written_class_name_tokens: LIST [EDITOR_TOKEN] is
+	complete_written_class_name_tokens: LIST [EDITOR_TOKEN]
 			-- Editor tokens to display complete written class form of `feature_item'.`written_class_c'.
 		do
 			if complete_written_class_name_tokens_internal = Void then
@@ -238,7 +238,7 @@ feature{NONE} -- Implementation
 	feature_signature_tokens: LIST [EDITOR_TOKEN]
 			-- Editor tokens to display feature signature.
 
-	feature_comment: LIST [EDITOR_TOKEN] is
+	feature_comment: LIST [EDITOR_TOKEN]
 			-- Feature comment
 		do
 			if feature_comment_internal = Void then
@@ -253,7 +253,7 @@ feature{NONE} -- Implementation
 	feature_comment_internal: like feature_comment
 			-- Implementation of `feature_comment'
 
-	complete_class_name_tokens: LIST [EDITOR_TOKEN] is
+	complete_class_name_tokens: LIST [EDITOR_TOKEN]
 			-- Editor tokens to display complete class form of `feature_item'.`class_c'.
 		do
 			if complete_class_name_tokens_internal = Void then
@@ -270,7 +270,7 @@ invariant
 	short_class_tokens_attached: short_class_tokens /= Void
 	short_class_image_attached: short_class_image /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

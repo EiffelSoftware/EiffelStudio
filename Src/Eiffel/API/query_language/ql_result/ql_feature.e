@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a feature item used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,12 +19,12 @@ inherit
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Name of current item
 		deferred
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code of current
 		local
 			l_name: STRING
@@ -43,14 +43,14 @@ feature -- Access
 			Result := internal_hash_code
 		end
 
-	wrapped_domain: QL_FEATURE_DOMAIN is
+	wrapped_domain: QL_FEATURE_DOMAIN
 			-- A feature domain which has current as the only item
 		do
 			create Result.make
 			Result.content.extend (Current)
 		end
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current
 		do
 			Result := feature_scope
@@ -58,12 +58,12 @@ feature -- Access
 			good_result: Result = feature_scope
 		end
 
-	return_type: QL_CLASS is
+	return_type: QL_CLASS
 			-- Return type of current feature.
 		do
 		end
 
-	e_feature: E_FEATURE is
+	e_feature: E_FEATURE
 			-- Feature associated with Current
 		require
 			is_real_feature: is_real_feature
@@ -72,15 +72,15 @@ feature -- Access
 
 feature -- Status report
 
-	is_compiled: BOOLEAN is True
+	is_compiled: BOOLEAN = True
 			-- Is current item compiled?
 
-	is_immediate: BOOLEAN is
+	is_immediate: BOOLEAN
 			-- Is current invariant immediate?
 		deferred
 		end
 
-	is_visible: BOOLEAN is
+	is_visible: BOOLEAN
 			-- Is current visible from source domain level?
 		local
 			l_class: QL_CLASS
@@ -90,7 +90,7 @@ feature -- Status report
 			Result := l_class.is_visible
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -103,7 +103,7 @@ feature -- Status report
 
 feature -- Visit
 
-	process (a_visitor: QL_VISITOR) is
+	process (a_visitor: QL_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_feature (Current)
@@ -113,7 +113,7 @@ invariant
 	class_c_attached: class_c /= Void
 	parent_valid: parent /= Void implies parent.is_class and parent.is_valid_domain_item
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

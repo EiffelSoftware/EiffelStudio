@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used by C++ encapsulation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -9,7 +9,7 @@ class SHARED_CPP_CONSTANTS
 
 feature -- Validity
 
-	valid_type (i: INTEGER): BOOLEAN is
+	valid_type (i: INTEGER): BOOLEAN
 			-- Does `i' represent a kind of C++ external.
 		do
 			Result := i = standard or i = creator or i = delete or i = static 
@@ -18,22 +18,22 @@ feature -- Validity
 
 feature {NONE} -- Constants
 
-    standard: INTEGER is 1
-	new, creator: INTEGER is 2
-	delete: INTEGER is 3
-	static: INTEGER is 4
-	data_member: INTEGER is 5
-	static_data_member: INTEGER is 6
+    standard: INTEGER = 1
+	new, creator: INTEGER = 2
+	delete: INTEGER = 3
+	static: INTEGER = 4
+	data_member: INTEGER = 5
+	static_data_member: INTEGER = 6
  
-    data_member_keyword: STRING is "data_member"
+    data_member_keyword: STRING = "data_member"
  
-    delete_keyword: STRING is "delete"
+    delete_keyword: STRING = "delete"
  
-    new_keyword: STRING is "new"
+    new_keyword: STRING = "new"
  
-    static_keyword: STRING is "static";
+    static_keyword: STRING = "static";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a wrapper criterion to require that an item must be a compiled item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ feature -- Access
 	wrapped_criterion: QL_CLASS_CRITERION
 			-- Wrapped criterion
 
-	compiled_criterion: QL_CLASS_CRITERION is
+	compiled_criterion: QL_CLASS_CRITERION
 			-- A criterion which takes `require_compiled' into account
 		do
 			Result := Current
@@ -45,7 +45,7 @@ feature -- Access
 			Result = Current
 		end
 
-	intrinsic_domain: QL_CLASS_DOMAIN is
+	intrinsic_domain: QL_CLASS_DOMAIN
 			-- Intrinsic_domain which can be inferred from current criterion
 		do
 			create Result.make
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Evaluate
 
-	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
+	is_satisfied_by (a_item: QL_CLASS): BOOLEAN
 			-- Evaluate `a_item'.
 		do
 			if a_item.is_compiled then
@@ -64,7 +64,7 @@ feature -- Evaluate
 			good_result: Result implies (a_item.is_compiled) and then wrapped_criterion.is_satisfied_by (a_item)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

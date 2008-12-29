@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to perform a clipboard operation (cut, copy or paste)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	on_changed is
+	on_changed
 			-- The undo/redo stack has changed.
 		local
 			sensitive: BOOLEAN
@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Launch the documentation wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			enable_sensitive
@@ -28,7 +28,7 @@ feature -- Initialization
 
 feature -- Access
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with '&' symbol).
 		do
 			Result := Interface_names.m_Generate_documentation
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Start documentation wizard.
 		do
 			create wizard
@@ -46,7 +46,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	generate is
+	generate
 			-- Generate documentation with options in `wizard'.
 		require
 			wizard_not_void: wizard /= Void
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 	wizard: EB_DOCUMENTATION_WIZARD;
 		-- Documentation option dialog.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

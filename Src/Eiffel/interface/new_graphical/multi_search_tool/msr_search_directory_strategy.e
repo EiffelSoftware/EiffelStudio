@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Recursively search in a directory. All matches return."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_keyword: STRING; a_range: INTEGER; a_path: FILE_NAME) is
+	make (a_keyword: STRING; a_range: INTEGER; a_path: FILE_NAME)
 			-- Initialization
 		require
 			keyword_attached: a_keyword /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	path: FILE_NAME is
+	path: FILE_NAME
 			-- Directory that is searching
 		require else
 			path_not_void: is_path_set
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_path_set: BOOLEAN is
+	is_path_set: BOOLEAN
 			-- If path is set
 		do
 			Result := (path_internal /= Void)
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_path (p_path: FILE_NAME) is
+	set_path (p_path: FILE_NAME)
 			-- Set path to search.
 		require else
 			p_path_not_void: p_path /= Void
@@ -68,7 +68,7 @@ feature -- Status setting
 			is_path_set: is_path_set
 		end
 
-	set_one_file_searched_action (action: PROCEDURE [ANY, TUPLE [STRING]]) is
+	set_one_file_searched_action (action: PROCEDURE [ANY, TUPLE [STRING]])
 			-- Set action for invokation one a file searched
 		require
 			action_not_void: action /= Void
@@ -78,7 +78,7 @@ feature -- Status setting
 			one_file_searched_internal_not_void: one_file_searched_internal = action
 		end
 
-	set_subdirectory_searched (b: BOOLEAN) is
+	set_subdirectory_searched (b: BOOLEAN)
 			-- Set `is_subdirectory_searched' with b.
 		do
 			is_subdirectory_searched := b
@@ -86,7 +86,7 @@ feature -- Status setting
 
 feature -- Basic operations		
 
-	reset_all is
+	reset_all
 			-- Reset all
 		do
 			Precursor
@@ -100,7 +100,7 @@ feature -- Basic operations
 			not_is_path_set: not is_path_set
 		end
 
-	launch is
+	launch
 			-- Launch the the search.
 		require else
 			is_path_set: is_path_set
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

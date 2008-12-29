@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base interface for all session data object structures
 	]"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	put (a_item: like item) is
+	put (a_item: like item)
 			-- Make Current with `a_item'
 		do
 			replace (a_item)
@@ -32,7 +32,7 @@ feature -- Access
 	item: G
 			-- Stored data
 
-	prepare_for_storage is
+	prepare_for_storage
 		do
 			notify_session_of_value_change
 			if item /= Void then
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Change
 
-	replace (a_item: like item) is
+	replace (a_item: like item)
 			-- Set `item' to `a_item'
 		do
 			item := a_item
@@ -51,7 +51,7 @@ feature -- Change
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Keyword all in export clause is repeated more than once."
@@ -18,16 +18,16 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER = 1;
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			print_parent (a_text_formatter);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

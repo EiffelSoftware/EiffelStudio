@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 				Customized formatter discriptor
 				This class contains information of a customized formatter.
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name)
 			-- Initialize Current.
 		require
 			a_name_attached: a_name /= Void
@@ -55,7 +55,7 @@ feature -- Access
 	metric_name: STRING
 			-- Name of Current formatter
 
-	new_formatter (a_tool: STRING; a_manager: EB_STONABLE): EB_CUSTOMIZED_FORMATTER is
+	new_formatter (a_tool: STRING; a_manager: EB_STONABLE): EB_CUSTOMIZED_FORMATTER
 			-- New customized formatter which is going to be used in tool named `a_tool'.
 		require
 			a_tool_attached: a_tool /= Void
@@ -81,7 +81,7 @@ feature -- Access
 			-- `tool_name' is the tool in which the customized formatter is displayed,
 			-- `sorting_order' is sorting orders for that formatter which is to be displayed in that tool
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			if hash_code_internal = 0 then
@@ -95,7 +95,7 @@ feature -- Status report
 	is_filter_enabled: BOOLEAN
 			-- Is filter enabled when metric is calculated?
 
-	has_tool (a_tool_name: STRING): BOOLEAN is
+	has_tool (a_tool_name: STRING): BOOLEAN
 			-- Can Current formatter be used in tool named `a_tool_name'?
 		require
 			a_tool_name_attached: a_tool_name /= Void
@@ -107,7 +107,7 @@ feature -- Status report
 			-- Is Current formatter of global scope?
 			-- Global scope means that Current formatter is displayed per EiffelStduio as oppose to per target scope.
 
-	is_target_scope: BOOLEAN is
+	is_target_scope: BOOLEAN
 			-- Is Current formatter of target scope?
 			-- For more information of formatter scope, see `is_global_scope'.
 		do
@@ -118,7 +118,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -126,7 +126,7 @@ feature -- Setting
 			name := a_name.twin
 		end
 
-	set_header (a_header: like header) is
+	set_header (a_header: like header)
 			-- Set `header' with `a_header'.
 		require
 			a_header_attached: a_header /= Void
@@ -134,7 +134,7 @@ feature -- Setting
 			header := a_header.twin
 		end
 
-	set_temp_header (a_temp_header: like temp_header) is
+	set_temp_header (a_temp_header: like temp_header)
 			-- Set `temp_header' with `a_temp_header'.
 		require
 			a_temp_header_attached: a_temp_header /= Void
@@ -142,7 +142,7 @@ feature -- Setting
 			temp_header := a_temp_header.twin
 		end
 
-	set_tooltip (a_tooltip: like tooltip) is
+	set_tooltip (a_tooltip: like tooltip)
 			-- Set `tooltip' with `a_tooltip'.
 		require
 			a_tooltip_attached: a_tooltip /= Void
@@ -150,7 +150,7 @@ feature -- Setting
 			tooltip := a_tooltip.twin
 		end
 
-	set_pixmap_location (a_pixmap_location: like pixmap_location) is
+	set_pixmap_location (a_pixmap_location: like pixmap_location)
 			-- Set `pixmap_location' with `a_pixmap_location'.
 		require
 			a_pixmap_location_attached: a_pixmap_location /= Void
@@ -158,7 +158,7 @@ feature -- Setting
 			pixmap_location := a_pixmap_location.twin
 		end
 
-	set_metric_name (a_metric_name: like metric_name) is
+	set_metric_name (a_metric_name: like metric_name)
 			-- Set `metric_name' with `a_metric_name'.
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -166,7 +166,7 @@ feature -- Setting
 			metric_name := a_metric_name.twin
 		end
 
-	set_is_filter_enabled (b: BOOLEAN) is
+	set_is_filter_enabled (b: BOOLEAN)
 			-- Set `is_filter_enabled' with `b'.
 		do
 			is_filter_enabled := b
@@ -174,7 +174,7 @@ feature -- Setting
 			is_filter_enabled_set: is_filter_enabled = b
 		end
 
-	enable_global_scope is
+	enable_global_scope
 			-- Enable global scope of Current formatter
 			-- For more information about formatter scope, see `is_global_scope'.
 		do
@@ -183,7 +183,7 @@ feature -- Setting
 			global_scope_set: is_global_scope
 		end
 
-	enable_target_scope is
+	enable_target_scope
 			-- Enable target scope of Current formatter
 			-- For more information about formatter scope, see `is_global_scope'.
 		do
@@ -192,14 +192,14 @@ feature -- Setting
 			target_scope_set: is_target_scope
 		end
 
-	wipe_out_tools is
+	wipe_out_tools
 			-- Wipe out `tools' and `sorting_orders'.
 		do
 			tools.wipe_out
 			sorting_orders.wipe_out
 		end
 
-	extend_tool (a_tool_name: STRING; a_viewer_name: STRING; a_sorting_order: STRING) is
+	extend_tool (a_tool_name: STRING; a_viewer_name: STRING; a_sorting_order: STRING)
 			-- Add a tool named `a_tool_name', a viewer named `a_viewer_name' and sorting order `a_sorting_order' in `tools'.
 		require
 			a_tool_name_attached: a_tool_name /= Void
@@ -210,7 +210,7 @@ feature -- Setting
 			sorting_orders.force (a_sorting_order, a_tool_name)
 		end
 
-	extend_sorting_order (a_tool_name: STRING; a_sorting_order: STRING) is
+	extend_sorting_order (a_tool_name: STRING; a_sorting_order: STRING)
 			-- Add a tool named `a_tool_name' and sorting order `a_sorting_order' in `sorting_orders'.
 		require
 			a_tool_name_attached: a_tool_name /= Void
@@ -229,7 +229,7 @@ invariant
 	tools_attached: tools /= Void
 	sorting_orders_attached: sorting_orders /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

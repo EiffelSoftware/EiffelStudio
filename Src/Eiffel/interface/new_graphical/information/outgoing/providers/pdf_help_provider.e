@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help provider to launch pdf files."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -70,7 +70,7 @@ feature -- Basic operations
 			end
 		end
 
-	append_acrobat_url_arguments (a_string: !STRING; a_entry: !EIS_ENTRY) is
+	append_acrobat_url_arguments (a_string: !STRING; a_entry: !EIS_ENTRY)
 			-- Append acrobat url arguments to `a_string'.
 		local
 			l_args: ?STRING
@@ -82,7 +82,7 @@ feature -- Basic operations
 			end
 		end
 
-	append_acrobat_command_arguments (a_string: !STRING; a_entry: !EIS_ENTRY) is
+	append_acrobat_command_arguments (a_string: !STRING; a_entry: !EIS_ENTRY)
 			-- Append acrobat command arguments to `a_string'.
 		local
 			l_args: ?STRING
@@ -96,7 +96,7 @@ feature -- Basic operations
 			end
 		end
 
-	pdf_arguments_from_entry (a_entry: !EIS_ENTRY): ?STRING is
+	pdf_arguments_from_entry (a_entry: !EIS_ENTRY): ?STRING
 			-- PDF arguments from `a_entry'
 		local
 			l_result: STRING
@@ -127,7 +127,7 @@ feature -- Basic operations
 			end
 		end
 
-	quoted_string (a_string: !STRING): !STRING is
+	quoted_string (a_string: !STRING): !STRING
 			-- Quoted string of `a_string'
 		do
 			create Result.make_from_string (a_string)
@@ -135,7 +135,7 @@ feature -- Basic operations
 			Result.append ("%"")
 		end
 
-	launch_command (a_command: !STRING_8) is
+	launch_command (a_command: !STRING_8)
 			-- Launches a command
 		do
 			if {l_process: !PROCESS} (create {PROCESS_FACTORY}).process_launcher (a_command, Void, Void) then
@@ -166,7 +166,7 @@ feature {NONE} -- Constants
 
 	acrobat_nameddest: !STRING = "nameddest";
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

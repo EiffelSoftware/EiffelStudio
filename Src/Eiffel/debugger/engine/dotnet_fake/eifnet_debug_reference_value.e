@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the value of a reference coming from the dotnet world ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,32 +19,32 @@ inherit
 
 feature -- Access
 
-	dynamic_class: CLASS_C is
+	dynamic_class: CLASS_C
 			-- Find corresponding CLASS_C to type represented by `value'.
 		do
 		end
 
-	dump_value: DUMP_VALUE is
+	dump_value: DUMP_VALUE
 			-- Dump_value corresponding to `Current'.
 		do
 		end
 
 feature {NONE} -- Output
 
-	type_and_value: STRING_32 is
+	type_and_value: STRING_32
 			-- Return a string representing `Current'.
 		do
 		end
 
 feature -- Output
 
-	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+	children: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

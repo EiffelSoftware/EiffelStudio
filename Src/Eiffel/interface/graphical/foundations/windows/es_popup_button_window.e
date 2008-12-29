@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A foundation button window to display a popup widget, or process a actions when a the button on a popup window is selected.
 		
@@ -376,7 +376,7 @@ feature {NONE} -- Internal implementation cache
 invariant
 	popup_widget_container_attached: (is_initialized and is_interface_usable) implies popup_widget_container /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

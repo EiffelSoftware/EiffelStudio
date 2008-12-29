@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- The enlarged "old" operator
@@ -23,13 +23,13 @@ feature
 	exception_register: REGISTRABLE;
 			-- Register which stores the exception object if any.
 
-	set_register (r: REGISTRABLE) is
+	set_register (r: REGISTRABLE)
 			-- Assign `r' to `register'
 		do
 			register := r;
 		end;
 
-	special_analyze is
+	special_analyze
 			-- Analyze expression and get a register
 		local
 			target_type: TYPE_A
@@ -44,7 +44,7 @@ feature
 			create {REGISTER}exception_register.make (exception_type.c_type)
 		end;
 
-	initialize is
+	initialize
 			-- Initialize the value of the old variable.
 		local
 			target_type: TYPE_A
@@ -91,7 +91,7 @@ feature
 			buf.put_string ("RTE_OE")
 		end;
 
-	unanalyze is
+	unanalyze
 			-- Undo the analysis
 		local
 			void_reg: REGISTER;
@@ -100,12 +100,12 @@ feature
 			set_register (void_reg);
 		end;
 
-	analyze is
+	analyze
 			-- Do nothing
 		do
 		end;
 
-	generate is
+	generate
 			-- We always check that the corresponding recorded exception object exists,
 			-- and raise an OLD_VIOLATION if so.
 		local
@@ -118,18 +118,18 @@ feature
 			buf.put_string (gc_rparan_semi_c)
 		end;
 
-	print_register is
+	print_register
 			-- Print the value of the old variable
 		do
 			register.print_register;
 		end;
 
-	free_register is
+	free_register
 			-- Do nothing
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

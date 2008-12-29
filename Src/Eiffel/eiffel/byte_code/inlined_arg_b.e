@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class INLINED_ARG_B
@@ -13,24 +13,24 @@ inherit
 
 feature -- Access
 
-	type: TYPE_A is
+	type: TYPE_A
 		do
 			Result := System.remover.inliner.inlined_feature.argument_type (position)
 		end
 
-	enlarged: INLINED_ARG_B is
+	enlarged: INLINED_ARG_B
 		do
 			Result := Current
 		end
 
 feature -- Status report
 
-	is_argument: BOOLEAN is False
+	is_argument: BOOLEAN = False
 			-- Current should not be considered as an actual argument
 
 feature -- Settings
 
-	fill_from (a: ARGUMENT_B) is
+	fill_from (a: ARGUMENT_B)
 		do
 			parent := a.parent;
 			position := a.position
@@ -38,32 +38,32 @@ feature -- Settings
 
 feature -- Register and code generation
 
-	Current_register: INLINED_CURRENT_B is
+	Current_register: INLINED_CURRENT_B
 		once
 			create Result
 		end
 
-	propagate (r: REGISTRABLE) is
+	propagate (r: REGISTRABLE)
 			-- Do nothing
 		do
 		end;
 
-	analyze is
+	analyze
 			-- Do nothing
 		do
 		end;
 
-	generate is
+	generate
 			-- Do nothing
 		do
 		end;
 
-	free_register is
+	free_register
 			-- Do nothing
 		do
 		end;
 
-	print_register is
+	print_register
 		local
 			inlined_feature: INLINED_FEAT_B
 			context_class_type: CLASS_TYPE
@@ -92,7 +92,7 @@ feature -- Register and code generation
 			Context.set_inlined_current_register (current_reg)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

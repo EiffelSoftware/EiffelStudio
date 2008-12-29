@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"General features of profile switches for output."
@@ -18,7 +18,7 @@ feature {EWB_SWITCHES_CMD} -- Help message
 	show_enabled: BOOLEAN
 		-- Should number of calls be shown?
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		local
 			current_value: STRING
 		do
@@ -36,7 +36,7 @@ feature {EWB_SWITCHES_CMD} -- Help message
 
 feature {NONE} -- Execution
 
-	execute is
+	execute
 			-- Execute Current batch command.
 		local
 			new_array: ARRAY [STRING];
@@ -63,27 +63,27 @@ feature {NONE} -- Execution
 
 feature -- Output strings
 
-	real_help_message: STRING_GENERAL is
+	real_help_message: STRING_GENERAL
 			-- Used in help_message.
 		deferred
 		end
 
-	tabs: STRING is
+	tabs: STRING
 			-- Used in help_message.
 		deferred
 		end
 
-	column_name: STRING is
+	column_name: STRING
 			-- Used in execute.
 		deferred
 		end
 
-	abbrev_cmd_name: STRING is
+	abbrev_cmd_name: STRING
 			-- Used in EWB_SWITCHES_CMD
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

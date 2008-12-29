@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Bsae implementation class for descendents that need access to an {OUTPUT_WINDOW}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (a_window: like output_window) is
+	make (a_window: like output_window)
 			-- Initialize error displayer using an output window `a_window'
 		require
 			a_window_attached: a_window /= Void
@@ -28,7 +28,7 @@ feature -- Access
 invariant
 	output_window_attached: output_window /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

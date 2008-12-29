@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a NOT criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Process
 
-	process (a_criterion_visitor: QL_CRITERION_VISITOR) is
+	process (a_criterion_visitor: QL_CRITERION_VISITOR)
 			-- Process Current using `a_criterion_visitor'.
 		do
 			a_criterion_visitor.process_not_criterion (Current)
@@ -27,7 +27,7 @@ feature -- Process
 
 feature -- Status report
 
-	has_inclusive_intrinsic_domain: BOOLEAN is
+	has_inclusive_intrinsic_domain: BOOLEAN
 			-- Does current criterion has a domain by default?
 		do
 			Result := wrapped_criterion.has_exclusive_intrinsic_domain
@@ -35,7 +35,7 @@ feature -- Status report
 			good_result: Result implies wrapped_criterion.has_exclusive_intrinsic_domain
 		end
 
-	has_exclusive_intrinsic_domain: BOOLEAN is
+	has_exclusive_intrinsic_domain: BOOLEAN
 			-- Does current criterion has an exclusive intrinsic domain?
 		do
 			Result := wrapped_criterion.has_inclusive_intrinsic_domain
@@ -43,7 +43,7 @@ feature -- Status report
 			good_result: Result implies wrapped_criterion.has_inclusive_intrinsic_domain
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

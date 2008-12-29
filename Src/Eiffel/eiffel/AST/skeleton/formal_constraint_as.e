@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of a formal generic parameter. %
 				%Instances produced by Yacc. Version for Bench."
 	legal: "See notice at end of class."
@@ -46,7 +46,7 @@ create
 
 feature -- Status
 
-	constraint_types (a_context_class: CLASS_C): TYPE_SET_A is
+	constraint_types (a_context_class: CLASS_C): TYPE_SET_A
 			-- Actual type of the constraint.
 		require
 			a_context_class_not_void: a_context_class /= Void
@@ -91,7 +91,7 @@ feature -- Status
 			result_does_not_containt_void: Result.for_all (agent (a_any: RENAMED_TYPE_A [TYPE_A]): BOOLEAN do Result := (a_any /= Void) end)
 		end
 
-	constraint_types_if_possible (a_context_class: CLASS_C): TYPE_SET_A is
+	constraint_types_if_possible (a_context_class: CLASS_C): TYPE_SET_A
 			-- Fault tolerant actual type of the constraint.
 			--
 			-- `a_context_class' is the context class.
@@ -138,7 +138,7 @@ feature -- Status
 			result_not_void: Result /= Void
 		end
 
-	constraint_type (a_context_class: CLASS_C): RENAMED_TYPE_A [TYPE_A] is
+	constraint_type (a_context_class: CLASS_C): RENAMED_TYPE_A [TYPE_A]
 			-- Actual type of the constraint.
 			--
 			-- `a_context_class' is used to evaluate the type.
@@ -165,7 +165,7 @@ feature -- Status
 			result_not_void: Result /= Void
 		end
 
-	constraint_type_if_possible (a_context_class: CLASS_C): RENAMED_TYPE_A [TYPE_A] is
+	constraint_type_if_possible (a_context_class: CLASS_C): RENAMED_TYPE_A [TYPE_A]
 			-- Actual type of the constraint.
 		require
 			a_context_class_not_void: a_context_class /= Void
@@ -189,7 +189,7 @@ feature -- Status
 			end
 		end
 
-	has_computed_feature_table (a_context_class: CLASS_C): BOOLEAN is
+	has_computed_feature_table (a_context_class: CLASS_C): BOOLEAN
 			-- Check that we can retrieve a FEATURE_TABLE from the class
 			-- on which we want to check the validity rule about creation
 			-- constraint.
@@ -221,7 +221,7 @@ feature -- Status
 			end
 		end
 
-	constraint_creation_list (a_context_class: CLASS_C): LINKED_LIST [TUPLE [type_item: RENAMED_TYPE_A [TYPE_A]; feature_item: FEATURE_I]] is
+	constraint_creation_list (a_context_class: CLASS_C): LINKED_LIST [TUPLE [type_item: RENAMED_TYPE_A [TYPE_A]; feature_item: FEATURE_I]]
 			-- Actual creation routines from a constraint clause.
 			--
 			-- `a_context_class' is used to compute a flat version of the formal constraints.
@@ -306,13 +306,13 @@ feature -- Status
 
 feature {NONE} -- Access
 
-	Any_constraint_type: RENAMED_TYPE_A [CL_TYPE_A] is
+	Any_constraint_type: RENAMED_TYPE_A [CL_TYPE_A]
 			-- Default constraint actual type
 		once
 			create Result.make (create {CL_TYPE_A}.make(System.any_id),Void)
 		end
 
-	Constraint_types_containing_any: TYPE_SET_A is
+	Constraint_types_containing_any: TYPE_SET_A
 			-- Default constraint actual type
 		once
 			create Result.make(1)
@@ -321,7 +321,7 @@ feature {NONE} -- Access
 
 feature -- Output
 
-	append_signature (a_text_formatter: TEXT_FORMATTER; a_short: BOOLEAN; a_context_class: CLASS_C) is
+	append_signature (a_text_formatter: TEXT_FORMATTER; a_short: BOOLEAN; a_context_class: CLASS_C)
 			-- Append the signature of current class in `a_text_formatter'
 			-- If `a_short', use "..." to replace constrained generic type, so
 			-- class {HASH_TABLE [G, H -> HASHABLE]} becomes {HASH_TABLE [G, H -> ...]}.
@@ -464,7 +464,7 @@ feature -- Validity checking
 			end
 		end
 
-	check_constraint_creation (a_context_class: CLASS_C) is
+	check_constraint_creation (a_context_class: CLASS_C)
 			-- Check validity of the creation clause in the constraint.
 			-- Also checks the constraint renaming (`check_constraint_renaming')
 			--
@@ -523,7 +523,7 @@ feature -- Validity checking
 
 		end
 
-	is_valid_creation_routine (f: FEATURE_I): BOOLEAN is
+	is_valid_creation_routine (f: FEATURE_I): BOOLEAN
 			-- Does `f' have all the needed requirement to be
 			-- used a creation routine for the future creation
 			-- of the generic parameter.
@@ -538,7 +538,7 @@ feature -- Validity checking
 
 feature {NONE} -- Implementation
 
-	append_constraints (a_text_formatter: TEXT_FORMATTER; a_short: BOOLEAN; a_context_class: CLASS_C) is
+	append_constraints (a_text_formatter: TEXT_FORMATTER; a_short: BOOLEAN; a_context_class: CLASS_C)
 			-- Append constraints to a text decorator.
 			--
 			-- Output is appended to a`a_text_formatter'
@@ -600,7 +600,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	append_rename_clause (a_text_formatter: TEXT_FORMATTER; a_rename_clause: RENAME_CLAUSE_AS; a_constraint_class: CLASS_C; a_short: BOOLEAN) is
+	append_rename_clause (a_text_formatter: TEXT_FORMATTER; a_rename_clause: RENAME_CLAUSE_AS; a_constraint_class: CLASS_C; a_short: BOOLEAN)
 			-- Prints renaming
 			--
 			-- `a_text_formatter': Used to append the renaming to.
@@ -709,7 +709,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "All commands in EB_DEVELOPMENT_WINDOW."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ feature -- Query
 	toggle_stone_cmd: EB_UNIFY_STONE_CMD
 			-- Command to toggle between the stone management modes.
 
-	system_info_cmd: EB_STANDARD_CMD is
+	system_info_cmd: EB_STANDARD_CMD
 			-- Command to display information about the system (root class,...)
 		do
 			Result := develop_window.Eb_debugger_manager.system_info_cmd
@@ -89,7 +89,7 @@ feature -- Query
 	save_as_cmd: EB_SAVE_FILE_AS_COMMAND
 			-- Command to save a class with a different file name.
 
-	Edit_external_commands_cmd: EB_EXTERNAL_COMMANDS_EDITOR is
+	Edit_external_commands_cmd: EB_EXTERNAL_COMMANDS_EDITOR
 			-- Command that lets the user add new external commands to the tools menu.
 		once
 			create Result.make
@@ -190,7 +190,7 @@ feature -- Commands
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER, EB_DEVELOPMENT_WINDOW} -- Settings
 
-	set_save_as_cmd (a_cmd: like save_as_cmd) is
+	set_save_as_cmd (a_cmd: like save_as_cmd)
 			-- Set `save_as_cmd'
 		do
 			save_as_cmd := a_cmd
@@ -200,7 +200,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER, E
 
 feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -- Settings
 
-	set_toolbarable_commands (a_commands: like toolbarable_commands) is
+	set_toolbarable_commands (a_commands: like toolbarable_commands)
 			-- Set `toolbarable_commands'.
 		do
 			toolbarable_commands := a_commands
@@ -208,7 +208,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: toolbarable_commands = a_commands
 		end
 
-	set_new_tab_cmd (a_cmd: like new_tab_cmd) is
+	set_new_tab_cmd (a_cmd: like new_tab_cmd)
 			-- Set `new_tab_cmd'
 		do
 			new_tab_cmd := a_cmd
@@ -216,7 +216,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: new_tab_cmd = a_cmd
 		end
 
-	set_editor_cut_cmd (a_cmd: like editor_cut_cmd) is
+	set_editor_cut_cmd (a_cmd: like editor_cut_cmd)
 			-- Set `editor_cut_cmd'
 		do
 			editor_cut_cmd := a_cmd
@@ -224,7 +224,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_cut_cmd = a_cmd
 		end
 
-	set_editor_copy_cmd (a_cmd: like editor_copy_cmd) is
+	set_editor_copy_cmd (a_cmd: like editor_copy_cmd)
 			-- Set `editor_copy_cmd'
 		do
 			editor_copy_cmd := a_cmd
@@ -232,7 +232,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_copy_cmd = a_cmd
 		end
 
-	set_shell_cmd (a_cmd: like shell_cmd) is
+	set_shell_cmd (a_cmd: like shell_cmd)
 			-- Set `shell_cmd;
 		do
 			shell_cmd := a_cmd
@@ -240,7 +240,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: shell_cmd = a_cmd
 		end
 
-	set_print_cmd (a_cmd: like print_cmd) is
+	set_print_cmd (a_cmd: like print_cmd)
 			-- Set `print_cmd'
 		do
 			print_cmd := a_cmd
@@ -248,7 +248,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: print_cmd = a_cmd
 		end
 
-	set_c_workbench_compilation_cmd (a_cmd: like c_workbench_compilation_cmd) is
+	set_c_workbench_compilation_cmd (a_cmd: like c_workbench_compilation_cmd)
 			-- Set `c_workbench_compilation_cmd'
 		do
 			c_workbench_compilation_cmd := a_cmd
@@ -256,7 +256,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: c_workbench_compilation_cmd = a_cmd
 		end
 
-	set_c_finalized_compilation_cmd (a_cmd: like c_finalized_compilation_cmd) is
+	set_c_finalized_compilation_cmd (a_cmd: like c_finalized_compilation_cmd)
 			-- Set `c_finalized_compilation_cmd'
 		do
 			c_finalized_compilation_cmd := a_cmd
@@ -264,7 +264,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: c_finalized_compilation_cmd = a_cmd
 		end
 
-	set_undo_cmd (a_cmd: like undo_cmd) is
+	set_undo_cmd (a_cmd: like undo_cmd)
 			-- Set `undo_cmd'
 		do
 			undo_cmd := a_cmd
@@ -272,7 +272,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: undo_cmd = a_cmd
 		end
 
-	set_redo_cmd (a_cmd: like redo_cmd) is
+	set_redo_cmd (a_cmd: like redo_cmd)
 			-- Set `redo_cmd'
 		do
 			redo_cmd := a_cmd
@@ -280,7 +280,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: redo_cmd = a_cmd
 		end
 
-	set_editor_paste_cmd (a_cmd: like editor_paste_cmd) is
+	set_editor_paste_cmd (a_cmd: like editor_paste_cmd)
 			-- Set `editor_paste_cmd'
 		do
 			editor_paste_cmd := a_cmd
@@ -288,7 +288,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_paste_cmd = a_cmd
 		end
 
-	set_new_cluster_cmd (a_cmd: like new_cluster_cmd) is
+	set_new_cluster_cmd (a_cmd: like new_cluster_cmd)
 			-- Set `new_cluster_cmd'
 		do
 			new_cluster_cmd := a_cmd
@@ -296,7 +296,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: new_cluster_cmd = a_cmd
 		end
 
-	set_new_library_cmd (a_cmd: like new_library_cmd) is
+	set_new_library_cmd (a_cmd: like new_library_cmd)
 			-- Set `new_library_cmd'
 		do
 			new_library_cmd := a_cmd
@@ -304,7 +304,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: new_library_cmd = a_cmd
 		end
 
-	set_new_assembly_cmd (a_cmd: like new_assembly_cmd) is
+	set_new_assembly_cmd (a_cmd: like new_assembly_cmd)
 			-- Set `new_assembly_cmd'
 		do
 			new_assembly_cmd := a_cmd
@@ -312,7 +312,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: new_assembly_cmd = a_cmd
 		end
 
-	set_new_class_cmd (a_cmd: like new_class_cmd) is
+	set_new_class_cmd (a_cmd: like new_class_cmd)
 			-- Set `new_class_cmd'
 		do
 			new_class_cmd := a_cmd
@@ -320,7 +320,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: new_class_cmd = a_cmd
 		end
 
-	set_delete_class_cluster_cmd (a_cmd: like delete_class_cluster_cmd)	is
+	set_delete_class_cluster_cmd (a_cmd: like delete_class_cluster_cmd)
 			-- Set `delete_class_cluster_cmd"
 		do
 			delete_class_cluster_cmd := a_cmd
@@ -328,7 +328,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: delete_class_cluster_cmd = a_cmd
 		end
 
-	set_new_feature_cmd (a_cmd: like new_feature_cmd) is
+	set_new_feature_cmd (a_cmd: like new_feature_cmd)
 			-- Set `new_feature_cmd'
 		do
 			new_feature_cmd := a_cmd
@@ -336,7 +336,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: new_feature_cmd = a_cmd
 		end
 
-	set_toggle_stone_cmd (a_cmd: like toggle_stone_cmd) is
+	set_toggle_stone_cmd (a_cmd: like toggle_stone_cmd)
 			-- Set `toggle_stone_cmd'
 		do
 			toggle_stone_cmd := a_cmd
@@ -344,7 +344,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: toggle_stone_cmd = a_cmd
 		end
 
-	set_send_stone_to_context_cmd (a_cmd: like send_stone_to_context_cmd) is
+	set_send_stone_to_context_cmd (a_cmd: like send_stone_to_context_cmd)
 			-- Set `send_stone_to_context_cmd'
 		do
 			send_stone_to_context_cmd := a_cmd
@@ -352,7 +352,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: send_stone_to_context_cmd = a_cmd
 		end
 
-	set_show_profiler (a_cmd: like show_profiler) is
+	set_show_profiler (a_cmd: like show_profiler)
 			-- Set `show_profiler'
 		do
 			show_profiler := a_cmd
@@ -360,7 +360,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: show_profiler = a_cmd
 		end
 
-	set_show_tool_commands (a_commands: like show_tool_commands) is
+	set_show_tool_commands (a_commands: like show_tool_commands)
 			-- Set `show_tool_commands'
 		do
 			show_tool_commands := a_commands
@@ -368,7 +368,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: show_tool_commands = a_commands
 		end
 
-	set_show_shell_tool_commands (a_commands: like show_shell_tool_commands) is
+	set_show_shell_tool_commands (a_commands: like show_shell_tool_commands)
 			-- Set `show_tool_commands'
 		do
 			show_shell_tool_commands := a_commands
@@ -376,7 +376,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: show_shell_tool_commands = a_commands
 		end
 
-	set_show_toolbar_commands (a_commands: like show_toolbar_commands) is
+	set_show_toolbar_commands (a_commands: like show_toolbar_commands)
 			-- Set `show_toolbar_commands'
 		do
 			show_toolbar_commands := a_commands
@@ -384,7 +384,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: show_toolbar_commands = a_commands
 		end
 
-	set_editor_commands (a_commands: like editor_commands) is
+	set_editor_commands (a_commands: like editor_commands)
 			-- Set `editor_commands'
 		do
 			editor_commands := a_commands
@@ -392,7 +392,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_commands = a_commands
 		end
 
-	set_reset_layout_command (a_cmd: like reset_layout_command) is
+	set_reset_layout_command (a_cmd: like reset_layout_command)
 			-- Set `reset_layout_command'
 		do
 			reset_layout_command := a_cmd
@@ -400,7 +400,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: reset_layout_command = a_cmd
 		end
 
-	set_open_layout_command (a_cmd: like open_layout_command) is
+	set_open_layout_command (a_cmd: like open_layout_command)
 			-- Set `open_layout_command'
 		do
 			open_layout_command := a_cmd
@@ -408,7 +408,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: open_layout_command = a_cmd
 		end
 
-	set_save_layout_as_command (a_cmd: like save_layout_as_command) is
+	set_save_layout_as_command (a_cmd: like save_layout_as_command)
 			-- Set `save_layout_as_command'
 		do
 			save_layout_as_command := a_cmd
@@ -416,7 +416,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: save_layout_as_command = a_cmd
 		end
 
-	set_simple_shortcut_commands (a_cmd: like simple_shortcut_commands) is
+	set_simple_shortcut_commands (a_cmd: like simple_shortcut_commands)
 			-- Set `save_layout_as_command'
 		do
 			simple_shortcut_commands := a_cmd
@@ -424,7 +424,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: simple_shortcut_commands = a_cmd
 		end
 
-	set_lock_tool_bar_command (a_cmd: like lock_tool_bar_command) is
+	set_lock_tool_bar_command (a_cmd: like lock_tool_bar_command)
 			-- Set `lock_tool_bar_command'
 		do
 			lock_tool_bar_command := a_cmd
@@ -432,7 +432,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: lock_tool_bar_command = a_cmd
 		end
 
-	set_lock_docking_command (a_cmd: like lock_docking_command) is
+	set_lock_docking_command (a_cmd: like lock_docking_command)
 			-- Set `lock_docking_command'
 		do
 			lock_docking_command := a_cmd
@@ -440,7 +440,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: lock_docking_command = a_cmd
 		end
 
-	set_lock_editor_docking_command (a_cmd: like lock_editor_docking_command) is
+	set_lock_editor_docking_command (a_cmd: like lock_editor_docking_command)
 			-- Set `lock_docking_command'
 		do
 			lock_editor_docking_command := a_cmd
@@ -448,7 +448,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: lock_editor_docking_command = a_cmd
 		end
 
-	set_maximize_editor_area_command (a_cmd: like maximize_editor_area_command) is
+	set_maximize_editor_area_command (a_cmd: like maximize_editor_area_command)
 			-- Set `maximize_editor_area_command'
 		do
 			maximize_editor_area_command := a_cmd
@@ -456,7 +456,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: maximize_editor_area_command = a_cmd
 		end
 
-	set_minimize_editor_area_command (a_cmd: like minimize_editor_area_command) is
+	set_minimize_editor_area_command (a_cmd: like minimize_editor_area_command)
 			-- Set `minimize_editor_area_command'
 		do
 			minimize_editor_area_command := a_cmd
@@ -464,7 +464,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: minimize_editor_area_command = a_cmd
 		end
 
-	set_restore_editor_area_command (a_cmd: like restore_editor_area_command) is
+	set_restore_editor_area_command (a_cmd: like restore_editor_area_command)
 			-- Set `restore_editor_area_command'
 		do
 			restore_editor_area_command := a_cmd
@@ -472,7 +472,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: restore_editor_area_command = a_cmd
 		end
 
-	set_minimize_editors_command (a_cmd: like minimize_editors_command) is
+	set_minimize_editors_command (a_cmd: like minimize_editors_command)
 			-- Set `minimize_editors_command'
 		do
 			minimize_editors_command := a_cmd
@@ -480,7 +480,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: minimize_editors_command = a_cmd
 		end
 
-	set_restore_editors_command (a_cmd: like restore_editors_command) is
+	set_restore_editors_command (a_cmd: like restore_editors_command)
 			-- Set `restore_editors_command'
 		do
 			restore_editors_command := a_cmd
@@ -488,7 +488,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: restore_editors_command = a_cmd
 		end
 
-	set_editor_font_zoom_in_command (a_cmd: like editor_font_zoom_in_command) is
+	set_editor_font_zoom_in_command (a_cmd: like editor_font_zoom_in_command)
 			-- Set `editor_font_zoom_in_command'
 		do
 			editor_font_zoom_in_command := a_cmd
@@ -496,7 +496,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_font_zoom_in_command = a_cmd
 		end
 
-	set_editor_font_zoom_in_numpad_command (a_cmd: like editor_font_zoom_in_numpad_command) is
+	set_editor_font_zoom_in_numpad_command (a_cmd: like editor_font_zoom_in_numpad_command)
 			-- Set `editor_font_zoom_in_numpad_command'
 		do
 			editor_font_zoom_in_numpad_command := a_cmd
@@ -504,7 +504,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_font_zoom_in_numpad_command = a_cmd
 		end
 
-	set_editor_font_zoom_out_command (a_cmd: like editor_font_zoom_out_command) is
+	set_editor_font_zoom_out_command (a_cmd: like editor_font_zoom_out_command)
 			-- Set `editor_font_zoom_out_command'
 		do
 			editor_font_zoom_out_command := a_cmd
@@ -512,7 +512,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_font_zoom_out_command = a_cmd
 		end
 
-	set_editor_font_zoom_out_numpad_command (a_cmd: like editor_font_zoom_out_numpad_command) is
+	set_editor_font_zoom_out_numpad_command (a_cmd: like editor_font_zoom_out_numpad_command)
 			-- Set `editor_font_zoom_out_numpad_command'
 		do
 			editor_font_zoom_out_numpad_command := a_cmd
@@ -520,7 +520,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_font_zoom_out_numpad_command = a_cmd
 		end
 
-	set_editor_font_zoom_reset_command (a_cmd: like editor_font_zoom_reset_command) is
+	set_editor_font_zoom_reset_command (a_cmd: like editor_font_zoom_reset_command)
 			-- Set `editor_font_zoom_reset_command'
 		do
 			editor_font_zoom_reset_command := a_cmd
@@ -528,7 +528,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_font_zoom_reset_command = a_cmd
 		end
 
-	set_editor_font_zoom_reset_numpad_command (a_cmd: like editor_font_zoom_reset_numpad_command) is
+	set_editor_font_zoom_reset_numpad_command (a_cmd: like editor_font_zoom_reset_numpad_command)
 			-- Set `editor_font_zoom_reset_numpad_command'
 		do
 			editor_font_zoom_reset_numpad_command := a_cmd
@@ -536,7 +536,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_font_zoom_reset_numpad_command = a_cmd
 		end
 
-	set_customized_formatter_command (a_cmd: like customized_formatter_command) is
+	set_customized_formatter_command (a_cmd: like customized_formatter_command)
 			-- Set `customized_formatter_command' with `a_cmd'.
 		do
 			customized_formatter_command := a_cmd
@@ -544,7 +544,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			customized_formatter_command_set: customized_formatter_command = a_cmd
 		end
 
-	set_customized_tool_command (a_cmd: like customized_tool_command) is
+	set_customized_tool_command (a_cmd: like customized_tool_command)
 			-- Set `customized_tool_command' with `a_cmd'.
 		do
 			customized_tool_command := a_cmd
@@ -594,7 +594,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 
 feature -- Recycle
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle all commands.
 		local
 			os_cmd: EB_ON_SELECTION_COMMAND
@@ -706,7 +706,7 @@ feature -- Recycle
 			Precursor {EB_DEVELOPMENT_WINDOW_PART}
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

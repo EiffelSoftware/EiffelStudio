@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A service for logging messages in EiffelStudio.
 	]"
@@ -153,7 +153,7 @@ feature -- Query
 invariant
 	reasonable_log_cache_length: log_cache_length >= 10
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

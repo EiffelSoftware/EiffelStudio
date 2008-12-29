@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class EWB_REACTIVATE_SUBQUERY
@@ -11,7 +11,7 @@ inherit
 
 feature {NONE} -- Execution
 
-	loop_action is
+	loop_action
 		local
 			command_arguments: EWB_ARGUMENTS;
 			index_str: STRING;
@@ -49,7 +49,7 @@ feature {NONE} -- Execution
 			execute;
 		end;
 
-	execute is
+	execute
 		do
 			if index <= subqueries.count then
 				subqueries.go_i_th (index);
@@ -91,17 +91,17 @@ feature {NONE} -- Execution
 
 feature -- Properties
 
-	name: STRING is
+	name: STRING
 		once
 			Result := reactivate_subquery_cmd_name;
 		end;
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		once
 			Result := reactivate_subquery_help;
 		end;
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 		once
 			Result := reactivate_subquery_abb;
 		end;
@@ -110,7 +110,7 @@ feature {NONE} -- Attributes
 
 	index: INTEGER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

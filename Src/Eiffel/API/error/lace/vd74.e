@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error that a precompile has been added to a compiled sytem."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,14 +16,14 @@ inherit
 
 feature -- Output
 
-	build_explain (st: TEXT_FORMATTER) is
+	build_explain (st: TEXT_FORMATTER)
 		do
 			st.add_new_line
 			st.add ("Precompile was added to a compiled system.")
 			st.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Groups selection for documentation."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize with no groups in system.
 		do
 			create groups.make (10)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			any_feature_format_generated := True
 		end
 
-	make_all is
+	make_all
 			-- Initialize with all groups in system.
 		do
 			make
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	include_group (gr: CONF_GROUP) is
+	include_group (gr: CONF_GROUP)
 			-- Add `gr' (if not yet present) to universe.
 		require
 			gr_not_void: gr /= Void
@@ -68,7 +68,7 @@ feature -- Element change
 			end
 		end
 
-	include_all is
+	include_all
 			-- Include all groups from the universe in the documentation.
 		require
 			not_is_universe_completed: not is_universe_completed
@@ -103,7 +103,7 @@ feature -- Element change
 
 feature -- Setting
 
-	complete_universe is
+	complete_universe
 			-- Set `is_universe_completed' to True.
 		do
 			groups.sort (group_sorter)
@@ -118,7 +118,7 @@ feature -- Access
 	groups: DS_ARRAYED_LIST [CONF_GROUP]
 			-- All groups in universe.
 
-	classes: DS_ARRAYED_LIST [CONF_CLASS] is
+	classes: DS_ARRAYED_LIST [CONF_CLASS]
 			-- All classes from `groups' sorted.
 		do
 			Result := classes_internal
@@ -131,7 +131,7 @@ feature -- Access
 			sorted: Result.sorted (class_sorter)
 		end
 
-	classes_in_group (group: CONF_GROUP): like classes is
+	classes_in_group (group: CONF_GROUP): like classes
 			-- List of all items from `classes' whose group is `group' and alphabetically sorted.
 		require
 			group_not_void: group /= Void
@@ -160,7 +160,7 @@ feature -- Status report
 	is_universe_completed: BOOLEAN
 			-- Is setting of `groups' completed?
 
-	is_group_generated (a_group: CONF_GROUP): BOOLEAN is
+	is_group_generated (a_group: CONF_GROUP): BOOLEAN
 			-- Is documentation for `a_group' generated?
 		do
 			Result := any_group_format_generated and then groups.has (a_group)
@@ -174,7 +174,7 @@ feature -- Status report
 			found_group_set: Result implies (found_group /= Void and then groups.has (found_group))
 		end
 
-	is_class_generated (a_class: CLASS_I): BOOLEAN is
+	is_class_generated (a_class: CLASS_I): BOOLEAN
 			-- Is documentation for `a_class' generated?
 		do
 			Result := any_class_format_generated and then is_class_in_group (a_class)
@@ -183,7 +183,7 @@ feature -- Status report
 			found_group_set: Result implies (found_group /= Void and then groups.has (found_group))
 		end
 
-	is_feature_generated (a_feature: E_FEATURE): BOOLEAN is
+	is_feature_generated (a_feature: E_FEATURE): BOOLEAN
 			-- Is documentation for `cl' generated?
 		do
 			Result := any_feature_format_generated and then is_class_in_group (a_feature.written_class.lace_class)
@@ -192,7 +192,7 @@ feature -- Status report
 			found_group_set: Result implies (found_group /= Void and then groups.has (found_group))
 		end
 
-	is_class_in_group (a_class: CLASS_I): BOOLEAN is
+	is_class_in_group (a_class: CLASS_I): BOOLEAN
 			-- Does `a_class' belongs to one of the group in `groups'.
 		local
 			l_phys_as: CONF_PHYSICAL_ASSEMBLY
@@ -236,24 +236,24 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_any_group_format_generated (f: BOOLEAN) is
+	set_any_group_format_generated (f: BOOLEAN)
 		do
 			any_group_format_generated := f
 		end
 
-	set_any_class_format_generated (f: BOOLEAN) is
+	set_any_class_format_generated (f: BOOLEAN)
 		do
 			any_class_format_generated := f
 		end
 
-	set_any_feature_format_generated (f: BOOLEAN) is
+	set_any_feature_format_generated (f: BOOLEAN)
 		do
 			any_feature_format_generated := f
 		end
 
 feature {NONE} -- Implementation
 
-	unsorted_classes_in_group (group: CONF_GROUP): like classes is
+	unsorted_classes_in_group (group: CONF_GROUP): like classes
 			-- List of all items from `classes' whose group is `group'.
 		require
 			group_not_void: group /= Void
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation: Access
 
-	class_sorter: DS_QUICK_SORTER [CONF_CLASS] is
+	class_sorter: DS_QUICK_SORTER [CONF_CLASS]
 			-- Sorter object for classes.
 		once
 			create Result.make (create {KL_COMPARABLE_COMPARATOR [CONF_CLASS]}.make)
@@ -293,7 +293,7 @@ feature {NONE} -- Implementation: Access
 			Result_not_void: Result /= Void
 		end
 
-	group_sorter: DS_QUICK_SORTER [CONF_GROUP] is
+	group_sorter: DS_QUICK_SORTER [CONF_GROUP]
 			-- Sorter object for groups.
 		once
 			create Result.make (create {KL_COMPARABLE_COMPARATOR [CONF_GROUP]}.make)
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation: Access
 invariant
 	groups_not_void: groups /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

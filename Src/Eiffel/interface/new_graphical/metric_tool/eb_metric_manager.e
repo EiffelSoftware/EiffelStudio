@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Metric manager to maintain all registered metrics in current application targer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create {LINKED_LIST [EB_METRIC]} metrics.make
@@ -45,7 +45,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	clear_last_error is
+	clear_last_error
 			-- Clear `last_error'.
 		do
 			last_error := Void
@@ -55,7 +55,7 @@ feature -- Setting
 
 feature -- Validation
 
-	check_validation (a_force: BOOLEAN) is
+	check_validation (a_force: BOOLEAN)
 			-- Check validation status of metrics in `metrics'.
 			-- If `a_force' is True, check even though some metric has already been checked.
 		local
@@ -78,7 +78,7 @@ feature -- Validation
 			metrics.go_to (l_cursor)
 		end
 
-	check_validation_for_metric (a_name: STRING) is
+	check_validation_for_metric (a_name: STRING)
 			-- Check validation for metric named `a_name'.
 			-- Do not check name crash.
 		require
@@ -105,7 +105,7 @@ feature -- Validation
 
 feature{EB_METRIC_VALIDITY_VISITOR} -- Validity setting
 
-	set_metric_validity (a_metric_name: STRING; a_validity: EB_METRIC_ERROR) is
+	set_metric_validity (a_metric_name: STRING; a_validity: EB_METRIC_ERROR)
 			-- Set validity of metric named `a_metric_name' with `a_validity'.
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -118,13 +118,13 @@ feature{EB_METRIC_VALIDITY_VISITOR} -- Validity setting
 
 feature -- Status report
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Does parsing contain error?
 		do
 			Result := last_error /= Void
 		end
 
-	has_metric (a_name: STRING): BOOLEAN is
+	has_metric (a_name: STRING): BOOLEAN
 			-- Does `metrics' has metric named `a_name'?
 		require
 			a_name_attached: a_name /= Void
@@ -145,7 +145,7 @@ feature -- Status report
 			l_metrics.go_to (l_cursor)
 		end
 
-	is_metric_valid (a_name: STRING): BOOLEAN is
+	is_metric_valid (a_name: STRING): BOOLEAN
 			-- Is metric named `a_name' valid?
 		require
 			a_name_attached: a_name /= Void
@@ -157,7 +157,7 @@ feature -- Status report
 			Result := metric_validity (a_name) = Void
 		end
 
-	is_metric_calculatable (a_name: STRING): BOOLEAN is
+	is_metric_calculatable (a_name: STRING): BOOLEAN
 			-- Is metric named `a_name' calculatable (i.e., metric exists and is valid)?
 		require
 			a_name_attached: a_name /= Void
@@ -168,7 +168,7 @@ feature -- Status report
 	is_metric_loaded: BOOLEAN
 			-- Have metrics in files been loaded?
 
-	is_userdefined_metric_file_exist: BOOLEAN is
+	is_userdefined_metric_file_exist: BOOLEAN
 			-- Does user defined metric file exist?
 		local
 			l_file: RAW_FILE
@@ -177,7 +177,7 @@ feature -- Status report
 			Result := l_file.exists
 		end
 
-	is_metric_name_equal (a_metric_name, b_metric_name: STRING): BOOLEAN is
+	is_metric_name_equal (a_metric_name, b_metric_name: STRING): BOOLEAN
 			-- Are `a_metric_name' and `b_metric_name' equal?
 		require
 			a_metric_name_attached: a_metric_name /= Void
@@ -209,7 +209,7 @@ feature -- Status report
 	is_history_recalculation_running: BOOLEAN
 			-- Is metric history recalculation running?
 
-	is_metric_name_valid (a_name: STRING): BOOLEAN is
+	is_metric_name_valid (a_name: STRING): BOOLEAN
 			-- Is `a_name' a valid metric name?
 		do
 			Result := a_name /= Void and then
@@ -221,7 +221,7 @@ feature -- Status report
 	has_archive_been_loaded: BOOLEAN
 			-- Has archive history been loaded from `archive_history_file' into `archvie_history'?
 
-	is_metric_validity_checked (a_name: STRING): BOOLEAN is
+	is_metric_validity_checked (a_name: STRING): BOOLEAN
 			-- Is validity of metric named `a_name' checked?
 		require
 			a_name_attached: a_name /= Void
@@ -232,7 +232,7 @@ feature -- Status report
 
 feature -- Access
 
-	userdefined_metrics_file: STRING is
+	userdefined_metrics_file: STRING
 			-- File to store user-defined metrics
 		require
 			system_defined: workbench.system_defined and then workbench.is_already_compiled
@@ -246,7 +246,7 @@ feature -- Access
 			good_result: Result /= Void and then not Result.is_empty
 		end
 
-	archive_history_file: STRING is
+	archive_history_file: STRING
 			-- File to store metric history
 		require
 			system_defined: workbench.system_defined and then workbench.is_already_compiled
@@ -260,7 +260,7 @@ feature -- Access
 			good_result: Result /= Void and then not Result.is_empty
 		end
 
-	userdefined_metrics_path: STRING is
+	userdefined_metrics_path: STRING
 			-- File path where `userdefined_metric_file' is located, not including the trailing directory separator
 		require
 			system_defined: workbench.system_defined and then workbench.is_already_compiled
@@ -280,7 +280,7 @@ feature -- Access
 	metrics: LIST [EB_METRIC]
 			-- List of registered metrics
 
-	metric_with_name (a_name: STRING): EB_METRIC is
+	metric_with_name (a_name: STRING): EB_METRIC
 			-- Metric whose name is `a_name'
 			-- Void if no metric whose name is `a_name' in `metrics'.
 		require
@@ -305,7 +305,7 @@ feature -- Access
 			l_metrics.go_to (l_cursor)
 		end
 
-	ordered_metrics (a_metric_order_tester: FUNCTION [ANY, TUPLE [EB_METRIC, EB_METRIC], BOOLEAN]; a_flat: BOOLEAN): HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT] is
+	ordered_metrics (a_metric_order_tester: FUNCTION [ANY, TUPLE [EB_METRIC, EB_METRIC], BOOLEAN]; a_flat: BOOLEAN): HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT]
 			-- All metrics in order retrieved by `a_metric_order_tester'.
 			-- If `a_flat' is True, DO NOT sort metrics according to unit, and all sorted metrics will be in a list with the key `no_unit'.
 		require
@@ -375,7 +375,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	metric_validity (a_name: STRING): EB_METRIC_ERROR is
+	metric_validity (a_name: STRING): EB_METRIC_ERROR
 			-- Validity status of metric named `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -387,7 +387,7 @@ feature -- Access
 			Result := metrics_validity.item (a_name)
 		end
 
-	units: LIST [QL_METRIC_UNIT] is
+	units: LIST [QL_METRIC_UNIT]
 			-- List of all supported units
 		once
 			create {ARRAYED_LIST [QL_METRIC_UNIT]} Result.make (11)
@@ -406,7 +406,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	next_metric_name_with_unit (a_unit: QL_METRIC_UNIT): STRING is
+	next_metric_name_with_unit (a_unit: QL_METRIC_UNIT): STRING
 			-- Next numbered metric name starting with "Unnamed" and with unit `a_unit'
 		require
 			a_unit_attached: a_unit /= Void
@@ -420,7 +420,7 @@ feature -- Access
 	last_loaded_metric_archive: LIST [EB_METRIC_ARCHIVE_NODE]
 			-- Last loaded metric archive by `load_metric_archive'
 
-	uuid_generator: UUID_GENERATOR is
+	uuid_generator: UUID_GENERATOR
 			-- UUID generator
 		once
 			create Result
@@ -428,7 +428,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	metrics_from_file (a_file_name: STRING): LIST [EB_METRIC] is
+	metrics_from_file (a_file_name: STRING): LIST [EB_METRIC]
 			-- Metrics defined in file named `a_file_name'
 			-- If error occurs when opening the file or loading metric definitions,
 			-- result will be Void and the actual error will be in `last_error'.
@@ -453,7 +453,7 @@ feature -- Access
 			end
 		end
 
-	create_last_error (a_error_message: STRING_GENERAL) is
+	create_last_error (a_error_message: STRING_GENERAL)
 			-- Create `last_error' to contain message `a_error_message'.
 		require
 			a_error_message_attached: a_error_message /= Void
@@ -466,7 +466,7 @@ feature -- Access
 	archive_history: EB_METRIC_ARCHIVE
 			-- Archive history
 
-	on_compile_start_agent: PROCEDURE [ANY, TUPLE] is
+	on_compile_start_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent for `on_compile_start'
 		do
 			if on_compile_start_agent_internal = Void then
@@ -477,7 +477,7 @@ feature -- Access
 
 feature -- Metric management
 
-	load_metrics is
+	load_metrics
 			-- Load predefined and user-defined metrics.
 		local
 			l_final_error: STRING_GENERAL
@@ -518,7 +518,7 @@ feature -- Metric management
 			end
 		end
 
-	load_metric_definitions (a_file_name: STRING; a_predefined: BOOLEAN) is
+	load_metric_definitions (a_file_name: STRING; a_predefined: BOOLEAN)
 			-- Load metric definitions in `a_file_name'.
 			-- If some error occurs when parsing `a_file_name', no metric will be registered in `metrics'.
 			-- If `a_predefined' is True, mark loaded metrics predefined.
@@ -550,7 +550,7 @@ feature -- Metric management
 			end
 		end
 
-	store_metric_definitions (a_file_name: STRING) is
+	store_metric_definitions (a_file_name: STRING)
 			-- Store non-predefined `metrics' in `a_file_name'.
 			-- Note: Always create new file when store.
 		require
@@ -566,7 +566,7 @@ feature -- Metric management
 			store_xml (xml_document_for_items (n_metric, l_userdefined_metrics, agent l_xml_generator.xml_element), a_file_name, agent create_last_error (metric_names.err_file_not_writable (a_file_name)))
 		end
 
-	store_userdefined_metrics is
+	store_userdefined_metrics
 			-- Store user-defined metrics.
 		local
 			l_folder: DIRECTORY
@@ -586,7 +586,7 @@ feature -- Metric management
 			retry
 		end
 
-	insert_metric (a_metric: EB_METRIC; a_predefined: BOOLEAN) is
+	insert_metric (a_metric: EB_METRIC; a_predefined: BOOLEAN)
 			-- Insert `a_metric' in `metrics'.
 			-- If `a_predefined' is True, mark `a_metric' as predefined.
 		require
@@ -597,7 +597,7 @@ feature -- Metric management
 			check_validation (True)
 		end
 
-	remove_metric (a_name: STRING) is
+	remove_metric (a_name: STRING)
 			-- Remove metric named `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -628,7 +628,7 @@ feature -- Metric management
 			metric_removed: not has_metric (a_name)
 		end
 
-	update_metric (a_name: STRING; a_metric: EB_METRIC) is
+	update_metric (a_name: STRING; a_metric: EB_METRIC)
 			-- Update metric named `a_name' with `a_metric'.
 		require
 			a_name_attached: a_name /= Void
@@ -665,7 +665,7 @@ feature -- Metric management
 			end
 		end
 
-	save_metric (a_metric: EB_METRIC; a_new: BOOLEAN; a_old_metric: EB_METRIC) is
+	save_metric (a_metric: EB_METRIC; a_new: BOOLEAN; a_old_metric: EB_METRIC)
 			-- Save `a_metric' into `metrics'.
 			-- `a_new' is True indicates that `a_metric' is a newly created metric,
 			-- and in this case, `a_old_metric' is the old metric.
@@ -683,7 +683,7 @@ feature -- Metric management
 			end
 		end
 
-	load_archive_history is
+	load_archive_history
 			-- Load archive history from `archive_history_file' into `archive_history'.
 		local
 			l_file_name: RAW_FILE
@@ -702,7 +702,7 @@ feature -- Metric management
 			set_has_archive_been_loaded (True)
 		end
 
-	store_archive_history is
+	store_archive_history
 			-- Store `archive_history' in `archive_history_file'.
 		require
 			archive_history_loaded: has_archive_been_loaded
@@ -731,7 +731,7 @@ feature -- Metric management
 			retry
 		end
 
-	terminate_evaluation is
+	terminate_evaluation
 			-- Terminate every running evaluation including metric evaluation, archive evaluation and history recalculation.
 		local
 			l_generator: QL_TARGET_DOMAIN_GENERATOR
@@ -744,7 +744,7 @@ feature -- Metric management
 
 feature -- Metric archive
 
-	load_metric_archive (a_file_name: STRING) is
+	load_metric_archive (a_file_name: STRING)
 			-- Load metric archive from file named `a_file_name'.
 			-- Store result in `last_loaded_metric_archive'.
 			-- Set `last_loaded_metric_archive' to Void if error occurs.
@@ -765,7 +765,7 @@ feature -- Metric archive
 			end
 		end
 
-	store_metric_archive (a_file_name: STRING; a_archive: LIST [EB_METRIC_ARCHIVE_NODE]) is
+	store_metric_archive (a_file_name: STRING; a_archive: LIST [EB_METRIC_ARCHIVE_NODE])
 			-- Store metric archive `a_archive' into file named `a_file_name'.
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -783,7 +783,7 @@ feature -- Metric archive
 
 feature -- Setting
 
-	set_is_eiffel_compiling (b: BOOLEAN) is
+	set_is_eiffel_compiling (b: BOOLEAN)
 			-- Set `is_eiffel_compiling' with `b'.
 		do
 			is_eiffel_compiling := b
@@ -791,7 +791,7 @@ feature -- Setting
 			is_eiffel_compiling_set: is_eiffel_compiling = b
 		end
 
-	set_is_archive_calculating (b: BOOLEAN) is
+	set_is_archive_calculating (b: BOOLEAN)
 			-- Set `is_archive_calculating' with `b'.
 		do
 			is_archive_calculating := b
@@ -799,7 +799,7 @@ feature -- Setting
 			is_archive_calculating_set: is_archive_calculating = b
 		end
 
-	set_is_metric_evaluating (b: BOOLEAN) is
+	set_is_metric_evaluating (b: BOOLEAN)
 			-- Set `is_metric_evaluating' with `b'.
 		do
 			is_metric_evaluating := b
@@ -807,7 +807,7 @@ feature -- Setting
 			is_metric_evaluating_set: is_metric_evaluating = b
 		end
 
-	set_is_project_loaded (b: BOOLEAN) is
+	set_is_project_loaded (b: BOOLEAN)
 			-- Set `is_project_loaded' with `b'.
 		do
 			is_project_loaded := b
@@ -815,7 +815,7 @@ feature -- Setting
 			is_project_loaded_set: is_project_loaded = b
 		end
 
-	set_is_history_recalculation_running (b: BOOLEAN) is
+	set_is_history_recalculation_running (b: BOOLEAN)
 			-- Set `is_history_recalculation_running' with `b'.
 		do
 			is_history_recalculation_running := b
@@ -823,7 +823,7 @@ feature -- Setting
 			is_history_recalculation_running_set: is_history_recalculation_running = b
 		end
 
-	set_has_archive_been_loaded (b: BOOLEAN) is
+	set_has_archive_been_loaded (b: BOOLEAN)
 			-- Set `has_archive_been_loaded' with `b'.
 		do
 			has_archive_been_loaded := b
@@ -833,35 +833,35 @@ feature -- Setting
 
 feature -- Actions
 
-	on_project_loaded is
+	on_project_loaded
 			-- A new project has been loaded.
 		do
 			set_is_project_loaded (True)
 			project_load_actions.call (Void)
 		end
 
-	on_project_unloaded is
+	on_project_unloaded
 			-- Current project has been closed.
 		do
 			set_is_project_loaded (False)
 			project_unload_actions.call (Void)
 		end
 
-	on_compile_start is
+	on_compile_start
 			-- Action to be performed when Eiffel compilation starts
 		do
 			set_is_eiffel_compiling (True)
 			compile_start_actions.call (VOid)
 		end
 
-	on_compile_stop is
+	on_compile_stop
 			-- Action to be performed when Eiffel compilation stops
 		do
 			set_is_eiffel_compiling (False)
 			compile_stop_actions.call (Void)
 		end
 
-	on_metric_evaluation_starts (a_data: ANY) is
+	on_metric_evaluation_starts (a_data: ANY)
 			-- Action to be performed when metric evaluation starts
 			-- `a_data' can be the metric tool panel from which metric evaluation starts.
 		do
@@ -869,7 +869,7 @@ feature -- Actions
 			metric_evaluation_start_actions.call ([a_data])
 		end
 
-	on_metric_evaluation_stops (a_data: ANY) is
+	on_metric_evaluation_stops (a_data: ANY)
 			-- Action to be performed when metric evaluation stops
 			-- `a_data' can be the metric tool panel from which metric evaluation stops.
 		do
@@ -877,7 +877,7 @@ feature -- Actions
 			metric_evaluation_stop_actions.call ([a_data])
 		end
 
-	on_archive_calculation_starts (a_data: ANY) is
+	on_archive_calculation_starts (a_data: ANY)
 			-- Action to be performed when metric archive calculation starts
 			-- `a_data' can be the metric tool panel from which metric archive calculation starts.
 		do
@@ -885,7 +885,7 @@ feature -- Actions
 			archive_calculation_start_actions.call ([a_data])
 		end
 
-	on_archive_calculation_stops (a_data: ANY) is
+	on_archive_calculation_stops (a_data: ANY)
 			-- Action to be performed when metric archive calculation stops
 			-- `a_data' can be the metric tool panel from which metric archive calculation stops.
 		do
@@ -893,7 +893,7 @@ feature -- Actions
 			archive_calculation_stop_actions.call ([a_data])
 		end
 
-	on_history_recalculation_starts (a_data: ANY) is
+	on_history_recalculation_starts (a_data: ANY)
 			-- Action to be performed when metric history recalculation starts
 			-- `a_data' can be the metric tool panel from which metric history recalculation starts.
 		do
@@ -901,7 +901,7 @@ feature -- Actions
 			history_recalculation_start_actions.call ([a_data])
 		end
 
-	on_history_recalculation_stops (a_data: ANY) is
+	on_history_recalculation_stops (a_data: ANY)
 			-- Action to be performed when metric history recalculation stops
 			-- `a_data' can be the metric tool panel from which metric history recalculation stops.
 		do
@@ -911,7 +911,7 @@ feature -- Actions
 
 feature{NONE} -- Implementation
 
-	register_metric (a_metric: EB_METRIC; a_predefined: BOOLEAN) is
+	register_metric (a_metric: EB_METRIC; a_predefined: BOOLEAN)
 			-- Register `a_metric' in `metrics'.
 			-- If `a_predefined' is True, mark `a_metric' as predefined metric (User can not edit or delete a predefined metric)
 		require
@@ -932,7 +932,7 @@ feature{NONE} -- Implementation
 			-- Key is name of metric, value is the error message.
 			-- Value is Void indicates that the metric is valid.
 
-	check_name_crash (a_metric_list: like metrics) is
+	check_name_crash (a_metric_list: like metrics)
 			-- Check if there is a metric in `a_metric_list' which will cause name crash with metrics in `metrics'.
 		require
 			a_metric_list_attached: a_metric_list /= Void
@@ -953,7 +953,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	next_metric_name (a_name_starter: STRING): STRING is
+	next_metric_name (a_name_starter: STRING): STRING
 			-- Next numbered metric name with starter `a_name_starter'
 			-- For example, if metric named "Unnamed metric#1" exists in `metrics',
 			-- `next_metric_name' with starter "Unnamed metric" will return "Unnamed metric#2"
@@ -998,7 +998,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	metric_with_name_internal (a_name: STRING): EB_METRIC is
+	metric_with_name_internal (a_name: STRING): EB_METRIC
 			-- Metric whose name is `a_name'
 			-- Void if no metric whose name is `a_name' in `metrics'.
 		require
@@ -1030,7 +1030,7 @@ invariant
 	metrics_attached: metrics /= Void
 	metrics_validity_attached: metrics_validity /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

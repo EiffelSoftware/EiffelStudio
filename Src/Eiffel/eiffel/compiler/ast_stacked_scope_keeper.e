@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Keeper for non-void entity scopes that uses stacks to track voidness status."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -158,7 +158,7 @@ invariant
 	inner_scopes_attached: inner_scopes /= Void
 	same_level: outer_scopes.count = inner_scopes.count
 
-indexing
+note
 	copyright:	"Copyright (c) 2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encodings used in ec."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	default_encoding: !ENCODING is
+	default_encoding: !ENCODING
 			-- Default encoding reading/writing from file.
 		do
 			Result := iso_8859_1
@@ -21,7 +21,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	iso_8859_1: !ENCODING is
+	iso_8859_1: !ENCODING
 			-- Encoding ISO-8859-1 encoding.
 			-- TODO: This encoding should be eventually integrated
 			-- into encoding library.
@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

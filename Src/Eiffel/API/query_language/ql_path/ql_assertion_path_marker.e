@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Path marker for assertion item used in Eiffel Query Language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	path_name (a_base_name: STRING): STRING is
+	path_name (a_base_name: STRING): STRING
 			-- Path name of `a_base_name'
 		do
 			create Result.make (a_base_name.count + opener.count + closer.count)
@@ -37,10 +37,10 @@ feature -- Access
 			end
 		end
 
-	empty_assertion_name: STRING is "%"%"";
+	empty_assertion_name: STRING = "%"%"";
 			-- Virtual name for an assertion without tag
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

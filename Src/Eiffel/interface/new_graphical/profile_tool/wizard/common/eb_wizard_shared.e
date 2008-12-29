@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Proxy to shared references"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,13 +16,13 @@ inherit
 
 feature -- Access
 
-	first_window: EB_WIZARD_WINDOW is
+	first_window: EB_WIZARD_WINDOW
 			-- Main Window ( i.e. the wizard window frame )
 		do
 			Result := first_window_cell.item
 		end
 
-	main_box: EV_VERTICAL_BOX is
+	main_box: EV_VERTICAL_BOX
 			-- Box in which we display the different pages the
 			-- user will see. All the WIZARD_STATE_WINDOW instances will
 			-- be displayed child of this box.
@@ -34,7 +34,7 @@ feature -- Access
 			exists: Result /= Void
 		end
 
-	history: TWO_WAY_LIST [EB_WIZARD_STATE_WINDOW] is
+	history: TWO_WAY_LIST [EB_WIZARD_STATE_WINDOW]
 			-- History of the different pages
 			-- the user has processed.
 		once
@@ -43,14 +43,14 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap on which can be displayed a picture which
 			-- goes with the state.
 		do
 			Result := pixmap_cell.item
 		end
 
-	pixmap_icon: EV_PIXMAP is
+	pixmap_icon: EV_PIXMAP
 			-- Pixmap for the small icon of the wizard
 		do
 			Result := pixmap_icon_cell.item
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_first_window (a_wizard_window: EB_WIZARD_WINDOW) is
+	set_first_window (a_wizard_window: EB_WIZARD_WINDOW)
 			-- Set the main Window (i.e. the wizard window frame) to `a_wizard_window'
 		require
 			a_wizard_window_valid: a_wizard_window /= Void
@@ -69,7 +69,7 @@ feature -- Element change
 			set: first_window = a_wizard_window
 		end
 
-	remove_first_window is
+	remove_first_window
 			-- Set the main Window (i.e. the wizard window frame) to `a_wizard_window'
 		do
 			first_window_cell.put (Void)
@@ -77,7 +77,7 @@ feature -- Element change
 			no_first_window: first_window = Void
 		end
 
-	set_pixmaps (left_pixmap: EV_PIXMAP; icon_pixmap: EV_PIXMAP) is
+	set_pixmaps (left_pixmap: EV_PIXMAP; icon_pixmap: EV_PIXMAP)
 			-- Set the pixmap displayed on the left of initial and
 			-- final state to `left_pixmap' and the pixmap displayed
 			-- in intermediary states to `icon_pixmap'.
@@ -92,7 +92,7 @@ feature -- Element change
 			pixmap_icon_not_void: pixmap_icon /= Void
 		end
 
-	remove_pixmaps is
+	remove_pixmaps
 			-- Set the pixmap displayed on the left of initial and
 			-- final state to `left_pixmap' and the pixmap displayed
 			-- in intermediary states to `icon_pixmap'.
@@ -106,27 +106,27 @@ feature -- Element change
 
 feature -- Colors
 
-	White_color: EV_COLOR is
+	White_color: EV_COLOR
 		once
 			create Result.make_with_rgb (1,1,1)
 		end
 
-	Blue_color: EV_COLOR is
+	Blue_color: EV_COLOR
 		once
 			create Result.make_with_rgb (0,0,1)
 		end
 
-	Red_color: EV_COLOR is
+	Red_color: EV_COLOR
 		once
 			create Result.make_with_rgb (1,0,0)
 		end
 
-	Green_color: EV_COLOR is
+	Green_color: EV_COLOR
 		once
 			create Result.make_with_rgb (0,1,0)
 		end
 
-	Welcome_title_font: EV_FONT is
+	Welcome_title_font: EV_FONT
 			-- Title for welcome page
 		once
 			create Result
@@ -139,7 +139,7 @@ feature -- Colors
 			Result.set_height_in_points (Result.height_in_points + 3)
 		end
 
-	Interior_title_font: EV_FONT is
+	Interior_title_font: EV_FONT
 			-- Title for interior pages
 		once
 			create Result
@@ -151,7 +151,7 @@ feature -- Colors
 			Result.preferred_families.extend ("Helvetica")
 		end
 
-	Interior_font: EV_FONT is
+	Interior_font: EV_FONT
 			-- Title for interior pages
 		once
 			create Result
@@ -163,25 +163,25 @@ feature -- Colors
 			Result.preferred_families.extend ("Helvetica")
 		end
 
-	Title_border_width: INTEGER is
+	Title_border_width: INTEGER
 			-- Border on the left of the title
 		do
 			Result := dialog_unit_to_pixels (22)
 		end
 
-	Title_right_border_width: INTEGER is
+	Title_right_border_width: INTEGER
 			-- Border on the right of the title
 		do
 			Result := dialog_unit_to_pixels (5)
 		end
 
-	Subtitle_border_width: INTEGER is
+	Subtitle_border_width: INTEGER
 			-- Border on the left of the subtitle
 		do
 			Result := dialog_unit_to_pixels (20)
 		end
 
-	Interior_border_width: INTEGER is
+	Interior_border_width: INTEGER
 			-- Border on the left of the text in the core of the wizard.
 		do
 			Result := dialog_unit_to_pixels (42)
@@ -189,26 +189,26 @@ feature -- Colors
 
 feature {NONE} -- Implementation
 
-	first_window_cell: CELL [EB_WIZARD_WINDOW] is
+	first_window_cell: CELL [EB_WIZARD_WINDOW]
 			-- Main Window ( i.e. the wizard window frame )
 		once
 			create Result.put (Void)
 		end
 
-	pixmap_cell: CELL [EV_PIXMAP] is
+	pixmap_cell: CELL [EV_PIXMAP]
 			-- Pixmap on which can be displayed a picture which
 			-- goes with the state.
 		once
 			create Result.put (Void)
 		end
 
-	pixmap_icon_cell: CELL [EV_PIXMAP] is
+	pixmap_icon_cell: CELL [EV_PIXMAP]
 			-- Pixmap for the small icon of the wizard
 		once
 			create Result.put (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

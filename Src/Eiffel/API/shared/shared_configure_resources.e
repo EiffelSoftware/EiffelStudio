@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared resources used by the compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Resources
 
-	Configure_resources: RESOURCE_TABLE is
+	Configure_resources: RESOURCE_TABLE
 			-- Resources specified by the user
 			-- (Calls `init_resources'. To include your own
 			-- resource files redefine `init_resources'.)
@@ -20,28 +20,28 @@ feature -- Resources
 
 feature -- Resource names
 
-	r_AutomaticBackup: STRING is "automatic_backup"
-	r_Fail_on_rescue: STRING is "fail_on_rescue"
-	r_Cache_size: STRING is "cache_size"
-	r_Graphics_disabled: STRING is "graphics_disabled"
-	r_Windows_timer_delay: STRING is "windows_timer_delay"
-	r_Metamorphosis_disabled: STRING is	"metamorphosis_disabled"
+	r_AutomaticBackup: STRING = "automatic_backup"
+	r_Fail_on_rescue: STRING = "fail_on_rescue"
+	r_Cache_size: STRING = "cache_size"
+	r_Graphics_disabled: STRING = "graphics_disabled"
+	r_Windows_timer_delay: STRING = "windows_timer_delay"
+	r_Metamorphosis_disabled: STRING =	"metamorphosis_disabled"
 
 feature {NONE} -- Convenient access
 
-	Fail_on_rescue: BOOLEAN is
+	Fail_on_rescue: BOOLEAN
 			-- Fail on rescue?
 		once
 			Result := Configure_resources.get_boolean (r_Fail_on_rescue, False)
 		end
 
-	Metamorphosis_disabled: BOOLEAN is
+	Metamorphosis_disabled: BOOLEAN
 			-- Is extra metamorphosis disabled?
 		once
 			Result := Configure_resources.get_boolean (r_Metamorphosis_disabled, False)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Tree representing a set of the favorites"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_favorites_manager: EB_FAVORITES_MANAGER; clickable: BOOLEAN) is
+	make (a_favorites_manager: EB_FAVORITES_MANAGER; clickable: BOOLEAN)
 			-- Initialization: build the widget and the tree.
 		do
 			is_clickable := clickable
@@ -69,7 +69,7 @@ feature -- Status report
 
 feature -- Element change
 
-	refresh is
+	refresh
 			-- Update `Current's display.
 		local
 			fitem: EB_FAVORITES_TREE_ITEM
@@ -89,7 +89,7 @@ feature -- Element change
 
 feature {NONE} -- Cleaning
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the object is no more used.
 		do
 			if favorites /= Void then
@@ -100,7 +100,7 @@ feature {NONE} -- Cleaning
 
 feature {NONE} -- Initialization Implementation
 
-	build_tree is
+	build_tree
 			-- Build the tree corresponding to `a_favorites'.
 		local
 			tree_item: EB_FAVORITES_TREE_ITEM
@@ -126,7 +126,7 @@ feature {NONE} -- Initialization Implementation
 			end
 		end
 
-	build_tree_folder (a_favorites_folder: EB_FAVORITES_FOLDER): EB_FAVORITES_TREE_ITEM is
+	build_tree_folder (a_favorites_folder: EB_FAVORITES_FOLDER): EB_FAVORITES_TREE_ITEM
 			-- Build the tree node corresponding to `a_favorites'.
 		local
 			tree_item: EB_FAVORITES_TREE_ITEM
@@ -148,7 +148,7 @@ feature {NONE} -- Initialization Implementation
 			end
 		end
 
-	favorite_to_tree_item (an_item: EB_FAVORITES_ITEM): EB_FAVORITES_TREE_ITEM is
+	favorite_to_tree_item (an_item: EB_FAVORITES_ITEM): EB_FAVORITES_TREE_ITEM
 			-- Favorite item to Favorite tree item
 		local
 			a_folder_item: EB_FAVORITES_FOLDER
@@ -193,7 +193,7 @@ feature {NONE} -- Initialization Implementation
 
 feature -- Observer pattern
 
-	on_item_added (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
+	on_item_added (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER])
 			-- `a_item' has been added
 			-- `a_item' is situated in the path `a_path'. The first item of the path list
 			-- is a folder situated in the root. If `a_item' is in the root, `a_path' can
@@ -228,7 +228,7 @@ feature -- Observer pattern
 			end
 		end
 
-	on_item_removed (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]) is
+	on_item_removed (a_item: EB_FAVORITES_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER])
 			-- `a_item' has been removed.
 			-- `a_item' is situated in the path `a_path'. The first item of the path list
 			-- is a folder situated in the root. If `a_item' is in the root, `a_path' can
@@ -249,14 +249,14 @@ feature -- Observer pattern
 			end
 		end
 
-	on_update is
+	on_update
 			-- Reload the favorites tree.
 		do
 			wipe_out
 			build_tree
 		end
 
-	add_stone (a_stone: STONE) is
+	add_stone (a_stone: STONE)
 			-- Add a stone
 		local
 			l_class_stone: CLASSI_STONE
@@ -271,7 +271,7 @@ feature -- Observer pattern
 			end
 		end
 
-	add_feature_stone (a_stone: FEATURE_STONE) is
+	add_feature_stone (a_stone: FEATURE_STONE)
 			-- Add a feature, defined by `a_stone', to the main branch of the tree.
 		require
 			valid_stone: a_stone /= Void
@@ -279,7 +279,7 @@ feature -- Observer pattern
 			favorites.add_feature_stone (a_stone)
 		end
 
-	add_class_stone (a_stone: CLASSI_STONE) is
+	add_class_stone (a_stone: CLASSI_STONE)
 			-- Add a class, defined by `a_stone', to the main branch of the tree.
 		require
 			valid_stone: a_stone /= Void
@@ -307,7 +307,7 @@ feature -- Observer pattern
 			end
 		end
 
-	add_folder (a_folder: EB_FAVORITES_FOLDER) is
+	add_folder (a_folder: EB_FAVORITES_FOLDER)
 			-- Add a folder, defined by `a_folder', to the main branch of the tree.
 		require
 			valid_folder: a_folder /= Void
@@ -315,7 +315,7 @@ feature -- Observer pattern
 			favorites.extend (a_folder)
 		end
 
-	remove_folder (a_folder: EB_FAVORITES_FOLDER) is
+	remove_folder (a_folder: EB_FAVORITES_FOLDER)
 			-- Remove a folder, defined by `a_folder', from the tree.
 		require
 			valid_folder: a_folder /= Void
@@ -324,7 +324,7 @@ feature -- Observer pattern
 			a_folder.parent.prune (a_folder)
 		end
 
-	remove_class_stone (a_stone: EB_FAVORITES_CLASS_STONE) is
+	remove_class_stone (a_stone: EB_FAVORITES_CLASS_STONE)
 			-- Remove a class, defined by `a_stone', from the tree.
 		require
 			valid_stone: a_stone /= Void
@@ -336,7 +336,7 @@ feature -- Observer pattern
 			old_class.parent.prune (old_class)
 		end
 
-	remove_feature_stone (a_stone: EB_FAVORITES_FEATURE_STONE) is
+	remove_feature_stone (a_stone: EB_FAVORITES_FEATURE_STONE)
 			-- Remove a feature, defined by `a_stone', from the tree.
 		require
 			valid_stone: a_stone /= Void
@@ -348,7 +348,7 @@ feature -- Observer pattern
 			old_feat.parent.prune (old_feat)
 		end
 
-	on_button_pressed (a_node: ANY; a_x, a_y, a_button: INTEGER) is
+	on_button_pressed (a_node: ANY; a_x, a_y, a_button: INTEGER)
 			-- Action done when an item is selected.
 		local
 			l_item: EB_FAVORITES_ITEM
@@ -369,7 +369,7 @@ feature -- Observer pattern
 
 feature {NONE} -- Implementation
 
-	handle_key (a_key: EV_KEY) is
+	handle_key (a_key: EV_KEY)
 			-- Handle `a_key' press for favorites tree.
 		local
 			item_to_delete: EB_FAVORITES_ITEM
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_tree_item_from_path (item_list: EV_TREE_NODE_LIST; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]): EV_TREE_NODE_LIST is
+	get_tree_item_from_path (item_list: EV_TREE_NODE_LIST; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]): EV_TREE_NODE_LIST
 			-- Get the tree item corresponding to the path `a_path'
 			-- Void if not found.
 		local
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	valid_stone (a_stone: ANY): BOOLEAN is
+	valid_stone (a_stone: ANY): BOOLEAN
 			--
 		local
 			l_class: CLASSI_STONE
@@ -425,7 +425,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	context_menu_factory: EB_CONTEXT_MENU_FACTORY is
+	context_menu_factory: EB_CONTEXT_MENU_FACTORY
 			-- Context menu factory
 		do
 			Result := favorites_manager.development_window.menus.context_menu_factory
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 	favorites_manager: EB_FAVORITES_MANAGER;
 			-- Associated favorites manager
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

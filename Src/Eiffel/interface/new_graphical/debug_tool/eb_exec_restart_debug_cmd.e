@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Set execution format so that breakable point %
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	internal_execute (a_execution_mode: INTEGER) is
+	internal_execute (a_execution_mode: INTEGER)
 			-- Execute.
 		local
 			pre_ag, ag: PROCEDURE [ANY, TUPLE]
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 	delayed_run_action: ES_DELAYED_ACTION
 			-- Delayed run action when "restarting"
 
-	ask_and_kill is
+	ask_and_kill
 			-- Pop up a discardable confirmation dialog before killing the application.
 		local
 			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			window_manager.last_focused_window.show
 		end
 
-	kill is
+	kill
 			-- Effectively kill the application.
 		require
 			valid_application: eb_debugger_manager.application_is_executing
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap for the button.
 		do
 			Result := pixmaps.icon_pixmaps.debug_restart_icon
@@ -121,28 +121,28 @@ feature {NONE} -- Attributes
 			Result := pixmaps.icon_pixmaps.debug_restart_icon_buffer
 		end
 
-	name: STRING is "Exec_restart_debug"
+	name: STRING = "Exec_restart_debug"
 			-- Name of the command.
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Default text displayed in toolbar button
 		do
 			Result := interface_names.b_restart
 		end
 
-	internal_tooltip: STRING_GENERAL is
+	internal_tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.f_restart_application
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name used in menu entry.
 		once
 			Result := Interface_names.m_restart_application
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

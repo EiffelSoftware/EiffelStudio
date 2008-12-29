@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel call stack for the stopped application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -56,7 +56,7 @@ feature -- Properties
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER; tid: like thread_id) is
+	make (n: INTEGER; tid: like thread_id)
 			-- Fill `where' with the `n' first call stack elements.
 			-- `where' is left empty if there is an error.
 			-- Retrieve the whole call stack if `n' = -1.
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			reload (n)
 		end
 
-	make_empty (tid: like thread_id) is
+	make_empty (tid: like thread_id)
 			-- Initialize only the first call stack element.
 		do
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": Creating Empty Eiffel Stack%N"); end
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 
 feature {APPLICATION_STATUS} -- Restricted Access
 
-	reload (n: INTEGER) is
+	reload (n: INTEGER)
 		local
 			tid: like thread_id
 			call: CALL_STACK_ELEMENT_CLASSIC
@@ -129,7 +129,7 @@ feature -- Properties
 
 feature {NONE} -- Externals
 
-	send_dump_stack_request (n: INTEGER; tid: like thread_id) is
+	send_dump_stack_request (n: INTEGER; tid: like thread_id)
 		do
 			send_rqst_1 (rqst_dump_stack, n)
 		end
@@ -138,7 +138,7 @@ invariant
 
 	empty_if_error: error_occurred implies is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

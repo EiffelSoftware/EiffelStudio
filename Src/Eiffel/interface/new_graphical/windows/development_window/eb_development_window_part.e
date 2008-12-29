@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parts for EB_DEVELOPMENT_WINDOW"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,21 +22,21 @@ inherit
 
 feature {NONE} -- Recycle
 
-	internal_detach_entities is
+	internal_detach_entities
 			-- <Precursor>
 		do
 			develop_window := Void
 			Precursor
 		end
 
-	internal_recycle is
+	internal_recycle
 			-- <Precursor>
 		do
 		end
 
 feature{NONE} -- Initlization
 
-	make (a_window: like develop_window) is
+	make (a_window: like develop_window)
 			-- Creation method
 		require
 			not_void: a_window /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 invariant
 	development_window_not_void: is_interface_usable implies develop_window /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for deferred root class."
@@ -18,12 +18,12 @@ inherit
 
 feature -- Properties
 
-	code: STRING is "VSRT";
+	code: STRING = "VSRT";
 			-- Error code
 
-	subcode: INTEGER is 3;
+	subcode: INTEGER = 3;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

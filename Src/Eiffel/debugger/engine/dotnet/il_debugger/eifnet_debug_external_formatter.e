@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Format data coming from external types, handle specific case"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (info: like debugger_info) is
+	make (info: like debugger_info)
 		do
 			debugger_info := info
 		end
@@ -39,7 +39,7 @@ feature {NONE} -- Debugger information
 
 feature -- Conversion String
 
-	system_string_value_to_string (v: ICOR_DEBUG_VALUE): STRING_32 is
+	system_string_value_to_string (v: ICOR_DEBUG_VALUE): STRING_32
 			-- STRING value from `v' which is supposed to be a System.String value.
 		do
 			Result := Edv_formatter.icor_debug_value_as_string_to_string (v)
@@ -131,7 +131,7 @@ feature {NONE} -- get member data
 
 feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 
-	get_ise_runtime_tokens is
+	get_ise_runtime_tokens
 			-- token of "EiffelSoftware.Runtime.ISE_RUNTIME.exception_manager"
 		local
 			l_icd_module: ICOR_DEBUG_MODULE
@@ -147,7 +147,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 			end
 		end
 
-	token_IseRuntime: NATURAL_32 is
+	token_IseRuntime: NATURAL_32
 			-- token of ISE_RUNTIME
 		do
 			Result := private_token_IseRuntime
@@ -157,7 +157,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 			end
 		end
 
-	token_IseRuntime__check_assert: NATURAL_32 is
+	token_IseRuntime__check_assert: NATURAL_32
 			-- Attribute token of ISE_RUNTIME::check_assert
 		do
 			Result := private_token_IseRuntime__check_assert
@@ -167,7 +167,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 			end
 		end
 
-	token_IseRuntime__rt_extension_object: NATURAL_32 is
+	token_IseRuntime__rt_extension_object: NATURAL_32
 			-- Attribute token of ISE_RUNTIME::rt_extension_object
 		do
 			Result := private_token_IseRuntime__rt_extension_object
@@ -177,7 +177,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- ISE_RUNTIME
 			end
 		end
 
-	token_IseRuntime__get_exception_manager: NATURAL_32 is
+	token_IseRuntime__get_exception_manager: NATURAL_32
 			-- Attribute token of ISE_RUNTIME::get_exception_manager
 		do
 			Result := private_token_IseRuntime__get_exception_manager
@@ -216,7 +216,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 --			end
 --		end
 
-	get_system_exception_tokens is
+	get_system_exception_tokens
 		local
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_type_token: NATURAL_32
@@ -232,7 +232,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 			end
 		end
 
-	get_system_threading_thread_tokens is
+	get_system_threading_thread_tokens
 		local
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_type_token: NATURAL_32
@@ -276,7 +276,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 --			end
 --		end
 
-	token_Exception_ToString: NATURAL_32 is
+	token_Exception_ToString: NATURAL_32
 			-- Attribute token of System.Exception::ToString
 		do
 			Result := private_token_Exception_ToString
@@ -286,7 +286,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 			end
 		end
 
-	token_Exception_get_Message: NATURAL_32 is
+	token_Exception_get_Message: NATURAL_32
 			-- Attribute token of System.Exception::get_Message
 		do
 			Result := private_token_Exception_get_Message
@@ -296,7 +296,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 			end
 		end
 
-	token_Thread_m_Name: NATURAL_32 is
+	token_Thread_m_Name: NATURAL_32
 			-- Attribute token of System.Threading.Thread::m_Name
 		do
 			Result := private_token_System_Threading_Thread_m_Name
@@ -306,7 +306,7 @@ feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 			end
 		end
 
-	token_Thread_m_Priority: NATURAL_32 is
+	token_Thread_m_Priority: NATURAL_32
 			-- Attribute token of System.Threading.Thread::m_Priority
 		do
 			Result := private_token_System_Threading_Thread_m_Priority
@@ -339,7 +339,7 @@ feature {NONE} -- Once per instance implementation
 	private_token_System_Threading_Thread_m_Priority: NATURAL_32;
 			-- Attribute token of System.Threading.Thread::m_Priority
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

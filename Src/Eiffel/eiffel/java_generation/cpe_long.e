@@ -1,4 +1,4 @@
-indexing
+note
 	description: "constant pool entry for longs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,22 +24,22 @@ create
 
 feature {NONE} -- Initialisation
 
-	make_from_int (i: INTEGER) is
+	make_from_int (i: INTEGER)
 		do
 			long := i
 		end
 																
-	make (l: INTEGER_64) is
+	make (l: INTEGER_64)
 		do
 			long := l
 		end
 																
 feature -- Access
 
-	tag_id: INTEGER is 5
+	tag_id: INTEGER = 5
 	long: INTEGER_64
 
-	close is
+	close
 		do
 			create bc.make_size (Int_16_size + Int_64_size)
 			append_tag_info (bc)
@@ -47,19 +47,19 @@ feature -- Access
 			Precursor
 		end
 																
-	emit (file: RAW_FILE) is
+	emit (file: RAW_FILE)
 		do
 			bc.emit (file)
 		end
 																
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
 			Result := same_type (other) and then long.is_equal (other.long)
 		end
 																
-	out: STRING is
+	out: STRING
 		do
 			Result := "Long:" + long.out + "%N"
 		end
@@ -72,7 +72,7 @@ invariant
 																
 	closed_implies_bc_exists: is_closed implies bc /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "A resource value for integer resources."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_value: INTEGER) is
+	make (a_name: STRING; a_value: INTEGER)
 			-- Initialize Current
 		do
 			name := a_name
@@ -29,19 +29,19 @@ feature -- Access
 	default_value, actual_value: INTEGER
 			-- Value represented by Current
 
-	value: STRING is
+	value: STRING
 			-- Value as a `STRING' as represented by Current
 		do
 			Result := actual_value.out
 		end
 
-	is_valid (a_value: STRING): BOOLEAN is
+	is_valid (a_value: STRING): BOOLEAN
 			-- Is `a_value' valid for use in Current?
 		do
 			Result := a_value.is_integer
 		end
 
-	has_changed: BOOLEAN is
+	has_changed: BOOLEAN
 			-- Has the resource changed from the default value?
 		do
 			Result := actual_value /= default_value
@@ -49,26 +49,26 @@ feature -- Access
 
 feature -- Setting
 
-	set_value (new_value: STRING) is
+	set_value (new_value: STRING)
 			-- Set `actual_value' according to `new_value'.
 		do
 			actual_value := new_value.to_integer
 		end
 
-	set_actual_value (an_int: INTEGER) is
+	set_actual_value (an_int: INTEGER)
 			-- Set `actual_value' to `an_int'.
 		do
 			actual_value := an_int
 		end
 
-	mark_saved is
+	mark_saved
 		do
 			default_value := actual_value
 		end
 
 feature -- Output
 
-	xml_trace: STRING is
+	xml_trace: STRING
 			-- XML representation of current
 		do
 			Result := "<TEXT>"
@@ -78,13 +78,13 @@ feature -- Output
 			Result.append ("</INTEGER></TEXT>")
 		end
 
-	registry_name: STRING is
+	registry_name: STRING
 			-- name of Current in the registry
 		do
 			Result := "EIFINT_" + name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Container for an history manager"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	window: EV_WINDOW is
+	window: EV_WINDOW
 			-- A window that can receive warnings and other dialogs.
 		deferred
 		end
@@ -29,7 +29,7 @@ feature -- Access
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
+	internal_recycle
 			-- Free references to `Current'.
 		do
 			if history_manager /= Void then
@@ -47,13 +47,13 @@ feature {NONE} -- Clean up
 
 feature -- Status setting
 
-	advanced_set_stone (a_stone: STONE) is
+	advanced_set_stone (a_stone: STONE)
 			-- 'Special' set_stone, which may do more than a basic `set_stone'.
 		do
 			set_stone (a_stone)
 		end
 
-	set_history_moving_cancelled (a_cancel: BOOLEAN) is
+	set_history_moving_cancelled (a_cancel: BOOLEAN)
 			-- Set `history_moving_cancelled' with `a_cancel'.
 		do
 			history_moving_cancelled := a_cancel
@@ -65,7 +65,7 @@ feature -- Status report
 
 	history_moving_cancelled: BOOLEAN;
 			-- Is history moving cancelled?
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

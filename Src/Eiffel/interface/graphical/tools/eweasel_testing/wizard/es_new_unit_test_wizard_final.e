@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Final step of test case creation wizard
 																					]"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_info: like wizard_information) is
+	make (an_info: like wizard_information)
 			-- Redefine
 		do
 			wizard_information := an_info
@@ -43,19 +43,19 @@ feature {NONE} -- Implementation
 	wizard_information: ES_NEW_UNIT_TEST_WIZARD_INFORMATION;
 			-- Redefine
 
-	proceed_with_current_info is
+	proceed_with_current_info
 			-- Redefine
 		do
 			Precursor {EB_WIZARD_FINAL_STATE_WINDOW}
 		end
 
-	title_string: STRING_GENERAL is
+	title_string: STRING_GENERAL
 			-- Title string
 		do
 			Result := interface_names.t_Unit_test_files_will_be_generated
 		end
 
-	message_string: STRING_GENERAL is
+	message_string: STRING_GENERAL
 			-- Message string
 		local
 			l_path: STRING
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

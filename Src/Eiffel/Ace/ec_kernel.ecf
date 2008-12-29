@@ -5,7 +5,7 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true">
+		<option warning="true" syntax_level="1">
 			<warning name="old_verbatim_strings" enabled="false"/>
 		</option>
 		<external_include location="$(EIFFEL_SRC)/C/bench">

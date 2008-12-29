@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generator of routine tables"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature
 
-	init_file (file: INDENT_FILE) is
+	init_file (file: INDENT_FILE)
 			-- Initialization of new file
 		do
 				-- Let's finish C code generation of current block.
@@ -35,7 +35,7 @@ feature
 			file.put_string ("#include %"../E1/eoffsets.h%"%N")
 		end;
 
-	finish_file is
+	finish_file
 			-- Finish generation of `current_buffer'.
 		local
 			temp: STRING
@@ -64,7 +64,7 @@ feature
 			current_buffer.start_c_specific_code
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface containing configuration options for manual test classes.
 	]"

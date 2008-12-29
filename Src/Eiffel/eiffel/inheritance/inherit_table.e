@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Table of inherited features indexed by name ID: feature `pass2' is
 		second pass of compiler.
@@ -93,7 +93,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Hash table creation
 		do
 			default_size := n
@@ -157,7 +157,7 @@ feature
 	assert_prop_list: LINKED_LIST [INTEGER];
 			-- List of routine ids for assertion modifications
 
-	adaptations: LINKED_LIST [FEATURE_ADAPTATION] is
+	adaptations: LINKED_LIST [FEATURE_ADAPTATION]
 			-- List of redefinitions and joins
 		once
 			create Result.make
@@ -167,7 +167,7 @@ feature
 			-- Second pass controler, needs to be an attribute since
 			-- used by `pass2' and `feature_i_from_feature_as'.
 
-	pass2 (pass_c: CLASS_C; is_supplier_status_modified: BOOLEAN) is
+	pass2 (pass_c: CLASS_C; is_supplier_status_modified: BOOLEAN)
 			-- Second pass of the compiler on class `cl'. The ultimate
 			-- goal here is to calculate the feature table `inherited_features'.
 		require
@@ -505,7 +505,7 @@ end;
 			end;
 		end;
 
-	mark_generic_attribute_seeds (resulting_table: FEATURE_TABLE) is
+	mark_generic_attribute_seeds (resulting_table: FEATURE_TABLE)
 			-- Mark attributes that are seeds of generic types to generate
 			-- wrappers for them.
 		require
@@ -543,7 +543,7 @@ end;
 		end
 
 
-	assign_feature_table is
+	assign_feature_table
 			-- Assign attribute `feature_table'. Look for a previous
 			-- feature table.
 		require
@@ -564,7 +564,7 @@ end;
 			previous_feature_table := a_class.current_feature_table
 		end
 
-	Empty_table: FEATURE_TABLE is
+	Empty_table: FEATURE_TABLE
 			-- Empty feature table
 		do
 			create Result.make (1)
@@ -573,7 +573,7 @@ end;
 			empty_table_not_void: Result /= Void
 		end
 
-	merge_features_of_parent_c (parent_c: PARENT_C) is
+	merge_features_of_parent_c (parent_c: PARENT_C)
 			-- Merge feature table of parent `cl' into
 			-- a data structure to analyse.
 		local
@@ -637,7 +637,7 @@ end;
 			parent_c.check_validity1
 		end
 
-	add_renamed_feature (info: INHERIT_INFO; feature_name_id: INTEGER) is
+	add_renamed_feature (info: INHERIT_INFO; feature_name_id: INTEGER)
 			-- Adds a renamed inherited feature in the table.
 		do
 			search (feature_name_id)
@@ -651,7 +651,7 @@ end;
 	renaming_occurred: BOOLEAN
 		-- Did a renaming occur during `process_renaming'?
 
-	process_renaming is
+	process_renaming
 			-- Process all direct renamings.
 		local
 			l_feature_list, l_content: SPECIAL [INHERIT_FEAT]
@@ -716,7 +716,7 @@ end;
 			end
 		end
 
-	analyze is
+	analyze
 			-- Analyze inherited features: the renamings must have
 			-- been treated before
 		require
@@ -787,7 +787,7 @@ end;
 			end;
 		end;
 
-	analyze_declarations is
+	analyze_declarations
 			-- Analyze local declarations written in the class for a
 			-- syntactically changed class.
 		local
@@ -881,7 +881,7 @@ end;
 			end;
 		end;
 
-	recompute_declarations is
+	recompute_declarations
 			-- Recompute local declarations for a non-syntactically changed
 			-- class.
 		require
@@ -908,7 +908,7 @@ end;
 			end;
 		end;
 
-	analyze_local_feature_declaration (feature_i: FEATURE_I; feature_name_id: INTEGER) is
+	analyze_local_feature_declaration (feature_i: FEATURE_I; feature_name_id: INTEGER)
 			-- Analyze local declaration of class `a_class' named
 			-- `feat_name' which abstract representation is `yacc_feature'.
 		require
@@ -1055,7 +1055,7 @@ end;
 			origins.extend (feature_i.feature_name_id);
 		end;
 
-	feature_i_from_feature_as (yacc_feature: FEATURE_AS; feat: FEATURE_NAME): FEATURE_I is
+	feature_i_from_feature_as (yacc_feature: FEATURE_AS; feat: FEATURE_NAME): FEATURE_I
 			-- Feature correponding to declaration `yacc_feature'.
 			-- If we found a feature named `feature_name' in a previous
 			-- feature table, don't change of feature id. If this previous
@@ -1243,7 +1243,7 @@ end;
 			end;
 		end;
 
-	clear is
+	clear
 			-- Clear the second pass processor
 		do
 			previous_feature_table := Void;
@@ -1264,7 +1264,7 @@ end;
 			create inherited_features.make (default_size)
 		end;
 
-	process_pattern (resulting_table: FEATURE_TABLE) is
+	process_pattern (resulting_table: FEATURE_TABLE)
 			-- Process pattern of features listed in `origins'.
 			-- [We just have to compute pattern ids for origin features
 			-- since for inherited features it is transmitted automatically
@@ -1287,7 +1287,7 @@ end;
 			end;
 		end;
 
-	update_inherited_assertions is
+	update_inherited_assertions
 			-- Update assert_id_set for redefined or merged routines
 			-- in adaptations.
 		local
@@ -1297,7 +1297,7 @@ end;
 			redefined_features.process (adaptations);
 		end;
 
-	update_changed_features is
+	update_changed_features
 			-- Update table `changed_features' of `a_class' after a
 			-- successful second pass
 		local
@@ -1317,7 +1317,7 @@ end;
 	update_convert_clause (
 			a_old_convert, a_new_convert: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A];
 			a_resulting_table: FEATURE_TABLE)
-		is
+		
 			-- Take into account incremental changes in `convert' clauses.
 		require
 			a_class_not_void: a_class /= Void
@@ -1351,19 +1351,19 @@ end;
 			end
 		end
 
-	Routine_id_counter: ROUTINE_COUNTER is
+	Routine_id_counter: ROUTINE_COUNTER
 			-- Counter for routine ids
 		once
 			Result := System.routine_id_counter;
 		end;
 
-	Body_index_counter: BODY_INDEX_COUNTER is
+	Body_index_counter: BODY_INDEX_COUNTER
 			-- Counter for bodies index
 		once
 			Result := System.body_index_counter;
 		end;
 
-	check_validity2 is
+	check_validity2
 			-- Check if redefinitions are effectively done and does
 			-- joins an deferred features if needed
 		require
@@ -1448,7 +1448,7 @@ end;
 			end;
 		end;
 
-	init_inherited_feature (a_feature_name_id: INTEGER_32; inherit_info: INHERIT_INFO; inherit_feat: INHERIT_FEAT): FEATURE_I is
+	init_inherited_feature (a_feature_name_id: INTEGER_32; inherit_info: INHERIT_INFO; inherit_feat: INHERIT_FEAT): FEATURE_I
 			-- Initialization of an inherited feature
 		require
 			a_feature_valid: inherit_info /= Void and then inherit_info.internal_a_feature /= Void
@@ -1524,7 +1524,7 @@ end;
 			end
 		end
 
-	give_new_feature_id (f: FEATURE_I) is
+	give_new_feature_id (f: FEATURE_I)
 			-- Give a new feature id to `f'.
 		require
 			good_argument: f /= Void;
@@ -1549,7 +1549,7 @@ end;
 			f.set_feature_id (new_feature_id);
 		end;
 
-	check_validity3 (resulting_table: FEATURE_TABLE) is
+	check_validity3 (resulting_table: FEATURE_TABLE)
 			-- Check the signature conformance of the redefinitions and
 			-- validity of joins; check assigner command validity.
 		do
@@ -1573,7 +1573,7 @@ end;
 			end
 		end
 
-	check_redeclarations (resulting_table: FEATURE_TABLE) is
+	check_redeclarations (resulting_table: FEATURE_TABLE)
 			-- Check redeclarations into an attribute.
 		do
 			from
@@ -1586,7 +1586,7 @@ end;
 			end;
 		end;
 
-	insert_feature (f: FEATURE_I) is
+	insert_feature (f: FEATURE_I)
 			-- Insert `f' in `inherited_feature'
 		require
 			good_argument: f /= Void
@@ -1607,7 +1607,7 @@ end;
 			end
 		end
 
-	compute_invariant is
+	compute_invariant
 			-- Compute invariant clause
 		require
 			good_context: not (a_class = Void or else class_info = Void)
@@ -1642,7 +1642,7 @@ end;
 
 feature {NONE} -- Implementation
 
-	compute_main_parent (a_feat_tbl: FEATURE_TABLE) is
+	compute_main_parent (a_feat_tbl: FEATURE_TABLE)
 			-- Set `number_of_features' and `main_parent' of `a_class'
 		require
 			a_feat_tbl_not_void: a_feat_tbl /= Void
@@ -1682,7 +1682,7 @@ feature {NONE} -- Implementation
 			nb_features_set: a_class.number_of_features = a_feat_tbl.count
 		end
 
-	check_alias_name_conflict (f: FEATURE_I) is
+	check_alias_name_conflict (f: FEATURE_I)
 			-- Check if feature after `f' has been added to `inherited_features'
 			-- `inherited_features.is_alias_conflict' is set to `true'. Report error in this case.
 		require
@@ -1706,7 +1706,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Temporary body index
 
-	external_body_index: INTEGER is
+	external_body_index: INTEGER
 			-- Dummy body index to be used when someone redefine an external feature
 			-- with no body (i.e. an IL external).
 		once
@@ -1715,7 +1715,7 @@ feature {NONE} -- Temporary body index
 			external_body_index_positive: Result > 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

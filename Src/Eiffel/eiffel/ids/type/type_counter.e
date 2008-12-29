@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- System level static type counter.
@@ -13,7 +13,7 @@ create
 
 feature -- Access
 
-	packet_number (id: INTEGER): INTEGER is
+	packet_number (id: INTEGER): INTEGER
 			-- Packet in which the file for the corresponding 
 			-- type will be generated
 		do
@@ -24,7 +24,7 @@ feature -- Access
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

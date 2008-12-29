@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Reference description"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,14 +20,14 @@ feature -- Access
 	type_i: TYPE_A
 			-- Class type of a reference attribute
 
-	sk_value: INTEGER is
+	sk_value: INTEGER
 		do
 			Result := {SK_CONST}.Sk_ref
 		end
 
 feature -- Settings
 
-	set_type_i (t: like type_i) is
+	set_type_i (t: like type_i)
 			-- Assign `t' to `type_i'.
 		require
 			t_not_void: t /= Void
@@ -39,7 +39,7 @@ feature -- Settings
 
 feature -- Comparisons
 
-	same_as (other: ATTR_DESC): BOOLEAN is
+	same_as (other: ATTR_DESC): BOOLEAN
 			-- Is `other' equal to Current ?
 		local
 			l_ref: REFERENCE_DESC
@@ -53,14 +53,14 @@ feature -- Comparisons
 
 feature -- Code generation
 
-	generate_code (buffer: GENERATION_BUFFER) is
+	generate_code (buffer: GENERATION_BUFFER)
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
 			buffer.put_string ({SK_CONST}.sk_ref_string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

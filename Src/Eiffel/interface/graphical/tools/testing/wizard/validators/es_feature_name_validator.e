@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that validate feature names.
 	]"
@@ -36,7 +36,7 @@ feature -- Validation
 			end
 		end
 
-	validate_new_feature_name (a_feature_name: !STRING; a_class: !CLASS_I) is
+	validate_new_feature_name (a_feature_name: !STRING; a_class: !CLASS_I)
 			-- Is name a valid name for a new feature?
 			--
 			-- `a_feature_name': Name of new Eiffel feature.
@@ -84,7 +84,7 @@ feature {NONE} -- Internationalization
 	e_feature_already_exists: STRING = "{$1} already contains a feature named $2."
 	e_class_file_not_valid: STRING = "Class file {$1} can not be parsed."
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

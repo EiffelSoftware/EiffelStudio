@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class EXPR_ADDRESS_B
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (e: EXPR_B) is
+	make (e: EXPR_B)
 			-- Set `expr' to `e'
 		require
 			e_not_void: e /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_expr_address_b (Current)
@@ -48,45 +48,45 @@ feature -- Attributes
 
 feature -- Status report
 
-	is_type_fixed: BOOLEAN is True
+	is_type_fixed: BOOLEAN = True
 			-- Is type of the expression statically fixed,
 			-- so that there is no variation at run-time?
 
 feature
 
-	type: POINTER_A is
+	type: POINTER_A
 			-- Address type
 		do
 			Result := pointer_type
 		end
 
-	enlarged: EXPR_ADDRESS_BL is
+	enlarged: EXPR_ADDRESS_BL
 			-- Enlarge the expression
 		do
 			create Result.make (expr.enlarged)
 		end;
 
-	is_hector: BOOLEAN is True;
+	is_hector: BOOLEAN = True;
 			-- The expression is an hector one.
 
-	has_gcable_variable: BOOLEAN is
+	has_gcable_variable: BOOLEAN
 			-- Is the expression using a GCable variable ?
 		do
 			Result := expr.has_gcable_variable;
 		end;
 
-	has_call: BOOLEAN is
+	has_call: BOOLEAN
 			-- Is the expression using a call ?
 		do
 			Result := expr.has_call;
 		end;
 
-	allocates_memory: BOOLEAN is
+	allocates_memory: BOOLEAN
 		do
 			Result := expr.allocates_memory
 		end;
 
-	used (r: REGISTRABLE): BOOLEAN is
+	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' used in the expression ?
 		do
 			Result := expr.used (r);
@@ -94,7 +94,7 @@ feature
 
 feature -- Byte code generation
 
-	make_protected_byte_code (ba: BYTE_ARRAY; pointer_pos, value_pos: INTEGER) is
+	make_protected_byte_code (ba: BYTE_ARRAY; pointer_pos, value_pos: INTEGER)
 			-- Generate byte code for parenthesized expression.
 		require
 			is_protected: is_protected
@@ -104,7 +104,7 @@ feature -- Byte code generation
 			ba.append_uint32_integer (value_pos);
 		end
 
-	is_protected: BOOLEAN is
+	is_protected: BOOLEAN
 			-- Is the expression protected with some special byte code?
 		do
 			Result := expr.type.is_basic
@@ -112,17 +112,17 @@ feature -- Byte code generation
 
 feature -- Array optimization
 
-	calls_special_features (array_desc: INTEGER): BOOLEAN is
+	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
 			Result := expr.calls_special_features (array_desc)
 		end
 
-	is_unsafe: BOOLEAN is
+	is_unsafe: BOOLEAN
 		do
 			Result := expr.is_unsafe
 		end
 
-	optimized_byte_node: like Current is
+	optimized_byte_node: like Current
 		do
 			Result := Current
 			expr := expr.optimized_byte_node
@@ -130,18 +130,18 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := expr.size
 		end
 
-	pre_inlined_code: like Current is
+	pre_inlined_code: like Current
 		do
 			Result := Current;
 			expr := expr.pre_inlined_code
 		end
 
-	inlined_byte_code: like Current is
+	inlined_byte_code: like Current
 		do
 			Result := Current
 			expr := expr.inlined_byte_code
@@ -150,7 +150,7 @@ feature -- Inlining
 invariant
 	expr_not_void: expr /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

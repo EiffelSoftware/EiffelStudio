@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Byte code for retry instruction
@@ -19,7 +19,7 @@ create
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_retry_b (Current)
@@ -27,7 +27,7 @@ feature -- Visitor
 
 feature -- C code generation
 
-	generate is
+	generate
 			-- Generate the retry instruction
 		local
 			class_c: CLASS_C
@@ -55,7 +55,7 @@ feature -- C code generation
 			buf.put_string ("RTER;")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

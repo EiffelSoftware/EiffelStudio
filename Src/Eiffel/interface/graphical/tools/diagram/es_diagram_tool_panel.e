@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Area in EB_CONTEXT_TOOL notebook designated to view%N%
 		%the context diagram of center class or center cluster."
@@ -75,7 +75,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_tool is
+	make_with_tool
 			-- Set default values.
 		local
 			empty_world: BON_CLASS_DIAGRAM
@@ -134,13 +134,13 @@ feature {NONE} -- Initialization
 			area.set_configurable_target_menu_handler (agent context_menu_handler)
 		end
 
-	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY) is
+	context_menu_handler (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: ANY)
 			-- Context menu handler.
 		do
 			develop_window.menus.context_menu_factory.diagram_tool_menu (a_menu, a_target_list, a_source, a_pebble)
 		end
 
-	init_commands is
+	init_commands
 			-- Create command classes.
 		do
 
@@ -283,7 +283,7 @@ feature {NONE} -- Initialization
 			force_settings_cmd.enable_displayed
 		end
 
-	initialize_accelerators (a_command_list: LINKED_LIST [EB_TOOLBARABLE_COMMAND]) is
+	initialize_accelerators (a_command_list: LINKED_LIST [EB_TOOLBARABLE_COMMAND])
 			-- Initialize accelerators from commands held in `a_command_list'.
 		require
 			a_command_list_not_void: a_command_list /= Void
@@ -304,7 +304,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	build_tool_bar is
+	build_tool_bar
 			-- Create diagram option bar.
 		local
 			v_box: EV_VERTICAL_BOX
@@ -482,7 +482,7 @@ feature {NONE} -- Initialization
 
 		end
 
-	show_view_menu is
+	show_view_menu
 			-- Display "View" menu.
 		local
 			view_menu: EV_MENU
@@ -512,21 +512,21 @@ feature {NONE} -- Initialization
 			view_menu.show_at (view_menu_button, 0, view_menu_button.height)
 		end
 
-	select_view (a_name: STRING) is
+	select_view (a_name: STRING)
 			-- Select `a_name' as the current view and switch to that view.
 		do
 			view_selector.set_text (a_name)
 			on_view_changed
 		end
 
-	name_view is
+	name_view
 			-- Name the view.
 		do
 			view_selector.select_all
 			view_selector.set_focus
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Build dockable content.
 		do
 			Precursor {EB_STONABLE_TOOL}(a_docking_manager)
@@ -536,7 +536,7 @@ feature {NONE} -- Initialization
 
 feature -- EB_TOOL features
 
-	build_interface is
+	build_interface
 			-- Build interface
 		do
 			check
@@ -550,7 +550,7 @@ feature -- EB_TOOL features
 			address_manager.set_context_menu_factory (develop_window.menus.context_menu_factory)
 		end
 
-	build_mini_toolbar is
+	build_mini_toolbar
 			-- Redefine
 		do
 			create history_toolbar.make
@@ -566,7 +566,7 @@ feature -- EB_TOOL features
 
 feature -- Initialization
 
-	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Attach to docking manager
 		do
 			build_docking_content (a_docking_manager)
@@ -579,7 +579,7 @@ feature -- Status report
 	is_rebuild_world_needed: BOOLEAN
 			-- Is a rebuild of the world needed when a stone is dropped?
 
-	is_excluded_in_preferences (name: STRING): BOOLEAN is
+	is_excluded_in_preferences (name: STRING): BOOLEAN
 			-- Is class figure named `name' excluded in preferences?
 		do
 			Result := excluded_class_figures.has (name)
@@ -593,7 +593,7 @@ feature -- Status report
 
 feature -- Access
 
-	default_pixmaps: EV_STOCK_PIXMAPS is
+	default_pixmaps: EV_STOCK_PIXMAPS
 		do
 			create Result
 		end
@@ -601,19 +601,19 @@ feature -- Access
 	graph: ES_GRAPH
 			-- Current graph.
 
-	class_graph: ES_CLASS_GRAPH is
+	class_graph: ES_CLASS_GRAPH
 			-- Current class graph if not Void.
 		do
 			Result ?= graph
 		end
 
-	cluster_graph: ES_CLUSTER_GRAPH is
+	cluster_graph: ES_CLUSTER_GRAPH
 			-- Current cluster graph if not Void.
 		do
 			Result ?= graph
 		end
 
-	world: EIFFEL_WORLD is
+	world: EIFFEL_WORLD
 			-- Current world.
 		do
 			Result := world_cell.world
@@ -621,7 +621,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	projector: EIFFEL_PROJECTOR is
+	projector: EIFFEL_PROJECTOR
 			-- Current projector
 		require
 			not_recycled: not is_recycled
@@ -640,7 +640,7 @@ feature -- Access
 	history: EB_HISTORY_DIALOG
 			-- History of undoable commands.
 
-	pointer_position: EV_COORDINATE is
+	pointer_position: EV_COORDINATE
 			-- Position of the screen pointer relative to `area'.
 		do
 			create Result.set (
@@ -650,13 +650,13 @@ feature -- Access
 			position_not_void: Result /= Void
 		end
 
-	class_view: EIFFEL_CLASS_DIAGRAM is
+	class_view: EIFFEL_CLASS_DIAGRAM
 			-- Class view currently displayed.
 		do
 			Result ?= world
 		end
 
-	cluster_view: EIFFEL_CLUSTER_DIAGRAM is
+	cluster_view: EIFFEL_CLUSTER_DIAGRAM
 			-- Cluster view currently displayed.
 		do
 			Result ?= world
@@ -667,7 +667,7 @@ feature -- Access
 
 feature -- Status settings.
 
-	update_excluded_class_figures is
+	update_excluded_class_figures
 			-- Preferences may have changed.
 			-- Refresh `excluded_class_figures' and `ignore_excluded_figures'.
 		local
@@ -691,19 +691,19 @@ feature -- Status settings.
 			end
 		end
 
-	disable_resize is
+	disable_resize
 			-- Disable resizing world cell.
 		do
 			world_cell.disable_resize
 		end
 
-	enable_resize is
+	enable_resize
 			-- Enable resizing worl cell.
 		do
 			world_cell.enable_resize
 		end
 
-	set_is_rebuild_world_needed (b: BOOLEAN) is
+	set_is_rebuild_world_needed (b: BOOLEAN)
 			-- Set `is_rebuild_world_needed' to `b'.
 		do
 			is_rebuild_world_needed := b
@@ -711,7 +711,7 @@ feature -- Status settings.
 			set: is_rebuild_world_needed = b
 		end
 
-	disable_toolbar is
+	disable_toolbar
 			-- Disable sensitive for all buttons except center diagram.
 		do
 			zoom_selector.disable_sensitive
@@ -746,7 +746,7 @@ feature -- Status settings.
 			force_settings_cmd.disable_sensitive
 		end
 
-	enable_toolbar is
+	enable_toolbar
 			-- Enable toolbar.
 		do
 			if class_graph /= Void then
@@ -764,7 +764,7 @@ feature -- Status settings.
 			end
 		end
 
-	enable_force_directed is
+	enable_force_directed
 			-- Enable use of force directed physics.
 		local
 			min_box: EV_RECTANGLE
@@ -799,7 +799,7 @@ feature -- Status settings.
 			is_force_directed_used: is_force_directed_used
 		end
 
-	disable_force_directed is
+	disable_force_directed
 			-- Disable use of force directed physics.
 		do
 			is_force_directed_used := False
@@ -810,7 +810,7 @@ feature -- Status settings.
 			not_is_force_directed_used: not is_force_directed_used
 		end
 
-	restart_force_directed is
+	restart_force_directed
 			-- Restart using force directed physics after stop.
 		do
 			if is_force_directed_used then
@@ -832,7 +832,7 @@ feature -- Status settings.
 
 feature -- Element change
 
-	clear_area is
+	clear_area
 			-- Make `area' empty.
 		local
 			a_class_graph: ES_CLASS_GRAPH
@@ -851,7 +851,7 @@ feature -- Element change
 			disable_toolbar
 		end
 
-	create_link_tool (a_stone: LINK_STONE) is
+	create_link_tool (a_stone: LINK_STONE)
 			-- Create a new link tool with `a_stone'.
 		require
 			a_stone_exists: a_stone /= Void
@@ -859,7 +859,7 @@ feature -- Element change
 			link_tool_cmd.execute_with_link_stone (a_stone)
 		end
 
-	reset_history is
+	reset_history
 			-- Forget about previous undoable commands.
 		do
 			history.wipe_out
@@ -867,7 +867,7 @@ feature -- Element change
 			redo_cmd.disable_sensitive
 		end
 
-	create_class_view (a_class: CLASS_I; load_when_possible: BOOLEAN) is
+	create_class_view (a_class: CLASS_I; load_when_possible: BOOLEAN)
 			-- Initialize diagram centered on `a_class', load from file if possible when `load_when_possible'.
 		require
 			a_class_exists: a_class /= Void
@@ -1012,7 +1012,7 @@ feature -- Element change
 			retry
 		end
 
-	create_cluster_view (a_group: CONF_GROUP; load_when_possible: BOOLEAN) is
+	create_cluster_view (a_group: CONF_GROUP; load_when_possible: BOOLEAN)
 			-- Initialize diagram centered on `a_cluster', load from file if possible when `load_when_possible'.
 		require
 			a_group_exists: a_group /= Void
@@ -1147,7 +1147,7 @@ feature -- Element change
 			retry
 		end
 
-	synchronize is
+	synchronize
 			-- Contexts need to be updated because of recompilation
 			-- or similar action that needs resynchonization.
 		do
@@ -1160,7 +1160,7 @@ feature -- Element change
 			end
 		end
 
-	crop_diagram is
+	crop_diagram
 			-- Crop diagram.
 		do
 			world_cell.crop
@@ -1168,7 +1168,7 @@ feature -- Element change
 
 feature {EB_TOGGLE_UML_COMMAND} -- UML/BON toggle.
 
-	toggle_uml is
+	toggle_uml
 			-- Toggle between UML/BON mode
 		local
 			uml_class: UML_CLASS_DIAGRAM
@@ -1268,7 +1268,7 @@ feature {EB_TOGGLE_UML_COMMAND} -- UML/BON toggle.
 			end
 		end
 
-	is_uml: BOOLEAN is
+	is_uml: BOOLEAN
 			-- Is diagram shown in UML.
 		do
 			Result := world.is_uml
@@ -1276,7 +1276,7 @@ feature {EB_TOGGLE_UML_COMMAND} -- UML/BON toggle.
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
+	internal_recycle
 			-- Frees `Current's memory, and leave `Current' in an unstable state
 			-- so that we know whether we're still referenced or not.
 		local
@@ -1386,7 +1386,7 @@ feature {NONE} -- Clean up
 
 feature {ES_DIAGRAM_TOOL_PANEL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- Toolbar actions
 
-	launch_stone (a_stone: STONE) is
+	launch_stone (a_stone: STONE)
 			-- Launch stone.
 		local
 			l_tool: EB_STONABLE_TOOL
@@ -1406,7 +1406,7 @@ feature {ES_DIAGRAM_TOOL_PANEL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE}
 
 	is_link_client, is_link_inheritance, is_link_aggregate: BOOLEAN
 
-	on_new_client_click is
+	on_new_client_click
 			-- The user wants a new client-supplier link.
 		do
 			is_link_client := True
@@ -1414,7 +1414,7 @@ feature {ES_DIAGRAM_TOOL_PANEL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE}
 			is_link_aggregate := False
 		end
 
-	on_new_agg_client_click is
+	on_new_agg_client_click
 			-- The user wants a new client-supplier link.
 		do
 			is_link_client := False
@@ -1422,7 +1422,7 @@ feature {ES_DIAGRAM_TOOL_PANEL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE}
 			is_link_aggregate := True
 		end
 
-	on_new_inherit_click is
+	on_new_inherit_click
 			-- The user wants a new inheritance link.
 		do
 			is_link_client := False
@@ -1432,7 +1432,7 @@ feature {ES_DIAGRAM_TOOL_PANEL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE}
 
 feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 
-	set_focus is
+	set_focus
 			-- Give the focus to the drawing_area.
 		require
 			focusable: widget.is_displayed and widget.is_sensitive
@@ -1444,7 +1444,7 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 			end
 		end
 
-	set_stone (new_stone: STONE) is
+	set_stone (new_stone: STONE)
 			-- Simply change last stone.
 			-- If current widget is displayed, the stone is forced.
 			-- Choose default tool to load a feature stone.
@@ -1480,7 +1480,7 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 			end
 		end
 
-	force_last_stone is
+	force_last_stone
 			-- Force last stone.
 		do
 			if not is_last_stone_processed then
@@ -1531,7 +1531,7 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 			end
 		end
 
-	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL is
+	decide_tool_to_display (a_st: STONE): EB_STONABLE_TOOL
 			-- Decide which tool to display.
 		local
 			fs: FEATURE_STONE
@@ -1551,7 +1551,7 @@ feature {EB_DEVELOPMENT_WINDOW_TOOLS, EB_STONE_CHECKER} -- Context tool
 
 feature {NONE} -- force last stone when displayed
 
-	force_last_stone_now is
+	force_last_stone_now
 		do
 			cancel_force_last_stone_now
 			force_last_stone
@@ -1560,7 +1560,7 @@ feature {NONE} -- force last stone when displayed
 	agent_force_last_stone_now: PROCEDURE [ANY, TUPLE]
 			-- agent on `force_last_stone_now'.
 
-	request_force_last_stone_now is
+	request_force_last_stone_now
 			-- Request `force_last_stone_now'
 		do
 			if agent_force_last_stone_now = Void then
@@ -1571,7 +1571,7 @@ feature {NONE} -- force last stone when displayed
 			end
 		end
 
-	cancel_force_last_stone_now is
+	cancel_force_last_stone_now
 			-- Request `force_last_stone_now'
 		do
 			if content /= Void and then agent_force_last_stone_now /= Void then
@@ -1590,7 +1590,7 @@ feature {EB_CENTER_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- Center diagram comma
 
 feature {NONE} -- Class head command
 
-	area_as_widget: EV_WIDGET is
+	area_as_widget: EV_WIDGET
 			-- `area' cast to EV_WIDGET.
 		require
 			not_recycled: not is_recycled
@@ -1615,7 +1615,7 @@ feature {EB_ZOOM_OUT_COMMAND, EB_ZOOM_IN_COMMAND, EIFFEL_FIGURE_WORLD_CELL, EB_F
 
 feature {NONE} -- Views
 
-	reset_view_selector is
+	reset_view_selector
 			-- Set entries in `view_selector' to `available_views' in `world'.
 		do
 			view_selector.set_text (world.current_view)
@@ -1715,7 +1715,7 @@ feature -- Commands
 
 feature {EG_FIGURE, EIFFEL_WORLD} -- Force directed.
 
-	on_time_out is
+	on_time_out
 			-- `timer' has a timeout.
 		local
 			time: C_DATE
@@ -1748,7 +1748,7 @@ feature {NONE} -- Events
 	timer: EV_TIMEOUT
 			-- Timer used to force direct the graph.
 
-	on_force_stop is
+	on_force_stop
 			-- `force_directed_layout' has stopped.
 		do
 			if timer /= Void then
@@ -1760,7 +1760,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_history_do_command is
+	on_history_do_command
 			-- An undoable command has been done.
 			-- Enable `undo_cmd'.
 		do
@@ -1769,7 +1769,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_history_undo_command is
+	on_history_undo_command
 			-- An undoable command has been undone.
 			-- Enable `redo_cmd'.
 		do
@@ -1778,7 +1778,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_history_undo_exhausted is
+	on_history_undo_exhausted
 			-- There is no more actions to undo.
 			-- Disable `undo_cmd'.
 		do
@@ -1787,7 +1787,7 @@ feature {NONE} -- Events
 			undo_cmd_not_sensitive: not undo_cmd.is_sensitive
 		end
 
-	on_history_redo_exhausted is
+	on_history_redo_exhausted
 			-- There is no more actions to redo.
 			-- Disable `redo_cmd'.
 		do
@@ -1796,7 +1796,7 @@ feature {NONE} -- Events
 			redo_cmd_not_sensitive: not redo_cmd.is_sensitive
 		end
 
-	on_zoom_level_select is
+	on_zoom_level_select
 			-- User selected a new zoom level.
 		local
 			level_text: STRING
@@ -1827,7 +1827,7 @@ feature {NONE} -- Events
 				[<<agent world.scale (1/scale_factor), agent crop_diagram, agent zoom_selector.show_as_text (old_scale), agent restart_force_directed>>])
 		end
 
-	on_view_changed is
+	on_view_changed
 			-- The user wants to switch to another view.
 		local
 			cancelled: BOOLEAN
@@ -1893,7 +1893,7 @@ feature {NONE} -- Events
 			retry
 		end
 
-	on_text_edited (directly_edited: BOOLEAN) is
+	on_text_edited (directly_edited: BOOLEAN)
 			-- Some text was inserted in the editor.
 			-- If `directly_edited' is true, the user did.
 		do
@@ -1907,7 +1907,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_item_removed (a_item: EB_WINDOW) is
+	on_item_removed (a_item: EB_WINDOW)
 			-- `a_item' has been removed.
 			-- If it is parent development window, store diagram.
 		 do
@@ -1918,7 +1918,7 @@ feature {NONE} -- Events
 
 feature {EB_DELETE_VIEW_COMMAND} -- View selector
 
-	remove_view (a_name: STRING) is
+	remove_view (a_name: STRING)
 			-- Delete view of `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -1965,7 +1965,7 @@ feature {EB_DELETE_VIEW_COMMAND} -- View selector
 
 feature {EB_RESET_VIEW_COMMAND} -- Implementation
 
-	reset_current_view is
+	reset_current_view
 			-- Reset current view to default.
 		do
 			if class_graph /= Void then
@@ -1982,7 +1982,7 @@ feature {EB_FIT_TO_SCREEN_COMMAND} -- Implementation
 
 feature {EB_SHOW_LEGEND_COMMAND} -- Implementation
 
-	on_cluster_legend_pin is
+	on_cluster_legend_pin
 			-- User pined `world'.`cluster_legend'.
 		do
 			cluster_legend_x := world.cluster_legend.point_x - projector.area_x
@@ -1991,10 +1991,10 @@ feature {EB_SHOW_LEGEND_COMMAND} -- Implementation
 
 feature -- Implementation
 
-	default_bon_horizontal_spacing: INTEGER is 25
-	default_bon_vertical_spacing: INTEGER is 25
-	default_uml_horizontal_spacing: INTEGER is 150
-	default_uml_vertical_spacing: INTEGER is 150
+	default_bon_horizontal_spacing: INTEGER = 25
+	default_bon_vertical_spacing: INTEGER = 25
+	default_uml_horizontal_spacing: INTEGER = 150
+	default_uml_vertical_spacing: INTEGER = 150
 		-- Default spacings used to layout generated figures.
 
 feature {NONE} -- Implementation
@@ -2006,7 +2006,7 @@ feature {NONE} -- Implementation
 	default_ancestor_depth: INTEGER
 	default_descendant_depth: INTEGER
 
-	retrieve_depth_preferences is
+	retrieve_depth_preferences
 			-- Retrieve values for default depth from preferences.
 		do
 			default_subcluster_depth := preferences.diagram_tool_data.subcluster_depth
@@ -2037,13 +2037,13 @@ feature {NONE} -- Implementation
 	is_right_angles_blocked: BOOLEAN
 			-- Is not right angles applayed at force stop?
 
-	on_figure_change_start is
+	on_figure_change_start
 			-- User started to change position/shape of a figure.
 		do
 			is_right_angles_blocked := True
 		end
 
-	on_figure_change_end is
+	on_figure_change_end
 			-- User finished to change position/shape of a figure.
 		do
 			is_right_angles_blocked := False
@@ -2052,7 +2052,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_scroll (value: INTEGER) is
+	on_scroll (value: INTEGER)
 			-- User scrolled scrollbars.
 		local
 			l_legend: EIFFEL_CLUSTER_LEGEND
@@ -2067,7 +2067,7 @@ feature {NONE} -- Implementation
 	cluster_legend_y: INTEGER
 			-- Position of pined cluster legend.
 
-	on_cluster_legend_move (x, y: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_cluster_legend_move (x, y: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- User moved `world'.`cluster_legend'.
 		do
 			cluster_legend_x := world.cluster_legend.point_x - projector.area_x
@@ -2082,7 +2082,7 @@ feature {NONE} -- Implementation
 	drawing_toolbar: SD_TOOL_BAR
 			-- Part of toolbar that can be customized.
 
-	area: EV_DRAWING_AREA is
+	area: EV_DRAWING_AREA
 			-- Graphical surface displaying diagram.
 		require
 			not_recycled: not is_recycled
@@ -2095,7 +2095,7 @@ feature {NONE} -- Implementation
 	toolbar_menu: EV_MENU
 			-- Popped up when user clicks left to the right of the toolbar.
 
-	on_class_drop (a_stone: CLASSI_STONE) is
+	on_class_drop (a_stone: CLASSI_STONE)
 			-- `stone' was dropped on an empty world.
 		do
 			if a_stone.is_valid then
@@ -2104,7 +2104,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_cluster_drop (a_stone: CLUSTER_STONE) is
+	on_cluster_drop (a_stone: CLUSTER_STONE)
 			-- `stone' was dropped on an empty world
 		do
 			if a_stone.is_valid then
@@ -2113,7 +2113,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	reset_tool_bar_for_uml_class_view is
+	reset_tool_bar_for_uml_class_view
 			-- Set toolbar for uml class view
 		do
 			reset_toolbar
@@ -2125,7 +2125,7 @@ feature {NONE} -- Implementation
 			toggle_cluster_cmd.disable_sensitive
 		end
 
-	reset_tool_bar_for_uml_cluster_view is
+	reset_tool_bar_for_uml_cluster_view
 			-- Set toolbar for uml cluster view.
 		do
 			reset_tool_bar_for_uml_class_view
@@ -2133,7 +2133,7 @@ feature {NONE} -- Implementation
 			toggle_cluster_cmd.enable_sensitive
 		end
 
-	reset_tool_bar_for_class_view is
+	reset_tool_bar_for_class_view
 			-- Set toolbar for class_view.
 		do
 			reset_toolbar
@@ -2147,7 +2147,7 @@ feature {NONE} -- Implementation
 			toggle_cluster_cmd.disable_sensitive
 		end
 
-	reset_tool_bar_for_cluster_view is
+	reset_tool_bar_for_cluster_view
 			-- Set toolbar for cluster_view.
 		do
 			reset_tool_bar_for_class_view
@@ -2155,7 +2155,7 @@ feature {NONE} -- Implementation
 			toggle_cluster_cmd.enable_sensitive
 		end
 
-	reset_toolbar is
+	reset_toolbar
 			-- Set toolbar for all views.
 		do
 			zoom_selector.enable_sensitive
@@ -2198,7 +2198,7 @@ feature {NONE} -- Implementation
 	excluded_class_figures: HASH_TABLE [STRING, STRING]
 			-- Classes never present on the diagram (unless `ignore_excluded_figures' is False).
 
-	default_excluded_class_figures: ARRAY [STRING] is
+	default_excluded_class_figures: ARRAY [STRING]
 			-- Default settings for `excluded_class_figures'.
 		once
 			Result := <<
@@ -2209,7 +2209,7 @@ feature {NONE} -- Implementation
 
 feature {EIFFEL_WORLD} -- XML Output
 
-	store is
+	store
 			-- Freeze state of `Current'.
 		local
 			ptf: RAW_FILE
@@ -2237,7 +2237,7 @@ feature {EIFFEL_WORLD} -- XML Output
 			retry
 		end
 
-	diagram_file_name (esg: ES_GRAPH): FILE_NAME is
+	diagram_file_name (esg: ES_GRAPH): FILE_NAME
 			-- Location of XML file.
 		require
 			diagram_exists: esg /= Void
@@ -2262,7 +2262,7 @@ feature {EIFFEL_WORLD} -- XML Output
 			Result.add_extension ("xml")
 		end
 
-	is_valide_diagram_file (f: RAW_FILE): BOOLEAN is
+	is_valide_diagram_file (f: RAW_FILE): BOOLEAN
 			-- Is `f' referencing a valid diagram file?
 		require
 			f_not_void: f /= Void
@@ -2284,7 +2284,7 @@ feature {EIFFEL_WORLD} -- XML Output
 			retry
 		end
 
-	reset_tool_bar_toggles is
+	reset_tool_bar_toggles
 			-- Set toolbar toggle buttons states according to worlds settings.
 		do
 			if world.is_client_supplier_links_shown then
@@ -2333,7 +2333,7 @@ feature {EIFFEL_WORLD} -- XML Output
 
 feature {NONE} -- Implementation keyboard shortcuts
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- A key was pressed while focus is on `area'.
 		local
 			accelerators: LIST [EV_ACCELERATOR]
@@ -2366,7 +2366,7 @@ feature {NONE} -- Implementation keyboard shortcuts
 	shortcut_table: HASH_TABLE [LIST[EV_ACCELERATOR], INTEGER]
 			-- List of accelerators and key codes.
 
-	extend_shortcut_table (an_accelerator: EV_ACCELERATOR) is
+	extend_shortcut_table (an_accelerator: EV_ACCELERATOR)
 			-- Add `an_accelerator' to `shortcut_table'.
 		require
 			an_accelerator_exists: an_accelerator /= Void
@@ -2393,7 +2393,7 @@ feature {NONE} -- Implementation for mini tool bar
 	history_toolbar: SD_TOOL_BAR;
 			-- Toolbar containing the history commands.
 
-	window: EV_WINDOW is
+	window: EV_WINDOW
 			-- Window dialogs can refer to.
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
@@ -2406,7 +2406,7 @@ feature {NONE} -- Implementation for mini tool bar
 			end
 		end
 
-	refresh is
+	refresh
 			-- Refresh
 		do
 		end
@@ -2420,7 +2420,7 @@ invariant
 	world_cell_not_void: not is_recycled implies world_cell /= Void
 	shortcut_table_not_void: shortcut_table /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

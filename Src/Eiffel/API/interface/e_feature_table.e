@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Table representing features for a class hashed on feature name."
@@ -26,7 +26,7 @@ feature -- Properties
 	class_id: INTEGER;
 			-- Id of the class to which the feature table belongs to.
 
-	associated_class: CLASS_C is
+	associated_class: CLASS_C
 			-- Associated class
 		require
 			valid_class_id: class_id /= 0
@@ -36,7 +36,7 @@ feature -- Properties
 
 feature {FEATURE_TABLE} -- Optimization
 
-	set_class_id (i: like class_id) is
+	set_class_id (i: like class_id)
 			-- Set the `class_id' to i.
 		do
 			class_id := i
@@ -44,7 +44,7 @@ feature {FEATURE_TABLE} -- Optimization
 			set: class_id = i
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

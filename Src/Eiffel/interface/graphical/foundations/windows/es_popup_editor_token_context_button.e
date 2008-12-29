@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An editor based popup window, using an editor token to render a button used to present a popup widget or process an action.
 	]"
@@ -286,7 +286,7 @@ feature -- Status report
 
 feature {NONE} -- Action handlers
 
-	on_pointer_pressed_in_token_image (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_pressed_in_token_image (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Called when the pointer was pressed in the token image.
 			--
 			-- `a_x': The relative X position of the pointer pressed action.
@@ -448,7 +448,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	render_smart_token (a_token: !EDITOR_TOKEN; a_dc: !EV_DRAWABLE; a_x: INTEGER; a_y: INTEGER; a_paint: BOOLEAN): TUPLE [coords: !EV_RECTANGLE; token_coords: !EV_RECTANGLE] is
+	render_smart_token (a_token: !EDITOR_TOKEN; a_dc: !EV_DRAWABLE; a_x: INTEGER; a_y: INTEGER; a_paint: BOOLEAN): TUPLE [coords: !EV_RECTANGLE; token_coords: !EV_RECTANGLE]
 			-- Renders a smart token image on a drawing area, at the specified coordinates.
 			--
 			-- `a_token': The editor token to render on a drawable area.
@@ -566,7 +566,7 @@ invariant
 	editor_is_interface_usable: editor.is_interface_usable
 	not_is_beam_indicator: is_token_hidden_on_popup_widget_shown implies not is_beam_indicator
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

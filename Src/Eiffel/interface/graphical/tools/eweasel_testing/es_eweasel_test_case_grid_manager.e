@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Manager of test case grid in {ES_EWEASEL_TESTING_TOOL_PANEL}
 					
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_grid: !ES_GRID) is
+	make (a_grid: !ES_GRID)
 			-- Creation method
 		do
 			grid := a_grid
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	build_columns is
+	build_columns
 			-- Init columns of `grid'.
 		local
 			l_grid: like grid
@@ -73,19 +73,19 @@ feature -- Command
 			added: grid.column_count = all_columns_titles.count
 		end
 
-	select_next_failed_row is
+	select_next_failed_row
 			-- Select next test case row in `grid'
 		do
 			select_next_or_previous_failed_row (True)
 		end
 
-	select_previous_failed_row is
+	select_previous_failed_row
 			-- Select previous test case row in `grid'
 		do
 			select_next_or_previous_failed_row (False)
 		end
 
-	add_test_case (a_event_list_grid_item: !EVENT_LIST_TEST_CASE_ITEM; a_row: EV_GRID_ROW) is
+	add_test_case (a_event_list_grid_item: !EVENT_LIST_TEST_CASE_ITEM; a_row: EV_GRID_ROW)
 			-- `a_row' is where to insert new grid items, maybe void
 		require
 			valid: is_test_case_item (a_event_list_grid_item.data)
@@ -98,7 +98,7 @@ feature -- Command
 			end
 		end
 
-	save_test_case_to_session is
+	save_test_case_to_session
 			-- Save test case data to session data
 		local
 			l_shared: EB_SHARED_WINDOW_MANAGER
@@ -115,7 +115,7 @@ feature -- Command
 			end
 		end
 
-	restore_test_case_from_session is
+	restore_test_case_from_session
 			-- Load test case data from session data
 		local
 			l_consumer: SERVICE_CONSUMER [EVENT_LIST_S]
@@ -142,7 +142,7 @@ feature -- Command
 			end
 		end
 
-	update_buttons_sensitivity is
+	update_buttons_sensitivity
 			-- Update buttons' sensitivity
 		do
 			if all_test_cases_from_grid.count > 0 then
@@ -168,7 +168,7 @@ feature -- Command
 			end
 		end
 
-	only_show_failed_test_cases (a_reverse: BOOLEAN) is
+	only_show_failed_test_cases (a_reverse: BOOLEAN)
 			-- Only show failed test cases in grid?
 			-- If `a_reverse', show all test cases
 		local
@@ -204,7 +204,7 @@ feature -- Command
 			end
 		end
 
-	remove_selected_rows is
+	remove_selected_rows
 			-- Remove current selected rows in `grid'
 		local
 			l_list: ARRAYED_LIST [EV_GRID_ROW]
@@ -220,7 +220,7 @@ feature -- Command
 			end
 		end
 
-	remove_all_rows is
+	remove_all_rows
 			-- Remove all rows in `grid;
 		do
 			if grid.row_count > 1 then
@@ -228,14 +228,14 @@ feature -- Command
 			end
 		end
 
-	refresh_time_columns is
+	refresh_time_columns
 			-- Refresh time related columns' texts
 		do
 			update_grid_column_time
 			update_grid_column_changed_after_last_run
 		end
 
-	update_grid_item_with_test_run_data (a_result: !ES_EWEASEL_TEST_RESULT_ITEM) is
+	update_grid_item_with_test_run_data (a_result: !ES_EWEASEL_TEST_RESULT_ITEM)
 			-- Update `a_result' related row's texts and row's data.
 		local
 			l_test_run_class: CONF_CLASS
@@ -277,7 +277,7 @@ feature -- Command
 			end
 		end
 
-	test_case_row_related_with (a_class: !CONF_CLASS): EV_GRID_ROW is
+	test_case_row_related_with (a_class: !CONF_CLASS): EV_GRID_ROW
 			-- `grid''s row related with `a_class_i'
 			-- Result void if not found
 		local
@@ -301,7 +301,7 @@ feature -- Command
 			end
 		end
 
-	reset is
+	reset
 			-- Clear last test run data
 		do
 			failure_count := 0
@@ -309,7 +309,7 @@ feature -- Command
 			update_failure_and_error_label
 		end
 
-	unselect_all_rows is
+	unselect_all_rows
 			-- Unselect all rows in `grid'
 		local
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
@@ -327,13 +327,13 @@ feature -- Command
 
 feature -- Query
 
-	is_test_case_item (a_data: ANY): BOOLEAN is
+	is_test_case_item (a_data: ANY): BOOLEAN
 			-- If `a_data' is test case item?
 		do
 			Result := {l_test: ES_EWEASEL_TEST_CASE_ITEM} a_data
 		end
 
-	all_columns: !ARRAYED_LIST [EV_GRID_COLUMN] is
+	all_columns: !ARRAYED_LIST [EV_GRID_COLUMN]
 			-- All columns in `grid'
 		local
 			l_index, l_count: INTEGER
@@ -352,7 +352,7 @@ feature -- Query
 			end
 		end
 
-	selected_test_cases (a_failed_first: BOOLEAN): !ARRAYED_LIST [EVENT_LIST_TEST_CASE_ITEM] is
+	selected_test_cases (a_failed_first: BOOLEAN): !ARRAYED_LIST [EVENT_LIST_TEST_CASE_ITEM]
 			-- Selected test cased in `grid'
 			-- `a_failed_first' means failed test case put to the front of list
 		local
@@ -425,7 +425,7 @@ feature -- Query
 			end
 		end
 
-	session_data: ES_EWEASEL_TEST_CASE_SESSION_DATA is
+	session_data: ES_EWEASEL_TEST_CASE_SESSION_DATA
 			-- Session data
 			-- Result maybe void
 		local
@@ -437,7 +437,7 @@ feature -- Query
 			end
 		end
 
-	has_failed_test_case: BOOLEAN is
+	has_failed_test_case: BOOLEAN
 			-- Doese `grid' have any failed test case?
 		local
 			l_test_cases: like all_test_cases_from_grid
@@ -463,7 +463,7 @@ feature -- Query
 
 feature {NONE} -- Agents
 
-	on_veto_drop (a_stone: CLASSI_STONE): BOOLEAN is
+	on_veto_drop (a_stone: CLASSI_STONE): BOOLEAN
 			-- Veto function of `on_drop'.
 		require
 			not_void: a_stone /= Void
@@ -477,7 +477,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_drop (a_stone: CLASSI_STONE) is
+	on_drop (a_stone: CLASSI_STONE)
 			-- Handle `grid' drop actions.
 		require
 			not_void: a_stone /= Void
@@ -500,7 +500,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_key_press (a_key: EV_KEY) is
+	on_key_press (a_key: EV_KEY)
 			-- Hanlde key press actions on `grid'
 		do
 			inspect
@@ -518,7 +518,7 @@ feature {NONE} -- Implementation queries
 	grid: !ES_GRID
 			-- Grid managed by Current.
 
-	has_test_case (a_class_i: !CLASS_I): BOOLEAN is
+	has_test_case (a_class_i: !CLASS_I): BOOLEAN
 			-- Does the grid already has row represent `a_class_i'
 		local
 			l_all_items: like all_test_cases_from_grid
@@ -535,13 +535,13 @@ feature {NONE} -- Implementation queries
 			end
 		end
 
-	test_case_finder: !ES_EWEASEL_TEST_CASE_FINDER is
+	test_case_finder: !ES_EWEASEL_TEST_CASE_FINDER
 			-- Test case helper class
 		once
 			create Result
 		end
 
-	conf_class_of (a_class_name: !STRING): CONF_CLASS is
+	conf_class_of (a_class_name: !STRING): CONF_CLASS
 			-- Result void if not found
 		local
 			l_util: ES_EWEASEL_TEST_CASE_FINDER
@@ -550,7 +550,7 @@ feature {NONE} -- Implementation queries
 			Result := l_util.conf_class_of (a_class_name)
 		end
 
-	test_case_item_from (a_row: !EV_GRID_ROW): ES_EWEASEL_TEST_CASE_ITEM is
+	test_case_item_from (a_row: !EV_GRID_ROW): ES_EWEASEL_TEST_CASE_ITEM
 			-- Result void if not found
 		do
 			if {l_event_data: EVENT_LIST_TEST_CASE_ITEM} a_row.data then
@@ -564,7 +564,7 @@ feature {NONE} -- Implementation queries
 			end
 		end
 
-	manager: ES_EWEASEL_EXECUTION_MANAGER is
+	manager: ES_EWEASEL_EXECUTION_MANAGER
 			-- Chief eweasel execution manager
 		local
 			l_panel: ES_EWEASEL_TESTING_TOOL_PANEL
@@ -576,7 +576,7 @@ feature {NONE} -- Implementation queries
 			not_void: Result /= Void
 		end
 
-	testing_tool_panel: !ES_EWEASEL_TESTING_TOOL_PANEL is
+	testing_tool_panel: !ES_EWEASEL_TESTING_TOOL_PANEL
 			-- Testing tool panel
 		local
 			l_shared: ES_EWEASEL_SINGLETON_FACTORY
@@ -589,10 +589,10 @@ feature {NONE} -- Implementation queries
 			end
 		end
 
-	session_data_id: STRING is "com.eiffel.testing.test_cases_id"
+	session_data_id: STRING = "com.eiffel.testing.test_cases_id"
 			-- Session data used for session service
 
-	context_uuid: !UUID is
+	context_uuid: !UUID
 			-- Context uuid
 		local
 			l_enum: ES_EWEASEL_TESTING_EVENT_LIST_CONTEXTS
@@ -601,7 +601,7 @@ feature {NONE} -- Implementation queries
 			Result := l_enum.es_test_case_grid_manager
 		end
 
-	default_grid_background_color: EV_COLOR is
+	default_grid_background_color: EV_COLOR
 			-- Default grid background color
 		local
 			l_grid: EV_GRID
@@ -610,7 +610,7 @@ feature {NONE} -- Implementation queries
 			Result := l_grid.background_color
 		end
 
-	colors: !ES_COLORS is
+	colors: !ES_COLORS
 			-- Color helper
 		once
 			create Result
@@ -618,14 +618,14 @@ feature {NONE} -- Implementation queries
 
 feature {NONE} -- Implementation commands
 
-	update_failure_and_error_label is
+	update_failure_and_error_label
 			-- Update {ES_EWEASEL_TESTING_TOOL_PANEL}'s failure and error labels' texts
 		do
 			testing_tool_panel.set_failure_label_with (failure_count)
 			testing_tool_panel.set_error_label_with (error_count)
 		end
 
-	update_row_forground_color_base_on_result (a_label_item: !EV_GRID_LABEL_ITEM; a_result: INTEGER) is
+	update_row_forground_color_base_on_result (a_label_item: !EV_GRID_LABEL_ITEM; a_result: INTEGER)
 			-- Update `a_label_item''s row forground color base on `a_result'
 		require
 			valid: (create {ES_EWEASEL_RESULT_TYPE}).is_valid (a_result)
@@ -654,7 +654,7 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	set_all_items_forground_color_to (a_row: !EV_GRID_ROW; a_color: !EV_COLOR) is
+	set_all_items_forground_color_to (a_row: !EV_GRID_ROW; a_color: !EV_COLOR)
 			-- Set all items in `a_row''s colors to `a_color'
 		local
 			l_item: EV_GRID_ITEM
@@ -675,7 +675,7 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	update_grid_column_time is
+	update_grid_column_time
 			-- Update column `Changed_time'
 		local
 			l_test_cases: like all_test_cases_from_grid
@@ -711,7 +711,7 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	update_grid_column_changed_after_last_run is
+	update_grid_column_changed_after_last_run
 			-- Update column `Changed after last test run'
 		local
 			l_test_cases: like all_test_cases_from_grid
@@ -743,7 +743,7 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	insert_one_row_items (a_row: EV_GRID_ROW; a_test_case: !ES_EWEASEL_TEST_CASE_ITEM) is
+	insert_one_row_items (a_row: EV_GRID_ROW; a_test_case: !ES_EWEASEL_TEST_CASE_ITEM)
 			-- Insert items to `a_row', items information query from `a_test_case'
 		require
 			not_void: a_row /= Void
@@ -825,7 +825,7 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	all_columns_titles: ARRAYED_LIST [STRING_GENERAL] is
+	all_columns_titles: ARRAYED_LIST [STRING_GENERAL]
 			-- All columns titles in `grid'
 		once
 			create Result.make (6)
@@ -840,7 +840,7 @@ feature {NONE} -- Implementation commands
 			column_count_right: Result.count = 6
 		end
 
-	select_next_or_previous_failed_row (a_select_next: BOOLEAN) is
+	select_next_or_previous_failed_row (a_select_next: BOOLEAN)
 			-- Select next/previous failed row in `grid'
 		local
 			l_rows: ARRAYED_LIST [EV_GRID_ROW]
@@ -883,7 +883,7 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	all_failed_rows: !ARRAYED_LIST [EV_GRID_ROW] is
+	all_failed_rows: !ARRAYED_LIST [EV_GRID_ROW]
 			-- All rows which last test run failed
 		local
 			l_grid: like grid
@@ -913,7 +913,7 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	on_tag_item_deactive is
+	on_tag_item_deactive
 			-- Handle a editable item deactive action	
 		do
 			if {l_item: EV_GRID_EDITABLE_ITEM} grid.activated_item then
@@ -930,7 +930,7 @@ feature {NONE} -- Implementation commands
 			end
 		end
 
-	update_current_session_data is
+	update_current_session_data
 			-- Update Current session data with current data in the grid
 		do
 			-- Different from {ES_TEST_RUN_RESULT_GRID_MANAGER}.update_current_session_data
@@ -938,7 +938,7 @@ feature {NONE} -- Implementation commands
 			-- So we only need overwrite here
 			save_test_case_to_session
 		end
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

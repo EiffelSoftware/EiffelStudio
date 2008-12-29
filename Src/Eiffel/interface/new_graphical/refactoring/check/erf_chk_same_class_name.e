@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Check if a given class name is already used."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_group: CONF_GROUP; a_name: STRING) is
+	make (a_group: CONF_GROUP; a_name: STRING)
 			-- Create check for class name `a_name' in the context of `a_group'.
 		require
 			a_group_not_void: a_group /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-	execute is
+	execute
             -- Execute a check.
         do
         	success := universe.safe_class_named (new_name, group) = Void
@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 	group: CONF_GROUP;
 			-- The context to check.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

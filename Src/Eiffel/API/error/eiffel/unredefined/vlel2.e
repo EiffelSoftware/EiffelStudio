@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"A feature name of an export clause is not a final %
@@ -19,7 +19,7 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is
+	subcode: INTEGER
 		do
 			Result := 2
 		end;
@@ -29,7 +29,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Invalid feature name: ");
 			a_text_formatter.add (feature_name);
@@ -39,13 +39,13 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_feature_name (s: STRING) is
+	set_feature_name (s: STRING)
 			-- Assign `s' to `feature_name'.
 		do
 			feature_name := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

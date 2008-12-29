@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command that can be added in a menu and in a toolbar."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature -- Access
 
-	new_menu_item: EB_COMMAND_CHECK_MENU_ITEM is
+	new_menu_item: EB_COMMAND_CHECK_MENU_ITEM
 			-- New menu item
 		do
 			create Result.make (Current)
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Change
 
-	set_select (b: BOOLEAN) is
+	set_select (b: BOOLEAN)
 			-- Set Current selected if `b' is True, otherwise set Current deselected
 		local
 			lst: like internal_managed_menu_items
@@ -68,7 +68,7 @@ feature -- Change
 			end
 		end
 
-	update_items is
+	update_items
 			-- Update associated items (menu items and toolbar items)
 		local
 			menu_items: like internal_managed_menu_items
@@ -131,7 +131,7 @@ feature -- Change
 
 feature {NONE} -- Implementation
 
-	initialize_menu_item (a_menu_item: EV_MENU_ITEM) is
+	initialize_menu_item (a_menu_item: EV_MENU_ITEM)
 			-- Create a new menu entry for this command.
 		local
 			l_item: like new_menu_item
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "represents written features. that is either a new feature, or a redefined/renamed/somehow changed feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {ANY} -- Initialsiation
 			
-	make (cp: CONSTANT_POOL) is
+	make (cp: CONSTANT_POOL)
 			-- create feature
 			-- `cp' is the constant pool of it's class
 		require
@@ -46,7 +46,7 @@ feature {ANY} -- Access
 			-- This is the ready to go string for the name entry in a
 			-- CONSTANT_NameAndType entry in the constant pool.
 			
-	signature: STRING is
+	signature: STRING
 			-- Signature of this feature (return type and parameter types)
 			-- This is the ready to go string for the type entry in a
 			-- CONSTANT_NameAndType entry in the constant pool.
@@ -98,7 +98,7 @@ feature {ANY} --
 			-- only a placeholder, when we should make a call to such a
 			-- feature we generate the bytecode to set the attribute instead.
 			
-	is_method: BOOLEAN is
+	is_method: BOOLEAN
 			-- is this a real method?
 			-- Note: Attribute setters are not considerd to be methods
 			-- since they will not be generated to real byte code.
@@ -106,13 +106,13 @@ feature {ANY} --
 			Result := not is_field and not is_field_setter
 		end
 			
-	written_feature: JVM_WRITTEN_FEATURE is
+	written_feature: JVM_WRITTEN_FEATURE
 		-- returns Current, since we are a written feature
 		do
 			Result := Current
 		end
 	
-	field: JVM_WRITTEN_FEATURE is
+	field: JVM_WRITTEN_FEATURE
 			-- in case this is a field setter, return the corresponding field
 			-- works for static and non static field setters
 		require
@@ -128,7 +128,7 @@ feature {ANY} --
 	
 feature {ANY} --
 			
-	set_is_field (b: BOOLEAN) is
+	set_is_field (b: BOOLEAN)
 			-- set `is_field' flag
 		do
 			is_field := b
@@ -136,7 +136,7 @@ feature {ANY} --
 			is_field_set: is_field = b
 		end
 			
-	set_is_static (b: BOOLEAN) is
+	set_is_static (b: BOOLEAN)
 		-- set `is_static' flag
 		do
 			is_static := b
@@ -144,7 +144,7 @@ feature {ANY} --
 			is_static_set: is_static = b
 		end
 			
-	set_is_constructor (b: BOOLEAN) is
+	set_is_constructor (b: BOOLEAN)
 			-- set `is_constructor' flag
 		do
 			is_constructor := b
@@ -152,7 +152,7 @@ feature {ANY} --
 			is_constructor_set: is_constructor = b
 		end
 			
-	set_is_field_setter (b: BOOLEAN) is
+	set_is_field_setter (b: BOOLEAN)
 			-- set `is_field_setter' flag
 		do
 			is_field_setter := b
@@ -160,7 +160,7 @@ feature {ANY} --
 			is_field_setter_set: is_field_setter = b
 		end
 
-	set_external_name (n: STRING) is
+	set_external_name (n: STRING)
 			-- set `external_name' of this feature
 		require
 			n_not_void: n /= Void
@@ -172,7 +172,7 @@ feature {ANY} --
 			external_name_set: external_name.is_equal (n)
 		end
 			
-	set_parameters (s: STRING) is
+	set_parameters (s: STRING)
 			-- Set parameters from a string. JVM Format
 			-- Example: "I[Ljava/lang/String;"
 			-- Note: do not wrapp string in "(" and ")"
@@ -186,7 +186,7 @@ feature {ANY} --
 			parameter_jvm_type_ids := jvm_type_descriptors_to_jvm_type_ids (s)
 		end
 			
-	set_return_type_name (s: STRING) is
+	set_return_type_name (s: STRING)
 			-- Set return type from string. JVM Format
 			-- Example: "Ljava/lang/String;"
 		require
@@ -199,7 +199,7 @@ feature {ANY} --
 			return_jvm_type_id := jvm_type_descriptors_to_jvm_type_ids (s).item (1)
 		end
 			
-	set_parameters_from_string_array (params: ARRAY [STRING]) is
+	set_parameters_from_string_array (params: ARRAY [STRING])
 			-- Set parameters from array of strings in format of the
 			-- Java external clause in Eiffel source code.
 		require
@@ -208,7 +208,7 @@ feature {ANY} --
 			set_parameters (eiffel_external_parameter_names_to_jvm_parameters (params))
 		end
 			
-	set_return_type_from_string (s: STRING) is
+	set_return_type_from_string (s: STRING)
 			-- Set return type from string. Format of Java external
 			-- clause in Eiffel source code.
 		require
@@ -217,7 +217,7 @@ feature {ANY} --
 			set_return_type_name (java_to_jvm_name (s))
 		end
 			
-	set_parameters_from_type_id_list (l: LINKED_LIST [PAIR [INTEGER, STRING]]) is
+	set_parameters_from_type_id_list (l: LINKED_LIST [PAIR [INTEGER, STRING]])
 			-- Set parameters from a list of pairs containing type ids 
 			-- plus names
 		require
@@ -244,7 +244,7 @@ feature {ANY} --
 			set_parameters (s)
 		end
 			
-	set_return_type_by_id (a_type_id: INTEGER) is
+	set_return_type_by_id (a_type_id: INTEGER)
 			-- Set return type from a type id
 		require
 			valid_id: repository.has_by_id (a_type_id)
@@ -252,7 +252,7 @@ feature {ANY} --
 			set_return_type_name (repository.item (a_type_id).qualified_name)
 		end
 			
-	emit (file: RAW_FILE) is
+	emit (file: RAW_FILE)
 			-- emmit the features byte code to a file
 			-- in this class, this is only for attributes (fields)
 			-- decendants will redefine it to fit their purposes.
@@ -261,7 +261,7 @@ feature {ANY} --
 			attributes_count_bc.emit (file)
 		end
 			
-	close is
+	close
 		do
 			close_header
 			close_attributes_count
@@ -280,7 +280,7 @@ feature {ANY} --
 			-- emitted is has to be closed "using `close'" just like any 
 			-- other jvm byte code emitter too.
 	
-	close_signature is
+	close_signature
 			-- close signature. see `is_signature_closed' for details.
 		do
 			is_signature_closed := True
@@ -290,7 +290,7 @@ feature {ANY} --
 
 feature {NONE} -- Implementation			
 	
-	close_header is
+	close_header
 		local
 			name_index: INTEGER
 			type_index: INTEGER
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 			header_bc.append_uint_16_from_int (type_index) -- type index
 		end
 	
-	append_access_flag is
+	append_access_flag
 		local
 			f: INTEGER
 		do
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 	header_bc: JVM_BYTE_CODE
 	attributes_count_bc: JVM_BYTE_CODE
 			
-	close_attributes_count is
+	close_attributes_count
 		do
 			create attributes_count_bc.make_size (Int_16_size)
 			attributes_count_bc.append_uint_16_from_int (0) -- Attributes count
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 
 feature {ANY} -- Basic Access
 	
-	return_class: JVM_CLASS is
+	return_class: JVM_CLASS
 			-- gets you the eiffel type of the return type if present
 		require
 			signature_closed: is_signature_closed
@@ -355,7 +355,7 @@ feature {ANY} -- Basic Access
 			Result := repository.item_by_qualified_name (s)
 		end
 			
-	has_non_void_return_type: BOOLEAN is
+	has_non_void_return_type: BOOLEAN
 			-- tells wether the given feature has a non void return type
 		require
 			signature_closed: is_signature_closed
@@ -404,7 +404,7 @@ invariant
 	return_jvm_type_id_valid: valid_jvm_type (return_jvm_type_id)
 	parameter_type_names_not_void: parameter_type_names /= Void
 	-- for all items `e' in `parameter_type_names' | valid_jvm_type (e)
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

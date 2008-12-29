@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that contains ids within Eiffel Studio."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,66 +17,66 @@ inherit
 
 feature -- Color ids
 
-	breakpoint_background_color_id: INTEGER is 30
+	breakpoint_background_color_id: INTEGER = 30
 			-- Background color used to display breakpoints		
 
-	assertion_tag_text_color_id: INTEGER is 31
+	assertion_tag_text_color_id: INTEGER = 31
 
-	assertion_tag_background_color_id: INTEGER is 32
+	assertion_tag_background_color_id: INTEGER = 32
 
-	indexing_tag_text_color_id: INTEGER is 33
+	indexing_tag_text_color_id: INTEGER = 33
 
-	indexing_tag_background_color_id: INTEGER is 34
+	indexing_tag_background_color_id: INTEGER = 34
 
-	reserved_text_color_id: INTEGER is 35
+	reserved_text_color_id: INTEGER = 35
 
-	reserved_background_color_id: INTEGER is 36
+	reserved_background_color_id: INTEGER = 36
 
-	generic_text_color_id: INTEGER is 37
+	generic_text_color_id: INTEGER = 37
 
-	generic_background_color_id: INTEGER is 38
+	generic_background_color_id: INTEGER = 38
 
-	local_text_color_id: INTEGER is 39
+	local_text_color_id: INTEGER = 39
 
-	local_background_color_id: INTEGER is 40
+	local_background_color_id: INTEGER = 40
 
-	class_text_color_id: INTEGER is 41
+	class_text_color_id: INTEGER = 41
 
-	class_background_color_id: INTEGER is 42
+	class_background_color_id: INTEGER = 42
 
-	feature_text_color_id: INTEGER is 43
+	feature_text_color_id: INTEGER = 43
 
-	feature_background_color_id: INTEGER is 44
+	feature_background_color_id: INTEGER = 44
 
-	cluster_text_color_id: INTEGER is 45
+	cluster_text_color_id: INTEGER = 45
 
-	cluster_background_color_id: INTEGER is 46
+	cluster_background_color_id: INTEGER = 46
 
-	error_text_color_id: INTEGER is 47
+	error_text_color_id: INTEGER = 47
 
-	error_background_color_id: INTEGER is 48
+	error_background_color_id: INTEGER = 48
 
-	object_text_color_id: INTEGER is 49
+	object_text_color_id: INTEGER = 49
 
-	object_background_color_id: INTEGER is 50
+	object_background_color_id: INTEGER = 50
 
-	target_text_color_id: INTEGER is 51
+	target_text_color_id: INTEGER = 51
 
-	target_background_color_id: INTEGER is 52
+	target_background_color_id: INTEGER = 52
 
-	warning_text_color_id: INTEGER is 53
+	warning_text_color_id: INTEGER = 53
 
-	warning_background_color_id: INTEGER is 54
+	warning_background_color_id: INTEGER = 54
 
-	argument_text_color_id: INTEGER is 55
+	argument_text_color_id: INTEGER = 55
 
-	argument_background_color_id: INTEGER is 56
+	argument_background_color_id: INTEGER = 56
 
-	folder_text_color_id: INTEGER is 57
+	folder_text_color_id: INTEGER = 57
 
-	folder_background_color_id: INTEGER is 58
+	folder_background_color_id: INTEGER = 58
 
-	max_color_id: INTEGER is
+	max_color_id: INTEGER
 		do
 			Result := folder_background_color_id
 		end
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

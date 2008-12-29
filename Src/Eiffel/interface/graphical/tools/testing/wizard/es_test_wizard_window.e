@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {ES_TEST_WIZARD_WINDOW}."
 	author: ""
 	date: "$Date$"
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			make (a_wizard_info)
 		end
 
-	initialize_container (a_container: EV_VERTICAL_BOX): EV_BOX is
+	initialize_container (a_container: EV_VERTICAL_BOX): EV_BOX
 			-- Initialize container to add widgets for wizard window
 			--
 			-- Note: apparently the wizard windows look better when using the parents of `choice_box'
@@ -67,7 +67,7 @@ feature {NONE} -- Access
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Window `Current' is attached to.
 
-	pixmap_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY is
+	pixmap_factory: EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 			-- Pixmap factory
 		once
 			create Result

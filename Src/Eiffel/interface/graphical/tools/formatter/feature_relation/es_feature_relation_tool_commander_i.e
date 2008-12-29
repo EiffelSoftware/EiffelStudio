@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A commander interface for interacting with the feature relation tool {ES_FEATURE_RELATION_TOOL}.
 
@@ -81,7 +81,7 @@ feature -- Element change
 --			stone_set: stone = a_stone
 --		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

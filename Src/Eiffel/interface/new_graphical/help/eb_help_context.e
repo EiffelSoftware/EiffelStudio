@@ -1,4 +1,4 @@
-indexing
+note
 	description: "$EiffelGraphicalCompiler$ help context sent to help engine%
 				%Made of a URL and a base address.%
 				%The URL is relative to the base address."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base_id: INTEGER; a_url: STRING) is
+	make (a_base_id: INTEGER; a_url: STRING)
 			-- Set `url' with concatenation of base URL identified by `a_base_id' and `a_url'.
 			-- See `EB_HELP_CONTEXTS_BASES' for valid `a_base_id' values.
 		require
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			url := base_url (a_base_id) + a_url
 		end
 
-	make_absolute (a_url: STRING) is
+	make_absolute (a_url: STRING)
 			-- Set `url' with `a_url'.
 		require
 			valid_url: is_valid_url (a_url)
@@ -51,7 +51,7 @@ invariant
 
 	valid_url: is_valid_url (url)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

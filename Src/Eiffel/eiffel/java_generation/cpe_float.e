@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a float on the constant pool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,18 +23,18 @@ create
 
 feature {NONE} -- Initialisation
 
-	make (f: REAL) is
+	make (f: REAL)
 		do
 			float := f
 		end
 			
 feature -- Access
 
-	tag_id: INTEGER is 4
+	tag_id: INTEGER = 4
 	
 	float: REAL
 
-	close is
+	close
 		do
 			create bc.make_size (Int_16_size + Float_size)
 			append_tag_info (bc)
@@ -42,19 +42,19 @@ feature -- Access
 			Precursor
 		end
 			
-	emit (file: RAW_FILE) is
+	emit (file: RAW_FILE)
 		do
 			bc.emit (file)
 		end
 			
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
 			Result := same_type (other) and then float = other.float
 		end
 			
-	out: STRING is
+	out: STRING
 		do
 			Result := "Float:" + float.out + "%N"
 		end
@@ -67,7 +67,7 @@ invariant
 			
 	closed_implies_bc_exists: is_closed implies bc /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

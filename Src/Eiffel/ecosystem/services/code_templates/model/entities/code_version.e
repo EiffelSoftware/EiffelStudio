@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents a code model version, for template versioning.
 	]"
@@ -106,7 +106,7 @@ feature {NONE} -- Actions handlers
 
 feature -- Comparison
 
-	is_less alias "<" (other: CODE_VERSION): BOOLEAN is
+	is_less alias "<" (other: CODE_VERSION): BOOLEAN
 			-- <Precursor>
 		do
 			Result := False
@@ -137,7 +137,7 @@ feature -- Constants
 	deafult_version: STRING_8 = "0.0.0.0"
 			-- Default version string
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

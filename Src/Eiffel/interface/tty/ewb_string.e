@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Description of a menu entry string for%
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (n: STRING; h: STRING_GENERAL c: CHARACTER; s: EWB_MENU) is
+	make (n: STRING; h: STRING_GENERAL c: CHARACTER; s: EWB_MENU)
 		do
 			name := n;
 			int_help_message := h;
@@ -32,7 +32,7 @@ feature -- Properties
 
 	name: STRING;
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		do
 			Result := int_help_message;
 		end;
@@ -43,7 +43,7 @@ feature -- Properties
 
 feature {NONE} -- Execution
 
-	execute is
+	execute
 		do
 		end;
 
@@ -51,7 +51,7 @@ feature {NONE} -- Attributes
 
 	int_help_message: STRING_GENERAL;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

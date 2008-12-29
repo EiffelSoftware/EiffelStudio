@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of a printer under GTK"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create {EB_PRINTER}
 
 feature {NONE} -- Initialization
 
-	make (interf: EB_PRINTER) is
+	make (interf: EB_PRINTER)
 			-- Initialize `Current' and associate it with `interf'.
 		require
 			valid_interface: interf /= Void
@@ -56,7 +56,7 @@ feature -- Miscellaneous
 
 feature {EB_PRINTER} -- Basic operations
 
-	send_print_request is
+	send_print_request
 			-- Send a print request based on the parameters in `interface'.
 		require
 			text_set: interface.text /= Void
@@ -120,7 +120,7 @@ feature {EB_PRINTER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	generate_temp_name: STRING is
+	generate_temp_name: STRING
 			-- Generate a temporary file name.
 		local
 			prefix_name: STRING
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			Result.from_c (p)
 		end
 
-	tempnam (d,p: POINTER): POINTER is
+	tempnam (d,p: POINTER): POINTER
 		external
 			"C | <stdio.h>"
 		end
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 invariant
 	valid_interface: interface /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

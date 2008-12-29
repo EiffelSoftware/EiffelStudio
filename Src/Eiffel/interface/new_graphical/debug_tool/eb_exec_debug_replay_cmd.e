@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to replay the execution of the debugged application."
@@ -79,7 +79,7 @@ feature -- Properties
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Pause the execution.
 		require else
 			stopped: debugger_manager.safe_application_is_stopped
@@ -105,13 +105,13 @@ feature -- Access
 
 feature {NONE} -- Attributes
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip displayed on `Current's buttons.
 		do
 			inspect direction
@@ -128,7 +128,7 @@ feature {NONE} -- Attributes
 			end
 		end
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text displayed on `Current's buttons.
 		do
 			inspect direction
@@ -147,7 +147,7 @@ feature {NONE} -- Attributes
 	name: STRING
 			-- Name of the command.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Menu entry corresponding to `Current'.
 		do
 			inspect direction
@@ -163,7 +163,7 @@ feature {NONE} -- Attributes
 			end
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing `Current' on buttons.
 		do
 			inspect direction
@@ -179,7 +179,7 @@ feature {NONE} -- Attributes
 			end
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			inspect direction
@@ -195,7 +195,7 @@ feature {NONE} -- Attributes
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

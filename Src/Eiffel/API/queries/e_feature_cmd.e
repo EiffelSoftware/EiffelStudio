@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"General notion of an eiffel query command (semantic unity)%
@@ -23,7 +23,7 @@ inherit
 
 feature -- Initialization
 
-	make (a_text_formatter: TEXT_FORMATTER; a_feature: E_FEATURE) is
+	make (a_text_formatter: TEXT_FORMATTER; a_feature: E_FEATURE)
 			-- Make current command with current_feature as `a_feature'.
 		require
 			non_void_a_feature: a_feature /= Void
@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- Is the Current able to be executed?
 		do
 			Result := current_class /= Void and then
@@ -49,7 +49,7 @@ feature -- Status report
 					has_valid_feature
 		end
 
-	has_valid_feature: BOOLEAN is
+	has_valid_feature: BOOLEAN
 			-- Is current_feature valid?
 		do
 			Result := current_feature.is_compiled
@@ -60,7 +60,7 @@ feature -- Property
 	current_feature: E_FEATURE;
 			-- Feature for current action
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

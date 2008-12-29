@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class containing features for retrieving pixmaps for Clusters, Classes and Features"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ feature -- Query (Pixmap)
 			result_not_void: Result /= Void
 		end
 
-	pixmap_from_class_i (a_class: CLASS_I): EV_PIXMAP is
+	pixmap_from_class_i (a_class: CLASS_I): EV_PIXMAP
 			-- Return pixmap based on `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -106,7 +106,7 @@ feature -- Query (Pixmap)
 			result_not_void: Result /= Void
 		end
 
-	pixmap_from_e_feature (a_feature: E_FEATURE): EV_PIXMAP is
+	pixmap_from_e_feature (a_feature: E_FEATURE): EV_PIXMAP
 			-- Sets `a_item' pixmap based on `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -178,7 +178,7 @@ feature -- Query (Pixmap)
 			result_not_void: Result /= Void
 		end
 
-	pixmap_from_feature_ast (is_class_external: BOOLEAN; a_feature_as: FEATURE_AS; a_name_pos: INTEGER): EV_PIXMAP is
+	pixmap_from_feature_ast (is_class_external: BOOLEAN; a_feature_as: FEATURE_AS; a_name_pos: INTEGER): EV_PIXMAP
 			-- Pixmaps from features.
 		require
 			a_feature_as_not_void: a_feature_as /= Void
@@ -255,7 +255,7 @@ feature -- Query (Pixmap)
 			result_not_void: Result /= Void
 		end
 
-	pixmap_for_query_lanaguage_item (a_item: QL_ITEM): EV_PIXMAP is
+	pixmap_for_query_lanaguage_item (a_item: QL_ITEM): EV_PIXMAP
 			-- Pixmap for `a_item'
 		require
 			a_item_attached: a_item /= Void
@@ -294,7 +294,7 @@ feature -- Query (Pixmap)
 
 feature -- Query (Pixel buffer)
 
-	pixel_buffer_from_class_i (a_class: CLASS_I): EV_PIXEL_BUFFER is
+	pixel_buffer_from_class_i (a_class: CLASS_I): EV_PIXEL_BUFFER
 			-- Return pixmap based on `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -368,7 +368,7 @@ feature -- Query (Pixel buffer)
 			result_not_void: Result /= Void
 		end
 
-	pixel_buffer_from_e_feature (a_feature: E_FEATURE): EV_PIXEL_BUFFER is
+	pixel_buffer_from_e_feature (a_feature: E_FEATURE): EV_PIXEL_BUFFER
 			-- Sets `a_item' pixmap based on `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -440,7 +440,7 @@ feature -- Query (Pixel buffer)
 			result_not_void: Result /= Void
 		end
 
-	pixel_buffer_from_feature_ast (is_class_external: BOOLEAN; a_feature_as: FEATURE_AS; a_name_pos: INTEGER): EV_PIXEL_BUFFER is
+	pixel_buffer_from_feature_ast (is_class_external: BOOLEAN; a_feature_as: FEATURE_AS; a_name_pos: INTEGER): EV_PIXEL_BUFFER
 			-- Pixmaps from features.
 		require
 			a_feature_as_not_void: a_feature_as /= Void
@@ -519,7 +519,7 @@ feature -- Query (Pixel buffer)
 
 feature {NONE} -- Access
 
-	class_icon_map: HASH_TABLE [EV_PIXMAP, NATURAL_8] is
+	class_icon_map: HASH_TABLE [EV_PIXMAP, NATURAL_8]
 			-- Class icon map
 		once
 			create Result.make (37)
@@ -566,17 +566,17 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	none_flag:  NATURAL_8 is 0x01
-	compiled_flag: NATURAL_8 is 0x02
-	deferred_flag: NATURAL_8 is 0x04
-	expanded_flag: NATURAL_8 is 0x08
-	frozen_flag: NATURAL_8 is 0x010
-	overrides_flag: NATURAL_8 is 0x20
-	overriden_flag: NATURAL_8 is 0x40
-	readonly_flag: NATURAL_8 is 0x80;
+	none_flag:  NATURAL_8 = 0x01
+	compiled_flag: NATURAL_8 = 0x02
+	deferred_flag: NATURAL_8 = 0x04
+	expanded_flag: NATURAL_8 = 0x08
+	frozen_flag: NATURAL_8 = 0x010
+	overrides_flag: NATURAL_8 = 0x20
+	overriden_flag: NATURAL_8 = 0x40
+	readonly_flag: NATURAL_8 = 0x80;
 		-- Class icon state flags		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

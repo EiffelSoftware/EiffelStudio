@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Representation of arguments entered by the user%
@@ -32,14 +32,14 @@ feature -- Properties
 
 feature -- Access
 
-	current_item: STRING is
+	current_item: STRING
 			-- Current argument string at `argument_position'
 		do
 			Result := item (argument_position);
 			argument_position := argument_position + 1;
 		end;
 
-	more_arguments: BOOLEAN is
+	more_arguments: BOOLEAN
 			-- Are there more arguments?
 		do
 			Result := argument_count > 0 and then (argument_position <= argument_count)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Update
 
-	force (s: STRING; i: INTEGER) is
+	force (s: STRING; i: INTEGER)
 			-- Force string `s' at position `i'.
 		do
 			Precursor {ARRAY} (s, i);
@@ -56,7 +56,7 @@ feature -- Update
 			end;
 		end;
 
-	wipe_out is
+	wipe_out
 			-- Clear arguments.
 		do
 			make (lower, upper);
@@ -64,7 +64,7 @@ feature -- Update
 			argument_count := 1;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

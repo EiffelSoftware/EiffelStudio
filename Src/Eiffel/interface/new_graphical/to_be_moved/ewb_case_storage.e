@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Store Eiffelcase readable format of system to disk."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	execute is
+	execute
 		local
 --			format_storage: FORMAT_CASE_STORAGE
 		do
@@ -26,7 +26,7 @@ feature {NONE} -- Implementation
 --			format_storage.execute ("")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

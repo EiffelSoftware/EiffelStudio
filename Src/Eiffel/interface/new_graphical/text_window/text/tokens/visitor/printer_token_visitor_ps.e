@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Editor token visitor for PostScript building."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create {EB_PRINTER_TEXT_GENERATOR}
 
 feature {NONE} -- Initialzation
 
-	make is
+	make
 			-- Initialzation
 		do
 			create print_color_table.make (max_color_id + 1)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialzation
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Text genrated.
 		do
 			if not current_line.is_empty then
@@ -62,7 +62,7 @@ feature -- Access
 
 feature {NONE} -- Visit
 
-	process_editor_token_eol (a_tok: EDITOR_TOKEN_EOL) is
+	process_editor_token_eol (a_tok: EDITOR_TOKEN_EOL)
 		do
 			text_processing.append (current_line_height.max (a_tok.font.height).out)
 			text_processing.append (ps_space)
@@ -75,7 +75,7 @@ feature {NONE} -- Visit
 
 feature {NONE} -- Implementation
 
-	build_token_text (a_tok: EDITOR_TOKEN) is
+	build_token_text (a_tok: EDITOR_TOKEN)
 			-- Build RTF text for `a_tok'
 		local
 			l_color: EV_COLOR
@@ -107,15 +107,15 @@ feature {NONE} -- Implementation
 	current_line_width: INTEGER
 			-- Buffer of current line width.
 
-	color_string: STRING is "color"
+	color_string: STRING = "color"
 
-	font_string: STRING is "font"
+	font_string: STRING = "font"
 
-	bold_string : STRING is "Bold"
+	bold_string : STRING = "Bold"
 
-	italic_string: STRING is "Italic"
+	italic_string: STRING = "Italic"
 
-	process_ise_info is
+	process_ise_info
 			-- Process ISE generation information.
 		do
 			from
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Post Script generation
 
-	color_table_string : STRING is
+	color_table_string : STRING
 			-- Color table string RTF representation
 		local
 			l_color: EV_COLOR
@@ -167,7 +167,7 @@ feature {NONE} -- Post Script generation
 			end
 		end
 
-	font_table_string : STRING is
+	font_table_string : STRING
 			-- Font table string RTF representation
 		local
 			l_font: EV_FONT
@@ -210,32 +210,32 @@ feature {NONE} -- Post Script generation
 			end
 		end
 
-	new_line: STRING is "%N"
+	new_line: STRING = "%N"
 
-	header :STRING is "%%!PS-Adobe-1.0"
+	header :STRING = "%%!PS-Adobe-1.0"
 			-- Header of PostScript.
 
-	left_margin: INTEGER is 1
+	left_margin: INTEGER = 1
 			-- Inch
 
-	right_margin: INTEGER is 8
+	right_margin: INTEGER = 8
 			-- Inch
 
-	top_margin: INTEGER is 10
+	top_margin: INTEGER = 10
 			-- Inch
 
-	bottom_margin: INTEGER is 1
+	bottom_margin: INTEGER = 1
 			-- Inch
 
-	max_line_width: INTEGER is
+	max_line_width: INTEGER
 			-- Points
 		once
 			Result := (right_margin - left_margin) * points_per_inch
 		end
 
-	points_per_inch: INTEGER is 72
+	points_per_inch: INTEGER = 72
 
-	page_definition: STRING is
+	page_definition: STRING
 			-- Page definition string.
 			-- |Fixme: Page demetion should be set according to device demention.
 		once
@@ -247,37 +247,37 @@ feature {NONE} -- Post Script generation
 			"/tablength 4 def"
 		end
 
-	ps_moveto_start: STRING is "leftmargin topmargin moveto"
+	ps_moveto_start: STRING = "leftmargin topmargin moveto"
 
-	ps_findfont: STRING is "findfont"
+	ps_findfont: STRING = "findfont"
 
-	ps_setfont: STRING is "setfont"
+	ps_setfont: STRING = "setfont"
 
-	ps_setrgbcolor: STRING is "setrgbcolor"
+	ps_setrgbcolor: STRING = "setrgbcolor"
 
-	ps_scalefont: STRING is "scalefont"
+	ps_scalefont: STRING = "scalefont"
 
-	ps_print_next_line: STRING is "print_next_line"
+	ps_print_next_line: STRING = "print_next_line"
 
-	ps_new_line: STRING is "new_line"
+	ps_new_line: STRING = "new_line"
 
-	ps_end_prolog: STRING is "%%%%EndProlog"
+	ps_end_prolog: STRING = "%%%%EndProlog"
 
-	ps_showpage: STRING is "showpage"
+	ps_showpage: STRING = "showpage"
 
-	ps_space: STRING is " "
+	ps_space: STRING = " "
 
-	ps_routine_character: STRING is "/"
+	ps_routine_character: STRING = "/"
 
-	ps_l_brace: STRING is "{"
+	ps_l_brace: STRING = "{"
 
-	ps_r_brace: STRING is "}"
+	ps_r_brace: STRING = "}"
 
-	ps_def: STRING is "def"
+	ps_def: STRING = "def"
 
-	ps_dash: STRING is "-"
+	ps_dash: STRING = "-"
 
-	ps_routines_definition: STRING is
+	ps_routines_definition: STRING =
 		"[
 		/new_line {
 			currentpoint exch pop exch sub
@@ -360,7 +360,7 @@ feature {NONE} -- Post Script generation
 		} def
 		]";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

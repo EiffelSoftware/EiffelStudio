@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tool as formatters container"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			create {LINKED_LIST [EB_FORMATTER]} formatters.make
@@ -64,7 +64,7 @@ feature{NONE} -- Initialization
 			eiffel_project.manager.load_agents.extend (on_project_loaded_agent)
 		end
 
-	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Build dockable content.
 		do
 			Precursor (a_docking_manager)
@@ -76,7 +76,7 @@ feature{NONE} -- Initialization
 					)
 		end
 
-	build_interface is
+	build_interface
 			-- Build interface
 		do
 			initialize
@@ -92,7 +92,7 @@ feature{NONE} -- Initialization
 
 feature{NONE} -- Clean up
 
-	internal_recycle is
+	internal_recycle
 			-- To be called when the button has became useless.
 		do
 			safe_remove_agent (on_customized_formatter_loaded_agent, customized_formatter_manager.change_actions)
@@ -138,21 +138,21 @@ feature -- Access
 	address_manager: EB_ADDRESS_MANAGER
 			-- Manager for the header info.
 
-	predefined_formatters: like formatters is
+	predefined_formatters: like formatters
 			-- Predefined formatters
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	no_target_message: STRING_GENERAL is
+	no_target_message: STRING_GENERAL
 			-- Message to be displayed in `output_line' when no stone is set
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	empty_widget: EV_WIDGET is
+	empty_widget: EV_WIDGET
 			-- Empty widget of Current tool if there is no formatter attached
 		local
 			l_frame: EV_FRAME
@@ -180,17 +180,17 @@ feature -- Status report
 
 feature -- Setting
 
-	pop_default_formatter is
+	pop_default_formatter
 			-- Popup default formatter specified by `default_formatter'.
 		deferred
 		end
 
-	drop_stone (st: like last_stone) is
+	drop_stone (st: like last_stone)
 			-- Set `st' in the stone manager and pop up the feature view if it is a feature stone.
 		deferred
 		end
 
-	invalidate is
+	invalidate
 			-- Contexts need to be updated because of recompilation
 			-- or similar action that needs resynchonization.
 		do
@@ -198,7 +198,7 @@ feature -- Setting
 			set_last_stone (Void)
 		end
 
-	refresh is
+	refresh
 			-- Contexts need to be updated because of recompilation
 			-- or similar action that needs resynchonization.
 		do
@@ -211,7 +211,7 @@ feature -- Setting
 			)
 		end
 
-	quick_refresh_editor is
+	quick_refresh_editor
 			-- Refresh the editor.
 		do
 			do_all_in_list (
@@ -228,7 +228,7 @@ feature -- Setting
 			)
 		end
 
-	quick_refresh_margin is
+	quick_refresh_margin
 			-- Refresh the editor's margin.
 		do
 			do_all_in_list (
@@ -245,7 +245,7 @@ feature -- Setting
 			)
 		end
 
-	set_parent_notebook (a_notebook: EV_NOTEBOOK) is
+	set_parent_notebook (a_notebook: EV_NOTEBOOK)
 			-- Set `parent_notebok' to `a_notebook'.
 		require
 			a_notebook_non_void: a_notebook /= Void
@@ -254,7 +254,7 @@ feature -- Setting
 			parent_notebook := a_notebook
 		end
 
-	set_focus is
+	set_focus
 			-- Give the focus to `Current'.
 		require
 			focusable: content.is_visible and widget.is_sensitive
@@ -262,7 +262,7 @@ feature -- Setting
 			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_focus end)
 		end
 
-	ensure_formatter_display (a_formatter: EB_FORMATTER) is
+	ensure_formatter_display (a_formatter: EB_FORMATTER)
 			-- Ensure that `a_formatter' is displayed in Current tool.
 		local
 			l_control_bar: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -293,7 +293,7 @@ feature -- Setting
 			end
 		end
 
-	force_last_stone is
+	force_last_stone
 			-- Force that `last_stone' is displayed in formatters in Current view
 		do
 			if not is_last_stone_processed then
@@ -303,7 +303,7 @@ feature -- Setting
 			end
 		end
 
-	show is
+	show
 			-- Show tool.
 		do
 			Precursor
@@ -318,7 +318,7 @@ feature -- Setting
 			)
 		end
 
-	show_with_setting is
+	show_with_setting
 			-- Show current tool (if possible), and do some settings
 		do
 			Precursor
@@ -326,7 +326,7 @@ feature -- Setting
 			set_focus
 		end
 
-	force_display is
+	force_display
 			-- Jump to this tab and display `explorer_parent'.
 		do
 			if
@@ -337,7 +337,7 @@ feature -- Setting
 			end
 		end
 
-	force_reload is
+	force_reload
 			-- Force to reload `formatters'
 		do
 			on_customized_formatter_loaded
@@ -345,7 +345,7 @@ feature -- Setting
 
 feature{NONE} -- Implementation/Cache
 
-	displayer_cache: HASH_TABLE [EB_FORMATTER_DISPLAYER, STRING] is
+	displayer_cache: HASH_TABLE [EB_FORMATTER_DISPLAYER, STRING]
 			-- Cache for formatter displayers indexed by name
 		do
 			if displayer_cache_internal = Void then
@@ -354,7 +354,7 @@ feature{NONE} -- Implementation/Cache
 			Result := displayer_cache_internal
 		end
 
-	cached_displayer_names: DS_HASH_SET [STRING] is
+	cached_displayer_names: DS_HASH_SET [STRING]
 			-- Set of names of cached displayers			
 		local
 			l_cache: like displayer_cache
@@ -374,7 +374,7 @@ feature{NONE} -- Implementation/Cache
 			good_result: Result.count = displayer_cache.count
 		end
 
-	needed_displayers: DS_HASH_SET [STRING] is
+	needed_displayers: DS_HASH_SET [STRING]
 			-- Set of names of needed displayers for `formatters'
 		local
 			l_formatters: like formatters
@@ -398,7 +398,7 @@ feature{NONE} -- Implementation/Cache
 			result_attached: Result /= Void
 		end
 
-	remove_cache (a_names: DS_HASH_SET [STRING]) is
+	remove_cache (a_names: DS_HASH_SET [STRING])
 			-- Remove cached displayers whose names are given by `a_names'.
 		require
 			a_names_attached: a_names /= Void
@@ -421,13 +421,13 @@ feature{NONE} -- Implementation/Cache
 
 feature{NONE} -- Implementation
 
-	attach_veto_format_function is
+	attach_veto_format_function
 			-- Attach veto format function to `formatters'.
 		do
 			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_veto_format_function (agent veto_format) end)
 		end
 
-	detach_veto_format_function is
+	detach_veto_format_function
 			-- Detach veto format function to `formatters'.
 		do
 			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_veto_format_function (Void) end)
@@ -436,7 +436,7 @@ feature{NONE} -- Implementation
 	veto_format_function_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
 			-- Veto format function
 
-	veto_format: BOOLEAN is
+	veto_format: BOOLEAN
 			-- True if format is allowed to go on, otherwise False.
 		do
 			Result := not is_format_vetoed
@@ -445,7 +445,7 @@ feature{NONE} -- Implementation
 	is_format_vetoed: BOOLEAN
 			-- Is format vetoed?
 
-	set_is_format_vetoed (b: BOOLEAN) is
+	set_is_format_vetoed (b: BOOLEAN)
 			-- Set `is_format_vetoed' with `b'.
 		do
 			is_format_vetoed := b
@@ -453,7 +453,7 @@ feature{NONE} -- Implementation
 			is_format_vetoed_set: is_format_vetoed = b
 		end
 
-	retrieve_formatters is
+	retrieve_formatters
 			-- Retrieve all formatters related with Current tool and store them in `formatters'
 		require
 			predefined_formatters_attached: predefined_formatters /= Void
@@ -484,7 +484,7 @@ feature{NONE} -- Implementation
 			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.set_manager (develop_window.tools) end)
 		end
 
-	fill_formatters is
+	fill_formatters
 			-- Fill `formatters' with non Void formatters in `predefined_formatters' and `customized_formatters'.
 		local
 			l_formatters: like formatters
@@ -506,7 +506,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	build_formatters is
+	build_formatters
 			-- Build all formatters
 		local
 			l_displayers: like cached_displayer_names
@@ -520,7 +520,7 @@ feature{NONE} -- Implementation
 			remove_cache (l_displayers)
 		end
 
-	setup_displayers (a_formatters: LIST [EB_FORMATTER]) is
+	setup_displayers (a_formatters: LIST [EB_FORMATTER])
 			-- Setup displayers for every formatter in `a_formatters'
 		require
 			a_formatters_attached: a_formatters /= Void
@@ -563,7 +563,7 @@ feature{NONE} -- Implementation
 			l_formatters.go_to (l_cursor)
 		end
 
-	new_displayer (a_name: STRING; a_generator: FUNCTION [ANY, TUPLE, EB_FORMATTER_DISPLAYER]): EB_FORMATTER_DISPLAYER is
+	new_displayer (a_name: STRING; a_generator: FUNCTION [ANY, TUPLE, EB_FORMATTER_DISPLAYER]): EB_FORMATTER_DISPLAYER
 			-- New displayer whose name is `a_name' generated from `a_generator'
 			-- If there is already a displayer of the same name in cache, use that one instead of generating a new one.
 			-- If a new displayer is generated, also put it in cache.
@@ -599,7 +599,7 @@ feature{NONE} -- Implementation
 	on_metric_loaded_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_metric_loaded'
 
-	window: EV_WINDOW is
+	window: EV_WINDOW
 			-- Window dialogs can refer to.
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
@@ -639,7 +639,7 @@ feature{NONE} -- Implementation
 	empty_widget_internal: like empty_widget
 			-- Implementation of `empty_widget'
 
-	clear_control_bar_butons (a_tool_bar: SD_TOOL_BAR) is
+	clear_control_bar_butons (a_tool_bar: SD_TOOL_BAR)
 			-- Clear previous `control_bar' buttons from a formatter.
 		require
 			not_void: a_tool_bar /= Void
@@ -680,7 +680,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Actions
 
-	on_customized_formatter_loaded is
+	on_customized_formatter_loaded
 			-- Action to be performed when customized formatters are loaded in `customized_formatter_manager'.
 		local
 			l_stone: like stone
@@ -698,7 +698,7 @@ feature{NONE} -- Actions
 			formatter_dialog.on_items_reloaded
 		end
 
-	on_metric_loaded is
+	on_metric_loaded
 			-- Action to be performed when metrices are loaded/reloaded in `metric_manager'
 		local
 			l_last_stone: like last_stone
@@ -711,7 +711,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_item_dropped (a_pebble: ANY) is
+	on_item_dropped (a_pebble: ANY)
 			-- Action to be performed when `a_pebble' is dropped
 		local
 			l_stone: like last_stone
@@ -722,35 +722,35 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_context_change is
+	on_context_change
 			-- Action to be performed when `viewpoints' changes
 		do
 			token_writer.set_context_group (viewpoints.current_viewpoint)
 			refresh
 		end
 
-	on_select is
+	on_select
 			-- Display information from the selected formatter.
 		do
 			visible := True
 			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.on_shown end)
 		end
 
-	on_deselect is
+	on_deselect
 			-- This view is hidden.
 		do
 			do_all_in_list (formatters, agent (a_formatter: EB_FORMATTER) do a_formatter.on_hidden end)
 			visible := False
 		end
 
-	on_setup_customized_formatters is
+	on_setup_customized_formatters
 			-- Action to be performed to reload customized formatters
 		do
 			reload_customized_formatter (False)
 			popup_formatter_dialog (develop_window)
 		end
 
-	on_project_loaded is
+	on_project_loaded
 			-- Action to be performed when project is loaded into EiffelStudio
 		do
 			reload_customized_formatter (True)
@@ -758,7 +758,7 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Implementation
 
-	build_mini_toolbar is
+	build_mini_toolbar
 			-- Redefine
 		do
 			create history_toolbar.make
@@ -772,7 +772,7 @@ feature{NONE} -- Implementation
 			address_manager.label_changed_actions.extend (agent (develop_window.docking_manager).update_mini_tool_bar_size (content))
 		end
 
-	do_all_in_list (a_list: LIST [ANY]; a_agent: PROCEDURE [ANY, TUPLE [ANY]]) is
+	do_all_in_list (a_list: LIST [ANY]; a_agent: PROCEDURE [ANY, TUPLE [ANY]])
 			-- Call `a_agent' for every element in `a_list'.
 		require
 			a_list_attached: a_list /= Void
@@ -781,7 +781,7 @@ feature{NONE} -- Implementation
 			a_list.do_all (a_agent)
 		end
 
-	fill_in is
+	fill_in
 			-- Display all controls of the window.
 		local
 			sep: EV_HORIZONTAL_SEPARATOR
@@ -804,7 +804,7 @@ feature{NONE} -- Implementation
 			output_line.set_text (no_target_message)
 		end
 
-	build_tool_bar is
+	build_tool_bar
 			-- Create diagram option bar.
 		local
 			l_cell: EV_CELL
@@ -828,7 +828,7 @@ feature{NONE} -- Implementation
 			attach_formatters
 		end
 
-	attach_formatters is
+	attach_formatters
 			-- Attach `formatters' in Current tool
 		local
 			l_formatters: like formatters
@@ -867,7 +867,7 @@ feature{NONE} -- Implementation
 			pop_default_formatter
 		end
 
-	attach_formatter (a_formatter: EB_FORMATTER) is
+	attach_formatter (a_formatter: EB_FORMATTER)
 			-- Attach `a_formatter' to Current tool.
 		require
 			a_formatter_attached: a_formatter /= Void
@@ -895,7 +895,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	customized_formatter_button: SD_TOOL_BAR_BUTTON is
+	customized_formatter_button: SD_TOOL_BAR_BUTTON
 			-- Button used to setup customized formatters
 		do
 			if customized_formatter_button_internal = Void then
@@ -921,7 +921,7 @@ invariant
 	customized_formatters_attached: customized_formatters /= Void
 	veto_format_function_agent_attached: veto_format_function_agent /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

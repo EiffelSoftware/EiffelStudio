@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used by C++ encapsulation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Property
 
-	valid_type (a_type: INTEGER): BOOLEAN is
+	valid_type (a_type: INTEGER): BOOLEAN
 			-- Does `a_type' belong to list of predefined constants.
 		do
 			inspect
@@ -29,7 +29,7 @@ feature -- Property
 			end
 		end
 
-	need_current (a_type: INTEGER): BOOLEAN is
+	need_current (a_type: INTEGER): BOOLEAN
 			-- Does `a_type' correspond to either a static method
 			-- or a static field access.
 		require
@@ -47,26 +47,26 @@ feature -- Property
 
 feature -- Constants
 
-	normal_type: INTEGER is 1
-	creator_type: INTEGER is 2
-	field_type: INTEGER is 3
-	static_field_type: INTEGER is 4
-	set_field_type: INTEGER is 5
-	set_static_field_type: INTEGER is 6
-	static_type: INTEGER is 7
-	get_property_type: INTEGER is 8
-	set_property_type: INTEGER is 9
-	deferred_type: INTEGER is 10
-	operator_type: INTEGER is 11
-	creator_call_type: INTEGER is 12
-	enum_field_type: INTEGER is 13
+	normal_type: INTEGER = 1
+	creator_type: INTEGER = 2
+	field_type: INTEGER = 3
+	static_field_type: INTEGER = 4
+	set_field_type: INTEGER = 5
+	set_static_field_type: INTEGER = 6
+	static_type: INTEGER = 7
+	get_property_type: INTEGER = 8
+	set_property_type: INTEGER = 9
+	deferred_type: INTEGER = 10
+	operator_type: INTEGER = 11
+	creator_call_type: INTEGER = 12
+	enum_field_type: INTEGER = 13
 			-- Constants used to differentiate all type of IL externals.
 
-	msil_language: INTEGER is 1
-	java_language: INTEGER is 2;
+	msil_language: INTEGER = 1
+	java_language: INTEGER = 2;
 			-- Constants used to determine language of externals
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

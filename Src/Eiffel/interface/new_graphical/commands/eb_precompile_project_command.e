@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Command to precompile the Eiffel code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} --Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			Precursor {EB_MELT_PROJECT_COMMAND}
@@ -46,7 +46,7 @@ feature {NONE} --Initialization
 
 feature {NONE} -- Implementation
 
-	confirm_and_compile is
+	confirm_and_compile
 			-- Ask for confirmation, and compile thereafter.
 		local
 			l_confirm: ES_DISCARDABLE_QUESTION_PROMPT
@@ -62,14 +62,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	confirm_finalization_and_compile (fin_comp: BOOLEAN) is
+	confirm_finalization_and_compile (fin_comp: BOOLEAN)
 			-- Ask for confirmation to finalize and discard assertions and compile	
 		do
 			finalize_precompile := fin_comp
 			compile
 		end
 
-	launch_c_compilation is
+	launch_c_compilation
 			-- Launch the C compilation in the background.
 		do
 			if start_c_compilation then
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	perform_compilation is
+	perform_compilation
 			-- The actual compilation process.
 		do
 			if finalize_precompile then
@@ -99,22 +99,22 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	tooltext: STRING_GENERAL is
+	tooltext: STRING_GENERAL
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_Precompile
 		end
 
-	name: STRING is "Precompile"
+	name: STRING = "Precompile"
 			-- Name of precompile command.
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name used in menu entry
 		once
 			Result := Interface_names.m_Precompile_new
 		end
 
-	is_precompiling: BOOLEAN is True
+	is_precompiling: BOOLEAN = True
 			-- We are doing a precompilation here.
 
 	finalize_precompile: BOOLEAN
@@ -122,7 +122,7 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Implementation
 
-	is_dotnet_project: BOOLEAN is
+	is_dotnet_project: BOOLEAN
 			-- is current loaded ace a .net project
 		local
 			l_value: STRING
@@ -131,19 +131,19 @@ feature {NONE} -- Implementation
 			Result := l_value /= Void and then l_value.is_case_insensitive_equal ("true")
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.project_melt_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.project_melt_icon_buffer
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

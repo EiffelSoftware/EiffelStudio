@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Interface of an helper object
 	]"

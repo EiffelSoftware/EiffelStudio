@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class BIN_NE_B
@@ -13,7 +13,7 @@ inherit
 
 feature -- Visitor
 
-	process (v: BYTE_NODE_VISITOR) is
+	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
 			v.process_bin_ne_b (Current)
@@ -21,25 +21,25 @@ feature -- Visitor
 
 feature
 
-	generate_operator (a_buffer: GENERATION_BUFFER) is
+	generate_operator (a_buffer: GENERATION_BUFFER)
 			-- Generate the operator
 		do
 			a_buffer.put_four_character (' ', '!', '=', ' ')
 		end;
 
-	generate_boolean_constant is
+	generate_boolean_constant
 			-- Generate true constant
 		do
 			buffer.put_string ("EIF_TRUE");
 		end;
 
-	generate_negation is
+	generate_negation
 			-- Generate negation of an equality test (if required).
 		do
 			buffer.put_character ('!')
 		end
 
-	enlarged: EXPR_B is
+	enlarged: EXPR_B
 			-- Enlarge node
 		local
 			l_left_val, l_right_val: VALUE_I
@@ -68,7 +68,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Common shared routines for XML extraction, saving and deserialization
 		]"
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	Xml_routines: XML_ROUTINES is
+	Xml_routines: XML_ROUTINES
 			-- Access the common xml routines.
 		once
 			create Result.default_create
@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 			non_void_Xml_routines: Xml_routines /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

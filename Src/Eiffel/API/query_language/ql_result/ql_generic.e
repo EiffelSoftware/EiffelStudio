@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a class generic item in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: like parent) is
+	make (a_name: STRING; a_parent: like parent)
 			-- Initialize `name' with `a_name' and `parent' with `a_parent'.
 		require
 			a_name_attached: a_name /= Void
@@ -45,7 +45,7 @@ feature{NONE} -- Initialization
 			parent_set: parent = a_parent
 		end
 
-	make_with_ast (a_ast: like ast; a_parent: like parent) is
+	make_with_ast (a_ast: like ast; a_parent: like parent)
 			-- Initialize `ast' with `a_ast' and `parent' with `a_parent'.
 		require
 			a_ast_attached: a_ast /= Void
@@ -62,7 +62,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'.
 		require
 			a_name_attached: a_name /= Void
@@ -79,7 +79,7 @@ feature -- Access
 	name: STRING
 			-- Name of current item
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		local
 			l_str: STRING
@@ -99,7 +99,7 @@ feature -- Access
 			Result := internal_hash_code
 		end
 
-	description: STRING is
+	description: STRING
 			-- Description of current item
 		do
 			Result := ""
@@ -107,14 +107,14 @@ feature -- Access
 			no_description_attached_to_a_line: Result.is_equal ("")
 		end
 
-	wrapped_domain: QL_GENERIC_DOMAIN is
+	wrapped_domain: QL_GENERIC_DOMAIN
 			-- A domain which has current as the only item
 		do
 			create Result.make
 			Result.extend (Current)
 		end
 
-	ast: FORMAL_DEC_AS is
+	ast: FORMAL_DEC_AS
 			-- AST node associated with current item
 		local
 			l_list: EIFFEL_LIST [FORMAL_DEC_AS]
@@ -145,7 +145,7 @@ feature -- Access
 			good_result: Result = internal_ast
 		end
 
-	class_i: CLASS_I is
+	class_i: CLASS_I
 			-- CLASS_I object associated with current item
 		local
 			l_class: QL_CLASS
@@ -155,7 +155,7 @@ feature -- Access
 			Result := l_class.class_i
 		end
 
-	class_c: CLASS_C is
+	class_c: CLASS_C
 			-- CLASS_C object associated with current_item
 		local
 			l_class: QL_CLASS
@@ -165,7 +165,7 @@ feature -- Access
 			Result := l_class.class_c
 		end
 
-	written_class: like class_c is
+	written_class: like class_c
 			-- CLASS_C in which current is written
 		do
 			Result := class_c
@@ -173,7 +173,7 @@ feature -- Access
 			good_result: Result = class_c
 		end
 
-	scope: QL_SCOPE is
+	scope: QL_SCOPE
 			-- Scope of current
 		do
 			Result := generic_scope
@@ -181,7 +181,7 @@ feature -- Access
 			good_result: Result = generic_scope
 		end
 
-	path_name_marker: QL_PATH_MARKER is
+	path_name_marker: QL_PATH_MARKER
 			-- Marker for `path_name'
 		do
 			Result := generic_path_marker
@@ -191,7 +191,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_compiled: BOOLEAN is
+	is_compiled: BOOLEAN
 			-- Is Current item compiled?
 		do
 			Result := True
@@ -199,7 +199,7 @@ feature -- Status report
 			good_result: Result
 		end
 
-	has_constraint: BOOLEAN is
+	has_constraint: BOOLEAN
 			-- Does the formal generic parameter have a constraint?
 		do
 			Result := ast.has_constraint
@@ -207,7 +207,7 @@ feature -- Status report
 			good_result: Result implies ast.has_constraint
 		end
 
-	has_creation_constraint: BOOLEAN is
+	has_creation_constraint: BOOLEAN
 			-- Does the construct have a creation constraint?
 		do
 			Result := ast.has_creation_constraint
@@ -215,7 +215,7 @@ feature -- Status report
 			good_result: Result implies ast.has_creation_constraint
 		end
 
-	is_reference: BOOLEAN is
+	is_reference: BOOLEAN
 			-- Is Current formal to be always instantiated as a reference type?
 		do
 			Result := ast.is_reference
@@ -223,7 +223,7 @@ feature -- Status report
 			good_result: Result implies ast.is_reference
 		end
 
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- Is Current formal to be always instantiated as an expanded type?
 		do
 			Result := ast.is_expanded
@@ -231,7 +231,7 @@ feature -- Status report
 			good_result: Result implies ast.is_expanded
 		end
 
-	is_visible: BOOLEAN is
+	is_visible: BOOLEAN
 			-- Is current visible from source domain level?
 		local
 			l_class: QL_CLASS
@@ -243,13 +243,13 @@ feature -- Status report
 
 feature -- Visit
 
-	process (a_visitor: QL_VISITOR) is
+	process (a_visitor: QL_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_generic (Current)
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -269,7 +269,7 @@ invariant
 	parent_attached: parent /= Void
 	parent_valid: parent.is_class and then parent.is_valid_domain_item and then parent.is_compiled
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2008, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

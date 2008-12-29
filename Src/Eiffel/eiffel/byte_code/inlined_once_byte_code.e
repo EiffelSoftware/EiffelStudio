@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class INLINED_ONCE_BYTE_CODE
@@ -24,14 +24,14 @@ create
 
 feature -- Update
 
-	make (std: STD_BYTE_CODE) is
+	make (std: STD_BYTE_CODE)
 			-- Initialize current from non-inlined `std'.
 		do
 			Precursor {INLINED_BYTE_CODE} (std)
 			set_is_global_once (std.is_global_once)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

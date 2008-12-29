@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Check if a given class name is valid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Create check for class name `a_name'.
 		require
 			a_name_not_void: a_name /= void
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-	execute is
+	execute
             -- Execute a check.
         do
 			success := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (new_name)
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	new_name: STRING;
 			-- The name to check.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

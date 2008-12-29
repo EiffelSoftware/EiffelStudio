@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Command that only show failed test case rows in {ES_EWEASEL_TESTING_TOOL_PANEL}'s grid
 																										]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like manager) is
+	make (a_manager: like manager)
 			-- Creation method
 		do
 			manager := a_manager
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	execute is
+	execute
 			-- Redefine
 		do
 			manager.testing_tool.test_case_grid_manager.only_show_failed_test_cases (not is_selected)
@@ -36,7 +36,7 @@ feature -- Command
 
 feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Redefine
 		do
 			if not managed_sd_toolbar_items.is_empty then
@@ -44,37 +44,37 @@ feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 			end
 		end
 
-	menu_name: STRING_GENERAL is
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu (with & symbol).
 		do
 		end
 
-	description: STRING_GENERAL is
+	description: STRING_GENERAL
 			-- Description for this command.
 		do
 			Result := tooltip
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_warning_icon
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_warning_icon_buffer
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 		do
 			Result := "Show_failed_tests_only"
 		end
 
-	tooltip: STRING_GENERAL is
+	tooltip: STRING_GENERAL
 			-- Tooltip for the toolbar button.
 		do
 			Result := interface_names.t_Show_failures_only
@@ -83,7 +83,7 @@ feature {ES_EWEASEL_TESTING_TOOL_PANEL} -- Implementation
 	manager: !ES_EWEASEL_EXECUTION_MANAGER;
 			-- eweasel execution manager
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

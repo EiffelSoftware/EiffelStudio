@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Explicitly named register."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (n: like register_name; t: like c_type) is
+	make (n: like register_name; t: like c_type)
 			-- Create register with name `n' of type `t'
 		require
 			n_attached: n /= Void
@@ -39,7 +39,7 @@ feature -- Access
 	register_name: STRING;
 			-- The ASCII representation of the register
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

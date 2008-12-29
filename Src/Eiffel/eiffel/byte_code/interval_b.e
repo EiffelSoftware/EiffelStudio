@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract representation of an interval in an inspect clause."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ inherit
 
 feature {INTERVAL_B} -- Creation
 
-	make (i: like lower; j: like upper) is
+	make (i: like lower; j: like upper)
 			-- Create a new interval with lower `i' and upper `j'.
 		require
 			i_not_void: i /= Void
@@ -54,7 +54,7 @@ feature  -- Access
 	case_index: INTEGER
 			-- Position of corresponding When_part in inspect instruction
 
-	intersection (other: like Current): like Current is
+	intersection (other: like Current): like Current
 			-- Instersection of `other' and Current
 		require
 			good_argument: other /= Void
@@ -77,7 +77,7 @@ feature  -- Access
 			Result.make (new_lower, new_upper)
 		end
 
-	disjunction (other: like Current): BOOLEAN is
+	disjunction (other: like Current): BOOLEAN
 			-- Is the intersection of Current and `other' null?
 		require
 			good_argument: other /= Void
@@ -90,7 +90,7 @@ feature  -- Access
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is `other' greater than Current?
 		do
 			Result :=
@@ -98,7 +98,7 @@ feature -- Comparison
 				lower.is_equal (other.lower) and then upper < other.upper
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' equal to Current?
 		do
 			Result := lower.is_equal (other.lower) and then upper.is_equal (other.upper)
@@ -106,20 +106,20 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_lower_included: BOOLEAN is true
+	is_lower_included: BOOLEAN = true
 			-- Is `lower' included in an interval?
 
-	is_upper_included: BOOLEAN is true
+	is_upper_included: BOOLEAN = true
 			-- Is `upper' included in an interval?
 
 feature -- Measurement
 
-	count: DOUBLE is 1.0
+	count: DOUBLE = 1.0
 			-- Number of intervals and gaps in current span
 
 feature -- Modification
 
-	set_upper (new_upper: like upper) is
+	set_upper (new_upper: like upper)
 			-- Set `upper' to `new_upper'.
 		require
 			new_upper_not_void: new_upper /= Void
@@ -131,7 +131,7 @@ feature -- Modification
 			upper_set: upper = new_upper
 		end
 
-	set_case_index (i: INTEGER) is
+	set_case_index (i: INTEGER)
 			-- Set `case_index' to `i'.
 		require
 			valid_index: i > 0
@@ -143,7 +143,7 @@ feature -- Modification
 
 feature -- Output
 
-	display (a_text_formatter: TEXT_FORMATTER) is
+	display (a_text_formatter: TEXT_FORMATTER)
 		do
 			lower.display (a_text_formatter)
 			a_text_formatter.add_string ("..")
@@ -152,7 +152,7 @@ feature -- Output
 
 feature -- C code generation
 
-	generate is
+	generate
 			-- Generate the interval.
 		do
 			lower.generate_interval (upper)
@@ -160,7 +160,7 @@ feature -- C code generation
 
 feature -- IL code generation
 
-	generate_il (a_generator: IL_NODE_GENERATOR; min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B) is
+	generate_il (a_generator: IL_NODE_GENERATOR; min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B)
 			-- Generate code for single interval of `instruction' assuming that inspect value is in range `min_value'..`max_value'
 			-- where bounds are included in interval according to values of `is_min_included' and `is_max_included'.
 			-- Use `labels' to branch to the corresponding code.
@@ -236,7 +236,7 @@ invariant
 	bounds_of_same_type: lower.same_type (upper)
 	valid_range: lower <= upper
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

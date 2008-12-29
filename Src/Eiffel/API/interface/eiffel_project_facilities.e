@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Routines generally used on Eiffel_project clients."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	class_by_name (name: STRING): CLASS_I is
+	class_by_name (name: STRING): CLASS_I
 			-- Return class with `name'. `Void' if not in system.
 		require
 			name_not_void: name /= Void
@@ -27,7 +27,7 @@ feature -- Access
 			end
 		end
 
-	cluster_by_name (name: STRING): CLUSTER_I is
+	cluster_by_name (name: STRING): CLUSTER_I
 			-- Return cluster with `name'. `Void' if not in system.
 		require
 			name_not_void: name /= Void
@@ -35,7 +35,7 @@ feature -- Access
 			Result := Eiffel_universe.cluster_of_name (name)
 		end
 
-	feature_by_name (name: STRING): E_FEATURE is
+	feature_by_name (name: STRING): E_FEATURE
 			-- Return feature in current class with `name'. `Void' if not in system.
 		local
 			cc: CLASS_C
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Helper		
 
-	group_name_presentation (sep: STRING_32; a_name: STRING_32; a_group: CONF_GROUP): STRING_32 is
+	group_name_presentation (sep: STRING_32; a_name: STRING_32; a_group: CONF_GROUP): STRING_32
 			-- Name presentation of `a_group' + `sep' + `a_name'. i.e. "a.a_name"
 		require
 			sep_not_void: sep /= Void
@@ -105,7 +105,7 @@ feature -- Helper
 			group_name_presentation_not_void: Result /= Void
 		end
 
-	path_representation (sep: STRING_32; a_name: STRING_32; a_group: CONF_GROUP; dotdot_path: BOOLEAN): STRING_32 is
+	path_representation (sep: STRING_32; a_name: STRING_32; a_group: CONF_GROUP; dotdot_path: BOOLEAN): STRING_32
 			-- Path representation
 			-- If dotdot, we do ../../ instead of name/name/
 		require
@@ -136,7 +136,7 @@ feature -- Helper
 			path_representation_not_void: Result /= Void
 		end
 
-	subclusters_of_group (a_group: CONF_GROUP): DS_ARRAYED_LIST [CONF_CLUSTER] is
+	subclusters_of_group (a_group: CONF_GROUP): DS_ARRAYED_LIST [CONF_CLUSTER]
 			-- Subclusters of a group.
 		require
 			a_group_not_void: a_group /= Void
@@ -184,7 +184,7 @@ feature -- Helper
 			sorted: (({DS_ARRAYED_LIST [CONF_GROUP]}) [Result]).sorted (group_sorter)
 		end
 
-	top_level_clusters: DS_ARRAYED_LIST [CONF_GROUP] is
+	top_level_clusters: DS_ARRAYED_LIST [CONF_GROUP]
 			-- Top level clusters in the system
 		local
 			l_groups: ARRAYED_LIST [CONF_GROUP]
@@ -215,7 +215,7 @@ feature -- Helper
 
 feature {NONE} -- Implementation
 
-	group_sorter: DS_QUICK_SORTER [CONF_GROUP] is
+	group_sorter: DS_QUICK_SORTER [CONF_GROUP]
 			-- Sorter of group in alphabetical order.
 		once
 			create Result.make (create {KL_COMPARABLE_COMPARATOR [CONF_GROUP]}.make)
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			group_sorter_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

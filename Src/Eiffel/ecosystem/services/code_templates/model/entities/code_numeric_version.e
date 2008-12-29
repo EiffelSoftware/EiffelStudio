@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents a code model numeric 4-part version, for template versioning.
 	]"
@@ -193,7 +193,7 @@ feature {NONE} -- Actions handlers
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- <Precursor>
 		do
 			if {l_other: !CODE_NUMERIC_VERSION} other then
@@ -219,7 +219,7 @@ feature -- Comparison
 			end
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

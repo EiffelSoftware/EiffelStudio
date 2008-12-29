@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error for export validity violation."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_for_none (a_feature_name: STRING) is
+	make_for_none (a_feature_name: STRING)
 			-- Create a VUEX error for special case `v.f' where `v' is of type NONE.
 		do
 			is_target_none := True
@@ -40,14 +40,14 @@ feature -- Properties
 
 	exported_feature: E_FEATURE;
 
-	code: STRING is "VUEX";
+	code: STRING = "VUEX";
 			-- Error code
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER = 2;
 
 feature -- Access
 
-	is_defined: BOOLEAN is
+	is_defined: BOOLEAN
 			-- Is the error fully defined?
 		do
 			Result := is_class_defined and then is_feature_defined and then
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Build specific explanation image for current error
 			-- in `a_text_formatter'.
 		local
@@ -85,7 +85,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_static_class (c: CLASS_C) is
+	set_static_class (c: CLASS_C)
 			-- Assign `c' to `static_class'.
 		require
 			valid_c: c /= Void
@@ -93,7 +93,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			static_class := c
 		end;
 
-	set_exported_feature (f: FEATURE_I) is
+	set_exported_feature (f: FEATURE_I)
 			-- Assign `f' to `exported_feature'.
 		require
 			valid_f: f /= Void
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation: Access
 invariant
 	feature_name_set: is_target_none implies feature_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

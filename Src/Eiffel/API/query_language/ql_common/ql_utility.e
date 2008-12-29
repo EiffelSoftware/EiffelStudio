@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Query Language utilities"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Status report
 
-	is_class_compiled (a_conf_class: CONF_CLASS): BOOLEAN is
+	is_class_compiled (a_conf_class: CONF_CLASS): BOOLEAN
 			-- Does `a_conf_class' represent a compiled class?
 		local
 			l_class_i: CLASS_I
@@ -29,7 +29,7 @@ feature -- Status report
 
 feature -- Access
 
-	query_feature_item_from_e_feature (a_feature: E_FEATURE): QL_FEATURE is
+	query_feature_item_from_e_feature (a_feature: E_FEATURE): QL_FEATURE
 			-- Given a E_FEATURE object, return a QL_FEATURE object representing it.
 		require
 			a_feature_attached: a_feature /= Void
@@ -43,7 +43,7 @@ feature -- Access
 			result_valid: Result.is_valid_domain_item
 		end
 
-	query_class_item_from_class_c (a_class_c: CLASS_C): QL_CLASS is
+	query_class_item_from_class_c (a_class_c: CLASS_C): QL_CLASS
 			-- Given a CLASS_C object, return a QL_CLASS object representing it.
 		require
 			a_class_c_attached: a_class_c /= Void
@@ -54,7 +54,7 @@ feature -- Access
 			result_valid: Result.is_valid_domain_item
 		end
 
-	query_class_item_from_class_i (a_class_i: CLASS_I): QL_CLASS is
+	query_class_item_from_class_i (a_class_i: CLASS_I): QL_CLASS
 			-- Given a CLASS_I object, return a QL_CLASS object representing it.
 		require
 			a_class_i_attached: a_class_i /= Void
@@ -65,7 +65,7 @@ feature -- Access
 			result_valid: Result.is_valid_domain_item
 		end
 
-	query_class_item_from_conf_class (a_conf_class: CONF_CLASS): QL_CLASS is
+	query_class_item_from_conf_class (a_conf_class: CONF_CLASS): QL_CLASS
 			-- Given a CONF_CLASS object, return a QL_CLASS object representing it.
 		require
 			a_conf_class_attached: a_conf_class /= Void
@@ -76,7 +76,7 @@ feature -- Access
 			result_valid: Result.is_valid_domain_item
 		end
 
-	query_group_item_from_conf_group (a_group: CONF_GROUP): QL_GROUP is
+	query_group_item_from_conf_group (a_group: CONF_GROUP): QL_GROUP
 			-- Given a CONF_GROUP object, return a QL_GROUP object representing it.
 		require
 			a_group_attached: a_group /= Void
@@ -87,7 +87,7 @@ feature -- Access
 			result_valid: Result.is_valid_domain_item
 		end
 
-	query_target_item_from_conf_target (a_target: CONF_TARGET): QL_TARGET is
+	query_target_item_from_conf_target (a_target: CONF_TARGET): QL_TARGET
 			-- Given a CONF_TARGET object, return a QL_TARGET object representing it.
 		require
 			a_target_attached: a_target /= Void
@@ -127,7 +127,7 @@ feature -- Access
 
 feature -- Type
 
-	actual_type_from_type_a (a_class: CLASS_C; a_type: TYPE_A): CLASS_C is
+	actual_type_from_type_a (a_class: CLASS_C; a_type: TYPE_A): CLASS_C
 			-- Actual type from `a_type' in context of `a_class'
 		require
 			a_class_attached: a_class /= Void
@@ -147,7 +147,7 @@ feature -- Type
 
 feature -- Equality tester
 
-	is_class_equal (a_class, b_class: QL_CLASS): BOOLEAN is
+	is_class_equal (a_class, b_class: QL_CLASS): BOOLEAN
 			-- Does `a_class' equal to `b_class'?
 		require
 			a_class_attached: a_class /= Void
@@ -158,7 +158,7 @@ feature -- Equality tester
 			good_result: Result = a_class.is_equal (b_class)
 		end
 
-	is_feature_equal (a_feature, b_feature: QL_FEATURE): BOOLEAN is
+	is_feature_equal (a_feature, b_feature: QL_FEATURE): BOOLEAN
 			-- Does `a_feature' equal to `b_feature'?
 		require
 			a_feature_attached: a_feature /= Void
@@ -171,7 +171,7 @@ feature -- Equality tester
 
 feature{NONE} -- Implementation
 
-	find_path_from_conf_group (a_list: LINKED_LIST [QL_ITEM]; a_group: CONF_GROUP; a_stop_on_target: BOOLEAN) is
+	find_path_from_conf_group (a_list: LINKED_LIST [QL_ITEM]; a_group: CONF_GROUP; a_stop_on_target: BOOLEAN)
 			-- Find a path from `a_group' to current system target, and
 			-- save this path in `a_list'.
 			-- If `a_stop_on_target' is True, stop path building when we meet a target component.
@@ -229,7 +229,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	set_parents (a_list: LIST [QL_ITEM]) is
+	set_parents (a_list: LIST [QL_ITEM])
 			-- Set parent of every item in `a_list'.
 		require
 			a_list_attached: a_list /= Void
@@ -251,7 +251,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	conf_group_as_parent (a_group: CONF_GROUP; a_stop_on_target: BOOLEAN): QL_ITEM is
+	conf_group_as_parent (a_group: CONF_GROUP; a_stop_on_target: BOOLEAN): QL_ITEM
 			-- Return query language representation of `a_group'.
 			-- Result's parent is already setup.
 			-- If `a_stop_on_target' is True, stop path building when we meet a target component.			
@@ -269,7 +269,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	constrained_type (a_class_c: CLASS_C; a_type: TYPE_A): TYPE_A is
+	constrained_type (a_class_c: CLASS_C; a_type: TYPE_A): TYPE_A
 			-- Constrained type of `a_type'.
 		require
 			a_class_c_attached: a_class_c /= Void
@@ -289,7 +289,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

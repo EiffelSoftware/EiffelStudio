@@ -1,4 +1,4 @@
-indexing
+note
 	description: "entry for manifest strings in constant pool. they only store a ref to a utf8 entry"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialisation
 
-	make (a_utf8_index: INTEGER) is
+	make (a_utf8_index: INTEGER)
 		require
 			valid_index: a_utf8_index > 0
 		do
@@ -33,11 +33,11 @@ feature {NONE} -- Initialisation
 			
 feature -- Access
 
-	tag_id: INTEGER is 8
+	tag_id: INTEGER = 8
 	
 	utf8_index: INTEGER
 			
-	close is
+	close
 		do
 			create bc.make_size (Int_16_size + Int_8_size)
 			append_tag_info (bc)
@@ -45,19 +45,19 @@ feature -- Access
 			Precursor
 		end
 			
-	emit (file: RAW_FILE) is
+	emit (file: RAW_FILE)
 		do
 			bc.emit (file)
 		end
 			
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
 			Result := same_type (other) and then utf8_index = other.utf8_index
 		end
 			
-	out: STRING is
+	out: STRING
 		do
 			Result := "STRING(index): " + utf8_index.out
 		end
@@ -70,7 +70,7 @@ invariant
 			
 	closed_implies_bc_exists: is_closed implies bc /= Void
 						
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

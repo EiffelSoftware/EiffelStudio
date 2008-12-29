@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Basic help provider context, providing contextual information through external parameters.
 	]"
@@ -74,7 +74,7 @@ feature {NONE} -- Internal implementation cache
 	internal_help_provider: like help_provider
 			-- Mutable version of `help_provider'
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

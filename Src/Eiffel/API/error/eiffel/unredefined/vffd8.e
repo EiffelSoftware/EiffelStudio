@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Error for a once function having an anchored type."
@@ -18,9 +18,9 @@ inherit
 
 feature -- Properties
 
-	subcode: INTEGER is 8;
+	subcode: INTEGER = 8;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

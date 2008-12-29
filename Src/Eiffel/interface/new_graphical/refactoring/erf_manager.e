@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manages all available refactorings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create
 		do
 			preferences := eb_preferences.preferences
@@ -65,13 +65,13 @@ feature -- Access
 
 feature -- Status
 
-	can_undo: BOOLEAN is
+	can_undo: BOOLEAN
 			-- Is there a refactoring to undo?
 		do
 			Result := not undo_stack.is_empty
 		end
 
-	can_redo: BOOLEAN is
+	can_redo: BOOLEAN
 			-- Is there a refactoring to redo?
 		do
 			Result := not redo_stack.is_empty
@@ -79,7 +79,7 @@ feature -- Status
 
 feature -- Element change
 
-	undo_last is
+	undo_last
 			-- Undo the last refactoring.
 		require
 			can_undo: can_undo
@@ -118,7 +118,7 @@ feature -- Element change
 			enable_sensitive
 		end
 
-	redo_last is
+	redo_last
 			-- Redo the last refactoring.
 		require
 			can_redo: can_redo
@@ -153,7 +153,7 @@ feature -- Element change
 			enable_sensitive
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Enable the commands.
 		do
 			pull_command.enable_sensitive
@@ -170,7 +170,7 @@ feature -- Element change
 			end
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Disable the commands and forget undo informations.
 		do
 			pull_command.disable_sensitive
@@ -179,14 +179,14 @@ feature -- Element change
 			redo_command.disable_sensitive
 		end
 
-	destroy is
+	destroy
 			-- Called before the object ist destroyed.
 		do
 			destroy_undo
 			destroy_redo
 		end
 
-	forget_undo_redo is
+	forget_undo_redo
 			-- Forget any associated undo or redo information.
 		do
 			destroy_undo
@@ -195,7 +195,7 @@ feature -- Element change
 
 feature -- Basic operation
 
-	execute_refactoring (a_refactoring: ERF_REFACTORING) is
+	execute_refactoring (a_refactoring: ERF_REFACTORING)
 			-- Execute `a_refactoring'.
 		do
 			logger.refactoring_start
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 	redo_stack: LINKED_STACK [ LIST [ERF_ACTION]]
 			--  The stack of list of commands where all undone actions have to be registered for them to be redoable.
 
-	destroy_undo is
+	destroy_undo
 			-- Destroy the undo informations
 		local
 			l_actions: LIST [ERF_ACTION]
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	destroy_redo is
+	destroy_redo
 			-- Destroy the redo informations
 		local
 			l_actions: LIST [ERF_ACTION]
@@ -283,7 +283,7 @@ invariant
 	undo_command_not_void: undo_command /= Void
 	redo_command_not_void: redo_command /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

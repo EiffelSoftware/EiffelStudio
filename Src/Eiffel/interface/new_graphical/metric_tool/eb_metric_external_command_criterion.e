@@ -1,4 +1,4 @@
-indexing
+note
 	description: "External command criterion"
 	author: ""
 	date: "$Date$"
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_scope: like scope; a_name: STRING) is
+	make (a_scope: like scope; a_name: STRING)
 			-- Initialize `scope' with `a_scope' and `name' with `a_name'.
 		do
 			Precursor (a_scope, a_name)
@@ -29,7 +29,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	new_criterion (a_scope: QL_SCOPE): QL_CRITERION is
+	new_criterion (a_scope: QL_SCOPE): QL_CRITERION
 			-- QL_CRITERION representing current criterion			
 			-- `a_scope' is only used in delayed criterion.			
 		do
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_parameter_valid: BOOLEAN is
+	is_parameter_valid: BOOLEAN
 			-- Is parameters of current criterion valid?
 		do
 			Result := tester.is_command_specified
@@ -50,12 +50,12 @@ feature -- Status report
 			good_result: Result = tester.is_command_specified
 		end
 
-	is_external_command_criterion: BOOLEAN is True
+	is_external_command_criterion: BOOLEAN = True
 			-- Is current an external command criterion?
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
+	process (a_visitor: EB_METRIC_VISITOR)
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_external_command_criterion (Current)

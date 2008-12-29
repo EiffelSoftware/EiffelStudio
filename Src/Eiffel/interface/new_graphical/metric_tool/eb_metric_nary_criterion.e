@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a n-nary criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_scope: like scope; a_name: STRING) is
+	make (a_scope: like scope; a_name: STRING)
 			-- Initialize `scope' with `a_scope', `name' with `a_name' and `operands'.
 		require
 			a_scope_attached: a_scope /= Void
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_parameter_valid: BOOLEAN is
+	is_parameter_valid: BOOLEAN
 			-- Is parameters of current criterion valid?
 		local
 			l_cursor: CURSOR
@@ -63,13 +63,13 @@ feature -- Status report
 			end
 		end
 
-	is_nary_criterion: BOOLEAN is True
+	is_nary_criterion: BOOLEAN = True
 			-- Is current a nary criterion?
 
 invariant
 	operands_attached: operands /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

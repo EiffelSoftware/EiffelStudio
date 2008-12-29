@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Graphical version for project loading."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -77,7 +77,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: like parent_window) is
+	make (a_parent: like parent_window)
 			-- New instance of EB_GRAPHICAL_PROJECT_LOADER where dialogs are shown
 			-- either relative or modal to `a_parent'.
 		require
@@ -107,7 +107,7 @@ feature -- Status report
 
 feature -- Settings
 
-	set_is_project_location_requested (v: like is_project_location_requested) is
+	set_is_project_location_requested (v: like is_project_location_requested)
 			-- Set `is_project_location_requested' with `v'.
 		do
 			is_project_location_requested := v
@@ -115,14 +115,14 @@ feature -- Settings
 			is_project_location_requested_set: is_project_location_requested = v
 		end
 
-	compile_project is
+	compile_project
 			-- Compile newly created project.
 		do
 			ev_application.do_once_on_idle (
 				agent (window_manager.last_focused_development_window.melt_project_cmd).execute)
 		end
 
-	launch_precompile_process (a_arguments: LIST [STRING]) is
+	launch_precompile_process (a_arguments: LIST [STRING])
 			-- Launch precompile process `a_command'.
 		local
 			l_prc_factory: PROCESS_FACTORY
@@ -148,7 +148,7 @@ feature -- Settings
 			end
 		end
 
-	open_project (in_new_studio: BOOLEAN) is
+	open_project (in_new_studio: BOOLEAN)
 			-- Open project.
 		require
 			not_has_error: not has_error
@@ -159,7 +159,7 @@ feature -- Settings
 			end
 		end
 
-	melt_project (in_new_studio: BOOLEAN) is
+	melt_project (in_new_studio: BOOLEAN)
 			-- Open project.
 		require
 			not_has_error: not has_error
@@ -174,7 +174,7 @@ feature -- Settings
 			end
 		end
 
-	precompile_project (in_new_studio: BOOLEAN) is
+	precompile_project (in_new_studio: BOOLEAN)
 			-- Compile newly created project.
 		require
 			not_has_error: not has_error
@@ -189,7 +189,7 @@ feature -- Settings
 			end
 		end
 
-	freeze_project (in_new_studio: BOOLEAN) is
+	freeze_project (in_new_studio: BOOLEAN)
 			-- Compile newly created project.
 		require
 			not_has_error: not has_error
@@ -204,7 +204,7 @@ feature -- Settings
 			end
 		end
 
-	finalize_project (in_new_studio: BOOLEAN) is
+	finalize_project (in_new_studio: BOOLEAN)
 			-- Compile newly created project.
 		require
 			not_has_error: not has_error
@@ -221,7 +221,7 @@ feature -- Settings
 
 feature {NONE} -- Actions
 
-	post_create_project is
+	post_create_project
 			-- Actions performed after creating a new project.
 		do
 				-- Destroy and forget `deleting_dialog' if it was used.
@@ -231,7 +231,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	retrieve_or_create_project (a_project_path: STRING_8) is
+	retrieve_or_create_project (a_project_path: STRING_8)
 			-- Retrieve or create project.
 		local
 			l_win: EB_DEVELOPMENT_WINDOW
@@ -247,7 +247,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	estudio_cmd_line: STRING is
+	estudio_cmd_line: STRING
 			-- Command line to open/compile currently selected project.
 		require
 			not_has_error: not has_error
@@ -268,61 +268,61 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Error reporting
 
-	report_non_readable_configuration_file (a_file_name: STRING) is
+	report_non_readable_configuration_file (a_file_name: STRING)
 			-- Report an error when `a_file_name' cannot be read.
 		do
 			report_loading_error (warning_messages.w_cannot_read_file (a_file_name))
 		end
 
-	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: STRING) is
+	report_non_readable_ace_file_in_epr (a_epr_name, a_file_name: STRING)
 			-- Report an error when ace file `a_file_name' cannot be accessed from epr file `a_epr_name'.
 			-- Note that `a_file_name' can be Void if `a_epr_name' does not mention it.
 		do
 			report_loading_error (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name, a_file_name))
 		end
 
-	report_cannot_read_ace_file (a_file_name: STRING; a_conf_error: CONF_ERROR) is
+	report_cannot_read_ace_file (a_file_name: STRING; a_conf_error: CONF_ERROR)
 			-- Report an error when ace  file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		do
 			report_loading_error (warning_messages.w_unable_to_load_ace_file (a_file_name, a_conf_error.text))
 		end
 
-	report_cannot_read_config_file (a_file_name: STRING; a_conf_error: CONF_ERROR) is
+	report_cannot_read_config_file (a_file_name: STRING; a_conf_error: CONF_ERROR)
 			-- Report an error when a config file `a_file_name' can be read, but its content cannot
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		do
 			report_loading_error (warning_messages.w_unable_to_load_config_file (a_file_name, a_conf_error.text))
 		end
 
-	report_cannot_save_converted_file (a_file_name: STRING) is
+	report_cannot_save_converted_file (a_file_name: STRING)
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		do
 			report_loading_error (warning_messages.w_cannot_save_file (a_file_name))
 		end
 
-	report_cannot_convert_project (a_file_name: STRING) is
+	report_cannot_convert_project (a_file_name: STRING)
 			-- Report an error when result of a conversion from ace `a_file_name' to new format failed.
 		do
 			report_loading_error (warning_messages.w_cannot_convert_file (a_file_name))
 		end
 
-	report_cannot_create_project (a_dir_name: STRING) is
+	report_cannot_create_project (a_dir_name: STRING)
 			-- Report an error when we cannot create project in `a_dir_name'.
 		do
 			report_loading_error (warning_messages.w_cannot_create_project_directory (a_dir_name))
 		end
 
 
-	report_cannot_open_project (a_msg: STRING_GENERAL) is
+	report_cannot_open_project (a_msg: STRING_GENERAL)
 			-- Report an error when project cannot be read/write for some reasons
 			-- and possibly propose user to upgrade
 		do
 			report_loading_error (a_msg)
 		end
 
-	report_incompatible_project (a_msg: STRING_GENERAL) is
+	report_incompatible_project (a_msg: STRING_GENERAL)
 			-- Report an error when retrieving an incompatible project and possibly
 			-- propose user to upgrade.
 		local
@@ -338,27 +338,27 @@ feature {NONE} -- Error reporting
 			end
 		end
 
-	report_project_corrupted (a_msg: STRING_GENERAL) is
+	report_project_corrupted (a_msg: STRING_GENERAL)
 			-- Report an error when retrieving a project which is corrupted and possibly
 			-- propose user to recompile from scratch.
 		do
 			report_loading_error (a_msg)
 		end
 
-	report_project_retrieval_interrupted (a_msg: STRING_GENERAL) is
+	report_project_retrieval_interrupted (a_msg: STRING_GENERAL)
 			-- Report an error when project retrieval was stopped.
 		do
 			report_loading_error (a_msg)
 		end
 
-	report_project_incomplete (a_msg: STRING_GENERAL) is
+	report_project_incomplete (a_msg: STRING_GENERAL)
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		do
 			report_loading_error (a_msg)
 		end
 
-	report_project_loaded_successfully is
+	report_project_loaded_successfully
 			-- Report that project was loaded successfully.
 		local
 			l_title: STRING_GENERAL
@@ -386,13 +386,13 @@ feature {NONE} -- Error reporting
 
 		end
 
-	report_precompilation_error is
+	report_precompilation_error
 			-- Report that the precompilation of a precompile did not work.
 		do
 			report_loading_error (warning_messages.w_project_build_precompile_error)
 		end
 
-	report_loading_error (a_msg: STRING_GENERAL) is
+	report_loading_error (a_msg: STRING_GENERAL)
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		require
@@ -409,7 +409,7 @@ feature {NONE} -- Error reporting
 
 feature {NONE} -- User interaction
 
-	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]]) is
+	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]])
 			-- Given `a_dir_name' and a proposed `a_file_name' name for the new format, ask the
 			-- user if he wants to create `a_file_name' or a different name. If he said yes, then
 			-- execute `a_action' with chosen file_name, otherwise do nothing.
@@ -443,7 +443,7 @@ feature {NONE} -- User interaction
 			l_ev.show_modal_to_window (parent_window)
 		end
 
-	select_config_file (a_dlg: EV_FILE_SAVE_DIALOG; a_action: PROCEDURE [ANY, TUPLE]) is
+	select_config_file (a_dlg: EV_FILE_SAVE_DIALOG; a_action: PROCEDURE [ANY, TUPLE])
 			-- Given a save dialog `a_dlg', check if the selected file does not exist, and then
 			-- execute `a_action'. If file exists, display a warning and ask if user wants to
 			-- override that file or not. If overriden, then execute `a_action', otherwise
@@ -466,7 +466,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_for_target_name (a_target: STRING; a_targets: DS_ARRAYED_LIST [STRING]) is
+	ask_for_target_name (a_target: STRING; a_targets: DS_ARRAYED_LIST [STRING])
 			-- Ask user to choose one target among `a_targets'.
 			-- If not Void, `a_target' is the one selected by user.
 		local
@@ -557,7 +557,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_for_new_project_location (a_project_path: STRING) is
+	ask_for_new_project_location (a_project_path: STRING)
 			-- Given a proposed location `a_project_path', ask user if he wants
 			-- this location or another one.
 		local
@@ -573,7 +573,7 @@ feature {NONE} -- User interaction
 			end
 		end
 
-	ask_compile_precompile is
+	ask_compile_precompile
 			-- Should a needed precompile be automatically built?
 		local
 			l_question: ES_DISCARDABLE_QUESTION_PROMPT
@@ -583,7 +583,7 @@ feature {NONE} -- User interaction
 			l_question.show (parent_window)
 		end
 
-	ask_environment_update (a_key, a_old_val, a_new_val: STRING) is
+	ask_environment_update (a_key, a_old_val, a_new_val: STRING)
 			-- Should new environment values be accepted?
 		local
 			l_question: ES_QUESTION_PROMPT
@@ -599,7 +599,7 @@ feature {NONE} -- Actions
 	choose_again: BOOLEAN
 			-- We need to choose again the file
 
-	on_delete_directory (deleted_files: ARRAYED_LIST [STRING]) is
+	on_delete_directory (deleted_files: ARRAYED_LIST [STRING])
 			-- The files in `deleted_files' have just been deleted.
 			-- Display
 		local
@@ -621,19 +621,19 @@ feature {NONE} -- Actions
 			ev_application.process_events
 		end
 
-	on_cancel_button_pushed is
+	on_cancel_button_pushed
 			-- The user has just pushed the "Cancel" in the deleting dialog.
 		do
 			is_deletion_cancelled := True
 		end
 
-	on_cancel_operation: BOOLEAN is
+	on_cancel_operation: BOOLEAN
 			-- Has the user pushed the "Cancel" in the deleting dialog?
 		do
 			Result := is_deletion_cancelled
 		end
 
-	on_select_button_pushed (a_dlg: EV_DIALOG; a_list: EV_LIST) is
+	on_select_button_pushed (a_dlg: EV_DIALOG; a_list: EV_LIST)
 			-- Action when user click Select button for a target.
 		require
 			a_dlg_not_void: a_dlg /= Void
@@ -649,7 +649,7 @@ feature {NONE} -- Actions
 			target_name_set: old a_list.selected_item /= Void implies (target_name /= Void)
 		end
 
-	on_target_selected (a_dlg: EV_DIALOG; a_item: EV_LIST_ITEM) is
+	on_target_selected (a_dlg: EV_DIALOG; a_item: EV_LIST_ITEM)
 			-- Action when user select a target with a double click.
 		require
 			a_dlg_not_void: a_dlg /= Void
@@ -661,7 +661,7 @@ feature {NONE} -- Actions
 			a_dlg.destroy
 		end
 
-	on_cancelled (a_dlg: EV_DIALOG) is
+	on_cancelled (a_dlg: EV_DIALOG)
 			-- Action when user select a target with a double click.
 		require
 			a_dlg_not_void: a_dlg /= Void
@@ -706,7 +706,7 @@ invariant
 	parent_window_not_void: parent_window /= Void
 	parent_window_not_destroyed: not parent_window.is_destroyed
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

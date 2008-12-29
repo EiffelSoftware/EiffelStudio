@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Degree 5 during Eiffel compilation"
 	legal: "See notice at end of class."
@@ -25,12 +25,12 @@ create
 
 feature -- Access
 
-	Degree_number: INTEGER is 5
+	Degree_number: INTEGER = 5
 			-- Degree number
 
 feature -- Status report
 
-	is_in_tmp_ast_server (a_class: CLASS_C): BOOLEAN is
+	is_in_tmp_ast_server (a_class: CLASS_C): BOOLEAN
 			-- Is `a_class' ast in the temporary server?
 		require
 			a_class_not_void: a_class /= Void
@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Processing
 
-	execute is
+	execute
 			-- Process all classes.
 		local
 			i, nb_errors: INTEGER
@@ -103,7 +103,7 @@ feature -- Processing
 			l_degree_output.put_end_degree
 		end
 
-	post_degree_5_execute is
+	post_degree_5_execute
 			-- Initialize `parents' for all recompiled classes.
 			-- It needs to be done after all VTCT errors have been reported.
 		local
@@ -150,7 +150,7 @@ feature -- Processing
 
 feature {NONE} -- Processing
 
-	process_class (a_class: CLASS_C) is
+	process_class (a_class: CLASS_C)
 			-- Syntax analysis on `a_class'.
 		require
 			a_class_not_void: a_class /= Void
@@ -183,7 +183,7 @@ feature {NONE} -- Processing
 
 feature -- Element change
 
-	insert_class (a_class: CLASS_C) is
+	insert_class (a_class: CLASS_C)
 			-- Add `a_class' to be processed.
 		do
 			if not a_class.degree_5_needed then
@@ -192,7 +192,7 @@ feature -- Element change
 			end
 		end
 
-	insert_new_class (a_class: CLASS_C) is
+	insert_new_class (a_class: CLASS_C)
 			-- Add `a_class' to be processed.
 			-- Mark it as new compilation.
 		do
@@ -200,7 +200,7 @@ feature -- Element change
 			a_class.set_parsing_needed (True)
 		end
 
-	insert_changed_class (a_class: CLASS_C) is
+	insert_changed_class (a_class: CLASS_C)
 			--
 		require
 			a_class_not_void: a_class /= Void
@@ -210,7 +210,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_class (a_class: CLASS_C) is
+	remove_class (a_class: CLASS_C)
 			-- Remove `a_class'.
 		do
 			if a_class.degree_5_needed then
@@ -219,7 +219,7 @@ feature -- Removal
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all classes.
 		local
 			i, nb: INTEGER
@@ -243,7 +243,7 @@ feature -- Removal
 			count := 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

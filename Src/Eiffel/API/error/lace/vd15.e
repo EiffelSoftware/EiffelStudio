@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Error for invalid value for option."
@@ -24,7 +24,7 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			a_text_formatter.add ("Option: ");
 			a_text_formatter.add (option_name);
@@ -40,17 +40,17 @@ feature -- Output
 
 feature {LACE_I} -- Setting
 
-	set_option_name (s: STRING) is
+	set_option_name (s: STRING)
 		do
 			option_name := s;
 		end;
 
-	set_option_value (s: STRING) is
+	set_option_value (s: STRING)
 		do
 			option_value := s;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

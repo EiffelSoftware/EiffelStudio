@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to setup external command criterion"
 	author: ""
 	date: "$Date$"
@@ -34,7 +34,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			l_main: EV_VERTICAL_BOX
@@ -290,7 +290,7 @@ feature -- Access
 
 feature{NONE} -- Actions
 
-	on_show is
+	on_show
 			-- Action to be performed when Current dialog is shown
 		local
 			l_value: like value
@@ -319,7 +319,7 @@ feature{NONE} -- Actions
 			update_ui
 		end
 
-	on_ok is
+	on_ok
 			-- Action to be performed when "OK" button is pressed
 		local
 			l_value: like value
@@ -364,7 +364,7 @@ feature{NONE} -- Implementation
 	is_ui_update_blocked: BOOLEAN
 			-- Is `update_ui' blocked?
 
-	set_is_ui_update_blocked (b: BOOLEAN) is
+	set_is_ui_update_blocked (b: BOOLEAN)
 			-- Set `is_ui_update_blocked' with `b'.
 		do
 			is_ui_update_blocked := b
@@ -373,7 +373,7 @@ feature{NONE} -- Implementation
 		end
 
 
-	update_ui is
+	update_ui
 			-- Update interface.
 		local
 			l_text: EV_TEXT
@@ -430,7 +430,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	update_checkbox_status (a_checkbox: EV_CHECK_BUTTON; a_selected: BOOLEAN) is
+	update_checkbox_status (a_checkbox: EV_CHECK_BUTTON; a_selected: BOOLEAN)
 			-- Update selection status of `a_checkbox' with `a_selected'.
 		require
 			a_checkbox_attached: a_checkbox /= Void
@@ -442,7 +442,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	extend_cell_in_box (a_width, a_height: INTEGER; a_expand_allowed: BOOLEAN; a_box: EV_BOX) is
+	extend_cell_in_box (a_width, a_height: INTEGER; a_expand_allowed: BOOLEAN; a_box: EV_BOX)
 			-- Insert an EV_CELL with (`a_width', `a_height') as mininum width and height into `a_box'.
 			-- If `a_expanded_allowed' is True, allow that inserted EV_CELL to expand.
 		require
@@ -458,7 +458,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	extend_widget_in_box (a_widget: EV_WIDGET; a_allow_expand: BOOLEAN; a_box: EV_BOX) is
+	extend_widget_in_box (a_widget: EV_WIDGET; a_allow_expand: BOOLEAN; a_box: EV_BOX)
 			-- Insert `a_widget' into `a_box'.
 		require
 			a_widget_attached: a_widget /= Void
@@ -470,7 +470,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	set_working_directory (a_dir_dlg: EV_DIRECTORY_DIALOG) is
+	set_working_directory (a_dir_dlg: EV_DIRECTORY_DIALOG)
 			-- Set text of `working_directory_field' with directory specified in `a_dir_dlg'.
 		require
 			a_dir_dlg_attached: a_dir_dlg /= Void
@@ -478,7 +478,7 @@ feature{NONE} -- Implementation
 			working_directory_field.set_text (a_dir_dlg.directory)
 		end
 
-	show_dialog (a_dialog: EV_STANDARD_DIALOG) is
+	show_dialog (a_dialog: EV_STANDARD_DIALOG)
 			-- Show `a_dialog'.
 		require
 			a_dialog_attached: a_dialog /= Void
@@ -486,7 +486,7 @@ feature{NONE} -- Implementation
 			a_dialog.show_modal_to_window (parent_window (Current))
 		end
 
-	placeholder_list: SORTABLE_ARRAY [NAME_FOR_COMPLETION] is
+	placeholder_list: SORTABLE_ARRAY [NAME_FOR_COMPLETION]
 			-- Placeholder list
 		do
 			if placeholder_list_internal = Void then

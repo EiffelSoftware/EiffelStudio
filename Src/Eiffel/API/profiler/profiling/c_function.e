@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Information about a profiled C function."
@@ -17,7 +17,7 @@ create
 
 feature -- Creation
 
-	make (new_name: STRING) is
+	make (new_name: STRING)
 			-- Create a C function with function name
 			-- `new_name'.
 		do
@@ -26,7 +26,7 @@ feature -- Creation
 
 feature -- Output
 
-	name: STRING is
+	name: STRING
 			-- The name of the function.
 		do
 			Result := function_name
@@ -37,7 +37,7 @@ feature {NONE} -- Attributes
 	function_name: STRING;
 		-- C function name as declared in source code.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

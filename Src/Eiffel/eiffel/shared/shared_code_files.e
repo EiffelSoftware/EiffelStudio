@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Helper for creating files used in C code generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Makefile generation
 
-	Make_f (final_mode: BOOLEAN): INDENT_FILE is
+	Make_f (final_mode: BOOLEAN): INDENT_FILE
 			-- Makefile for C compilation
 		local
 			p: STRING
@@ -33,7 +33,7 @@ feature -- Makefile generation
 
 feature -- C code generation
 
-	gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING is
+	gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING
 			-- Generate a file name either in workbench or final mode with
 			-- a `.c' extension in the E1 directory.
 		require
@@ -44,7 +44,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	x_gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING is
+	x_gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING
 			-- Generate a file name either in workbench or final mode with
 			-- a `.x' extension in the E1 directory.
 		require
@@ -59,7 +59,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	final_file_name (base_name, extension: STRING; n: INTEGER): STRING is
+	final_file_name (base_name, extension: STRING; n: INTEGER): STRING
 			-- Generate a file name in final_mode with file `extension'
 			-- in system directory E`n'.
 		require
@@ -72,7 +72,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	workbench_file_name (base_name, extension: STRING; n: INTEGER): STRING is
+	workbench_file_name (base_name, extension: STRING; n: INTEGER): STRING
 			-- Generate a file in workbench_mode with file `extension'
 			-- in system directory E1.
 		require
@@ -85,7 +85,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	full_file_name (final_mode: BOOLEAN; sub_dir: STRING; file_name, extension: STRING): STRING is
+	full_file_name (final_mode: BOOLEAN; sub_dir: STRING; file_name, extension: STRING): STRING
 			-- Generated file name for `final_mode' creating a subdirectory
 			-- if `sub_dir' is not Void or empty, using `file_name'+`extension' as filename.
 			-- Side effect: Create the corresponding subdirectory if it
@@ -141,7 +141,7 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
-	packet_name (sub_dir_prefix: CHARACTER; a_packet_number: INTEGER): STRING is
+	packet_name (sub_dir_prefix: CHARACTER; a_packet_number: INTEGER): STRING
 			-- Name of subdirectory.
 		require
 			a_packet_number_non_negative: a_packet_number >= 0
@@ -153,7 +153,7 @@ feature -- C code generation
 			packet_name_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

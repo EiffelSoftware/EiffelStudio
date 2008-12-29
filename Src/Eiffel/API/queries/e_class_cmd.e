@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"General notion of an eiffel query command (semantic unity)%
@@ -28,7 +28,7 @@ inherit
 
 feature -- Initialization
 
-	make (a_text_formatter: TEXT_FORMATTER; a_class: CLASS_C) is
+	make (a_text_formatter: TEXT_FORMATTER; a_class: CLASS_C)
 			-- Make current command with current_class as
 			-- `a_class'.
 		require
@@ -47,7 +47,7 @@ feature -- Property
 	current_class: CLASS_C
 			-- Class for current action
 
-	executable: BOOLEAN is
+	executable: BOOLEAN
 			-- Is the Current able to be executed?
 		do
 			Result := current_class /= Void and then
@@ -58,7 +58,7 @@ feature -- Property
 
 feature -- Execution
 
-	execute is
+	execute
 			-- Execute the current command. Add a before and after
 			-- declaration to `text_formatter'
 			-- and invoke `work'.
@@ -68,24 +68,24 @@ feature -- Execution
 			text_formatter.process_filter_item (f_Class_declaration, false);
 		end;
 
-	work is
+	work
 			-- Perform the command only.
 		deferred
 		end;
 
 feature {NONE} -- Implementation
 
-	criterion: QL_CRITERION is
+	criterion: QL_CRITERION
 			-- Criterion used in current command
 		do
 		end
 
-	domain_generator: QL_DOMAIN_GENERATOR is
+	domain_generator: QL_DOMAIN_GENERATOR
 			-- Domain generator used in current command
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

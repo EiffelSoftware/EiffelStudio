@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 -- Enlarge node for attribute access in workbench mode
@@ -14,7 +14,7 @@ inherit
 
 feature
 
-	check_dt_current (reg: REGISTRABLE) is
+	check_dt_current (reg: REGISTRABLE)
 			-- Check whether we need to compute the dynamic type of current
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
@@ -30,10 +30,10 @@ feature
 			end;
 		end;
 
-	is_polymorphic: BOOLEAN is True;
+	is_polymorphic: BOOLEAN = True;
 			-- Is the attribute access polymorphic ?
 
-	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A) is
+	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)
 			-- Generate attribute access in a `typ' context
 		local
 			is_nested: BOOLEAN;
@@ -99,7 +99,7 @@ feature
 			end;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

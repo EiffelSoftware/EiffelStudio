@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to Open a project"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: like parent_window) is
+	make (a_parent: like parent_window)
 			-- Create dialog based on `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 
 feature -- Action
 
-	show is
+	show
 			-- Show Current to `parent_window'.
 		do
 			if open_project.is_empty then
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Actions
 
-	on_item_deselected is
+	on_item_deselected
 			-- Handle case when an item has been deselected and whether or not
 			-- the `OK' button should be activated.
 		do
@@ -122,14 +122,14 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_cancel is
+	on_cancel
 			-- Cancel button has been pressed
 		do
 			update_preferences
 			dialog.destroy
 		end
 
-	on_ok is
+	on_ok
 			-- Ok button has been pressed
 		local
 			l_pointer: EV_POINTER_STYLE
@@ -157,7 +157,7 @@ feature {NONE} -- Actions
 			retry
 		end
 
-	update_preferences is
+	update_preferences
 			-- Update size preferences.
 		require
 			dialog_not_void: dialog /= Void

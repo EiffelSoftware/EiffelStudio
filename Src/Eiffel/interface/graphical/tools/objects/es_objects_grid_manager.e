@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 deferred
@@ -15,7 +15,7 @@ feature -- cmd specific
 
 	hex_format_cmd: EB_HEX_FORMAT_CMD
 
-	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND is
+	object_viewer_cmd: EB_OBJECT_VIEWER_COMMAND
 			-- Command that is used to display extended information concerning objects.
 		deferred
 		end
@@ -24,12 +24,12 @@ feature -- cmd specific
 
 feature -- Access
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget representing Current object.
 		deferred
 		end
 
-	parent_window: EV_WINDOW is
+	parent_window: EV_WINDOW
 			-- Parent EV_WINDOW if any.
 		local
 			w: EV_WIDGET
@@ -42,14 +42,14 @@ feature -- Access
 
 feature -- Refresh
 
-	refresh is
+	refresh
 			-- Refresh related grid
 		deferred
 		end
 
 feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_CMD} -- EiffelStudio specific
 
-	objects_grid_object_line (add: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE is
+	objects_grid_object_line (add: DBG_ADDRESS): ES_OBJECTS_GRID_OBJECT_LINE
 		require
 			valid_address: add /= Void
 		deferred
@@ -60,7 +60,7 @@ feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_C
 				)
 		end
 
-	pre_activate_cell (ei: EV_GRID_ITEM) is
+	pre_activate_cell (ei: EV_GRID_ITEM)
 			-- Process special operation before cell `ei' get activated
 		local
 			evi: ES_OBJECTS_GRID_VALUE_CELL
@@ -83,7 +83,7 @@ feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_C
 
 feature -- ES grid specific
 
-	toggle_expanded_state_of_selected_rows (a_grid: EV_GRID) is
+	toggle_expanded_state_of_selected_rows (a_grid: EV_GRID)
 		require
 			a_grid /= Void
 		local
@@ -108,7 +108,7 @@ feature -- ES grid specific
 			end
 		end
 
-	expand_selected_rows (a_grid: EV_GRID) is
+	expand_selected_rows (a_grid: EV_GRID)
 		require
 			a_grid /= Void
 		local
@@ -129,7 +129,7 @@ feature -- ES grid specific
 			end
 		end
 
-	collapse_selected_rows (a_grid: EV_GRID) is
+	collapse_selected_rows (a_grid: EV_GRID)
 		require
 			a_grid /= Void
 		local
@@ -150,7 +150,7 @@ feature -- ES grid specific
 			end
 		end
 
-	grid_data_from_widget (a_item: EV_ANY): ANY is
+	grid_data_from_widget (a_item: EV_ANY): ANY
 		local
 			ctler: ES_GRID_ROW_CONTROLLER
 		do
@@ -166,7 +166,7 @@ feature -- ES grid specific
 
 feature -- Clipboard related
 
-	update_clipboard_string_with_selection (grid: ES_OBJECTS_GRID) is
+	update_clipboard_string_with_selection (grid: ES_OBJECTS_GRID)
 		local
 			dv: ABSTRACT_DEBUG_VALUE
 			s, text_data: STRING_32
@@ -242,7 +242,7 @@ feature -- Clipboard related
 
 feature {NONE} -- Implementation
 
-	impl_parent_window (w: EV_WIDGET): EV_WINDOW is
+	impl_parent_window (w: EV_WIDGET): EV_WINDOW
 		local
 			p: EV_WIDGET
 		do
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

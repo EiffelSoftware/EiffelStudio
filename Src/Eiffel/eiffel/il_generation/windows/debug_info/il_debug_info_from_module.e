@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Managing data used to interpret debugger info
 		we are dealing for a module identified by `module_filename' :
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_module_filename: like module_filename; a_syst_name: STRING) is
+	make (a_module_filename: like module_filename; a_syst_name: STRING)
 			-- Initialize `Current'.
 		require
 			mod_name_valid: a_module_filename /= Void and then not a_module_filename.is_empty
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- reset
 
-	reset (a_module_filename: like module_filename) is
+	reset (a_module_filename: like module_filename)
 			-- Reset data for `module_filename'.
 		do
 			check
@@ -53,7 +53,7 @@ feature -- reset
 			list_feature_info.wipe_out
 		end
 
-	set_module_name (a_mod_name: like module_name) is
+	set_module_name (a_mod_name: like module_name)
 			-- Set module name (should not change anymore)
 		require
 			module_name_valid: a_mod_name /= Void and then not a_mod_name.is_empty
@@ -69,7 +69,7 @@ feature -- reset
 
 feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
 
-	update_module_filename (a_mod_filename: STRING) is
+	update_module_filename (a_mod_filename: STRING)
 			-- Update Current module filename with `a_mod_filename'.
 		require
 			a_mod_name_not_empty: a_mod_filename /= Void and then not a_mod_filename.is_empty
@@ -77,14 +77,14 @@ feature {IL_DEBUG_INFO_RECORDER} -- Update Module Name
 			module_filename := a_mod_filename
 		end
 
-	merge (other: like Current) is
+	merge (other: like Current)
 			-- Merge information from other into Current.
 		do
 			list_class_type_id.merge (other.list_class_type_id)
 			list_feature_info.merge (other.list_feature_info)
 		end
 
-	set_system_name (s: STRING) is
+	set_system_name (s: STRING)
 			-- Set system name related to Current module
 		do
 			system_name := s
@@ -106,7 +106,7 @@ feature -- Properties
 
 feature -- Queries Class
 
-	class_type_for_token (a_class_token: NATURAL_32): CLASS_TYPE is
+	class_type_for_token (a_class_token: NATURAL_32): CLASS_TYPE
 			-- CLASS_TYPE associated with `a_class_token'
 		require
 			class_token_valid: a_class_token /= 0
@@ -121,7 +121,7 @@ feature -- Queries Class
 			Result /= Void implies list_class_type_id.has (a_class_token)
 		end
 
-	know_class_from_token (a_class_token: NATURAL_32): BOOLEAN is
+	know_class_from_token (a_class_token: NATURAL_32): BOOLEAN
 			-- Know class from token `a_class_token' ?
 		do
 			Result := list_class_type_id.has (a_class_token)
@@ -129,7 +129,7 @@ feature -- Queries Class
 
 feature -- Reverse Queries Class
 
-	class_token_for_class_type (a_class_type: CLASS_TYPE): NATURAL_32 is
+	class_token_for_class_type (a_class_type: CLASS_TYPE): NATURAL_32
 		require
 			class_type_not_void: a_class_type /= Void
 		local
@@ -158,7 +158,7 @@ feature -- Reverse Queries Class
 
 feature -- Queries Feature
 
-	feature_i_for_token (a_feature_token: NATURAL_32): FEATURE_I is
+	feature_i_for_token (a_feature_token: NATURAL_32): FEATURE_I
 			-- FEATURE_I associated with `a_feature_token'
 		require
 			feature_token_valid: a_feature_token /= 0
@@ -191,7 +191,7 @@ feature -- Queries Feature
 			Result /= Void implies list_feature_info.has (a_feature_token)
 		end
 
-	know_feature_from_token (a_feature_token: NATURAL_32): BOOLEAN is
+	know_feature_from_token (a_feature_token: NATURAL_32): BOOLEAN
 			-- Know feature from token `a_feature_token' ?
 		do
 			Result := list_feature_info.has (a_feature_token)
@@ -199,7 +199,7 @@ feature -- Queries Feature
 
 feature -- Recording Operation
 
-	record_class_type (a_class_type: CLASS_TYPE; a_class_token: NATURAL_32) is
+	record_class_type (a_class_type: CLASS_TYPE; a_class_token: NATURAL_32)
 		require
 			class_type_not_void: a_class_type /= Void
 		local
@@ -221,7 +221,7 @@ feature -- Recording Operation
 			--| This can be forced any time
 		end
 
-	record_feature_i (a_class_type: CLASS_TYPE; a_feature_i: FEATURE_I; a_feature_token: NATURAL_32) is
+	record_feature_i (a_class_type: CLASS_TYPE; a_feature_i: FEATURE_I; a_feature_token: NATURAL_32)
 		require
 			class_type_not_void: a_class_type /= Void
 			feature_i_not_void: a_feature_i /= Void
@@ -253,7 +253,7 @@ feature -- Recording Operation
 
 feature -- Cleaning operation
 
-	clean_feature_token (a_feature_token: NATURAL_32) is
+	clean_feature_token (a_feature_token: NATURAL_32)
 		require
 			know_feature_from_token: know_feature_from_token (a_feature_token)
 		do
@@ -275,7 +275,7 @@ feature {IL_DEBUG_INFO_FROM_MODULE} -- Storage Implementation
 
 feature
 
-	debug_display is
+	debug_display
 			--
 		do
 			io.put_string ("************************************************************%N")
@@ -301,7 +301,7 @@ invariant
 
 	module_filename_not_void: module_filename /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

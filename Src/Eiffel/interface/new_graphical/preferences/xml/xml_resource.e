@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class which describes the features for one resource."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 	
-	make (root_resource: XML_ELEMENT) is
+	make (root_resource: XML_ELEMENT)
 			-- initialization from `root_resource'
 		require
 			not_void: root_resource /= Void
@@ -63,7 +63,7 @@ feature -- Initialization
 
 feature -- Implementation
 
-	process_unit_specific (node: XML_ELEMENT) is
+	process_unit_specific (node: XML_ELEMENT)
 			-- Gets the appropriate resource from `node'
 			-- if the type is unknown, it is assumed to be a string.
 		local
@@ -136,7 +136,7 @@ feature -- Implementation
 feature {NONE} -- Constants
 
 	string_type, color_type, integer_type,
-	font_type, boolean_type, array_type: INTEGER is unique
+	font_type, boolean_type, array_type: INTEGER = unique
 
 feature -- Implementation
 
@@ -160,7 +160,7 @@ invariant
 	XML_RESOURCE_exists: name /= Void and value /= Void
 	XML_RESOURCE_consistency: not name.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

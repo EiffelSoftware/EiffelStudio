@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Group of intervals with high density or a single interval with low density."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (interval: like lower_interval) is
+	make (interval: like lower_interval)
 			-- Create a group with a single interval `interval'.
 		do
 			is_lower_included := true
@@ -76,7 +76,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_is_extended (value: like is_extended) is
+	set_is_extended (value: like is_extended)
 			-- Set `is_extended' to `value'.
 		do
 			is_extended := value
@@ -86,7 +86,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	extend_with_interval (interval: like lower_interval) is
+	extend_with_interval (interval: like lower_interval)
 			-- Extend current group by adding `interval' or a gap to it
 			-- unless density becomes smaller than `density'.
 			-- Set `is_extended' to true if interval is included in group and to false otherwise.
@@ -133,7 +133,7 @@ feature -- Element change
 				not is_extended and then count > old count implies count = old count + 1
 		end
 
-	extend_with_lower_gap (value: like lower; is_value_included: BOOLEAN) is
+	extend_with_lower_gap (value: like lower; is_value_included: BOOLEAN)
 			-- Extend current group by adding a gap `value'..`lower'
 			-- to it unless density becomes smaller than `density'.
 			-- Inclusion of `value' in range is specified by `is_value_included'.
@@ -168,7 +168,7 @@ feature -- Element change
 			count_incremented_implies_is_lower_included_set: count > old count implies is_lower_included = is_value_included
 		end
 
-	extend_with_upper_gap (value: like lower; is_value_included: BOOLEAN) is
+	extend_with_upper_gap (value: like lower; is_value_included: BOOLEAN)
 			-- Extend current group by adding a gap `upper'..`value'
 			-- to it unless density becomes smaller than `density'.
 			-- Inclusion of `value' in range is specified by `is_value_included'.
@@ -203,7 +203,7 @@ feature -- Element change
 			count_incremented_implies_is_upper_included_set: count > old count implies is_upper_included = is_value_included
 		end
 
-	extend_with_group (group: INTERVAL_GROUP) is
+	extend_with_group (group: INTERVAL_GROUP)
 			-- Extend current group by adding `group' or a gap to it.
 			-- unless density becomes smaller than `density'.
 			-- Set `is_extended' to true if `group' is merged with current one and to false otherwise.
@@ -223,7 +223,7 @@ feature -- Element change
 
 feature -- IL code generation
 
-	generate_il (a_generator: IL_NODE_GENERATOR; min, max: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B) is
+	generate_il (a_generator: IL_NODE_GENERATOR; min, max: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B)
 			-- Generate code for group of intervals in `instruction' assuming that inspect value is in range `min'..`max'
 			-- where bounds are included in interval according to values of `is_min_included' and `is_max_included'.
 			-- Use `labels' to branch to the corresponding code.
@@ -301,7 +301,7 @@ feature -- IL code generation
 
 feature {NONE} -- Status report
 
-	density: DOUBLE is 0.25
+	density: DOUBLE = 0.25
 			-- Minimum number of distinct elements (intervals and gaps) per their range of values
 			-- Smaller values result in more table-driven (potentially faster, but longer) code: 0 means only tables are used
 			-- Higher values result in more decision-tree (potentially shorter, but slower) code: 1 means only conditional instructions are used
@@ -311,7 +311,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Element change
 
-	extend (lb, ub: like lower; is_lb_included, is_ub_included: like is_lower_included; li, ui: like lower_interval; c: like count) is
+	extend (lb, ub: like lower; is_lb_included, is_ub_included: like is_lower_included; li, ui: like lower_interval; c: like count)
 			-- Extend current group by adding other group or a gap to it
 			-- specified by `lb', `ub', `is_lb_included', `is_up_included', `li', `ui' and `c'
 			-- unless density becomes smaller that `density'.
@@ -400,7 +400,7 @@ invariant
 	consistent_upper: upper >= upper_interval.item.upper
 	density_in_range: 0 <= density and density <= 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

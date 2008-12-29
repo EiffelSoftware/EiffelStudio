@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A command that all Errors and Warnings tool {ES_ERRORS_AND_WARNINGS_TOOL} commands are based on.
 	]"
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Clean up
 
-	internal_recycle is
+	internal_recycle
 			-- Recycle
 		do
 			if accelerator /= Void then
@@ -64,7 +64,7 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	frozen pixmap: EV_PIXMAP is
+	frozen pixmap: EV_PIXMAP
 			-- Pixmap representing the command.
 		local
 			l_item: like internal_pixmap
@@ -82,14 +82,14 @@ feature -- Access
 			result_consistent: Result = Result
 		end
 
-	pixel_buffer: EV_PIXEL_BUFFER is
+	pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel buffer which representing the command.
 		deferred
 		ensure then
 			result_consistent: Result = Result
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the command. Use to store the command in the
 			-- preferences.
 		do
@@ -110,7 +110,7 @@ feature {NONE} -- Internal implementation cache
 invariant
 	tool_commander_attached: is_interface_usable implies tool_commander /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

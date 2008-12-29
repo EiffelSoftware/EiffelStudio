@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Enlarged node for Eiffel feature call in workbench mode."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,13 +26,13 @@ create
 
 feature -- Status Report
 
-	is_polymorphic: BOOLEAN is
+	is_polymorphic: BOOLEAN
 			-- <Precursor>
 		do
 			Result := True
 		end
 
-	has_one_signature: BOOLEAN is
+	has_one_signature: BOOLEAN
 			-- <Precursor>
 		do
 			Result := False
@@ -40,7 +40,7 @@ feature -- Status Report
 
 feature -- C code generation
 
-	analyze_on (reg: REGISTRABLE) is
+	analyze_on (reg: REGISTRABLE)
 			-- Analyze feature call on `reg'.
 		local
 			return_type: like c_type
@@ -53,7 +53,7 @@ feature -- C code generation
 			end
 		end
 
-	free_register is
+	free_register
 			-- Free registers.
 		do
 			Precursor
@@ -62,14 +62,14 @@ feature -- C code generation
 			end
 		end
 
-	unanalyze is
+	unanalyze
 			-- Undo the analysis
 		do
 			Precursor
 			result_register := Void
 		end
 
-	check_dt_current (reg: REGISTRABLE) is
+	check_dt_current (reg: REGISTRABLE)
 			-- Check whether we need to compute the dynamic type of current
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
@@ -99,13 +99,13 @@ feature -- C code generation
 			end;
 		end;
 
-	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A) is
+	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)
 			-- Generate feature call in a `typ' context.
 		do
 			generate_workbench_access_on_type (reg, typ, result_register)
 		end
 
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A) is
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A)
 			-- Generate final portion of C code.
 		do
 			Precursor (gen_reg, class_type)
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			-- A register to hold return value
 			-- to be normalized before use.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

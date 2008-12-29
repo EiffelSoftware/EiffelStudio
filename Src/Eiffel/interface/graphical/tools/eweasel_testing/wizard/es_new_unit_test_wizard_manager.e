@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Manager of new eweasel test case creation wizard
 																				]"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_and_launch (a_parent_window: EV_WINDOW; a_tool_panel: ES_EWEASEL_TESTING_TOOL_PANEL) is
+	make_and_launch (a_parent_window: EV_WINDOW; a_tool_panel: ES_EWEASEL_TESTING_TOOL_PANEL)
 			-- Create and display the profiler wizard.
 			-- The window is shown modal to `a_parent_window'.
 		require
@@ -46,19 +46,19 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	wizard_title: STRING_GENERAL is
+	wizard_title: STRING_GENERAL
 			-- Redefine
 		do
 			Result := interface_names.t_new_unit_test_wizard
 		end
 
-	wizard_pixmap: EV_PIXMAP is
+	wizard_pixmap: EV_PIXMAP
 			-- Redefine
 		do
 			Result := Pixmaps.bm_Wizard_blue
 		end
 
-	wizard_icon_pixmap: EV_PIXMAP is
+	wizard_icon_pixmap: EV_PIXMAP
 			-- Redefine
 		do
 			Result := Pixmaps.bm_Wizard_testing_icon
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	wizard_window_icon: EV_PIXMAP is
+	wizard_window_icon: EV_PIXMAP
 			-- Redefine
 		local
 			l_shared: EB_SHARED_PIXMAPS
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

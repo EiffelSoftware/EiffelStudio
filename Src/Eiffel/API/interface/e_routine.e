@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an eiffel routine."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -63,13 +63,13 @@ feature -- Properties
 
 feature -- Access
 
-	argument_names: LIST [STRING] is
+	argument_names: LIST [STRING]
 			-- Argument names
 		do
 			Result := arguments.argument_names
 		end
 
-	locals: EIFFEL_LIST [TYPE_DEC_AS] is
+	locals: EIFFEL_LIST [TYPE_DEC_AS]
 		local
 			routine_as: ROUTINE_AS
 		do
@@ -79,7 +79,7 @@ feature -- Access
 			end
 		end
 
-	object_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]] is
+	object_test_locals: LIST [TUPLE [name: ID_AS; type: TYPE_AS]]
 			-- Object test locals mentioned in the routine
 		local
 			routine_as: ROUTINE_AS
@@ -110,7 +110,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	associated_routine_as: ROUTINE_AS is
+	associated_routine_as: ROUTINE_AS
 			-- Associated routine as used to find out locals and object test locals
 		do
 			if is_inline_agent then
@@ -137,61 +137,61 @@ feature {NONE} -- Implementation
 
 feature {FEATURE_I} -- Setting
 
-	set_deferred (b: like is_deferred) is
+	set_deferred (b: like is_deferred)
 			-- Set `is_deferred' to `b'.
 		do
 			is_deferred := b;
 		end;
 
-	set_once (b: like is_once) is
+	set_once (b: like is_once)
 			-- Set `is_once' to `b'.
 		do
 			is_once := b;
 		end;
 
-	set_external (b: like is_external) is
+	set_external (b: like is_external)
 			-- Set `is_external' to `b'.
 		do
 			is_external := b
 		end;
 
-	set_arguments (args: like arguments) is
+	set_arguments (args: like arguments)
 			-- Assign `args' to `arguments'.
 		do
 			arguments := args;
 		end;
 
-	set_has_precondition (b: BOOLEAN) is
+	set_has_precondition (b: BOOLEAN)
 			-- Assign `b' to `has_precondition'.
 		do
 			has_precondition := b;
 		end;
 
-	set_has_postcondition (b: BOOLEAN) is
+	set_has_postcondition (b: BOOLEAN)
 			-- Assign `b' to `has_postcondition'.
 		do
 			has_postcondition := b;
 		end;
 
-	set_obsolete_message (s: STRING) is
+	set_obsolete_message (s: STRING)
 			-- Assign `s' to `obsolete_message'
 		do
 			obsolete_message := s;
 		end;
 
-	set_inline_agent_nr (nr: INTEGER) is
+	set_inline_agent_nr (nr: INTEGER)
 			-- Assign `nr' to `inline_agent_nr'
 		do
 			inline_agent_nr := nr
 		end
 
-	set_is_invariant (b: BOOLEAN) is
+	set_is_invariant (b: BOOLEAN)
 			-- Assign `b' to `is_invariant'
 		do
 			is_invariant := b
 		end
 
-	set_enclosing_body_id (id: INTEGER) is
+	set_enclosing_body_id (id: INTEGER)
 			-- Assign `id' to `enclosing_body_id'
 		do
 			enclosing_body_id := id
@@ -208,7 +208,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			end
 		end
 
-	associated_feature_i: FEATURE_I is
+	associated_feature_i: FEATURE_I
 			-- Assocated feature_i
 		do
 			if is_inline_agent then
@@ -218,7 +218,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

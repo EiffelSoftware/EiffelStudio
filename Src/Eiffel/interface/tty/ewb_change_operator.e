@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class EWB_CHANGE_OPERATOR
@@ -11,7 +11,7 @@ inherit
 
 feature {NONE} -- Execution
 
-	loop_action is
+	loop_action
 		local
 			command_arguments: EWB_ARGUMENTS;
 			index_str: STRING;
@@ -68,7 +68,7 @@ feature {NONE} -- Execution
 			execute;
 		end;
 
-	execute is
+	execute
 		do
 			if index <= subquery_operators.count then
 				subquery_operators.go_i_th (index);
@@ -84,17 +84,17 @@ feature {NONE} -- Execution
 
 feature -- Porperties
 
-	name: STRING is
+	name: STRING
 		once
 			Result := change_operator_cmd_name;
 		end;
 
-	help_message: STRING_32 is
+	help_message: STRING_32
 		once
 			Result := change_operator_help;
 		end;
 
-	abbreviation: CHARACTER is
+	abbreviation: CHARACTER
 		once
 			Result := change_operator_abb;
 		end;
@@ -105,7 +105,7 @@ feature {NONE} -- Attributes
 
 	new_operator: STRING;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

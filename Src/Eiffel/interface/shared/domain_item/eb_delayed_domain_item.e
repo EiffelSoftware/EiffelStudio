@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Delayed domain item"
 	author: ""
 	date: "$Date$"
@@ -21,19 +21,19 @@ create
 
 feature -- Status report
 
-	is_delayed_item: BOOLEAN is True
+	is_delayed_item: BOOLEAN = True
 			-- Is current a delayed item?
 
-	is_valid: BOOLEAN is True
+	is_valid: BOOLEAN = True
 			-- Does current represent a valid domain item?
 
-	is_input_domain_item: BOOLEAN is
+	is_input_domain_item: BOOLEAN
 			-- Does Current delayed item represents an input domain item?
 		do
 			Result := id.is_empty
 		end
 
-	is_real_delayed_item: BOOLEAN is
+	is_real_delayed_item: BOOLEAN
 			-- Does Current delayed item represents a real delayed domain item?
 		do
 			Result := not id.is_empty
@@ -41,18 +41,18 @@ feature -- Status report
 
 feature -- Access
 
-	domain (a_scope: QL_SCOPE): QL_DOMAIN is
+	domain (a_scope: QL_SCOPE): QL_DOMAIN
 			-- New query lanaguage domain representing current item
 		do
 			Result := a_scope.delayed_domain
 		end
 
-	query_language_item: QL_ITEM is
+	query_language_item: QL_ITEM
 			-- Query language item representation of current domain item
 		do
 		end
 
-	group: QL_GROUP is
+	group: QL_GROUP
 			-- Group to which current domain item belongs
 			-- Return Void for delayed item.
 		do
@@ -60,19 +60,19 @@ feature -- Access
 			result_not_attached: Result = Void
 		end
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- Text of current item
 		do
 			Result := names.l_delayed_item
 		end
 
-	sorting_order_index: INTEGER is
+	sorting_order_index: INTEGER
 			-- Sorting order index
 		do
 			Result := delayed_index
 		end
 
-	item_type_name: STRING_GENERAL is
+	item_type_name: STRING_GENERAL
 			-- Name of type of current item
 		do
 			Result := names.l_delayed_domain_item
@@ -80,13 +80,13 @@ feature -- Access
 
 feature{NONE} -- Implemenation
 
-	update is
+	update
 			-- Update status of current item.			
 		do
 			update_last_compilation_count
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

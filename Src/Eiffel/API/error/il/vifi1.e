@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error when a class performs inheritance of a frozen class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	subcode: INTEGER is 1
+	subcode: INTEGER = 1
 			-- Identifier for VIFI error.
 
 	parent_class: CLASS_C
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_parent_class (cl: CLASS_C) is
+	set_parent_class (cl: CLASS_C)
 			-- Set `parent_class' with `cl'.
 		require
 			cl_not_void: cl /= Void
@@ -39,7 +39,7 @@ feature -- Setting
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER) is
+	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Display error message
 		do
 			check
@@ -51,7 +51,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code completable EV_ADD_REMOVE_LIST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature -- Init
 
-	make (a_group_callback: FUNCTION [ANY, TUPLE, CONF_GROUP]) is
+	make (a_group_callback: FUNCTION [ANY, TUPLE, CONF_GROUP])
 			-- Initialize
 		require
 			a_group_callback_not_void: a_group_callback /= Void
@@ -42,7 +42,7 @@ feature -- Init
 
 feature -- Access
 
-	group: CONF_GROUP is
+	group: CONF_GROUP
 			-- Group for class auto completion
 		do
 			Result := group_internal.item (Void)
@@ -52,7 +52,7 @@ feature -- Access
 
 feature {NONE} -- GUI
 
-	build_widget is
+	build_widget
 			-- Build current widget.
 		local
 			hbox: EV_HORIZONTAL_BOX
@@ -100,7 +100,7 @@ feature {NONE} -- GUI
 			disable_item_expand (hbox)
 		end
 
-	build_text_field (t: STRING_GENERAL) is
+	build_text_field (t: STRING_GENERAL)
 			-- Create text field part.
 		local
 			hbox: EV_HORIZONTAL_BOX
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

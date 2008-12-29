@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actual type for simple types."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_class_id: INTEGER) is
+	make (a_class_id: INTEGER)
 		local
 			l_class: like associated_class
 		do
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	generic_derivation: CL_TYPE_A is
+	generic_derivation: CL_TYPE_A
 			-- <Precursor>
 		do
 			Result := internal_generic_derivation (0)
@@ -55,51 +55,51 @@ feature -- FIXME
 
 feature -- Status Report
 
-	is_basic: BOOLEAN is True
+	is_basic: BOOLEAN = True
 			-- Is the current actual type a basic one ?
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 		do
 			Result := c_type.hash_code
 		end
 
-	description: ATTR_DESC is
+	description: ATTR_DESC
 			-- Type description for skeleton
 		do
 			Result := c_type.new_attribute_description
 		end
 
-	element_type: INTEGER_8 is
+	element_type: INTEGER_8
 		do
 			Result := c_type.element_type
 		end
 
-	sk_value (a_context_type: TYPE_A): INTEGER is
+	sk_value (a_context_type: TYPE_A): INTEGER
 		do
 			Result := c_type.sk_value
 		end
 
-	meta_type: BASIC_A is
+	meta_type: BASIC_A
 			-- Associated meta type
 		do
 			Result := Current
 		end
 
-	good_generics: BOOLEAN is
+	good_generics: BOOLEAN
 			-- Has the current type the right number of generic types ?
 		do
 			Result := True
 		end
 
-	error_generics: VTUG is
+	error_generics: VTUG
 		do
 		end
 
 feature -- IL code generation
 
-	generic_il_type_name (a_context_type: TYPE_A): STRING is
+	generic_il_type_name (a_context_type: TYPE_A): STRING
 			-- Associated name to for naming in generic derivation.
 		do
 			Result := associated_class.name.twin
@@ -107,7 +107,7 @@ feature -- IL code generation
 
 feature -- C code generation
 
-	metamorphose (reg, value: REGISTRABLE; buffer: GENERATION_BUFFER) is
+	metamorphose (reg, value: REGISTRABLE; buffer: GENERATION_BUFFER)
 			-- Generate the metamorphism from simple type to reference and
 			-- put result in register `reg'. The value of the basic type is
 			-- held in `value'.
@@ -147,20 +147,20 @@ feature -- C code generation
 			value.print_register
 		end
 
-	generate_cecil_value (buffer: GENERATION_BUFFER; a_context_type: TYPE_A) is
+	generate_cecil_value (buffer: GENERATION_BUFFER; a_context_type: TYPE_A)
 		do
 			c_type.generate_sk_value (buffer)
 		end
 
 feature {TYPE_A} -- Helpers
 
-	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN is
+	internal_is_valid_for_class (a_class: CLASS_C): BOOLEAN
 			-- The associated class is still in the system
 		do
 			Result := True
 		end
 
-	internal_generic_derivation (a_level: INTEGER): CL_TYPE_A is
+	internal_generic_derivation (a_level: INTEGER): CL_TYPE_A
 			-- Precise generic derivation of current type.
 			-- That is to say given a type, it gives the associated TYPE_I
 			-- which can be used to search its associated CLASS_TYPE.
@@ -174,7 +174,7 @@ feature {TYPE_A} -- Helpers
 			end
 		end
 
-	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER): BOOLEAN is
+	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER): BOOLEAN
 		do
 			if a_level = 0 and not system.il_generation then
 				if {l_type: !CL_TYPE_A} other then
@@ -197,13 +197,13 @@ feature {COMPILER_EXPORTER}
 --			Result ?= f.type
 --		end
 
-	instantiation_of (type: TYPE_A; a_class_id: INTEGER): TYPE_A is
+	instantiation_of (type: TYPE_A; a_class_id: INTEGER): TYPE_A
 			-- Insatiation of `type' in s simple type
 		do
 			Result := type.actual_type
 		end
 
-	reference_type: CL_TYPE_A is
+	reference_type: CL_TYPE_A
 			-- Reference counterpart of an expanded type
 		do
 			create Result.make (class_id)
@@ -217,7 +217,7 @@ invariant
 	is_basic: is_basic
 	is_expanded: is_expanded
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

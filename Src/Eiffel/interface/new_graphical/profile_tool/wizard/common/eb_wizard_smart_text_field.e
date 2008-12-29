@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Text field which are used by the Wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,13 +33,13 @@ create
 
 feature -- Initialization
 
-	make (a_caller: like caller) is
+	make (a_caller: like caller)
 			-- Create a new smart text field for the window `a_caller'.
 		do
 			caller := a_caller
 		end
 
-	generate is
+	generate
 			-- Generate the Smart text field
 		require
 			not_yet_generated: not generated
@@ -104,7 +104,7 @@ feature -- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Text of the textfield
 		do
 			if generated then
@@ -114,7 +114,7 @@ feature -- Access
 			end
 		end
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Widget representing Current.
 		require
 			generated: generated
@@ -124,7 +124,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions associated with the text field.
 		require
 			generated: generated
@@ -132,7 +132,7 @@ feature -- Access
 			Result := textfield.change_actions
 		end
 
-	browse_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	browse_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions associated with the browse button.
 		require
 			has_browse_button: has_browse_button
@@ -152,7 +152,7 @@ feature -- Status report
 	generated: BOOLEAN
 			-- Has the widget been generated?
 
-	is_sensitive: BOOLEAN is
+	is_sensitive: BOOLEAN
 			-- Is object sensitive to user input.
 		require
 			generated: generated
@@ -160,7 +160,7 @@ feature -- Status report
 			Result := widget.is_sensitive
 		end
 
-	starting_directory: STRING is
+	starting_directory: STRING
 			-- Starting directory
 		require
 			has_browse_button: has_browse_button
@@ -170,7 +170,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make object sensitive to user input.
 		require
 			generated: generated
@@ -180,7 +180,7 @@ feature -- Status setting
 			is_sensitive: is_sensitive
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make object non-sensitive to user input.
 		require
 			generated: generated
@@ -192,7 +192,7 @@ feature -- Status setting
 
 feature -- Settings
 
-	set_text, set_textfield_string (a_string: STRING) is
+	set_text, set_textfield_string (a_string: STRING)
 			-- Set the text of the text field to `txt'.
 		require
 			valid_string: a_string /= Void and then not a_string.is_empty
@@ -204,7 +204,7 @@ feature -- Settings
 			end
 		end
 
-	set_label_string_and_size (a_string: STRING_GENERAL; a_size: INTEGER) is
+	set_label_string_and_size (a_string: STRING_GENERAL; a_size: INTEGER)
 			-- Set the label text to `a_string' and the minimum width for
 			-- the label to `a_size'.
 		require
@@ -238,7 +238,7 @@ feature -- Settings
 			end
 		end
 
-	set_label_string (a_string: STRING_GENERAL) is
+	set_label_string (a_string: STRING_GENERAL)
 			-- Set the label text to `a_string'.
 		require
 			valid_string: a_string /= Void and then not a_string.is_empty
@@ -246,7 +246,7 @@ feature -- Settings
 			set_label_string_and_size (a_string, 0)
 		end
 
-	set_textfield_string_and_capacity (a_string: STRING; a_capacity: INTEGER) is
+	set_textfield_string_and_capacity (a_string: STRING; a_capacity: INTEGER)
 			-- Set the textfield text to `a_string' and the capacity (max
 			-- number of characters) for the textfield to `a_capacity'.
 		do
@@ -259,7 +259,7 @@ feature -- Settings
 			end
 		end
 
-	enable_directory_browse_button is
+	enable_directory_browse_button
 			-- Add a browse button near on the right of the text field,
 			-- clicking on the browse button will display a dialog to
 			-- choose a directory.
@@ -273,7 +273,7 @@ feature -- Settings
 			has_browse_button: has_browse_button
 		end
 
-	enable_file_browse_button (a_filter: STRING) is
+	enable_file_browse_button (a_filter: STRING)
 			-- Add a browse button near the right of the text field,
 			-- clicking on the browse button will display a dialog to
 			-- choose a file among `a_filter'.
@@ -289,7 +289,7 @@ feature -- Settings
 			has_browse_button: has_browse_button
 		end
 
-	disable_browse_button is
+	disable_browse_button
 			-- Remove a browse button near the right of the text field.
 		require
 			not_yet_generated: not generated
@@ -301,7 +301,7 @@ feature -- Settings
 			not_has_browse_button: not has_browse_button
 		end
 
-	enable_password is
+	enable_password
 			-- Set the text in the text field to be replaced by stars (for passwords)
 		require
 			not_password: not is_password
@@ -312,7 +312,7 @@ feature -- Settings
 			is_password: is_password
 		end
 
-	disable_password is
+	disable_password
 			-- Set the text in the text field not to be replaced by stars
 		require
 			is_password: is_password
@@ -323,7 +323,7 @@ feature -- Settings
 			not_password: not is_password
 		end
 
-	set_starting_directory (a_directory: STRING) is
+	set_starting_directory (a_directory: STRING)
 			-- Set the starting directory
 		require
 			has_browse_button: has_browse_button
@@ -334,7 +334,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation
 
-	browse_file is
+	browse_file
 			-- Launch a file Browser.
 		local
 			file_selector: EV_FILE_OPEN_DIALOG
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 			file_selector.show_modal_to_window (caller.first_window)
 		end
 
-	browse_directory is
+	browse_directory
 			-- Launch a computer directory Browser.
 		local
 			dir_selector: EV_DIRECTORY_DIALOG
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 			dir_selector.show_modal_to_window (caller.first_window)
 		end
 
-	directory_selected (dir_selector: EV_DIRECTORY_DIALOG) is
+	directory_selected (dir_selector: EV_DIRECTORY_DIALOG)
 			-- The user selected a directory from the browser.
 			-- It updates the text fields accordingly.
 		require
@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 			textfield.set_text (dir_selector.directory)
 		end
 
-	file_selected (file_selector: EV_FILE_OPEN_DIALOG) is
+	file_selected (file_selector: EV_FILE_OPEN_DIALOG)
 			-- The user selected a file from the file dialog.
 			-- Updates the text field accordingly.
 		require
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 	browse_button_action: PROCEDURE [ANY, TUPLE];
 			-- Action for the browse button.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Command to run the query from a PROFILE_QUERY_WINDOW"
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_query_window: EB_PROFILE_QUERY_WINDOW) is
+	make (a_query_window: EB_PROFILE_QUERY_WINDOW)
 			-- Create Current and set `query_window' to `a_query_window'.
 		require
 			a_query_window_not_void: a_query_window /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Command Execution
 
-	execute is
+	execute
 			-- Extract the current query and display the results.
 		local
 			profiler_query: PROFILER_QUERY
@@ -54,7 +54,7 @@ feature {NONE} -- Attributes
 	query_window: EB_PROFILE_QUERY_WINDOW;
 		-- The window where query results will be displayed.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

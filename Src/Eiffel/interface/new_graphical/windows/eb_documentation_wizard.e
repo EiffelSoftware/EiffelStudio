@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Guides the user through the options for project documentation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -78,7 +78,7 @@ inherit
 
 feature {EV_ANY} -- Initialization
 
-	initialize is
+	initialize
 			-- Set defaults.
 		local
 			vb: EV_VERTICAL_BOX
@@ -120,7 +120,7 @@ feature {EV_ANY} -- Initialization
 
 feature {NONE} -- Implementation
 
-	set_default_settings is
+	set_default_settings
 			-- Initialize user selection.
 		local
 			b: EV_BUTTON
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	filter: STRING is
+	filter: STRING
 			-- User selection.
 		local
 			si: DYNAMIC_LIST [EV_LIST_ITEM]
@@ -183,7 +183,7 @@ feature -- Access
 			end
 		end
 
-	documentation_universe: DOCUMENTATION_UNIVERSE is
+	documentation_universe: DOCUMENTATION_UNIVERSE
 			-- User selection.
 		local
 			l: EV_LIST
@@ -198,7 +198,7 @@ feature -- Access
 			end
 		end
 
-	excluded_indexing_items: ARRAYED_LIST [STRING] is
+	excluded_indexing_items: ARRAYED_LIST [STRING]
 			-- Indexing items user does not want generated in HTML meta clauses.
 		do
 			Result := indexing_include.exclude_list.strings_8
@@ -207,37 +207,37 @@ feature -- Access
 	diagram_views: HASH_TABLE [STRING, STRING]
 			-- Contains (view_name, cluster_name) couples for every included cluster.
 
-	class_list_selected: BOOLEAN is
+	class_list_selected: BOOLEAN
 			-- Does the user want a class list?
 		do
 			Result := class_list_button.is_selected
 		end
 
-	cluster_list_selected: BOOLEAN is
+	cluster_list_selected: BOOLEAN
 			-- Does the user want a cluster list?
 		do
 			Result := cluster_list_button.is_selected
 		end
 
-	cluster_hierarchy_selected: BOOLEAN is
+	cluster_hierarchy_selected: BOOLEAN
 			-- Does the user want a cluster hierarchy?
 		do
 			Result := cluster_hierarchy_button.is_selected
 		end
 
-	cluster_charts_selected: BOOLEAN is
+	cluster_charts_selected: BOOLEAN
 			-- Does the user want cluster charts?
 		do
 			Result := cluster_charts_button.is_selected
 		end
 
-	cluster_diagrams_selected: BOOLEAN is
+	cluster_diagrams_selected: BOOLEAN
 			-- Does the user want cluster diagrams?
 		do
 			Result := cluster_diagrams_button.is_selected
 		end
 
-	directory: DIRECTORY is
+	directory: DIRECTORY
 			-- Location where documentation should be generated.
 		local
 			dir_name: STRING
@@ -249,7 +249,7 @@ feature -- Access
 	cancelled: BOOLEAN
 			-- Has the user pressed "Cancel"?
 
-	html_css_filter_name: STRING is "html-stylesheet"
+	html_css_filter_name: STRING = "html-stylesheet"
 			-- Name of html-css filter, which should be selected
 			-- by default when wizard shows up.
 
@@ -275,7 +275,7 @@ feature -- Widgets
 
 feature -- Status report
 
-	is_html: BOOLEAN is
+	is_html: BOOLEAN
 			-- Is an HTML filter selected?
 		do
 			Result := filter /= Void and then filter.substring_index ("html", 1) > 0
@@ -292,7 +292,7 @@ feature -- Status report
 
 feature -- Miscellaneous
 
-	start is
+	start
 			-- Show the first page.
 		do
 			cancelled := False
@@ -306,7 +306,7 @@ feature -- Miscellaneous
 			show
 		end
 
-	next is
+	next
 			-- Show next page.
 		do
 			current_page := current_page + 1
@@ -319,7 +319,7 @@ feature -- Miscellaneous
 			go_to_page (current_page)
 		end
 
-	previous is
+	previous
 			-- Revert to previous page.
 		do
 			current_page := current_page - 1
@@ -332,14 +332,14 @@ feature -- Miscellaneous
 			go_to_page (current_page)
 		end
 
-	cancel is
+	cancel
 			-- Close the wizard and do nothing.
 		do
 			hide
 			cancelled := True
 		end
 
-	finish is
+	finish
 			-- Close the wizard and work with current selection.
 		do
 			hide
@@ -394,19 +394,19 @@ feature {NONE} -- Implementation
 	current_page: INTEGER
 			-- Index of page currently opened.
 
-	html_specific_page (i: INTEGER): BOOLEAN is
+	html_specific_page (i: INTEGER): BOOLEAN
 			-- Index of page allowing to choose metatags.
 		do
 			Result := i = 3
 		end
 
-	diagram_specific_page (i: INTEGER): BOOLEAN is
+	diagram_specific_page (i: INTEGER): BOOLEAN
 			-- Index of page allowing to choose diagram views.
 		do
 			Result := i = 5
 		end
 
-	go_to_page (i: INTEGER) is
+	go_to_page (i: INTEGER)
 			-- Display page with `i' as index.
 		do
 			inspect i when 1 then
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_filter_selection is
+	show_filter_selection
 		do
 			if update_filters then
 				fill_filter_box (filter_combo_box)
@@ -461,7 +461,7 @@ feature {NONE} -- Implementation
 			wizard_area.set_text (interface_names.l_select_format_for_output)
 		end
 
-	show_cluster_selection is
+	show_cluster_selection
 		do
 			wizard_area.wipe_out
 			wizard_area.set_text (interface_names.l_select_cluster_to_generate)
@@ -474,7 +474,7 @@ feature {NONE} -- Implementation
 			wizard_area.replace (cluster_include)
 		end
 
-	show_indexing_selection is
+	show_indexing_selection
 		local
 			err: SYNTAX_ERROR
 			retried: BOOLEAN
@@ -504,13 +504,13 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	show_option_selection is
+	show_option_selection
 		do
 			wizard_area.replace (option_page)
 			wizard_area.set_text (interface_names.l_select_format_to_use)
 		end
 
-	show_view_selection is
+	show_view_selection
 		do
 			set_pointer_style (Default_pixmaps.Wait_cursor)
 			fill_view_page (view_page)
@@ -520,7 +520,7 @@ feature {NONE} -- Implementation
 			set_size (wizard_width, wizard_height)
 		end
 
-	show_directory_selection is
+	show_directory_selection
 		do
 			wizard_area.replace (directory_area)
 			wizard_area.set_text (interface_names.l_select_directory_to_generate)
@@ -528,7 +528,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	fill_filter_box (list: like filter_combo_box) is
+	fill_filter_box (list: like filter_combo_box)
 		local
 			filter_dir: DIRECTORY
 			file_name, file_suffix: STRING
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_cluster_box (ie: EB_INCLUDE_EXCLUDE) is
+	fill_cluster_box (ie: EB_INCLUDE_EXCLUDE)
 			-- Fill `ie.include_list' with all groups in system.
 			-- We assume that new added groups go into the "include" part.
 		local
@@ -623,7 +623,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_indexing_box (ie: EB_INCLUDE_EXCLUDE) is
+	fill_indexing_box (ie: EB_INCLUDE_EXCLUDE)
 			-- Fill `ie.include_list' with all indexing tags.
 			-- Except the ones in `exclude_indexing_items'.
 		local
@@ -671,7 +671,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_indexes (i: EIFFEL_LIST [INDEX_AS]; l: LINKED_LIST [STRING]) is
+	add_indexes (i: EIFFEL_LIST [INDEX_AS]; l: LINKED_LIST [STRING])
 		local
 			t: STRING
 		do
@@ -688,7 +688,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_option_box (p: EV_VERTICAL_BOX) is
+	fill_option_box (p: EV_VERTICAL_BOX)
 		local
 			cb: EV_CHECK_BUTTON
 			vs: EV_HORIZONTAL_SEPARATOR
@@ -734,7 +734,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_view_page (vb: EV_VERTICAL_BOX) is
+	fill_view_page (vb: EV_VERTICAL_BOX)
 			-- Initialize `view_page'.
 		require
 			vb_not_void: vb /= Void
@@ -800,7 +800,7 @@ feature {NONE} -- Implementation
 			vb.extend (main_hb)
 		end
 
-	on_cluster_selected (row: EV_MULTI_COLUMN_LIST_ROW) is
+	on_cluster_selected (row: EV_MULTI_COLUMN_LIST_ROW)
 			-- `row' has been selected.
 			-- Display available views for corresponding cluster in `view_list'.
 			-- Update `view_label'.
@@ -832,7 +832,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_set_view_button_pressed is
+	on_set_view_button_pressed
 			-- `set_view_button' was pressed.
 			-- Update `view_mcl'.
 		local
@@ -851,20 +851,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_directory_return_pressed is
+	on_directory_return_pressed
 			-- Return was pressed after typing a directory name.
 			-- Press `finish_button'.
 		do
 			finish_button.select_actions.call (Void)
 		end
 
-	on_cf_toggle (cf: CLASS_FORMAT; state: EV_CHECK_BUTTON) is
+	on_cf_toggle (cf: CLASS_FORMAT; state: EV_CHECK_BUTTON)
 			-- Set the generated state of `cf' to the selected state of `state'.
 		do
 			cf.set_generated (state.is_selected)
 		end
 
-	on_browse is
+	on_browse
 			-- User pressed "browse" button.
 		local
 			d: EV_DIRECTORY_DIALOG
@@ -879,7 +879,7 @@ feature {NONE} -- Implementation
 			d.show_modal_to_window (Current)
 		end
 
-	on_directory_change (d: EV_DIRECTORY_DIALOG) is
+	on_directory_change (d: EV_DIRECTORY_DIALOG)
 		do
 			if d.directory.is_empty then
 				directory_field.remove_text
@@ -888,13 +888,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	wizard_width: INTEGER is 420
+	wizard_width: INTEGER = 420
 		-- Nicest value for width of Current.
 
-	wizard_height: INTEGER is 350;
+	wizard_height: INTEGER = 350;
 		-- Nicest value for height of Current.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Profile information about a call cycle"
@@ -22,7 +22,7 @@ create
 
 feature -- Creation
 
-	make (num_calls: INTEGER; time, self_s, descen: REAL; new_function: CYCLE_FUNCTION) is
+	make (num_calls: INTEGER; time, self_s, descen: REAL; new_function: CYCLE_FUNCTION)
 			-- Create profile data for a whole cycle.
 		do
 			p_d_make (num_calls, time, self_s, descen);
@@ -32,7 +32,7 @@ feature -- Creation
 
 feature -- Copy features
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Reinitialize by copying features of `other'.
 			-- (This is also used by `close'.)
 		do
@@ -45,7 +45,7 @@ feature -- Copy features
 
 feature -- Status report
 
-	function: CYCLE_FUNCTION is
+	function: CYCLE_FUNCTION
 			-- The cycle all information is about.
 		do
 			Result := int_function
@@ -58,7 +58,7 @@ feature {CYCLE_PROFILE_DATA} -- Attrbutes
 
 feature -- Adding
 
-	add_function (new_function: LANGUAGE_FUNCTION) is
+	add_function (new_function: LANGUAGE_FUNCTION)
 			-- Add `new_function' to cycle.
 		require
 			valid_function: new_function /= Void;
@@ -70,13 +70,13 @@ feature -- Adding
 
 feature -- Status report
 
-	number: INTEGER is
+	number: INTEGER
 			-- The number of this cycle.
 		do
 			Result := int_function.cycle_number;
 		end;
 
-	name: STRING is
+	name: STRING
 			-- The name of this cycle.
 		do
 			Result := int_function.name;
@@ -87,7 +87,7 @@ feature {NONE} -- Attributes
 	functions: LINKED_CIRCULAR [LANGUAGE_FUNCTION];
 		-- Functions in this cycle
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a unique constant"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,13 +24,13 @@ feature
 			-- [Note that this value is processed during second pass by
 			-- feature `feature_unit' of class INHERIT_TABLE.]
 
-	is_unique: BOOLEAN is True
+	is_unique: BOOLEAN = True
 			-- Is the current feature a unique one ?
 
-	is_once: BOOLEAN is False
+	is_once: BOOLEAN = False
 			-- Is the constant (implemented like) a once function?
 
-	equiv (other: FEATURE_I): BOOLEAN is
+	equiv (other: FEATURE_I): BOOLEAN
 			-- Is `other' equivalent to Current ?
 		local
 			other_unique: UNIQUE_I
@@ -45,7 +45,7 @@ feature
 			end
 		end
 
-	same_value (other: FEATURE_I): BOOLEAN is
+	same_value (other: FEATURE_I): BOOLEAN
 		require
 			other /= Void
 			other.is_unique
@@ -56,7 +56,7 @@ feature
 			Result := value.is_equal (other_unique.value)
 		end
 
-	check_types (feat_tbl: FEATURE_TABLE) is
+	check_types (feat_tbl: FEATURE_TABLE)
 			-- Check Result
 		local
 			vqui: VQUI
@@ -75,7 +75,7 @@ feature
 			end
 		end
 
-	replicated (in: INTEGER): FEATURE_I is
+	replicated (in: INTEGER): FEATURE_I
 			-- Replication
 		local
 			rep: R_UNIQUE_I
@@ -87,14 +87,14 @@ feature
 			Result := rep
 		end
 
-	selected: UNIQUE_I is
+	selected: UNIQUE_I
 			-- <Precursor>
 		do
 			create Result.make
 			Result.transfer_from (Current)
 		end
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I
 			-- Unselected feature
 		local
 			unselect: D_UNIQUE_I
@@ -107,7 +107,7 @@ feature
 
 feature {NONE} -- Implementation
 
-	new_api_feature: E_UNIQUE is
+	new_api_feature: E_UNIQUE
 			-- API feature creation
 		do
 			create Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			Result.set_value (value.string_value)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

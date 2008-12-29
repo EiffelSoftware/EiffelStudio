@@ -164,7 +164,7 @@ feature -- Event connection
 						if l_map /= Void then
 							l_action := l_map.action
 							l_event := l_map.event
-							if not l_event.is_subscribed (l_action) then
+							if l_event.is_subscribed (l_action) then
 								l_event.unsubscribe (l_action)
 							end
 						end

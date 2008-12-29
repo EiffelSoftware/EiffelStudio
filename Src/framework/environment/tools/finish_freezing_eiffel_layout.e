@@ -13,8 +13,11 @@ inherit
 
 feature -- Access
 
-	application_name: !STRING_8 = "finish_freezing"
+	application_name: !STRING_8
 			-- <Precursor>
+		once
+			Result := "finish_freezing"
+		end
 
 feature -- Directories
 

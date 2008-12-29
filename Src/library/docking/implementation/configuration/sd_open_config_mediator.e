@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that with responsibility for open all docking library config."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Open inner container data.
 
-	open_config (a_file: STRING_GENERAL): BOOLEAN is
+	open_config (a_file: STRING_GENERAL): BOOLEAN
 			-- Open all docking library data from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -44,7 +44,7 @@ feature -- Open inner container data.
 			call_show_actions
 		end
 
-	open_editors_config (a_file: STRING_GENERAL) is
+	open_editors_config (a_file: STRING_GENERAL)
 			-- Open main window eidtor config data.
 		require
 			not_void: a_file /= Void
@@ -103,7 +103,7 @@ feature -- Open inner container data.
 			call_show_actions
 		end
 
-	open_tools_config (a_file: STRING_GENERAL): BOOLEAN is
+	open_tools_config (a_file: STRING_GENERAL): BOOLEAN
 			-- Open tools config, except all editors
 		require
 			not_called: top_container = Void
@@ -224,7 +224,7 @@ feature -- Open inner container data.
 			cleared: top_container = Void
 		end
 
-	open_maximized_tool_data (a_file: STRING_GENERAL) is
+	open_maximized_tool_data (a_file: STRING_GENERAL)
 			-- Open maximized tool data.
 		require
 			a_file_not_void: a_file /= Void
@@ -235,7 +235,7 @@ feature -- Open inner container data.
 			internal_open_maximized_tool_data (l_data)
 		end
 
-	open_tool_bar_item_data (a_file: STRING_GENERAL) is
+	open_tool_bar_item_data (a_file: STRING_GENERAL)
 			-- Restore SD_TOOL_BAR_RESIZABLE_ITEM's width.
 		require
 			a_file_not_void: a_file /= Void
@@ -248,7 +248,7 @@ feature -- Open inner container data.
 
 feature -- Query
 
-	config_data_from_file (a_file: STRING_GENERAL): SD_CONFIG_DATA is
+	config_data_from_file (a_file: STRING_GENERAL): SD_CONFIG_DATA
 			-- Config data readed from `a_file'
 		require
 			not_void: a_file /= Void
@@ -275,7 +275,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	open_all_config (a_file: STRING_GENERAL): BOOLEAN is
+	open_all_config (a_file: STRING_GENERAL): BOOLEAN
 			-- Open all docking library data from `a_file'.
 		require
 			a_file_not_void: a_file /= Void
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	editor_top_parent_for_restore: EV_CONTAINER is
+	editor_top_parent_for_restore: EV_CONTAINER
 			-- Editor top parent for restore
 		local
 			l_top_split_area: SD_MIDDLE_CONTAINER
@@ -416,7 +416,7 @@ feature {NONE} -- Implementation
 			parented: Result /= Void implies Result.parent /= Void
 		end
 
-	is_all_tools (a_zones: ARRAYED_LIST [SD_ZONE]): BOOLEAN is
+	is_all_tools (a_zones: ARRAYED_LIST [SD_ZONE]): BOOLEAN
 			-- If `a_zones' all of tools conentes.
 		require
 			not_void: a_zones /= Void
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_all_inner_containers_data (a_config_data: SD_CONFIG_DATA) is
+	open_all_inner_containers_data (a_config_data: SD_CONFIG_DATA)
 			-- Open all SD_MULTI_DOCK_AREA data, include main dock area in main window and floating zones.
 		require
 			a_config_data: a_config_data /= Void
@@ -478,7 +478,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clear_up_floating_zones is
+	clear_up_floating_zones
 			-- Clear up all floating zones
 		local
 			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clean_up_tool_bar_containers is
+	clean_up_tool_bar_containers
 			-- Wipe out all tool bar containers.
 		local
 			l_cont: SD_TOOL_BAR_CONTAINER
@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 			l_cont.right.wipe_out
 		end
 
-	clear_up_containers is
+	clear_up_containers
 			-- Wipe out all containers in docking library.
 		local
 			l_all_main_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
@@ -608,7 +608,7 @@ feature {NONE} -- Implementation
 			cleared: not internal_docking_manager.query.inner_container_main.full
 		end
 
-	clean_up_tool_bars is
+	clean_up_tool_bars
 			-- Clean up all tool bars.
 		local
 			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
@@ -625,7 +625,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clean_up_mini_tool_bar is
+	clean_up_mini_tool_bar
 			-- Clean up all mini tool bars' parents.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clean_up_all_editors is
+	clean_up_all_editors
 			-- Clean up all editors
 			-- Remove all parents of all editors.
 		local
@@ -685,7 +685,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_all_visible is
+	set_all_visible
 			-- Set all contents not visible
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -708,7 +708,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_inner_container_data (a_config_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
+	open_inner_container_data (a_config_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)
 			-- Preorder recursive.
 		require
 			a_config_data_not_void: a_config_data /= Void
@@ -769,7 +769,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_middle_container (a_config_data: SD_INNER_CONTAINER_DATA): SD_MIDDLE_CONTAINER is
+	new_middle_container (a_config_data: SD_INNER_CONTAINER_DATA): SD_MIDDLE_CONTAINER
 			-- Middle container factory method.
 		require
 			not_void: a_config_data /= Void
@@ -792,7 +792,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	open_inner_container_data_split_position (a_config_data: SD_INNER_CONTAINER_DATA; a_split: EV_SPLIT_AREA) is
+	open_inner_container_data_split_position (a_config_data: SD_INNER_CONTAINER_DATA; a_split: EV_SPLIT_AREA)
 			-- After set all zone's postion in split area, this time is set all EV_SPLIT_AREAs' split position.
 		require
 			a_config_data_not_void: a_config_data /= Void
@@ -825,7 +825,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_auto_hide_panel_data (a_data: SD_AUTO_HIDE_PANEL_DATA) is
+	open_auto_hide_panel_data (a_data: SD_AUTO_HIDE_PANEL_DATA)
 			-- Open all auto hide zone data.
 		require
 			a_data_not_void: a_data /= Void
@@ -836,7 +836,7 @@ feature {NONE} -- Implementation
 			open_one_auto_hide_panel_data (a_data.top, {SD_ENUMERATION}.top)
 		end
 
-	open_one_auto_hide_panel_data (a_data: ARRAYED_LIST [ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, INTEGER, INTEGER]]]; a_direction: INTEGER) is
+	open_one_auto_hide_panel_data (a_data: ARRAYED_LIST [ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, INTEGER, INTEGER]]]; a_direction: INTEGER)
 			-- Open one SD_AUTO_HIDE_PANEL's data.
 		require
 			a_data_not_void: a_data /= Void
@@ -904,7 +904,7 @@ feature {NONE} -- Implementation
 			l_panel.update_tab_group
 		end
 
-	open_tool_bar_data (a_tool_bar_data: ARRAYED_LIST [SD_TOOL_BAR_DATA]) is
+	open_tool_bar_data (a_tool_bar_data: ARRAYED_LIST [SD_TOOL_BAR_DATA])
 			-- Open four area tool bar data.
 		require
 			a_tool_bar_data_not_void: a_tool_bar_data /= Void
@@ -990,7 +990,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_one_tool_bar_data (a_direction: INTEGER; a_tool_bar_data: SD_TOOL_BAR_DATA) is
+	open_one_tool_bar_data (a_direction: INTEGER; a_tool_bar_data: SD_TOOL_BAR_DATA)
 			-- Open one tool bar area config data.
 		require
 			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
@@ -1058,7 +1058,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_editor_minimized_data_unminimized (a_config_data: SD_CONFIG_DATA) is
+	open_editor_minimized_data_unminimized (a_config_data: SD_CONFIG_DATA)
 			-- Unminimized editor zone if `a_config_data' is unminimized.
 		local
 			l_editor_zone: SD_UPPER_ZONE
@@ -1073,7 +1073,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_editor_minimized_data_minimize (a_config_data: SD_CONFIG_DATA) is
+	open_editor_minimized_data_minimize (a_config_data: SD_CONFIG_DATA)
 			-- Minimized editor zone if `a_cofig_data' is minimized.
 		local
 			l_editor_zone: SD_UPPER_ZONE
@@ -1088,7 +1088,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_open_maximized_tool_data (a_config_data: SD_CONFIG_DATA) is
+	internal_open_maximized_tool_data (a_config_data: SD_CONFIG_DATA)
 			-- Open maximized tool data.
 		local
 			l_content: SD_CONTENT
@@ -1114,7 +1114,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_open_tool_bar_item_data (a_config_data: SD_CONFIG_DATA) is
+	internal_open_tool_bar_item_data (a_config_data: SD_CONFIG_DATA)
 			-- Open tool bar resizable item data.
 		local
 			l_contents: ARRAYED_LIST [SD_TOOL_BAR_CONTENT]
@@ -1199,7 +1199,7 @@ feature {NONE} -- Internals.
 
 	internal_shared: SD_SHARED;
 			-- All singletons.
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

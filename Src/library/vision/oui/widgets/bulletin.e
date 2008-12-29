@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Area for free-form placement on any of its children"
 	legal: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a bulletin with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged bulletin with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a bulletin with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	valid_stackables (a_stackable_array: ARRAY [STACKABLE]): BOOLEAN is
+	valid_stackables (a_stackable_array: ARRAY [STACKABLE]): BOOLEAN
 			-- check that the array of stackables meets the critea
 			-- require for widgets to be restacked
 		require
@@ -96,7 +96,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	allow_recompute_size is
+	allow_recompute_size
 			-- Allow Current bulletin to recompute its size
 			-- according to its children.
 		require
@@ -105,7 +105,7 @@ feature -- Status setting
 			implementation.allow_recompute_size
 		end;
 
-	forbid_recompute_size is
+	forbid_recompute_size
 			-- Forbid Current bulletin to recompute its size
 			-- according to its children.
 		require
@@ -114,7 +114,7 @@ feature -- Status setting
 			implementation.forbid_recompute_size
 		end;
 
-	set_default_position (flag: BOOLEAN) is
+	set_default_position (flag: BOOLEAN)
 			-- Set default position of Current to `flag'.
 		require
 			exists: not destroyed
@@ -122,7 +122,7 @@ feature -- Status setting
 			implementation.set_default_position (flag);
 		end;
 
-	circulate_up is
+	circulate_up
 			-- Circulate the children of this widget up
 		require
 			exists: not destroyed
@@ -130,7 +130,7 @@ feature -- Status setting
 			implementation.circulate_up;
 		end;
 
-	circulate_down is
+	circulate_down
 			-- Circulate the children of this widget down
 		require
 			exists: not destroyed
@@ -138,7 +138,7 @@ feature -- Status setting
 			implementation.circulate_down;
 		end;
 
-	restack_children (a_stackable_array: ARRAY [STACKABLE]) is
+	restack_children (a_stackable_array: ARRAY [STACKABLE])
 			-- the stackable's in the array have to have the
 			-- same parent.
 		require
@@ -150,7 +150,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current bulletin.
 		do
 		end;
@@ -160,7 +160,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: BULLETIN_I;
 			-- Implementation of bulletin
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

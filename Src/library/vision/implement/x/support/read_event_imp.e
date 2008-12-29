@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Creation of Context data from X events."
@@ -18,7 +18,7 @@ inherit
 	
 feature {NONE} -- Initialization
 
-	create_context_data_from_event (widget_oui: WIDGET; event: MEL_EVENT): CONTEXT_DATA is
+	create_context_data_from_event (widget_oui: WIDGET; event: MEL_EVENT): CONTEXT_DATA
 			-- Create a context data from the `event' information
 		require
 			non_void_widget_oui: widget_oui /= Void;
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	buttons_state (state: INTEGER): BUTTONS is
+	buttons_state (state: INTEGER): BUTTONS
 			-- State of buttons when the event occurs
 		do
 			create Result.make (5);
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			Result.put (and_masks (state, Button5Mask), 5);
 		end;
 
-	modifiers_state (state: INTEGER): KEYBOARD is
+	modifiers_state (state: INTEGER): KEYBOARD
 			-- State of modifier keys
 		local
 			mod: ARRAY [BOOLEAN]
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			mod.put (and_masks (state, Mod5Mask), 5);
 		end;
 
-	button_press_data (widget_oui: WIDGET; event: MEL_EVENT): BTPRESS_DATA is
+	button_press_data (widget_oui: WIDGET; event: MEL_EVENT): BTPRESS_DATA
 			-- Create a context for `ButtonPress' event.
 		local
 			e: MEL_BUTTON_EVENT
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 					buttons_state (e.state), modifiers_state (e.state))
 		end;
 
-	button_release_data (widget_oui: WIDGET; event: MEL_EVENT): BUTREL_DATA is
+	button_release_data (widget_oui: WIDGET; event: MEL_EVENT): BUTREL_DATA
 			-- Create a context for `ButtonRelease' event.
 		local
 			e: MEL_BUTTON_EVENT	
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 					buttons_state (e.state), modifiers_state (e.state))
 		end;
 
-	expose_data (widget_oui: WIDGET; event: MEL_EVENT): EXPOSE_DATA is
+	expose_data (widget_oui: WIDGET; event: MEL_EVENT): EXPOSE_DATA
 		local
 			clip: CLIP;
 			coord: COORD_XY;
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			create Result.make (widget_oui, clip, e.count);
 		end;
 
-	key_press_data (widget_oui: WIDGET; event: MEL_EVENT): KYPRESS_DATA is
+	key_press_data (widget_oui: WIDGET; event: MEL_EVENT): KYPRESS_DATA
 		local
 			e: MEL_KEY_EVENT
 		do
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 					modifiers_state (e.state));
 		end;
 
-	key_release_data (widget_oui: WIDGET; event: MEL_EVENT): KEYREL_DATA is
+	key_release_data (widget_oui: WIDGET; event: MEL_EVENT): KEYREL_DATA
 		local
 			e: MEL_KEY_EVENT
 		do
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 					modifiers_state (e.state))
 		end; 
 
-	motion_notify_data (widget_oui: WIDGET; event: MEL_EVENT): MOTNOT_DATA is
+	motion_notify_data (widget_oui: WIDGET; event: MEL_EVENT): MOTNOT_DATA
 		local
 			e: MEL_MOTION_EVENT
 		do
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 					buttons_state (e.state))
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

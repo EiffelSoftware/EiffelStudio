@@ -1,4 +1,4 @@
-indexing
+note
 	description: "wrapper for anynymous enums from file HIGeometry.h"
 
 class
@@ -6,28 +6,28 @@ class
 
 feature -- Carbon constants
 
-	frozen kHICoordSpace72DPIGlobal: INTEGER is
+	frozen kHICoordSpace72DPIGlobal: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICoordSpace72DPIGlobal"
 	end
 
-	frozen kHICoordSpaceScreenPixel: INTEGER is
+	frozen kHICoordSpaceScreenPixel: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICoordSpaceScreenPixel"
 	end
 
-	frozen kHICoordSpaceWindow: INTEGER is
+	frozen kHICoordSpaceWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICoordSpaceWindow"
 	end
 
-	frozen kHICoordSpaceView: INTEGER is
+	frozen kHICoordSpaceView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias

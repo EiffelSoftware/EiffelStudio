@@ -1,4 +1,4 @@
-indexing
+note
 	description: "button in a menu"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_menu_b: MENU_B; man: BOOLEAN; oui_parent: MENU) is
+	make (a_menu_b: MENU_B; man: BOOLEAN; oui_parent: MENU)
 		local
 			mp: MENU_PULL
 		do
@@ -46,7 +46,7 @@ feature -- Access
 
 	text: STRING
 
-	width: INTEGER is
+	width: INTEGER
 		local
 			system_font: WEL_SYSTEM_FONT
 		do
@@ -54,7 +54,7 @@ feature -- Access
 			Result := (text.count + 1) * system_font.log_font.width
 		end
 
-	height: INTEGER is
+	height: INTEGER
 		local
 			system_font: WEL_SYSTEM_FONT
 		do
@@ -64,12 +64,12 @@ feature -- Access
 
 feature -- Status setting
 
-	set_text (new_text: STRING) is
+	set_text (new_text: STRING)
 		do
 			text := new_text
 		end
 
-	set_insensitive (flag: BOOLEAN) is
+	set_insensitive (flag: BOOLEAN)
 			-- Set sensitivity of Current to reflect `flag'.
 		do
 			Precursor {BUTTON_IMP} (flag)
@@ -82,36 +82,36 @@ feature -- Status setting
 
 feature -- Element change
 
-	wel_set_text (a_text: STRING) is
+	wel_set_text (a_text: STRING)
 		do
 		end;
 
-	wel_disabled: BOOLEAN is
+	wel_disabled: BOOLEAN
 		do
 		end;
 
-	realize is
+	realize
 		do
 			realized := True
 		end
 
-	unrealize is
+	unrealize
 		do
 			realized := false
 		end
 
-	wel_enable is
+	wel_enable
 			-- Enable current button.
 		do
 		end;
 
-	wel_disable is
+	wel_disable
 			-- Disable current button.
 		do
 		end;
 
 
-	wel_destroy is
+	wel_destroy
 		do
 		end
 
@@ -119,29 +119,29 @@ feature -- Element change
 
 feature {NONE} -- Inapplicable
 
-	default_style: INTEGER is
+	default_style: INTEGER
 		do
 		end
 
-	class_name: STRING is
+	class_name: STRING
 		do
 		end
 
-	process_notification (notification_code: INTEGER) is
+	process_notification (notification_code: INTEGER)
 		do
 		end
 
-	attach_menu (a_menu: MENU_PULL) is
+	attach_menu (a_menu: MENU_PULL)
 		do
 			associated_menu := a_menu
 		end
 
 	wel_hide, wel_set_focus, enable, disable, invalidate,
-	wel_release_capture, wel_set_capture, wel_show  is
+	wel_release_capture, wel_set_capture, wel_show
 		do
 		end
 
-	wel_set_menu (wel_menu: WEL_MENU) is
+	wel_set_menu (wel_menu: WEL_MENU)
 		do
 		end
 
@@ -153,32 +153,32 @@ feature {NONE} -- Inapplicable
 
 	wel_children: LINKED_LIST [WEL_WINDOW]
 
-	wel_set_width, wel_set_height, wel_set_x, wel_set_y (i:INTEGER) is do end
+	wel_set_width, wel_set_height, wel_set_x, wel_set_y (i:INTEGER) do end
 
 	absolute_x, absolute_y, wel_width, wel_height, wel_x, wel_y: INTEGER
 
 	wel_text: STRING_32
 
-	resize, wel_move (new_width, new_height: INTEGER) is
+	resize, wel_move (new_width, new_height: INTEGER)
 		do
 		end
 
-	set_z_order (flags: POINTER) is
+	set_z_order (flags: POINTER)
 		do
 		end
 
 	wel_item: POINTER
 
-	disable_default_processing is
+	disable_default_processing
 		do
 		end
 
 	wel_font: WEL_FONT
 
-	wel_set_font (f:WEL_FONT) is
+	wel_set_font (f:WEL_FONT)
 		do
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Responsible for maitain all colors used by docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation method
 		do
 			ev_application.theme_changed_actions.put_front (agent init_colors)
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			create internal_shared
 		end
 
-	init_colors is
+	init_colors
 			-- Initialize all colors
 		local
 			l_system_color: SD_SYSTEM_COLOR
@@ -58,61 +58,61 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	non_focused_color: EV_COLOR is
+	non_focused_color: EV_COLOR
 			-- Non focuse color. Used by SD_TITLE_BAR.
 		do
 			Result := non_focused_color_cell.item
 		end
 
-	non_focused_title_color: EV_COLOR is
+	non_focused_title_color: EV_COLOR
 			-- Non focused color of window title bar.
 		do
 			Result := non_focused_title_color_cell.item
 		end
 
-	non_focused_title_text_color: EV_COLOR is
+	non_focused_title_text_color: EV_COLOR
 			-- Title bar text color when non focused.
 		do
 			Result := non_focused_title_text_color_cell.item
 		end
 
-	non_focused_color_lightness: EV_COLOR is
+	non_focused_color_lightness: EV_COLOR
 			-- Lighter `non_focused_color'.
 		do
 			Result := non_focused_color_lightness_cell.item
 		end
 
-	focused_color: EV_COLOR is
+	focused_color: EV_COLOR
 			-- Focused color. Used by SD_TITLE_BAR...
 		do
 			Result := focused_color_cell.item
 		end
 
-	focused_title_text_color: EV_COLOR is
+	focused_title_text_color: EV_COLOR
 			-- Focused title bar text color. Used bt SD_TITLE_BAR.
 		do
 			Result := focused_title_text_color_cell.item
 		end
 
-	border_color: EV_COLOR is
+	border_color: EV_COLOR
 			-- Border color, used by SD_TAB_STUB, SD_NOTEBOOK_TAB...
 		do
 			Result := active_border_color_cell.item
 		end
 
-	tab_text_color: EV_COLOR is
+	tab_text_color: EV_COLOR
 			-- Text color
 		do
 			Result := tab_text_color_cell.item
 		end
 
-	tool_tip_color: EV_COLOR is
+	tool_tip_color: EV_COLOR
 			-- Tooltip color which is used by SD_NOTEBOOK_HIDE_DIALOG.
 		do
 			Result := tool_tip_color_cell.item
 		end
 
-	tool_bar_title_bar_color: EV_COLOR is
+	tool_bar_title_bar_color: EV_COLOR
 			-- Tool bar tilte bar color when tool bar floating.
 		once
 			create Result
@@ -121,13 +121,13 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	feedback_indicator_region_window_discard_color: EV_COLOR is
+	feedback_indicator_region_window_discard_color: EV_COLOR
 			-- Feedback indicator window region discard color.
 		once
 			create Result.make_with_rgb (1, 1, 1)
 		end
 
-	default_background_color: EV_COLOR is
+	default_background_color: EV_COLOR
 			-- Default background color
 		do
 			Result := default_background_color_cell.item
@@ -135,7 +135,7 @@ feature -- Query
 
 feature -- Implementation
 
-	update_all_tool_bars is
+	update_all_tool_bars
 			-- Update all tool bars background color.
 		local
 			l_mem: MEMORY
@@ -160,61 +160,61 @@ feature -- Implementation
 			end
 		end
 
-	non_focused_color_cell: CELL [EV_COLOR] is
+	non_focused_color_cell: CELL [EV_COLOR]
 			-- Singelton cell for `non_focus_color'
 		once
 			create Result.put (Void)
 		end
 
-	non_focused_title_color_cell: CELL [EV_COLOR] is
+	non_focused_title_color_cell: CELL [EV_COLOR]
 			-- Singleton cell for `non_focused_title_color'
 		once
 			create Result.put (Void)
 		end
 
-	non_focused_title_text_color_cell: CELL [EV_COLOR] is
+	non_focused_title_text_color_cell: CELL [EV_COLOR]
 			-- Singleton cell for `non_focused_title_text_color'
 		once
 			create Result.put (Void)
 		end
 
-	non_focused_color_lightness_cell: CELL [EV_COLOR] is
+	non_focused_color_lightness_cell: CELL [EV_COLOR]
 			-- Singleton cell for `non_focused_color_lightness'
 		once
 			create Result.put (Void)
 		end
 
-	focused_color_cell: CELL [EV_COLOR] is
+	focused_color_cell: CELL [EV_COLOR]
 			-- Singleton cell for `focused_color_cell'
 		once
 			create Result.put (Void)
 		end
 
-	focused_title_text_color_cell: CELL [EV_COLOR] is
+	focused_title_text_color_cell: CELL [EV_COLOR]
 			-- Singleton cell for `focused_title_text_color'
 		once
 			create Result.put (Void)
 		end
 
-	active_border_color_cell: CELL [EV_COLOR] is
+	active_border_color_cell: CELL [EV_COLOR]
 			-- Singleton cell for `active_border_color'
 		once
 			create Result.put (Void)
 		end
 
-	tab_text_color_cell: CELL [EV_COLOR] is
+	tab_text_color_cell: CELL [EV_COLOR]
 			-- Singleton cell for `tab_text_color'
 		once
 			create Result.put (Void)
 		end
 
-	tool_tip_color_cell:CELL [EV_COLOR] is
+	tool_tip_color_cell:CELL [EV_COLOR]
 			-- Singleton cell for `tool_tip_color'
 		once
 			create Result.put (Void)
 		end
 
-	default_background_color_cell: CELL [EV_COLOR] is
+	default_background_color_cell: CELL [EV_COLOR]
 			-- Singletone cell for `default_background_color'
 		once
 			create Result.put (Void)
@@ -226,7 +226,7 @@ feature -- Implementation
 invariant
 	not_void: internal_shared /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

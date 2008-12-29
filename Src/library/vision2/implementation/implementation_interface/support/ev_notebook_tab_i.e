@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a tab associated with a notebook item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ feature -- Access
 
 feature {EV_NOTEBOOK_TAB} -- Status Setting
 
-	set_widgets (a_notebook: EV_NOTEBOOK; a_widget: EV_WIDGET) is
+	set_widgets (a_notebook: EV_NOTEBOOK; a_widget: EV_WIDGET)
 			-- Assign `a_notebook' to `notebook' and `a_widget' to `widget'.
 		require
 			notebook_not_void: a_notebook /= Void
@@ -53,7 +53,7 @@ feature {EV_NOTEBOOK_TAB} -- Status Setting
 			widget_set: widget = a_widget
 		end
 		
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is objects state set to selected.
 		do
 			if notebook /= Void then
@@ -61,7 +61,7 @@ feature {EV_NOTEBOOK_TAB} -- Status Setting
 			end
 		end
 
-	enable_select is
+	enable_select
 			-- Select the object.
 		do
 			if notebook /= Void and widget /= Void then
@@ -75,7 +75,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision print dialog, mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,14 +51,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			wel_make
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 			--| Currently no need to do anything here.
 		do
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	print_context: EV_PRINT_CONTEXT is
+	print_context: EV_PRINT_CONTEXT
 			-- Return a print context for the dialog box.
 		do
 			Result := Precursor {EV_PRINT_DIALOG_I}
@@ -85,7 +85,7 @@ feature -- Access
 			end
 		end
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Title of `Current'.
 		do
 			Result := internal_title
@@ -96,7 +96,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_title (new_title: STRING_GENERAL) is
+	set_title (new_title: STRING_GENERAL)
 			-- Assign `new_title' to `title'.
 		do
 			internal_title := new_title.twin
@@ -104,7 +104,7 @@ feature -- Element change
 			title_set: title.is_equal (new_title)
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			destroy_item
@@ -116,98 +116,98 @@ feature {EV_ANY_I}
 	--| FIXME These features are all required by EV_POSITIONED and
 	--| EV_POSITIONABLE. Is there a way to implement these?
 
-	set_x_position (a: INTEGER) is
+	set_x_position (a: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_y_position (a: INTEGER) is
+	set_y_position (a: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_height (a: INTEGER) is
+	set_height (a: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_width (a: INTEGER) is
+	set_width (a: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_size (a, b: INTEGER) is
+	set_size (a, b: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	x_position: INTEGER is
+	x_position: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	width: INTEGER is
+	width: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_position (a, b: INTEGER) is
+	set_position (a, b: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
@@ -216,14 +216,14 @@ feature {EV_ANY_I}
 
 feature -- Access
 
-	output_file_name: STRING_32 is
+	output_file_name: STRING_32
 		do
 			--| FIXME it appears that to implement this, you
 			--| need to handle WIN32 StartDoc and DOCINFO
 			Result:="Not yet implemented."
 		end
 
-	printer_name: STRING_32 is
+	printer_name: STRING_32
 		do
 			--| FIXME Need to add WEL support for DEVNAMES
 			--| structure, to implement this feature.
@@ -232,14 +232,14 @@ feature -- Access
 
 feature -- Element change
 
-	set_maximum_to_page (value: INTEGER) is
+	set_maximum_to_page (value: INTEGER)
 			-- Make 'value' the new maximum 'to_page' value.
 		do
 			maximum_to_page := value
 			set_maximum_range (maximum_to_page)
 		end
 
-	set_minimum_from_page (value: INTEGER) is
+	set_minimum_from_page (value: INTEGER)
 			-- Make 'value' the new minimum 'to_page' value.
 		do
 			minimum_from_page := value
@@ -248,7 +248,7 @@ feature -- Element change
 
 feature -- Status_report
 
-	landscape_checked: BOOLEAN is
+	landscape_checked: BOOLEAN
 		do
 			--| FIXME Appears to be no easy way to find this from
 			--| the dialog.
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 	internal_title: STRING_32
 			-- Storage for `title'.
 
-	activate (a_parent: WEL_COMPOSITE_WINDOW) is
+	activate (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Activate current dialog
 		do
 			begin_activate
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			end_activate
 		end
 
-	print_dialog_procedure (hdlg: POINTER; msg: INTEGER_32; wparam, lparam: POINTER): POINTER is
+	print_dialog_procedure (hdlg: POINTER; msg: INTEGER_32; wparam, lparam: POINTER): POINTER
 			-- Hook for handling messages of the font dialog.
 		local
 			l_str: WEL_STRING
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

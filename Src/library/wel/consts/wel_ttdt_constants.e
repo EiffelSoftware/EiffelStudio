@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tooltip Delay Time (TTDT) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,35 +10,35 @@ class
 
 feature -- Access
 
-	Ttdt_automatic: INTEGER is
+	Ttdt_automatic: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"TTDT_AUTOMATIC"
 		end
 
-	Ttdt_autopop: INTEGER is
+	Ttdt_autopop: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"TTDT_AUTOPOP"
 		end
 
-	Ttdt_initial: INTEGER is
+	Ttdt_initial: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"TTDT_INITIAL"
 		end
 
-	Ttdt_reshow: INTEGER is
+	Ttdt_reshow: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"TTDT_RESHOW"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

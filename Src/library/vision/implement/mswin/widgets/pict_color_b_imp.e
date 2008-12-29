@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPpixmap button"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -33,7 +33,7 @@ create
 
 feature -- Initialization
 
-	make (a_picture_color_button: PICT_COLOR_B; oui_parent: COMPOSITE; man: BOOLEAN) is
+	make (a_picture_color_button: PICT_COLOR_B; oui_parent: COMPOSITE; man: BOOLEAN)
 			-- Create the pict color b
 		do
 			create private_attributes
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_pressed (b: boolean) is
+	set_pressed (b: boolean)
 			-- Set `is_pressed' to `b'. 
 		do 
 			is_pressed := b;
@@ -62,7 +62,7 @@ feature -- Status setting
 			end
 		end
 
-	set_pixmap, set_background_pixmap (a_pixmap: PIXMAP) is
+	set_pixmap, set_background_pixmap (a_pixmap: PIXMAP)
 			-- Set the pixmap for the button
 		do
 			pixmap := a_pixmap
@@ -79,7 +79,7 @@ feature -- Status setting
 			end
 		end
 
-	set_default_size is
+	set_default_size
 			-- Set default of button
 		do
 			if pixmap /= Void then
@@ -90,13 +90,13 @@ feature -- Status setting
 
 feature -- Element change 
 
-	add_draw_item_action (a_command: COMMAND; arg: ANY) is
+	add_draw_item_action (a_command: COMMAND; arg: ANY)
 			-- Action for a draw item.
 		do
 			draw_item_actions.add (Current, a_command, arg)
 		end
 
-	realize is
+	realize
 		do
 			Precursor{OWNER_DRAW_BUTTON_WINDOWS} ;
 			invalidate
@@ -104,7 +104,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_draw_item_action (a_command: COMMAND; arg: ANY) is
+	remove_draw_item_action (a_command: COMMAND; arg: ANY)
 			-- Remove actions for draw_item event
 		do
 			draw_item_actions.remove (Current, a_command, arg)
@@ -112,7 +112,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	on_lbutton_move (keys, x_pos, y_pos: INTEGER) is
+	on_lbutton_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse moves with the left button dowm
 			-- (from WIDGET_IMP)
 			-- (export status {NONE})
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_left_button_down (keys, a_x, a_y: INTEGER) is
+	on_left_button_down (keys, a_x, a_y: INTEGER)
 			-- Wm_lbuttondown message
 			-- See class WEL_IMPK_CONSTANTS for `keys' value
 		local
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			left_button_press_actions.execute (Current, cd)
 		end
 
-	on_left_button_up (keys, a_x, a_y: INTEGER) is
+	on_left_button_up (keys, a_x, a_y: INTEGER)
 			-- Wm_lbuttonup message
 			-- See class WEL_IMPK_CONSTANTS for `keys' value
 		local
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_draw (a_draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
+	on_draw (a_draw_item_struct: WEL_DRAW_ITEM_STRUCT)
 			-- Respond to a draw_item message.
 		local
 			dc: WEL_DC
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			end	
 		end
 
-	draw_selected (a_dc: WEL_DC) is
+	draw_selected (a_dc: WEL_DC)
 		local
 			bitmap: WEL_BITMAP
 			pixmap_w: PIXMAP_IMP
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_unselected (a_dc: WEL_DC) is
+	draw_unselected (a_dc: WEL_DC)
 		local
 			bitmap: WEL_BITMAP
 			pixmap_w: PIXMAP_IMP
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_width: INTEGER is
+	internal_width: INTEGER
 		require
 			exists: exists
 		do
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 			positive_result: Result >= 0
 		end
 
-	internal_height: INTEGER is
+	internal_height: INTEGER
 		require
 			exists: exists
 		do
@@ -300,12 +300,12 @@ feature {NONE} -- Implementation
 	is_being_pressed: BOOLEAN
 		-- Is this button currently being pressed?
 
-	Total_offset: INTEGER is 
+	Total_offset: INTEGER 
 		do
 			Result := 5
 		end
 
-	in_button_area (a_x, a_y: INTEGER): BOOLEAN is
+	in_button_area (a_x, a_y: INTEGER): BOOLEAN
 			-- Is position marked by `a_x' and `a_y' in the
 			-- area of the button?
 		do
@@ -319,12 +319,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_bn_clicked is
+	on_bn_clicked
 			-- Do nothing
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

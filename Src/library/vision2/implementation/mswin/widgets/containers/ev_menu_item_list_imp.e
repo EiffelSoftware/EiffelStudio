@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu item list. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 		do
 			base_make (an_interface)
 			create ev_children.make (2)
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Standard output
 
-	print_radio_groups is
+	print_radio_groups
 		local
 			cur: CURSOR
 			sep_imp: EV_MENU_SEPARATOR_IMP
@@ -76,7 +76,7 @@ feature -- Standard output
 			ev_children.go_to (cur)
 		end
 
-	print_radio_group (g: like radio_group) is
+	print_radio_group (g: like radio_group)
 		local
 			cur: CURSOR
 		do
@@ -103,7 +103,7 @@ feature -- Standard output
 
 feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP, EV_POPUP_MENU_HANDLER} -- WEL Implementation
 
-	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU): POINTER is
+	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU): POINTER
 			-- The menu char `char_code' has been typed within `corresponding_menu'.
 		local
 			shortcut_text: STRING_32
@@ -154,7 +154,7 @@ feature {EV_CONTAINER_IMP, EV_MENU_ITEM_LIST_IMP, EV_POPUP_MENU_HANDLER} -- WEL 
 
 feature {EV_WINDOW_IMP, EV_MENU_ITEM_IMP} -- Operations
 
-	rebuild_control is
+	rebuild_control
 			-- Rebuild the control by removing all items
 			-- and then reinserting them.
 			--
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 	radio_group: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 			-- Radios groups
 
-	insert_item (item_imp: EV_ITEM_IMP; pos: INTEGER) is
+	insert_item (item_imp: EV_ITEM_IMP; pos: INTEGER)
 			-- Insert `item_imp' on `pos' in `ev_children'.
 		local
 			sep_imp: EV_MENU_SEPARATOR_IMP
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			update_parent_size
 		end
 
-	quick_insert_item (menu_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
+	quick_insert_item (menu_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER)
 			-- Quickly insert `item_imp' on `pos' in `ev_children'.
 			-- Do not take care of radio groups, etc.
 			--
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_item (item_imp: EV_ITEM_IMP) is
+	remove_item (item_imp: EV_ITEM_IMP)
 			-- Remove `item_imp' from `ev_children'.
 		local
 			pos: INTEGER
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_separator_item (sep_imp: EV_MENU_SEPARATOR_IMP; pos: INTEGER) is
+	insert_separator_item (sep_imp: EV_MENU_SEPARATOR_IMP; pos: INTEGER)
 			-- Insert `sep_imp' on `pos' in `ev_children'.
 		local
 			radio_imp: EV_RADIO_MENU_ITEM_IMP
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 				default_pointer, cwel_integer_to_pointer (sep_imp.object_id))
 		end
 
-	insert_menu (menu_imp: EV_MENU_IMP; pos: INTEGER) is
+	insert_menu (menu_imp: EV_MENU_IMP; pos: INTEGER)
 			-- Insert `menu_imp' on `pos' in `ev_children'.
 		local
 			menu_flag: INTEGER
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 				cwel_integer_to_pointer (menu_imp.object_id))
 		end
 
-	insert_menu_item (menu_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
+	insert_menu_item (menu_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER)
 			-- Insert `menu_imp' on `pos' in `ev_children'.
 		local
 			sep_imp: EV_MENU_SEPARATOR_IMP
@@ -444,12 +444,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_parent_size is
+	update_parent_size
 			-- Update size of parent.
 		deferred
 		end
 
-	is_menu_separator_imp (item_imp: EV_ITEM_IMP): BOOLEAN is
+	is_menu_separator_imp (item_imp: EV_ITEM_IMP): BOOLEAN
 			-- Is `item_imp' of type EV_MENU_SEPARATOR_IMP?
 		local
 			sep_imp: EV_MENU_SEPARATOR_IMP
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 			Result := sep_imp /= Void
 		end
 
-	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP is
+	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP
 			-- Separator before item with `an_index'.
 		require
 			an_index_within_bounds:
@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU): POINTER is
+	propagate_on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU): POINTER
 			-- Propagate the `on_menu_char' message to the submenus until
 			-- the message is handled.
 		local
@@ -506,12 +506,12 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 
-	is_sensitive: BOOLEAN is
+	is_sensitive: BOOLEAN
 			-- Is `Current' sensitive?
 		deferred
 		end
 
-	internal_replace (an_item: EV_MENU_ITEM_IMP; pos: INTEGER) is
+	internal_replace (an_item: EV_MENU_ITEM_IMP; pos: INTEGER)
 			-- replace item at position `pos' with `an_item'.
 			-- Will not alter state of radio_menu_items.
 		do
@@ -523,7 +523,7 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 			ev_children.go_i_th (pos)
 		end
 
-	menu_opened (a_menu: WEL_MENU) is
+	menu_opened (a_menu: WEL_MENU)
 			-- Call `select_actions' for `a_menu'.
 		require
 			a_menu_not_void: a_menu /= Void
@@ -546,7 +546,7 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 			end
 		end
 
-	menu_item_clicked (a_id: INTEGER) is
+	menu_item_clicked (a_id: INTEGER)
 			-- Call `on_activate' for menu item with `a_id'.
 		local
 			l_menu_item: EV_MENU_ITEM_IMP
@@ -599,7 +599,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU_ITEM_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Trees implemented using a linked list representation"
@@ -107,7 +107,7 @@ create
 
 feature -- Initialization
 
-	make (v: like item) is
+	make (v: like item)
 			-- Create single node with item `v'.
 		do
 			put (v)
@@ -125,7 +125,7 @@ feature -- Access
 	first_child: like parent
 			-- Leftmost child
 
-	left_sibling: like parent is
+	left_sibling: like parent
 			-- Left neighbor (if any)
 		do
 			if parent /= Void then
@@ -139,7 +139,7 @@ feature -- Access
 			end
 		end
 
-	child_cursor: LINKED_TREE_CURSOR [G] is
+	child_cursor: LINKED_TREE_CURSOR [G]
 			-- Current cursor position
 		do
 			create Result.make (child, child_after, child_before)
@@ -147,7 +147,7 @@ feature -- Access
 
 feature {RECURSIVE_CURSOR_TREE} -- Element change
 
-	set_child (n: like parent) is
+	set_child (n: like parent)
 			-- Set the child of parent to `n'.
 		do
 			child := n
@@ -157,7 +157,7 @@ feature {RECURSIVE_CURSOR_TREE} -- Element change
 
 feature -- Element change
 
-	put_child (n: like parent) is
+	put_child (n: like parent)
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
 		do
@@ -179,14 +179,14 @@ feature -- Element change
 			arity := arity + 1
 		end
 
-	replace_child (n: like parent) is
+	replace_child (n: like parent)
 			-- Replace current child by `n'.
 		do
 			put_child_right (n)
 			remove_child
 		end
 
-	put_child_left (n: like parent) is
+	put_child_left (n: like parent)
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -196,7 +196,7 @@ feature -- Element change
 			child_forth
 		end
 
-	put_child_right (n: like parent) is
+	put_child_right (n: like parent)
 			-- Add `n' to the right of cursor position.
 			-- Do not move cursor.
 		do
@@ -216,7 +216,7 @@ feature -- Element change
 			arity := arity + 1
 		end
 
-	merge_tree_before (other: like first_child) is
+	merge_tree_before (other: like first_child)
 			-- Merge children of `other' into current structure
 			-- before cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -225,7 +225,7 @@ feature -- Element change
 			ll_merge_left (other)
 		end
 
-	merge_tree_after (other: like first_child) is
+	merge_tree_after (other: like first_child)
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
@@ -236,7 +236,7 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (n: like first_child) is
+	prune (n: like first_child)
 			-- Prune `n' from children.
 		local
 			l_child: like first_child
@@ -277,7 +277,7 @@ feature -- Removal
 
 feature {NONE} -- Inapplicable
 
-	forget_left is
+	forget_left
 			-- Forget all left siblings.
 		do
 		end
@@ -285,7 +285,7 @@ feature {NONE} -- Inapplicable
 feature {LINKED_TREE} -- Implementation
 
 
-	new_cell (v: like item): like first_child is
+	new_cell (v: like item): like first_child
 			-- New cell containing `v'
 		do
 			create Result.make (v)
@@ -295,7 +295,7 @@ feature {LINKED_TREE} -- Implementation
 			Result.attach_to_parent (Current)
 		end
 
-	new_tree: like Current is
+	new_tree: like Current
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
@@ -303,14 +303,14 @@ feature {LINKED_TREE} -- Implementation
 			create Result.make (item)
 		end
 
-	clone_node (n: like Current): like Current is
+	clone_node (n: like Current): like Current
 			-- Clone node `n'.
 		do
 			create Result.make (n.item)
 			Result.copy_node (n)
 		end
 
-	copy_node (n: like Current) is
+	copy_node (n: like Current)
 			-- Copy content of `n' except tree data into Current.
 		do
 			standard_copy (n)
@@ -325,7 +325,7 @@ feature {LINKED_TREE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	attach (other: like first_child) is
+	attach (other: like first_child)
 				-- Attach all children of `other' to current node.
 		local
 			cursor: CURSOR
@@ -346,7 +346,7 @@ invariant
 
 	no_void_child: readable_child = child_readable
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_STANDARD_DIALOG_I."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Event handling
 
-	ok_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	ok_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when user clicks OK.
 		do
 			if ok_actions_internal = Void then
@@ -27,7 +27,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_ok_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_ok_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a ok action sequence.
 		deferred
 		end
@@ -38,7 +38,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	cancel_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	cancel_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when user cancels.
 		do
 			if cancel_actions_internal = Void then
@@ -52,7 +52,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_cancel_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_cancel_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a cancel action sequence.
 		deferred
 		end
@@ -60,7 +60,7 @@ feature {EV_ANY_I} -- Implementation
 	cancel_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Implementation of once per object `cancel_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

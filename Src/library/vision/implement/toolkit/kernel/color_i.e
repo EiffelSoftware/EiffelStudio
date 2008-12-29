@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -10,49 +10,49 @@ deferred class
 
 feature -- Access
 
-	allocated_blue: INTEGER is
+	allocated_blue: INTEGER
 			-- Allocated blue saturation level for `a_widget'
 		deferred
 		end;
 
-	allocated_green: INTEGER is
+	allocated_green: INTEGER
 			-- Allocated green saturation level for `a_widget'
 		deferred
 		end;
 
-	allocated_red: INTEGER is
+	allocated_red: INTEGER
 			-- Allocated red saturation level for `a_widget'
 		deferred
 		end;
 
 feature -- Status report
 
-	blue: INTEGER is
+	blue: INTEGER
 			-- Blue saturation level
 		require
 			color_not_specified_by_name: (name = Void)
 		deferred
 		end;
 
-	green: INTEGER is
+	green: INTEGER
 			-- Green saturation level
 		require
 			color_not_specified_by_name: (name = Void)
 		deferred
 		end;
 
-	is_white_by_default: BOOLEAN is
+	is_white_by_default: BOOLEAN
 			-- Default color used in case of failure
 			-- to allocate desire color
 		deferred
 		end;
 
-	name: STRING is
+	name: STRING
 			-- name of desired color for current
 		deferred
 		end;
 
-	red: INTEGER is
+	red: INTEGER
 			-- Red saturation level
 		require
 			color_not_specified_by_name: (name = Void)
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_blue (blue_value: INTEGER) is
+	set_blue (blue_value: INTEGER)
 			-- Set blue saturation level to `blue_value'.
 		require
 			blue_value_small_enough: blue_value  <= 65535;
@@ -72,7 +72,7 @@ feature -- Status setting
 			blue_set: blue = blue_value
 		end;
 
-	set_green (green_value: INTEGER) is
+	set_green (green_value: INTEGER)
 			-- Set green saturation level to `green_value'.
 		require
 			green_value_small_enough: green_value  <= 65535;
@@ -83,7 +83,7 @@ feature -- Status setting
 			green_set: green = green_value
 		end;
 
-	set_red (red_value: INTEGER) is
+	set_red (red_value: INTEGER)
 			-- Set red saturation level to `red_value'.
 		require
 			red_value_small_enough: red_value  <= 65535;
@@ -94,7 +94,7 @@ feature -- Status setting
 			red_set: red = red_value
 		end;
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set color name to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -104,7 +104,7 @@ feature -- Status setting
 			name_set: name.is_equal (a_name)
 		end;
 
-	set_rgb (red_value, green_value, blue_value: INTEGER) is
+	set_rgb (red_value, green_value, blue_value: INTEGER)
 			-- Set red, green and blue saturation level respectivly to
 			-- `red_value', `green_value' and `blue_value'.
 		require
@@ -122,7 +122,7 @@ feature -- Status setting
 			blue_set: blue = blue_value
 		end;
 
-	set_black_default is
+	set_black_default
 			-- Set black color to be used by default if
 			-- it is impossible to allocate desire color.
 		deferred
@@ -130,7 +130,7 @@ feature -- Status setting
 			black_default: not is_white_by_default
 		end;
 
-	set_white_default is
+	set_white_default
 			-- Set white color to be used by default if
 			-- it is impossible to allocate desire color.
 		deferred
@@ -138,7 +138,7 @@ feature -- Status setting
 			white_default: is_white_by_default
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

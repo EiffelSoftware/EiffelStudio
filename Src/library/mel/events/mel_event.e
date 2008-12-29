@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of the XAnyEvent."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_event_ptr: POINTER) is
+	make (an_event_ptr: POINTER)
 			-- Create the events.
 		require
 			valid_an_event_ptr: an_event_ptr /= default_pointer
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type: INTEGER is
+	type: INTEGER
 			-- Event type 
 			-- (Look in class MEL_EVENT_CONSTANTS for all
 			-- event types)
@@ -49,7 +49,7 @@ feature -- Access
 			Result := c_event_type (handle)
 		end
 
-	serial: INTEGER is
+	serial: INTEGER
 			-- Number of last processed event.
 			-- Caution it is an unsigned long casted into an int,
 			-- so it can be sometimes negative.
@@ -57,19 +57,19 @@ feature -- Access
 			Result := c_event_serial (handle)
 		end;
 
-	send_event: BOOLEAN is
+	send_event: BOOLEAN
 			-- True means that the event is from a SendEvent
 		do
 			Result := c_event_send_event (handle)
 		end
 
-	window_widget: MEL_WIDGET is
+	window_widget: MEL_WIDGET
 			-- Associated MEL widget class with `window'
 		do
 			Result := retrieve_widget_from_window (window)
 		end;
 
-	display: MEL_DISPLAY is
+	display: MEL_DISPLAY
 			-- Associated display 
 		local
 			d: POINTER
@@ -85,13 +85,13 @@ feature -- Pointer access
 	handle: POINTER;
 			-- Pointer to the C XEvent structure
 
-	display_pointer: POINTER is
+	display_pointer: POINTER
 			-- Display server that reported the event
 		do
 			Result := c_event_display (handle)
 		end
 
-	window: POINTER is
+	window: POINTER
 			-- Window pointer requesting the event
 		do
 			Result := c_event_window (handle)
@@ -99,7 +99,7 @@ feature -- Pointer access
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Output of event
 		do
 			Result := event_out
@@ -107,7 +107,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	retrieve_widget_from_window (w_ptr: POINTER): MEL_WIDGET is
+	retrieve_widget_from_window (w_ptr: POINTER): MEL_WIDGET
 			-- Retrieve mel widget from window pointer `ptr'
 		do
 			if w_ptr /= default_pointer then
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	event_out: STRING is
+	event_out: STRING
 			-- Output of event
 		local
 			w: MEL_WIDGET
@@ -144,27 +144,27 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	c_event_type (event_ptr: POINTER): INTEGER is
+	c_event_type (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XAnyEvent *): EIF_INTEGER"
 		end;
 
-	c_event_serial (event_ptr: POINTER): INTEGER is
+	c_event_serial (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XAnyEvent *): EIF_INTEGER"
 		end;
 
-	c_event_send_event (event_ptr: POINTER): BOOLEAN is
+	c_event_send_event (event_ptr: POINTER): BOOLEAN
 		external
 			"C [macro %"events.h%"] (XAnyEvent *): EIF_BOOLEAN"
 		end;
 
-	c_event_display (event_ptr: POINTER): POINTER is
+	c_event_display (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XAnyEvent *): EIF_POINTER"
 		end;
 
-    c_event_window (event_ptr: POINTER): POINTER is
+    c_event_window (event_ptr: POINTER): POINTER
         external
             "C [macro %"events.h%"] (XAnyEvent *): EIF_POINTER"
         end;
@@ -173,7 +173,7 @@ invariant
 	
 	valid_handle: handle /= default_pointer
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

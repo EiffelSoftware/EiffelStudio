@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif arrow button."
@@ -46,7 +46,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_arrow_b: ARROW_B; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (an_arrow_b: ARROW_B; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif arrow button.
 		local
 			mc: MEL_COMPOSITE
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when current
 			-- arrow button is activated.
 		local
@@ -73,7 +73,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_arm_action (a_command: COMMAND; argument: ANY) is
+	add_arm_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when current
 			-- arrow button is armed.
 		local
@@ -87,7 +87,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_release_action (a_command: COMMAND; argument: ANY) is
+	add_release_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when current
 			-- arrow button is released.
 		local
@@ -103,21 +103,21 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current arrow button is activated.
 		do
 			remove_command (activate_command, a_command, argument)
 		end; 
 
-	remove_arm_action (a_command: COMMAND; argument: ANY) is
+	remove_arm_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current arrow button is armed.
 		do
 			remove_command (arm_command, a_command, argument)
 		end; 
 
-	remove_release_action (a_command: COMMAND; argument: ANY) is
+	remove_release_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current arrow button is released.
 		do
@@ -126,49 +126,49 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	font: FONT is
+	font: FONT
 			-- Font of arrow button
 		do
 		end;
 
-	set_font (f: FONT) is
+	set_font (f: FONT)
 			-- Font of arrow button
 		do
 		end;
 
-	text: STRING is
+	text: STRING
 			-- Text of current button
 		do
 		end;
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set current button text to `a_text'.
 		do
 		end;
 
-	set_left_alignment is
+	set_left_alignment
 			--	Set text alignment to left. 
 		do
 		end;
 
-	set_center_alignment is
+	set_center_alignment
 			--	Set text alignment to center. 
 		do
 		end;
 
-	allow_recompute_size is
+	allow_recompute_size
 			-- Allow current button to recompute its  size according to
 			-- some changes on its text.
 		do
 		end;
 
-	forbid_recompute_size is
+	forbid_recompute_size
 			-- Forbid current button to recompute its size according to
 			-- some changes on its text.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

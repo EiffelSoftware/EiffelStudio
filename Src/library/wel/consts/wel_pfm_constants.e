@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Paragraph format mask (PFM) constants for the rich edit %
 		%control."
 	legal: "See notice at end of class."
@@ -11,56 +11,56 @@ class
 
 feature -- Access
 
-	Pfm_startindent: INTEGER is 1
+	Pfm_startindent: INTEGER = 1
 			-- The dxStartIndent member is valid.
 
-	Pfm_rightindent: INTEGER is 2
+	Pfm_rightindent: INTEGER = 2
 			-- The dxRightIndent member is valid.
 
-	Pfm_offset: INTEGER is 4
+	Pfm_offset: INTEGER = 4
 			-- The dxStartIndent member is valid and specifies
 			-- a relative value.
 
-	Pfm_alignment: INTEGER is 8
+	Pfm_alignment: INTEGER = 8
 			-- The wAlignment member is valid.
 
-	Pfm_tabstops: INTEGER is 16
+	Pfm_tabstops: INTEGER = 16
 			-- The cTabStobs and rgxTabStops members are valid.
 
-	Pfm_numbering: INTEGER is 32
+	Pfm_numbering: INTEGER = 32
 			-- The wNumbering member is valid.
 			
-	Pfm_spacebefore: INTEGER is 64
+	Pfm_spacebefore: INTEGER = 64
 			-- The dySpaceBefore member is valid.
 			
-	Pfm_spaceafter: INTEGER is 128
+	Pfm_spaceafter: INTEGER = 128
 			-- The dySpaceAfter member is valid.
 			
-	Pfm_linespacing: INTEGER is 256
+	Pfm_linespacing: INTEGER = 256
 			-- The dyLineSpacing member is valid.
 			
-	Pfm_style: INTEGER is 512
+	Pfm_style: INTEGER = 512
 			-- The sStyle member is valid.
 			
-	Pfm_border: INTEGER is 2048
+	Pfm_border: INTEGER = 2048
 			-- The wBorderSpace, wBorderWidth and wBorders members are valid.
 			
-	Pfm_shading: INTEGER is 4096
+	Pfm_shading: INTEGER = 4096
 			-- The wShadingStyle and wShadingWeight members arevalid.
 			
-	Pfm_numberingstyle: INTEGER is 8092
+	Pfm_numberingstyle: INTEGER = 8092
 			-- The wNumberingStyle member is valid.
 			
-	Pfm_numberingtab: INTEGER is 16384
+	Pfm_numberingtab: INTEGER = 16384
 			-- The wNumberingTab member is valid.
 			
-	Pfm_numberingstart: INTEGER is 32768
+	Pfm_numberingstart: INTEGER = 32768
 			-- The wNumberingStart member is valid.
 
-	Pfm_offsetindent: INTEGER is -2147483648;
+	Pfm_offsetindent: INTEGER = -2147483648;
 			-- The dxOffset member is valid.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

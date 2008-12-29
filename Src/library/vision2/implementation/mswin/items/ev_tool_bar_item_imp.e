@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision tool bar item. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,12 +20,12 @@ inherit
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text displayed in textable.
 		deferred
 		end
 
-	has_pixmap: BOOLEAN is
+	has_pixmap: BOOLEAN
 			-- Has Current a pixmap?
 		deferred
 		end
@@ -33,28 +33,28 @@ feature -- Access
 	image_index: INTEGER
 			-- Index of the pixmaps in the imagelists.
 
-	is_sensitive: BOOLEAN is
+	is_sensitive: BOOLEAN
 			-- Is `Current' sensitive?
 		deferred
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Enable `Current'.
 		deferred
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Disable `Current'.
 		deferred
 		end
 
-	internal_non_sensitive: BOOLEAN is
+	internal_non_sensitive: BOOLEAN
 			-- Is `Current' not sensitive to input as seen
 			-- from `interface'?
 		deferred
 		end
 
-	restore_private_pixmaps is
+	restore_private_pixmaps
 			-- When `Current' is parented, `private_pixmap' and
 			-- `private_gray_pixmap' are assigned Void. This is to stop
 			-- us keeping to many references to GDI objects. When
@@ -65,13 +65,13 @@ feature -- Access
 
 feature -- Status setting
 
-	set_pixmap_in_parent is
+	set_pixmap_in_parent
 			-- Add the pixmap to the parent by updating the
 			-- parent's image list.
 		deferred
 		end
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
+	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
 		deferred
@@ -81,7 +81,7 @@ feature {EV_ANY_I} -- Interface
 
 	interface: EV_TOOL_BAR_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

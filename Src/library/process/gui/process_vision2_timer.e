@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Process status listening timer implemented with Vision2 timer."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature{NONE} -- Implementation
 
-	make (interval: INTEGER) is
+	make (interval: INTEGER)
 			-- Set time interval which this timer will be triggered with `interval'.
 			-- Unit of `interval' is milliseconds.
 		require
@@ -34,7 +34,7 @@ feature{NONE} -- Implementation
 
 feature -- Control
 
-	start is
+	start
 		local
 			prc_imp: PROCESS_IMP
 		do
@@ -47,7 +47,7 @@ feature -- Control
 			has_started := True
 		end
 
-	wait (a_timeout: INTEGER): BOOLEAN is
+	wait (a_timeout: INTEGER): BOOLEAN
 		local
 			l_sleep_time: INTEGER_64
 			prc_imp: PROCESS_IMP
@@ -88,12 +88,12 @@ feature -- Control
 			end
 		end
 
-	destroy is
+	destroy
 		do
 			timer.destroy
 		end
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 		do
 			Result := timer.is_destroyed
 		end
@@ -106,7 +106,7 @@ feature{NONE} -- Implementation
 invariant
 	timer_not_void: timer /= Void
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -117,4 +117,6 @@ indexing
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end
+

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Press button for use with EV_TOOL_BAR
@@ -58,13 +58,13 @@ create
 
 feature -- Access
 
-	parent: EV_TOOL_BAR is
+	parent: EV_TOOL_BAR
 			-- Parent of the current item.
 		do
 			Result ?= Precursor {EV_TOOL_BAR_ITEM}
 		end
 
-	gray_pixmap: EV_PIXMAP is
+	gray_pixmap: EV_PIXMAP
 			-- Gray image displayed when the button is not hot
 			-- i.e. when the mouse cursor is not over it.
 		require
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP) is
+	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP)
 			-- Assign `a_gray_pixmap' to `gray_pixmap'.
 		require
 			not_destroyed: not is_destroyed
@@ -90,7 +90,7 @@ feature -- Element change
 							 gray_pixmap /= a_gray_pixmap
 		end
 
-	remove_gray_pixmap is
+	remove_gray_pixmap
 			-- Make `gray_pixmap' `Void'.
 		require
 			not_destroyed: not is_destroyed
@@ -102,7 +102,7 @@ feature -- Element change
 
 feature -- Obsolete
 
-	align_text_left is
+	align_text_left
 			-- Display text left aligned
 		obsolete "Was not implemented on all platforms."
 		require
@@ -110,7 +110,7 @@ feature -- Obsolete
 		do
 		end
 
-	align_text_center is
+	align_text_center
 			-- Display text center aligned
 		obsolete "Was not implemented on all platforms."
 		require
@@ -118,7 +118,7 @@ feature -- Obsolete
 		do
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display text right aligned
 		obsolete "Was not implemented on all platforms."
 		require
@@ -128,7 +128,7 @@ feature -- Obsolete
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_TOOL_BAR_ITEM}
@@ -143,13 +143,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TOOL_BAR_BUTTON_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

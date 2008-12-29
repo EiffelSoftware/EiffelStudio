@@ -1,4 +1,4 @@
-indexing
+note
 
 	decription: 
 		"Motif functions that can be used on objects.";
@@ -11,7 +11,7 @@ class
 
 feature {NONE} -- Implementation
 
-	xm_change_color (a_target: POINTER; a_pixel: POINTER) is
+	xm_change_color (a_target: POINTER; a_pixel: POINTER)
 			-- Change all of the colors for the specified widget
 			-- based on the new background color.
 		external
@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 			"XmChangeColor"
 		end;
 
-	get_xm_string_direction (a_target: POINTER; a_resource_name: POINTER): INTEGER is
+	get_xm_string_direction (a_target: POINTER; a_resource_name: POINTER): INTEGER
 			-- Value of string direction resource with a_resource_name
 			-- as name.
 		require
@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 			Result := c_get_string_direction (a_target, a_resource_name)
 		end;
 
-	set_xm_string_direction (a_target: POINTER; a_resource_name: POINTER; a_direction: INTEGER) is
+	set_xm_string_direction (a_target: POINTER; a_resource_name: POINTER; a_direction: INTEGER)
 			-- Assign a_direction to target string direction resource
 			-- with a_resource_name as name.
 		require
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			c_set_string_direction (a_target, a_resource_name, a_direction)
 		end;
 
-	get_xm_string_table (a_target: POINTER; a_resource_name: POINTER): POINTER is
+	get_xm_string_table (a_target: POINTER; a_resource_name: POINTER): POINTER
 			-- Value of string direction resource with a_resource_name
 			-- as name.
 		require
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			Result := c_get_string_table (a_target, a_resource_name)
 		end;
 
-	set_xm_string_table (a_target: POINTER; a_resource_name: POINTER; a_string_table: POINTER) is
+	set_xm_string_table (a_target: POINTER; a_resource_name: POINTER; a_string_table: POINTER)
 			-- Assign a_direction to target string direction resource
 			-- with a_resource_name as name.
 		require
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			c_set_string_table (a_target, a_resource_name, a_string_table)
 		end;
 
-	get_xm_string (a_target: POINTER; a_resource_name: POINTER): MEL_STRING is
+	get_xm_string (a_target: POINTER; a_resource_name: POINTER): MEL_STRING
 			-- Value of X string resource with a_resource_name
 			-- as name.
 		require
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	set_xm_string (a_target: POINTER; a_resource_name: POINTER; a_compound_string: MEL_STRING) is
+	set_xm_string (a_target: POINTER; a_resource_name: POINTER; a_compound_string: MEL_STRING)
 			-- Assign a_compound_string to target string resource
 			-- with a_resource_name as name.
 		require
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			c_set_xmstring (a_target, a_resource_name, a_compound_string.handle)
 		end;
 
-	get_xm_font_list (a_target: POINTER; a_resource_name: POINTER): MEL_FONT_LIST is
+	get_xm_font_list (a_target: POINTER; a_resource_name: POINTER): MEL_FONT_LIST
 			-- Value of X string resource with a_resource_name
 			-- as name.
 		require
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			Result.set_shared
 		end;
 
-	set_xm_font_list (a_target: POINTER; a_resource_name: POINTER; a_font: MEL_FONT_LIST) is
+	set_xm_font_list (a_target: POINTER; a_resource_name: POINTER; a_font: MEL_FONT_LIST)
 			-- Assign a_compound_string to target string resource
 			-- with a_resource_name as name.
 		require
@@ -111,105 +111,105 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Widget queries
 
-    xm_is_scroll_bar (widget: POINTER): BOOLEAN is
+    xm_is_scroll_bar (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/ScrollBar.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsScrollBar"
         end;
 
-    xm_is_label (widget: POINTER): BOOLEAN is
+    xm_is_label (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/Label.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsLabel"
         end;
 
-    xm_is_label_gadget (widget: POINTER): BOOLEAN is
+    xm_is_label_gadget (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/LabelG.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsLabelGadget"
         end;
 
-    xm_is_arrow_button (widget: POINTER): BOOLEAN is
+    xm_is_arrow_button (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/ArrowB.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsArrowButton"
         end;
 
-    xm_is_arrow_button_gadget (widget: POINTER): BOOLEAN is
+    xm_is_arrow_button_gadget (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/ArrowBG.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsArrowButtonGadget"
         end;
 
-    xm_is_cascade_button (widget: POINTER): BOOLEAN is
+    xm_is_cascade_button (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/CascadeB.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsCascadeButton"
         end;
 
-    xm_is_cascade_button_gadget (widget: POINTER): BOOLEAN is
+    xm_is_cascade_button_gadget (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/CascadeBG.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsCascadeButtonGadget"
         end;
 
-    xm_is_push_button_gadget (widget: POINTER): BOOLEAN is
+    xm_is_push_button_gadget (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/PushBG.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsPushButtonGadget"
         end;
 
-    xm_is_push_button (widget: POINTER): BOOLEAN is
+    xm_is_push_button (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/PushB.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsPushButton"
         end;
 
-    xm_is_list (widget: POINTER): BOOLEAN is
+    xm_is_list (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/List.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsList"
         end;
 
-    xm_is_sash (widget: POINTER): BOOLEAN is
+    xm_is_sash (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/SashP.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsSash"
         end;
 
-    xm_is_text (widget: POINTER): BOOLEAN is
+    xm_is_text (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/Text.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsText"
         end;
 
-    xm_is_text_field (widget: POINTER): BOOLEAN is
+    xm_is_text_field (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/TextF.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsTextField"
         end;
 
-    xm_is_toggle_button (widget: POINTER): BOOLEAN is
+    xm_is_toggle_button (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/ToggleB.h>] (Widget): EIF_BOOLEAN"
         alias
             "XmIsToggleButton"
         end;
 
-    xm_is_toggle_button_gadget (widget: POINTER): BOOLEAN is
+    xm_is_toggle_button_gadget (widget: POINTER): BOOLEAN
         external
             "C [macro <Xm/ToggleBG.h>] (Widget): EIF_BOOLEAN"
         alias
@@ -218,47 +218,47 @@ feature {NONE} -- Widget queries
 
 feature {NONE} -- External features
 
-	c_get_string_direction (scr_obj: POINTER; resource: POINTER): INTEGER is
+	c_get_string_direction (scr_obj: POINTER; resource: POINTER): INTEGER
 		external
 			"C"
 		end;
 
-	c_set_string_direction (scr_obj: POINTER; resource: POINTER; val: INTEGER) is
+	c_set_string_direction (scr_obj: POINTER; resource: POINTER; val: INTEGER)
 		external
 			"C"
 		end;
 
-	c_get_string_table (scr_obj: POINTER; resource: POINTER): POINTER is
+	c_get_string_table (scr_obj: POINTER; resource: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	c_set_string_table (scr_obj: POINTER; resource: POINTER; val: POINTER) is
+	c_set_string_table (scr_obj: POINTER; resource: POINTER; val: POINTER)
 		external
 			"C"
 		end;
 
-	c_set_xmstring (scr_obj: POINTER; resource: POINTER; val: POINTER) is
+	c_set_xmstring (scr_obj: POINTER; resource: POINTER; val: POINTER)
 		external
 			"C"
 		end;
 
-	c_get_xmstring (scr_obj: POINTER; resource: POINTER): POINTER is
+	c_get_xmstring (scr_obj: POINTER; resource: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	c_set_font_list (scr_obj: POINTER; resource: POINTER; val: POINTER) is
+	c_set_font_list (scr_obj: POINTER; resource: POINTER; val: POINTER)
 		external
 			"C"
 		end;
 
-	c_get_font_list (scr_obj: POINTER; resource: POINTER): POINTER is
+	c_get_font_list (scr_obj: POINTER; resource: POINTER): POINTER
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

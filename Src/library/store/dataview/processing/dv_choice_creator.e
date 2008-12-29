@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that enable to create a%
 			% database table row and let user%
 			% select foreign keys of new row."
@@ -26,14 +26,14 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 		end
 
 feature -- Status report
 
-	can_be_activated: BOOLEAN is
+	can_be_activated: BOOLEAN
 			-- Can the component be activated?
 		do
 			Result := Precursor and then
@@ -41,7 +41,7 @@ feature -- Status report
 				db_tablerow_selector /= Void
 		end
 
-	control_set: BOOLEAN is
+	control_set: BOOLEAN
 			-- Has a controller for creation been set?
 		do
 			Result := control /= Void
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_control (ctrl: DV_SENSITIVE_CONTROL) is
+	set_control (ctrl: DV_SENSITIVE_CONTROL)
 			-- Set control to trigger the creation to `ctrl'.
 		require
 			not_activated: not is_activated
@@ -64,7 +64,7 @@ feature -- Basic operations
 			control_set: control_set
 		end
 
-	set_tablerow_selector (tr_selector: DV_TABLEROW_ID_PROVIDER) is
+	set_tablerow_selector (tr_selector: DV_TABLEROW_ID_PROVIDER)
 			-- Set associated component to select foreign key values.
 		require
 			not_activated: not is_activated
@@ -76,7 +76,7 @@ feature -- Basic operations
 
 feature {DV_COMPONENT} -- Basic operations
 
-	activate is
+	activate
 			-- Activate component.
 		do
 			if db_table_component.is_dependent then
@@ -86,7 +86,7 @@ feature {DV_COMPONENT} -- Basic operations
 			is_activated := True
 		end
 
-	set_table_component (table_comp: DV_TABLE_COMPONENT) is
+	set_table_component (table_comp: DV_TABLE_COMPONENT)
 			-- Set associated table component.
 		local
 			td: DB_TABLE_DESCRIPTION
@@ -101,25 +101,25 @@ feature {DV_COMPONENT} -- Basic operations
 			fkey_table := td.to_create_fkey_from_table
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Enable creation.
 		do
 			control.enable_sensitive
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Disable creation.
 		do
 			control.disable_sensitive
 		end
 
-	refresh: ARRAYED_LIST [DB_TABLE] is
+	refresh: ARRAYED_LIST [DB_TABLE]
 			-- Refresh selection showing created table row.
 		do
 			Result := db_searcher.refresh
 		end
 
-	add_foreign_key_value (value: ANY) is
+	add_foreign_key_value (value: ANY)
 			-- Add `value' to field constrained by current foreign key
 			-- in `'.
 		require
@@ -133,7 +133,7 @@ feature {DV_COMPONENT} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	ask_for_creation is
+	ask_for_creation
 			-- Create a tablerow (eventually
 			-- ask user before).
 		require
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			request_foreign_key_value
 		end
  
- 	request_foreign_key_value is
+ 	request_foreign_key_value
  			-- Request a value for next foreign key attribute in table row to
  			-- create or create the table ro if all foreign key values are set.
 		require
@@ -166,7 +166,7 @@ feature {NONE} -- Implementation
  			end
  		end
  
- 	create_tablerow is
+ 	create_tablerow
  			-- Actually create the table row with information
  			-- contained in `tablerow_to_create'.
  		require
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			-- Code of calling table. Associated foreign key value must be
 			-- calling component current table row ID.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

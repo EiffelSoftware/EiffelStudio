@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Properties of the memory management mechanism.
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make (memory: INTEGER) is
+	make (memory: INTEGER)
 			-- Update Current for `memory' type.
 		require
 			memory_valid: memory = Total_memory or memory = Eiffel_memory or memory = C_memory
@@ -38,7 +38,7 @@ feature -- Initialization
 			type_set: type = memory
 		end
 
-	update (memory: INTEGER) is
+	update (memory: INTEGER)
 			-- Update Current for `memory' type.
 		require
 			memory_valid: memory = Total_memory or memory = Eiffel_memory or memory = C_memory
@@ -56,21 +56,21 @@ feature -- Access
 
 feature -- Measurement
 
-	total: INTEGER is
+	total: INTEGER
 			-- Total number of bytes allocated for `type'
 			-- before last call to `update'
 		do
 			Result := c_ml_total (item)
 		end
 
-	used: INTEGER is
+	used: INTEGER
 			-- Number of bytes used for `type'
 			-- before last call to `update'
 		do
 			Result := c_ml_used (item)
 		end
 
-	free: INTEGER is
+	free: INTEGER
 			-- Number of bytes still free for `type'
 			-- before last call to `update'
 		do
@@ -79,14 +79,14 @@ feature -- Measurement
 			Computed: Result = total - used - overhead
 		end
 
-	overhead: INTEGER is
+	overhead: INTEGER
 			-- Number of bytes used by memory management
 			-- scheme for `type' before last call to `update'
 		do
 			Result := c_ml_over (item)
 		end
 
-	chunk: INTEGER is
+	chunk: INTEGER
 			-- Number of allocated memory chunks
 		do
 			Result := c_ml_chunk (item)
@@ -94,7 +94,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	mem_stat (a_ptr: POINTER; mem: INTEGER) is
+	mem_stat (a_ptr: POINTER; mem: INTEGER)
 			-- Initialize `a_ptr' used by MEM_INFO to retrieve the
 			-- statistics frozen at the time of this call.
 		external
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			"eif_mem_stat"
 		end
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of underlying C structure.
 		do
 			Result := c_sizeof_emallinfo
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- C externals
 
-	c_ml_total (a_ptr: POINTER): INTEGER is
+	c_ml_total (a_ptr: POINTER): INTEGER
 			-- Access `ml_total' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_eiffel.h%""
@@ -119,7 +119,7 @@ feature {NONE} -- C externals
 			"((struct emallinfo *) $a_ptr)->ml_total"
 		end
 
-	c_ml_used (a_ptr: POINTER): INTEGER is
+	c_ml_used (a_ptr: POINTER): INTEGER
 			-- Access `ml_used' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_eiffel.h%""
@@ -127,7 +127,7 @@ feature {NONE} -- C externals
 			"((struct emallinfo *) $a_ptr)->ml_used"
 		end
 
-	c_ml_over (a_ptr: POINTER): INTEGER is
+	c_ml_over (a_ptr: POINTER): INTEGER
 			-- Access `ml_over' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_eiffel.h%""
@@ -135,7 +135,7 @@ feature {NONE} -- C externals
 			"((struct emallinfo *) $a_ptr)->ml_over"
 		end
 
-	c_ml_chunk (a_ptr: POINTER): INTEGER is
+	c_ml_chunk (a_ptr: POINTER): INTEGER
 			-- Access `ml_chunk' data member of `a_ptr' struct.
 		external
 			"C inline use %"eif_eiffel.h%""
@@ -143,7 +143,7 @@ feature {NONE} -- C externals
 			"((struct emallinfo *) $a_ptr)->ml_chunk"
 		end
 
-	c_sizeof_emallinfo: INTEGER is
+	c_sizeof_emallinfo: INTEGER
 			-- Size of struct `emallinfo'.
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -155,7 +155,7 @@ invariant
 
 	consistent_memory: total = free + used + overhead
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

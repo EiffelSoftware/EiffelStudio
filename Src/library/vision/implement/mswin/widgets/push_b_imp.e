@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPpush button"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -71,7 +71,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_button: PUSH_B; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_button: PUSH_B; man: BOOLEAN; oui_parent: COMPOSITE)
 		do
 			create private_attributes
 			parent ?= oui_parent.implementation;
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			set_center_alignment
 		end
 
-	realize is
+	realize
 			-- Realize a push_button
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -129,7 +129,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	set_managed (flag: BOOLEAN) is
+	set_managed (flag: BOOLEAN)
 			-- Enable geometry managment on screen widget implementation,
 			-- by window manager of parent widget if `flag', disable it
 			-- otherwise.
@@ -173,7 +173,7 @@ feature -- Access
 			end
 		end
 
-	set_insensitive (flag: BOOLEAN) is
+	set_insensitive (flag: BOOLEAN)
 			-- Set current widget in insensitive mode if `flag'. This means
 			-- that any events with an event type of KeyPress,
 			-- KeyRelease, ButtonPress, ButtonRelease, MotionNotify,
@@ -198,7 +198,7 @@ feature -- Access
 			end
 		end
 
-	unrealize is
+	unrealize
 			-- Unrealize the button.
 		do
 			if exists then
@@ -218,7 +218,7 @@ feature -- Status report
 	realized: BOOLEAN
 			-- Is this widget realized?
 
-	insensitive: BOOLEAN is
+	insensitive: BOOLEAN
 			-- Is Current insensitive?
 		do
 			if in_menu then
@@ -234,7 +234,7 @@ feature -- Status report
 
 feature -- Removal
 
-	destroy (wid_list: LINKED_LIST [WIDGET]) is
+	destroy (wid_list: LINKED_LIST [WIDGET])
 			-- Destroy Current.
 		local
 			ww: WIDGET_IMP
@@ -261,13 +261,13 @@ feature -- Removal
 
 feature {NONE} -- Notification
 
-	on_bn_clicked is
+	on_bn_clicked
 			-- Button pressed.
 		do
 			activate_actions.execute (Current, Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

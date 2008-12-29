@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows that enable to select a%
 		%database table row."
 	legal: "See notice at end of class."
@@ -33,14 +33,14 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create the window and the status bar.
 		do
 			default_create
 			close_request_actions.extend (agent hide)
 		end
 
-	set_display_list (display_l: DV_TABLEROW_MULTILIST) is
+	set_display_list (display_l: DV_TABLEROW_MULTILIST)
 				-- Set selection list to `display_list'.
 		require
 			not_void: display_l /= Void
@@ -48,7 +48,7 @@ feature -- Initialization
 			display_list := display_l
 		end
 
-	set_content is
+	set_content
 			-- Set window widgets.
 		do
 			create_widgets
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Status setting
 
-	show is
+	show
 			-- Show window.
 		do
 			if display_list.table_code_set then
@@ -70,7 +70,7 @@ feature -- Status setting
 			Precursor
 		end
 
-	hide is
+	hide
 			-- Hide window.
 		do
 			set_title (selection_window_title (Undetermined_table_name))
@@ -79,7 +79,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	create_widgets is
+	create_widgets
 			-- Set window content. Clicking on "OK" performs `ok_action'.
 		local
 			hbox: DV_HORIZONTAL_BOX
@@ -112,13 +112,13 @@ feature {NONE} -- Implementation
 	display_list: DV_TABLEROW_MULTILIST
 			-- Selection list.	
 
-	set_initial_focus is
+	set_initial_focus
 			-- Set initial focus to the multi-list.
 		do
 			display_list.set_focus
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

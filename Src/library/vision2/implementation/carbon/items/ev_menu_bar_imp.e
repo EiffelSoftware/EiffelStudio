@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu bar. Carbon implementation."
 
 class
@@ -32,9 +32,9 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False
+	needs_event_box: BOOLEAN = False
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 		do
 			base_make (an_interface)
 			set_c_object ($current)
@@ -42,49 +42,49 @@ feature {NONE} -- Initialization
 
 feature -- Measurement
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		do
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		do
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size in pixels.
 		do
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size in pixels.
 		do
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels.
 		do
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
 		do
 		end
 		
 feature {EV_WINDOW_IMP} -- Implementation
 
-	set_parent_window_imp (a_wind: EV_WINDOW_IMP) is
+	set_parent_window_imp (a_wind: EV_WINDOW_IMP)
 			-- Set `parent_window' to `a_wind'.
 		require
 			a_wind_not_void: a_wind /= Void
@@ -92,7 +92,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 			parent_imp := a_wind
 		end
 
-	parent: EV_WINDOW is
+	parent: EV_WINDOW
 			-- Parent window of Current.
 		do
 			if parent_imp /= Void then
@@ -100,7 +100,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 			end
 		end
 
-	remove_parent_window is
+	remove_parent_window
 			-- Set `parent_window' to Void.
 		do
 			parent_imp := Void
@@ -110,7 +110,7 @@ feature {EV_WINDOW_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
+	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER)
 			-- Generic menu item insertion.
 		local
 			ptr: POINTER
@@ -128,7 +128,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, the ETH Eiffel.Mac Team"
 
 end -- class EV_MENU_BAR_IMP

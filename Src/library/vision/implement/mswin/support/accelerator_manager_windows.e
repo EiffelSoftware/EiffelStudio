@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_WINDOWS push button"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature {NONE} -- Implementation
 
-	accelerators: ACCELERATORS_WINDOWS is
+	accelerators: ACCELERATORS_WINDOWS
 			-- Accelerators for the application
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

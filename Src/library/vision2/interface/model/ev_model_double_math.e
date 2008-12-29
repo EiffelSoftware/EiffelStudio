@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Facilities class for EV_FIGURE."
 	legal: "See notice at end of class."
@@ -15,13 +15,13 @@ inherit
 
 feature -- Implementation
 
-	distance (x1, y1, x2, y2: DOUBLE): DOUBLE is
+	distance (x1, y1, x2, y2: DOUBLE): DOUBLE
 			-- Calculate distance between (`x1', `y1') and (`x2', `y2').
 		do
 			Result := sqrt ((x1 - x2) ^ 2 + (y1 - y2) ^ 2)
 		end
 
-	distance_from_line (x, y, x1, y1, x2, y2: DOUBLE): DOUBLE is
+	distance_from_line (x, y, x1, y1, x2, y2: DOUBLE): DOUBLE
 			-- Calculate distance between (`x', `y') and (`x1', `y1')-(`x2', `y2').
 			-- The line is considered to be infinite.
 		local
@@ -40,7 +40,7 @@ feature -- Implementation
 			Result := sqrt (x_dist ^ 2 + y_dist ^ 2)
 		end
 
-	line_angle (x1, y1, x2, y2: DOUBLE): DOUBLE is
+	line_angle (x1, y1, x2, y2: DOUBLE): DOUBLE
 			-- Return angle of line from (`x1', `y1') to (`x2', `y2') relative to world.
 			-- clockwise. 0.0 is 3 o'clock.
 		do
@@ -59,19 +59,19 @@ feature -- Implementation
 			end
 		end
 
-	delta_x (angle: DOUBLE; length: DOUBLE): DOUBLE is
+	delta_x (angle: DOUBLE; length: DOUBLE): DOUBLE
 			-- Get dx component of line segment with `length' and `angle'.
 		do
 			Result := (cosine (angle) * length)
 		end
 
-	delta_y (angle: DOUBLE; length: DOUBLE): DOUBLE is
+	delta_y (angle: DOUBLE; length: DOUBLE): DOUBLE
 			-- Get dy component of line segment with `length' and `angle'.
 		do
 			Result := (sine (angle) * length)
 		end
 
-	point_on_line (x, y, x1, y1, x2, y2, width: DOUBLE): BOOLEAN is
+	point_on_line (x, y, x1, y1, x2, y2, width: DOUBLE): BOOLEAN
 			-- Is (`x', `y') on line from (`x2', `y2') to (`x1', `y1') with `width'?
 		local
 			t, rsq, dx, dy, dpx, dpy: DOUBLE
@@ -95,7 +95,7 @@ feature -- Implementation
 			end
 		end
 
-	point_on_segment (x, y, x1, y1, x2, y2, width: DOUBLE): BOOLEAN is
+	point_on_segment (x, y, x1, y1, x2, y2, width: DOUBLE): BOOLEAN
 			-- Is (`x', `y') on segment [(`x2', `y2'), (`x1', `y1')] with `width'?
 		local
 			half_dx, half_dy, dpx, dpy: DOUBLE
@@ -117,7 +117,7 @@ feature -- Implementation
 			end
 		end
 
-	point_on_ellipse (x, y, xc, yc, r1, r2: DOUBLE): BOOLEAN  is
+	point_on_ellipse (x, y, xc, yc, r1, r2: DOUBLE): BOOLEAN
 			-- Is (`x', `y') inside specified ellipse?
 			--| With orientation 0.0.
 		do
@@ -126,7 +126,7 @@ feature -- Implementation
 			equals_point_on_rotated: Result = point_on_rotated_ellipse (x, y, xc, yc, r1, r2, 0.0)
 		end
 		
-	point_on_rotated_ellipse (x, y, xc, yc, r1, r2, angle: DOUBLE): BOOLEAN is
+	point_on_rotated_ellipse (x, y, xc, yc, r1, r2, angle: DOUBLE): BOOLEAN
 			-- Is ('x', `y') inside specified ellipse?
 			--| With orientation angle clockwise.
 		local
@@ -139,7 +139,7 @@ feature -- Implementation
 			Result := ( (px * cos - py * sin) / r1) ^ 2 + ((px * sin + py * cos) / r2) ^ 2 <= 1
 		end
 
-	point_on_ellipse_boundary (x, y, xc, yc, r1, r2, width: DOUBLE): BOOLEAN  is
+	point_on_ellipse_boundary (x, y, xc, yc, r1, r2, width: DOUBLE): BOOLEAN
 			-- Is (`x', `y') on specified ellipse border?
 			--| With orientation 0.0.
 		local
@@ -150,7 +150,7 @@ feature -- Implementation
 			Result := tmp <= (1 + semi_width_ratio) and tmp >= (1 - semi_width_ratio)
 		end
 		
-	point_on_rotated_ellipse_boundary (x, y, xc, yc, r1, r2, angle, width: DOUBLE): BOOLEAN is
+	point_on_rotated_ellipse_boundary (x, y, xc, yc, r1, r2, angle, width: DOUBLE): BOOLEAN
 			-- Is (`x', `y') on specified ellipse border?
 			--| With orientation angle.
 		local
@@ -166,14 +166,14 @@ feature -- Implementation
 			Result := tmp <= (1 + semi_width_ratio) and tmp >= (1 - semi_width_ratio)
 		end
 
-	point_on_rectangle (x, y, x1, y1, x2, y2: DOUBLE): BOOLEAN is
+	point_on_rectangle (x, y, x1, y1, x2, y2: DOUBLE): BOOLEAN
 			-- Is (`x', `y') inside specified box?
 			--| With orientation 0.0.
 		do
 			Result := between (x, x1, x2) and then between (y, y1, y2)
 		end
 
-	point_on_polygon (x, y: DOUBLE; points: SPECIAL [EV_COORDINATE]): BOOLEAN is
+	point_on_polygon (x, y: DOUBLE; points: SPECIAL [EV_COORDINATE]): BOOLEAN
 			-- Is (`x', `y') contained in polygon with `points'?
 			-- Based on code by Hanpeter van Vliet.
 		local
@@ -279,7 +279,7 @@ feature -- Implementation
 			end
 		end
 
-	modulo (a, b: DOUBLE): DOUBLE is
+	modulo (a, b: DOUBLE): DOUBLE
 			-- `a' modulo `b'.
 			--| Should be in DOUBLE_REF.
 		require
@@ -296,7 +296,7 @@ feature -- Implementation
 			in_interval: Result >= 0.0 and Result < b
 		end
 
-	between (n, a, b: DOUBLE): BOOLEAN is
+	between (n, a, b: DOUBLE): BOOLEAN
 			-- Is `n' a value between `a' and `b'?
 		do
 			Result := n >= a.min (b) and then n <= a.max (b)
@@ -304,7 +304,7 @@ feature -- Implementation
 		
 feature {NONE} -- Implementation
 		
-	all_on_vertical_line (points: SPECIAL [EV_COORDINATE]): BOOLEAN is
+	all_on_vertical_line (points: SPECIAL [EV_COORDINATE]): BOOLEAN
 			-- Are all `points' an a vertical line?
 			-- That is all x positions are equal
 		require
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	all_on_horizontal_line (points: SPECIAL [EV_COORDINATE]): BOOLEAN is
+	all_on_horizontal_line (points: SPECIAL [EV_COORDINATE]): BOOLEAN
 			-- Are all `points' an a vertical line?
 			-- That is all y positions are equal.
 		require
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	as_integer (a_value: DOUBLE): INTEGER is
+	as_integer (a_value: DOUBLE): INTEGER
 			-- Truncat `a_value' to INTEGER.
 		do
 			if a_value > 0 then
@@ -366,13 +366,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pi_half: DOUBLE is 1.57079632679489661923
+	pi_half: DOUBLE = 1.57079632679489661923
 					   
-	pi_times_two: DOUBLE is 6.28318530717958647693 
+	pi_times_two: DOUBLE = 6.28318530717958647693 
 	
-	pi_half_times_three: DOUBLE is 4.71238898038468985769;
+	pi_half_times_three: DOUBLE = 4.71238898038468985769;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

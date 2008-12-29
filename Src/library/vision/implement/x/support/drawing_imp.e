@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"General definitions for drawable elements."
@@ -45,7 +45,7 @@ inherit
 
 feature -- Access
 
-	max_count_for_draw_polyline: INTEGER is
+	max_count_for_draw_polyline: INTEGER
 			-- Maximum value for `points.count' for `draw_polyline'
 		do
 			Result := (display.max_request_size-3) // 2
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Output
 
-	clear is
+	clear
 			-- Clear the entire area.
 		do
 			if is_drawable then
@@ -61,7 +61,7 @@ feature -- Output
 			end
 		end;
 
-	copy_bitmap (a_point: COORD_XY; a_bitmap: PIXMAP) is
+	copy_bitmap (a_point: COORD_XY; a_bitmap: PIXMAP)
 			-- Copy `a_bitmap' to the drawing at `a_point'.
 		local
 			bitmap_implementation: PIXMAP_IMP
@@ -74,7 +74,7 @@ feature -- Output
 					a_point.x, a_point.y, 1)
 		end;
 
-	copy_pixmap (a_point: COORD_XY; a_pixmap: PIXMAP) is
+	copy_pixmap (a_point: COORD_XY; a_pixmap: PIXMAP)
 			-- Copy `a_pixmap' to the drawing at `a_point'.
 		local
 			bitmap_implementation: PIXMAP_IMP
@@ -87,7 +87,7 @@ feature -- Output
 		end;
 
 	draw_arc (center: COORD_XY; radius1, radius2: INTEGER; 
-				angle1, angle2, orientation: REAL; arc_style: INTEGER) is
+				angle1, angle2, orientation: REAL; arc_style: INTEGER)
 			-- Draw an arc centered in (`x', `y') with a great radius of
 			-- `radius1' and a small radius of `radius2'
 			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
@@ -139,13 +139,13 @@ feature -- Output
 			end
 		end;
 
-	draw_image_text (base: COORD_XY; text: STRING) is
+	draw_image_text (base: COORD_XY; text: STRING)
 			-- Draw text
 		do
 			draw_image_string (Current, base.x, base.y, text)
 		end;
 
-	draw_inf_line (point1, point2: COORD_XY) is
+	draw_inf_line (point1, point2: COORD_XY)
 			-- Draw an infinite line traversing `point1' and `point2'.
 		local
 			x1, y1, x2, y2: INTEGER;
@@ -166,13 +166,13 @@ feature -- Output
 			end
 		end;
 
-	draw_point (a_point: COORD_XY) is
+	draw_point (a_point: COORD_XY)
 			-- Draw `a_point'.
 		do
 			mel_draw_point (Current, a_point.x, a_point.y)
 		end;
 
-	draw_polyline (points: LIST [COORD_XY]; is_closed: BOOLEAN) is
+	draw_polyline (points: LIST [COORD_XY]; is_closed: BOOLEAN)
 			-- Draw a polyline, close it automatically if `is_closed'.
 		local
 			cur: CURSOR;
@@ -212,7 +212,7 @@ feature -- Output
 			draw_lines (Current, list, True);
 		end;
 
-	draw_rectangle (center: COORD_XY; r_width, r_height: INTEGER; orientation: REAL) is
+	draw_rectangle (center: COORD_XY; r_width, r_height: INTEGER; orientation: REAL)
 			-- Draw a rectangle whose center is `center' and
 			-- whose size is `r_width' and `r_height'.
 		local
@@ -231,20 +231,20 @@ feature -- Output
 			end
 		end;
 
-	draw_segment (point1, point2: COORD_XY) is
+	draw_segment (point1, point2: COORD_XY)
 			-- Draw a segment between `point1' and `point2'.
 		do
 			draw_line (Current, point1.x, point1.y, point2.x, point2.y)
 		end;
 
-	draw_text (base: COORD_XY; text: STRING) is
+	draw_text (base: COORD_XY; text: STRING)
 			-- Draw text
 		do
 			draw_string (Current, base.x, base.y, text)
 		end;			
 			
 	fill_arc (center: COORD_XY; radius1, radius2: INTEGER; 
-				angle1, angle2, orientation: REAL; arc_style: INTEGER) is
+				angle1, angle2, orientation: REAL; arc_style: INTEGER)
 			-- Fill an arc centered in (`x', `y') with a great radius of
 			-- `radius1' and a small radius of `radius2'
 			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
@@ -272,7 +272,7 @@ feature -- Output
 			end
 		end;
 
-	fill_polygon (points: LIST [COORD_XY]) is
+	fill_polygon (points: LIST [COORD_XY])
 			 -- Fill a polygon.
 		local
 			cur: CURSOR;
@@ -297,7 +297,7 @@ feature -- Output
 			mel_fill_polygon (Current, list, Complex, True);
 		end;
 
-	fill_rectangle (center: COORD_XY; r_width, r_height: INTEGER; orientation: REAL) is
+	fill_rectangle (center: COORD_XY; r_width, r_height: INTEGER; orientation: REAL)
 			-- Fill a rectangle whose center is `center' and
 			-- whose size is `r_width' and `r_height'.
 		local
@@ -319,23 +319,23 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	n_64_units: INTEGER is 64;
+	n_64_units: INTEGER = 64;
 			-- 64 units
 
-	n_360_degrees: INTEGER is 23040;
+	n_360_degrees: INTEGER = 23040;
 			-- 360 degrees in 64ths of a degree (64 * 360)
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of drawing area
 		deferred
 		end;
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of drawing 
 		deferred
 		end;
 
-	angle_x (angle: REAL): INTEGER is
+	angle_x (angle: REAL): INTEGER
 			-- Convert `angle' in an integer in 64th of degree
 			-- (angle_x (360) = 360 * 64)
 		do
@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 			result_less_than: Result <= n_360_degrees
 		end;
 
-	join_lines (center: COORD_XY; x0, y0, x1, y1: INTEGER; arc_style: INTEGER) is
+	join_lines (center: COORD_XY; x0, y0, x1, y1: INTEGER; arc_style: INTEGER)
 			-- Join (x0, y0) and (x1, y1) if `arc_style' = 0,
 			-- or join ((x0, y0), center and (x1, y1) if `arc_style' = 1.
 		require
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 		end;
 
 	arc_points (center: COORD_XY; radius1, radius2: INTEGER; 
-				angle1, angle2, orientation: REAL): ARRAYED_LIST [MEL_POINT] is
+				angle1, angle2, orientation: REAL): ARRAYED_LIST [MEL_POINT]
 			-- Returns the list of an arbitrary number of ordonated points composing the arc
 		local
 			seg_count, loop_angle, angle_inc, sino, coso, ell_x, ell_y, rot_x, rot_y: DOUBLE;
@@ -400,13 +400,13 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	deg_rad_rate: DOUBLE is
+	deg_rad_rate: DOUBLE
 			-- degrees into radians conversion constant
 		once
 			Result := Pi / 180
 		end
 
-	rectangle_points (center: COORD_XY; r_width, r_height: INTEGER; orientation: REAL): ARRAYED_LIST [MEL_POINT] is
+	rectangle_points (center: COORD_XY; r_width, r_height: INTEGER; orientation: REAL): ARRAYED_LIST [MEL_POINT]
 			-- Returns the 4 points composing the rectangle
 		local
 			coso, sino, point_x, point_y, half_r_width_coso, half_r_width_sino, half_r_height_coso, half_r_height_sino: DOUBLE
@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 			Result.extend (a_point)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

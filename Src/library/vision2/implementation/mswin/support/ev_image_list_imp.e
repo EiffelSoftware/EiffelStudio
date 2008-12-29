@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "List of images. The list is cached to avoid %
 				  %multiplication of indexes for the same image"
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_size (a_width, a_height: INTEGER) is
+	make_with_size (a_width, a_height: INTEGER)
 			-- Create image list with all images
 			-- `a_width' by `a_height' pixels
 		do
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			create image_id_to_bitmap_id_index.make (4)
 		end
 
-	add_transparent_pixmap is
+	add_transparent_pixmap
 			-- Add a transparent pixmap to the image list.
 			--
 			-- `last_position' is updated.
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	pixmap_position (a_pixmap: EV_PIXMAP) is
+	pixmap_position (a_pixmap: EV_PIXMAP)
 			-- Update `last_position' with the position of `a_pixmap'
 			-- in the image list. Set `last_position' to -1 if `a_pixmap'
 			-- is not present in the image list.
@@ -108,7 +108,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_pixmap (a_pixmap: EV_PIXMAP) is
+	add_pixmap (a_pixmap: EV_PIXMAP)
 			-- Add the pixmap `a_pixmap' into the image list.
 			--
 			-- `last_position' is updated.
@@ -154,7 +154,7 @@ feature -- Element change
 			end
 		end
 
-	extend_pixmap (a_pixmap: EV_PIXMAP) is
+	extend_pixmap (a_pixmap: EV_PIXMAP)
 			-- Add the pixmap `a_pixmap' at the end of the image list.
 			-- Do not test for possible cached version.
 			--
@@ -180,7 +180,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation (Private features)
 
-	internal_add_pixmap (a_pixmap: EV_PIXMAP) is
+	internal_add_pixmap (a_pixmap: EV_PIXMAP)
 			-- Add `a_pixmap' to the image list.
 			-- The pixmap is resized if needed to fit into the
 			-- image list.
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation (Private features)
 			graphres.decrement_reference
 		end
 
-	internal_pixmap_position (a_pixmap: EV_PIXMAP) is
+	internal_pixmap_position (a_pixmap: EV_PIXMAP)
 			-- Update `last_position' with the position of `a_pixmap'
 			-- in the image list. Set `last_position' to -1 if `a_pixmap'
 			-- is not present in the image list.
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation (Private features)
 			end
 		end
 
-	internal_extend_pixmap (a_pixmap: EV_PIXMAP) is
+	internal_extend_pixmap (a_pixmap: EV_PIXMAP)
 			-- Add the pixmap `a_pixmap' at the end of the image list.
 			-- Do not test for possible cached version.
 			--
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation (Private features)
 			end
 		end
 
-	add_pixmap_bitmap (a_pixmap: EV_PIXMAP) is
+	add_pixmap_bitmap (a_pixmap: EV_PIXMAP)
 			-- Add the pixmap `a_pixmap' internally holding a HBITMAP
 			-- at the end of the image list.
 			-- Do not test for possible cached version.
@@ -380,13 +380,13 @@ feature {NONE} -- Implementation (Attributes, Constants, ...)
 			-- [[position in image list, number of items pointing to this
 			-- image], windows pointer].
 
-	raster_constants: WEL_RASTER_OPERATIONS_CONSTANTS is
+	raster_constants: WEL_RASTER_OPERATIONS_CONSTANTS
 			-- Raster operations constants.
 		once
 			Create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

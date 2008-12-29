@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Projection under a PNG format of a drawing"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ feature -- Initialization
 
 feature -- Access
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Background color of current image.
 		require else
 			has_background: has_background_color
@@ -53,7 +53,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	foreground_color: EV_COLOR is
+	foreground_color: EV_COLOR
 			-- Foreground color of current image. 
 			-- Return background color if no current foreground color (default).
 		require else
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_foreground_color (new_color: EV_COLOR) is
+	set_foreground_color (new_color: EV_COLOR)
 		-- Set 'new_color' as current selected color.
 		require else
 			not_void: new_color /= Void
@@ -77,7 +77,7 @@ feature -- Settings
 			color_index >0 and then color_index <= color_index_bound	
 		end
 
-	set_background_color (col: EV_COLOR) is
+	set_background_color (col: EV_COLOR)
 		-- Set 'col' as background color.
 		require else
 			background_not_allocated: not has_background_color
@@ -98,7 +98,7 @@ feature -- Resizing
 
 feature -- Drawing operations.
 
-	draw_ellipse (pt: EV_COORDINATES; r1: INTEGER; r2: INTEGER; orientation: EV_ANGLE) is
+	draw_ellipse (pt: EV_COORDINATES; r1: INTEGER; r2: INTEGER; orientation: EV_ANGLE)
 			-- Draw an ellipse.
 		require else
 			not_void: pt /= Void and orientation /= Void
@@ -107,7 +107,7 @@ feature -- Drawing operations.
 			gdImageArc(image,pt.x,pt.y,r1,r2,0,360,color_index)
 		end
 
-	fill_ellipse (pt: EV_COORDINATES; r1: INTEGER; r2: INTEGER; orientation: EV_ANGLE) is
+	fill_ellipse (pt: EV_COORDINATES; r1: INTEGER; r2: INTEGER; orientation: EV_ANGLE)
 			-- Fill an ellipse.
 		require else
 			not_void: pt /= Void and orientation /= Void
@@ -117,7 +117,7 @@ feature -- Drawing operations.
 			gdimagefilltoborder(image,pt.x,pt.y,color_index, color_index )
 		end
 
-	draw_rectangle (pt: EV_COORDINATES; w: INTEGER; h: INTEGER; orientation: EV_ANGLE) is
+	draw_rectangle (pt: EV_COORDINATES; w: INTEGER; h: INTEGER; orientation: EV_ANGLE)
 			-- Draw a rectangle.
 		require
 			not_void: pt /= Void and orientation /= Void
@@ -126,7 +126,7 @@ feature -- Drawing operations.
 			gdImageRectangle(image,pt.x,pt.y,pt.x+w,pt.y+h,color_index)	
 		end
 
-	fill_rectangle (pt: EV_COORDINATES; w: INTEGER; h: INTEGER; orientation: EV_ANGLE) is
+	fill_rectangle (pt: EV_COORDINATES; w: INTEGER; h: INTEGER; orientation: EV_ANGLE)
 			-- Fill a rectangle.
 		require
 			not_void: pt /= Void and orientation /= Void
@@ -136,10 +136,10 @@ feature -- Drawing operations.
 			gdimagefilltoborder(image,pt.x,pt.y,color_index, color_index )
 		end
 
-	clear_rect (left: INTEGER; top: INTEGER; right: INTEGER; bottom: INTEGER) is do end
+	clear_rect (left: INTEGER; top: INTEGER; right: INTEGER; bottom: INTEGER) do end
 
 
-	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is 
+	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) 
 			-- Draw a polyline figure.
 		require else
 			not_void: pts /= Void
@@ -162,7 +162,7 @@ feature -- Drawing operations.
 			draw_line(gp2.x,gp2.y,gp1.x,gp1.y,color_index) 
 		end
 
-	draw_line(x1,y1,x2,y2: INTEGER;color_ind: INTEGER) is
+	draw_line(x1,y1,x2,y2: INTEGER;color_ind: INTEGER)
 			-- Draw a line
 		require
 			color_index_possible: color_ind >=0 and color_ind <=255 and then color_ind <= color_index_bound
@@ -172,7 +172,7 @@ feature -- Drawing operations.
 			gdimageline (image, x1,y1,x2,y2,color_ind)
 		end
 
-	fill_polygon (pts: ARRAY [EV_COORDINATES]) is
+	fill_polygon (pts: ARRAY [EV_COORDINATES])
 			-- Fill polygon defined by 'pts'.	
 		require
 			not_void: pts /= Void 
@@ -192,7 +192,7 @@ feature -- Duplication
 
 feature {NONE} -- Internal operations
 
-	corresponding_color(i: like color_index): EV_COLOR is
+	corresponding_color(i: like color_index): EV_COLOR
 			-- Color corrsponding to index 'i'.
 		require
 			has_background: has_background_color
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Internal image information
 
-	color_index_bound: INTEGER is
+	color_index_bound: INTEGER
 		-- Return the number of color indexes currently associated with the image.
 		do
 			Result := c_image_color_total(image)
@@ -231,13 +231,13 @@ feature {NONE} -- Internal image information
 			possible: Result >=0
 		end
 
-	coordinates_within_the_image(x,y: INTEGER): BOOLEAN is
+	coordinates_within_the_image(x,y: INTEGER): BOOLEAN
 			-- Does a point (x,y ) within the boundaries ?
 		do
 			Result := (gdImageBoundsSafe(image,x,y)=1)
 		end
 
-	color(red,green,blue: INTEGER):INTEGER is
+	color(red,green,blue: INTEGER):INTEGER
 			-- Index of Color obtained in rgb mode for Current Image.
 		require
 			red_possible: red >=0 and red <256
@@ -253,7 +253,7 @@ feature {NONE} -- Internal image information
 			result_possible: Result > 0
 		end
 
-	has_background_color: BOOLEAN is
+	has_background_color: BOOLEAN
 		-- Does Current have a background color ?
 		do
 			Result := (c_image_color_total(image) >0)
@@ -264,18 +264,18 @@ feature {NONE} -- Internal image information
 
 feature -- Settings
 
-	set_font (ft: EV_FONT) is 
+	set_font (ft: EV_FONT) 
 		do
 
 		end
 
 feature -- Drawings
 
-	draw_pixmap (pt: EV_COORDINATES; pix: EV_PIXMAP) is do end
+	draw_pixmap (pt: EV_COORDINATES; pix: EV_PIXMAP) do end
 
-	clear is do end
+	clear do end
 
-	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is 
+	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) 
 		local
 			i: INTEGER
 			gp1,gp2: EV_COORDINATES
@@ -294,7 +294,7 @@ feature -- Drawings
 			draw_line(gp2.x,gp2.y,gp1.x,gp1.y,color_index) 
 		end
 
-	draw_line(x1,y1,x2,y2: INTEGER;color_ind: INTEGER) is
+	draw_line(x1,y1,x2,y2: INTEGER;color_ind: INTEGER)
 			-- Draw a line
 		require
 			color_index_possible: color_ind >=0 and color_ind <=255 and then color_ind <= color_index_bound
@@ -304,7 +304,7 @@ feature -- Drawings
 			gdimageline (image, x1,y1,x2,y2,color_ind)
 		end
 
-	fill_polygon (pts: ARRAY [EV_COORDINATES]) is
+	fill_polygon (pts: ARRAY [EV_COORDINATES])
 			do 
 				draw_polyline(pts, TRUE)
 			--	gdimagefilltoborder(image,pt.x,pt.y,color_index, color_index )
@@ -312,7 +312,7 @@ feature -- Drawings
 
 	draw_arc (pt: EV_COORDINATES; r1: INTEGER; r2: INTEGER; 
 				start_angle: EV_ANGLE; aperture: EV_ANGLE;
-			 	orientation: EV_ANGLE; style: INTEGER) is
+			 	orientation: EV_ANGLE; style: INTEGER)
 			do 
 				gdImageArc(image,pt.x,pt.y,r1,
 					   r2,start_angle.degrees.rounded,
@@ -320,16 +320,16 @@ feature -- Drawings
 					   color_index)
 			end
 
- 	draw_segment (pt1: EV_COORDINATES; pt2: EV_COORDINATES) is 
+ 	draw_segment (pt1: EV_COORDINATES; pt2: EV_COORDINATES) 
 		do 
 			gdimageline ( image, pt1.x,pt1.y,pt2.x,pt2.y,color_index )
 		end
 
-	draw_straight_line (pt1: EV_COORDINATES; pt2: EV_COORDINATES) is do end
+	draw_straight_line (pt1: EV_COORDINATES; pt2: EV_COORDINATES) do end
 
-	fill_arc (pt: EV_COORDINATES; r1: INTEGER; r2: INTEGER; start_angle: EV_ANGLE; aperture: EV_ANGLE; orientation: EV_ANGLE; style: INTEGER) is do end
+	fill_arc (pt: EV_COORDINATES; r1: INTEGER; r2: INTEGER; start_angle: EV_ANGLE; aperture: EV_ANGLE; orientation: EV_ANGLE; style: INTEGER) do end
 
-	draw_text (pt: EV_COORDINATES; text: STRING) is
+	draw_text (pt: EV_COORDINATES; text: STRING)
 		local
 			a: any
 			p: POINTER
@@ -339,35 +339,35 @@ feature -- Drawings
 			c_image_string(image, p,pt.x,pt.y, $a , color_index)	
 		end 
 
-	draw_point (pt: EV_COORDINATES) is 
+	draw_point (pt: EV_COORDINATES) 
 		do
 			
 		end
 
 feature {NONE} -- Externals (general)
 
-	GdImageCreate (i,j: INTEGER):POINTER is
+	GdImageCreate (i,j: INTEGER):POINTER
 		external
 			"C"
 		alias
 			"gdImageCreate"
 		end
 
-	c_destroy_image (p: POINTER)is
+	c_destroy_image (p: POINTER)
 		external
 			"C"
 		alias
 			"gdImageDestroy"
 		end
 
-	gdImagePng(p: POINTER; f: POINTER) is
+	gdImagePng(p: POINTER; f: POINTER)
 		external
 			"c"
 		alias
 			"gdImagePng"
 		end
 
-	gdImageBoundsSafe(p: POINTER; x,y: INTEGER):INTEGER is
+	gdImageBoundsSafe(p: POINTER; x,y: INTEGER):INTEGER
 		external
 			"c"
 		alias
@@ -376,35 +376,35 @@ feature {NONE} -- Externals (general)
 
 feature {NONE} -- Externals (drawings)
 
-	gdimagefilltoborder(p: POINTER; x1,y1, stopping_color, color_ind: INTEGER) is
+	gdimagefilltoborder(p: POINTER; x1,y1, stopping_color, color_ind: INTEGER)
 		external
 			"c"
 		alias
 			"gdImageFillToBorder"
 		end
 
-	c_image_string (p,f: POINTER; i1,i2: INTEGER; s: POINTER; color_ind: INTEGER) is
+	c_image_string (p,f: POINTER; i1,i2: INTEGER; s: POINTER; color_ind: INTEGER)
 		external
 			"c"
 		alias
 			"gdImageString"
 		end
 
-	gdImageArc(p: POINTER; x,y,ellipse_width,ellipse_height,starting_angle,ending_angle,col_index: INTEGER) is
+	gdImageArc(p: POINTER; x,y,ellipse_width,ellipse_height,starting_angle,ending_angle,col_index: INTEGER)
 		external
 			"c"
 		alias
 			"gdImageArc"
 		end
 
-	gdImageRectangle(p: POINTER; x1,y1,x2,y2: INTEGER; color_ind: INTEGER) is
+	gdImageRectangle(p: POINTER; x1,y1,x2,y2: INTEGER; color_ind: INTEGER)
 		external
 			"c"
 		alias
 			"gdImageRectangle"
 		end
 
- 	gdImageLine(p: POINTER; x1,y1,x2,y2: INTEGER; color_ind: INTEGER) is
+ 	gdImageLine(p: POINTER; x1,y1,x2,y2: INTEGER; color_ind: INTEGER)
 		external
 			"c"
 		alias
@@ -413,42 +413,42 @@ feature {NONE} -- Externals (drawings)
 
 feature {NONE} -- Externals (colors)
 
-	c_red(p: POINTER; i: INTEGER):INTEGER is
+	c_red(p: POINTER; i: INTEGER):INTEGER
 		external
 			"c"
 		alias
 			"c_get_red"
 		end
 
-	c_blue(p: POINTER; i: INTEGER): INTEGER is
+	c_blue(p: POINTER; i: INTEGER): INTEGER
 		external
 			"c"
 		alias
 			"c_get_blue"
 		end
 
-	c_green(p: POINTER; i: INTEGER):INTEGER is
+	c_green(p: POINTER; i: INTEGER):INTEGER
 		external
 			"c"
 		alias
 			"c_get_green"
 		end
 
-	c_image_color_total (p: POINTER): INTEGER is
+	c_image_color_total (p: POINTER): INTEGER
 		external	
 			"c[macro <eiffel_png.h>]"
 		alias
 			"c_get_colors_total"
 		end
 
-	gdImageColorAllocate(p: POINTER; red,green,blue: INTEGER): INTEGER is
+	gdImageColorAllocate(p: POINTER; red,green,blue: INTEGER): INTEGER
 		external
 			"c"
 		alias
 			"gdImageColorAllocate"
 		end
 
-	c_get_color_exact (p: POINTER; r,g,b: INTEGER):INTEGER is
+	c_get_color_exact (p: POINTER; r,g,b: INTEGER):INTEGER
 		external
 			"c"
 		alias
@@ -458,7 +458,7 @@ feature {NONE} -- Externals (colors)
 invariant
 	color_index_possible: color_index >=0 and then color_index <= color_index_bound
 	image_exists: image /= Void
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

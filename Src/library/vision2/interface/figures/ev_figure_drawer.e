@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Adapters for EV_DRAWABLE that allow drawing of figures."
 	legal: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_drawable (a_drawable: EV_DRAWABLE) is
+	make_with_drawable (a_drawable: EV_DRAWABLE)
 			-- Initialize.
 		require
 			a_drawable_not_void: a_drawable /= Void
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	draw_grid is
+	draw_grid
 			-- Draw grid on canvas.
 			-- `world.point' is the origin of the grid.
 		local
@@ -59,17 +59,17 @@ feature -- Access
 	drawable: EV_DRAWABLE
 			-- Drawable surface (screen, drawing area or pixmap).
 
-	world: EV_FIGURE_WORLD is
+	world: EV_FIGURE_WORLD
 		deferred
 		end
 
-	Default_colors: EV_STOCK_COLORS is
+	Default_colors: EV_STOCK_COLORS
 		deferred
 		end
 
 feature -- Element Change
 
-	set_drawable (a_drawable: EV_DRAWABLE) is
+	set_drawable (a_drawable: EV_DRAWABLE)
 			-- Set `drawable' to `a_drawable'.
 		require
 			a_drawable_not_void: a_drawable /= Void
@@ -81,7 +81,7 @@ feature -- Element Change
 
 feature -- Figure drawing
 
-	draw_figure_arc (arc: EV_FIGURE_ARC) is
+	draw_figure_arc (arc: EV_FIGURE_ARC)
 			-- Draw standard representation of `arc' to canvas.
 		local
 			d: like drawable
@@ -106,7 +106,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_dot (dot: EV_FIGURE_DOT) is
+	draw_figure_dot (dot: EV_FIGURE_DOT)
 			-- Draw standard representation of `dot' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER]
@@ -127,7 +127,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_ellipse (ellipse: EV_FIGURE_ELLIPSE) is
+	draw_figure_ellipse (ellipse: EV_FIGURE_ELLIPSE)
 			-- Draw standard representation of `ellipse' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
@@ -157,7 +157,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_equilateral (eql: EV_FIGURE_EQUILATERAL) is
+	draw_figure_equilateral (eql: EV_FIGURE_EQUILATERAL)
 			-- Draw standard representation of `eql' to canvas.
 		local
 			bg: EV_COLOR
@@ -180,7 +180,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_line (line: EV_FIGURE_LINE) is
+	draw_figure_line (line: EV_FIGURE_LINE)
 			-- Draw standard representation of `line' to canvas.
 		local
 			p: EV_FIGURE_POLYGON
@@ -218,7 +218,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_picture (picture: EV_FIGURE_PICTURE) is
+	draw_figure_picture (picture: EV_FIGURE_PICTURE)
 			-- Draw standard representation of `picture' to canvas.
 		local
 			c: EV_COORDINATE
@@ -227,7 +227,7 @@ feature -- Figure drawing
 			drawable.draw_pixmap (c.x, c.y, picture.pixmap)
 		end
 
-	draw_figure_pie_slice (slice: EV_FIGURE_PIE_SLICE) is
+	draw_figure_pie_slice (slice: EV_FIGURE_PIE_SLICE)
 			-- Draw standard representation of `slice' to canvas.
 		local
 			m: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
@@ -259,7 +259,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_polygon (polygon: EV_FIGURE_POLYGON) is
+	draw_figure_polygon (polygon: EV_FIGURE_POLYGON)
 			-- Draw standard representation of `polygon' to canvas.
 		local
 			bg: EV_COLOR
@@ -282,7 +282,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_polyline (line: EV_FIGURE_POLYLINE) is
+	draw_figure_polyline (line: EV_FIGURE_POLYLINE)
 			-- Draw standard representation of `polyline' to canvas.
 		local
 			p: EV_FIGURE_POLYGON
@@ -321,7 +321,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_rectangle (rectangle: EV_FIGURE_RECTANGLE) is
+	draw_figure_rectangle (rectangle: EV_FIGURE_RECTANGLE)
 			-- Draw standard representation of `rectangle' to canvas.
 		local
 			top, left: INTEGER
@@ -363,7 +363,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_rounded_rectangle (f: EV_FIGURE_ROUNDED_RECTANGLE) is
+	draw_figure_rounded_rectangle (f: EV_FIGURE_ROUNDED_RECTANGLE)
 			-- Draw standard representation of `f' to canvas.
 		local
 			d: like drawable
@@ -386,7 +386,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_star (star: EV_FIGURE_STAR) is
+	draw_figure_star (star: EV_FIGURE_STAR)
 			-- Draw standard representation of `star' to canvas.
 		local
 			cx, cy: INTEGER
@@ -415,7 +415,7 @@ feature -- Figure drawing
 			end
 		end
 
-	draw_figure_text (text_figure: EV_FIGURE_TEXT) is
+	draw_figure_text (text_figure: EV_FIGURE_TEXT)
 			-- Draw standard representation of `text_figure' to canvas.
 			--| FIXME Hazardous when origin of `text_figure' has
 			--| different values for `scale_x_abs'
@@ -445,7 +445,7 @@ feature -- Figure drawing
 invariant
 	drawable_not_void: drawable /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

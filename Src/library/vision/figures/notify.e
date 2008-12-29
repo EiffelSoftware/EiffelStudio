@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Modification notification. %
@@ -15,39 +15,39 @@ class
 
 feature -- Access
 	
-	get_notified: ANY is -- !!! get_notified: NOTIFY
+	get_notified: ANY -- !!! get_notified: NOTIFY
 			-- object being notified
 		do
 			Result := notified
 		end;
 
-	set_notified (arg: ANY) is -- !!! set_notified (arg: NOTIFY) is 
+	set_notified (arg: ANY) -- !!! set_notified (arg: NOTIFY) is 
 			-- set object being notified
 		do
 			notified := arg
 		end;
 
-	set_receive is
+	set_receive
 		do
 			receive := true
 		end;
 
-	set_not_receive is
+	set_not_receive
 		do
 			receive := false
 		end;
 
-	set_notify is
+	set_notify
 		do
 			notify := true
 		end;
 
-	set_not_notify is
+	set_not_notify
 		do
 			notify := false
 		end;
 
-	set_modified is
+	set_modified
 			-- simple notification of `Current`
 		do
 			if not notify then
@@ -58,7 +58,7 @@ feature -- Access
 			end
 		end;
 
-	set_modified_with (arg: ANY) is
+	set_modified_with (arg: ANY)
 			-- 'arg' has been modified
 		do
 			if not notify then
@@ -69,7 +69,7 @@ feature -- Access
 			end
 		end;
 
-	unset_modified is
+	unset_modified
 		do
 			modified := false
 		ensure
@@ -77,14 +77,14 @@ feature -- Access
 		end;
 
 
-		set_value_modified (bool: BOOLEAN) is
+		set_value_modified (bool: BOOLEAN)
 		do
 			modified := bool
 		end;
 
 feature -- Updating
 
-	recompute is
+	recompute
 			 -- Updating modification
 		do
 			unset_modified	
@@ -109,7 +109,7 @@ invariant
 	--notified.receive implies notify;
 	-- if receive=false `Current` is not always notified
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

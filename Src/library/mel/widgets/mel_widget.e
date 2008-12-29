@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 			"Abstact notion of windowed widgets which %
@@ -30,7 +30,7 @@ create
 
 feature -- Access
 
-	window: POINTER is
+	window: POINTER
 			-- Associated window
 		do
 			Result := xt_window (screen_object)
@@ -38,13 +38,13 @@ feature -- Access
 			valid_result: realized implies Result /= default_pointer
 		end;
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is Current widget valid?
 		do
 			Result := not is_destroyed
 		end;
 
-	event_command (a_mask: INTEGER): MEL_COMMAND_EXEC is
+	event_command (a_mask: INTEGER): MEL_COMMAND_EXEC
 			-- Command set for the xt event `a_mask'
 		local
 			cb: like callbacks;
@@ -57,7 +57,7 @@ feature -- Access
 			end
 		end;
 
-	translation_command (a_translation: STRING): MEL_COMMAND_EXEC is
+	translation_command (a_translation: STRING): MEL_COMMAND_EXEC
 			-- Command set for the translation action `a_translation'
 		require
 			translation_not_void: a_translation /= Void
@@ -74,7 +74,7 @@ feature -- Access
 
 feature -- Status Report
 
-	is_mapped_when_managed: BOOLEAN is
+	is_mapped_when_managed: BOOLEAN
 			-- Becomes Current visible as soon as it is both realized and managed?
 		require
 			exists: not is_destroyed
@@ -82,7 +82,7 @@ feature -- Status Report
 			Result := get_xt_boolean (screen_object, XmNmappedWhenManaged)
 		end;
 
-	background, background_color: MEL_PIXEL is
+	background, background_color: MEL_PIXEL
 			-- Color used for the background
 		require
 			exists: not is_destroyed
@@ -94,7 +94,7 @@ feature -- Status Report
 			Result_is_shared: Result.is_shared
 		end;
 
-	background_pixmap: MEL_PIXMAP is
+	background_pixmap: MEL_PIXMAP
 			-- Background pixmap
 		require
 			exists: not is_destroyed
@@ -106,7 +106,7 @@ feature -- Status Report
 			Result_is_shared: Result.is_shared
 		end;
 
-	depth: INTEGER is
+	depth: INTEGER
 			-- Number of bits allowed for each pixel
 		do
 			Result := get_xt_int (screen_object, XmNdepth)
@@ -114,7 +114,7 @@ feature -- Status Report
 
 feature -- Status setting
 
-	set_background, set_background_color (a_color: MEL_PIXEL) is
+	set_background, set_background_color (a_color: MEL_PIXEL)
 			-- Set `background' and `background_color' to `a_color'.
 		require
 			exists: not is_destroyed;
@@ -127,7 +127,7 @@ feature -- Status setting
 			background_set: background.is_equal (a_color)
 		end;
 
-	set_background_pixmap (a_pixmap: MEL_PIXMAP) is
+	set_background_pixmap (a_pixmap: MEL_PIXMAP)
 			-- Set `background_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
@@ -140,7 +140,7 @@ feature -- Status setting
 			background_pixmap_set: background_pixmap.is_equal (a_pixmap)
 		end;
 
-	propagate_event is
+	propagate_event
 			-- Propagate event to direct ancestor if no action
 			-- is specified for event.
 		require
@@ -149,7 +149,7 @@ feature -- Status setting
 			x_propagate_event (screen_object, True)
 		end;
 
-	set_no_event_propagation is
+	set_no_event_propagation
 			-- Don't propagate event to direct ancestor.
 		require
 			widget_realized: realized
@@ -157,7 +157,7 @@ feature -- Status setting
 			x_propagate_event (screen_object, False)
 		end;
 
-	map_when_managed is
+	map_when_managed
 			-- Set `is_mapped_when_managed' to True.
 		require
 			exists: not is_destroyed
@@ -167,7 +167,7 @@ feature -- Status setting
 			is_mapped_when_managed: is_mapped_when_managed 
 		end;
 
-	no_map_when_managed is
+	no_map_when_managed
 			-- Set `is_mapped_when_managed' to False.
 		require
 			exists: not is_destroyed
@@ -179,7 +179,7 @@ feature -- Status setting
 
 feature -- Transformation
 
-	lower is
+	lower
 			-- Lower Current in the stacking order.
 		require
 			exists: not is_destroyed
@@ -189,7 +189,7 @@ feature -- Transformation
 			end
 		end;
 
-	raise is
+	raise
 			-- Raise Current to the top of the stacking order.
 		require
 			exists: not is_destroyed
@@ -201,7 +201,7 @@ feature -- Transformation
 
 feature -- Miscellaneous
 
-	update_colors is
+	update_colors
 			-- Update the colors (top_shadow, bottom_shadow,
 			-- select_color ...) if necessary using `background_color'.
 		require
@@ -213,7 +213,7 @@ feature -- Miscellaneous
 
 feature -- Element change
 
-	set_event_handler (a_mask: INTEGER; a_command: MEL_COMMAND; an_argument: ANY) is
+	set_event_handler (a_mask: INTEGER; a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when event callback
 			-- with `a_mask' is invoked.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -237,7 +237,7 @@ feature -- Element change
 					a_command, an_argument)
 		end;
 
-	set_translation (a_translation: STRING; a_command: MEL_COMMAND; an_argument: ANY) is
+	set_translation (a_translation: STRING; a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when `a_translation' occurs.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -273,7 +273,7 @@ feature -- Element change
 					a_command, an_argument)
 		end;
 
-	define_cursor (a_cursor: MEL_SCREEN_CURSOR) is
+	define_cursor (a_cursor: MEL_SCREEN_CURSOR)
 			-- Define the cursor to be displayed to `a_cursor' if not
 			-- Void. Otherwize, if `a_cursor' is Void then have
 			-- the parent's cursor displayed in the Current window.
@@ -294,7 +294,7 @@ feature -- Element change
 			end
 		end;
 
-	grab_pointer (a_cursor: MEL_SCREEN_CURSOR) is
+	grab_pointer (a_cursor: MEL_SCREEN_CURSOR)
 			-- Actively grab the pointer. Display `a_cursor' if it is
 			-- not void. Otherwize, keep the current cursor.
 			-- (Grab both the mouse and the keyboard events).
@@ -310,7 +310,7 @@ feature -- Element change
 			xt_grab_pointer (screen_object, cursor_id)
 		end;
 
-	next_event (a_mask: INTEGER): MEL_EVENT is
+	next_event (a_mask: INTEGER): MEL_EVENT
 			-- Retrieve the next event with mask `a_mask' in the 
 			-- queue for Current widget and remove it from the queue
 			-- (Return immediately if event is not found)
@@ -331,7 +331,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_event_handler (a_mask: INTEGER) is
+	remove_event_handler (a_mask: INTEGER)
 			-- Remove the command for event callback with `a_mask'.
 			-- (All masks are defined in class `MEL_EVENT_MASK_CONSTANTS')
 		require
@@ -348,7 +348,7 @@ feature -- Removal
 			removed: event_command (a_mask) = Void
 		end;
 
-	remove_translation (a_translation: STRING) is
+	remove_translation (a_translation: STRING)
 			-- Remove the callback for `a_translation'.
 		require
 			exists: not is_destroyed;
@@ -366,7 +366,7 @@ feature -- Removal
 			removed: translation_command (a_translation) = Void
 		end;
 
-	undefine_cursor is
+	undefine_cursor
 			-- Sets the cursor to Current window to its parent's
 			-- cursor.
 		local
@@ -378,7 +378,7 @@ feature -- Removal
 			end
 		end;
 
-	ungrab_pointer is
+	ungrab_pointer
 			-- Release the pointer from an active grab.
 		require
 			widget_realized: realized
@@ -388,7 +388,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	display_handle: POINTER is
+	display_handle: POINTER
 			-- Associated C handle for the display
 		do  
 			Result := display.handle
@@ -396,32 +396,32 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External features
 
-	c_set_override_translations (scr_obj: POINTER; a_trans: POINTER) is
+	c_set_override_translations (scr_obj: POINTER; a_trans: POINTER)
 		external
 			"C"
 		end;
 
-	c_add_event_handler (scr_obj: POINTER; mask: INTEGER) is
+	c_add_event_handler (scr_obj: POINTER; mask: INTEGER)
 		external
 			"C"
 		end;
 
-	c_remove_event_handler (scr_obj: POINTER; mask: INTEGER) is
+	c_remove_event_handler (scr_obj: POINTER; mask: INTEGER)
 		external
 			"C"
 		end;
 
-	x_propagate_event (scr_obj: POINTER; c_bool: BOOLEAN) is
+	x_propagate_event (scr_obj: POINTER; c_bool: BOOLEAN)
 		external
 			"C"
 		end;
 
-	xt_grab_pointer (display_ptr: POINTER; cursor: POINTER) is
+	xt_grab_pointer (display_ptr: POINTER; cursor: POINTER)
 		external
 			"C"
 		end;
 
-	x_define_cursor (display_ptr: POINTER; a_window: POINTER; cursor: POINTER) is
+	x_define_cursor (display_ptr: POINTER; a_window: POINTER; cursor: POINTER)
 		external
 			"C (Display *, Window, Cursor) | <X11/Xlib.h>"
 		alias
@@ -429,47 +429,47 @@ feature {NONE} -- External features
 		end;
 
 	x_check_window_event (display_ptr: POINTER; a_window: POINTER; 
-				an_event_mask: INTEGER; event_ptr: POINTER): BOOLEAN is
+				an_event_mask: INTEGER; event_ptr: POINTER): BOOLEAN
 		external
 			"C (Display *, Window, long, XEvent *): Bool | <X11/Xlib.h>"
 		alias
 			"XCheckWindowEvent"
 		end;
 
-	x_undefine_cursor (display_ptr: POINTER; a_window: POINTER) is
+	x_undefine_cursor (display_ptr: POINTER; a_window: POINTER)
 		external
 			"C (Display *, Window) | <X11/Xlib.h>"
 		alias
 			"XUndefineCursor"
 		end;
 
-	xt_ungrab_pointer (w: POINTER; time: INTEGER) is
+	xt_ungrab_pointer (w: POINTER; time: INTEGER)
 		external
 			"C (Widget, Time) | <X11/Intrinsic.h>"
 		alias
 			"XtUngrabPointer"
 		end;
 
-	x_lower_window (display_ptr: POINTER; a_window: POINTER) is
+	x_lower_window (display_ptr: POINTER; a_window: POINTER)
 		external
 			"C (Display *, Window) | <X11/Xlib.h>"
 		alias
 			"XLowerWindow"
 		end;
 
-	x_raise_window (display_ptr: POINTER; a_window: POINTER) is
+	x_raise_window (display_ptr: POINTER; a_window: POINTER)
 		external
 			"C (Display *, Window) | <X11/Xlib.h>"
 		alias
 			"XRaiseWindow"
 		end;
 
-	global_xevent_ptr: POINTER is
+	global_xevent_ptr: POINTER
 		external
 			"C [macro %"mel.h%"]: XEvent *"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

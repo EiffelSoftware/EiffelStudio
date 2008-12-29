@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Representation of an X Pixel."
@@ -30,7 +30,7 @@ create
 feature {NONE} -- Initilization
 
 	make_by_name (a_display: MEL_DISPLAY; a_colormap: MEL_COLORMAP;
-			a_color_name: STRING) is
+			a_color_name: STRING)
 			-- Make a pixel from the name of a color.
 		require
 			valid_display: a_display /= Void and then a_display.is_valid
@@ -53,7 +53,7 @@ feature {NONE} -- Initilization
 		end;
 
 	make_by_rgb_value (a_display: MEL_DISPLAY; a_colormap: MEL_COLORMAP;
-				red_value, green_value, blue_value: INTEGER) is
+				red_value, green_value, blue_value: INTEGER)
 			-- Make a pixel from a rgb value.
 			-- Caution, red, green and blue are 16 bits int values.
 		require
@@ -79,7 +79,7 @@ feature {NONE} -- Initilization
 			is_shared: is_shared
 		end;
 
-	make_from_existing (a_display: MEL_DISPLAY; an_id: like identifier) is
+	make_from_existing (a_display: MEL_DISPLAY; an_id: like identifier)
 			-- Make a pixel from an already existing value.
 		require
 			valid_display: a_display /= Void and then a_display.is_valid
@@ -99,7 +99,7 @@ feature -- Access
 			-- Associated color map identifier used to
 			-- allocate the colors
 
-	colormap: MEL_COLORMAP is
+	colormap: MEL_COLORMAP
 			-- Associated color map
 		do
 			if colormap_identifier /= default_pointer then	
@@ -107,7 +107,7 @@ feature -- Access
 			end
 		end;
 
-	is_bad_color_name: BOOLEAN is
+	is_bad_color_name: BOOLEAN
 			-- Did the last attempt of allocating a color
 			-- could not be done successfully because the color
 			-- name did not exist?
@@ -115,7 +115,7 @@ feature -- Access
 			Result := status = BAD_COLOR_NAME
 		end;
 
-	is_no_free_cell_available: BOOLEAN is
+	is_no_free_cell_available: BOOLEAN
 			-- Did the last attempt of allocating a color
 			-- could not be done successfully because there were
 			-- no free cell available?
@@ -123,7 +123,7 @@ feature -- Access
 			Result := status = NO_FREE_CELL_AVAILABLE
 		end;
 
-	has_valid_colormap: BOOLEAN is
+	has_valid_colormap: BOOLEAN
 			-- Has the `colormap_identifier' been set?
 		do
 			Result := colormap_identifier /= default_pointer
@@ -133,13 +133,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is Current pixel valid?
 		do
 			Result := status = 0
 		end;
 
-	red: INTEGER is
+	red: INTEGER
 			-- Red component value of this color
 		require
 			pixel_is_valid: is_valid;
@@ -151,7 +151,7 @@ feature -- Status report
 			red_value_small_enough: Result <= 65535
 		end;
 
-	green: INTEGER is
+	green: INTEGER
 			-- Green component value of this color
 		require
 			pixel_is_valid: is_valid;
@@ -164,7 +164,7 @@ feature -- Status report
 			green_value_small_enough: Result <= 65535
 		end;
 
-	blue: INTEGER is
+	blue: INTEGER
 			-- Blue component value of this color
 		require
 			pixel_is_valid: is_valid;
@@ -179,7 +179,7 @@ feature -- Status report
 
 feature -- Status setting
 
-    set_colormap (a_colormap: MEL_COLORMAP) is
+    set_colormap (a_colormap: MEL_COLORMAP)
             -- Set `colormap' to `a_colormap'.
         require
 			colormap_not_set: not has_valid_colormap;
@@ -193,7 +193,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	destroy is
+	destroy
 			-- Free the cell from `colormap'.
 		do
 			check
@@ -217,56 +217,56 @@ feature {NONE} -- Implementation
 			-- -3: couldn't allocate the color (no more cells in the colormap)
 			-- -99: Alread freed
 
-	ALREADY_FREED: INTEGER is -99;	
+	ALREADY_FREED: INTEGER = -99;	
 
 feature {NONE} -- Implementation
 
-	get_color_by_name (a_string: POINTER; a_display, cmap: POINTER): POINTER is
+	get_color_by_name (a_string: POINTER; a_display, cmap: POINTER): POINTER
 		external
 			"C"
 		end;
 
 	get_color_by_rgb_value (red_value, green_value, 
-			blue_value: INTEGER; a_display, cmap: POINTER): POINTER is
+			blue_value: INTEGER; a_display, cmap: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	red_component (pixel: POINTER; a_display, a_colormap: POINTER): INTEGER is
+	red_component (pixel: POINTER; a_display, a_colormap: POINTER): INTEGER
 		external
 			"C"
 		end;
 
-	green_component (pixel: POINTER; a_display, a_colormap: POINTER): INTEGER is
+	green_component (pixel: POINTER; a_display, a_colormap: POINTER): INTEGER
 		external
 			"C"
 		end;
 
-	blue_component (pixel: POINTER; a_display, a_colormap: POINTER): INTEGER is
+	blue_component (pixel: POINTER; a_display, a_colormap: POINTER): INTEGER
 		external
 			"C"
 		end;
 
-	last_color_alloc_status: INTEGER is
+	last_color_alloc_status: INTEGER
 		external
 			"C [macro %"pixel.h%"]: EIF_INTEGER"
 		alias
 			"last_color_alloc_status"
 		end;
 
-	x_free_color (a_display, a_colormap, an_id: POINTER) is
+	x_free_color (a_display, a_colormap, an_id: POINTER)
 		external
 			"C"
 		end;
 
-	BAD_COLOR_NAME: INTEGER is
+	BAD_COLOR_NAME: INTEGER
 		external
 			"C [macro %"pixel.h%"]: EIF_INTEGER"
 		alias
 			"BAD_COLOR_NAME"
 		end;
 
-	NO_FREE_CELL_AVAILABLE: INTEGER is
+	NO_FREE_CELL_AVAILABLE: INTEGER
 		external
 			"C [macro %"pixel.h%"]: EIF_INTEGER"
 		alias
@@ -277,7 +277,7 @@ invariant
 
 	valid_display: has_valid_display
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

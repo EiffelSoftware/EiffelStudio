@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Encapsulation of the Application Context of X."
 	legal: "See notice at end of class.";
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create the mel application context.
 		do
 			handle := xt_init;
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			application_context_is_valid: is_valid
 		end;
 
-	make_from_existing (a_pointer: POINTER) is
+	make_from_existing (a_pointer: POINTER)
 			-- Create a mel application context from 
 			-- an existing application context.
 		require
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the application context valid?
 		do
 			Result := handle /= default_pointer
@@ -66,14 +66,14 @@ feature -- Status report
 			is_valid_implies_non_null: Result implies handle /= default_pointer
 		end;
 
-	last_id: MEL_IDENTIFIER is
+	last_id: MEL_IDENTIFIER
 			-- Id from `set_input', `set_time_out' and 
 			-- `set_work' callbacks.
 		do
 			Result := Mel_dispatcher.last_id
 		end;
 
-	pending: INTEGER is
+	pending: INTEGER
 			-- Mask of pending event 
 			-- (Zero, if there are none)
 		require
@@ -85,7 +85,7 @@ feature -- Status report
 					(Result <= XtIMAll) 
 		end;
 
-	next_event: MEL_EVENT is
+	next_event: MEL_EVENT
 			-- Retrieves the next event from the queue 
 			-- (It waits until there is an event in the queue. The
 			-- retrieved event is removed from the queue)
@@ -101,7 +101,7 @@ feature -- Status report
 			event_returned: Result /= Void
 		end;
 	
-	XtIMAlternateInput: INTEGER is
+	XtIMAlternateInput: INTEGER
 			-- Constant for Alternative input
 			-- (Returned by `pending' and used for `process_event')
 		external
@@ -110,7 +110,7 @@ feature -- Status report
 			"XtIMAlternateInput"
 		end;
 
-	XtIMAll: INTEGER is
+	XtIMAll: INTEGER
 			-- Constant for all events
 			-- (Used for `process_event')
 		external
@@ -119,7 +119,7 @@ feature -- Status report
 			"XtIMAll"
 		end;
 
-	XtIMTimer: INTEGER is
+	XtIMTimer: INTEGER
 			-- Constant for timer event
 			-- (Returned by `pending' and used for `process_event')
 		external
@@ -128,7 +128,7 @@ feature -- Status report
 			"XtIMTimer"
 		end;
 
-	XtIMXEvent: INTEGER is
+	XtIMXEvent: INTEGER
 			-- Constant for X events
 			-- (Returned by `pending' and used for `process_event')
 		external
@@ -139,7 +139,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_default_resources (a_list: ARRAY [MEL_WIDGET_RESOURCE]) is
+	set_default_resources (a_list: ARRAY [MEL_WIDGET_RESOURCE])
 			-- Set the default resource setting's
 		local
 			out_list: ARRAY [ANY];
@@ -162,7 +162,7 @@ feature -- Element change
 			set_fallback_res (handle, ext, number)
 		end;
 
-	set_input_read_callback (a_file: IO_MEDIUM; a_command: MEL_COMMAND; an_argument: ANY) is
+	set_input_read_callback (a_file: IO_MEDIUM; a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed for a pending read on a `a_file'.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -182,7 +182,7 @@ feature -- Element change
 			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
-	set_input_write_callback (a_file: IO_MEDIUM; a_command: MEL_COMMAND; an_argument: ANY) is
+	set_input_write_callback (a_file: IO_MEDIUM; a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed for a pending write to a `a_file'.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -202,7 +202,7 @@ feature -- Element change
 			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
-	set_input_except_callback (a_file: IO_MEDIUM; a_command: MEL_COMMAND; an_argument: ANY) is
+	set_input_except_callback (a_file: IO_MEDIUM; a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed for a pending I/O on `a_file'.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- invoked as a callback.
@@ -222,7 +222,7 @@ feature -- Element change
 			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
-	set_input_none_callback (a_file: IO_MEDIUM; a_command: MEL_COMMAND; an_argument: ANY) is
+	set_input_none_callback (a_file: IO_MEDIUM; a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed so that it never calls
 			-- the registered function.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -242,7 +242,7 @@ feature -- Element change
 			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
-	set_time_out_callback (a_delay: INTEGER; a_command: MEL_COMMAND; an_argument: ANY) is
+	set_time_out_callback (a_delay: INTEGER; a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed after `a_delay'
 			-- milliseconds has elapsed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -264,7 +264,7 @@ feature -- Element change
 			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
-	set_work_proc_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_work_proc_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed for work procedure callback.
 			-- `argument' will be passed to `a_command' whenever it is
 			-- Set the id of the work proc to `last_id'.
@@ -284,7 +284,7 @@ feature -- Element change
 
 feature -- Update
 
-	main_loop is
+	main_loop
 			-- Loop the application.
 		require
 			is_valid: is_valid;
@@ -292,7 +292,7 @@ feature -- Update
 			xt_app_main_loop (handle)
 		end;
 
-	process_event (a_mask: INTEGER) is
+	process_event (a_mask: INTEGER)
 			-- Process one X event, alternative input source or timer
 			-- event in Current application context based on `a_mask'.
 			-- This routine will block until an event of type `a_mask'
@@ -304,7 +304,7 @@ feature -- Update
 			xt_app_process_event (handle, a_mask)
 		end;
 
-	dispatch_event (an_event: MEL_EVENT) is
+	dispatch_event (an_event: MEL_EVENT)
 			-- Dispatch `an_event' to the appropriated event handler.
 		require
 			valid_an_event: an_event /= Void 
@@ -315,7 +315,7 @@ feature -- Update
 
 feature -- Removal
 
-	destroy is
+	destroy
 			-- Destroy the application context.
 		require
 			application_context_is_valid: is_valid
@@ -323,7 +323,7 @@ feature -- Removal
 			xt_destroy_application_context (handle);
 		end;
 
-	exit is
+	exit
 			-- Destroy the application context and then
 			-- exit the application.
 		require
@@ -335,13 +335,13 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	create_dispatcher is
+	create_dispatcher
 			-- Create the `dispatcher' for MEL callbacks.
 		once
 			if Mel_dispatcher /= Void then end
 		end;
 
-	last_id_ref: CELL [MEL_IDENTIFIER] is
+	last_id_ref: CELL [MEL_IDENTIFIER]
 			-- Last id saved
 		once
 			create Result.put (Void)
@@ -349,64 +349,64 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	xt_destroy_application_context (app_contxt: POINTER) is
+	xt_destroy_application_context (app_contxt: POINTER)
 		external
 			"C (XtAppContext) | <X11/Intrinsic.h>"
 		alias
 			"XtDestroyApplicationContext"
 		end;
 
-	xt_init: POINTER is
+	xt_init: POINTER
 		external
 			"C"
 		end;
 
-	xt_app_main_loop (app_contxt: POINTER) is
+	xt_app_main_loop (app_contxt: POINTER)
 		external
 			"C (XtAppContext) | <X11/Intrinsic.h>"
 		alias
 			"XtAppMainLoop"
 		end;
 
-	set_fallback_res (app_contxt: POINTER; resource_list: ANY; count: INTEGER) is
+	set_fallback_res (app_contxt: POINTER; resource_list: ANY; count: INTEGER)
 		external
 			"C"
 		end;
 
-	xt_app_pending (app_contxt: POINTER): INTEGER is
+	xt_app_pending (app_contxt: POINTER): INTEGER
 		external
 			"C(XtAppContext): EIF_INTEGER | <X11/Intrinsic.h>"
 		alias
 			"XtAppPending"
 		end;
 
-	xt_app_process_event (app_contxt: POINTER; a_mask: INTEGER) is
+	xt_app_process_event (app_contxt: POINTER; a_mask: INTEGER)
 		external
 			"C (XtAppContext, XtInputMask) | <X11/Intrinsic.h>"
 		alias
 			"XtAppProcessEvent"
 		end;
 
-	xt_dispatch_event (an_event: POINTER): BOOLEAN is
+	xt_dispatch_event (an_event: POINTER): BOOLEAN
 		external
 			"C (XEvent *): EIF_BOOLEAN | <X11/Intrinsic.h>"
 		alias
 			"XtDispatchEvent"
 		end;
 
-	xt_app_next_event (app_context: POINTER; an_event: POINTER) is
+	xt_app_next_event (app_context: POINTER; an_event: POINTER)
 		external
 			"C (XtAppContext, XEvent *) | <X11/Intrinsic.h>"
 		alias
 			"XtAppNextEvent"
 		end;
 
- 	global_xevent_ptr: POINTER is
+ 	global_xevent_ptr: POINTER
 		external
 			"C [macro %"mel.h%"]: XEvent *"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

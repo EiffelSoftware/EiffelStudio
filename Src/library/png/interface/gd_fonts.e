@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fonts supported."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,32 +15,32 @@ inherit
 
 feature {GD_IMAGE} -- Access
 
-	large_font_pointer: POINTER is
+	large_font_pointer: POINTER
 		once
 			Result := c_large_font
 		end
 
-	tiny_font_pointer: POINTER is
+	tiny_font_pointer: POINTER
 		once
 			Result := c_tiny_font
 		end
 
-	small_font_pointer: POINTER is
+	small_font_pointer: POINTER
 		once
 			Result := c_small_font
 		end
 
-	medium_bold_font_pointer: POINTER is
+	medium_bold_font_pointer: POINTER
 		once
 			Result := c_medium_bold_font
 		end
 
-	giant_font_pointer: POINTER is
+	giant_font_pointer: POINTER
 		once
 			Result := c_giant_font
 		end
 	
-	font(i: INTEGER):POINTER is
+	font(i: INTEGER):POINTER
 		-- Select a font thanks to its associated value.
 		-- Please refer to GIF_FONT_CONSTANTS for possible values.
 		require
@@ -59,39 +59,39 @@ feature {GD_IMAGE} -- Access
 
 feature -- Externals
 
-	c_tiny_font:POINTER is
+	c_tiny_font:POINTER
 		external
 			"C"
 		alias
 			"c_tiny_font"
 		end
-	c_small_font:POINTER is
+	c_small_font:POINTER
 		external
 			"C"
 		alias
 			"c_small_font"
 		end
-	c_medium_bold_font:POINTER is
+	c_medium_bold_font:POINTER
 		external
 			"C"
 		alias
 			"c_medium_bold_font"
 		end
-	c_giant_font:POINTER is
+	c_giant_font:POINTER
 		external
 			"C"
 		alias
 			"c_giant_font"
 		end
 
-	c_large_font:POINTER  is
+	c_large_font:POINTER
 		external
 			"C"
 		alias
 			"c_large_font"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

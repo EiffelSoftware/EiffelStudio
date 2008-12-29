@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A model for a graph node"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a EG_NODE
 		do
 			Precursor {EG_LINKABLE}
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

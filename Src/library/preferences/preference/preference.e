@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Resource type abstraction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Status setting
 
-	set_name (new_name: STRING) is
+	set_name (new_name: STRING)
 			-- Set `name' to `new_name'.
 		require
 			new_name_not_void: new_name /= Void
@@ -21,7 +21,7 @@ feature -- Status setting
 			name_set: name = new_name
 		end
 
-	set_description (new_description: STRING) is
+	set_description (new_description: STRING)
 			-- Set `description' to `new_description'.
 		require
 			new_description_exists: new_description /= Void
@@ -32,7 +32,7 @@ feature -- Status setting
 			description_set: description = new_description
 		end		
 	
-	set_hidden (a_flag: BOOLEAN) is
+	set_hidden (a_flag: BOOLEAN)
 			-- Set if this is hidden from user view.
 		do
 			is_hidden := a_flag
@@ -40,7 +40,7 @@ feature -- Status setting
 			value_set: is_hidden = a_flag
 		end		
 	
-	set_default_value (a_value: STRING) is
+	set_default_value (a_value: STRING)
 			-- Set the value to be used for default in the event `value' is not set.
 		require
 			a_value_not_void: a_value /= Void
@@ -54,7 +54,7 @@ feature -- Status setting
 			default_value_set: internal_default_value = a_value
 		end		
 	
-	set_value_from_string (a_value: STRING) is
+	set_value_from_string (a_value: STRING)
 			-- Parse the string value `a_value' and set `value'.
 		require
 			a_value_not_void: a_value /= Void
@@ -62,7 +62,7 @@ feature -- Status setting
 		deferred
 		end	
 
-	reset is
+	reset
 			-- Reset value to `default_value'.
 		require
 			has_default_value: has_default_value
@@ -76,7 +76,7 @@ feature -- Status setting
 			is_reset: is_default_value
 		end		
 
-	set_restart_required (is_required: BOOLEAN) is
+	set_restart_required (is_required: BOOLEAN)
 			-- Set 'restart_required'
 		do
 			restart_required := is_required
@@ -92,7 +92,7 @@ feature -- Access
 	description: STRING
 			-- Description of what the preference is all about.
 
-	default_value: STRING is
+	default_value: STRING
 			-- Value to be used for default.
 		do
 			if auto_preference = Void then
@@ -102,7 +102,7 @@ feature -- Access
 			end
 		end
 
-	string_value: STRING is
+	string_value: STRING
 			-- String value for this preference.
 		require
 			has_value: has_value
@@ -111,14 +111,14 @@ feature -- Access
 			not_void: Result /= Void
 		end		
 
-	string_type: STRING is
+	string_type: STRING
 			-- String description of this preference type.
 		deferred
 		ensure
 			string_type_not_void: Result /= Void
 		end		
 
-	generating_preference_type: STRING is
+	generating_preference_type: STRING
 			-- The generating type of the preference for graphical representation.
 		deferred
 		ensure
@@ -133,18 +133,18 @@ feature -- Access
 
 feature -- Query
 		
-	has_value: BOOLEAN is
+	has_value: BOOLEAN
 			-- Does this preference have a value to use?
 		deferred
 		end
 		
-	has_default_value: BOOLEAN is
+	has_default_value: BOOLEAN
 			-- Does this preference have a default value to use?
 		do
 			Result := default_value /= Void	or auto_preference /= Void
 		end		
 
-	is_default_value: BOOLEAN is
+	is_default_value: BOOLEAN
 			-- Is this preference value the same as the default value?
 		do
 			if has_default_value then
@@ -155,7 +155,7 @@ feature -- Query
 	is_hidden: BOOLEAN
 			-- Should Current be hidden from user view?
 
-	valid_value_string (a_string: STRING): BOOLEAN is
+	valid_value_string (a_string: STRING): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?
 		require
 			string_not_void: a_string /= Void
@@ -170,7 +170,7 @@ feature -- Query
 
 feature -- Actions
 
-	change_actions: ACTION_SEQUENCE [TUPLE] is
+	change_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when `value' changes, after call to `set_value'.
 		do
 			Result := internal_change_actions
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 	internal_change_actions: like change_actions
 			-- Storage for `change_actions'.
 
-	auto_string: STRING is "auto"
+	auto_string: STRING = "auto"
 			-- Auto
 
 	internal_default_value: STRING
@@ -196,7 +196,7 @@ invariant
 	name_not_void: name /= Void
 	has_change_actions: change_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

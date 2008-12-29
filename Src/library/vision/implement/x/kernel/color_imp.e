@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "X implementation of the notion of color"
 	legal: "See notice at end of class.";
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_color: COLOR) is
+	make (a_color: COLOR)
 			-- Create a color
 		require
 			last_open_display_not_null: last_open_display /= Void
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			display := last_open_display
 		end; 
 
-	make_for_screen (a_color: COLOR; a_screen: SCREEN) is
+	make_for_screen (a_color: COLOR; a_screen: SCREEN)
 			-- Create a font.
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
@@ -62,21 +62,21 @@ feature -- Access
 	display: MEL_DISPLAY;
 			-- Display where resource is allocated
 
-	allocated_blue: INTEGER is
+	allocated_blue: INTEGER
 			-- Allocated blue saturation level for `a_widget'
 		do
 			allocate_pixel;
 			Result := red
 		end; 
 
-	allocated_green: INTEGER is
+	allocated_green: INTEGER
 			-- Allocated green saturation level for `a_widget'
 		do
 			allocate_pixel;
 			Result := green
 		end; 
 
-	allocated_red: INTEGER is
+	allocated_red: INTEGER
 			-- Allocated red saturation level for `a_widget'
 		do
 			allocate_pixel;
@@ -103,14 +103,14 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_black_default is
+	set_black_default
 			-- Set black color to be used by default if
 			-- it is impossible to allocate desire color.
 		do
 			is_white_by_default := false
 		end; 
 
-	set_blue (blue_value: INTEGER) is
+	set_blue (blue_value: INTEGER)
 			-- Set blue saturation level to `blue_value'.
 		do
 			blue := blue_value;
@@ -119,7 +119,7 @@ feature -- Status setting
 			update_widgets
 		end; 
 
-	set_green (green_value: INTEGER) is
+	set_green (green_value: INTEGER)
 			-- Set green saturation level to `green_value'.
 		do
 			green := green_value;
@@ -128,7 +128,7 @@ feature -- Status setting
 			update_widgets
 		end; 
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set color name to `a_name'.
 		do
 			name := a_name.twin;
@@ -136,7 +136,7 @@ feature -- Status setting
 			update_widgets
 		end; 
 
-	set_default_pixel (a_pixel: MEL_PIXEL; cmap: MEL_COLORMAP) is
+	set_default_pixel (a_pixel: MEL_PIXEL; cmap: MEL_COLORMAP)
 			-- Set the default Pixel color to `pixel_value'
 		require
 			valid_pixel: a_pixel /= Void and then a_pixel.is_valid;
@@ -149,7 +149,7 @@ feature -- Status setting
 			name := Void;
 		end;
 			
-	set_red (red_value: INTEGER) is
+	set_red (red_value: INTEGER)
 			-- Set red saturation level to `red_value'.
 		do
 			red := red_value;
@@ -158,7 +158,7 @@ feature -- Status setting
 			update_widgets
 		end; 
 
-	set_rgb (red_value, green_value, blue_value: INTEGER) is
+	set_rgb (red_value, green_value, blue_value: INTEGER)
 			-- Set red, green and blue saturation level respectivly to
 			-- `red_value', `green_value' and `blue_value'.
 		do
@@ -170,7 +170,7 @@ feature -- Status setting
 			update_widgets
 		end; 
 
-	set_white_default is
+	set_white_default
 			-- Set white color to be used by default if
 			-- it is impossible to allocate desire color.
 		do
@@ -179,7 +179,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	allocate_pixel is
+	allocate_pixel
 			-- Allocate Pixel of current color on `a_screen' if
 			-- it has not been done.
 		local
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 	is_real_allocated: BOOLEAN
 			-- Was the X color structure allocated?
 
-	dispose is
+	dispose
 			-- Free color resource.
 		do
 			if is_real_allocated then
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			identifier := default_pointer;
 		end; 
 
-	update_widget_resource (widget_m: WIDGET_IMP) is
+	update_widget_resource (widget_m: WIDGET_IMP)
 			-- Update resource for `widget_m'.
 			-- Set `updated' to True if the resource was set.
 		local
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 			end;
 		end; 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

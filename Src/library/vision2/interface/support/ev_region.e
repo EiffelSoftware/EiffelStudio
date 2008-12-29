@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Used for defining a clip region in EV_DRAWABLE"
 	author: ""
 	date: "$Date$"
@@ -140,7 +140,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_REGION_I;
 			-- Implementation interface.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

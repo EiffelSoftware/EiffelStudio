@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Projection to a Printer."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_context (a_world: EV_FIGURE_WORLD; a_context: EV_PRINT_CONTEXT) is
+	make_with_context (a_world: EV_FIGURE_WORLD; a_context: EV_PRINT_CONTEXT)
 			-- Create with `a_world' and `a_context'.
 		require
 			a_world_not_void: a_world /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	project is
+	project
 			-- Make a standard projection of the world on the device.
 		require
 			not_destroyed: not is_destroyed
@@ -60,13 +60,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_PRINT_PROJECTOR_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

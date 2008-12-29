@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of PROCESS_INFO"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	process_id: INTEGER is
+	process_id: INTEGER
 			-- Process ID of current process
 		external
 			"C inline"
@@ -25,7 +25,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	get_process_module (a_module: TYPED_POINTER [POINTER]; a_count: TYPED_POINTER [INTEGER]; a_succ: TYPED_POINTER [BOOLEAN]) is
+	get_process_module (a_module: TYPED_POINTER [POINTER]; a_count: TYPED_POINTER [INTEGER]; a_succ: TYPED_POINTER [BOOLEAN])
 			-- Get module of current process and store it in `a_module'.
 			-- Length of `a_module' in bytes is stored in `a_count'.
 			-- If succeeded, set `a_succ' to True, otherwise False.
@@ -50,7 +50,7 @@ feature{NONE} -- Implementation
 			]"
 		end
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

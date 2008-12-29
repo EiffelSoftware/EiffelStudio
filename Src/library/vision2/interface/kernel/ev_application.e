@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision Application.%N%
 		%To start an Eiffel Vision application: create exactly one%
@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Initialization is
 
-	initialize is
+	initialize
 			-- Mark `Current' as initialized.
 		do
 			set_tooltip_delay (default_tooltip_delay)
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization is
 
 feature -- Access
 
-	windows: LINEAR [EV_WINDOW] is
+	windows: LINEAR [EV_WINDOW]
 			-- All of the application's windows.
 		require
 			not_destroyed: not is_destroyed
@@ -51,7 +51,7 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.windows)
 		end
 
-	locked_window: EV_WINDOW is
+	locked_window: EV_WINDOW
 			-- Window currently locked. Void if no window
 			-- is currently locked.
 			--
@@ -62,7 +62,7 @@ feature -- Access
 			Result := implementation.locked_window
 		end
 
-	captured_widget: EV_WIDGET is
+	captured_widget: EV_WIDGET
 			-- Widget currently captured. Void if none.
 		require
 			not_destroyed: not is_destroyed
@@ -70,7 +70,7 @@ feature -- Access
 			Result := implementation.captured_widget
 		end
 
-	help_accelerator: EV_ACCELERATOR is
+	help_accelerator: EV_ACCELERATOR
 			-- Accelerator that displays contextual help
 		require
 			not_destroyed: not is_destroyed
@@ -81,7 +81,7 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.help_accelerator)
 		end
 
-	contextual_help_accelerator: EV_ACCELERATOR is
+	contextual_help_accelerator: EV_ACCELERATOR
 			-- Accelerator that enables contextual help mode
 		require
 			not_destroyed: not is_destroyed
@@ -93,7 +93,7 @@ feature -- Access
 				(implementation.contextual_help_accelerator)
 		end
 
-	help_engine: EV_HELP_ENGINE is
+	help_engine: EV_HELP_ENGINE
 			-- Object that handles contextual help display requests
 		require
 			not_destroyed: not is_destroyed
@@ -104,7 +104,7 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.help_engine)
 		end
 
-	clipboard: EV_CLIPBOARD is
+	clipboard: EV_CLIPBOARD
 			-- Native platform clipboard access.
 		require
 			not_destroyed: not is_destroyed
@@ -117,7 +117,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_help_accelerator (an_accelerator: EV_ACCELERATOR) is
+	set_help_accelerator (an_accelerator: EV_ACCELERATOR)
 			-- Assign `an_accelerator' to `help_accelerator'
 		require
 			not_destroyed: not is_destroyed
@@ -128,7 +128,7 @@ feature -- Element Change
 			help_accelerator_assigned: help_accelerator = an_accelerator
 		end
 
-	set_contextual_help_accelerator (an_accelerator: EV_ACCELERATOR) is
+	set_contextual_help_accelerator (an_accelerator: EV_ACCELERATOR)
 			-- Assign `an_accelerator' to `contextual_help_accelerator'
 		require
 			not_destroyed: not is_destroyed
@@ -140,7 +140,7 @@ feature -- Element Change
 				contextual_help_accelerator = an_accelerator
 		end
 
-	set_help_engine (an_engine:  EV_HELP_ENGINE) is
+	set_help_engine (an_engine:  EV_HELP_ENGINE)
 			-- Assign `an_engine' to `help_engine'
 		require
 			not_destroyed: not is_destroyed
@@ -153,7 +153,7 @@ feature -- Element Change
 
 feature -- Basic operation
 
-	launch is
+	launch
 			-- Start the application.
 			-- This begins the event processing loop.
 		require
@@ -168,7 +168,7 @@ feature -- Basic operation
 			is_launched := False
 		end
 
-	process_events is
+	process_events
 			-- Process any pending events.
 			-- Pass control to the underlying native toolkit so that it can
 			-- handle any events that may be in its queue.
@@ -180,7 +180,7 @@ feature -- Basic operation
 			implementation.process_events
 		end
 
-	process_events_until_stopped is
+	process_events_until_stopped
 			-- Process all events until 'stop_processing' is called.
 		require
 			not_destroyed: not is_destroyed
@@ -189,7 +189,7 @@ feature -- Basic operation
 			implementation.process_events_until_stopped
 		end
 
-	process_graphical_events is
+	process_graphical_events
 			-- Process any pending paint events.
 			-- Pass control to the GUI toolkit so that it can
 			-- handle any paint events that may be in its queue.
@@ -200,7 +200,7 @@ feature -- Basic operation
 			implementation.process_graphical_events
 		end
 
-	stop_processing is
+	stop_processing
 			--  Exit `process_events_until_stopped'.
 		require
 			not_destroyed: not is_destroyed
@@ -209,7 +209,7 @@ feature -- Basic operation
 			implementation.stop_processing
 		end
 
-	sleep (msec: INTEGER) is
+	sleep (msec: INTEGER)
 			-- Wait for `msec' milliseconds and return.
 		require
 			not_destroyed: not is_destroyed
@@ -218,7 +218,7 @@ feature -- Basic operation
 			implementation.sleep (msec)
 		end
 
-	enable_contextual_help is
+	enable_contextual_help
 			-- Change mouse cursor to help cursor.
 			-- Capture mouse input.
 			-- Send help context of widget being clicked to help engine for
@@ -229,7 +229,7 @@ feature -- Basic operation
 			implementation.enable_contextual_help
 		end
 
-	display_help_for_widget (a_widget: EV_WIDGET) is
+	display_help_for_widget (a_widget: EV_WIDGET)
 			-- Display contextual help for `a_widget', if any.
 		require
 			not_destroyed: not is_destroyed
@@ -243,7 +243,7 @@ feature -- Status report
 	is_launched: BOOLEAN
 			-- Has `launch' been called?
 
-	tooltip_delay: INTEGER is
+	tooltip_delay: INTEGER
 			-- Time in milliseconds which the pointer must be stationary over
 			-- a widget before a tooltip appears.
 		require
@@ -254,10 +254,10 @@ feature -- Status report
 			bridge_ok: Result = implementation.tooltip_delay
 		end
 
-	default_tooltip_delay: INTEGER is 500
+	default_tooltip_delay: INTEGER = 500
 			-- Default delay in milleseconds for tooltips.
 
-	focused_widget: EV_WIDGET is
+	focused_widget: EV_WIDGET
 			-- Widget that has keyboard focus.
 		require
 			not_destroyed: not is_destroyed
@@ -275,7 +275,7 @@ feature -- Status report
 			Result := implementation.transport_in_progress
 		end
 
-	ctrl_pressed: BOOLEAN is
+	ctrl_pressed: BOOLEAN
 			-- Is ctrl key currently pressed?
 		require
 			not_destroyed: not is_destroyed
@@ -283,7 +283,7 @@ feature -- Status report
 			Result := implementation.ctrl_pressed
 		end
 
-	alt_pressed: BOOLEAN is
+	alt_pressed: BOOLEAN
 			-- Is alt key currently pressed?
 		require
 			not_destroyed: not is_destroyed
@@ -291,7 +291,7 @@ feature -- Status report
 			Result := implementation.alt_pressed
 		end
 
-	shift_pressed: BOOLEAN is
+	shift_pressed: BOOLEAN
 			-- Is shift key currently pressed?
 		require
 			not_destroyed: not is_destroyed
@@ -299,7 +299,7 @@ feature -- Status report
 			Result := implementation.shift_pressed
 		end
 
-	caps_lock_on: BOOLEAN is
+	caps_lock_on: BOOLEAN
 			-- Is caps lock key currently on?
 		require
 			not_destroyed: not is_destroyed
@@ -318,7 +318,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_tooltip_delay (a_delay: INTEGER) is
+	set_tooltip_delay (a_delay: INTEGER)
 			-- Assign `a_delay' to `tooltip_delay'.
 		require
 			not_destroyed: not is_destroyed
@@ -331,7 +331,7 @@ feature -- Status setting
 
 feature -- Event handling
 
-	add_idle_action_kamikaze, do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE]) is
+	add_idle_action_kamikaze, do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE])
 			-- Perform `an_action' one time when the application is next idle.
 			-- Thread safe
 		require
@@ -340,7 +340,7 @@ feature -- Event handling
 			implementation.do_once_on_idle (an_action)
 		end
 
-	add_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is
+	add_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE])
 			-- Add `a_idle_actions' to `idle_actions' if not already present.
 			-- Thread safe
 		require
@@ -349,7 +349,7 @@ feature -- Event handling
 			implementation.add_idle_action (a_idle_action)
 		end
 
-	remove_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is
+	remove_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE])
 			-- Remove `a_idle_action' from `idle_actions'.
 			-- Thread safe.
 		require
@@ -374,7 +374,7 @@ feature {EV_LITE_ACTION_SEQUENCE} -- Implementation
 
 feature {NONE} -- Contract support
 
-	application_exists: BOOLEAN is
+	application_exists: BOOLEAN
 			-- Does the application exist? This is used to stop
 			-- manipulation of widgets before an application is created.
 			-- As we are now in the process of creating the application,
@@ -390,7 +390,7 @@ feature {EV_ANY, EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE, EV_SHARED_TRANSPORT_I,
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_APPLICATION_IMP} implementation.make (Current)
@@ -400,7 +400,7 @@ invariant
 	tooltip_delay_not_negative: tooltip_delay >= 0
 	windows_not_void: windows /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

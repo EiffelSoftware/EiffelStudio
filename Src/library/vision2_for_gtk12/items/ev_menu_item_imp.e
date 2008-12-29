@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu item. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,18 +40,18 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False
+	needs_event_box: BOOLEAN = False
 
-	is_dockable: BOOLEAN is False
+	is_dockable: BOOLEAN = False
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a menu.
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_menu_item_new)
 		end
 
-	initialize is
+	initialize
 			-- Call to both precursors.		
 		do
 			real_signal_connect (c_object, "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_ITEM_IMP}
 		end
 
-	initialize_menu_item_box is
+	initialize_menu_item_box
 			-- Create and initialize menu item box.
 		local
 			box: POINTER
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Displayed on menu item.
 		do
 			if real_text /= Void then
@@ -91,7 +91,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Assign `a_text' to `text'.
 		local
 			temp_string: STRING
@@ -119,7 +119,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	real_text: STRING
 			-- Internal `text'. (with ampersands)
 
-	filter_ampersand (s: STRING; char: CHARACTER) is
+	filter_ampersand (s: STRING; char: CHARACTER)
 			-- Replace occurrences of '&' from `s'  by `char' and
 			-- replace occurrences of "&&" with '&'.
 		require
@@ -145,7 +145,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			s.replace_substring_all ("&&", "&")
 		end
 
-	u_lined_filter (s: STRING): STRING is
+	u_lined_filter (s: STRING): STRING
 			-- Copy of `s' with underscores instead of ampersands.
 			-- (If `s' does not contain ampersands, return `s'.)
 		require
@@ -163,7 +163,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			s_not_changed: (old s.twin).is_equal (s)
 		end
 
-	on_activate is
+	on_activate
 		local
 			p_imp: EV_MENU_ITEM_LIST_IMP
 		do
@@ -180,7 +180,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	menu_item_box: POINTER is
+	menu_item_box: POINTER
 		local
 			a_child_list: POINTER
 		do
@@ -191,7 +191,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	interface: EV_MENU_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

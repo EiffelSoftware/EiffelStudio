@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Polyline"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make(im: GD_IMAGE; point_array: ARRAY[TUPLE[INTEGER,INTEGER]]) is
+	make(im: GD_IMAGE; point_array: ARRAY[TUPLE[INTEGER,INTEGER]])
 		-- Create image with points 'point_array'.
 		require
 			image_exists: im /= Void
@@ -39,7 +39,7 @@ feature -- Initialization
 
 feature -- Drawing
 
-	draw_lines is
+	draw_lines
 			-- Draw lines
 		local
 			i: INTEGER
@@ -61,7 +61,7 @@ feature -- Drawing
 
 feature -- Settings
 
-	set_style(a_style: INTEGER) is
+	set_style(a_style: INTEGER)
 		do
 
 		end
@@ -77,7 +77,7 @@ feature -- Implementation
 
 feature {NONE} -- Externals
 
-	 gdImageLine(p: POINTER; x1,y1,x2,y2: INTEGER; a_color_index: INTEGER) is
+	 gdImageLine(p: POINTER; x1,y1,x2,y2: INTEGER; a_color_index: INTEGER)
 		external
 			"c"
 		alias
@@ -87,7 +87,7 @@ feature {NONE} -- Externals
 invariant
 	at_least_one_line: points.count>0
 	points_with_the_image: image.points_within_the_image(points)
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

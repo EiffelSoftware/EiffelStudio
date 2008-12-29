@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,42 +12,42 @@ inherit
 
 feature -- Status Report
 
-	abort_user_precondition: BOOLEAN is
+	abort_user_precondition: BOOLEAN
 			-- User-defined preconditions for `abort'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	suspend_user_precondition: BOOLEAN is
+	suspend_user_precondition: BOOLEAN
 			-- User-defined preconditions for `suspend'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	resume_user_precondition: BOOLEAN is
+	resume_user_precondition: BOOLEAN
 			-- User-defined preconditions for `resume'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_priority_user_precondition (n_priority: INTEGER): BOOLEAN is
+	set_priority_user_precondition (n_priority: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_priority'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_priority_user_precondition (pn_priority: INTEGER_REF): BOOLEAN is
+	get_priority_user_precondition (pn_priority: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `get_priority'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_bind_result_user_precondition (pclsid_protocol: ECOM_GUID; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER): BOOLEAN is
+	get_bind_result_user_precondition (pclsid_protocol: ECOM_GUID; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER): BOOLEAN
 			-- User-defined preconditions for `get_bind_result'.
 			-- Redefine in descendants if needed.
 		do
@@ -56,7 +56,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	abort is
+	abort
 			-- No description available.
 		require
 			abort_user_precondition: abort_user_precondition
@@ -64,7 +64,7 @@ feature -- Basic Operations
 
 		end
 
-	suspend is
+	suspend
 			-- No description available.
 		require
 			suspend_user_precondition: suspend_user_precondition
@@ -72,7 +72,7 @@ feature -- Basic Operations
 
 		end
 
-	resume is
+	resume
 			-- No description available.
 		require
 			resume_user_precondition: resume_user_precondition
@@ -80,7 +80,7 @@ feature -- Basic Operations
 
 		end
 
-	set_priority (n_priority: INTEGER) is
+	set_priority (n_priority: INTEGER)
 			-- No description available.
 			-- `n_priority' [in].  
 		require
@@ -89,7 +89,7 @@ feature -- Basic Operations
 
 		end
 
-	get_priority (pn_priority: INTEGER_REF) is
+	get_priority (pn_priority: INTEGER_REF)
 			-- No description available.
 			-- `pn_priority' [out].  
 		require
@@ -99,7 +99,7 @@ feature -- Basic Operations
 
 		end
 
-	get_bind_result (pclsid_protocol: ECOM_GUID; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER) is
+	get_bind_result (pclsid_protocol: ECOM_GUID; pdw_result: INTEGER_REF; psz_result: CELL [STRING]; dw_reserved: INTEGER)
 			-- No description available.
 			-- `pclsid_protocol' [out].  
 			-- `pdw_result' [out].  
@@ -117,7 +117,7 @@ feature -- Basic Operations
 			valid_psz_result: psz_result.item /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

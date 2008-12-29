@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Abstract notion of a dialog."
@@ -32,22 +32,22 @@ inherit
 
 feature -- Access
 
-	screen_object: POINTER is
+	screen_object: POINTER
 			-- C handle representing widget
 		deferred
 		end
 
-	parent: MEL_DIALOG_SHELL is
+	parent: MEL_DIALOG_SHELL
 			-- Associated dialog shell
 		deferred
 		end;
 
-	display: MEL_DISPLAY is
+	display: MEL_DISPLAY
 			-- Associated display
 		deferred
 		end;
 
-	is_stackable: BOOLEAN is
+	is_stackable: BOOLEAN
 			-- Is Current a stackable element?
 			-- (No it is not)
 		do
@@ -56,37 +56,37 @@ feature -- Access
 	is_popped_up: BOOLEAN;
 			-- Is the popup widget popped up on screen ?
 
-	is_shown: BOOLEAN is
+	is_shown: BOOLEAN
 			-- Is current widget visible on the screen?
 		do
 			Result := parent.is_shown
 		end;
 
-	manage is
+	manage
 			-- Manage dialog
 		deferred
 		end;
 
-	unmanage is
+	unmanage
 			-- Unmanage dialog
 		deferred
 		end;
 
-	screen: SCREEN_I is
+	screen: SCREEN_I
 			-- Associated screen
 		deferred
 		end
 
 feature -- Status report
 
-	title: STRING is
+	title: STRING
 			-- Application name to be displayed by
 			-- the window manager
 		do
 			Result := parent.title
 		end;
 
-	widget_group: WIDGET is
+	widget_group: WIDGET
 			-- Widget with wich current widget is associated.
 			-- By convention this widget is the "leader" of a group
 			-- widgets. Window manager will treat all widgets in
@@ -95,7 +95,7 @@ feature -- Status report
 		do
 		end 
 
- 	base_height: INTEGER is
+ 	base_height: INTEGER
 			-- Base for a progression of preferred heights
 			-- for current window manager to use in sizing
 			-- widgets.
@@ -105,7 +105,7 @@ feature -- Status report
 			Result := parent.base_height
 		end;
 
-	base_width: INTEGER is
+	base_width: INTEGER
 			-- Base for a progression of preferred widths
 			-- for current window manager to use in sizing
 			-- widgets.
@@ -115,7 +115,7 @@ feature -- Status report
 			Result := parent.base_width
 		end;
 
-	height_inc: INTEGER is
+	height_inc: INTEGER
 			-- Increment for a progression of preferred
 			-- heights for the window manager tu use in sizing 
 			-- widgets.
@@ -123,7 +123,7 @@ feature -- Status report
 			Result := parent.height_inc
 		end;
 
-	width_inc: INTEGER is
+	width_inc: INTEGER
 			-- Increment for a progression of preferred
 			-- widths for the window manager tu use in sizing
 			-- widgets.
@@ -131,20 +131,20 @@ feature -- Status report
 			Result := parent.width_inc
 		end;
 
-	icon_mask: PIXMAP is
+	icon_mask: PIXMAP
 			-- Bitmap that could be used by window manager
 			-- to clip `icon_pixmap' bitmap to make the
 			-- icon nonrectangular 
 		do
 		end;
 
-	icon_pixmap: PIXMAP is
+	icon_pixmap: PIXMAP
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon
 		do
 		end;
 
-	icon_x: INTEGER is
+	icon_x: INTEGER
 			-- Place to put application's icon
 			-- Since the window manager controls icon placement
 			-- policy, this may be ignored.
@@ -152,7 +152,7 @@ feature -- Status report
 			Result := parent.icon_x
 		end; 
 
-	icon_y: INTEGER is
+	icon_y: INTEGER
 			-- Place to put application's icon
 			-- Since the window manager controls icon placement
 			-- policy, this may be ignored.
@@ -160,63 +160,63 @@ feature -- Status report
 			Result := parent.icon_y
 		end;
 
-	max_height: INTEGER is
+	max_height: INTEGER
 			-- Maximum height that application wishes widget
 			-- instance to have
 		do
 			Result := parent.max_height
 		end;
 
-	max_width: INTEGER is
+	max_width: INTEGER
 			-- Maximum width that application wishes widget
 			-- instance to have
 		do
 			Result := parent.max_width
 		end;
 
-	min_aspect_x: INTEGER is
+	min_aspect_x: INTEGER
 			-- Numerator of minimum aspect ratio (X/Y) that
 			-- application wishes widget instance to have
 		do
 			Result := parent.min_aspect_x
 		end;
 
-	min_aspect_y: INTEGER is
+	min_aspect_y: INTEGER
 			-- Denominator of minimum ration (X/Y) that
 			-- application wishes widget instance to have
 		do
 			Result := parent.min_aspect_y
 		end;
 
-	min_height: INTEGER is
+	min_height: INTEGER
 			-- minimum height that application wishes widget
 			-- instance to have
 		do
 			Result := parent.min_height
 		end;
 
-	min_width: INTEGER is
+	min_width: INTEGER
 			-- minimum width that application wishes widget
 			-- instance to have
 		do
 			Result := parent.min_width
 		end; 
 
-	max_aspect_y: INTEGER is
+	max_aspect_y: INTEGER
 			-- Denominator of maximum ration (X/Y) that
 			-- application wishes widget instance to have
 		do
 			Result := parent.max_aspect_y
 		end;
 
-	max_aspect_x: INTEGER is
+	max_aspect_x: INTEGER
 			-- Numerator of maximum aspect ratio (X/Y) that
 			-- application wishes widget instance to have
 		do
 			Result := parent.max_aspect_x
 		end;
 
-	popdown is
+	popdown
 			-- Popdown popup shell.
 		do
 			if is_popped_up then
@@ -225,7 +225,7 @@ feature -- Status report
 			end
 		end;
 
-	popup is
+	popup
 			-- Popup a popup shell.
 		do
 			if not is_popped_up then
@@ -236,13 +236,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Set `title' to `a_title'.
 		do
 			parent.set_title (a_title)
 		end;
 
-	set_parent_action (action: STRING; cmd: COMMAND; arg: ANY) is
+	set_parent_action (action: STRING; cmd: COMMAND; arg: ANY)
 			-- Set the dialog shell action to `cmd' with `arg'
 		local
 			list: VISION_COMMAND_LIST
@@ -252,135 +252,135 @@ feature -- Status setting
 			list.add_command (cmd, arg)
 		end
 
-	remove_parent_action (action: STRING) is
+	remove_parent_action (action: STRING)
 			-- Remove `action' from the dialog shell
 		do
 			parent.remove_translation (action)
 		end
 
-	dialog_command_target is
+	dialog_command_target
 			-- Set the main object to the dialog shell.
 		obsolete
 			"Use `set_parent_action' instead"
 		do
 		end;
 
-	widget_command_target is
+	widget_command_target
 			-- Set the main object to the dialog.
 		obsolete
 			"Not necessary when using `set_parent_action'."
 		do
 		end;
 
-	set_base_height (a_height: INTEGER) is
+	set_base_height (a_height: INTEGER)
 			-- Set `base_height' to `a_height'. 
 		do
 			parent.set_base_height (a_height)
 		end;
 
-	set_base_width (a_width: INTEGER) is
+	set_base_width (a_width: INTEGER)
 			-- Set `base_width' to `a_width'.
 		do
 			parent.set_base_height (a_width)
 		end;
 
-	set_height_inc (an_increment: INTEGER) is
+	set_height_inc (an_increment: INTEGER)
 			-- Set `height_inc' to `an_increment'.
 		do
 			parent.set_height_inc (an_increment)
 		end;
 
-	set_width_inc (an_increment: INTEGER) is
+	set_width_inc (an_increment: INTEGER)
 			-- Set `width_inc' to `an_increment'.
 		do
 			parent.set_width_inc (an_increment)
 		end;
 
-	set_icon_mask (a_mask: PIXMAP) is
+	set_icon_mask (a_mask: PIXMAP)
 			-- Set `icon_mask' to `a_mask'.
 		do
 		end;
 
-	set_icon_pixmap (a_pixmap: PIXMAP) is
+	set_icon_pixmap (a_pixmap: PIXMAP)
 			-- Set `icon_pixmap' to `a_pixmap'.
 		do
 		end;
 
-	set_icon_x (x_value: INTEGER) is
+	set_icon_x (x_value: INTEGER)
 			-- Set `icon_x' to `x_value'.
 		do
 			parent.set_icon_x (x_value)
 		end;
 
-	set_icon_y (y_value: INTEGER) is
+	set_icon_y (y_value: INTEGER)
 			-- Set `icon_y' to `y_value'.
 		do
 			parent.set_icon_y (y_value)
 		end; 
 
-	set_max_aspect_x (a_max: INTEGER) is
+	set_max_aspect_x (a_max: INTEGER)
 			-- Set `max_aspect_x' to `a_max'.
 		do
 			parent.set_max_aspect_x (a_max)
 		end;
 
-	set_max_aspect_y (a_max: INTEGER) is
+	set_max_aspect_y (a_max: INTEGER)
 			-- Set `max_aspect_y' to `a_max'.
 		do
 			parent.set_max_aspect_y (a_max)
 		end;
 
-	set_max_height (a_height: INTEGER) is
+	set_max_height (a_height: INTEGER)
 			-- Set `max_height' to `a_height'.
 		do
 			parent.set_max_height (a_height)
 		end;
 
-	set_max_width (a_max: INTEGER) is
+	set_max_width (a_max: INTEGER)
 			-- Set `max_width' to `a_max'.
 		do
 			parent.set_max_width (a_max)
 		end;
 
-	set_min_aspect_x (a_min: INTEGER) is
+	set_min_aspect_x (a_min: INTEGER)
 			-- Set `min_aspect_x' to `a_min'.
 		do
 			parent.set_min_aspect_x (min_aspect_x)
 		end;
 
-	set_min_aspect_y (a_min: INTEGER) is
+	set_min_aspect_y (a_min: INTEGER)
 			-- Set `min_aspect_y' to `a_min'.
 		do
 			parent.set_min_aspect_y (a_min)
 		end;
 
-	set_min_height (a_height: INTEGER) is
+	set_min_height (a_height: INTEGER)
 			-- Set `min_height' to `a_height'.
 		do
 			parent.set_min_height (a_height)
 		end;
 
-	set_min_width (a_min: INTEGER) is
+	set_min_width (a_min: INTEGER)
 			-- Set `min_width' to `a_min'.
 		do
 			parent.set_min_width (min_width)
 		end;
 
-	set_widget_group (a_widget: WIDGET) is
+	set_widget_group (a_widget: WIDGET)
 			-- Set `widget_group' to `a_widget'.
 		do
 		end;
 
 feature -- Element change
 
-	allow_resize is
+	allow_resize
 			-- Allow geometry resize to all geometry requests
 			-- from its children.
 		do
 			parent.allow_shell_resize 
 		end;
 
-	forbid_resize is
+	forbid_resize
 			-- Forbid geometry resize to all geometry requests
 			-- from its children.
 		do
@@ -389,31 +389,31 @@ feature -- Element change
 
 feature -- Display
 
-	lower is
+	lower
 			-- Lower the shell in the stacking order.
 		do
 			parent.raise
 		end;
 
-	raise is
+	raise
 			-- Raise the shell to the top of the stacking order.
 		do
 			parent.raise
 		end;
 
-	hide is
+	hide
 			-- Make widget invisible on the screen.
 		do
 			parent.hide
 		end;
 
-	show is
+	show
 			-- Make widget visible on the screen.
 		do
 			parent.show;
 		end;
 
-	destroy (wid_list: LINKED_LIST [WIDGET]) is
+	destroy (wid_list: LINKED_LIST [WIDGET])
 			-- Destroy screen widget implementation and all
 			-- screen widget implementations of its children
 			-- contained in `wid_list;.
@@ -424,7 +424,7 @@ feature -- Display
 
 feature {NONE} -- Implementation
 
-	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
+	define_cursor_if_shell (a_cursor: SCREEN_CURSOR)
 			-- Define `a_cursor' if the current widget is a shell.
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -437,25 +437,25 @@ feature {NONE} -- Implementation
 			display.flush
 		end;
 
-	undefine_cursor_if_shell is
+	undefine_cursor_if_shell
 			-- Undefine the cursor if the current widget is a shell.
 		do
 			undefine_cursor;
 			display.flush
 		end;
 
-	mel_destroy is
+	mel_destroy
 			-- Destroy the associated MEL widget.
 		deferred
 		end;
 
-	undefine_cursor is
+	undefine_cursor
 			-- Sets the cursor to Current window to its parent's
 			-- cursor.
 		deferred
 		end;
 
-	define_cursor (a_cursor: MEL_SCREEN_CURSOR) is
+	define_cursor (a_cursor: MEL_SCREEN_CURSOR)
 			-- Define the cursor to be displayed to `a_cursor' if not
 			-- Void. Otherwize, if `a_cursor' is Void then have
 			-- the parent's cursor displayed in the Current window.
@@ -466,7 +466,7 @@ feature {NONE} -- Implementation
 
 feature -- Execution
 
-	execute (up: ANY) is
+	execute (up: ANY)
 		local
 			bool_ref: BOOLEAN_REF
 		do
@@ -479,7 +479,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	initialize (shell: MEL_SHELL) is
+	initialize (shell: MEL_SHELL)
 			-- Initialize the current dialog
 		do
 			shell.forbid_shell_resize;
@@ -487,9 +487,9 @@ feature {NONE} -- Implementation
 			shell.set_popdown_callback (Current, False);
 		end;
 
-	action_target: POINTER is do end;
+	action_target: POINTER do end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

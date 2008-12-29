@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of popup shell."
@@ -33,20 +33,20 @@ inherit
 
 feature -- Status report
 
-	is_cascade_grab: BOOLEAN is
+	is_cascade_grab: BOOLEAN
 			-- Is the shell popped up with cascade grab (allowing the other
 			-- shells popped up with grab to receive events) ?
 		do
 			Result := grab_type = 2
 		end; 
 
-	is_exclusive_grab: BOOLEAN is
+	is_exclusive_grab: BOOLEAN
 			-- Is the shell popped up with exclusive grab ?
 		do
 			Result := grab_type = 1
 		end;
 
-	is_no_grab: BOOLEAN is
+	is_no_grab: BOOLEAN
 			-- Is the shell popped up with no grab ?
 		do
 			Result := grab_type = 0
@@ -57,20 +57,20 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_cascade_grab is
+	set_cascade_grab
 			-- Specifies that the shell would be popped up with cascade grab
 			-- (allowing the other shells popped up with grab to receive events).
 		do
 			grab_type := 2
 		end; 
 
-	set_exclusive_grab is
+	set_exclusive_grab
 			-- Specifies that the shell would be popped up with exclusive grab.
 		do
 			grab_type := 1
 		end;
 
-	set_no_grab is
+	set_no_grab
 			-- Specifies that the shell would be popped up with no grab.
 		do
 			grab_type := 0
@@ -78,7 +78,7 @@ feature -- Status setting
 
 feature -- Display
 
-	popdown is
+	popdown
 			-- Popdown popup shell.
 		do
 			if is_popped_up then
@@ -87,7 +87,7 @@ feature -- Display
 			is_popped_up := False
 		end;
 
-	popup is
+	popup
 			-- Popup a popup shell.
 		do
 			if not is_popped_up then
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 	grab_type: INTEGER;
 			-- Type of grab
 	
-	initialize (shell: MEL_SHELL) is
+	initialize (shell: MEL_SHELL)
 			-- Initialize the current dialog
 		do
 			shell.forbid_shell_resize;
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Execution
 
-	execute (up: ANY) is
+	execute (up: ANY)
 		local
 			bool_ref: BOOLEAN_REF
 		do
@@ -130,7 +130,7 @@ feature {NONE} -- Execution
 			is_popped_up := bool_ref.item
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

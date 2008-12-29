@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"GtkTextIter Struct helper class"
 	legal: "See notice at end of class."
@@ -18,14 +18,14 @@ create
 
 feature -- Externals
 
-	frozen structure_size: INTEGER is
+	frozen structure_size: INTEGER
 		external
 			"C [macro <gtk/gtk.h>]"
 		alias
 			"sizeof(GtkTextIter)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	
 	description: "Item that can be stacked on the screen"
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Access
 
-	screen_object: POINTER is
+	screen_object: POINTER
 			-- implementation of current widget
 		require
 			exists: not destroyed;
@@ -20,7 +20,7 @@ feature -- Access
 			Result := implementation.screen_object;
 		end;
 
-	parent: COMPOSITE is
+	parent: COMPOSITE
 		require
 			exists: not destroyed;
 		deferred
@@ -28,18 +28,18 @@ feature -- Access
 
 feature -- Status report
 
-	is_stackable: BOOLEAN is
+	is_stackable: BOOLEAN
 		require
 			exists: not destroyed;
 		do
 			Result := implementation.is_stackable;
 		end
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 		deferred
 		end;
 
-	realized: BOOLEAN is
+	realized: BOOLEAN
 		require
 			exists: not destroyed;
 		deferred
@@ -49,7 +49,7 @@ feature {NONE}
 
 	implementation: STACKABLE_I;;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

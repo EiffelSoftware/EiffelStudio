@@ -1,4 +1,4 @@
-indexing	
+note	
 	description: "Eiffel Vision radio peer. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 	
 feature -- Status report
 
-	peers: LINKED_LIST [like interface] is
+	peers: LINKED_LIST [like interface]
 			-- List of all radio items in the group `Current' is in.
 		local
 			cur: CURSOR
@@ -41,7 +41,7 @@ feature -- Status report
 			end
 		end
 
-	selected_peer: like interface is
+	selected_peer: like interface
 			-- Radio item that is currently selected.
 		local
 			cur: CURSOR
@@ -76,7 +76,7 @@ feature {EV_ANY_I} -- Implementation
 			-- List this radio peer is in.
 			-- This reference is shared with the other peers in the group.
 
-	set_radio_group (a_list: like radio_group) is
+	set_radio_group (a_list: like radio_group)
 			-- Remove `Current' from `radio_group'.
 			-- Set `radio_group' to `a_list'.
 			-- Extend `Current' in `a_list'.
@@ -97,7 +97,7 @@ feature {EV_ANY_I} -- Implementation
 			in_it: radio_group.has (Current)
 		end
 
-	remove_from_radio_group is
+	remove_from_radio_group
 			-- Remove `Current' from `radio_group'.
 			-- Set `radio_group' to `Void'.
 		require
@@ -118,7 +118,7 @@ feature {EV_ANY_I} -- Implementation
 		
 feature {EV_CONTAINER_IMP} -- Implementation
 
-	internal_set_radio_group (a_list: like radio_group) is
+	internal_set_radio_group (a_list: like radio_group)
 			-- Assign `a_list' to `radio_group'.
 		do
 			radio_group := a_list			
@@ -128,7 +128,7 @@ invariant
 	
 	peers_not_void: peers /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

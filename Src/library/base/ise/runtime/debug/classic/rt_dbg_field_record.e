@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Field record"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -215,12 +215,12 @@ feature {NONE} -- Internal Implementation
 
 feature {NONE} -- Implementation
 
-	default_value: ?G is
+	default_value: ?G
 			-- Default value
 		do
 		end
 
-indexing
+note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

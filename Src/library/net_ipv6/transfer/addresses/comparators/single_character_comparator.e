@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Comparators for single characters"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (c: CHARACTER) is
+	make (c: CHARACTER)
 			-- Create comparator.
 		do
 			character := c
@@ -27,14 +27,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	character_set: STRING is
+	character_set: STRING
 			-- Character represented by comparator
 		do
 			create Result.make (1)
 			Result.extend (character)
 		end
 
-	contains (c: CHARACTER): BOOLEAN is
+	contains (c: CHARACTER): BOOLEAN
 			-- Does comparator contain `c'?
 		do
 			Result := character = c
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 
 	character: CHARACTER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

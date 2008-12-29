@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about a combo-box-ex%
 			% Cben_endedit notification message."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make_by_nmhdr (a_nmhdr: WEL_NMHDR) is
+	make_by_nmhdr (a_nmhdr: WEL_NMHDR)
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
@@ -29,7 +29,7 @@ feature -- Initialization
 
 feature -- Access
 
-	hdr: WEL_NMHDR is
+	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
 		do
 			create Result.make_by_pointer (cwel_nm_cbeendedit_get_hdr (item))
@@ -37,28 +37,28 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	has_changed: BOOLEAN is
+	has_changed: BOOLEAN
 			-- Value indicating whether the contents of the control's
 			-- edit box have changed.
 		do
 			Result := cwel_nm_cbeendedit_get_fchanged (item) /= 0
 		end
 
-	selected_item: INTEGER is
+	selected_item: INTEGER
 			-- Zero-based index of the item that will be selected
 			-- after completing the edit operation.
 		do
 			Result := cwel_nm_cbeendedit_get_inewselection (item)
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text from within the control's edit box.
 		do
 				-- Fixme: this routine is useless without a `set_text' counterpart.
 			create Result.make_empty
 		end
 
-	why: INTEGER is
+	why: INTEGER
 			-- Value that specifies the action that generated then
 			-- Cben_endedit notification message.
 			-- Can be any of the Cbenf_* constants.
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_nm_cbeendedit
@@ -77,39 +77,39 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_nm_cbeendedit: INTEGER is
+	c_size_of_nm_cbeendedit: INTEGER
 		external
 			"C [macro %"nmcbeendedit.h%"]"
 		alias
 			"sizeof (NMCBEENDEDIT)"
 		end
 
-	cwel_nm_cbeendedit_get_hdr (ptr: POINTER): POINTER is
+	cwel_nm_cbeendedit_get_hdr (ptr: POINTER): POINTER
 		external
 			"C [macro %"nmcbeendedit.h%"] (NMCBEENDEDIT*): EIF_POINTER"
 		end
 
-	cwel_nm_cbeendedit_get_fchanged (ptr: POINTER): INTEGER is
+	cwel_nm_cbeendedit_get_fchanged (ptr: POINTER): INTEGER
 		external
 			"C [macro %"nmcbeendedit.h%"]"
 		end
 
-	cwel_nm_cbeendedit_get_inewselection (ptr: POINTER): INTEGER is
+	cwel_nm_cbeendedit_get_inewselection (ptr: POINTER): INTEGER
 		external
 			"C [macro %"nmcbeendedit.h%"]"
 		end
 
-	cwel_nm_cbeendedit_get_tchar (ptr: POINTER): POINTER is
+	cwel_nm_cbeendedit_get_tchar (ptr: POINTER): POINTER
 		external
 			"C [macro %"nmcbeendedit.h%"] (NMCBEENDEDIT*): EIF_POINTER"
 		end
 
-	cwel_nm_cbeendedit_get_iwhy (ptr: POINTER): INTEGER is
+	cwel_nm_cbeendedit_get_iwhy (ptr: POINTER): INTEGER
 		external
 			"C [macro %"nmcbeendedit.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "FIXME"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,18 +44,18 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False
+	needs_event_box: BOOLEAN = False
 
-	is_dockable: BOOLEAN is False
+	is_dockable: BOOLEAN = False
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a list item with an empty name.
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_list_item_new)
 		end
 
-	initialize is
+	initialize
 			-- Set up action sequence connection and `Precursor' initialization,
 			-- create list item box to hold label and pixmap.
 		local
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
-	checkable_imp_initialize is
+	checkable_imp_initialize
 			--
 		do
 			check_box := {EV_GTK_EXTERNALS}.gtk_check_button_new
@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 
 feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 
-	set_item_parent_imp (a_parent: EV_ITEM_LIST_IMP [EV_ITEM]) is
+	set_item_parent_imp (a_parent: EV_ITEM_LIST_IMP [EV_ITEM])
 			--
 		do
 			Precursor {EV_ITEM_IMP} (a_parent)
@@ -103,7 +103,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	check_callback is
+	check_callback
 			--
 		local
 			check_list_par: EV_CHECKABLE_LIST_IMP
@@ -132,7 +132,7 @@ feature {EV_CHECKABLE_LIST_IMP} -- Implementation
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is the item selected.
 		local
 			par: POINTER
@@ -150,7 +150,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Select the item.
 		local
 			par: POINTER
@@ -180,7 +180,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_select is
+	disable_select
 			-- Deselect the item.
 		local
 			par: POINTER
@@ -198,7 +198,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_text (txt: STRING_32) is
+	set_text (txt: STRING_32)
 			-- Set current button text to `txt'.
 		local
 			combo_par: EV_COMBO_BOX_IMP
@@ -220,7 +220,7 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_LIST_I} -- Implementation
 
 	interface: EV_LIST_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

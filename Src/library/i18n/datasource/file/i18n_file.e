@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract representation of a dictionary file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature	-- creation
 
-	make (path: STRING_GENERAL) is
+	make (path: STRING_GENERAL)
 			-- Initialize file from `a_path'.
 			--
 			-- `a_path': File path of a valid mo file
@@ -25,7 +25,7 @@ feature	-- creation
 
 feature	-- Access
 
- 	locale: STRING_32 is
+ 	locale: STRING_32
  			-- Locale of file
  			--
  			-- Note: This is a best guess and may not be accurate.
@@ -51,7 +51,7 @@ feature	-- Access
 	entry_count: INTEGER
 			-- Number of entries in the file.
 
-	original_singular_string (i: INTEGER): STRING_32 is
+	original_singular_string (i: INTEGER): STRING_32
 			-- Original singular string for ith entry
 			--
 			-- `i': Entry index
@@ -62,7 +62,7 @@ feature	-- Access
 		deferred
 		end
 
-	translated_singular_string (i: INTEGER): STRING_32 is
+	translated_singular_string (i: INTEGER): STRING_32
 			-- Translated singular string for ith entry
 		require
 			file_open: opened
@@ -70,7 +70,7 @@ feature	-- Access
 		deferred
 		end
 
-	original_plural_string (i:INTEGER): STRING_32 is
+	original_plural_string (i:INTEGER): STRING_32
 			-- Original plural string for ith entry
 			--
 			-- `i': Entry index
@@ -82,7 +82,7 @@ feature	-- Access
 		deferred
 		end
 
-	translated_plural_strings (i: INTEGER): ARRAY [STRING_32] is
+	translated_plural_strings (i: INTEGER): ARRAY [STRING_32]
 			-- Translated plural strings for ith entry
 			--
 			-- Note: Result array is indexed exactly from 0 to 3
@@ -102,7 +102,7 @@ feature	-- Access
 
 feature -- Status report
 
-	entry_has_plurals (i: INTEGER): BOOLEAN is
+	entry_has_plurals (i: INTEGER): BOOLEAN
 			-- Does this entry have any plurals?
 		require
 			file_open: opened
@@ -110,7 +110,7 @@ feature -- Status report
 		deferred
 		end
 
-	valid_index(i:INTEGER):BOOLEAN is
+	valid_index(i:INTEGER):BOOLEAN
 			-- Is this a valid index for an entry?
 		require
 			file_open: opened
@@ -120,14 +120,14 @@ feature -- Status report
 	opened: BOOLEAN
 			-- Is the file opened?
 
-	valid: BOOLEAN is
+	valid: BOOLEAN
 			-- Was file parsed correctly?
 		deferred
 		end
 
 feature -- Basic operations
 
-	close is
+	close
 			-- Close file.
 		require
 			file_open: opened
@@ -136,7 +136,7 @@ feature -- Basic operations
 			closed: not opened
 		end
 
-	open is
+	open
 			-- Open file.
 		require
 			file_closed: not opened
@@ -154,7 +154,7 @@ invariant
 	opened_only_if_valid: opened implies valid
 	opened_means_file_exists: opened implies file.exists
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

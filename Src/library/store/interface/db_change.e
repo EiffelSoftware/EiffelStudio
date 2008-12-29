@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -33,7 +33,7 @@ create -- Creation procedure
 
 feature -- Access
 
-	last_parsed_query : STRING is
+	last_parsed_query : STRING
 			-- Last parsed SQL query
 		do
 			Result := implementation.last_parsed_query
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	modify (request: STRING) is
+	modify (request: STRING)
 			-- Execute `request' to modify persistent objects.
 			-- When using the DBMS layer the request must be
 			-- SQL-like compliant.
@@ -60,7 +60,7 @@ feature -- Basic operations
 			last_query_changed: last_query = request
 		end
 
-	execute_query is
+	execute_query
 			-- Execute `modify' with `last_query'.
 		do
 			modify (last_query)
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an interface object to change active base.
 		do
 			implementation := handle.database.db_change
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			implementation.set_ht_order (ht_order)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

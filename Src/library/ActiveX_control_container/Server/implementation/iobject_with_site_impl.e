@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IObjectWithSite' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,14 +15,14 @@ inherit
 	
 feature -- Basic Operations
 
-	set_site (p_unk_site: ECOM_INTERFACE) is
+	set_site (p_unk_site: ECOM_INTERFACE)
 			-- No description available.
 			-- `p_unk_site' [in].  
 		do
 			unknown_site := p_unk_site
 		end
 
-	get_site (riid: ECOM_GUID; ppv_site: CELL [POINTER]) is
+	get_site (riid: ECOM_GUID; ppv_site: CELL [POINTER])
 			-- No description available.
 			-- `riid' [in].  
 			-- `ppv_site' [out].  
@@ -33,7 +33,7 @@ feature -- Basic Operations
 		end
 
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

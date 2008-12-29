@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ancestor of WEL_OPEN_FILE_DIALOG and %
 		%WEL_SAVE_FILE_DIALOG."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make and setup the structure
 		do
 			standard_dialog_make
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Dialog box creation flags.
 			-- Can be a combination of the values defined in
 			-- class WEL_OFN_CONSTANTS.
@@ -51,7 +51,7 @@ feature -- Access
 			Result := cwel_open_file_name_get_flags (item)
 		end
 
-	file_name: STRING_32 is
+	file_name: STRING_32
 			-- File name selected (including path).
 		require
 			selected: selected
@@ -61,7 +61,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	multiple_file_names: LIST [STRING_32] is
+	multiple_file_names: LIST [STRING_32]
 			-- return the full path name of all selected files.
 		require
 			multiple_files_flag_set: has_flag ({WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
@@ -111,7 +111,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	file_title: STRING_32 is
+	file_title: STRING_32
 			-- Title of the selected file (without path).
 		require
 			selected: selected
@@ -121,7 +121,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Title of the current dialog
 		do
 			Result := str_title.string
@@ -129,7 +129,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	file_name_offset: INTEGER is
+	file_name_offset: INTEGER
 			-- Specifies the offset from the beginning of the path
 			-- to the file name in the string `file_name'.
 		require
@@ -140,7 +140,7 @@ feature -- Access
 			result_greater_than_or_equal_to_one: Result >= 1
 		end
 
-	file_extension_offset: INTEGER is
+	file_extension_offset: INTEGER
 			-- Specifies the offset from the beginning of the path
 			-- to the file name extension in the string `file_name'.
 		require
@@ -151,7 +151,7 @@ feature -- Access
 			result_greater_than_or_equal_to_one: Result >= 1
 		end
 
-	filter_index: INTEGER is
+	filter_index: INTEGER
 			-- Index of the selected filter
 		require
 			selected: selected
@@ -161,12 +161,12 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	Max_file_name_length: INTEGER is 1024
+	Max_file_name_length: INTEGER = 1024
 			-- Maximum file name length
 
 feature -- Element change
 
-	set_flags (a_flags: INTEGER) is
+	set_flags (a_flags: INTEGER)
 			-- Set `flags' with `a_flags'.
 			-- See class WEL_OFN_CONSTANTS for `a_flags' values.
 		do
@@ -175,7 +175,7 @@ feature -- Element change
 			flags_set: flags = a_flags
 		end
 
-	add_flag (a_flags: INTEGER) is
+	add_flag (a_flags: INTEGER)
 			-- Add `a_flags' to `flags'.
 			-- See class WEL_OFN_CONSTANTS for `a_flags' values.
 		do
@@ -184,7 +184,7 @@ feature -- Element change
 			has_flag: has_flag (a_flags)
 		end
 
-	remove_flag (a_flags: INTEGER) is
+	remove_flag (a_flags: INTEGER)
 			-- Remove `a_flags' from `flags'.
 			-- See class WEL_OFN_CONSTANTS for `a_flags' values.
 		do
@@ -193,7 +193,7 @@ feature -- Element change
 			has_not_flag: not has_flag (a_flags)
 		end
 
-	set_file_name (a_file_name: STRING_GENERAL) is
+	set_file_name (a_file_name: STRING_GENERAL)
 			-- Set `file_name' with `a_file' and initialize
 			-- the file name edit control.
 		require
@@ -207,7 +207,7 @@ feature -- Element change
 			file_name_set: file_name.is_equal (a_file_name)
 		end
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Set `title' with `a_title' and use this string to
 			-- display the title.
 		require
@@ -220,7 +220,7 @@ feature -- Element change
 			title_set: title.is_equal (a_title)
 		end
 
-	set_default_title is
+	set_default_title
 			-- Set the title bar with the default value ("Save As"
 			-- or "Open")
 		do
@@ -231,7 +231,7 @@ feature -- Element change
 			default_title_set: title.is_empty
 		end
 
-	set_filter (filter_names, filter_patterns: ARRAY [STRING_GENERAL]) is
+	set_filter (filter_names, filter_patterns: ARRAY [STRING_GENERAL])
 			-- Set the file type combo box.
 			-- `filter_names' is an array of string containing
 			-- the filter names and `filter_patterns' is an
@@ -274,7 +274,7 @@ feature -- Element change
 				str_filter.item)
 		end
 
-	set_filter_index (a_filter_index: INTEGER) is
+	set_filter_index (a_filter_index: INTEGER)
 			-- Set `filter_index' with `a_filter_index'.
 		require
 			positive_filter_index: a_filter_index >= 0
@@ -285,7 +285,7 @@ feature -- Element change
 			filter_index_set: filter_index = a_filter_index
 		end
 
-	set_initial_directory (directory: STRING_GENERAL) is
+	set_initial_directory (directory: STRING_GENERAL)
 			-- Set the initial directory with `directory'.
 		require
 			directory_not_void: directory /= Void
@@ -295,14 +295,14 @@ feature -- Element change
 				str_intial_directory.item)
 		end
 
-	set_initial_directory_as_current is
+	set_initial_directory_as_current
 			-- Set the initial directory as the current one.
 		do
 			cwel_open_file_name_set_lpstrinitialdir (item,
 				default_pointer)
 		end
 
-	set_default_extension (extension: STRING_GENERAL) is
+	set_default_extension (extension: STRING_GENERAL)
 			-- Set the default extension with `extension'.
 			-- This extension will be automatically added to the
 			-- file name if the user fails to type an extension.
@@ -316,7 +316,7 @@ feature -- Element change
 
 feature -- Status report
 
-	has_flag (a_flags: INTEGER): BOOLEAN is
+	has_flag (a_flags: INTEGER): BOOLEAN
 			-- Is `a_flags' set in `flags'?
 			-- See class WEL_OFN_CONSTANTS for `a_flags' values.
 		do
@@ -325,7 +325,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	set_parent (a_parent: WEL_COMPOSITE_WINDOW) is
+	set_parent (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Set the parent window with `a_parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -352,15 +352,15 @@ feature {NONE} -- Implementation
 	str_default_extension: WEL_STRING
 			-- C string to save the default extension
 
-	Max_file_title_length: INTEGER is 256
+	Max_file_title_length: INTEGER = 256
 			-- Maximum file title length
 
-	Max_title_length: INTEGER is 256
+	Max_title_length: INTEGER = 256
 			-- Maximum title length
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_open_file_name
@@ -368,139 +368,139 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_open_file_name: INTEGER is
+	c_size_of_open_file_name: INTEGER
 		external
 			"C [macro <ofn.h>]"
 		alias
 			"sizeof (OPENFILENAME)"
 		end
 
-	cwel_open_file_name_set_lstructsize (ptr: POINTER; value: INTEGER) is
+	cwel_open_file_name_set_lstructsize (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_set_hwndowner (ptr, value: POINTER) is
+	cwel_open_file_name_set_hwndowner (ptr, value: POINTER)
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_set_lpstrfilter (ptr, value: POINTER) is
+	cwel_open_file_name_set_lpstrfilter (ptr, value: POINTER)
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_set_nfilterindex (ptr: POINTER; value: INTEGER) is
+	cwel_open_file_name_set_nfilterindex (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_set_lpstrfile (ptr, value: POINTER) is
+	cwel_open_file_name_set_lpstrfile (ptr, value: POINTER)
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_set_nmaxfile (ptr: POINTER; value: INTEGER) is
+	cwel_open_file_name_set_nmaxfile (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_set_lpstrfiletitle (ptr, value: POINTER) is
+	cwel_open_file_name_set_lpstrfiletitle (ptr, value: POINTER)
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_set_nmaxfiletitle (ptr: POINTER; value: INTEGER) is
+	cwel_open_file_name_set_nmaxfiletitle (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_set_lpstrinitialdir (ptr, value: POINTER) is
+	cwel_open_file_name_set_lpstrinitialdir (ptr, value: POINTER)
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_set_lpstrtitle (ptr, value: POINTER) is
+	cwel_open_file_name_set_lpstrtitle (ptr, value: POINTER)
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_set_flags (ptr: POINTER; value: INTEGER) is
+	cwel_open_file_name_set_flags (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_set_nfileextension (ptr: POINTER; value: INTEGER) is
+	cwel_open_file_name_set_nfileextension (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_set_lpstrdefext (ptr, value: POINTER) is
+	cwel_open_file_name_set_lpstrdefext (ptr, value: POINTER)
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_get_hwndowner (ptr: POINTER): POINTER is
+	cwel_open_file_name_get_hwndowner (ptr: POINTER): POINTER
 		external
 			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
 
-	cwel_open_file_name_get_lpstrfilter (ptr: POINTER): POINTER is
+	cwel_open_file_name_get_lpstrfilter (ptr: POINTER): POINTER
 		external
 			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
 
-	cwel_open_file_name_get_nfilterindex (ptr: POINTER): INTEGER is
+	cwel_open_file_name_get_nfilterindex (ptr: POINTER): INTEGER
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_get_lpstrfile (ptr: POINTER): POINTER is
+	cwel_open_file_name_get_lpstrfile (ptr: POINTER): POINTER
 		external
 			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
 
-	cwel_open_file_name_get_nmaxfile (ptr: POINTER): INTEGER is
+	cwel_open_file_name_get_nmaxfile (ptr: POINTER): INTEGER
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_get_lpstrfiletitle (ptr: POINTER): POINTER is
+	cwel_open_file_name_get_lpstrfiletitle (ptr: POINTER): POINTER
 		external
 			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
 
-	cwel_open_file_name_get_nmaxfiletitle (ptr: POINTER): INTEGER is
+	cwel_open_file_name_get_nmaxfiletitle (ptr: POINTER): INTEGER
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_get_lpstrinitialdir (ptr: POINTER): POINTER is
+	cwel_open_file_name_get_lpstrinitialdir (ptr: POINTER): POINTER
 		external
 			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
 
-	cwel_open_file_name_get_lpstrtitle (ptr: POINTER): POINTER is
+	cwel_open_file_name_get_lpstrtitle (ptr: POINTER): POINTER
 		external
 			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
 
-	cwel_open_file_name_get_flags (ptr: POINTER): INTEGER is
+	cwel_open_file_name_get_flags (ptr: POINTER): INTEGER
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_get_nfileoffset (ptr: POINTER): INTEGER is
+	cwel_open_file_name_get_nfileoffset (ptr: POINTER): INTEGER
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_get_nfileextension (ptr: POINTER): INTEGER is
+	cwel_open_file_name_get_nfileextension (ptr: POINTER): INTEGER
 		external
 			"C [macro <ofn.h>]"
 		end
 
-	cwel_open_file_name_get_lpstrdefext (ptr: POINTER): POINTER is
+	cwel_open_file_name_get_lpstrdefext (ptr: POINTER): POINTER
 		external
 			"C [macro <ofn.h>] (OPENFILENAME *): EIF_POINTER"
 		end
@@ -514,7 +514,7 @@ invariant
 	str_title_not_void: str_title /= Void
 	str_title_exists: str_title.exists
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

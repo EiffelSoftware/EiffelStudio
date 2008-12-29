@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 
 				`text's in a `font' displayed on p0 == point.
@@ -67,7 +67,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create in (0, 0)
 		do
 			Precursor {EV_MODEL_ATOMIC}
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			center_is_valid: is_center_valid
 		end
 
-	make_with_text (a_text: STRING_GENERAL) is
+	make_with_text (a_text: STRING_GENERAL)
 			-- Create with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -102,31 +102,31 @@ feature -- Access
 	text: STRING_32
 			-- Text that is displayed.
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Typeface `text' is displayed in.
 		do
 			Result := id_font.font
 		end
 
-	angle: DOUBLE is 0.0
+	angle: DOUBLE = 0.0
 			-- Since not rotatable.
 
-	is_scalable: BOOLEAN is True
+	is_scalable: BOOLEAN = True
 			-- Is scalable? (Yes)
 
-	is_rotatable: BOOLEAN is False
+	is_rotatable: BOOLEAN = False
 			-- Not yet.
 
-	is_transformable: BOOLEAN is False
+	is_transformable: BOOLEAN = False
 			-- No.
 
-	point_x: INTEGER is
+	point_x: INTEGER
 			-- x position of `point'.
 		do
 			Result := point_array.item (0).x
 		end
 
-	point_y: INTEGER is
+	point_y: INTEGER
 			-- y position of `point'.
 		do
 			Result := point_array.item (0).y
@@ -134,7 +134,7 @@ feature -- Access
 
 feature -- Status report
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal dimension.
 		local
 			l_point_array: like point_array
@@ -143,7 +143,7 @@ feature -- Status report
 			Result := as_integer (l_point_array.item (2).x_precise - l_point_array.item (0).x_precise)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical dimension.
 		local
 			l_point_array: like point_array
@@ -155,7 +155,7 @@ feature -- Status report
 	is_default_font_used: BOOLEAN
 			-- Is `Current' using a default font?
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := text < other.text
@@ -163,7 +163,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_point_position (ax, ay: INTEGER) is
+	set_point_position (ax, ay: INTEGER)
 			-- Set position of `point' to (`ax', `ay').
 		local
 			a_delta_x, a_delta_y: DOUBLE
@@ -187,7 +187,7 @@ feature -- Status setting
 			center_invalidate
 		end
 
-	set_font (a_font: like font) is
+	set_font (a_font: like font)
 			-- Assign `a_font' to `font'.
 		require
 			a_font_not_void: a_font /= Void
@@ -197,7 +197,7 @@ feature -- Status setting
 			font_assigned: font = a_font
 		end
 
-	set_identified_font (an_id_font: EV_IDENTIFIED_FONT) is
+	set_identified_font (an_id_font: EV_IDENTIFIED_FONT)
 			-- Set `id_font' to `an_id_font' initialize `scaled_font'.
 		require
 			an_id_font_not_Void: an_id_font /= Void
@@ -228,7 +228,7 @@ feature -- Status setting
 			set: id_font = an_id_font
 		end
 
-	set_text (a_text: like text) is
+	set_text (a_text: like text)
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -242,7 +242,7 @@ feature -- Status setting
 
 feature -- Events
 
-	position_on_figure (a_x, a_y: INTEGER): BOOLEAN is
+	position_on_figure (a_x, a_y: INTEGER): BOOLEAN
 			-- Is the point on (`a_x', `a_y') on this figure?
 			--| Used to generate events.
 		local
@@ -256,7 +256,7 @@ feature -- Events
 
 feature {EV_MODEL_GROUP} -- Figure group
 
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center.
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 
 	id_font: EV_IDENTIFIED_FONT
 
-	update_dimensions is
+	update_dimensions
 			-- Reassign `width' and `height'.
 		local
 			t: TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
@@ -309,14 +309,14 @@ feature {NONE} -- Implementation
 			center_invalidate
 		end
 
-	default_font: EV_IDENTIFIED_FONT is
+	default_font: EV_IDENTIFIED_FONT
 			-- Font set by `default_create'.
 		once
 			Result := font_factory.registered_font (create {EV_FONT})
 			font_factory.register_font (Result)
 		end
 
-	set_center is
+	set_center
 			-- Set the position to the center
 		local
 			l_point_array: like point_array
@@ -335,7 +335,7 @@ invariant
 	text_exists: text /= Void
 	font_exists: font /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

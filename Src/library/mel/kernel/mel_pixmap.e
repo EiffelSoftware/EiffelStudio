@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Representation of an X Pixmap."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_drawable: MEL_DRAWABLE; a_width, a_height, a_depth: INTEGER) is
+	make (a_drawable: MEL_DRAWABLE; a_width, a_height, a_depth: INTEGER)
 			-- Create a pixmap with `a_width', `a_height' and `a_depth'.
 			-- Use `a_drawable' to determine which screen the pixmap is 
 			-- stored on. The resulting pixmap can only be used on this
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			is_shared: is_shared
 		end;
 
-	make_from_existing (a_display: MEL_DISPLAY; a_handle: POINTER; a_depth: INTEGER) is
+	make_from_existing (a_display: MEL_DISPLAY; a_handle: POINTER; a_depth: INTEGER)
 			-- Create a MEL resource from an `a_handle'
 			-- for display `a_display'.
 		require
@@ -77,13 +77,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_bitmap: BOOLEAN is
+	is_bitmap: BOOLEAN
 			-- Is this pixmap a single plane bitmap?
 		do
 			Result := depth = 1
 		end;
 
-	is_pixmap: BOOLEAN is
+	is_pixmap: BOOLEAN
 			-- Is this pixmap a multi plane pixmap?
 		do
 			Result := not is_bitmap
@@ -94,7 +94,7 @@ feature -- Access
 
 feature -- Removal
 
-	destroy is
+	destroy
 			-- Free the pixmap.
 		do
 			check
@@ -107,7 +107,7 @@ feature -- Removal
 feature {NONE} -- External features
 
 	x_create_pixmap (a_display: POINTER; a_pixmap: POINTER; 
-				a_width, a_height, a_depth: INTEGER): POINTER is
+				a_width, a_height, a_depth: INTEGER): POINTER
 		external
 			"C (Display *, Drawable, %
 				%unsigned int, unsigned int, unsigned int): EIF_POINTER | <X11/Xlib.h>"
@@ -115,7 +115,7 @@ feature {NONE} -- External features
 			"XCreatePixmap"
 		end;
 
-	x_free_pixmap (a_display: POINTER; a_pixmap: POINTER) is
+	x_free_pixmap (a_display: POINTER; a_pixmap: POINTER)
 		external
 			"C (Display *, Pixmap) | <X11/Xlib.h>"
 		alias
@@ -123,7 +123,7 @@ feature {NONE} -- External features
 		end;
 
 	x_get_geometry (dspl_pointer, a_drawable, a_root: POINTER; a_x, a_y,
-					a_width, a_hght, a_b_width, a_depth: POINTER): BOOLEAN is
+					a_width, a_hght, a_b_width, a_depth: POINTER): BOOLEAN
 		external
 			"C (Display *, Drawable, Window *, %
 				%int *, int *, unsigned int *, unsigned int *,%
@@ -136,7 +136,7 @@ invariant
 
 	valid_display: has_valid_display
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

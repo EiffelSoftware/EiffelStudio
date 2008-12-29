@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a view for an EG_ITEM."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EG_FIGURE
 		do
 			Precursor {EV_MODEL_MOVE_HANDLE}
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			is_center_valid := True
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current' (synchronize with model).
 		require
 			model_not_void: model /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_storable: BOOLEAN is
+	is_storable: BOOLEAN
 			-- Does `Current' need to be persistently stored?
 			-- True by default.
 		do
@@ -59,13 +59,13 @@ feature -- Access
 	model: EG_ITEM
 			-- The model for `Current'
 
-	world: EG_FIGURE_WORLD is
+	world: EG_FIGURE_WORLD
 			-- The world `Current' is part of.
 		do
 			Result ?= Precursor {EV_MODEL_MOVE_HANDLE}
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml node representing `Current's state.
 		local
 			l_xml_routines: like xml_routines
@@ -79,12 +79,12 @@ feature -- Access
 			Result := node
 		end
 
-	is_selected_string: STRING is "IS_SELECTED"
-	is_label_shown_string: STRING is "IS_LABEL_SHOWN"
-	name_string: STRING is "NAME"
+	is_selected_string: STRING = "IS_SELECTED"
+	is_label_shown_string: STRING = "IS_LABEL_SHOWN"
+	name_string: STRING = "NAME"
 		-- XML String constants.
 
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
 			l_name: STRING
@@ -112,7 +112,7 @@ feature -- Access
 			end
 		end
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := once "EG_FIGURE"
@@ -123,7 +123,7 @@ feature -- Status report
 	is_selected: BOOLEAN
 			-- Is `Current' selected?
 
-	is_label_shown: BOOLEAN is
+	is_label_shown: BOOLEAN
 			-- Is label shown?
 		do
 			Result := name_label.is_show_requested
@@ -134,7 +134,7 @@ feature -- Status report
 
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free resources of `Current' such that GC can collect it.
 			-- Leave it in an unstable state.
 		do
@@ -145,7 +145,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	enable_selected is
+	enable_selected
 			-- Enable select.
 		do
 			set_is_selected (True)
@@ -153,7 +153,7 @@ feature -- Status setting
 			selected: is_selected
 		end
 
-	disable_selected is
+	disable_selected
 			-- Disable select.
 		do
 			set_is_selected (False)
@@ -161,7 +161,7 @@ feature -- Status setting
 			deselected: not is_selected
 		end
 
-	show_label is
+	show_label
 			-- Show name label.
 		require
 			not_shown: not is_label_shown
@@ -172,7 +172,7 @@ feature -- Status setting
 			is_label_shown: is_label_shown
 		end
 
-	hide_label is
+	hide_label
 			-- Hide name label.
 		require
 			shown: is_label_shown
@@ -183,7 +183,7 @@ feature -- Status setting
 			not_is_lable_shown: not is_label_shown
 		end
 
-	request_update is
+	request_update
 			-- Set `is_update_required' to True.
 		do
 			is_update_required := True
@@ -193,7 +193,7 @@ feature -- Status setting
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
-	update is
+	update
 			-- Some properties may have changed.
 		deferred
 		ensure
@@ -202,7 +202,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 feature {NONE} -- Implementation
 
-	set_is_selected (an_is_selected: like is_selected) is
+	set_is_selected (an_is_selected: like is_selected)
 			-- Set `is_selected' to `an_is_selected'.
 		deferred
 		ensure
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 	name_label: EV_MODEL_TEXT
 			-- The label for the name.
 
-	on_name_change is
+	on_name_change
 			-- Name was changed in the model.
 		do
 			if model.name = Void then
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-	set_name_label_text (a_text: STRING) is
+	set_name_label_text (a_text: STRING)
 			-- Set `name_label'.`text' to `a_text'.
 			-- | Redefine in subclass if you want make changes to the text.
 		require
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 invariant
 	name_label_not_void: name_label /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

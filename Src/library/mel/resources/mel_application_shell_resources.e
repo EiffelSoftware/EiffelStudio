@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Xt Application Shell resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNargc: POINTER is
+	XmNargc: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNargc"
 		end;
 
-	XmNargv: POINTER is
+	XmNargv: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNargv"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

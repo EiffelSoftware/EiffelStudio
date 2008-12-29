@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Format flags for feature format of class WEL_HD_ITEM."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	frozen Hdf_center: INTEGER is
+	frozen Hdf_center: INTEGER
 			-- Centers the contents of the item. 
 		external
 			"C [macro %"cctrl.h%"]"
@@ -18,7 +18,7 @@ feature -- Access
 			"HDF_CENTER"
 		end
 
-	frozen Hdf_left: INTEGER is
+	frozen Hdf_left: INTEGER
 			-- Left aligns the contents of the item. 
 		external
 			"C [macro %"cctrl.h%"]"
@@ -26,7 +26,7 @@ feature -- Access
 			"HDF_LEFT"
 		end
 
-	frozen Hdf_right: INTEGER is
+	frozen Hdf_right: INTEGER
 			-- Right aligns the contents of the item. 
 		external
 			"C [macro %"cctrl.h%"]"
@@ -34,7 +34,7 @@ feature -- Access
 			"HDF_RIGHT"
 		end
 
-	frozen Hdf_justify_mask: INTEGER is
+	frozen Hdf_justify_mask: INTEGER
 			-- You can use this mask to isolate the text justification 
 			-- portion of the fmt member. 
 		external
@@ -43,7 +43,7 @@ feature -- Access
 			"HDF_JUSTIFYMASK"
 		end
 
-	frozen Hdf_owner_draw: INTEGER is
+	frozen Hdf_owner_draw: INTEGER
 			-- The owner window of the header control draws the item.
 		external
 			"C [macro %"cctrl.h%"]"
@@ -51,7 +51,7 @@ feature -- Access
 			"HDF_OWNERDRAW"
 		end
 
-	frozen Hdf_bitmap: INTEGER is
+	frozen Hdf_bitmap: INTEGER
 			-- The item displays a bitmap.
 		external
 			"C [macro %"cctrl.h%"]"
@@ -59,7 +59,7 @@ feature -- Access
 			"HDF_BITMAP"
 		end
 
-	frozen Hdf_string: INTEGER is
+	frozen Hdf_string: INTEGER
 			-- The item displays a string. 
 		external
 			"C [macro %"cctrl.h%"]"
@@ -67,7 +67,7 @@ feature -- Access
 			"HDF_STRING"
 		end
 		
-	frozen Hdf_image: INTEGER is
+	frozen Hdf_image: INTEGER
 			-- The item displays an image from an image list. 
 		external
 			"C [macro %"cctrl.h%"]"
@@ -75,7 +75,7 @@ feature -- Access
 			"HDF_IMAGE"
 		end
 
-	frozen Hdf_rtl_reading: INTEGER is
+	frozen Hdf_rtl_reading: INTEGER
 			-- In addition, on Hebrew or Arabic systems you can specify this flag 
 			-- to display text using right-to-left reading order. 
 		external
@@ -84,7 +84,7 @@ feature -- Access
 			"HDF_RTLREADING"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

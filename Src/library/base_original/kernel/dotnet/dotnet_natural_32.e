@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Set of static routines belonging to System.UInt32"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create {NONE}
 
 feature -- Statics
 
-	frozen from_string (s: SYSTEM_STRING): NATURAL_32 is
+	frozen from_string (s: SYSTEM_STRING): NATURAL_32
 			-- (Static)
 			-- Converts the string representation of a number to its 32-bit
 			-- signed integer equivalent.
@@ -37,7 +37,7 @@ feature -- Statics
 			"Parse"
 		end
 
-	frozen from_string_with_style (s: SYSTEM_STRING; style: NUMBER_STYLES): NATURAL_32 is
+	frozen from_string_with_style (s: SYSTEM_STRING; style: NUMBER_STYLES): NATURAL_32
 			-- (Static)
 			-- Converts the string representation of a number in a specified style
 			-- to its 32-bit signed integer equivalent.
@@ -64,7 +64,7 @@ feature -- Statics
 			"Parse"
 		end
 
-	frozen from_string_with_format (s: SYSTEM_STRING; provider: IFORMAT_PROVIDER): NATURAL_32 is
+	frozen from_string_with_format (s: SYSTEM_STRING; provider: IFORMAT_PROVIDER): NATURAL_32
 			-- (Static)
 			-- Converts the string representation of a number in a specified
 			-- culture-specific format to its 32-bit signed integer equivalent.
@@ -87,7 +87,7 @@ feature -- Statics
 			"Parse"
 		end
 
-	frozen from_string_with_style_and_format (s: SYSTEM_STRING; style: NUMBER_STYLES; provider: IFORMAT_PROVIDER): NATURAL_32 is
+	frozen from_string_with_style_and_format (s: SYSTEM_STRING; style: NUMBER_STYLES; provider: IFORMAT_PROVIDER): NATURAL_32
 			-- (Static)
 			-- Converts the string representation of a number in a specified style
 			-- and culture-specific format to its 32-bit signed integer equivalent.
@@ -116,7 +116,7 @@ feature -- Statics
 			"Parse"
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

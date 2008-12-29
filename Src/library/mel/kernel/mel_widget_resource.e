@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Default resource for widget."
@@ -15,7 +15,7 @@ create
 
 feature  -- Initalization
 
-	make is
+	make
 			-- Initialize object.
 		do
 			create widget_name.make (0);
@@ -35,7 +35,7 @@ feature -- Status report
 			-- empty widget name means all widgets that have
 			-- the resource name as a valid resource
 
-	resource_string: STRING is
+	resource_string: STRING
 			-- The joining of widget name, resource name and resource value
 			-- to form the resource string;
 		do
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature  -- Status setting
 
-	set_resource_name (a_name: STRING) is
+	set_resource_name (a_name: STRING)
 			-- Set `resource_name' to `a_name'.
 		require
 			name_not_null: a_name /= Void
@@ -67,7 +67,7 @@ feature  -- Status setting
 			set: resource_name.is_equal (a_name)
 		end;
 
-	set_resource_value (a_value: STRING) is
+	set_resource_value (a_value: STRING)
 			-- Set `resource_value' to `a_value'.
 		require
 			value_not_null: a_value /= Void
@@ -77,7 +77,7 @@ feature  -- Status setting
 			set: resource_value.is_equal (a_value)
 		end;
 
-	set_widget_name (a_name: STRING) is
+	set_widget_name (a_name: STRING)
 			-- Set `widget_name' to `a_name'.
 		require
 			name_not_null: a_name /= Void
@@ -87,7 +87,7 @@ feature  -- Status setting
 			set: widget_name.is_equal (a_name)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

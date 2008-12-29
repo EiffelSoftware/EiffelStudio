@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					A tool bar container that is a row when at top/bottom or column at
 					left/right tool bar area. It contain SD_TOOL_BAR_ZONE.
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: SD_DOCKING_MANAGER; a_vertical: BOOLEAN) is
+	make (a_manager: SD_DOCKING_MANAGER; a_vertical: BOOLEAN)
 			-- Creation method
 		require
 			not_void: a_manager /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	extend (a_zone: SD_TOOL_BAR_ZONE) is
+	extend (a_zone: SD_TOOL_BAR_ZONE)
 			-- Extend `a_zone'.
 		require
 			a_tool_bar_not_void: a_zone /= Void
@@ -92,7 +92,7 @@ feature -- Command
 			tool_bar_row_set: a_zone.row = Current
 		end
 
-	prune (a_zone: SD_TOOL_BAR_ZONE) is
+	prune (a_zone: SD_TOOL_BAR_ZONE)
 			-- Redefine
 		local
 			l_result: INTEGER
@@ -107,7 +107,7 @@ feature -- Command
 			pruned: not internal_zones.has (a_zone)
 		end
 
-	on_pointer_motion (a_screen_position: INTEGER) is
+	on_pointer_motion (a_screen_position: INTEGER)
 			-- When user dragging, handle pointer motion.
 		local
 			l_relative_position: INTEGER
@@ -121,7 +121,7 @@ feature -- Command
 			end
 		end
 
-	set_item_position_relative (a_widget: EV_WIDGET; a_relative_x_y: INTEGER) is
+	set_item_position_relative (a_widget: EV_WIDGET; a_relative_x_y: INTEGER)
 			-- Set `a_widget' position with relative position.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -129,7 +129,7 @@ feature -- Command
 			internal_set_item_position (a_widget, a_relative_x_y)
 		end
 
-	reposition is
+	reposition
 			-- Reposition zones, make sure there are not clip each other.
 		require
 			is_dragged: (create {SD_SHARED}).tool_bar_docker_mediator_cell.item /= Void
@@ -141,13 +141,13 @@ feature -- Command
 			end
 		end
 
-	apply_change is
+	apply_change
 			-- Handle user stopped dragging.
 		do
 			internal_positioner.end_drag
 		end
 
-	start_drag (a_dragged_item: EV_WIDGET) is
+	start_drag (a_dragged_item: EV_WIDGET)
 			-- Handle user start dragging.
 		require
 			a_dragged_item_not_void: a_dragged_item /= Void
@@ -155,7 +155,7 @@ feature -- Command
 			internal_positioner.start_drag
 		end
 
-	on_resize (a_size: INTEGER) is
+	on_resize (a_size: INTEGER)
 			-- Handle docking manger main window resize events.
 			-- a_size is width when row is horizontal
 			-- a_size is height when row is vertical
@@ -165,13 +165,13 @@ feature -- Command
 			end
 		end
 
-	record_state is
+	record_state
 			-- Record position and size state.
 		do
 			internal_positioner.record_positions_and_sizes (False)
 		end
 
-	set_ignore_resize (a_ignore: BOOLEAN) is
+	set_ignore_resize (a_ignore: BOOLEAN)
 			-- Set `is_ignore_resize'.
 		do
 			is_ignore_resize := a_ignore
@@ -179,7 +179,7 @@ feature -- Command
 			set: is_ignore_resize = a_ignore
 		end
 
-	destroy is
+	destroy
 			-- Redefine
 		do
 			docking_manager := Void
@@ -188,7 +188,7 @@ feature -- Command
 
 feature {SD_TOOL_BAR_ROW_POSITIONER} -- Internal Issues
 
-	internal_set_item_position (a_widget: EV_WIDGET; a_relative_position: INTEGER) is
+	internal_set_item_position (a_widget: EV_WIDGET; a_relative_position: INTEGER)
 			-- Only do set item position issues.
 		require
 			valid: a_relative_position >= 0
@@ -204,13 +204,13 @@ feature {SD_TOOL_BAR_ROW_POSITIONER} -- Internal Issues
 
 feature -- Query
 
-	has_screen_y (a_screen_y: INTEGER): BOOLEAN is
+	has_screen_y (a_screen_y: INTEGER): BOOLEAN
 			-- If a_screen_y in Current area?
 		do
 			Result := a_screen_y >= screen_y and a_screen_y <= (screen_y + height)
 		end
 
-	has_screen_x (a_screen_x: INTEGER): BOOLEAN is
+	has_screen_x (a_screen_x: INTEGER): BOOLEAN
 			-- If a_screen_x in Current area?
 		do
 			Result := a_screen_x >= screen_x and a_screen_x <= (screen_x + width)
@@ -219,7 +219,7 @@ feature -- Query
 	is_vertical: BOOLEAN
 			-- If `Current' is_vertical?
 
-	zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE] is
+	zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			-- All tool bar zone in Current. Order is from left to right (top to bottom).
 		local
 			l_sorter: DS_QUICK_SORTER [SD_TOOL_BAR_ZONE]
@@ -231,7 +231,7 @@ feature -- Query
 			l_sorter.sort (Result)
 		end
 
-	size: INTEGER is
+	size: INTEGER
 			-- Size of current.
 		do
 			if is_vertical then
@@ -246,13 +246,13 @@ feature -- Query
 	is_ignore_resize: BOOLEAN
 			-- Is ignore resize?
 
-	is_enough_max_space: BOOLEAN is
+	is_enough_max_space: BOOLEAN
 			-- If there is enought space for each SD_TOOL_BAR without reduce size?
 		do
 			Result := internal_positioner.internal_sizer.is_enough_max_space (True)
 		end
 
-	hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- All hideen items in row.
 		local
 			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
@@ -287,7 +287,7 @@ feature -- Query
 
 feature {SD_TOOL_BAR_ROW_POSITIONER} -- Implementation
 
-	sort_by_position (a_first, a_second: SD_TOOL_BAR_ZONE): BOOLEAN is
+	sort_by_position (a_first, a_second: SD_TOOL_BAR_ZONE): BOOLEAN
 			-- Compare `a_first' and `a_second'.
 		require
 			not_void: a_first /= Void
@@ -296,7 +296,7 @@ feature {SD_TOOL_BAR_ROW_POSITIONER} -- Implementation
 			Result := a_first.position < a_second.position
 		end
 
-	to_relative_position (a_screen_position: INTEGER): INTEGER is
+	to_relative_position (a_screen_position: INTEGER): INTEGER
 			-- Screen position convert to relative position.
 		do
 			if not is_vertical then
@@ -322,7 +322,7 @@ invariant
 
 	not_void: internal_zones /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

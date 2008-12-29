@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Abstract class for Motif resources that has been allocated %
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_from_existing (a_display: MEL_DISPLAY; a_handle: POINTER) is
+	make_from_existing (a_display: MEL_DISPLAY; a_handle: POINTER)
 			-- Create a MEL resource from an `a_handle'
 			-- for display `a_display'.
 		require
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			is_shared: is_shared
 		end;
 
-    make_from_existing_handle (a_handle: POINTER) is
+    make_from_existing_handle (a_handle: POINTER)
             -- Initialize `a_handle' to `handle;.
         do
             handle := a_handle;
@@ -55,7 +55,7 @@ feature -- Access
 	display_handle: POINTER;
 			-- Display C handle on which resource is allocated
 
-	display: MEL_DISPLAY is
+	display: MEL_DISPLAY
 			-- Mel display on which resource was allocated
 		do
 			if display_handle /= default_pointer then
@@ -63,7 +63,7 @@ feature -- Access
 			end
 		end;
 
-	has_valid_display: BOOLEAN is
+	has_valid_display: BOOLEAN
 			-- Has the `display' been set?
 		do
 			Result := display_handle /= default_pointer
@@ -71,7 +71,7 @@ feature -- Access
 			valid_result: Result implies display_handle /= default_pointer
 		end;
 
-	same_display (other_display: MEL_DISPLAY): BOOLEAN is
+	same_display (other_display: MEL_DISPLAY): BOOLEAN
 			-- Is `display' same as `other_display'?
 		require
 			valid_other_display: other_display /= Void and then other_display.is_valid
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_display (a_display: MEL_DISPLAY) is
+	set_display (a_display: MEL_DISPLAY)
 			-- Set `display' to `a_display'
 		require
 			not_valid_display: not has_valid_display
@@ -93,7 +93,7 @@ feature -- Status setting
 			set: equal (display, a_display)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

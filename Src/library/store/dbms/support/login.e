@@ -1,4 +1,4 @@
-indexing
+note
 	description: ""
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -17,7 +17,7 @@ create -- Creation procedure
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			create name.make (1)
 			create passwd.make (1)
@@ -31,7 +31,7 @@ feature -- Initialization
 
 feature -- Status setting
 
-	set (uname, upasswd: STRING) is
+	set (uname, upasswd: STRING)
 			-- Set user name and password before connection becomes possible.
 		require
 			user_name_ok: db_spec.user_name_ok (uname)
@@ -43,7 +43,7 @@ feature -- Status setting
 			password_ensure: db_spec.password_ensure (name, passwd, uname, upasswd)
 		end
 
-	set_application (appname: STRING) is
+	set_application (appname: STRING)
 			-- Set name of application
 		require
 			argument_not_void: appname /= Void
@@ -53,7 +53,7 @@ feature -- Status setting
 			name_set: application.is_equal(appname)
 		end
 
-	set_hostname (uhostname: STRING) is
+	set_hostname (uhostname: STRING)
 		require
 			argument_not_void: uhostname /= Void
 		do
@@ -62,7 +62,7 @@ feature -- Status setting
 			name_set: hostname.is_equal(uhostname)
 		end
 
-	set_data_source (udata_source: STRING) is
+	set_data_source (udata_source: STRING)
 			-- Set Data Source of ODBC.
 		require
 			argument_not_void: data_source /= Void
@@ -72,7 +72,7 @@ feature -- Status setting
 			data_source_set: data_source.is_equal(udata_source)
 		end
 
-	set_role (uroleId, urolePassWd: STRING) is
+	set_role (uroleId, urolePassWd: STRING)
 			-- Set role identifier of data base.
 		require
 			argument_not_void: uroleId /= Void
@@ -87,7 +87,7 @@ feature -- Status setting
 			name_set: roleId.is_equal(uroleId)
 		end
 
-	set_group (ugroupId: STRING) is
+	set_group (ugroupId: STRING)
 		require
 			argument_not_void: ugroupId /= Void
 		do
@@ -122,7 +122,7 @@ feature -- Status report
 	groupId: STRING;
 			-- Group Identifier.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

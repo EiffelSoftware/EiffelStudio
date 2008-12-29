@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Check button."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Access
 
-	checked: BOOLEAN is
+	checked: BOOLEAN
 			-- Boolean value held.
 		do
 			Result := is_selected
@@ -33,19 +33,19 @@ feature -- Access
 
 feature -- Basic operations
 
-	request_sensitive is
+	request_sensitive
 			-- Request display sensitive.
 		do
 			enable_sensitive
 		end
 
-	request_insensitive is
+	request_insensitive
 			-- Request display insensitive.
 		do
 			disable_sensitive
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

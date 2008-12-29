@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Save the application context."
@@ -12,13 +12,13 @@ class
 
 feature -- Access
 
-	application_context: MEL_APPLICATION_CONTEXT is
+	application_context: MEL_APPLICATION_CONTEXT
 			-- Application context
 		do
 			Result := application_context_cell.item
 		end;
 
-	application_class: STRING is
+	application_class: STRING
 			-- Application class name used for resources.
 		do
 			Result := application_class_cell.item
@@ -26,17 +26,17 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	application_class_cell: CELL [STRING] is
+	application_class_cell: CELL [STRING]
 		once
 			create Result.put (Void)
 		end
 
-	application_context_cell: CELL [MEL_APPLICATION_CONTEXT] is
+	application_context_cell: CELL [MEL_APPLICATION_CONTEXT]
 		once
 			create Result.put (Void)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

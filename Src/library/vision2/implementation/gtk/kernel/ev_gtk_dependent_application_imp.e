@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision application, GTK+ implementation."
 	legal: "See notice at end of class."
@@ -30,7 +30,7 @@ inherit
 
 feature -- Initialize
 
-	gtk_dependent_initialize is
+	gtk_dependent_initialize
 			-- Gtk dependent code for `initialize'
 		do
 				-- Initialize custom styles for gtk.
@@ -38,7 +38,7 @@ feature -- Initialize
 			initialize_tool_bar_style
 		end
 
-	gtk_dependent_launch_initialize is
+	gtk_dependent_launch_initialize
 			-- Gtk dependent code for `launch'
 		do
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver = 1 and then {EV_GTK_EXTERNALS}.gtk_min_ver <= 2 and then {EV_GTK_EXTERNALS}.gtk_mic_ver < 8 then
@@ -48,45 +48,45 @@ feature -- Initialize
 
 feature -- Implementation
 
-	pixel_value_from_point_value (a_point_value: INTEGER): INTEGER is
+	pixel_value_from_point_value (a_point_value: INTEGER): INTEGER
 			-- Returns the number of screen pixels represented by `a_point_value'
 		do
 			Result := ((a_point_value / 3 * 4) + 0.5).truncated_to_integer
 		end
 
-	point_value_from_pixel_value (a_pixel_value: INTEGER): INTEGER is
+	point_value_from_pixel_value (a_pixel_value: INTEGER): INTEGER
 			-- Returns the number of points represented by `a_pixel_value' screen pixels value
 		do
 			Result := ((a_pixel_value / 4 * 3) + 0.5).truncated_to_integer
 		end
 
-	pango_layout: POINTER is
+	pango_layout: POINTER
 			-- PangoLayout structure used for rendering fonts
 		once
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (default_gtk_window, default_pointer)
 		end
 
-	pango_iter: POINTER is
+	pango_iter: POINTER
 			-- Retrieve PangoLayoutIter from our default layout object, Result must be freed when not needed
 		do
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
 		end
 
-	writeable_pixbuf_formats: ARRAYED_LIST [STRING_32] is
+	writeable_pixbuf_formats: ARRAYED_LIST [STRING_32]
 			-- Array of GdkPixbuf formats that Vision2 can save to on the gtk2.4.x platform
 		once
 			Result := pixbuf_formats (True)
 			Result.compare_objects
 		end
 
-	readable_pixbuf_formats: ARRAYED_LIST [STRING_32] is
+	readable_pixbuf_formats: ARRAYED_LIST [STRING_32]
 			-- Array of GdkPixbuf formats that Vision2 can load to on the gtk2.4.x platform
 		once
 			Result := pixbuf_formats (False)
 			Result.compare_objects
 		end
 
-	pixbuf_formats (a_writeable: BOOLEAN): ARRAYED_LIST [STRING_32] is
+	pixbuf_formats (a_writeable: BOOLEAN): ARRAYED_LIST [STRING_32]
 			-- List of the readable formats available with current Gtk 2.0 library
 		local
 			formats: POINTER
@@ -122,7 +122,7 @@ feature -- Implementation
 			{EV_GTK_EXTERNALS}.g_slist_free (formats)
 		end
 
-	initialize_default_font_values is
+	initialize_default_font_values
 			-- Initialize values use for creating our default font
 		local
 			font_desc: STRING_32
@@ -177,7 +177,7 @@ feature -- Implementation
 			end
 		end
 
-	default_font_name: STRING_32 is
+	default_font_name: STRING_32
 			-- Face name of the default font
 		do
 			if font_settings_changed then
@@ -188,7 +188,7 @@ feature -- Implementation
 
 	default_font_name_internal: STRING_32
 
-	default_font_point_height: INTEGER is
+	default_font_point_height: INTEGER
 			-- Size of the default font in points
 		do
 			if font_settings_changed then
@@ -199,7 +199,7 @@ feature -- Implementation
 
 	default_font_point_height_internal: INTEGER
 
-	default_font_style: INTEGER is
+	default_font_style: INTEGER
 			-- Style of the default font
 		do
 			if font_settings_changed then
@@ -210,7 +210,7 @@ feature -- Implementation
 
 	default_font_style_internal: INTEGER
 
-	default_font_weight: INTEGER is
+	default_font_weight: INTEGER
 			-- Weight of the default font
 		do
 			if font_settings_changed then
@@ -221,7 +221,7 @@ feature -- Implementation
 
 	default_font_weight_internal: INTEGER
 
-	font_settings_changed: BOOLEAN is
+	font_settings_changed: BOOLEAN
 			-- Have the default font settings been changed by the user
 		local
 			font_name_ptr: POINTER
@@ -250,20 +250,20 @@ feature -- Implementation
 	previous_font_settings: POINTER
 		-- Pointer to the previous gtk-settings font value.
 
-	c_strcmp (ptr1, ptr2: POINTER): INTEGER is
+	c_strcmp (ptr1, ptr2: POINTER): INTEGER
 		external
 			"C inline use <string.h>"
 		alias
 			"return strcmp ((const char*) $ptr1, (const char*) $ptr2);"
 		end
 
-	default_gtk_settings: POINTER is
+	default_gtk_settings: POINTER
 			-- Default GtkSettings
 		once
 			Result := {EV_GTK_EXTERNALS}.gtk_settings_get_default
 		end
 
-	default_font_description: STRING_32 is
+	default_font_description: STRING_32
 			-- Description string of the current font used
 		local
 			font_name_ptr: POINTER
@@ -280,13 +280,13 @@ feature -- Implementation
 			end
 		end
 
-	gtk_font_name_setting: EV_GTK_C_STRING is
+	gtk_font_name_setting: EV_GTK_C_STRING
 			-- String optimization for gtk-font-name property string
 		once
 			Result := "gtk-font-name"
 		end
 
-	font_names_on_system: ARRAYED_LIST [STRING_32] is
+	font_names_on_system: ARRAYED_LIST [STRING_32]
 			-- Retrieve a list of all the font names available on the system
 		local
 			a_name_array: POINTER
@@ -310,7 +310,7 @@ feature -- Implementation
 			a_name_array.memory_free
 		end
 
-	font_names_on_system_as_lower: ARRAYED_LIST [STRING_32] is
+	font_names_on_system_as_lower: ARRAYED_LIST [STRING_32]
 			-- Retrieve a list of all the font names available on the system in lower case
 			-- This is needed for easy case insensitive lookup in EV_FONT_IMP.
 		local
@@ -331,10 +331,10 @@ feature -- Implementation
 			Result.compare_objects
 		end
 
-	default_gtk_window: POINTER is deferred end
+	default_gtk_window: POINTER deferred end
 
 
-	window_manager_name: STRING is
+	window_manager_name: STRING
 			-- Name of Window Manager currently running.
 		local
 			l_display, l_screen, l_wm_name: POINTER
@@ -347,7 +347,7 @@ feature -- Implementation
 
 feature {NONE} -- Externals
 
-	initialize_combo_box_style is
+	initialize_combo_box_style
 			-- Set the combo box style so that they appear as lists and not menus.
 		external
 			"C inline use <gtk/gtk.h>"
@@ -359,7 +359,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	initialize_tool_bar_style is
+	initialize_tool_bar_style
 			-- Remove the default shadow from the toolbar.
 		external
 			"C inline use <gtk/gtk.h>"
@@ -371,7 +371,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	retrieve_available_fonts (a_widget: POINTER; name_array: TYPED_POINTER [POINTER]; number_elements: TYPED_POINTER [INTEGER]) is
+	retrieve_available_fonts (a_widget: POINTER; name_array: TYPED_POINTER [POINTER]; number_elements: TYPED_POINTER [INTEGER])
 			-- Retrieve all available fonts present on the system
 		external
 			"C inline use <gtk/gtk.h>"
@@ -398,7 +398,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	gchar_array_i_th (a_gchar_array: POINTER; an_index: INTEGER): POINTER is
+	gchar_array_i_th (a_gchar_array: POINTER; an_index: INTEGER): POINTER
 			-- Returns `an_index' i_th value from gchar** `a_gchar_array'
 		require
 			an_index_valid: an_index > 0
@@ -409,7 +409,7 @@ feature {NONE} -- Externals
 			"(EIF_POINTER) *((gchar**) $a_gchar_array + (int) ($an_index - 1))"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Drop down menu containing EV_MENU_ITEMs
@@ -40,7 +40,7 @@ create
 
 feature -- Status report
 
-	parent: EV_MENU_ITEM_LIST is
+	parent: EV_MENU_ITEM_LIST
 			-- Menu item list containing `Current'.
 		do
 			Result := implementation.parent
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Standard operations
 
-	show is
+	show
 			-- Pop up on the current pointer position.
 		require
 			not_destroyed: not is_destroyed
@@ -57,7 +57,7 @@ feature -- Standard operations
 			implementation.show
 		end
 
-	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
+	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget' or relative to the screen if `a_widget' is Void.
 		require
@@ -71,13 +71,13 @@ feature -- Standard operations
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_MENU_ITEM} and Precursor {EV_MENU_ITEM_LIST}
 		end
 
-	one_selected_radio_item_per_separator: BOOLEAN is
+	one_selected_radio_item_per_separator: BOOLEAN
 			-- Is there at most one selected radio item between
 			-- consecutive separators?
 		do
@@ -93,7 +93,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_MENU_IMP} implementation.make (Current)
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 invariant
 	one_selected_radio_item_per_separator: one_selected_radio_item_per_separator
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

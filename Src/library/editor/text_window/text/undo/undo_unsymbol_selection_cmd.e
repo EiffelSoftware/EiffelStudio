@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Undo for uncomment and unindent."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,19 +21,19 @@ create
 
 feature -- Basic operations
 
-	undo is
+	undo
 			-- undo the command
 		do
 			do_selection (True)
 		end
 
-	redo is
+	redo
 			-- redo the command
 		do
 			do_selection (False)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

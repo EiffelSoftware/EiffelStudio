@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specifies the width and height of a rectangle."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_width, a_height: INTEGER) is
+	make (a_width, a_height: INTEGER)
 			-- Make a size and set `width',
 			-- `height', with `a_width', `a_height'
 		do
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			height_set: height = a_height
 		end
 
-	default_create is
+	default_create
 			-- Make a size where all fields are set to zero.
 		do
 			structure_make
@@ -46,13 +46,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of the rectangle
 		do
 			Result := cwel_size_get_cx (item)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of the rectangle
 		do
 			Result := cwel_size_get_cy (item)
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' with `a_width'
 		do
 			cwel_size_set_cx (item, a_width)
@@ -68,7 +68,7 @@ feature -- Element change
 			width_set: width = a_width
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' with `a_height'
 		do
 			cwel_size_set_cy (item, a_height)
@@ -78,7 +78,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := cwel_size_of_size
@@ -86,34 +86,34 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	cwel_size_of_size: INTEGER is
+	cwel_size_of_size: INTEGER
 		external
 			"C [macro <wsize.h>]"
 		alias
 			"sizeof (SIZE)"
 		end
 
-	cwel_size_get_cx (ptr: POINTER): INTEGER is
+	cwel_size_get_cx (ptr: POINTER): INTEGER
 		external
 			"C [macro <wsize.h>]"
 		end
 
-	cwel_size_get_cy (ptr: POINTER): INTEGER is
+	cwel_size_get_cy (ptr: POINTER): INTEGER
 		external
 			"C [macro <wsize.h>]"
 		end
 
-	cwel_size_set_cx (ptr: POINTER; value: INTEGER) is
+	cwel_size_set_cx (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <wsize.h>]"
 		end
 
-	cwel_size_set_cy (ptr: POINTER; value: INTEGER) is
+	cwel_size_set_cy (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <wsize.h>]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Bit operations on integer (or, and not)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Basic operations
 
-	set_flag (flags, mask: INTEGER): INTEGER is
+	set_flag (flags, mask: INTEGER): INTEGER
 			-- Set the `mask' in `flags'
 		do
 			Result := flags | mask
@@ -18,7 +18,7 @@ feature -- Basic operations
 			flag_set: flag_set (Result, mask)
 		end
 
-	clear_flag (flags, mask: INTEGER): INTEGER is
+	clear_flag (flags, mask: INTEGER): INTEGER
 			-- Clear the `mask' in `flags'
 		do
 			Result := flags & mask.bit_not
@@ -28,13 +28,13 @@ feature -- Basic operations
 
 feature -- Status report
 
-	flag_set (flags, mask: INTEGER): BOOLEAN is
+	flag_set (flags, mask: INTEGER): BOOLEAN
 			-- Is `mask' set in `flags'?
 		do
 			Result := (flags & mask) = mask
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision push button. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -155,7 +155,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
@@ -166,7 +166,7 @@ feature {NONE} -- Initialization
 			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
@@ -184,7 +184,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Reset `Current' to its default minimum size.
 		local
 			font_imp: EV_FONT_IMP
@@ -224,7 +224,7 @@ feature -- Status setting
 			ev_set_minimum_size (w, h)
 		end
 
-	align_text_left is
+	align_text_left
 			-- Display `text' with alignment to left of `Current'.
 		local
 			new_style: INTEGER
@@ -238,7 +238,7 @@ feature -- Status setting
 			invalidate
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display `text' with alignment to right of `Current'.
 		local
 			new_style: INTEGER
@@ -252,7 +252,7 @@ feature -- Status setting
 			invalidate
 		end
 
-	align_text_center is
+	align_text_center
 			-- -- Display `text' with alignment in center of `Current'.
 		local
 			new_style: INTEGER
@@ -266,7 +266,7 @@ feature -- Status setting
 			invalidate
 		end
 
-	enable_default_push_button is
+	enable_default_push_button
 			-- Set the style "default_push_button" of `Current'.
 		do
 			is_default_push_button := True
@@ -279,7 +279,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_default_push_button is
+	disable_default_push_button
 			-- Remove the style "default_push_button"  of `Current'.
 		do
 			is_default_push_button := False
@@ -292,7 +292,7 @@ feature -- Status setting
 			end
 		end
 
-	enable_can_default is
+	enable_can_default
 			--| Implementation only needed for GTK
 		do
 			--| Do nothing as this is the default on Win32.
@@ -300,7 +300,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_pixmap (pix: EV_PIXMAP) is
+	set_pixmap (pix: EV_PIXMAP)
 			-- Make `pix' the pixmap of `Current'.
 		local
 			internal_pixmap_state: EV_PIXMAP_IMP_STATE
@@ -327,14 +327,14 @@ feature -- Element change
 			invalidate
 		end
 
-	set_font (ft: EV_FONT) is
+	set_font (ft: EV_FONT)
 			-- Make `ft' new font of `Current'.
 		do
 			Precursor {EV_FONTABLE_IMP} (ft)
 			set_default_minimum_size
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove `pixmap' from `Current'.
 		do
 			Precursor {EV_PIXMAPABLE_IMP}
@@ -342,7 +342,7 @@ feature -- Element change
 			invalidate
 		end
 
-	wel_set_text (txt: STRING_GENERAL) is
+	wel_set_text (txt: STRING_GENERAL)
 			-- Assign `txt' to `text' of `Current'.
 		do
 			Precursor {WEL_BITMAP_BUTTON} (txt)
@@ -351,13 +351,13 @@ feature -- Element change
 
 feature {NONE} -- Implementation, focus event
 
-	internal_default_height: INTEGER is
+	internal_default_height: INTEGER
 			-- The default minimum height of `Current' with no text.
 		do
 			Result := 7
 		end
 
-	update_current_push_button is
+	update_current_push_button
 			-- Update the current push button
 			--
 			-- Current is a push button, so we set it to be
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation, focus event
 			end
 		end
 
-	fire_select_actions_on_enter is
+	fire_select_actions_on_enter
 			-- Call select_actions to respond to Enter key press if
 			-- Current supports it.
 		do
@@ -388,13 +388,13 @@ feature {NONE} -- Implementation, focus event
 
 feature {NONE} -- WEL Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create `Current'.
 		do
 			Result := ws_visible | ws_child | ws_group | ws_tabstop | Ws_clipchildren | Ws_clipsiblings | Bs_ownerdraw
 		end
 
-	on_bn_clicked is
+	on_bn_clicked
 			-- `Current' has been pressed.
 		do
 			if select_actions_internal /= Void then
@@ -402,14 +402,14 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- A key has been pressed.
 		do
 			process_navigation_key (virtual_key)
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 
-	on_wm_theme_changed is
+	on_wm_theme_changed
 			-- WM_THEMECHANGED message received so update current theme object.
 		do
 			application_imp.theme_drawer.close_theme_data (open_theme)
@@ -423,20 +423,20 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_ANY_I} -- Drawing implementation
 
-	has_pushed_appearence (state: INTEGER): BOOLEAN is
+	has_pushed_appearence (state: INTEGER): BOOLEAN
 			-- Should `Current' have the appearence of being
 			-- pressed?
 		do
 			Result := flag_set (state, Ods_selected)
 		end
 
-	pixmap_border: INTEGER is 4
+	pixmap_border: INTEGER = 4
 		-- spacing between image and edge of `Current'.
 
-	focus_rect_border: INTEGER is 3
+	focus_rect_border: INTEGER = 3
 		-- Distance of focus rectangle from edge of button.
 
-	internal_background_brush: WEL_BRUSH is
+	internal_background_brush: WEL_BRUSH
 			-- `Result' is background brush to be used for `Current'.
 		local
 			color_imp: EV_COLOR_IMP
@@ -451,7 +451,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			create Result.make_solid (color_imp)
 		end
 
-	on_draw_item (draw_item: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_item (draw_item: WEL_DRAW_ITEM_STRUCT)
 			-- Wm_drawitem message received. We must now draw `Current'
 			-- ourselves with the information in `draw_item'.
 		local
@@ -710,7 +710,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			end
 		end
 
-	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER is
+	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER
 			-- Grayscale image drawer.
 			-- Void if Gdi+ not installed.
 		local
@@ -722,7 +722,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			end
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erase_background message has been received by Windows.
 			-- We must override the default processing, as if we do not, then
 			-- Windows will draw the background for us, even though it is not needed.
@@ -731,13 +731,13 @@ feature {EV_ANY_I} -- Drawing implementation
 			disable_default_processing
 		end
 
-	white: WEL_COLOR_REF is
+	white: WEL_COLOR_REF
 			-- `Result' is color corresponding to white
 		once
 			Create Result.make_rgb (255, 255, 255)
 		end
 
-	default_foreground_color_imp: EV_COLOR_IMP is
+	default_foreground_color_imp: EV_COLOR_IMP
 			-- Default foreground color for widgets.
 		once
 			Result ?= (create {EV_STOCK_COLORS}).default_foreground_color.implementation
@@ -750,7 +750,7 @@ feature {EV_ANY_I} -- Drawing implementation
 		-- a temporary hack until it can be found why Ods_hottrack does not seem to
 		-- be sent when it should.
 
-	on_mouse_enter is
+	on_mouse_enter
 			-- Called when the mouse enters `Current'.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
@@ -758,7 +758,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			invalidate
 		end
 
-	on_mouse_leave is
+	on_mouse_leave
 			-- Called when the mouse leaves `Current'.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
@@ -770,7 +770,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

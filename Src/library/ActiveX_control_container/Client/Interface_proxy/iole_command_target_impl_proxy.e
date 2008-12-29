@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IOleCommandTarget' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iole_command_target_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	query_status (pguid_cmd_group: ECOM_GUID; c_cmds: INTEGER; prg_cmds: ARRAY [X_TAG_OLECMD_RECORD]; p_cmd_text: X_TAG_OLECMDTEXT_RECORD) is
+	query_status (pguid_cmd_group: ECOM_GUID; c_cmds: INTEGER; prg_cmds: ARRAY [X_TAG_OLECMD_RECORD]; p_cmd_text: X_TAG_OLECMDTEXT_RECORD)
 			-- No description available.
 			-- `pguid_cmd_group' [in].  
 			-- `c_cmds' [in].  
@@ -37,7 +37,7 @@ feature -- Basic Operations
 			ccom_query_status (initializer, pguid_cmd_group.item, c_cmds, prg_cmds, p_cmd_text.item)
 		end
 
-	exec (pguid_cmd_group: ECOM_GUID; n_cmd_id: INTEGER; n_cmdexecopt: INTEGER; pva_in: ECOM_VARIANT; pva_out: ECOM_VARIANT) is
+	exec (pguid_cmd_group: ECOM_GUID; n_cmd_id: INTEGER; n_cmdexecopt: INTEGER; pva_in: ECOM_VARIANT; pva_out: ECOM_VARIANT)
 			-- No description available.
 			-- `pguid_cmd_group' [in].  
 			-- `n_cmd_id' [in].  
@@ -50,7 +50,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iole_command_target_impl_proxy(initializer)
@@ -58,37 +58,37 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_query_status (cpp_obj: POINTER; pguid_cmd_group: POINTER; c_cmds: INTEGER; prg_cmds: ARRAY [X_TAG_OLECMD_RECORD]; p_cmd_text: POINTER) is
+	ccom_query_status (cpp_obj: POINTER; pguid_cmd_group: POINTER; c_cmds: INTEGER; prg_cmds: ARRAY [X_TAG_OLECMD_RECORD]; p_cmd_text: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleCommandTarget_impl_proxy %"ecom_control_library_IOleCommandTarget_impl_proxy_s.h%"](GUID *,EIF_INTEGER,EIF_OBJECT,ecom_control_library::_tagOLECMDTEXT *)"
 		end
 
-	ccom_exec (cpp_obj: POINTER; pguid_cmd_group: POINTER; n_cmd_id: INTEGER; n_cmdexecopt: INTEGER; pva_in: POINTER; pva_out: POINTER) is
+	ccom_exec (cpp_obj: POINTER; pguid_cmd_group: POINTER; n_cmd_id: INTEGER; n_cmdexecopt: INTEGER; pva_in: POINTER; pva_out: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleCommandTarget_impl_proxy %"ecom_control_library_IOleCommandTarget_impl_proxy_s.h%"](GUID *,EIF_INTEGER,EIF_INTEGER,VARIANT *,VARIANT *)"
 		end
 
-	ccom_delete_iole_command_target_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iole_command_target_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IOleCommandTarget_impl_proxy %"ecom_control_library_IOleCommandTarget_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iole_command_target_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iole_command_target_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IOleCommandTarget_impl_proxy %"ecom_control_library_IOleCommandTarget_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IOleCommandTarget_impl_proxy %"ecom_control_library_IOleCommandTarget_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

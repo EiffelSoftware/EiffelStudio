@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Hatch style (HS) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,49 +10,49 @@ class
 
 feature -- Access
 
-	Hs_horizontal: INTEGER is
+	Hs_horizontal: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"HS_HORIZONTAL"
 		end
 
-	Hs_vertical: INTEGER is
+	Hs_vertical: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"HS_VERTICAL"
 		end
 
-	Hs_fdiagonal: INTEGER is
+	Hs_fdiagonal: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"HS_FDIAGONAL"
 		end
 
-	Hs_bdiagonal: INTEGER is
+	Hs_bdiagonal: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"HS_BDIAGONAL"
 		end
 
-	Hs_cross: INTEGER is
+	Hs_cross: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"HS_CROSS"
 		end
 
-	Hs_diagcross: INTEGER is
+	Hs_diagcross: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"HS_DIAGCROSS"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

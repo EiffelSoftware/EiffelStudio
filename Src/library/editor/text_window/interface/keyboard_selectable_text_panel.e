@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Editable: no
 		Scroll bars: yes
@@ -40,7 +40,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	user_initialization is
+	user_initialization
 			-- Initialize variables and objects related to display.
 		do
 
@@ -72,13 +72,13 @@ feature -- Access
 
 feature -- Query
 
-	has_selection: BOOLEAN is
+	has_selection: BOOLEAN
 			-- Is there any selection in the text ?
 		do
 			Result := text_displayed.has_selection
 		end
 
-	position_is_in_selection (x_pos, y_pos: INTEGER; include_selection_end: BOOLEAN): BOOLEAN is
+	position_is_in_selection (x_pos, y_pos: INTEGER; include_selection_end: BOOLEAN): BOOLEAN
 			-- Is point with coordinates `x_pos', `y_pos' in the selection?
 		local
 			cur: like cursor_type
@@ -88,7 +88,7 @@ feature -- Query
 			Result := cursor_is_in_selection (cur)
 		end
 
-	cursor_is_in_selection (cur: like cursor_type): BOOLEAN is
+	cursor_is_in_selection (cur: like cursor_type): BOOLEAN
 			-- Is `cursor' in the selection?
 		require
 			cursor_is_not_void: cur /= Void
@@ -96,7 +96,7 @@ feature -- Query
 			Result := has_selection and then (cur >= text_displayed.selection_start and then cur < text_displayed.selection_end)
 		end
 
-	cursor_is_visible: BOOLEAN is
+	cursor_is_visible: BOOLEAN
 			-- Check if the cursor is visible in the editor.		
 		local
 			cur_pos: INTEGER
@@ -107,7 +107,7 @@ feature -- Query
 			end
 		end
 
-	current_cursor_position: INTEGER is
+	current_cursor_position: INTEGER
 			-- Character position of current cursor in text.
 		local
 			l_cursor: like cursor_type
@@ -121,7 +121,7 @@ feature -- Query
 
 feature -- Cursor Management
 
-	check_cursor_position is
+	check_cursor_position
 			-- Check if cursor position is displayed and scroll if necessary.
 		require
 			text_not_empty: not text_displayed.is_empty
@@ -129,7 +129,7 @@ feature -- Cursor Management
 			check_position (text_displayed.cursor)
 		end
 
-	position_cursor (a_cursor: like cursor_type; x_pos, y_pos: INTEGER) is
+	position_cursor (a_cursor: like cursor_type; x_pos, y_pos: INTEGER)
 			-- Position `a_cursor' as close as possible from coordinates (x_pos, y_pos).
 		local
 			l_number		: INTEGER
@@ -187,7 +187,7 @@ feature -- Cursor Management
 
 feature -- Text Selection
 
-	show_selection (always_scroll: BOOLEAN) is
+	show_selection (always_scroll: BOOLEAN)
 			-- Center the display on the selected text.
 			-- If `always_scroll', the beginning of the selection appear in the middle of the panel,
 			-- else the selection appear in the middle of the panel only if it was not already displayed.
@@ -227,7 +227,7 @@ feature -- Text Selection
 			end
 		end
 
-	select_all is
+	select_all
 			-- Select the entire text.
 		require
 			text_is_not_empty: number_of_lines > 0
@@ -236,7 +236,7 @@ feature -- Text Selection
 			refresh
 		end
 
-	disable_selection, deselect_all is
+	disable_selection, deselect_all
 			-- Forget selection if there is one.
 		local
 			sel_start, sel_end: INTEGER
@@ -249,7 +249,7 @@ feature -- Text Selection
 			end
 		end
 
-	dim_selection is
+	dim_selection
 			-- Dim selection to indicate panel has lost focus.
 		local
 			sel_start, sel_end: INTEGER
@@ -261,7 +261,7 @@ feature -- Text Selection
 			end
 		end
 
-	select_region (start_pos, end_pos: INTEGER) is
+	select_region (start_pos, end_pos: INTEGER)
 			-- Select characters between indexes `start_pos' and `end_pos'.
 			-- Do not scroll to selected position.
 		require
@@ -299,7 +299,7 @@ feature -- Text Selection
 			end
  		end
 
-	select_lines (a_start, a_end: INTEGER) is
+	select_lines (a_start, a_end: INTEGER)
 			-- Select lines between `a_start' and `a_end'.  Do not scroll to new cursor position.
 			-- Selection will be from first character of `a_start' line and last character of `a_end' line.
 		require
@@ -318,7 +318,7 @@ feature -- Text Selection
 			select_region (l_first_char, l_last_char)
 		end
 
-	copy_selection is
+	copy_selection
 			-- Copy current selection to clipboard.
 		require
 			text_is_not_empty: number_of_lines /= 0
@@ -337,7 +337,7 @@ feature -- Text Selection
 
 feature -- Status Setting
 
-	set_first_line_displayed (fld: INTEGER; refresh_if_necessary: BOOLEAN) is
+	set_first_line_displayed (fld: INTEGER; refresh_if_necessary: BOOLEAN)
 			-- Assign `fld' to `first_line_displayed'.
 		local
 			diff, y_offset: INTEGER
@@ -352,7 +352,7 @@ feature -- Status Setting
 			Precursor (fld, refresh_if_necessary)
 		end
 
-	redraw_current_line is
+	redraw_current_line
 			-- Redraw the line where the cursor is
 		do
 			invalidate_cursor_rect (False)
@@ -368,7 +368,7 @@ feature -- Status Setting
 
 feature -- Observation
 
-	add_selection_observer (txt_observer: TEXT_OBSERVER) is
+	add_selection_observer (txt_observer: TEXT_OBSERVER)
 			-- Add observer of `text_displayed' for selection changes.
 		do
 			if text_displayed /= Void and then not text_displayed.is_notifying then
@@ -376,7 +376,7 @@ feature -- Observation
 			end
 		end
 
-	add_cursor_observer (txt_observer: TEXT_OBSERVER) is
+	add_cursor_observer (txt_observer: TEXT_OBSERVER)
 			-- Add observer of `text_displayed' for cursor position changes.
 		do
 			if text_displayed /= Void then
@@ -384,7 +384,7 @@ feature -- Observation
 			end
 		end
 
-	remove_observer (txt_observer: TEXT_OBSERVER) is
+	remove_observer (txt_observer: TEXT_OBSERVER)
 			-- Remove observer of `text_displayed'.
 		do
 			if text_displayed /= Void then
@@ -392,7 +392,7 @@ feature -- Observation
 			end
 		end
 
-	on_text_loaded is
+	on_text_loaded
 			-- Finish the panel setup as the entire text has been loaded.
 		local
 			l_cursor: like cursor_type
@@ -414,7 +414,7 @@ feature -- Observation
 			end
 		end
 
-	reload is
+	reload
 			-- Reload the opened file from disk.
 		do
 			restore_cursor := True
@@ -429,7 +429,7 @@ feature -- Observation
 
 feature {NONE} -- Process Vision2 events
 
-	on_key_down (ev_key: EV_KEY) is
+	on_key_down (ev_key: EV_KEY)
 			-- Process Wm_keydown message corresponding to the
 			-- key `virtual_key' and the associated data `key_data'.
 		do
@@ -455,14 +455,14 @@ feature {NONE} -- Process Vision2 events
 			end
 		end
 
-	on_key_up (ev_key: EV_KEY) is
+	on_key_up (ev_key: EV_KEY)
 			-- Process Wm_keyup message corresponding to the
 			-- key `virtual_key' and the associated data `key_data'.
 		do
 			blink_on := False
 		end
 
-	gain_focus is
+	gain_focus
 			-- Update the panel as it has just gained the focus.
 		local
 			sel_start,
@@ -480,12 +480,12 @@ feature {NONE} -- Process Vision2 events
 			end
 		end
 
-	key_not_handled_action is
+	key_not_handled_action
 			-- Apply default key processing.
 		do
 		end
 
-	lose_focus is
+	lose_focus
 			-- Update the panel as it has just lost the focus.
 		do
 				-- Redraw the line where the cursor is (we will erase the cursor)
@@ -500,7 +500,7 @@ feature {NONE} -- Process Vision2 events
 
 feature {NONE} -- Handle keystrokes
 
-	repeat_ctrled_key (ev_key: EV_KEY) is
+	repeat_ctrled_key (ev_key: EV_KEY)
 			-- Call `handle_extended_ctrled_key' if `continue_key_action' is True
 			-- else reset timer associated with key press handling.
 		do
@@ -513,7 +513,7 @@ feature {NONE} -- Handle keystrokes
 			end
 		end
 
-	repeat_extended_key (ev_key: EV_KEY) is
+	repeat_extended_key (ev_key: EV_KEY)
 			-- Call `handle_extended_key' if `continue_key_action' is True
 			-- else reset timer associated with key press handling.
 		do
@@ -535,7 +535,7 @@ feature {NONE} -- Handle keystrokes
 	continue_key_action: BOOLEAN
 			-- Continue the action associated with the key `key_pressed' ?
 
-	handle_extended_ctrled_key (ev_key: EV_KEY) is
+	handle_extended_ctrled_key (ev_key: EV_KEY)
  			-- Process the push on Ctrl + an extended key.
 		local
 			l_cursor: like cursor_type
@@ -595,7 +595,7 @@ feature {NONE} -- Handle keystrokes
 			end
 		end
 
-	handle_extended_key (ev_key: EV_KEY) is
+	handle_extended_key (ev_key: EV_KEY)
  			-- Process the push on an extended key.
 		local
 			other_keys: BOOLEAN
@@ -677,7 +677,7 @@ feature {NONE} -- Handle keystrokes
 
 feature {NONE} -- Cursor Management
 
-	cursor_width: INTEGER is 2
+	cursor_width: INTEGER = 2
 			-- Default width of cursor.
 
 	show_cursor: BOOLEAN
@@ -692,7 +692,7 @@ feature {NONE} -- Blink Cursor Management
 	let_blink: BOOLEAN
 			-- Should cursor be allowed to blink?
 
-	blink_interval: INTEGER is 500
+	blink_interval: INTEGER = 500
 			-- Interval in milliseconds between cursor blinks
 
 	blinking_timeout: EV_TIMEOUT
@@ -701,7 +701,7 @@ feature {NONE} -- Blink Cursor Management
 	internal_blink_delay_timeout: EV_TIMEOUT
 			-- Cached version of `blinking_timeout' do not use directly
 
-	blink_delay_timeout: EV_TIMEOUT is
+	blink_delay_timeout: EV_TIMEOUT
 			-- Timeout for controlling blinking cursor resuce (when `reset_blinking' is called)
 		do
 			Result := internal_blink_delay_timeout
@@ -715,13 +715,13 @@ feature {NONE} -- Blink Cursor Management
 			result_not_void: Result /= Void
 		end
 
-	on_blink_delay_timer is
+	on_blink_delay_timer
 			-- Called when `blink_deplay_timeout' times out.
 		do
 			let_blink := True
 		end
 
-	reset_blinking is
+	reset_blinking
 			-- Resets cursor blinking delay timer `blink_deplay_timeout' to temporarly stop blinking.
 		local
 			i: INTEGER
@@ -732,7 +732,7 @@ feature {NONE} -- Blink Cursor Management
 			blink_delay_timeout.set_interval (i)
 		end
 
-	suspend_cursor_blinking is
+	suspend_cursor_blinking
 			-- Suspends cursor blinking until `resume_cursor_blinking' is called.
 		do
 			if is_initialized and then not blink_suspended then
@@ -749,7 +749,7 @@ feature {NONE} -- Blink Cursor Management
 	blink_suspended: BOOLEAN
 			-- Has blinking been suspended?
 
-	resume_cursor_blinking is
+	resume_cursor_blinking
 			-- Resumes cursor blinking from a call to `suspend_cursor_blinking'
 		do
 			if is_initialized then
@@ -771,7 +771,7 @@ feature {NONE} -- Blink Cursor Management
 			not_blink_suspended: is_initialized implies not blink_suspended
 		end
 
-	basic_cursor_move (action: PROCEDURE[like cursor_type, TUPLE]) is
+	basic_cursor_move (action: PROCEDURE[like cursor_type, TUPLE])
 			-- Perform a basic cursor move such as go_left,
 			-- go_right, ... an example of agent `action' is
 			-- cursor~go_left_char
@@ -822,7 +822,7 @@ feature {NONE} -- Blink Cursor Management
 			end
 		end
 
-	invalidate_cursor_rect (flush_screen: BOOLEAN) is
+	invalidate_cursor_rect (flush_screen: BOOLEAN)
 			-- Set the line where the cursor is situated to be redrawn
 			-- Redraw immediately if `flush' is set.
 		do
@@ -831,7 +831,7 @@ feature {NONE} -- Blink Cursor Management
 			end
 		end
 
-	invalidate_selection_rect (flush_screen: BOOLEAN) is
+	invalidate_selection_rect (flush_screen: BOOLEAN)
 			-- Set lines of the selection be redrawn.
 			-- Redraw immediately if `flush_screen' is set.
 		local
@@ -844,7 +844,7 @@ feature {NONE} -- Blink Cursor Management
 			end
 		end
 
-	draw_cursor (media: EV_DRAWABLE; x, y, width: INTEGER) is
+	draw_cursor (media: EV_DRAWABLE; x, y, width: INTEGER)
 			-- Draw the cursor block defined by the rectangle associated with the current cursor at `y' and on `media'.
 		require
 			x_pos_valid: x >= 0
@@ -860,7 +860,7 @@ feature {NONE} -- Blink Cursor Management
 			internal_draw_cursor (media, x, y, width, line_height, show_cursor)
  		end
 
-	internal_draw_cursor (media: EV_DRAWABLE; x, y, width_cursor, ln_height: INTEGER; do_show: BOOLEAN) is
+	internal_draw_cursor (media: EV_DRAWABLE; x, y, width_cursor, ln_height: INTEGER; do_show: BOOLEAN)
 			-- Internal cursor drawing.  Draws cursor on `media' at position `x' and `y'.
 		require
 			x_pos_valid: x >= 0
@@ -890,7 +890,7 @@ feature {NONE} -- Blink Cursor Management
 			media.set_copy_mode
 		end
 
-	x_position_of_cursor (a_cursor: like cursor_type): INTEGER is
+	x_position_of_cursor (a_cursor: like cursor_type): INTEGER
 			-- Horizontal position in pixels of `a_cursor' in the panel.
 		require
 			cursor_is_not_void: a_cursor /= Void
@@ -917,31 +917,31 @@ feature {NONE} -- Blink Cursor Management
 
 feature {NONE} -- Implementation
 
-	shifted_key: BOOLEAN is
+	shifted_key: BOOLEAN
 			-- Is any of the shift key pushed?
 		do
 			Result := ev_application.shift_pressed
 		end
 
-	ctrled_key: BOOLEAN is
+	ctrled_key: BOOLEAN
 		-- Is any of the ctrl key pushed?
 		do
 			Result := ev_application.ctrl_pressed
 		end
 
-	alt_key: BOOLEAN is
+	alt_key: BOOLEAN
 		-- Is any of the alt key pushed?
 		do
 			Result := ev_application.alt_pressed
 		end
 
-	ignore_keyboard_input: BOOLEAN is
+	ignore_keyboard_input: BOOLEAN
 			-- Ignore keyboard events?
 		do
 			Result := text_displayed.is_empty or else ev_application.transport_in_progress
 		end
 
-	check_position (a_cursor: like cursor_type) is
+	check_position (a_cursor: like cursor_type)
 			-- Check if the current line is displayed and scroll the editor if necessary.
 		require
 			cursor_not_void: a_cursor /= Void
@@ -970,7 +970,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_line_to_buffered_line (xline: INTEGER; a_line: like line_type) is
+	draw_line_to_buffered_line (xline: INTEGER; a_line: like line_type)
  			-- Draw onto the buffered line the tokens in `a_line'.
 		local
  			cursor_line				: BOOLEAN -- Is the cursor present in the current line?
@@ -1148,7 +1148,7 @@ feature {NONE} -- Implementation
 
  		end
 
-	update_lines (first, last, x_offset, a_width: INTEGER; buffered: BOOLEAN) is
+	update_lines (first, last, x_offset, a_width: INTEGER; buffered: BOOLEAN)
 			-- Draw the lines `first' to `last' between `x_offset' and `a_width'.
 		local
  			curr_line,
@@ -1240,7 +1240,7 @@ feature {NONE} -- Implementation
  			updating_line := False
 		end
 
-	line_has_cursor_or_selection (a_line: INTEGER): BOOLEAN is
+	line_has_cursor_or_selection (a_line: INTEGER): BOOLEAN
 			-- Does `a_line' have either the cursor or some part of the text selected?
 		local
 			l_cursor: like cursor_type
@@ -1268,7 +1268,7 @@ feature -- Clipboard
 
 feature {NONE} -- Scroll bars management
 
-	on_vertical_scroll (vscroll_pos: INTEGER) is
+	on_vertical_scroll (vscroll_pos: INTEGER)
  			-- Process vertical scroll event. `vertical_scrollbar.value' has changed.
  		do
  			Precursor {TEXT_PANEL} (vscroll_pos)
@@ -1282,7 +1282,7 @@ feature {NONE} -- Scroll bars management
  			end
  		end
 
-	on_horizontal_scroll (scroll_pos: INTEGER) is
+	on_horizontal_scroll (scroll_pos: INTEGER)
  			-- Process horizontal scroll event. `horizontal_scrollbar.value' has changed.
  		do
  			Precursor {TEXT_PANEL} (scroll_pos)
@@ -1298,7 +1298,7 @@ feature {NONE} -- Scroll bars management
 
 feature {NONE} -- Memory Management
 
-	recycle is
+	recycle
 			-- Destroy `Current'.
 		do
 			Precursor {TEXT_PANEL}
@@ -1319,16 +1319,16 @@ feature {NONE} -- Memory Management
 
 feature {NONE} -- Private Constants
 
-	Token_not_selected	: INTEGER is 0
-	Token_selected		: INTEGER is 1
-	Token_half_selected	: INTEGER is 4;
+	Token_not_selected	: INTEGER = 0
+	Token_selected		: INTEGER = 1
+	Token_half_selected	: INTEGER = 4;
 
 invariant
 	stored_cursor_line_not_negative: stored_cursor_line >= 0
 	stored_cursor_char_not_negative: stored_cursor_char >= 0
 	stored_first_line_not_negative: stored_first_line >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

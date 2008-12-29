@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface for editor related icons"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,25 +10,25 @@ deferred class
 
 feature -- Cursor
 
-	header_left_scroll_pixmap: EV_PIXMAP is
+	header_left_scroll_pixmap: EV_PIXMAP
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	header_right_scroll_pixmap: EV_PIXMAP is
+	header_right_scroll_pixmap: EV_PIXMAP
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-	header_close_current_document_pixmap: EV_PIXMAP is
+	header_close_current_document_pixmap: EV_PIXMAP
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

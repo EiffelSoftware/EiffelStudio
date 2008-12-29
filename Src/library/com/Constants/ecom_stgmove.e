@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "SToraGe MOVE flags"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	Stgmove_move: INTEGER is
+	Stgmove_move: INTEGER
 			-- Carry out the move operation, as expected.
 		external
 			"C [macro <wtypes.h>]"
@@ -19,7 +19,7 @@ feature -- Access
 			"STGMOVE_MOVE"
 		end
 
-	Stgmove_copy: INTEGER is
+	Stgmove_copy: INTEGER
 			-- Carry out the first part of the move operation but do
 			-- not remove the original element.
 		external
@@ -28,14 +28,14 @@ feature -- Access
 			"STGMOVE_COPY"
 		end
 
-	is_valid_stgmove (stgmove: INTEGER): BOOLEAN is
+	is_valid_stgmove (stgmove: INTEGER): BOOLEAN
 			-- Is `stgmove' a valid storage move flag?
 		do
 			Result := stgmove = Stgmove_move or
 						stgmove = Stgmove_copy
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

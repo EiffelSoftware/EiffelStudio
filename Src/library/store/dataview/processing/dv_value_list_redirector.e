@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Redirect values to strings at fixed%
 			%list positions"
 	legal: "See notice at end of class."
@@ -14,13 +14,13 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create redirection_list.make (1)
 		end
 
-	add_value_redirector (redirector: DV_VALUE_REDIRECTOR; position: INTEGER) is
+	add_value_redirector (redirector: DV_VALUE_REDIRECTOR; position: INTEGER)
 			-- Add redirection `redirector' at `position' in the list.
 		require
 			not_void: redirector /= Void
@@ -35,7 +35,7 @@ feature -- Initialization
 
 feature -- Access
 
-	redirected_list: ARRAYED_LIST [STRING] is
+	redirected_list: ARRAYED_LIST [STRING]
 			-- Last list set with redirections performed.
 		require
 			list_set: list_set
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Status report
 
-	list_set: BOOLEAN is
+	list_set: BOOLEAN
 			-- Has a list been set?
 		do
 			Result := result_list /= Void
@@ -53,7 +53,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	redirect_list (list: ARRAYED_LIST [ANY]) is
+	redirect_list (list: ARRAYED_LIST [ANY])
 			-- Redirect defined values of `list'.
 			-- Values at redirection positions must be integer values.
 		require
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 	result_list: ARRAYED_LIST [STRING];
 			-- Last list set with redirections performed (implementation).
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

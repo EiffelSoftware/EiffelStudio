@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class."; 
 	date: "$Date$"; 
 	revision: "$Revision$" 
@@ -11,7 +11,7 @@ inherit
 
 feature -- Implementation
 
-	add_main_window (tw: TOP_IMP) is
+	add_main_window (tw: TOP_IMP)
 			-- Add `tw' to the list of main windows.
 		do
 			if main_windows.is_empty then
@@ -22,7 +22,7 @@ feature -- Implementation
 			end
 		end
 
-	set_main_window is
+	set_main_window
 			-- Set the main window for the application
 		require
 			main_window_exists: main_window /= Void
@@ -32,7 +32,7 @@ feature -- Implementation
 			main_window_set: main_window /= Void
 		end
 
-	main_window: TOP_IMP is
+	main_window: TOP_IMP
 			-- The main window of the application
 		require else
 			no_precondition: true
@@ -42,7 +42,7 @@ feature -- Implementation
 			end
 		end
 
-	main_windows: LINKED_LIST [TOP_IMP] is
+	main_windows: LINKED_LIST [TOP_IMP]
 			-- Storage for the main window
 		once
 			create Result.make
@@ -50,7 +50,7 @@ feature -- Implementation
 			result_exists: Result /= Void
 		end
 
-	remove_main_window (tw: TOP_IMP) is
+	remove_main_window (tw: TOP_IMP)
 			-- Remove `tw' from the main windows list
 		do
 			if main_windows.count /= 1 then
@@ -66,7 +66,7 @@ feature -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Event mask constants used when adding event handlers.."
 	legal: "See notice at end of class.";
@@ -11,189 +11,189 @@ class
 
 feature -- Event types
 
-	NoEventMask: INTEGER is
+	NoEventMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"NoEventMask"
 		end;
 
-	KeyPressMask: INTEGER is
+	KeyPressMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"KeyPressMask"
 		end;
 
-	KeyReleaseMask: INTEGER is
+	KeyReleaseMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"KeyReleaseMask"
 		end;
 
-	ButtonPressMask: INTEGER is
+	ButtonPressMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ButtonPressMask"
 		end;
 
-	ButtonReleaseMask: INTEGER is
+	ButtonReleaseMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ButtonReleaseMask"
 		end;
 
-	EnterWindowMask: INTEGER is
+	EnterWindowMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"EnterWindowMask"
 		end;
 
-	LeaveWindowMask: INTEGER is
+	LeaveWindowMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"LeaveWindowMask"
 		end;
 
-	PointerMotionMask: INTEGER is
+	PointerMotionMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"PointerMotionMask"
 		end;
 
-	PointerMotionHintMask: INTEGER is
+	PointerMotionHintMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"PointerMotionHintMask"
 		end;
 
-	Button1MotionMask: INTEGER is
+	Button1MotionMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"Button1MotionMask"
 		end;
 
-	Button2MotionMask: INTEGER is
+	Button2MotionMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"Button2MotionMask"
 		end;
 
-	Button3MotionMask: INTEGER is
+	Button3MotionMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"Button3MotionMask"
 		end;
 
-	Button4MotionMask: INTEGER is
+	Button4MotionMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"Button4MotionMask"
 		end;
 
-	Button5MotionMask: INTEGER is
+	Button5MotionMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"Button5MotionMask"
 		end;
 
-	ButtonMotionMask: INTEGER is
+	ButtonMotionMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ButtonMotionMask"
 		end;
 
-	KeymapStateMask: INTEGER is
+	KeymapStateMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"KeymapStateMask"
 		end;
 
-	ExposureMask: INTEGER is
+	ExposureMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ExposureMask"
 		end;
 
-	VisibilityChangeMask: INTEGER is
+	VisibilityChangeMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"VisibilityChangeMask"
 		end;
 
-	StructureNotifyMask: INTEGER is
+	StructureNotifyMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"StructureNotifyMask"
 		end;
 
-	ResizeRedirectMask: INTEGER is
+	ResizeRedirectMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ResizeRedirectMask"
 		end;
 
-	SubstructureNotifyMask: INTEGER is
+	SubstructureNotifyMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"SubstructureNotifyMask"
 		end;
 
-	SubstructureRedirectMask: INTEGER is
+	SubstructureRedirectMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"SubstructureRedirectMask"
 		end;
 
-	FocusChangeMask: INTEGER is
+	FocusChangeMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"FocusChangeMask"
 		end;
 
-	PropertyChangeMask: INTEGER is
+	PropertyChangeMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"PropertyChangeMask"
 		end;
 
-	ColormapChangeMask: INTEGER is
+	ColormapChangeMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ColormapChangeMask"
 		end;
 
-	OwnerGrabButtonMask: INTEGER is
+	OwnerGrabButtonMask: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"OwnerGrabButtonMask"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,35 +12,35 @@ inherit
 
 feature -- Status Report
 
-	get_rect_user_precondition (dw_aspect: INTEGER; p_rect: X_RECTL_RECORD): BOOLEAN is
+	get_rect_user_precondition (dw_aspect: INTEGER; p_rect: X_RECTL_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_rect'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_view_status_user_precondition (pdw_status: INTEGER_REF): BOOLEAN is
+	get_view_status_user_precondition (pdw_status: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `get_view_status'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	query_hit_point_user_precondition (dw_aspect: INTEGER; p_rect_bounds: TAG_RECT_RECORD; ptl_loc: TAG_POINT_RECORD; l_close_hint: INTEGER; p_hit_result: INTEGER_REF): BOOLEAN is
+	query_hit_point_user_precondition (dw_aspect: INTEGER; p_rect_bounds: TAG_RECT_RECORD; ptl_loc: TAG_POINT_RECORD; l_close_hint: INTEGER; p_hit_result: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `query_hit_point'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	query_hit_rect_user_precondition (dw_aspect: INTEGER; p_rect_bounds: TAG_RECT_RECORD; p_rect_loc: TAG_RECT_RECORD; l_close_hint: INTEGER; p_hit_result: INTEGER_REF): BOOLEAN is
+	query_hit_rect_user_precondition (dw_aspect: INTEGER; p_rect_bounds: TAG_RECT_RECORD; p_rect_loc: TAG_RECT_RECORD; l_close_hint: INTEGER; p_hit_result: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `query_hit_rect'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_natural_extent_user_precondition (dw_aspect: INTEGER; lindex: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: POINTER; p_extent_info: TAG_EXTENT_INFO_RECORD; psizel: TAG_SIZEL_RECORD): BOOLEAN is
+	get_natural_extent_user_precondition (dw_aspect: INTEGER; lindex: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: POINTER; p_extent_info: TAG_EXTENT_INFO_RECORD; psizel: TAG_SIZEL_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_natural_extent'.
 			-- Redefine in descendants if needed.
 		do
@@ -49,7 +49,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	get_rect (dw_aspect: INTEGER; p_rect: X_RECTL_RECORD) is
+	get_rect (dw_aspect: INTEGER; p_rect: X_RECTL_RECORD)
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `p_rect' [out].  
@@ -61,7 +61,7 @@ feature -- Basic Operations
 
 		end
 
-	get_view_status (pdw_status: INTEGER_REF) is
+	get_view_status (pdw_status: INTEGER_REF)
 			-- No description available.
 			-- `pdw_status' [out].  
 		require
@@ -71,7 +71,7 @@ feature -- Basic Operations
 
 		end
 
-	query_hit_point (dw_aspect: INTEGER; p_rect_bounds: TAG_RECT_RECORD; ptl_loc: TAG_POINT_RECORD; l_close_hint: INTEGER; p_hit_result: INTEGER_REF) is
+	query_hit_point (dw_aspect: INTEGER; p_rect_bounds: TAG_RECT_RECORD; ptl_loc: TAG_POINT_RECORD; l_close_hint: INTEGER; p_hit_result: INTEGER_REF)
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `p_rect_bounds' [in].  
@@ -89,7 +89,7 @@ feature -- Basic Operations
 
 		end
 
-	query_hit_rect (dw_aspect: INTEGER; p_rect_bounds: TAG_RECT_RECORD; p_rect_loc: TAG_RECT_RECORD; l_close_hint: INTEGER; p_hit_result: INTEGER_REF) is
+	query_hit_rect (dw_aspect: INTEGER; p_rect_bounds: TAG_RECT_RECORD; p_rect_loc: TAG_RECT_RECORD; l_close_hint: INTEGER; p_hit_result: INTEGER_REF)
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `p_rect_bounds' [in].  
@@ -107,7 +107,7 @@ feature -- Basic Operations
 
 		end
 
-	get_natural_extent (dw_aspect: INTEGER; lindex: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: POINTER; p_extent_info: TAG_EXTENT_INFO_RECORD; psizel: TAG_SIZEL_RECORD) is
+	get_natural_extent (dw_aspect: INTEGER; lindex: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: POINTER; p_extent_info: TAG_EXTENT_INFO_RECORD; psizel: TAG_SIZEL_RECORD)
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `lindex' [in].  
@@ -127,7 +127,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

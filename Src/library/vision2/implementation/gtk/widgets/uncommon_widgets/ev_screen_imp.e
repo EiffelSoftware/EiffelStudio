@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision screen. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -31,13 +31,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create an empty drawing area.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Set up action sequence connections and create graphics context.
 		do
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	pointer_position: EV_COORDINATE is
+	pointer_position: EV_COORDINATE
 			-- Position of the screen pointer.
 		local
 			l_display_data: TUPLE [a_window: POINTER; a_x: INTEGER; a_y: INTEGER; a_mask: NATURAL_32]
@@ -57,7 +57,7 @@ feature -- Status report
 			create Result.set (l_display_data.a_x, l_display_data.a_y)
 		end
 
-	widget_at_position (x, y: INTEGER): EV_WIDGET is
+	widget_at_position (x, y: INTEGER): EV_WIDGET
 			-- Widget at position ('x', 'y') if any.
 		local
 			l_pointer_position: like pointer_position
@@ -79,7 +79,7 @@ feature -- Status report
 			end
 		end
 
-	widget_at_mouse_pointer: EV_WIDGET is
+	widget_at_mouse_pointer: EV_WIDGET
 			-- Widget at mouse pointer if any.
 		local
 			l_widget_imp: EV_WIDGET_IMP
@@ -90,7 +90,7 @@ feature -- Status report
 			end
 		end
 
-	widget_imp_at_pointer_position: EV_WIDGET_IMP is
+	widget_imp_at_pointer_position: EV_WIDGET_IMP
 			-- Widget implementation at current mouse pointer position (if any)
 		local
 			a_x, a_y: INTEGER
@@ -111,7 +111,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_default_colors is
+	set_default_colors
 			-- Set foreground and background color to their default values.
 		local
 			a_default_colors: EV_STOCK_COLORS
@@ -123,14 +123,14 @@ feature -- Status setting
 
 feature -- Basic operation
 
-	redraw is
+	redraw
 			-- Redraw the entire area.
 		do
 			{EV_GTK_EXTERNALS}.gdk_window_invalidate_rect (drawable, default_pointer, True)
 			{EV_GTK_EXTERNALS}.gdk_window_process_updates (drawable, True)
 		end
 
-	x_test_capable: BOOLEAN is
+	x_test_capable: BOOLEAN
 			-- Is current display capable of performing x tests.
 		local
 			a_event_base, a_error_base, a_maj_ver, a_min_ver: INTEGER
@@ -144,7 +144,7 @@ feature -- Basic operation
 
 		end
 
-	set_pointer_position (a_x, a_y: INTEGER) is
+	set_pointer_position (a_x, a_y: INTEGER)
 			-- Set pointer position to (a_x, a_y).
 		local
 			a_success_flag: BOOLEAN
@@ -158,7 +158,7 @@ feature -- Basic operation
 			end
 		end
 
-	fake_pointer_button_press (a_button: INTEGER) is
+	fake_pointer_button_press (a_button: INTEGER)
 			-- Fake button `a_button' press on pointer.
 		local
 			a_success_flag: BOOLEAN
@@ -172,7 +172,7 @@ feature -- Basic operation
 			end
 		end
 
-	fake_pointer_button_release (a_button: INTEGER) is
+	fake_pointer_button_release (a_button: INTEGER)
 			-- Fake button `a_button' release on pointer.
 		local
 			a_success_flag: BOOLEAN
@@ -186,21 +186,21 @@ feature -- Basic operation
 			end
 		end
 
-	fake_pointer_wheel_up is
+	fake_pointer_wheel_up
 			-- Simulate the user rotating the mouse wheel up.
 		do
 				--| Mouse pointer button number 4 relates to mouse wheel up
 			fake_pointer_button_press (4)
 		end
 
-	fake_pointer_wheel_down is
+	fake_pointer_wheel_down
 			-- Simulate the user rotating the mouse wheel down.
 		do
 				--| Mouse pointer button number 5 relates to mouse wheel up
 			fake_pointer_button_press (5)
 		end
 
-	fake_key_press (a_key: EV_KEY) is
+	fake_key_press (a_key: EV_KEY)
 			-- Fake key `a_key' press.
 		local
 			a_success_flag: BOOLEAN
@@ -217,7 +217,7 @@ feature -- Basic operation
 			end
 		end
 
-	fake_key_release (a_key: EV_KEY) is
+	fake_key_release (a_key: EV_KEY)
 			-- Fake key `a_key' release.
 		local
 			a_success_flag: BOOLEAN
@@ -239,7 +239,7 @@ feature -- Basic operation
 			end
 		end
 
-	key_conversion: EV_GTK_KEY_CONVERSION is
+	key_conversion: EV_GTK_KEY_CONVERSION
 			-- Utilities for converting X key codes.
 		once
 			create Result
@@ -247,25 +247,25 @@ feature -- Basic operation
 
 feature -- Measurement
 
-	horizontal_resolution: INTEGER is
+	horizontal_resolution: INTEGER
 			-- Number of pixels per inch along horizontal axis
 		do
 			Result := horizontal_resolution_internal
 		end
 
-	vertical_resolution: INTEGER is
+	vertical_resolution: INTEGER
 			-- Number of pixels per inch along vertical axis
 		do
 			Result := vertical_resolution_internal
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size in pixels.
 		do
 			Result := {EV_GTK_EXTERNALS}.gdk_screen_height
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size in pixels.
 		do
 			Result := {EV_GTK_EXTERNALS}.gdk_screen_width
@@ -273,35 +273,35 @@ feature -- Measurement
 
 feature {NONE} -- Externals (XTEST extension)
 
-	frozen x_keysym_to_keycode (a_display: POINTER; a_keycode: INTEGER): INTEGER is
+	frozen x_keysym_to_keycode (a_display: POINTER; a_keycode: INTEGER): INTEGER
 		external
 			"C: EIF_INTEGER| <X11/Xlib.h>"
 		alias
 			"XKeysymToKeycode"
 		end
 
-	frozen x_test_fake_button_event (a_display: POINTER; a_button: INTEGER; a_is_press: BOOLEAN; a_delay: INTEGER): BOOLEAN is
+	frozen x_test_fake_button_event (a_display: POINTER; a_button: INTEGER; a_is_press: BOOLEAN; a_delay: INTEGER): BOOLEAN
 		external
 			"C: EIF_BOOL| <X11/extensions/XTest.h>"
 		alias
 			"XTestFakeButtonEvent"
 		end
 
-	frozen x_test_fake_key_event (a_display: POINTER; a_keycode: INTEGER; a_is_press: BOOLEAN; a_delay: INTEGER): BOOLEAN is
+	frozen x_test_fake_key_event (a_display: POINTER; a_keycode: INTEGER; a_is_press: BOOLEAN; a_delay: INTEGER): BOOLEAN
 		external
 			"C: EIF_BOOL| <X11/extensions/XTest.h>"
 		alias
 			"XTestFakeKeyEvent"
 		end
 
-	frozen x_test_fake_motion_event (a_display: POINTER; a_scr_num, a_x, a_y, a_delay: INTEGER): BOOLEAN is
+	frozen x_test_fake_motion_event (a_display: POINTER; a_scr_num, a_x, a_y, a_delay: INTEGER): BOOLEAN
 		external
 			"C: EIF_BOOL| <X11/extensions/XTest.h>"
 		alias
 			"XTestFakeMotionEvent"
 		end
 
-	frozen x_test_query_extension (a_display, a_event_base, a_error_base, a_major_version, a_minor_version: POINTER): BOOLEAN is
+	frozen x_test_query_extension (a_display, a_event_base, a_error_base, a_major_version, a_minor_version: POINTER): BOOLEAN
 		external
 			"C: EIF_BOOL| <X11/extensions/XTest.h>"
 		alias
@@ -310,31 +310,31 @@ feature {NONE} -- Externals (XTEST extension)
 
 feature {NONE} -- Implementation
 
-	app_implementation: EV_APPLICATION_IMP is
+	app_implementation: EV_APPLICATION_IMP
 			-- Return the instance of EV_APPLICATION_IMP.
 		once
 			Result ?= (create {EV_ENVIRONMENT}).application.implementation
 		end
 
-	flush is
+	flush
 			-- Force all queued draw to be called.
 		do
 			-- By default do nothing
 		end
 
-	update_if_needed is
+	update_if_needed
 			-- Update `Current' if needed
 		do
 			-- By default do nothing
 		end
 
-	destroy is
+	destroy
 		do
 			{EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
 			set_is_destroyed (True)
 		end
 
-	dispose is
+	dispose
 			-- Cleanup
 		do
 			if gc /= default_pointer then
@@ -343,13 +343,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	drawable: POINTER is
+	drawable: POINTER
 			-- Pointer to the screen (root window)
 		do
 			Result := {EV_GTK_EXTERNALS}.gdk_root_parent
 		end
 
-	mask: POINTER is
+	mask: POINTER
 			-- Mask of `Current', which is always NULL
 		do
 			-- Not applicable to screen
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_SCREEN;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

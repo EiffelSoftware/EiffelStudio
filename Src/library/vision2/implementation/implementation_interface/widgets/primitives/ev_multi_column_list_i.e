@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision multi column list. Implementation interface."
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature {EV_ANY} -- Initialization
 
-	initialize is
+	initialize
 		do
 				-- Set default width & height for the pixmaps
 			initialize_pixmaps
@@ -41,41 +41,41 @@ feature {EV_ANY} -- Initialization
 
 feature -- Access
 
-	column_count: INTEGER is
+	column_count: INTEGER
 			-- Column count.
 		deferred
 		end
 
-	selected_item: EV_MULTI_COLUMN_LIST_ROW is
+	selected_item: EV_MULTI_COLUMN_LIST_ROW
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 			-- (For multiple selections see `selected_items')
 		deferred
 		end
 
-	selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW] is
+	selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			-- Currently selected items.
 		deferred
 		end
 
-	row_height: INTEGER is
+	row_height: INTEGER
 			-- Height in pixels of each row.
 		deferred
 		end
 
 feature -- Status report
 
-	multiple_selection_enabled: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN
 			-- Can more that one item be selected?
 		deferred
 		end
 
-	title_shown: BOOLEAN is
+	title_shown: BOOLEAN
 			-- Is a row displaying column titles shown?
 		deferred
 		end
 
-	column_title (a_column: INTEGER): STRING_32 is
+	column_title (a_column: INTEGER): STRING_32
 			-- Title of `a_column'.
 		require
 			a_column_positive: a_column > 0
@@ -89,7 +89,7 @@ feature -- Status report
 			column_title_not_void: Result /= Void
 		end
 
-	column_width (a_column: INTEGER): INTEGER is
+	column_width (a_column: INTEGER): INTEGER
 			-- Width of `a_column' in pixels.
 		require
 			a_column_positive: a_column > 0
@@ -101,7 +101,7 @@ feature -- Status report
 			end
 		end
 
-	column_alignment (a_column: INTEGER): EV_TEXT_ALIGNMENT is
+	column_alignment (a_column: INTEGER): EV_TEXT_ALIGNMENT
 			-- `Result' is alignment of column `a_column'.
 		require
 			a_column_positive: a_column > 0
@@ -125,12 +125,12 @@ feature -- Status report
 
 feature {EV_ANY, EV_ANY_I} -- Status setting
 
-	ensure_item_visible (an_item: EV_MULTI_COLUMN_LIST_ROW) is
+	ensure_item_visible (an_item: EV_MULTI_COLUMN_LIST_ROW)
 			-- Ensure `an_item' is visible in `Current'.
 		deferred
 		end
 
-	select_item (an_index: INTEGER) is
+	select_item (an_index: INTEGER)
 			-- Select item at `an_index'.
 		require
 			an_index_within_range: an_index > 0 and an_index <= count
@@ -140,7 +140,7 @@ feature {EV_ANY, EV_ANY_I} -- Status setting
 				selected_items.has (interface.i_th (an_index))
 		end
 
-	deselect_item (an_index: INTEGER) is
+	deselect_item (an_index: INTEGER)
 			-- Deselect item at `an_index'.
 		require
 			an_index_within_range: an_index > 0 and an_index <= count
@@ -150,40 +150,40 @@ feature {EV_ANY, EV_ANY_I} -- Status setting
 				not selected_items.has (interface.i_th (an_index))
 		end
 
-	clear_selection is
+	clear_selection
 			-- Make `selected_items' empty.
 		deferred
 		ensure
 			selected_items_empty: selected_items.is_empty
 		end
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Allow more than one item to be selected.
 		deferred
 		ensure
 			multiple_selection_enabled: multiple_selection_enabled
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Allow only one item to be selected.
 		deferred
 		ensure
 			not_multiple_selection_enabled: not multiple_selection_enabled
 		end
 
-	show_title_row is
+	show_title_row
 			-- Show row displaying column titles.
 		deferred
 		ensure
 			title_shown: title_shown
 		end
 
-	hide_title_row is
+	hide_title_row
 			-- Hide the row of the titles.
 		deferred
 		end
 
-	align_text_left (a_column: INTEGER) is
+	align_text_left (a_column: INTEGER)
 			-- Display text of `a_column' left aligned.
 			-- First column is always left aligned.
 		require
@@ -195,7 +195,7 @@ feature {EV_ANY, EV_ANY_I} -- Status setting
 			set_column_alignment (an_alignment, a_column)
 		end
 
-	align_text_center (a_column: INTEGER) is
+	align_text_center (a_column: INTEGER)
 			-- Display text of `a_column' centered.
 			-- First column is always left aligned.
 		require
@@ -208,7 +208,7 @@ feature {EV_ANY, EV_ANY_I} -- Status setting
 		end
 
 
-	align_text_right (a_column: INTEGER) is
+	align_text_right (a_column: INTEGER)
 			-- Display text of `a_column' right aligned.
 			-- First column is always left aligned.
 		require
@@ -222,7 +222,7 @@ feature {EV_ANY, EV_ANY_I} -- Status setting
 
 feature {EV_ANY, EV_ANY_I}-- Element change
 
-	set_column_title (a_title: STRING_GENERAL; a_column: INTEGER) is
+	set_column_title (a_title: STRING_GENERAL; a_column: INTEGER)
 			-- Assign `a_title' to the `column_title'(`a_column').
 		require
 			a_column_positive: a_column > 0
@@ -248,7 +248,7 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 			a_title_assigned: column_title (a_column).is_equal (a_title)
 		end
 
-	set_column_titles (titles: ARRAY [STRING_GENERAL]) is
+	set_column_titles (titles: ARRAY [STRING_GENERAL])
 			-- Assign `titles' to titles of columns in order.
 		require
 			titles_not_void: titles /= Void
@@ -282,7 +282,7 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 
 		end
 
-	set_column_width (a_width: INTEGER; a_column: INTEGER) is
+	set_column_width (a_width: INTEGER; a_column: INTEGER)
 			-- Assign `a_width' `column_width'(`a_column').
 		require
 			a_column_within_range: a_column > 0 and a_column <= column_count
@@ -294,14 +294,14 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 			a_width_assigned: a_width = column_width (a_column)
 		end
 
-	resize_column_to_content (a_column: INTEGER) is
+	resize_column_to_content (a_column: INTEGER)
 			-- Resize column `a_column' to width of its widest text.
 		require
 			a_column_within_range: a_column > 0 and a_column <= column_count
 		deferred
 		end
 
-	set_column_widths (widths: ARRAY [INTEGER]) is
+	set_column_widths (widths: ARRAY [INTEGER])
 			-- Assign `widths' to column widths in order.
 		require
 			widths_not_void: widths /= Void
@@ -331,7 +331,7 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 			end
 		end
 
-	set_column_alignments (alignments: LINKED_LIST [EV_TEXT_ALIGNMENT]) is
+	set_column_alignments (alignments: LINKED_LIST [EV_TEXT_ALIGNMENT])
 			-- Assign `alignments' to column text alignments in order.
 		require
 			alignments_not_void: alignments /= Void
@@ -365,7 +365,7 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 			end
 		end
 
-	set_column_alignment (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
+	set_column_alignment (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER)
 			-- Assign text alignment to `an_alignment' for
 			-- column `a_column'.
 		require
@@ -389,14 +389,14 @@ feature {EV_ANY, EV_ANY_I}-- Element change
 
 feature {EV_ANY_I} -- Implementation
 
-	expand_column_count_to (a_columns: INTEGER) is
+	expand_column_count_to (a_columns: INTEGER)
 			-- Expand the number of columns in the list to `a_columns'.
 		require
 			expandable: a_columns > column_count
 		deferred
 		end
 
-	update_column_width (a_width: INTEGER; a_column: INTEGER) is
+	update_column_width (a_width: INTEGER; a_column: INTEGER)
 			-- Assign `a_width' `column_width'(`a_column').
 		require
 			a_column_within_range: a_column > 0 and a_column <= column_count
@@ -418,7 +418,7 @@ feature {EV_ANY_I} -- Implementation
 			a_width_assigned: a_width = column_width (a_column)
 		end
 
-	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING_GENERAL) is
+	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING_GENERAL)
 			-- Set the label of the cell with coordinates `a_column',
 			-- `a_row' with `a_text'.
 		require
@@ -430,7 +430,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
+	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		require
 			a_row_positive: a_row > 0
@@ -439,7 +439,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	remove_row_pixmap (a_row: INTEGER) is
+	remove_row_pixmap (a_row: INTEGER)
 			-- Remove any pixmap associated with row `a_row'.
 		require
 			a_row_positive: a_row > 0
@@ -448,7 +448,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Do nothing by default
 		end
 
-	column_title_changed (a_title: STRING_GENERAL; a_column: INTEGER) is
+	column_title_changed (a_title: STRING_GENERAL; a_column: INTEGER)
 			-- Replace title of `a_column' with `a_title' if column present.
 			-- If `a_title' is Void, remove it.
 			-- Called when a title has been altered.
@@ -457,7 +457,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	column_width_changed (a_width, a_column: INTEGER) is
+	column_width_changed (a_width, a_column: INTEGER)
 			-- Replace width of `a_column' with `a_width' if column present.
 			-- Called when a column width has been changed.
 		require
@@ -466,7 +466,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
+	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER)
 			-- Set alignment of `a_column' to
 			-- corresponding `alignment_code'.
 			-- Called when an alignment has been changed.
@@ -504,12 +504,12 @@ feature {EV_ANY_I} -- Implementation
 			-- `set_column_alignments'
 			--  and `set_column_alignment'.
 
-	Default_column_width: INTEGER is 80
+	Default_column_width: INTEGER = 80
 
 invariant
 	ev_children_not_void: ev_children /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

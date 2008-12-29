@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision popup window, implementation interface "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	disconnect_from_window_manager is
+	disconnect_from_window_manager
 			-- Show popup window disconnected from Window manager.
 			-- By default when shown the window will have full capture
 			-- and be setup so that clicking on an area outside the window
@@ -35,7 +35,7 @@ feature -- Status Setting
 			is_disconnected_from_window_manager := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Results of test cases"
 	legal: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create result.
 		do
 			create current_record.make
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	failure_reason (n: INTEGER): STRING is
+	failure_reason (n: INTEGER): STRING
 			-- Failure reason of assertion `n'
 		require
 			valid_assertion_number: valid_assertion_index (n)
@@ -58,7 +58,7 @@ feature -- Access
 			non_empty_reason: Result /= Void and then not Result.is_empty
 		end
 
-	exception_info (n: INTEGER): EXCEPTION_INFO is
+	exception_info (n: INTEGER): EXCEPTION_INFO
 			-- Exception info of assertion `n'
 		require
 			valid_assertion_number: valid_assertion_index (n)
@@ -70,7 +70,7 @@ feature -- Access
 			complete_info: Result /= Void and then Result.complete
 		end
 
-	execution_time: DOUBLE is
+	execution_time: DOUBLE
 			-- Execution time of selected run
 		require
 			time_recorded: has_execution_time
@@ -89,7 +89,7 @@ feature -- Measurement
 	exceptions: INTEGER
 			-- Number of thrown exceptions
 			
-	assertions: INTEGER is
+	assertions: INTEGER
 			-- Number of recorded assertions in selected run
 		require
 			results_available: has_results
@@ -99,19 +99,19 @@ feature -- Measurement
 		
 feature -- Status report
 
-	has_current_result: BOOLEAN is
+	has_current_result: BOOLEAN
 			-- Has a current result been recorded?
 		do
 			Result := not current_record.is_empty
 		end
 
-	all_tests_passed: BOOLEAN is
+	all_tests_passed: BOOLEAN
 			-- Did all tests pass?
 		do
 			Result := (has_results and failed_tests = 0)
 		end
 
-	has_any_execution_time: BOOLEAN is
+	has_any_execution_time: BOOLEAN
 			-- Has any run an execution time recorded?
 		local
 			old_run: INTEGER
@@ -130,25 +130,25 @@ feature -- Status report
 			select_run (run)
 		end
 
-	has_passed: BOOLEAN is
+	has_passed: BOOLEAN
 			-- Has selected run passed?
 		do
 			Result := i_th (run).passed
 		end
 
-	has_execution_time: BOOLEAN is
+	has_execution_time: BOOLEAN
 			-- Has execution time been recorded?
 		do
 			Result := i_th (run).has_execution_time
 		end
 
-	is_exception: BOOLEAN is
+	is_exception: BOOLEAN
 			-- Has selected run thrown an exception?
 		do
 			Result := i_th (run).is_exception
 		end
 
-	has_current_passed: BOOLEAN is
+	has_current_passed: BOOLEAN
 			-- Has currently recorded test passed (so far)?
 		require
 			recording: has_current_result
@@ -156,7 +156,7 @@ feature -- Status report
 			Result := current_record.passed
 		end
 
-	is_current_exception: BOOLEAN is
+	is_current_exception: BOOLEAN
 			-- Did currently recorded test throw an exception (yet)?
 		require
 			recording: has_current_result
@@ -164,7 +164,7 @@ feature -- Status report
 			Result := current_record.is_exception
 		end
 
-	is_assertion_pass (n: INTEGER): BOOLEAN is
+	is_assertion_pass (n: INTEGER): BOOLEAN
 			-- Is assertion `n' of selected run a pass?
 		require
 			results_available: has_results
@@ -173,7 +173,7 @@ feature -- Status report
 			Result := i_th (run).is_assertion_pass (n)
 		end
 
-	is_assertion_exception (n: INTEGER): BOOLEAN is
+	is_assertion_exception (n: INTEGER): BOOLEAN
 			-- Is assertion `n' of selected run a pass?
 		require
 			results_available: has_results
@@ -182,19 +182,19 @@ feature -- Status report
 			Result := i_th (run).is_assertion_exception (n)
 		end
 
-	insertable (v: like current_record): BOOLEAN is
+	insertable (v: like current_record): BOOLEAN
 			-- Can `v' be inserted?
 		do
 			Result := True
 		end
 
-	has_results: BOOLEAN is
+	has_results: BOOLEAN
 			-- Are there test results available?
 		do
 			Result := not is_empty
 		end
 
-	valid_assertion_index (n: INTEGER): BOOLEAN is
+	valid_assertion_index (n: INTEGER): BOOLEAN
 			-- Is assertion index `n' valid?
 		require
 			not_empty: has_results
@@ -206,7 +206,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_pass is
+	add_pass
 			-- Add pass.
 		local
 			a: ASSERTION_RESULT
@@ -220,7 +220,7 @@ feature -- Element change
 					(current_record.passed = old current_record.passed)
 		end
 
-	add_failure (reason: STRING) is
+	add_failure (reason: STRING)
 			-- Add failure with `reason'.
 		require
 			non_empty_reason: reason /= Void and then not reason.is_empty
@@ -236,7 +236,7 @@ feature -- Element change
 				current_record.is_exception)
 		end
 
-	add_exception (ex: EXCEPTION_INFO) is
+	add_exception (ex: EXCEPTION_INFO)
 			-- Add exception `ex'.
 		require
 			exception_exists: ex /= Void
@@ -250,7 +250,7 @@ feature -- Element change
 			is_exception: current_record.is_exception
 		end
 
-	set_execution_time (t: TIME_DURATION) is
+	set_execution_time (t: TIME_DURATION)
 			-- Set execution time to `t'.
 		do
 			current_record.set_execution_time (t)
@@ -260,7 +260,7 @@ feature -- Element change
 
 feature -- Element change
 
-	finish_recording is
+	finish_recording
 			-- Store record and start new record.
 		require
 			current_result_available: has_current_result
@@ -291,7 +291,7 @@ feature -- Element change
 
 feature -- Removal
 	
-	clear_results is
+	clear_results
 			-- Clear test results.
 		do
 			make
@@ -302,7 +302,7 @@ feature -- Removal
 			nothing_recorded: not has_current_result
 		end
 
-	clear_current_result is
+	clear_current_result
 			-- Clear current result record.
 		do
 			create current_record.make
@@ -323,7 +323,7 @@ invariant
 	valid_run_index: has_results implies valid_run_index (run)
 	result_counting_consistent: run_count = count
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

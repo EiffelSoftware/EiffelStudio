@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Unmanaged MEL_FILE_SELECTION_BOX as a child of a MEL_DIALOG_SHELL."
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE)
 			-- Create file selection dialog.
 		require
 			name_exists: a_name /= Void
@@ -55,7 +55,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	created_dialog_automatically: BOOLEAN is
+	created_dialog_automatically: BOOLEAN
 			-- Was the dialog shell created automatically?
 		do
 			Result := True
@@ -63,14 +63,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	xm_create_file_selection_dialog (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_file_selection_dialog (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 	   external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/FileSB.h>"
 		alias
 			"XmCreateFileSelectionDialog"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

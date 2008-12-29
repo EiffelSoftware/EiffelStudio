@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Draw half-tone lines (include rectangles) on windows."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			create internal_shared
@@ -22,7 +22,7 @@ feature {NONE}  -- Initlization
 
 feature -- Command
 
-	draw_line_area (a_start_x, a_start_y, a_width, a_height: INTEGER) is
+	draw_line_area (a_start_x, a_start_y, a_width, a_height: INTEGER)
 			-- Draw a half-tone line on screen.
 		local
 			l_dc: WEL_SCREEN_DC
@@ -41,7 +41,7 @@ feature -- Command
 			l_dc.dispose
 		end
 
-	draw_rectangle (left, top, width, height, line_width: INTEGER) is
+	draw_rectangle (left, top, width, height, line_width: INTEGER)
 			-- Draw a rectangle on screen which center is blank.
 		require
 			line_width_valid: line_width > 0
@@ -60,7 +60,7 @@ feature -- Command
 			draw_rectangle_internal (left, top, width, height, line_width)
 		end
 
-	reset_feedback_clearing is
+	reset_feedback_clearing
 			-- Redefine
 		do
 			if internal_last_feedback_top /= 0 and internal_last_feedback_left /=0
@@ -73,7 +73,7 @@ feature -- Command
 			end
 		end
 
-	reset_screen is
+	reset_screen
 			-- Because dc will change between user using Remote Desktop and normal video card.
 			-- So we need to recreate `internal_screen' to make sure line can be drawn.
 		do
@@ -82,7 +82,7 @@ feature -- Command
 
 feature -- Query
 
-	screen: EV_SCREEN is
+	screen: EV_SCREEN
 			-- Screen to draw.
 		do
 			Result := internal_screen
@@ -92,7 +92,7 @@ feature -- Query
 
 feature {NONE} -- Implementation for draw_rectangle
 
-	draw_rectangle_internal_top (a_start_x, a_start_y, a_width, a_height: INTEGER) is
+	draw_rectangle_internal_top (a_start_x, a_start_y, a_width, a_height: INTEGER)
 			-- Draw a vertical line on the screen.
 		do
 			if last_half_tone_pixmap_top = Void or
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation for draw_rectangle
 			screen.draw_pixmap (a_start_x, a_start_y, last_half_tone_pixmap_top)
 		end
 
-	draw_rectangle_internal_bottom (a_start_x, a_start_y, a_width, a_height: INTEGER) is
+	draw_rectangle_internal_bottom (a_start_x, a_start_y, a_width, a_height: INTEGER)
 			-- Draw a vertical line on the screen.
 		do
 			if last_half_tone_pixmap_bottom = Void or
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation for draw_rectangle
 			screen.draw_pixmap (a_start_x, a_start_y, last_half_tone_pixmap_bottom)
 		end
 
-	draw_rectangle_internal_left (a_start_x, a_start_y, a_width, a_height: INTEGER) is
+	draw_rectangle_internal_left (a_start_x, a_start_y, a_width, a_height: INTEGER)
 			-- Draw a vertical line on the screen.
 		do
 			if last_half_tone_pixmap_left = Void or
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation for draw_rectangle
 			screen.draw_pixmap (a_start_x, a_start_y, last_half_tone_pixmap_left)
 		end
 
-	draw_rectangle_internal_right (a_start_x, a_start_y, a_width, a_height: INTEGER) is
+	draw_rectangle_internal_right (a_start_x, a_start_y, a_width, a_height: INTEGER)
 			-- Draw a vertical line on the screen.
 		do
 			if last_half_tone_pixmap_right = Void or
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation for draw_rectangle
 
 feature {NONE} -- Implementation
 
-	half_tone_pixmap (a_width, a_height: INTEGER): EV_PIXMAP is
+	half_tone_pixmap (a_width, a_height: INTEGER): EV_PIXMAP
 			-- Get a dot line pixmap.
 		require
 			valid: a_width > 0 and a_height > 0
@@ -185,13 +185,13 @@ feature {NONE} -- Implementation
 
 	internal_last_feedback_left, internal_last_feedback_top, internal_last_feedback_width, internal_last_feedback_height: INTEGER
 
-	clear_last_feedback is
+	clear_last_feedback
 			-- Clear last drawn feedback rectangle.
 		do
 			draw_rectangle_internal (internal_last_feedback_left, internal_last_feedback_top, internal_last_feedback_width, internal_last_feedback_height, internal_shared.line_width)
 		end
 
-	draw_rectangle_internal (a_left, a_top, a_width, a_height, a_line_width: INTEGER) is
+	draw_rectangle_internal (a_left, a_top, a_width, a_height, a_line_width: INTEGER)
 			-- Draw half-tone rectangle feedback.
 		require
 			valid: a_line_width > 0
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 
 feature {NONE}  -- Implementation
 
- 	half_tone_brush: WEL_BRUSH is
+ 	half_tone_brush: WEL_BRUSH
 			-- Create the brush to draw resize bar feedback
 		local
 			l_helper: WEL_BITMAP_HELPER
@@ -225,7 +225,7 @@ feature {NONE}  -- Implementation
 	internal_shared: SD_SHARED;
 			-- All singletons.
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

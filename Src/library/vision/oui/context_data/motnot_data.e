@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Information given by EiffelVision when the pointer moves. %
@@ -25,7 +25,7 @@ create
 
 feature -- Initialization
 
-	make (a_widget: WIDGET; a_relative_x, a_relative_y, an_absolute_x, an_absolute_y: INTEGER; a_buttons_state: BUTTONS) is
+	make (a_widget: WIDGET; a_relative_x, a_relative_y, an_absolute_x, an_absolute_y: INTEGER; a_buttons_state: BUTTONS)
 			-- Create a context_data for `MotionNotify' event.
 		do
 			widget := a_widget;
@@ -61,7 +61,7 @@ invariant
 
 	buttons_state /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

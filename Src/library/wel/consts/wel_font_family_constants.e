@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Font family (FF) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Ff_dontcare: INTEGER is
+	Ff_dontcare: INTEGER
 			-- Don't care or don't know
 		external
 			"C [macro %"wel.h%"]"
@@ -18,7 +18,7 @@ feature -- Access
 			"FF_DONTCARE"
 		end
 
-	Ff_roman: INTEGER is
+	Ff_roman: INTEGER
 			-- Fonts with variable stroke width (proportional)
 			-- and with serifs. MS Serif is an example.
 		external
@@ -27,7 +27,7 @@ feature -- Access
 			"FF_ROMAN"
 		end
 
-	Ff_swiss: INTEGER is
+	Ff_swiss: INTEGER
 			-- Fonts with variable stroke width (proportional)
 			-- and without serifs. MS Sans Serif is an example.
 		external
@@ -36,7 +36,7 @@ feature -- Access
 			"FF_SWISS"
 		end
 
-	Ff_modern: INTEGER is
+	Ff_modern: INTEGER
 			-- Fonts with constant stroke width (monospace),
 			-- with or without serifs. Monospace fonts are usually
 			-- modern. Pica, Elite, and CourierNew are examples.
@@ -46,7 +46,7 @@ feature -- Access
 			"FF_MODERN"
 		end
 
-	Ff_script: INTEGER is
+	Ff_script: INTEGER
 			-- Fonts designed to look like handwriting.
 			-- Script and Cursive are examples.
 		external
@@ -55,7 +55,7 @@ feature -- Access
 			"FF_SCRIPT"
 		end
 
-	Ff_decorative: INTEGER is
+	Ff_decorative: INTEGER
 			-- Novelty fonts. Old English is an example.
 		external
 			"C [macro %"wel.h%"]"
@@ -63,7 +63,7 @@ feature -- Access
 			"FF_DECORATIVE"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Modeless dialog box that allows the user to switch %
 		%between the dialog box and the application."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Basic operations
 
-	terminate (a_result: INTEGER) is
+	terminate (a_result: INTEGER)
 			-- Terminate the dialog with `a_result'.
 			-- `result_id' will contain `a_result'.
 		do
@@ -30,7 +30,7 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;
-			a_name: STRING_GENERAL) is
+			a_name: STRING_GENERAL)
 			-- Create the dialog
 		local
 			c_name: WEL_STRING
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Externals
 
 	cwin_create_dialog (hinstance, template, hparent,
-			dlgproc: POINTER): POINTER is
+			dlgproc: POINTER): POINTER
 			-- SDK CreateDialog
 		external
 			"C [macro <wel.h>] (HINSTANCE, LPCTSTR, HWND, %
@@ -75,7 +75,7 @@ feature {NONE} -- Externals
 			"CreateDialog"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

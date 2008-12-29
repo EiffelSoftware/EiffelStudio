@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A network stream socket."
@@ -40,7 +40,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create a network stream socket.
 		do
 			c_reset_error
@@ -52,7 +52,7 @@ feature -- Initialization
 			timeout_set_to_default: timeout = default_timeout
 		end;
 
-	make_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING) is
+	make_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING)
 				-- Create a client connection to `a_peer_host' on
 				-- `a_peer_port'.
 		require
@@ -86,7 +86,7 @@ feature -- Initialization
 			peer_address.set_port (a_peer_port)
 		end;
 
-	make_server_by_port (a_port: INTEGER) is
+	make_server_by_port (a_port: INTEGER)
 			-- Create server socket on `a_port'.
 		require
 			valid_port: a_port >= 0
@@ -104,7 +104,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	maximum_seg_size: INTEGER is
+	maximum_seg_size: INTEGER
 			-- Maximum segment size
 		require
 			socket_exists: exists
@@ -112,7 +112,7 @@ feature -- Status report
 			Result := c_get_sock_opt_int (descriptor, level_iproto_tcp, tcpmax_seg)
 		end
 
-	maxium_seg_size: INTEGER is
+	maxium_seg_size: INTEGER
 			-- Maximum segment size
 		obsolete
 			"Use `maximum_seg_size' instead."
@@ -122,7 +122,7 @@ feature -- Status report
 			Result := c_get_sock_opt_int (descriptor, level_iproto_tcp, tcpmax_seg)
 		end
 
-	has_delay: BOOLEAN is
+	has_delay: BOOLEAN
 			-- Is option TCPNO_DELAY off.
 		require
 			socket_exists: exists
@@ -133,7 +133,7 @@ feature -- Status report
 			Result := l_value = 0
 		end;
 
-	is_linger_on: BOOLEAN is
+	is_linger_on: BOOLEAN
 			-- Is lingering switched on?
 		require
 			socket_exists: exists
@@ -141,7 +141,7 @@ feature -- Status report
 			Result := c_is_linger_on (descriptor)
 		end;
 
-	is_out_of_band_inline: BOOLEAN is
+	is_out_of_band_inline: BOOLEAN
 			-- Are out-of-band packets sent inline?
 		require
 			socket_exists: exists
@@ -152,7 +152,7 @@ feature -- Status report
 			Result := is_inline /= 0
 		end
 
-	linger_time: INTEGER is
+	linger_time: INTEGER
 			-- Linger time
 		require
 			socket_exists: exists
@@ -162,7 +162,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_delay is
+	set_delay
 			-- Switch option TCPNO_DELAY off.
 		require
 			socket_exists: exists
@@ -170,7 +170,7 @@ feature -- Status setting
 			c_set_sock_opt_int (descriptor, level_iproto_tcp, tcpno_delay, 0)
 		end;
 
-	set_nodelay is
+	set_nodelay
 			-- Switch option TCPNO_DELAY on.
 		require
 			socket_exists: exists
@@ -178,7 +178,7 @@ feature -- Status setting
 			c_set_sock_opt_int (descriptor, level_iproto_tcp, tcpno_delay, 1)
 		end;
 
-	set_linger (flag: BOOLEAN; time: INTEGER) is
+	set_linger (flag: BOOLEAN; time: INTEGER)
 		obsolete "Use `set_linger_on'/`set_linger_off' instead."
 			-- Switch lingering on/off (depending on `flag') and set linger
 			-- time to `time'.
@@ -190,7 +190,7 @@ feature -- Status setting
 			valid_return := c_set_sock_opt_linger (descriptor, flag, time)
 		end;
 
-	set_linger_on (time: INTEGER) is
+	set_linger_on (time: INTEGER)
 			-- Switch lingering on and set linger time to `time'.
 		require
 			socket_exists: exists
@@ -200,7 +200,7 @@ feature -- Status setting
 			valid_return := c_set_sock_opt_linger (descriptor, True, time)
 		end;
 
-	set_linger_off is
+	set_linger_off
 			-- Switch lingering off.
 		require
 			socket_exists: exists
@@ -210,7 +210,7 @@ feature -- Status setting
 			valid_return := c_set_sock_opt_linger (descriptor, True, 0)
 		end;
 
-	set_out_of_band_inline is
+	set_out_of_band_inline
 			-- Switch "out of band packets inline" on.
 		require
 			socket_exists: exists
@@ -218,7 +218,7 @@ feature -- Status setting
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_oob_inline, 1)
 		end;
 
-	set_out_of_band_not_inline is
+	set_out_of_band_not_inline
 			-- Switch "out of band packets inline" off.
 		require
 			socket_exists: exists
@@ -228,22 +228,22 @@ feature -- Status setting
 
 feature {NONE} -- Externals
 
-	c_set_sock_opt_linger (fd: INTEGER flag: BOOLEAN; time: INTEGER): INTEGER is
+	c_set_sock_opt_linger (fd: INTEGER flag: BOOLEAN; time: INTEGER): INTEGER
 		external
 			"C"
 		end;
 
-	c_is_linger_on (fd: INTEGER): BOOLEAN is
+	c_is_linger_on (fd: INTEGER): BOOLEAN
 		external
 			"C"
 		end;
 
-	c_linger_time (fd: INTEGER): INTEGER is
+	c_linger_time (fd: INTEGER): INTEGER
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

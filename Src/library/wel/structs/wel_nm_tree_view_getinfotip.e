@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about a tree view notification%
 		%message."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- access
 
-	hdr: WEL_NMHDR is
+	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
 		do
 			create Result.make_by_pointer (cwel_nmtvinfotip_get_hdr (item))
@@ -26,7 +26,7 @@ feature -- access
 			result_not_void: Result /= Void
 		end
 
-	psztext: POINTER is
+	psztext: POINTER
 			-- Address of text to be displayed.
 		do
 			Result := cwel_nmtvinfotip_get_psztext (item)
@@ -34,7 +34,7 @@ feature -- access
 			Result_not_default: Result /= default_pointer
 		end
 
-	cchtextmax: INTEGER is
+	cchtextmax: INTEGER
 			-- Size of buffer at `psztext'.
 		do
 			Result := cwel_nmtvinfotip_get_cchtextmax (item)
@@ -42,7 +42,7 @@ feature -- access
 			Result_not_void: Result >= 0
 		end
 
-	hitem: POINTER is
+	hitem: POINTER
 			-- Handle to item for which the tooltip is displayed.
 		do
 			Result := cwel_nmtvinfotip_get_hitem (item)
@@ -50,7 +50,7 @@ feature -- access
 			Result_not_default: Result /= default_pointer
 		end
 
-	lparam: INTEGER is
+	lparam: INTEGER
 			-- Application defined data associated with `hitem'.
 		do
 			Result := cwel_nmtvinfotip_get_lparam (item)
@@ -58,7 +58,7 @@ feature -- access
 			Result_not_void: Result /= 0
 		end
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_nm_tvgetinfotip
@@ -66,21 +66,21 @@ feature -- access
 
 feature {NONE} -- Externals
 
-	c_size_of_nm_tvgetinfotip: INTEGER is
+	c_size_of_nm_tvgetinfotip: INTEGER
 		external
 			"C [macro <commctrl.h>]"
 		alias
 			"sizeof (NMTVGETINFOTIP)"
 		end
 
-	cwel_nmtvinfotip_get_hdr (ptr: POINTER): POINTER is
+	cwel_nmtvinfotip_get_hdr (ptr: POINTER): POINTER
 		external
 			"C [struct <commctrl.h>] (NMTVGETINFOTIP): EIF_POINTER"
 		alias
 			"&hdr"
 		end
 
-	cwel_nmtvinfotip_get_psztext (ptr: POINTER): POINTER is
+	cwel_nmtvinfotip_get_psztext (ptr: POINTER): POINTER
 			-- (export status {NONE})
 		external
 			"C [struct <commctrl.h>] (NMTVGETINFOTIP): EIF_POINTER"
@@ -88,21 +88,21 @@ feature {NONE} -- Externals
 			"pszText"
 		end
 		
-	cwel_nmtvinfotip_get_cchtextmax (ptr: POINTER): INTEGER is
+	cwel_nmtvinfotip_get_cchtextmax (ptr: POINTER): INTEGER
 		external
 			"C [struct <commctrl.h>] (NMTVGETINFOTIP): EIF_INTEGER"
 		alias
 			"cchTextMax"
 		end
 
-	cwel_nmtvinfotip_get_hitem (ptr: POINTER): POINTER is
+	cwel_nmtvinfotip_get_hitem (ptr: POINTER): POINTER
 		external
 			"C [struct <commctrl.h>] (NMTVGETINFOTIP): EIF_INTEGER"
 		alias
 			"hItem"
 		end
 
-	cwel_nmtvinfotip_get_lparam (ptr: POINTER): INTEGER is
+	cwel_nmtvinfotip_get_lparam (ptr: POINTER): INTEGER
 		external
 			"C [struct <commctrl.h>] (NMTVGETINFOTIP): EIF_INTEGER"
 		alias
@@ -110,7 +110,7 @@ feature {NONE} -- Externals
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

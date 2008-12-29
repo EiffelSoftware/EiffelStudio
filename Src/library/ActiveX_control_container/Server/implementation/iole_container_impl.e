@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IOleContainer' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Basic Operations
 
-	parse_display_name (pbc: IBIND_CTX_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]) is
+	parse_display_name (pbc: IBIND_CTX_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 			-- `pbc' [in].  
 			-- `psz_display_name' [in].  
@@ -27,7 +27,7 @@ feature -- Basic Operations
 			trigger (E_notimpl)
 		end
 
-	enum_objects (grf_flags: INTEGER; ppenum: CELL [IENUM_UNKNOWN_INTERFACE]) is
+	enum_objects (grf_flags: INTEGER; ppenum: CELL [IENUM_UNKNOWN_INTERFACE])
 			-- Enumerates objects in a container.
 			-- `grf_flags' [in].  
 			-- `ppenum' [out].  
@@ -41,7 +41,7 @@ feature -- Basic Operations
 			ppenum.put (enumeration)
 		end
 
-	lock_container (f_lock: INTEGER) is
+	lock_container (f_lock: INTEGER)
 			-- Keeps container running until explicitly released.
 			-- `f_lock' [in].  
 		do
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 	m_locked: BOOLEAN;
 			-- Is container locked?
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

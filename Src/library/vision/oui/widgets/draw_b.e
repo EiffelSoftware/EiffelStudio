@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Drawable rectangle with a shadow border"
 	legal: "See notice at end of class.";
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a draw button with `a_name' as identifier
 			-- and `a_parent' as parent.
 		require
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged draw button with `a_name' as identifier
 			-- and `a_parent' as parent.
 		require
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a draw button with `a_name' as identifier
 			-- and `a_parent' as parent.
 		do
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_valid (other: COMPOSITE): BOOLEAN is
+	is_valid (other: COMPOSITE): BOOLEAN
 			-- Is `other' a valid parent?
 		local
 			a_bar: BAR
@@ -89,12 +89,12 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current drawing button.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

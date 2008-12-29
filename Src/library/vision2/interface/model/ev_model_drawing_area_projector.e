@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Projectors that make representations of `world' on%N%
 		%EV_DRAWING_AREA."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_world: EV_MODEL_WORLD; a_drawing_area: EV_DRAWING_AREA) is
+	make (a_world: EV_MODEL_WORLD; a_drawing_area: EV_DRAWING_AREA)
 			-- Create with `a_world' and `a_drawing_area'.
 		require
 			a_world_not_void: a_world /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 	make_with_buffer (
 		a_world: EV_MODEL_WORLD;
 		a_buffer: EV_PIXMAP;
-		a_drawing_area: EV_DRAWING_AREA) is
+		a_drawing_area: EV_DRAWING_AREA)
 			-- Create with `a_world', `a_drawing_area' and `a_buffer'.
 		require
 			a_world_not_void: a_world /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		
 feature {NONE} -- Implementation
 
-	on_paint (x, y, w, h: INTEGER) is
+	on_paint (x, y, w, h: INTEGER)
 		do
 			if buffer_used then
 				update_rectangle (create {EV_RECTANGLE}.make (x, y, w, h), x, y)
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

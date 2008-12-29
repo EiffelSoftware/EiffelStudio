@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about message Wm_notify which informs the %
 		%parent window of a control that an event has occurred in the %
 		%control or that the control requires some kind of information."
@@ -18,13 +18,13 @@ create
 
 feature -- Access
 
-	id: INTEGER is
+	id: INTEGER
 			-- Identifier of the control sending the message
 		do
 			Result := w_param.to_integer_32
 		end
 
-	nmhdr: WEL_NMHDR is
+	nmhdr: WEL_NMHDR
 			-- Information about the notification
 		do
 			create Result.make_by_pointer (l_param)
@@ -32,7 +32,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

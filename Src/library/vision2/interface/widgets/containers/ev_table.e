@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"[
 			EiffelVision table. Invisible container that allows
@@ -43,7 +43,7 @@ create
 
 feature -- Access
 
-	rows: INTEGER is
+	rows: INTEGER
 			-- Number of rows in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -51,7 +51,7 @@ feature -- Access
 			Result := implementation.rows
 		end
 
-	columns: INTEGER is
+	columns: INTEGER
 			-- Number of columns in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -59,7 +59,7 @@ feature -- Access
 			Result := implementation.columns
 		end
 
-	item_at_position (a_column, a_row: INTEGER): EV_WIDGET is
+	item_at_position (a_column, a_row: INTEGER): EV_WIDGET
 			-- Widget at coordinates (`row', `column').
 		require
 			not_destroyed: not is_destroyed
@@ -69,7 +69,7 @@ feature -- Access
 			Result := implementation.item_at_position (a_column, a_row)
 		end
 
-	item_column_position (widget: EV_WIDGET): INTEGER is
+	item_column_position (widget: EV_WIDGET): INTEGER
 			-- `Result' is column coordinate of `widget'.
 		require
 			not_destroyed: not is_destroyed
@@ -80,7 +80,7 @@ feature -- Access
 			Result_valid: Result > 0 and Result <= columns - item_column_span (widget) + 1
 		end
 		
-	item_row_position (widget: EV_WIDGET): INTEGER is
+	item_row_position (widget: EV_WIDGET): INTEGER
 			-- `Result' is row coordinate of `widget'.
 		require
 			not_destroyed: not is_destroyed
@@ -91,7 +91,7 @@ feature -- Access
 			Result_valid: Result > 0 and Result <= rows - item_row_span (widget) + 1
 		end
 		
-	item_column_span (widget: EV_WIDGET): INTEGER is
+	item_column_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of columns taken by `widget'.
 		require
 			not_destroyed: not is_destroyed
@@ -102,7 +102,7 @@ feature -- Access
 			Result_valid: Result > 0 and Result <= columns - item_column_position (widget) + 1
 		end
 	
-	item_row_span (widget: EV_WIDGET): INTEGER is
+	item_row_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of rows taken by `widget'.
 		require
 			not_destroyed: not is_destroyed
@@ -113,7 +113,7 @@ feature -- Access
 			Result_valid: Result > 0 and Result <= rows - item_row_position (widget) + 1
 		end
 
-	item_list: ARRAYED_LIST [EV_WIDGET] is
+	item_list: ARRAYED_LIST [EV_WIDGET]
 			-- List of items in `Current'.
 		obsolete "Use `linear_representation' instead."
 		require
@@ -125,7 +125,7 @@ feature -- Access
 			count_matches_widget_count: Result.count = count
 		end
 		
-	to_array: ARRAY [EV_WIDGET] is
+	to_array: ARRAY [EV_WIDGET]
 			-- A representation of `Current' as ARRAY. Included to
 			-- ease transition from inheritance of ARRAY to
 			-- inheritance of CHAIN. Contains contents of all cells
@@ -143,7 +143,7 @@ feature -- Access
 
 feature -- Status report
 
-	columns_resizable_to (a_column: INTEGER): BOOLEAN is
+	columns_resizable_to (a_column: INTEGER): BOOLEAN
 			-- May the column count be resized to `a_column'?
 		require
 			not_destroyed: not is_destroyed
@@ -152,7 +152,7 @@ feature -- Status report
 			Result := implementation.columns_resizable_to (a_column)
 		end
 
-	rows_resizable_to (a_row: INTEGER): BOOLEAN is
+	rows_resizable_to (a_row: INTEGER): BOOLEAN
 			-- May the row count be resized to `a_row'?
 		require
 			not_destroyed: not is_destroyed
@@ -161,7 +161,7 @@ feature -- Status report
 			Result := implementation.rows_resizable_to (a_row)
 		end
 
-	column_clear (a_column: INTEGER): BOOLEAN is
+	column_clear (a_column: INTEGER): BOOLEAN
 			-- Is column `a_column' free of widgets?
 		require
 			not_destroyed: not is_destroyed
@@ -171,7 +171,7 @@ feature -- Status report
 			Result := implementation.column_clear (a_column)
 		end
 
-	row_clear (a_row: INTEGER): BOOLEAN is
+	row_clear (a_row: INTEGER): BOOLEAN
 			-- Is row `a_row' free of widgets?
 		require
 			not_destroyed: not is_destroyed
@@ -181,7 +181,7 @@ feature -- Status report
 			Result := implementation.row_clear (a_row)
 		end
 
-	widget_count: INTEGER is
+	widget_count: INTEGER
 			-- Number of widgets in `Current'.
 			-- Now that `Current' inherits CHAIN instead
 			-- of ARRAY, `count' correctly returns the number
@@ -198,7 +198,7 @@ feature -- Status report
 			Result_non_negative: Result >= 0
 		end
 
-	row_spacing: INTEGER is
+	row_spacing: INTEGER
 			-- Spacing between two consecutive rows, in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -208,7 +208,7 @@ feature -- Status report
 			Result_non_negative: Result >= 0
 		end
 
-	column_spacing: INTEGER is
+	column_spacing: INTEGER
 			-- Spacing between two consecutive columns, in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -218,7 +218,7 @@ feature -- Status report
 			Result_non_negative: Result >= 0
 		end
 
-	border_width: INTEGER is
+	border_width: INTEGER
 			-- Spacing between edge of `Current' and outside edge items,
 			-- in pixels.
 		require
@@ -229,7 +229,7 @@ feature -- Status report
 			Result_non_negative: Result >= 0
 		end
 		
-	is_homogeneous: BOOLEAN is
+	is_homogeneous: BOOLEAN
 			-- Are all items forced to have same dimensions.
 		require
 			not_destroyed: not is_destroyed
@@ -239,7 +239,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_homogeneous
 		end
 
-	area_clear (a_column, a_row, column_span, row_span: INTEGER): BOOLEAN is
+	area_clear (a_column, a_row, column_span, row_span: INTEGER): BOOLEAN
 			-- Are the cells represented by parameters free of widgets?
 		require
 			not_destroyed: not is_destroyed
@@ -266,7 +266,7 @@ feature -- Status report
 			end
 		end
 		
-	area_clear_excluding_widget (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER): BOOLEAN is
+	area_clear_excluding_widget (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER): BOOLEAN
 			-- Are the cells represented by parameters free of widgets? Excludes cells
 			-- filled by `v'.
 		require
@@ -277,16 +277,16 @@ feature -- Status report
 			Result := implementation.area_clear_excluding_widget (v, a_column, a_row, column_span, row_span)
 		end
 		
-	Prunable: BOOLEAN is True
+	Prunable: BOOLEAN = True
 		-- `Current' is always prunable.
 		
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May new items be added?
 		do
 			Result := not full
 		end
 		
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-chain beginning at current position
 			-- and having min (`n', `from_here') items,
 			-- where `from_here' is the number of items
@@ -300,7 +300,7 @@ feature -- Status report
 
 feature -- Status settings
 
-	enable_homogeneous is
+	enable_homogeneous
 			-- Set each item in `Current' to be equal in size
 			-- to that of the largest item.
 		require
@@ -311,7 +311,7 @@ feature -- Status settings
 			is_homogeneous: is_homogeneous
 		end
 
-	disable_homogeneous is
+	disable_homogeneous
 			-- Allow items to have varying sizes.
 		require
 			not_destroyed: not is_destroyed
@@ -321,7 +321,7 @@ feature -- Status settings
 			is_not_homogeneous: not is_homogeneous
 		end
 	
-	set_row_spacing (a_value: INTEGER) is
+	set_row_spacing (a_value: INTEGER)
 			-- Assign `a_value' to the spacing in-between rows, in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -332,7 +332,7 @@ feature -- Status settings
 			row_spacing_set: row_spacing = a_value
 		end
 
-	set_column_spacing (a_value: INTEGER) is
+	set_column_spacing (a_value: INTEGER)
 			-- Assign `a_value' to the spacing in-between columns, in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -343,7 +343,7 @@ feature -- Status settings
 			column_spacing_set: column_spacing = a_value
 		end
 
-	set_border_width (a_value: INTEGER) is
+	set_border_width (a_value: INTEGER)
 			-- Assign `a_value' to `border_width'.
 		require
 			not_destroyed: not is_destroyed
@@ -354,7 +354,7 @@ feature -- Status settings
 			border_width_set: border_width = a_value
 		end
 
-	resize (a_column, a_row: INTEGER) is
+	resize (a_column, a_row: INTEGER)
 			-- Resize the table to hold `a_column' by `a_row' widgets.
 		require
 			not_destroyed: not is_destroyed
@@ -370,7 +370,7 @@ feature -- Status settings
 			items_untouched: linear_representation.is_equal (old linear_representation)
 		end
 		
-	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
+	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER)
 			-- Move `v' to position `a_column', `a_row'.
 		require
 			not_destroyed: not is_destroyed
@@ -389,7 +389,7 @@ feature -- Status settings
 				item_row_span (v) = old item_row_span (v)
 		end
 		
-	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
+	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER)
 			-- Resize `v' to occupy `column_span' columns and `row_span' rows.
 		require
 			not_destroyed: not is_destroyed
@@ -408,7 +408,7 @@ feature -- Status settings
 					item_row_position (v) = old item_row_position (v)
 			end
 		
-	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
+	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
 			-- Move `v' to `a_column', `a_row', and resize to occupy `column_span' columns and `row_span' rows.
 		require
 			not_destroyed: not is_destroyed
@@ -432,7 +432,7 @@ feature -- Status settings
 
 feature -- Element change
 
-	put_at_position, add (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
+	put_at_position, add (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
 			-- Set the position of the widgets in one-based coordinates. 
 			--
 			--           1         2
@@ -469,13 +469,13 @@ feature -- Element change
 			span_assigned: item_column_span (v) = column_span and item_row_span (v) = row_span
 		end
 		
-	remove is
+	remove
 			-- Remove current item.
 		do
 			prune (item)
 		end
 		
-	prune (v: EV_WIDGET) is
+	prune (v: EV_WIDGET)
 			-- Remove `v' if present. Do not move cursor, except if
 			-- cursor was on `v', move to right neighbor.
 		do
@@ -490,62 +490,62 @@ feature -- Element change
 		
 feature -- Iteration.
 
-	has (v: EV_WIDGET): BOOLEAN is
+	has (v: EV_WIDGET): BOOLEAN
 			-- Does `Current' contain `v'?
 		do
 			Result := implementation.has (v)
 		end
 		
-	count: INTEGER is
+	count: INTEGER
 			-- Number of widgets contained in `Current'.
 		do
 			Result := implementation.count
 		end
 		
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is structure filled to capacity?
 		do
 			Result := implementation.full
 		end
 		
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			implementation.wipe_out
 		end
 		
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid position to the left of current one?
 		do
 			Result := implementation.before
 		end
 		
-	index: INTEGER is
+	index: INTEGER
 			-- Current position.
 		do
 			Result := implementation.index
 		end
 	
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid position to the right of current one?
 		do
 			Result := implementation.after
 		end
 	
-	forth is
+	forth
 			-- Move to next position; if no next position,
 			-- ensure that `exhausted' will be true.
 		do
 			implementation.forth
 		end
 		
-	back is
+	back
 			-- Move to previous position.
 		do
 			implementation.back
 		end
 		
-	cursor: CURSOR is
+	cursor: CURSOR
 			-- Current cursor position.
 		do
 			Result := implementation.cursor
@@ -553,7 +553,7 @@ feature -- Iteration.
 			bridge_ok: Result.is_equal (implementation.cursor)
 		end
 		
-	valid_cursor (p: CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 			-- This is True if `p' conforms to EV_DYNAMIC_LIST_CURSOR and
 			-- if it points to an item, `Current' must have it.
@@ -561,13 +561,13 @@ feature -- Iteration.
 			Result := implementation.valid_cursor (p)
 		end
 		
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		do
 			implementation.go_to (p)
 		end
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions. The cursor
 			-- may end up `off' if the absolute value of `i'
 			-- is too big.
@@ -577,7 +577,7 @@ feature -- Iteration.
 
 feature -- Contract support
 		
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state.
 		do
 			Result := Precursor {EV_CONTAINER} and (
@@ -596,7 +596,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TABLE_IMP} implementation.make (Current)
@@ -606,7 +606,7 @@ invariant
 	columns_positive: columns >= 1
 	rows_positive: rows >= 1
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

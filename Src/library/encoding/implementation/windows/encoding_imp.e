@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encoding conversion implementation on Windows"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- String encoding convertion
 
-	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING) is
+	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING)
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		local
 			l_from_code_page, l_to_code_page: STRING
@@ -110,7 +110,7 @@ feature -- String encoding convertion
 			end
 		end
 
-	wide_char_to_multi_byte (a_code_page: STRING; a_string: STRING_32): STRING_8 is
+	wide_char_to_multi_byte (a_code_page: STRING; a_string: STRING_32): STRING_8
 			-- Convert UTF-16 string into 8bit string by `a_code_page'.
 		local
 			l_count: INTEGER
@@ -124,7 +124,7 @@ feature -- String encoding convertion
 			Result := pointer_to_multi_byte (l_out_string.item, l_count - 1)
 		end
 
-	multi_byte_to_wide_char (a_code_page: STRING; a_string: STRING_8): STRING_32 is
+	multi_byte_to_wide_char (a_code_page: STRING; a_string: STRING_8): STRING_32
 			-- Convert 8bit string into UTF-16 string by `a_code_page'.
 		local
 			l_count: INTEGER
@@ -140,7 +140,7 @@ feature -- String encoding convertion
 
 feature -- Status report
 
-	is_code_page_valid (a_code_page: STRING): BOOLEAN is
+	is_code_page_valid (a_code_page: STRING): BOOLEAN
 			-- Is `a_code_page' valid?
 		do
 			if a_code_page /= Void and then not a_code_page.is_empty then
@@ -148,7 +148,7 @@ feature -- Status report
 			end
 		end
 
-	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING): BOOLEAN is
+	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING): BOOLEAN
 			-- Is `a_from_code_page' convertable to `a_to_code_page'.
 		do
 				-- Always true. It is not really interesting here on windows without converting strings.
@@ -158,7 +158,7 @@ feature -- Status report
 
 feature {NONE} -- Access
 
-	platfrom_code_page_from_name (a_code_page_name: STRING): STRING is
+	platfrom_code_page_from_name (a_code_page_name: STRING): STRING
 			-- Code page the OS supported.
 			-- Result can be passed to Windows API.
 		require
@@ -173,7 +173,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Status report
 
-	is_known_code_page (a_code_page: STRING): BOOLEAN is
+	is_known_code_page (a_code_page: STRING): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -182,7 +182,7 @@ feature {NONE} -- Status report
 			Result := code_pages.has (a_code_page.as_lower)
 		end
 
-	is_two_byte_code_page (a_code_page: STRING): BOOLEAN is
+	is_two_byte_code_page (a_code_page: STRING): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -191,7 +191,7 @@ feature {NONE} -- Status report
 			Result := two_byte_code_pages.has (a_code_page.as_lower)
 		end
 
-	is_four_bype_code_page (a_code_page: STRING): BOOLEAN is
+	is_four_bype_code_page (a_code_page: STRING): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -200,7 +200,7 @@ feature {NONE} -- Status report
 			Result := four_byte_code_pages.has (a_code_page.as_lower)
 		end
 
-	is_big_endian_code_page (a_code_page: STRING): BOOLEAN is
+	is_big_endian_code_page (a_code_page: STRING): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -211,7 +211,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Implementation
 
-	cwin_WideCharToMultiByte_buffer_length (cpid: INTEGER; a_wide_string: POINTER): INTEGER is
+	cwin_WideCharToMultiByte_buffer_length (cpid: INTEGER; a_wide_string: POINTER): INTEGER
 			-- Get buffer length of converted result.
 		external
 			"C inline use <windows.h>"
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 			"return WideCharToMultiByte ($cpid, 0, $a_wide_string, -1, NULL, 0, NULL, NULL);"
 		end
 
-	cwin_MultiByteToWideChar_buffer_length (cpid: INTEGER; a_multi_byte: POINTER): INTEGER is
+	cwin_MultiByteToWideChar_buffer_length (cpid: INTEGER; a_multi_byte: POINTER): INTEGER
 			-- Get buffer length of converted result.
 		external
 			"C inline use <windows.h>"
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			"return MultiByteToWideChar ($cpid, 0, $a_multi_byte, -1, NULL, 0);"
 		end
 
-	cwin_wide_char_to_multi_byte (cpid: INTEGER; a_wide_string: POINTER; a_out_pointer: POINTER; a_count_to_buffer: INTEGER; a_b: TYPED_POINTER [BOOLEAN]) is
+	cwin_wide_char_to_multi_byte (cpid: INTEGER; a_wide_string: POINTER; a_out_pointer: POINTER; a_count_to_buffer: INTEGER; a_b: TYPED_POINTER [BOOLEAN])
 		external
 			"C inline use <windows.h>"
 		alias
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	cwin_multi_byte_to_wide_char (cpid: INTEGER; a_multi_byte: POINTER; a_out_pointer: POINTER; a_count_to_buffer: INTEGER; a_b: TYPED_POINTER [BOOLEAN]) is
+	cwin_multi_byte_to_wide_char (cpid: INTEGER; a_multi_byte: POINTER; a_out_pointer: POINTER; a_count_to_buffer: INTEGER; a_b: TYPED_POINTER [BOOLEAN])
 		external
 			"C inline use <windows.h>"
 		alias
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	Wchar_length: INTEGER is
+	Wchar_length: INTEGER
 			-- Length of WCHAR.
 		external
 			"C inline use <windows.h>"
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 		end
 
 
-indexing
+note
 	library:   "Encoding: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

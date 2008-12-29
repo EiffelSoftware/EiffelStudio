@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Horizontal box for display elements"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Basic operations
 
-	extend_separator is
+	extend_separator
 			-- Add a non-expandable separator to end
 			-- of structure.
 		local
@@ -43,7 +43,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_HORIZONTAL_BOX_I;
 			-- Responsible for interaction with the native graphics toolkit.
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

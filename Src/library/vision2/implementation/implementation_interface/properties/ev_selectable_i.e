@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Eiffel Vision selectable. Implementation interface."
 	legal: "See notice at end of class."
@@ -18,20 +18,20 @@ inherit
 	
 feature -- Status report
 
-	is_selectable: BOOLEAN is
+	is_selectable: BOOLEAN
 			-- May the object be selected?
 		do
 			Result := True
 		end
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is objects state set to selected?
 		deferred
 		end
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Select the object.
 		require
 			is_selectable: is_selectable
@@ -46,7 +46,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

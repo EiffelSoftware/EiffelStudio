@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision pixmap, Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -92,7 +92,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		local
 			ret: INTEGER
@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 			internal_width := 1
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		local
 			ret: INTEGER
@@ -123,19 +123,19 @@ feature {NONE} -- Initialization
 			init_default_values
 		end
 
-	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE)
 			-- Initialize from `a_pointer_style'
 		do
 		end
 
-	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Initialize from `a_pixel_buffer'
 		do
 		end
 
 feature -- Drawing operations
 
-	redraw is
+	redraw
 			-- Force `Current' to redraw itself.
 		local
 			ret: INTEGER
@@ -143,7 +143,7 @@ feature -- Drawing operations
 			ret := hiview_set_needs_display_external (c_object, 1)
 		end
 
-	flush is
+	flush
 			-- Ensure that the appearance of `Current' is updated on screen
 			-- immediately. Any changes that have not yet been reflected will
 			-- become visible.
@@ -153,20 +153,20 @@ feature -- Drawing operations
 			ret := hiview_set_needs_display_external (c_object, 1)
 		end
 
-	update_if_needed is
+	update_if_needed
 			-- Update `Current' if needed.
 		do
 		end
 
 feature -- Measurement
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of the pixmap in pixels.
 		do
 			Result := cgimage_get_width_external (drawable)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- height of the pixmap.
 		do
 			Result := cgimage_get_height_external (drawable)
@@ -174,7 +174,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	read_from_named_file (file_name: STRING_GENERAL) is
+	read_from_named_file (file_name: STRING_GENERAL)
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 		local
 			url, provider: POINTER
@@ -207,21 +207,21 @@ feature -- Element change
 
 		end
 
-	frozen kCGRenderingIntentDefault: INTEGER is
+	frozen kCGRenderingIntentDefault: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kCGRenderingIntentDefault"
 	end
 
-	frozen kCFStringEncodingASCII: INTEGER is
+	frozen kCFStringEncodingASCII: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kCFStringEncodingASCII"
 	end
 
-	frozen kHIViewZOrderBelow: INTEGER is
+	frozen kHIViewZOrderBelow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -229,13 +229,13 @@ feature -- Element change
 	end
 
 
-	set_with_default is
+	set_with_default
 			-- Initialize the pixmap with the default
 			-- pixmap (Vision2 logo)
 		do
 		end
 
-	stretch (a_x, a_y: INTEGER) is
+	stretch (a_x, a_y: INTEGER)
 			-- Stretch the image to fit in size `a_x' by `a_y'.
 		local
 			ret: INTEGER
@@ -244,7 +244,7 @@ feature -- Element change
 			set_size (a_x, a_y)
 		end
 
-	set_size (a_width, a_height: INTEGER) is
+	set_size (a_width, a_height: INTEGER)
 			-- Set the size of the pixmap to `a_width' by `a_height'.
 		local
 			ret : INTEGER
@@ -264,7 +264,7 @@ feature -- Element change
 			internal_height := a_height
 		end
 
-	reset_for_buffering (a_width, a_height: INTEGER) is
+	reset_for_buffering (a_width, a_height: INTEGER)
 			-- Resets the size of the pixmap without keeping original image or clearing background.
 		local
 
@@ -274,7 +274,7 @@ feature -- Element change
 			end
 		end
 
-		set_mask (a_mask: EV_BITMAP) is
+		set_mask (a_mask: EV_BITMAP)
 			-- Set the Bitmap used for masking `Current'.
 		local
 			a_mask_imp: EV_BITMAP_IMP
@@ -305,13 +305,13 @@ feature -- Access
 --		end
 --	end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		do
 			Result := internal_minimum_width.min (width)
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum width that the widget may occupy.
 		do
 			Result := internal_minimum_height.min (height)
@@ -319,13 +319,13 @@ feature -- Access
 
 	image_ptr: POINTER
 
-	raw_image_data: EV_RAW_IMAGE_DATA is
+	raw_image_data: EV_RAW_IMAGE_DATA
 		do
 		end
 
 feature -- Duplication
 
-	copy_pixmap (other: EV_PIXMAP) is
+	copy_pixmap (other: EV_PIXMAP)
 			-- Update `Current' to have same appearance as `other'.
 			-- (So as to satisfy `is_equal'.)
 		local
@@ -342,7 +342,7 @@ feature -- Duplication
 
 feature {EV_ANY_I} -- Implementation
 
-	set_pixmap_from_pixbuf (a_pixbuf: POINTER) is
+	set_pixmap_from_pixbuf (a_pixbuf: POINTER)
 			-- Construct `Current' from GdkPixbuf `a_pixbuf'
 		do
 		end
@@ -361,7 +361,7 @@ feature {EV_ANY_I} -- Implementation
 		-- Pointer to the appropriate XPM image used for the default stock cursor if any
 
 feature {EV_APPLICATION_IMP}
-	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER is
+	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER
 			-- Feature that is called if an event occurs
 		local
 			event_class, event_kind : INTEGER
@@ -384,40 +384,40 @@ feature {NONE} -- Implementation
 	internal_height: INTEGER
 	internal_width: INTEGER
 
-	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
+	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME)
 			-- Save `Current' in `a_format' to `a_filename'
 		do
 		end
 
-	destroy is
+	destroy
 			-- Destroy the pixmap and resources.
 		do
 		end
 
-	dispose is
+	dispose
 			-- Clear up resources if needed in object disposal.
 		do
 		end
 
 feature {NONE} -- Externals
 
-	default_pixmap_xpm: POINTER is
+	default_pixmap_xpm: POINTER
 		do
 		end
 
 feature {NONE} -- Constants
 
-	Default_color_depth: INTEGER is -1
+	Default_color_depth: INTEGER = -1
 			-- Default color depth, use the one from gdk_root_parent.
 
-	Monochrome_color_depth: INTEGER is 1
+	Monochrome_color_depth: INTEGER = 1
 			-- Black and White color depth (for mask).
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PIXMAP;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- EV_PIXMAP_IMP
 

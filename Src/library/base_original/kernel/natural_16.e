@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Unsigned integer values coded on 16 bits"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ convert
 	to_natural_32: {NATURAL_32},
 	to_natural_64: {NATURAL_64}
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

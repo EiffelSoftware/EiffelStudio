@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,19 +33,19 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	n_length: INTEGER is
+	n_length: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_remsecurity_attributes_n_length (item)
 		end
 
-	lp_security_descriptor: INTEGER is
+	lp_security_descriptor: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_remsecurity_attributes_lp_security_descriptor (item)
 		end
 
-	b_inherit_handle: INTEGER is
+	b_inherit_handle: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_remsecurity_attributes_b_inherit_handle (item)
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_x_remsecurity_attributes
@@ -61,19 +61,19 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_n_length (a_n_length: INTEGER) is
+	set_n_length (a_n_length: INTEGER)
 			-- Set `n_length' with `a_n_length'.
 		do
 			ccom_x_remsecurity_attributes_set_n_length (item, a_n_length)
 		end
 
-	set_lp_security_descriptor (a_lp_security_descriptor: INTEGER) is
+	set_lp_security_descriptor (a_lp_security_descriptor: INTEGER)
 			-- Set `lp_security_descriptor' with `a_lp_security_descriptor'.
 		do
 			ccom_x_remsecurity_attributes_set_lp_security_descriptor (item, a_lp_security_descriptor)
 		end
 
-	set_b_inherit_handle (a_b_inherit_handle: INTEGER) is
+	set_b_inherit_handle (a_b_inherit_handle: INTEGER)
 			-- Set `b_inherit_handle' with `a_b_inherit_handle'.
 		do
 			ccom_x_remsecurity_attributes_set_b_inherit_handle (item, a_b_inherit_handle)
@@ -81,7 +81,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_x_remsecurity_attributes: INTEGER is
+	c_size_of_x_remsecurity_attributes: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library__REMSECURITY_ATTRIBUTES_s.h%"]"
@@ -89,43 +89,43 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::_REMSECURITY_ATTRIBUTES)"
 		end
 
-	ccom_x_remsecurity_attributes_n_length (a_pointer: POINTER): INTEGER is
+	ccom_x_remsecurity_attributes_n_length (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__REMSECURITY_ATTRIBUTES_s_impl.h%"](ecom_control_library::_REMSECURITY_ATTRIBUTES *):EIF_INTEGER"
 		end
 
-	ccom_x_remsecurity_attributes_set_n_length (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_remsecurity_attributes_set_n_length (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__REMSECURITY_ATTRIBUTES_s_impl.h%"](ecom_control_library::_REMSECURITY_ATTRIBUTES *, ULONG)"
 		end
 
-	ccom_x_remsecurity_attributes_lp_security_descriptor (a_pointer: POINTER): INTEGER is
+	ccom_x_remsecurity_attributes_lp_security_descriptor (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__REMSECURITY_ATTRIBUTES_s_impl.h%"](ecom_control_library::_REMSECURITY_ATTRIBUTES *):EIF_INTEGER"
 		end
 
-	ccom_x_remsecurity_attributes_set_lp_security_descriptor (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_remsecurity_attributes_set_lp_security_descriptor (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__REMSECURITY_ATTRIBUTES_s_impl.h%"](ecom_control_library::_REMSECURITY_ATTRIBUTES *, ULONG)"
 		end
 
-	ccom_x_remsecurity_attributes_b_inherit_handle (a_pointer: POINTER): INTEGER is
+	ccom_x_remsecurity_attributes_b_inherit_handle (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__REMSECURITY_ATTRIBUTES_s_impl.h%"](ecom_control_library::_REMSECURITY_ATTRIBUTES *):EIF_INTEGER"
 		end
 
-	ccom_x_remsecurity_attributes_set_b_inherit_handle (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_remsecurity_attributes_set_b_inherit_handle (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__REMSECURITY_ATTRIBUTES_s_impl.h%"](ecom_control_library::_REMSECURITY_ATTRIBUTES *, LONG)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

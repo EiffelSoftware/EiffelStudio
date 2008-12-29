@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Default widget for viewing and editing font preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	graphical_type: STRING is
+	graphical_type: STRING
 			-- Graphical type identifier.
 		do
 			Result := "FONT"
@@ -40,7 +40,7 @@ feature -- Access
 
 feature {preference_view} -- commands
 
-	change is
+	change
 			-- change the value.
 		require
 			preference_exists: preference /= Void
@@ -57,7 +57,7 @@ feature {preference_view} -- commands
 
 feature {NONE} -- Commands
 
-	update_changes is
+	update_changes
 			-- Commit the result of Font Tool.
 		do
 			last_selected_value := font_tool.font
@@ -68,13 +68,13 @@ feature {NONE} -- Commands
 			Precursor {PREFERENCE_WIDGET}
 		end
 
-	cancel_changes is
+	cancel_changes
 			-- Commit the result of Font Tool.
 		do
 			last_selected_value := Void
 		end
 
-	update_preference is
+	update_preference
 			-- Update preference to reflect recently chosen value
 		do
 			if last_selected_value /= Void then
@@ -82,13 +82,13 @@ feature {NONE} -- Commands
 			end
 		end
 
-	show is
+	show
 			-- Show the widget in its editable state
 		do
 			show_change_item_widget
 		end
 
-	refresh is
+	refresh
 		local
 			l_font: EV_FONT
 		do
@@ -101,7 +101,7 @@ feature {NONE} -- Commands
 
 feature {NONE} -- Implementation
 
-	build_change_item_widget is
+	build_change_item_widget
 			-- Create and setup `change_item_widget'.
 		do
 			create change_item_widget
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
 		end
 
-	show_change_item_widget is
+	show_change_item_widget
 			-- Show the font change dialog.
 		do
 			change
@@ -118,10 +118,10 @@ feature {NONE} -- Implementation
 	font_tool: EV_FONT_DIALOG
 			-- Dialog from which we can select a font.
 
-	default_font_height: INTEGER is 9;
+	default_font_height: INTEGER = 9;
 			-- Default font height in points (for display only)
 
-indexing
+note
 
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

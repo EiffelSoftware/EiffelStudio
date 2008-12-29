@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision list item list, gtk implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a list widget with `par' as parent.
 			-- By default, a list allow only one selection.
 		local
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			)
 		end
 
-	initialize is
+	initialize
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
@@ -96,14 +96,14 @@ feature {NONE} -- Initialization
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Initialization
 
-	select_callback (n_args: INTEGER; args: POINTER) is
+	select_callback (n_args: INTEGER; args: POINTER)
 			-- Called when a list item is selected.
 		require
 			one_arg: n_args = 1
 		deferred
 		end
 
-	deselect_callback (n_args: INTEGER; args: POINTER) is
+	deselect_callback (n_args: INTEGER; args: POINTER)
 			-- Called when a list item is deselected.
 		require
 			one_arg: n_args = 1
@@ -127,7 +127,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Initialization
 
 feature -- Status report
 
-	selected_item: EV_LIST_ITEM is
+	selected_item: EV_LIST_ITEM
 			-- Currently selected item if any.
 		local
 			item_pointer: POINTER
@@ -144,19 +144,19 @@ feature -- Status report
 
 feature -- Status setting
 
-	select_item (an_index: INTEGER) is
+	select_item (an_index: INTEGER)
 			-- Select item at one based index, `an_index'.
 		do
 			check do_not_call: False end
 		end
 
-	deselect_item (an_index: INTEGER) is
+	deselect_item (an_index: INTEGER)
 			-- Deselect item at one based index, `an_index'.
 		do
 			check do_not_call: False end
 		end
 
-	clear_selection is
+	clear_selection
 			-- Clear the selection of the list.
 		do
 			{EV_GTK_EXTERNALS}.gtk_list_unselect_all (list_widget)
@@ -164,7 +164,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		local
 			item_imp: EV_LIST_ITEM_IMP
@@ -189,7 +189,7 @@ feature -- Removal
 
 feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_LIST_ITEM_IMP
@@ -204,7 +204,7 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 	previous_selected_item_imp: EV_LIST_ITEM_IMP
 			-- Item that was selected previously.
 
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
+	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER)
 			-- Move `a_child' to `a_position' in `a_container'.
 		local
 			item_list, item_pointer, new_item_list: POINTER
@@ -239,7 +239,7 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation	
 
-	on_list_clicked is
+	on_list_clicked
 			-- The list was clicked.
 		do
 			if not has_focus then
@@ -253,7 +253,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {NONE} -- Implementation
 
-	call_select_actions (selected_item_imp: EV_LIST_ITEM_IMP) is
+	call_select_actions (selected_item_imp: EV_LIST_ITEM_IMP)
 			-- Call `select_actions'.
 		do
 			if previous_selected_item_imp /= Void and then
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_i_th (an_index: INTEGER) is
+	remove_i_th (an_index: INTEGER)
 		local
 			f_i: EV_LIST_ITEM
 			item_imp: EV_LIST_ITEM_IMP
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 			child_array.remove
 		end
 
-	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
+	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP)
 			-- Add `v' to end of list.
 		do
 			if v_imp.internal_pixmap /= Void then
@@ -320,19 +320,19 @@ feature {NONE} -- Implementation
 			v_imp.set_item_parent_imp (Current)
 		end
 
-	create_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- 	
 		do
 			create Result
 		end
 
-	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
 			--
 		do
 			create Result
 		end
 
-	focused_item: EV_LIST_ITEM is
+	focused_item: EV_LIST_ITEM
 			-- item of the list which has currently the focus.
 		local
 			item_imp: EV_LIST_ITEM_IMP
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_key_pressed (ev_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+	on_key_pressed (ev_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN)
 			-- Called when a list item is selected.
 		local
 			f_item: EV_LIST_ITEM
@@ -382,7 +382,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			on_key_event (ev_key, a_key_string, a_key_press, False)
 		end
 
-	on_item_clicked is
+	on_item_clicked
 			-- One of the item has been clicked.
 		do
 				-- When the user clicks on one of the items of the list
@@ -392,7 +392,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			list_has_been_clicked := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

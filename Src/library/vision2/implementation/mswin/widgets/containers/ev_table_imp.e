@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Eiffel Vision table. Ms windows implementation
@@ -61,7 +61,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with `an_interface'.
 		do
 			base_make (an_interface)
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			rebuild_internal_item_list
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'. Precusor and create new_item_actions.
 		do
 			create_columns
@@ -84,14 +84,14 @@ feature {NONE} -- Initialization
 			disable_homogeneous
 		end
 
-	create_columns is
+	create_columns
 			-- Initialize columns.
 		do
 			create columns_minimum.make_filled (1)
 			column_spacing := Default_column_spacing
 		end
 
-	create_rows is
+	create_rows
 			-- Initialize rows.
 		do
 			create rows_minimum.make_filled (1)
@@ -115,7 +115,7 @@ feature {EV_ANY_I} -- Access
 	row_spacing: INTEGER
 			-- Spacing betwwen two rows in pixels.
 
-	item_column_position (widget: EV_WIDGET): INTEGER is
+	item_column_position (widget: EV_WIDGET): INTEGER
 			-- `Result' is column coordinate of `widget'.
 		local
 			widget_imp: EV_WIDGET_IMP
@@ -128,7 +128,7 @@ feature {EV_ANY_I} -- Access
 			Result := find_widget_child (widget_imp).left_attachment + 1
 		end
 
-	item_row_position (widget: EV_WIDGET): INTEGER is
+	item_row_position (widget: EV_WIDGET): INTEGER
 			-- `Result' is row coordinate of `widget'.
 		local
 			widget_imp: EV_WIDGET_IMP
@@ -141,7 +141,7 @@ feature {EV_ANY_I} -- Access
 			Result := find_widget_child (widget_imp).top_attachment + 1
 		end
 
-	item_column_span (widget: EV_WIDGET): INTEGER is
+	item_column_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of columns taken by `widget'.
 		local
 			widget_child: EV_TABLE_CHILD_IMP
@@ -156,7 +156,7 @@ feature {EV_ANY_I} -- Access
 			Result := widget_child.right_attachment - widget_child.left_attachment
 		end
 
-	item_row_span (widget: EV_WIDGET): INTEGER is
+	item_row_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of rows taken by `widget'.
 		local
 			widget_child: EV_TABLE_CHILD_IMP
@@ -176,7 +176,7 @@ feature {EV_TABLE_I} -- Status report
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
+	is_control_in_window (hwnd_control: POINTER): BOOLEAN
 			-- Is the control of handle `hwnd_control'
 			-- located inside `Current'?
 		local
@@ -201,21 +201,21 @@ feature {EV_TABLE_I} -- Status report
 
 feature {EV_ANY_I} -- Status settings
 
-	disable_sensitive is
+	disable_sensitive
 			-- Set `Current' insensitive.
 		do
 			set_insensitive (True)
 			Precursor
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Set `Current' sensitive.
 		do
 			set_insensitive (False)
 			Precursor
 		end
 
-	set_insensitive (flag: BOOLEAN) is
+	set_insensitive (flag: BOOLEAN)
 			-- Set `Current' sensitive if `sensitive'.
 			-- Set `Current' insensitive if not `sensitive'.
 			--| As it is a container, all children's sensitivity
@@ -249,7 +249,7 @@ feature {EV_ANY_I} -- Status settings
 			cursor_not_moved: old ev_children.index = ev_children.index
 		end
 
-	enable_homogeneous is
+	enable_homogeneous
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
@@ -257,35 +257,35 @@ feature {EV_ANY_I} -- Status settings
 			notify_change (Nc_minsize, Current)
 		end
 
-	disable_homogeneous is
+	disable_homogeneous
 			-- Disable homogeneous. Allow controls to take different sizes.
 		do
 			is_homogeneous := False
 			notify_change (Nc_minsize, Current)
 		end
 
-	set_row_spacing (value: INTEGER) is
+	set_row_spacing (value: INTEGER)
 			-- Make `value' the new `row_spacing'.
 		do
 			row_spacing := value
 			notify_change (nc_minheight, Current)
 		end
 
-	set_column_spacing (value: INTEGER) is
+	set_column_spacing (value: INTEGER)
 			-- Make `value' the new `column_spacing'.
 		do
 			column_spacing := value
 			notify_change (nc_minwidth, Current)
 		end
 
-	set_border_width (a_value: INTEGER) is
+	set_border_width (a_value: INTEGER)
 			-- Spacing between edge of `Current' and items.
 		do
 			border_width := a_value
 			notify_change (Nc_minsize, Current)
 		end
 
-	replace (v: like item) is
+	replace (v: like item)
 		-- Replace `item' with `v'.
 		do
 			check
@@ -293,7 +293,7 @@ feature {EV_ANY_I} -- Status settings
 			end
 		end
 
-	put (child: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER) is
+	put (child: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER)
 			--	Add `child' to `Current' at cell position `a_x', `a_y',
 			-- with size `a_width', `a_height' in cells.
 		local
@@ -322,7 +322,7 @@ feature {EV_ANY_I} -- Status settings
 			new_item_actions.call ([child])
 		end
 
-	resize (a_column, a_row: INTEGER) is
+	resize (a_column, a_row: INTEGER)
 			-- Resize the table to `a_column', `a_row'.
 		do
 			Precursor {EV_TABLE_I} (a_column, a_row)
@@ -332,7 +332,7 @@ feature {EV_ANY_I} -- Status settings
 		end
 
 
-	remove (v: EV_WIDGET) is
+	remove (v: EV_WIDGET)
 			-- Remove `v' from `Current' if present.
 		local
 			widget_imp: EV_WIDGET_IMP
@@ -359,7 +359,7 @@ feature {EV_ANY_I} -- Status settings
 			widget_imp.on_orphaned
 		end
 
-	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
+	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER)
 			-- Move `v' to position `a_column', `a_row'.
 		local
 			table_child: EV_TABLE_CHILD_IMP
@@ -376,7 +376,7 @@ feature {EV_ANY_I} -- Status settings
 			notify_change (Nc_minsize, Current)
 		end
 
-	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
+	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER)
 			-- Resize `v' to occupy `column_span' columns and `row_span' rows.
 		local
 			table_child: EV_TABLE_CHILD_IMP
@@ -393,7 +393,7 @@ feature {EV_ANY_I} -- Status settings
 			notify_change (Nc_minsize, Current)
 		end
 
-	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
+	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
 			-- Move `v' to `a_column', `a_row', and resize to occupy `column_span' columns and `row_span' rows.
 			local
 				table_child: EV_TABLE_CHILD_IMP
@@ -421,7 +421,7 @@ feature {EV_ANY_I} -- Status settings
 
 feature -- Element change
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		local
@@ -446,7 +446,7 @@ feature -- Element change
 
 feature {NONE} -- Assertions
 
-	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN
 			-- Is `a_child' a child of `Current'?
 		do
 			Result := find_widget_child (a_child) /= Void
@@ -478,7 +478,7 @@ feature {NONE} -- Access features for implementation
 
 feature {NONE} -- Resize Implementation
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- `Current' has been resized.
 		do
 			Precursor {EV_CONTAINER_IMP} (size_type, a_width, a_height)
@@ -486,14 +486,14 @@ feature {NONE} -- Resize Implementation
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position,
-				a_width, a_height: INTEGER; repaint: BOOLEAN) is
+				a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width,
 					a_height, repaint)
 			set_local_size (a_width, a_height, False)
 		end
 
-	set_local_size (new_width, new_height: INTEGER; originator: BOOLEAN) is
+	set_local_size (new_width, new_height: INTEGER; originator: BOOLEAN)
 			-- Recalculate the values of both rows and columns.
 			-- Do not resize the children for efficiency purposes.
 		local
@@ -523,7 +523,7 @@ feature {NONE} -- Resize Implementation
 			end
 		end
 
-	adjust_minimums_homogeneous (minimums: ARRAYED_LIST [INTEGER]) is
+	adjust_minimums_homogeneous (minimums: ARRAYED_LIST [INTEGER])
 			-- Adapt `minimums' so all values are equivalent to maximum value
 			-- of `minimums'.
 		local
@@ -540,7 +540,7 @@ feature {NONE} -- Resize Implementation
 			end
 		end
 
-	maximum_value (values: ARRAYED_LIST [INTEGER]): INTEGER is
+	maximum_value (values: ARRAYED_LIST [INTEGER]): INTEGER
 			-- `Result' is maximum integer value in `values'.
 		do
 		from
@@ -557,7 +557,7 @@ feature {NONE} -- Resize Implementation
 
 feature {NONE} -- Basic operations for implementation
 
-	compute_minimum_width is
+	compute_minimum_width
 			-- Recompute minimum_width of `Curren'.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
@@ -622,7 +622,7 @@ feature {NONE} -- Basic operations for implementation
 			end
 		end
 
-	compute_minimum_height is
+	compute_minimum_height
 			-- Recompute minimum_width of `Current'.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
@@ -686,7 +686,7 @@ feature {NONE} -- Basic operations for implementation
 			end
 		end
 
-	compute_minimum_size is
+	compute_minimum_size
 			-- Recompute minimum size of `Current'.
 		local
 			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
@@ -768,7 +768,7 @@ feature {NONE} -- Basic operations for implementation
 
 feature {NONE} -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
@@ -782,7 +782,7 @@ feature {NONE} -- Implementation
 
 	compute_values
 		(minimums: ARRAYED_LIST [INTEGER]; new_size, total_sum, spacing: INTEGER
-		): ARRAYED_LIST [INTEGER] is
+		): ARRAYED_LIST [INTEGER]
 			-- Recalculate values depending on the options and the minimums.
 		local
 			rate, total_rest, mark: INTEGER
@@ -830,21 +830,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	initialize_columns (value: INTEGER) is
+	initialize_columns (value: INTEGER)
 			-- Recreate `columns_minimum'.
 		do
 			columns_minimum.wipe_out
 			columns_minimum.make_filled (value)
 		end
 
-	initialize_rows (value: INTEGER) is
+	initialize_rows (value: INTEGER)
 			-- Recreate `rows_minimum'.
 		do
 			rows_minimum.wipe_out
 			rows_minimum.make_filled (value)
 		end
 
-	rest (total_rest: INTEGER): INTEGER is
+	rest (total_rest: INTEGER): INTEGER
 				-- Give the rest we must add to the current child of
 				-- ev_children when the size of the parent is not a
 				-- multiple of the number of children.
@@ -858,7 +858,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	find_widget_child (a_child: EV_WIDGET_IMP): EV_TABLE_CHILD_IMP is
+	find_widget_child (a_child: EV_WIDGET_IMP): EV_TABLE_CHILD_IMP
 				-- `Result' is the table child containing `a_child'.
 		require
 			valid_child: a_child /= Void
@@ -889,7 +889,7 @@ feature {NONE} -- Implementation
 
 	adjust_children
 		(columns_value, rows_value: ARRAYED_LIST [INTEGER];
-		originator: BOOLEAN) is
+		originator: BOOLEAN)
 			-- Ask the children to move and to resize theirselves
 			-- according to the given values :
 			-- `columns_value' for the columns, `rows_value' for the rows.
@@ -953,7 +953,7 @@ feature {NONE} -- Implementation
 
 	second_body_loop
 		(minimums: ARRAYED_LIST [INTEGER]; minimum_value, first, last,
-		spacing: INTEGER) is
+		spacing: INTEGER)
 			-- Adjust `minimums' to take into account widgets that occupy more
 			-- than one cell.
 			-- `minimum_value' is minimum width of widget at span `first', `last'.
@@ -1020,7 +1020,7 @@ feature {NONE} -- Implementation
 			minimums.go_to (cur)
 		end
 
-	sum_rows_minimums is
+	sum_rows_minimums
 			-- Sum the elements of the given list and store it in the last item.
 		local
 			cur: CURSOR
@@ -1046,7 +1046,7 @@ feature {NONE} -- Implementation
 			rows_sum := sum
 		end
 
-	sum_columns_minimums is
+	sum_columns_minimums
 			-- Sum the elements of the given list and store it in the last item.
 		local
 			cur: CURSOR
@@ -1071,7 +1071,7 @@ feature {NONE} -- Implementation
 			columns_sum := sum
 		end
 
-	adjust_tab_ordering (ordered_widgets: ARRAYED_LIST [WEL_WINDOW]; widget_depths: ARRAYED_LIST [INTEGER]; depth: INTEGER) is
+	adjust_tab_ordering (ordered_widgets: ARRAYED_LIST [WEL_WINDOW]; widget_depths: ARRAYED_LIST [INTEGER]; depth: INTEGER)
 			-- Adjust tab ordering of children in `Current'.
 			-- used when `Current' is a child of an EV_DIALOG_IMP_MODAL
 			-- or an EV_DIALOG_IMP_MODELESS. When
@@ -1079,13 +1079,13 @@ feature {NONE} -- Implementation
 			--| FIXME implement.
 		end
 
-	index_of_child (child: EV_WIDGET_IMP): INTEGER is
+	index_of_child (child: EV_WIDGET_IMP): INTEGER
 			-- `Result' is 1 based index of `child' within `Current'.
 		do
 			Result := interface.index_of (child.interface, 1)
 		end
 
-	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP
 			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
 			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
 			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
@@ -1150,7 +1150,7 @@ invariant
 
 	ev_children_not_void: ev_children /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

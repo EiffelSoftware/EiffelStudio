@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about message Wm_windowposchanged, %
 		%Wm_windowposchanging. These messages are sent to a window %
 		%whose size, position, or place in the Z order has changed."
@@ -18,12 +18,12 @@ create
 
 feature -- Access
 
-	position: WEL_WINDOW_POS is
+	position: WEL_WINDOW_POS
 		do
 			create Result.make_by_pointer (l_param)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

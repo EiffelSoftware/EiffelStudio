@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Font type constants for WEL_FONT_FAMILY_ENUMERATOR class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,15 +10,15 @@ class
 
 feature -- Access
 
-	Raster_fonttype: INTEGER is 1
+	Raster_fonttype: INTEGER = 1
 
-	Device_fonttype: INTEGER is 2
+	Device_fonttype: INTEGER = 2
 
-	Truetype_fonttype: INTEGER is 4
+	Truetype_fonttype: INTEGER = 4
 
 feature -- Status report
 
-	valid_font_type_enum_constant (c: INTEGER): BOOLEAN is
+	valid_font_type_enum_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid font type enum constant?
 		do
 			Result := c = Device_fonttype or else
@@ -26,7 +26,7 @@ feature -- Status report
 				c = Truetype_fonttype
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

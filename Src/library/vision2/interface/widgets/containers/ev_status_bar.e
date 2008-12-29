@@ -1,4 +1,4 @@
-indexing 
+note 
 	description:
 		"Horizontal bar for display of status messages."
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Set `padding' to default.
 		do
 			Precursor
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state.
 		do
 			Result := Precursor or padding = Default_padding
@@ -46,10 +46,10 @@ feature {NONE} -- Contract support
 
 feature {NONE} -- Implementation
 
-	Default_padding: INTEGER is 2;
+	Default_padding: INTEGER = 2;
 			-- `padding' at creation.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

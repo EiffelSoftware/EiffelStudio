@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Memory device context compatible with a given %
 		%device context or the application's current screen."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make a memory dc compatible with the application's
 			-- current screen.
 		local
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			item := cwin_create_compatible_dc (a_default_pointer)
 		end
 
-	make_by_dc (a_dc: WEL_DC) is
+	make_by_dc (a_dc: WEL_DC)
 			-- Make a memory dc compatible with `a_dc'.
 		require
 			a_dc_not: a_dc /= Void
@@ -42,19 +42,19 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	get is
+	get
 			-- Get the device context
 		do
 		end
 
-	release is
+	release
 			-- Release the device context
 		do
 		end
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- Delete the current device context.
 		local
 			p: POINTER	-- Default_pointer
@@ -70,7 +70,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Externals
 
-	cwin_create_compatible_dc (hdc: POINTER): POINTER is
+	cwin_create_compatible_dc (hdc: POINTER): POINTER
 			-- SDK CreateCompatibleDC
 		external
 			"C [macro <wel.h>] (HDC): EIF_POINTER"
@@ -78,7 +78,7 @@ feature {NONE} -- Externals
 			"CreateCompatibleDC"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

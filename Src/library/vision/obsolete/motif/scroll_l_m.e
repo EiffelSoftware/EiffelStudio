@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Rectangle with scrollbars or not which contains a list of %
@@ -73,7 +73,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_list: SCROLL_LIST; man, is_fixed: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_list: SCROLL_LIST; man, is_fixed: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif list, get screen_object value of srolled
 			-- window which contains current list.
 		local
@@ -105,7 +105,7 @@ feature -- Access
 	parent: MEL_SCROLLED_WINDOW;
 			-- Dialog shell parent
 
-	main_widget: MEL_SCROLLED_WINDOW is
+	main_widget: MEL_SCROLLED_WINDOW
 			-- Main widget of scroll list (scrolled window)
 		do
 			Result := parent
@@ -113,7 +113,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_managed (flag: BOOLEAN) is
+	set_managed (flag: BOOLEAN)
 			-- Enable geometry managment on screen widget implementation,
 			-- by window manager of parent widget if `flag', disable it
 			-- otherwise.
@@ -127,7 +127,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_size (new_width:INTEGER; new_height: INTEGER) is
+	set_size (new_width:INTEGER; new_height: INTEGER)
 			-- Set both width and height to `new_width'
 			-- and `new_height'.
 		local
@@ -143,7 +143,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_width (new_width :INTEGER) is
+	set_width (new_width :INTEGER)
 			-- Set width to `new_width'.
 		local
 			was_unmanaged: BOOLEAN
@@ -158,7 +158,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 			-- Set height to `new_height'.
 		local
 			was_unmanaged: BOOLEAN;
@@ -173,7 +173,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_background_color_from_imp (color_imp: COLOR_IMP) is
+	set_background_color_from_imp (color_imp: COLOR_IMP)
 			-- Set the background color from implementation `color_imp'.
 		local
 			w: MEL_WIDGET
@@ -196,7 +196,7 @@ feature -- Status setting
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

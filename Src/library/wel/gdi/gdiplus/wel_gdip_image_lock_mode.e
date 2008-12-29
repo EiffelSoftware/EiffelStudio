@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Enumeration of image lock mode."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,21 +10,21 @@ class
 
 feature -- Enumeration
 
-	Read_only: NATURAL_32 is 1
+	Read_only: NATURAL_32 = 1
 			-- Read only
 
-	Write_only: NATURAL_32 is 2
+	Write_only: NATURAL_32 = 2
 			-- Write only
 
-	Read_write: NATURAL_32 is 3
+	Read_write: NATURAL_32 = 3
 			-- Read write
 
-	User_input_buffer: NATURAL_32 is 4
+	User_input_buffer: NATURAL_32 = 4
 			-- User input buffer
 
 feature -- Query
 
-	is_valid (a_mode: NATURAL_32): BOOLEAN is
+	is_valid (a_mode: NATURAL_32): BOOLEAN
 			-- If `a_mode' valid?
 		do
 			Result := a_mode = Read_only
@@ -33,7 +33,7 @@ feature -- Query
 				or a_mode = User_input_buffer
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

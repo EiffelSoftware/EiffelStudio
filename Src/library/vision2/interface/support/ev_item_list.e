@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Base class for widgets that contain EV_ITEMs"
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature -- Access
 
-	item_by_data (some_data: ANY): like item is
+	item_by_data (some_data: ANY): like item
 			-- First item with `some_data'.
 		obsolete "Use `retrieve_item_by_data (some_data, True)' instead."
 		require
@@ -43,7 +43,7 @@ feature -- Access
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_DYNAMIC_LIST}
@@ -51,7 +51,7 @@ feature {NONE} -- Contract support
 
 feature {NONE} -- Contract support
 
-	parent_of_items_is_current: BOOLEAN is
+	parent_of_items_is_current: BOOLEAN
 			-- Do all items have parent `Current'?
 		require
 			not_destroyed: not is_destroyed
@@ -75,7 +75,7 @@ feature {NONE} -- Contract support
 			go_to (c)
 		end
 
-	items_unique: BOOLEAN is
+	items_unique: BOOLEAN
 			-- Are all items unique?
 			-- (ie Are there no duplicates?)
 		require
@@ -101,7 +101,7 @@ feature {NONE} -- Contract support
 			go_to (c)
 		end
 
-	lists_equal (list1, list2: DYNAMIC_LIST [G]): BOOLEAN is
+	lists_equal (list1, list2: DYNAMIC_LIST [G]): BOOLEAN
 			-- Are elements in `list1' equal to those in `list2'.
 		require
 			not_destroyed: not is_destroyed
@@ -135,7 +135,7 @@ feature {NONE} -- Contract support
 
 feature -- Implementation
 
-	changeable_comparison_criterion: BOOLEAN is False
+	changeable_comparison_criterion: BOOLEAN = False
 			-- May `object_comparison' be changed?
 			-- (Answer: no by default.
 
@@ -149,7 +149,7 @@ invariant
 	parent_of_items_is_current: is_usable and then not is_empty implies parent_of_items_is_current
 	items_unique: is_usable and not is_empty implies items_unique
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

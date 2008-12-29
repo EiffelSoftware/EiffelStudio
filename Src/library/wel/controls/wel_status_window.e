@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A window containing one or several parts which can
 		display text or can be owner drawn.
@@ -43,7 +43,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; an_id: INTEGER)
 			-- Create a status window with `a_parent' as parent and
 			-- `an_id' as id.
 		require
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	number_of_parts: INTEGER is
+	number_of_parts: INTEGER
 			-- Current number of parts
 		require
 			exists: exists
@@ -72,7 +72,7 @@ feature -- Status report
 			positive_result: Result > 0
 		end
 
-	text_for_part (index: INTEGER): STRING_32 is
+	text_for_part (index: INTEGER): STRING_32
 			-- Text for the part identified by the zero-based
 			-- `index'.
 		require
@@ -96,7 +96,7 @@ feature -- Status report
 				text_length_for_part (index)
 		end
 
-	text_length_for_part (index: INTEGER): INTEGER is
+	text_length_for_part (index: INTEGER): INTEGER
 			-- Length of the text in the part identified by the
 			-- zero-based `index'.
 		require
@@ -110,7 +110,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	text_style_for_part (index: INTEGER): INTEGER is
+	text_style_for_part (index: INTEGER): INTEGER
 			-- Style of the text in the part identified by the
 			-- zero-based `index'
 		require
@@ -124,7 +124,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	rect_for_part (index: INTEGER): WEL_RECT is
+	rect_for_part (index: INTEGER): WEL_RECT
 			-- Rectangle for a part identified by the
 			-- zero-based `index'.
 		require
@@ -138,7 +138,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	edges: ARRAY [INTEGER] is
+	edges: ARRAY [INTEGER]
 			-- Zero-based integer array which contains
 			-- all the edges currently present.
 		require
@@ -155,7 +155,7 @@ feature -- Status report
 			consistent_count: Result.count = number_of_parts
 		end
 
-	horizontal_border_width: INTEGER is
+	horizontal_border_width: INTEGER
 			-- Width of the horizontal border
 		require
 			exists: exists
@@ -165,7 +165,7 @@ feature -- Status report
 			positive_result: Result > 0
 		end
 
-	vertical_border_width: INTEGER is
+	vertical_border_width: INTEGER
 			-- Width of the vertical border
 		require
 			exists: exists
@@ -175,7 +175,7 @@ feature -- Status report
 			positive_result: Result > 0
 		end
 
-	width_between_rectangles: INTEGER is
+	width_between_rectangles: INTEGER
 			-- Width between the rectangles
 		require
 			exists: exists
@@ -187,7 +187,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	reposition is
+	reposition
 			-- Reposition the window according to the parent.
 			-- This function needs to be called in the
 			-- `on_size' routine of the parent.
@@ -199,7 +199,7 @@ feature -- Basic operations
 
 feature -- Element change
 
-	set_simple_mode is
+	set_simple_mode
 			-- Switch to simple mode.
 		require
 			exists: exists
@@ -207,7 +207,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Sb_simple, to_wparam (1), to_lparam (0))
 		end
 
-	set_multiple_mode is
+	set_multiple_mode
 			-- Switch to multiple parts mode.
 		require
 			exists: exists
@@ -215,7 +215,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Sb_simple, to_wparam (0), to_lparam (0))
 		end
 
-	set_simple_text (a_text: STRING_GENERAL) is
+	set_simple_text (a_text: STRING_GENERAL)
 			-- Set `a_text' for the simple mode
 		require
 			exists: exists
@@ -227,7 +227,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Sb_settext, to_wparam (Simple_part), a_wel_string.item)
 		end
 
-	set_simple_text_with_style (a_text: STRING_GENERAL; a_style: INTEGER) is
+	set_simple_text_with_style (a_text: STRING_GENERAL; a_style: INTEGER)
 			-- Set the text `a_text' with style `a_style' for a part
 			-- identified by `Simple_part'.
 			-- See class WEL_SBT_CONSTANTS for `a_style' values.
@@ -242,7 +242,7 @@ feature -- Element change
 				to_wparam (Simple_part + a_style), a_wel_string.item)
 		end
 
-	set_parts (a_edges: ARRAY [INTEGER]) is
+	set_parts (a_edges: ARRAY [INTEGER])
 			-- Set the parts for a multiple parts status window
 			-- according to the edged defined in `a_edges'.
 			-- If an element is -1, the position of the right edge
@@ -262,7 +262,7 @@ feature -- Element change
 			edges_set: edges.same_items (a_edges)
 		end
 
-	set_text_part (index: INTEGER; a_text: STRING_GENERAL) is
+	set_text_part (index: INTEGER; a_text: STRING_GENERAL)
 			-- Set the text for a part identified by the
 			-- zero-based `index'.
 		require
@@ -280,7 +280,7 @@ feature -- Element change
 		end
 
 	set_text_part_with_style (index: INTEGER; a_text: STRING_GENERAL;
-			a_style: INTEGER) is
+			a_style: INTEGER)
 			-- Set the text for a part identified by the
 			-- zero-based `index'.
 			-- See class WEL_SBT_CONSTANTS for `a_style' values.
@@ -299,7 +299,7 @@ feature -- Element change
 			style_is_set: a_style = text_style_for_part (index)
 		end
 
-	set_part_owner_drawn (index, value, a_style: INTEGER) is
+	set_part_owner_drawn (index, value, a_style: INTEGER)
 			-- Set a part identified by the zero-based `index' to
 			-- be owner drawn using `a_style' as extended style.
 			-- `value' will be present in the `on_draw_item'
@@ -318,7 +318,7 @@ feature -- Element change
 				Sbt_ownerdraw + a_style
 		end
 
-	set_minimum_height (a_height: INTEGER) is
+	set_minimum_height (a_height: INTEGER)
 			-- Set the minimun height with `a_height' in pixels.
 			-- To let the change take effect, call
 			-- the `reposition' procedure.
@@ -331,10 +331,10 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	Simple_part: INTEGER is 255
+	Simple_part: INTEGER = 255
 			-- Identifies the simple part
 
-	status_window_borders (index: INTEGER): INTEGER is
+	status_window_borders (index: INTEGER): INTEGER
 			-- Information about status window borders
 		require
 			exists: exists
@@ -352,13 +352,13 @@ feature {NONE} -- Implementation
 			positive_result: Result > 0
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := (create {WEL_STRING}.share_from_pointer (cwin_status_window_class)).string
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Sbars_sizegrip
@@ -366,32 +366,32 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Set the window text.
 		do
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Window text
 		do
 			create Result.make_empty
 		end
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Length of text
 		do
 		end
 
 feature {NONE} -- Externals
 
-	cwin_status_window_class: POINTER is
+	cwin_status_window_class: POINTER
 		external
 			"C [macro <cctrl.h>] : EIF_POINTER"
 		alias
 			"STATUSCLASSNAME"
 		end
 
-	Sbars_sizegrip: INTEGER is
+	Sbars_sizegrip: INTEGER
 			-- Style to draw the size grip.
 		external
 			"C [macro <cctrl.h>]"
@@ -399,7 +399,7 @@ feature {NONE} -- Externals
 			"SBARS_SIZEGRIP"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

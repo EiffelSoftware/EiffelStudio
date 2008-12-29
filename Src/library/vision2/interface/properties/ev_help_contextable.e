@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstraction for objects that support active help contexts."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 	
 feature -- Access
 
-	help_context: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT] is
+	help_context: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
 			-- Agent that evaluates to help context sent to help engine when help is requested
 		require
 			not_destroyed: not is_destroyed
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_help_context (an_help_context: like help_context) is
+	set_help_context (an_help_context: like help_context)
 			-- Assign `an_help_context' to `help_context'.
 		require
 			not_destroyed: not is_destroyed
@@ -41,7 +41,7 @@ feature -- Element change
 			help_context_assigned: help_context.is_equal (an_help_context)
 		end
 
-	remove_help_context is
+	remove_help_context
 			-- Remove key press action associated with `EV_APPLICATION.help_key'.
 		require
 			not_destroyed: not is_destroyed
@@ -57,7 +57,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_HELP_CONTEXTABLE_I;
 			-- Responsible for interaction with native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

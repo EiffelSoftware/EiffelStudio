@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Owner Draw Type (ODT) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,42 +10,42 @@ class
 
 feature -- Access
 
-	frozen Odt_menu: INTEGER is
+	frozen Odt_menu: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"ODT_MENU"
 		end
 
-	frozen Odt_listbox: INTEGER is
+	frozen Odt_listbox: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"ODT_LISTBOX"
 		end
 
-	frozen Odt_combobox: INTEGER is
+	frozen Odt_combobox: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"ODT_COMBOBOX"
 		end
 
-	frozen Odt_button: INTEGER is
+	frozen Odt_button: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"ODT_BUTTON"
 		end
 
-	frozen Odt_static: INTEGER is
+	frozen Odt_static: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"ODT_STATIC"
 		end
 		
-	Odt_tab: INTEGER is
+	Odt_tab: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -53,7 +53,7 @@ feature -- Access
 		end
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Email Object"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,13 +17,13 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize the headers table.
 		do
 			create headers.make (3)
 		end
 
-	make_with_entry (header_from, header_to: STRING) is
+	make_with_entry (header_from, header_to: STRING)
 			-- Create an email with the 'header_from' and the 'header_to'.
 		require
 			needed_info: header_from /= Void
@@ -36,7 +36,7 @@ feature -- Initialization
 
 feature {NONE} -- Basic operations.
 
-	transfer (resource: PROTOCOL_RESOURCE) is
+	transfer (resource: PROTOCOL_RESOURCE)
 			-- Used when the mailer will receive an email from 'resource'.
 		do
 
@@ -44,7 +44,7 @@ feature {NONE} -- Basic operations.
 
 feature -- Basic operations
 
-	add_header_entry (header_key, header_entry: STRING) is
+	add_header_entry (header_key, header_entry: STRING)
 			-- Add 'header_entry' to header 'header_key',
 			-- If no such header exists, create it.
 		require
@@ -64,7 +64,7 @@ feature -- Basic operations
 			end
 		end
 
-	add_header_entries (header_key: STRING; header_entries: ARRAY [STRING]) is
+	add_header_entries (header_key: STRING; header_entries: ARRAY [STRING])
 			-- Add multiple 'header_entries' at once  to 'header_key',
 			-- If not such header exists. create it.
 		local
@@ -82,7 +82,7 @@ feature -- Basic operations
 			end
 		end
 
-	remove_header_entry (header_key, header_entry: STRING) is
+	remove_header_entry (header_key, header_entry: STRING)
 			-- Remove 'header_entry' from header 'header_key'.
 		require
 			header_exists: headers.has (header_key)
@@ -98,7 +98,7 @@ feature -- Basic operations
 					not (headers.item (header_key)). entries.has (header_entry)
 		end
 
-	remove_header_entries (header_key: STRING) is
+	remove_header_entries (header_key: STRING)
 		require
 			header_exists: headers.has (header_key)
 		local
@@ -108,18 +108,18 @@ feature -- Basic operations
 			a_header.entries.wipe_out
 		end
 
-	has_header_entry (header_key: STRING): BOOLEAN is
+	has_header_entry (header_key: STRING): BOOLEAN
 		do
 			Result:= headers.has (header_key)
 		end
 
-	send is
+	send
 			-- Send email.
 		do
 
 		end
 
-	receive is
+	receive
 			-- Receive email.
 		do
 
@@ -127,13 +127,13 @@ feature -- Basic operations
 
 feature -- Implementation (EMAIL_RESOURCE)
 
-	can_be_received: BOOLEAN is True
+	can_be_received: BOOLEAN = True
 		-- Can an email received?
 
-	can_be_sent: BOOLEAN is True;
+	can_be_sent: BOOLEAN = True;
 		-- Can an email be send?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

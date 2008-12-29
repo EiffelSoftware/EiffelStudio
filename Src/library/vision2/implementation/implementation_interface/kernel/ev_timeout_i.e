@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision timeout. Implementation interface."
 	legal: "See notice at end of class."
@@ -17,13 +17,13 @@ inherit
 
 feature -- Access
 
-	interval: INTEGER is
+	interval: INTEGER
 			-- Time between calls to `interface.actions' in milliseconds.
 			-- Zero when disabled.
 		deferred
 		end
 
-	set_interval (an_interval: INTEGER) is
+	set_interval (an_interval: INTEGER)
 			-- Assign `an_interval' in milliseconds to `interval'.
 			-- Zero disables.
 		require
@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	reset_count is
+	reset_count
 			-- Set `count' to 0.
 		do
 			count := 0
@@ -50,7 +50,7 @@ feature -- Status setting
 
 feature -- Implementation
 
-	on_timeout is
+	on_timeout
 			-- Call actions and increment count if not already executing.
 		do
 				-- Do not process timeout if `Current' is already executing.
@@ -78,7 +78,7 @@ invariant
 	interval_not_negative: interval >= 0
 	count_not_negative: count >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

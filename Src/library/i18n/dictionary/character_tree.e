@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Datastructure that indexes items with a string_32 key by constructing a tree of characters"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {CHARACTER_TREE} -- Init
 
-	make (a_key: STRING_32; a_character_list: LINKED_LIST[CHARACTER_TREE[G]]) is
+	make (a_key: STRING_32; a_character_list: LINKED_LIST[CHARACTER_TREE[G]])
 			-- Make a tree with `a_key' as key and `a_character_list' as character list
 		require
 			a_key_not_exists: a_key /= Void
@@ -28,7 +28,7 @@ feature {CHARACTER_TREE} -- Init
 
 feature -- Interface
 
-	insert (a_item: G; a_key: STRING_32) is
+	insert (a_item: G; a_key: STRING_32)
 			-- Insert an `a_item' with `a_key' as key in Current tree
 		require
 			item_and_key_exist: a_item /= Void and a_key /= Void
@@ -55,7 +55,7 @@ feature -- Interface
 			end
 		end
 
-	get (a_key: STRING_32): G is
+	get (a_key: STRING_32): G
 			-- get item with `a_key' as key
 		require
 			a_key_exists: a_key /= Void
@@ -71,7 +71,7 @@ feature -- Interface
 			end
 		end
 
-	has (a_item: G; s: STRING_32): BOOLEAN is
+	has (a_item: G; s: STRING_32): BOOLEAN
 			-- Does current tree have `a_item' with `a_key' as key?
 		local
 			tree_el: CHARACTER_TREE[G]
@@ -84,7 +84,7 @@ feature -- Interface
 			end
 		end
 
-	get_item_with_key (s: STRING_32): G is
+	get_item_with_key (s: STRING_32): G
 			-- get the item in the tree that has as key `s'
 			-- if no item with this porperty, Result is void
 		require
@@ -130,7 +130,7 @@ feature {CHARACTER_TREE} -- character_trees_list
 			end
 		end
 
-	insert_character_tree (a_item: G; a_key: STRING_32) is
+	insert_character_tree (a_item: G; a_key: STRING_32)
 			-- Insert in `character_trees_list' a subtree with
 			-- `a_item' es element and `a_key' as key
 			-- If necessary, update `key' and all keys
@@ -154,7 +154,7 @@ feature {CHARACTER_TREE} -- character_trees_list
 			character_trees_list.put_front (l_tree)
 		end
 
-	split (a_item: G; a_string: STRING_32) is
+	split (a_item: G; a_string: STRING_32)
 			-- split leaf in a node with a character tree list
 		require
 			is_leaf: is_leaf
@@ -183,20 +183,20 @@ feature {CHARACTER_TREE} -- character_trees_list
 
 feature {CHARACTER_TREE} -- Information
 
-	is_leaf: BOOLEAN is
+	is_leaf: BOOLEAN
 			-- is current element a leaf?
 		do
 			Result := character_trees_list = Void
 		end
 	key: STRING_32
 
-	key_corresponds (a_key: STRING_32): BOOLEAN is
+	key_corresponds (a_key: STRING_32): BOOLEAN
 			-- does `a_key' correspond to a_string?
 		do
 			Result := minimum_distance (a_key) > 0
 		end
 
-	prepend_to_key (a_string: STRING_32) is
+	prepend_to_key (a_string: STRING_32)
 			-- prepend `a_string' to `key'
 		do
 			key:= a_string + key
@@ -204,13 +204,13 @@ feature {CHARACTER_TREE} -- Information
 
 	item: G
 
-	default_item: G is
+	default_item: G
 		do
 		end
 
 feature {CHARACTER_TREE} -- Implementation
 
-	minimum_distance (a_key: STRING_32): INTEGER is
+	minimum_distance (a_key: STRING_32): INTEGER
 			-- find distance between `a_string' and `key'
 			-- Result is the amount of equal characters from the beginning
 			-- of the two strings
@@ -228,7 +228,7 @@ feature {CHARACTER_TREE} -- Implementation
 
 feature --display
 
-	print_tree (t: INTEGER): STRING_32 is
+	print_tree (t: INTEGER): STRING_32
 			-- display current tree,
 			-- `t' is the depth, of current item
 		local
@@ -258,7 +258,7 @@ feature --display
 invariant
 	i2:	is_leaf implies character_trees_list = Void
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that map a networking path to a local drive"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_path: STRING_GENERAL) is
+	make (a_path: STRING_GENERAL)
 			-- Map the networking path `a_path' to a temporary path
 		local
 			net_resource: WEL_NET_RESOURCE
@@ -64,7 +64,7 @@ feature -- Access
 		
 feature -- Removal
 	
-	destroy is
+	destroy
 			-- Unmap the network path
 		local
 			result_func: INTEGER
@@ -81,7 +81,7 @@ feature {NONE} -- Externals
 
 	cwin_wnet_use_connection (hwnd_owner: POINTER; net_resource: POINTER;
 		user: POINTER; password: POINTER; flags: INTEGER; access_name_ptr: POINTER;
-		buffer_size: POINTER; result_info: POINTER): INTEGER is
+		buffer_size: POINTER; result_info: POINTER): INTEGER
 			-- SDK WNetUseConnection (with the result)
 		local
 			first_id: POINTER
@@ -103,7 +103,7 @@ feature {NONE} -- Externals
 	cwin_internal_wnet_use_connection (hwnd_owner: POINTER; net_resource: POINTER; 
 		user_nt_or_password_9x: POINTER; password_nt_or_user_9x: POINTER; 
 		flags: INTEGER; access_name_ptr: POINTER; buffer_size: POINTER; 
-		result_info: POINTER): INTEGER is
+		result_info: POINTER): INTEGER
 			-- SDK WNetUseConnection (with the result)
 			--
 			-- Note: Windows 9x/Me: The lpUserID and lpPassword parameters are in
@@ -116,7 +116,7 @@ feature {NONE} -- Externals
 			"WNetUseConnection"
 		end
 
-	cwin_wnet_cancel_connection2 (resource_name: POINTER; flags: INTEGER; force: BOOLEAN): INTEGER is
+	cwin_wnet_cancel_connection2 (resource_name: POINTER; flags: INTEGER; force: BOOLEAN): INTEGER
 			-- SDK WNetCancelConnection2 (with the result)
 		external
 			"C [macro <Winnetwk.h>] (LPCTSTR, DWORD, BOOL): DWORD"
@@ -124,7 +124,7 @@ feature {NONE} -- Externals
 			"WNetCancelConnection2"
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

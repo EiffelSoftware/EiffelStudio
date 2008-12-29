@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Figures consisting of two points."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_points (a_point_a, a_point_b: EV_RELATIVE_POINT) is
+	make_with_points (a_point_a, a_point_b: EV_RELATIVE_POINT)
 			-- Create on `a_point_a' and `a_point_b'.
 		require
 			a_point_a_not_void: a_point_a /= Void
@@ -34,13 +34,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	point_count: INTEGER is
+	point_count: INTEGER
 			-- `Current' has two points.
 		do
 			Result := 2
 		end
 
-	point_b: EV_RELATIVE_POINT is
+	point_b: EV_RELATIVE_POINT
 			-- Second point of `Current'.
 		do
 			Result := points.i_th (2)
@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_point_b (a_point: EV_RELATIVE_POINT) is
+	set_point_b (a_point: EV_RELATIVE_POINT)
 			-- Assign `a_point' to `point_b'.
 		require
 			a_point_not_void: a_point /= Void
@@ -58,7 +58,7 @@ feature -- Status setting
 			point_b_assigned: point_b = a_point
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

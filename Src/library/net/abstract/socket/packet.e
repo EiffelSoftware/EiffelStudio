@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A data packet for sending and receiving on a socket."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (size: INTEGER) is
+	make (size: INTEGER)
 			-- Create a packet.
 		require
 			valid_size: size >= 0
@@ -28,7 +28,7 @@ feature -- Initialization
 			create data.make (size)
 		end
 
-	make_from_managed_pointer (a_data: like data) is
+	make_from_managed_pointer (a_data: like data)
 			-- Create packet from `a_data' memory stream.
 		require
 			a_data_not_void: a_data /= Void
@@ -40,7 +40,7 @@ feature -- Initialization
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of elements in packet
 		do
 			Result := data.count
@@ -48,7 +48,7 @@ feature -- Measurement
 
 feature -- Access
 
-	element alias "[]", infix "@" (i: INTEGER): CHARACTER assign put_element is
+	element alias "[]", infix "@" (i: INTEGER): CHARACTER assign put_element
 			-- Entry at index `i'.
 		require
 			valid_position: valid_position (i)
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_position (i: INTEGER): BOOLEAN is
+	valid_position (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of Current?
 		do
 			Result := (0 <= i) and then (i < count)
@@ -66,7 +66,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put_element (v: CHARACTER; i: INTEGER) is
+	put_element (v: CHARACTER; i: INTEGER)
 			-- Replace `i'-th entry by `v'.
 		require
 			valid_position: valid_position (i)
@@ -78,7 +78,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current packet equal to `other'?
 		do
 			Result := data.is_equal (other.data)
@@ -86,7 +86,7 @@ feature -- Comparison
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Reinitialize by copying characters of `other'.
 			-- (This is also used by `clone')
 		do
@@ -104,7 +104,7 @@ feature -- Storage
 invariant
 	data_not_equal_void: data /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

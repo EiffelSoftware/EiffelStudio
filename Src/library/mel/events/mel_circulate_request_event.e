@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XCirculateRequestEvent."
@@ -19,13 +19,13 @@ create
 
 feature -- Access
 
-	parent_widget: MEL_WIDGET is
+	parent_widget: MEL_WIDGET
 			-- Parent window pointer that was restacked
 		do
 			Result := retrieve_widget_from_window (parent)
 		end;
 
-    is_place_on_top: BOOLEAN is
+    is_place_on_top: BOOLEAN
             -- Is the window place on top?
         do
             Result := c_event_place (handle) = PlaceOnTop
@@ -33,7 +33,7 @@ feature -- Access
             valid_result: Result = not is_place_on_bottom
         end;
 
-    is_place_on_bottom: BOOLEAN is
+    is_place_on_bottom: BOOLEAN
             -- Is the window place on the bottom?
         do
             Result := c_event_place (handle) = PlaceOnBottom
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Pointer access
 
-	parent: POINTER is
+	parent: POINTER
 			-- Parent window pointer that was restacked
 		do
 			Result := c_event_parent (handle)
@@ -51,17 +51,17 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_event_parent (event_ptr: POINTER): POINTER is
+	c_event_parent (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XCirculateRequestEvent *): EIF_POINTER"
 		end;
 
-	c_event_place (event_ptr: POINTER): INTEGER is
+	c_event_place (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XCirculateRequestEvent *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

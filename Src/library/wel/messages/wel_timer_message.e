@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about message Wm_timer which is sent after %
 		%each interval specified in the `set_timer' procedure used to %
 		%install a timer."
@@ -18,13 +18,13 @@ create
 
 feature -- Access
 
-	id: POINTER is
+	id: POINTER
 			-- Timer id specified with `set_timer'.
 		do
 			Result := w_param
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

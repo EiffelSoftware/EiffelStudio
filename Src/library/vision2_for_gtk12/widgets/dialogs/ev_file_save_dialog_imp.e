@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "EiffelVision file save dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			Precursor
 			set_title ("Save As")
@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_FILE_SAVE_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Popup shell that interacts with the window manager."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE)
 			-- Create a transient shell.
 		require
 			name_exists: a_name /= Void;
@@ -48,7 +48,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	transient_for: MEL_WIDGET is
+	transient_for: MEL_WIDGET
 			-- The widget from which Current will popup
 		require
 			exists: not is_destroyed
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_transient_for (a_widget: MEL_WIDGET) is
+	set_transient_for (a_widget: MEL_WIDGET)
 			-- Set `transient_for' to `a_widget'.
 		require
 			exists: not is_destroyed;
@@ -71,12 +71,12 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	xt_create_transient_shell (a_parent, a_name: POINTER): POINTER is
+	xt_create_transient_shell (a_parent, a_name: POINTER): POINTER
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision table, gtk implementation"
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a table widget with `par' as parent.
 		local
 			ret: INTEGER
@@ -68,17 +68,17 @@ feature -- Status report
 	is_homogeneous: BOOLEAN
 			-- Does Table have homogeneous spacing, no by default.
 
-	row_spacing: INTEGER is
+	row_spacing: INTEGER
 		do
 
 		end
 
-	column_spacing: INTEGER is
+	column_spacing: INTEGER
 		do
 
 		end
 
-	border_width: INTEGER is
+	border_width: INTEGER
 			-- Width of border around container in pixels.
 		do
 
@@ -86,7 +86,7 @@ feature -- Status report
 
 		end
 
-	setup_layout is
+	setup_layout
 			local
 				w: EV_WIDGET_IMP
 				c: EV_CONTAINER_IMP
@@ -108,12 +108,12 @@ feature -- Status report
 --				end
 			end
 
-	calculate_minimum_sizes is
+	calculate_minimum_sizes
 			--calculate the minimum sizes for buffered_minimum_heigth and width
 			do
 			end
 
-	replace (a_widget: EV_WIDGET) is
+	replace (a_widget: EV_WIDGET)
 			do
 
 			end
@@ -121,7 +121,7 @@ feature -- Status report
 
 feature -- Status settings
 
-	enable_homogeneous is
+	enable_homogeneous
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
@@ -129,7 +129,7 @@ feature -- Status settings
 
 		end
 
-	disable_homogeneous is
+	disable_homogeneous
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
@@ -137,59 +137,59 @@ feature -- Status settings
 			is_homogeneous := False
 		end
 
-	set_border_width (a_value: INTEGER) is
+	set_border_width (a_value: INTEGER)
 			-- Set the tables border width to `a_value' pixels.
 		do
 
 		end
 
-	set_row_spacing (a_value: INTEGER) is
+	set_row_spacing (a_value: INTEGER)
 			-- Spacing between two rows of the table.
 		do
 
 		end
 
-	set_column_spacing (a_value: INTEGER) is
+	set_column_spacing (a_value: INTEGER)
 			-- Spacing between two columns of the table.
 		do
 
 		end
 
-	put (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
+	put (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
 			-- Set the position of the `v' in the table.
 		do
 		end
 
-	remove (v: EV_WIDGET) is
+	remove (v: EV_WIDGET)
 			-- Remove `v' from the table if present.
 		do
 
 		end
 
-	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
+	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER)
 			-- Move `v' to position `a_column', `a_row'.
 		do
 
 		end
 
-	item_column_span (widget: EV_WIDGET): INTEGER is
+	item_column_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of columns taken by `widget'.
 		do
 
 		end
 
-	item_row_span (widget: EV_WIDGET): INTEGER is
+	item_row_span (widget: EV_WIDGET): INTEGER
 			--  `Result' is number of rows taken by `widget'.
 		do
 		end
 
-	item_row_position (widget: EV_WIDGET): INTEGER is
+	item_row_position (widget: EV_WIDGET): INTEGER
 			-- Result is row coordinate of 'widget'
 		do
 
 		end
 
-	item_column_position (widget: EV_WIDGET): INTEGER is
+	item_column_position (widget: EV_WIDGET): INTEGER
 			-- Result is column coordinate of 'widget'
 		do
 
@@ -197,13 +197,13 @@ feature -- Status settings
 
 feature {EV_ANY_I, EV_ANY} -- Status Settings
 
-	resize (a_column, a_row: INTEGER) is
+	resize (a_column, a_row: INTEGER)
 		do
 
 
 		end
 
-	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
+	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER)
 			-- Resize 'v' to occupy column span and row span
 		do
 
@@ -214,7 +214,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_TABLE;
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

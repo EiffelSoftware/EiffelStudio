@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "TIMER for debugger on Carbon"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (dmi: TTY_DEBUGGER_EVENTS_HANDLER_IMP) is
+	make (dmi: TTY_DEBUGGER_EVENTS_HANDLER_IMP)
 		do
 			tty_dbg_events_handler_imp := dmi
 			create actions
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Change
 
-	set_interval (i: like interval) is
+	set_interval (i: like interval)
 		do
 			interval := i
 			if timeout_connection_id > 0 then
@@ -55,12 +55,12 @@ feature {NONE} -- Implementation
 
 	timeout_connection_id: INTEGER
 
-	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER_32; args: POINTER) is
+	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER_32; args: POINTER)
 		do
 			action.call (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

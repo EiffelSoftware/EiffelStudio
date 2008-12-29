@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -20,42 +20,42 @@ create
 
 feature -- Access
 
-	flags: INTEGER is
+	flags: INTEGER
 		do
 			Result := c_ai_flags (object_ptr)
 		end
 
-	family: INTEGER is
+	family: INTEGER
 		do
 			Result := c_ai_family (object_ptr)
 		end
 
-	socktype: INTEGER is
+	socktype: INTEGER
 		do
 			Result := c_ai_socktype (object_ptr)
 		end
 
-	protocol: INTEGER is
+	protocol: INTEGER
 		do
 			Result := c_ai_protocol (object_ptr)
 		end
 
-	addrlen: INTEGER is
+	addrlen: INTEGER
 		do
 			Result := c_ai_addrlen (object_ptr)
 		end
 
-	canonname: STRING is
+	canonname: STRING
 		do
 			Result := c_ai_canonname (object_ptr)
 		end
 
-	addr: POINTER is
+	addr: POINTER
 		do
 			Result := c_ai_addr (object_ptr)
 		end
 
-	next: ADDRINFO is
+	next: ADDRINFO
 		local
 			p: POINTER
 		do
@@ -67,63 +67,63 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	c_ai_flags (obj_ptr: POINTER): INTEGER is
+	c_ai_flags (obj_ptr: POINTER): INTEGER
 		external
 			"C"
 		alias
 			"en_addrinfo_ai_flags"
 		end
 
-	c_ai_family (obj_ptr: POINTER): INTEGER is
+	c_ai_family (obj_ptr: POINTER): INTEGER
 		external
 			"C"
 		alias
 			"en_addrinfo_ai_family"
 		end
 
-	c_ai_socktype (obj_ptr: POINTER): INTEGER is
+	c_ai_socktype (obj_ptr: POINTER): INTEGER
 		external
 			"C"
 		alias
 			"en_addrinfo_ai_socktype"
 		end
 
-	c_ai_protocol (obj_ptr: POINTER): INTEGER is
+	c_ai_protocol (obj_ptr: POINTER): INTEGER
 		external
 			"C"
 		alias
 			"en_addrinfo_ai_protocol"
 		end
 
-	c_ai_addrlen (obj_ptr: POINTER): INTEGER is
+	c_ai_addrlen (obj_ptr: POINTER): INTEGER
 		external
 			"C"
 		alias
 			"en_addrinfo_ai_addrlen"
 		end
 
-	c_ai_canonname (obj_ptr: POINTER): STRING is
+	c_ai_canonname (obj_ptr: POINTER): STRING
 		external
 			"C"
 		alias
 			"en_addrinfo_ai_canonname"
 		end
 
-	c_ai_addr (obj_ptr: POINTER): POINTER is
+	c_ai_addr (obj_ptr: POINTER): POINTER
 		external
 			"C"
 		alias
 			"en_addrinfo_ai_addr"
 		end
 
-	c_ai_next (obj_ptr: POINTER): POINTER is
+	c_ai_next (obj_ptr: POINTER): POINTER
 		external
 			"C"
 		alias
 			"en_addrinfo_ai_next"
 		end
 
-	c_free (obj_ptr: POINTER) is
+	c_free (obj_ptr: POINTER)
 		external
 			"C"
 		alias

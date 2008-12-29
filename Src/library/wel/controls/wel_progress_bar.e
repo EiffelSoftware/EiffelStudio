@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Control to indicate the progress of a lengthy operation.
 		Note: The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Make a progress bar.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -45,21 +45,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	position: INTEGER is
+	position: INTEGER
 			-- Current position
 		do
 			Result := {WEL_API}.send_message_result_integer (item, Pbm_getpos,
 				to_wparam (0), to_lparam (0))
 		end
 
-	minimum: INTEGER is
+	minimum: INTEGER
 			-- Minimum position
 		do
 			Result := {WEL_API}.send_message_result_integer (item,
 				Pbm_getrange, to_wparam (1), to_lparam (0))
 		end
 
-	maximum: INTEGER is
+	maximum: INTEGER
 			-- Maximum position
 		do
 			Result := {WEL_API}.send_message_result_integer (item,
@@ -68,31 +68,31 @@ feature -- Access
 
 feature -- Element change
 
-	step_it is
+	step_it
 			-- Advance the current position by the step increment.
 		do
 			{WEL_API}.send_message (item, Pbm_stepit, to_wparam (0), to_lparam (0))
 		end
 
-	set_position (new_position: INTEGER) is
+	set_position (new_position: INTEGER)
 			-- Set the current position with `new_position'.
 		do
 			{WEL_API}.send_message (item, Pbm_setpos, to_wparam (new_position), to_lparam (0))
 		end
 
-	set_range (min, max: INTEGER) is
+	set_range (min, max: INTEGER)
 			-- Set the range with `minimum' and `maximum'.
 		do
 			{WEL_API}.send_message (item, Pbm_setrange32, to_wparam (min), to_lparam (max))
 		end
 
-	set_step (step: INTEGER) is
+	set_step (step: INTEGER)
 			-- Set the step increment with `step'.
 		do
 			{WEL_API}.send_message (item, Pbm_setstep, to_wparam (step), to_lparam (0))
 		end
 
-	set_delta_pos (increment: INTEGER) is
+	set_delta_pos (increment: INTEGER)
 			-- Advance the current position by a specified
 			-- `increment'.
 		require
@@ -103,13 +103,13 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := (create {WEL_STRING}.share_from_pointer (cwin_progress_class)).string
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group + Ws_tabstop
@@ -117,14 +117,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_progress_class: POINTER is
+	cwin_progress_class: POINTER
 		external
 			"C [macro <cctrl.h>] : EIF_POINTER"
 		alias
 			"PROGRESS_CLASS"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

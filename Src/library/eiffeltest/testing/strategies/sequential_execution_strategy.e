@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Strategy executing tests in the suite in a specified order"
 	legal: "See notice at end of class."
@@ -16,23 +16,23 @@ class SEQUENTIAL_EXECUTION_STRATEGY inherit
 
 feature -- Status report
 
-	Is_context_needed: BOOLEAN is True
+	Is_context_needed: BOOLEAN = True
 			-- Does strategy need context? (Answer: yes)
 
-	is_last: BOOLEAN is
+	is_last: BOOLEAN
 			-- Is current test the last test?
 		do
 			Result := (index = context.count)
 		end
 
-	is_ready: BOOLEAN is
+	is_ready: BOOLEAN
 			-- Is strategy ready for execution?
 		do
 			Result := Precursor and then not context.is_empty and then 
 				all_indices_valid
 		end
 
-	is_context_ok: BOOLEAN is
+	is_context_ok: BOOLEAN
 			-- Is context value ok?
 		local
 			i: INTEGER
@@ -48,13 +48,13 @@ feature -- Status report
 			end
 		end
 
-	Has_random_generator: BOOLEAN is False
+	Has_random_generator: BOOLEAN = False
 			-- Does current object have access to a random number generator?
 			-- (Answer: no)
 	 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Select next test.
 		do
 			index := index + 1
@@ -62,7 +62,7 @@ feature -- Cursor movement
 			is_reset := False
 		end
 
-	start is
+	start
 			-- Select first test.
 		do
 			reset
@@ -71,7 +71,7 @@ feature -- Cursor movement
 			index_reset: index = 1
 		end
 
-	reset is
+	reset
 			-- Reset strategy.
 		do
 			Precursor
@@ -80,12 +80,12 @@ feature -- Cursor movement
 
 feature {NONE} -- Inapplicable
 
-	seed: INTEGER is
+	seed: INTEGER
 			-- Random seed
 		do
 		end
 	 
-	set_seed (s: INTEGER) is
+	set_seed (s: INTEGER)
 			-- Set seed to `s'.
 		do
 		end
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 	index: INTEGER
 			-- Current index
 	
-	all_indices_valid: BOOLEAN is
+	all_indices_valid: BOOLEAN
 			-- Are all test indices in context valid?
 		require
 			context_not_empty: not context.is_empty
@@ -123,7 +123,7 @@ invariant
 	valid_index_constraint: is_test_selected implies
 			(1 <= index and index <= context.count)
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

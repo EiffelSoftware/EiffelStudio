@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision range. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -81,7 +81,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control.
 		do
 			Result := Ws_visible + Ws_child + Ws_group
@@ -93,7 +93,7 @@ feature {EV_ANY_I, EV_INTERNAL_SILLY_WINDOW_IMP} -- Interface
 
 	interface: EV_RANGE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

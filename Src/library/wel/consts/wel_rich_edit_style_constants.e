@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Rich edit styles."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,43 +10,43 @@ class
 
 feature -- Access
 
-	Es_disablenoscroll: INTEGER is 8192
+	Es_disablenoscroll: INTEGER = 8192
 			-- Disables scrollbars instead of hiding them when they
 			-- are not needed.
 
-	Es_noime: INTEGER is 524288
+	Es_noime: INTEGER = 524288
 			-- Disables the input method editor (IME) operation.
 			-- Available for Asian-languages only.
 
-	Es_savesel: INTEGER is 32768
+	Es_savesel: INTEGER = 32768
 			-- Preserves the selection when the control loses the
 			-- focus. By default, the entire contents of the
 			-- control are selected when it regains the focus.
 
-	Es_selfime: INTEGER is 262144
+	Es_selfime: INTEGER = 262144
 			-- Directs the rich edit control to allow the
 			-- application to handle all IME operations.
 			-- Available for Asian-languages only.
 
-	Es_sunken: INTEGER is 16384
+	Es_sunken: INTEGER = 16384
 			-- Displays the control with a sunken border style so
 			-- that the rich edit control appears recessed into
 			-- its parent window. Applications developed for
 			-- Windows 95 should use WS_EX_CLIENTEDGE instead of
 			-- ES_SUNKEN.
 
-	Es_vertical: INTEGER is 4194304
+	Es_vertical: INTEGER = 4194304
 			-- Draws text and objects in a vertical direction.
 			-- Available for Asian-languages only.
 
-	Es_ex_nocalloleinit: INTEGER is 16777216;
+	Es_ex_nocalloleinit: INTEGER = 16777216;
 			-- Prevents the control from calling the OleInitialize function
 			-- when created. This window style is useful only in dialog 
 			-- templates because CreateWindowEx does not accept this style.
 			--
 			-- Declared in Windows as ES_EX_NOCALLOLEINIT
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

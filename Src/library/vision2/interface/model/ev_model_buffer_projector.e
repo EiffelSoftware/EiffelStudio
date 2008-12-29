@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Projectors for widgets using limited-sized buffer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 	make_with_buffer (
 		a_world: like world;
-		a_drawing_area: EV_DRAWING_AREA) is
+		a_drawing_area: EV_DRAWING_AREA)
 			-- Create with `a_world' and `a_drawing_area'.
 		require
 			a_world_not_void: a_world /= Void
@@ -69,22 +69,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	buffer_scale_factor: REAL_32 is 1.5
+	buffer_scale_factor: REAL_32 = 1.5
 			-- The buffer is `buffer_scale_factor' times bigger than the window.
 
-	offset_x: INTEGER is
+	offset_x: INTEGER
 			-- Everyting is drawn offset_x pixels to the right.
 		do
 			Result := -drawable_position.x
 		end
 
-	offset_y: INTEGER is
+	offset_y: INTEGER
 			-- Everyting is drawen offset_y pixels to bottom.
 		do
 			Result := -drawable_position.y
 		end
 
-	world_as_pixmap (a_border: INTEGER): EV_PIXMAP is
+	world_as_pixmap (a_border: INTEGER): EV_PIXMAP
 			-- Image of the `world' with `a_border'.
 		require
 			a_border_positive: a_border >= 0
@@ -128,7 +128,7 @@ feature -- Access
 
 feature -- Element change
 
-	change_area_position (a_x, a_y: INTEGER) is
+	change_area_position (a_x, a_y: INTEGER)
 			-- `area' has moved to (`a_x', `a_y') of `drawable'.
 		do
 			area_x := a_x
@@ -144,11 +144,11 @@ feature -- Element change
 
 feature -- Status report
 
-	buffer_used: BOOLEAN is True
+	buffer_used: BOOLEAN = True
 
 feature {EV_MODEL_WORLD_CELL} -- Element change
 
-	simulate_mouse_move (ax, ay: INTEGER) is
+	simulate_mouse_move (ax, ay: INTEGER)
 			-- Let `Current' behave as if pointer was moved to `ax', `ay'
 		do
 			is_projecting := True
@@ -157,7 +157,7 @@ feature {EV_MODEL_WORLD_CELL} -- Element change
 
 feature -- Display updates
 
-	full_project is
+	full_project
 			-- Project entire area.
 		local
 			rectangle: EV_RECTANGLE
@@ -166,7 +166,7 @@ feature -- Display updates
 			project_rectangle (rectangle)
 		end
 
-	project_rectangle (u: EV_RECTANGLE) is
+	project_rectangle (u: EV_RECTANGLE)
 			-- Project area under `u'
 		local
 			pixmap: EV_PIXMAP
@@ -207,7 +207,7 @@ feature -- Display updates
 			end
 		end
 
-	update_rectangle (u: EV_RECTANGLE; a_x, a_y: INTEGER) is
+	update_rectangle (u: EV_RECTANGLE; a_x, a_y: INTEGER)
 			-- Flush `u' on `area' at (`a_x', `a_y').
 		local
 			pixmap: EV_PIXMAP
@@ -222,7 +222,7 @@ feature -- Display updates
 			end
 		end
 
-	update is
+	update
 			-- Update display by drawing the right part of the buffer on `area'.
 		local
 			u: EV_RECTANGLE
@@ -244,12 +244,12 @@ feature -- Display updates
 
 feature {NONE} -- Implementation
 
-	on_paint (x, y, w, h: INTEGER) is
+	on_paint (x, y, w, h: INTEGER)
 		do
 			update_rectangle (create {EV_RECTANGLE}.make (x, y, w, h), x, y)
 		end
 
-	move_buffer is
+	move_buffer
 			-- Move buffer so that `area' is in its middle.
 		local
 			buffer_bounds: EV_RECTANGLE
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			project_rectangle (buffer_bounds)
 		end
 
-	resize_buffer (a_x, a_y, area_width, area_height: INTEGER) is
+	resize_buffer (a_x, a_y, area_width, area_height: INTEGER)
 			-- Resize buffer if it is smaller than `Buffer_scale_factor' times
 			-- the size given by `area_width' and `area_height'.
 		local
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 			update
 		end
 
-	buffer_covers_area: BOOLEAN is
+	buffer_covers_area: BOOLEAN
 			-- Is `area' still in the surface covered by buffer ?
 		do
 			Result :=
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 invariant
 	right_drawable_in_the_cell: drawable = drawable_in_the_cell
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "DB_SELECTION for dynamic sql"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create an interface objet to query active base.
 		do
 			create ht.make (name_table_size)
@@ -50,7 +50,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	prepare (s: STRING) is
+	prepare (s: STRING)
 			-- Parse of the sql statement `s'
 		require
 			not_void: s /= Void
@@ -70,7 +70,7 @@ feature -- Element change
 			prepared_statement: not is_executed
 		end
 
-	execute  is
+	execute
 			-- Execute the sql statement
 		require
 			prepared_statement: is_prepared
@@ -91,7 +91,7 @@ feature -- Element change
 			prepared_statement: is_executed
 		end
 
-	parameter_count : INTEGER is
+	parameter_count : INTEGER
 		do
 			Result := implementation.parameter_count
 		end
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 	implementation: DATABASE_DYN_SELECTION [DATABASE];
 		-- Handle reference to specific database implementation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

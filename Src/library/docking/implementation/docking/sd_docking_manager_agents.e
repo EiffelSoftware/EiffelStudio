@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects help SD_DOCKING_MANAGER with agents issues."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
@@ -49,7 +49,7 @@ feature {NONE}  -- Initlization
 
 feature -- Command
 
-	init_actions is
+	init_actions
 			-- Initlialize actions.
 		require
 			not_destroyed: not is_destroyed
@@ -71,7 +71,7 @@ feature -- Command
 
 feature  -- Agents
 
-	on_widget_pointer_press (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER) is
+	on_widget_pointer_press (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER)
 			-- Handle EV_APPLICATION's pointer button press actions.
 		require
 			not_destroyed: not is_destroyed
@@ -111,7 +111,7 @@ feature  -- Agents
 			ignore_additional_click := False
 		end
 
-	on_widget_pointer_press_for_upper_zone (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER) is
+	on_widget_pointer_press_for_upper_zone (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER)
 			-- Handle EV_APPLICATION's pointer button press actions, for recover SD_UPPER_ZONE's size.
 		require
 			not_destroyed: not is_destroyed
@@ -140,7 +140,7 @@ feature  -- Agents
 			end
 		end
 
-	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_force: BOOLEAN) is
+	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_force: BOOLEAN)
 			-- Handle resize zone event. Resize all the widgets in fixed_area (EV_FIXED).
 		require
 			not_destroyed: not is_destroyed
@@ -176,14 +176,14 @@ feature  -- Agents
 			internal_docking_manager.tool_bar_manager.on_resize (a_x, a_y, internal_docking_manager.internal_viewport.width, internal_docking_manager.internal_viewport.height, a_force)
 		end
 
-	on_added_zone (a_zone: SD_ZONE) is
+	on_added_zone (a_zone: SD_ZONE)
 			-- Handle inserted a zone event.
 		require
 			not_destroyed: not is_destroyed
 		do
 		end
 
-	on_pruned_zone (a_zone: SD_ZONE) is
+	on_pruned_zone (a_zone: SD_ZONE)
 			-- Handle pruned a zone event.
 		require
 			not_destroyed: not is_destroyed
@@ -191,7 +191,7 @@ feature  -- Agents
 		do
 		end
 
-	on_added_content (a_content: SD_CONTENT) is
+	on_added_content (a_content: SD_CONTENT)
 			--  Handle added a content to contents.
 		require
 			not_destroyed: not is_destroyed
@@ -203,7 +203,7 @@ feature  -- Agents
 			set: a_content.docking_manager = internal_docking_manager
 		end
 
-	on_prune_content (a_content: SD_CONTENT) is
+	on_prune_content (a_content: SD_CONTENT)
 			--  Handle prune a content from contents.
 		require
 			not_void: a_content /= Void
@@ -213,7 +213,7 @@ feature  -- Agents
 			set: a_content.docking_manager = Void
 		end
 
-	on_main_window_focus_out is
+	on_main_window_focus_out
 			-- Handle window lost focus event.
 		require
 			not_destroyed: not is_destroyed
@@ -233,7 +233,7 @@ feature  -- Agents
 			end
 		end
 
-	on_main_window_focus_in is
+	on_main_window_focus_in
 			-- Handle window get focus event.
 		require
 			not_destroyed: not is_destroyed
@@ -285,7 +285,7 @@ feature  -- Agents
 			end
 		end
 
-	on_top_level_window_focus_in is
+	on_top_level_window_focus_in
 			-- Handle top level window focus in actions.
 		require
 			not_destroyed: not is_destroyed
@@ -293,7 +293,7 @@ feature  -- Agents
 --			internal_docking_manager.tool_bar_manager.show_all_floating
 		end
 
-	on_pick_actions (a_pebble: ANY) is
+	on_pick_actions (a_pebble: ANY)
 			-- Handle pick actions.
 		require
 			not_destroyed: not is_destroyed
@@ -301,7 +301,7 @@ feature  -- Agents
 			focused_tab_stub := Void
 		end
 
-	on_drop_actions (a_pebble: ANY) is
+	on_drop_actions (a_pebble: ANY)
 			-- Handle drop actions.
 		require
 			not_destroyed: not is_destroyed
@@ -309,7 +309,7 @@ feature  -- Agents
 			ignore_additional_click := True
 		end
 
-	on_theme_changed is
+	on_theme_changed
 			-- Handle theme changed actions.
 		require
 			not_destroyed: not is_destroyed
@@ -321,7 +321,7 @@ feature  -- Agents
 			internal_docking_manager.main_container.set_background_color (internal_shared.non_focused_color_lightness)
 		end
 
-	on_pnd_motions (a_x, a_y: INTEGER; a_target: EV_ABSTRACT_PICK_AND_DROPABLE) is
+	on_pnd_motions (a_x, a_y: INTEGER; a_target: EV_ABSTRACT_PICK_AND_DROPABLE)
 			-- Handle pick and drop motion actions.
 			-- We notify all auto hide tab stubs when pick and drop shere.
 		require
@@ -360,7 +360,7 @@ feature  -- Agents
 	pointer_in_tab: BOOLEAN
 			-- During pick and drop, if pointer position with in a tab stub?
 
-	notify_one_auto_hide_panel (a_direction: INTEGER; a_target: EV_WIDGET; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	notify_one_auto_hide_panel (a_direction: INTEGER; a_target: EV_WIDGET; a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Notify one auto hide
 			-- Result is if notified one tab stub
 		require
@@ -407,7 +407,7 @@ feature  -- Agents
 
 feature -- Destory
 
-	destroy is
+	destroy
 			-- Destory all underline objects
 		local
 			l_viewport: EV_VIEWPORT
@@ -438,7 +438,7 @@ feature -- Destory
 
 feature -- Contract support
 
-	user_widget_valid (a_content: SD_CONTENT): BOOLEAN is
+	user_widget_valid (a_content: SD_CONTENT): BOOLEAN
 			-- Dose a_widget alreay in docking library?
 		require
 			not_destroyed: not is_destroyed
@@ -472,7 +472,7 @@ feature -- Contract support
 			Result := not l_found
 		end
 
-	title_unique (a_content: SD_CONTENT): BOOLEAN is
+	title_unique (a_content: SD_CONTENT): BOOLEAN
 			-- If `a_unique_title' really unique?
 		require
 			not_destroyed: not is_destroyed
@@ -500,7 +500,7 @@ feature -- Contract support
 
 feature {SD_DEBUG_ACCESS} -- For debug.
 
-	show_inner_container_structure is
+	show_inner_container_structure
 			-- For debug.
 		require
 			not_destroyed: not is_destroyed
@@ -510,7 +510,7 @@ feature {SD_DEBUG_ACCESS} -- For debug.
 			show_inner_container_structure_imp (internal_docking_manager.inner_containers.item.item, " ")
 		end
 
-	show_inner_container_structure_imp (a_container: EV_WIDGET; a_indent: STRING_GENERAL) is
+	show_inner_container_structure_imp (a_container: EV_WIDGET; a_indent: STRING_GENERAL)
 			-- For debug.
 		require
 			not_destroyed: not is_destroyed
@@ -573,7 +573,7 @@ invariant
 	theme_changed_handler_not_void: theme_changed_handler /= Void
 	internal_shared_not_void: internal_shared /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

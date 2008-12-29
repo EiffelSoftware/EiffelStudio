@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ask user to select%
 			%a database table row from a set through%
 			%class DV_TABLEROWS_NAVIGATOR."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Basic operations
 
-	set_db_tablerow_navigator (db_tr_navigator: DV_TABLEROWS_NAVIGATOR) is
+	set_db_tablerow_navigator (db_tr_navigator: DV_TABLEROWS_NAVIGATOR)
 			-- Set `db_tr_navigator' to component enabling to navigate among
 			-- retrieved database table rows.
 		require
@@ -28,7 +28,7 @@ feature -- Basic operations
 
 feature {DV_COMPONENT} -- Access
 
-	selected_tablerows: ARRAYED_LIST [DB_TABLE] is
+	selected_tablerows: ARRAYED_LIST [DB_TABLE]
 			-- Base for database table row selection.
 		require
 			is_activated: is_activated
@@ -37,17 +37,17 @@ feature {DV_COMPONENT} -- Access
 			result_not_void: Result /= Void
 		end
 
-	No_selection: INTEGER is 0
+	No_selection: INTEGER = 0
 			-- No selection in the database table row list.
 
-	table_description: DB_TABLE_DESCRIPTION is
+	table_description: DB_TABLE_DESCRIPTION
 			-- Description of table represented by component.
 		deferred
 		end
 
 feature {DV_COMPONENT} -- Basic operations
 
-	change_selection (position: INTEGER) is
+	change_selection (position: INTEGER)
 			-- Select `tablerow_set' element at `position'.
 			-- Remove any selection if `position' = `No_selection'.
 		require
@@ -65,14 +65,14 @@ feature {NONE} -- Implementation
 	db_tablerow_navigator: DV_TABLEROWS_NAVIGATOR
 			-- Component enabling user to browse selected database table rows.
 
-	update_controls_sensitiveness is
+	update_controls_sensitiveness
 			-- Update controls sensitiveness.
 		require
 			is_activated: is_activated
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

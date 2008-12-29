@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Objects that is a filter that filter out the
 					information (classes, memory cost) we don't care.
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Creation method.
 		do
 			create item_and_filter_names.make (1)
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature  -- Filter
 
-	filter_class (a_class_name: STRING): BOOLEAN is
+	filter_class (a_class_name: STRING): BOOLEAN
 			-- Filter for Classs which we don't care, if we don't want the class then return True, else False.
 		require
 			a_class_name_valid: a_class_name.count > 0
@@ -60,7 +60,7 @@ invariant
 
 	item_and_filter_names_not_void: item_and_filter_names /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

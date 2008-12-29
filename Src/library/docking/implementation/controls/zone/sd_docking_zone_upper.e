@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Works like SD_DOCKING_ZONE, but instead of showing title bar, show one tab."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature -- Initlization
 
-	make (a_content: SD_CONTENT) is
+	make (a_content: SD_CONTENT)
 			-- Creation method.
 		require
 			a_content_not_void: a_content /= Void
@@ -73,7 +73,7 @@ feature -- Initlization
 
 feature -- Redefine
 
-	on_focus_in (a_content: SD_CONTENT) is
+	on_focus_in (a_content: SD_CONTENT)
 			-- <Precursor>
 		do
 			Precursor {SD_DOCKING_ZONE} (a_content)
@@ -81,67 +81,67 @@ feature -- Redefine
 			notebook.set_focus_color (True)
 		end
 
-	on_focus_out is
+	on_focus_out
 			-- <Precursor>
 		do
 			Precursor {SD_DOCKING_ZONE}
 			notebook.set_focus_color (False)
 		end
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- <Precursor>
 		do
 			notebook.set_item_text (internal_content, a_title)
 		end
 
-	set_show_normal_max (a_show: BOOLEAN) is
+	set_show_normal_max (a_show: BOOLEAN)
 			-- <Precursor>
 		do
 		end
 
-	set_show_stick (a_show: BOOLEAN) is
+	set_show_stick (a_show: BOOLEAN)
 			-- <Precursor>
 		do
 
 		end
 
-	set_max (a_max: BOOLEAN) is
+	set_max (a_max: BOOLEAN)
 			-- <Precursor>
 		do
 			notebook.set_show_maximized (a_max)
 		end
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- <Precursor>
 		do
 			notebook.set_item_pixmap (content, a_pixmap)
 		end
 
-	update_user_widget is
+	update_user_widget
 			-- <Precursor>
 		do
 			notebook.replace (content)
 		end
 
-	is_maximized: BOOLEAN is
+	is_maximized: BOOLEAN
 			-- <Precursor>
 		do
 			Result := notebook.is_maximized
 		end
 
-	title: STRING_32 is
+	title: STRING_32
 			-- <Precursor>
 		do
 			Result := notebook.item_text (internal_content)
 		end
 
-	title_area: EV_RECTANGLE is
+	title_area: EV_RECTANGLE
 			-- <Precursor>
 		do
 			Result := notebook.tab_area
 		end
 
-	set_focus_color (a_selection: BOOLEAN) is
+	set_focus_color (a_selection: BOOLEAN)
 			-- <Precursor>
 		do
 			if a_selection then
@@ -153,13 +153,13 @@ feature -- Redefine
 			notebook.set_focus_color (a_selection)
 		end
 
-	set_non_focus_selection_color is
+	set_non_focus_selection_color
 			-- <Precursor>
 		do
 			notebook.set_tab_active_color (False)
 		end
 
-	show_notebook_contents (a_is_show: BOOLEAN) is
+	show_notebook_contents (a_is_show: BOOLEAN)
 			-- <Precursor>
 		do
 			Precursor {SD_UPPER_ZONE}(a_is_show)
@@ -177,13 +177,13 @@ feature {SD_DOCKING_STATE} -- Query
 
 feature {NONE} -- Implementation
 
-	on_tab_drag (a_content: SD_CONTENT; a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	on_tab_drag (a_content: SD_CONTENT; a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Handle drag tab actions.
 		do
 			on_drag_started (a_x, a_y, 0, 0, 0, a_screen_x, a_screen_y)
 		end
 
-	on_normal_max_window is
+	on_normal_max_window
 		do
 			-- We need to remove the minimized state when either
 			-- selecting `restore' or `maximize'.
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 invariant
 	internal_notebook_not_void: notebook /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

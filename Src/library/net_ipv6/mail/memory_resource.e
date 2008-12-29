@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Memory resource object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,22 +14,22 @@ inherit
 
 feature -- Basic operations
 
-	send is
+	send
 		-- Send the resource.
 		deferred
 		end
 
-	receive is
+	receive
 		-- Receive the resource.
 		deferred
 		end
 
 feature -- Implementation (EMAIL_RESOURCE)
 
-	can_send: BOOLEAN is False
+	can_send: BOOLEAN = False
 		-- Can memory resource send?
 
-	can_receive: BOOLEAN is False
+	can_receive: BOOLEAN = False
 		-- Can memory resource receive?
 
 feature -- Access
@@ -42,19 +42,19 @@ feature -- Access
 
 feature -- Settings
 
-	set_message (s: STRING) is
+	set_message (s: STRING)
 			-- Set mail_message to 's'.
 		do
 			mail_message:= s
 		end
 
-	set_signature (s: STRING) is
+	set_signature (s: STRING)
 			-- Set mail_signature to 's'.
 		do
 			mail_signature:= s
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

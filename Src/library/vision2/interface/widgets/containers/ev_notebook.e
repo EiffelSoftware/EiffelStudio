@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Multiple widget container. Each widget is displayed on an individual
@@ -59,7 +59,7 @@ create
 
 feature -- Access
 
-	item_text (an_item: EV_WIDGET): STRING_32 is
+	item_text (an_item: EV_WIDGET): STRING_32
 			-- Label of `an_item'.
 		require
 			not_destroyed: not is_destroyed
@@ -72,7 +72,7 @@ feature -- Access
 			cloned: Result /= implementation.item_text (an_item)
 		end
 
-	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
+	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB
 			-- Tab associated with `an_item'.
 		require
 			not_destroyed: not is_destroyed
@@ -85,7 +85,7 @@ feature -- Access
 
 feature {EV_BUILDER} -- Access
 
-	pixmap_paths: HASH_TABLE [STRING_32, INTEGER] is
+	pixmap_paths: HASH_TABLE [STRING_32, INTEGER]
 			-- All pixmap paths for pixmaps of tabs.
 		once
 			create Result.make (4)
@@ -93,7 +93,7 @@ feature {EV_BUILDER} -- Access
 
 feature -- Status report
 
-	selected_item: EV_WIDGET is
+	selected_item: EV_WIDGET
 			-- Page displayed topmost.
 		require
 			not_destroyed: not is_destroyed
@@ -104,7 +104,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.selected_item
 		end
 
-	selected_item_index: INTEGER is
+	selected_item_index: INTEGER
 			-- Index of `selected_item'.
 		require
 			not_destroyed: not is_destroyed
@@ -114,7 +114,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.selected_item_index
 		end
 
-	tab_position: INTEGER is
+	tab_position: INTEGER
 			-- Position of tabs.
 			-- One of `Tab_left', `Tab_right', `Tab_top' or `Tab_bottom'.
 			-- Default: `Tab_top'
@@ -126,7 +126,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.tab_position
 		end
 
-	pointed_tab_index: INTEGER is
+	pointed_tab_index: INTEGER
 			-- index of tab currently under mouse pointer, or 0 if none.
 		require
 			not_destroyed: not is_destroyed
@@ -138,7 +138,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	position_tabs_top is
+	position_tabs_top
 			-- Display tabs at top of `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -148,7 +148,7 @@ feature -- Status setting
 			tab_position_set: tab_position = Tab_top
 		end
 
-	position_tabs_bottom is
+	position_tabs_bottom
 			-- Display tabs at bottom of `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -158,7 +158,7 @@ feature -- Status setting
 			tab_position_set: tab_position = Tab_bottom
 		end
 
-	position_tabs_left is
+	position_tabs_left
 			-- Display tabs at left of `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -168,7 +168,7 @@ feature -- Status setting
 			tab_position_set: tab_position = Tab_left
 		end
 
-	position_tabs_right is
+	position_tabs_right
 			-- Display tabs at right of `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -178,7 +178,7 @@ feature -- Status setting
 			tab_position_set: tab_position = Tab_right
 		end
 
-	set_tab_position (a_tab_position: INTEGER) is
+	set_tab_position (a_tab_position: INTEGER)
 			-- Display tabs at `a_tab_position'.
 		require
 			not_destroyed: not is_destroyed
@@ -191,7 +191,7 @@ feature -- Status setting
 			tab_position_set: tab_position = a_tab_position
 		end
 
-	select_item (an_item: EV_WIDGET) is
+	select_item (an_item: EV_WIDGET)
 			-- Display `an_item' above all others.
 		require
 			not_destroyed: not is_destroyed
@@ -204,21 +204,21 @@ feature -- Status setting
 
 feature -- Constants
 
-	Tab_left: INTEGER is 1
+	Tab_left: INTEGER = 1
 			-- Value used to position tab at left.
 
-	Tab_right: INTEGER is 2
+	Tab_right: INTEGER = 2
 			-- Value used to position tab at right.
 
-	Tab_top: INTEGER is 3
+	Tab_top: INTEGER = 3
 			-- Value used to position tab at top.
 
-	Tab_bottom: INTEGER is 4
+	Tab_bottom: INTEGER = 4
 			-- Value used to position tab at bottom.
 
 feature -- Element change
 
-	set_item_text (an_item: EV_WIDGET; a_text: STRING_GENERAL) is
+	set_item_text (an_item: EV_WIDGET; a_text: STRING_GENERAL)
 			-- Assign `a_text' to label of `an_item'.
 		require
 			not_destroyed: not is_destroyed
@@ -233,7 +233,7 @@ feature -- Element change
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_WIDGET_LIST} and tab_position = Tab_top
@@ -246,7 +246,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_NOTEBOOK_IMP} implementation.make (Current)
@@ -268,7 +268,7 @@ invariant
 	selected_item_index_is_index_of_selected_item:
 		is_usable and not is_empty implies selected_item_index = index_of (selected_item, 1)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

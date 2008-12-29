@@ -1,4 +1,4 @@
-indexing
+note
 	description: "When Docking Manager is locked, use this one instead of SD_DOCKER_MANAGER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_caller: like caller; a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_caller: like caller; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Redefine
 		do
 			caller := a_caller
@@ -34,7 +34,7 @@ feature {NONE} -- Initlization
 
 feature -- Hanlde pointer events
 
-	start_tracing_pointer (a_offset_x, a_offset_y: INTEGER_32) is
+	start_tracing_pointer (a_offset_x, a_offset_y: INTEGER_32)
 			-- Redefine
 		local
 			l_env: EV_ENVIRONMENT
@@ -48,21 +48,21 @@ feature -- Hanlde pointer events
 			l_env.application.focus_out_actions.extend (focus_out_agent)
 		end
 
-	cancel_tracing_pointer is
+	cancel_tracing_pointer
 			-- Redefine
 		do
 			is_tracing := False
 			clear_up
 		end
 
-	end_tracing_pointer (a_screen_x, a_screen_y: INTEGER_32) is
+	end_tracing_pointer (a_screen_x, a_screen_y: INTEGER_32)
 			-- Redefine
 		do
 			is_tracing := False
 			clear_up
 		end
 
-	on_pointer_motion (a_screen_x, a_screen_y: INTEGER_32) is
+	on_pointer_motion (a_screen_x, a_screen_y: INTEGER_32)
 			-- Redefine
 		local
 			l_floating_zone: SD_FLOATING_ZONE
@@ -86,7 +86,7 @@ feature -- Hanlde pointer events
 
 feature {NONE} -- Implementation
 
-	clear_up is
+	clear_up
 			-- Redefine
 		local
 			l_env: EV_ENVIRONMENT
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			l_env.application.focus_out_actions.prune (focus_out_agent)
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

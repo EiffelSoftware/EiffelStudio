@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision Parent Class for EV_TEXT_FIELD_IMP and EV_TEXT_IMP Carbon implementationimplementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ inherit
 		end
 
 feature {NONE} -- Initialization
-	make (an_interface: EV_ANY)is
+	make (an_interface: EV_ANY)
 			do
 
 			end
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen kTXNSingleLineOnlyMask: INTEGER is
+	frozen kTXNSingleLineOnlyMask: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -51,7 +51,7 @@ feature -- Access
 		"kTXNSingleLineOnlyMask"
 	end
 
-	frozen kTXNNoUserIOTag: INTEGER is
+	frozen kTXNNoUserIOTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -59,7 +59,7 @@ feature -- Access
 		"kTXNNoUserIOTag"
 	end
 
-	frozen kTXNTextData: INTEGER is
+	frozen kTXNTextData: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -67,7 +67,7 @@ feature -- Access
 		"kTXNTextData"
 	end
 
-	frozen kTXNStartOffset: INTEGER is
+	frozen kTXNStartOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -75,7 +75,7 @@ feature -- Access
 		"kTXNStartOffset"
 	end
 
-	frozen kTXNEndOffset: INTEGER is
+	frozen kTXNEndOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -83,7 +83,7 @@ feature -- Access
 		"kTXNEndOffset"
 	end
 
-	frozen kTXNUnicodeTextData: INTEGER is
+	frozen kTXNUnicodeTextData: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -91,7 +91,7 @@ feature -- Access
 		"kTXNUnicodeTextData"
 	end
 
-	frozen kTXNSystemDefaultEncoding: INTEGER is
+	frozen kTXNSystemDefaultEncoding: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -99,7 +99,7 @@ feature -- Access
 		"kTXNSystemDefaultEncoding"
 	end
 
-	get_text_length (obj: POINTER; starto, endo: INTEGER):INTEGER is
+	get_text_length (obj: POINTER; starto, endo: INTEGER):INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -114,7 +114,7 @@ feature -- Access
 			]"
 	end
 
-	get_text (obj, buf_ptr: POINTER; starto, endo: INTEGER) is
+	get_text (obj, buf_ptr: POINTER; starto, endo: INTEGER)
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -144,7 +144,7 @@ feature -- Access
 			]"
 	end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text displayed in field.
 		local
 			string_ptr: POINTER
@@ -160,7 +160,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			a_c_str: C_STRING
@@ -170,7 +170,7 @@ feature -- Status setting
 			ret := txnset_data_external (entry_widget, kTXNTextData, a_c_str.item, a_text.count, kTXNStartOffset, kTXNEndOffset)
 		end
 
-	append_text (txt: STRING_GENERAL) is
+	append_text (txt: STRING_GENERAL)
 			-- Append `txt' to the end of the text.
 		local
 			a_c_str: C_STRING
@@ -180,7 +180,7 @@ feature -- Status setting
 			ret := txnset_data_external (entry_widget, kTXNTextData, a_c_str.item, txt.count, kTXNEndOffset, kTXNEndOffset)
 		end
 
-	prepend_text (txt: STRING_GENERAL) is
+	prepend_text (txt: STRING_GENERAL)
 			-- Prepend `txt' to the end of the text.
 		local
 			a_c_str: C_STRING
@@ -192,7 +192,7 @@ feature -- Status setting
 
 feature -- Status Report
 
-	caret_position: INTEGER is
+	caret_position: INTEGER
 			-- Current position of the caret.
 		local
 			starto, endo: INTEGER
@@ -202,7 +202,7 @@ feature -- Status Report
 		end
 feature --dispose
 
-	dispose is
+	dispose
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
 		local
@@ -215,7 +215,7 @@ feature --dispose
 
 feature -- Status report
 
-	is_editable: BOOLEAN is
+	is_editable: BOOLEAN
 			-- Is the text editable.
 		local
 			tag, ret, data: INTEGER
@@ -225,7 +225,7 @@ feature -- Status report
 			Result := (data = 0)
 		end
 
-	has_selection: BOOLEAN is
+	has_selection: BOOLEAN
 			-- Is something selected?
 		local
 			starto, endo: INTEGER
@@ -235,7 +235,7 @@ feature -- Status report
 
 		end
 
-	selection_start: INTEGER is
+	selection_start: INTEGER
 			-- Index of the first character selected.
 		local
 			starto, endo: INTEGER
@@ -244,7 +244,7 @@ feature -- Status report
 			Result := starto+1
 		end
 
-	selection_end: INTEGER is
+	selection_end: INTEGER
 			-- Index of the last character selected.
 		local
 			starto, endo: INTEGER
@@ -253,7 +253,7 @@ feature -- Status report
 			Result := endo+1
 		end
 
-	clipboard_content: STRING_32 is
+	clipboard_content: STRING_32
 			-- `Result' is current clipboard content.
 		local
 			string_ptr: POINTER
@@ -271,12 +271,12 @@ feature -- Status report
 
 feature -- status settings
 
-	hide_border is
+	hide_border
 			-- Hide the border of `Current'.
 		do
 		end
 
-	set_editable (flag: BOOLEAN) is
+	set_editable (flag: BOOLEAN)
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.
 			-- kTXNNoUserIOTag
@@ -294,7 +294,7 @@ feature -- status settings
 
 		end
 
-	set_caret_position (pos: INTEGER) is
+	set_caret_position (pos: INTEGER)
 			-- Set the position of the caret to `pos'.
 		local
 			ret: INTEGER
@@ -304,7 +304,7 @@ feature -- status settings
 
 feature -- Basic operation
 
-	insert_text (txt: STRING_GENERAL) is
+	insert_text (txt: STRING_GENERAL)
 			-- Insert `txt' at the current position.
 		local
 			a_c_str: C_STRING
@@ -314,7 +314,7 @@ feature -- Basic operation
 			ret := txnset_data_external (entry_widget, kTXNTextData, a_c_str.item, txt.count, selection_start-1, selection_end-1)
 		end
 
-	insert_text_at_position (txt: STRING_GENERAL; a_pos: INTEGER) is
+	insert_text_at_position (txt: STRING_GENERAL; a_pos: INTEGER)
 			-- Insert `txt' at the current position at position `a_pos'
 		local
 			a_c_str: C_STRING
@@ -324,7 +324,7 @@ feature -- Basic operation
 			ret := txnset_data_external (entry_widget, kTXNTextData, a_c_str.item, txt.count, a_pos-1, a_pos-1)
 		end
 
-	select_region (start_pos, end_pos: INTEGER) is
+	select_region (start_pos, end_pos: INTEGER)
 			-- Select (highlight) the text between
 			-- 'start_pos' and 'end_pos'.
 		local
@@ -333,19 +333,19 @@ feature -- Basic operation
 			ret := txnset_selection_external (entry_widget, start_pos-1, end_pos-1)
 		end
 
-	deselect_all is
+	deselect_all
 			-- Unselect the current selection.
 		do
 		set_caret_position (selection_start)
 		end
 
-	delete_selection is
+	delete_selection
 			-- Delete the current selection.
 		do
 			insert_text("")
 		end
 
-	cut_selection is
+	cut_selection
 			-- Cut the `selected_region' by erasing it from
 			-- the text and putting it in the Clipboard
 			-- to paste it later.
@@ -357,7 +357,7 @@ feature -- Basic operation
 			ret := txncut_external (entry_widget)
 		end
 
-	copy_selection is
+	copy_selection
 			-- Copy the `selected_region' in the Clipboard
 			-- to paste it later.
 			-- If the `selected_region' is empty, it does
@@ -369,7 +369,7 @@ feature -- Basic operation
 
 		end
 
-	paste (index: INTEGER) is
+	paste (index: INTEGER)
 			-- Insert the string which is in the
 			-- Clipboard at the `index' position in the
 			-- text.
@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 invariant
 	entry_widget_set: entry_widget /= NULL
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_CARBON_TXN
 

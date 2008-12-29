@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Screen log facilities for test results"
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_stderr is
+	make_with_stderr
 			-- Create log to standard error.
 		do
 			set_stderr
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			stderr_set: is_stderr
 		end
 
-	make, make_with_stdout is
+	make, make_with_stdout
 			-- Create log to standard output.
 		do
 			set_stdout
@@ -38,13 +38,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_stderr: BOOLEAN is
+	is_stderr: BOOLEAN
 			-- Output on standard error?
 		do
 			Result := output_device = Io.error
 		end
 
-	is_stdout: BOOLEAN is
+	is_stdout: BOOLEAN
 			-- Output on standard output?
 		do
 			Result := output_device = Io.output
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_stderr is
+	set_stderr
 			-- Set output to standard error.
 		do
 			output_device := Io.error
@@ -60,7 +60,7 @@ feature -- Status setting
 			output_to_stderr: output_device = Io.error
 		end
 
-	set_stdout is
+	set_stdout
 			-- Set output to standard output.
 		do
 			output_device := Io.output
@@ -77,7 +77,7 @@ invariant
 
 	well_defined_state: is_stdout xor is_stderr
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

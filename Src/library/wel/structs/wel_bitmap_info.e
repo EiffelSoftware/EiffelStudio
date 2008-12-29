@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Defines the dimensions and color information for a %
 		%Windows device-independent bitmap (DIB)."
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_bitmap_info_header: WEL_BITMAP_INFO_HEADER;
-			a_rgb_quad_count: INTEGER) is
+			a_rgb_quad_count: INTEGER)
 			-- Make a BITMAPINFO structure
 			-- with `a_bitmap_info_header'
 		require
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			set_bitmap_info_header (a_bitmap_info_header)
 		end
 
-	make_by_dc (dc: WEL_DC; bitmap: WEL_BITMAP; usage: INTEGER) is
+	make_by_dc (dc: WEL_DC; bitmap: WEL_BITMAP; usage: INTEGER)
 			-- Make a bitmap info structure using `dc' and
 			-- `bitmap'.
 			-- See class WEL_DIB_COLORS_CONSTANTS for `usage'
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	header: WEL_BITMAP_INFO_HEADER is
+	header: WEL_BITMAP_INFO_HEADER
 			-- Information about the dimensions and color
 			-- format of a DIB
 		do
@@ -81,7 +81,7 @@ feature -- Access
 	rgb_quad_count: INTEGER
 			-- Number of colors
 
-	rgb_quad (index: INTEGER): WEL_RGB_QUAD is
+	rgb_quad (index: INTEGER): WEL_RGB_QUAD
 			-- Bitmap color at zero-based `index'
 		require
 			index_small_enough: index < rgb_quad_count
@@ -94,7 +94,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_bitmap_info_header (a_header: WEL_BITMAP_INFO_HEADER) is
+	set_bitmap_info_header (a_header: WEL_BITMAP_INFO_HEADER)
 			-- Set `header' with `a_header'.
 		require
 			a_header_not_void: a_header /= Void
@@ -102,7 +102,7 @@ feature -- Element change
 			cwel_bitmap_info_set_header (item, a_header.item)
 		end
 
-	set_rgb_quad (index: INTEGER; a_rgb_quad: WEL_RGB_QUAD) is
+	set_rgb_quad (index: INTEGER; a_rgb_quad: WEL_RGB_QUAD)
 			-- Set `rgb_quad' with `a_rgb_quad' at
 			-- zero-based `index'.
 		require
@@ -122,7 +122,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		do
 				-- It has to be `- 1' because in the size of `BITMAP_INFO' it already
@@ -133,21 +133,21 @@ feature -- Measurement
 
 feature -- Obsolete
 
-	bitmap_info_header: WEL_BITMAP_INFO_HEADER is obsolete "Use ``header''"
+	bitmap_info_header: WEL_BITMAP_INFO_HEADER obsolete "Use ``header''"
 		do
 			Result := header
 		end
 
 feature {NONE} -- Externals
 
-	c_size_of_bitmap_info: INTEGER is
+	c_size_of_bitmap_info: INTEGER
 		external
 			"C [macro <bmpinfo.h>]"
 		alias
 			"sizeof (BITMAPINFO)"
 		end
 
-	c_size_of_rgb_quad: INTEGER is
+	c_size_of_rgb_quad: INTEGER
 		external
 			"C [macro <bmpinfo.h>]"
 		alias
@@ -155,46 +155,46 @@ feature {NONE} -- Externals
 		end
 
 	cwel_bitmap_info_set_rgb_quad_rgb_red (ptr: POINTER; index,
-			value: INTEGER) is
+			value: INTEGER)
 		external
 			"C [macro <bmpinfo.h>]"
 		end
 
-	cwel_bitmap_info_set_header (ptr: POINTER; value: POINTER) is
+	cwel_bitmap_info_set_header (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <bmpinfo.h>]"
 		end
 
 	cwel_bitmap_info_set_rgb_quad_rgb_green (ptr: POINTER; index,
-			value: INTEGER) is
+			value: INTEGER)
 		external
 			"C [macro <bmpinfo.h>]"
 		end
 
 	cwel_bitmap_info_set_rgb_quad_rgb_blue (ptr: POINTER; index,
-			value: INTEGER) is
+			value: INTEGER)
 		external
 			"C [macro <bmpinfo.h>]"
 		end
 
 	cwel_bitmap_info_set_rgb_quad_rgb_reserved (ptr: POINTER; index,
-			value: INTEGER) is
+			value: INTEGER)
 		external
 			"C [macro <bmpinfo.h>]"
 		end
 
-	cwel_bitmap_info_get_header (ptr: POINTER): POINTER is
+	cwel_bitmap_info_get_header (ptr: POINTER): POINTER
 		external
 			"C [macro <bmpinfo.h>] (BITMAPINFO*): EIF_POINTER"
 		end
 
-	cwel_bitmap_info_get_rgb_quad (ptr: POINTER; i: INTEGER): POINTER is
+	cwel_bitmap_info_get_rgb_quad (ptr: POINTER; i: INTEGER): POINTER
 		external
 			"C [macro <bmpinfo.h>]"
 		end
 
 	cwin_get_di_bits (hdc, hbmp: POINTER; start_scan, scan_lines: INTEGER;
-			bits, bi: POINTER; usage: INTEGER) is
+			bits, bi: POINTER; usage: INTEGER)
 			-- SDK GetDIBits
 		external
 			"C [macro <wel.h>] (HDC, HBITMAP, UINT, UINT, %
@@ -203,7 +203,7 @@ feature {NONE} -- Externals
 			"GetDIBits"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

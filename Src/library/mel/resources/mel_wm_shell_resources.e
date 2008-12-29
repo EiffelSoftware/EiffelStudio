@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 	
 		"Window manager shell resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNbaseHeight: POINTER is
+	XmNbaseHeight: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNbaseHeight"
 		end;
 
-	XmNbaseWidth: POINTER is
+	XmNbaseWidth: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNbaseWidth"
 		end;
 
-	XmNheightInc: POINTER is
+	XmNheightInc: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNheightInc"
 		end;
 
-	XmNiconMask: POINTER is
+	XmNiconMask: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNiconMask"
 		end;
 
-	XmNiconPixmap: POINTER is
+	XmNiconPixmap: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNiconPixmap"
 		end;
 
-	XmNiconWindow: POINTER is
+	XmNiconWindow: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNiconWindow"
 		end;
 
-	XmNiconX: POINTER is
+	XmNiconX: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNiconX"
 		end;
 
-	XmNiconY: POINTER is
+	XmNiconY: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNiconY"
 		end;
 
-	XmNinitialState: POINTER is
+	XmNinitialState: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNinitialState"
 		end;
 
-	XmNinput: POINTER is
+	XmNinput: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNinput"
 		end;
 
-	XmNmaxAspectX: POINTER is
+	XmNmaxAspectX: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNmaxAspectX"
 		end;
 
-	XmNmaxAspectY: POINTER is
+	XmNmaxAspectY: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNmaxAspectY"
 		end;
 
-	XmNmaxHeight: POINTER is
+	XmNmaxHeight: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmNmaxHeight"
 		end;
 
-	XmNmaxWidth: POINTER is
+	XmNmaxWidth: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmNmaxWidth"
 		end;
 
-	XmNminAspectX: POINTER is
+	XmNminAspectX: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmNminAspectX"
 		end;
 
-	XmNminAspectY: POINTER is
+	XmNminAspectY: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmNminAspectY"
 		end;
 
-	XmNminHeight: POINTER is
+	XmNminHeight: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmNminHeight"
 		end;
 
-	XmNminWidth: POINTER is
+	XmNminWidth: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmNminWidth"
 		end;
 
-	XmNtitle: POINTER is
+	XmNtitle: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmNtitle"
 		end;
 
-	XmNtitleEncoding: POINTER is
+	XmNtitleEncoding: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmNtitleEncoding"
 		end;
 
-	XmNtransient: POINTER is
+	XmNtransient: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"XmNtransient"
 		end;
 
-	XmNwaitForWm: POINTER is
+	XmNwaitForWm: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -188,7 +188,7 @@ feature -- Implementation
 			"XmNwaitForWm"
 		end;
 
-	XmNwidthInc: POINTER is
+	XmNwidthInc: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -196,7 +196,7 @@ feature -- Implementation
 			"XmNwidthInc"
 		end;
 
-	XmNwindowGroup: POINTER is
+	XmNwindowGroup: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -204,7 +204,7 @@ feature -- Implementation
 			"XmNwindowGroup"
 		end;
 
-	XmNwinGravity: POINTER is
+	XmNwinGravity: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -212,7 +212,7 @@ feature -- Implementation
 			"XmNwinGravity"
 		end;
 
-	XmNwmTimeout: POINTER is
+	XmNwmTimeout: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -220,7 +220,7 @@ feature -- Implementation
 			"XmNwmTimeout"
 		end;
 
-	NormalState: INTEGER is
+	NormalState: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/Xm.h>]: EIF_INTEGER"
@@ -228,7 +228,7 @@ feature -- Implementation
 			"NormalState"
 		end;
 
-	IconicState: INTEGER is
+	IconicState: INTEGER
 			-- Core constant value
 		external
 			"C [macro <Xm/Xm.h>]: EIF_INTEGER"
@@ -236,7 +236,7 @@ feature -- Implementation
 			"IconicState"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object is a view for an EG_CLUSTER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 		
 feature {NONE} -- Initialization
 	
-	initialize is
+	initialize
 			-- Initialize `Current' (synchronize with model).
 		do
 			Precursor {EG_LINKABLE_FIGURE}
@@ -38,13 +38,13 @@ feature -- Access
 	layouter: EG_LAYOUT
 			-- Layouter used for this `Cluster' if not Void
 			
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the xml node returned by `xml_element'.
 		do
 			Result := once "EG_CLUSTER_FIGURE"
 		end
 		
-	subclusters: ARRAYED_LIST [EG_CLUSTER_FIGURE] is
+	subclusters: ARRAYED_LIST [EG_CLUSTER_FIGURE]
 			-- Clusters with parent `Current'.
 		local
 			l_item: EG_CLUSTER_FIGURE
@@ -65,7 +65,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml element representing `Current's state.
 		local
 			eg_fig: EG_LINKABLE_FIGURE
@@ -88,7 +88,7 @@ feature -- Access
 			Result.put_last (elements)
 		end
 		
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
 			elements: XM_ELEMENT
@@ -144,7 +144,7 @@ feature -- Access
 			
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EG_LINKABLE_FIGURE}
@@ -154,7 +154,7 @@ feature -- Element change
 			end
 		end
 
-	set_layouter (a_layouter: like layouter) is
+	set_layouter (a_layouter: like layouter)
 			-- Set `layouter' to `a_layouter'.
 		do
 			layouter := a_layouter
@@ -164,7 +164,7 @@ feature -- Element change
 		
 feature -- Status settings
 
-	set_is_fixed (b: BOOLEAN) is
+	set_is_fixed (b: BOOLEAN)
 			-- Set `is_fixed' to `b'
 		local
 			linkable_figure: EG_LINKABLE_FIGURE
@@ -185,7 +185,7 @@ feature -- Status settings
 		
 feature {NONE} -- Implementation
 
-	on_linkable_add (a_linkable: EG_LINKABLE) is
+	on_linkable_add (a_linkable: EG_LINKABLE)
 			-- `a_linkable' was added to the cluster.
 		local
 			l_world: like world
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-	on_linkable_remove (a_linkable: EG_LINKABLE) is
+	on_linkable_remove (a_linkable: EG_LINKABLE)
 			-- `a_linkable' was removed from the cluster.
 		local
 			l_world: like world
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

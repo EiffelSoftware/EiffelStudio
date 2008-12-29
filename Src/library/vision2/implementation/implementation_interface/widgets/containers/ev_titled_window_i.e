@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision titled window. Implementation interface."
 	legal: "See notice at end of class."
@@ -19,41 +19,41 @@ inherit
 
 feature -- Access
 
-	icon_name: STRING_32 is
+	icon_name: STRING_32
 			-- Alternative name, displayed when window is minimised.
 		deferred
 		end
 
-	icon_pixmap: EV_PIXMAP is
+	icon_pixmap: EV_PIXMAP
 			-- Window icon.
 		deferred
 		end
 
 feature -- Status report
 
-	is_minimized: BOOLEAN is
+	is_minimized: BOOLEAN
 			-- Is displayed iconified/minimised?
 		deferred
 		end
 
-	is_maximized: BOOLEAN is
+	is_maximized: BOOLEAN
 			-- Is displayed at maximum size?
 		deferred
 		end
 
 feature -- Status setting
 
-	raise is
+	raise
 			-- Request that window be displayed above all other windows.
 		deferred
 		end
 
-	lower is
+	lower
 			-- Request that window be displayed below all other windows.
 		deferred
 		end
 
-	minimize is
+	minimize
 			-- Display iconified/minimised.
 		deferred
 		ensure
@@ -61,14 +61,14 @@ feature -- Status setting
 			--| is_minimized: is_minimized
 		end
 
-	maximize is
+	maximize
 			-- Display at maximum size.
 		deferred
 		ensure
 			is_maximized: is_maximized
 		end
 
-	restore is
+	restore
 			-- Restore to original position when minimized or maximized.
 		deferred
 		ensure
@@ -79,7 +79,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (an_icon_name: STRING_GENERAL) is
+	set_icon_name (an_icon_name: STRING_GENERAL)
 			-- Assign `an_icon_name' to `icon_name'.
 		require
 			an_icon_name_not_void: an_icon_name /= Void
@@ -88,7 +88,7 @@ feature -- Element change
 			icon_name_assigned: icon_name.is_equal (an_icon_name)
 		end
 
-	set_icon_pixmap (an_icon: EV_PIXMAP) is
+	set_icon_pixmap (an_icon: EV_PIXMAP)
 			-- Assign `an_icon' to `icon'.
 		require
 			pixmap_not_void: an_icon /= Void
@@ -102,7 +102,7 @@ feature {EV_WIDGET_I} -- Implementation
 	help_enabled: BOOLEAN
 			-- Are accelerators `EV_APPLICATION.Help_accelerator' and `EV_APPLICATION.Contextual_help_accelerator' connected?
 
-	enable_help is
+	enable_help
 			-- Connect accelerators `EV_APPLICATION.Help_accelerator' and `EV_APPLICATION.Contextual_help_accelerator'.
 		require
 			help_disabled: not help_enabled
@@ -118,7 +118,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TITLED_WINDOW;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

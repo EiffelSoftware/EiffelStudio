@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Helper routines for WEL_BITMAP."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Command
 
-	mirror_image (a_bitmap: WEL_BITMAP) is
+	mirror_image (a_bitmap: WEL_BITMAP)
 			-- Mirror image datas. It's a vertical filp conversion.
 		require
 			not_void: a_bitmap /= Void
@@ -39,7 +39,7 @@ feature -- Command
 
 feature -- Query
 
-	bits_of_image (a_bitmap: WEL_BITMAP): ARRAY [CHARACTER] is
+	bits_of_image (a_bitmap: WEL_BITMAP): ARRAY [CHARACTER]
 			-- Data bits of `a_bitmap'
 		require
 			not_void: a_bitmap /= Void
@@ -56,7 +56,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	bits_of_image_bottom_up (a_bitmap: WEL_BITMAP): ARRAY [CHARACTER] is
+	bits_of_image_bottom_up (a_bitmap: WEL_BITMAP): ARRAY [CHARACTER]
 			-- Data bits of `a_bitmap', vertical filp data bits.
 		require
 			not_void: a_bitmap /= Void
@@ -72,7 +72,7 @@ feature -- Query
 			l_info.dispose
 		end
 
-	info_of_bitmap (a_bitmap: WEL_BITMAP): WEL_BITMAP_INFO is
+	info_of_bitmap (a_bitmap: WEL_BITMAP): WEL_BITMAP_INFO
 			-- Create a Result base on `a_bitmap'
 		local
 			l_dc: WEL_MEMORY_DC
@@ -91,7 +91,7 @@ feature -- Query
 
 feature -- Brush Query
 
- 	half_tone_brush: WEL_BRUSH is
+ 	half_tone_brush: WEL_BRUSH
 			-- Half tone brush which is widely used in Windows feedback drawing
 		local
 			a_bitmap: WEL_BITMAP
@@ -127,7 +127,7 @@ feature -- Brush Query
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

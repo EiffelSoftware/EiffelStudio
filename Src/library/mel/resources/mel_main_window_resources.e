@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Main Window resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNcommandWindow: POINTER is
+	XmNcommandWindow: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MainW.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNcommandWindow"
 		end;
 
-	XmNcommandWindowLocation: POINTER is
+	XmNcommandWindowLocation: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MainW.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNcommandWindowLocation"
 		end;
 
-	XmNmainWindowMarginHeight: POINTER is
+	XmNmainWindowMarginHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MainW.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNmainWindowMarginHeight"
 		end;
 
-	XmNmainWindowMarginWidth: POINTER is
+	XmNmainWindowMarginWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MainW.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNmainWindowMarginWidth"
 		end;
 
-	XmNmenuBar: POINTER is
+	XmNmenuBar: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MainW.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNmenuBar"
 		end;
 
-	XmNmessageWindow: POINTER is
+	XmNmessageWindow: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MainW.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNmessageWindow"
 		end;
 
-	XmNshowSeparator: POINTER is
+	XmNshowSeparator: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MainW.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNshowSeparator"
 		end;
 
-	XmCOMMAND_ABOVE_WORKSPACE: INTEGER is
+	XmCOMMAND_ABOVE_WORKSPACE: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MainW.h>]: EIF_INTEGER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmCOMMAND_ABOVE_WORKSPACE"
 		end;
 
-	XmCOMMAND_BELOW_WORKSPACE: INTEGER is
+	XmCOMMAND_BELOW_WORKSPACE: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/MainW.h>]: EIF_INTEGER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmCOMMAND_BELOW_WORKSPACE"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

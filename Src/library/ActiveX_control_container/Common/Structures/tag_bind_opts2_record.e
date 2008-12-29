@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,49 +33,49 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	cb_struct: INTEGER is
+	cb_struct: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_bind_opts2_cb_struct (item)
 		end
 
-	grf_flags: INTEGER is
+	grf_flags: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_bind_opts2_grf_flags (item)
 		end
 
-	grf_mode: INTEGER is
+	grf_mode: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_bind_opts2_grf_mode (item)
 		end
 
-	dw_tick_count_deadline: INTEGER is
+	dw_tick_count_deadline: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_bind_opts2_dw_tick_count_deadline (item)
 		end
 
-	dw_track_flags: INTEGER is
+	dw_track_flags: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_bind_opts2_dw_track_flags (item)
 		end
 
-	dw_class_context: INTEGER is
+	dw_class_context: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_bind_opts2_dw_class_context (item)
 		end
 
-	locale: INTEGER is
+	locale: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_bind_opts2_locale (item)
 		end
 
-	p_server_info: X_COSERVERINFO_RECORD is
+	p_server_info: X_COSERVERINFO_RECORD
 			-- No description available.
 		do
 			Result := ccom_tag_bind_opts2_p_server_info (item)
@@ -83,7 +83,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_tag_bind_opts2
@@ -91,49 +91,49 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_cb_struct (a_cb_struct: INTEGER) is
+	set_cb_struct (a_cb_struct: INTEGER)
 			-- Set `cb_struct' with `a_cb_struct'.
 		do
 			ccom_tag_bind_opts2_set_cb_struct (item, a_cb_struct)
 		end
 
-	set_grf_flags (a_grf_flags: INTEGER) is
+	set_grf_flags (a_grf_flags: INTEGER)
 			-- Set `grf_flags' with `a_grf_flags'.
 		do
 			ccom_tag_bind_opts2_set_grf_flags (item, a_grf_flags)
 		end
 
-	set_grf_mode (a_grf_mode: INTEGER) is
+	set_grf_mode (a_grf_mode: INTEGER)
 			-- Set `grf_mode' with `a_grf_mode'.
 		do
 			ccom_tag_bind_opts2_set_grf_mode (item, a_grf_mode)
 		end
 
-	set_dw_tick_count_deadline (a_dw_tick_count_deadline: INTEGER) is
+	set_dw_tick_count_deadline (a_dw_tick_count_deadline: INTEGER)
 			-- Set `dw_tick_count_deadline' with `a_dw_tick_count_deadline'.
 		do
 			ccom_tag_bind_opts2_set_dw_tick_count_deadline (item, a_dw_tick_count_deadline)
 		end
 
-	set_dw_track_flags (a_dw_track_flags: INTEGER) is
+	set_dw_track_flags (a_dw_track_flags: INTEGER)
 			-- Set `dw_track_flags' with `a_dw_track_flags'.
 		do
 			ccom_tag_bind_opts2_set_dw_track_flags (item, a_dw_track_flags)
 		end
 
-	set_dw_class_context (a_dw_class_context: INTEGER) is
+	set_dw_class_context (a_dw_class_context: INTEGER)
 			-- Set `dw_class_context' with `a_dw_class_context'.
 		do
 			ccom_tag_bind_opts2_set_dw_class_context (item, a_dw_class_context)
 		end
 
-	set_locale (a_locale: INTEGER) is
+	set_locale (a_locale: INTEGER)
 			-- Set `locale' with `a_locale'.
 		do
 			ccom_tag_bind_opts2_set_locale (item, a_locale)
 		end
 
-	set_p_server_info (a_p_server_info: X_COSERVERINFO_RECORD) is
+	set_p_server_info (a_p_server_info: X_COSERVERINFO_RECORD)
 			-- Set `p_server_info' with `a_p_server_info'.
 		require
 			non_void_a_p_server_info: a_p_server_info /= Void
@@ -144,7 +144,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_tag_bind_opts2: INTEGER is
+	c_size_of_tag_bind_opts2: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library_tagBIND_OPTS2_s.h%"]"
@@ -152,103 +152,103 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::tagBIND_OPTS2)"
 		end
 
-	ccom_tag_bind_opts2_cb_struct (a_pointer: POINTER): INTEGER is
+	ccom_tag_bind_opts2_cb_struct (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *):EIF_INTEGER"
 		end
 
-	ccom_tag_bind_opts2_set_cb_struct (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_bind_opts2_set_cb_struct (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *, ULONG)"
 		end
 
-	ccom_tag_bind_opts2_grf_flags (a_pointer: POINTER): INTEGER is
+	ccom_tag_bind_opts2_grf_flags (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *):EIF_INTEGER"
 		end
 
-	ccom_tag_bind_opts2_set_grf_flags (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_bind_opts2_set_grf_flags (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *, ULONG)"
 		end
 
-	ccom_tag_bind_opts2_grf_mode (a_pointer: POINTER): INTEGER is
+	ccom_tag_bind_opts2_grf_mode (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *):EIF_INTEGER"
 		end
 
-	ccom_tag_bind_opts2_set_grf_mode (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_bind_opts2_set_grf_mode (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *, ULONG)"
 		end
 
-	ccom_tag_bind_opts2_dw_tick_count_deadline (a_pointer: POINTER): INTEGER is
+	ccom_tag_bind_opts2_dw_tick_count_deadline (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *):EIF_INTEGER"
 		end
 
-	ccom_tag_bind_opts2_set_dw_tick_count_deadline (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_bind_opts2_set_dw_tick_count_deadline (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *, ULONG)"
 		end
 
-	ccom_tag_bind_opts2_dw_track_flags (a_pointer: POINTER): INTEGER is
+	ccom_tag_bind_opts2_dw_track_flags (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *):EIF_INTEGER"
 		end
 
-	ccom_tag_bind_opts2_set_dw_track_flags (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_bind_opts2_set_dw_track_flags (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *, ULONG)"
 		end
 
-	ccom_tag_bind_opts2_dw_class_context (a_pointer: POINTER): INTEGER is
+	ccom_tag_bind_opts2_dw_class_context (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *):EIF_INTEGER"
 		end
 
-	ccom_tag_bind_opts2_set_dw_class_context (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_bind_opts2_set_dw_class_context (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *, ULONG)"
 		end
 
-	ccom_tag_bind_opts2_locale (a_pointer: POINTER): INTEGER is
+	ccom_tag_bind_opts2_locale (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *):EIF_INTEGER"
 		end
 
-	ccom_tag_bind_opts2_set_locale (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_bind_opts2_set_locale (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *, ULONG)"
 		end
 
-	ccom_tag_bind_opts2_p_server_info (a_pointer: POINTER): X_COSERVERINFO_RECORD is
+	ccom_tag_bind_opts2_p_server_info (a_pointer: POINTER): X_COSERVERINFO_RECORD
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *):EIF_REFERENCE"
 		end
 
-	ccom_tag_bind_opts2_set_p_server_info (a_pointer: POINTER; arg2: POINTER) is
+	ccom_tag_bind_opts2_set_p_server_info (a_pointer: POINTER; arg2: POINTER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagBIND_OPTS2_s_impl.h%"](ecom_control_library::tagBIND_OPTS2 *, ecom_control_library::_COSERVERINFO *)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

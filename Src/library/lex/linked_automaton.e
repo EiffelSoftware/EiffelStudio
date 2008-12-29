@@ -1,5 +1,5 @@
 
-indexing
+note
 
 	description:
 		"General finite state automata, implemented as lists"
@@ -19,7 +19,7 @@ create
 
 feature -- Status setting
 
-	set_final (state, f: INTEGER) is
+	set_final (state, f: INTEGER)
 			-- Make `state' a final state for regular expression `f'.
 		require
 			is_in_automaton: state <= count and state >= 1
@@ -34,7 +34,7 @@ feature -- Status setting
 			same_index: index = old index 
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

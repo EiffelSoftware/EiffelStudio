@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Abstract equivalent of HASH_TABLE [NATURAL_32, ANY], since this type cannot be written
 		as ANY does not inherit from HASHABLE
@@ -13,7 +13,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make (n: NATURAL_32) is
+	make (n: NATURAL_32)
 			-- Initialize current instance
 		require
 			n_not_too_large: n <= {INTEGER}.max_value.to_natural_32
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	index (an_obj: ANY): NATURAL_32 is
+	index (an_obj: ANY): NATURAL_32
 			-- Index of `an_obj' in Current
 		require
 			an_obj_not_void: an_obj /= Void
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Status report
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Default capacity of current.
 		deferred
 		ensure
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		deferred
 		end
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 	last_index: NATURAL_32;
 			-- Last index of inserted items.
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

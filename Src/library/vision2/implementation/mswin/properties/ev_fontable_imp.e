@@ -1,4 +1,4 @@
-indexing
+note
 	description:"[
 		EiffelVision fontable, mswindows implementation.
 
@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Font of `Current'.
 		local
 			font_imp: EV_FONT_IMP
@@ -38,7 +38,7 @@ feature -- Access
 			end
 		end
 
-	internal_font: EV_FONT is
+	internal_font: EV_FONT
 			-- Font of `Current' for internal queries.
 			-- Faster than calling `font' as we do not need to
 			-- create a new EV_FONT every time.
@@ -50,7 +50,7 @@ feature -- Access
 			end
 		end
 
-	internal_font_height: INTEGER is
+	internal_font_height: INTEGER
 			-- Height required to correctly display font of `Current' in pixels.
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_font (ft: EV_FONT) is
+	set_font (ft: EV_FONT)
 			-- Make `ft' new font of `Current'.
 		local
 			local_font_windows: EV_FONT_IMP
@@ -89,7 +89,7 @@ feature -- Status setting
 			private_wel_font := Void
 		end
 
-	set_default_font is
+	set_default_font
 			-- Make system to use default font.
 		do
 			private_wel_font := wel_default_font
@@ -107,23 +107,23 @@ feature {EV_ANY_I} -- Implementation
 feature {NONE} -- Implementation : The wel values, are deferred here, but
 			   -- they need to be defined by their heirs.
 
-	wel_default_font: WEL_FONT is
+	wel_default_font: WEL_FONT
 			-- Default font of system.
 		once
 			Result := (create {WEL_SHARED_FONTS}).gui_font
 		end
 
-	wel_font: WEL_FONT is
+	wel_font: WEL_FONT
 			-- The wel_font
 		deferred
 		end
 
-	wel_set_font (a_font: WEL_FONT) is
+	wel_set_font (a_font: WEL_FONT)
 			-- Make `a_font' the new font of the widget.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Simple geometry-managing widget."
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif bulletin board.
 		require
 			name_exists: a_name /= Void
@@ -51,7 +51,7 @@ feature -- Initialization
 			name_set: name.is_equal (a_name)
 		end;
 
-	make_no_auto_unmanage (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make_no_auto_unmanage (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif bulletin board and set `auto_unmanage' to False.
 		require
 			name_exists: a_name /= Void
@@ -76,7 +76,7 @@ feature -- Initialization
 
 feature {NONE} -- Initialization
 
-	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
+	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN)
 			-- Create bulletin with name `w_name' and manage it according to
 			-- `auto_manage_flag'.
 		require	
@@ -95,19 +95,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	focus_command: MEL_COMMAND_EXEC is
+	focus_command: MEL_COMMAND_EXEC
 			-- Command set for the focus callback
 		do
 			Result := motif_command (XmNfocusCallback)
 		end;
 
-	map_command: MEL_COMMAND_EXEC is
+	map_command: MEL_COMMAND_EXEC
 			-- Command set for the map callback
 		do
 			Result := motif_command (XmNmapCallback)
 		end;
 
-	unmap_command: MEL_COMMAND_EXEC is
+	unmap_command: MEL_COMMAND_EXEC
 			-- Command set for the unmap callback
 		do
 			Result := motif_command (XmNunmapCallback)
@@ -115,7 +115,7 @@ feature -- Access
 
 feature -- Status report
 
-	overlap_allowed: BOOLEAN is
+	overlap_allowed: BOOLEAN
 			-- Are the children allowed to overlap Current?
 		require
 			exists: not is_destroyed
@@ -123,7 +123,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNallowOverlap)
 		end;
 
-	auto_unmanage: BOOLEAN is
+	auto_unmanage: BOOLEAN
 			-- Is the bulletin board automatically unmanaged after a button is activated
 			-- unless the button is an Apply or Help button?
 		require
@@ -132,7 +132,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNautoUnmanage)
 		end;
 
-	button_font_list: MEL_FONT_LIST is
+	button_font_list: MEL_FONT_LIST
 			-- Font list of the button children
 		require
 			exists: not is_destroyed
@@ -143,7 +143,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	label_font_list: MEL_FONT_LIST is
+	label_font_list: MEL_FONT_LIST
 			-- Font list of the label children
 		require
 			exists: not is_destroyed
@@ -154,7 +154,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	text_font_list: MEL_FONT_LIST is
+	text_font_list: MEL_FONT_LIST
 			-- Font list of the text children
 		require
 			exists: not is_destroyed
@@ -165,7 +165,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	cancel_button: MEL_RECT_OBJ is
+	cancel_button: MEL_RECT_OBJ
 			-- Widget of the Cancel button
 		require
 			exists: not is_destroyed
@@ -173,7 +173,7 @@ feature -- Status report
 			Result ?= get_xt_widget (screen_object, XmNcancelButton)
 		end;
 
-	default_button: MEL_RECT_OBJ is
+	default_button: MEL_RECT_OBJ
 			-- The widget of the default button
 		require
 			exists: not is_destroyed
@@ -181,7 +181,7 @@ feature -- Status report
 			Result ?= get_xt_widget (screen_object, XmNdefaultButton)
 		end;
 
-	is_default_position: BOOLEAN is
+	is_default_position: BOOLEAN
 			-- Is Current centered relative to `parent'.
 		require
 			exists: not is_destroyed
@@ -189,7 +189,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNdefaultPosition)
 		end;
 
-	dialog_work_area: BOOLEAN is
+	dialog_work_area: BOOLEAN
 			-- Is the dialog style a work area?
 		require
 			exists: not is_destroyed
@@ -197,7 +197,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogStyle) = XmDIALOG_WORK_AREA
 		end;
 
-	dialog_modeless: BOOLEAN is
+	dialog_modeless: BOOLEAN
 			-- Is the dialog style modeless?
 		require
 			exists: not is_destroyed
@@ -205,7 +205,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogStyle) = XmDIALOG_MODELESS
 		end;
 
-	dialog_full_application_modal: BOOLEAN is
+	dialog_full_application_modal: BOOLEAN
 			-- Is the dialog style full application modal?
 		require
 			exists: not is_destroyed
@@ -213,7 +213,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogStyle) = XmDIALOG_FULL_APPLICATION_MODAL
 		end;
 
-	dialog_application_modal: BOOLEAN is
+	dialog_application_modal: BOOLEAN
 			-- Is the dialog style application modal?
 		require
 			exists: not is_destroyed
@@ -221,7 +221,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogStyle) = XmDIALOG_APPLICATION_MODAL
 		end;
 
-	dialog_primary_application_modal: BOOLEAN is
+	dialog_primary_application_modal: BOOLEAN
 			-- Is the dialog style primary application modal?
 		require
 			exists: not is_destroyed
@@ -229,7 +229,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogStyle) = XmDIALOG_PRIMARY_APPLICATION_MODAL
 		end;
 
-	dialog_system_modal: BOOLEAN is
+	dialog_system_modal: BOOLEAN
 			-- Is the dialog style system modal?
 		require
 			exists: not is_destroyed
@@ -237,7 +237,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogStyle) = XmDIALOG_SYSTEM_MODAL
 		end;
 
-	dialog_title: MEL_STRING is
+	dialog_title: MEL_STRING
 			-- Title
 		require
 			exists: not is_destroyed
@@ -245,7 +245,7 @@ feature -- Status report
 			Result := get_xm_string (screen_object, XmNdialogTitle)
 		end;
 
-	margin_height: INTEGER is
+	margin_height: INTEGER
 			-- The minimun spacing between a bulletin board's top
 			-- or bottom edge of any child widget
 		require
@@ -256,7 +256,7 @@ feature -- Status report
 			not_margin_height_negative: Result >= 0
 		end;
 
-	margin_width: INTEGER is
+	margin_width: INTEGER
 			-- The minimun spacing between a bulletin board's left
 			-- or right edge of any child widget
 		require
@@ -267,7 +267,7 @@ feature -- Status report
 			not_margin_width_negative: Result >= 0
 		end;
 
-	has_resize_control: BOOLEAN is
+	has_resize_control: BOOLEAN
 			-- Does MWM include resize controls in the window manager frame of `parent'?
 		require
 			exists: not is_destroyed
@@ -275,7 +275,7 @@ feature -- Status report
 			Result := not get_xt_boolean (screen_object, XmNnoResize)
 		end;
 
-	resize_none: BOOLEAN is
+	resize_none: BOOLEAN
 			-- Will the widget remain at fixed size?
 		require
 			exists: not is_destroyed
@@ -283,7 +283,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNresizePolicy) = XmRESIZE_NONE
 		end;
 
-	resize_grow: BOOLEAN is
+	resize_grow: BOOLEAN
 			-- Can the widget expand only?
 		require
 			exists: not is_destroyed
@@ -291,7 +291,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNresizePolicy) = XmRESIZE_GROW
 		end;
 
-	resize_any: BOOLEAN is
+	resize_any: BOOLEAN
 			-- Can the widget shrink or expand as needed?
 		require
 			exists: not is_destroyed
@@ -299,7 +299,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNresizePolicy) = XmRESIZE_ANY
 		end;
 
-	is_shadow_in: BOOLEAN is
+	is_shadow_in: BOOLEAN
 			-- Is Current widget appear inset?
 		require
 			exists: not is_destroyed
@@ -308,7 +308,7 @@ feature -- Status report
 					(screen_object, XmNshadowType) = XmSHADOW_IN)
 		end;
 
-	is_shadow_out: BOOLEAN is
+	is_shadow_out: BOOLEAN
 			-- Is Current widget appear raised?
 		require
 			exists: not is_destroyed
@@ -317,7 +317,7 @@ feature -- Status report
 					(screen_object, XmNshadowType) = XmSHADOW_OUT)
 		end;
 
-	is_shadow_etched_in: BOOLEAN is
+	is_shadow_etched_in: BOOLEAN
 			-- Does Current appear with a double line shadow inset?
 		require
 			exists: not is_destroyed
@@ -326,7 +326,7 @@ feature -- Status report
 						(screen_object, XmNshadowType) = XmSHADOW_ETCHED_IN)
 		end;
 
-	is_shadow_etched_out: BOOLEAN is
+	is_shadow_etched_out: BOOLEAN
 			-- Does Current appear with a double line shadow raised?
 		require
 			exists: not is_destroyed
@@ -337,7 +337,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_overlap is
+	enable_overlap
 			-- Set `overlap_allowed' to True.
 		require
 			exists: not is_destroyed
@@ -347,7 +347,7 @@ feature -- Status setting
 			overlap_is_allowed: overlap_allowed 
 		end;
 
-	forbid_overlap is
+	forbid_overlap
 			-- Set `overlap_allowed' to False.
 		require
 			exists: not is_destroyed
@@ -357,7 +357,7 @@ feature -- Status setting
 			overlap_is_not_allowed: not overlap_allowed 
 		end;
 
-	set_button_font_list (a_font_list: MEL_FONT_LIST) is
+	set_button_font_list (a_font_list: MEL_FONT_LIST)
 			-- Set `button_font_list' to a `a_font_list'.
 		require
 			exists: not is_destroyed
@@ -366,7 +366,7 @@ feature -- Status setting
 			set_xm_font_list (screen_object, XmNbuttonFontList, a_font_list)
 		end;
 
-	set_label_font_list (a_font_list: MEL_FONT_LIST) is
+	set_label_font_list (a_font_list: MEL_FONT_LIST)
 			-- Set `label_font_list' to a `a_font_list'.
 		require
 			exists: not is_destroyed
@@ -375,7 +375,7 @@ feature -- Status setting
 			set_xm_font_list (screen_object, XmNlabelFontList, a_font_list)
 		end;
 
-	set_text_font_list (a_font_list: MEL_FONT_LIST) is
+	set_text_font_list (a_font_list: MEL_FONT_LIST)
 			-- Set `text_font_list' to `a_font_list'.
 		require
 			exists: not is_destroyed
@@ -384,7 +384,7 @@ feature -- Status setting
 			set_xm_font_list (screen_object, XmNtextFontList, a_font_list)
 		end;
 
-	set_cancel_button (a_button: like cancel_button) is
+	set_cancel_button (a_button: like cancel_button)
 			-- Set `cancel_button' to `a_button'.
 		require
 			exists: not is_destroyed;
@@ -395,7 +395,7 @@ feature -- Status setting
 			cancel_button_set: cancel_button.is_equal (a_button)
 		end;
 
-	set_default_button (a_button: like default_button) is
+	set_default_button (a_button: like default_button)
 			-- Set `default_button' to `a_button'.
 		require
 			exists: not is_destroyed;
@@ -406,7 +406,7 @@ feature -- Status setting
 			default_button_set: default_button.is_equal (a_button)
 		end;
 
-	enable_default_positioning is
+	enable_default_positioning
 			-- Set `is_default_position' to True.
 		require
 			exists: not is_destroyed
@@ -416,7 +416,7 @@ feature -- Status setting
 			default_position_enabled: is_default_position 
 		end;
 
-	disable_default_positioning is
+	disable_default_positioning
 			-- Set `is_default_position' to False.
 		require
 			exists: not is_destroyed
@@ -426,7 +426,7 @@ feature -- Status setting
 			default_position_disabled: not is_default_position 
 		end;
 
-	set_dialog_work_area is
+	set_dialog_work_area
 			-- Set the dialog style to work area.
 		require
 			exists: not is_destroyed
@@ -436,7 +436,7 @@ feature -- Status setting
 			dialog_work_area_set: dialog_work_area
 		end;
 
-	set_dialog_modeless is
+	set_dialog_modeless
 			-- Set the dialog style modeless.
 		require
 			exists: not is_destroyed
@@ -446,7 +446,7 @@ feature -- Status setting
 			dialog_modeless_set: dialog_modeless
 		end;
 
-	set_dialog_full_application_modal is
+	set_dialog_full_application_modal
 			-- Set the dialog style full application modal.
 		require
 			exists: not is_destroyed
@@ -456,7 +456,7 @@ feature -- Status setting
 			dialog_full_application_modal_set: dialog_full_application_modal
 		end;
 
-	set_dialog_application_modal is
+	set_dialog_application_modal
 			-- Set the dialog style application modal.
 		require
 			exists: not is_destroyed
@@ -466,7 +466,7 @@ feature -- Status setting
 			dialog_application_modal_set: dialog_application_modal
 		end;
 
-	set_dialog_primary_application_modal is
+	set_dialog_primary_application_modal
 			-- Set the dialog style primary application modal.
 		require
 			exists: not is_destroyed
@@ -476,7 +476,7 @@ feature -- Status setting
 			dialog_primary_application_modal_set: dialog_primary_application_modal
 		end;
 
-	set_dialog_system_modal is
+	set_dialog_system_modal
 			-- Set the dialog style system modal.
 		require
 			exists: not is_destroyed
@@ -486,7 +486,7 @@ feature -- Status setting
 			dialog_system_modal_set: dialog_system_modal
 		end;
 
-	set_dialog_title (a_compound_string: MEL_STRING) is
+	set_dialog_title (a_compound_string: MEL_STRING)
 			-- Set `dialog_title' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -498,7 +498,7 @@ feature -- Status setting
 			dialog_title_set: dialog_title.is_equal (a_compound_string)
 		end;
 
-	set_margin_height (a_height: INTEGER) is
+	set_margin_height (a_height: INTEGER)
 			-- Set `margin_height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -509,7 +509,7 @@ feature -- Status setting
 			margin_height_set: margin_height = a_height
 		end;
 
-	set_margin_width (a_width: INTEGER) is
+	set_margin_width (a_width: INTEGER)
 			-- Set `margin_width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -520,7 +520,7 @@ feature -- Status setting
 			margin_width_set: margin_width = a_width
 		end;
 
-	allow_resize_control is
+	allow_resize_control
 			-- Set `has_resize_control' to True.
 		require
 			exists: not is_destroyed
@@ -530,7 +530,7 @@ feature -- Status setting
 			resize_allowed: has_resize_control 
 		end;
 
-	forbid_resize_control is
+	forbid_resize_control
 			-- Set `has_resize_control' to False.
 		require
 			exists: not is_destroyed
@@ -540,7 +540,7 @@ feature -- Status setting
 			resize_not_allowed: not has_resize_control 
 		end;
 
-	set_resize_none is
+	set_resize_none
 			-- The widget remains at fixed size.
 		require
 			exists: not is_destroyed
@@ -550,7 +550,7 @@ feature -- Status setting
 			resize_none_set: resize_none
 		end;
 
-	set_resize_grow is
+	set_resize_grow
 			-- Allow the widget to expand only.
 		require
 			exists: not is_destroyed
@@ -560,7 +560,7 @@ feature -- Status setting
 			resize_grow_set: resize_grow
 		end;
 
-	set_resize_any is
+	set_resize_any
 			-- Allow the widget to shrink or expand as needed.
 		require
 			exists: not is_destroyed
@@ -570,7 +570,7 @@ feature -- Status setting
 			resize_any_set: resize_any
 		end;
 
-	set_shadow_in is
+	set_shadow_in
 			-- Set `is_shadow_in' to True.
 		require
 			exists: not is_destroyed
@@ -580,7 +580,7 @@ feature -- Status setting
 			is_shadow_in: is_shadow_in
 		end;
 
-	set_shadow_out is
+	set_shadow_out
 			-- Set `is_shadow_in' to False.
 		require
 			exists: not is_destroyed
@@ -590,7 +590,7 @@ feature -- Status setting
 			is_shadow_out: is_shadow_out
 		end;
 
-	set_shadow_etched_in is
+	set_shadow_etched_in
 			-- Set `is_shadow_etched_in' to True.
 		require
 			exists: not is_destroyed
@@ -600,7 +600,7 @@ feature -- Status setting
 			is_shadow_etched_in: is_shadow_etched_in
 		end;
 
-	set_shadow_etched_out is
+	set_shadow_etched_out
 			-- Set `is_shadow_etched_out' to True.
 		require
 			exists: not is_destroyed
@@ -612,7 +612,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_focus_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_focus_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the widget or one of
 			-- its descendants receives the input focus. 
 			-- `argument' will be passed to `a_command' whenever it is
@@ -625,7 +625,7 @@ feature -- Element change
 			command_set: command_set (focus_command, a_command, an_argument)
 		end;
 
-	set_map_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_map_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the widget is mapped, 
 			-- if the widget is a child of a dialog shell.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -638,7 +638,7 @@ feature -- Element change
 			command_set: command_set (map_command, a_command, an_argument)
 		end;
 
-	set_unmap_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_unmap_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the widget is unmapped, 
 			-- if the widget is a child of a dialog shell.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -653,7 +653,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_focus_callback is
+	remove_focus_callback
 			-- Remove the command for the focus callback.
 		do
 			remove_callback (XmNfocusCallback)
@@ -661,7 +661,7 @@ feature -- Removal
 			removed: focus_command = Void
 		end;
 
-	remove_map_callback is
+	remove_map_callback
 			-- Remove the command for the map callback.
 		do
 			remove_callback (XmNmapCallback)
@@ -669,7 +669,7 @@ feature -- Removal
 			removed: map_command = Void
 		end;
 
-	remove_unmap_callback is
+	remove_unmap_callback
 			-- Remove the command for the unmap callback.
 		do
 			remove_callback (XmNunmapCallback)
@@ -680,7 +680,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Implementation
 
 	create_callback_struct (a_callback_struct_ptr,
-				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT is
+				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -689,7 +689,7 @@ feature {MEL_DISPATCHER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	auto_unmanage_arg: POINTER is
+	auto_unmanage_arg: POINTER
 			-- C pointer value of Arg value of
 			-- XmNautoUnmanage which is set to False
 		once
@@ -698,20 +698,20 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External features
 
-	c_auto_unmanage_arg: POINTER is
+	c_auto_unmanage_arg: POINTER
 			-- Set the `XmNautoUnmanage' arg to False.
 		external
 			"C"
 		end;
 
-	xm_create_bulletin_board (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_bulletin_board (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/BulletinB.h>"
 		alias
 			"XmCreateBulletinBoard"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

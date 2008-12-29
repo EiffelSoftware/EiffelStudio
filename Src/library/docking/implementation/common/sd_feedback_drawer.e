@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that draw feedback when user dragging a window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ create
 	make
 
 feature
-	make is
+	make
 			-- Creation method
 		do
 			create internal_shared
@@ -22,7 +22,7 @@ feature
 
 feature -- Basic operations
 
-	draw_pixmap (a_screen_x, a_screen_y: INTEGER; a_pixmap: EV_PIXMAP) is
+	draw_pixmap (a_screen_x, a_screen_y: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Draw a pixmap at desktop.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
@@ -31,7 +31,7 @@ feature -- Basic operations
 			line_drawer.screen.draw_pixmap (a_screen_x, a_screen_y, a_pixmap)
 		end
 
-	draw_pixmap_with_mask (a_screen_x, a_screen_y: INTEGER; a_target_pixmap, a_mask, orignal_screen: EV_PIXMAP) is
+	draw_pixmap_with_mask (a_screen_x, a_screen_y: INTEGER; a_target_pixmap, a_mask, orignal_screen: EV_PIXMAP)
 			-- Draw a_target_pixmap whit mask which is a_mask.
 		local
 			l_buffer: EV_PIXMAP
@@ -51,7 +51,7 @@ feature -- Basic operations
 			line_drawer.screen.draw_pixmap (a_screen_x, a_screen_y, l_buffer)
 		end
 
-	draw_pixmap_by_colors (a_screen_x, a_screen_y: INTEGER; a_colors: SPECIAL [SPECIAL [INTEGER]]) is
+	draw_pixmap_by_colors (a_screen_x, a_screen_y: INTEGER; a_colors: SPECIAL [SPECIAL [INTEGER]])
 			-- Draw a pixmap on desktop by colors, black is discarded.
 		require
 			a_pixmap_not_void: a_colors /= Void
@@ -154,33 +154,33 @@ feature -- Basic operations
 			end
 		end
 
-	draw_line_area (a_start_x, a_start_y, a_width, a_height: INTEGER) is
+	draw_line_area (a_start_x, a_start_y, a_width, a_height: INTEGER)
 			-- Draw a vertical line on the screen.
 		do
 			line_drawer.draw_line_area (a_start_x, a_start_y, a_width, a_height)
 		end
 
-	reset_feedback_clearing is
+	reset_feedback_clearing
 			-- Clear feedback
 		do
 			line_drawer.reset_feedback_clearing
 		end
 
-	clear is
+	clear
 			-- Clear feedback rectangle.
 		do
 			feedback_rect.clear
 			line_drawer.reset_feedback_clearing
 		end
 
-	draw_red_rectangle (left, top, width, height: INTEGER) is
+	draw_red_rectangle (left, top, width, height: INTEGER)
 			-- Draw red rectangle.
 		do
 			line_drawer.screen.set_foreground_color ((create {EV_STOCK_COLORS}).red)
 			line_drawer.screen.draw_rectangle (left, top, width, height)
 		end
 
-	draw_rectangle (a_left, a_top, a_width, a_height, a_line_width: INTEGER) is
+	draw_rectangle (a_left, a_top, a_width, a_height, a_line_width: INTEGER)
 			-- Draw a rectangle on the screen which center is blank.
 		require
 			line_width_valid: a_line_width > 0
@@ -188,7 +188,7 @@ feature -- Basic operations
 			line_drawer.draw_rectangle (a_left, a_top, a_width, a_height, a_line_width)
 		end
 
-	draw_transparency_rectangle (a_left, a_top, a_width, a_height: INTEGER) is
+	draw_transparency_rectangle (a_left, a_top, a_width, a_height: INTEGER)
 			-- Draw transparency rectangle.
 		do
 			feedback_rect.show
@@ -196,7 +196,7 @@ feature -- Basic operations
 			feedback_rect.set_area (create {EV_RECTANGLE}.make (a_left, a_top, a_width, a_height))
 		end
 
-	draw_transparency_rectangle_for_tab (a_top_rect, a_bottom_rect: EV_RECTANGLE) is
+	draw_transparency_rectangle_for_tab (a_top_rect, a_bottom_rect: EV_RECTANGLE)
 			-- Draw transparency rectangle for tab indicator.
 		do
 			feedback_rect.show
@@ -213,13 +213,13 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	edge_lightness: REAL is 0.65
+	edge_lightness: REAL = 0.65
 			-- Lightness to to identify edge of icon.
 
 	internal_shared: SD_SHARED;
 			-- All singletons.
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

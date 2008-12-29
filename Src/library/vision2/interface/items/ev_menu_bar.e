@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Menu bar containing drop down menus. See EV_MENU.
@@ -32,7 +32,7 @@ create
 
 feature -- Status report
 
-	parent: EV_WINDOW is
+	parent: EV_WINDOW
 			-- Parent of `Current'.
 		do
 			Result := implementation.parent
@@ -45,13 +45,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_MENU_BAR_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

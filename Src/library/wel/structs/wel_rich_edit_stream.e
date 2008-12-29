@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Defines the general notions of a stream for the rich %
 		%edit control."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make the structure
 		do
 			structure_make
@@ -30,7 +30,7 @@ feature -- Access
 	is_unicode_data: BOOLEAN
 			-- Is current stream unicode based?
 
-	error: INTEGER is
+	error: INTEGER
 			-- Error encountered while streaming. If there was no
 			-- error, the value is zero.
 		do
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_error (an_error: INTEGER) is
+	set_error (an_error: INTEGER)
 			-- Set `error' with `an_error'.
 		do
 			cwel_editstream_set_dwerror (item, an_error)
@@ -53,7 +53,7 @@ feature -- Element change
 
 feature {NONE} -- Element change
 
-	set_is_unicode_data (v: like is_unicode_data) is
+	set_is_unicode_data (v: like is_unicode_data)
 			-- Set `is_unicode_data' with `v'.
 			-- It is not exported here because some descendants
 			-- cannot handle a switch of mode once created.
@@ -65,19 +65,19 @@ feature {NONE} -- Element change
 
 feature -- Basic operations
 
-	init_action is
+	init_action
 			-- Called before the streams.
 			-- May be redefined to make special operations.
 		do
 		end
 
-	finish_action is
+	finish_action
 			-- Called after the streams.
 			-- May be redefined to make special operations.
 		do
 		end
 
-	release_stream is
+	release_stream
 			-- In order to avoid a memory leak when using a WEL_RICH_EDIT_STREAM
 			-- descendant, this need to be called.
 		do
@@ -86,7 +86,7 @@ feature -- Basic operations
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_editstream
@@ -94,7 +94,7 @@ feature -- Measurement
 
 feature {NONE} -- Cookie access and settings
 
-	record_current_in_cookie is
+	record_current_in_cookie
 			-- Record protected reference on Current object in `cookie'
 		require
 			valid_cookie: cookie = default_pointer
@@ -107,7 +107,7 @@ feature {NONE} -- Cookie access and settings
 			cookie_set: cookie /= default_pointer
 		end
 
-	free_current_from_cookie is
+	free_current_from_cookie
 			-- Free protected reference on Current
 		require
 			valid_cookie: cookie /= default_pointer
@@ -118,13 +118,13 @@ feature {NONE} -- Cookie access and settings
 			cookie_set: cookie = default_pointer
 		end
 
-	cookie: POINTER is
+	cookie: POINTER
 			-- Current protected object passed to callback function.
 		do
 			Result := cwel_editstream_get_dwcookie (item)
 		end
 
-	set_cookie (a_cookie: POINTER) is
+	set_cookie (a_cookie: POINTER)
 			-- Set `cookie' with `a_cookie'.
 			--| Contains Current, so the C callback function knows
 			--| which object to call.
@@ -134,7 +134,7 @@ feature {NONE} -- Cookie access and settings
 			cookie_set: cookie = a_cookie
 		end
 
-	c_protect_cookie (a: POINTER): POINTER is
+	c_protect_cookie (a: POINTER): POINTER
 			-- Protect `a'.
 		external
 			"C [macro %"estream.h%"] (EIF_REFERENCE): EIF_POINTER"
@@ -142,7 +142,7 @@ feature {NONE} -- Cookie access and settings
 			"eif_protect"
 		end
 
-	c_free_cookie (ptr: POINTER) is
+	c_free_cookie (ptr: POINTER)
 			-- Remove protection on `ptr'.
 		external
 			"C [macro %"estream.h%"] (EIF_OBJECT)"
@@ -152,34 +152,34 @@ feature {NONE} -- Cookie access and settings
 
 feature {NONE} -- Externals
 
-	c_size_of_editstream: INTEGER is
+	c_size_of_editstream: INTEGER
 		external
 			"C [macro %"estream.h%"]"
 		alias
 			"sizeof (EDITSTREAM)"
 		end
 
-	cwel_editstream_set_dwcookie (ptr: POINTER; value: POINTER) is
+	cwel_editstream_set_dwcookie (ptr: POINTER; value: POINTER)
 		external
 			"C [macro %"estream.h%"]"
 		end
 
-	cwel_editstream_set_dwerror (ptr: POINTER; value: INTEGER) is
+	cwel_editstream_set_dwerror (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"estream.h%"]"
 		end
 
-	cwel_editstream_get_dwcookie (ptr: POINTER): POINTER is
+	cwel_editstream_get_dwcookie (ptr: POINTER): POINTER
 		external
 			"C [macro %"estream.h%"]"
 		end
 
-	cwel_editstream_get_dwerror (ptr: POINTER): INTEGER is
+	cwel_editstream_get_dwerror (ptr: POINTER): INTEGER
 		external
 			"C [macro %"estream.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

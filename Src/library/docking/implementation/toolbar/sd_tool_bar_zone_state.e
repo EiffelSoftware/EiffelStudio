@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Store tool bar zone state."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			container_direction := {SD_ENUMERATION}.top
@@ -24,7 +24,7 @@ feature -- Properties which record information in one row.
 	size: INTEGER
 			-- SD_TOOL_BAR_ZONE size
 
-	set_size (a_size: INTEGER) is
+	set_size (a_size: INTEGER)
 			-- Set `size'
 		require
 			valid: a_size >= 0
@@ -37,7 +37,7 @@ feature -- Properties which record information in one row.
 	position: INTEGER
 			-- SD_TOOL_BAR_ZONE position in its parent row.
 
-	set_position (a_position: INTEGER) is
+	set_position (a_position: INTEGER)
 			-- Set `position'
 		require
 			valid: a_position >= 0
@@ -50,7 +50,7 @@ feature -- Properties which record information in one row.
 	is_only_zone: BOOLEAN
 			-- When docking, if there is only one SD_T0OL_BAR_ZONE in SD_TOOL_BAR_ROW?
 
-	set_is_only_zone (a_only_zone: BOOLEAN) is
+	set_is_only_zone (a_only_zone: BOOLEAN)
 			-- Set `is_only_zone'
 		do
 			is_only_zone := a_only_zone
@@ -64,7 +64,7 @@ feature -- Propertites which record row infomations.
 			-- Tool bar container direction.
 			-- One value of {SD_ENUMERATION}.top, dock_bottom, dock_left, dock_right.
 
-	set_container_direction (a_direction: INTEGER) is
+	set_container_direction (a_direction: INTEGER)
 			-- Set `container_direction'
 		require
 			valid: is_direction_valid (a_direction)
@@ -77,7 +77,7 @@ feature -- Propertites which record row infomations.
 	container_row_number: INTEGER
 			-- Which row SD_TOOL_BAR_ZONE is in?
 
-	set_container_row_number (a_row_number: INTEGER) is
+	set_container_row_number (a_row_number: INTEGER)
 			-- Set `container_row_number'
 		require
 			valid: a_row_number > 0
@@ -89,7 +89,7 @@ feature -- Propertites which record row infomations.
 
 feature -- Properties which record floating informations.
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- `internal_screen_x'
 		local
 			l_screen: EV_SCREEN
@@ -103,7 +103,7 @@ feature -- Properties which record floating informations.
 
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- 'internal_screen_y'
 		local
 			l_screen: EV_SCREEN
@@ -116,7 +116,7 @@ feature -- Properties which record floating informations.
 			end
 		end
 
-	set_screen_x (a_screen_x: INTEGER) is
+	set_screen_x (a_screen_x: INTEGER)
 			-- Set `screen_x'
 		do
 			internal_screen_x := a_screen_x
@@ -126,7 +126,7 @@ feature -- Properties which record floating informations.
 			set: is_screen_position_set = True
 		end
 
-	set_screen_y (a_screen_y: INTEGER) is
+	set_screen_y (a_screen_y: INTEGER)
 			-- Set `screen_y'
 		do
 			internal_screen_y := a_screen_y
@@ -139,7 +139,7 @@ feature -- Properties which record floating informations.
 	floating_group_info: SD_TOOL_BAR_GROUP_INFO
 			-- How items positioned when floating?
 
-	set_floating_group_info (a_group_info: SD_TOOL_BAR_GROUP_INFO) is
+	set_floating_group_info (a_group_info: SD_TOOL_BAR_GROUP_INFO)
 			-- Set `row_count'
 		require
 			not_void: a_group_info /= Void
@@ -151,7 +151,7 @@ feature -- Properties which record floating informations.
 
 feature -- Items layout
 
-	set_items_layout (a_layout: like items_layout) is
+	set_items_layout (a_layout: like items_layout)
 			-- Set `a_layout'
 		require
 			not_void: a_layout /= Void
@@ -170,7 +170,7 @@ feature -- Customize dialog data.
 	customize_dialog_width, customize_dialog_height: INTEGER
 			-- Tool Bar customize dialog last width/height shown on the screen.
 
-	set_cutomize_dialog_size (a_width, a_height: INTEGER) is
+	set_cutomize_dialog_size (a_width, a_height: INTEGER)
 			-- Set `customize_dialog_width' and `customize_dialog_height' with `a_width' and `a_height'.
 		require
 			valid: a_width >= 0 and a_height >= 0
@@ -183,7 +183,7 @@ feature -- Customize dialog data.
 
 feature -- Query
 
-	is_docking_state_recorded: BOOLEAN is
+	is_docking_state_recorded: BOOLEAN
 			-- If have a valid docking state recorded?
 		do
 			Result := is_direction_valid (container_direction)
@@ -193,14 +193,14 @@ feature -- Query
 			end
 		end
 
-	is_direction_valid (a_direction: INTEGER): BOOLEAN is
+	is_direction_valid (a_direction: INTEGER): BOOLEAN
 			-- If `a_direction' valid?
 		do
 			Result :=  a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
 		end
 
-	is_vertical: BOOLEAN is
+	is_vertical: BOOLEAN
 			-- If Current is vertical tool bar?
 		require
 			valid: is_direction_valid (container_direction)
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 
 	is_screen_position_set: BOOLEAN;
 			-- If already setted `internal_screen_x' and `internal_screen_y'?
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

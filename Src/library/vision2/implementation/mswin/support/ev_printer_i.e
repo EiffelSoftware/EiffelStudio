@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "EiffelVision printer. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Status setting
 
-	set_printer_dc (a_dc: WEL_PRINTER_DC) is
+	set_printer_dc (a_dc: WEL_PRINTER_DC)
 			-- Set `printer_dc' to `a_dc'.
 		require
 			a_dc_not_void: a_dc /= Void
@@ -26,11 +26,11 @@ feature -- Status setting
 
 feature -- Status setting
 
-	start_document is
+	start_document
 		deferred
 		end
 
-	end_document is
+	end_document
 		deferred
 		end
 
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_PRINTER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

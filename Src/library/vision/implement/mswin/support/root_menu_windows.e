@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Menus which can be attached to a window"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ inherit
 
 feature -- Initialization
 
-	make_root is
+	make_root
 			-- Create the root menu details
 		do
 			create menu_id.make (1, 2147483645)
@@ -22,7 +22,7 @@ feature -- Initialization
 
 feature -- Access
 
-	new_id is
+	new_id
 			-- Generate a new id.
 		do
 			menu_id.next
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Status report
 
-	value: INTEGER is
+	value: INTEGER
 			-- Value of the menu
 		do
 			Result := menu_id.value
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	add (widget: WIDGET_IMP) is
+	add (widget: WIDGET_IMP)
 			-- Add a widget to the menu.
 		do
 			if not menu_buttons.has_item (widget) then
@@ -51,7 +51,7 @@ feature -- Status setting
 			end
 		end
 
-	add_with_id (widget: WIDGET_IMP; a_id: INTEGER) is
+	add_with_id (widget: WIDGET_IMP; a_id: INTEGER)
 			-- Add a widget to the menu.
 		do
 			if not menu_buttons.has_item (widget) then
@@ -59,7 +59,7 @@ feature -- Status setting
 			end
 		end
 
-	remove (a_id: INTEGER) is
+	remove (a_id: INTEGER)
 			-- Remove a widget from the menu.
 		do
 			if menu_buttons.has (a_id) then
@@ -67,7 +67,7 @@ feature -- Status setting
 			end
 		end
 
-	reset is
+	reset
 			-- Reset the contents of the menu
 		do
 			menu_id.reset
@@ -76,7 +76,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	execute (id: INTEGER) is
+	execute (id: INTEGER)
 		local
 			ww: WIDGET_IMP
 			tb: TOGGLE_B_IMP
@@ -98,7 +98,7 @@ feature -- Basic operations
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,84 +12,84 @@ inherit
 
 feature -- Status Report
 
-	open_user_precondition (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE): BOOLEAN is
+	open_user_precondition (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `open'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	close_user_precondition (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE; f_commit: INTEGER): BOOLEAN is
+	close_user_precondition (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE; f_commit: INTEGER): BOOLEAN
 			-- User-defined preconditions for `close'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	add_user_precondition (p_uu: IOLE_UNDO_UNIT_INTERFACE): BOOLEAN is
+	add_user_precondition (p_uu: IOLE_UNDO_UNIT_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `add'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_open_parent_state_user_precondition (pdw_state: INTEGER_REF): BOOLEAN is
+	get_open_parent_state_user_precondition (pdw_state: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `get_open_parent_state'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	discard_from_user_precondition (p_uu: IOLE_UNDO_UNIT_INTERFACE): BOOLEAN is
+	discard_from_user_precondition (p_uu: IOLE_UNDO_UNIT_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `discard_from'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	undo_to_user_precondition (p_uu: IOLE_UNDO_UNIT_INTERFACE): BOOLEAN is
+	undo_to_user_precondition (p_uu: IOLE_UNDO_UNIT_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `undo_to'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	redo_to_user_precondition (p_uu: IOLE_UNDO_UNIT_INTERFACE): BOOLEAN is
+	redo_to_user_precondition (p_uu: IOLE_UNDO_UNIT_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `redo_to'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enum_undoable_user_precondition (ppenum: CELL [IENUM_OLE_UNDO_UNITS_INTERFACE]): BOOLEAN is
+	enum_undoable_user_precondition (ppenum: CELL [IENUM_OLE_UNDO_UNITS_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `enum_undoable'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enum_redoable_user_precondition (ppenum: CELL [IENUM_OLE_UNDO_UNITS_INTERFACE]): BOOLEAN is
+	enum_redoable_user_precondition (ppenum: CELL [IENUM_OLE_UNDO_UNITS_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `enum_redoable'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_last_undo_description_user_precondition (p_bstr: CELL [STRING]): BOOLEAN is
+	get_last_undo_description_user_precondition (p_bstr: CELL [STRING]): BOOLEAN
 			-- User-defined preconditions for `get_last_undo_description'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_last_redo_description_user_precondition (p_bstr: CELL [STRING]): BOOLEAN is
+	get_last_redo_description_user_precondition (p_bstr: CELL [STRING]): BOOLEAN
 			-- User-defined preconditions for `get_last_redo_description'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enable_user_precondition (f_enable: INTEGER): BOOLEAN is
+	enable_user_precondition (f_enable: INTEGER): BOOLEAN
 			-- User-defined preconditions for `enable'.
 			-- Redefine in descendants if needed.
 		do
@@ -98,7 +98,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	open (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE) is
+	open (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE)
 			-- No description available.
 			-- `p_puu' [in].  
 		require
@@ -107,7 +107,7 @@ feature -- Basic Operations
 
 		end
 
-	close (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE; f_commit: INTEGER) is
+	close (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE; f_commit: INTEGER)
 			-- No description available.
 			-- `p_puu' [in].  
 			-- `f_commit' [in].  
@@ -117,7 +117,7 @@ feature -- Basic Operations
 
 		end
 
-	add (p_uu: IOLE_UNDO_UNIT_INTERFACE) is
+	add (p_uu: IOLE_UNDO_UNIT_INTERFACE)
 			-- No description available.
 			-- `p_uu' [in].  
 		require
@@ -126,7 +126,7 @@ feature -- Basic Operations
 
 		end
 
-	get_open_parent_state (pdw_state: INTEGER_REF) is
+	get_open_parent_state (pdw_state: INTEGER_REF)
 			-- No description available.
 			-- `pdw_state' [out].  
 		require
@@ -136,7 +136,7 @@ feature -- Basic Operations
 
 		end
 
-	discard_from (p_uu: IOLE_UNDO_UNIT_INTERFACE) is
+	discard_from (p_uu: IOLE_UNDO_UNIT_INTERFACE)
 			-- No description available.
 			-- `p_uu' [in].  
 		require
@@ -145,7 +145,7 @@ feature -- Basic Operations
 
 		end
 
-	undo_to (p_uu: IOLE_UNDO_UNIT_INTERFACE) is
+	undo_to (p_uu: IOLE_UNDO_UNIT_INTERFACE)
 			-- No description available.
 			-- `p_uu' [in].  
 		require
@@ -154,7 +154,7 @@ feature -- Basic Operations
 
 		end
 
-	redo_to (p_uu: IOLE_UNDO_UNIT_INTERFACE) is
+	redo_to (p_uu: IOLE_UNDO_UNIT_INTERFACE)
 			-- No description available.
 			-- `p_uu' [in].  
 		require
@@ -163,7 +163,7 @@ feature -- Basic Operations
 
 		end
 
-	enum_undoable (ppenum: CELL [IENUM_OLE_UNDO_UNITS_INTERFACE]) is
+	enum_undoable (ppenum: CELL [IENUM_OLE_UNDO_UNITS_INTERFACE])
 			-- No description available.
 			-- `ppenum' [out].  
 		require
@@ -175,7 +175,7 @@ feature -- Basic Operations
 			valid_ppenum: ppenum.item /= Void
 		end
 
-	enum_redoable (ppenum: CELL [IENUM_OLE_UNDO_UNITS_INTERFACE]) is
+	enum_redoable (ppenum: CELL [IENUM_OLE_UNDO_UNITS_INTERFACE])
 			-- No description available.
 			-- `ppenum' [out].  
 		require
@@ -187,7 +187,7 @@ feature -- Basic Operations
 			valid_ppenum: ppenum.item /= Void
 		end
 
-	get_last_undo_description (p_bstr: CELL [STRING]) is
+	get_last_undo_description (p_bstr: CELL [STRING])
 			-- No description available.
 			-- `p_bstr' [out].  
 		require
@@ -199,7 +199,7 @@ feature -- Basic Operations
 			valid_p_bstr: p_bstr.item /= Void
 		end
 
-	get_last_redo_description (p_bstr: CELL [STRING]) is
+	get_last_redo_description (p_bstr: CELL [STRING])
 			-- No description available.
 			-- `p_bstr' [out].  
 		require
@@ -211,7 +211,7 @@ feature -- Basic Operations
 			valid_p_bstr: p_bstr.item /= Void
 		end
 
-	enable (f_enable: INTEGER) is
+	enable (f_enable: INTEGER)
 			-- No description available.
 			-- `f_enable' [in].  
 		require
@@ -220,7 +220,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

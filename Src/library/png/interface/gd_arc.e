@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Arc"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make(im: GD_IMAGE;a_color_index:INTEGER;x,y,a_width,a_height,deg_start,deg_end: INTEGER) is
+	make(im: GD_IMAGE;a_color_index:INTEGER;x,y,a_width,a_height,deg_start,deg_end: INTEGER)
 		do
 			center_x := x
 			center_y := y
@@ -34,7 +34,7 @@ feature -- Initialization
 
 feature -- Drawing
 
-	draw_border is
+	draw_border
 			-- Draw on image 'image' with color corresponding to 'color_index'.
 			-- gdImageArc is used to draw a partial ellipse centered at the given point,
 			-- with the specified width and height in pixels. The arc begins at the position 
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	gdImageArc(p: POINTER; x,y,ellipse_width,ellipse_height,starting_angle,ending_angle,col_index: INTEGER) is
+	gdImageArc(p: POINTER; x,y,ellipse_width,ellipse_height,starting_angle,ending_angle,col_index: INTEGER)
 		external
 			"c"
 		alias
@@ -70,7 +70,7 @@ invariant
 	color_index_possible: color_index >=0 and color_index <=255 and then 
 								  color_index <= image.color_index_bound
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

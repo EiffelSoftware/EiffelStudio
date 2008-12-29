@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that represent the cursor of a text viewer"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization
 
-	make_from_absolute_pos (x, y : INTEGER; a_text: like whole_text) is
+	make_from_absolute_pos (x, y : INTEGER; a_text: like whole_text)
 			-- Create a cursor in `a_text', at position given by
 			-- `x' (in pixels) and `y' (in lines).
 		require
@@ -40,7 +40,7 @@ feature -- Initialization
 		end
 
 	make_from_relative_pos (a_line: VIEWER_LINE; a_token: EDITOR_TOKEN;
-				pos: INTEGER; a_text: like whole_text) is
+				pos: INTEGER; a_text: like whole_text)
 			-- Create a cursor in `a_text', at position given by
 			-- `a_line', `a_token' and `pos'.
 		require
@@ -55,7 +55,7 @@ feature -- Initialization
 			set_current_char (a_token, pos)
 		end
 
-	make_from_character_pos (ch_num, y: INTEGER; a_text: like whole_text) is
+	make_from_character_pos (ch_num, y: INTEGER; a_text: like whole_text)
 			-- Create a cursor in `a_text', at the `ch_num'th
 			-- character in line `y'.
 		require
@@ -68,7 +68,7 @@ feature -- Initialization
 			set_x_in_characters (ch_num)
 		end
 
-	make_from_integer (ch_num: INTEGER; a_text: like whole_text) is
+	make_from_integer (ch_num: INTEGER; a_text: like whole_text)
 			-- Create a cursor in `a_text', at the `ch_num'th
 			-- character of the whole text.
 		require
@@ -122,7 +122,7 @@ feature -- Access
 
 		--| Character-based position
 
-	x_in_characters: INTEGER is
+	x_in_characters: INTEGER
 			-- Horizontal position of Current, in characters.
 		local
 			current_token : EDITOR_TOKEN
@@ -140,7 +140,7 @@ feature -- Access
 
 		--| Other functions
 
-	item: CHARACTER is
+	item: CHARACTER
 			-- Character current points on
 		obsolete
 			"Use wide_item instead"
@@ -148,7 +148,7 @@ feature -- Access
 			Result := wide_item.to_character_8
 		end
 
-	wide_item: CHARACTER_32 is
+	wide_item: CHARACTER_32
 			-- Character current points on
 		do
 			if token = line.eol_token then
@@ -158,7 +158,7 @@ feature -- Access
 			end
 		end
 
-	pos_in_characters: INTEGER is
+	pos_in_characters: INTEGER
 			-- Position of Current, in characters from the start of the text.
 		local
 			a_line: VIEWER_LINE
@@ -179,7 +179,7 @@ feature -- Access
 
 feature -- Cursor movement
 
-	go_right_char is
+	go_right_char
 			-- Move to next character, if there is one.
 		do
 			if pos_in_token = token.length then
@@ -198,7 +198,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_left_char is
+	go_left_char
 			-- Move to previous character, if there is one.
 		do
 			if pos_in_token = 1 then
@@ -217,27 +217,27 @@ feature -- Cursor movement
 			end
 		end
 
-	go_up_line is
+	go_up_line
 			-- Move up one line (to preceding line), if possible.
 		do
 			set_line_to_previous
 			update_current_char
 		end
 
-	go_down_line is
+	go_down_line
 			-- Move down one line (to next line), if possible.
 		do
 			set_line_to_next
 			update_current_char
 		end
 
-	go_start_line is
+	go_start_line
 			-- Move to beginning of line.
 		do
 			set_current_char (line.first_token, 1)
 		end
 
-	go_end_line is
+	go_end_line
 			-- Move to end of line.
 		do
 			set_current_char (line.eol_token, line.eol_token.length)
@@ -245,7 +245,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	set_line (a_line: like line) is
+	set_line (a_line: like line)
 			-- Make `a_line' the new value of `line'.
 		require
 			a_line_exists: a_line /= Void
@@ -256,7 +256,7 @@ feature -- Element change
 			update_current_char
 		end
 
-	set_current_char (a_token: EDITOR_TOKEN; a_position: INTEGER) is
+	set_current_char (a_token: EDITOR_TOKEN; a_position: INTEGER)
 			-- Make `a_token' be the new value for `token'.
 			-- Set the value of `pos_in_token' to `a_position'.
 			-- Update `x_in_pixels' accordingly.
@@ -289,7 +289,7 @@ feature -- Element change
 			x_in_pixels := current_width
 		end
 
-	set_x_in_pixels (x: INTEGER) is
+	set_x_in_pixels (x: INTEGER)
 			-- Make `x' be the new value of `x_in_pixels'.
 		require
 			x_valid: x >= 0
@@ -302,7 +302,7 @@ feature -- Element change
 			update_current_char
 		end
 
-	set_y_in_lines (y: INTEGER) is
+	set_y_in_lines (y: INTEGER)
 			-- Make `y' be the new value of `y_in_lines'.
 			-- Change `line' accordingly.
 		require
@@ -315,7 +315,7 @@ feature -- Element change
 			update_current_char
 		end
 
-	set_x_in_characters (x_in_ch: INTEGER) is
+	set_x_in_characters (x_in_ch: INTEGER)
 			-- Set attributes so that `x_in_characters' return `x_in_ch'.
 		require
 			x_in_ch_valid: x_in_ch >= 1
@@ -364,7 +364,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := (y_in_lines < other.y_in_lines) or else
@@ -373,7 +373,7 @@ feature -- Comparison
 				--| We have to verify that Current and `other' are not equal.
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is Current equal to `other'?
 		do
 			Result := (y_in_lines = other.y_in_lines) and then (token = other.token) and then (pos_in_token = other.pos_in_token)
@@ -381,7 +381,7 @@ feature -- Comparison
 
 feature {NONE} -- Implementation
 
-	set_line_to_next is
+	set_line_to_next
 			-- Make `line.next' the new value of `line'.
 			-- Change `y_in_lines' accordingly.
 			-- Do not update `pos' and `token',
@@ -406,7 +406,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_line_to_previous is
+	set_line_to_previous
 			-- Make `line.previous' the new value of `line'.
 			-- Change `y_in_lines' accordingly.
 			-- Do not update `pos' and `token',
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_current_char is
+	update_current_char
 			-- Update the current token and the the position in it.
 		local
 			current_x: INTEGER
@@ -474,7 +474,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_x_in_pixels is
+	update_x_in_pixels
 			-- Update x_in_pixels from `token' and `pos_in_token'
 		local
 			current_width: INTEGER
@@ -509,7 +509,7 @@ invariant
 	pos_in_token_positive			: pos_in_token > 0
 	whole_text_not_void				: whole_text /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

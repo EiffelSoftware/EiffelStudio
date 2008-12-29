@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that enable to navigate among a list %
 			%of database table rows."
 	legal: "See notice at end of class."
@@ -17,27 +17,27 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			--Initialize.
 		do
 		end
 
 feature -- Status report
 
-	display_list_set: BOOLEAN is
+	display_list_set: BOOLEAN
 			-- Has a display list been set?
 		do
 			Result := display_list /= Void
 		end
 
-	can_be_activated_with_list: BOOLEAN is
+	can_be_activated_with_list: BOOLEAN
 			-- Can the component be activated if a display list is set?
 		do
 			Result := db_selectable_component /= Void and then
 					db_selectable_component.table_description /= Void
 		end
 
-	can_be_activated: BOOLEAN is
+	can_be_activated: BOOLEAN
 			-- Can the component be activated?
 		do
 			if display_list_set then
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_display_list (display_l: DV_TABLEROW_LIST) is
+	set_display_list (display_l: DV_TABLEROW_LIST)
 			-- Set display list to navigate through selection results.
 			-- `display_list' can be changed after activation to display
 			-- different results on different lists. Please use this
@@ -75,7 +75,7 @@ feature -- Basic operations
 			display_list_set: display_list_set
 		end
 
-	set_list_edition_control (list_edition_ctrl: DV_SENSITIVE_CONTROL) is
+	set_list_edition_control (list_edition_ctrl: DV_SENSITIVE_CONTROL)
 			-- Set `list_edition_ctrl' as control to raise display list.
 			-- Warning: action to raise the list is not added, component
 			-- only manage sensitiveness.
@@ -87,7 +87,7 @@ feature -- Basic operations
 			list_edition_control.disable_sensitive
 		end
 
-	set_previous_control (previous_ctrl: DV_SENSITIVE_CONTROL) is
+	set_previous_control (previous_ctrl: DV_SENSITIVE_CONTROL)
 			-- Set `previous_ctrl' as control to go to previous page.
 		require
 			not_void: previous_ctrl /= Void
@@ -97,7 +97,7 @@ feature -- Basic operations
 			previous_control.disable_sensitive
 		end
 
-	set_next_control (next_ctrl: DV_SENSITIVE_CONTROL) is
+	set_next_control (next_ctrl: DV_SENSITIVE_CONTROL)
 			-- Set `next_ctrl' as control to go to next page.
 		require
 			not_void: next_ctrl /= Void
@@ -107,7 +107,7 @@ feature -- Basic operations
 			next_control.disable_sensitive
 		end
 
-	reactivate is
+	reactivate
 			-- Reset component and reactivate it from `db_selectable_component'.
 			-- (Simply activate it if it was not activated.)
 		do
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 	display_list: DV_TABLEROW_LIST
 			-- Displayed list of table rows.
 
-	refresh is
+	refresh
 			-- Refresh table row set display
 			-- from `db_selectable_component.selected_tablerows'.
 		local
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	activate is
+	activate
 			-- Build display.
 		do
 			if display_list /= Void then
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			is_activated := True
 		end
 
-	list_select_actions is
+	list_select_actions
 			-- Action performed when a `display_list' item is
 			-- selected.
 		do
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 	next_control: DV_SENSITIVE_CONTROL
 			-- Control to go to next page.
 
-	next is
+	next
 			-- Move to next item in `db_selectable_component.selected_tablerows'.
 		require
 			not db_selectable_component.selected_tablerows.after
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			update_next_control
 		end
 
-	previous is
+	previous
 			-- Move to previous item in `db_selectable_component.selected_tablerows'.
 		require
 			not db_selectable_component.selected_tablerows.before
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			update_previous_control
 		end
 
-	update_previous_control is
+	update_previous_control
 			-- Update previous control sensitiveness.
 		require
 			set_not_empty: db_selectable_component.selected_tablerows /= Void and then
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_next_control is
+	update_next_control
 			-- Update next control sensitiveness.
 		require
 			set_not_empty: db_selectable_component.selected_tablerows /= Void and then
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	disable_controls_sensitive is
+	disable_controls_sensitive
 			-- Disable previous and next controls set sensitive.
 		do
 			if previous_control /= Void then
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_controls_sensitive is
+	update_controls_sensitive
 			-- Update every control set sensitiveness
 			-- according to current position in
 			-- `db_selectable_component.selected_tablerows'.
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

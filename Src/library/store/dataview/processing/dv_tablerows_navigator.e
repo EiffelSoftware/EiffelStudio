@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that enable to navigate among a list %
 			%of database table rows."
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {DV_COMPONENT} -- Basic operations
 
-	set_table_component (selectable_comp: DV_TABLEROWS_COMPONENT) is
+	set_table_component (selectable_comp: DV_TABLEROWS_COMPONENT)
 			-- Set `selectable_comp' to `db_selectable_component'.
 		require
 			not_activated: not is_activated
@@ -23,7 +23,7 @@ feature {DV_COMPONENT} -- Basic operations
 			db_selectable_component := selectable_comp
 		end
 
-	reactivate is
+	reactivate
 			-- Reset component and reactivate it from `db_selectable_component'.
 		require
 			can_be_activated: can_be_activated
@@ -32,7 +32,7 @@ feature {DV_COMPONENT} -- Basic operations
 			is_activated: is_activated
 		end
 
-	refresh is
+	refresh
 			-- Refresh table row set display
 			-- from `db_selectable_component'.
 		require
@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 	db_selectable_component: DV_TABLEROWS_COMPONENT;
 			-- Display of current database table row.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

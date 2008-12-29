@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Example2, which builds a spirale."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- drawing
 
-	build is
+	build
 			-- Build figures on the images.
 		local
 			pt: EV_COORDINATES
@@ -43,9 +43,9 @@ feature -- drawing
 
 feature -- Access
 	
-	suffix: STRING is "_2";
+	suffix: STRING = "_2";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

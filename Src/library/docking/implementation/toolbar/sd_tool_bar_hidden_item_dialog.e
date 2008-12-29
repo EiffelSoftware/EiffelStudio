@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to show hidden tool bar items."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]; a_tool_bar: SD_TOOL_BAR_ZONE) is
+	make (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]; a_tool_bar: SD_TOOL_BAR_ZONE)
 			-- Creation method.
 		require
 			not_void: a_hidden_items /= Void
@@ -64,7 +64,7 @@ feature {NONE}  -- Initlization
 			set: parent_tool_bar = a_tool_bar
 		end
 
-	make_for_menu (a_tool_bar: SD_TOOL_BAR_ZONE) is
+	make_for_menu (a_tool_bar: SD_TOOL_BAR_ZONE)
 			-- Creation method for right-click menu.
 		require
 			not_void: a_tool_bar /= Void
@@ -75,7 +75,7 @@ feature {NONE}  -- Initlization
 			make (l_list, a_tool_bar)
 		end
 
-	init_grouping (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]) is
+	init_grouping (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
 			-- Grouping hidden items.
 		local
 			l_divider: SD_TOOL_BAR_HIDDEN_GROUP_DIVIDER
@@ -87,7 +87,7 @@ feature {NONE}  -- Initlization
 			end
 		end
 
-	init_hidden_items (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]) is
+	init_hidden_items (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
 			-- Add hidden items to Current.
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
@@ -115,7 +115,7 @@ feature {NONE}  -- Initlization
 			end
 		end
 
-	init_customize_label is
+	init_customize_label
 			-- Add customize label.
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
@@ -133,7 +133,7 @@ feature {NONE}  -- Initlization
 			internal_tool_bar.extend (l_button)
 		end
 
-	init_close is
+	init_close
 			-- Initialization close events.
 		do
 			focus_out_actions.extend (agent on_focus_out)
@@ -141,7 +141,7 @@ feature {NONE}  -- Initlization
 
 feature {SD_TOOL_BAR_MANAGER} -- Command
 
-	on_customize is
+	on_customize
 			-- Handle customize actions.
 		local
 			l_dialog: SD_TOOL_BAR_CUSTOMIZE_DIALOG
@@ -197,7 +197,7 @@ feature {SD_TOOL_BAR_MANAGER} -- Command
 
 feature {NONE} -- Implementation
 
-	prepare_size (a_dialog: EV_DIALOG; a_state: SD_TOOL_BAR_ZONE_STATE) is
+	prepare_size (a_dialog: EV_DIALOG; a_state: SD_TOOL_BAR_ZONE_STATE)
 			-- Try to use last customize dialog width and height.
 		require
 			not_void: a_dialog /= Void
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			a_dialog.set_size (l_width, l_height)
 		end
 
-	save_items_layout (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]) is
+	save_items_layout (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM])
 			-- Save `a_tool_bar' items layout to it's data.
 		require
 			not_void: a_items /= Void
@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 	internal_tool_bar: SD_WIDGET_TOOL_BAR
 			-- Tool bar contain all hidden items and "Customize" label.
 
-	on_focus_out is
+	on_focus_out
 			-- Handle focus out actions.
 		do
 			if is_displayed then
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 invariant
 	parent_tool_bar_not_void: parent_tool_bar /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Gtk implementation to draw native looking notebook tabs.
 					]"
@@ -39,7 +39,7 @@ create
 	make
 
 feature {NONE} -- Initlialization
-		make is
+		make
 				-- Creation method
 			do
 					Precursor {SD_NOTEBOOK_TAB_DRAWER_I}
@@ -50,14 +50,14 @@ feature {NONE} -- Initlialization
 
 feature -- Command
 
-	expose_unselected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
+	expose_unselected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
 			-- Draw unselected notebook tab.
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
 			internal_expose (a_width, internal_tab.x, False)
 		end
 
-	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
+	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
 			-- Draw selected notebook tab.
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
@@ -67,14 +67,14 @@ feature -- Command
 			end
 		end
 
-	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
+	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
 			-- Draw hot notebook tab.
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I} (a_width, a_tab_info)
 			internal_expose (a_width, internal_tab.x, False)
 		end
 
-	tool_bar_drawer: SD_TOOL_BAR_DRAWER_IMP is
+	tool_bar_drawer: SD_TOOL_BAR_DRAWER_IMP
 			-- Tool bar drawer which used for drawing close button.
 		once
 			create Result.make
@@ -113,7 +113,7 @@ feature -- Command
 			end
 		end
 
-	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER) is
+	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
 			-- Redefine
 		local
 			l_font: EV_FONT
@@ -144,7 +144,7 @@ feature -- Command
 			end
 		end
 
-	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER) is
+	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
 			-- Redefine
 		local
 			l_font: EV_FONT
@@ -167,7 +167,7 @@ feature -- Command
 			draw_close_button (a_pixmap, internal_shared.icons.close)
 		end
 
-	draw_focus_rect (a_rect: EV_RECTANGLE) is
+	draw_focus_rect (a_rect: EV_RECTANGLE)
 			-- Redefine
 		local
 			l_imp: SD_DRAWING_AREA_IMP
@@ -178,7 +178,7 @@ feature -- Command
 			c_gtk_paint_focus (l_imp.c_object, {EV_GTK_EXTERNALS}.gtk_rc_get_style (l_imp.c_object), a_rect.x, a_rect.y, a_rect.width, a_rect.height)
 		end
 
-	pixmap_y_position: INTEGER is
+	pixmap_y_position: INTEGER
 			-- Pixmap positon relative to Current.
 		do
 			if pixmap /= Void then
@@ -190,26 +190,26 @@ feature -- Command
 
 feature {NONE}  -- Implementation	
 
-	gap_height: INTEGER is 0
+	gap_height: INTEGER = 0
 			-- Redefine
 
-	start_y_position: INTEGER is 1
+	start_y_position: INTEGER = 1
 			-- Redefine
 
-	start_y_position_text: INTEGER is
+	start_y_position_text: INTEGER
 			-- Redefine
 		do
 			Result := internal_shared.tool_bar_font.height // 3 - 2
 		end
 
-	clear (a_width, a_x: INTEGER) is
+	clear (a_width, a_x: INTEGER)
 			-- Clear `internal_tab''s area.
 		do
 			internal_tab.parent.set_foreground_color (internal_tab.parent.background_color)
 			internal_tab.parent.fill_rectangle (a_x, 0, a_width, internal_tab.parent.height)
 		end
 
-	notebook_style: POINTER is
+	notebook_style: POINTER
 			-- Default theme style from resource.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_rc_get_style (style_source)
@@ -217,7 +217,7 @@ feature {NONE}  -- Implementation
 			not_void: Result /= default_pointer
 		end
 
-	style_source: POINTER is
+	style_source: POINTER
 			-- Notebook for query theme style.
 		once
 			-- We can't use notebook for the soure of style here.
@@ -228,7 +228,7 @@ feature {NONE}  -- Implementation
 			Result := {EV_GTK_EXTERNALS}.gtk_button_new
 		end
 
-	internal_expose (a_width: INTEGER; a_x: INTEGER; a_is_selected: BOOLEAN) is
+	internal_expose (a_width: INTEGER; a_x: INTEGER; a_is_selected: BOOLEAN)
 			-- Expose implementation
 		local
 			l_imp: SD_DRAWING_AREA_IMP
@@ -251,7 +251,7 @@ feature {NONE}  -- Implementation
 
 	c_gtk_paint_extension (a_gtk_widget: POINTER; a_style: POINTER; a_selected: BOOLEAN;
 									a_x, a_y, a_width, a_height: INTEGER;
-									a_top: BOOLEAN) is
+									a_top: BOOLEAN)
 			-- Gtk Draw notebook tabs.
 			-- See gdknotebook.c gtk_notebook_draw_tab
 		external
@@ -290,7 +290,7 @@ feature {NONE}  -- Implementation
 			]"
 		end
 
-	c_gtk_paint_focus (a_gtk_widget: POINTER; a_style: POINTER; a_x, a_y, a_width, a_height: INTEGER) is
+	c_gtk_paint_focus (a_gtk_widget: POINTER; a_style: POINTER; a_x, a_y, a_width, a_height: INTEGER)
 			-- Draws a focus indicator around the given rectangle.
 		external
 			"C inline use <gtk/gtk.h>		"
@@ -321,7 +321,7 @@ feature {NONE}  -- Implementation
 			]"
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

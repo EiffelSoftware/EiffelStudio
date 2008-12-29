@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						All image encoder constants used by gdi+.
 																			]"
@@ -12,7 +12,7 @@ class
 
 feature -- Total
 
-	all_formats: ARRAYED_LIST [WEL_GDIP_IMAGE_ENCODER] is
+	all_formats: ARRAYED_LIST [WEL_GDIP_IMAGE_ENCODER]
 			-- All formats supported.
 		do
 			create Result.make (12)
@@ -34,7 +34,7 @@ feature -- Total
 
 feature -- Query
 
-	memoryBMP: WEL_GDIP_IMAGE_ENCODER is
+	memoryBMP: WEL_GDIP_IMAGE_ENCODER
     		-- Memory BMP format.
 		local
 			l_guid: WEL_GUID
@@ -46,7 +46,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	bmp: WEL_GDIP_IMAGE_ENCODER is
+	bmp: WEL_GDIP_IMAGE_ENCODER
 			-- BMP format.
 		local
 			l_guid: WEL_GUID
@@ -58,7 +58,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	emf: WEL_GDIP_IMAGE_ENCODER is
+	emf: WEL_GDIP_IMAGE_ENCODER
 			-- EMF format.
 		local
 			l_guid: WEL_GUID
@@ -70,7 +70,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	wmf: WEL_GDIP_IMAGE_ENCODER is
+	wmf: WEL_GDIP_IMAGE_ENCODER
 			-- WMF format.
 		local
 			l_guid: WEL_GUID
@@ -82,7 +82,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	jpeg: WEL_GDIP_IMAGE_ENCODER is
+	jpeg: WEL_GDIP_IMAGE_ENCODER
 			-- JPEG format.
 		local
 			l_guid: WEL_GUID
@@ -94,7 +94,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	png: WEL_GDIP_IMAGE_ENCODER is
+	png: WEL_GDIP_IMAGE_ENCODER
 			-- PNG format.
 		local
 			l_guid: WEL_GUID
@@ -106,7 +106,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	gif: WEL_GDIP_IMAGE_ENCODER is
+	gif: WEL_GDIP_IMAGE_ENCODER
 			-- GIF format.
 		local
 			l_guid: WEL_GUID
@@ -118,7 +118,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	tiff: WEL_GDIP_IMAGE_ENCODER is
+	tiff: WEL_GDIP_IMAGE_ENCODER
 			-- TIFF format.
 		local
 			l_guid: WEL_GUID
@@ -130,7 +130,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	exif: WEL_GDIP_IMAGE_ENCODER is
+	exif: WEL_GDIP_IMAGE_ENCODER
 			-- EXIF format.
 		local
 			l_guid: WEL_GUID
@@ -142,7 +142,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	photoCD: WEL_GDIP_IMAGE_ENCODER is
+	photoCD: WEL_GDIP_IMAGE_ENCODER
 			-- photoCD format.
 		local
 			l_guid: WEL_GUID
@@ -154,7 +154,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	flashPIX: WEL_GDIP_IMAGE_ENCODER is
+	flashPIX: WEL_GDIP_IMAGE_ENCODER
 			-- flashPIX format.
 		local
 			l_guid: WEL_GUID
@@ -166,7 +166,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	icon: WEL_GDIP_IMAGE_ENCODER is
+	icon: WEL_GDIP_IMAGE_ENCODER
 			-- ICON format.
 		local
 			l_guid: WEL_GUID
@@ -178,7 +178,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

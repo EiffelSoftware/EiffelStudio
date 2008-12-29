@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"`text's in a `font' displayed on `point'."
 	legal: "See notice at end of class."
@@ -37,7 +37,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create in (0, 0)
 		do
 			create {STRING_32} text.make_empty
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_ATOMIC_FIGURE}
 		end
 
-	make_with_text (a_text: STRING_GENERAL) is
+	make_with_text (a_text: STRING_GENERAL)
 			-- Create with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -76,7 +76,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Assign `a_font' to `font'.
 		require
 			a_font_not_void: a_font /= Void
@@ -89,7 +89,7 @@ feature -- Status setting
 			font_assigned: font = a_font
 		end
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -103,7 +103,7 @@ feature -- Status setting
 
 feature -- Events
 
-	position_on_figure (x, y: INTEGER): BOOLEAN is
+	position_on_figure (x, y: INTEGER): BOOLEAN
 			-- Is (`x', `y') on this figure?
 		do
 			update_dimensions
@@ -113,7 +113,7 @@ feature -- Events
 
 feature {NONE} -- Implementation
 
-	update_dimensions is
+	update_dimensions
 			-- Reassign `width' and `height'.
 		local
 			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			update_dimensions_with_text_size (t)
 		end
 
-	update_dimensions_with_text_size (t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]) is
+	update_dimensions_with_text_size (t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER])
 		require
 			t_not_void: t /= Void
 		do
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			height := t.integer_item (2)
 		end
 
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangle `Current' fits in.
 		local
 			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	Default_font: EV_FONT is
+	Default_font: EV_FONT
 			-- Font set by `default_create'.
 		once
 			create Result
@@ -156,7 +156,7 @@ invariant
 	text_exists: text /= Void
 	font_exists: font /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

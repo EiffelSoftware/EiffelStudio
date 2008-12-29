@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision vertical box. The children are arranged vertically.%
 		% Mswindows implementation."
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_homogeneous (flag: BOOLEAN) is
+	set_homogeneous (flag: BOOLEAN)
 			-- set `is_homogeneous' to `flag'.
 			-- Recompute heights of children.
 		do
@@ -40,14 +40,14 @@ feature -- Status setting
 			notify_change (Nc_minheight, Current)
 		end
 
-	set_padding (value: INTEGER) is
+	set_padding (value: INTEGER)
 			-- Make `value' the new spacing of `Current'.
 		do
 			padding := value
 			notify_change (Nc_minheight, Current)
 		end
 
-	set_border_width (value: INTEGER) is
+	set_border_width (value: INTEGER)
 			-- Make `value' the new border width of `Current'.
 		do
 			border_width := value
@@ -56,19 +56,19 @@ feature -- Status setting
 
 feature {NONE} -- Basic operation
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 		do
 			Precursor (size_type, a_width, a_height)
 			set_children_height (client_height + 2 * border_width, True)
 		end
 
-	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
 			set_children_height (client_height + 2 * border_width, False)
 		end
 
-	set_children_height (a_height: INTEGER; originator: BOOLEAN) is
+	set_children_height (a_height: INTEGER; originator: BOOLEAN)
 			-- Resize the children to fit the current height.
 		local
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
@@ -195,7 +195,7 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Implementation for automatic size computation.
 
-	compute_minimum_width is
+	compute_minimum_width
 			-- Recompute the minimum_width of `Current'.
 		local
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation for automatic size computation.
 			ev_set_minimum_width (value + 2 * border_width)
 		end
 
-	compute_minimum_height is
+	compute_minimum_height
 			-- Recompute the minimum_height of `Current'.
 		local
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
@@ -285,7 +285,7 @@ feature {NONE} -- Implementation for automatic size computation.
 			end
 		end
 
-	compute_minimum_size is
+	compute_minimum_size
 			-- Recompute both the minimum_width and the minimum_height
 			-- of `Current'.
 		local
@@ -350,7 +350,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_VERTICAL_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

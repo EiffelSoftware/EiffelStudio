@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Intermediary routines between gtk and eiffel."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,12 +19,12 @@ inherit
 
 feature {EV_ANY_IMP} -- Gtk Dependent intermediary routines
 
-	scroll_wheel_translate (n: INTEGER; args: POINTER): TUPLE is
+	scroll_wheel_translate (n: INTEGER; args: POINTER): TUPLE
 		do
 			-- Not used.
 		end
 
-	page_switch_translate (n: INTEGER; args: POINTER): TUPLE is
+	page_switch_translate (n: INTEGER; args: POINTER): TUPLE
 			-- Retrieve index of switched page.
 		local
 			gtkarg2: POINTER
@@ -33,7 +33,7 @@ feature {EV_ANY_IMP} -- Gtk Dependent intermediary routines
 			Result := [{EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_uint (gtkarg2)]
 		end
 
-	mcl_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_int: INTEGER) is
+	mcl_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_int: INTEGER)
 			-- Multi-column list event
 		local
 			a_mcl_imp: EV_MULTI_COLUMN_LIST_IMP
@@ -54,7 +54,7 @@ feature {EV_ANY_IMP} -- Gtk Dependent intermediary routines
 
 feature {EV_ANY_IMP} -- Toolbar intermediary agent routines
 
-	on_tool_bar_radio_button_activate (a_c_object: POINTER) is
+	on_tool_bar_radio_button_activate (a_c_object: POINTER)
 			-- Toolbar button activated
 		local
 			a_tool_bar_radio_button_imp: EV_TOOL_BAR_RADIO_BUTTON_IMP
@@ -63,7 +63,7 @@ feature {EV_ANY_IMP} -- Toolbar intermediary agent routines
 			a_tool_bar_radio_button_imp.on_activate
 		end
 
-	toolbar_button_select_actions_intermediary (a_c_object: POINTER) is
+	toolbar_button_select_actions_intermediary (a_c_object: POINTER)
 			-- Intermediary agent for toolbar button select action
 		local
 			a_toolbar_button_imp: EV_TOOL_BAR_BUTTON_IMP
@@ -74,7 +74,7 @@ feature {EV_ANY_IMP} -- Toolbar intermediary agent routines
 
 feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list item intermediary agent routines
 
-	on_list_item_list_key_pressed_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+	on_list_item_list_key_pressed_intermediary (a_c_object: POINTER; a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN)
 			-- List item selected
 		local
 			a_list_item_list: EV_LIST_ITEM_LIST_IMP
@@ -83,7 +83,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			--a_list_item_list.on_key_pressed (a_key, a_key_string, a_key_press)
 		end
 
-	on_list_item_list_item_clicked_intermediary (a_c_object: POINTER) is
+	on_list_item_list_item_clicked_intermediary (a_c_object: POINTER)
 			-- List item clicked
 		local
 			a_list_item_list: EV_LIST_ITEM_LIST_IMP
@@ -92,7 +92,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			--a_list_item_list.on_item_clicked
 		end
 
-	list_proximity_intermediary (a_c_object: POINTER; in_out_flag: BOOLEAN) is
+	list_proximity_intermediary (a_c_object: POINTER; in_out_flag: BOOLEAN)
 			-- Pointer entered or left
 		local
 			a_list_imp: EV_LIST_IMP
@@ -101,7 +101,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			--a_list_imp.set_is_out (in_out_flag)
 		end
 
-	list_item_select_callback_intermediary (a_c_object: POINTER; n_args: INTEGER; args: POINTER) is
+	list_item_select_callback_intermediary (a_c_object: POINTER; n_args: INTEGER; args: POINTER)
 			-- Item select callback
 		local
 			l_list_item_list: EV_LIST_ITEM_LIST_IMP
@@ -110,7 +110,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			l_list_item_list.select_callback (n_args, args)
 		end
 
-	list_item_check_intermediary (a_c_object: POINTER) is
+	list_item_check_intermediary (a_c_object: POINTER)
 			-- List item check button callback
 		local
 			l_list_item_imp: EV_LIST_ITEM_IMP
@@ -119,7 +119,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			l_list_item_imp.check_callback ()
 		end
 
-	list_item_deselect_callback_intermediary (a_c_object: POINTER; n_args: INTEGER; args: POINTER) is
+	list_item_deselect_callback_intermediary (a_c_object: POINTER; n_args: INTEGER; args: POINTER)
 			-- Item deselect callback
 		local
 			l_list_item_list: EV_LIST_ITEM_LIST_IMP
@@ -130,7 +130,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			end
 		end
 
-	list_clicked_intermediary (a_c_object: POINTER) is
+	list_clicked_intermediary (a_c_object: POINTER)
 			-- List clicked
 		local
 			l_list_item_list: EV_LIST_ITEM_LIST_IMP
@@ -139,7 +139,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			l_list_item_list.on_list_clicked
 		end
 
-	list_key_pressed_intermediary (a_c_object: POINTER; ev_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+	list_key_pressed_intermediary (a_c_object: POINTER; ev_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN)
 			-- Key pressed in list
 		local
 			l_list_item_list: EV_LIST_ITEM_LIST_IMP
@@ -148,7 +148,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			l_list_item_list.on_key_pressed (ev_key, a_key_string, a_key_press)
 		end
 
-	list_item_clicked_intermediary (a_c_object: POINTER) is
+	list_item_clicked_intermediary (a_c_object: POINTER)
 			-- List item clicked
 		local
 			l_list_item_list: EV_LIST_ITEM_LIST_IMP
@@ -159,7 +159,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 
 feature {EV_ANY_IMP} -- Combo box intermediary agent routines
 
-	on_combo_box_dropdown_unmapped (a_c_object: POINTER) is
+	on_combo_box_dropdown_unmapped (a_c_object: POINTER)
 			-- Button released
 		local
 			a_combo_box_imp: EV_COMBO_BOX_IMP
@@ -171,7 +171,7 @@ feature {EV_ANY_IMP} -- Combo box intermediary agent routines
 
 feature {EV_ANY_IMP} -- Tree intermediary agent routines	
 
-	on_tree_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_tree_item: POINTER) is
+	on_tree_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_tree_item: POINTER)
 			-- Tree event
 		local
 			a_tree_imp: EV_TREE_IMP
@@ -192,7 +192,7 @@ feature {EV_ANY_IMP} -- Tree intermediary agent routines
 
 feature {EV_ANY_I} -- Externals
 
-	frozen c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_ANY_IMP is
+	frozen c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_ANY_IMP
 			-- Get Eiffel object from `a_c_object'.
 		external
 			"C (GtkWidget*): EIF_REFERENCE | %"ev_any_imp.h%""
@@ -200,7 +200,7 @@ feature {EV_ANY_I} -- Externals
 			"c_ev_any_imp_get_eif_reference_from_object_id"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Mapping mode (MM) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,56 +10,56 @@ class
 
 feature -- Access
 
-	Mm_text: INTEGER is
+	Mm_text: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"MM_TEXT"
 		end
 
-	Mm_lometric: INTEGER is
+	Mm_lometric: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"MM_LOMETRIC"
 		end
 
-	Mm_himetric: INTEGER is
+	Mm_himetric: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"MM_HIMETRIC"
 		end
 
-	Mm_loenglish: INTEGER is
+	Mm_loenglish: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"MM_LOENGLISH"
 		end
 
-	Mm_hienglish: INTEGER is
+	Mm_hienglish: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"MM_HIENGLISH"
 		end
 
-	Mm_twips: INTEGER is
+	Mm_twips: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"MM_TWIPS"
 		end
 
-	Mm_isotropic: INTEGER is
+	Mm_isotropic: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"MM_ISOTROPIC"
 		end
 
-	Mm_anisotropic: INTEGER is
+	Mm_anisotropic: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_map_mode_constant (c: INTEGER): BOOLEAN is
+	valid_map_mode_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid map mode constant?
 		do
 			Result := c = Mm_text or else
@@ -81,7 +81,7 @@ feature -- Status report
 				c = Mm_anisotropic
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

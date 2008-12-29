@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPcheck box"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initalization
 
-	make (a_check_box: CHECK_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_check_box: CHECK_BOX; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Make a check box.
 		do
 			create private_attributes
@@ -35,13 +35,13 @@ feature {NONE} -- Initalization
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING
 			-- Class name
 		once
 			Result := "EvisionCheckBox"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

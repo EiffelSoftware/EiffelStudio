@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision GDK font. (for GTK implementation.) %N%
 		%Objects that have a reference to a GdkFont, and the fully %N%
 		%matched string that it is loaded from."
@@ -15,19 +15,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_full_name: STRING_GENERAL) is
+	make (a_full_name: STRING_GENERAL)
 			-- Initialize.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	load is
+	load
 			-- Load font specified in `full_name'.
 		do
 		end
 
-	destroy is
+	destroy
 			-- Unreference font.
 		do
 		end
@@ -38,7 +38,7 @@ feature -- Access
 
 	c_object: POINTER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

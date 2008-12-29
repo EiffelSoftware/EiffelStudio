@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that store config data about inner container which is SD_MULTI_DOCK_AREA."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ feature -- Tab and Docking data.
 	titles: ARRAYED_LIST [STRING_GENERAL]
 			-- All titles. If it's a docking zone, there is only one title.
 
-	add_title (a_title: STRING_GENERAL) is
+	add_title (a_title: STRING_GENERAL)
 			-- Add `a_title'.
 		require
 			a_title_not_void: a_title /= Void
@@ -27,7 +27,7 @@ feature -- Tab and Docking data.
 			added: titles.has (a_title)
 		end
 
-	set_titles (a_titles: like titles) is
+	set_titles (a_titles: like titles)
 			-- Set `titles' with `a_titles'
 		do
 			titles := a_titles
@@ -38,7 +38,7 @@ feature -- Tab and Docking data.
 	selected_tab_index: INTEGER
 			-- If have multi contents (tab zone), remember the one is seleted.
 
-	set_selected_tab_index (a_int: INTEGER) is
+	set_selected_tab_index (a_int: INTEGER)
 			-- Set `selected_tab_index'
 		do
 			selected_tab_index := a_int
@@ -49,7 +49,7 @@ feature -- Tab and Docking data.
 	split_proportion: REAL
 			-- If current is a split area, this is spliter position's proportion. -1 if current spliter not full.
 
-	set_split_proportion (a_value: like split_proportion) is
+	set_split_proportion (a_value: like split_proportion)
 			-- Set `split_position'.
 		do
 			split_proportion := a_value
@@ -60,7 +60,7 @@ feature -- Tab and Docking data.
 	children_left: SD_INNER_CONTAINER_DATA
 			-- `Current' data's left children.
 
-	set_children_left (a_data: like children_left) is
+	set_children_left (a_data: like children_left)
 			-- Set `children_left'.
 		require
 			a_data_not_void: a_data /= Void
@@ -73,7 +73,7 @@ feature -- Tab and Docking data.
 	children_right: SD_INNER_CONTAINER_DATA
 			-- `Current' data's right children.
 
-	set_children_right (a_data: like children_right) is
+	set_children_right (a_data: like children_right)
 			-- Set `children_right'.
 		require
 			a_data_not_void: a_data /= Void
@@ -86,7 +86,7 @@ feature -- Tab and Docking data.
 	parent: like Current
 			-- `Current' parent data.
 
-	set_parent (a_parent: like Current) is
+	set_parent (a_parent: like Current)
 			-- Set `parent'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -99,7 +99,7 @@ feature -- Tab and Docking data.
 	is_split_area: BOOLEAN
 			-- If it is a EV_SPLIT_AREA? Otherwise it's a SD_ZONE or SD_FLOATING_ZONE.
 
-	set_is_split_area (a_value: BOOLEAN) is
+	set_is_split_area (a_value: BOOLEAN)
 			-- Set `is_split_area'.
 		do
 			is_split_area := a_value
@@ -110,7 +110,7 @@ feature -- Tab and Docking data.
 	is_horizontal_split_area: BOOLEAN
 			---If Current is a spliter, if Current is SD_HORIZONTAL_SPLIT_AREA?
 
-	set_is_horizontal_split_area (a_value: BOOLEAN) is
+	set_is_horizontal_split_area (a_value: BOOLEAN)
 			-- Set `is_horizontal_split_area'.
 		do
 			is_horizontal_split_area := a_value
@@ -124,7 +124,7 @@ feature -- Minimized data
 			-- If is SD_UPPER_ZONE, if it is minized?
 			-- This value maybe used by SD_MIDDLE_CONTAINER or SD_UPPER_ZONE.	
 
-	set_is_minimized (a_bool: BOOLEAN) is
+	set_is_minimized (a_bool: BOOLEAN)
 			-- Set `is_minimized'
 		do
 			is_minimized := a_bool
@@ -134,7 +134,7 @@ feature -- Minimized data
 
 feature -- Floating data.
 
-	set_screen_x (a_screen_x: INTEGER) is
+	set_screen_x (a_screen_x: INTEGER)
 			-- Set `screen_x'.
 		do
 			screen_x := a_screen_x
@@ -142,7 +142,7 @@ feature -- Floating data.
 			set: screen_x = a_screen_x
 		end
 
-	set_screen_y (a_screen_y: INTEGER) is
+	set_screen_y (a_screen_y: INTEGER)
 			-- Set `screen_y'.
 		do
 			screen_y := a_screen_y
@@ -153,7 +153,7 @@ feature -- Floating data.
 	screen_x, screen_y: INTEGER
 			-- When Current is SD_FLOATING_ZONE data, screen x y position of SD_FLOATING_ZONE.
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width'.
 		do
 			width := a_width
@@ -161,7 +161,7 @@ feature -- Floating data.
 			set: width = a_width
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height'.
 		do
 			height := a_height
@@ -177,7 +177,7 @@ feature -- Common properties
 	state: STRING_32
 			-- One generator type name of SD_STATE and it's descendents.
 
-	set_state (a_class_name: STRING_GENERAL) is
+	set_state (a_class_name: STRING_GENERAL)
 			-- Set `state'.
 		do
 			state := a_class_name
@@ -188,7 +188,7 @@ feature -- Common properties
 	direction: INTEGER
 			-- Direction of state. One enumeration from SD_DOCKING_MANAGER.
 
-	set_direction (a_direction: INTEGER) is
+	set_direction (a_direction: INTEGER)
 			-- Set `direction'.
 		require
 			vaild: (create {SD_ENUMERATION}).is_direction_valid (a_direction)
@@ -201,7 +201,7 @@ feature -- Common properties
 	is_visible: BOOLEAN
 			-- If it's widget is visible?
 
-	set_visible (a_visible: like is_visible) is
+	set_visible (a_visible: like is_visible)
 			-- Set `a_visible'
 		do
 			is_visible := a_visible
@@ -209,7 +209,7 @@ feature -- Common properties
 			set: is_visible = a_visible
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A text editor for one line of text. %
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a text field with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged text field with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a text field with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Value of current text field
 		require
 			exists: not destroyed
@@ -91,7 +91,7 @@ feature -- Access
 
 feature -- Measurement
 
-	maximum_size: INTEGER is
+	maximum_size: INTEGER
 			-- Maximum number of characters in current
 			-- text field
 		require
@@ -100,7 +100,7 @@ feature -- Measurement
 			Result := implementation.maximum_size
 		end;
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of character in current text field
 		require
 			exists: not destroyed
@@ -112,7 +112,7 @@ feature -- Measurement
 
 feature -- Status setting
 
-	clear is
+	clear
 			-- Clear current text field.
 		require
 			exists: not destroyed
@@ -120,7 +120,7 @@ feature -- Status setting
 			implementation.clear
 		end;
 
-	set_maximum_size (a_max: INTEGER) is
+	set_maximum_size (a_max: INTEGER)
 			-- Set maximum_size to `a_max'.
 		require
 			exists: not destroyed;
@@ -131,7 +131,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- an activate event occurs.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -143,7 +143,7 @@ feature -- Element change
 			implementation.add_activate_action (a_command, argument)
 		end;
 
-	append (a_text: STRING) is
+	append (a_text: STRING)
 			-- Append `a_text' at the end of current text.
 		require
 			exists: not destroyed;
@@ -152,7 +152,7 @@ feature -- Element change
 			implementation.append (a_text)
 		end;
 
-	insert (a_text: STRING; a_position: INTEGER) is
+	insert (a_text: STRING; a_position: INTEGER)
 			-- Insert `a_text' in current text field at `a_position'.
 			-- Same as `replace (a_position, a_position, a_text)'.
 		require
@@ -167,7 +167,7 @@ feature -- Element change
 					(a_position + 1, a_position + a_text.count))
 		end;
 
-	replace (from_position, to_position: INTEGER; a_text: STRING) is
+	replace (from_position, to_position: INTEGER; a_text: STRING)
 			-- Replace text from `from_position' to `to_position' by `a_text'.
 		require
 			exists: not destroyed;
@@ -182,7 +182,7 @@ feature -- Element change
 					(from_position + 1, from_position + a_text.count))
 		end;
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set `text' to `a_text'.
 		require
 			exists: not destroyed;
@@ -193,7 +193,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to be executed
 			-- when an activate event occurs.
 		require
@@ -210,17 +210,17 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {G_ANY, G_ANY_I, WIDGET_I} -- Implementation
 
-	is_fontable: BOOLEAN is true;
+	is_fontable: BOOLEAN = true;
 			-- Is current widget an heir of FONTABLE ?
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default text to current text field.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

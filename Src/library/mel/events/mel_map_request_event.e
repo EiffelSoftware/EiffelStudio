@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XMapRequestEvent."
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	parent_widget: MEL_WIDGET is
+	parent_widget: MEL_WIDGET
 			-- Parent widget of `window'
 		do
 			Result := retrieve_widget_from_window (parent)
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Pointer access
 
-	parent: POINTER is
+	parent: POINTER
 			-- Parent window of `window'.
 		do
 			Result := c_event_parent (handle)
@@ -35,12 +35,12 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_event_parent (event_ptr: POINTER): POINTER is
+	c_event_parent (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XMapRequestEvent *): EIF_POINTER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

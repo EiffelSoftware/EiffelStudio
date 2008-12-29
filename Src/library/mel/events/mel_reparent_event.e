@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Implementation of XReparentEvent."
 	legal: "See notice at end of class.";
@@ -18,31 +18,31 @@ create
 
 feature -- Access
 
-	event_widget: MEL_WIDGET is
+	event_widget: MEL_WIDGET
 			-- Window that received the event
 		do
 			Result := retrieve_widget_from_window (event)
 		end;
 
-	parent_widget: MEL_WIDGET is
+	parent_widget: MEL_WIDGET
 			-- New parent of `window'
 		do
 			Result := retrieve_widget_from_window (parent)
 		end;
 
-	x: INTEGER is
+	x: INTEGER
 			-- X position in new parent
 		do
 			Result := c_event_x (handle)
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 			-- Y position in new parent
 		do
 			Result := c_event_y (handle)
 		end;
 
-	override_redirect: BOOLEAN is
+	override_redirect: BOOLEAN
 			-- Will the window manager not intercept the
 			-- reparenting request
 		do
@@ -51,12 +51,12 @@ feature -- Access
 
 feature -- Pointer access
 
-	parent: POINTER is
+	parent: POINTER
 		do
 			Result := c_event_parent (handle)
 		end;
 
-	event: POINTER is
+	event: POINTER
 			-- Window pointer that received the event
 		do
 			Result := c_event_event (handle)
@@ -64,32 +64,32 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_event_event (event_ptr: POINTER): POINTER is
+	c_event_event (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XReparentEvent *): EIF_POINTER"
 		end;
 
-	c_event_parent (event_ptr: POINTER): POINTER is
+	c_event_parent (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XReparentEvent *): EIF_POINTER"
 		end;
 
-	c_event_x (event_ptr: POINTER): INTEGER is
+	c_event_x (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XReparentEvent *): EIF_INTEGER"
 		end;
 
-	c_event_y (event_ptr: POINTER): INTEGER is
+	c_event_y (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XReparentEvent *): EIF_INTEGER"
 		end;
 
-	c_event_override_redirect (event_ptr: POINTER): BOOLEAN is
+	c_event_override_redirect (event_ptr: POINTER): BOOLEAN
 		external
 			"C [macro %"events.h%"] (XReparentEvent *): EIF_BOOLEAN"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class 
@@ -9,7 +9,7 @@ create
 
 feature -- Initialization
 
-	make (a_class_name: STRING; output_file, input_file: STRING) is
+	make (a_class_name: STRING; output_file, input_file: STRING)
 			-- Create a class `a_class_name' in the file `output_file'.
 		require 
 			a_class_name_not_void: a_class_name /= Void
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	extract_definition (input_file: STRING) is
+	extract_definition (input_file: STRING)
 			-- Scans input_file for "#define id integer" and puts them in output_file
 		require
 			input_file_not_void: input_file /= Void
@@ -64,7 +64,7 @@ feature -- Basic operations
 			a_file.close
 		end 
 
-	close_file is
+	close_file
 			-- Puts class-statement end in ouput_file and closes it.
 		require
 			class_file_is_open: class_file.is_open_write
@@ -79,7 +79,7 @@ feature -- Basic operations
 
 feature -- Status report
 
-	file_exists (filename: STRING): BOOLEAN is
+	file_exists (filename: STRING): BOOLEAN
 			-- Check if a file with filename exists
 		require
 			filename_not_void: filename /= Void
@@ -92,7 +92,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	scan_definition (a_file: PLAIN_TEXT_FILE) is
+	scan_definition (a_file: PLAIN_TEXT_FILE)
 			-- Scan a "define id value" in `a_file' if any to come
 		require
 			a_file_not_void: a_file /= Void
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_header_in_file (a_file: PLAIN_TEXT_FILE; input_file: STRING) is
+	insert_header_in_file (a_file: PLAIN_TEXT_FILE; input_file: STRING)
 			-- Fill the file with the basic stuff
 		require
 			a_file_not_void: a_file /= Void
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			a_file.putstring ("%N%Nfeature -- Access%N%N")
 		end
 
-	scan_to_previous_white_space (a_file: PLAIN_TEXT_FILE) is
+	scan_to_previous_white_space (a_file: PLAIN_TEXT_FILE)
 			-- Go to the previous white space in `a_file'
 		require
 			a_file_not_void: a_file /= Void
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	insert_id_in_file (id, value: STRING; a_file: PLAIN_TEXT_FILE) is
+	insert_id_in_file (id, value: STRING; a_file: PLAIN_TEXT_FILE)
 			-- Add a `id' to the class file.
 		require
 			id_not_void: id /= Void
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	white_space (a_c: CHARACTER): BOOLEAN is
+	white_space (a_c: CHARACTER): BOOLEAN
 			-- Is `a_c' white space?
 		do
 			Result := a_c = '%T' or else
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 				a_c = ' '
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

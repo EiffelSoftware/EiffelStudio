@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Constants for server commands"
 	legal: "See notice at end of class."
@@ -12,37 +12,37 @@ class
 
 feature {NONE} -- Constants for FTP
 
-	Ftp_user_command: STRING is "USER"
+	Ftp_user_command: STRING = "USER"
 
-	Ftp_password_command: STRING is "PASS"
+	Ftp_password_command: STRING = "PASS"
 
-	Ftp_text_mode_command: STRING is "TYPE A"
+	Ftp_text_mode_command: STRING = "TYPE A"
 
-	Ftp_binary_mode_command: STRING is "TYPE I"
+	Ftp_binary_mode_command: STRING = "TYPE I"
 
-	Ftp_port_command: STRING is "PORT"
+	Ftp_port_command: STRING = "PORT"
 
-	Ftp_passive_mode_command: STRING is "PASV"
+	Ftp_passive_mode_command: STRING = "PASV"
 
-	Ftp_retrieve_command: STRING is "RETR"
+	Ftp_retrieve_command: STRING = "RETR"
 
-	Ftp_store_command: STRING is "STOR"
+	Ftp_store_command: STRING = "STOR"
 	
 feature {NONE} -- Constants for HTTP
 
-	Http_get_command: STRING is "GET"
+	Http_get_command: STRING = "GET"
 
-	Http_version: STRING is "HTTP/1.0"
+	Http_version: STRING = "HTTP/1.0"
 	
-	Http_host_header: STRING is "Host"
+	Http_host_header: STRING = "Host"
 	
-	Http_Authorization_header: STRING is "Authorization"
+	Http_Authorization_header: STRING = "Authorization"
 
-	Http_end_of_header_line: STRING is "%R%N"
+	Http_end_of_header_line: STRING = "%R%N"
 
-	Http_end_of_command: STRING is "%R%N%R%N";
+	Http_end_of_command: STRING = "%R%N%R%N";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

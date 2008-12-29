@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IOleContainer' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iole_container_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	parse_display_name (pbc: IBIND_CTX_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]) is
+	parse_display_name (pbc: IBIND_CTX_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 			-- `pbc' [in].  
 			-- `psz_display_name' [in].  
@@ -49,7 +49,7 @@ feature -- Basic Operations
 			ccom_parse_display_name (initializer, pbc_item, psz_display_name, pch_eaten, ppmk_out)
 		end
 
-	enum_objects (grf_flags: INTEGER; ppenum: CELL [IENUM_UNKNOWN_INTERFACE]) is
+	enum_objects (grf_flags: INTEGER; ppenum: CELL [IENUM_UNKNOWN_INTERFACE])
 			-- No description available.
 			-- `grf_flags' [in].  
 			-- `ppenum' [out].  
@@ -57,7 +57,7 @@ feature -- Basic Operations
 			ccom_enum_objects (initializer, grf_flags, ppenum)
 		end
 
-	lock_container (f_lock: INTEGER) is
+	lock_container (f_lock: INTEGER)
 			-- No description available.
 			-- `f_lock' [in].  
 		do
@@ -66,7 +66,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iole_container_impl_proxy(initializer)
@@ -74,43 +74,43 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_parse_display_name (cpp_obj: POINTER; pbc: POINTER; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]) is
+	ccom_parse_display_name (cpp_obj: POINTER; pbc: POINTER; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleContainer_impl_proxy %"ecom_control_library_IOleContainer_impl_proxy_s.h%"](::IBindCtx *,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_enum_objects (cpp_obj: POINTER; grf_flags: INTEGER; ppenum: CELL [IENUM_UNKNOWN_INTERFACE]) is
+	ccom_enum_objects (cpp_obj: POINTER; grf_flags: INTEGER; ppenum: CELL [IENUM_UNKNOWN_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleContainer_impl_proxy %"ecom_control_library_IOleContainer_impl_proxy_s.h%"](EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_lock_container (cpp_obj: POINTER; f_lock: INTEGER) is
+	ccom_lock_container (cpp_obj: POINTER; f_lock: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleContainer_impl_proxy %"ecom_control_library_IOleContainer_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_delete_iole_container_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iole_container_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IOleContainer_impl_proxy %"ecom_control_library_IOleContainer_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iole_container_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iole_container_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IOleContainer_impl_proxy %"ecom_control_library_IOleContainer_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IOleContainer_impl_proxy %"ecom_control_library_IOleContainer_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

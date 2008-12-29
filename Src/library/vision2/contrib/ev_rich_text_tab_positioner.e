@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent a control displaying a number of small sliders which may be used to modify the tab positions
 		of an associated rich text control. Simply associate a rich text via `make_with_rich_text', and the tab positions
@@ -23,7 +23,7 @@ create
 		
 feature {NONE} -- Creation
 
-	make_with_rich_text (a_rich_text: EV_RICH_TEXT) is
+	make_with_rich_text (a_rich_text: EV_RICH_TEXT)
 			-- Create `Current' and set widths to `default_tab' in pixels.
 		require
 			rich_text_not_void: a_rich_text /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Creation
 			create_figures
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_DRAWING_AREA}
@@ -47,7 +47,7 @@ feature {NONE} -- Creation
 			last_dashed_line_position := -1
 		end
 		
-	create_figures is
+	create_figures
 			-- Create all figures representing sliders.
 		local
 			counter: INTEGER
@@ -127,7 +127,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	move_started (polygon: EV_FIGURE_POLYGON; index: INTEGER)is
+	move_started (polygon: EV_FIGURE_POLYGON; index: INTEGER)
 			-- A move has started on slider `index', represented by `polygon'.
 		require
 			polygon_not_void: polygon /= Void
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			original_x := polygon.point_array.item (1).x
 		end
 
-	move_completed (polygon: EV_FIGURE_POLYGON; index: INTEGER)is
+	move_completed (polygon: EV_FIGURE_POLYGON; index: INTEGER)
 			-- A move has completed on slider `index', represented by `polygon'.
 		require
 			polygon_not_void: polygon /= Void
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	slider_moving (an_x, a_y: INTEGER; polygon: EV_FIGURE_POLYGON; index: INTEGER) is
+	slider_moving (an_x, a_y: INTEGER; polygon: EV_FIGURE_POLYGON; index: INTEGER)
 			-- Slider `index' represented by `polygon' is being dragged. `an_x' and
 			-- `a_y' give the relative position to its origin before dragging.
 		require
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 			last_dashed_line_position := screen_x + position
 		end
 
-	position_handle (new_x, new_y: INTEGER; polygon: EV_FIGURE_POLYGON; handle_index: INTEGER): TUPLE [INTEGER, INTEGER] is
+	position_handle (new_x, new_y: INTEGER; polygon: EV_FIGURE_POLYGON; handle_index: INTEGER): TUPLE [INTEGER, INTEGER]
 			--
 		do
 			create Result
@@ -212,40 +212,40 @@ feature {NONE} -- Implementation
 	projector: EV_DRAWING_AREA_PROJECTOR
 		-- Projector for projection of `figure_world' to `Current'.
 	
-	width_of_figure: INTEGER is 6
+	width_of_figure: INTEGER = 6
 		-- Width of slider.
 	
-	point_height: INTEGER is 3
+	point_height: INTEGER = 3
 		-- Height of point on slider.
 	
-	base_height: INTEGER is 4
+	base_height: INTEGER = 4
 		-- Height of slider base.
 		
-	positioners: INTEGER is 32
+	positioners: INTEGER = 32
 		-- Number of positioners on `Current'.
 	
 	initial_tab_width: INTEGER
 		-- Initial width of tabs in `rich_edit'.
 
-	redraw_control (an_x, a_y, a_width, a_height: INTEGER) is
+	redraw_control (an_x, a_y, a_width, a_height: INTEGER)
 			-- Redraw visual elements of `Current'.
 		do
 			projector.project
 		end
 
-	fill_background_color: EV_COLOR is
+	fill_background_color: EV_COLOR
 			-- Once access to background color for `Current'.
 		once
 			Result := (create {EV_STOCK_COLORS}).default_background_color
 		end
 		
-	white: EV_COLOR is
+	white: EV_COLOR
 			-- Once access to color white.
 		once
 			Result := (create {EV_STOCK_COLORS}).white
 		end
 
-	screen: EV_SCREEN is
+	screen: EV_SCREEN
 			-- Once access to EV_SCREEN object.
 		once
 			create Result
@@ -257,7 +257,7 @@ invariant
 	start_drag_actions_not_void: start_drag_actions /= Void
 	end_drag_actions_not_void: end_drag_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

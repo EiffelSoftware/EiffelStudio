@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract interface with a database.%
 			%It caters needs of DB_TABLE_COMPONENT class%
 			%and descendants."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	database_result_list: ARRAYED_LIST [DB_TABLE] is
+	database_result_list: ARRAYED_LIST [DB_TABLE]
 			-- Database result list.
 		require
 			no_error: not has_error
@@ -24,65 +24,65 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	Equals_type: INTEGER is 0
+	Equals_type: INTEGER = 0
 			-- Attribute equals value.
 
-	Greater_type: INTEGER is 1
+	Greater_type: INTEGER = 1
 			-- Attribute is greater than value.
 
-	Lower_type: INTEGER is 2
+	Lower_type: INTEGER = 2
 			-- Attribute is lower than value.
 
-	Prefix_type: INTEGER is 3
+	Prefix_type: INTEGER = 3
 			-- Value is prefix of attribute.
 
-	Suffix_type: INTEGER is 4
+	Suffix_type: INTEGER = 4
 			-- Value is suffix of attribute.
 
-	Contains_type: INTEGER is 5
+	Contains_type: INTEGER = 5
 			-- Attribute contains value.
 
-	Max_type: INTEGER is 5
+	Max_type: INTEGER = 5
 			-- Maximum type.
 
-	Case_sensitive: BOOLEAN is True
+	Case_sensitive: BOOLEAN = True
 			-- Selection is case sensitive.
 	
-	Case_insensitive: BOOLEAN is False
+	Case_insensitive: BOOLEAN = False
 			-- Selection is case insensitive.
 	
 feature -- Status report
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Has an error occurred during last database operation?
 		deferred
 		end
 
-	error_message: STRING is
+	error_message: STRING
 			-- Error message if an error occurred during last
 			-- database operation.
 		deferred
 		end
 
-	select_query_prepared: BOOLEAN is
+	select_query_prepared: BOOLEAN
 			-- Is a select query prepared?
 		deferred
 		end
 
-	valid_type (type: INTEGER): BOOLEAN is
+	valid_type (type: INTEGER): BOOLEAN
 			-- Is `type' a valid qualifying type?
 		do
 			Result := type >= 0 and then type <= Max_type
 		end
 
-	has_id (tablerow: DB_TABLE): BOOLEAN is
+	has_id (tablerow: DB_TABLE): BOOLEAN
 			-- Does `tablerow' have an ID and can it be found?
 		deferred
 		end
 
 feature -- Basic operations: selection
 
-	load_result is
+	load_result
 			-- Load result. Set `has_error'. Result is available in
 			-- `database_result' if result is unique, `database_result_list' otherwise.
 		require
@@ -90,7 +90,7 @@ feature -- Basic operations: selection
 		deferred
 		end
 
-	prepare_select_with_table (tablecode: INTEGER) is
+	prepare_select_with_table (tablecode: INTEGER)
 			-- Prepare a simple select query on table with code `tablecode'.
 			-- Execute it with `load_result_list'.
 		require
@@ -98,7 +98,7 @@ feature -- Basic operations: selection
 		deferred
 		end
 
-	add_value_qualifier (column: INTEGER; value: STRING) is
+	add_value_qualifier (column: INTEGER; value: STRING)
 			-- Add qualifier `column' = `value' to prepared select query.
 		require
 			select_query_prepared: select_query_prepared
@@ -106,7 +106,7 @@ feature -- Basic operations: selection
 		deferred
 		end
 
-	add_specific_qualifier (column: INTEGER; value: STRING; type: INTEGER; case: BOOLEAN) is
+	add_specific_qualifier (column: INTEGER; value: STRING; type: INTEGER; case: BOOLEAN)
 			-- Add qualifier `column' related to `value' with `type' and `case'.
 		require
 			select_query_prepared: select_query_prepared
@@ -117,7 +117,7 @@ feature -- Basic operations: selection
 
 feature -- Basic operations: update
 
-	update_tablerow (description: DB_TABLE) is
+	update_tablerow (description: DB_TABLE)
 			-- Update object with `description' in the database.
 			-- Object should already exist and should have kept
 			-- same ID.
@@ -127,7 +127,7 @@ feature -- Basic operations: update
 		deferred
 		end
 
-	set_id_and_create_tablerow (a_tablerow: DB_TABLE) is
+	set_id_and_create_tablerow (a_tablerow: DB_TABLE)
 			-- Store in the DB object `a_tablerow' after giving it
 			-- a valid ID.
 		require
@@ -136,7 +136,7 @@ feature -- Basic operations: update
 		deferred
 		end
 
-	delete_tablerow (a_tablerow: DB_TABLE) is
+	delete_tablerow (a_tablerow: DB_TABLE)
 			-- Delete `tablerow' in the database,
 			-- i.e. the table row of `an_obj' table with `an_obj' ID.
 			--| Warning: delete all dependent table rows.
@@ -146,7 +146,7 @@ feature -- Basic operations: update
 		deferred
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Composite widget used for creating message disalogs."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
+	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN)
 			-- Create message box with `auto_manage_flag'.
 		do
 			if auto_manage_flag then
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	cancel_button: MEL_PUSH_BUTTON_GADGET is
+	cancel_button: MEL_PUSH_BUTTON_GADGET
 			-- Cancel button
 		local
 			w: POINTER
@@ -55,7 +55,7 @@ feature -- Access
 			end
 		end;
 
-	help_button: MEL_PUSH_BUTTON_GADGET is
+	help_button: MEL_PUSH_BUTTON_GADGET
 			-- Help button
 		local
 			w: POINTER
@@ -69,7 +69,7 @@ feature -- Access
 			end
 		end;
 
-	ok_button: MEL_PUSH_BUTTON_GADGET is
+	ok_button: MEL_PUSH_BUTTON_GADGET
 			-- Ok button
 		local
 			w: POINTER
@@ -83,7 +83,7 @@ feature -- Access
 			end
 		end;
 
-	separator: MEL_SEPARATOR_GADGET is
+	separator: MEL_SEPARATOR_GADGET
 			-- Separator used
 		local
 			w: POINTER
@@ -97,7 +97,7 @@ feature -- Access
 			end
 		end;
 
-	message_label: MEL_LABEL_GADGET is
+	message_label: MEL_LABEL_GADGET
 			-- Message label where message is displayed
 		local
 			w: POINTER
@@ -111,7 +111,7 @@ feature -- Access
 			end
 		end;
 
-	symbol_label: MEL_LABEL_GADGET is
+	symbol_label: MEL_LABEL_GADGET
 			-- Symbol widget representing the pixmap
 		local
 			w: POINTER
@@ -125,13 +125,13 @@ feature -- Access
 			end
 		end;
 
-	ok_command: MEL_COMMAND_EXEC is
+	ok_command: MEL_COMMAND_EXEC
 			-- Command set for the ok callback
 		do
 			Result := motif_command (XmNokCallback)
 		end;
 
-	cancel_command: MEL_COMMAND_EXEC is
+	cancel_command: MEL_COMMAND_EXEC
 			-- Command set for the cancel callback
 		do
 			Result := motif_command (XmNcancelCallback)
@@ -139,7 +139,7 @@ feature -- Access
 
 feature -- Status report
 
-	message_string: MEL_STRING is
+	message_string: MEL_STRING
 			-- The string that appears in the message
 		require
 			exists: not is_destroyed
@@ -149,7 +149,7 @@ feature -- Status report
 			result_is_valid: Result /= Void and then not Result.is_destroyed
 		end;
 
-	cancel_label_string: MEL_STRING is
+	cancel_label_string: MEL_STRING
 			-- The string that labels the cancel button
 		require
 			exists: not is_destroyed
@@ -159,7 +159,7 @@ feature -- Status report
 			result_is_valid: Result /= Void and then not Result.is_destroyed
 		end;
 
-	help_label_string: MEL_STRING is
+	help_label_string: MEL_STRING
 			-- The string that labels the help button.
 		require
 			exists: not is_destroyed
@@ -169,7 +169,7 @@ feature -- Status report
 			result_is_valid: Result /= Void and then not Result.is_destroyed
 		end;
 
-	ok_label_string: MEL_STRING is
+	ok_label_string: MEL_STRING
 			-- The string that labels the ok button.
 		require
 			exists: not is_destroyed
@@ -179,7 +179,7 @@ feature -- Status report
 			result_is_valid: Result /= Void and then not Result.is_destroyed
 		end;
 
-	is_cancel_button_default: BOOLEAN is
+	is_cancel_button_default: BOOLEAN
 			-- Is `cancel_button' the default button?
 		require
 			exists: not is_destroyed
@@ -187,7 +187,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdefaultButtonType) = XmDIALOG_CANCEL_BUTTON
 		end;
 
-	is_help_button_default: BOOLEAN is
+	is_help_button_default: BOOLEAN
 			-- Is `help_button' the default button?
 		require
 			exists: not is_destroyed
@@ -195,7 +195,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdefaultButtonType) = XmDIALOG_HELP_BUTTON
 		end;
 
-	is_ok_button_default: BOOLEAN is
+	is_ok_button_default: BOOLEAN
 			-- Is `ok_button' the default button?
 		require
 			exists: not is_destroyed
@@ -203,7 +203,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdefaultButtonType) = XmDIALOG_OK_BUTTON
 		end;
 
-	is_error_dialog: BOOLEAN is
+	is_error_dialog: BOOLEAN
 			-- Is type error dialog?
 		require
 			exists: not is_destroyed
@@ -211,7 +211,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_ERROR
 		end;
 
-	is_information_dialog: BOOLEAN is
+	is_information_dialog: BOOLEAN
 			-- Is type information dialog?
 		require
 			exists: not is_destroyed
@@ -219,7 +219,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_INFORMATION
 		end;
 
-	is_message_dialog: BOOLEAN is
+	is_message_dialog: BOOLEAN
 			-- Is type message dialog?
 		require
 			exists: not is_destroyed
@@ -227,7 +227,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_MESSAGE
 		end;
 
-	is_question_dialog: BOOLEAN is
+	is_question_dialog: BOOLEAN
 			-- Is type question dialog?
 		require
 			exists: not is_destroyed
@@ -235,7 +235,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_QUESTION
 		end;
 
-	is_template_dialog: BOOLEAN is
+	is_template_dialog: BOOLEAN
 			-- Is type template dialog?
 		require
 			exists: not is_destroyed
@@ -243,7 +243,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_TEMPLATE
 		end;
 
-	is_warning_dialog: BOOLEAN is
+	is_warning_dialog: BOOLEAN
 			-- Is type warning dialog?
 		require
 			exists: not is_destroyed
@@ -251,7 +251,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_WARNING
 		end;
 
-	is_working_dialog: BOOLEAN is
+	is_working_dialog: BOOLEAN
 			-- Is type working dialog?
 		require
 			exists: not is_destroyed
@@ -259,7 +259,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNdialogType) = XmDIALOG_WORKING
 		end;
 
-	is_alignment_beginning: BOOLEAN is
+	is_alignment_beginning: BOOLEAN
 			-- Is alignment set to the beginning?
 		require
 			exists: not is_destroyed
@@ -267,7 +267,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNmessageAlignment) = XmALIGNMENT_BEGINNING
 		end;
 
-	is_alignment_center: BOOLEAN is
+	is_alignment_center: BOOLEAN
 			-- Is alignment set to the center?
 		require
 			exists: not is_destroyed
@@ -275,7 +275,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNmessageAlignment) = XmALIGNMENT_CENTER
 		end;
 
-	is_alignment_end: BOOLEAN is
+	is_alignment_end: BOOLEAN
 			-- Is alignment set to the end?
 		require
 			exists: not is_destroyed
@@ -283,7 +283,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNmessageAlignment) = XmALIGNMENT_END
 		end;
 
-	buttons_minimized: BOOLEAN is
+	buttons_minimized: BOOLEAN
 			-- Keep the buttons keep their prefered size?
 		require
 			exists: not is_destroyed
@@ -291,7 +291,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNminimizeButtons)
 		end;
 
-	symbol_pixmap: MEL_PIXMAP is
+	symbol_pixmap: MEL_PIXMAP
 			-- Pixmap label used as message symbol
 		require
 			exists: not is_destroyed
@@ -305,7 +305,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_message_string (a_compound_string: MEL_STRING) is
+	set_message_string (a_compound_string: MEL_STRING)
 			-- Set `message_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -316,7 +316,7 @@ feature -- Status setting
 			-- message_label_string_set: message_string.is_equal (a_compound_string)
 		end;
 
-	set_cancel_label_string (a_compound_string: MEL_STRING) is
+	set_cancel_label_string (a_compound_string: MEL_STRING)
 			-- Set `cancel_label_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -327,7 +327,7 @@ feature -- Status setting
 			-- cancel_label_string_set: cancel_label_string.is_equal (a_compound_string)
 		end;
 
-	set_help_label_string (a_compound_string: MEL_STRING) is
+	set_help_label_string (a_compound_string: MEL_STRING)
 			-- Set `help_label_string' as `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -338,7 +338,7 @@ feature -- Status setting
 			-- help_label_string_set: help_label_string.is_equal (a_compound_string)
 		end;
 
-	set_ok_label_string (a_compound_string: MEL_STRING) is
+	set_ok_label_string (a_compound_string: MEL_STRING)
 			-- Set `ok_label_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -349,7 +349,7 @@ feature -- Status setting
 			-- ok_label_string_set: ok_label_string.is_equal (a_compound_string)
 		end;
 
-	set_default_button_cancel is
+	set_default_button_cancel
 			-- Set `cancel_button' as the default button.
 		require
 			exists: not is_destroyed
@@ -359,7 +359,7 @@ feature -- Status setting
 			default_button_cancel_set: is_cancel_button_default
 		end;
 
-	set_default_button_help is
+	set_default_button_help
 			-- Set `help_button' as the default button.
 		require
 			exists: not is_destroyed
@@ -369,7 +369,7 @@ feature -- Status setting
 			default_button_help_set: is_help_button_default
 		end;
 
-	set_default_button_ok is
+	set_default_button_ok
 			-- Set `ok_button' as the default button.
 		require
 			exists: not is_destroyed
@@ -379,7 +379,7 @@ feature -- Status setting
 			default_button_ok_set: is_ok_button_default
 		end;
 
-	set_error_dialog is
+	set_error_dialog
 			-- Set `is_error_dialog'.
 		require
 			exists: not is_destroyed
@@ -389,7 +389,7 @@ feature -- Status setting
 			dialog_error_set: is_error_dialog
 		end;
 
-	set_information_dialog is
+	set_information_dialog
 			-- Set `is_information_dialog'.
 		require
 			exists: not is_destroyed
@@ -399,7 +399,7 @@ feature -- Status setting
 			dialog_information_set: is_information_dialog
 	   end;
 
-	set_message_dialog is
+	set_message_dialog
 			-- Set `is_message_dialog'.
 		require
 			exists: not is_destroyed
@@ -409,7 +409,7 @@ feature -- Status setting
 			dialog_message_set: is_message_dialog
 		end;
 
-	set_question_dialog is
+	set_question_dialog
 			-- Set `is_question_dialog'.
 		require
 			exists: not is_destroyed
@@ -419,7 +419,7 @@ feature -- Status setting
 			dialog_question_set: is_question_dialog
 		end;
 
-	set_template_dialog is
+	set_template_dialog
 			-- Set `is_template_dialog'.
 		require
 			exists: not is_destroyed
@@ -429,7 +429,7 @@ feature -- Status setting
 			dialog_template: is_template_dialog
 		end;
 
-	set_warning_dialog is
+	set_warning_dialog
 			-- Set `is_warning_dialog'.
 		require
 			exists: not is_destroyed
@@ -439,7 +439,7 @@ feature -- Status setting
 			dialog_warning_set: is_warning_dialog
 		end;
 
-	set_working_dialog is
+	set_working_dialog
 			-- Set `is_working_dialog'.
 		require
 			exists: not is_destroyed
@@ -449,7 +449,7 @@ feature -- Status setting
 			dialog_working: is_working_dialog
 		end;
 
-	set_alignment_beginning is
+	set_alignment_beginning
 			-- Set `is_alignment_beginning'.
 		require
 			exists: not is_destroyed
@@ -459,7 +459,7 @@ feature -- Status setting
 			alignment_beginning_set: is_alignment_beginning
 		end;
 
-	set_alignment_center is
+	set_alignment_center
 			-- Set `is_alignment_center'.
 		require
 			exists: not is_destroyed
@@ -469,7 +469,7 @@ feature -- Status setting
 			alignment_center_set: is_alignment_center
 		end;
 
-	set_alignment_end is
+	set_alignment_end
 			-- Set `is_alignment_end'.
 		require
 			exists: not is_destroyed
@@ -479,7 +479,7 @@ feature -- Status setting
 			alignment_end_set: is_alignment_end
 	   end;
 
-	minimize_button is
+	minimize_button
 			-- Set `buttons_minimized' to True.
 		require
 			exists: not is_destroyed
@@ -489,7 +489,7 @@ feature -- Status setting
 			buttons_minimized: buttons_minimized 
 		end;
 
-	maximize_button is
+	maximize_button
 			-- Set `buttons_minimized' to False.
 		require
 			exists: not is_destroyed
@@ -499,7 +499,7 @@ feature -- Status setting
 			buttons_maximized: not buttons_minimized 
 		end;
 
-	set_symbol_pixmap (a_pixmap: MEL_PIXMAP) is
+	set_symbol_pixmap (a_pixmap: MEL_PIXMAP)
 			-- Set `symbol_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
@@ -514,7 +514,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_cancel_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_cancel_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the user selects
 			-- the `cancel_button'.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -527,7 +527,7 @@ feature -- Element change
 			command_set (cancel_command, a_command, an_argument)
 		end;
 
-	set_ok_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_ok_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the user selects
 			-- the `ok_button'.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -542,7 +542,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_cancel_callback is
+	remove_cancel_callback
 			-- Remove the command for the cancel callback.
 		do
 			remove_callback (XmNcancelCallback)
@@ -550,7 +550,7 @@ feature -- Removal
 			removed: cancel_command = Void
 		end;
 
-	remove_ok_callback is
+	remove_ok_callback
 			-- Remove the command for the cancel callback.
 		do
 			remove_callback (XmNokCallback)
@@ -560,21 +560,21 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	xm_create_message_box (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_message_box (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/MessageB.h>"
 		alias
 			"XmCreateMessageBox"
 		end;
 
-	xm_message_box_get_child (scr_obj: POINTER; value: INTEGER): POINTER is
+	xm_message_box_get_child (scr_obj: POINTER; value: INTEGER): POINTER
 		external
 			"C (Widget, unsigned char): EIF_POINTER | <Xm/MessageB.h>"
 		alias
 			"XmMessageBoxGetChild"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

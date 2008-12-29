@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that represent a line in the editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make_from_lexer (lexer: EDITOR_SCANNER) is
+	make_from_lexer (lexer: EDITOR_SCANNER)
 			-- Create a line using token from `lexer'
 		require
 			lexer_exists: lexer /= Void
@@ -59,7 +59,7 @@ feature -- Initialization
 
 feature -- Transformation
 
-	replace_from_lexer (lexer: EDITOR_SCANNER; t_before, t_after: EDITOR_TOKEN) is
+	replace_from_lexer (lexer: EDITOR_SCANNER; t_before, t_after: EDITOR_TOKEN)
 			-- Replace tokens between `t_before' and `t_after'
 			-- by tokens from `lexer'.
 		require
@@ -89,7 +89,7 @@ feature -- Transformation
 --| Should we avoid the case "t_before = Void" or
 --| redirect it to `replace_beginning_from_lexer'?
 
-	replace_beginning_from_lexer (lexer: EDITOR_SCANNER; t_after: EDITOR_TOKEN) is
+	replace_beginning_from_lexer (lexer: EDITOR_SCANNER; t_after: EDITOR_TOKEN)
 			-- Replace tokens before `t_after' by tokens from `lexer'.
 		require
 			lexer_exists: lexer /= Void
@@ -109,7 +109,7 @@ feature -- Transformation
 			update_token_information
 		end
 
-	rebuild_from_lexer (lexer: EDITOR_SCANNER; in_v_string: BOOLEAN) is
+	rebuild_from_lexer (lexer: EDITOR_SCANNER; in_v_string: BOOLEAN)
 			-- Rebuild Current using token from `lexer'.  If lexer is scanning a line that is part of
 			-- a verbatim string then `in_v_string' should be True.
 		do
@@ -123,7 +123,7 @@ feature -- Transformation
 
 feature -- Status Report					
 
-	wide_image_from_start_to_cursor (text_cursor: TEXT_CURSOR): STRING_32 is
+	wide_image_from_start_to_cursor (text_cursor: TEXT_CURSOR): STRING_32
 			-- Substring of the line starting at the beginning of
 			-- the line and ending at the cursor position (not
 			-- included)
@@ -156,7 +156,7 @@ feature -- Status Report
 			Result_not_void: Result /= Void
 		end
 
-	wide_image_from_cursor_to_end (text_cursor: TEXT_CURSOR): STRING_32 is
+	wide_image_from_cursor_to_end (text_cursor: TEXT_CURSOR): STRING_32
 			-- Substring of the line starting at the cursor
 			-- position (included) and ending at the end of the line
 		require
@@ -204,7 +204,7 @@ feature -- Status Report
 
 feature -- Obsolete
 
-	image_from_start_to_cursor (text_cursor: TEXT_CURSOR): STRING is
+	image_from_start_to_cursor (text_cursor: TEXT_CURSOR): STRING
 			-- Substring of the line starting at the beginning of
 			-- the line and ending at the cursor position (not
 			-- included)
@@ -218,7 +218,7 @@ feature -- Obsolete
 			Result_not_void: Result /= Void
 		end
 
-	image_from_cursor_to_end (text_cursor: TEXT_CURSOR): STRING is
+	image_from_cursor_to_end (text_cursor: TEXT_CURSOR): STRING
 			-- Substring of the line starting at the cursor
 			-- position (included) and ending at the end of the line
 		obsolete
@@ -233,7 +233,7 @@ feature -- Obsolete
 
 feature -- Status Setting
 
-	set_auto_indented (a_flag: BOOLEAN) is
+	set_auto_indented (a_flag: BOOLEAN)
 			-- Set `auto_indented' to `a_flag'
 		do
 			auto_indented := a_flag
@@ -241,7 +241,7 @@ feature -- Status Setting
 			value_set: auto_indented = a_flag
 		end
 
-	set_part_of_verbatim_string (a_flag: BOOLEAN) is
+	set_part_of_verbatim_string (a_flag: BOOLEAN)
 			-- Set `part_of_verbatim_string' to `a_flag'
 		do
 			part_of_verbatim_string := a_flag
@@ -249,7 +249,7 @@ feature -- Status Setting
 			value_set: part_of_verbatim_string = a_flag
 		end
 
-	set_end_of_verbatim_string (a_flag: BOOLEAN) is
+	set_end_of_verbatim_string (a_flag: BOOLEAN)
 			-- Set `end_of_verbatim_string' to `a_flag'
 		do
 			end_of_verbatim_string := a_flag
@@ -257,7 +257,7 @@ feature -- Status Setting
 			value_set: end_of_verbatim_string = a_flag
 		end
 
-	set_start_of_verbatim_string (a_flag: BOOLEAN) is
+	set_start_of_verbatim_string (a_flag: BOOLEAN)
 			-- Set `start_of_verbatim_string' to `a_flag'
 		do
 			start_of_verbatim_string := a_flag
@@ -265,7 +265,7 @@ feature -- Status Setting
 			value_set: start_of_verbatim_string = a_flag
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

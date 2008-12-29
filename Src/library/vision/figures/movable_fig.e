@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -10,12 +10,12 @@ deferred class
 	
 feature -- Access
 
-	moving_figure: FIGURE is
+	moving_figure: FIGURE
 			-- Returns a figure to be moved. 
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

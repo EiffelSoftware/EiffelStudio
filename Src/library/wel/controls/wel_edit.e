@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This control permits the user to enter and edit text %
 		%from the keyboard. Ancestor of WEL_SINGLE_LINE_EDIT and %
 		%WEL_MULTIPLE_LINE_EDIT."
@@ -37,7 +37,7 @@ inherit
 
 feature -- Access
 
-	background_color: WEL_COLOR_REF is
+	background_color: WEL_COLOR_REF
 			-- Background color used for the background of the
 			-- control
 			-- Can be redefined by the user
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status report
 
-	read_only: BOOLEAN is
+	read_only: BOOLEAN
 			-- Is the current edit control read-only?
 		require
 			exists: exists
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	clip_cut is
+	clip_cut
 			-- Cut the current selection to the clipboard.
 		require
 			exists: exists
@@ -68,7 +68,7 @@ feature -- Basic operations
 			has_no_selection: not has_selection
 		end
 
-	clip_copy is
+	clip_copy
 			-- Copy the current selection to the clipboard.
 		require
 			exists: exists
@@ -77,7 +77,7 @@ feature -- Basic operations
 			{WEL_API}.send_message (item, Wm_copy, to_wparam (0), to_lparam (0))
 		end
 
-	clip_paste is
+	clip_paste
 			-- Paste at the current caret position the
 			-- content of the clipboard.
 		require
@@ -86,7 +86,7 @@ feature -- Basic operations
 			{WEL_API}.send_message (item, Wm_paste, to_wparam (0), to_lparam (0))
 		end
 
-	undo is
+	undo
 			-- Undo the last operation.
 			-- The previously deleted text is restored or the
 			-- previously added text is deleted.
@@ -97,7 +97,7 @@ feature -- Basic operations
 			{WEL_API}.send_message (item, Em_undo, to_wparam (0), to_lparam (0))
 		end
 
-	delete_selection is
+	delete_selection
 			-- Delete the current selection.
 		require
 			exists: exists
@@ -108,7 +108,7 @@ feature -- Basic operations
 			has_no_selection: not has_selection
 		end
 
-	select_all is
+	select_all
 			-- Select all the text.
 		require
 			exists: exists
@@ -121,7 +121,7 @@ feature -- Basic operations
 			selection_end_set: selection_end <= text_length + 2
 		end
 
-	unselect is
+	unselect
 			-- Unselect the current selection.
 		require
 			exists: exists
@@ -132,7 +132,7 @@ feature -- Basic operations
 			has_no_selection: not has_selection
 		end
 
-	replace_selection (new_text: STRING_GENERAL) is
+	replace_selection (new_text: STRING_GENERAL)
 			-- Replace the current selection with `new_text'.
 			-- If there is no selection, `new_text' is inserted
 			-- at the current `caret_position'.
@@ -148,7 +148,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	set_modify (modify: BOOLEAN)is
+	set_modify (modify: BOOLEAN)
 			-- Set `modified' with `modify'
 		require
 			exists: exists
@@ -162,7 +162,7 @@ feature -- Status setting
 			modified_set: modified = modify
 		end
 
-	set_read_only is
+	set_read_only
 			-- Set the read-only state.
 		require
 			exists: exists
@@ -170,7 +170,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_setreadonly, to_wparam (1), to_lparam (0))
 		end
 
-	set_read_write is
+	set_read_write
 			-- Set the read-write state.
 		require
 			exists: exists
@@ -178,7 +178,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_setreadonly, to_wparam (0), to_lparam (0))
 		end
 
-	set_text_limit (limit: INTEGER) is
+	set_text_limit (limit: INTEGER)
 			-- Set to `limit' the length of the text the user
 			-- can enter into the edit control.
 		require
@@ -188,7 +188,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_limittext, to_wparam (limit), to_lparam (0))
 		end
 
-	get_text_limit: INTEGER is
+	get_text_limit: INTEGER
 			-- Get the maximum length of text that the user
 			-- can enter into the edit control.
 		require
@@ -199,7 +199,7 @@ feature -- Status setting
 			positive_result: Result >= 0
 		end
 
-	set_selection (start_position, end_position: INTEGER) is
+	set_selection (start_position, end_position: INTEGER)
 			-- Set the selection between `start_position'
 			-- and `end_position'.
 		require
@@ -214,7 +214,7 @@ feature -- Status setting
 --			reverse_order: (end_position < start_position) implies (selection_start = end_position and selection_end = start_position)
 		end
 
-	set_caret_position (position: INTEGER) is
+	set_caret_position (position: INTEGER)
 			-- Set the caret position with `position'.
 		require
 			exists: exists
@@ -229,7 +229,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	caret_position: INTEGER is
+	caret_position: INTEGER
 			-- Caret position
 		require
 			exists: exists
@@ -244,7 +244,7 @@ feature -- Status report
 			Result := sel_end
 		end
 
-	has_selection: BOOLEAN is
+	has_selection: BOOLEAN
 			-- Has a current selection?
 		require
 			exists: exists
@@ -259,7 +259,7 @@ feature -- Status report
 			Result := sel_end /= sel_start
 		end
 
-	selection_start: INTEGER is
+	selection_start: INTEGER
 			-- Index of the first character selected
 		require
 			exists: exists
@@ -275,7 +275,7 @@ feature -- Status report
 			result_small_enough: Result <= text_length
 		end
 
-	selection_end: INTEGER is
+	selection_end: INTEGER
 			-- Index of the last character selected
 		require
 			exists: exists
@@ -291,7 +291,7 @@ feature -- Status report
 			result_small_enough: Result <= text_length + 2
 		end
 
-	can_undo: BOOLEAN is
+	can_undo: BOOLEAN
 			-- Can the last operation be undone?
 		require
 			exists: exists
@@ -299,7 +299,7 @@ feature -- Status report
 			Result := {WEL_API}.send_message_result (item, Em_canundo, to_wparam (0), to_lparam (0)) /= default_pointer
 		end
 
-	modified: BOOLEAN is
+	modified: BOOLEAN
 			-- Has the text been modified?
 		require
 			exists: exists
@@ -308,7 +308,7 @@ feature -- Status report
 				Em_getmodify, to_wparam (0), to_lparam (0)) /= default_pointer
 		end
 
-	formatting_rect: WEL_RECT is
+	formatting_rect: WEL_RECT
 			-- Limiting rectangle the text. It is independent of
 			-- the size of the edit-control window.
 		require
@@ -322,7 +322,7 @@ feature -- Status report
 
 feature -- Notifications
 
-	on_en_change is
+	on_en_change
 			-- The user has taken an action
 			-- that may have altered the text.
 		require
@@ -330,21 +330,21 @@ feature -- Notifications
 		do
 		end
 
-	on_en_vscroll is
+	on_en_vscroll
 			-- The user click on the vertical scroll bar.
 		require
 			exists: exists
 		do
 		end
 
-	on_en_hscroll is
+	on_en_hscroll
 			-- The user click on the horizontal scroll bar.
 		require
 			exists: exists
 		do
 		end
 
-	on_en_errspace is
+	on_en_errspace
 			-- Cannot allocate enough memory to
 			-- meet a specific request.
 		require
@@ -352,28 +352,28 @@ feature -- Notifications
 		do
 		end
 
-	on_en_setfocus is
+	on_en_setfocus
 			-- Receive the keyboard focus.
 		require
 			exists: exists
 		do
 		end
 
-	on_en_killfocus is
+	on_en_killfocus
 			-- Lose the keyboard focus.
 		require
 			exists: exists
 		do
 		end
 
-	on_en_update is
+	on_en_update
 			-- The control is about to display altered text.
 		require
 			exists: exists
 		do
 		end
 
-	on_en_maxtext is
+	on_en_maxtext
 			-- The current text insertion has exceeded
 			-- the specified number of characters.
 		require
@@ -383,7 +383,7 @@ feature -- Notifications
 
 feature -- Obsolete
 
-	clear_selection is obsolete "Use ``delete_selection''"
+	clear_selection obsolete "Use ``delete_selection''"
 			-- Delete the current selection.
 		require
 			exists: exists
@@ -396,7 +396,7 @@ feature -- Obsolete
 
 feature {NONE} -- Implementation
 
-	process_notification (notification_code: INTEGER) is
+	process_notification (notification_code: INTEGER)
 		do
 			if notification_code = En_change then
 				on_en_change
@@ -419,13 +419,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := "Edit"
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		deferred
 		end
@@ -439,7 +439,7 @@ invariant
 	valid_caret_position: exists implies caret_position >= 0 and then
 		caret_position <= text_length + 2
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of a regular polygon (square, pentagon,...)"
 	legal: "See notice at end of class.";
@@ -30,7 +30,7 @@ create
 
 feature -- Initialization
 
-	make  is
+	make
 			-- Create a reg_polygon.
 		do
 			init_fig (Void);
@@ -54,7 +54,7 @@ feature -- Access
 	orientation: REAL;
 			-- Orientation in degree of the reg_polygon
 
-	origin: COORD_XY_FIG is
+	origin: COORD_XY_FIG
 			-- Origin of reg_polygon
 		do
 			inspect
@@ -70,7 +70,7 @@ feature -- Access
 	radius: INTEGER;
 			-- Radius of the circle who contains all the point of the polygon
 
-	size_of_side: INTEGER is
+	size_of_side: INTEGER
 			-- Size of a side
 		do
 			Result := (2*radius/(cos (180.0/number_of_sides))).truncated_to_integer
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_center (a_point: like center) is
+	set_center (a_point: like center)
 			-- Set `center' to `a_point'.
 		require
 			a_point_exits: a_point /= Void
@@ -89,7 +89,7 @@ feature -- Element change
 			center = a_point
 		end;
 
-	set_number_of_sides (new_number_of_sides: like number_of_sides) is
+	set_number_of_sides (new_number_of_sides: like number_of_sides)
 			-- Set `number_of_sides' to `new_number_of_sides'.
 		require
 			at_least_three_sides: new_number_of_sides >= 3
@@ -100,7 +100,7 @@ feature -- Element change
 			number_of_sides = new_number_of_sides
 		end;
 
-	set_orientation (new_orientation: like orientation) is
+	set_orientation (new_orientation: like orientation)
 			-- Set `orientation' to `new_orientation'.
 		require
 			orientation_positive: new_orientation >= 0;
@@ -112,7 +112,7 @@ feature -- Element change
 			orientation = new_orientation
 		end;
 
-	set_origin_to_center is
+	set_origin_to_center
 			-- Set origin to `center'.
 		do
 			origin_user_type := 2;
@@ -120,7 +120,7 @@ feature -- Element change
 			origin.is_superimposable (center)
 		end; 
 
-	set_radius (new_radius: like radius) is
+	set_radius (new_radius: like radius)
 			-- Set `radius' to `new_radius', change `size_of_side'.
 		require
 			size_positive: new_radius >= 0
@@ -131,7 +131,7 @@ feature -- Element change
 			radius = new_radius
 		end;
 
-	set_size_of_side (a_size: INTEGER) is
+	set_size_of_side (a_size: INTEGER)
 			-- Set `size_of_side' to `a_size', change `radius'.
 		require
 			a_size_positive: a_size >= 0
@@ -146,7 +146,7 @@ feature -- Element change
 			--rounding_error_allowance: a_size - 1 <= size_of_side and size_of_side <= a_size + 1
 		end;
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: REAL; px, py: INTEGER)
 			-- Rotate figure by `a' relative to (`px', `py').
 			-- Angle `a' is measured in degrees.
 		do
@@ -155,7 +155,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xyscale (f: REAL; px,py: INTEGER) is
+	xyscale (f: REAL; px,py: INTEGER)
 			-- Scale figure by `f' relative to (`px', `py').
 		require else
 			scale_factor_positive: f > 0.0
@@ -165,7 +165,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xytranslate (vx, vy: INTEGER) is
+	xytranslate (vx, vy: INTEGER)
 			-- Translate by `vx' horizontally and `vy' vertically.
 		do
 			center.xytranslate (vx, vy);
@@ -174,7 +174,7 @@ feature -- Element change
 
 feature -- Output
 
-	draw is
+	draw
 			-- Draw the reg_polygon.
 		local
 			polygon: POLYGON;
@@ -219,7 +219,7 @@ feature -- Output
 
  feature -- Status report
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the current reg_polygon superimposable to `other' ?
 			--| not finished
 		require else
@@ -232,7 +232,7 @@ feature -- Output
 
 feature {CONFIGURE_NOTIFY} -- Updating
 
-	conf_recompute is
+	conf_recompute
 		local
 			diameter: INTEGER;
 		do
@@ -251,7 +251,7 @@ invariant
 	orientation_large_enough: orientation >= 0;
 	center_exists: center /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XPropertyEvent."
@@ -19,13 +19,13 @@ create
 
 feature -- Access
 
-    time: INTEGER is
+    time: INTEGER
             -- Time when property was changed?
         do
             Result := c_event_time (handle)
         end;
 
-	atom: MEL_ATOM is
+	atom: MEL_ATOM
 			-- Name of property involved
         do
 			create Result.make_from_existing (c_event_atom (handle));
@@ -33,7 +33,7 @@ feature -- Access
 			result_not_void: Result /= Void
         end;
 
-	state: INTEGER is
+	state: INTEGER
 			-- State of Event
 		do
             Result := c_event_state (handle)
@@ -42,13 +42,13 @@ feature -- Access
 				is_property_delete
 		end;
 
-	is_property_new_value: BOOLEAN is
+	is_property_new_value: BOOLEAN
 			-- Is `state' value set to PropertyNewValue?
 		do
 			Result := state = PropertyNewValue
 		end;	
 
-	is_property_delete: BOOLEAN is
+	is_property_delete: BOOLEAN
 			-- Is `state' value set to PropertyDelete?
 		do
 			Result := state = PropertyDelete
@@ -56,22 +56,22 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_event_time (event_ptr: POINTER): INTEGER is
+	c_event_time (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XPropertyEvent *): EIF_INTEGER"
 		end;
 
-	c_event_state (event_ptr: POINTER): INTEGER is
+	c_event_state (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XPropertyEvent *): EIF_INTEGER"
 		end;
 
-	c_event_atom (event_ptr: POINTER): POINTER is
+	c_event_atom (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XPropertyEvent *): EIF_POINTER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

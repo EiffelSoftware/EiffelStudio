@@ -1,5 +1,5 @@
 
-indexing
+note
 
 	description:
 		"Path name abstraction"
@@ -28,13 +28,13 @@ inherit
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create path name object.
 		do
 			string_make (0)
 		end
 
-	make_from_string (p: STRING) is
+	make_from_string (p: STRING)
 			-- Create path name object and initialize it with the
 			-- path name `p'
 		do
@@ -46,7 +46,7 @@ feature -- Initialization
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is the path name equal to `other'?
 		local
 			l_a: PATH
@@ -57,7 +57,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_directory_name_valid (dir_name: STRING): BOOLEAN is
+	is_directory_name_valid (dir_name: STRING): BOOLEAN
 			-- Is `dir_name' a valid subdirectory part for the operating system?
 		require
 			exists: dir_name /= Void
@@ -69,7 +69,7 @@ feature -- Status report
 			Result := a_sys_str /= Void and then not a_sys_str.equals (a_sys_str.empty)
 		end
 
-	is_volume_name_valid (vol_name: STRING): BOOLEAN is
+	is_volume_name_valid (vol_name: STRING): BOOLEAN
 			-- Is `vol_name' a valid volume name for the operating system?
 		require
 			exists: vol_name /= Void
@@ -81,14 +81,14 @@ feature -- Status report
 			Result := a_sys_str.equals (l_a.get_path_root (a_sys_str))
 		end
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the path name valid for the operating system?
 		deferred
 		end
 
 feature -- Status setting
 
-	set_volume (volume_name: STRING) is
+	set_volume (volume_name: STRING)
 			-- Set the volume part of the path name to `volume_name'.
 		require
 			string_exists: volume_name /= Void
@@ -100,7 +100,7 @@ feature -- Status setting
 			valid_file_name: is_valid
 		end
 
-	extend, set_subdirectory (directory_name: STRING) is
+	extend, set_subdirectory (directory_name: STRING)
 			-- Append the subdirectory `directory_name' to the path name.
 		require
 			string_exists: directory_name /= Void
@@ -120,7 +120,7 @@ feature -- Status setting
 			valid_file_name: is_valid
 		end
 
-	set_directory (directory_name: STRING) is
+	set_directory (directory_name: STRING)
 			-- Set the absolute directory part of the path name to `directory_name'.
 		require
 			string_exists: directory_name /= Void
@@ -140,7 +140,7 @@ feature -- Status setting
 			valid_file_name: is_valid
 		end
 
-	extend_from_array (directories: ARRAY [STRING]) is
+	extend_from_array (directories: ARRAY [STRING])
 			-- Append the subdirectories from `directories' to the path name.
 		require
 			array_exists: directories /= Void and then not (directories.is_empty)
@@ -160,7 +160,7 @@ feature -- Status setting
 			valid_file_name: is_valid
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

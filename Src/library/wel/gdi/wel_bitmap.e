@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows Bitmap, which can be loaded from a resource %
 			%or created from an existing DIB."
 	legal: "See notice at end of class."
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_by_id (id: INTEGER) is
+	make_by_id (id: INTEGER)
 			-- Load the resource by an `id'
 		do
 			debug ("WEL_GDI_COUNT")
@@ -55,14 +55,14 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_by_name (name: STRING_GENERAL) is
+	make_by_name (name: STRING_GENERAL)
 			-- Load the resource by a `name'
 		do
 			Precursor (name)
 			gdi_make
 		end
 
-	make_compatible (a_dc: WEL_DC; a_width, a_height: INTEGER) is
+	make_compatible (a_dc: WEL_DC; a_width, a_height: INTEGER)
 			-- Initialize current bitmap to be compatible
 			-- with `a_dc' and with `a_width' as `width',
 			-- `a_height' as `height'.
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_by_dib (a_dc: WEL_DC; dib: WEL_DIB; mode: INTEGER) is
+	make_by_dib (a_dc: WEL_DC; dib: WEL_DIB; mode: INTEGER)
 			-- Create a WEL_BITMAP from a `dib' in the `a_dc'
 			-- using `mode'. See class `WEL_DIB_COLORS_CONSTANTS'
 			-- for `mode' values.
@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			bitmap_created: item /= item.default
 		end
 
-	make_by_bitmap (a_bitmap: WEL_BITMAP) is
+	make_by_bitmap (a_bitmap: WEL_BITMAP)
 			-- Create a WEL_BITMAP from another WEL_BITMAP. The
 			-- bitmap is copied by value
 		do
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_indirect (a_log_bitmap: WEL_LOG_BITMAP) is
+	make_indirect (a_log_bitmap: WEL_LOG_BITMAP)
 			-- Make a bitmap using `a_log_bitmap'.
 		require
 			a_log_bitmap_not_void: a_log_bitmap /= Void
@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_direct (a_width, a_height, a_planes, a_bits_per_pixel: INTEGER; a_data: STRING) is
+	make_direct (a_width, a_height, a_planes, a_bits_per_pixel: INTEGER; a_data: STRING)
 			-- Make a bitmap of dimension `a_width' x `a_height' that has `a_planes' number
 			-- of color planes and `a_bits_per_pixel' (number of bits to identify color).
 			-- `a_data' contains color data array.
@@ -134,7 +134,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_dib (a_header_info: WEL_BITMAP_INFO_HEADER) is
+	make_dib (a_header_info: WEL_BITMAP_INFO_HEADER)
 			-- Create a DIB bitmap section.
 		require
 			a_header_info_not_void: a_header_info /= Void
@@ -151,7 +151,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	width: INTEGER is
+	width: INTEGER
 			-- Bitmap width
 		require
 			exists: exists
@@ -161,7 +161,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Bitmap height
 		require
 			exists: exists
@@ -171,7 +171,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	log_bitmap: WEL_LOG_BITMAP is
+	log_bitmap: WEL_LOG_BITMAP
 			-- Log bitmap structure associated to `Current'
 		require
 			exists: exists
@@ -191,7 +191,7 @@ feature -- Access
 feature -- Basic operations
 
 	set_di_bits (a_dc: WEL_DC; start_line, length: INTEGER; dib: WEL_DIB;
-			mode: INTEGER) is
+			mode: INTEGER)
 			-- Set the bits of the current bitmap to the values
 			-- given in `dib', starting at line `start_line'
 			-- during `length' lines, using `mode'.
@@ -209,14 +209,14 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	load_item (hinstance, id: POINTER) is
+	load_item (hinstance, id: POINTER)
 		do
 			item := cwin_load_bitmap (hinstance, id)
 		end
 
 feature {NONE} -- Externals
 
-	cwin_create_compatible_bitmap (hdc: POINTER; w, h: INTEGER): POINTER is
+	cwin_create_compatible_bitmap (hdc: POINTER; w, h: INTEGER): POINTER
 			-- SDK CreateCompatibleBitmap
 		external
 			"C [macro <wel.h>] (HDC, int, int): EIF_POINTER"
@@ -225,7 +225,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_create_di_bitmap (hdc, bitmapinfo: POINTER;init: INTEGER;
-				bits, infodib: POINTER; mode: INTEGER): POINTER is
+				bits, infodib: POINTER; mode: INTEGER): POINTER
 			-- SDK CreateDIBitmap
 		external
 			"C [macro <wel.h>] (HDC, BITMAPINFOHEADER *, DWORD, %
@@ -235,7 +235,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_set_di_bits (hdc, bitmap: POINTER;start_line, length: INTEGER;
-			 bits, info: POINTER; mode: INTEGER) is
+			 bits, info: POINTER; mode: INTEGER)
 			-- SDK SetDIBits
 		external
 			"C [macro <wel.h>] (HDC, HBITMAP, UINT, UINT, void *, %
@@ -245,7 +245,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_get_di_bits (hdc, bitmap: POINTER;start_line, no_scanlines: INTEGER;
-			 bits, info: POINTER; mode: INTEGER) is
+			 bits, info: POINTER; mode: INTEGER)
 			-- SDK GetDIBits
 		external
 			"C [macro <wel.h>] (HDC, HBITMAP, UINT, UINT, void *, %
@@ -254,7 +254,7 @@ feature {NONE} -- Externals
 			"GetDIBits"
 		end
 
-	cwin_load_bitmap (hinstance: POINTER; id: POINTER): POINTER is
+	cwin_load_bitmap (hinstance: POINTER; id: POINTER): POINTER
 			-- SDK LoadBitmap
 		external
 			"C [macro <wel.h>] (HINSTANCE, LPCTSTR): EIF_POINTER"
@@ -262,7 +262,7 @@ feature {NONE} -- Externals
 			"LoadBitmap"
 		end
 
-	cwin_copy_image (himage: POINTER; utype, new_width, new_height, flags: INTEGER): POINTER is
+	cwin_copy_image (himage: POINTER; utype, new_width, new_height, flags: INTEGER): POINTER
 			-- SDK CopyImage
 		external
 			"C [macro <wel.h>] (HANDLE, UINT, int, int, UINT): EIF_POINTER"
@@ -270,7 +270,7 @@ feature {NONE} -- Externals
 			"CopyImage"
 		end
 
-	cwin_create_bitmap_indirect (a_log_bitmap: POINTER): POINTER is
+	cwin_create_bitmap_indirect (a_log_bitmap: POINTER): POINTER
 			-- SDK CreateBitmapIndirect
 		external
 			"C [macro <wel.h>] (BITMAP *): EIF_POINTER"
@@ -278,7 +278,7 @@ feature {NONE} -- Externals
 			"CreateBitmapIndirect"
 		end
 
-	cwin_create_bitmap (a_width, a_height, a_planes, a_bits_per_pixel: INTEGER; a_data: POINTER): POINTER is
+	cwin_create_bitmap (a_width, a_height, a_planes, a_bits_per_pixel: INTEGER; a_data: POINTER): POINTER
 			-- SDK CreateBitmapt
 		external
 			"C [macro <wel.h>] (int, int, UINT, UINT, CONST VOID *): EIF_POINTER"
@@ -286,7 +286,7 @@ feature {NONE} -- Externals
 			"CreateBitmap"
 		end
 
-	cwin_create_dib_section (a_dc, a_bitmap_info: POINTER; a_i_usage: INTEGER; a_ppv_bits: TYPED_POINTER [POINTER]; a_h_section: POINTER; a_offset: NATURAL_64): POINTER is
+	cwin_create_dib_section (a_dc, a_bitmap_info: POINTER; a_i_usage: INTEGER; a_ppv_bits: TYPED_POINTER [POINTER]; a_h_section: POINTER; a_offset: NATURAL_64): POINTER
 			-- SDK CreateDIBSection
 		external
 			"C inline use <windows.h>"
@@ -303,14 +303,14 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	Cbm_init: INTEGER is
+	Cbm_init: INTEGER
 		external
 			"C [macro <wel.h>]"
 		alias
 			"CBM_INIT"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Pointer sytle constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,60 +11,60 @@ class
 
 feature -- Enumeration
 
-	Busy_cursor: INTEGER is 1
+	Busy_cursor: INTEGER = 1
 			-- Standard arrow and small hourglass
 
-	Standard_cursor: INTEGER is 2
+	Standard_cursor: INTEGER = 2
 			-- Standard arrow
 
-	Crosshair_cursor: INTEGER is 3
+	Crosshair_cursor: INTEGER = 3
 			-- Crosshair
 
-	Help_cursor: INTEGER is 4
+	Help_cursor: INTEGER = 4
 			-- Arrow and question mark
 
-	Ibeam_cursor: INTEGER is 5
+	Ibeam_cursor: INTEGER = 5
 			-- I-beam displayed in editable widgets.
 
-	No_cursor: INTEGER is 6
+	No_cursor: INTEGER = 6
 			-- Slashed_circle
 
-	Sizeall_cursor: INTEGER is 7
+	Sizeall_cursor: INTEGER = 7
 			-- Four-pointed arrow pointing north, south, east and west
 
-	Sizens_cursor: INTEGER is 8
+	Sizens_cursor: INTEGER = 8
 			-- Double-pointed arrow pointing north and south
 
-	Sizenwse_cursor: INTEGER is 9
+	Sizenwse_cursor: INTEGER = 9
 			-- Double-pointed arrow pointing north-west and south-east
 
-	Sizenesw_cursor: INTEGER is 10
+	Sizenesw_cursor: INTEGER = 10
 			-- Double-pointed arrow pointing north-east and south-west
 
-	Sizewe_cursor: INTEGER is 11
+	Sizewe_cursor: INTEGER = 11
 			-- Double-pointed arrow pointing west and east
 
-	Uparrow_cursor: INTEGER is 12
+	Uparrow_cursor: INTEGER = 12
 			-- Vertical arrow
 
-	Wait_cursor: INTEGER is 13
+	Wait_cursor: INTEGER = 13
 			-- Hourglass
 
-	Header_sizewe_cursor: INTEGER is 14
+	Header_sizewe_cursor: INTEGER = 14
 			-- Double-pointed arrow pointing west and east used for header column resizing.
 
-	Hyperlink_cursor: INTEGER is 15
+	Hyperlink_cursor: INTEGER = 15
 			-- Used for hyperlinks
 
 feature -- Query
 
-	is_valid (a_integer: INTEGER): BOOLEAN is
+	is_valid (a_integer: INTEGER): BOOLEAN
 			-- If `a_integer' is valid?
 		do
 			Result := (Busy_cursor |..| Hyperlink_cursor).valid_index (a_integer)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

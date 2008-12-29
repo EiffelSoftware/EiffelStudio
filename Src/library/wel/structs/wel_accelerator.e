@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a Windows accelerator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
  
 feature {NONE} -- Initialization
 
-	make (a_key, a_command_id, a_flags: INTEGER) is
+	make (a_key, a_command_id, a_flags: INTEGER)
 			-- Create a definition of an accelerator.
 			-- See class WEL_ACCELERATOR_FLAG_CONSTANTS
 			-- for `a_flags' values.
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	key: INTEGER is
+	key: INTEGER
 			-- Key of accelerator
 		require
 			exists: exists
@@ -48,7 +48,7 @@ feature -- Access
 			Result := cwel_accel_get_key (item)
 		end
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Flags of accelerator
 		require
 			exists: exists
@@ -56,7 +56,7 @@ feature -- Access
 			Result := cwel_accel_get_fvirt (item)
 		end
 
-	command_id: INTEGER is
+	command_id: INTEGER
 			-- Command id of accelerator
 		require
 			exists: exists
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_key (a_key: INTEGER) is
+	set_key (a_key: INTEGER)
 			-- Set `key' to `a_key'.
 		require
 			exists: exists
@@ -76,7 +76,7 @@ feature -- Element change
 			key_set: key = a_key
 		end
 
-	set_flags (a_flags: INTEGER) is
+	set_flags (a_flags: INTEGER)
 			-- Set `flags' to `a_flags'.
 		require
 			exists: exists
@@ -86,7 +86,7 @@ feature -- Element change
 			flags_set: flags = a_flags
 		end
 
-	set_command_id (a_command_id: INTEGER) is
+	set_command_id (a_command_id: INTEGER)
 			-- Set `command_id' to `a_command_id'.
 		require
 			exists: exists
@@ -99,7 +99,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_accel
@@ -107,39 +107,39 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_accel: INTEGER is
+	c_size_of_accel: INTEGER
 		external
 			"C [macro <wel.h>]"
 		alias
 			"sizeof (ACCEL)"
 		end
 
-	cwel_accel_set_fvirt (ptr: POINTER; value: INTEGER) is
+	cwel_accel_set_fvirt (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <accel.h>]"
 		end
 
-	cwel_accel_set_key (ptr: POINTER; value: INTEGER) is
+	cwel_accel_set_key (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <accel.h>]"
 		end
 
-	cwel_accel_set_cmd (ptr: POINTER; value: INTEGER) is
+	cwel_accel_set_cmd (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <accel.h>]"
 		end
 
-	cwel_accel_get_fvirt (ptr: POINTER): INTEGER is
+	cwel_accel_get_fvirt (ptr: POINTER): INTEGER
 		external
 			"C [macro <accel.h>]"
 		end
 
-	cwel_accel_get_key (ptr: POINTER): INTEGER is
+	cwel_accel_get_key (ptr: POINTER): INTEGER
 		external
 			"C [macro <accel.h>]"
 		end
 
-	cwel_accel_get_cmd (ptr: POINTER): INTEGER is
+	cwel_accel_get_cmd (ptr: POINTER): INTEGER
 		external
 			"C [macro <accel.h>]"
 		end
@@ -147,7 +147,7 @@ feature {NONE} -- Externals
 invariant
 	valid_command_id: command_id >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

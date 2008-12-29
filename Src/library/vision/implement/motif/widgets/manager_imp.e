@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a MOTIF manager widget."
@@ -29,7 +29,7 @@ inherit
 
 feature -- Access
 
-	is_stackable: BOOLEAN is 
+	is_stackable: BOOLEAN 
 			-- Is the Current widget stackable?
 		do
 			Result := True;
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status Report
 
-	foreground_color: COLOR is
+	foreground_color: COLOR
 			-- Color used for the foreground_color
 		local
 			fg_color_x: COLOR_IMP
@@ -56,7 +56,7 @@ feature -- Status Report
 
 feature -- Status Setting
 
-	set_foreground_color (a_color: COLOR) is
+	set_foreground_color (a_color: COLOR)
 			-- Set `foreground_color' to `a_color'.
 		require
 			a_color_exists: not (a_color = Void)
@@ -76,7 +76,7 @@ feature -- Status Setting
 			set: foreground_color = a_color
 		end;
 
-	set_initial_input_focus (a_widget: WIDGET) is
+	set_initial_input_focus (a_widget: WIDGET)
 			-- Set child which will initially have input focus
 		local
 			widget_implementation: WIDGET_IMP
@@ -93,7 +93,7 @@ feature {COLOR_IMP} -- Implementation
 	private_foreground_color: COLOR;
 			-- foreground_color color
 
-	update_foreground_color is
+	update_foreground_color
 			-- Update the X color after a change inside the Eiffel color.
 		local
 			color_implementation: COLOR_IMP
@@ -103,7 +103,7 @@ feature {COLOR_IMP} -- Implementation
 			set_foreground_color_from_imp (color_implementation);
 		end
 
-	set_foreground_color_from_imp (color_imp: COLOR_IMP) is
+	set_foreground_color_from_imp (color_imp: COLOR_IMP)
 			-- Set the background color from implementation `color_imp'.
 		require
 			valid_color_imp: color_imp /= Void and color_imp.is_valid
@@ -111,7 +111,7 @@ feature {COLOR_IMP} -- Implementation
 			mel_set_foreground_color (color_imp)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

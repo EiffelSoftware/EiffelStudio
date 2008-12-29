@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of Font List Entry."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_default_from_font_struct (a_font_struct: MEL_FONT_STRUCT) is
+	make_default_from_font_struct (a_font_struct: MEL_FONT_STRUCT)
 			-- Make a font_list entry from `a_font_struct' using
 			-- the font list default tag (XmFONTLIST_DEFAULT_TAG). 
 		require
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 				(XmFONTLIST_DEFAULT_TAG, XmFONT_IS_FONT, a_font_struct.handle)
 		end;
 
-	make_from_font_struct (a_tag: STRING; a_font_struct: MEL_FONT_STRUCT) is
+	make_from_font_struct (a_tag: STRING; a_font_struct: MEL_FONT_STRUCT)
 			-- Make a font_list entry from `a_font_struct'.
 		require
 			tag_not_void: a_tag /= Void;
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 				($ext1, XmFONT_IS_FONT, a_font_struct.handle)
 		end;
 
-	make_using_font (a_display: MEL_DISPLAY; a_name: STRING; a_tag: STRING) is
+	make_using_font (a_display: MEL_DISPLAY; a_name: STRING; a_tag: STRING)
 			-- Make a font_list entry from `a_name' with tag `a_tag'
 			-- for display `a_display' using XmFONT_IS_FONT for font format.
 		require
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	font_struct: MEL_FONT_STRUCT is
+	font_struct: MEL_FONT_STRUCT
 			-- Font structure of entry
 		require
 			is_valid: is_valid
@@ -91,7 +91,7 @@ feature -- Access
 			end
 		end;
 
-	tag: STRING is
+	tag: STRING
 			-- Tag of entry
 		require
 			is_valid: is_valid
@@ -106,7 +106,7 @@ feature -- Access
 
 feature -- Removal
 
-	destroy is
+	destroy
 			-- Free the font list entry.
 		do	
 			xm_font_list_entry_free (handle);
@@ -116,7 +116,7 @@ feature -- Removal
 feature {NONE} -- External features
 
 	xm_font_list_entry_load (a_display, a_name, a_font_type, 
-			a_tag: POINTER): POINTER is
+			a_tag: POINTER): POINTER
 		external
 			"C (Display *, char *,%
 				%XmFontType, char *): EIF_POINTER | <Xm/Xm.h>"
@@ -124,19 +124,19 @@ feature {NONE} -- External features
 			"XmFontListEntryLoad"
 		end;
 
-	xm_font_list_entry_create (a_tag, a_font_type, a_font: POINTER): POINTER is
+	xm_font_list_entry_create (a_tag, a_font_type, a_font: POINTER): POINTER
 		external
 			"C (char *, XmFontType, XtPointer): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmFontListEntryCreate"
 		end;
 
-	xm_font_list_entry_free (an_entry: POINTER) is
+	xm_font_list_entry_free (an_entry: POINTER)
 		external
 			"C"
 		end;
 
-	xm_font_list_entry_get_tag (an_entry: POINTER): POINTER is
+	xm_font_list_entry_get_tag (an_entry: POINTER): POINTER
 		external
 			"C (XmFontListEntry): EIF_POINTER | <Xm/Xm.h>"
 		alias
@@ -144,49 +144,49 @@ feature {NONE} -- External features
 		end;
 
 	xm_font_list_entry_get_font (an_entry: POINTER; 
-				a_f_type: POINTER): POINTER is
+				a_f_type: POINTER): POINTER
 		external
 			"C (XmFontListEntry, XmFontType  *): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmFontListEntryGetFont"
 		end;
 
-	XmFONT_IS_FONT: POINTER is
+	XmFONT_IS_FONT: POINTER
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
 		alias
 			"XmFONT_IS_FONT"
 		end;
 
-	XmFONT_IS_FONTSET: POINTER is
+	XmFONT_IS_FONTSET: POINTER
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
 		alias
 			"XmFONT_IS_FONTSET"
 		end;
 
-	XmFONTLIST_DEFAULT_TAG: POINTER is
+	XmFONTLIST_DEFAULT_TAG: POINTER
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
 		alias
 			"XmFONTLIST_DEFAULT_TAG"
 		end;
 
-	xt_free (obj: POINTER) is
+	xt_free (obj: POINTER)
 		external
 			"C (XtPointer) | <X11/Intrinsic.h>"
 		alias
 			"XtFree"
 		end;
 
-	x_build_font_from_set (p: POINTER): POINTER is
+	x_build_font_from_set (p: POINTER): POINTER
 		external
 			"C | %"font.h%""
 		alias
 			"x_build_font_from_set"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

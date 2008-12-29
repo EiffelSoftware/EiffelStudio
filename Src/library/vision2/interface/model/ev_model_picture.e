@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Pixmaps drawn on `point'.
 	
@@ -47,7 +47,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create in (0, 0)
 		do
 			Precursor {EV_MODEL_ATOMIC}
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			point_array.put (create {EV_COORDINATE}.make (0, 0), 2)
 		end
 
-	make_with_pixmap (a_pixmap: EV_PIXMAP) is
+	make_with_pixmap (a_pixmap: EV_PIXMAP)
 			-- Create with `a_pixmap'.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			set_pixmap (a_pixmap)
 		end
 		
-	make_with_identified_pixmap (an_id_pixmap: EV_IDENTIFIED_PIXMAP) is
+	make_with_identified_pixmap (an_id_pixmap: EV_IDENTIFIED_PIXMAP)
 			-- Create with `an_id_pixmap'.
 		require
 			an_id_pixmap_not_Void: an_id_pixmap /= Void
@@ -81,22 +81,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap that is displayed.
 		do
 			Result := id_pixmap.pixmap
 		end
 			
-	angle: DOUBLE is 0.0
+	angle: DOUBLE = 0.0
 			-- Since not rotatable
 
-	point_x: INTEGER is
+	point_x: INTEGER
 			-- x position of `point'.
 		do
 			Result := point_array.item (0).x
 		end
 		
-	point_y: INTEGER is
+	point_y: INTEGER
 			-- y position of `point'.
 		do
 			Result := point_array.item (0).y
@@ -104,13 +104,13 @@ feature -- Access
 
 feature -- Status report
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of pixmap.
 		do
 			Result := as_integer (point_array.item (1).x_precise - point_array.item (0).x_precise)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of Pixmap.
 		do
 			Result := as_integer (point_array.item (2).y_precise - point_array.item (0).y_precise)
@@ -119,18 +119,18 @@ feature -- Status report
 	is_default_pixmap_used: BOOLEAN
 			-- Is `Current' using a default pixmap?
 			
-	is_rotatable: BOOLEAN is False
+	is_rotatable: BOOLEAN = False
 			-- Is rotatable? (No)
 			
-	is_scalable: BOOLEAN is True
+	is_scalable: BOOLEAN = True
 			-- Is scalable? (Yes)
 			
-	is_transformable: BOOLEAN is False
+	is_transformable: BOOLEAN = False
 			-- Is transformable? (No)
 
 feature -- Status setting
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set `pixmap' to `a_pixmap'.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
@@ -140,7 +140,7 @@ feature -- Status setting
 			pixmap_assigned: pixmap = a_pixmap
 		end
 		
-	set_identified_pixmap (an_id_pixmap: EV_IDENTIFIED_PIXMAP) is
+	set_identified_pixmap (an_id_pixmap: EV_IDENTIFIED_PIXMAP)
 			-- Set `id_pixmap' to `an_id_pixmap' and initialize `scaled_pixmap'.
 		require
 			an_id_pixmap_not_Void: an_id_pixmap /= Void
@@ -157,7 +157,7 @@ feature -- Status setting
 			set: id_pixmap = an_id_pixmap
 		end
 		
-	set_point_position (ax, ay: INTEGER) is
+	set_point_position (ax, ay: INTEGER)
 			-- Set position of `point' to `a_point'.
 		local
 			a_delta_x, a_delta_y: DOUBLE
@@ -180,7 +180,7 @@ feature -- Status setting
 
 feature -- Events
 
-	position_on_figure (a_x, a_y: INTEGER): BOOLEAN is
+	position_on_figure (a_x, a_y: INTEGER): BOOLEAN
 			-- Is (`a_x', `a_y') on this figure?
 		local
 			ax, ay: DOUBLE
@@ -196,7 +196,7 @@ feature -- Events
 		
 feature {EV_MODEL_GROUP}
 		
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
@@ -214,14 +214,14 @@ feature {NONE} -- Implementation
 
 	id_pixmap: EV_IDENTIFIED_PIXMAP
 		
-	default_pixmap: EV_IDENTIFIED_PIXMAP is
+	default_pixmap: EV_IDENTIFIED_PIXMAP
 			-- Pixmap set by `default_create'.
 		once
 			Result := pixmap_factory.registered_pixmap (create {EV_PIXMAP})
 			pixmap_factory.register_pixmap (Result)
 		end
 
-	set_center is
+	set_center
 			-- Set the center.
 		local
 			l_point_array: like point_array
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			is_center_valid := True
 		end
 		
-	update_scaled_pixmap is
+	update_scaled_pixmap
 			-- Scale `pixmap' store result in `scaled_pixmap'.
 		do
 			if scaled_pixmap.width /= width or else scaled_pixmap.height /= height then
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 invariant
 	pixmap_exists: pixmap /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

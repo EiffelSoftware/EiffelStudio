@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Argument list for calls to Java methods"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (nb: INTEGER) is
+	make (nb: INTEGER)
 			-- Make an argument list for at most `nb' arguments.
 		require
 			nb_at_least_one: nb >= 1
@@ -32,7 +32,7 @@ feature -- Access
 	count: INTEGER 
 			-- Number of items in Current argument list.
 
-	item (index: INTEGER): JAVA_VALUE is
+	item (index: INTEGER): JAVA_VALUE
 			-- Associated java value at position `i'.
 		require
 			valid_index: valid_index (index)
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Element change
 
-	put_double (value: DOUBLE; index: INTEGER) is
+	put_double (value: DOUBLE; index: INTEGER)
 			-- Add a "double" argument at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -55,7 +55,7 @@ feature -- Element change
 			inserted: item (index).double_value = value
 		end
 
-	put_float (value: REAL; index: INTEGER) is
+	put_float (value: REAL; index: INTEGER)
 			-- Add a "float" argument at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -66,7 +66,7 @@ feature -- Element change
 			inserted: item (index).float_value = value
 		end
 
-	put_boolean (value: BOOLEAN; index: INTEGER) is
+	put_boolean (value: BOOLEAN; index: INTEGER)
 			-- Add a "boolean" argument at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -77,7 +77,7 @@ feature -- Element change
 			inserted: item (index).boolean_value = value
 		end
 
-	put_byte (value: INTEGER_8; index: INTEGER) is
+	put_byte (value: INTEGER_8; index: INTEGER)
 			-- Add a "byte" argument at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -88,7 +88,7 @@ feature -- Element change
 			inserted: item (index).byte_value = value
 		end
 
-	put_char (value: CHARACTER; index: INTEGER) is
+	put_char (value: CHARACTER; index: INTEGER)
 			-- Add a "character" argument at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -99,7 +99,7 @@ feature -- Element change
 			inserted: item (index).char_value = value
 		end
 
-	put_short (value: INTEGER_16; index: INTEGER) is
+	put_short (value: INTEGER_16; index: INTEGER)
 			-- Add a "short" argument at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -110,7 +110,7 @@ feature -- Element change
 			inserted: item (index).short_value = value
 		end
 
-	put_int (value: INTEGER; index: INTEGER) is
+	put_int (value: INTEGER; index: INTEGER)
 			-- Add "integer" argument at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -121,7 +121,7 @@ feature -- Element change
 			inserted: item (index).int_value = value
 		end
 
-	put_long (value: INTEGER_64; index: INTEGER) is
+	put_long (value: INTEGER_64; index: INTEGER)
 			-- Add "long" argument at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -132,7 +132,7 @@ feature -- Element change
 			inserted: item (index).long_value = value
 		end
 
-	put_string (value: STRING; index: INTEGER) is
+	put_string (value: STRING; index: INTEGER)
 			-- Add "string" argument at position `index'.
 		require
 			valid_index: valid_index (index)
@@ -149,7 +149,7 @@ feature -- Element change
 				value = Void implies item (index).object_value = default_pointer
 		end
 
-	put_object (value: JAVA_OBJECT; index: INTEGER) is
+	put_object (value: JAVA_OBJECT; index: INTEGER)
 			-- Add an "object" argument at position `index'.
 			-- Void `value' means a null value for Java.
 		require
@@ -170,7 +170,7 @@ feature -- Element change
 				value = Void implies item (index).object_value = default_pointer
 		end
 
-	put_array (value: JAVA_ARRAY; index: INTEGER) is
+	put_array (value: JAVA_ARRAY; index: INTEGER)
 			-- Add a "array" argument at position `index'.
 			-- Void `value' means a null value for Java.
 		require
@@ -191,7 +191,7 @@ feature -- Element change
 
 feature -- Status report
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' a valid index for Current.
 		do
 			Result := 0 < i and i <= count
@@ -199,7 +199,7 @@ feature -- Status report
 
 feature {JAVA_OBJECT, JAVA_CLASS}
 
-	to_c: POINTER is
+	to_c: POINTER
 			-- Return the pointer to the arg array that can be passed 
 			-- to JNI/Java calls
 		do
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- externals
 
-	sizeof_jvalue: INTEGER is
+	sizeof_jvalue: INTEGER
 		external
 			"C macro use %"jni.h%""
 		alias
@@ -227,7 +227,7 @@ invariant
 	java_args_array_not_void: java_args_array /= Void
 	count_at_least_one: count >= 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

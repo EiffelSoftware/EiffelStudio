@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision dialog. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -92,7 +92,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_dialog_window (a_other_imp: like other_imp) is
+	make_with_dialog_window (a_other_imp: like other_imp)
 			-- Create `Current' using attributes of `other_imp'.
 		require
 			other_imp_not_void: a_other_imp /= Void
@@ -116,7 +116,7 @@ feature -- Status Report
 			-- (Through a clik on the Window Menu, or by
 			-- pressing ALT-F4).
 
-	is_modal: BOOLEAN is
+	is_modal: BOOLEAN
 			-- Is `Current' shown modally to another window?
 			-- If `True' then `Current' must be closed before
 			-- application can receive user events again?
@@ -124,13 +124,13 @@ feature -- Status Report
 			Result := False
 		end
 
-	is_relative: BOOLEAN is
+	is_relative: BOOLEAN
 			-- Is `Current' shown relative to another window?
 		do
 			Result := False
 		end
 
-	blocking_window: EV_WINDOW is
+	blocking_window: EV_WINDOW
 			-- `Result' is window `Current' is shown to if
 			-- `is_modal' or `is_relative'.
 		do
@@ -141,7 +141,7 @@ feature -- Status Report
 
 feature -- Status Setting
 
-	enable_closeable is
+	enable_closeable
 			-- Set `Current' to be closeable by the user.
 			-- (Through a clik on the Window Menu, or by
 			-- pressing ALT-F4).
@@ -149,19 +149,19 @@ feature -- Status Setting
 			is_closeable := True
 		end
 
-	disable_closeable is
+	disable_closeable
 			-- Set `Current'to be non closeable by the user
 		do
 			is_closeable := False
 		end
 
-	forbid_resize is
+	forbid_resize
 			-- Forbid the resize of `Current'.
 		do
 			update_style_and_minimum_size
 		end
 
-	allow_resize is
+	allow_resize
 			-- Allow the resize of `Current'.
 		do
 			update_style_and_minimum_size
@@ -178,7 +178,7 @@ feature {EV_DIALOG_I} -- Implementation
 	other_imp: EV_DIALOG_IMP
 			-- Previous Implementation if any, Void otherwise.
 
-	destroy_implementation is
+	destroy_implementation
 			-- Destroy `Current' but does not wipe out the children.
 		do
 			application_imp.remove_root_window (Current)
@@ -189,7 +189,7 @@ feature {EV_DIALOG_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	update_style_and_minimum_size is
+	update_style_and_minimum_size
 			-- Update the style and the minimum size after changing
 			-- the `user_can_resize' flag.
 		do
@@ -200,19 +200,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER; a_name: STRING_GENERAL) is
+	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER; a_name: STRING_GENERAL)
 			-- Create the dialog
 		deferred
 		end
 
-	dlg_template: WEL_DLG_TEMPLATE is
+	dlg_template: WEL_DLG_TEMPLATE
 			-- Empty dialog template
 		once
 			create Result.make_with_global_alloc
 			Result.set_style (default_style)
 		end
 
-	promote_to_dialog_window is
+	promote_to_dialog_window
 			-- Promote the current implementation to
 			-- EV_DIALOG_IMP_MODAL which allows modality
 		local
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			interface.replace_implementation (dialog_window_imp)
 		end
 
-	copy_attributes is
+	copy_attributes
 			-- Copy attributes from `other_imp' to `Current'
 		require
 			other_window_not_void: other_imp /= Void
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 		-- only be used to defer execution until the dialog is created and be rebuilt each time
 		-- as required.
 
-	setup_dialog is
+	setup_dialog
 			-- May be redefined to setup the dialog and its
 			-- children.
 		local
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 			application_imp.add_root_window (Current)
 		end
 
-	move_children is
+	move_children
 			-- Move the children to the dialog or the window, depending
 			-- on which is currently selected in `wel_item'.
 		local
@@ -391,14 +391,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	wel_destroy_window is
+	wel_destroy_window
 			-- Destroy the window-widget
 		do
 				-- Destroy the dialog and unregister it
 			terminate (Idcancel)
 		end
 
-	update_style is
+	update_style
 			-- Update the style of the window accordingly to the
 			-- options set (`user_can_resize', `is_closeable', ...)
 			-- and set the pixmap.
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 			set_style (new_style)
 		end
 
-	center_dialog is
+	center_dialog
 				-- Center the dialog relative to the parent window.
 		require
 			parent_window /= Void
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation
 			set_position (x_pos, y_pos)
 		end
 
-	on_wm_command (wparam, lparam: POINTER) is
+	on_wm_command (wparam, lparam: POINTER)
 			-- Wm_command message.
 		local
 			text_field_imp: EV_TEXT_FIELD_IMP
@@ -505,7 +505,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- Process all message plus `WM_INITDIALOG'.
 		do
 			inspect msg
@@ -526,7 +526,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_wm_ctlcolordialog (wparam, lparam: POINTER) is
+	on_wm_ctlcolordialog (wparam, lparam: POINTER)
 			-- Wm_ctlcolordialog message received.
 		local
 			paint_dc: WEL_PAINT_DC
@@ -541,14 +541,14 @@ feature {NONE} -- Implementation
 			---background_brush.delete
 		end
 
-	on_wm_ncdestroy is
+	on_wm_ncdestroy
 			-- Wm_nc_destroy message.
 			--| Redefined in order not to post a WM_QUIT message.
 		do
 			on_destroy
 		end
 
-	window_on_wm_activate (wparam, lparam: POINTER) is
+	window_on_wm_activate (wparam, lparam: POINTER)
 			-- `Wm_activate' message recieved form Windows by `Current'.
 		do
 			Precursor {EV_TITLED_WINDOW_IMP} (wparam, lparam)
@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	common_dialog_imp: EV_DIALOG_IMP_COMMON is
+	common_dialog_imp: EV_DIALOG_IMP_COMMON
 			-- Dialog implementation type common to all descendents.
 		do
 		end
@@ -577,7 +577,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: EV_DIALOG;
 			-- Interface for `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General scrolled window implementation"
 	legal: "See notice at end of class.";
@@ -16,13 +16,13 @@ inherit
 	
 feature 
 
-	working_area: WIDGET is
+	working_area: WIDGET
 			-- Working area of window which will
 			-- be moved using scrollbars
 		deferred
 		end;
 
-	set_working_area (a_widget: WIDGET) is
+	set_working_area (a_widget: WIDGET)
 			-- Set work area of windon to `a_widget'.
 		require
 			not_a_widget_void: a_widget /= Void
@@ -31,7 +31,7 @@ feature
 			working_area = a_widget
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

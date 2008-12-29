@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree view notification (TVN) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,46 +10,46 @@ class
 
 feature -- Access
 
-	Tvn_begindrag: INTEGER is -456
+	Tvn_begindrag: INTEGER = -456
 			-- Declared in Windows as TVN_BEGINDRAG
 
-	Tvn_beginlabeledit: INTEGER is -459
+	Tvn_beginlabeledit: INTEGER = -459
 			-- Declared in Windows as TVN_BEGINLABELEDIT
 
-	Tvn_beginrdrag: INTEGER is -457
+	Tvn_beginrdrag: INTEGER = -457
 			-- Declared in Windows as TVN_BEGINRDRAG
 
-	Tvn_deleteitem: INTEGER is -458
+	Tvn_deleteitem: INTEGER = -458
 			-- Declared in Windows as TVN_DELETEITEM
 
-	Tvn_endlabeledit: INTEGER is -460
+	Tvn_endlabeledit: INTEGER = -460
 			-- Declared in Windows as TVN_ENDLABELEDIT
 
-	Tvn_getdispinfo: INTEGER is -452
+	Tvn_getdispinfo: INTEGER = -452
 			-- Declared in Windows as TVN_GETDISPINFO
 
-	Tvn_itemexpanded: INTEGER is -455
+	Tvn_itemexpanded: INTEGER = -455
 			-- Declared in Windows as TVN_ITEMEXPANDED
 
-	Tvn_itemexpanding: INTEGER is -454
+	Tvn_itemexpanding: INTEGER = -454
 			-- Declared in Windows as TVN_ITEMEXPANDING
 
-	Tvn_keydown: INTEGER is -412
+	Tvn_keydown: INTEGER = -412
 			-- Declared in Windows as TVN_KEYDOWN
 
-	Tvn_selchanged: INTEGER is -451
+	Tvn_selchanged: INTEGER = -451
 			-- Declared in Windows as TVN_SELCHANGED
 
-	Tvn_selchanging: INTEGER is -450
+	Tvn_selchanging: INTEGER = -450
 			-- Declared in Windows as TVN_SELCHANGING
 
-	Tvn_setdispinfo: INTEGER is -453
+	Tvn_setdispinfo: INTEGER = -453
 			-- Declared in Windows as TVN_SETDISPINFO
 
-	Tvn_getinfotip: INTEGER is -414;
+	Tvn_getinfotip: INTEGER = -414;
 			-- Declared in Windows as TVN_GETINFOTIP
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a cluster figure that can be resized by moving one of its edges."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 		
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a EG_CLUSTER_FIGURE
 		local
 			rectangle: EV_MODEL_RECTANGLE
@@ -76,22 +76,22 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	left: INTEGER is
+	left: INTEGER
 			-- 
 		deferred
 		end
 
-	top: INTEGER is
+	top: INTEGER
 			-- 
 		deferred
 		end
 		
-	right: INTEGER is
+	right: INTEGER
 			-- 
 		deferred
 		end
 		
-	bottom: INTEGER is
+	bottom: INTEGER
 			--
 		deferred
 		end
@@ -99,13 +99,13 @@ feature -- Access
 	user_size: EV_RECTANGLE
 			-- User resized `Current' to `user_size' if not void.
 			
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the xml node returned by `xml_element'.
 		do
 			Result := once "EG_RESIZABLE_CLUSTER_FIGURE"
 		end
 		
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml element representing `Current's state.
 		local
 			l_colon: STRING
@@ -126,11 +126,11 @@ feature -- Access
 			end
 		end
 
-	is_user_sized_string: STRING is "IS_USER_SIZED"
-	user_size_string: STRING is "USER_SIZE"
+	is_user_sized_string: STRING = "IS_USER_SIZED"
+	user_size_string: STRING = "USER_SIZE"
 		-- String constants for XML handling.
 		
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
 			size_str: STRING
@@ -144,7 +144,7 @@ feature -- Access
 		
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			Precursor {EG_CLUSTER_FIGURE}
@@ -154,7 +154,7 @@ feature -- Element change
 			resizer_bottom_left.move_actions.prune_all (agent on_move_bottom_left)
 		end
 		
-	reset_user_size is
+	reset_user_size
 			-- Set `user_size' to Void
 		do
 			user_size := Void
@@ -164,7 +164,7 @@ feature -- Element change
 		
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			
-	update is
+	update
 			-- Some properties of `Current' may have changed.
 		do
 			resizer_top_left.set_point_position (left, top)
@@ -176,12 +176,12 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 feature {NONE} -- Implementation
 
-	set_top_left_position (ax, ay: INTEGER) is
+	set_top_left_position (ax, ay: INTEGER)
 			-- Set position of top left corner to (`ax', `ay').
 		deferred
 		end
 		
-	set_bottom_right_position (ax, ay: INTEGER) is
+	set_bottom_right_position (ax, ay: INTEGER)
 			-- Set position of bottom right corner to (`ax', `ay').
 		deferred
 		end
@@ -199,13 +199,13 @@ feature {NONE} -- Implementation
 	resizer_bottom_left: EV_MODEL_MOVE_HANDLE
 			-- resizer for bottom left corner.
 			
-	resizers_width: INTEGER is 20
+	resizers_width: INTEGER = 20
 			-- width of the resizers in pixel.
 			
-	resizers_height: INTEGER is 20
+	resizers_height: INTEGER = 20
 			-- height of the resizers in pixel.
 			
-	on_move_top_left (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_move_top_left (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- `resizer_top_left' was moved for (`ax', `ay').
 		local
 			new_x, new_y: INTEGER
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-	on_move_top_right (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_move_top_right (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- `resizer_top_right' was moved to (`ax', `ay').
 		local
 			new_x, new_y: INTEGER
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 		
-	on_move_bottom_right (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_move_bottom_right (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- `resizer_bottom_right' was moved to (`ax', `ay').
 		local
 			new_x, new_y: INTEGER
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 		
-	on_move_bottom_left (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_move_bottom_left (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- `resizer_bottom_left' was moved to (`ax', `ay').
 		local
 			new_x, new_y: INTEGER
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			request_update
 		end
 		
-	update_user_size is
+	update_user_size
 			-- Set `user_size' to current size.
 		do
 			if user_size = Void then
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	rectangle_from_string (a_size: STRING): EV_RECTANGLE is
+	rectangle_from_string (a_size: STRING): EV_RECTANGLE
 			-- 
 		require
 			a_size_not_void: a_size /= Void
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 invariant
 	risizers_not_void: resizer_top_left /= Void and resizer_top_right /= Void and resizer_bottom_right /= Void and resizer_bottom_left /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

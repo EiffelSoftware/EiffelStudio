@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XpmAttribute structure"
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Allocate the associated C structure.
 		do
 			handle := c_malloc (xpm_attributes_size);
@@ -35,13 +35,13 @@ feature {NONE} -- Initialization
 feature -- Access
 
 
-	colormap: MEL_COLORMAP is
+	colormap: MEL_COLORMAP
 			-- Colormap used for allocation of color pixels
 		do
 			create Result.make_from_existing (xpm_attributes_colormap (handle))
 		end;
 
-	number_of_colors: INTEGER is
+	number_of_colors: INTEGER
 			-- Number of colors
 		require
 			is_valid: is_valid
@@ -49,31 +49,31 @@ feature -- Access
 			Result := xpm_attributes_ncolors (handle)
 		end;
 
-	alloc_close_colors: BOOLEAN is
+	alloc_close_colors: BOOLEAN
 			-- Search for closest color to alloc
 		do
 			Result := xpm_attributes_alloc_close_colors (handle)
 		end;
 
-	red_closeness: INTEGER is
+	red_closeness: INTEGER
 			-- authorized red difference from wanted color while allocation
 		do
 			Result := xpm_attributes_red_closeness (handle)
 		end;
 
-	green_closeness: INTEGER is
+	green_closeness: INTEGER
 			-- authorized green difference from wanted color while allocation
 		do
 			Result := xpm_attributes_green_closeness (handle)
 		end;
 
-	blue_closeness: INTEGER is
+	blue_closeness: INTEGER
 			-- authorized blue difference from wanted color while allocation
 		do
 			Result := xpm_attributes_blue_closeness (handle)
 		end;
 
-	x_hotspot: INTEGER is
+	x_hotspot: INTEGER
 			-- X hotspot coordinate of created pixmap
 		require
 			is_valid: is_valid
@@ -81,7 +81,7 @@ feature -- Access
 			Result := xpm_attributes_x_hotspot (handle)
 		end;
 
-	y_hotspot: INTEGER is
+	y_hotspot: INTEGER
 			-- Y hotspot coordinate of created pixmap
 		require
 			is_valid: is_valid
@@ -89,7 +89,7 @@ feature -- Access
 			Result := xpm_attributes_y_hotspot (handle)
 		end;
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of created pixmap
 		require
 			is_valid: is_valid
@@ -97,7 +97,7 @@ feature -- Access
 			Result := xpm_attributes_height (handle)
 		end;
 
-	width: INTEGER is
+	width: INTEGER
 			-- Height of created pixmap
 		require
 			is_valid: is_valid
@@ -107,7 +107,7 @@ feature -- Access
 
 feature -- Status report
 
-	valuemask: INTEGER is
+	valuemask: INTEGER
 			-- Valuemask to specify which attributes are defined
 		require
 			is_valid: is_valid
@@ -117,7 +117,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_valuemask (masks: INTEGER) is
+	set_valuemask (masks: INTEGER)
 			-- Set `valuemask' to `masks'.
 		require
 			is_valid: is_valid
@@ -127,7 +127,7 @@ feature -- Status setting
 			set: valuemask = masks
 		end;
 
-	set_red_closeness (closeness : INTEGER) is
+	set_red_closeness (closeness : INTEGER)
 		-- Set red_closeness to closeness
 		-- Don't forget to put XpmRGBCloseness flag in valuemask
 		require
@@ -138,7 +138,7 @@ feature -- Status setting
 			set: red_closeness = closeness
 		end;
 
-	set_green_closeness (closeness : INTEGER) is
+	set_green_closeness (closeness : INTEGER)
 		-- Set green_closeness to closeness
 		-- Don't forget to put XpmRGBCloseness flag in valuemask
 		require
@@ -149,7 +149,7 @@ feature -- Status setting
 			set: green_closeness = closeness
 		end;
 
-	set_blue_closeness (closeness : INTEGER) is
+	set_blue_closeness (closeness : INTEGER)
 		-- Set blue_closeness to closeness
 		-- Don't forget to put XpmRGBCloseness flag in valuemask
 		require
@@ -162,7 +162,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	destroy is
+	destroy
 			-- Destroy the color allocated for the structure
 			-- and the XpmStructure itself.
 		do
@@ -179,7 +179,7 @@ feature {MEL_XPM_FORMAT} -- Implementation
 			-- Destroy the attribute content?
 			--| Can only be destroyed if it is initialized
 
-	set_destroy_attributes is
+	set_destroy_attributes
 			-- Set `destroy_attributes' to True.
 		do
 			destroy_attributes := True
@@ -187,7 +187,7 @@ feature {MEL_XPM_FORMAT} -- Implementation
 			destroy_attributes: destroy_attributes
 		end;
 
-	unset_destroy_attributes is
+	unset_destroy_attributes
 			-- Set `destroy_attributes' to False.
 		do
 			destroy_attributes := False
@@ -197,7 +197,7 @@ feature {MEL_XPM_FORMAT} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_malloc (a_size: INTEGER): POINTER is
+	c_malloc (a_size: INTEGER): POINTER
 			-- C malloc
 		external
 			"C (unsigned int): EIF_POINTER | %"eif_eiffel.h%""
@@ -205,7 +205,7 @@ feature {NONE} -- Externals
 			"cmalloc"
 		end;
 	
-	x_free (ptr: POINTER) is
+	x_free (ptr: POINTER)
 			-- C free
 		external
 			"C (char *) | %"eif_eiffel.h%""
@@ -213,7 +213,7 @@ feature {NONE} -- Externals
 			"xfree"
 		end;
 
-	c_enomem is
+	c_enomem
 			-- Eiffel run-time function to raise an
 			-- "Out of memory" exception.
 		external
@@ -222,56 +222,56 @@ feature {NONE} -- Externals
 			"enomem"
 		end;
 
-	xpm_free_attributes (ptr: POINTER) is
+	xpm_free_attributes (ptr: POINTER)
 		external
 			"C (XpmAttributes *) | %"xpm.h%""
 		alias
 			"XpmFreeAttributes"
 		end;
 
-	set_xpm_attributes_valuemask (ptr: POINTER; a_mask: INTEGER) is
+	set_xpm_attributes_valuemask (ptr: POINTER; a_mask: INTEGER)
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *, unsigned long)"
 		end;
 
-	set_xpm_attributes_alloc_close_colors (ptr: POINTER; c_mode: BOOLEAN) is
+	set_xpm_attributes_alloc_close_colors (ptr: POINTER; c_mode: BOOLEAN)
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *, EIF_BOOLEAN)"
 		end;
 
-	set_xpm_attributes_colors_closeness (ptr: POINTER; degree: INTEGER) is
+	set_xpm_attributes_colors_closeness (ptr: POINTER; degree: INTEGER)
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *, unsigned long)"
 		end;
 	
-	set_xpm_attributes_red_closeness (ptr: POINTER; degree: INTEGER) is
+	set_xpm_attributes_red_closeness (ptr: POINTER; degree: INTEGER)
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *, unsigned long)"
 		end;
 		
-	set_xpm_attributes_green_closeness (ptr: POINTER; degree: INTEGER) is
+	set_xpm_attributes_green_closeness (ptr: POINTER; degree: INTEGER)
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *, unsigned long)"
 		end;
 		
-	set_xpm_attributes_blue_closeness (ptr: POINTER; degree: INTEGER) is
+	set_xpm_attributes_blue_closeness (ptr: POINTER; degree: INTEGER)
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *, unsigned long)"
 		end;
 	
-	set_xpm_attributes_exactcolors (ptr: POINTER; c_mode: BOOLEAN) is
+	set_xpm_attributes_exactcolors (ptr: POINTER; c_mode: BOOLEAN)
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *, EIF_BOOLEAN)"
 		end;
 
-	xpm_attributes_size: INTEGER is
+	xpm_attributes_size: INTEGER
 		external
 			"C (): int | %"xpm.h%""
 		alias
 			"XpmAttributesSize"
 		end;
 
-	xpm_attributes_colormap (h: POINTER): POINTER is
+	xpm_attributes_colormap (h: POINTER): POINTER
 			-- Colormap used
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_POINTER"
@@ -279,61 +279,61 @@ feature {NONE} -- Externals
 			"xpm_attributes_colormap"
 		end;
 
-	xpm_attributes_ncolors (h: POINTER): INTEGER is
+	xpm_attributes_ncolors (h: POINTER): INTEGER
 			-- Number of colors
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		end;
 
-	xpm_attributes_red_closeness (h: POINTER): INTEGER is
+	xpm_attributes_red_closeness (h: POINTER): INTEGER
 			-- RGB closeness authorized while allocating colors
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		end;
 
-	xpm_attributes_blue_closeness (h: POINTER): INTEGER is
+	xpm_attributes_blue_closeness (h: POINTER): INTEGER
 			-- RGB closeness authorized while allocating colors
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		end;
 
-	xpm_attributes_green_closeness (h: POINTER): INTEGER is
+	xpm_attributes_green_closeness (h: POINTER): INTEGER
 			-- RGB closeness authorized while allocating colors
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		end;
 
-	xpm_attributes_alloc_close_colors (h: POINTER): BOOLEAN is
+	xpm_attributes_alloc_close_colors (h: POINTER): BOOLEAN
 			-- Search for closest color while colormapping if no cell is available
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_BOOLEAN"
 		end;
 
-	xpm_attributes_x_hotspot (h: POINTER): INTEGER is
+	xpm_attributes_x_hotspot (h: POINTER): INTEGER
 			-- X hotspot coordinate of created pixmap
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		end;
 
-	xpm_attributes_y_hotspot (h: POINTER): INTEGER is
+	xpm_attributes_y_hotspot (h: POINTER): INTEGER
 			-- Y hotspot coordinate of created pixmap
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		end;
 
-	xpm_attributes_height (h: POINTER): INTEGER is
+	xpm_attributes_height (h: POINTER): INTEGER
 			-- Height of created pixmap
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		end;
 
-	xpm_attributes_width (h: POINTER): INTEGER is
+	xpm_attributes_width (h: POINTER): INTEGER
 			-- Height of created pixmap
 		external
 			"C [macro %"pixel.h%"] (XpmAttributes *): EIF_INTEGER"
 		end;
 
-	xpm_attributes_value_mask (h: POINTER): INTEGER is
+	xpm_attributes_value_mask (h: POINTER): INTEGER
 			-- Valuemask value of attribute structure
 		require
 			is_valid: is_valid
@@ -343,7 +343,7 @@ feature {NONE} -- Externals
 			"xpm_attributes_value_mask"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

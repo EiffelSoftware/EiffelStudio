@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Carbon implementation for SD_DEPENDENCY_CHECKER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,12 +13,12 @@ inherit
 
 feature -- Command
 
-	check_dependency (a_parent_window: EV_WINDOW) is
+	check_dependency (a_parent_window: EV_WINDOW)
 			-- Redefine
 		do
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

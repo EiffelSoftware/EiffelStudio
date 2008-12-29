@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stretch mode constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,21 +10,21 @@ class
 
 feature -- Access
 
-	frozen Stretch_andscans: INTEGER is
+	frozen Stretch_andscans: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"STRETCH_ANDSCANS"
 		end
 
-	frozen Stretch_deletescans: INTEGER is
+	frozen Stretch_deletescans: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"STRETCH_DELETESCANS"
 		end
 
-	frozen Stretch_orscans: INTEGER is
+	frozen Stretch_orscans: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_stretch_mode_constant (c: INTEGER): BOOLEAN is
+	valid_stretch_mode_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid stretch mode constant?
 		do
 			Result := c = Stretch_andscans or else
@@ -41,7 +41,7 @@ feature -- Status report
 				c = Stretch_orscans
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

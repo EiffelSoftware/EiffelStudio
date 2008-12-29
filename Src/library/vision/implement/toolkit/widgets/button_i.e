@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General button implementation"
 	legal: "See notice at end of class.";
@@ -18,34 +18,34 @@ inherit
 	
 feature -- Status setting
 
-	allow_recompute_size is
+	allow_recompute_size
 			-- Allow current button to recompute its  size according to
 			-- some changes on its text.
 		deferred
 		end;
 
-	forbid_recompute_size is
+	forbid_recompute_size
 			-- Forbid current button to recompute its size according to
 			-- some changes on its text.
 		deferred
 		end;
 
-	set_center_alignment is
+	set_center_alignment
 			-- Set text alignment of current label to center
 		deferred
 		end;
  
-	set_left_alignment is
+	set_left_alignment
 			-- Set text alignment of current label to left.
 		deferred
 		end;
 
-	text: STRING is
+	text: STRING
 			-- Text of current button
 		deferred
 		end;
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set current button text to `a_text'.
 		require
 			not_text_void: a_text /= Void
@@ -56,7 +56,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when current
 			-- push button is activated.
 		require
@@ -64,7 +64,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_arm_action (a_command: COMMAND; argument: ANY) is
+	add_arm_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when current
 			-- push button is armed.
 		require
@@ -72,7 +72,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_release_action (a_command: COMMAND; argument: ANY) is
+	add_release_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when current
 			-- push button is released.
 		require
@@ -82,7 +82,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is activated.
 		require
@@ -90,7 +90,7 @@ feature -- Removal
 		deferred
 		end;
 
-	remove_arm_action (a_command: COMMAND; argument: ANY) is
+	remove_arm_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is armed.
 		require
@@ -98,7 +98,7 @@ feature -- Removal
 		deferred
 		end;
 
-	remove_release_action (a_command: COMMAND; argument: ANY) is
+	remove_release_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current push button is released.
 		require
@@ -106,7 +106,7 @@ feature -- Removal
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

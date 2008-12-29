@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An editable combo-box that handles bitmaps."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,13 +26,13 @@ create
 
 feature -- Status report
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Text length
 		do
 			Result := cwin_get_window_text_length (edit_item)
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Window text
 		local
 			length: INTEGER
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Status settings
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Set the window text
 		local
 			a_wel_string: WEL_STRING
@@ -65,7 +65,7 @@ feature -- Status settings
 			{WEL_API}.set_window_text (edit_item, a_wel_string.item)
 		end
 
-	set_limit_text (limit: INTEGER) is
+	set_limit_text (limit: INTEGER)
 			-- Set the length of the text the user may type.
 		require
 			exists: exists
@@ -76,7 +76,7 @@ feature -- Status settings
 
 feature {NONE} -- Implementation
 
-	edit_item: POINTER is
+	edit_item: POINTER
 			-- Return the child edit control that composes the
 			-- current control. Corresponds to a WEL_EDIT.
 		require
@@ -85,14 +85,14 @@ feature {NONE} -- Implementation
 			Result := {WEL_API}.send_message_result (item, Cbem_geteditcontrol, to_wparam (0), to_lparam (0))
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_border
 				+ Cbs_autohscroll + Cbs_dropdown
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

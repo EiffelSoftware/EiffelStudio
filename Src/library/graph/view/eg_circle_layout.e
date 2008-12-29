@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EG_CIRCLE_LAYOUT arranges the nodes in a circle around a center with a radius."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a EG_CIRCLE_LAYOUT.
 		do
 			Precursor {EG_LAYOUT}
@@ -48,7 +48,7 @@ feature -- Access
 				
 feature -- Element change
 
-	set_center (ax, ay: like center_x) is
+	set_center (ax, ay: like center_x)
 			-- Set `center_x' to `ax' and `center_y' to `ay'.
 		do
 			center_x := ax
@@ -57,7 +57,7 @@ feature -- Element change
 			set: center_x = ax and center_y = ay
 		end
 		
-	set_radius (a_radius: like radius) is
+	set_radius (a_radius: like radius)
 			-- Set `radius' to `a_radius'.
 		require
 			a_radius_larger_zero: a_radius > 0
@@ -67,7 +67,7 @@ feature -- Element change
 			set: radius = a_radius
 		end
 		
-	set_exponent (an_exponent: like exponent) is
+	set_exponent (an_exponent: like exponent)
 			-- Set `exponent' to `an_exponent'.
 		require
 			an_exponent_larger_equal_one: an_exponent >= 1.0
@@ -79,7 +79,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE) is
+	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE)
 			-- arrange `linkables'.
 		local
 			l_count: INTEGER
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

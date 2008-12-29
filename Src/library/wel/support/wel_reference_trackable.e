@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Facility to track references of an object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ feature -- Status Report
 	reference_tracked: BOOLEAN
 			-- Are number references of `Current' tracked?
 
-	shared: BOOLEAN is
+	shared: BOOLEAN
 			-- Is `item' shared by another object?
 			-- If False (by default), `item' will
 			-- be destroyed by `destroy_item'.
@@ -24,7 +24,7 @@ feature -- Status Report
 		deferred
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Is `Current' valid?
 		deferred
 		end
@@ -34,7 +34,7 @@ feature -- Status Report
 
 feature -- Status Setting
 
-	object_id: INTEGER is
+	object_id: INTEGER
 			-- Runtime Id of `Current'.
 		do
 			if internal_object_id = 0 then
@@ -43,7 +43,7 @@ feature -- Status Setting
 			Result := internal_object_id
 		end
 
-	enable_reference_tracking is
+	enable_reference_tracking
 			-- Set `references_tracked' to True.
 		require
 			exists: exists
@@ -65,7 +65,7 @@ feature -- Status Setting
 			internal_number_id_cell.put (internal_number_id + 1)
 		end
 
-	decrement_reference is
+	decrement_reference
 			-- Decrement number of references to current object.
 			-- When number of references reaches zero,
 			-- `delete' is called if object is not protected.
@@ -104,7 +104,7 @@ feature -- Status Setting
 			end
 		end
 
-	increment_reference is
+	increment_reference
 			-- Increment number of references to current object.
 		require
 			exists: exists
@@ -117,7 +117,7 @@ feature -- Status Setting
 
 feature {NONE} -- Removal
 
-	dispose is
+	dispose
 			-- Destroy inner structure of `Current'.
 			--| Called by GC when object is collected,
 			--| developer should use `delete'.
@@ -148,7 +148,7 @@ feature {NONE} -- Removal
 
 feature -- Removal
 
-	delete is
+	delete
 			-- Destroy inner structure of `Current'.
 			-- To be called when Current is no more needed
 		require
@@ -163,7 +163,7 @@ feature -- Removal
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- Ensure current object is destroyed.
 		require
 			exists: exists
@@ -183,19 +183,19 @@ feature {NONE} -- Implementation
 			--| during whole run). Helps debugging object disposed
 			--| by a reference_number > 0
 
-	internal_number_id_cell: CELL [INTEGER] is
+	internal_number_id_cell: CELL [INTEGER]
 			-- Cell to give a unique integer to each new object.
 		once
 			create Result.put (0)
 		end
 
-	internal_id_list: ARRAYED_LIST [INTEGER] is
+	internal_id_list: ARRAYED_LIST [INTEGER]
 			-- Cell to give a unique integer to each new object.
 		once
 			create Result.make (10)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

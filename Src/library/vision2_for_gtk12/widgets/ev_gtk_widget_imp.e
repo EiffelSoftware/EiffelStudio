@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN)
 			-- Used for key event actions sequences, redefined by descendants
 		do
 
@@ -22,7 +22,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {NONE} -- Implementation
 
-	Gdk_events_mask: INTEGER is
+	Gdk_events_mask: INTEGER
 			-- Mask of all the gdk events the gdkwindow shall receive.
 		once
 			Result :=
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 --				| {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
 		end
 
-	initialize is
+	initialize
 			-- Initialize `c_object'.
 		local
 			l_c_object: POINTER
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		local
 			gr: POINTER
@@ -68,7 +68,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum width that the widget may occupy.
 		local
 			gr: POINTER
@@ -80,7 +80,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	event_widget: POINTER is
+	event_widget: POINTER
 			-- Pointer to the widget handling the widget events
 		local
 			a_visual_widget: POINTER
@@ -93,7 +93,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	eif_object_from_gtk_object (a_gtk_object: POINTER): EV_ANY_IMP is
+	eif_object_from_gtk_object (a_gtk_object: POINTER): EV_ANY_IMP
 			-- Return the EV_ANY_IMP object from `a_gtk_object' if any.
 		require
 			a_gtk_object_not_null: a_gtk_object /= default_pointer
@@ -110,7 +110,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	gtk_widget_imp_at_pointer_position: EV_GTK_WIDGET_IMP is
+	gtk_widget_imp_at_pointer_position: EV_GTK_WIDGET_IMP
 			-- Gtk Widget implementation at current mouse pointer position (if any)
 		local
 			a_x, a_y: INTEGER
@@ -128,7 +128,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	widget_imp_at_pointer_position: EV_WIDGET_IMP is
+	widget_imp_at_pointer_position: EV_WIDGET_IMP
 			-- Widget implementation at current mouse pointer position (if any)
 		do
 			Result ?= gtk_widget_imp_at_pointer_position
@@ -142,13 +142,13 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	internal_set_focus is
+	internal_set_focus
 			-- Grab keyboard focus.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_grab_focus (visual_widget)
 		end
 
-	set_pointer_style (a_pointer: EV_POINTER_STYLE) is
+	set_pointer_style (a_pointer: EV_POINTER_STYLE)
 			-- Assign `a_pointer' to `pointer_style'.
 		do
 			if a_pointer /= pointer_style then
@@ -157,7 +157,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE) is
+	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE)
 			-- Assign `a_cursor' to `pointer_style', used for PND
 		local
 			a_cursor_ptr: POINTER
@@ -184,7 +184,7 @@ feature {EV_ANY_I} -- Implementation
 	pointer_style: EV_POINTER_STYLE
 			-- Cursor displayed when the pointer is over this widget.
 
-	frozen has_struct_flag (a_gtk_object: POINTER; a_flag: INTEGER): BOOLEAN is
+	frozen has_struct_flag (a_gtk_object: POINTER; a_flag: INTEGER): BOOLEAN
 			-- Has this widget the flag `a_flag' set in struct_flags?
 		external
 			"C inline use <gtk/gtk.h>"
@@ -192,7 +192,7 @@ feature {EV_ANY_I} -- Implementation
 			"((GtkObject*) $a_gtk_object)->flags & $a_flag"
 		end
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does widget have the keyboard focus?
 		local
 			l_window, l_widget: POINTER
@@ -209,7 +209,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size measured in pixels.
 		local
 			a_min_width: INTEGER
@@ -219,7 +219,7 @@ feature {EV_ANY_I} -- Implementation
 			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (a_min_width)
 		end
 
-	update_parent_size is
+	update_parent_size
 			-- Check to see if `Current' needs resizing in parent.
 		local
 			a_toplevel: POINTER
@@ -231,7 +231,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size measured in pixels.
 		local
 			a_min_height: INTEGER
@@ -241,13 +241,13 @@ feature {EV_ANY_I} -- Implementation
 			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (a_min_height)
 		end
 
-	update_request_size is
+	update_request_size
 			-- Force the requisition struct to be updated.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_size_request (c_object, default_pointer)
 		end
 
-	aux_info_struct: POINTER is
+	aux_info_struct: POINTER
 			-- Pointer to the auxillary information struct used for retrieving when widget is unmapped
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_object_get_data (
@@ -256,7 +256,7 @@ feature {EV_ANY_I} -- Implementation
 			)
 		end
 
-	show is
+	show
 			-- Request that `Current' be displayed when its parent is.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
@@ -264,7 +264,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Status report
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal position of the client area on screen,
 		local
 			a_x: INTEGER
@@ -285,7 +285,7 @@ feature -- Status report
 			end
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical position of the client area on screen,
 		local
 			a_y: INTEGER
@@ -306,14 +306,14 @@ feature -- Status report
 			end
 		end
 
-	is_show_requested: BOOLEAN is
+	is_show_requested: BOOLEAN
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
 		do
 			Result := has_struct_flag (c_object, {EV_GTK_EXTERNALS}.GTK_VISIBLE_ENUM)
 		end
 
-	is_displayed: BOOLEAN is
+	is_displayed: BOOLEAN
 			-- Is `Current' visible on the screen?
 		do
 			Result := has_struct_flag (c_object, {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM)
@@ -321,7 +321,7 @@ feature -- Status report
 
 feature {EV_ANY_I} -- Implementation
 
-	top_level_window_imp: EV_WINDOW_IMP is
+	top_level_window_imp: EV_WINDOW_IMP
 			-- Window implementation that `Current' is contained within (if any)
 		local
 			wind_ptr: POINTER
@@ -332,7 +332,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	top_level_window: EV_WINDOW is
+	top_level_window: EV_WINDOW
 			-- Window the current is contained within (if any)
 		local
 			a_window_imp: EV_WINDOW_IMP
@@ -345,13 +345,13 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	aux_info_string: EV_GTK_C_STRING is
+	aux_info_string: EV_GTK_C_STRING
 			-- String optimization for  "gtk-aux-info"
 		once
 			Result := "gtk-aux-info"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

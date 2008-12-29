@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Container in the middler layer between top level docking conainter (given by client progrmammers) and leaf nodes containers(SD_ZONEs)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature -- Docking query
 
-	is_minimized: BOOLEAN is
+	is_minimized: BOOLEAN
 			-- If Current alreay a container used for minimized zones?
 		local
 			l_spliter: EV_SPLIT_AREA
@@ -43,47 +43,47 @@ feature -- Docking query
 
 feature -- Access
 
-	first: EV_WIDGET is
+	first: EV_WIDGET
 			-- First child.
 		deferred
 		end
 
-	second: EV_WIDGET is
+	second: EV_WIDGET
 			-- Second child.
 		deferred
 		end
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- If full?
 		deferred
 		end
 
-	maximum_split_position: INTEGER is
+	maximum_split_position: INTEGER
 			-- Maximum split position.
 		deferred
 		end
 
-	minimum_split_position: INTEGER is
+	minimum_split_position: INTEGER
 			-- Minimum split position.
 		deferred
 		end
 
-	split_position: INTEGER is
+	split_position: INTEGER
 			-- Spliter position.
 		deferred
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- If no child?
 		deferred
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- How many child current have?
 		deferred
 		end
 
-	is_horizontal: BOOLEAN is
+	is_horizontal: BOOLEAN
 			-- If current is horizontal split area?
 		local
 			l_h_split: SD_HORIZONTAL_SPLIT_AREA
@@ -98,37 +98,37 @@ feature -- Access
 
 feature -- Setting
 
-	disable_item_expand (a_item: EV_WIDGET) is
+	disable_item_expand (a_item: EV_WIDGET)
 			-- Diable `a_item' size auto expand.
 		deferred
 		end
 
-	enable_item_expand (a_item: EV_WIDGET) is
+	enable_item_expand (a_item: EV_WIDGET)
 			-- Enable `a_item' size auto expand.
 		deferred
 		end
 
-	set_split_position (a_pos: INTEGER) is
+	set_split_position (a_pos: INTEGER)
 			-- Set `split_position` with `a_pos'
 		deferred
 		end
 
-	extend (a_widget: EV_WIDGET) is
+	extend (a_widget: EV_WIDGET)
 			-- Extend `a_widget'
 		deferred
 		end
 
-	prune (a_widget: EV_WIDGET) is
+	prune (a_widget: EV_WIDGET)
 			-- Prune `a_widget'.
 		deferred
 		end
 
-	wipe_out is
+	wipe_out
 			-- Wipe out all childs.
 		deferred
 		end
 
-	set_splitter_visible (a_visible: BOOLEAN) is
+	set_splitter_visible (a_visible: BOOLEAN)
 			-- Set splitter bar visible base on chidren visibilities.
 		do
 		end
@@ -205,7 +205,7 @@ feature -- Split area resizing
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

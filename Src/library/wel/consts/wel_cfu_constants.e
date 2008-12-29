@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Char format mask underlinr (CFU) constants for the rich edit %
 		%control."
 	legal: "See notice at end of class."
@@ -11,25 +11,25 @@ class
 
 feature -- Access
 
-	Cfu_underline_none: INTEGER is 0
+	Cfu_underline_none: INTEGER = 0
 			-- Corresponds to CFU_UNDERLINENONE.
 			
-	Cfu_underline: INTEGER is 1
+	Cfu_underline: INTEGER = 1
 			-- Corresponds to CFU_UNDERLINE.
 	
-	Cfu_underline_word: INTEGER is 2
+	Cfu_underline_word: INTEGER = 2
 			-- Corresponds to CFU_UNDERLINEWORD.
 			
-	Cfu_underline_double: INTEGER is 3
+	Cfu_underline_double: INTEGER = 3
 			-- Corresponds to CFU_UNDERLINEDOUBLE.
 			
-	Cfu_underline_dotted: INTEGER is 4
+	Cfu_underline_dotted: INTEGER = 4
 			-- Corresponds to CFU_UNDERLINEDOTTED.
 
-	Cfu_cf1_underline: INTEGER is 255;
+	Cfu_cf1_underline: INTEGER = 255;
 			-- Corresponds to CFU_CF1UNDERLINE.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

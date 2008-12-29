@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Assistants that manage a SD_FLOATING_TOOL_BAR_ZONE position item issues."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_floating_zone: SD_FLOATING_TOOL_BAR_ZONE) is
+	make (a_floating_zone: SD_FLOATING_TOOL_BAR_ZONE)
 			-- Creation method
 		require
 			not_void: a_floating_zone /= Void
@@ -25,7 +25,7 @@ feature {NONE}  -- Initlization
 
 feature -- Commands
 
-	position_groups (a_groups_info: SD_TOOL_BAR_GROUP_INFO) is
+	position_groups (a_groups_info: SD_TOOL_BAR_GROUP_INFO)
 			-- Position tool_bar items by a_group_info.
 		require
 			not_void: a_groups_info /= Void
@@ -39,7 +39,7 @@ feature -- Commands
 			end
 		end
 
-	to_minmum_size is
+	to_minmum_size
 			-- To minmum size.
 		do
 			zone.set_size (zone.minimum_width, zone.minimum_height)
@@ -52,7 +52,7 @@ feature -- Commands
 
 feature {NONE} -- Implementation functions
 
-	position_groups_imp (a_groups_info: SD_TOOL_BAR_GROUP_INFO) is
+	position_groups_imp (a_groups_info: SD_TOOL_BAR_GROUP_INFO)
 			-- Position tool_bar items by a_group_info.
 		require
 			not_void: a_groups_info /= Void
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	position_top_level_items (a_group_indexs: DS_HASH_TABLE [INTEGER, INTEGER]) is
+	position_top_level_items (a_group_indexs: DS_HASH_TABLE [INTEGER, INTEGER])
 			-- Position tool bar items' groups.
 		require
 			not_void: a_group_indexs /= Void
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	position_sub_level_items (a_sub_info: SD_TOOL_BAR_GROUP_INFO; a_group_index: INTEGER) is
+	position_sub_level_items (a_sub_info: SD_TOOL_BAR_GROUP_INFO; a_group_index: INTEGER)
 			-- Position group items.
 		require
 			not_void: a_sub_info /= Void
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	reset_all_items_wrap is
+	reset_all_items_wrap
 			-- Reset items to wrap state.
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation attributes
 invariant
 	not_void: zone /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

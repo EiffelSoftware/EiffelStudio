@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Set of features to access ISE runtime functionality.
 		To be used at your own risk.
@@ -13,7 +13,7 @@ class
 
 feature -- Feature specific to ISE runtime.
 
-	frozen c_standard_clone (other: POINTER): ANY is
+	frozen c_standard_clone (other: POINTER): ANY
 			-- New object of same dynamic type as `other'
 		external
 			"C signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_copy.h%""
@@ -21,7 +21,7 @@ feature -- Feature specific to ISE runtime.
 			"eclone"
 		end
 
-	frozen c_conforms_to (obj1, obj2: POINTER): BOOLEAN is
+	frozen c_conforms_to (obj1, obj2: POINTER): BOOLEAN
 			-- Does dynamic type of object attached to `obj1' conform to
 			-- dynamic type of object attached to `obj2'?
 		external
@@ -30,7 +30,7 @@ feature -- Feature specific to ISE runtime.
 			"econfg"
 		end
 
-	frozen c_same_type (obj1, obj2: POINTER): BOOLEAN is
+	frozen c_same_type (obj1, obj2: POINTER): BOOLEAN
 			-- Are dynamic type of object attached to `obj1' and
 			-- dynamic type of object attached to `obj2' the same?
 		external
@@ -39,7 +39,7 @@ feature -- Feature specific to ISE runtime.
 			"estypeg"
 		end
 
-	frozen c_standard_is_equal (target, source: POINTER): BOOLEAN is
+	frozen c_standard_is_equal (target, source: POINTER): BOOLEAN
 			-- C external performing standard equality
 		external
 			"C signature (EIF_REFERENCE, EIF_REFERENCE): EIF_BOOLEAN use %"eif_equal.h%""
@@ -47,7 +47,7 @@ feature -- Feature specific to ISE runtime.
 			"eequal"
 		end
 
-	frozen c_standard_copy (source, target: POINTER) is
+	frozen c_standard_copy (source, target: POINTER)
 			-- C external performing standard copy
 		external
 			"C signature (EIF_REFERENCE, EIF_REFERENCE) use %"eif_copy.h%""
@@ -55,7 +55,7 @@ feature -- Feature specific to ISE runtime.
 			"ecopy"
 		end
 
-	frozen c_deep_clone (other: POINTER): ANY is
+	frozen c_deep_clone (other: POINTER): ANY
 			-- New object structure recursively duplicated from the one
 			-- attached to `other'
 		external
@@ -64,7 +64,7 @@ feature -- Feature specific to ISE runtime.
 			"edclone"
 		end
 
-	frozen c_deep_equal (some: POINTER; other: like some): BOOLEAN is
+	frozen c_deep_equal (some: POINTER; other: like some): BOOLEAN
 			-- Are `some' and `other' attached to recursively isomorphic
 			-- object structures?
 		external
@@ -73,52 +73,52 @@ feature -- Feature specific to ISE runtime.
 			"ediso"
 		end
 
-	frozen c_tagged_out (some: POINTER): STRING is
+	frozen c_tagged_out (some: POINTER): STRING
 			-- Printable representation of current object
 		external
 			"C use %"eif_out.h%""
 		end
 
-	frozen c_generator_of_type (type_id: INTEGER): STRING is
+	frozen c_generator_of_type (type_id: INTEGER): STRING
 			-- Name of the generating class of current object
 		external
 			"C use %"eif_out.h%""
 		end
 
-	frozen c_generator (some: POINTER): STRING is
+	frozen c_generator (some: POINTER): STRING
 			-- Name of the generating class of current object
 		external
 			"C macro use %"eif_out.h%""
 		end
 
-	frozen check_assert (b: BOOLEAN): BOOLEAN is
+	frozen check_assert (b: BOOLEAN): BOOLEAN
 		external
 			"C use %"eif_copy.h%""
 		alias
 			"c_check_assert"
 		end
 
- 	frozen c_generating_type (obj: POINTER): STRING is
+ 	frozen c_generating_type (obj: POINTER): STRING
  		external
  			"C macro use %"eif_gen_conf.h%""
  		alias
  			"eif_gen_typename"
  		end
 
- 	frozen c_generating_type_of_type (type_id: INTEGER): STRING is
+ 	frozen c_generating_type_of_type (type_id: INTEGER): STRING
  		external
  			"C signature (int16): EIF_REFERENCE use %"eif_gen_conf.h%""
  		alias
  			"eif_gen_typename_of_type"
  		end
 
-	frozen sp_count (sp_obj: POINTER): INTEGER is
+	frozen sp_count (sp_obj: POINTER): INTEGER
 			-- Count of special object
 		external
 			"C signature (EIF_REFERENCE): EIF_INTEGER use %"eif_plug.h%""
 		end
 
-	frozen in_assertion: BOOLEAN is
+	frozen in_assertion: BOOLEAN
 			-- Are we currently checking some assertions?
 		external
 			"C inline use %"eif_eiffel.h%""
@@ -131,7 +131,7 @@ feature -- Feature specific to ISE runtime.
 
 feature -- Internal C routines
 
-	frozen type_id_from_name (s: POINTER): INTEGER is
+	frozen type_id_from_name (s: POINTER): INTEGER
 			-- Dynamic type whose name is represented by `s'.
 		external
 			"C signature (char *): EIF_INTEGER use %"eif_cecil.h%""
@@ -139,7 +139,7 @@ feature -- Internal C routines
 			"eif_type_id"
 		end
 
-	frozen dynamic_type (object: POINTER): INTEGER is
+	frozen dynamic_type (object: POINTER): INTEGER
 			-- Dynamic type of `object'.
 		external
 			"C macro signature (EIF_REFERENCE): EIF_INTEGER use %"eif_macros.h%""
@@ -147,7 +147,7 @@ feature -- Internal C routines
 			"Dftype"
 		end
 
-	frozen pre_ecma_mapping_status: BOOLEAN is
+	frozen pre_ecma_mapping_status: BOOLEAN
 			-- Do we map old name to new name by default?
 		external
 			"C inline use %"eif_cecil.h%""
@@ -155,7 +155,7 @@ feature -- Internal C routines
 			"return eif_pre_ecma_mapping();"
 		end
 
-	frozen set_pre_ecma_mapping (v: BOOLEAN) is
+	frozen set_pre_ecma_mapping (v: BOOLEAN)
 			-- Set `pre_ecma_mapping_status' with `v'.
 		external
 			"C inline use %"eif_cecil.h%""
@@ -163,7 +163,7 @@ feature -- Internal C routines
 			"eif_set_pre_ecma_mapping($v)"
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

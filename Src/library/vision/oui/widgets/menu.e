@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General notion of menu"
 	legal: "See notice at end of class.";
@@ -19,7 +19,7 @@ inherit
 	
 feature -- Access
 
-	title: STRING is
+	title: STRING
 			-- Title of menu
 		require
 			exists: not destroyed;
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Set menu title to `a_title'.
 		require
 			exists: not destroyed;
@@ -38,7 +38,7 @@ feature -- Element change
 			implementation.set_title (a_title)
 		end;
 
-	remove_title is
+	remove_title
 			-- Remove current menu title if any.
 		require
 			exists: not destroyed;
@@ -51,7 +51,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: MENU_I;;
 			-- Implementation of menu
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

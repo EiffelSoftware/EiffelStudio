@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Locally extended version of FORMAT_INTEGER"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_integer (n: INTEGER) is
+	make_from_integer (n: INTEGER)
 			-- Create formatter whose width equals to the digits of `n'.
 		do
 			make (digits (n))
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	digits (n: INTEGER): INTEGER is
+	digits (n: INTEGER): INTEGER
 			-- Number of digits in `n'
 		local
 			d: INTEGER
@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			positive_result: Result > 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

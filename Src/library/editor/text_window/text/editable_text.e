@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Editable text with cursor and selection.
 		Changes in text are stored in an UNDO_REDO_STACK and
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- create an empty text
 		do
 			Precursor {SELECTABLE_TEXT}
@@ -59,19 +59,19 @@ feature -- Access
 
 feature -- Status Report
 
-	use_smart_indentation: BOOLEAN is
+	use_smart_indentation: BOOLEAN
 			-- Is smart_indentation enabled?
 		do
 			Result := editor_preferences.smart_indentation
 		end
 
-	redo_is_possible: BOOLEAN is
+	redo_is_possible: BOOLEAN
 			-- is there anything in the redo stack ?
 		do
 			Result := (not is_empty) and then history.redo_is_possible
 		end
 
-	undo_is_possible: BOOLEAN is
+	undo_is_possible: BOOLEAN
 			-- is there anything in the undo stack ?
 		do
 			Result := (not is_empty) and then history.undo_is_possible
@@ -79,7 +79,7 @@ feature -- Status Report
 
 feature -- Status setting
 
-	set_changed (value: BOOLEAN; directly_edited: BOOLEAN) is
+	set_changed (value: BOOLEAN; directly_edited: BOOLEAN)
 			-- Assign `value' to `changed'
 		do
 			if value then
@@ -93,7 +93,7 @@ feature -- Status setting
 
 feature -- Basic Operations
 
-	undo is
+	undo
 			-- undo last command
 		do
 			ignore_cursor_moves := True
@@ -105,7 +105,7 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
-	redo is
+	redo
 			-- redo last command
 		do
 			ignore_cursor_moves := True
@@ -117,7 +117,7 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
-	delete_selection is
+	delete_selection
 			-- delete selected text.
 		local
 			begin_sel, end_sel: like cursor
@@ -143,7 +143,7 @@ feature -- Basic Operations
 			end
 		end
 
-	replace_selection (a_word: STRING_GENERAL) is
+	replace_selection (a_word: STRING_GENERAL)
 			-- replace the selected text with `a_word'
 		require
 			selection_present: has_selection
@@ -168,7 +168,7 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
-	set_selection_case (lower: BOOLEAN) is
+	set_selection_case (lower: BOOLEAN)
 			-- Change selected text to lower case if `lower',
 			-- else to upper case.
 		local
@@ -195,7 +195,7 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
-	comment_selection is
+	comment_selection
 			-- Comment all lines included in the selection with the string `--'.
 		do
 			ignore_cursor_moves := True
@@ -210,7 +210,7 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
-	uncomment_selection is
+	uncomment_selection
 			-- Uncomment all lines included in the selection with the string `--'.
 		local
 			ln: EDITOR_LINE
@@ -289,7 +289,7 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
-	indent_selection is
+	indent_selection
 			-- Tabify all lines included in the selection.
 		do
 			ignore_cursor_moves := True
@@ -304,7 +304,7 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
-	unindent_selection is
+	unindent_selection
 			-- Tabify all lines included in the selection.
 		do
 			ignore_cursor_moves := True
@@ -319,7 +319,7 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
-	remove_trailing_blanks is
+	remove_trailing_blanks
 			-- Remove trailing blanks, this will be recorded in history stack, but invisible to user.
 			-- Blanks before the cursor are not removed.
 		local
@@ -374,7 +374,7 @@ feature -- Basic Operations
 			cursor := l_cursor
 		end
 
-	remove_trailing_fake_blanks is
+	remove_trailing_fake_blanks
 			-- Remove trailing fake (inserted automatically) blanks,
 			-- this will be recorded in history stack, but invisible to user.
 		local
@@ -427,7 +427,7 @@ feature -- Basic Operations
 			cursor := l_cursor
 		end
 
-	insert_char (c: CHARACTER_32) is
+	insert_char (c: CHARACTER_32)
 			-- Insert `c' at the cursor position.
 			-- Delete selection if any.
 		require
@@ -446,7 +446,7 @@ feature -- Basic Operations
 			end
 		end
 
-	insert_string (txt: STRING_GENERAL) is
+	insert_string (txt: STRING_GENERAL)
 			-- Insert `txt' at cursor position.
 			-- Delete selection, if any.
 		require
@@ -465,7 +465,7 @@ feature -- Basic Operations
 			end
 		end
 
-	insert_eol is
+	insert_eol
 			-- Insert new line at cursor position.
 			-- Delete selection, if any.
 		require
@@ -496,7 +496,7 @@ feature -- Basic Operations
 			end
 		end
 
-	insert_string_as_selectable (txt: STRING_GENERAL) is
+	insert_string_as_selectable (txt: STRING_GENERAL)
 			-- Insert `txt' at cursor position as a selectable token			
 		require
 			text_not_empty: not is_empty
@@ -514,7 +514,7 @@ feature -- Basic Operations
 			end
 		end
 
-	replace_char (c: CHARACTER_32) is
+	replace_char (c: CHARACTER_32)
 			-- Replace character at cursor position by `c'.
 			-- Delete selection, if any.
 		require
@@ -539,7 +539,7 @@ feature -- Basic Operations
 			end
 		end
 
-	delete_char is
+	delete_char
 			-- Delete character at cursor position.
 			-- Delete selection, if any.
 		require
@@ -559,7 +559,7 @@ feature -- Basic Operations
 			end
 		end
 
-	back_delete_char is
+	back_delete_char
 			-- Delete character before cursor position.
 			-- Delete selection, if any.
 		do
@@ -592,7 +592,7 @@ feature -- Basic Operations
 			end
 		end
 
-	delete_word (back: BOOLEAN) is
+	delete_word (back: BOOLEAN)
 			-- Delete word before cursor position if `back',
 			-- or else at cursor position.
 			-- Delete selection, if any.
@@ -611,7 +611,7 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 
-	move_selection_to_pos (i:INTEGER) is
+	move_selection_to_pos (i:INTEGER)
 			--
 		require
 			selection_exists: has_selection
@@ -633,7 +633,7 @@ feature -- Basic Operations
 			insert_string (local_clipboard)
 		end
 
-	copy_selection_to_pos (i:INTEGER) is
+	copy_selection_to_pos (i:INTEGER)
 			--
 		require
 			selection_exists: has_selection
@@ -648,7 +648,7 @@ feature -- Basic Operations
 
 feature -- for search only
 
-	replace_for_replace_all (start_pos, end_pos: INTEGER; a_word: STRING_GENERAL) is
+	replace_for_replace_all (start_pos, end_pos: INTEGER; a_word: STRING_GENERAL)
 			-- replace the selected text with `a_word'
 		require
 			right_order: start_pos < end_pos
@@ -675,14 +675,14 @@ feature -- for search only
 
 feature -- Reinitialization
 
-	reset_text is
+	reset_text
 			-- put Current back in its original state
 		do
 			Precursor {SELECTABLE_TEXT}
 			history.initialize
 		end
 
-	on_text_loaded is
+	on_text_loaded
 			-- reinitialize text after loading.
 		do
 				-- Initialize undo-redo history
@@ -694,7 +694,7 @@ feature -- Reinitialization
 
 feature {UNDO_CMD} -- Operations on selected text
 
-	symbol_selection (start_selection: like cursor; end_selection: like cursor; symbol: STRING_GENERAL) is
+	symbol_selection (start_selection: like cursor; end_selection: like cursor; symbol: STRING_GENERAL)
 			-- Prepend all lines included in the selection with the string `symbol'.
 			-- Even if `start_selection' does not begin the line, the entire line
 			-- is prepended with `symbol'. Same for the last line of the selection.
@@ -819,7 +819,7 @@ feature {UNDO_CMD} -- Operations on selected text
 			end
 		end
 
-	unsymbol_selection (start_selection: like cursor; end_selection: like cursor; symbol: STRING_GENERAL) is
+	unsymbol_selection (start_selection: like cursor; end_selection: like cursor; symbol: STRING_GENERAL)
 			-- Prepend all lines included in the selection with the string `symbol'.
 			-- Even If `start_selection' does not begin the line, the entire line
 			-- is prepended with `symbol'. Same for the last line of the selection.
@@ -932,7 +932,7 @@ feature {UNDO_CMD} -- Operations on selected text
 			end
 		end
 
-	remove_selection (start_selection: like cursor; end_selection: like cursor) is
+	remove_selection (start_selection: like cursor; end_selection: like cursor)
 			-- Delete text between `start_selection' until `end_selection'.
 			-- `end_selection' is not included.
 			-- Warning: Changes are not recorded in the undo stack.
@@ -1027,7 +1027,7 @@ feature {UNDO_CMD} -- Operations on selected text
 
 feature {UNDO_CMD} -- Basic Text changes
 
-	insert_char_at_cursor_pos (c: CHARACTER_32) is
+	insert_char_at_cursor_pos (c: CHARACTER_32)
 			-- Insert `c' in text, at cursor position.
 			-- Warning: Changes are not recorded in the undo stack.
 		require
@@ -1101,7 +1101,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			end
 		end
 
-	insert_string_at_cursor_pos (s: STRING_GENERAL) is
+	insert_string_at_cursor_pos (s: STRING_GENERAL)
 			-- Insert `s' in text, at cursor position.
 			-- Leave cursor pointing at the first non inserted character.
 			-- Warning: Changes are not recorded in the undo stack.
@@ -1227,7 +1227,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			cursor.set_x_in_characters (end_pos)
 		end
 
-	insert_string_as_selectable_at_cursor_pos (s: STRING_GENERAL) is
+	insert_string_as_selectable_at_cursor_pos (s: STRING_GENERAL)
 			-- Insert `s' in text, at cursor position as a selectable token.
 			-- Leave cursor pointing at the first non inserted character.
 			-- Warning: Changes are not recorded in the undo stack.
@@ -1305,7 +1305,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			cursor.set_x_in_characters (end_pos)
 		end
 
-	delete_char_at_cursor_pos is
+	delete_char_at_cursor_pos
 			-- Delete character at cursor position.
 			-- Warning: Changes are not recorded in the undo stack.
 		require
@@ -1389,7 +1389,7 @@ feature {UNDO_CMD} -- Basic Text changes
 
 		end
 
-	delete_n_chars_at_cursor_pos (n: INTEGER) is
+	delete_n_chars_at_cursor_pos (n: INTEGER)
 			-- Delete `n' characters from cursor position.
 			-- Warning: Changes are not recorded in the undo stack.
 		require
@@ -1503,7 +1503,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			--cursor.update_current_char
 		end
 
-	replace_char_at_cursor_pos (c: CHARACTER_32) is
+	replace_char_at_cursor_pos (c: CHARACTER_32)
 			-- Replace character at cursor position by `c'.
 			-- Warning: Changes are not recorded in the undo stack.
 		require
@@ -1587,7 +1587,7 @@ feature {UNDO_CMD} -- Basic Text changes
 		end
 	end
 
-	insert_eol_at_cursor_pos is
+	insert_eol_at_cursor_pos
 			-- Insert new line in text, at cursor position.
 			-- Warning: Changes are not recorded in the undo stack.
 		require
@@ -1677,7 +1677,7 @@ feature {UNDO_CMD} -- Basic Text changes
 			cursor.set_x_in_characters (new_pos)
 		end
 
-	delete_after_cursor is
+	delete_after_cursor
 			-- Erase from cursor (included) to end of line.
 			-- Warning: Changes are not recorded in the undo stack.
 		require
@@ -1727,7 +1727,7 @@ feature {UNDO_CMD} -- Basic Text changes
 
 feature {NONE} -- Implementation
 
-	mark_fake_trailing_blank (a_line: EDITOR_LINE; a_number: INTEGER) is
+	mark_fake_trailing_blank (a_line: EDITOR_LINE; a_number: INTEGER)
 			-- Mark all trailing blanks as fake ones among `a_number' lines
 			-- starts from `a_line'.
 		require
@@ -1765,7 +1765,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_white_spaces is
+	remove_white_spaces
 			-- Remove all consecutive blank spaces on current line
 			-- starting from `cursor' position.
 			-- Undo command will be bound to next inserted
@@ -1791,7 +1791,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_blank (ch: CHARACTER_32): BOOLEAN is
+	is_blank (ch: CHARACTER_32): BOOLEAN
 			-- Is `ch' a blank space ?
 		do
 			Result  := ch = ' ' or ch = '%T'
@@ -1801,7 +1801,7 @@ feature {NONE} -- Implementation
 
 	end_line_tokens: LINKED_LIST[EDITOR_TOKEN]
 
-	record_first_modified_line (ln: like line; modified_token: EDITOR_TOKEN) is
+	record_first_modified_line (ln: like line; modified_token: EDITOR_TOKEN)
 			-- store token reference before new line with new tokens is created
 			-- this information will be used by `restore_tokens_properties' to restore
 			-- some token properties (position, beginning of a feature)
@@ -1822,7 +1822,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	record_last_modified_line (ln: like line; modified_token: EDITOR_TOKEN) is
+	record_last_modified_line (ln: like line; modified_token: EDITOR_TOKEN)
 			-- store token reference before new line with new tokens is created
 			-- this information will be used by `restore_tokens_properties' to restore
 			-- some token properties (position, beginning of a feature)
@@ -1845,7 +1845,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	record_modified_line (ln: like line) is
+	record_modified_line (ln: like line)
 			-- store token reference before new line with new tokens is created
 			-- this information will be used by `restore_tokens_properties' to restore
 			-- some token properties (position, beginning of a feature)
@@ -1866,7 +1866,7 @@ feature {NONE} -- Implementation
 			end_line_tokens.put_front(tok)
 		end
 
-	restore_tokens_properties (begin_line, end_line: like line) is
+	restore_tokens_properties (begin_line, end_line: like line)
 			-- restore some token properties (position, beginning of a feature)
 			-- using lists crated by `record...' procedures above
 		require
@@ -1877,7 +1877,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	restore_tokens_properties_one_line (begin_line: like line) is
+	restore_tokens_properties_one_line (begin_line: like line)
 		require
 			begin_line_not_void: begin_line /= Void
 			begin_line_tokens_not_void: begin_line_tokens /= Void
@@ -1901,7 +1901,7 @@ feature {TEXT_CURSOR}
 			-- flag to tell whether calls to `on_cursor_move' by `cursor'
 			-- should reset `history' state.
 
-	on_cursor_move (cur: EDITOR_CURSOR) is
+	on_cursor_move (cur: EDITOR_CURSOR)
 			-- action performed on cursor moves.
 		do
 			if cur = cursor then
@@ -1917,7 +1917,7 @@ invariant
 -- Commented because while doing a modification it does not hold.
 --	undo_enabled: changed = undo_is_possible
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

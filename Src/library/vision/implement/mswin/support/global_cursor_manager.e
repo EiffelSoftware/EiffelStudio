@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -11,13 +11,13 @@ inherit
 
 feature -- Access
 
-	global_cursor : SCREEN_CURSOR is
+	global_cursor : SCREEN_CURSOR
 			-- Cursor for all windows
 		do
 			Result := cursor_holder.item
 		end
 
-	global_cursor_windows: SCREEN_CURSOR_IMP is
+	global_cursor_windows: SCREEN_CURSOR_IMP
 		local
 			gc: SCREEN_CURSOR
 		do
@@ -29,7 +29,7 @@ feature -- Access
 
 feature -- Status setting
 
-	restore_cursors is
+	restore_cursors
 			-- Restore cursor of each window
 		local
 			wc : WEL_CURSOR
@@ -43,7 +43,7 @@ feature -- Status setting
 			end
 		end
 
-	set_global_cursor (c: SCREEN_CURSOR) is
+	set_global_cursor (c: SCREEN_CURSOR)
 			-- Set cursor for all windows
 		local
 			wc: WEL_CURSOR
@@ -55,12 +55,12 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	cursor_holder: CELL [SCREEN_CURSOR] is
+	cursor_holder: CELL [SCREEN_CURSOR]
 		once
 			create Result.put (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

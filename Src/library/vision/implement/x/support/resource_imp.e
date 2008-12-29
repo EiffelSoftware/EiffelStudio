@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"A manager for X resource."
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	display: MEL_DISPLAY is
+	display: MEL_DISPLAY
 			-- Display where resource is allocated
 		deferred
 		end;
@@ -28,7 +28,7 @@ feature -- Access
 	is_allocated: BOOLEAN
 			-- Has the resource been allocated yet?
 
-	has_valid_display: BOOLEAN is
+	has_valid_display: BOOLEAN
 			-- Does the Current resource have a display?
 		do
 			Result := display /= Void and then display.is_valid
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Element change
 
-	increment_users is
+	increment_users
 			-- Increment the `number_of_users' by one.
 		do
 			number_of_users := number_of_users + 1
@@ -44,7 +44,7 @@ feature -- Element change
 			incremented: number_of_users = old number_of_users + 1
 		end;
 
-	decrement_users is
+	decrement_users
 			-- Decrement the `number_of_users' by one.
 		do
 			number_of_users := number_of_users - 1
@@ -54,7 +54,7 @@ feature -- Element change
 
 feature {NONE} -- Update
 
-	update_widgets is
+	update_widgets
 			-- Update widgets.
 		local
 			area: SPECIAL [WIDGET];
@@ -88,7 +88,7 @@ end
 			end
 		end;
 
-	update_widget_resource (widget_m: WIDGET_IMP) is
+	update_widget_resource (widget_m: WIDGET_IMP)
 			-- Update resource for `widget_m'.
 		require
 			widget_m_not_null: widget_m /= Void;
@@ -105,7 +105,7 @@ invariant
 
 	has_valid_display: display /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

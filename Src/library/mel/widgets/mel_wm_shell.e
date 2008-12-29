@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Fundamental shell widget that interacts with an %
@@ -22,7 +22,7 @@ inherit
 
 feature -- Status report
 
-	base_height: INTEGER is
+	base_height: INTEGER
 			-- Base for a progression of preferred heights for current
 			-- window manager to use in sizing widgets.
 			-- The preferred heights are base_heights plus integral multiples
@@ -35,7 +35,7 @@ feature -- Status report
 			base_height_large_enough: Result >= 0
 		end;
 
-	base_width: INTEGER is
+	base_width: INTEGER
 			-- Base for a progression of preferred widths for current
 			-- window manager to use in sizing widgets.
 			-- The preferred widths are base_heights plus integral multiples
@@ -48,7 +48,7 @@ feature -- Status report
 			base_width_large_enough: Result >= 0
 		end;
 
-	height_inc: INTEGER is
+	height_inc: INTEGER
 			-- Increment for a progression of preferred heights for the
 			-- window manager tu use in sizing widgets
 		require
@@ -59,7 +59,7 @@ feature -- Status report
 			height_inc_large_enough: Result >= 0
 		end;
 
-	width_inc: INTEGER is
+	width_inc: INTEGER
 			-- Increment for a progression of preferred widths for the
 			-- window manager tu use in sizing widgets
 		require
@@ -70,7 +70,7 @@ feature -- Status report
 			width_inc_large_enough: Result >= 0
 		end;
 
-	icon_mask: MEL_PIXMAP is
+	icon_mask: MEL_PIXMAP
 			-- Bitmap that could be used by window manager to clip icon_pixmap
 			-- bitmap to make the icon non rectangular
 		require
@@ -83,7 +83,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	icon_pixmap: MEL_PIXMAP is
+	icon_pixmap: MEL_PIXMAP
 			-- Bitmap that could be used by the window manager as the application's icon
 		require
 			exists: not is_destroyed
@@ -95,7 +95,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	icon_window: POINTER is
+	icon_window: POINTER
 			-- The ID of a window that serves as the application's icon.
 		require
 			exists: not is_destroyed
@@ -103,7 +103,7 @@ feature -- Status report
 		ensure
 		end;
 
-	icon_x: INTEGER is
+	icon_x: INTEGER
 			-- Place to put application's icon
 			-- (Since the window manager controls icon placement policy, this may be ignored.)
 		require
@@ -112,7 +112,7 @@ feature -- Status report
 			Result := get_xt_int (screen_object, XmNiconX)
 		end;
 
-	icon_y: INTEGER is
+	icon_y: INTEGER
 			-- Place to put application's icon
 			-- (Since the window manager controls icon placement policy, this may be ignored.)
 		require
@@ -121,7 +121,7 @@ feature -- Status report
 			Result := get_xt_int (screen_object, XmNiconY)
 		end;
 
-	is_initial_state_normal: BOOLEAN is
+	is_initial_state_normal: BOOLEAN
 			-- Does the application start as a window?
 		require
 			exists: not is_destroyed
@@ -129,7 +129,7 @@ feature -- Status report
 			Result := get_xt_int (screen_object, XmNinitialState) = NormalState
 		end;
 
-	is_initial_state_iconic: BOOLEAN is
+	is_initial_state_iconic: BOOLEAN
 			-- Does the application start as an icon?
 		require
 			exists: not is_destroyed
@@ -137,7 +137,7 @@ feature -- Status report
 			Result := get_xt_int (screen_object, XmNinitialState) = IconicState
 		end;
 
-	input: BOOLEAN is
+	input: BOOLEAN
 			-- Is input allowed?
 			-- (`input' is only useful in conjunction with the `WM_TAKE_FOCUS' atom,
 			--  with which it determines the keyboard focus model:
@@ -151,7 +151,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNinput)
 		end;
 
-	max_aspect_x: INTEGER is
+	max_aspect_x: INTEGER
 			-- Numerator of maximum aspect ratio requested for Current
 		require
 			exists: not is_destroyed
@@ -159,7 +159,7 @@ feature -- Status report
 			Result := get_xt_int (screen_object, XmNmaxAspectX)
 		end;
 
-	max_aspect_y: INTEGER is
+	max_aspect_y: INTEGER
 			-- Denominator of maximum aspect ratio requested for Current
 		require
 			exists: not is_destroyed
@@ -167,7 +167,7 @@ feature -- Status report
 			Result := get_xt_int (screen_object, XmNmaxAspectY)
 		end;
 
-	min_aspect_x: INTEGER is
+	min_aspect_x: INTEGER
 			-- Numerator of minimum aspect ratio requested for Current
 		require
 			exists: not is_destroyed
@@ -175,7 +175,7 @@ feature -- Status report
 			Result := get_xt_int (screen_object, XmNminAspectX)
 		end;
 
-	min_aspect_y: INTEGER is
+	min_aspect_y: INTEGER
 			-- Denominator of minimum ratio requested for Current
 		require
 			exists: not is_destroyed
@@ -183,7 +183,7 @@ feature -- Status report
 			Result := get_xt_int (screen_object, XmNminAspectY)
 		end;
 
-	max_height: INTEGER is
+	max_height: INTEGER
 			-- Maximum height
 		require
 			exists: not is_destroyed
@@ -193,7 +193,7 @@ feature -- Status report
 			max_height_large_enough: Result >= min_height
 		end;
 
-	max_width: INTEGER is
+	max_width: INTEGER
 			-- Maximum width
 		require
 			exists: not is_destroyed
@@ -203,7 +203,7 @@ feature -- Status report
 			max_width_large_enough: Result >= min_width
 		end;
 
-	min_height: INTEGER is
+	min_height: INTEGER
 			-- Minimum height
 		require
 			exists: not is_destroyed
@@ -214,7 +214,7 @@ feature -- Status report
 			min_height_small_enough: Result <= max_height
 		end;
 
-	min_width: INTEGER is
+	min_width: INTEGER
 			-- Minimum width
 		require
 			exists: not is_destroyed
@@ -225,7 +225,7 @@ feature -- Status report
 			min_width_small_enough: Result <= max_width
 		end;
 
-	title: STRING is
+	title: STRING
 			-- Application name to be displayed by the window manager
 		require
 			exists: not is_destroyed
@@ -235,7 +235,7 @@ feature -- Status report
 			title_not_void: Result /= Void
 		end;
 
-	title_encoding is
+	title_encoding
 			-- Property type for encoding `title'
 		require
 			exists: not is_destroyed
@@ -243,7 +243,7 @@ feature -- Status report
 		ensure
 		end;
 
-	is_transient: BOOLEAN is
+	is_transient: BOOLEAN
 			-- Is Current transient?
 		require
 			exists: not is_destroyed
@@ -251,7 +251,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNtransient)
 		end;
 
-	wait_for_wm: BOOLEAN is
+	wait_for_wm: BOOLEAN
 			-- Does the X Toolkit wait for a response
 			-- from the window manager before acting as if no window
 			-- manager exists?
@@ -261,7 +261,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNwaitForWm)
 		end;
 
-	window_group is
+	window_group
 			-- Window assciated with Current
 		require
 			exists: not is_destroyed
@@ -269,7 +269,7 @@ feature -- Status report
 		ensure
 		end;
 
-	window_gravity: INTEGER is
+	window_gravity: INTEGER
 			-- Window gravity is used in positioning Current
 		require
 			exists: not is_destroyed
@@ -277,7 +277,7 @@ feature -- Status report
 			Result := get_xt_int (screen_object, XmNwinGravity)
 		end;
 
-	wm_timeout: INTEGER is
+	wm_timeout: INTEGER
 			-- Number of milliseconds that the X Toolkit waits
 			-- for a response from the window manager
 		require
@@ -290,7 +290,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_base_height (a_height: INTEGER) is
+	set_base_height (a_height: INTEGER)
 			-- Set `base_height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -301,7 +301,7 @@ feature -- Status setting
 			base_height_set: base_height = a_height
 		end;
 
-	set_base_width (a_width: INTEGER) is
+	set_base_width (a_width: INTEGER)
 			-- Set `base_width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -312,7 +312,7 @@ feature -- Status setting
 			base_width_set: base_width = a_width
 		end;
 
-	set_height_inc (a_height: INTEGER) is
+	set_height_inc (a_height: INTEGER)
 			-- Set `height_inc' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -323,7 +323,7 @@ feature -- Status setting
 			height_inc_set: height_inc = a_height
 		end;
 
-	set_width_inc (a_width: INTEGER) is
+	set_width_inc (a_width: INTEGER)
 			-- Set `width_inc' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -334,7 +334,7 @@ feature -- Status setting
 			width_inc_set: width_inc = a_width
 		end;
 
-	set_icon_mask (a_mask: MEL_PIXMAP) is
+	set_icon_mask (a_mask: MEL_PIXMAP)
 			-- Set `icon_mask' to `a_mask'.
 		require
 			exists: not is_destroyed;
@@ -346,7 +346,7 @@ feature -- Status setting
 			set: icon_mask.is_equal (a_mask)
 		end;
 
-	set_icon_pixmap (a_pixmap: MEL_PIXMAP) is
+	set_icon_pixmap (a_pixmap: MEL_PIXMAP)
 			-- Set `icon_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
@@ -358,7 +358,7 @@ feature -- Status setting
 			set: icon_pixmap.is_equal (a_pixmap)
 		end;
 
-	set_icon_window is
+	set_icon_window
 			-- Set `icon_window'.
 		require
 			exists: not is_destroyed
@@ -366,7 +366,7 @@ feature -- Status setting
 		ensure
 		end;
 
-	set_icon_x (a_x: INTEGER) is
+	set_icon_x (a_x: INTEGER)
 			-- Set `icon_x' to `a_x'.
 		require
 			exists: not is_destroyed
@@ -376,7 +376,7 @@ feature -- Status setting
 			icon_x_set: icon_x = a_x;
 		end;
 
-	set_icon_y (a_y: INTEGER) is
+	set_icon_y (a_y: INTEGER)
 			-- Set `icon_y' to `a_y'.
 		require
 			exists: not is_destroyed
@@ -386,7 +386,7 @@ feature -- Status setting
 			icon_y_set: icon_y = a_y
 		end;
 
-	set_initial_state_to_normal is
+	set_initial_state_to_normal
 			-- Set `is_initial_state_normal' to True.
 		require
 			exists: not is_destroyed
@@ -396,7 +396,7 @@ feature -- Status setting
 			initial_state_is_normal: is_initial_state_normal 
 		end;
 
-	set_initial_state_to_iconic is
+	set_initial_state_to_iconic
 			-- Set `is_initial_state_iconic' to True.
 		require
 			exists: not is_destroyed
@@ -406,7 +406,7 @@ feature -- Status setting
 			initial_state_is_iconic: is_initial_state_iconic 
 		end;
 
-	enable_input is
+	enable_input
 			-- Set `input' to True.
 		require
 			exists: not is_destroyed
@@ -416,7 +416,7 @@ feature -- Status setting
 			input_enabled: input
 		end;
 
-	disable_input is
+	disable_input
 			-- Set `input' to False.
 		require
 			exists: not is_destroyed
@@ -426,7 +426,7 @@ feature -- Status setting
 			input_disabled: not input
 		end;
 
-	set_max_aspect_x (a_value: INTEGER) is
+	set_max_aspect_x (a_value: INTEGER)
 			-- Set `max_aspect_x' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -437,7 +437,7 @@ feature -- Status setting
 			max_aspect_x_set: max_aspect_x = a_value
 		end;
 
-	set_max_aspect_y (a_value: INTEGER) is
+	set_max_aspect_y (a_value: INTEGER)
 			-- Set `max_aspect_y' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -448,7 +448,7 @@ feature -- Status setting
 			max_aspect_y_set: max_aspect_y = a_value
 		end;
 
-	set_min_aspect_x (a_value: INTEGER) is
+	set_min_aspect_x (a_value: INTEGER)
 			-- Set `min_aspect_x' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -459,7 +459,7 @@ feature -- Status setting
 			min_aspect_x_set: min_aspect_x = a_value
 		end;
 
-	set_min_aspect_y (a_value: INTEGER) is
+	set_min_aspect_y (a_value: INTEGER)
 			-- Set `min_aspect_y' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -470,7 +470,7 @@ feature -- Status setting
 			min_aspect_y_set: min_aspect_y = a_value
 		end;
 
-	set_max_height (a_height: INTEGER) is
+	set_max_height (a_height: INTEGER)
 			-- Set `max_height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -481,7 +481,7 @@ feature -- Status setting
 			max_height_set: max_height = a_height
 		end;
 
-	set_max_width (a_width: INTEGER) is
+	set_max_width (a_width: INTEGER)
 			-- Set `max_width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -492,7 +492,7 @@ feature -- Status setting
 			max_width_set: max_width = a_width
 		end;
 
-	set_min_height (a_height: INTEGER) is
+	set_min_height (a_height: INTEGER)
 			-- Set `min_height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -504,7 +504,7 @@ feature -- Status setting
 			min_height_set: min_height = a_height
 		end;
 
-	set_min_width (a_width: INTEGER) is
+	set_min_width (a_width: INTEGER)
 			-- Set `min_width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -516,7 +516,7 @@ feature -- Status setting
 			min_width_set: min_width = a_width
 		end;
 
-	set_title (a_string: STRING) is
+	set_title (a_string: STRING)
 			-- Set `title' to `a_string'.
 		require
 			exists: not is_destroyed;
@@ -527,7 +527,7 @@ feature -- Status setting
 			title_set: title.is_equal (a_string)
 		end;
 
-	enable_transient is
+	enable_transient
 			-- Set `is_transient' to True.
 		require
 			exists: not is_destroyed
@@ -537,7 +537,7 @@ feature -- Status setting
 			shell_is_transient: is_transient 
 		end;
 
-	disable_transient is
+	disable_transient
 			-- Set `is_transient' to False.
 		require
 			exists: not is_destroyed
@@ -547,7 +547,7 @@ feature -- Status setting
 			shell_is_not_transient: not is_transient 
 		end;
 
-	enable_wait_for_wm is
+	enable_wait_for_wm
 			-- Set `wait_for_wm' to True.
 		require
 			exists: not is_destroyed
@@ -557,7 +557,7 @@ feature -- Status setting
 			wait_for_wm_enabled: wait_for_wm 
 		end;
 
-	disable_wait_for_wm is
+	disable_wait_for_wm
 			-- Set `wait_for_wm' to False.
 		require
 			exists: not is_destroyed
@@ -567,7 +567,7 @@ feature -- Status setting
 			wait_for_wm_disabled: not wait_for_wm 
 		end;
 
-	set_window_gravity (a_value: INTEGER) is
+	set_window_gravity (a_value: INTEGER)
 			-- Set `window_gravity' to `a_value'.
 		require
 			exists: not is_destroyed
@@ -577,7 +577,7 @@ feature -- Status setting
 			window_gravity_set: window_gravity = a_value
 		end;
 
-	set_wm_timeout (a_value: INTEGER) is
+	set_wm_timeout (a_value: INTEGER)
 			-- Set `wm_timeout' as `a_value'.
 		require
 			exists: not is_destroyed;
@@ -593,7 +593,7 @@ invariant
 --	max_aspect_greater_than_min_aspect:
 --		(max_aspect_x / max_aspect_y) >= (min_aspect_x / min_aspect_y)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

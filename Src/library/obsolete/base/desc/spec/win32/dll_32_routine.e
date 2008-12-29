@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"32 bit DLL routine for Windows"
@@ -25,7 +25,7 @@ create
 feature
 
 	make_by_index (lib: DLL_32; r_index: INTEGER;
-				arg_types: ARRAY [INTEGER]; ret_type: INTEGER) is
+				arg_types: ARRAY [INTEGER]; ret_type: INTEGER)
 			-- Connect to the routine of index `r_index' in library `lib'
 		require
 			library_exists: lib /= Void
@@ -54,7 +54,7 @@ feature
 		end
 
 	make_by_name (lib: DLL_32; f_name: STRING;
-				arg_types: ARRAY [INTEGER]; ret_type: INTEGER) is
+				arg_types: ARRAY [INTEGER]; ret_type: INTEGER)
 			-- Connect to the routine `f_name' in library `lib'
 		local
 			c_func_name: ANY
@@ -76,7 +76,7 @@ feature
 
 feature -- Basic operations
 
-	call (args: ARRAY [ANY]) is
+	call (args: ARRAY [ANY])
 			-- Call the routine with actual arguments `args'
 		local
 			formal_args: ANY
@@ -114,49 +114,49 @@ feature -- Basic operations
 
 feature -- Status report
 
-	boolean_result: BOOLEAN is
+	boolean_result: BOOLEAN
 			-- Value when the routine returns a boolean
 		do
 			Result := imp_boolean_result
 		end
 
-	character_result: CHARACTER is
+	character_result: CHARACTER
 			-- Value when the routine returns a character
 		do
 			Result := imp_character_result
 		end
 
-	double_result: DOUBLE is
+	double_result: DOUBLE
 			-- Value when the routine returns a double
 		do
 			Result := imp_double_result
 		end
 
-	integer_result: INTEGER is
+	integer_result: INTEGER
 			-- Value when the routine returns an integer
 		do
 			Result := imp_integer_result
 		end
 
-	pointer_result: POINTER is
+	pointer_result: POINTER
 			-- Value when the routine returns a pointer
 		do
 			Result := imp_pointer_result
 		end
 
-	real_result: REAL is
+	real_result: REAL
 			-- Value when the routine returns a real
 		do
 			Result := imp_real_result
 		end
 
-	reference_result: ANY is
+	reference_result: ANY
 			-- Value when the routine returns a reference
 		do
 			Result := imp_reference_result
 		end
 
-	string_result: STRING is
+	string_result: STRING
 			-- Value when the routine returns a string
 		do
 			Result := imp_string_result
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 
 	arguments_size: INTEGER
 
-	fill_argument_array (args: ARRAY [ANY]) is
+	fill_argument_array (args: ARRAY [ANY])
 			-- Fill area for stack pushing operation
 		local
 			i, j, nb: INTEGER
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 	imp_string_result: STRING
 			-- Value when the routine returns a string
 
-	make_argument_array is
+	make_argument_array
 			-- Allocates area for stack pushing operation
 		local
 			i, nb: INTEGER
@@ -352,86 +352,86 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	desc_call_dll32_boolean (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): BOOLEAN is
+	desc_call_dll32_boolean (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): BOOLEAN
 			-- Call to function returning a boolean
 		external
 			"C [dll32 %"ise_desc.dll%"] (DWORD, DWORD, char *): EIF_BOOLEAN"
 		end
 
-	desc_call_dll32_character (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): CHARACTER is
+	desc_call_dll32_character (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): CHARACTER
 			-- Call to function returning a character
 		external
 			"C [dll32 %"ise_desc.dll%"] (DWORD, DWORD, char *): EIF_CHARACTER"
 		end
 
-	desc_call_dll32_double (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): DOUBLE is
+	desc_call_dll32_double (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): DOUBLE
 			-- Call to function returning a double
 		external
 			"C [dll32 %"ise_desc.dll%"] (DWORD, DWORD, char *): EIF_DOUBLE"
 		end
 
-	desc_call_dll32_integer (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): INTEGER is
+	desc_call_dll32_integer (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): INTEGER
 			-- Call to function returning an integer
 		external
 			"C [dll32 %"ise_desc.dll%"] (DWORD, DWORD, char *): EIF_INTEGER"
 		end
 
-	desc_call_dll32_pointer (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): POINTER is
+	desc_call_dll32_pointer (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): POINTER
 			-- Call to function returning a pointer
 		external
 			"C [dll32 %"ise_desc.dll%"] (DWORD, DWORD, char *): EIF_POINTER"
 		end
 
-	desc_call_dll32_real (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): REAL is
+	desc_call_dll32_real (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): REAL
 			-- Call to function returning a real
 		external
 			"C [dll32 %"ise_desc.dll%"] (DWORD, DWORD, char *): EIF_REAL"
 		end
 
-	desc_call_dll32_reference (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): ANY is
+	desc_call_dll32_reference (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): ANY
 			-- Call to function returning a reference
 		external
 			"C [dll32 %"ise_desc.dll%"] (DWORD, DWORD, char *): EIF_REFERENCE"
 		end
 
-	desc_call_dll32_procedure (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER) is
+	desc_call_dll32_procedure (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER)
 			-- Call to procedure
 		external
 			"C [dll32 %"ise_desc.dll%"] (DWORD, DWORD, char *)"
 		end
 
-	desc_call_dll32_short_integer (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): INTEGER is
+	desc_call_dll32_short_integer (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): INTEGER
 			-- Call to function returning a short integer
 		external
 			"C [dll32 %"ise_desc.dll%"] (DWORD, DWORD, char *): short int"
 		end
 
-	desc_call_dll32_string (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): POINTER is
+	desc_call_dll32_string (f_ptr: POINTER; arg_count: INTEGER; actual_args: POINTER): POINTER
 			-- Call to function returning a string
 		external
 			"C [dll32 %"ise_desc.dll%"] (DWORD, DWORD, char *): EIF_POINTER"
 		end
 
-	desc_copy_arg (target, source: POINTER; offset, size: INTEGER) is
+	desc_copy_arg (target, source: POINTER; offset, size: INTEGER)
 			-- Copy `size' characters from `source'
 			-- to `target' + `offset'
 		do
 			(target + offset).memory_copy (source, size)
 		end
 
-	desc_get_function_index_pointer (m_p: POINTER; r_index: INTEGER): POINTER is
+	desc_get_function_index_pointer (m_p: POINTER; r_index: INTEGER): POINTER
 			-- Get function handle (by index)
 		external
 			"C [dll32 %"ise_desc.dll%"] (DWORD, DWORD): EIF_POINTER"
 		end
 
-	desc_get_size (type: INTEGER): INTEGER is
+	desc_get_size (type: INTEGER): INTEGER
 			-- Get size of type `type'
 		external
 			"C [dll32 %"ise_desc.dll%"] (DWORD): short int"
 		end
 
-	win_get_proc_address (m_p, fn: POINTER): POINTER is
+	win_get_proc_address (m_p, fn: POINTER): POINTER
 			-- Get function handle
 		external
 			"C [macro <windows.h>] (HINSTANCE, LPCSTR): EIF_POINTER"
@@ -439,7 +439,7 @@ feature {NONE} -- Externals
 			"GetProcAddress"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

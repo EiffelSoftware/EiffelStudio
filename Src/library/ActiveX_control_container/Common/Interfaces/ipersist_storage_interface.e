@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,42 +12,42 @@ inherit
 
 feature -- Status Report
 
-	is_dirty_user_precondition: BOOLEAN is
+	is_dirty_user_precondition: BOOLEAN
 			-- User-defined preconditions for `is_dirty'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	init_new_user_precondition (pstg: ECOM_STORAGE): BOOLEAN is
+	init_new_user_precondition (pstg: ECOM_STORAGE): BOOLEAN
 			-- User-defined preconditions for `init_new'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	load_user_precondition (pstg: ECOM_STORAGE): BOOLEAN is
+	load_user_precondition (pstg: ECOM_STORAGE): BOOLEAN
 			-- User-defined preconditions for `load'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	save_user_precondition (p_stg_save: ECOM_STORAGE; f_same_as_load: INTEGER): BOOLEAN is
+	save_user_precondition (p_stg_save: ECOM_STORAGE; f_same_as_load: INTEGER): BOOLEAN
 			-- User-defined preconditions for `save'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	save_completed_user_precondition (p_stg_new: ECOM_STORAGE): BOOLEAN is
+	save_completed_user_precondition (p_stg_new: ECOM_STORAGE): BOOLEAN
 			-- User-defined preconditions for `save_completed'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	hands_off_storage_user_precondition: BOOLEAN is
+	hands_off_storage_user_precondition: BOOLEAN
 			-- User-defined preconditions for `hands_off_storage'.
 			-- Redefine in descendants if needed.
 		do
@@ -56,7 +56,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	is_dirty is
+	is_dirty
 			-- No description available.
 		require
 			is_dirty_user_precondition: is_dirty_user_precondition
@@ -64,7 +64,7 @@ feature -- Basic Operations
 
 		end
 
-	init_new (pstg: ECOM_STORAGE) is
+	init_new (pstg: ECOM_STORAGE)
 			-- No description available.
 			-- `pstg' [in].  
 		require
@@ -73,7 +73,7 @@ feature -- Basic Operations
 
 		end
 
-	load (pstg: ECOM_STORAGE) is
+	load (pstg: ECOM_STORAGE)
 			-- No description available.
 			-- `pstg' [in].  
 		require
@@ -82,7 +82,7 @@ feature -- Basic Operations
 
 		end
 
-	save (p_stg_save: ECOM_STORAGE; f_same_as_load: INTEGER) is
+	save (p_stg_save: ECOM_STORAGE; f_same_as_load: INTEGER)
 			-- No description available.
 			-- `p_stg_save' [in].  
 			-- `f_same_as_load' [in].  
@@ -92,7 +92,7 @@ feature -- Basic Operations
 
 		end
 
-	save_completed (p_stg_new: ECOM_STORAGE) is
+	save_completed (p_stg_new: ECOM_STORAGE)
 			-- No description available.
 			-- `p_stg_new' [in].  
 		require
@@ -101,7 +101,7 @@ feature -- Basic Operations
 
 		end
 
-	hands_off_storage is
+	hands_off_storage
 			-- No description available.
 		require
 			hands_off_storage_user_precondition: hands_off_storage_user_precondition
@@ -109,7 +109,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

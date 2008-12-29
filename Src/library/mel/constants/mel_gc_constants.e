@@ -1,5 +1,5 @@
 
-indexing
+note
 	description: 
 		"Constants used to set and retrieve values of a Graphic Context."
 	legal: "See notice at end of class.";
@@ -12,112 +12,112 @@ class
 
 feature -- Function mode access
 
-	GXclear: INTEGER is
+	GXclear: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXclear"
 		end;
 
-	GXand: INTEGER is
+	GXand: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXand"
 		end;
 
-	GXandReverse: INTEGER is
+	GXandReverse: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXandReverse"
 		end;
 
-	GXcopy: INTEGER is
+	GXcopy: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXcopy"
 		end;
 
-	GXandInverted: INTEGER is
+	GXandInverted: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXandInverted"
 		end;
 
-	GXnoop: INTEGER is
+	GXnoop: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXnoop"
 		end;
 
-	GXxor: INTEGER is
+	GXxor: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXxor"
 		end;
 
-	GXor: INTEGER is
+	GXor: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXor"
 		end;
 
-	GXnor: INTEGER is
+	GXnor: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXnor"
 		end;
 
-	GXequiv: INTEGER is
+	GXequiv: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXequiv"
 		end;
 
-	GXinvert: INTEGER is
+	GXinvert: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXinvert"
 		end;
 
-	GXorReverse: INTEGER is
+	GXorReverse: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXorReverse"
 		end;
 
-	GXcopyInverted: INTEGER is
+	GXcopyInverted: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXcopyInverted"
 		end;
 
-	GXorInverted: INTEGER is
+	GXorInverted: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXorInverted"
 		end;
 
-	GXnand: INTEGER is
+	GXnand: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"GXnand"
 		end;
 
-	GXset: INTEGER is
+	GXset: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
@@ -126,14 +126,14 @@ feature -- Function mode access
 
 feature -- Arc mode access
 
-	ArcChord: INTEGER is
+	ArcChord: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ArcChord"
 		end;
 
-	ArcPieSlice: INTEGER is
+	ArcPieSlice: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
@@ -142,28 +142,28 @@ feature -- Arc mode access
 
 feature -- Cap style access
 
-	CapNotLast: INTEGER is
+	CapNotLast: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"CapNotLast"
 		end;
 
-	CapButt: INTEGER is
+	CapButt: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"CapButt"
 		end;
 
-	CapRound: INTEGER is
+	CapRound: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"CapRound"
 		end;
 
-	CapProjecting: INTEGER is
+	CapProjecting: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
@@ -172,28 +172,28 @@ feature -- Cap style access
 
 feature -- Fill style access
 
-	FillSolid: INTEGER is
+	FillSolid: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"FillSolid"
 		end;
 
-	FillTiled: INTEGER is
+	FillTiled: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"FillTiled"
 		end;
 
-	FillStippled: INTEGER is
+	FillStippled: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"FillStippled"
 		end;
 
-	FillOpaqueStippled: INTEGER is
+	FillOpaqueStippled: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
@@ -202,21 +202,21 @@ feature -- Fill style access
 
 feature -- File style access
 
-	JoinMiter: INTEGER is
+	JoinMiter: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"JoinMiter"
 		end;
 
-	JoinRound: INTEGER is
+	JoinRound: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"JoinRound"
 		end;
 
-	JoinBevel: INTEGER is
+	JoinBevel: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
@@ -225,21 +225,21 @@ feature -- File style access
 
 feature -- Line style access
 
-	LineSolid: INTEGER is
+	LineSolid: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"LineSolid"
 		end;
 
-	LineOnOffDash: INTEGER is
+	LineOnOffDash: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"LineOnOffDash"
 		end;
 
-	LineDoubleDash: INTEGER is
+	LineDoubleDash: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
@@ -248,21 +248,21 @@ feature -- Line style access
 
 feature -- Subwindow mode access
 
-	ClipByChildren: INTEGER is
+	ClipByChildren: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"ClipByChildren"
 		end;
 
-	IncludeInferiors: INTEGER is
+	IncludeInferiors: INTEGER
 		external
 			"C [macro <X11/X.h>]: EIF_INTEGER"
 		alias
 			"IncludeInferiors"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

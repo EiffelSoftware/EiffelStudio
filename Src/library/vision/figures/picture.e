@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization 
 
-		make is
+		make
 			-- Create a picture.
 		do
 			init_fig (Void);
@@ -52,7 +52,7 @@ feature -- Access
 	upper_left: COORD_XY_FIG;
 			-- Upper left point of picture
 
-	origin: COORD_XY_FIG is
+	origin: COORD_XY_FIG
 			-- Origin of picture
 		do
 			inspect
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Element change
 	
-	set_pixmap (a_pixmap: like pixmap) is
+	set_pixmap (a_pixmap: like pixmap)
 			-- Set `pixmap' to `a_pixmap'.
 		require
 			a_pixmap_exists: a_pixmap /= Void;
@@ -80,7 +80,7 @@ feature -- Element change
 			pixap_set: a_pixmap = pixmap
 		end;
 
-	set_origin_to_upper_left is
+	set_origin_to_upper_left
 			-- Set `origin' to `upper_left'.
 		do
 			origin_user_type := 2;
@@ -88,7 +88,7 @@ feature -- Element change
 			origin.is_superimposable (upper_left)
 		end;
 
-	set_upper_left (a_point: like upper_left) is
+	set_upper_left (a_point: like upper_left)
 			-- Set `upper_left' to `a_point'.
 		require
 			a_point_exists: a_point /= Void
@@ -99,7 +99,7 @@ feature -- Element change
 			a_point = upper_left
 		end;	
 
-	xyrotate (a: REAL; px,py: INTEGER) is
+	xyrotate (a: REAL; px,py: INTEGER)
 			-- Rotate by `a' relative to (`px', `py').
 			-- Warning: don't rotate `pixmap' but just `upper_left'.
 		require else
@@ -110,7 +110,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xyscale (f: REAL; px,py: INTEGER) is
+	xyscale (f: REAL; px,py: INTEGER)
 			-- Scale figure by `f' relative to (`px', `py').
 			-- Warning: don't scale `pixmap' but just `upper_left'.
 		require else
@@ -120,7 +120,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xytranslate (vx, vy: INTEGER) is
+	xytranslate (vx, vy: INTEGER)
 			-- Translate by `vx' horizontally and `vy' vertically.
 		do
 			upper_left.xytranslate (vx, vy);
@@ -129,7 +129,7 @@ feature -- Element change
 
 feature -- Output
 	
-	draw is
+	draw
 			-- Draw the current picture.
 		require else
 			drawing_attached: drawing /= Void;
@@ -146,7 +146,7 @@ feature -- Output
 
 feature -- Status report
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the current picture superimposable to other ?
 			-- Not compare pixmap resource structures : they must be the
 			-- same in reference.
@@ -159,7 +159,7 @@ feature -- Status report
 	
 feature {CONFIGURE_NOTIFY} -- Implementation
 	
-	conf_recompute is
+	conf_recompute
 		require else
 			pixmap /= Void and upper_left /= Void
 		do
@@ -178,7 +178,7 @@ invariant
 	foreground_color_exists: foreground_color /= Void;
 	background_color_exists: background_color /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

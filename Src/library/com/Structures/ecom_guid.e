@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM GUID structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-	generate is
+	generate
 			-- Generate a new GUID
 		do
 			is_initialized := c_generate_guid (item) = 0
@@ -46,7 +46,7 @@ feature -- Basic operation
 
 feature {NONE} -- Initialization
 
-	make_from_string (string: STRING) is
+	make_from_string (string: STRING)
 			-- Create GUID from string `string'.
 		require
 			non_void_string: string /= Void
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			valid_item: item /= default_pointer
 		end
 
-	make_from_guid (other: ECOM_GUID) is
+	make_from_guid (other: ECOM_GUID)
 			-- Create new structure with same GUID as `other'.
 		require
 			valid_guid: other /= Void and then other.item /= default_pointer
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Status Report
 
-	is_equal (a_guid: ECOM_GUID): BOOLEAN is
+	is_equal (a_guid: ECOM_GUID): BOOLEAN
 			-- Is `a_guid' equal to `Current'?
 		do
 			Result := c_is_equal_guid (item, a_guid.item)
@@ -85,7 +85,7 @@ feature -- Status Report
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of GUID structure
 		do
 			Result := c_size_of_guid
@@ -93,7 +93,7 @@ feature -- Measurement
 
 feature -- Conversion
 
-	to_string: STRING is
+	to_string: STRING
 			-- String representation
 		require
 			valid_item: item /= default_pointer
@@ -110,7 +110,7 @@ feature -- Conversion
 			non_void_representation: Result /= Void
 		end
 
-	to_definition_string: STRING is
+	to_definition_string: STRING
 			-- String representation needed for code generation.
 		require
 			valid_item: item /= default_pointer
@@ -124,7 +124,7 @@ feature -- Conversion
 			non_void_representation: Result /= Void
 		end
 
-	out: STRING is
+	out: STRING
 			-- String representation
 		do
 			Result := to_string
@@ -132,42 +132,42 @@ feature -- Conversion
 
 feature {NONE} -- Externals
 
-	c_size_of_guid: INTEGER is
+	c_size_of_guid: INTEGER
 		external
 			"C macro use <windows.h>"
 		alias
 			"sizeof(GUID)"
 		end
 
-	c_string_to_guid (a_str: POINTER; a_guid: POINTER): INTEGER is
+	c_string_to_guid (a_str: POINTER; a_guid: POINTER): INTEGER
 		external
 			"C signature (LPOLESTR, LPCLSID): EIF_INTEGER use <windows.h>"
 		alias
 			"CLSIDFromString"
 		end
 
-	c_guid_to_string (a_guid, a_string: POINTER; a_count: INTEGER): INTEGER is
+	c_guid_to_string (a_guid, a_string: POINTER; a_count: INTEGER): INTEGER
 		external
 			"C signature (REFGUID, LPOLESTR, int): EIF_INTEGER use <windows.h>"
 		alias
 			"StringFromGUID2"
 		end
 
-	c_is_equal_guid (a_guid1, a_guid2: POINTER): BOOLEAN is
+	c_is_equal_guid (a_guid1, a_guid2: POINTER): BOOLEAN
 		external
 			"C signature (REFGUID, REFGUID): EIF_BOOLEAN use <windows.h>"
 		alias
 			"IsEqualGUID"
 		end
 
-	c_generate_guid (a_guid: POINTER): INTEGER is
+	c_generate_guid (a_guid: POINTER): INTEGER
 		external
 			"C signature (GUID*): EIF_INTEGER use <windows.h>"
 		alias
 			"CoCreateGuid"
 		end
 
-	c_guid_to_defstring (a_guid, a_string: POINTER) is
+	c_guid_to_defstring (a_guid, a_string: POINTER)
 		external
 			"C inline use <windows.h>"
 		alias
@@ -179,7 +179,7 @@ feature {NONE} -- Externals
       		]"
       	end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

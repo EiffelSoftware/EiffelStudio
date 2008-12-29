@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IOleParentUndoUnit' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iole_parent_undo_unit_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	do1 (p_undo_manager: IOLE_UNDO_MANAGER_INTERFACE) is
+	do1 (p_undo_manager: IOLE_UNDO_MANAGER_INTERFACE)
 			-- No description available.
 			-- `p_undo_manager' [in].  
 		local
@@ -46,14 +46,14 @@ feature -- Basic Operations
 			ccom_do1 (initializer, p_undo_manager_item)
 		end
 
-	get_description (p_bstr: CELL [STRING]) is
+	get_description (p_bstr: CELL [STRING])
 			-- No description available.
 			-- `p_bstr' [out].  
 		do
 			ccom_get_description (initializer, p_bstr)
 		end
 
-	get_unit_type (p_clsid: ECOM_GUID; pl_id: INTEGER_REF) is
+	get_unit_type (p_clsid: ECOM_GUID; pl_id: INTEGER_REF)
 			-- No description available.
 			-- `p_clsid' [out].  
 			-- `pl_id' [out].  
@@ -61,13 +61,13 @@ feature -- Basic Operations
 			ccom_get_unit_type (initializer, p_clsid.item, pl_id)
 		end
 
-	on_next_add is
+	on_next_add
 			-- No description available.
 		do
 			ccom_on_next_add (initializer)
 		end
 
-	open (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE) is
+	open (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE)
 			-- No description available.
 			-- `p_puu' [in].  
 		local
@@ -86,7 +86,7 @@ feature -- Basic Operations
 			ccom_open (initializer, p_puu_item)
 		end
 
-	close (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE; f_commit: INTEGER) is
+	close (p_puu: IOLE_PARENT_UNDO_UNIT_INTERFACE; f_commit: INTEGER)
 			-- No description available.
 			-- `p_puu' [in].  
 			-- `f_commit' [in].  
@@ -106,7 +106,7 @@ feature -- Basic Operations
 			ccom_close (initializer, p_puu_item, f_commit)
 		end
 
-	add (p_uu: IOLE_UNDO_UNIT_INTERFACE) is
+	add (p_uu: IOLE_UNDO_UNIT_INTERFACE)
 			-- No description available.
 			-- `p_uu' [in].  
 		local
@@ -125,7 +125,7 @@ feature -- Basic Operations
 			ccom_add (initializer, p_uu_item)
 		end
 
-	find_unit (p_uu: IOLE_UNDO_UNIT_INTERFACE) is
+	find_unit (p_uu: IOLE_UNDO_UNIT_INTERFACE)
 			-- No description available.
 			-- `p_uu' [in].  
 		local
@@ -144,7 +144,7 @@ feature -- Basic Operations
 			ccom_find_unit (initializer, p_uu_item)
 		end
 
-	get_parent_state (pdw_state: INTEGER_REF) is
+	get_parent_state (pdw_state: INTEGER_REF)
 			-- No description available.
 			-- `pdw_state' [out].  
 		do
@@ -153,7 +153,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iole_parent_undo_unit_impl_proxy(initializer)
@@ -161,79 +161,79 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_do1 (cpp_obj: POINTER; p_undo_manager: POINTER) is
+	ccom_do1 (cpp_obj: POINTER; p_undo_manager: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](::IOleUndoManager *)"
 		end
 
-	ccom_get_description (cpp_obj: POINTER; p_bstr: CELL [STRING]) is
+	ccom_get_description (cpp_obj: POINTER; p_bstr: CELL [STRING])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_get_unit_type (cpp_obj: POINTER; p_clsid: POINTER; pl_id: INTEGER_REF) is
+	ccom_get_unit_type (cpp_obj: POINTER; p_clsid: POINTER; pl_id: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](GUID *,EIF_OBJECT)"
 		end
 
-	ccom_on_next_add (cpp_obj: POINTER) is
+	ccom_on_next_add (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"]()"
 		end
 
-	ccom_open (cpp_obj: POINTER; p_puu: POINTER) is
+	ccom_open (cpp_obj: POINTER; p_puu: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](::IOleParentUndoUnit *)"
 		end
 
-	ccom_close (cpp_obj: POINTER; p_puu: POINTER; f_commit: INTEGER) is
+	ccom_close (cpp_obj: POINTER; p_puu: POINTER; f_commit: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](::IOleParentUndoUnit *,EIF_INTEGER)"
 		end
 
-	ccom_add (cpp_obj: POINTER; p_uu: POINTER) is
+	ccom_add (cpp_obj: POINTER; p_uu: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](::IOleUndoUnit *)"
 		end
 
-	ccom_find_unit (cpp_obj: POINTER; p_uu: POINTER) is
+	ccom_find_unit (cpp_obj: POINTER; p_uu: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](::IOleUndoUnit *)"
 		end
 
-	ccom_get_parent_state (cpp_obj: POINTER; pdw_state: INTEGER_REF) is
+	ccom_get_parent_state (cpp_obj: POINTER; pdw_state: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_delete_iole_parent_undo_unit_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iole_parent_undo_unit_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iole_parent_undo_unit_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iole_parent_undo_unit_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IOleParentUndoUnit_impl_proxy %"ecom_control_library_IOleParentUndoUnit_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about message Wm_move which is sent after a %
 		%window has been moved."
 	legal: "See notice at end of class."
@@ -17,21 +17,21 @@ create
 
 feature -- Access
 
-	x: INTEGER is
+	x: INTEGER
 			-- x-coordinate of the upper-left corner of the client
 			-- area of the window
 		do
 			Result := x_position_from_lparam (l_param)
 		end
 
-	y: INTEGER is
+	y: INTEGER
 			-- y-coordinate of the upper-left corner of the client
 			-- area of the window
 		do
 			Result := y_position_from_lparam (l_param)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

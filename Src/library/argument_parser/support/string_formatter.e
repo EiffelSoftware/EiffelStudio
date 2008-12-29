@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Permits argument-based formatting of {STRING} instances."
 	legal      : "See notice at end of class."
 	status     : "See notice at end of class."
@@ -253,7 +253,7 @@ feature {NONE} -- Symbols
 	close_char: CHARACTER = '}';
 			-- Index close character
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

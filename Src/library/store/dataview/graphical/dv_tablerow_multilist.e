@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Multi column list displaying database table rows."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ feature -- Status report
 	is_display_ready: BOOLEAN
 			-- Has the object display been built?
 
-	information_set: BOOLEAN is
+	information_set: BOOLEAN
 			-- Is `table_code' set or are multi-list columns
 			-- sufficiently defined?
 		do
@@ -39,20 +39,20 @@ feature -- Status report
 	title_list_set: BOOLEAN
 			-- Has a title list been set?
 
-	table_code_set: BOOLEAN is
+	table_code_set: BOOLEAN
 			-- Has a table code been set?
 		do
 			Result := table_code /= No_code
 		end
 
-	has_select_action (action: PROCEDURE [ANY, TUPLE]): BOOLEAN is
+	has_select_action (action: PROCEDURE [ANY, TUPLE]): BOOLEAN
 			-- Does list of actions executed when an item is selected
 			-- contain `action'?
 		do
 			Result := select_actions.has (agent select_actions.wrapper (?, action))
 		end
 
-	has_deselect_action (action: PROCEDURE [ANY, TUPLE]): BOOLEAN is
+	has_deselect_action (action: PROCEDURE [ANY, TUPLE]): BOOLEAN
 			-- Does list of actions executed when an item is deselected
 			-- contain `action'?
 		do
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Access
 
-	index: INTEGER is
+	index: INTEGER
 			-- Position of graphic selected element
 			-- in the buffer list.
 		local
@@ -85,13 +85,13 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_tablecode (tablecode: INTEGER) is
+	set_tablecode (tablecode: INTEGER)
 			-- Set `tablecode' to `table_code'.
 		do
 			table_code := tablecode
 		end
 
-	set_column_titles (a_title_list: ARRAY [STRING]) is
+	set_column_titles (a_title_list: ARRAY [STRING])
 			-- Set `a_title_list' to the column title list.
 		do
 			Precursor (a_title_list)
@@ -100,7 +100,7 @@ feature -- Basic operations
 			title_list_set: title_list_set
 		end
 
-	set_attributes (a_list: ARRAYED_LIST [INTEGER]) is
+	set_attributes (a_list: ARRAYED_LIST [INTEGER])
 			-- Set `a_list' to the list of database table attributes to display.
 		do
 			if a_list /= Void then
@@ -110,7 +110,7 @@ feature -- Basic operations
 			end
 		end
 
-	build is
+	build
 			-- Set up the list.
 		do
 			if table_code /= No_code then
@@ -125,7 +125,7 @@ feature -- Basic operations
 			is_display_ready := True
 		end
 
-	refresh (tablerow_list: ARRAYED_LIST [DB_TABLE]) is
+	refresh (tablerow_list: ARRAYED_LIST [DB_TABLE])
 			-- Fill the multi_column_list according to `tablerow_list'.
 			-- Select current item of `tablerow_list' if any.
 		local
@@ -162,19 +162,19 @@ feature -- Basic operations
 			end
 		end
 
-	extend_select_actions (action: PROCEDURE [ANY, TUPLE]) is
+	extend_select_actions (action: PROCEDURE [ANY, TUPLE])
 			-- Extend list of actions executed when an item is selected.
 		do
 			select_actions.force_extend (action)
 		end
 
-	extend_deselect_actions (action: PROCEDURE [ANY, TUPLE]) is
+	extend_deselect_actions (action: PROCEDURE [ANY, TUPLE])
 			-- Extend list of actions executed when an item is deselected.
 		do
 			deselect_actions.force_extend (action)
 		end
 
-	set_value_list_redirector (vlr: DV_VALUE_LIST_REDIRECTOR) is
+	set_value_list_redirector (vlr: DV_VALUE_LIST_REDIRECTOR)
 			-- Set a value list redirector `vlr' to redirect
 			-- fixed column results from integer string to "explicit" string.
 		do
@@ -183,7 +183,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	set_col_titles is
+	set_col_titles
 			-- Set column titles with names of attributes which codes are in `attr_codes_list'.
 		local
 			ind: INTEGER
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_to_list (list_item: DB_TABLE; current_i, last_i: INTEGER) is
+	add_to_list (list_item: DB_TABLE; current_i, last_i: INTEGER)
 			-- Add `list_item' representation to the list. Select it if
 			-- `current_i' = `last_i'.
 		local
@@ -223,10 +223,10 @@ feature {NONE} -- Implementation
 	value_list_redirector: DV_VALUE_LIST_REDIRECTOR
 			-- Value list redirector.
 
-	No_code: INTEGER is 0;
+	No_code: INTEGER = 0;
 			-- No `table_code' has been set yet.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

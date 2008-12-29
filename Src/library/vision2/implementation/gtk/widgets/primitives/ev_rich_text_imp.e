@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Set up `Current'
 		do
 			create tab_positions
@@ -47,26 +47,26 @@ feature {NONE} -- Initialization
 			Precursor {EV_TEXT_IMP}
 		end
 
-	initialize_buffer_events is
+	initialize_buffer_events
 			-- Initialize `text_buffer' events
 		do
 			Precursor {EV_TEXT_IMP}
 			real_signal_connect (text_buffer, "mark_set", agent (app_implementation.gtk_marshal).text_buffer_mark_set_intermediary (object_id, ?, ?), Void)
 		end
 
-	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE is
+	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Create a caret move action sequence.
 		do
 			create Result
 		end
 
-	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a selection change action sequence.
 		do
 			create Result
 		end
 
-	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE is
+	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Create a file access action sequence.
 		do
 			create Result
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER is
+	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER
 		local
 			character_change: INTEGER_REF
 			range_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			Result := character_change
 		end
 
-	initialize_for_saving is
+	initialize_for_saving
 			-- Initialize `Current' for save operations, by performing
 			-- optimizations that prevent the control from slowing down due to
 			-- unecessary optimizations.
@@ -92,14 +92,14 @@ feature {NONE} -- Implementation
 			-- Do nothing
 		end
 
-	complete_saving is
+	complete_saving
 			-- Restore `Current' back to its default state before last call
 			-- to `initialize_for_saving'.
 		do
 			-- Do nothing
 		end
 
-	initialize_for_loading is
+	initialize_for_loading
 			-- Initialize `Current' for load operations, by performing
 			-- optimizations that prevent the control from slowing down due to
 			-- unecessary optimizations.
@@ -107,14 +107,14 @@ feature {NONE} -- Implementation
 			-- Do nothing
 		end
 
-	complete_loading is
+	complete_loading
 			-- Restore `Current' back to its default state before last call
 			-- to `initialize_for_loading'.
 		do
 			-- Do nothing
 		end
 
-	font_char_set (a_font: EV_FONT): INTEGER is
+	font_char_set (a_font: EV_FONT): INTEGER
 			-- `Result' is char set of font `a_font'.
 		do
 			Result := 0
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 
 feature -- Status Report
 
-	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
+	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT)
 			--  Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
 		local
 			format_imp: EV_PARAGRAPH_FORMAT_IMP
@@ -131,7 +131,7 @@ feature -- Status Report
 			modify_paragraph_internal (start_line, end_line, format_imp, format_imp.dummy_paragraph_format_range_information)
 		end
 
-	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_index' to `end_index'.
 			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
 			--`end_index' and `False' otherwise.
@@ -141,7 +141,7 @@ feature -- Status Report
 			Result := internal_character_format_range_information (start_index, end_index, False, Void)
 		end
 
-	internal_character_format_range_information (start_index, end_index: INTEGER; abort_on_change: BOOLEAN; change_index: INTEGER_REF): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+	internal_character_format_range_information (start_index, end_index: INTEGER; abort_on_change: BOOLEAN; change_index: INTEGER_REF): EV_CHARACTER_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_index' to `end_index'.
 			-- All attributes in `Result' are set to `True' if they remain consistent from `start_index' to
 			--`end_index' and `False' otherwise.
@@ -257,7 +257,7 @@ feature -- Status Report
 			end
 		end
 
-	paragraph_format_range_information (start_index, end_index: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+	paragraph_format_range_information (start_index, end_index: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 			-- Formatting range information from caret position `start_index' to `end_index'.
 			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
 			--`end_index' and `False' otherwise.
@@ -325,7 +325,7 @@ feature -- Status Report
 
 		end
 
-	paragraph_format_contiguous, internal_paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
+	paragraph_format_contiguous, internal_paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN
 			-- Is paragraph formatting from line `start_position' to `end_position' contiguous?
 		local
 			range_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
@@ -334,7 +334,7 @@ feature -- Status Report
 			Result := range_info.alignment and then range_info.left_margin and then range_info.right_margin and then range_info.top_spacing and then range_info.bottom_spacing
 		end
 
-	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 			-- Internal version which permits optimizations as caret position and selection
 			-- does not need to be restored.
@@ -342,7 +342,7 @@ feature -- Status Report
 			Result := internal_character_format_contiguous (start_index, end_index)
 		end
 
-	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 		local
 			a_range_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
@@ -351,7 +351,7 @@ feature -- Status Report
 			Result := a_range_info.font_family
 		end
 
-	selected_paragraph_format: EV_PARAGRAPH_FORMAT is
+	selected_paragraph_format: EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph format of current selection.
 			-- If more than one format is contained in the selection, `Result'
 			-- is the first of these formats.
@@ -359,7 +359,7 @@ feature -- Status Report
 			Result := paragraph_format (selection_start)
 		end
 
-	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
+	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION)
 			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
 		local
@@ -369,7 +369,7 @@ feature -- Status Report
 			modify_region_internal (text_buffer, start_position, end_position, a_format_imp, applicable_attributes)
 		end
 
-	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION)
 			-- Modify paragraph formatting from caret positions `start_position' to `end_position' applying all attributes of `format' that are set to
 			-- `True' within `applicable_attributes', ignoring others.
 		local
@@ -379,7 +379,7 @@ feature -- Status Report
 			modify_paragraph_internal (start_position, end_position, format_imp, applicable_attributes)
 		end
 
-	paragraph_format, internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
+	paragraph_format, internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT
 			-- `Result' is paragraph_format at caret position `caret_index'.
 		local
 			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
@@ -411,13 +411,13 @@ feature -- Status Report
 			gtk_text_attributes_free (a_text_attributes)
 		end
 
-	selected_character_format: EV_CHARACTER_FORMAT is
+	selected_character_format: EV_CHARACTER_FORMAT
 			-- Format of the character which starts the selection
 		do
 			Result := character_format (selection_start)
 		end
 
-	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
+	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER
 			-- Index of character closest to position `x_position', `y_position'.
 		local
 			a_buf_x, a_buf_y: INTEGER
@@ -433,7 +433,7 @@ feature -- Status Report
 			Result := Result.min (text_count).max (1)
 		end
 
-	position_from_index (an_index: INTEGER): EV_COORDINATE is
+	position_from_index (an_index: INTEGER): EV_COORDINATE
 			-- Position of character at index `an_index'.
 		local
 			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
@@ -450,7 +450,7 @@ feature -- Status Report
 			create Result.set (a_x2, a_y2)
 		end
 
-	character_displayed (an_index: INTEGER): BOOLEAN is
+	character_displayed (an_index: INTEGER): BOOLEAN
 			-- Is character `an_index' currently visible in `Current'?
 		local
 			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
@@ -471,7 +471,7 @@ feature -- Status Report
 
 feature -- Status report
 
-	character_format (pos: INTEGER): EV_CHARACTER_FORMAT is
+	character_format (pos: INTEGER): EV_CHARACTER_FORMAT
 			-- `Result' is character format at position `pos'. On some platforms
 			-- this may be optimized to take the selected character format and therefore
 			-- should only be used by `next_change_of_character'.
@@ -479,7 +479,7 @@ feature -- Status report
 			Result := internal_character_format (pos).interface
 		end
 
-	internal_character_format (character_index: INTEGER): EV_CHARACTER_FORMAT_IMP is
+	internal_character_format (character_index: INTEGER): EV_CHARACTER_FORMAT_IMP
 			-- `Result' is character format of character `character_index'.
 		local
 			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
@@ -543,7 +543,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_current_format (format: EV_CHARACTER_FORMAT) is
+	set_current_format (format: EV_CHARACTER_FORMAT)
 			-- apply `format' to current caret position, applicable
 			-- to next typed characters.
 		do
@@ -553,7 +553,7 @@ feature -- Status setting
 	current_format: EV_CHARACTER_FORMAT
 		-- Format to be applied to next typed characters
 
-	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
+	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately. May or may not change the cursor position.
 		local
@@ -565,7 +565,7 @@ feature -- Status setting
 			end
 		end
 
-	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
+	buffered_format (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT)
 			-- Apply a character format `format' from caret positions `start_position' to `end_position' to
 			-- format buffer. Call `flush_format_buffer' to apply buffered contents to `Current'.
 		local
@@ -582,7 +582,7 @@ feature -- Status setting
 			modify_region_internal (append_buffer, start_position, end_position, a_format_imp, a_format_imp.dummy_character_format_range_information)
 		end
 
-	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT) is
+	buffered_append (a_text: STRING_GENERAL; format: EV_CHARACTER_FORMAT)
 			-- Apply `a_text' with format `format' to append buffer.
 			-- To apply buffer contents to `Current', call `flush_append_buffer' or
 			-- `flush_append_buffer_to'.
@@ -617,7 +617,7 @@ feature -- Status setting
 	temp_start_iter, temp_end_iter: EV_GTK_TEXT_ITER_STRUCT
 		-- Reusable GtkTextIter objects
 
-	flush_buffer is
+	flush_buffer
 			-- Flush contents of buffer.
 			-- If `buffer_locked_for_append' then replace contents of `Current' with buffer contents.
 			-- If `buffer_locked_for_format' then apply buffered formatting to contents of `Current'.
@@ -639,7 +639,7 @@ feature -- Status setting
 			end
 		end
 
-	flush_buffer_to (start_position, end_position: INTEGER) is
+	flush_buffer_to (start_position, end_position: INTEGER)
 			-- Replace contents of current from caret position `start_position' to `end_position' with
 			-- contents of buffer, since it was last flushed. If `start_position' and `end_position'
 			-- are equal, insert the contents of the buffer at caret position `start_position'.
@@ -664,7 +664,7 @@ feature -- Status setting
 			buffer_locked_in_append_mode := False
 		end
 
-	set_tab_width (a_width: INTEGER) is
+	set_tab_width (a_width: INTEGER)
 			-- Assign `a_width' to `tab_width'.
 		do
 			tab_width := a_width
@@ -679,7 +679,7 @@ feature -- Status setting
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
 			-- Used for key event actions sequences.
 		do
 			Precursor {EV_TEXT_IMP} (a_key, a_key_string, a_key_press)
@@ -692,7 +692,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	on_text_mark_changed (a_text_iter, a_text_mark: POINTER) is
+	on_text_mark_changed (a_text_iter, a_text_mark: POINTER)
 			-- Called when a text mark within `text_buffer' has been set.
 		local
 			a_caret_position: INTEGER
@@ -729,135 +729,135 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	gtk_text_view_set_tabs (a_text_view, a_pango_tab_array: POINTER) is
+	gtk_text_view_set_tabs (a_text_view, a_pango_tab_array: POINTER)
 			external
 				"C signature (GtkTextView*, PangoTabArray*) use <gtk/gtk.h>"
 			end
 
-	pango_tab_array_new (initial_size: INTEGER; dimension_in_pixels: BOOLEAN): POINTER is
+	pango_tab_array_new (initial_size: INTEGER; dimension_in_pixels: BOOLEAN): POINTER
 			external
 				"C inline use <gtk/gtk.h>"
 			alias
 				"pango_tab_array_new ((gint) $initial_size, (gboolean) $dimension_in_pixels)"
 			end
 
-	gtk_text_attributes_struct_font_description (a_text_attributes: POINTER): POINTER is
+	gtk_text_attributes_struct_font_description (a_text_attributes: POINTER): POINTER
 			external
 				"C struct GtkTextAttributes access font use <gtk/gtk.h>"
 			end
 
-	gtk_text_attributes_struct_text_appearance (a_text_attributes: POINTER): POINTER is
+	gtk_text_attributes_struct_text_appearance (a_text_attributes: POINTER): POINTER
 			external
 				"C struct GtkTextAttributes access &appearance use <gtk/gtk.h>"
 			end
 
-	gtk_text_attributes_struct_justification (a_text_attributes: POINTER): INTEGER is
+	gtk_text_attributes_struct_justification (a_text_attributes: POINTER): INTEGER
 			external
 				"C struct GtkTextAttributes access justification use <gtk/gtk.h>"
 			end
 
-	gtk_text_attributes_struct_left_margin (a_text_attributes: POINTER): INTEGER is
+	gtk_text_attributes_struct_left_margin (a_text_attributes: POINTER): INTEGER
 			external
 				"C struct GtkTextAttributes access left_margin use <gtk/gtk.h>"
 			end
 
-	gtk_text_attributes_struct_right_margin (a_text_attributes: POINTER): INTEGER is
+	gtk_text_attributes_struct_right_margin (a_text_attributes: POINTER): INTEGER
 			external
 				"C struct GtkTextAttributes access right_margin use <gtk/gtk.h>"
 			end
 
-	gtk_text_attributes_struct_pixels_above_lines (a_text_attributes: POINTER): INTEGER is
+	gtk_text_attributes_struct_pixels_above_lines (a_text_attributes: POINTER): INTEGER
 			external
 				"C struct GtkTextAttributes access pixels_above_lines use <gtk/gtk.h>"
 			end
 
-	gtk_text_attributes_struct_pixels_below_lines (a_text_attributes: POINTER): INTEGER is
+	gtk_text_attributes_struct_pixels_below_lines (a_text_attributes: POINTER): INTEGER
 			external
 				"C struct GtkTextAttributes access pixels_below_lines use <gtk/gtk.h>"
 			end
 
-	gtk_text_appearance_struct_rise (a_text_appearance: POINTER): INTEGER is
+	gtk_text_appearance_struct_rise (a_text_appearance: POINTER): INTEGER
 			external
 				"C struct GtkTextAppearance access rise use <gtk/gtk.h>"
 			end
 
-	gtk_text_appearance_struct_bg_color (a_text_appearance: POINTER): POINTER is
+	gtk_text_appearance_struct_bg_color (a_text_appearance: POINTER): POINTER
 			external
 				"C struct GtkTextAppearance access &bg_color use <gtk/gtk.h>"
 			end
 
-	gtk_text_appearance_struct_underline (a_text_appearance: POINTER): INTEGER is
+	gtk_text_appearance_struct_underline (a_text_appearance: POINTER): INTEGER
 			external
 				"C struct GtkTextAppearance access underline use <gtk/gtk.h>"
 			end
 
-	gtk_text_appearance_struct_strikethrough (a_text_appearance: POINTER): INTEGER is
+	gtk_text_appearance_struct_strikethrough (a_text_appearance: POINTER): INTEGER
 			external
 				"C struct GtkTextAppearance access strikethrough use <gtk/gtk.h>"
 			end
 
-	gtk_text_appearance_struct_fg_color (a_text_appearance: POINTER): POINTER is
+	gtk_text_appearance_struct_fg_color (a_text_appearance: POINTER): POINTER
 			external
 				"C struct GtkTextAppearance access &fg_color use <gtk/gtk.h>"
 			end
 
-	gtk_text_iter_get_attributes (a_text_iter: POINTER; a_text_values: POINTER): BOOLEAN is
+	gtk_text_iter_get_attributes (a_text_iter: POINTER; a_text_values: POINTER): BOOLEAN
 			external
 				"C inline use <gtk/gtk.h>"
 			alias
 				"gtk_text_iter_get_attributes ((GtkTextIter*) $a_text_iter, (GtkTextAttributes*) $a_text_values )"
 			end
 
-	gtk_text_view_get_default_attributes (a_text_view: POINTER): POINTER is
+	gtk_text_view_get_default_attributes (a_text_view: POINTER): POINTER
 			external
 				"C inline use <gtk/gtk.h>"
 			alias
 				"gtk_text_view_get_default_attributes ((GtkTextView*) $a_text_view)"
 			end
 
-	gtk_text_attributes_free (a_text_attributes: POINTER) is
+	gtk_text_attributes_free (a_text_attributes: POINTER)
 			external
 				"C inline use <gtk/gtk.h>"
 			alias
 				"free ((GtkTextAttributes*) $a_text_attributes)"
 			end
 
-	gtk_text_attributes_copy_values (a_text_attributes_src, a_text_attributes_dest: POINTER) is
+	gtk_text_attributes_copy_values (a_text_attributes_src, a_text_attributes_dest: POINTER)
 			external
 				"C inline use <gtk/gtk.h>"
 			alias
 				"gtk_text_attributes_copy_values ((GtkTextAttributes*) $a_text_attributes_src, (GtkTextAttributes*) $a_text_attributes_dest)"
 			end
 
-	gtk_text_attributes_copy (a_text_attributes_src: POINTER): POINTER is
+	gtk_text_attributes_copy (a_text_attributes_src: POINTER): POINTER
 			external
 				"C inline use <gtk/gtk.h>"
 			alias
 				"gtk_text_attributes_copy ((GtkTextAttributes*) $a_text_attributes_src)"
 			end
 
-	gtk_text_view_get_iter_at_location (a_text_view,  a_text_iter: POINTER; buffer_x, buffer_y: INTEGER) is
+	gtk_text_view_get_iter_at_location (a_text_view,  a_text_iter: POINTER; buffer_x, buffer_y: INTEGER)
 			external
 				"C inline use <gtk/gtk.h>"
 			alias
 				"gtk_text_view_get_iter_at_location ((GtkTextView*) $a_text_view, (GtkTextIter*) $a_text_iter, (gint) $buffer_x, (gint) $buffer_y)"
 			end
 
-	gtk_text_view_window_to_buffer_coords (a_text_view: POINTER; window_x, window_y: INTEGER; buffer_x, buffer_y: POINTER) is
+	gtk_text_view_window_to_buffer_coords (a_text_view: POINTER; window_x, window_y: INTEGER; buffer_x, buffer_y: POINTER)
 			external
 				"C inline use <gtk/gtk.h>"
 			alias
 				"gtk_text_view_window_to_buffer_coords ((GtkTextView*) $a_text_view, GTK_TEXT_WINDOW_TEXT, (gint) $window_x, (gint) $window_y, (gint *) $buffer_x, (gint *) $buffer_y)"
 			end
 
-	gtk_text_view_buffer_to_window_coords (a_text_view: POINTER; buffer_x, buffer_y: INTEGER; window_x, window_y: POINTER) is
+	gtk_text_view_buffer_to_window_coords (a_text_view: POINTER; buffer_x, buffer_y: INTEGER; window_x, window_y: POINTER)
 			external
 				"C inline use <gtk/gtk.h>"
 			alias
 				"gtk_text_view_buffer_to_window_coords ((GtkTextView*) $a_text_view, GTK_TEXT_WINDOW_TEXT, (gint) $buffer_x, (gint) $buffer_y, (gint *) $window_x, (gint *) $window_y)"
 			end
 
-	modify_region_internal (a_text_buffer: POINTER; start_position, end_position: INTEGER; format_imp: EV_CHARACTER_FORMAT_IMP; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
+	modify_region_internal (a_text_buffer: POINTER; start_position, end_position: INTEGER; format_imp: EV_CHARACTER_FORMAT_IMP; applicable_attributes: EV_CHARACTER_FORMAT_RANGE_INFORMATION)
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
 			-- Formatting is applied immediately. May or may not change the cursor position.
 		local
@@ -876,7 +876,7 @@ feature {NONE} -- Implementation
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_apply_tag (a_text_buffer, text_tag, a_start_iter.item, a_end_iter.item)
 		end
 
-	modify_paragraph_internal (start_position, end_position: INTEGER; format_imp: EV_PARAGRAPH_FORMAT_IMP; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+	modify_paragraph_internal (start_position, end_position: INTEGER; format_imp: EV_PARAGRAPH_FORMAT_IMP; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION)
 			-- Apply paragraph formatting `format' from position `start_position' to `end_position' based on `applicable_attributes'
 		local
 			a_start_position, a_end_position: INTEGER
@@ -906,7 +906,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	update_tab_positions (value: INTEGER) is
+	update_tab_positions (value: INTEGER)
 			-- Update tab widths based on contents of `tab_positions'.
 		local
 			i: INTEGER
@@ -927,7 +927,7 @@ feature {NONE} -- Implementation
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_tabs (text_view, pango_tab_array)
 		end
 
-	dispose_append_buffer is
+	dispose_append_buffer
 			-- Clean up `append_buffer'.
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (append_buffer)
@@ -941,7 +941,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RICH_TEXT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

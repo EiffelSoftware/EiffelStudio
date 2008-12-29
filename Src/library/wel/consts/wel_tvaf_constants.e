@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree view action flag (TVAF) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,35 +10,35 @@ class
 
 feature -- Access
 
-	Tvc_bykeyboard: INTEGER is 2
+	Tvc_bykeyboard: INTEGER = 2
 			-- Used for the `Tvn_selchanged' and `Tvn_selchanging'
 			-- notification messages.
 			-- Action done by a key stroke.
 			--
 			-- Declared in Windows as TVC_BYKEYBOARD
 
-	Tvc_bymouse: INTEGER is 1
+	Tvc_bymouse: INTEGER = 1
 			-- Used for the `Tvn_selchanged' and `Tvn_selchanging'
 			-- notification messages.
 			-- Action done by a mouse click.
 			--
 			-- Declared in Windows as TVC_BYMOUSE
 
-	Tvc_unknown: INTEGER is 0
+	Tvc_unknown: INTEGER = 0
 			-- Used for the `Tvn_selchanged' or `Tvn_selchanging'
 			-- notification messages.
 			-- Action done by unknown.
 			--
 			-- Declared in Windows as TVC_UNKNOWN
 
-	Tve_collapse: INTEGER is 1
+	Tve_collapse: INTEGER = 1
 			-- Used for the `Tvn_expand' or `Tvn_expanding'
 			-- notification messages.
 			-- Action done by collapsing the list.
 			--
 			-- Declared in Windows as TVE_COLLAPSE
 
-	Tve_collapsereset: INTEGER is 32768
+	Tve_collapsereset: INTEGER = 32768
 			-- Used for the `Tvn_expand' and `Tvn_expanding'
 			-- notification messages.
 			-- Action done by collapsing the list and removing
@@ -46,14 +46,14 @@ feature -- Access
 			--
 			-- Declared in Windows as TVE_COLLAPSERESET
 
-	Tve_expand: INTEGER is 2
+	Tve_expand: INTEGER = 2
 			-- Used for the `Tvn_expand' and `Tvn_expanding'
 			-- notification messages.
 			-- Action done by expanding the list.
 			--
 			-- Declared in Windows as TVE_EXPAND
 
-	Tve_toggle: INTEGER is 3;
+	Tve_toggle: INTEGER = 3;
 			-- Used for the `Tvn_expand' and `Tvn_expanding'
 			-- notification messages.
 			-- Action done by changing the list of the list 
@@ -61,7 +61,7 @@ feature -- Access
 			--
 			-- Declared in Windows as TVE_TOGGLE
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

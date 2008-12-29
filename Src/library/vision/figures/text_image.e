@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make  is
+	make
 			-- Create a text.
 		do
 			init_fig (Void);
@@ -44,7 +44,7 @@ feature -- Initialization
 
 feature -- Output
 
-	select_figure is
+	select_figure
 			-- select the text image
 		local
 			temp: COLOR
@@ -54,13 +54,13 @@ feature -- Output
 			set_background_color (temp);
 		end;
 
-	deselect is
+	deselect
 			-- deselect the text image
 		do
 -- FIX ME			select_text_image
 		end;
 
-	draw is
+	draw
 			-- Draw the current text.
 		require else
 			a_drawing_attached: drawing /= Void
@@ -79,7 +79,7 @@ invariant
 	foreground_color_exists: foreground_color /= Void;
 	background_color_exists: background_color /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

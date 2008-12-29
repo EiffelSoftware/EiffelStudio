@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Regression tests for {EQA_EXTRACTED_TEST_SET}.
 	]"

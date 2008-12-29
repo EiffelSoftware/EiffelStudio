@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IPersistStorage' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_ipersist_storage_impl_proxy_from_pointer(cpp_obj)
@@ -27,20 +27,20 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	get_class_id (p_class_id: ECOM_GUID) is
+	get_class_id (p_class_id: ECOM_GUID)
 			-- No description available.
 			-- `p_class_id' [out].  
 		do
 			ccom_get_class_id (initializer, p_class_id.item)
 		end
 
-	is_dirty is
+	is_dirty
 			-- No description available.
 		do
 			ccom_is_dirty (initializer)
 		end
 
-	init_new (pstg: ECOM_STORAGE) is
+	init_new (pstg: ECOM_STORAGE)
 			-- No description available.
 			-- `pstg' [in].  
 		local
@@ -59,7 +59,7 @@ feature -- Basic Operations
 			ccom_init_new (initializer, pstg_item)
 		end
 
-	load (pstg: ECOM_STORAGE) is
+	load (pstg: ECOM_STORAGE)
 			-- No description available.
 			-- `pstg' [in].  
 		local
@@ -78,7 +78,7 @@ feature -- Basic Operations
 			ccom_load (initializer, pstg_item)
 		end
 
-	save (p_stg_save: ECOM_STORAGE; f_same_as_load: INTEGER) is
+	save (p_stg_save: ECOM_STORAGE; f_same_as_load: INTEGER)
 			-- No description available.
 			-- `p_stg_save' [in].  
 			-- `f_same_as_load' [in].  
@@ -98,7 +98,7 @@ feature -- Basic Operations
 			ccom_save (initializer, p_stg_save_item, f_same_as_load)
 		end
 
-	save_completed (p_stg_new: ECOM_STORAGE) is
+	save_completed (p_stg_new: ECOM_STORAGE)
 			-- No description available.
 			-- `p_stg_new' [in].  
 		local
@@ -117,7 +117,7 @@ feature -- Basic Operations
 			ccom_save_completed (initializer, p_stg_new_item)
 		end
 
-	hands_off_storage is
+	hands_off_storage
 			-- No description available.
 		do
 			ccom_hands_off_storage (initializer)
@@ -125,7 +125,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_ipersist_storage_impl_proxy(initializer)
@@ -133,67 +133,67 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_get_class_id (cpp_obj: POINTER; p_class_id: POINTER) is
+	ccom_get_class_id (cpp_obj: POINTER; p_class_id: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](GUID *)"
 		end
 
-	ccom_is_dirty (cpp_obj: POINTER) is
+	ccom_is_dirty (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"]()"
 		end
 
-	ccom_init_new (cpp_obj: POINTER; pstg: POINTER) is
+	ccom_init_new (cpp_obj: POINTER; pstg: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](IStorage *)"
 		end
 
-	ccom_load (cpp_obj: POINTER; pstg: POINTER) is
+	ccom_load (cpp_obj: POINTER; pstg: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](IStorage *)"
 		end
 
-	ccom_save (cpp_obj: POINTER; p_stg_save: POINTER; f_same_as_load: INTEGER) is
+	ccom_save (cpp_obj: POINTER; p_stg_save: POINTER; f_same_as_load: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](IStorage *,EIF_INTEGER)"
 		end
 
-	ccom_save_completed (cpp_obj: POINTER; p_stg_new: POINTER) is
+	ccom_save_completed (cpp_obj: POINTER; p_stg_new: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](IStorage *)"
 		end
 
-	ccom_hands_off_storage (cpp_obj: POINTER) is
+	ccom_hands_off_storage (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"]()"
 		end
 
-	ccom_delete_ipersist_storage_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_ipersist_storage_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_ipersist_storage_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_ipersist_storage_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IPersistStorage_impl_proxy %"ecom_control_library_IPersistStorage_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

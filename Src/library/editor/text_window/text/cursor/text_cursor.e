@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that represent the cursor of an editor window "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature -- Initialization
 
-	make_from_relative_pos (a_line: like line; a_token: EDITOR_TOKEN;	pos: INTEGER; a_text: like text) is
+	make_from_relative_pos (a_line: like line; a_token: EDITOR_TOKEN;	pos: INTEGER; a_text: like text)
 			-- Create a cursor for `text', at position given by
 			-- `a_line', `a_token' and `pos'.
 		require
@@ -49,7 +49,7 @@ feature -- Initialization
 			set_current_char (a_token, pos)
 		end
 
-	make_from_character_pos (ch_num, y: INTEGER; a_text: like text) is
+	make_from_character_pos (ch_num, y: INTEGER; a_text: like text)
 			-- Create a cursor for `text', at the `ch_num'th
 			-- character in line `y'.
 		require
@@ -70,7 +70,7 @@ feature -- Initialization
 			set_x_in_characters (ch_num)
 		end
 
-	make_from_integer (ch_num: INTEGER; a_text: like text) is
+	make_from_integer (ch_num: INTEGER; a_text: like text)
 			-- Create a cursor in `a_window', at the `ch_num'th
 			-- character of the whole text.
 		require
@@ -140,7 +140,7 @@ feature -- Access
 			-- it can be counted by someone who reads the text
 			-- i.e. each tabulations is counted as several characters.
 
-	x_in_characters: INTEGER is
+	x_in_characters: INTEGER
 			-- Position of `Current' in line in characters as
 			-- it can be counted in a file, i.e. each tabulation
 			-- is counted as only one character.
@@ -161,7 +161,7 @@ feature -- Access
 			end
 		end
 
-	pos_in_text: INTEGER is
+	pos_in_text: INTEGER
 			-- Position, given in characters, from the beginning
 			-- of the text. Tabulations are counted as one character.
 		local
@@ -195,7 +195,7 @@ feature -- Access
 
 --| Other functions
 
-	item: CHARACTER is
+	item: CHARACTER
 			-- Character current points on
 		obsolete
 			"Use wide_item instead"
@@ -203,7 +203,7 @@ feature -- Access
 			Result := wide_item.to_character_8
 		end
 
-	wide_item: CHARACTER_32 is
+	wide_item: CHARACTER_32
 			-- Character current points on
 		do
 			if token = line.eol_token then
@@ -213,7 +213,7 @@ feature -- Access
 			end
 		end
 
-	pos_in_characters: INTEGER is
+	pos_in_characters: INTEGER
 			-- Position of Current, in characters from the start of the text.
 		local
 			a_line: EDITOR_LINE
@@ -235,7 +235,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_line (a_line: like line) is
+	set_line (a_line: like line)
 			-- Make `a_line' the new value of `line'.
 		require
 			a_line_exists: a_line /= Void
@@ -246,7 +246,7 @@ feature -- Element change
 			update_current_char
 		end
 
-	set_current_char (a_token: EDITOR_TOKEN; a_position: INTEGER) is
+	set_current_char (a_token: EDITOR_TOKEN; a_position: INTEGER)
 			-- Make `a_token' be the new value for `token'.
 			-- Set the value of `pos_in_token' to `a_position'.
 			-- Update `x_in_pixels' accordingly.
@@ -279,7 +279,7 @@ feature -- Element change
 			end
 		end
 
-	equivalent_length (position, tab_number: INTEGER): INTEGER is
+	equivalent_length (position, tab_number: INTEGER): INTEGER
 			-- Length of a tabulation inserted after `position' in the text
 			-- as it would appear to the reader.
 		local
@@ -291,7 +291,7 @@ feature -- Element change
 			end
 		end
 
-	token_length (tok: EDITOR_TOKEN; pos: INTEGER): INTEGER is
+	token_length (tok: EDITOR_TOKEN; pos: INTEGER): INTEGER
 			-- Length of token `tok' after `position' in the text
 			-- as it would appear to the reader.
 		require
@@ -307,7 +307,7 @@ feature -- Element change
 			end
 		end
 
-	update_current_char is
+	update_current_char
 			-- Update the current token and the position in it.
 			-- It is required that the cursor is not in the left margin.
 		require
@@ -361,7 +361,7 @@ feature -- Element change
 			end
 		end
 
-	set_y_in_lines (y: INTEGER) is
+	set_y_in_lines (y: INTEGER)
 			-- Make `y' be the new value of `y_in_lines'.
 			-- Change `line' accordingly.
 		require
@@ -381,7 +381,7 @@ feature -- Element change
 			update_current_char
 		end
 
-	set_x_in_characters (x_in_ch: INTEGER) is
+	set_x_in_characters (x_in_ch: INTEGER)
 			-- Set attributes so that `x_in_characters' return `x_in_ch'.
 		require
 			x_in_ch_valid: x_in_ch >= 1
@@ -407,7 +407,7 @@ feature -- Element change
 
 feature -- Cursor movement
 
-	go_right_char is
+	go_right_char
 			-- Move to next character, if there is one.
 		do
 			if pos_in_token = token.length then
@@ -427,7 +427,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_right_char_no_down_line is
+	go_right_char_no_down_line
 			-- Move to next character, if there is one.
 		do
 			if pos_in_token = token.length then
@@ -440,7 +440,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_left_char is
+	go_left_char
 			-- Move to previous character, if there is one.
 		local
 			previous_token: EDITOR_TOKEN
@@ -463,7 +463,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_up_line is
+	go_up_line
 			-- Move up one line (to preceding line), if possible.
 		do
 			if line.previous /= Void then
@@ -472,7 +472,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_down_line is
+	go_down_line
 			-- Move down one line (to next line), if possible.
 		do
 			if line.next /= Void then
@@ -481,19 +481,19 @@ feature -- Cursor movement
 			end
 		end
 
-	go_start_line is
+	go_start_line
 			-- Move to beginning of line.
 		do
 			set_current_char (line.first_token, 1)
 		end
 
-	go_end_line is
+	go_end_line
 			-- Move to end of line.
 		do
 			set_current_char (line.eol_token, line.eol_token.length)
 		end
 
-	go_smart_home is
+	go_smart_home
 			-- Move to smart home position
 		local
 			l_token: like token
@@ -516,7 +516,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_start_word is
+	go_start_word
 			-- Move to beginning of word.
 		local
 			image: STRING_32
@@ -554,7 +554,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_end_word is
+	go_end_word
 			-- Move to end of word.
 		local
 			image: STRING_32
@@ -596,7 +596,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_left_word is
+	go_left_word
 			-- Move `Current' to the beginning of the previous word.
 		do
 			go_left_char
@@ -604,14 +604,14 @@ feature -- Cursor movement
 		end
 
 
-	go_right_word is
+	go_right_word
 			-- Move `Current' to the end of the next word.
 		do
 			go_right_char
 			go_end_word
 		end
 
-	go_to_position (a_position: INTEGER) is
+	go_to_position (a_position: INTEGER)
 			-- Move `Current' to `a_position' of the text
 		local
 			pos: INTEGER
@@ -647,7 +647,7 @@ feature -- Cursor movement
 			set_current_char (t, pos)
 		end
 
-	char_is_separator (char: CHARACTER_32): BOOLEAN is
+	char_is_separator (char: CHARACTER_32): BOOLEAN
 			-- Is `char' considered a word separator?
 		do
 			if char.is_character_8 then
@@ -656,7 +656,7 @@ feature -- Cursor movement
 			end
 		end
 
-	char_is_blank (char: CHARACTER_32): BOOLEAN is
+	char_is_blank (char: CHARACTER_32): BOOLEAN
 			-- Is `char' a blank space or a tabulation?
 		do
 			if char.is_character_8 then
@@ -666,7 +666,7 @@ feature -- Cursor movement
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := (y_in_lines < other.y_in_lines) or else
@@ -674,7 +674,7 @@ feature -- Comparison
 				--| We have to verify that Current and `other' are not equal.
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is Current equal to `other'?
 		do
 			Result := (y_in_lines = other.y_in_lines) and then (x_in_visible_characters = other.x_in_visible_characters)
@@ -682,7 +682,7 @@ feature -- Comparison
 
 feature {NONE} -- Word-by-word Implementation
 
-	internal_go_right_char is
+	internal_go_right_char
 			-- Move to next character, if there is one.
 		do
 			bound_reached := False
@@ -699,7 +699,7 @@ feature {NONE} -- Word-by-word Implementation
 			end
 		end
 
-	internal_go_left_char is
+	internal_go_left_char
 			-- Move to previous character, if there is one.
 		local
 			previous_token: EDITOR_TOKEN
@@ -724,7 +724,7 @@ feature {NONE} -- Word-by-word Implementation
 
 feature {SELECTABLE_TEXT} -- Implementation
 
-	set_line_to_next is
+	set_line_to_next
 			-- Make `line.next' the new value of `line'.
 			-- Change `y_in_lines' accordingly.
 		do
@@ -735,7 +735,7 @@ feature {SELECTABLE_TEXT} -- Implementation
 			end
 		end
 
-	set_line_to_previous is
+	set_line_to_previous
 			-- Make `line.previous' the new value of `line'.
 			-- Change `y_in_lines' accordingly.
 			-- Do not update `pos' and `token',
@@ -750,7 +750,7 @@ feature {SELECTABLE_TEXT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	tab_length: INTEGER is
+	tab_length: INTEGER
 		once
 			Result := text.tabulation_size
 		ensure
@@ -760,7 +760,7 @@ feature {NONE} -- Implementation
 	text: SELECTABLE_TEXT
 		-- Whole text displayed.
 
-	additional_separators: ARRAY [CHARACTER] is
+	additional_separators: ARRAY [CHARACTER]
 			-- separators other than blank spaces and brackets/parenthesis
 			-- for word by word selection
 		once
@@ -772,7 +772,7 @@ invariant
 	pos_in_token_positive			: pos_in_token > 0
 	text_not_void					: text /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

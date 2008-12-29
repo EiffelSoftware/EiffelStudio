@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Eiffel Vision Simple application.%N%
 		%Base for root class in a simple application.%N%
@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	prepare is
+	prepare
 			-- Create initial windows and widgets.
 			-- eg:
 			-- prepare is
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		deferred
 		end
 
-	make is
+	make
 			-- Launch the application.
 		do
 			default_create
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			launch
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

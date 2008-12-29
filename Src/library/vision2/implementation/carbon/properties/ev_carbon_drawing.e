@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -39,7 +39,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-set_rectangle (a_x, a_y, a_height, a_width, a_line: INTEGER; a_filled, a_dashed: BOOLEAN; a_col: EV_COLOR) is
+set_rectangle (a_x, a_y, a_height, a_width, a_line: INTEGER; a_filled, a_dashed: BOOLEAN; a_col: EV_COLOR)
 	do
 		internal_rectangle := true
 		internal_dashed_line_style := a_dashed
@@ -56,7 +56,7 @@ set_rectangle (a_x, a_y, a_height, a_width, a_line: INTEGER; a_filled, a_dashed:
 
 	end
 
-set_line (a_x, a_y, a_x2, a_y2, a_line: INTEGER; a_filled, a_dashed: BOOLEAN; a_col: EV_COLOR) is
+set_line (a_x, a_y, a_x2, a_y2, a_line: INTEGER; a_filled, a_dashed: BOOLEAN; a_col: EV_COLOR)
 	do
 		internal_line := true
 		internal_dashed_line_style := a_dashed
@@ -73,7 +73,7 @@ set_line (a_x, a_y, a_x2, a_y2, a_line: INTEGER; a_filled, a_dashed: BOOLEAN; a_
 
 	end
 
-set_elipse (a_x, a_y, a_height, a_width, a_line: INTEGER; a_filled, a_dashed: BOOLEAN; a_col: EV_COLOR) is
+set_elipse (a_x, a_y, a_height, a_width, a_line: INTEGER; a_filled, a_dashed: BOOLEAN; a_col: EV_COLOR)
 	do
 		internal_elipse := true
 		internal_dashed_line_style := a_dashed
@@ -92,7 +92,7 @@ set_elipse (a_x, a_y, a_height, a_width, a_line: INTEGER; a_filled, a_dashed: BO
 
 	end
 
-set_text (a_x, a_y: INTEGER; a_filled: BOOLEAN; a_col: EV_COLOR; a_font: EV_FONT; an_angle: REAL; a_string: STRING_GENERAL) is
+set_text (a_x, a_y: INTEGER; a_filled: BOOLEAN; a_col: EV_COLOR; a_font: EV_FONT; an_angle: REAL; a_string: STRING_GENERAL)
 	do
 		internal_text := true
 
@@ -109,7 +109,7 @@ set_text (a_x, a_y: INTEGER; a_filled: BOOLEAN; a_col: EV_COLOR; a_font: EV_FONT
 		create internal_string.make (a_string)
 	end
 
-set_pixmap (a_x, a_y: INTEGER; a_pix: EV_PIXMAP_IMP) is
+set_pixmap (a_x, a_y: INTEGER; a_pix: EV_PIXMAP_IMP)
 	do
 		pix_to_draw := a_pix
 

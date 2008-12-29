@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Registry manager"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ create
 	
 feature -- Initialization
 
-	make (a_name, a_class_id: STRING_GENERAL; a_modification_time: WEL_FILE_TIME) is
+	make (a_name, a_class_id: STRING_GENERAL; a_modification_time: WEL_FILE_TIME)
 			-- Create current instance.
 		do
 			name := a_name
@@ -36,7 +36,7 @@ feature -- Access
 	last_change: WEL_FILE_TIME;
 			-- Last modification time
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class is ancestor of RADIO_BOX_WINDOWS and CHECK_BOX_WINDOWS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {TOGGLE_B_IMP} -- Element change
 
-	add_toggle (a_toggle: TOGGLE_B_IMP) is
+	add_toggle (a_toggle: TOGGLE_B_IMP)
 			-- Add a toggle
 		local
 			c: CURSOR
@@ -24,7 +24,7 @@ feature {TOGGLE_B_IMP} -- Element change
 			toggle_list.go_to (c)
 		end
 
-	remove_toggle (a_toggle: TOGGLE_B_IMP) is
+	remove_toggle (a_toggle: TOGGLE_B_IMP)
 			-- Remove a toggle from the list
 		require
 			toggle_present: toggle_list.has (a_toggle)
@@ -48,7 +48,7 @@ feature {TOGGLE_B_IMP} -- Element change
 
 feature {TOGGLE_B_IMP} -- Status setting
 
-	set_index_on_checked_toggle (a_toggle: TOGGLE_B_IMP) is
+	set_index_on_checked_toggle (a_toggle: TOGGLE_B_IMP)
 		require
 			toggle_present: toggle_list.has (a_toggle)
 		do
@@ -61,7 +61,7 @@ feature {TOGGLE_B_IMP} -- Status setting
 			found: not toggle_list.off
 		end
 
-	number_of_toggles: INTEGER is
+	number_of_toggles: INTEGER
 			-- Number of toggles in the box
 		do
 			Result := toggle_list.count
@@ -70,7 +70,7 @@ feature {TOGGLE_B_IMP} -- Status setting
 	toggle_list: LINKED_LIST [TOGGLE_B_IMP];
 			-- List of the toggles in the box
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

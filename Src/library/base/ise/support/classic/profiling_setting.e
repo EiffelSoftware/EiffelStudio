@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 			Objects that manage the Eiffel profiler. You can start and
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Compute value of `is_profiler_enabled' for all instances of
 			-- Current class.
 		local
@@ -32,7 +32,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_profiling: BOOLEAN is
+	is_profiling: BOOLEAN
 			-- Is profiler currently enabled?
 		do
 			Result := c_prof_enabled > 0
@@ -40,7 +40,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	start_profiling is
+	start_profiling
 			-- Start profiling.
 		do
 			if is_profiler_enabled then
@@ -48,7 +48,7 @@ feature -- Status setting
 			end
 		end
 
-	stop_profiling is
+	stop_profiling
 			-- Stop profiling
 		do
 			if is_profiler_enabled then
@@ -58,7 +58,7 @@ feature -- Status setting
 
 feature -- Validity
 
-	is_profiler_enabled: BOOLEAN is
+	is_profiler_enabled: BOOLEAN
 			-- Is profiler enabled upon launch time?
 		once
 			Result := is_profiling
@@ -66,7 +66,7 @@ feature -- Validity
 
 feature {NONE} -- Implementation
 
-	c_prof_enabled: INTEGER is
+	c_prof_enabled: INTEGER
 			-- C variables which gives the status on the profiler.
 		external
 			"C [macro %"eif_project.h%"]"
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			"egc_prof_enabled"
 		end
 
-	set_prof_enabled is
+	set_prof_enabled
 			-- Enable profiler.
 		external
 			"C [macro %"eif_eiffel.h%"]"
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			"egc_prof_enabled = 3"
 		end
 
-	set_prof_disabled is
+	set_prof_disabled
 			-- Disable profiler.
 		external
 			"C [macro %"eif_eiffel.h%"]"
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			"egc_prof_enabled = 0"
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

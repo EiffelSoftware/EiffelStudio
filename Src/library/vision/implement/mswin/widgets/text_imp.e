@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPmulti-line text editor without scrollbar"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -87,7 +87,7 @@ create
 
 feature -- Initialization
 
-	make,make_word_wrapped (a_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make,make_word_wrapped (a_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create the text_windows
 		do
 			create private_text.make (0)
@@ -100,7 +100,7 @@ feature -- Initialization
 			is_multi_line_mode := true
 		end
 
-	init_rich_edit_dll is
+	init_rich_edit_dll
 			-- Load the rich edit control DLL.
 		local
 			rich_edit_dll: WEL_RICH_EDIT_DLL
@@ -109,7 +109,7 @@ feature -- Initialization
 			rich_edit_dll.set_shared
 		end
 
-	realize is
+	realize
 			-- Realize current widget
 		local
 			fw: FONT_IMP
@@ -180,7 +180,7 @@ feature -- Access
 			-- Maximum number of characters in current
 			-- text field
 
-	rows: INTEGER is
+	rows: INTEGER
 			-- Height of Current widget measured in character heights.
 		local
 			f: FONT
@@ -197,7 +197,7 @@ feature -- Access
 
 feature -- Status report
 
-	begin_of_selection: INTEGER is
+	begin_of_selection: INTEGER
 			-- Position of the beginning of the current highlighted selection
 		do
 			if exists then
@@ -207,7 +207,7 @@ feature -- Status report
 			end
 		end
 
-	end_of_selection: INTEGER is
+	end_of_selection: INTEGER
 			-- Position of the end of the current selection highlightened
 		do
 			if exists then
@@ -220,19 +220,19 @@ feature -- Status report
 	is_selection_visible: BOOLEAN
 			-- Is the selection visible?
 
-	hide_selection is
+	hide_selection
 		do
 			Precursor {WEL_RICH_EDIT}
 			is_selection_visible := False
 		end
 
-	show_selection is
+	show_selection
 		do
 			Precursor {WEL_RICH_EDIT}
 			is_selection_visible := True
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of characters in current text area
 		do
 			if exists then
@@ -242,7 +242,7 @@ feature -- Status report
 			end
 		end
 
-	cursor_position: INTEGER is
+	cursor_position: INTEGER
 			-- Current position of the text cursor (it indicates the position
 			-- where the next character pressed by the user will be inserted)
 		do
@@ -253,53 +253,53 @@ feature -- Status report
 			end
 		end
 
-	is_any_resizable: BOOLEAN is
+	is_any_resizable: BOOLEAN
 			-- Is width and height of current text resizable?
 		do
 			Result := is_height_resizable and is_width_resizable
 		end
 
-	is_height_resizable: BOOLEAN is
+	is_height_resizable: BOOLEAN
 			-- Is height of current text resizable?
 		do
 			Result := private_is_height_resizable
 		end
 
-	is_in_a_verification_callback: BOOLEAN is
+	is_in_a_verification_callback: BOOLEAN
 			-- Is the program in a `motion' or `modify' action ?
 		do
 		end
 
-	is_bell_enabled: BOOLEAN is
+	is_bell_enabled: BOOLEAN
 			-- Is the bell enabled when an action is forbidden
 		do
 		end
 
-	is_read_only: BOOLEAN is
+	is_read_only: BOOLEAN
 			-- Is current text in read only mode?
 		do
 			Result := private_is_read_only
 		end
 
-	is_selection_active: BOOLEAN is
+	is_selection_active: BOOLEAN
 			-- Is there a selection currently active ?
 		do
 			Result := has_selection
 		end
 
-	is_width_resizable: BOOLEAN is
+	is_width_resizable: BOOLEAN
 			-- Is width of current text resizable?
 		do
 			Result := private_is_width_resizable
 		end
 
-	is_word_wrap_mode: BOOLEAN is
+	is_word_wrap_mode: BOOLEAN
 			-- Is specified that lines are to be broken at word breaks?
 		do
 			Result := private_is_word_wrap_mode
 		end
 
-	text: STRING is
+	text: STRING
 			-- Value of current text field
 		do
 			if exists then
@@ -309,7 +309,7 @@ feature -- Status report
 			end
 		end
 
-	coordinate (char_pos: INTEGER): COORD_XY is
+	coordinate (char_pos: INTEGER): COORD_XY
 			-- Coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
 		local
@@ -320,7 +320,7 @@ feature -- Status report
 			Result.set (win_point.x, win_point.y)
 		end
 
-	x_coordinate (char_pos: INTEGER): INTEGER is
+	x_coordinate (char_pos: INTEGER): INTEGER
 			-- X coordinate relative to upper left corner
 			-- of current text widget at character position `char_pos'
 		do
@@ -329,7 +329,7 @@ feature -- Status report
 			end
 		end
 
-	y_coordinate (char_pos: INTEGER): INTEGER is
+	y_coordinate (char_pos: INTEGER): INTEGER
 			-- Y coordinate relative to upper left corner
 			-- of current text widget at character position `char_pos'
 		do
@@ -338,7 +338,7 @@ feature -- Status report
 			end
 		end
 
-	character_position (cx, cy : INTEGER) : INTEGER is
+	character_position (cx, cy : INTEGER) : INTEGER
 			-- character position at position `cx' and `cy'.
 		do
 			if exists then
@@ -346,7 +346,7 @@ feature -- Status report
 			end
 		end
 
-	top_character_position: INTEGER is
+	top_character_position: INTEGER
 			-- Character position of first character displayed
 		do
 			if exists then
@@ -357,7 +357,7 @@ feature -- Status report
 	is_multi_line_mode: BOOLEAN
 			-- Is Current editing a multiline text?
 
-	is_cursor_position_visible: BOOLEAN is
+	is_cursor_position_visible: BOOLEAN
 			-- Is the insert cursor position marked
 			-- by a blinking text cursor?
 		do
@@ -365,7 +365,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_foreground_color (c: COLOR) is
+	set_foreground_color (c: COLOR)
 			-- Set the foreground color of current widget.
 		local
 			char_format: WEL_CHARACTER_FORMAT
@@ -393,7 +393,7 @@ feature -- Status setting
 			end
 		end
 
-	set_background_color (a_color: COLOR) is
+	set_background_color (a_color: COLOR)
 			-- Set the background color to `a_color'
 			-- We may need a call to UpdateWindow
 		local
@@ -406,31 +406,31 @@ feature -- Status setting
 			end
 		end
 
-	unrealize is
+	unrealize
 			-- Unrealize current widget
 		do
 			update_private_text (text)
 			wel_destroy
 		end
 
-	set_margins (a_width, a_height: INTEGER) is
+	set_margins (a_width, a_height: INTEGER)
 			-- Set margins for text.
 		do
 		end
 
-	allow_action is
+	allow_action
 			-- Allow the cursor to move or the text to be modified
 			-- during a `motion' or a `modify' action.
 		do
 		end
 
-	clear is
+	clear
 			-- Clear current text field.
 		do
 			set_text ("")
 		end
 
-	clear_selection is
+	clear_selection
 			-- Clear a selection
 		do
 			private_begin_selection := 0
@@ -440,7 +440,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_resize is
+	disable_resize
 			-- Disable that current text widget attempts to resize its width and
 			-- height to accommodate all the text contained.
 		do
@@ -448,26 +448,26 @@ feature -- Status setting
 			private_is_height_resizable := False
 		end
 
-	disable_resize_height is
+	disable_resize_height
 			-- Disable that current text widget attempts to resize its height
 			-- to accommodate all the text contained.
 		do
 			private_is_height_resizable := False
 		end
 
-	disable_resize_width is
+	disable_resize_width
 			-- Disable that current text widget attempts to resize its width
 			-- to accommodate all the text contained.
 		do
 			private_is_width_resizable := False
 		end
 
-	disable_verify_bell is
+	disable_verify_bell
 			-- Disable the bell when an action is forbidden
 		do
 		end
 
-	enable_resize is
+	enable_resize
 			-- Enable that current text widget attempts to resize its width and
 			-- height to accommodate all the text contained.
 		do
@@ -475,26 +475,26 @@ feature -- Status setting
 			private_is_height_resizable := True
 		end
 
-	enable_resize_height is
+	enable_resize_height
 			-- Enable that current text widget attempts to resize its height to
 			-- accomodate all the text contained.
 		do
 			private_is_height_resizable := True
 		end
 
-	enable_resize_width is
+	enable_resize_width
 			-- Enable that current text widget attempts to resize its width to
 			-- accommodate all the text contained.
 		do
 			private_is_width_resizable := True
 		end
 
-	enable_verify_bell is
+	enable_verify_bell
 			-- Enable the bell when an action is forbidden
 		do
 		end
 
-	forbid_action is
+	forbid_action
 			-- Forbid the cursor to move or the text to be modified
 			-- during a `motion' or a `modify' action.
 		do
@@ -503,7 +503,7 @@ feature -- Status setting
 			end
 		end
 
-	set_cursor_position (pos: INTEGER) is
+	set_cursor_position (pos: INTEGER)
 			-- Set cursor_position to pos.
 		do
 			private_cursor_position := pos
@@ -517,7 +517,7 @@ feature -- Status setting
 			end
 		end
 
-	set_editable is
+	set_editable
 			-- Set the text in editable mode
 		do
 			if exists then
@@ -526,7 +526,7 @@ feature -- Status setting
 			private_is_read_only := False
 		end
 
-	set_margin_height (new_height: INTEGER) is
+	set_margin_height (new_height: INTEGER)
 			-- Set `margin_height' to `new_height'.
 		do
 			if exists then
@@ -535,7 +535,7 @@ feature -- Status setting
 			margin_height := new_height
 		end
 
-	set_margin_width (new_width: INTEGER) is
+	set_margin_width (new_width: INTEGER)
 			-- Set `margin_width' to `new_width'.
 		do
 			if exists then
@@ -544,7 +544,7 @@ feature -- Status setting
 			margin_width := new_width
 		end
 
-	set_maximum_size (a_max: INTEGER) is
+	set_maximum_size (a_max: INTEGER)
 			-- Set maximum_size to `a_max'.
 		do
 			maximum_size := a_max
@@ -553,7 +553,7 @@ feature -- Status setting
 			end
 		end
 
-	set_read_only is
+	set_read_only
 			-- Set the text in read_only mode
 		do
 			if exists then
@@ -562,7 +562,7 @@ feature -- Status setting
 			private_is_read_only := True
 		end
 
-	set_selection (first, last: INTEGER) is
+	set_selection (first, last: INTEGER)
 			-- Highlight the substring between `first' and `last' positions
 			-- leave the caret at `first'
 		local
@@ -606,7 +606,7 @@ feature -- Status setting
 			end
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set window text to `a_text'
 		do
 			update_private_text (a_text)
@@ -615,7 +615,7 @@ feature -- Status setting
 			end
 		end
 
-	set_top_character_position (char_pos: INTEGER) is
+	set_top_character_position (char_pos: INTEGER)
 			-- Set first character displayed to `char_pos'.
 		do
 			private_top_character_position := char_pos
@@ -624,13 +624,13 @@ feature -- Status setting
 			end
 		end
 
-	set_single_line_mode is
+	set_single_line_mode
 			-- Set editing for single line text.
 		do
 			is_multi_line_mode := false
 		end
 
-	set_rows (i: INTEGER) is
+	set_rows (i: INTEGER)
 			-- Set the character height of Current widget to `i'.
 		local
 			f: FONT
@@ -643,12 +643,12 @@ feature -- Status setting
 			set_height (i * (f.font_ascent + f.font_descent))
 		end
 
-	set_cursor_position_visible (flag: BOOLEAN) is
+	set_cursor_position_visible (flag: BOOLEAN)
 			-- Set is_cursor_position_visible to flag.
 		do
 		end
 
-	set_multi_line_mode is
+	set_multi_line_mode
 			-- Set editing for multiline text.
 		do
 			is_multi_line_mode := true
@@ -656,7 +656,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
                         -- Add `a_command' to the list of action to be executed when
 			-- an activate event occurs.
                         -- `argument' will be passed to `a_command' whenever it is
@@ -665,21 +665,21 @@ feature -- Element change
 			activate_actions.add (Current, a_command, argument)
 		end
 
-	add_modify_action (a_command: COMMAND; arg: ANY) is
+	add_modify_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute before
 			-- text is deleted from or inserted in current text widget.
 		do
 			modify_actions.add (Current, a_command, arg)
 		end
 
-	add_motion_action (a_command: COMMAND; arg: ANY) is
+	add_motion_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute before insert
 			-- cursor is moved to a new position.
 		do
 			motion_actions.add (Current, a_command, arg)
 		end
 
-	append (s: STRING) is
+	append (s: STRING)
                         -- Append `s' at the end of current text.
 		do
 			if exists then
@@ -693,7 +693,7 @@ feature -- Element change
 			end
 		end
 
-	insert (s: STRING; a_position: INTEGER) is
+	insert (s: STRING; a_position: INTEGER)
                         -- Insert `s' in current text field at `a_position'.
                         -- Same as `replace (a_position, a_position, s)'.
 		do
@@ -712,7 +712,7 @@ feature -- Element change
 			end
 		end
 
-	replace (from_position, to_position: INTEGER; s: STRING) is
+	replace (from_position, to_position: INTEGER; s: STRING)
                         -- Replace text from `from_position' to `to_position' by `s'.
 		do
 			if exists then
@@ -737,21 +737,21 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
                         -- Remove `a_command' from the list of action to execute when the
 			-- an activate event occurs.
 		do
 			activate_actions.remove (Current, a_command, argument)
 		end
 
-	remove_modify_action (a_command: COMMAND; arg : ANY) is
+	remove_modify_action (a_command: COMMAND; arg : ANY)
 			-- Remove `a_command' from the list of action to execute before
 			-- text is deleted from or inserted in current text widget.
 		do
 			modify_actions.remove (Current, a_command, arg)
 		end
 
-	remove_motion_action (a_command: COMMAND; arg : ANY) is
+	remove_motion_action (a_command: COMMAND; arg : ANY)
 			-- Remove `a_command' from the list of action to execute before
 			-- insert cursor is moved to a new position.
 		do
@@ -760,12 +760,12 @@ feature -- Removal
 
 feature {NONE} -- Notifications
 
-	on_en_change is
+	on_en_change
 		do
 			modify_actions.execute (Current, Void)
 		end
 
-	on_char (virtual_key, key_data: INTEGER) is
+	on_char (virtual_key, key_data: INTEGER)
 			-- Wm_char message
 		local
 			kw: KEYBOARD_WINDOWS
@@ -778,7 +778,7 @@ feature {NONE} -- Notifications
 			end
 		end
 
-	on_right_button_down (keys, a_x, a_y: INTEGER) is
+	on_right_button_down (keys, a_x, a_y: INTEGER)
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		do
@@ -786,7 +786,7 @@ feature {NONE} -- Notifications
 			disable_default_processing
 		end
 
-	on_right_button_up (keys, a_x, a_y: INTEGER) is
+	on_right_button_up (keys, a_x, a_y: INTEGER)
 			-- Wm_rbuttonup message
 			-- See class WEL_MK_CONSTANTS for `keys' value
 		do
@@ -796,7 +796,7 @@ feature {NONE} -- Notifications
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style for window control;
 		do
 			Result := Precursor {WEL_RICH_EDIT} + Es_left + Es_autovscroll
@@ -809,7 +809,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_private_text (a_text: STRING) is
+	update_private_text (a_text: STRING)
 			-- Update the private text and rebuild the
 		do
 			private_text := a_text
@@ -843,7 +843,7 @@ feature {NONE} -- Implementation
 	private_text: STRING;
 			-- Value of current text field
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Stock brushes, fonts, palette and pens."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,50 +10,50 @@ class
 
 feature -- Brushes
 
-	White_brush: INTEGER is 0
+	White_brush: INTEGER = 0
 
-	Ltgray_brush: INTEGER is 1
+	Ltgray_brush: INTEGER = 1
 
-	Gray_brush: INTEGER is 2
+	Gray_brush: INTEGER = 2
 
-	Dkgray_brush: INTEGER is 3
+	Dkgray_brush: INTEGER = 3
 
-	Black_brush: INTEGER is 4
+	Black_brush: INTEGER = 4
 
-	Null_brush: INTEGER is 5
+	Null_brush: INTEGER = 5
 
-	Hollow_brush: INTEGER is 5
+	Hollow_brush: INTEGER = 5
 			-- Same as `Null_brush'.
 
 feature -- Pens
 
-	White_pen: INTEGER is 6
+	White_pen: INTEGER = 6
 
-	Black_pen: INTEGER is 7
+	Black_pen: INTEGER = 7
 
-	Null_pen: INTEGER is 8
+	Null_pen: INTEGER = 8
 
 feature -- Fonts
 
-	Oem_fixed_font: INTEGER is 10
+	Oem_fixed_font: INTEGER = 10
 
-	Ansi_fixed_font: INTEGER is 11
+	Ansi_fixed_font: INTEGER = 11
 
-	Ansi_var_font: INTEGER is 12
+	Ansi_var_font: INTEGER = 12
 
-	System_font: INTEGER is 13
+	System_font: INTEGER = 13
 
-	Device_default_font: INTEGER is 14
+	Device_default_font: INTEGER = 14
 
-	System_fixed_font: INTEGER is 16
+	System_fixed_font: INTEGER = 16
 
-	Default_gui_font: INTEGER is 17
+	Default_gui_font: INTEGER = 17
 
 feature -- Palette
 
-	Default_palette: INTEGER is 15;
+	Default_palette: INTEGER = 15;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

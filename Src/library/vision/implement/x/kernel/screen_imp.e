@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of the X Display."
@@ -63,7 +63,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_screen: SCREEN) is
+	make (a_screen: SCREEN)
 			-- Create a screen
 		do
 			make_display (application_context, a_screen.screen_name, 
@@ -79,19 +79,19 @@ feature -- Access
 	display_handle: POINTER;
 			-- C pointer to X display
 
-	window: POINTER is
+	window: POINTER
 			-- Root window of default screen
 		do	
 			Result := default_screen.root_window
 		end;
 
-	depth: INTEGER is
+	depth: INTEGER
 			-- Default depth of root window
 		do
 			Result := default_screen.default_depth
 		end;
 
-	buttons: BUTTONS is
+	buttons: BUTTONS
 			-- Current state of the mouse buttons
 		local
 			i: INTEGER
@@ -109,13 +109,13 @@ feature -- Access
 			not (Result = Void)
 		end; 
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of screen
 		do
 			Result := default_screen.height
 		end;
 	
-	visible_height: INTEGER is
+	visible_height: INTEGER
 			-- Visible height is the same as height on X. 
 		do
 			Result := height
@@ -123,7 +123,7 @@ feature -- Access
 	
 	
 	
-	screen: SCREEN_I is
+	screen: SCREEN_I
 			-- Screen of widget
 		do
 			Result := Current
@@ -131,7 +131,7 @@ feature -- Access
 			not (Result = Void)
 		end;
 
-	widget_pointed: WIDGET is
+	widget_pointed: WIDGET
 			-- Widget currently pointed by the pointer
 		local
 			mel_widget: WIDGET_IMP;
@@ -154,25 +154,25 @@ feature -- Access
 			end;
 		end;
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of screen
 		do
 			Result := default_screen.width
 		end;
 
-	visible_width: INTEGER is
+	visible_width: INTEGER
 			-- Visible width is the same as width on X. 
 		do
 			Result := width
 		end;
 	
-	x: INTEGER is
+	x: INTEGER
 			-- Current absolute horizontal coordinate of the mouse
 		do
 			Result := default_screen.x
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 			-- Current absolute vertical coordinate of the mouse
 		do
 			Result := default_screen.y
@@ -180,19 +180,19 @@ feature -- Access
 
 feature {NONE} -- Useless routines
 
-	add_expose_action (a_command: COMMAND; argument: ANY) is
+	add_expose_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- current area is exposed.
 		do
 		end; 
 
-	remove_expose_action (a_command: COMMAND; argument: ANY) is
+	remove_expose_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current area is exposed.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"EiffelVision Split Area. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			Precursor {EV_CONTAINER_IMP}
 			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			real_signal_connect (c_object, "map-event", agent (App_implementation.gtk_marshal).on_widget_show (c_object), App_implementation.default_translate)
 		end
 
-	needs_event_box: BOOLEAN is
+	needs_event_box: BOOLEAN
 			-- 
 		do
 			Result := True
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	split_position: INTEGER is
+	split_position: INTEGER
 			-- Position from the left/top of the splitter from `Current'.
 		do
 			if not is_displayed and then user_split_position /= -1 then
@@ -63,7 +63,7 @@ feature -- Access
 			end
 		end
 
-	set_first (an_item: like item) is
+	set_first (an_item: like item)
 			-- Make `an_item' `first'.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -77,7 +77,7 @@ feature -- Access
 			update_splitter
 		end
 
-	set_second (an_item: like item) is
+	set_second (an_item: like item)
 			-- Make `an_item' `second'.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -91,7 +91,7 @@ feature -- Access
 			update_splitter
 		end
 
-	prune (an_item: like item) is
+	prune (an_item: like item)
 			-- Remove `an_item' if present from `Current'.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -121,25 +121,25 @@ feature -- Access
 			--feature {EV_GTK_EXTERNALS}.gtk_widget_queue_resize (container_widget)
 		end
 
-	enable_item_expand (an_item: like item) is
+	enable_item_expand (an_item: like item)
 			-- Let `an_item' expand when `Current' is resized.
 		do
 			set_item_resize (an_item, True)
 		end
 
-	disable_item_expand (an_item: like item) is
+	disable_item_expand (an_item: like item)
 			-- Make `an_item' non-expandable on `Current' resize.
 		do
 			set_item_resize (an_item, False)
 		end
 
-	set_split_position (a_split_position: INTEGER) is
+	set_split_position (a_split_position: INTEGER)
 			-- Set the position of the splitter.
 		do
 			internal_set_split_position (a_split_position)
 		end
 
-	show_separator is
+	show_separator
 			-- Make separator visible.
 		local
 			first_imp, second_imp: EV_WIDGET_IMP
@@ -159,7 +159,7 @@ feature -- Access
 			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, container_widget)
 		end
 
-	hide_separator is
+	hide_separator
 			-- Hide Separator.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -185,7 +185,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	internal_set_split_position (a_split_position: INTEGER) is
+	internal_set_split_position (a_split_position: INTEGER)
 			-- Set the position of the splitter.
 		do
 			if is_displayed then
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 	user_split_position: INTEGER
 			-- Split position as set by user, -1 if unset.
 
-	on_widget_mapped is
+	on_widget_mapped
 			-- `Current' has been mapped to screen.
 		do
 			if user_split_position /= -1 then
@@ -210,9 +210,9 @@ feature {NONE} -- Implementation
 	container_widget: POINTER
 		-- Pointer to the GtkPaned widget.
 
-	splitter_width: INTEGER is 8
+	splitter_width: INTEGER = 8
 
-	set_item_resize (an_item: like item; a_resizable: BOOLEAN) is
+	set_item_resize (an_item: like item; a_resizable: BOOLEAN)
 			-- Set whether `an_item' is `a_resizable' when `Current' resizes.
 		do
 			if an_item = first then
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			set_gtk_paned_struct_child2_resize (container_widget, second_expandable)
 		end
 
-	update_splitter is
+	update_splitter
 			-- Update splitter to account for different configurations
 		do
 			if first /= Void and second = Void then
@@ -244,21 +244,21 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals.
 
-	gtk_paned_struct_child1_size (a_c_struct: POINTER): INTEGER is
+	gtk_paned_struct_child1_size (a_c_struct: POINTER): INTEGER
 		external
 			"C [struct <gtk/gtk.h>] (GtkPaned): EIF_INTEGER"
 		alias
 			"child1_size"
 		end
 
-	set_gtk_paned_struct_child1_resize (a_c_struct: POINTER; a_resize: BOOLEAN) is
+	set_gtk_paned_struct_child1_resize (a_c_struct: POINTER; a_resize: BOOLEAN)
 		external
 			"C [struct <gtk/gtk.h>] (GtkPaned, EIF_BOOLEAN)"
 		alias
 			"child1_resize"
 		end
 
-	set_gtk_paned_struct_child2_resize (a_c_struct: POINTER; a_resize: BOOLEAN) is
+	set_gtk_paned_struct_child2_resize (a_c_struct: POINTER; a_resize: BOOLEAN)
 		external
 			"C [struct <gtk/gtk.h>] (GtkPaned, EIF_BOOLEAN)"
 		alias
@@ -270,7 +270,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_SPLIT_AREA;
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

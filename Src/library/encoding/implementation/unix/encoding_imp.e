@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encoding conversion implementation on Unix"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- String encoding convertion
 
-	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING) is
+	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING)
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		local
 			l_managed_pointer, l_fp, l_tp: MANAGED_POINTER
@@ -130,7 +130,7 @@ feature -- String encoding convertion
 
 feature -- Status report
 
-	is_code_page_valid (a_code_page: STRING): BOOLEAN is
+	is_code_page_valid (a_code_page: STRING): BOOLEAN
 			-- Is `a_code_page' valid?
 			-- We don't care this on Unix. What we are really interested is `is_code_page_convertable'.
 		do
@@ -165,7 +165,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	is_known_code_page (a_code_page: STRING): BOOLEAN is
+	is_known_code_page (a_code_page: STRING): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -185,7 +185,7 @@ feature {NONE} -- Status report
 			end
 		end
 
-	is_two_byte_code_page (a_code_page: STRING): BOOLEAN is
+	is_two_byte_code_page (a_code_page: STRING): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -194,7 +194,7 @@ feature {NONE} -- Status report
 			Result := two_byte_code_pages.has (a_code_page.as_lower)
 		end
 
-	is_four_byte_code_page (a_code_page: STRING): BOOLEAN is
+	is_four_byte_code_page (a_code_page: STRING): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -203,7 +203,7 @@ feature {NONE} -- Status report
 			Result := four_byte_code_pages.has (a_code_page.as_lower)
 		end
 
-	is_big_endian_code_page (a_code_page: STRING): BOOLEAN is
+	is_big_endian_code_page (a_code_page: STRING): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -212,7 +212,7 @@ feature {NONE} -- Status report
 			Result := big_endian_code_pages.has (a_code_page.as_lower)
 		end
 
-	is_little_endian_code_page (a_code_page: STRING): BOOLEAN is
+	is_little_endian_code_page (a_code_page: STRING): BOOLEAN
 			-- Is `a_code_page' a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -223,19 +223,19 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Implementation
 
-	bom_little_endian (code: NATURAL_32): BOOLEAN is
+	bom_little_endian (code: NATURAL_32): BOOLEAN
 			-- Is `code' little endian BOM?
 		do
 			Result := code = 0xFEFF or code = 0xFEFF0000
 		end
 
-	bom_big_endian (code: NATURAL_32): BOOLEAN is
+	bom_big_endian (code: NATURAL_32): BOOLEAN
 			-- Is `code' big endian BOM?
 		do
 			Result := code = 0xFFFE or code = 0xFFFE0000
 		end
 
-	string_32_to_pointer (a_string: STRING_32): MANAGED_POINTER is
+	string_32_to_pointer (a_string: STRING_32): MANAGED_POINTER
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			Result := l_managed_data
 		end
 
-	byte_order_mark: CHARACTER_32 is
+	byte_order_mark: CHARACTER_32
 			-- Byte order mark (BOM)
 		once
 			Result := (0xFEFF).to_character_32
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 			conversion_exception_not_void: Result /= Void
 		end
 
-	c_iconv (a_from_codeset, a_to_codeset: POINTER; a_str: POINTER; a_size: INTEGER; a_out_count, a_b: TYPED_POINTER [INTEGER]): POINTER is
+	c_iconv (a_from_codeset, a_to_codeset: POINTER; a_str: POINTER; a_size: INTEGER; a_out_count, a_b: TYPED_POINTER [INTEGER]): POINTER
 			-- Code `a_b' could be set when error occurs.
 			-- See `conversion_exception' for the meaning.
 		external
@@ -374,7 +374,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	is_codeset_convertable (a_from_codeset, a_to_codeset: POINTER; a_error: TYPED_POINTER [INTEGER]): BOOLEAN is
+	is_codeset_convertable (a_from_codeset, a_to_codeset: POINTER; a_error: TYPED_POINTER [INTEGER]): BOOLEAN
 			-- Is `a_from_codeset' and `a_to_codeset' convertable?
 		external
 			"C inline use <iconv.h>"
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	c_codeset_valid (a_code_set: POINTER; a_error: TYPED_POINTER [INTEGER]): BOOLEAN is
+	c_codeset_valid (a_code_set: POINTER; a_error: TYPED_POINTER [INTEGER]): BOOLEAN
 			-- Check if `a_code_set' is convertible to utf-8 to see if it is valid.
 			-- Some systems do not support utf-8 to utf-8 conversion, so checking utf-8
 			-- should be avoided.
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-indexing
+note
 	library:   "Encoding: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ellipse"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make(im: GD_IMAGE;x1,y1,a_width,a_height: INTEGER) is
+	make(im: GD_IMAGE;x1,y1,a_width,a_height: INTEGER)
 			-- Initialization
 		do
 			arc_make(im,x1,y1,a_width,a_height,0,360)
@@ -35,20 +35,20 @@ feature -- Initialization
 
 feature -- Drawing
 
-	draw_border is
+	draw_border
 			-- Draw on image 'im' with color corresponding to 'color_index'.
 		do
 			gdImageArc(image.image,x,y,width,height,0,360,color_index)
 		end
 
-	draw_plain_ellipse(red,green,blue: INTEGER) is
+	draw_plain_ellipse(red,green,blue: INTEGER)
 			-- Draw the ellipse and fill it with color 'col'.
 		do
 			draw_border
 			fill_ellipse(red,green,blue)			
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

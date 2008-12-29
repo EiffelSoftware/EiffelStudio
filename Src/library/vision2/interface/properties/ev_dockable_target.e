@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that allow dockable sources to be inserted as part of the
 		dockable mechanism. Use `enable_docking' to permit sources to be dropped,
@@ -36,7 +36,7 @@ inherit
 
 feature -- Access
 		
-	veto_dock_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN] is
+	veto_dock_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN]
 			-- Function to determine whether current dock is allowed.
 			-- If `Result' is `True', dock will be disallowed.
 		require
@@ -47,7 +47,7 @@ feature -- Access
 			bridge_ok: Result = implementation.veto_dock_function
 		end
 		
-	is_docking_enabled: BOOLEAN is
+	is_docking_enabled: BOOLEAN
 			-- May `Current' be docked to?
 			-- If True, `Current' will accept docking
 			-- from a compatible EV_DOCKABLE_SOURCE.
@@ -61,7 +61,7 @@ feature -- Access
 		
 feature -- Status setting
 
-	enable_docking is 
+	enable_docking 
 			-- Ensure `is_docking_enabled' is True.
 		require
 			not_destroyed: not is_destroyed
@@ -71,7 +71,7 @@ feature -- Status setting
 			is_dockable: is_docking_enabled
 		end
 		
-	disable_docking is
+	disable_docking
 			-- Ensure `is_docking_enabled' is False.
 			-- `Current' will not accept docking.
 		require
@@ -82,7 +82,7 @@ feature -- Status setting
 			not_dockable: not is_docking_enabled	
 		end
 		
-	set_veto_dock_function (a_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN]) is
+	set_veto_dock_function (a_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN])
 			-- Assign `a_function' to `veto_dock_function'.
 		require
 			not_destroyed: not is_destroyed
@@ -97,7 +97,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_DOCKABLE_TARGET_I;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

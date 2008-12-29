@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Internal file information"
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Creation procedure
 		do
 			make_buffered_file_info (30)
@@ -138,7 +138,7 @@ feature -- Status report
 
 feature -- Element change
 
-	update (f_name: STRING) is
+	update (f_name: STRING)
 			-- Update information buffer: fill it in with information
 			-- from the inode of `f_name'.
 		local
@@ -186,7 +186,7 @@ feature -- Element change
 			file_name := f_name
 		end -- update
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			In a EG_QUAD_TREE a `region' is splited into fore equaly sized parts:
 
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_region: like region; a_particle: like particle) is
+	make (a_region: like region; a_particle: like particle)
 			-- Make a node with `region' `a_region' containing a_particle.
 		require
 			a_region_exists: a_region /= Void
@@ -43,7 +43,7 @@ feature -- Status report
 	is_leaf: BOOLEAN
 			-- Is node a leaf?
 
-	valid_tree: BOOLEAN is
+	valid_tree: BOOLEAN
 			-- Are all particles in `Current' element `region'?
 		do
 			if is_leaf then
@@ -90,7 +90,7 @@ feature -- Access
 
 feature -- Element change
 
-	build_center_of_mass is
+	build_center_of_mass
 			-- Build a center of mass for every node in the tree.
 		local
 			x, y: DOUBLE
@@ -138,7 +138,7 @@ feature -- Element change
 			inside: region.has_x_y (center_of_mass_particle.x, center_of_mass_particle.y)
 		end
 
-	insert (a_particle: like particle) is
+	insert (a_particle: like particle)
 			-- Insert `a_particle' into the right position in the tree.
 		require
 			a_particle_exists: a_particle /= Void
@@ -210,7 +210,7 @@ feature -- Element change
 			inserted: has (a_particle)
 		end
 
-	has (a_particle: EG_PARTICLE): BOOLEAN is
+	has (a_particle: EG_PARTICLE): BOOLEAN
 			-- Is a particle equal to `a_particle' element of `Current' tree?
 		require
 			a_particle_not_void: a_particle /= Void
@@ -271,7 +271,7 @@ invariant
 	leaf_has_particle_inner_nodes_do_not: is_leaf = (particle /= Void)
 	is_leaf_implies_has_particle: is_leaf implies region.has_x_y (particle.x, particle.y)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision titled window. Carbon implementation."
 	legal: "See notice at end of class."
@@ -44,32 +44,32 @@ feature {NONE} -- Initialization
 --
 --		end
 
-	initialize is
+	initialize
 			--
 		do
 			Precursor {EV_WINDOW_IMP}
 		end
 
-	initialize_client_area is
+	initialize_client_area
 			-- Setup client area of window
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	call_window_state_event (a_window_state: INTEGER) is
+	call_window_state_event (a_window_state: INTEGER)
 			-- Call either minimize, maximize or restore actions for window
 		do
 		end
 
-	call_accelerators (a_v2_key_value, accel_mods: INTEGER) is
+	call_accelerators (a_v2_key_value, accel_mods: INTEGER)
 			-- Call the accelerator matching v2 key `a_v2_key_value' with a control mask of `accel_mods'
 		do
 		end
 
 feature -- Access
 
-	icon_name: STRING_32 is
+	icon_name: STRING_32
 			-- Alternative name, displayed when window is minimised.
 		do
 		end
@@ -88,24 +88,24 @@ feature -- Status report
 	is_maximized: BOOLEAN
 			-- Is displayed at maximum size?
 
-	is_displayed: BOOLEAN is
+	is_displayed: BOOLEAN
 			-- Is 'Current' displayed on screen?
 		do
 		end
 
 feature -- Status setting
 
-	raise is
+	raise
 			-- Request that window be displayed above all other windows.
 		do
 		end
 
-	lower is
+	lower
 			-- Request that window be displayed below all other windows.
 		do
 		end
 
-	minimize is
+	minimize
 			-- Display iconified/minimised.
 		local
 			ret: INTEGER
@@ -114,7 +114,7 @@ feature -- Status setting
 		end
 
 
-	maximize is
+	maximize
 			-- Display at maximum size.
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -129,7 +129,7 @@ feature -- Status setting
 			]"
 		end
 
-	restore is
+	restore
 			-- Restore to original position when minimized or maximized.
 		local
 			ret: INTEGER
@@ -139,12 +139,12 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (an_icon_name: STRING_GENERAL) is
+	set_icon_name (an_icon_name: STRING_GENERAL)
 			-- Assign `an_icon_name' to `icon_name'.
 		do
 		end
 
-	set_icon_pixmap (an_icon: EV_PIXMAP) is
+	set_icon_pixmap (an_icon: EV_PIXMAP)
 			-- Assign `an_icon' to `icon'.
 		do
 			icon_pixmap := an_icon
@@ -152,7 +152,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	default_wm_decorations: INTEGER is
+	default_wm_decorations: INTEGER
 			-- Default WM decorations of `Current'.?
 		do
 		end
@@ -166,7 +166,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TITLED_WINDOW;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_TITLED_WINDOW_IMP
 

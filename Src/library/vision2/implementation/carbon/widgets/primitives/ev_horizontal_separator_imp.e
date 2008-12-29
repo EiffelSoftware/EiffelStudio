@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision horizontal separator, Carbon implementation"
 	legal: "See notice at end of class.";
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	setup_binding ( user_pane, progress_bar : POINTER ) is
+	setup_binding ( user_pane, progress_bar : POINTER )
 			-- Take a horizontal orientation
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -54,7 +54,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_SEPARATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 
 end -- class EV_HORIZONTAL_SEPARATOR_IMP

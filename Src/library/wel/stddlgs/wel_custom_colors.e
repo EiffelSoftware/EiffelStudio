@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Custom colors chosen in a choose color dialog box."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Access
 
-	i_th_color (i: INTEGER): WEL_COLOR_REF is
+	i_th_color (i: INTEGER): WEL_COLOR_REF
 			-- Color at the position `i'
 		require
 			i_large_enough: i >= 1
@@ -28,12 +28,12 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	count: INTEGER is 16
+	count: INTEGER = 16
 			-- Number of colors
 
 feature -- Element change
 
-	set_color (a_color: WEL_COLOR_REF; i: INTEGER) is
+	set_color (a_color: WEL_COLOR_REF; i: INTEGER)
 			-- Set `a_color' at the position `i'.
 		require
 			i_large_enough: i >= 1
@@ -48,7 +48,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := count * c_size_of_color_ref
@@ -56,7 +56,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	c_size_of_color_ref: INTEGER is
+	c_size_of_color_ref: INTEGER
 		external
 			"C [macro <chooseco.h>]"
 		alias
@@ -64,18 +64,18 @@ feature {NONE} -- Implementation
 		end
 
 	cwel_color_palette_get_i_th_color (ptr: POINTER;
-			i: INTEGER): INTEGER is
+			i: INTEGER): INTEGER
 		external
 			"C [macro <chooseco.h>]"
 		end
 
 	cwel_color_palette_set_i_th_color (ptr: POINTER; i: INTEGER;
-			value: INTEGER) is
+			value: INTEGER)
 		external
 			"C [macro <chooseco.h>]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

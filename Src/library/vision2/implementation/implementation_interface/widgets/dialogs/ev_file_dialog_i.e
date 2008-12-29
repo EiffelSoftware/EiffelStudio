@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision file selection dialog, implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,12 +13,12 @@ inherit
 
 feature -- Access
 
-	file_name: STRING_32 is
+	file_name: STRING_32
 			-- Full name of currently selected file including path.
 		deferred
 		end
 
-	filter: STRING_32 is
+	filter: STRING_32
 			-- Filter currently applied to file list.
 		deferred
 		end
@@ -29,24 +29,24 @@ feature -- Access
 			-- Second element represents the displayed text
 			-- e.g. "Text files (*.txt)".
 
-	start_directory: STRING_32 is
+	start_directory: STRING_32
 			-- Base directory where browsing will start.
 		deferred
 		end
 
 feature -- Status report
 
-	file_title: STRING_32 is
+	file_title: STRING_32
 			-- `file_name' without its path.
 		deferred
 		end
 
-	file_path: STRING_32 is
+	file_path: STRING_32
 			-- Path of `file_name'.
 		deferred
 		end
 
-	selected_filter_index: INTEGER is
+	selected_filter_index: INTEGER
 			-- One based index of selected filter within `filters', or
 			-- zero if no filters set.
 		deferred
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_filter (a_filter: STRING_GENERAL) is
+	set_filter (a_filter: STRING_GENERAL)
 			-- Set `a_filter' as new filter.
 		require
 			a_filter_not_void: a_filter /= Void
@@ -66,7 +66,7 @@ feature -- Element change
 			assigned: filter.is_equal (a_filter)
 		end
 
-	set_file_name (a_name: STRING_GENERAL) is
+	set_file_name (a_name: STRING_GENERAL)
 			-- Make `a_name' the selected file.
 		require
 			a_name_not_void: a_name /= Void
@@ -75,7 +75,7 @@ feature -- Element change
 			assigned: not file_name.is_empty implies file_name.is_equal (a_name)
 		end
 
-	set_start_directory (a_path: STRING_GENERAL) is
+	set_start_directory (a_path: STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		require
 			a_path_not_void: a_path /= Void
@@ -86,12 +86,12 @@ feature -- Element change
 
 feature {EV_FILE_DIALOG} -- Contract support
 
-	valid_file_name (a_name: STRING_32): BOOLEAN is
+	valid_file_name (a_name: STRING_32): BOOLEAN
 			-- Is `a_name' a valid file_name on the current platform?
 		deferred
 		end
 
-	valid_file_title (a_title: STRING_32): BOOLEAN is
+	valid_file_title (a_title: STRING_32): BOOLEAN
 			-- Is `a_title' a valid file title on the current platform?
 		deferred
 		end
@@ -99,7 +99,7 @@ feature {EV_FILE_DIALOG} -- Contract support
 invariant
 	filters_not_void: filters /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

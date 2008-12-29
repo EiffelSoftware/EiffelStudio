@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Interface with the Lexical Library classes"
@@ -17,7 +17,7 @@ deferred class L_INTERFACE inherit
 
 feature -- Initialization
 
-	build (doc: INPUT) is
+	build (doc: INPUT)
 			-- Create lexical analyzer and set `doc'
 			-- to be the input document.
 		require
@@ -29,7 +29,7 @@ feature -- Initialization
 			doc.set_lexical (analyzer)
 		end;
 
-	obtain_analyzer is
+	obtain_analyzer
 			-- Build lexical analyzer.
 		deferred
 		ensure
@@ -38,7 +38,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	set_separator_type (type: INTEGER) is
+	set_separator_type (type: INTEGER)
 			-- Make tokens of type `type' to be separators.
 		do
 			if analyzer = Void then
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			analyzer.set_separator_type (type)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Facility to check the validity of hosts"
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ class
 
 feature -- Status report
 
-	host_ok (h: STRING): BOOLEAN is
+	host_ok (h: STRING): BOOLEAN
 			-- Is `h' a valid host?
 		do
 			if h /= Void and then not h.is_empty then
@@ -22,14 +22,14 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	Host_charset: CHARACTER_SET is
+	Host_charset: CHARACTER_SET
 			-- Character set for host names
 		once
 			create Result
 			Result.define ("A-Za-z0-9\-.")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Buffered data for text panel instances. Used for userset properties on single text panel instance.
 					 Differs from editor preferences that are for system wide editor property settings.
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 invariant
 	font_width_positive_implies_is_font_fixed: font_width > 0 implies is_font_fixed
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 
 feature -- Status Report
 
-	parse_display_name_user_precondition (pbc: IBIND_CTX_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]): BOOLEAN is
+	parse_display_name_user_precondition (pbc: IBIND_CTX_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `parse_display_name'.
 			-- Redefine in descendants if needed.
 		do
@@ -21,7 +21,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	parse_display_name (pbc: IBIND_CTX_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE]) is
+	parse_display_name (pbc: IBIND_CTX_INTERFACE; psz_display_name: STRING; pch_eaten: INTEGER_REF; ppmk_out: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 			-- `pbc' [in].  
 			-- `psz_display_name' [in].  
@@ -37,7 +37,7 @@ feature -- Basic Operations
 			valid_ppmk_out: ppmk_out.item /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

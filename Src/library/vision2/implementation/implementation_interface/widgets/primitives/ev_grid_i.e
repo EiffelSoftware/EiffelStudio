@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
 		Implementation Interface.
@@ -57,7 +57,7 @@ inherit
 
 feature -- Access
 
-	drop_actions: EV_PND_ACTION_SEQUENCE is
+	drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Actions to be performed when a pebble is dropped here.
 		do
 			if drop_actions_internal = Void then
@@ -66,19 +66,19 @@ feature -- Access
 			Result := drop_actions_internal
 		end
 
-	conforming_pick_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	conforming_pick_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when a pebble that fits here is picked.
 		do
 			Result := drawable.conforming_pick_actions
 		end
 
-	pick_actions: EV_PND_START_ACTION_SEQUENCE is
+	pick_actions: EV_PND_START_ACTION_SEQUENCE
 			-- Actions to be performed when `pebble' is picked up.
 		do
 			Result := drawable.pick_actions
 		end
 
-	pick_ended_actions: EV_PND_FINISHED_ACTION_SEQUENCE is
+	pick_ended_actions: EV_PND_FINISHED_ACTION_SEQUENCE
 			-- Actions to be performed when a transport from `Current' ends.
 			-- If transport completed successfully, then event data
 			-- is target. If cancelled, then event data is Void.
@@ -86,7 +86,7 @@ feature -- Access
 			Result := drawable.pick_ended_actions
 		end
 
-	row (a_row: INTEGER): EV_GRID_ROW is
+	row (a_row: INTEGER): EV_GRID_ROW
 			-- Row at index `a_row'.
 		require
 			a_row_positive: a_row > 0
@@ -97,7 +97,7 @@ feature -- Access
 			row_not_void: Result /= Void
 		end
 
-	column (a_column: INTEGER): EV_GRID_COLUMN is
+	column (a_column: INTEGER): EV_GRID_COLUMN
 			-- Column at index `a_column'.
 		require
 			a_column_positive: a_column > 0
@@ -108,7 +108,7 @@ feature -- Access
 			column_not_void: Result /= Void
 		end
 
-	displayed_column (i: INTEGER): EV_GRID_COLUMN is
+	displayed_column (i: INTEGER): EV_GRID_COLUMN
 			-- `i'-th displayed column. May not correspond
 			-- to `column' if one or more columns have been
 			--- hidden via `hide'.
@@ -135,7 +135,7 @@ feature -- Access
 			column_not_void: Result /= Void
 		end
 
-	item (a_column: INTEGER; a_row: INTEGER;): EV_GRID_ITEM is
+	item (a_column: INTEGER; a_row: INTEGER;): EV_GRID_ITEM
 			-- Cell at `a_column' and `a_row' position, Void if none.
 		require
 			a_column_positive: a_column > 0
@@ -151,7 +151,7 @@ feature -- Access
 			end
 		end
 
-	item_at_virtual_position (a_virtual_x, a_virtual_y: INTEGER): EV_GRID_ITEM is
+	item_at_virtual_position (a_virtual_x, a_virtual_y: INTEGER): EV_GRID_ITEM
 			-- Cell at virtual position `a_virtual_x', `a_virtual_y' or
 			-- `Void' if none.
 		require
@@ -166,7 +166,7 @@ feature -- Access
 			end
 		end
 
-	row_at_virtual_position (a_virtual_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW is
+	row_at_virtual_position (a_virtual_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW
 			-- Row at virtual y position `a_virtual_y'.
 		require
 			virtual_y_valid: a_virtual_y >=0 and a_virtual_y <= virtual_height
@@ -179,7 +179,7 @@ feature -- Access
 			end
 		end
 
-	column_at_virtual_position (a_virtual_x: INTEGER): EV_GRID_COLUMN is
+	column_at_virtual_position (a_virtual_x: INTEGER): EV_GRID_COLUMN
 			-- Column at virtual x position `a_virtual_x'.
 		require
 			virtual_x_valid: a_virtual_x >=0 and a_virtual_x <= virtual_width
@@ -192,7 +192,7 @@ feature -- Access
 			end
 		end
 
-	selected_columns: ARRAYED_LIST [EV_GRID_COLUMN] is
+	selected_columns: ARRAYED_LIST [EV_GRID_COLUMN]
 			-- All columns selected in `Current'.
 		local
 			temp_columns: like columns
@@ -216,7 +216,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	selected_rows: ARRAYED_LIST [EV_GRID_ROW] is
+	selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 			-- All rows selected in `Current'.
 		local
 			i: INTEGER
@@ -244,7 +244,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
+	selected_items: ARRAYED_LIST [EV_GRID_ITEM]
 			-- All items selected in `Current'.
 		local
 			i: INTEGER
@@ -270,7 +270,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	remove_selection is
+	remove_selection
 			-- Ensure that `selected_rows' and `selected_items' are empty.
 		local
 			sel_rows: like selected_rows
@@ -381,7 +381,7 @@ feature -- Access
 	are_tree_node_connectors_shown: BOOLEAN
 			-- Are connectors between tree nodes shown in `Current'?
 
-	virtual_x_position: INTEGER is
+	virtual_x_position: INTEGER
 			-- Horizontal offset of viewable area in relation to the left edge of
 			-- the virtual area in pixels.
 		do
@@ -390,7 +390,7 @@ feature -- Access
 			valid_result: Result >= 0 and Result <= maximum_virtual_x_position
 		end
 
-	virtual_y_position: INTEGER is
+	virtual_y_position: INTEGER
 			-- Vertical offset of viewable area in relation to the top edge of
 			-- the virtual area in pixels.
 		do
@@ -399,7 +399,7 @@ feature -- Access
 			valid_result: Result >= 0 and Result <= maximum_virtual_y_position
 		end
 
-	maximum_virtual_x_position: INTEGER is
+	maximum_virtual_x_position: INTEGER
 			-- Maximum permitted virtual x position based on current dimensions and properties.
 			-- Properties that affect this value are `is_vertical_scrolling_per_item' and
 			-- `is_vertical_overscroll_enabled'.
@@ -409,7 +409,7 @@ feature -- Access
 			result_non_negative: Result >= 0
 		end
 
-	maximum_virtual_y_position: INTEGER is
+	maximum_virtual_y_position: INTEGER
 			-- Maximum permitted virtual y position based on current properties.
 			-- Properties that affect this value are `is_horizontal_scrolling_per_item' and
 			-- `is_horizontal_overscroll_enabled'.
@@ -419,7 +419,7 @@ feature -- Access
 			result_non_negative: Result >= 0
 		end
 
-	pixels_displayed_after_final_column: INTEGER is
+	pixels_displayed_after_final_column: INTEGER
 			-- Width in pixels displayed after the final column of `Current'.
 			-- If `is_horizontal_overdraw_enabled' this is `viewable_width' less the final column width.
 			-- If not `is_horizontal_overdraw_enabled' and `is_horizontal_scrolling_per_item' this is
@@ -441,7 +441,7 @@ feature -- Access
 			end
 		end
 
-	pixels_displayed_after_final_row: INTEGER is
+	pixels_displayed_after_final_row: INTEGER
 			-- Height in pixels displayed after the final row of `Current'.
 			-- If `is_vertical_overdraw_enabled' this is `viewable_height' less the final row height.
 			-- If not `is_vertical_overdraw_enabled' and `is_vertical_scrolling_per_item' this is
@@ -486,7 +486,7 @@ feature -- Access
 				is_vertical_scrolling_per_item and row (row_count).virtual_y_position + row_height > viewable_height and not is_vertical_overscroll_enabled implies Result <= row_height
 		end
 
-	virtual_width: INTEGER is
+	virtual_width: INTEGER
 			-- Width of virtual area in pixels.
 		do
 			if columns.count > 0 then
@@ -498,7 +498,7 @@ feature -- Access
 			result_non_negative: Result >= 0
 		end
 
-	virtual_height: INTEGER is
+	virtual_height: INTEGER
 			-- Height of virtual area in pixels.
 		do
 			if row_count > 0 then
@@ -522,7 +522,7 @@ feature -- Access
 			-- Is equivalent to `viewport.height' and by storing this, multiple queries are far quicker
 			-- as the grid is only resized periodically and we no longer have to call EiffelVision for the value.
 
-	viewable_x_offset: INTEGER is
+	viewable_x_offset: INTEGER
 			-- Horizontal distance in pixels from the left edge of `Current' to
 			-- the left edge of the viewable area (defined by `viewable_width', `viewable_height')
 			-- in which all content is displayed.
@@ -533,7 +533,7 @@ feature -- Access
 			viewable_x_offset_valid: Result >=0 and Result <= width
 		end
 
-	viewable_y_offset: INTEGER is
+	viewable_y_offset: INTEGER
 			-- Vertical distance in pixels from the top edge of `Current' to
 			-- the top edge of the viewable area (defined by `viewable_width', `viewable_height')
 			-- in which all content is displayed.
@@ -545,13 +545,13 @@ feature -- Access
 			viewable_y_offset_valid: Result >=0 and Result <= height
 		end
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does `Current' have focus?
 		do
 			Result := drawable.has_focus
 		end
 
-	tooltip: STRING_32 is
+	tooltip: STRING_32
 			-- Tooltip displayed on `Current'.
 		do
 			if internal_tooltip = Void then
@@ -561,20 +561,20 @@ feature -- Access
 			end
 		end
 
-	set_default_key_processing_handler (a_handler: like default_key_processing_handler) is
+	set_default_key_processing_handler (a_handler: like default_key_processing_handler)
 			-- Assign `default_key_processing_handler' to `a_handler'.
 		do
 			default_key_processing_handler := a_handler
 			drawable.default_key_processing_handler := a_handler
 		end
 
-	has_capture: BOOLEAN is
+	has_capture: BOOLEAN
 			-- Does `Current' have capture?
 		do
 			Result := drawable.has_capture
 		end
 
-	unlock_column (a_column: EV_GRID_COLUMN_I) is
+	unlock_column (a_column: EV_GRID_COLUMN_I)
 			-- Ensure column `a_column' is unlocked.
 		local
 			l_locked_column: EV_GRID_LOCKED_COLUMN_I
@@ -604,7 +604,7 @@ feature -- Access
 			column_not_locked: not a_column.is_locked
 		end
 
-	unlock_row (a_row: EV_GRID_ROW_I) is
+	unlock_row (a_row: EV_GRID_ROW_I)
 			-- Ensure row `a_row' is unlocked.
 		local
 			l_locked_row: EV_GRID_LOCKED_ROW_I
@@ -639,7 +639,7 @@ feature -- Access
 
 feature -- Pick and Drop
 
-	item_accepts_pebble (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
+	item_accepts_pebble (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN
 			-- Do any actions accept `a_pebble' for `a_item'.
 		require
 			a_pebble_not_void: a_pebble /= Void
@@ -674,7 +674,7 @@ feature -- Pick and Drop
 	item_veto_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]
 		-- User item veto function.
 
-	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]) is
+	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN])
 			-- Assign `a_function' to `item_veto_pebble_function'.
 		do
 			item_veto_pebble_function := a_function
@@ -682,7 +682,7 @@ feature -- Pick and Drop
 			item_veto_pebble_function_set: item_veto_pebble_function = a_function
 		end
 
-	set_item_accept_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]) is
+	set_item_accept_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE])
 			-- Assign `a_function' to `item_accept_cursor_function'.
 		do
 			item_accept_cursor_function := a_function
@@ -693,7 +693,7 @@ feature -- Pick and Drop
 	item_accept_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
 			-- Function used to retrieve the PND accept cursor for a particular item.
 
-	set_item_deny_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]) is
+	set_item_deny_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE])
 			-- Assign `a_function' to `item_deny_cursor_function'.
 		do
 			item_deny_cursor_function := a_function
@@ -704,7 +704,7 @@ feature -- Pick and Drop
 	item_deny_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
 			-- Function used to retrieve the PND deny cursor for a particular item.
 
-	drop_action_intermediary (a_pebble: ANY) is
+	drop_action_intermediary (a_pebble: ANY)
 			-- A PND drop has occured on a grid item.
 		local
 			a_item: EV_GRID_ITEM
@@ -741,7 +741,7 @@ feature -- Pick and Drop
 
 		end
 
-	item_target: EV_GRID_ITEM is
+	item_target: EV_GRID_ITEM
 			-- Item currently at pointer position.
 		local
 			a_pointer_position: EV_COORDINATE
@@ -759,7 +759,7 @@ feature -- Pick and Drop
 			end
 		end
 
-	veto_pebble_function_intermediary (a_pebble: ANY): BOOLEAN is
+	veto_pebble_function_intermediary (a_pebble: ANY): BOOLEAN
 			-- Intermediary function used for pebble vetoing.
 		local
 			a_item_target: like item_target
@@ -777,7 +777,7 @@ feature -- Pick and Drop
 			end
 		end
 
-	set_accept_cursor (a_cursor: like accept_cursor) is
+	set_accept_cursor (a_cursor: like accept_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
@@ -797,7 +797,7 @@ feature -- Pick and Drop
 			end
 		end
 
-	set_deny_cursor (a_cursor: like deny_cursor) is
+	set_deny_cursor (a_cursor: like deny_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that doesn't accept `pebble' during pick and drop.
 		do
@@ -817,7 +817,7 @@ feature -- Pick and Drop
 			end
 		end
 
-	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]) is
+	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY])
 			-- Set `a_function' to compute `pebble'.
 			-- It will be called once each time a pick on the item area of the grid occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.
@@ -843,13 +843,13 @@ feature -- Pick and Drop
 			item_pebble_function := a_function
 		end
 
-	user_pebble_function_intermediary_locked (a_x, a_y: INTEGER; locked: EV_GRID_LOCKED_I): ANY is
+	user_pebble_function_intermediary_locked (a_x, a_y: INTEGER; locked: EV_GRID_LOCKED_I): ANY
 			-- Intermediary function used for grid item pick and drop on the widgets comprising the locked columns and rows.
 		do
 			Result := user_pebble_function_intermediary (locked.x_to_drawable_x (a_x), locked.y_to_drawable_y (a_y))
 		end
 
-	user_pebble_function_intermediary (a_x, a_y: INTEGER): ANY is
+	user_pebble_function_intermediary (a_x, a_y: INTEGER): ANY
 			-- Intermediary function used for grid item pick and drop.
 		local
 			item_imp: EV_GRID_ITEM_I
@@ -920,7 +920,7 @@ feature -- Status setting
 	currently_active_item: EV_GRID_ITEM
 		-- Item that is currently active.
 
-	activate_item (a_item: EV_GRID_ITEM) is
+	activate_item (a_item: EV_GRID_ITEM)
 			-- Setup `a_item' for user interactive editing.
 		require
 			a_item_not_void: a_item /= Void
@@ -990,7 +990,7 @@ feature -- Status setting
 			end
 		end
 
-	deactivate_item (a_item: EV_GRID_ITEM) is
+	deactivate_item (a_item: EV_GRID_ITEM)
 			-- Cleanup from previous call to `activate'.
 		require
 			a_item_not_void: a_item /= Void
@@ -1016,7 +1016,7 @@ feature -- Status setting
 			currently_active_item := Void
 		end
 
-	enable_selection_on_click is
+	enable_selection_on_click
 			-- Enable selection handling of items when clicked upon.
 		do
 			is_selection_on_click_enabled := True
@@ -1024,7 +1024,7 @@ feature -- Status setting
 			selection_on_click_enabled: is_selection_on_click_enabled
 		end
 
-	enable_selection_on_single_button_click is
+	enable_selection_on_single_button_click
 			-- Enable selection handling of items when clicked upon via mouse button `1'.
 			-- This is useful for implementing Contextual Menus where the selection may need
 			-- to remain unchanged when using mouse button `3' for instance.
@@ -1035,7 +1035,7 @@ feature -- Status setting
 			selection_on_single_click_enabled: is_selection_on_single_button_click_enabled and then is_selection_on_click_enabled
 		end
 
-	disable_selection_on_click is
+	disable_selection_on_click
 			-- Disable selection handling when items are clicked upon.
 		do
 			is_selection_on_single_button_click_enabled := False
@@ -1044,7 +1044,7 @@ feature -- Status setting
 			selection_on_click_disabled: not is_selection_on_click_enabled
 		end
 
-	enable_selection_keyboard_handling is
+	enable_selection_keyboard_handling
 			-- Enable selection handling of items via the keyboard.
 		do
 			is_selection_keyboard_handling_enabled := True
@@ -1052,7 +1052,7 @@ feature -- Status setting
 			selection_keyboard_handling_enabled: is_selection_keyboard_handling_enabled
 		end
 
-	disable_selection_keyboard_handling is
+	disable_selection_keyboard_handling
 			-- Disable selection handling of items via the keyboard.
 		do
 			is_selection_keyboard_handling_enabled := False
@@ -1060,7 +1060,7 @@ feature -- Status setting
 			selection_keyboard_handling_disabled: not is_selection_keyboard_handling_enabled
 		end
 
-	enable_tree is
+	enable_tree
 			-- Enable tree functionality for `Current'.
 			-- Must be `True' to perform any tree structure functions on `Current'.
 			-- Use `enable_tree' and `disable_tree' to set this state.
@@ -1076,7 +1076,7 @@ feature -- Status setting
 			tree_enabled: is_tree_enabled
 		end
 
-	disable_tree is
+	disable_tree
 			-- Disable tree functionality for `Current'.
 			-- All subrows of rows contained are unparented,
 			-- which flattens the tree structure.
@@ -1107,7 +1107,7 @@ feature -- Status setting
 			tree_disabled: not is_tree_enabled
 		end
 
-	show_column (a_column: INTEGER) is
+	show_column (a_column: INTEGER)
 			-- Ensure column `a_column' is visible in `Current'.
 		require
 			a_column_within_bounds: a_column > 0 and a_column <= column_count
@@ -1133,7 +1133,7 @@ feature -- Status setting
 			column_displayed: column_displayed (a_column)
 		end
 
-	hide_column (a_column: INTEGER) is
+	hide_column (a_column: INTEGER)
 			-- Ensure column `a_column' is not visible in `Current'.
 		require
 			a_column_within_bounds: a_column > 0 and a_column <= column_count
@@ -1158,7 +1158,7 @@ feature -- Status setting
 			column_not_displayed: not column_displayed (a_column)
 		end
 
-	select_column (a_column: INTEGER) is
+	select_column (a_column: INTEGER)
 			-- Ensure all items in `a_column' are selected.
 		require
 			a_column_within_bounds: a_column > 0 and a_column <= column_count
@@ -1169,7 +1169,7 @@ feature -- Status setting
 			column_selected: column (a_column).is_selected
 		end
 
-	select_row (a_row: INTEGER) is
+	select_row (a_row: INTEGER)
 			-- Ensure all items in `a_row' are selected.
 		require
 			a_row_within_bounds: a_row > 0 and a_row <= row_count
@@ -1179,7 +1179,7 @@ feature -- Status setting
 			row_selected: row (a_row).is_selected
 		end
 
-	enable_single_row_selection is
+	enable_single_row_selection
 			-- Allow the user to select a single row via clicking or navigating using the keyboard arrow keys.
 		local
 			a_row: EV_GRID_ROW_I
@@ -1213,7 +1213,7 @@ feature -- Status setting
 			single_row_selection_enabled: is_single_row_selection_enabled
 		end
 
-	enable_multiple_row_selection is
+	enable_multiple_row_selection
 			-- Allow the user to select more than one row via clicking or navigating using the keyboard arrow keys.
 			-- Multiple rows may be selected via Ctrl and Shift keys.
 		local
@@ -1239,7 +1239,7 @@ feature -- Status setting
 			multiple_row_selection_enabled: is_multiple_row_selection_enabled
 		end
 
-	enable_single_item_selection is
+	enable_single_item_selection
 			-- Allow the user to select a single item via clicking or navigating using the keyboard arrow keys.
 		local
 			sel_items: like selected_items
@@ -1259,7 +1259,7 @@ feature -- Status setting
 			single_item_selection_enabled: is_single_item_selection_enabled
 		end
 
-	enable_multiple_item_selection is
+	enable_multiple_item_selection
 			-- Allow the user to select more than one item via clicking or navigating using the keyboard arrow keys.
 			-- Multiple items may be selected via Ctrl and Shift keys.
 		local
@@ -1283,13 +1283,13 @@ feature -- Status setting
 			multiple_item_selection_enabled: is_multiple_item_selection_enabled
 		end
 
-	enable_always_selected is
+	enable_always_selected
 			-- Ensure that the user may not completely remove the selection from `Current'.
 		do
 			is_always_selected := True
 		end
 
-	disable_always_selected is
+	disable_always_selected
 			-- Allow the user to completely remove the selection from the grid by clicking on an item,
 			-- clicking on a Void area or by Ctrl clicking the selected item itself.
 		do
@@ -1299,7 +1299,7 @@ feature -- Status setting
 	is_always_selected: BOOLEAN
 			-- Ensure that the user may not completely remove the selection from `Current'.
 
-	show_header is
+	show_header
 			-- Ensure header displayed.
 		do
 			is_header_displayed := True
@@ -1308,7 +1308,7 @@ feature -- Status setting
 			header_displayed: is_header_displayed
 		end
 
-	hide_header is
+	hide_header
 			-- Ensure header is hidden.
 		do
 			is_header_displayed := False
@@ -1317,7 +1317,7 @@ feature -- Status setting
 			header_not_displayed: not is_header_displayed
 		end
 
-	set_first_visible_row (a_row: INTEGER) is
+	set_first_visible_row (a_row: INTEGER)
 			-- Set `a_row' as the first row visible in `Current' as long
 			-- as there are enough rows after `a_row' to fill the remainder of `Current'.
 		require
@@ -1330,7 +1330,7 @@ feature -- Status setting
 			-- Can be calculated from `height' of `Current' and row heights.
 		end
 
-	enable_resizing_divider is
+	enable_resizing_divider
 			-- Ensure a vertical divider is displayed during column resizing.
 		do
 			is_resizing_divider_enabled := True
@@ -1338,7 +1338,7 @@ feature -- Status setting
 			resizing_divider_enabled: is_resizing_divider_enabled
 		end
 
-	disable_resizing_divider is
+	disable_resizing_divider
 			-- Ensure no vertical divider is displayed during column resizing.
 		do
 			is_resizing_divider_enabled := False
@@ -1346,7 +1346,7 @@ feature -- Status setting
 			resizing_divider_disabled: not is_resizing_divider_enabled
 		end
 
-	enable_solid_resizing_divider is
+	enable_solid_resizing_divider
 			-- Ensure resizing divider displayed during column resizing
 			-- is displayed as a solid line.
 		do
@@ -1355,7 +1355,7 @@ feature -- Status setting
 			solid_resizing_divider: is_resizing_divider_solid
 		end
 
-	disable_solid_resizing_divider is
+	disable_solid_resizing_divider
 			-- Ensure resizing divider displayed during column resizing
 			-- is displayed as a dashed line.
 		do
@@ -1364,7 +1364,7 @@ feature -- Status setting
 			dashed_resizing_divider: not is_resizing_divider_solid
 		end
 
-	enable_horizontal_scrolling_per_item is
+	enable_horizontal_scrolling_per_item
 			-- Ensure horizontal scrolling is performed on a per-item basis.
 		do
 			is_horizontal_scrolling_per_item := True
@@ -1375,7 +1375,7 @@ feature -- Status setting
 			horizontal_scrolling_performed_per_item: is_horizontal_scrolling_per_item
 		end
 
-	disable_horizontal_scrolling_per_item is
+	disable_horizontal_scrolling_per_item
 			-- Ensure horizontal scrolling is performed on a per-pixel basis.
 		do
 			is_horizontal_scrolling_per_item := False
@@ -1401,7 +1401,7 @@ feature -- Status setting
 	is_item_height_changing: BOOLEAN
 			-- Is height of items in `Current' changing?
 
-	enable_vertical_scrolling_per_item is
+	enable_vertical_scrolling_per_item
 			-- Ensure vertical scrolling is performed on a per-item basis.
 		do
 			is_vertical_scrolling_per_item := True
@@ -1412,7 +1412,7 @@ feature -- Status setting
 			vertical_scrolling_performed_per_item: is_vertical_scrolling_per_item
 		end
 
-	disable_vertical_scrolling_per_item is
+	disable_vertical_scrolling_per_item
 			-- Ensure vertical scrolling is performed on a per-pixel basis.
 		do
 			is_vertical_scrolling_per_item := False
@@ -1423,7 +1423,7 @@ feature -- Status setting
 			vertical_scrolling_performed_per_pixel: not is_vertical_scrolling_per_item
 		end
 
-	enable_vertical_overscroll is
+	enable_vertical_overscroll
 			-- Ensure `is_vertical_overscroll_enabled' is `True'.
 		do
 			is_vertical_overscroll_enabled := True
@@ -1433,7 +1433,7 @@ feature -- Status setting
 			is_vertical_overscroll_enabled: is_vertical_overscroll_enabled
 		end
 
-	disable_vertical_overscroll is
+	disable_vertical_overscroll
 			-- Ensure `is_vertical_overscroll_enabled' is `False'.
 		require
 			dynamic_content_not_enabled_with_variable_row_heights:
@@ -1447,7 +1447,7 @@ feature -- Status setting
 			not_is_vertical_overscroll_enabled: not is_vertical_overscroll_enabled
 		end
 
-	enable_horizontal_overscroll is
+	enable_horizontal_overscroll
 			-- Ensure `is_horizontal_overscroll_enabled' is `True'.
 		do
 			is_horizontal_overscroll_enabled := True
@@ -1457,7 +1457,7 @@ feature -- Status setting
 			is_horizontal_overscroll_enabled: is_horizontal_overscroll_enabled
 		end
 
-	disable_horizontal_overscroll is
+	disable_horizontal_overscroll
 			-- Ensure `is_horizontal_overscroll_enabled' is `False'.
 		do
 			is_horizontal_overscroll_enabled := False
@@ -1468,7 +1468,7 @@ feature -- Status setting
 			not_is_horizontal_overscroll_enabled: not is_horizontal_overscroll_enabled
 		end
 
-	set_row_height (a_row_height: INTEGER) is
+	set_row_height (a_row_height: INTEGER)
 			-- Set height of all rows within `Current' to `a_row_height
 			-- If not `is_row_height_fixed' then use the height individually per row instead.
 		require
@@ -1488,7 +1488,7 @@ feature -- Status setting
 			row_height_set: row_height = a_row_height
 		end
 
-	enable_partial_dynamic_content is
+	enable_partial_dynamic_content
 			-- Ensure contents of `Current' must be retrieved when required via
 			-- `content_requested_actions' only if the item is not already set
 			-- in `Current'.
@@ -1503,7 +1503,7 @@ feature -- Status setting
 			content_partially_dynamic: is_content_partially_dynamic
 		end
 
-	disable_dynamic_content is
+	disable_dynamic_content
 			-- Ensure contents of `Current' are not dynamic and are no longer retrieved as such.
 		do
 			is_content_partially_dynamic := False
@@ -1511,7 +1511,7 @@ feature -- Status setting
 			content_not_dynamic: not is_content_partially_dynamic
 		end
 
-	enable_row_height_fixed is
+	enable_row_height_fixed
 			-- Ensure all rows have the same height.
 		do
 			is_row_height_fixed := True
@@ -1519,7 +1519,7 @@ feature -- Status setting
 			redraw_client_area
 		end
 
-	disable_row_height_fixed is
+	disable_row_height_fixed
 			-- Permit rows to have varying heights.
 		require
 			not_dynamic_content_enabled_with_height_not_bounded:
@@ -1530,7 +1530,7 @@ feature -- Status setting
 			redraw_client_area
 		end
 
-	set_column_count_to (a_column_count: INTEGER) is
+	set_column_count_to (a_column_count: INTEGER)
 			-- Resize `Current' to have `a_column_count' columns.
 		require
 			a_column_count_not_negative: a_column_count >= 0
@@ -1558,7 +1558,7 @@ feature -- Status setting
 			column_count_set: column_count = a_column_count
 		end
 
-	set_row_count_to (a_row_count: INTEGER) is
+	set_row_count_to (a_row_count: INTEGER)
 			-- Resize `Current' to have `a_row_count' columns.
 		require
 			a_row_count_non_negative: a_row_count >= 0
@@ -1574,7 +1574,7 @@ feature -- Status setting
 			row_count_set: row_count = a_row_count
 		end
 
-	set_dynamic_content_function (a_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]) is
+	set_dynamic_content_function (a_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM])
 			-- Function which computes the item that resides in a particular position of the
 			-- grid while `is_content_partially_dynamic' or `is_content_completely_dynamic.
 		require
@@ -1585,7 +1585,7 @@ feature -- Status setting
 			dynamic_content_function_set: dynamic_content_function = a_function
 		end
 
-	set_subrow_indent (a_subrow_indent: INTEGER) is
+	set_subrow_indent (a_subrow_indent: INTEGER)
 			-- Set `subrow_indent' to `a_subrow_indent'.
 		require
 			a_subrow_indent_non_negtive: a_subrow_indent >= 0
@@ -1596,7 +1596,7 @@ feature -- Status setting
 			subrow_indent_set: subrow_indent = a_subrow_indent
 		end
 
-	set_node_pixmaps (an_expand_node_pixmap, a_collapse_node_pixmap: EV_PIXMAP) is
+	set_node_pixmaps (an_expand_node_pixmap, a_collapse_node_pixmap: EV_PIXMAP)
 			-- Assign `an_expand_node_pixmap' to `expand_node_pixmap' and `a_collapse_node_pixmap'
 			-- to `collapse_node_pixmap'. These pixmaps are used in rows containing subrows for
 			-- expanding/collapsing the row.
@@ -1616,7 +1616,7 @@ feature -- Status setting
 			pixmaps_set: expand_node_pixmap = an_expand_node_pixmap and collapse_node_pixmap = a_collapse_node_pixmap
 		end
 
-	show_tree_node_connectors is
+	show_tree_node_connectors
 			-- Ensure connectors are displayed between nodes of tree structure in `Current'.
 		do
 			are_tree_node_connectors_shown := True
@@ -1625,7 +1625,7 @@ feature -- Status setting
 			tree_node_connectors_shown: are_tree_node_connectors_shown
 		end
 
-	hide_tree_node_connectors is
+	hide_tree_node_connectors
 			-- Ensure no connectors are displayed between nodes of tree structure in `Current'.
 		do
 			are_tree_node_connectors_shown := False
@@ -1634,7 +1634,7 @@ feature -- Status setting
 			tree_node_connectors_hidden: not are_tree_node_connectors_shown
 		end
 
-	set_virtual_position (virtual_x, virtual_y: INTEGER) is
+	set_virtual_position (virtual_x, virtual_y: INTEGER)
 			-- Move `Current' to virtual position `virtual_x', `virtual_y'.
 		require
 			virtual_x_valid: virtual_x >= 0 and virtual_x <= maximum_virtual_x_position
@@ -1701,7 +1701,7 @@ feature -- Status setting
 			virtual_position_set: virtual_x_position = virtual_x and virtual_y_position = virtual_y
 		end
 
-	set_tree_node_connector_color (a_color: EV_COLOR) is
+	set_tree_node_connector_color (a_color: EV_COLOR)
 			-- Set `a_color' as `tree_node_connector_color'.
 		require
 			a_color_not_void: a_color /= Void
@@ -1714,7 +1714,7 @@ feature -- Status setting
 			tree_node_connector_color_set: tree_node_connector_color = a_color
 		end
 
-	enable_columns_drawn_above_rows is
+	enable_columns_drawn_above_rows
 			-- Ensure `are_columns_drawn_above_rows' is `True'.
 		do
 			are_columns_drawn_above_rows := True
@@ -1723,7 +1723,7 @@ feature -- Status setting
 			columns_drawn_above_rows: are_columns_drawn_above_rows
 		end
 
-	disable_columns_drawn_above_rows is
+	disable_columns_drawn_above_rows
 			-- Ensure `are_columns_drawn_above_rows' is `False'.
 		do
 			are_columns_drawn_above_rows := False
@@ -1733,7 +1733,7 @@ feature -- Status setting
 		end
 
 
-	enable_column_resize_immediate is
+	enable_column_resize_immediate
 			-- Ensure `is_column_resize_immediate' is `True'.
 		do
 			is_column_resize_immediate := True
@@ -1741,7 +1741,7 @@ feature -- Status setting
 			is_column_resize_immediate: is_column_resize_immediate
 		end
 
-	disable_column_resize_immediate is
+	disable_column_resize_immediate
 			-- Ensure `is_column_resize_immediate' is `False'.
 		do
 			is_column_resize_immediate := False
@@ -1749,7 +1749,7 @@ feature -- Status setting
 			not_is_column_resize_immediate: not is_column_resize_immediate
 		end
 
-	enable_column_separators is
+	enable_column_separators
 			-- Ensure `are_column_separators_enabled' is `True'.
 		do
 			are_column_separators_enabled := True
@@ -1758,7 +1758,7 @@ feature -- Status setting
 			column_separators_enabled: are_column_separators_enabled
 		end
 
-	disable_column_separators is
+	disable_column_separators
 			-- Ensure `are_column_separators_enabled' is `False'.
 		do
 			are_column_separators_enabled := False
@@ -1767,7 +1767,7 @@ feature -- Status setting
 			column_separators_disabled: not are_column_separators_enabled
 		end
 
-	enable_row_separators is
+	enable_row_separators
 			-- Ensure `are_row_separators_enabled' is `True'.
 		do
 			are_row_separators_enabled := True
@@ -1776,7 +1776,7 @@ feature -- Status setting
 			row_separators_enabled: are_row_separators_enabled
 		end
 
-	disable_row_separators is
+	disable_row_separators
 			-- Ensure `are_row_separators_enabled' is `False'.
 		do
 			are_row_separators_enabled := False
@@ -1785,7 +1785,7 @@ feature -- Status setting
 			row_separators_disabled: not are_row_separators_enabled
 		end
 
-	set_separator_color (a_color: EV_COLOR) is
+	set_separator_color (a_color: EV_COLOR)
 			-- Set `a_color' as `separator_color'.
 		require
 			a_color_not_void: a_color /= Void
@@ -1796,27 +1796,27 @@ feature -- Status setting
 			separator_color_set: separator_color = a_color
 		end
 
-	set_focus is
+	set_focus
 			-- Grab keyboard focus.
 		do
 			drawable.set_focus
 		end
 
-	set_pebble (a_pebble: like pebble) is
+	set_pebble (a_pebble: like pebble)
 			-- Assign `a_pebble' to `pebble'.
 		do
 			Precursor {EV_CELL_I} (a_pebble)
 			drawable.set_pebble (a_pebble)
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY]) is
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY])
 			-- Assign `a_function' to `pebble_function'.
 		do
 			Precursor {EV_CELL_I} (a_function)
 			drawable.set_pebble_function (a_function)
 		end
 
-	set_focused_selection_color (a_color: EV_COLOR) is
+	set_focused_selection_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `focused_selection_color'.
 		require
 			a_color_not_void: a_color /= Void
@@ -1826,7 +1826,7 @@ feature -- Status setting
 			focused_selection_color_set: focused_selection_color = a_color
 		end
 
-	set_non_focused_selection_color (a_color: EV_COLOR) is
+	set_non_focused_selection_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `non_focused_selection_color'.
 		require
 			a_color_not_void: a_color /= Void
@@ -1836,7 +1836,7 @@ feature -- Status setting
 			non_focused_selection_color_set: non_focused_selection_color = a_color
 		end
 
-	set_focused_selection_text_color (a_color: EV_COLOR) is
+	set_focused_selection_text_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `focused_selection_text_color'.
 		require
 			a_color_not_void: a_color /= Void
@@ -1846,7 +1846,7 @@ feature -- Status setting
 			focused_selection_text_color_set: focused_selection_text_color = a_color
 		end
 
-	set_non_focused_selection_text_color (a_color: EV_COLOR) is
+	set_non_focused_selection_text_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `non_focused_selection_text_color'.
 		require
 			a_color_not_void: a_color /= Void
@@ -1856,13 +1856,13 @@ feature -- Status setting
 			non_focused_selection_text_color_set: non_focused_selection_text_color = a_color
 		end
 
-	redraw is
+	redraw
 			-- Force `Current' to be re-drawn when next idle.
 		do
 			redraw_client_area
 		end
 
-	enable_full_redraw_on_virtual_position_change is
+	enable_full_redraw_on_virtual_position_change
 			-- Ensure `is_full_redraw_on_virtual_position_change_enabled' is `True'.
 		do
 			is_full_redraw_on_virtual_position_change_enabled := True
@@ -1870,7 +1870,7 @@ feature -- Status setting
 			is_full_redraw_on_virtual_position_change_enabled: is_full_redraw_on_virtual_position_change_enabled
 		end
 
-	disable_full_redraw_on_virtual_position_change is
+	disable_full_redraw_on_virtual_position_change
 			-- Ensure `is_full_redraw_on_virtual_position_change_enabled' is `False'.
 		do
 			is_full_redraw_on_virtual_position_change_enabled := False
@@ -1878,7 +1878,7 @@ feature -- Status setting
 			not_is_full_redraw_on_virtual_position_change_enabled: not is_full_redraw_on_virtual_position_change_enabled
 		end
 
-	lock_update is
+	lock_update
 			-- Ensure `is_locked' is `True', thereby preventing graphical
 			-- updates until `unlock_update' is called.
 		do
@@ -1887,7 +1887,7 @@ feature -- Status setting
 			is_locked: is_locked
 		end
 
-	unlock_update is
+	unlock_update
 			-- Ensure `is_locked' is `False', thereby ensuring graphical
 			-- updates occur as normal. The complete client area
 			-- is refreshed to synchronize the display with the contents.
@@ -1898,14 +1898,14 @@ feature -- Status setting
 			not_is_locked: not is_locked
 		end
 
-	set_default_colors is
+	set_default_colors
 			-- Set foreground and background color to their default values.
 		do
 			set_background_color ((create {EV_STOCK_COLORS}).white.twin)
 			set_foreground_color ((create {EV_STOCK_COLORS}).black.twin)
 		end
 
-	hide_vertical_scroll_bar is
+	hide_vertical_scroll_bar
 			-- Ensure no vertical scroll bar is displayed in `Current'
 			-- at any time.
 		do
@@ -1917,7 +1917,7 @@ feature -- Status setting
 			not_is_vertical_scroll_bar_show_requested: not is_vertical_scroll_bar_show_requested
 		end
 
-	show_vertical_scroll_bar is
+	show_vertical_scroll_bar
 			-- Ensure a vertical scroll bar is displayed in `Current'
 			-- when required. Note that this does not force the vertical
 			-- scroll bar to be visible, simply ensures that when `virtual_height'
@@ -1932,7 +1932,7 @@ feature -- Status setting
 			-- Will a vertical scroll bar be displayed in `Current' when
 			-- `virtual_height' exceeds `viewable_height'?
 
-	hide_horizontal_scroll_bar is
+	hide_horizontal_scroll_bar
 			-- Ensure no horizontal scroll bar is displayed in `Current'
 			-- at any time.
 		do
@@ -1944,7 +1944,7 @@ feature -- Status setting
 			not_is_horizontal_scroll_bar_show_requested: not is_horizontal_scroll_bar_show_requested
 		end
 
-	show_horizontal_scroll_bar is
+	show_horizontal_scroll_bar
 			-- Ensure a horizontal scroll bar is displayed in `Current'
 			-- when required. Note that this does not force the horizontal
 			-- scroll bar to be visible, simply ensures that when `virtual_width'
@@ -1959,35 +1959,35 @@ feature -- Status setting
 			-- Will a horizontal scroll bar be displayed in `Current' when
 			-- `virtual_width' exceeds `viewable_width'?
 
-	set_pick_and_drop_mode is
+	set_pick_and_drop_mode
 			-- Set transport mechanism to pick and drop,
 		do
 			Precursor {EV_CELL_I}
 			drawable.set_pick_and_drop_mode
 		end
 
-	set_drag_and_drop_mode is
+	set_drag_and_drop_mode
 			-- Set transport mechanism to drag and drop,
 		do
 			Precursor {EV_CELL_I}
 			drawable.set_drag_and_drop_mode
 		end
 
-	set_target_menu_mode is
+	set_target_menu_mode
 			-- Set transport mechanism to a target_menu.
 		do
 			Precursor {EV_CELL_I}
 			drawable.set_target_menu_mode
 		end
 
-	set_configurable_target_menu_mode is
+	set_configurable_target_menu_mode
 			-- Set transport mechanism to a configurable target_menu.
 		do
 			Precursor {EV_CELL_I}
 			drawable.set_configurable_target_menu_mode
 		end
 
-	set_configurable_target_menu_handler (a_handler: like configurable_target_menu_handler) is
+	set_configurable_target_menu_handler (a_handler: like configurable_target_menu_handler)
 			-- Set Configurable Target Menu Handler to `a_handler'.
 		do
 			Precursor {EV_CELL_I}(a_handler)
@@ -2009,7 +2009,7 @@ feature -- Status report
 	is_tree_enabled: BOOLEAN
 			-- Is tree functionality enabled?
 
-	column_displayed (a_column: INTEGER): BOOLEAN is
+	column_displayed (a_column: INTEGER): BOOLEAN
 			-- May column `a_column' be displayed when `Current' is?
 			-- Will return False if `hide' has been called on column `a_column'.
 			-- A value of True does not signify that column `a_column' is visible on screen at that particular time.
@@ -2022,13 +2022,13 @@ feature -- Status report
 			Result := a_col_i.is_show_requested
 		end
 
-	is_row_selection_enabled: BOOLEAN is
+	is_row_selection_enabled: BOOLEAN
 			-- Is `Current' in either single or multiple row selection mode?
 		do
 			Result := is_single_row_selection_enabled or else is_multiple_row_selection_enabled
 		end
 
-	is_multiple_selection_enabled: BOOLEAN is
+	is_multiple_selection_enabled: BOOLEAN
 			-- Is `Current' in either multiple item or row selection mode?
 		do
 			Result := is_multiple_item_selection_enabled or else is_multiple_row_selection_enabled
@@ -2050,7 +2050,7 @@ feature -- Status report
 			-- Does clicking or keyboard navigating via arrow keys select an item, with multiple
 			-- item selection permitted via the use of Ctrl and Shift keys?
 
-	first_visible_row: EV_GRID_ROW is
+	first_visible_row: EV_GRID_ROW
 			-- First row visible in `Current' or Void if `row_count' = 0
 			-- If `is_vertical_scrolling_per_item', the first visible row may be only partially visible.
 		require
@@ -2067,7 +2067,7 @@ feature -- Status report
 			no_rows_implies_result_void: row_count = 0 implies result = Void
 		end
 
-	first_visible_column: EV_GRID_COLUMN is
+	first_visible_column: EV_GRID_COLUMN
 			-- First column visible in `Current' or Void if `column_count' = 0
 			-- If `is_horizontal_scrolling_per_item', the first visible column may be only partially visible.
 		require
@@ -2084,7 +2084,7 @@ feature -- Status report
 			no_columns_implies_result_void: column_count = 0 implies result = Void
 		end
 
-	last_visible_row: EV_GRID_ROW is
+	last_visible_row: EV_GRID_ROW
 			-- Last row visible in `Current' or Void if `row_count' = 0
 			-- The last visible row may be only partially visible.
 		require
@@ -2101,7 +2101,7 @@ feature -- Status report
 			no_rows_implies_result_void: row_count = 0 implies result = Void
 		end
 
-	last_visible_column: EV_GRID_COLUMN is
+	last_visible_column: EV_GRID_COLUMN
 			-- Last column visible in `Current' or Void if `column_count' = 0
 			-- The last visible column may be only partially visible.
 		require
@@ -2118,7 +2118,7 @@ feature -- Status report
 			no_columns_implies_result_void: column_count = 0 implies result = Void
 		end
 
-	visible_row_indexes: ARRAYED_LIST [INTEGER] is
+	visible_row_indexes: ARRAYED_LIST [INTEGER]
 			-- All rows that are currently visible in `Current'.
 		require
 			is_displayed: is_displayed
@@ -2129,7 +2129,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	viewable_row_indexes: ARRAYED_LIST [INTEGER] is
+	viewable_row_indexes: ARRAYED_LIST [INTEGER]
 			-- Row indexes that are currently viewable in the grid in its present state.
 			-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
 			-- would be 1, 11, 12, 13, 14, ...
@@ -2149,7 +2149,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	visible_column_indexes: ARRAYED_LIST [INTEGER] is
+	visible_column_indexes: ARRAYED_LIST [INTEGER]
 			-- All columns that are currently visible in `Current'.
 		require
 			is_displayed: is_displayed
@@ -2175,7 +2175,7 @@ feature -- Status report
 	non_focused_selection_text_color: EV_COLOR
 			-- Color used for text of selected items while not focused.
 
-	displayed_background_color (a_column, a_row: INTEGER): EV_COLOR is
+	displayed_background_color (a_column, a_row: INTEGER): EV_COLOR
 			-- `Result' is background color to be displayed for item at position `a_column', `a_row'
 			-- on parts of the cell space in which the item is not displayed. i.e. for the background
 			-- area of a tree structure.
@@ -2210,13 +2210,13 @@ feature -- Status report
 			-- foreground or background colors, the column colors are given priority.
 			-- If `False', the colors of the row are given priority.
 
-	enable_capture is
+	enable_capture
 			-- Grab the user input.
 		do
 			drawable.enable_capture
 		end
 
-	disable_capture is
+	disable_capture
 			-- Release the user input.
 		do
 			drawable.disable_capture
@@ -2228,7 +2228,7 @@ feature -- Status report
 
 feature -- Element change
 
-	enable_drawables_have_focus is
+	enable_drawables_have_focus
 			-- Ensure `drawables_have_focus' is set to `True'.
 		do
 			drawables_have_focus := True
@@ -2236,7 +2236,7 @@ feature -- Element change
 			drawables_have_focus: drawables_have_focus = True
 		end
 
-	disable_drawables_have_focus is
+	disable_drawables_have_focus
 			-- Ensure `drawables_have_focus' is set to `False'.
 		do
 			drawables_have_focus := False
@@ -2244,7 +2244,7 @@ feature -- Element change
 			drawables_have_focus: drawables_have_focus = False
 		end
 
-	insert_new_rows (rows_to_insert, i: INTEGER) is
+	insert_new_rows (rows_to_insert, i: INTEGER)
 			-- Insert `rows_to_insert' rows at index `i'.
 		require
 			i_within_range: i > 0 and i <= row_count + 1
@@ -2256,7 +2256,7 @@ feature -- Element change
 			row_count_set: row_count = old row_count + rows_to_insert
 		end
 
-	insert_new_rows_parented (rows_to_insert, i: INTEGER; a_parent_row: EV_GRID_ROW) is
+	insert_new_rows_parented (rows_to_insert, i: INTEGER; a_parent_row: EV_GRID_ROW)
 			-- Insert `rows_to_insert' new rows at index `i' and make those rows subnodes of `a_parent_row'.
 		require
 			i_positive: i > 0
@@ -2283,7 +2283,7 @@ feature -- Element change
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + rows_to_insert
 		end
 
-	insert_new_column (a_index: INTEGER) is
+	insert_new_column (a_index: INTEGER)
 			-- Insert a new column at index `a_index'.
 		require
 			a_index_within_range: a_index > 0 and a_index <= column_count + 1
@@ -2293,7 +2293,7 @@ feature -- Element change
 			column_count_set: column_count = old column_count + 1
 		end
 
-	move_rows_to_parent (i, j, n: INTEGER; a_parent_row: EV_GRID_ROW) is
+	move_rows_to_parent (i, j, n: INTEGER; a_parent_row: EV_GRID_ROW)
 			-- All purpose row moving routine.
 			-- Move `n' rows starting at index `i' immediately before row at index `j'.
 			-- If `j' = `row_count + 1' the rows are moved to the very bottom of the grid.
@@ -2414,7 +2414,7 @@ feature -- Element change
 			row_count_unchanged: row_count = old row_count
 		end
 
-	move_columns (i, j, n: INTEGER) is
+	move_columns (i, j, n: INTEGER)
 			-- Move `n' columns at index `i' to index `j'.
 		require
 			i_valid: i > 0 and then i <= column_count
@@ -2475,7 +2475,7 @@ feature -- Element change
 			column_count_unchanged: column_count = old column_count
 		end
 
-	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
+	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM)
 			-- Set grid item at position (`a_column', `a_row') to `a_item'.
 			-- If `a_item' is `Void', the current item (if any) is removed.
 		require
@@ -2491,7 +2491,7 @@ feature -- Element change
 			item_set: item (a_column, a_row) = a_item
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `Current'.
 		do
 			internal_tooltip := a_tooltip
@@ -2499,7 +2499,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_column (a_column: INTEGER) is
+	remove_column (a_column: INTEGER)
 			-- Remove column `a_column'.
 		require
 			a_column_positive: a_column > 0
@@ -2525,7 +2525,7 @@ feature -- Removal
 			old_column_removed: (old column (a_column)).parent = Void
 		end
 
-	remove_row (a_row: INTEGER) is
+	remove_row (a_row: INTEGER)
 			-- Remove row `a_row' and all subrows recursively.
 			-- If `row (a_row).subrow_count_recursive' is greater than 0 then
 			-- all subrows of the row are also removed from `Current'.
@@ -2548,7 +2548,7 @@ feature -- Removal
 			to_implement_assertion ("EV_GRID.remove_row		All old recursive subrows removed.")
 		end
 
-	remove_rows (lower_index, upper_index: INTEGER) is
+	remove_rows (lower_index, upper_index: INTEGER)
 			-- Remove all rows from `lower_index' to `upper_index' inclusive.
 		require
 			valid_lower_index: lower_index >= 1 and lower_index <= row_count
@@ -2641,7 +2641,7 @@ feature -- Removal
 			to_implement_assertion (once "middle_rows_removed from lower to upper all old rows parent = Void")
 		end
 
-	clear is
+	clear
 			-- Remove all items from `Current'.
 		local
 			i, a_row_count: INTEGER
@@ -2665,7 +2665,7 @@ feature -- Removal
 			to_implement_assertion ("EV_GRID_I.clear - All items positions return `Void'.")
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all columns and rows from `Current'.
 		local
 			current_row_data: SPECIAL [EV_GRID_ITEM_I]
@@ -2782,19 +2782,19 @@ feature -- Measurements
 			-- Equal to `column_count' if no columns have been
 			-- hidden via `hide'.
 
-	column_count: INTEGER is
+	column_count: INTEGER
 			-- Number of columns in Current.
 		do
 			Result := columns.count
 		end
 
-	row_count: INTEGER is
+	row_count: INTEGER
 			-- Number of rows in Current.
 		do
 			Result := internal_row_data.count
 		end
 
-	visible_row_count: INTEGER is
+	visible_row_count: INTEGER
 			-- Number of visible rows in `Current'. When `is_tree_enabled',
 			-- a number of rows may be within a collapsed parent row, so these
 			-- are ignored.
@@ -2820,7 +2820,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 
-	physical_column_indexes: SPECIAL [INTEGER] is
+	physical_column_indexes: SPECIAL [INTEGER]
 			-- Zero-based physical data indexes of the columns needed for `row_data' lookup whilst rendering cells
 			-- A call to insert_new_column (2) on an empty grid will result in a `physical_index' of 0 as this is the first column added (zero-based indexing for `row_list')
 			-- A following call to `insert_new_column (1) will result in a `physical_index' of 1 as this is the second column added
@@ -2856,7 +2856,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			result_count_equals_column_count: Result.count = column_count
 		end
 
-	previous_header_item_index_from_column_index (a_index: INTEGER): INTEGER is
+	previous_header_item_index_from_column_index (a_index: INTEGER): INTEGER
 			-- Return the header item index of the previous visible column from column index `a_index'.
 		require
 			a_index_valid: a_index > 0 and then a_index <= column_count
@@ -2908,7 +2908,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		-- must begin. This is used by `perform_horizontal_computation' to ensure
 		-- that we only recompute those columns that are strictly necessary.
 
-	set_vertical_computation_required (an_invalid_row_index: INTEGER) is
+	set_vertical_computation_required (an_invalid_row_index: INTEGER)
 			-- Assign `True' to `vertical_computation_required'.
 			-- `an_invalid_row_index' specifies the index from which the computation
 			-- is to be performed when actually performed. It may be `row_count' + 1 to
@@ -2924,7 +2924,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			invalid_row_index_set: invalid_row_index = invalid_row_index.min (old invalid_row_index)
 		end
 
-	set_horizontal_computation_required (an_invalid_column_index: INTEGER) is
+	set_horizontal_computation_required (an_invalid_column_index: INTEGER)
 			-- Assign `True' to `horizontal_computation_required'.
 			-- `an_invalid_row_index' specifies the index from which the computation
 			-- is to be performed when actually performed. It may be `column_count' + 1 to
@@ -2940,7 +2940,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			invalid_column_index_set: invalid_column_index = invalid_column_index.min (old invalid_column_index)
 		end
 
-	perform_vertical_computation is
+	perform_vertical_computation
 			-- Re-compute vertical row offsets and other such values
 			-- required before drawing may be performed, only if required.
 		do
@@ -2962,7 +2962,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			end
 		end
 
-	perform_horizontal_computation is
+	perform_horizontal_computation
 			-- Recompute horizontal column offsets and other
 			-- such values required before drawing may be performed, only if required.
 		do
@@ -2993,7 +2993,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 	vertical_computation_added_to_once_idle_actions: BOOLEAN
 		-- Is an agent contained in the idle actions which recomputes the vertical scroll bar?
 
-	recompute_vertical_scroll_bar_from_once_idle_actions is
+	recompute_vertical_scroll_bar_from_once_idle_actions
 			-- A wrapper for the idle actions to call `recompute_vertical_scroll_bar'
 			-- and reset `vertical_computation_added_to_once_idle_actions'.
 		do
@@ -3007,7 +3007,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			reset: vertical_computation_added_to_once_idle_actions = False
 		end
 
-	recompute_horizontal_scroll_bar_from_once_idle_actions is
+	recompute_horizontal_scroll_bar_from_once_idle_actions
 			-- A wrapper for the idle actions to call `recompute_horizontal_scroll_bar'
 			-- and reset `horizontal_computation_added_to_once_idle_actions'.
 		do
@@ -3021,7 +3021,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			reset: horizontal_computation_added_to_once_idle_actions = False
 		end
 
-	recompute_column_offsets (an_index: INTEGER) is
+	recompute_column_offsets (an_index: INTEGER)
 			-- Recompute contents of `column_offsets' from column index
 			-- `an_index' to `column_count'.
 		require
@@ -3059,7 +3059,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			counts_equal: column_offsets.count = column_count + 1
 		end
 
-	recompute_row_offsets (an_index: INTEGER) is
+	recompute_row_offsets (an_index: INTEGER)
 			-- Recompute contents of `row_offsets' from row index
 			-- `an_index' to `row_count'.
 		require
@@ -3221,7 +3221,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			row_index_not_changed: old rows.index = rows.index
 		end
 
-	restrict_virtual_y_position_to_maximum is
+	restrict_virtual_y_position_to_maximum
 			-- Ensure `virtual_y_position' is within the maximum permitted.
 			-- Useful for situations where rows are removed.
 		do
@@ -3232,7 +3232,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			virtual_y_position_valid: virtual_y_position <= maximum_virtual_y_position
 		end
 
-	restrict_virtual_x_position_to_maximum is
+	restrict_virtual_x_position_to_maximum
 			-- Ensure `virtual_x_position' is within the maximum permitted.
 			-- Useful for situations where columns are removed.
 		do
@@ -3243,7 +3243,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			virtual_x_position_valid: virtual_x_position <= maximum_virtual_x_position
 		end
 
-	total_column_width: INTEGER is
+	total_column_width: INTEGER
 			-- `Result' is total width of all columns contained in `Current'.
 		do
 			if columns.count > 0 then
@@ -3253,7 +3253,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			result_positive: result >= 0
 		end
 
-	total_row_height: INTEGER is
+	total_row_height: INTEGER
 			-- `Result' is total height of all rows contained in `Current'.
 		do
 			if row_count > 0 then
@@ -3267,7 +3267,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			result_positive: result >= 0
 		end
 
-	item_indent (an_item: EV_GRID_ITEM_I): INTEGER is
+	item_indent (an_item: EV_GRID_ITEM_I): INTEGER
 			-- `Result' is indent of `an_item' in pixels.
 			-- May be 0 for items that are not tree nodes.
 		require
@@ -3277,7 +3277,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			Result := item_cell_indent (an_item.column.index, an_item.row.index)
 		end
 
-	item_cell_indent (column_index, row_index: INTEGER): INTEGER is
+	item_cell_indent (column_index, row_index: INTEGER): INTEGER
 			-- `Result' is indent for cell item at position `column_index', `row_index'.
 			-- May be 0 for items that are not tree nodes.
 		require
@@ -3356,7 +3356,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_GRID_ITEM} -- Implementation
 
-	redraw_item (an_item: EV_GRID_ITEM_I) is
+	redraw_item (an_item: EV_GRID_ITEM_I)
 			-- Redraw area of `an_item' if visible and not `is_locked'.
 		require
 			an_item_not_void: an_item /= Void
@@ -3400,7 +3400,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			redraw_locked
 		end
 
-	maximum_objects_redrawn_between_refresh: INTEGER is 250
+	maximum_objects_redrawn_between_refresh: INTEGER = 250
 		-- The maximum number of grid objects for which a combination `redraw_item/row/column'
 		-- may be called before the complete client area is invalidated. By performing this, the
 		-- calculation of the objects exact position may be by-passed, ensuring large performance
@@ -3410,7 +3410,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		-- A counter to hold the number of times `redraw_item/row/column' has been called
 		-- since the last redraw.
 
-	reset_redraw_object_counter is
+	reset_redraw_object_counter
 			-- Reset `redraw_item_counter' to 0.
 		do
 			redraw_object_counter := 0
@@ -3418,7 +3418,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			redraw_object_counter_zero: redraw_object_counter = 0
 		end
 
-	redraw_client_area is
+	redraw_client_area
 			-- Redraw complete visible client area of `Current'.
 		do
 			if is_displayed then
@@ -3429,7 +3429,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			end
 		end
 
-	redraw_column (a_column: EV_GRID_COLUMN_I) is
+	redraw_column (a_column: EV_GRID_COLUMN_I)
 			-- Redraw area of `a_column' if visible.
 		require
 			a_column_not_void: a_column /= Void
@@ -3448,7 +3448,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			end
 		end
 
-	redraw_from_column_to_end (a_column: EV_GRID_COLUMN_I) is
+	redraw_from_column_to_end (a_column: EV_GRID_COLUMN_I)
 			-- Redraw client area from `virtual_x_position' of `a_column' to the right
 			-- of the client area. Complete height of client area is invalidated.
 		require
@@ -3479,7 +3479,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			end
 		end
 
-	redraw_row (a_row: EV_GRID_ROW_I) is
+	redraw_row (a_row: EV_GRID_ROW_I)
 			-- Redraw area of `a_row' if visible.
 		require
 			a_row_not_void: a_row /= Void
@@ -3502,7 +3502,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			end
 		end
 
-	redraw_locked is
+	redraw_locked
 			-- Redraw content of all locked rows and columns.
 			-- This is brute force, and all callers should be checked
 			-- to prevent large amounts of overdraw in cases where the entire area
@@ -3588,7 +3588,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 	horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR
 		-- Horizontal scroll bar of `Current'.
 
-	tree_node_spacing: INTEGER is 3
+	tree_node_spacing: INTEGER = 3
 			-- Spacing value used around the expand/collapse node of a
 			-- subrow. For example, to determine the height available for the node image
 			-- within a subrow, subtract 2 * tree_node_spacing from the `row_height'.
@@ -3599,7 +3599,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 	collapse_node_pixmap: EV_PIXMAP
 		-- Pixmap used within `Current' to indicate that a tree node may be collapsed.
 
-	initial_expand_node_pixmap: EV_PIXMAP is
+	initial_expand_node_pixmap: EV_PIXMAP
 			-- Construct the default `expand_node_pixmap'.
 		local
 			start_offset, end_offset, middle_offset: INTEGER
@@ -3620,7 +3620,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 			result_not_void: Result /= Void
 		end
 
-	initial_collapse_node_pixmap: EV_PIXMAP is
+	initial_collapse_node_pixmap: EV_PIXMAP
 			-- Construct the default `collapse_node_pixmap'.
 		local
 			start_offset, end_offset, middle_offset: INTEGER
@@ -3640,22 +3640,22 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 			result_not_void: Result /= Void
 		end
 
-	tree_node_button_dimension: INTEGER is 9
+	tree_node_button_dimension: INTEGER = 9
 		-- Dimension of the expand/collapse node used in the tree.
 
-	white: EV_COLOR is
+	white: EV_COLOR
 			-- Once access to the color white.
 		once
 			Result := (create {EV_STOCK_COLORS}).white.twin
 		end
 
-	black: EV_COLOR is
+	black: EV_COLOR
 			-- Once acces to the color black.
 		once
 			Result := (create {EV_STOCK_COLORS}).black.twin
 		end
 
-	screen: EV_SCREEN is
+	screen: EV_SCREEN
 			-- Once access to EV_SCREEN object.
 		once
 			create Result
@@ -3686,7 +3686,7 @@ feature {EV_GRID_ITEM_I, EV_GRID, EV_GRID_DRAWER_I, EV_GRID_LOCKED_I} -- Impleme
 			-- Are all graphical updates to `Current' suppressed until
 			-- `unlock_update' is called.
 
-	locked_rows: ARRAYED_LIST [EV_GRID_ROW] is
+	locked_rows: ARRAYED_LIST [EV_GRID_ROW]
 			-- All rows locked within `Current' in order of locking.
 		local
 			l_cursor: CURSOR
@@ -3712,7 +3712,7 @@ feature {EV_GRID_ITEM_I, EV_GRID, EV_GRID_DRAWER_I, EV_GRID_LOCKED_I} -- Impleme
 			Result_not_void: Result /= Void
 		end
 
-	locked_columns: ARRAYED_LIST [EV_GRID_COLUMN] is
+	locked_columns: ARRAYED_LIST [EV_GRID_COLUMN]
 			-- All columns locked within `Current' in order of locking.
 		local
 			l_cursor: CURSOR
@@ -3740,7 +3740,7 @@ feature {EV_GRID_ITEM_I, EV_GRID, EV_GRID_DRAWER_I, EV_GRID_LOCKED_I} -- Impleme
 
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 
-	recompute_vertical_scroll_bar is
+	recompute_vertical_scroll_bar
 			-- Recompute dimensions of `vertical_scroll_bar'.
 		local
 			l_total_row_height: INTEGER
@@ -3829,7 +3829,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 			end
 		end
 
-	last_first_row_in_per_item_scrolling: INTEGER is
+	last_first_row_in_per_item_scrolling: INTEGER
 			-- Return the index of the row which should be displayed
 			-- as the first row of the grid to ensure we do not scroll past
 			-- the final row.
@@ -3875,7 +3875,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 			valid_result: Result >= 1 and Result <= row_count
 		end
 
-	last_first_column_in_per_item_scrolling: INTEGER is
+	last_first_column_in_per_item_scrolling: INTEGER
 			-- Return the index of the column which should be displayed
 			-- as the first column of the grid to ensure we do not scroll past
 			-- the final column.
@@ -3909,7 +3909,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 
 feature {ANY}
 
-	recompute_horizontal_scroll_bar is
+	recompute_horizontal_scroll_bar
 			-- Recompute horizontal scroll bar positioning.
 		local
 			l_total_column_width: INTEGER
@@ -4002,7 +4002,7 @@ feature {ANY}
 		-- to turn off the automatic scrolling of the header grid as it should always change in synch
 		-- with the main grid. This should probably be moved into the interface of EV_GRID at some point.
 
-	disable_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width is
+	disable_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width
 			-- Ensure `is_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width' is `False'
 		do
 			is_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width := False
@@ -4012,7 +4012,7 @@ feature {ANY}
 
 feature {EV_GRID_DRAWER_I} -- Drawing implementation
 
-	redraw_resizing_line is
+	redraw_resizing_line
 			-- Redraw resizing line drawn on `Current' at last drawn position.
 			-- This must be called at the end of a redraw from EV_GRID_DRAWER_I
 			-- as after the contents have been re-drawn the resizing line must still
@@ -4031,7 +4031,7 @@ feature {EV_GRID_DRAWER_I} -- Drawing implementation
 
 feature {EV_GRID_LOCKED_I} -- Drawing implementation
 
-	initialize_grid is
+	initialize_grid
 			-- Initialize `Current'. To be called during `initialize' of
 			-- the implementation classes.
 		local
@@ -4212,7 +4212,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			set_state_flag (interface_is_initialized_flag, False)
 		end
 
-	resize_viewport_in_static_fixed (an_x, a_y, a_width, a_height: INTEGER) is
+	resize_viewport_in_static_fixed (an_x, a_y, a_width, a_height: INTEGER)
 			-- Resize `viewport' within `static_fixed' as the viewable
 			-- area of `Current' has changed.
 		do
@@ -4238,7 +4238,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			Result := 15000
 		end
 
-	header_item_resizing (header_item: EV_HEADER_ITEM) is
+	header_item_resizing (header_item: EV_HEADER_ITEM)
 			-- Respond to `header_item' being resized.
 		require
 			header_item_not_void: header_item /= Void
@@ -4285,7 +4285,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			last_width_of_header_during_resize_internal := header_item.width
 		end
 
-	last_width_of_header_during_resize: INTEGER is
+	last_width_of_header_during_resize: INTEGER
 			-- The last width of the header item that is currently being
 			-- resized. Used to determine if we must refresh the column to
 			-- the left of the current one as it could cause the border to
@@ -4302,7 +4302,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 	last_width_of_header_during_resize_internal: INTEGER
 		-- Storage for `last_width_of_header_during_resize'.
 
-	header_item_resize_started (header_item: EV_HEADER_ITEM) is
+	header_item_resize_started (header_item: EV_HEADER_ITEM)
 			-- Resizing has started on `header_item'.
 		require
 			header_item_not_void: header_item /= Void
@@ -4310,7 +4310,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			is_header_item_resizing := True
 		end
 
-	header_item_resize_ended (header_item: EV_HEADER_ITEM) is
+	header_item_resize_ended (header_item: EV_HEADER_ITEM)
 			-- Resizing has completed on `header_item'.
 		require
 			header_item_not_void: header_item /= Void
@@ -4335,7 +4335,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			end
 		end
 
-	draw_resizing_line (position: INTEGER) is
+	draw_resizing_line (position: INTEGER)
 			-- Draw a resizing line at horizontal position relative to `drawable'.
 			-- Clip line to drawable width.
 		do
@@ -4359,7 +4359,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			end
 		end
 
-	remove_resizing_line is
+	remove_resizing_line
 			-- Remove resizing line drawn on `drawable'.
 		do
 				-- Remove line representing position in current divider style.
@@ -4379,7 +4379,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 	last_dashed_line_position: INTEGER
 		-- Last horizontal coordinate of dashed line drawn when slider is moved.
 
-	vertical_scroll_bar_changed (a_value: INTEGER) is
+	vertical_scroll_bar_changed (a_value: INTEGER)
 			-- Respond to a change in value from `vertical_scroll_bar'.
 		require
 			a_value_non_negative: a_value >= 0
@@ -4401,7 +4401,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			end
 		end
 
-	horizontal_scroll_bar_changed (a_value: INTEGER) is
+	horizontal_scroll_bar_changed (a_value: INTEGER)
 			-- Respond to a change in value from `horizontal_scroll_bar'.
 		require
 			a_value_non_negative: a_value >= 0
@@ -4419,7 +4419,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			end
 		end
 
-	internal_set_virtual_y_position (a_y_position: INTEGER) is
+	internal_set_virtual_y_position (a_y_position: INTEGER)
 			-- Set virtual y position of `Current' to `a_y_position'.
 		require
 			a_y_position_non_negative: a_y_position >= 0
@@ -4476,7 +4476,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			internal_position_set: internal_client_y = a_y_position
 		end
 
-	internal_set_virtual_x_position (a_x_position: INTEGER) is
+	internal_set_virtual_x_position (a_x_position: INTEGER)
 			-- Set virtual x position of `Current' to `a_x_position'.
 		require
 			a_x_position_non_negative: a_x_position >= 0
@@ -4546,7 +4546,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 		-- comment of `last_horizontal_scroll_bar_value' for details of it's use.
 
 
-	update_scroll_bar_spacer is
+	update_scroll_bar_spacer
 			-- Update `scroll_bar_spacer' so that it has the appropriate minimum dimensions
 			-- given the visible state of `horizontal_scroll_bar' and `vertical_scroll_bar
 			-- which results in the two scroll bars being positioned correctly in relation
@@ -4559,7 +4559,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			end
 		end
 
-	viewport_resized (an_x, a_y, a_width, a_height: INTEGER) is
+	viewport_resized (an_x, a_y, a_width, a_height: INTEGER)
 			-- Respond to resizing of `Viewport' to width and height `a_width', `a_height'.
 		require
 			a_width_non_negative: a_width >= 0
@@ -4596,7 +4596,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 				viewport.item.height >= viewable_height
 		end
 
-	reposition_locked_items is
+	reposition_locked_items
 			-- Reposition all items locked within `Current'.
 		local
 			cursor: CURSOR
@@ -4632,16 +4632,16 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 		-- Main widget contained in `Current' used for custom widget insertion for descendent implementations.
 		-- Currently MSWin only.
 
-	default_header_height: INTEGER is 16
+	default_header_height: INTEGER = 16
 		-- Default height applied to `header'.
 
-	default_minimum_size: INTEGER is 50
+	default_minimum_size: INTEGER = 50
 		-- Default minimum size dimensions for `Current'.
 
-	resizing_line_border: INTEGER is 4
+	resizing_line_border: INTEGER = 4
 		-- Distance that resizing line is displayed from top and bottom edges of `drawable'.
 
-	buffered_drawable_size: INTEGER is 30000
+	buffered_drawable_size: INTEGER = 30000
 		-- Default size of `drawable' used for scrolling purposes.
 
 	horizontal_redraw_triggered_by_viewport_resize: BOOLEAN
@@ -4655,7 +4655,7 @@ feature {EV_GRID_DRAWABLE_ITEM_I, EV_GRID_LOCKED_I} -- Implementation
 
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 
-	reposition_locked_column (a_column: EV_GRID_COLUMN_I) is
+	reposition_locked_column (a_column: EV_GRID_COLUMN_I)
 			-- Reposition locked column `a_column_i'.
 		require
 			column_locked: a_column.is_locked
@@ -4671,7 +4671,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			a_column.locked_column.internal_set_virtual_y_position (virtual_y_position)
 		end
 
-	reposition_locked_row (a_row: EV_GRID_ROW_I) is
+	reposition_locked_row (a_row: EV_GRID_ROW_I)
 			-- Reposition locked row `a_row'.
 		require
 			a_row_locked: a_row.is_locked
@@ -4696,31 +4696,31 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 
 		-- First we define a number of functions for conversion of coordinates.
 
-	client_x_to_virtual_x (client_x: INTEGER): INTEGER is
+	client_x_to_virtual_x (client_x: INTEGER): INTEGER
 			-- Convert `client_x' in client coordinates of `drawable' to a virtual grid coordinate.
 		do
 			Result := client_x + internal_client_x - viewport_x_offset
 		end
 
-	client_y_to_virtual_y (client_y: INTEGER): INTEGER is
+	client_y_to_virtual_y (client_y: INTEGER): INTEGER
 			-- Convert `client_y' in client coordinates of `drawable' to a virtual grid coordinate.
 		do
 			Result := client_y + internal_client_y - viewport_y_offset
 		end
 
-	client_x_to_x (client_x: INTEGER): INTEGER is
+	client_x_to_x (client_x: INTEGER): INTEGER
 			-- Convert `client_x' in client coordinates of `drawable' to an absolute grid coordinate.
 		do
 			Result := client_x + viewable_x_offset - viewport_x_offset
 		end
 
-	client_y_to_y (client_y: INTEGER): INTEGER is
+	client_y_to_y (client_y: INTEGER): INTEGER
 			-- Convert `client_y' in client coordinates of `drawable' to an absolute grid coordinate.
 		do
 			Result := client_y + viewable_y_offset - viewport_y_offset
 		end
 
-	pointer_button_press_received (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	pointer_button_press_received (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- A pointer button press has been received by `drawable' so propagate to the interface.
 		local
 			pointed_item: EV_GRID_ITEM_I
@@ -4814,7 +4814,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	pointer_button_press_received_header (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	pointer_button_press_received_header (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- A pointer button press has been received by `header' so propagate to the interface.
 		do
 			if pointer_button_press_actions_internal /= Void and then not pointer_button_press_actions_internal.is_empty then
@@ -4825,7 +4825,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	pointer_motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pointer_motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_motion_actions' of `drawable'.
 		local
 			pointed_item: EV_GRID_ITEM_I
@@ -4940,7 +4940,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 		-- The last item that was pointed to in `pointer_motion_received', which may be `Void'.
 		-- This is used to implement the pointer enter and pointer leave actions at the item level.
 
-	pointer_motion_received_header (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pointer_motion_received_header (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_motion_actions' of `header'.
 		do
 			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
@@ -4951,7 +4951,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	pointer_motion_received_vertical_scroll_bar (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pointer_motion_received_vertical_scroll_bar (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_motion_actions' of `vertical_scroll_bar'.
 		do
 			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
@@ -4962,7 +4962,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	pointer_motion_received_horizontal_scroll_bar (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pointer_motion_received_horizontal_scroll_bar (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_motion_actions' of `horizontal_scroll_bar'.
 		do
 			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
@@ -4973,7 +4973,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	pointer_motion_received_scroll_bar_spacer (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pointer_motion_received_scroll_bar_spacer (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_motion_actions' of `scroll_bar_spacer'.
 		do
 			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
@@ -4981,7 +4981,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	pointer_double_press_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pointer_double_press_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_double_press_actions' of `drawable'.
 		local
 			pointed_item: EV_GRID_ITEM_I
@@ -5003,7 +5003,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	pointer_double_press_received_header (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	pointer_double_press_received_header (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- A pointer button double press has been received by `header' so propagate to the interface.
 		do
 			if pointer_double_press_actions_internal /= Void and then not pointer_double_press_actions_internal.is_empty then
@@ -5014,7 +5014,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	pointer_double_press_received_scroll_bar_spacer (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pointer_double_press_received_scroll_bar_spacer (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_double_press_actions' of `scroll_bar_spacer'.
 		do
 			if pointer_double_press_actions_internal /= Void and then not pointer_double_press_actions_internal.is_empty then
@@ -5025,7 +5025,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	pointer_button_release_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pointer_button_release_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_button_release_actions' of `drawable'.
 		local
 			pointed_item: EV_GRID_ITEM_I
@@ -5047,7 +5047,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	pointer_button_release_received_header (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	pointer_button_release_received_header (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- A pointer button double press has been received by `header' so propagate to the interface.
 		do
 			if pointer_button_release_actions_internal /= Void and then not pointer_button_release_actions_internal.is_empty then
@@ -5061,7 +5061,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 	pointer_enter_called: BOOLEAN
 		-- Have the pointer enter actions already been called for the grid?
 
-	pointer_enter_received is
+	pointer_enter_received
 			-- Called by `pointer_enter_actions' of widgets comprising `Current'.
 		do
 			if not pointer_enter_called then
@@ -5075,14 +5075,14 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	pointer_enter_received_on_drawable is
+	pointer_enter_received_on_drawable
 			-- Called by `pointer_enter_actions' of `drawable'.
 		do
 			-- The handling you may expect here is performed within the motion event on `drawable'
 			-- as we have retreived the item there, and this saves us from retreiving it twice.
 		end
 
-	pointer_leave_received is
+	pointer_leave_received
 			-- Called by `pointer_leave_actions' of widgets comprising `Current'.
 		local
 			pointed_widget: EV_WIDGET
@@ -5105,7 +5105,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	pointer_leave_received_on_drawable is
+	pointer_leave_received_on_drawable
 			-- Called by `pointer_leave_actions' of `drawable'.
 		local
 			pointed_widget: EV_WIDGET
@@ -5140,7 +5140,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			last_pointed_item := Void
 		end
 
-	find_next_item_in_row (grid_row: EV_GRID_ROW; starting_index: INTEGER; look_right: BOOLEAN): EV_GRID_ITEM is
+	find_next_item_in_row (grid_row: EV_GRID_ROW; starting_index: INTEGER; look_right: BOOLEAN): EV_GRID_ITEM
 			-- Find the next item horizontally in `grid_row' starting at index `starting_index', if 'look_right' then the the item to the right is found, else it looks to the left.
 			-- Result is Void if no item is found.
 		require
@@ -5182,7 +5182,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	find_next_item_in_column (grid_column: EV_GRID_COLUMN; starting_index: INTEGER; look_down: BOOLEAN; look_left_right_if_void: BOOLEAN): EV_GRID_ITEM is
+	find_next_item_in_column (grid_column: EV_GRID_COLUMN; starting_index: INTEGER; look_down: BOOLEAN; look_left_right_if_void: BOOLEAN): EV_GRID_ITEM
 			-- Find the next item vertically in `grid_column' starting a index `starting_index' if 'look_down' then the the item below is found, else it looks above.
 			-- If `look_left_right_if_void', if a Void item is found it will search along the current row starting to the left of `starting_index', then to the right if none found.
 			-- Result is Void if no item is found.
@@ -5236,7 +5236,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	is_item_navigatable_to (a_item: EV_GRID_ITEM): BOOLEAN is
+	is_item_navigatable_to (a_item: EV_GRID_ITEM): BOOLEAN
 			-- Is `a_item' currently navigatable via the keyboard?
 		local
 			l_parent_row_i: EV_GRID_ROW_I
@@ -5259,7 +5259,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	key_press_received (a_key: EV_KEY) is
+	key_press_received (a_key: EV_KEY)
 			-- Called by `key_press_actions' of `drawable'.
 		local
 			prev_sel_item, a_sel_item: EV_GRID_ITEM
@@ -5453,7 +5453,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 	shift_key_start_item: EV_GRID_ITEM
 		-- Item where initial selection began from.
 
-	handle_newly_selected_item (a_item: EV_GRID_ITEM; a_button: INTEGER; from_key_press: BOOLEAN) is
+	handle_newly_selected_item (a_item: EV_GRID_ITEM; a_button: INTEGER; from_key_press: BOOLEAN)
 			-- Handle selection for newly selected `a_item' as a result of pressing
 			-- mouse button `a_button'. If no mouse button was pressed to trigger the
 			-- change of selection, `a_button' should be 0.
@@ -5623,7 +5623,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	key_press_string_received (a_keystring: STRING_32) is
+	key_press_string_received (a_keystring: STRING_32)
 			-- Called by `key_press_string_actions' of `drawable'.
 		do
 			if key_press_string_actions_internal /= Void and then not key_press_string_actions_internal.is_empty then
@@ -5631,7 +5631,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	key_release_received (a_key: EV_KEY) is
+	key_release_received (a_key: EV_KEY)
 			-- Called by `key_release_actions' of `drawable'.
 		do
 			if key_release_actions_internal /= Void and then not key_release_actions_internal.is_empty then
@@ -5639,7 +5639,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	focus_in_received is
+	focus_in_received
 			-- Called by `focus_in_actions' of `drawable'.
 		do
 			enable_drawables_have_focus
@@ -5649,7 +5649,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	focus_out_received is
+	focus_out_received
 			-- Called by `focus_out_actions' of `drawable'.
 		do
 			disable_drawables_have_focus
@@ -5659,7 +5659,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 		end
 
-	mouse_wheel_received (a_value: INTEGER) is
+	mouse_wheel_received (a_value: INTEGER)
 			-- Called by `mouse_wheel_actions' of `drawable'.
 		do
 			if mouse_wheel_actions_internal /= Void and then not mouse_wheel_actions_internal.is_empty then
@@ -5669,7 +5669,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 
-	add_row_at (a_index: INTEGER) is
+	add_row_at (a_index: INTEGER)
 			-- Add a new row at index `a_index', replacing existing row
 			-- if any.
 		require
@@ -5702,7 +5702,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			set_vertical_computation_required (a_index)
 		end
 
-	insert_rows_at (rows_to_insert, a_index: INTEGER) is
+	insert_rows_at (rows_to_insert, a_index: INTEGER)
 			-- Insert `rows_to_insert' rows at index `a_index'.
 		require
 			i_positive: a_index > 0
@@ -5744,7 +5744,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			end
 		end
 
-	row_internal (a_row: INTEGER): EV_GRID_ROW_I is
+	row_internal (a_row: INTEGER): EV_GRID_ROW_I
 			-- Row `a_row', creates a new one if it doesn't exist.
 		require
 			a_row_positive: a_row > 0
@@ -5763,7 +5763,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			row_not_void: Result /= Void
 		end
 
-	column_internal (a_column: INTEGER): EV_GRID_COLUMN_I is
+	column_internal (a_column: INTEGER): EV_GRID_COLUMN_I
 			-- Column `a_column'.
 		require
 			a_column_positive: a_column > 0
@@ -5775,7 +5775,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	add_column_at (a_index: INTEGER; replace_existing_item: BOOLEAN) is
+	add_column_at (a_index: INTEGER; replace_existing_item: BOOLEAN)
 			-- Add a new column at index `a_index'.
 			-- If `replace_existing_item' then replace value at `a_index', else insert at `a_index'.
 		require
@@ -5824,7 +5824,7 @@ feature {NONE} -- Implementation
 			column_count_set: not replace_existing_item implies ((a_index < old column_count implies (column_count = old column_count + 1)) or column_count = a_index)
 		end
 
-	update_index_of_first_item_dirty_row_flags (a_index: INTEGER) is
+	update_index_of_first_item_dirty_row_flags (a_index: INTEGER)
 			-- Update the `index_of_first_item_dirty' flags for each row in the list.
 		require
 			a_index_valid: a_index > 0 and then a_index <= column_count + 1
@@ -5847,7 +5847,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_grid_row_indices (a_index: INTEGER) is
+	update_grid_row_indices (a_index: INTEGER)
 			-- Recalculate subsequent row indexes starting from `a_index'.
 		require
 			valid_index: a_index > 0 and then a_index <= row_count + 1
@@ -5872,7 +5872,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_grid_column_indices (a_index: INTEGER) is
+	update_grid_column_indices (a_index: INTEGER)
 			-- Recalculate subsequent column indexes starting from `a_index'.
 		require
 			valid_index: a_index > 0 and then a_index <= column_count + 1
@@ -5897,7 +5897,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resize_row_lists (new_count: INTEGER) is
+	resize_row_lists (new_count: INTEGER)
 			-- Resize the row lists so count equals `new_count'.
 		require
 			valid_new_count: new_count >= 0
@@ -5910,14 +5910,14 @@ feature {NONE} -- Implementation
 			counts_equal: rows.count = internal_row_data.count
 		end
 
-	maximum_header_width: INTEGER is 30000
+	maximum_header_width: INTEGER = 30000
 		-- Maximium width of `header'.
 
-	default_scroll_bar_leap: INTEGER is 16
-	default_scroll_bar_step: INTEGER is 1
+	default_scroll_bar_leap: INTEGER = 16
+	default_scroll_bar_step: INTEGER = 1
 		-- Default scrolling values for scrollbars.
 
-	enlarge_row (a_index, new_count: INTEGER) is
+	enlarge_row (a_index, new_count: INTEGER)
 			-- Enlarge the row at index `a_index' to `new_count'.
 		require
 			row_exists: internal_row_data @ (a_index) /= Void
@@ -5936,7 +5936,7 @@ feature {NONE} -- Implementation
 	physical_column_indexes_internal: SPECIAL [INTEGER]
 		-- Internal storage for `physical_column_indexes' to avoid unnecessary recalculation on each query.
 
-	default_row_height: INTEGER is
+	default_row_height: INTEGER
 			-- Default height of a row, based on the height of the default font.
 		once
 			Result := (create {EV_LABEL}).minimum_height + extra_text_spacing
@@ -5944,12 +5944,12 @@ feature {NONE} -- Implementation
 			result_positive: result > 0
 		end
 
-	extra_text_spacing: INTEGER is
+	extra_text_spacing: INTEGER
 			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
 		deferred
 		end
 
-	reset_internal_grid_attributes is
+	reset_internal_grid_attributes
 			-- Set all temporary attributes used internally by the
 			-- grid to `Void' if they are no longer contained in the grid.
 			-- This prevents memory leaks as otherwise references may be kept
@@ -5982,7 +5982,7 @@ feature {EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 
 feature {EV_GRID_ROW_I} -- Implementation
 
-	add_row_to_selected_rows (a_row: EV_GRID_ROW_I) is
+	add_row_to_selected_rows (a_row: EV_GRID_ROW_I)
 			-- Add `a_row' to `internal_selected_rows'.
 		require
 			a_row_not_void: a_row /= Void
@@ -5998,7 +5998,7 @@ feature {EV_GRID_ROW_I} -- Implementation
 	last_selected_row: EV_GRID_ROW_I
 		-- Row that was selected previously.
 
-	remove_row_from_selected_rows (a_row: EV_GRID_ROW_I) is
+	remove_row_from_selected_rows (a_row: EV_GRID_ROW_I)
 			-- Remove`a_row' from `internal_selected_rows'.
 		require
 			a_row_not_void: a_row /= Void
@@ -6015,7 +6015,7 @@ feature {EV_GRID_ROW_I} -- Implementation
 
 feature {EV_GRID_ITEM_I} -- Implementation
 
-	add_item_to_selected_items (a_item: EV_GRID_ITEM_I) is
+	add_item_to_selected_items (a_item: EV_GRID_ITEM_I)
 			-- Add `a_item' to `internal_selected_items'.
 		require
 			a_item_not_void: a_item /= Void
@@ -6031,7 +6031,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 	last_selected_item: EV_GRID_ITEM_I
 		-- Item that was previously selected by the user, used from Ctrl-Shift selection handling.
 
-	remove_item_from_selected_items (a_item: EV_GRID_ITEM_I) is
+	remove_item_from_selected_items (a_item: EV_GRID_ITEM_I)
 			-- Remove `a_item' from `internal_selected_items'.
 		require
 			a_item_not_void: a_item /= Void
@@ -6046,7 +6046,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			item_removed: not internal_selected_items.has (a_item)
 		end
 
-	string_size (s: STRING_GENERAL; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER]) is
+	string_size (s: STRING_GENERAL; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER])
 			-- `Result' contains width and height required to
 			-- fully display string `s' in font `f'.
 			-- This should be used instead of `string_size' from EV_FONT
@@ -6061,7 +6061,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- Implementation
 
-	internal_set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
+	internal_set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM)
 			-- Set grid item at position (`a_column', `a_row') to `a_item'.
 			-- If `a_item' is `Void', the current item (if any) is removed.
 		local
@@ -6161,7 +6161,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 	row_counter: INTEGER
 		-- Row counter used to identify individual rows for hashing.
 
-	item_internal (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM_I is
+	item_internal (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM_I
 			-- Cell at `a_row' and `a_column' position.
 		require
 			a_row_positive: a_row > 0
@@ -6192,7 +6192,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			end
 		end
 
-	uses_row_offsets: BOOLEAN is
+	uses_row_offsets: BOOLEAN
 			-- Does `Current' rely on `row_offsets' to calculate the current position of a row?
 			-- If not, then it is possible to calculate a rows' position based on the row heights
 			-- and it's index. `row_offsets' are only required when variable row heights, tree functionality or
@@ -6207,7 +6207,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 		-- information has no effect on this value. Use `computed_visible_row_count' to determine
 		-- the true number of rows that are actually displayed.
 
-	adjust_non_displayed_row_count (an_adjustment: INTEGER) is
+	adjust_non_displayed_row_count (an_adjustment: INTEGER)
 			-- Adjust `non_displayed_row_count' by `an_adjustment'.
 		require
 			valid_adjustment: non_displayed_row_count + an_adjustment >= 0
@@ -6241,7 +6241,7 @@ invariant
 	internal_viewport_positions_equal_to_viewports: is_initialized implies (viewport.x_offset = viewport_x_offset and viewport.y_offset = viewport_y_offset)
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

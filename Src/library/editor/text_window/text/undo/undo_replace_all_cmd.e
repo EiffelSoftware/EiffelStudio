@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Undo command for replace all"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize
 		do
 			create undo_replace_list.make
@@ -27,7 +27,7 @@ feature -- Initialization
 
 feature -- Transformation
 
-	add (urc: UNDO_REPLACE_CMD) is
+	add (urc: UNDO_REPLACE_CMD)
 			-- add the undo command to the list
 		do
 			undo_replace_list.extend (urc)
@@ -35,7 +35,7 @@ feature -- Transformation
 
 feature -- Basic operations
 
-	redo is
+	redo
 			-- undo this command
 		do
 			from
@@ -48,7 +48,7 @@ feature -- Basic operations
 			end
 		end
 
-	undo is
+	undo
 			-- redo this command
 		do
 			from
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 
 	undo_replace_list: LINKED_LIST[UNDO_REPLACE_CMD];
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

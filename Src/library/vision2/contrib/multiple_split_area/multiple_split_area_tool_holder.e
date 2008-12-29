@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that surround a tool with a title%
 		%and minimize and maximize buttons."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_tool (a_tool: EV_WIDGET; a_display_name: STRING_GENERAL; a_parent: MULTIPLE_SPLIT_AREA) is
+	make_with_tool (a_tool: EV_WIDGET; a_display_name: STRING_GENERAL; a_parent: MULTIPLE_SPLIT_AREA)
 			-- Create `Current', and initalize with
 			-- tool `a_tool'. Use `display_name' for title of `a_tool'.
 		require
@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 
 feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Access
 
-	lower_box: EV_VERTICAL_BOX is
+	lower_box: EV_VERTICAL_BOX
 			-- `Result' is lower box associated with `Current'. Minimized tools
 			-- below `Current' in `parent_area' are inserted within here.
 		require
@@ -129,7 +129,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Access
 			result_not_void: Result /= Void
 		end
 
-	upper_box: EV_VERTICAL_BOX is
+	upper_box: EV_VERTICAL_BOX
 			-- `Result' is upper box associated with `Current'. Minimized tools
 			-- above `Current' in `parent_area' are inserted within here.
 		require
@@ -150,7 +150,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Access
 	main_box: EV_VERTICAL_BOX
 		-- Main box, directly parented in `Current'.
 
-	is_external: BOOLEAN is
+	is_external: BOOLEAN
 			-- Is `Current' external to `parent_area' and
 			-- therefore contained in a dockable dialog?
 		do
@@ -180,7 +180,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 	tool: EV_WIDGET
 		-- Tool in `Current'.
 
-	disable_minimized is
+	disable_minimized
 			-- Assign `False' to `minimized'.
 		do
 			is_minimized := False
@@ -188,7 +188,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 			not_minimized: not is_minimized
 		end
 
-	enable_minimized is
+	enable_minimized
 			-- Assign `True' to `minimized'.
 		do
 			is_minimized := True
@@ -196,7 +196,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 			minimized: is_minimized
 		end
 
-	disable_maximized is
+	disable_maximized
 			-- Assign `False' to `maximized'.
 		do
 			is_maximized := False
@@ -204,7 +204,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 			not_maximized: not is_maximized
 		end
 
-	enable_maximized is
+	enable_maximized
 			-- Assign `True' to `maximized'.
 		do
 			is_maximized := True
@@ -212,7 +212,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 			maximized: is_maximized
 		end
 
-	disable_minimize_button is
+	disable_minimize_button
 			-- Ensure `minimize_button' is non sensitive.
 		do
 			if not parent_area.disabled_minimize_button_shown then
@@ -221,7 +221,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 			minimize_button.disable_sensitive
 		end
 
-	enable_minimize_button is
+	enable_minimize_button
 			-- Ensure `minimize_button' is sensitive.
 		do
 			if not parent_area.disabled_minimize_button_shown and not tool_bar.has (minimize_button) then
@@ -231,7 +231,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 			minimize_button.enable_sensitive
 		end
 
-	enable_close_button is
+	enable_close_button
 			-- Ensure a close button is displayed for `Current'.
 		do
 			if close_button.parent = Void then
@@ -239,7 +239,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 			end
 		end
 
-	enable_close_button_as_grayed is
+	enable_close_button_as_grayed
 			-- Ensure a close button is displayed as grayed for `Current'.
 		do
 			if close_button.parent = Void then
@@ -248,7 +248,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 			close_button.disable_sensitive
 		end
 
-	disable_close_button is
+	disable_close_button
 			-- Ensure no close button is displayed for `Current'.
 		do
 			if close_button.parent /= Void then
@@ -256,7 +256,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 			end
 		end
 
-	remove_maximized_restore is
+	remove_maximized_restore
 			-- Ensure that `maximize_button' displays the maximize pixmap.
 		do
 			maximize_button.set_pixmap (parent_area.maximize_pixmap)
@@ -270,7 +270,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implemnetation
 	restore_height: INTEGER
 		-- Height to restore to `Current'.
 
-	set_restore_height (a_height: INTEGER) is
+	set_restore_height (a_height: INTEGER)
 			-- Assign `a_height' to `restore_height'.
 		require
 			a_height_positive: a_height > 0
@@ -280,7 +280,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implemnetation
 			restore_height_set: restore_height = a_height
 		end
 
-	simulate_minimum_height (a_height: INTEGER) is
+	simulate_minimum_height (a_height: INTEGER)
 			-- Force `Current' to be displayed at least `a_height', as
 			-- if a minimum size had been set. `Current' will not be reduced if
 			-- larger. We cannot directly assign a minimum_height as
@@ -293,7 +293,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implemnetation
 			minimum_height_simulated: minimum_size_cell.minimum_height = a_height
 		end
 
-	remove_simulated_height is
+	remove_simulated_height
 			-- Remove any "minimum" height set through `simulate_minimum_height'.
 		do
 			minimum_size_cell.set_minimum_height (0)
@@ -301,7 +301,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implemnetation
 			minimum_size_removed: minimum_size_cell.minimum_height = 0
 		end
 
-	set_position_docked_from (a_position: INTEGER) is
+	set_position_docked_from (a_position: INTEGER)
 			-- Assign `a_position' to `position_docked_from'.
 		require
 			a_position >= 1
@@ -314,7 +314,7 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implemnetation
 
 feature {MULTIPLE_SPLIT_AREA} -- Implementation
 
-	destroy_dialog_and_restore (dialog: EV_DOCKABLE_DIALOG) is
+	destroy_dialog_and_restore (dialog: EV_DOCKABLE_DIALOG)
 			-- Destroy `dialog' and restore `Current' into `parent_area'.
 		require
 			dialog_not_void: dialog /= Void
@@ -365,7 +365,7 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 
 feature {MULTIPLE_SPLIT_AREA} -- Implementation
 
-	parent_dockable_dialog (widget: EV_WIDGET): EV_DOCKABLE_DIALOG is
+	parent_dockable_dialog (widget: EV_WIDGET): EV_DOCKABLE_DIALOG
 			-- `Result' is dialog parent of `widget'.
 			-- `Void' if none.
 		require
@@ -389,7 +389,7 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 
 feature {NONE} -- Implementation
 
-	docking_started is
+	docking_started
 			-- Respond to dock starting on `Current'.
 		do
 			parent_area.store_positions
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 	original_height, original_width: INTEGER
 		-- Original width and height before dock.
 
-	docking_ended is
+	docking_ended
 			-- A dock has ended, so close dialog, and restore `Current'
 		local
 			dialog: EV_DOCKABLE_DIALOG
@@ -564,7 +564,7 @@ feature {NONE} -- Implementation
 			original_width := 0
 		end
 
-	change_minimized_state is
+	change_minimized_state
 			-- Minimize `Current' if not minimized, restore otherwise.
 		do
 			if not is_minimized then
@@ -574,13 +574,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	close is
+	close
 			-- Respond to a user selecting the close icon.
 		do
 			parent_area.close_actions.call ([tool])
 		end
 
-	calculate_restore_height (tool_height: INTEGER): INTEGER is
+	calculate_restore_height (tool_height: INTEGER): INTEGER
 			-- Calculate height at which `Current' will be restored in `parent_area'.
 			-- `tool_height' is the current height, which is the desired height, however
 			-- if this is too large, it will expand `parent_area', hence we must constrain
@@ -612,7 +612,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	change_maximized_state is
+	change_maximized_state
 			-- Maximize `Current' if not maxamized, restore otherwise.
 		do
 			if is_maximized then
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 
 feature {MULTIPLE_SPLIT_AREA} -- Implementation
 
-	silent_set_minimized is
+	silent_set_minimized
 			-- Ensure `is_minimized' is `True' with no side effects.
 		do
 			is_minimized := True
@@ -632,7 +632,7 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 			minimized: is_minimized = True
 		end
 
-	silent_remove_minimized is
+	silent_remove_minimized
 			-- Ensure `is_minimized' is `False' with no side effects.
 		do
 			is_minimized := False
@@ -640,7 +640,7 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 			not_minimized: is_minimized = False
 		end
 
-	silent_remove_maximized is
+	silent_remove_maximized
 			-- Ensure `is_maximized' is `True' with no side effects.
 		do
 			is_maximized := False
@@ -665,13 +665,13 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER, MULTIPLE_SPLIT_AREA} -- Implementation
 	tool_bar: EV_TOOL_BAR
 		-- Tool bar used to display minimize, maximize and close buttons.
 
-	minimize_tooltip: STRING is "Minimize"
+	minimize_tooltip: STRING = "Minimize"
 		-- String displayed as tooltip on minimize button
 
-	maximize_tooltip: STRING is "Maximize"
+	maximize_tooltip: STRING = "Maximize"
 		-- String displayed as tooltip on maximize button
 
-	close_tooltip: STRING is "Close"
+	close_tooltip: STRING = "Close"
 		-- String displayed as tooltip on close button.
 
 	minimum_size_cell: EV_CELL
@@ -679,13 +679,13 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER, MULTIPLE_SPLIT_AREA} -- Implementation
 		-- without altering the resizing behaviour of `Current'. Has no screen space,
 		-- but force `height' of current to be adjusted as necessary.
 
-	default_external_docked_height: INTEGER is 100
+	default_external_docked_height: INTEGER = 100
 		-- Default height applied to all tools docked externally if they were minimized.
 
 invariant
 	minimum_size_cell_empty: minimum_size_cell.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

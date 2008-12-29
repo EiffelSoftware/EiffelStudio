@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Unmanaged MEL_FORM as child of a MEL_DIALOG_SHELL."
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE)
 			-- Create a motif form dialog.
 		require
 			name_exists: a_name /= Void
@@ -46,7 +46,7 @@ feature -- Initialization
 			name_set: name.is_equal (a_name)
 		end;
 
-	make_no_auto_unmanage (a_name: STRING; a_parent: MEL_COMPOSITE) is
+	make_no_auto_unmanage (a_name: STRING; a_parent: MEL_COMPOSITE)
 			-- Create a motif form dialog and set `auto_unmanage' to False.
 		require
 			name_exists: a_name /= Void
@@ -67,7 +67,7 @@ feature -- Initialization
 
 feature {NONE} -- Initialization
 
-	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
+	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN)
 			-- Create bulletin with `auto_manage_flag'.
 		do
 			if auto_manage_flag then
@@ -84,7 +84,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	created_dialog_automatically: BOOLEAN is
+	created_dialog_automatically: BOOLEAN
 			-- Was the dialog shell created automatically?
 		do
 			Result := True
@@ -92,14 +92,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	xm_create_form_dialog (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_form_dialog (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/Form.h>"
 		alias
 			"XmCreateFormDialog"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

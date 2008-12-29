@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision text area, gtk implementation."
@@ -38,9 +38,9 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is True
+	needs_event_box: BOOLEAN = True
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a gtk label.
 		do
 			base_make (an_interface)
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 		local
 			p: POINTER
 		do
@@ -64,7 +64,7 @@ feature -- Access
 			{EV_GTK_EXTERNALS}.g_free (p)
 		end
 
-	line (i: INTEGER): STRING_32 is
+	line (i: INTEGER): STRING_32
 			-- Returns the content of the `i'th line.
 		local
 			line_begin_pos, line_end_pos: INTEGER
@@ -99,7 +99,7 @@ feature -- Access
 			{EV_GTK_EXTERNALS}.g_free (p)
 		end
 
-	line_number_from_position (i: INTEGER): INTEGER is
+	line_number_from_position (i: INTEGER): INTEGER
 			-- Line containing caret position `i'.
 		do
 			--| Added for gtk2 implementation
@@ -107,7 +107,7 @@ feature -- Access
 
 feature -- Status report
 
-	line_count: INTEGER is
+	line_count: INTEGER
 			-- Number of lines present in widget.
 		local
 			temp_text: STRING
@@ -120,7 +120,7 @@ feature -- Status report
 			end
 		end
 
-	current_line_number: INTEGER is
+	current_line_number: INTEGER
 			-- Returns the number of the line the cursor currently
 			-- is on.
 		local
@@ -137,13 +137,13 @@ feature -- Status report
 			end
 		end
 
-	caret_position: INTEGER is
+	caret_position: INTEGER
 			-- Current position of the caret.
 		do
 			Result := gtk_text_get_point (entry_widget) + 1
 		end
 
-	first_position_from_line_number (i: INTEGER): INTEGER is
+	first_position_from_line_number (i: INTEGER): INTEGER
 			-- Position of the first character on the `i'-th line.
 		local
 			pos : INTEGER
@@ -170,7 +170,7 @@ feature -- Status report
 			end
 		end
 
-	last_position_from_line_number (i: INTEGER): INTEGER is
+	last_position_from_line_number (i: INTEGER): INTEGER
 			-- Position of the last character on the `i'-th line.
 		do
 			if valid_line_index (i + 1) then
@@ -182,7 +182,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Set background color of present
 		do
 			Precursor {EV_TEXT_COMPONENT_IMP} (a_color)
@@ -190,14 +190,14 @@ feature -- Status setting
 			set_font (font)
 		end
 
-	internal_set_caret_position (pos: INTEGER) is
+	internal_set_caret_position (pos: INTEGER)
 			-- Set the position of the caret to `pos'.
 		do
 			gtk_text_set_point (entry_widget, pos - 1)
 			{EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
 		end
 
-	insert_text_at_position (txt: STRING; a_position: INTEGER) is
+	insert_text_at_position (txt: STRING; a_position: INTEGER)
 		local
 			a_cs: EV_GTK_C_STRING
 			temp_caret_pos: INTEGER
@@ -209,37 +209,37 @@ feature -- Status setting
 			internal_set_caret_position (temp_caret_pos)
 		end
 
-	insert_text (txt: STRING) is
+	insert_text (txt: STRING)
 		do
 			insert_text_at_position (txt, caret_position)
 		end
 
-	set_text (txt: STRING) is
+	set_text (txt: STRING)
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_delete_text (entry_widget, 0, -1)
 			insert_text (txt)
 		end
 
-	append_text (txt: STRING) is
+	append_text (txt: STRING)
 			-- Append `txt' to `text'.
 		do
 			insert_text_at_position (txt, text_length + 1)
 		end
 
-	prepend_text (txt: STRING) is
+	prepend_text (txt: STRING)
 			-- Prepend 'txt' to `text'.
 		do
 			insert_text_at_position (txt, 1)
 		end
 
-	delete_text (start, finish: INTEGER) is
+	delete_text (start, finish: INTEGER)
 			-- Delete the text between `start' and `finish' index
 			-- both sides include.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_delete_text (entry_widget, start + 1, finish + 1)
 		end
 
-	freeze is
+	freeze
 			-- Freeze the widget.
 			-- If the widget is frozen any updates made to the
 			-- window will not be shown until the widget is
@@ -248,7 +248,7 @@ feature -- Status setting
 			gtk_text_freeze (entry_widget)
 		end
 
-	thaw is
+	thaw
 			-- Thaw a frozen widget.
 		do
 			gtk_text_thaw (entry_widget)
@@ -256,25 +256,25 @@ feature -- Status setting
 
 feature -- Basic operation
 
-	put_new_line is
+	put_new_line
 			-- Go to the beginning of the following line.
 		do
 			insert_text ("%N")
 		end
 
-	scroll_to_line (i: INTEGER) is
+	scroll_to_line (i: INTEGER)
 		do
 			--freeze
 			{EV_GTK_EXTERNALS}.gtk_adjustment_set_value (vertical_adjustment_struct, (i - 1) * line_height)
 			--thaw
 		end
 
-	scroll_to_end is
+	scroll_to_end
 		do
 			scroll_to_line (line_count)
 		end
 
-	enable_word_wrapping is
+	enable_word_wrapping
 			-- Set 'has_word_wrapping' to True.
 		do
 			has_word_wrapping := True
@@ -285,7 +285,7 @@ feature -- Basic operation
 			gtk_text_set_word_wrap (entry_widget, 1)
 		end
 
-	disable_word_wrapping is
+	disable_word_wrapping
 			-- Set 'has_word_wrapping' to False.
 		do
 			has_word_wrapping := False
@@ -300,7 +300,7 @@ feature -- Basic operation
 
 feature -- Assertions
 
-	last_line_not_empty: BOOLEAN is
+	last_line_not_empty: BOOLEAN
 			-- Has the line at least one character?
 		local
 			temp_text: STRING
@@ -311,13 +311,13 @@ feature -- Assertions
 
 feature {NONE} -- Implementation
 
-	vertical_adjustment_struct: POINTER is
+	vertical_adjustment_struct: POINTER
 			-- Pointer to vertical adjustment struct use in the scrollbar.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment ({EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (scrollable_window))
 		end
 
-	line_height: INTEGER is
+	line_height: INTEGER
 			-- Height of the text lines in the widget.
 		do
 			if private_font /= Void then
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 	entry_widget: POINTER
 		-- Pointer to the gtk text editable.
 
-	visual_widget: POINTER is
+	visual_widget: POINTER
 			-- Pointer to widget shown on screen.
 		do
 			Result := entry_widget
@@ -341,41 +341,41 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	gtk_text_new (a_hadj: POINTER; a_vadj: POINTER): POINTER is
+	gtk_text_new (a_hadj: POINTER; a_vadj: POINTER): POINTER
 			-- GtkWidget* gtk_text_new             (GtkAdjustment *hadj,
 			--                                   GtkAdjustment *vadj);
 		external
 			"C (GtkAdjustment*, GtkAdjustment*): GtkWidget* | <gtk/gtk.h>"
 		end
 
-	gtk_text_set_editable (a_text: POINTER; a_editable: BOOLEAN) is
+	gtk_text_set_editable (a_text: POINTER; a_editable: BOOLEAN)
 			-- void       gtk_text_set_editable    (GtkText       *text,
 			-- 				     gboolean       editable);
 		external
 			"C (GtkText*, gboolean) | <gtk/gtk.h>"
 		end
 
-	gtk_text_struct_cursor_pos_y (a_c_struct: POINTER): INTEGER is
+	gtk_text_struct_cursor_pos_y (a_c_struct: POINTER): INTEGER
 		external
 			"C [struct <gtk/gtk.h>] (GtkText): EIF_INTEGER"
 		alias
 			"cursor_pos_y"
 		end
 
-	gtk_text_struct_first_onscreen_ver_pixel (a_c_struct: POINTER): INTEGER is
+	gtk_text_struct_first_onscreen_ver_pixel (a_c_struct: POINTER): INTEGER
 		external
 			"C [struct <gtk/gtk.h>] (GtkText): EIF_INTEGER"
 		alias
 			"first_onscreen_ver_pixel"
 		end
 
-	gtk_text_get_point (a_text: POINTER): INTEGER is
+	gtk_text_get_point (a_text: POINTER): INTEGER
 			-- guint      gtk_text_get_point       (GtkText       *text);
 		external
 			"C (GtkText*): guint | <gtk/gtk.h>"
 		end
 
-	gtk_text_insert (a_text: POINTER; a_font: POINTER; a_fore: POINTER; a_back: POINTER; a_chars: POINTER; a_length: INTEGER) is
+	gtk_text_insert (a_text: POINTER; a_font: POINTER; a_fore: POINTER; a_back: POINTER; a_chars: POINTER; a_length: INTEGER)
 			-- void       gtk_text_insert          (GtkText       *text,
 			-- 				     GdkFont       *font,
 			-- 				     GdkColor      *fore,
@@ -386,31 +386,31 @@ feature {NONE} -- Externals
 			"C (GtkText*, GdkFont*, GdkColor*, GdkColor*, char*, gint) | <gtk/gtk.h>"
 		end
 
-	gtk_text_set_point (a_text: POINTER; a_index: INTEGER) is
+	gtk_text_set_point (a_text: POINTER; a_index: INTEGER)
 			-- void       gtk_text_set_point       (GtkText       *text,
 			-- 				     guint          index);
 		external
 			"C (GtkText*, guint) | <gtk/gtk.h>"
 		end
 
-	gtk_text_freeze (a_text: POINTER) is
+	gtk_text_freeze (a_text: POINTER)
 			-- void       gtk_text_freeze          (GtkText       *text);
 		external
 			"C (GtkText*) | <gtk/gtk.h>"
 		end
 
-	gtk_text_thaw (a_text: POINTER) is
+	gtk_text_thaw (a_text: POINTER)
 			-- void       gtk_text_thaw            (GtkText       *text);
 		external
 			"C (GtkText*) | <gtk/gtk.h>"
 		end
 
-	gtk_text_set_word_wrap (a_text: POINTER; word_wrap: INTEGER) is
+	gtk_text_set_word_wrap (a_text: POINTER; word_wrap: INTEGER)
 		external
 			"C (GtkText*, gint) | <gtk/gtk.h>"
 		end
 
-	gtk_text_set_line_wrap (a_text: POINTER; word_wrap: INTEGER) is
+	gtk_text_set_line_wrap (a_text: POINTER; word_wrap: INTEGER)
 		external
 			"C (GtkText*, gint) | <gtk/gtk.h>"
 		end
@@ -422,27 +422,27 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Status report
 
-	is_editable: BOOLEAN is
+	is_editable: BOOLEAN
 			-- Is the text editable.
 		do
 			--| FIXME This should be removed when gtk1 imp is made obsolete
 			Result := (create {EV_GTK_DEPENDENT_EXTERNALS}).gtk_editable_get_editable (entry_widget)
 		end
 
-	position: INTEGER is
+	position: INTEGER
 			-- Current position of the caret.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
 		end
 
-	has_selection: BOOLEAN is
+	has_selection: BOOLEAN
 			-- Is something selected?
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget) /=
 				{EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)
 		end
 
-	selection_start: INTEGER is
+	selection_start: INTEGER
 			-- Index of the first character selected.
 		local
 			a_start: INTEGER
@@ -451,7 +451,7 @@ feature -- Status report
 			Result := a_start.min ({EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)) + 1
 		end
 
-	selection_end: INTEGER is
+	selection_end: INTEGER
 			-- Index of the last character selected.
 		local
 			a_start: INTEGER
@@ -460,7 +460,7 @@ feature -- Status report
 			Result := a_start.max ({EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget))
 		end
 
-	clipboard_content: STRING_32 is
+	clipboard_content: STRING_32
 			-- `Result' is current clipboard content.
 		do
 			Result := App_implementation.clipboard.text
@@ -468,20 +468,20 @@ feature -- Status report
 
 feature -- status settings
 
-	set_editable (flag: BOOLEAN) is
+	set_editable (flag: BOOLEAN)
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_set_editable (entry_widget, flag)
 		end
 
-	set_position (pos: INTEGER) is
+	set_position (pos: INTEGER)
 			-- Set current insertion position.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
 		end
 
-	set_caret_position (pos: INTEGER) is
+	set_caret_position (pos: INTEGER)
 			-- Set the position of the caret to `pos'.
 		do
 			internal_set_caret_position (pos)
@@ -489,7 +489,7 @@ feature -- status settings
 
 feature -- Basic operation
 
-	select_region (start_pos, end_pos: INTEGER) is
+	select_region (start_pos, end_pos: INTEGER)
 			-- Select (highlight) the text between
 			-- 'start_pos' and 'end_pos'.
 		do
@@ -501,25 +501,25 @@ feature -- Basic operation
 			internal_timeout_imp.set_interval_kamikaze (0)
 		end
 
-	select_region_internal (start_pos, end_pos: INTEGER) is
+	select_region_internal (start_pos, end_pos: INTEGER)
 			-- Select region
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
 		end
 
-	deselect_all is
+	deselect_all
 			-- Unselect the current selection.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, 0, 0)
 		end
 
-	delete_selection is
+	delete_selection
 			-- Delete the current selection.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_delete_selection (entry_widget)
 		end
 
-	cut_selection is
+	cut_selection
 			-- Cut the `selected_region' by erasing it from
 			-- the text and putting it in the Clipboard
 			-- to paste it later.
@@ -529,7 +529,7 @@ feature -- Basic operation
 			{EV_GTK_EXTERNALS}.gtk_editable_cut_clipboard (entry_widget)
 		end
 
-	copy_selection is
+	copy_selection
 			-- Copy the `selected_region' in the Clipboard
 			-- to paste it later.
 			-- If the `selected_region' is empty, it does
@@ -538,7 +538,7 @@ feature -- Basic operation
 			{EV_GTK_EXTERNALS}.gtk_editable_copy_clipboard (entry_widget)
 		end
 
-	paste (index: INTEGER) is
+	paste (index: INTEGER)
 			-- Insert the string which is in the
 			-- Clipboard at the `index' position in the
 			-- text.
@@ -554,7 +554,7 @@ feature -- Basic operation
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
 			create Result
 			real_signal_connect (entry_widget, "changed", agent (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
@@ -570,13 +570,13 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	in_change_action: BOOLEAN
 			-- Is Current being changed?
 
-	toggle_in_change_action (a_flag: BOOLEAN) is
+	toggle_in_change_action (a_flag: BOOLEAN)
 			-- Set 'in_change_action' to 'a_flag'
 		do
 			in_change_action := a_flag
 		end
 
-	on_change_actions is
+	on_change_actions
 			-- A change action has occurred.
 		do
 			toggle_in_change_action (True)
@@ -594,7 +594,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that enable to retrieve foreign key values for table row %
 		%creation. Foreign key values are selected dynamically by user using %
 		%a navigator."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 			create db_all_searcher.make
@@ -28,7 +28,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	can_be_activated: BOOLEAN is
+	can_be_activated: BOOLEAN
 			-- Can the component be activated?
 		do
 			Result := db_creator /= Void and then
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_raising_action (raising_action: PROCEDURE [ANY, TUPLE]) is
+	set_raising_action (raising_action: PROCEDURE [ANY, TUPLE])
 			-- Set `raising_action' to raise navigation component to
 			-- select table row.
 		require
@@ -52,7 +52,7 @@ feature -- Basic operations
 			raise := raising_action
 		end
 
-	set_selecting_control (selecting_ctrl: DV_SENSITIVE_CONTROL) is
+	set_selecting_control (selecting_ctrl: DV_SENSITIVE_CONTROL)
 			-- Enable that component can
 			-- select active table row.
 		require
@@ -68,7 +68,7 @@ feature {DV_COMPONENT} -- Access
 	table_description: DB_TABLE_DESCRIPTION
 			-- Description of table represented by component.
 
-	selected_tablerows: ARRAYED_LIST [DB_TABLE] is
+	selected_tablerows: ARRAYED_LIST [DB_TABLE]
 			-- Base for database table row selection.
 		do
 			Result := tablerow_set
@@ -76,7 +76,7 @@ feature {DV_COMPONENT} -- Access
 
 feature {DV_COMPONENT} -- Basic operations
 
-	set_db_creator (creator: DV_CHOICE_CREATOR) is
+	set_db_creator (creator: DV_CHOICE_CREATOR)
 			-- Set `creator' as calling component.
 		require
 			not_activated: not is_activated
@@ -85,7 +85,7 @@ feature {DV_COMPONENT} -- Basic operations
 			db_creator := creator
 		end
 
-	select_from_table (table_code: INTEGER) is
+	select_from_table (table_code: INTEGER)
 			-- Let user select a tablerow of table with
 			-- `table_code'.
 		require
@@ -103,7 +103,7 @@ feature {DV_COMPONENT} -- Basic operations
 			raise.call ([])
 		end
 
-	activate is
+	activate
 			-- Activate component.
 		do
 			db_all_searcher.set_user_component (db_creator.db_table_component)
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 	raise: PROCEDURE [ANY, TUPLE]
 			-- Action to perform to raise the navigator.
 
-	update_controls_sensitiveness is
+	update_controls_sensitiveness
 			-- Update controls sensitiveness.
 		do
 			if tablerow_set.before then
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	ok is
+	ok
 			-- Select current table row and transmit its ID to creation component.
 		require
 			valid_position: tablerow_set.valid_index (tablerow_set.index)
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			db_creator.add_foreign_key_value (tablerow_set.item.table_description.id)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

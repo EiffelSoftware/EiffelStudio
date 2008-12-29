@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Deferred class representing EiffelStudio specific language exceptions.
 		]"

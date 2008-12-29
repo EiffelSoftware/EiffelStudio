@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wrapper for column descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 		
 feature {NONE} -- Initialization
 
-	make (stmt: OCI_STATEMENT; index: INTEGER; errh: OCI_ERROR_HANDLER) is
+	make (stmt: OCI_STATEMENT; index: INTEGER; errh: OCI_ERROR_HANDLER)
 		local
 			status: INTEGER_16
 			l_descriptor: like descriptor
@@ -73,7 +73,7 @@ feature -- Access
 	charset_form: INTEGER_8
 		-- the character set form, if the type attribute is of a string/character type
 	
-	is_string_type (type: INTEGER): BOOLEAN is
+	is_string_type (type: INTEGER): BOOLEAN
 			-- Is `type' a string/character type ?
 		do
 			Result := 
@@ -82,7 +82,7 @@ feature -- Access
 				type = Sqlt_vcs
 		end
 		
-	is_numeric_type (type: INTEGER): BOOLEAN is
+	is_numeric_type (type: INTEGER): BOOLEAN
 			-- Is `type' a numeric type ?
 		do
 			Result := 
@@ -94,7 +94,7 @@ feature -- Access
 				type = Sqlt_uin
 		end
 		
-	get_attributes (errh: OCI_ERROR_HANDLER) is
+	get_attributes (errh: OCI_ERROR_HANDLER)
 			-- Assign values of attributes
 		do
 			Precursor (errh)
@@ -117,7 +117,7 @@ feature -- Access
 			end
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

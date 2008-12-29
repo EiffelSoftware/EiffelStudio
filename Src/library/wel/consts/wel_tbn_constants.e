@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Toolbar notification (RBN) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,40 +10,40 @@ class
 
 feature -- Access
 
-	Tbn_getbuttoninfo: INTEGER is -680
+	Tbn_getbuttoninfo: INTEGER = -680
 			-- Declared in Windows as TBN_GETBUTTONINFO
 
-	Tbn_begindrag: INTEGER is -701
+	Tbn_begindrag: INTEGER = -701
 			-- Declared in Windows as TBN_BEGINDRAG
 
-	Tbn_enddrag: INTEGER is -702
+	Tbn_enddrag: INTEGER = -702
 			-- Declared in Windows as TBN_ENDDRAG
 
-	Tbn_beginadjust: INTEGER is -703
+	Tbn_beginadjust: INTEGER = -703
 			-- Declared in Windows as TBN_BEGINADJUST
 
-	Tbn_endadjust: INTEGER is -704
+	Tbn_endadjust: INTEGER = -704
 			-- Declared in Windows as TBN_ENDADJUST
 
-	Tbn_reset: INTEGER is -705
+	Tbn_reset: INTEGER = -705
 			-- Declared in Windows as TBN_RESET
 
-	Tbn_queryinsert: INTEGER is -706
+	Tbn_queryinsert: INTEGER = -706
 			-- Declared in Windows as TBN_QUERYINSERT
 
-	Tbn_querydelete: INTEGER is -707
+	Tbn_querydelete: INTEGER = -707
 			-- Declared in Windows as TBN_QUERYDELETE
 
-	Tbn_toolbarchange: INTEGER is -708
+	Tbn_toolbarchange: INTEGER = -708
 			-- Declared in Windows as TBN_TOOLBARCHANGE
 
-	Tbn_custhelp: INTEGER is -709
+	Tbn_custhelp: INTEGER = -709
 			-- Declared in Windows as TBN_CUSTHELP
 
-	Tbn_dropdown: INTEGER is -710;
+	Tbn_dropdown: INTEGER = -710;
 			-- Declared in Windows as TBN_DROPDOWN
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

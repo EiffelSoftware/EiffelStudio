@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wrapper of SYSTEMTIME structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make_by_current_time is
+	make_by_current_time
 			-- Create SYSTEMTIME structure and initialize it to current time.
 		do
 			make
@@ -31,49 +31,49 @@ feature -- Initialization
 
 feature -- Access
 
-	year: INTEGER is
+	year: INTEGER
 			-- Year
 		do
 			Result := cwel_system_time_year (item)
 		end
 
-	month: INTEGER is
+	month: INTEGER
 			-- Month
 		do
 			Result := cwel_system_time_month (item)
 		end
 
-	day_of_week: INTEGER is
+	day_of_week: INTEGER
 			-- Day of week
 		do
 			Result := cwel_system_time_day_of_week (item)
 		end
 
-	day: INTEGER is
+	day: INTEGER
 			-- Day
 		do
 			Result := cwel_system_time_day (item)
 		end
 
-	hour: INTEGER is
+	hour: INTEGER
 			-- Hour
 		do
 			Result := cwel_system_time_hour (item)
 		end
 
-	minute: INTEGER is
+	minute: INTEGER
 			-- Minute
 		do
 			Result := cwel_system_time_minute (item)
 		end
 
-	second: INTEGER is
+	second: INTEGER
 			-- Second
 		do
 			Result := cwel_system_time_second (item)
 		end
 
-	milliseconds: INTEGER is
+	milliseconds: INTEGER
 			-- Milliseconds
 		do
 			Result := cwel_system_time_milliseconds (item)
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of SYSTEMTIME structure
 		do
 			Result := c_size_of_system_time
@@ -90,7 +90,7 @@ feature -- Measurement
 
 feature -- Conversion
 
-	file_time: WEL_FILE_TIME is
+	file_time: WEL_FILE_TIME
 			-- SYSTEMTIME in FILETIME format
 		do
 			create Result.make
@@ -99,64 +99,64 @@ feature -- Conversion
 
 feature {NONE} -- Externals
 
-	c_size_of_system_time: INTEGER is
+	c_size_of_system_time: INTEGER
 		external
 			"C [macro %"wel_time.h%"]"
 		alias
 			"sizeof(SYSTEMTIME)"
 		end
 
-	cwel_system_time_to_file_time (st, ft: POINTER) is
+	cwel_system_time_to_file_time (st, ft: POINTER)
 		external
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_get_system_time (st: POINTER) is
+	cwel_get_system_time (st: POINTER)
 		external
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_system_time_year (st: POINTER): INTEGER is
+	cwel_system_time_year (st: POINTER): INTEGER
 		external
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_system_time_month (st: POINTER): INTEGER is
+	cwel_system_time_month (st: POINTER): INTEGER
 		external
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_system_time_day_of_week (st: POINTER): INTEGER is
+	cwel_system_time_day_of_week (st: POINTER): INTEGER
 		external
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_system_time_day (st: POINTER): INTEGER is
+	cwel_system_time_day (st: POINTER): INTEGER
 		external
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_system_time_hour (st: POINTER): INTEGER is
+	cwel_system_time_hour (st: POINTER): INTEGER
 		external
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_system_time_minute (st: POINTER): INTEGER is
+	cwel_system_time_minute (st: POINTER): INTEGER
 		external
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_system_time_second (st: POINTER): INTEGER is
+	cwel_system_time_second (st: POINTER): INTEGER
 		external
 			"C [macro %"wel_time.h%"]"
 		end
 
-	cwel_system_time_milliseconds (st: POINTER): INTEGER is
+	cwel_system_time_milliseconds (st: POINTER): INTEGER
 		external
 			"C [macro %"wel_time.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

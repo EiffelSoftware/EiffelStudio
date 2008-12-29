@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Figures implementation for X"
 	legal: "See notice at end of class.";
@@ -49,7 +49,7 @@ feature -- Access
 	surround_box: CLOSURE;
 			-- box surrounding  `Current`
 
-	Default_max_plane: INTEGER is 10;
+	Default_max_plane: INTEGER = 10;
 		-- Maximum default number of plane
 
 	max_plane: INTEGER;
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Element change
 
-	attach_drawing (a_drawing: DRAWING) is
+	attach_drawing (a_drawing: DRAWING)
 			-- Attach a drawing to the figure
 		do
 			drawing := a_drawing.implementation;
@@ -73,7 +73,7 @@ feature -- Element change
 			end
 		end;
 
-	set_plane (p: INTEGER) is
+	set_plane (p: INTEGER)
 		require
 			non_negative_plane: plane >= 0;
 			less_than_max_plane: plane < max_plane;
@@ -83,26 +83,26 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	deselect is
+	deselect
 			-- Do nothing by default
 		 do
 		 end;
 
-	select_figure is
+	select_figure
 			-- Do nothing by default
 		 do
 		 end;
 
 feature -- Output
 
-	draw is
+	draw
 			-- Draw the figure in `drawing'.
 		require
 			a_drawing_attached: drawing /= Void
 		deferred
 		end;
 
-	clip_draw (clip: CLIP) is
+	clip_draw (clip: CLIP)
 			-- conditionnal drawing in the 'clip' zone
 		require
 			clip_not_void: clip /= Void ;
@@ -124,7 +124,7 @@ feature -- Access
 
 feature {WORLD, FIGURE} -- Initialization
 
-	init_fig (f: FIGURE) is
+	init_fig (f: FIGURE)
 			-- by default `plane` is 0, `notify` is false, `received` is false
 		do
 			if f /= Void then
@@ -142,35 +142,35 @@ feature {WORLD, FIGURE} -- Initialization
 
 feature {CONFIGURE_NOTIFY} -- Access
 
-	set_figure (f: FIGURE) is
+	set_figure (f: FIGURE)
 		do
 			if f /= Void then
 				conf_notified := f
 			end
 		end;
 
-	attach_drawing_with_parent (parent: FIGURE; a_drawing: DRAWING) is
+	attach_drawing_with_parent (parent: FIGURE; a_drawing: DRAWING)
 			-- Attach a drawing to the figure
 		do
 			set_figure (parent);
 			attach_drawing (a_drawing);
 		end;
 
-	attach_drawing_imp_with_parent (parent: FIGURE; a_drawing_imp: DRAWING_I) is
+	attach_drawing_imp_with_parent (parent: FIGURE; a_drawing_imp: DRAWING_I)
 			-- Attach a drawing to the figure
 		do
 			set_figure (parent);
 			attach_drawing_imp (a_drawing_imp);
 		end;
 
-	attach_drawing_imp (a_drawing_imp: DRAWING_I) is
+	attach_drawing_imp (a_drawing_imp: DRAWING_I)
 			-- Attach a drawing to the figure
 		do
 			drawing := a_drawing_imp;
 			set_conf_modified
 		end;
 
-	set_conf_modified is
+	set_conf_modified
 		local
 			cl: CLOSURE;
 		do
@@ -185,7 +185,7 @@ feature {CONFIGURE_NOTIFY} -- Access
 				end
 		end;
 
-	set_conf_modified_with (cl1: CLOSURE) is
+	set_conf_modified_with (cl1: CLOSURE)
 		local
 			cl2: CLOSURE;
 		do
@@ -201,7 +201,7 @@ feature {CONFIGURE_NOTIFY} -- Access
 				end
 		end;
 
-	unset_conf_modified is
+	unset_conf_modified
 		do
 			set_conf_value_modified (false)
 		end;
@@ -211,7 +211,7 @@ invariant
 	less_than_max_plane: plane < max_plane;
 	plane_same_as_parent: (conf_notified /= Void) implies (conf_notified.plane = plane)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

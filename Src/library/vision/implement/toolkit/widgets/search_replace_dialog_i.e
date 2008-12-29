@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Dialog to ask for search or search and replace information"
@@ -18,113 +18,113 @@ inherit
 
 feature -- Status report
 
-	case_sensitive: BOOLEAN is
+	case_sensitive: BOOLEAN
 			-- Is search and replace to be case sensitive?	
 		deferred
 		end
 
-	replace_mode: BOOLEAN is
+	replace_mode: BOOLEAN
 			-- Is this dialog to do a replace?
 		deferred
 		end
 
-	replace_text: STRING is
+	replace_text: STRING
 			-- Text to replace `search_text' with.
 		require
 			replace_mode: replace_mode
 		deferred
 		end
 
-	search_text: STRING is 
+	search_text: STRING 
 			-- Text to search for
 		deferred
 		end
 
-	search_upwards: BOOLEAN is
+	search_upwards: BOOLEAN
 			-- Do this search from the bottom up?
 		deferred
 		end
 
 feature -- Status setting
 
-	show_direction_request is
+	show_direction_request
 			-- Show the direction requestor
 		require
 			not_popped_up: not is_popped_up
 		deferred
 		end
 
-	hide_direction_request is
+	hide_direction_request
 			-- Hide the direction requestor.
 		require
 			not_popped_up: not is_popped_up
 		deferred
 		end
 
-	enable_direction_request is
+	enable_direction_request
 			-- Enable the direction requestor
 		require
 			not_popped_up: not is_popped_up
 		deferred
 		end
 
-	disable_direction_request is
+	disable_direction_request
 			-- Disable the direction requestor
 		require
 			not_popped_up: not is_popped_up
 		deferred
 		end
 
-	show_match_case is
+	show_match_case
 			-- Show match case requestor
 		require
 			not_popped_up: not is_popped_up
 		deferred
 		end
 
-	hide_match_case is
+	hide_match_case
 			-- Hide match case requestor
 		require
 			not_popped_up: not is_popped_up
 		deferred
 		end
 
-	enable_match_case is
+	enable_match_case
 			-- Enable match case requestor
 		require
 			not_popped_up: not is_popped_up
 		deferred
 		end
 
-	disable_match_case is
+	disable_match_case
 			-- Disable match case requestor
 		require
 			not_popped_up: not is_popped_up
 		deferred
 		end
 
-	set_replace is
+	set_replace
 			-- Set dialog to search and replace.
 		deferred
 		ensure
 			replace_mode: replace_mode
 		end
 
-	set_replace_text (a_text: STRING)  is
+	set_replace_text (a_text: STRING)
 			-- Set `replace_text' to `a_text'
 		require
 			text_not_void: a_text /= Void
 		deferred
 		end
 
-	set_search is
+	set_search
 			-- Set dialog to search.
 		deferred
 		ensure
 			search_mode: not replace_mode
 		end
 
-	set_search_text (a_text: STRING) is
+	set_search_text (a_text: STRING)
 			-- Set `search_text' to `a_text'
 		require
 			text_not_void: a_text /= Void
@@ -133,7 +133,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_find_action (a_command: COMMAND; argument: ANY) is
+	add_find_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- user selects find option.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -143,7 +143,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
+	add_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- user selects cancel option.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -153,7 +153,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_replace_action (a_command: COMMAND; argument: ANY) is
+	add_replace_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- user selects replace option.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -163,7 +163,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_replace_all_action (a_command: COMMAND; argument: ANY) is
+	add_replace_all_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- user selects replace all option.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -175,7 +175,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+	remove_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the cancel option.
 		require
@@ -183,7 +183,7 @@ feature -- Removal
 		deferred
 		end;
 
-	remove_find_action (a_command: COMMAND; argument: ANY) is
+	remove_find_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the find option.
 		require
@@ -191,7 +191,7 @@ feature -- Removal
 		deferred
 		end;
 
-	remove_replace_action (a_command: COMMAND; argument: ANY) is
+	remove_replace_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the replace option.
 		require
@@ -199,7 +199,7 @@ feature -- Removal
 		deferred
 		end;
 
-	remove_replace_all_action (a_command: COMMAND; argument: ANY) is
+	remove_replace_all_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed 
 			-- when the user selects the replace all option.
 		require
@@ -207,7 +207,7 @@ feature -- Removal
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

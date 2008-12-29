@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Build editor displayable token from EiffelLex TOKENs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	build_token (a_token: TOKEN): EDITOR_TOKEN is
+	build_token (a_token: TOKEN): EDITOR_TOKEN
 	        -- 
 	  	require
 	  	do
@@ -53,19 +53,19 @@ feature -- Access
 		
 feature {NONE} -- Implementation
 
-	unmatched_type: INTEGER is 1
-	char_type: INTEGER is 2
-	comment_type: INTEGER is 3
-	integer_type: INTEGER is 4
-	operator_type: INTEGER is 5
-	real_type: INTEGER is 6
-	space_type: INTEGER is 7
-	string_type: INTEGER is 8
-	tab_type: INTEGER is 9
-	newline_type: INTEGER is 10
-	text_type: INTEGER is 11;
+	unmatched_type: INTEGER = 1
+	char_type: INTEGER = 2
+	comment_type: INTEGER = 3
+	integer_type: INTEGER = 4
+	operator_type: INTEGER = 5
+	real_type: INTEGER = 6
+	space_type: INTEGER = 7
+	string_type: INTEGER = 8
+	tab_type: INTEGER = 9
+	newline_type: INTEGER = 10
+	text_type: INTEGER = 11;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

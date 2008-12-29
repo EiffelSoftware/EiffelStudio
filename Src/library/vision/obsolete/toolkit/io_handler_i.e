@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A I/O handler manager. %
@@ -22,14 +22,14 @@ inherit
 	
 feature -- Status report
 
-	is_call_back_set: BOOLEAN is
+	is_call_back_set: BOOLEAN
 			-- Is a call back already set ?
 		deferred
 		end
 
 feature -- Status setting
 
-	set_error_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
+	set_error_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when an operation
 			-- on `a_file' had raised an I/O error.
 			--| the behave of this routine should be examined when other
@@ -42,7 +42,7 @@ feature -- Status setting
 			is_call_back_set
 		end;
 
-	set_no_call_back is
+	set_no_call_back
 			-- Remove any call-back already set.
 		require
 			a_call_back_must_be_set: is_call_back_set
@@ -51,7 +51,7 @@ feature -- Status setting
 			not is_call_back_set
 		end;
 
-	set_read_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
+	set_read_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when `a_file' has
 			-- data available.
 		require
@@ -62,7 +62,7 @@ feature -- Status setting
 			is_call_back_set
 		end;
 
-	set_write_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
+	set_write_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when `a_file' is
 			-- available for writing.
 		require
@@ -73,11 +73,11 @@ feature -- Status setting
 			is_call_back_set
 		end;
 
-	destroy is
+	destroy
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

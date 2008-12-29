@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Formatter for integral numbers"
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make (w: INTEGER) is
+	make (w: INTEGER)
 		require
 			reasonable_field: w >= 1
 		do
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Status report
 
-	centered: BOOLEAN is
+	centered: BOOLEAN
 			-- Are numbers to be formatted centered?
 		do
 			Result := justification = Center_justification
@@ -70,7 +70,7 @@ feature -- Status report
 			Result = (justification = Center_justification)
 		end
 
-	left_justified: BOOLEAN is
+	left_justified: BOOLEAN
 			-- Are numbers to be formatted with spaces on the right?
 		do
 			Result := justification = Left_justification
@@ -78,7 +78,7 @@ feature -- Status report
 			Result = (justification = Left_justification)
 		end
 
-	right_justified: BOOLEAN is
+	right_justified: BOOLEAN
 			-- Are numbers to be formatted with spaces on the left?
 		do
 			Result := justification = Right_justification
@@ -86,7 +86,7 @@ feature -- Status report
 			Result = (justification = Right_justification)
 		end
 
-	not_justified: BOOLEAN is
+	not_justified: BOOLEAN
 			-- Are numbers to be formatted in smallest string possible
 		do
 			Result := justification = No_justification
@@ -94,7 +94,7 @@ feature -- Status report
 			Result = (justification = No_justification)
 		end
 
-	show_sign_negative: BOOLEAN is
+	show_sign_negative: BOOLEAN
 			-- Are numbers to show sign only when negative?
 		do
 			Result := sign_format = Sign_negative_value
@@ -102,7 +102,7 @@ feature -- Status report
 			Result = (sign_format = Sign_negative_value)
 		end
 
-	show_sign_positive: BOOLEAN is
+	show_sign_positive: BOOLEAN
 			-- Are numbers to show sign only when positive?
 		do
 			Result := sign_format = Sign_positive_value
@@ -110,7 +110,7 @@ feature -- Status report
 			Result = (sign_format = Sign_positive_value)
 		end
 
-	show_sign: BOOLEAN is
+	show_sign: BOOLEAN
 			-- Are numbers to show sign whether positive or negative?
 		do
 			Result := sign_format = Show_sign_value
@@ -118,7 +118,7 @@ feature -- Status report
 			Result = (sign_format = Show_sign_value)
 		end
 
-	ignore_sign: BOOLEAN is
+	ignore_sign: BOOLEAN
 			-- Ignore the sign of a number?
 		do
 			Result := sign_format = Ignore_sign_value
@@ -126,7 +126,7 @@ feature -- Status report
 			Result = (sign_format = Ignore_sign_value)
 		end
 
-	no_separator: BOOLEAN is
+	no_separator: BOOLEAN
 			-- Is there a separator?
 		do
 			Result := separator = '%U'
@@ -134,7 +134,7 @@ feature -- Status report
 			Result = (separator = '%U')
 		end
 
-	leading_sign: BOOLEAN is
+	leading_sign: BOOLEAN
 		-- Is the sign leading?
 		do
 			Result := not trailing_sign
@@ -144,7 +144,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	blank_fill is
+	blank_fill
 			-- Fill numbers with blanks.
 		do
 			fill_character := ' '
@@ -152,7 +152,7 @@ feature -- Status setting
 			fill_character = ' '
 		end
 
-	zero_fill is
+	zero_fill
 			-- Fill numbers with zeros.
 		do
 			fill_character := '0'
@@ -160,7 +160,7 @@ feature -- Status setting
 			fill_character = '0'
 		end
 
-	dollar_fill is
+	dollar_fill
 			-- Fill numbers with dollars.
 		do
 			fill_character := '$'
@@ -168,7 +168,7 @@ feature -- Status setting
 			fill_character = '$'
 		end
 
-	asterisk_fill is
+	asterisk_fill
 			-- Fill numbers with asterisks.
 		do
 			fill_character := '*'
@@ -176,7 +176,7 @@ feature -- Status setting
 			fill_character = '*'
 		end
 
-	set_fill (c: CHARACTER) is
+	set_fill (c: CHARACTER)
 			-- Fill numbers with `c'
 		do
 			fill_character := c
@@ -184,7 +184,7 @@ feature -- Status setting
 			fill_character = c
 		end
 
-	set_width (w: INTEGER) is
+	set_width (w: INTEGER)
 			-- Set width to `w'
 		require
 			wide_enough: w >= 1
@@ -194,7 +194,7 @@ feature -- Status setting
 			width = w
 		end
 
-	underscore_separate is
+	underscore_separate
 			-- Set separator to underscore.
 		do
 			separator := '_'
@@ -202,7 +202,7 @@ feature -- Status setting
 			separator = '_'
 		end
 
-	comma_separate is
+	comma_separate
 			-- Set separator to comma.
 		do
 			separator := ','
@@ -210,7 +210,7 @@ feature -- Status setting
 			separator = ','
 		end
 
-	dot_separate is
+	dot_separate
 			-- Set separator to period.
 		do
 			separator := '.'
@@ -218,7 +218,7 @@ feature -- Status setting
 			separator = '.'
 		end
 
-	remove_separator is
+	remove_separator
 			-- Remove the separator.
 		do
 			separator := '%U'
@@ -226,7 +226,7 @@ feature -- Status setting
 			separator = '%U'
 		end
 
-	set_separator (c: CHARACTER) is
+	set_separator (c: CHARACTER)
 			-- Set the separator to `c'
 		do
 			separator := c
@@ -234,7 +234,7 @@ feature -- Status setting
 			separator = c
 		end
 
-	left_justify is
+	left_justify
 			--Put padding on right
 		do
 			justification := Left_justification
@@ -242,7 +242,7 @@ feature -- Status setting
 			left_justified
 		end
 
-	center_justify is
+	center_justify
 			-- Put padding on right and left
 		do
 			justification := Center_justification
@@ -250,7 +250,7 @@ feature -- Status setting
 			centered
 		end
 
-	right_justify is
+	right_justify
 			-- Put padding on left
 		do
 			justification := Right_justification
@@ -258,7 +258,7 @@ feature -- Status setting
 			right_justified
 		end
 
-	no_justify is
+	no_justify
 			-- Always return the smallest string possible
 		do
 			justification := No_justification
@@ -266,7 +266,7 @@ feature -- Status setting
 			not_justified
 		end
 
-	sign_leading is
+	sign_leading
 			-- Set the sign to lead
 		do
 			trailing_sign := False
@@ -274,7 +274,7 @@ feature -- Status setting
 			leading_sign
 		end
 
-	sign_trailing is
+	sign_trailing
 			-- Set the sign to trail
 		do
 			trailing_sign := True
@@ -282,7 +282,7 @@ feature -- Status setting
 			trailing_sign
 		end
 
-	sign_positive_only is
+	sign_positive_only
 			-- Show sign for positive numbers only.
 		do
 			sign_format := Sign_positive_value
@@ -290,7 +290,7 @@ feature -- Status setting
 			show_sign_positive
 		end
 
-	sign_negative_only is
+	sign_negative_only
 			-- Show sign for negative numbers only.
 		do
 			sign_format := Sign_negative_value
@@ -298,7 +298,7 @@ feature -- Status setting
 			show_sign_negative
 		end
 
-	sign_show is
+	sign_show
 			-- Show sign for all numbers.
 		do
 			sign_format := Show_sign_value
@@ -306,7 +306,7 @@ feature -- Status setting
 			show_sign
 		end
 
-	sign_ignore is
+	sign_ignore
 			-- Do not show sign.
 		do
 			sign_format := Ignore_sign_value
@@ -314,7 +314,7 @@ feature -- Status setting
 			ignore_sign
 		end
 
-	sign_normal is
+	sign_normal
 			-- Set sign for - and +.
 		do
 			sign_string := "- +"
@@ -322,7 +322,7 @@ feature -- Status setting
 			sign_string.is_equal ("- +")
 		end
 
-	sign_cr_dr is
+	sign_cr_dr
 			-- Set sign for CR/DR
 		do
 			sign_string := "CR DR"
@@ -330,7 +330,7 @@ feature -- Status setting
 			sign_string.is_equal ("CR DR")
 		end
 
-	sign_dr_cr is
+	sign_dr_cr
 			-- Set sign for DR/CR
 		do
 			sign_string := "DR CR"
@@ -338,7 +338,7 @@ feature -- Status setting
 			sign_string.is_equal ("DR CR")
 		end
 
-	sign_floating_dollar is
+	sign_floating_dollar
 			-- Set sign for floating dollar.
 		do
 			sign_string := "$$$"
@@ -347,7 +347,7 @@ feature -- Status setting
 			sign_string.is_equal ("$$$")
 		end
 
-	sign_floating_dollar_signed is
+	sign_floating_dollar_signed
 			-- Set sign for floating dollar include sign.
 		do
 			sign_string := "-$ $+$"
@@ -356,7 +356,7 @@ feature -- Status setting
 			sign_string.is_equal ("-$ $+$")
 		end
 
-	set_sign (s: STRING) is
+	set_sign (s: STRING)
 			-- Set sign values for positive, zero, negative
 			-- All values must be the same length.
 			-- Stored as negative, zero, positive.
@@ -370,7 +370,7 @@ feature -- Status setting
 			sign_string.is_equal (s)
 		end
 
-	bracket_negative is
+	bracket_negative
 			-- Bracket negative numbers.
 		do
 			bracketted_negative := True
@@ -378,7 +378,7 @@ feature -- Status setting
 			bracketted_negative
 		end
 
-	unbracket_negative is
+	unbracket_negative
 			-- Do not bracket negative numbers.
 		do
 			bracketted_negative := False
@@ -388,7 +388,7 @@ feature -- Status setting
 
 feature -- Conversion
 
-	formatted (i: INTEGER): STRING is
+	formatted (i: INTEGER): STRING
 			-- Format the integer.
 		local
 			sign: INTEGER
@@ -419,18 +419,18 @@ feature -- Conversion
 
 feature {NONE} -- Implementation
 
-	No_justification: INTEGER is 0
-	Left_justification: INTEGER is 1
-	Center_justification: INTEGER is 2
-	Right_justification: INTEGER is 3
+	No_justification: INTEGER = 0
+	Left_justification: INTEGER = 1
+	Center_justification: INTEGER = 2
+	Right_justification: INTEGER = 3
 
 
-	Show_sign_value: INTEGER is 0
-	Ignore_sign_value: INTEGER is 1
-	Sign_positive_value: INTEGER is 2
-	Sign_negative_value: INTEGER is 3
+	Show_sign_value: INTEGER = 0
+	Ignore_sign_value: INTEGER = 1
+	Sign_positive_value: INTEGER = 2
+	Sign_negative_value: INTEGER = 3
 
-	split (s: STRING): STRING is
+	split (s: STRING): STRING
 			-- Apply separators to an integer
 		require
 			efficiency: separator /= '%U'
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation
 			end
 		end -- split
 
-	process_sign (s: STRING; sn: INTEGER): STRING is
+	process_sign (s: STRING; sn: INTEGER): STRING
 			-- Process sign related values.
 		local
 			sstring: STRING
@@ -487,7 +487,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	sign_size: INTEGER is
+	sign_size: INTEGER
 			-- Size of the sign.
 		do
 			Result := sign_string.count // 3
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 			Result * 3 = sign_string.count
 		end
 
-	sign_value (i: INTEGER): STRING is
+	sign_value (i: INTEGER): STRING
 			-- Value of the sign.
 		require
 			correct_sign: - 1 <= i and i <= 1
@@ -506,7 +506,7 @@ feature {NONE} -- Implementation
 			Result := sign_string.substring (t, t + sign_size - 1)
 		end
 
-	justify (s: STRING): STRING is
+	justify (s: STRING): STRING
 			-- Justify `s'.
 		require
 			room: s.count < width
@@ -562,7 +562,7 @@ invariant
 	wide_enough: width >= 1
 	no_justification <= justification and justification <= right_justification
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

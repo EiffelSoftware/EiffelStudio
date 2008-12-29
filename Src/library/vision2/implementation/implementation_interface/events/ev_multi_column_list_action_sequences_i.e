@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_MULTI_COLUMN_LIST_I."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Event handling
 
-	select_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE is
+	select_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
 			-- Actions to be performed 
 		do
 			if select_actions_internal = Void then
@@ -27,7 +27,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_select_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE is
+	create_select_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
 			-- Create a select action sequence.
 		deferred
 		end
@@ -38,7 +38,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	deselect_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE is
+	deselect_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
 			-- Actions to be performed 
 		do
 			if deselect_actions_internal = Void then
@@ -52,7 +52,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_deselect_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE is
+	create_deselect_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE
 			-- Create a deselect action sequence.
 		deferred
 		end
@@ -63,7 +63,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	column_title_click_actions: EV_COLUMN_ACTION_SEQUENCE is
+	column_title_click_actions: EV_COLUMN_ACTION_SEQUENCE
 			-- Actions to be performed 
 		do
 			if column_title_click_actions_internal = Void then
@@ -77,7 +77,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_column_title_click_actions: EV_COLUMN_ACTION_SEQUENCE is
+	create_column_title_click_actions: EV_COLUMN_ACTION_SEQUENCE
 			-- Create a column_title_click action sequence.
 		deferred
 		end
@@ -88,7 +88,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	column_resized_actions: EV_COLUMN_ACTION_SEQUENCE is
+	column_resized_actions: EV_COLUMN_ACTION_SEQUENCE
 			-- Actions to be performed 
 		do
 			if column_resized_actions_internal = Void then
@@ -102,7 +102,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_column_resized_actions: EV_COLUMN_ACTION_SEQUENCE is
+	create_column_resized_actions: EV_COLUMN_ACTION_SEQUENCE
 			-- Create a column_resize action sequence.
 		deferred
 		end
@@ -110,7 +110,7 @@ feature {EV_ANY_I} -- Implementation
 	column_resized_actions_internal: EV_COLUMN_ACTION_SEQUENCE;
 			-- Implementation of once per object `column_resized_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

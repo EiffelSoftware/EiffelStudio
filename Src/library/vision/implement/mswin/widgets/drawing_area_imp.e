@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPdrawing area"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -89,7 +89,7 @@ create
 
 feature -- Initialization
 
-	make (a_drawing_area: DRAWING_AREA; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_drawing_area: DRAWING_AREA; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a drawing area
 		do
 			create private_attributes
@@ -107,7 +107,7 @@ feature -- Initialization
 			line_style := ps_solid
 		end
 
-	realize is
+	realize
 			-- Display a drawing area
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -129,7 +129,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set the height to new_height,
 			-- width to `new_width'.
 		do
@@ -146,14 +146,14 @@ feature -- Status report
 	painting: BOOLEAN
 			-- Are we currently executing a WM_PAINT message?
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 		do
 			Result := True
 		end
 
 feature -- Status setting
 
-	set_background_color (a_color: COLOR) is
+	set_background_color (a_color: COLOR)
 		do
 			private_background_color := a_color
 			bg_color ?= a_color.implementation
@@ -167,7 +167,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_input_action (a_command: COMMAND; arg: ANY) is
+	add_input_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- a key is pressed or when a mouse button is pressed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -186,7 +186,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_input_action (a_command: COMMAND; arg: ANY) is
+	remove_input_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when a key is pressed or when a mouse button
 			-- is pressed.
@@ -204,7 +204,7 @@ feature -- Removal
 
 feature -- Basic operations
 
-	output_to_printer (a_name: STRING) is
+	output_to_printer (a_name: STRING)
 		require
 			a_name_valid: a_name /= Void and not a_name.is_empty
 		local
@@ -243,7 +243,7 @@ feature -- Basic operations
 			end
 		end
 
-	output_to_printer_dc (a_printer_dc: WEL_PRINTER_DC; a_name: STRING) is
+	output_to_printer_dc (a_printer_dc: WEL_PRINTER_DC; a_name: STRING)
 			-- Output to `a_printer_dc'.
 		require
 			a_name_valid: a_name /= Void and not a_name.is_empty
@@ -276,7 +276,7 @@ feature -- Basic operations
 			painting := False
 		end
 
-	output_to_file (a_file_name: FILE_NAME) is
+	output_to_file (a_file_name: FILE_NAME)
 		require
 			a_file_name_valid: a_file_name /= Void and not a_file_name.is_empty
 		local
@@ -308,7 +308,7 @@ feature -- Basic operations
 
 feature -- WEL
 
-	background_brush: WEL_BRUSH is
+	background_brush: WEL_BRUSH
 			-- Brush used to paint the background.
 			-- Need to be redefine to appear white.
 		local
@@ -325,13 +325,13 @@ feature -- WEL
 	background_pen: WEL_PEN
 			-- Pen used to paint the background
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Windows class name
 		do
 			Result := "EVisionDrawingArea"
 		end
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Respond to a paint message.
 		local
 			clip: CLIP
@@ -351,20 +351,20 @@ feature -- WEL
 			expose_actions.execute (Current, expose_data)
 		end
 
-	wel_font: WEL_FONT is
+	wel_font: WEL_FONT
 		do
 		end
 
-	wel_set_font (f: WEL_FONT) is
+	wel_set_font (f: WEL_FONT)
 		do
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 		do
 			Result := 768
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,13 +33,13 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	cmd_id: INTEGER is
+	cmd_id: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_tag_olecmd_cmd_id (item)
 		end
 
-	cmdf: INTEGER is
+	cmdf: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_tag_olecmd_cmdf (item)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_x_tag_olecmd
@@ -55,13 +55,13 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_cmd_id (a_cmd_id: INTEGER) is
+	set_cmd_id (a_cmd_id: INTEGER)
 			-- Set `cmd_id' with `a_cmd_id'.
 		do
 			ccom_x_tag_olecmd_set_cmd_id (item, a_cmd_id)
 		end
 
-	set_cmdf (a_cmdf: INTEGER) is
+	set_cmdf (a_cmdf: INTEGER)
 			-- Set `cmdf' with `a_cmdf'.
 		do
 			ccom_x_tag_olecmd_set_cmdf (item, a_cmdf)
@@ -69,7 +69,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_x_tag_olecmd: INTEGER is
+	c_size_of_x_tag_olecmd: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library__tagOLECMD_s.h%"]"
@@ -77,31 +77,31 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::_tagOLECMD)"
 		end
 
-	ccom_x_tag_olecmd_cmd_id (a_pointer: POINTER): INTEGER is
+	ccom_x_tag_olecmd_cmd_id (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagOLECMD_s_impl.h%"](ecom_control_library::_tagOLECMD *):EIF_INTEGER"
 		end
 
-	ccom_x_tag_olecmd_set_cmd_id (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_tag_olecmd_set_cmd_id (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagOLECMD_s_impl.h%"](ecom_control_library::_tagOLECMD *, ULONG)"
 		end
 
-	ccom_x_tag_olecmd_cmdf (a_pointer: POINTER): INTEGER is
+	ccom_x_tag_olecmd_cmdf (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagOLECMD_s_impl.h%"](ecom_control_library::_tagOLECMD *):EIF_INTEGER"
 		end
 
-	ccom_x_tag_olecmd_set_cmdf (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_tag_olecmd_set_cmdf (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__tagOLECMD_s_impl.h%"](ecom_control_library::_tagOLECMD *, ULONG)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

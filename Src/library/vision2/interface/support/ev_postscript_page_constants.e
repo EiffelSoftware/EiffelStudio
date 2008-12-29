@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Page size constants for use with EV_POSTSCRIPT_PROJECTOR."
 	legal: "See notice at end of class."
@@ -12,41 +12,41 @@ class
 
 feature -- Constants
 
-	Comm10Envelope: INTEGER is 1
-	C5Envelope: INTEGER is 2
-	DLEnvelope: INTEGER is 3
-	Folio: INTEGER is 4
-	Executive: INTEGER is 5
-	Letter: INTEGER is 6
-	Legal: INTEGER is 7
-	Ledger: INTEGER is 8
-	Tabloid: INTEGER is 9
-	A0: INTEGER is 10
-	A1: INTEGER is 11
-	A2: INTEGER is 12
-	A3: INTEGER is 13
-	A4: INTEGER is 14
-	A5: INTEGER is 15
-	A6: INTEGER is 16
-	A7: INTEGER is 17
-	A8: INTEGER is 18
-	A9: INTEGER is 19
-	B0: INTEGER is 20
-	B1: INTEGER is 21
-	B2: INTEGER is 22
-	B3: INTEGER is 23
-	B4: INTEGER is 24
-	B5: INTEGER is 25
-	B6: INTEGER is 26
-	B7: INTEGER is 27
-	B8: INTEGER is 28
-	B9: INTEGER is 29
-	B10: INTEGER is 30
+	Comm10Envelope: INTEGER = 1
+	C5Envelope: INTEGER = 2
+	DLEnvelope: INTEGER = 3
+	Folio: INTEGER = 4
+	Executive: INTEGER = 5
+	Letter: INTEGER = 6
+	Legal: INTEGER = 7
+	Ledger: INTEGER = 8
+	Tabloid: INTEGER = 9
+	A0: INTEGER = 10
+	A1: INTEGER = 11
+	A2: INTEGER = 12
+	A3: INTEGER = 13
+	A4: INTEGER = 14
+	A5: INTEGER = 15
+	A6: INTEGER = 16
+	A7: INTEGER = 17
+	A8: INTEGER = 18
+	A9: INTEGER = 19
+	B0: INTEGER = 20
+	B1: INTEGER = 21
+	B2: INTEGER = 22
+	B3: INTEGER = 23
+	B4: INTEGER = 24
+	B5: INTEGER = 25
+	B6: INTEGER = 26
+	B7: INTEGER = 27
+	B8: INTEGER = 28
+	B9: INTEGER = 29
+	B10: INTEGER = 30
 		-- Valid page constants.
 
 feature -- Status report
 
-	page_width (a_size: INTEGER; landscape: BOOLEAN): INTEGER is
+	page_width (a_size: INTEGER; landscape: BOOLEAN): INTEGER
 			-- Return the page width in points (1 inch/72)
 			-- for the specified page size and orientation.
 		require
@@ -183,7 +183,7 @@ feature -- Status report
 			end
 		end
 
-	page_height (a_size: INTEGER; landscape: BOOLEAN): INTEGER is
+	page_height (a_size: INTEGER; landscape: BOOLEAN): INTEGER
 			-- Return the page height in points (1 inch/72)
 			-- for the specified page size and orientation.
 		require
@@ -320,22 +320,22 @@ feature -- Status report
 			end
 		end
 
-	Default_left_margin: INTEGER is 20
+	Default_left_margin: INTEGER = 20
 		-- Default size in pixels of the left side page margin.
 
-	Default_bottom_margin: INTEGER is 20
+	Default_bottom_margin: INTEGER = 20
 		-- Default size in pixels of the right side page margin.
 
 feature -- Contract support
 
-	valid_page_size (a_size: INTEGER): BOOLEAN is
+	valid_page_size (a_size: INTEGER): BOOLEAN
 			-- Is `a_size' a valid page value?
 		do
 			Result := a_size >= Comm10Envelope and
 			a_size <= B10
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

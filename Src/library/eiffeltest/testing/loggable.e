@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Objects that can produce output to the test logging facility"
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class LOGGABLE inherit
 
 feature -- Output
 
-	put_summary (f: LOG_FACILITY) is
+	put_summary (f: LOG_FACILITY)
 			-- Output test summary to `f'.
 		require
 			facility_exists: f /= Void
@@ -22,7 +22,7 @@ feature -- Output
 		deferred
 		end
 	 
-	 put_failure_information (f: LOG_FACILITY; n: INTEGER) is
+	 put_failure_information (f: LOG_FACILITY; n: INTEGER)
 	 		-- Output failure information for run `n' to `f'.
 		require
 			facility_exists: f /= Void
@@ -33,7 +33,7 @@ feature -- Output
 		deferred
 		end
 
-	 put_timing_information (f: LOG_FACILITY; n: INTEGER) is
+	 put_timing_information (f: LOG_FACILITY; n: INTEGER)
 	 		-- Output timing information for run `n' to `f'.
 		require
 			log_exists: f /= Void
@@ -44,7 +44,7 @@ feature -- Output
 		deferred
 		end
 	 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

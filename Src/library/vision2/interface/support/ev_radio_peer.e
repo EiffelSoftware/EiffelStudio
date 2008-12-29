@@ -1,4 +1,4 @@
-indexing	
+note	
 	description:
 		"Facilities for managing peer relations between radio buttons.%N%
 		%Base class for EV_RADIO_BUTTON, EV_RADIO_MENU_ITEM and%
@@ -21,14 +21,14 @@ inherit
 	
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is this radio item checked?
 		require
 			not_destroyed: not is_destroyed
 		deferred
 		end
 
-	peers: LINKED_LIST [like Current] is
+	peers: LINKED_LIST [like Current]
 			-- All radio items in the group `Current' is in.
 			-- Includes `Current'.
 		require
@@ -40,7 +40,7 @@ feature -- Status report
 			bridge_ok: Result.count = implementation.peers.count
 		end
 
-	selected_peer: like Current is
+	selected_peer: like Current
 			-- Item in `peers' that is currently selected.
 		require
 			not_destroyed: not is_destroyed
@@ -53,7 +53,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Change selected peer to `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -64,7 +64,7 @@ feature -- Status setting
 
 feature {NONE} -- Contract support
 
-	selected_count: INTEGER is
+	selected_count: INTEGER
 			-- Number of selected radio items in `peers'.
 		local
 			l: like peers
@@ -82,7 +82,7 @@ feature {NONE} -- Contract support
 			end
 		end
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 			-- Radio buttons are selected by default.
 		do
@@ -103,7 +103,7 @@ invariant
 		is_usable implies (is_selected = (selected_peer = Current))
 	one_radio_item_selected: is_usable implies (selected_count = 1)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_MENU_ITEM_LIST."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ feature {NONE} -- Implementation
 feature -- Event handling
 
 
-	item_select_actions: EV_MENU_ITEM_SELECT_ACTION_SEQUENCE is
+	item_select_actions: EV_MENU_ITEM_SELECT_ACTION_SEQUENCE
 			-- Actions to be performed when a menu item is selected.
 		do
 			Result := implementation.item_select_actions
@@ -34,7 +34,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

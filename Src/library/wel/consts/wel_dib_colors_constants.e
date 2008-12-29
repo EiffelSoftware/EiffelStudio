@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dib colors (DIB) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,19 +10,19 @@ class
 
 feature -- Access
 
-	Dib_rgb_colors: INTEGER is 0
+	Dib_rgb_colors: INTEGER = 0
 
-	Dib_pal_colors: INTEGER is 1
+	Dib_pal_colors: INTEGER = 1
 
 feature -- Status report
 
-	valid_dib_colors_constant (c: INTEGER): BOOLEAN is
+	valid_dib_colors_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid dib colors constant?
 		do
 			Result := c = Dib_rgb_colors or else c = Dib_pal_colors
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

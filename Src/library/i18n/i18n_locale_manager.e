@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class that presents information about available locales and generates I18N_LOCALE objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_uri: STRING_GENERAL) is
+	make (a_uri: STRING_GENERAL)
 			-- Initialize manager from given URI.
 			--
 			-- Note: At the moment only file resources are available. Thus
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	locale (a_locale_id: I18N_LOCALE_ID): I18N_LOCALE is
+	locale (a_locale_id: I18N_LOCALE_ID): I18N_LOCALE
 			-- Locale object that corresponds to `a_locale_id'
 			--
 			-- `a_locale_id': Locale ID for which the locale object is returned
@@ -67,7 +67,7 @@ feature -- Access
 			locale_not_void: Result /= Void
 		end
 
-	system_locale: I18N_LOCALE is
+	system_locale: I18N_LOCALE
 			-- Default locale in system
 		do
 			Result := locale (host_locale.system_locale_id)
@@ -75,7 +75,7 @@ feature -- Access
 			system_locale_not_void: Result /= Void
 		end
 
-	available_locales: LIST [I18N_LOCALE_ID] is
+	available_locales: LIST [I18N_LOCALE_ID]
 			-- List of available locales
 		local
 			temp: LINEAR [I18N_LOCALE_ID]
@@ -99,7 +99,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_translations (a_locale_id: I18N_LOCALE_ID): BOOLEAN is
+	has_translations (a_locale_id: I18N_LOCALE_ID): BOOLEAN
 			-- Are there translations for locale `a_locale_id'?
 			--
 			-- This checks the datasource for the locale with and without region information.
@@ -110,7 +110,7 @@ feature -- Status report
 					 datasource_manager.has_language (a_locale_id.language_id)
 		end
 
-	has_localised_translations (a_locale_id: I18N_LOCALE_ID): BOOLEAN is
+	has_localised_translations (a_locale_id: I18N_LOCALE_ID): BOOLEAN
 			-- Are there localized translations for locale `a_locale_id'?
 			--
 			-- This checks the datasource for the locale with region information.
@@ -120,7 +120,7 @@ feature -- Status report
 			Result := datasource_manager.has_locale (a_locale_id)
 		end
 
-	has_formatting_info (a_locale_id: I18N_LOCALE_ID): BOOLEAN is
+	has_formatting_info (a_locale_id: I18N_LOCALE_ID): BOOLEAN
 			-- Are there informations on formatting for locale `a_locale_id'
 		require
 			a_locale_id_not_void: a_locale_id /= Void
@@ -128,7 +128,7 @@ feature -- Status report
 			Result:= host_locale.is_available (a_locale_id)
 		end
 
-	has_locale (a_locale_id: I18N_LOCALE_ID): BOOLEAN is
+	has_locale (a_locale_id: I18N_LOCALE_ID): BOOLEAN
 			-- Is locale `a_locale_id' available?
 		require
 			a_locale_id_not_void: a_locale_id /= Void
@@ -151,7 +151,7 @@ invariant
 	datasource_manager_not_void: datasource_manager /= Void
 	host_locale_not_void: host_locale /= Void
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

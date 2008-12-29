@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Callback facilities for WEL_DISK_SPACE. Version for classic Eiffel."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ feature -- Access
 
 feature -- Status report
 
-	query_local_drive(drive_letter: CHARACTER) is
+	query_local_drive(drive_letter: CHARACTER)
 			-- Query the disk space available on the local drice 
 			-- designated by the letter `drive_letter'.
 		do
@@ -28,7 +28,7 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	cwin_query_disk_space(current_object: POINTER; drive_letter: CHARACTER; 
-			callback_function: POINTER): BOOLEAN is
+			callback_function: POINTER): BOOLEAN
 		external 
 			"C signature (EIF_REFERENCE, EIF_CHARACTER, EIF_POINTER): EIF_BOOLEAN use %"wel_disk_space.h%""
 		end
@@ -39,11 +39,11 @@ feature {NONE} -- Implementation
 			total_space: INTEGER;
 			free_space_in_bytes: INTEGER;
 			total_space_in_bytes: INTEGER
-			) is
+			)
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

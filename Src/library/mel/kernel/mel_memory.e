@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Class which can control the collection of external structures.%
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_from_existing (a_handle: POINTER) is
+	make_from_existing (a_handle: POINTER)
 			-- Initialize `a_handle' to `handle;.
 		require
 			a_handle_not_null: a_handle /= default_pointer
@@ -37,7 +37,7 @@ feature -- Access
 	handle: POINTER;
 			-- handle to C structure/identifier
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the resource valid?
 		do
 			Result := handle /= default_pointer
@@ -45,7 +45,7 @@ feature -- Access
 			valid_result: Result = not is_destroyed
 		end;
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 			-- Is the resource destroyed?
 		do
 			Result := not is_valid
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_shared is
+	set_shared
 			-- Set `shared' to True.
 		do
 			is_shared := True
@@ -70,7 +70,7 @@ feature -- Status setting
 			is_shared: is_shared
 		end;
 
-	set_unshared is
+	set_unshared
 			-- Set `is_shared' to False.
 		do
 			is_shared := False
@@ -80,7 +80,7 @@ feature -- Status setting
 
 feature -- Comparison
 
-	is_equal (other:like Current): BOOLEAN is
+	is_equal (other:like Current): BOOLEAN
 			-- Is Current `handle' equal to `other' handle?
 		do
 			Result := handle = other.handle
@@ -88,7 +88,7 @@ feature -- Comparison
 
 feature -- Removal
 
-	destroy is
+	destroy
 			-- Explicit destruction of associated `handle'.
 		require
 			exists: not is_destroyed
@@ -99,7 +99,7 @@ feature -- Removal
 
 feature {NONE} -- Removal
 
-	dispose is
+	dispose
 			-- Ensure `item' is destroyed when
 			-- garbage collected by calling `destroy_item'
 		do
@@ -108,7 +108,7 @@ feature {NONE} -- Removal
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

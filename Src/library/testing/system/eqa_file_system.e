@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects creating directories and files in a system test set environment.
 	]"

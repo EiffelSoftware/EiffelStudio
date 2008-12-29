@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Text field inside a combo-box-ex when it is
 		editable. It receive all the events and forewards them.
@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_combo (combo: EV_COMBO_BOX_IMP) is
+	make_with_combo (combo: EV_COMBO_BOX_IMP)
 			-- Create the text-field from `combo'.
 		do
 			wel_parent := combo
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: EV_COMBO_BOX_IMP is
+	parent: EV_COMBO_BOX_IMP
 			-- Parent of `Current'.
 		do
 			Result ?= wel_parent
@@ -114,7 +114,7 @@ feature -- Alignment
 
 feature {NONE} -- Implementation
 
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the left button is pressed.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the middle button is pressed.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_right_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the right button is pressed.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_up (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the left button is released.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
+	on_middle_button_up (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the middle button is released.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
+	on_right_button_up (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the right button is released.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_double_click (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the right button is double clicked.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER) is
+	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the right button is double clicked.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_right_button_double_click (keys, x_pos, y_pos: INTEGER) is
+	on_right_button_double_click (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the right button is double clicked.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse move.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- Executed when a key is pressed.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_char (character_code, key_data: INTEGER) is
+	on_char (character_code, key_data: INTEGER)
 			-- Wm_char message
 			-- Avoid an unconvenient `bip' when the user
 			-- tab to another control.
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_key_up (virtual_key, key_data: INTEGER) is
+	on_key_up (virtual_key, key_data: INTEGER)
 			-- Executed when a key is released.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_set_focus is
+	on_set_focus
 			-- Wm_setfocus message.
 		do
 			parent.increment_level
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_kill_focus is
+	on_kill_focus
 			-- Wm_killfocus message.
 		do
 			parent.increment_level
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 			parent.decrement_level
 		end
 
-	on_set_cursor (hit_code: INTEGER) is
+	on_set_cursor (hit_code: INTEGER)
 			-- Wm_setcursor message.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
 		do
@@ -370,7 +370,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -381,7 +381,7 @@ feature {NONE} -- Implementation
 			set_message_return_value (to_lresult (1))
 		end
 
-	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER)
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	allow_pick_and_drop is
+	allow_pick_and_drop
 			-- Override context menu on `Current' if pick and drop
 			-- should be handled instead. We must handle two cases :-
 			-- 1. We are attempting to pick from `Current'.
@@ -408,7 +408,7 @@ feature {NONE} -- Implementation
 			parent.enable_context_menu
 		end
 
-	on_getdlgcode is
+	on_getdlgcode
 			-- Called when window receives WM_GETDLGCODE message.
 		do
 			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 			Result := Current
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

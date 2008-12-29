@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IViewObjectEx' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iview_object_ex_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	draw (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD) is
+	draw (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD)
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -41,7 +41,7 @@ feature -- Basic Operations
 			ccom_draw (initializer, dw_draw_aspect, lindex, pv_aspect, ptd.item, hdc_target_dev, hdc_draw, lprc_bounds.item, lprc_wbounds.item)
 		end
 
-	get_color_set (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]) is
+	get_color_set (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD])
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -53,7 +53,7 @@ feature -- Basic Operations
 			ccom_get_color_set (initializer, dw_draw_aspect, lindex, pv_aspect, ptd.item, hic_target_dev, pp_color_set)
 		end
 
-	freeze (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF) is
+	freeze (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF)
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -63,14 +63,14 @@ feature -- Basic Operations
 			ccom_freeze (initializer, dw_draw_aspect, lindex, pv_aspect, pdw_freeze)
 		end
 
-	unfreeze (dw_freeze: INTEGER) is
+	unfreeze (dw_freeze: INTEGER)
 			-- No description available.
 			-- `dw_freeze' [in].  
 		do
 			ccom_unfreeze (initializer, dw_freeze)
 		end
 
-	set_advise (aspects: INTEGER; advf: INTEGER; p_adv_sink: IADVISE_SINK_INTERFACE) is
+	set_advise (aspects: INTEGER; advf: INTEGER; p_adv_sink: IADVISE_SINK_INTERFACE)
 			-- No description available.
 			-- `aspects' [in].  
 			-- `advf' [in].  
@@ -91,7 +91,7 @@ feature -- Basic Operations
 			ccom_set_advise (initializer, aspects, advf, p_adv_sink_item)
 		end
 
-	get_advise (p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]) is
+	get_advise (p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE])
 			-- No description available.
 			-- `p_aspects' [out].  
 			-- `p_advf' [out].  
@@ -100,7 +100,7 @@ feature -- Basic Operations
 			ccom_get_advise (initializer, p_aspects, p_advf, pp_adv_sink)
 		end
 
-	get_extent (dw_draw_aspect: INTEGER; lindex: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; lpsizel: TAG_SIZEL_RECORD) is
+	get_extent (dw_draw_aspect: INTEGER; lindex: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; lpsizel: TAG_SIZEL_RECORD)
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -110,7 +110,7 @@ feature -- Basic Operations
 			ccom_get_extent (initializer, dw_draw_aspect, lindex, ptd.item, lpsizel.item)
 		end
 
-	get_rect (dw_aspect: INTEGER; p_rect: X_RECTL_RECORD) is
+	get_rect (dw_aspect: INTEGER; p_rect: X_RECTL_RECORD)
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `p_rect' [out].  
@@ -118,14 +118,14 @@ feature -- Basic Operations
 			ccom_get_rect (initializer, dw_aspect, p_rect.item)
 		end
 
-	get_view_status (pdw_status: INTEGER_REF) is
+	get_view_status (pdw_status: INTEGER_REF)
 			-- No description available.
 			-- `pdw_status' [out].  
 		do
 			ccom_get_view_status (initializer, pdw_status)
 		end
 
-	query_hit_point (dw_aspect: INTEGER; p_rect_bounds: TAG_RECT_RECORD; ptl_loc: TAG_POINT_RECORD; l_close_hint: INTEGER; p_hit_result: INTEGER_REF) is
+	query_hit_point (dw_aspect: INTEGER; p_rect_bounds: TAG_RECT_RECORD; ptl_loc: TAG_POINT_RECORD; l_close_hint: INTEGER; p_hit_result: INTEGER_REF)
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `p_rect_bounds' [in].  
@@ -136,7 +136,7 @@ feature -- Basic Operations
 			ccom_query_hit_point (initializer, dw_aspect, p_rect_bounds.item, ptl_loc.item, l_close_hint, p_hit_result)
 		end
 
-	query_hit_rect (dw_aspect: INTEGER; p_rect_bounds: TAG_RECT_RECORD; p_rect_loc: TAG_RECT_RECORD; l_close_hint: INTEGER; p_hit_result: INTEGER_REF) is
+	query_hit_rect (dw_aspect: INTEGER; p_rect_bounds: TAG_RECT_RECORD; p_rect_loc: TAG_RECT_RECORD; l_close_hint: INTEGER; p_hit_result: INTEGER_REF)
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `p_rect_bounds' [in].  
@@ -147,7 +147,7 @@ feature -- Basic Operations
 			ccom_query_hit_rect (initializer, dw_aspect, p_rect_bounds.item, p_rect_loc.item, l_close_hint, p_hit_result)
 		end
 
-	get_natural_extent (dw_aspect: INTEGER; lindex: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: POINTER; p_extent_info: TAG_EXTENT_INFO_RECORD; psizel: TAG_SIZEL_RECORD) is
+	get_natural_extent (dw_aspect: INTEGER; lindex: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: POINTER; p_extent_info: TAG_EXTENT_INFO_RECORD; psizel: TAG_SIZEL_RECORD)
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `lindex' [in].  
@@ -161,7 +161,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iview_object_ex_impl_proxy(initializer)
@@ -169,97 +169,97 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_draw (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: POINTER; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: POINTER; lprc_wbounds: POINTER) is
+	ccom_draw (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: POINTER; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: POINTER; lprc_wbounds: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,ecom_control_library::tagDVTARGETDEVICE *,EIF_INTEGER,EIF_INTEGER,ecom_control_library::_RECTL *,ecom_control_library::_RECTL *)"
 		end
 
-	ccom_get_color_set (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: POINTER; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]) is
+	ccom_get_color_set (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: POINTER; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,ecom_control_library::tagDVTARGETDEVICE *,EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_freeze (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF) is
+	ccom_freeze (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_unfreeze (cpp_obj: POINTER; dw_freeze: INTEGER) is
+	ccom_unfreeze (cpp_obj: POINTER; dw_freeze: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_set_advise (cpp_obj: POINTER; aspects: INTEGER; advf: INTEGER; p_adv_sink: POINTER) is
+	ccom_set_advise (cpp_obj: POINTER; aspects: INTEGER; advf: INTEGER; p_adv_sink: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,::IAdviseSink *)"
 		end
 
-	ccom_get_advise (cpp_obj: POINTER; p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]) is
+	ccom_get_advise (cpp_obj: POINTER; p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_get_extent (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; ptd: POINTER; lpsizel: POINTER) is
+	ccom_get_extent (cpp_obj: POINTER; dw_draw_aspect: INTEGER; lindex: INTEGER; ptd: POINTER; lpsizel: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,ecom_control_library::tagDVTARGETDEVICE *,ecom_control_library::tagSIZEL *)"
 		end
 
-	ccom_get_rect (cpp_obj: POINTER; dw_aspect: INTEGER; p_rect: POINTER) is
+	ccom_get_rect (cpp_obj: POINTER; dw_aspect: INTEGER; p_rect: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::_RECTL *)"
 		end
 
-	ccom_get_view_status (cpp_obj: POINTER; pdw_status: INTEGER_REF) is
+	ccom_get_view_status (cpp_obj: POINTER; pdw_status: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_query_hit_point (cpp_obj: POINTER; dw_aspect: INTEGER; p_rect_bounds: POINTER; ptl_loc: POINTER; l_close_hint: INTEGER; p_hit_result: INTEGER_REF) is
+	ccom_query_hit_point (cpp_obj: POINTER; dw_aspect: INTEGER; p_rect_bounds: POINTER; ptl_loc: POINTER; l_close_hint: INTEGER; p_hit_result: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::tagRECT *,ecom_control_library::tagPOINT *,EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_query_hit_rect (cpp_obj: POINTER; dw_aspect: INTEGER; p_rect_bounds: POINTER; p_rect_loc: POINTER; l_close_hint: INTEGER; p_hit_result: INTEGER_REF) is
+	ccom_query_hit_rect (cpp_obj: POINTER; dw_aspect: INTEGER; p_rect_bounds: POINTER; p_rect_loc: POINTER; l_close_hint: INTEGER; p_hit_result: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::tagRECT *,ecom_control_library::tagRECT *,EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_get_natural_extent (cpp_obj: POINTER; dw_aspect: INTEGER; lindex: INTEGER; ptd: POINTER; hic_target_dev: POINTER; p_extent_info: POINTER; psizel: POINTER) is
+	ccom_get_natural_extent (cpp_obj: POINTER; dw_aspect: INTEGER; lindex: INTEGER; ptd: POINTER; hic_target_dev: POINTER; p_extent_info: POINTER; psizel: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER,ecom_control_library::tagDVTARGETDEVICE *,EIF_POINTER,ecom_control_library::tagExtentInfo *,ecom_control_library::tagSIZEL *)"
 		end
 
-	ccom_delete_iview_object_ex_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iview_object_ex_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iview_object_ex_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iview_object_ex_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IViewObjectEx_impl_proxy %"ecom_control_library_IViewObjectEx_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

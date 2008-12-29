@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,13 +25,13 @@ inherit
 
 feature {NONE} -- Implementation
 
-	parent_imp: EV_CONTAINER_IMP is
+	parent_imp: EV_CONTAINER_IMP
 			-- Parent of `Current', always Void as windows cannot be parented
 		do
 			-- Return Void
 		end
 
-	set_blocking_window (a_window: EV_WINDOW) is
+	set_blocking_window (a_window: EV_WINDOW)
 			-- Set as transient for `a_window'.
 		do
 			if not is_destroyed then
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	blocking_window: EV_WINDOW is
+	blocking_window: EV_WINDOW
 			-- Window this dialog is a transient for.
 		do
 			if internal_blocking_window /= Void and then not internal_blocking_window.is_destroyed then
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	window_position_enum: INTEGER is
+	window_position_enum: INTEGER
 			-- GtkWindow positioning enum.
 		do
 			if blocking_window /= Void then
@@ -72,19 +72,19 @@ feature {NONE} -- Implementation
 			-- Window that `Current' is relative to.
 			-- Implementation
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set the horizontal size to `a_width'.
 		do
 			set_size (a_width, height)
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set the vertical size to `a_height'.
 		do
 			set_size (width, a_height)
 		end
 
-	set_size (a_width, a_height: INTEGER) is
+	set_size (a_width, a_height: INTEGER)
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
 		local
@@ -127,19 +127,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_x_position (a_x: INTEGER) is
+	set_x_position (a_x: INTEGER)
 			-- Set horizontal offset to parent to `a_x'.
 		do
 			set_position (a_x, y_position)
 		end
 
-	set_y_position (a_y: INTEGER) is
+	set_y_position (a_y: INTEGER)
 			-- Set vertical offset to parent to `a_y'.
 		do
 			set_position (x_position, a_y)
 		end
 
-	set_position (a_x, a_y: INTEGER) is
+	set_position (a_x, a_y: INTEGER)
 			-- Set horizontal offset to parent to `a_x'.
 			-- Set vertical offset to parent to `a_y'.
 		do
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 	configure_event_pending: BOOLEAN
 		-- Has `Current' experienced a configure event?
 
-	x_position, screen_x: INTEGER is
+	x_position, screen_x: INTEGER
 			-- Horizontal position of the window on screen,
 		local
 			temp_y: INTEGER
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_window_get_position (c_object, $Result, $temp_y)
 		end
 
-	y_position, screen_y: INTEGER is
+	y_position, screen_y: INTEGER
 			-- Vertical position of the window on screen,
 		local
 			temp_x: INTEGER
@@ -165,13 +165,13 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_window_get_position (c_object, $temp_x, $Result)
 		end
 
-	default_wm_decorations: INTEGER is
+	default_wm_decorations: INTEGER
 			-- Default WM decorations of `Current'.
 		do
 			Result := 0 -- No decorations
 		end
 
-	show is
+	show
 			-- Request that `Current' be displayed when its parent is.
 		do
 			if not is_show_requested then
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	hide is
+	hide
 			-- Hide `Current'.
 		local
 			l_x_pos, l_y_pos, l_width, l_height: INTEGER_32
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 	is_modal: BOOLEAN
 		-- Is `Current' modal?
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show `Current' modal with respect to `a_window'.
 		local
 			l_window_imp: EV_WINDOW_IMP
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 
 feature -- Basic operations
 
-	show_relative_to_window (a_window: EV_WINDOW) is
+	show_relative_to_window (a_window: EV_WINDOW)
 			-- Show `Current' with respect to `a_window'.
 		do
 			set_blocking_window (a_window)
@@ -253,7 +253,7 @@ feature -- Basic operations
 			set_blocking_window (a_window)
 		end
 
-	block is
+	block
 			-- Wait until window is closed by the user.
 		local
 			l_app_imp: like app_implementation
@@ -267,7 +267,7 @@ feature -- Basic operations
 			end
 		end
 
-	blocking_condition: BOOLEAN is
+	blocking_condition: BOOLEAN
 			-- Condition when blocking ceases if enabled.
 		do
 			Result := is_destroyed or else not is_show_requested or else app_implementation.is_destroyed
@@ -275,12 +275,12 @@ feature -- Basic operations
 
 feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 
-	user_can_resize: BOOLEAN is
+	user_can_resize: BOOLEAN
 			-- Can `Current' be resized by the user?
 		deferred
 		end
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
 			-- `a_key' has either been pressed or released
 		deferred
 		end
@@ -437,7 +437,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			end
 		end
 
-	call_close_request_actions is
+	call_close_request_actions
 			-- Call the close request actions.
 		deferred
 		end
@@ -450,7 +450,7 @@ feature {EV_ANY_I} -- Implementation
 			configure_event_pending := False
 		end
 
-	forbid_resize is
+	forbid_resize
 			-- Forbid the resize of the window.
 		local
 			l_geometry: POINTER
@@ -467,7 +467,7 @@ feature {EV_ANY_I} -- Implementation
 			l_geometry.memory_free
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

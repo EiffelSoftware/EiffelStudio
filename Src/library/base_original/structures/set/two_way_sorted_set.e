@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Sets whose items may be compared according to a total order relation;
@@ -69,7 +69,7 @@ create {TWO_WAY_SORTED_SET}
 
 feature -- Element change
 
-	extend, put (v: G) is
+	extend, put (v: G)
 			-- Ensure that structure includes `v'.
 		local
 			found: BOOLEAN
@@ -99,7 +99,7 @@ feature -- Element change
 			end
 		end
 
-	merge (other: TRAVERSABLE_SUBSET [G]) is
+	merge (other: TRAVERSABLE_SUBSET [G])
 			-- Add all items of `other'.
 		local
 			mode: BOOLEAN
@@ -146,7 +146,7 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v: like item) is
+	prune (v: like item)
 		-- Remove `v' if present.
 		do
 			start
@@ -155,7 +155,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of sub-set beginning at cursor position
 			-- and having min (`n', `count' - `index' + 1) items
 		local
@@ -179,7 +179,7 @@ feature -- Duplication
 
 feature -- Basic operations
 
-	intersect (other: like Current) is
+	intersect (other: like Current)
 			-- Remove all items not in `other'.
 		do
 			from
@@ -221,7 +221,7 @@ feature -- Basic operations
 			end
 		end
 
-	subtract (other: like Current) is
+	subtract (other: like Current)
 			-- Remove all items also in `other'.
 		local
 			other_item: like item
@@ -245,12 +245,12 @@ feature -- Basic operations
 
 feature {NONE} -- Inapplicable
 
-	subset_symdif (other: SUBSET [G]) is
+	subset_symdif (other: SUBSET [G])
 			-- Inapplicable `symdif'.
 		do
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class representing a locked column in an EV_GRID."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_grid: EV_GRID_I; an_offset: INTEGER; a_column: EV_GRID_COLUMN_I) is
+	make (a_grid: EV_GRID_I; an_offset: INTEGER; a_column: EV_GRID_COLUMN_I)
 			-- Create `Current' associated to grid `a_grid', with column `a_column' locked at position `an_offset'.
 		require
 			grid_not_void: a_grid /= Void
@@ -40,14 +40,14 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	x_to_drawable_x (an_x: INTEGER): INTEGER is
+	x_to_drawable_x (an_x: INTEGER): INTEGER
 			-- Result is a relative x coordinate for the drawable of the grid
 			-- given a relative x coordinate to `drawing_area'.
 		do
 			Result := grid.viewport_x_offset + an_x + offset
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of DB_ALL_TYPES"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -27,14 +27,14 @@ create -- Creation procedure
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			ht_make (10)
 		end
 
 feature -- Access
 
-	db_type (object: ANY): DB_TYPE is
+	db_type (object: ANY): DB_TYPE
 			-- DB_TYPE instance associated to `object'
 		do
 			Result := item (dynamic_type (object))
@@ -43,7 +43,7 @@ feature -- Access
 		end
 feature -- Status report
 
-	is_registered (object: ANY): BOOLEAN is
+	is_registered (object: ANY): BOOLEAN
 			-- Is `object' type registered?
 		require
 			object_not_void: object /= Void
@@ -55,7 +55,7 @@ feature -- Status report
 
 feature -- Element change
 
-	register_all is
+	register_all
 			-- Register all available types.
 		require
 			count = 0
@@ -80,7 +80,7 @@ feature -- Element change
 			positive_count: count > 0
 		end
 
-	register_type (type: DB_TYPE) is
+	register_type (type: DB_TYPE)
 			-- Register a new `type'.
 		require
 			type_not_void: type /= Void
@@ -92,7 +92,7 @@ feature -- Element change
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

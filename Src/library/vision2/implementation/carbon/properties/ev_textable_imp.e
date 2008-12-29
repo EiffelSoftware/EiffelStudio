@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision textable. Carbon implementation."
 	legal: "See notice at end of class."
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text of the label.
 		do
 			if real_text /= Void then
@@ -47,7 +47,7 @@ feature -- Access
 			end
 		end
 
-	text_alignment: INTEGER is
+	text_alignment: INTEGER
 			-- Alignment of the text in the label.
 		do
 			Result := is_aligned
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Status setting
 
-	align_text_center is
+	align_text_center
 			-- Display `text' centered.
 		local
 			ret: INTEGER
@@ -79,7 +79,7 @@ feature -- Status setting
 			ret := hiview_set_needs_display_external (c_object, 1)
 		end
 
-	align_text_left is
+	align_text_left
 			-- Display `text' left aligned.
 		local
 			ret: INTEGER
@@ -93,7 +93,7 @@ feature -- Status setting
 			ret := hiview_set_needs_display_external (c_object, 1)
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display `text' right aligned.
 				local
 			ret: INTEGER
@@ -109,7 +109,7 @@ feature -- Status setting
 
 feature -- Element change	
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			ret: INTEGER
@@ -127,7 +127,7 @@ feature {EV_ANY_IMP} -- Implementation
 	text_label: POINTER
 			-- GtkLabel containing `text'.
 
-	accelerators_enabled: BOOLEAN is
+	accelerators_enabled: BOOLEAN
 			-- Does `Current' have keyboard accelerators enabled?
 		do
 			Result := False
@@ -138,7 +138,7 @@ feature {EV_ANY_IMP} -- Implementation
 
 	is_aligned: INTEGER --the alignement
 
-	filter_ampersand (s: STRING_32; char: CHARACTER) is
+	filter_ampersand (s: STRING_32; char: CHARACTER)
 			-- Replace occurrences of '&' from `s'  by `char' and
 			-- replace occurrences of "&&" with '&'.
 		require
@@ -164,7 +164,7 @@ feature {EV_ANY_IMP} -- Implementation
 			s.replace_substring_all (once "&&", once "&")
 		end
 
-	u_lined_filter (s: STRING_GENERAL): STRING_32 is
+	u_lined_filter (s: STRING_GENERAL): STRING_32
 			-- Copy of `s' with underscores instead of ampersands.
 			-- (If `s' does not contain ampersands, return `s'.)
 		require
@@ -181,6 +181,6 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TEXTABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_TEXTABLE_IMP

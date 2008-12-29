@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory with responsibility for create docking library widgets base on different style."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create {SD_SHARED}
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method.
 		do
 			set_style (style_different)
@@ -29,7 +29,7 @@ feature {NONE} -- Initlization
 
 feature -- Status setting
 
-	set_style (a_style: INTEGER) is
+	set_style (a_style: INTEGER)
 			-- Set style to one of enumeration at end of this class.
 		require
 			a_style_valid: style_valid (a_style)
@@ -41,7 +41,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	style_valid (a_style: INTEGER): BOOLEAN is
+	style_valid (a_style: INTEGER): BOOLEAN
 			-- If `a_style' valid?
 		do
 			Result := a_style = style_all_same or a_style = style_different
@@ -49,7 +49,7 @@ feature -- Status report
 
 feature -- Factory method.
 
-	title_bar (a_style: INTEGER; a_zone: SD_ZONE): SD_TITLE_BAR is
+	title_bar (a_style: INTEGER; a_zone: SD_ZONE): SD_TITLE_BAR
 			-- Title bar.
 		require
 			a_style_valid: style_valid (a_style)
@@ -82,7 +82,7 @@ feature -- Factory method.
 			not_void: Result /= Void
 		end
 
-	docking_zone (a_content: SD_CONTENT): SD_DOCKING_ZONE is
+	docking_zone (a_content: SD_CONTENT): SD_DOCKING_ZONE
 			-- Docking zone.
 		do
 			if internal_style = style_all_same then
@@ -98,7 +98,7 @@ feature -- Factory method.
 			end
 		end
 
-	tab_zone (a_content: SD_CONTENT): SD_TAB_ZONE is
+	tab_zone (a_content: SD_CONTENT): SD_TAB_ZONE
 			-- Tab zone.
 		require
 			a_content_not_void: a_content /= Void
@@ -195,7 +195,7 @@ feature -- Menu
 
 feature {NONE} -- Implementation
 
-	zone_under_pointer_of_all_managers: SD_ZONE is
+	zone_under_pointer_of_all_managers: SD_ZONE
 			-- Find {SD_ZONE} under current pointer position
 		local
 			l_list: ARRAYED_LIST [SD_DOCKING_MANAGER]
@@ -222,9 +222,9 @@ feature {NONE} -- Implementation
 
 feature -- Enumeration
 
-	style_all_same: INTEGER is 1
+	style_all_same: INTEGER = 1
 			-- Look and feel which all the same.
-	style_different: INTEGER is 2;
+	style_different: INTEGER = 2;
 			-- Look and feel which different.
 
 invariant
@@ -232,7 +232,7 @@ invariant
 	not_void: title_bar_area_menu_items /= Void
 	not_void: notebook_tab_area_menu_items /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

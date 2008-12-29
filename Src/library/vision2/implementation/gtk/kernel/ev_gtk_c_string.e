@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A low-level string class to solve some garbage collector problems (mainly objects moving around) when interfacing with C APIs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_utf8_ptr: POINTER) is
+	make_from_pointer (a_utf8_ptr: POINTER)
 			-- Set `item' to `a_utf8_ptr' and gain ownership of memory.
 		require
 			a_utf8_ptr_not_null: a_utf8_ptr /= default_pointer
@@ -38,7 +38,7 @@ feature -- Access
 	item: POINTER
 			-- Pointer to the UTF8 string.
 
-	string: STRING_32 is
+	string: STRING_32
 			-- Locale string representation of the UTF8 string
 		local
 			l_ptr: MANAGED_POINTER
@@ -119,7 +119,7 @@ feature -- Access
 	string_length: INTEGER
 			-- Length of string data held in `managed_data'
 
-	set_with_eiffel_string (a_string: STRING_GENERAL) is
+	set_with_eiffel_string (a_string: STRING_GENERAL)
 			-- Create `item' and retain ownership.
 		require
 			a_string_not_void: a_string /= Void
@@ -129,7 +129,7 @@ feature -- Access
 			string_set: string.is_equal (a_string)
 		end
 
-	share_with_eiffel_string (a_string: STRING_GENERAL) is
+	share_with_eiffel_string (a_string: STRING_GENERAL)
 			-- Create `item' but do not take ownership.
 		require
 			a_string_not_void: a_string /= Void
@@ -139,7 +139,7 @@ feature -- Access
 			string_set: string.is_equal (a_string)
 		end
 
-	share_from_pointer (a_utf8_ptr: POINTER) is
+	share_from_pointer (a_utf8_ptr: POINTER)
 			-- Set `Current' to use `a_utf8_ptr'.
 			-- `a_utf8_ptr' is not owned by `Current' as it isn't copied so do not free from outside.
 		require
@@ -150,13 +150,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	shared_pointer_helper: MANAGED_POINTER is
+	shared_pointer_helper: MANAGED_POINTER
 			-- Reusable Managed Pointer for UTF8 pointer manipulations.
 		once
 			create Result.share_from_pointer (default_pointer, 0)
 		end
 
-	internal_set_with_eiffel_string (a_string: STRING_GENERAL; a_shared: BOOLEAN) is
+	internal_set_with_eiffel_string (a_string: STRING_GENERAL; a_shared: BOOLEAN)
 			-- Create a UTF8 string from Eiffel String `a_string'
 		require
 			a_string_not_void: a_string /= Void
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			l_ptr.set_from_pointer (default_pointer, 0)
 		end
 
-	set_from_pointer (a_ptr: POINTER; a_size: INTEGER; a_shared: BOOLEAN) is
+	set_from_pointer (a_ptr: POINTER; a_size: INTEGER; a_shared: BOOLEAN)
 			--  Set `item' to use `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 			is_shared := a_shared
 		end
 
-	dispose is
+	dispose
 			-- Dispose `Current'.
 		do
 				-- This routine is also called from `set_from_pointer'.
@@ -273,14 +273,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_strlen (ptr: POINTER): INTEGER is
+	c_strlen (ptr: POINTER): INTEGER
 		external
 			"C macro signature (char *): EIF_INTEGER use <string.h>"
 		alias
 			"strlen"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of the JavaVMOption structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Access
 
-	option_string: STRING is
+	option_string: STRING
 			-- Associated option string.
 		do
 			if internal_option /= Void then
@@ -28,7 +28,7 @@ feature -- Access
 		
 feature -- Settings
 
-	set_option_string (an_option: STRING) is
+	set_option_string (an_option: STRING)
 			-- Set `an_option' to `option_string'.
 		do
 			create internal_option.make (an_option)
@@ -37,7 +37,7 @@ feature -- Settings
 		
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure being allocated.
 		do
 			Result := c_structure_size
@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 	internal_option: C_STRING
 			-- To hold data.
 
-	c_structure_size: INTEGER is
+	c_structure_size: INTEGER
 			-- Size of `JavaVMOption' structure.
 		external
 			"C macro use %"jni.h%""
@@ -56,25 +56,25 @@ feature {NONE} -- Implementation
 			"sizeof(JavaVMOption)"
 		end
 		
-	c_option_string (an_item: POINTER): POINTER is
+	c_option_string (an_item: POINTER): POINTER
 			-- Access to `optionString'.
 		external
 			"C struct JavaVMOption access optionString use %"jni.h%""
 		end
 
-	c_extra_info (an_item: POINTER): POINTER is
+	c_extra_info (an_item: POINTER): POINTER
 			-- Access to `extraInfo'.
 		external
 			"C struct JavaVMOption access extraInfo use %"jni.h%""
 		end
 
-	c_set_option_string (an_item: POINTER; l_val: POINTER) is
+	c_set_option_string (an_item: POINTER; l_val: POINTER)
 			-- Access to `optionString'.
 		external
 			"C struct JavaVMOption access optionString type char * use %"jni.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

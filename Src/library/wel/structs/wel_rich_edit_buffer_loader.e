@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		This class allows to set a buffer into a rich edit
 		control. Used internally by WEL.
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_string: STRING_GENERAL) is
+	make (a_string: STRING_GENERAL)
 			-- Set `a_string' to the rich edit control.
 		require
 			a_string_not_void: a_string /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 	string: STRING_GENERAL
 			-- String to set in the rich edit control
 
-	read_buffer is
+	read_buffer
 			-- Set to buffer a substring of `string'.
 		local
 			l_uni_str: WEL_STRING
@@ -83,7 +83,7 @@ invariant
 	string_not_void: string /= Void
 	positive_last_position: last_position > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

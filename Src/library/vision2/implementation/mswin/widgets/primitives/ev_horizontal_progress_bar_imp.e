@@ -1,4 +1,4 @@
-indexing 
+note 
 	description:
 		"Eiffel Vision horizontal progress bar. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature -- Status settings
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Initialize the size of `Current'.
 		do
 			ev_set_minimum_size (10, 14)
@@ -34,7 +34,7 @@ feature -- Status settings
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create `Current'.
 		do
 			Result := Ws_visible + Ws_child + Ws_clipchildren + Ws_clipsiblings
@@ -44,7 +44,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_PROGRESS_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

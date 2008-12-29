@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Finite structures whose item count is subject to change"
@@ -17,13 +17,13 @@ deferred class RESIZABLE [G] inherit
 feature -- Measurement
 
 
-	Growth_percentage: INTEGER is 50
+	Growth_percentage: INTEGER = 50
 			-- Percentage by which structure will grow automatically
 
-	Minimal_increase: INTEGER is 5
+	Minimal_increase: INTEGER = 5
 			-- Minimal number of additional items
 
-	additional_space: INTEGER is
+	additional_space: INTEGER
 			-- Proposed number of additional items
 			--| Result is a reasonable value, resulting from a space-time tradeoff.
 		do
@@ -34,7 +34,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	resizable: BOOLEAN is
+	resizable: BOOLEAN
 			-- May `capacity' be changed? (Answer: yes.)
 		do
 			Result := True
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Resizing
 
-	automatic_grow is
+	automatic_grow
 			-- Change the capacity to accommodate at least
 			-- `Growth_percentage' more items.
 			--| Trades space for time:
@@ -54,7 +54,7 @@ feature -- Resizing
 				capacity >= old capacity + old capacity * Growth_percentage // 100
 		end
 
-	grow (i: INTEGER) is
+	grow (i: INTEGER)
 			-- Ensure that capacity is at least `i'.
 		deferred
 		ensure
@@ -65,7 +65,7 @@ invariant
 
 	increase_by_at_least_one: Minimal_increase >= 1
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract List of Item for DOCUMENT_ITEM"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- List operations
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to previously focused item.
 		local
@@ -29,7 +29,7 @@ feature -- List operations
 			on_item_removed (removed_item)			
 		end
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Add `v' to end.
 			-- Do not move cursor.
 		do
@@ -39,13 +39,13 @@ feature -- List operations
 
 feature -- Basic Operations
 
-	enable_duplicates is
+	enable_duplicates
 			-- Enable to contain duplicate items
 		do
 			duplicates_enabled := True
 		end
 	
-	disable_duplicates is
+	disable_duplicates
 			-- Enable to contain duplicate items
 		do
 			duplicates_enabled := False
@@ -56,7 +56,7 @@ feature -- Query
 	duplicates_enabled: BOOLEAN
 			-- Can contain identical items?
 
-	contains_name (a_name: STRING): BOOLEAN is
+	contains_name (a_name: STRING): BOOLEAN
 			-- Does Current contains an item with name `a_name'.
 			-- The name comparison is not case-sensitive.			
 		local
@@ -77,18 +77,18 @@ feature -- Query
 		
 feature -- Observer Pattern
 
-	add_observer (a_observer: DOCUMENT_OBSERVER) is
+	add_observer (a_observer: DOCUMENT_OBSERVER)
 		do
 			observer_list.extend (a_observer)
 		end
 
-	remove_observer (a_observer: DOCUMENT_OBSERVER) is
+	remove_observer (a_observer: DOCUMENT_OBSERVER)
 		do
 			observer_list.start
 			observer_list.prune_all (a_observer)
 		end
 
-	on_item_added (a_item: DOCUMENT_ITEM) is
+	on_item_added (a_item: DOCUMENT_ITEM)
 			-- `a_item' has been added.
 		do
 			from
@@ -101,7 +101,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_item_removed (a_item: DOCUMENT_ITEM) is
+	on_item_removed (a_item: DOCUMENT_ITEM)
 			-- `a_item' has been removed.
 		do
 			from
@@ -114,7 +114,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_update is
+	on_update
 			-- The favorites have changed. Recompute the observers.
 		do
 			from
@@ -132,7 +132,7 @@ feature {NONE} -- Attributes
 	in_operation: BOOLEAN
 			-- Are we in the middle of a list operation (put, extend, remove, ...)?
 			
-	observer_list: ARRAYED_LIST [DOCUMENT_OBSERVER] is
+	observer_list: ARRAYED_LIST [DOCUMENT_OBSERVER]
 			-- 
 		once
 			create Result.make (1)
@@ -141,7 +141,7 @@ feature {NONE} -- Attributes
 	previous_item: like item;
 			-- Previously focused item
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

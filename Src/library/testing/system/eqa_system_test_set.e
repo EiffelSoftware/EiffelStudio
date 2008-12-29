@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Sets of tests performing black box testing by launching an external system.
 	]"

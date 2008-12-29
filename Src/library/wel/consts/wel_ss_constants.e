@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Static style (SS) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,51 +10,51 @@ class
 
 feature -- Access
 
-	Ss_left: INTEGER is 0
+	Ss_left: INTEGER = 0
 
-	Ss_center: INTEGER is 1
+	Ss_center: INTEGER = 1
 
-	Ss_right: INTEGER is 2
+	Ss_right: INTEGER = 2
 
-	Ss_icon: INTEGER is 3
+	Ss_icon: INTEGER = 3
 
-	Ss_blackrect: INTEGER is 4
+	Ss_blackrect: INTEGER = 4
 
-	Ss_grayrect: INTEGER is 5
+	Ss_grayrect: INTEGER = 5
 
-	Ss_whiterect: INTEGER is 6
+	Ss_whiterect: INTEGER = 6
 
-	Ss_blackframe: INTEGER is 7
+	Ss_blackframe: INTEGER = 7
 
-	Ss_grayframe: INTEGER is 8
+	Ss_grayframe: INTEGER = 8
 
-	Ss_whiteframe: INTEGER is 9
+	Ss_whiteframe: INTEGER = 9
 
-	Ss_useritem: INTEGER is 10
+	Ss_useritem: INTEGER = 10
 
-	Ss_simple: INTEGER is 11
+	Ss_simple: INTEGER = 11
 
-	Ss_leftnowordwrap: INTEGER is 12
+	Ss_leftnowordwrap: INTEGER = 12
 
-	Ss_ownerdraw: INTEGER is 13
+	Ss_ownerdraw: INTEGER = 13
 	
-	Ss_bitmap: INTEGER is 14
+	Ss_bitmap: INTEGER = 14
 
-	Ss_noprefix: INTEGER is 128
+	Ss_noprefix: INTEGER = 128
 
-	Ss_centerimage: INTEGER is 512
+	Ss_centerimage: INTEGER = 512
 
-	Ss_notify: INTEGER is 256
+	Ss_notify: INTEGER = 256
 	
 feature -- Obsolete
 
-	Ss_center_image: INTEGER is 
+	Ss_center_image: INTEGER 
 		obsolete "use `Ss_centerimage' instead"
 		do
 			Result := Ss_centerimage
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

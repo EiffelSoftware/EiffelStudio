@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fixed character array for WEL_STRUCTURE. Used internally by WEL. %
 				 % useful to protect character arrays within an external call"
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_array: ARRAY [CHARACTER]) is
+	make (an_array: ARRAY [CHARACTER])
 			-- Create a fixed character array
 			-- from an existing standard character array.
 		require
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	to_array (a_lower: INTEGER): ARRAY [CHARACTER] is
+	to_array (a_lower: INTEGER): ARRAY [CHARACTER]
 			-- Eiffel array
 		local
 			i, j, nb: INTEGER
@@ -78,7 +78,7 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of items in the array
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of the array (in bytes)
 		do
 				-- We need to return at least 1 to preserve the postcondition.
@@ -88,7 +88,7 @@ feature -- Measurement
 invariant
 	positive_count: count >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

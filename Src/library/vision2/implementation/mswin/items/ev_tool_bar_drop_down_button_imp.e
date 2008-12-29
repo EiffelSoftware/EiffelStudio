@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision tool-bar dropdown button, mswindows implementation."
 	date: "$Date$"
 	revision: "$Revision$"

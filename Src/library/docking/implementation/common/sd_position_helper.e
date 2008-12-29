@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Helper to set dialog positions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			create internal_shared
@@ -21,7 +21,7 @@ feature {NONE}  -- Initlization
 
 feature -- Command
 
-	set_dialog_position (a_dialog: EV_POSITIONABLE; a_prefer_x, a_prefer_y: INTEGER; a_base_height: INTEGER) is
+	set_dialog_position (a_dialog: EV_POSITIONABLE; a_prefer_x, a_prefer_y: INTEGER; a_base_height: INTEGER)
 			-- Set dialog position base on screen size.
 			-- `a_base_height' means the height to minus with y position when impossible showing `a_dialog' at bottom.
 		require
@@ -49,7 +49,7 @@ feature -- Command
 			end
 		end
 
-	set_tool_bar_hidden_dialog_position (a_dialog: EV_POSITIONABLE; a_prefer_x, a_prefer_y: INTEGER; a_indicator_width: INTEGER) is
+	set_tool_bar_hidden_dialog_position (a_dialog: EV_POSITIONABLE; a_prefer_x, a_prefer_y: INTEGER; a_indicator_width: INTEGER)
 			-- Set dialog position for SD_TOOL_BAR_HIDDEN_ITEM_DIALOG.
 		require
 			not_void: a_dialog /= Void
@@ -77,7 +77,7 @@ feature -- Command
 			end
 		end
 
-	set_tool_bar_hidden_dialog_vertical_position (a_dialog: EV_POSITIONABLE; a_prefer_x, a_prefer_y: INTEGER; a_indicator_width: INTEGER) is
+	set_tool_bar_hidden_dialog_vertical_position (a_dialog: EV_POSITIONABLE; a_prefer_x, a_prefer_y: INTEGER; a_indicator_width: INTEGER)
 			-- Set dialog position for SD_TOOL_BAR_HIDDEN_ITEM_DIALOG.
 		require
 			not_void: a_dialog /= Void
@@ -105,7 +105,7 @@ feature -- Command
 			end
 		end
 
-	set_tool_bar_floating_dialog_position (a_dialog: EV_POSITIONABLE; a_prefer_x, a_prefer_y: INTEGER; a_indicator_width: INTEGER; a_height: INTEGER) is
+	set_tool_bar_floating_dialog_position (a_dialog: EV_POSITIONABLE; a_prefer_x, a_prefer_y: INTEGER; a_indicator_width: INTEGER; a_height: INTEGER)
 			-- Set dialog position for SD_TOOL_BAR_HIDDEN_ITEM_DIALOG which is called by SD_FLOATING_TOOL_BAR_ZONE.
 		require
 			not_void: a_dialog /= Void
@@ -136,7 +136,7 @@ feature {NONE}  -- Implementation
 
 	internal_shared: SD_SHARED;
 			-- All singletons.
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

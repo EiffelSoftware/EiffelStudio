@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Factory that produce all new style feedback hot zones, which have indicators and
 		transparent feedback.
@@ -16,7 +16,7 @@ inherit
 
 feature -- Factory method
 
-	hot_zone (a_zone: SD_ZONE): SD_HOT_ZONE is
+	hot_zone (a_zone: SD_ZONE): SD_HOT_ZONE
 			-- Redefine.
 		local
 			l_docking_zone: SD_DOCKING_ZONE_NORMAL
@@ -40,7 +40,7 @@ feature -- Factory method
 			end
 		end
 
-	hot_zone_main (a_zone: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE is
+	hot_zone_main (a_zone: SD_ZONE; a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE
 			-- Redefine.
 		do
 			if a_zone.type = {SD_ENUMERATION}.editor then
@@ -53,7 +53,7 @@ feature -- Factory method
 
 feature {NONE}-- Implementation
 
-	hot_zone_docking (a_zone: SD_DOCKING_ZONE_NORMAL): SD_HOT_ZONE_DOCKING is
+	hot_zone_docking (a_zone: SD_DOCKING_ZONE_NORMAL): SD_HOT_ZONE_DOCKING
 			-- Hot zone for SD_DOCKING_ZONE.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -63,7 +63,7 @@ feature {NONE}-- Implementation
 			not_void: Result /= Void
 		end
 
-	hot_zone_docking_upper (a_zone: SD_DOCKING_ZONE_UPPER): SD_HOT_ZONE_DOCKING_UPPER is
+	hot_zone_docking_upper (a_zone: SD_DOCKING_ZONE_UPPER): SD_HOT_ZONE_DOCKING_UPPER
 			-- Hot zone for SD_DOCKING_ZONE.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -73,7 +73,7 @@ feature {NONE}-- Implementation
 			not_void: Result /= Void
 		end
 
-	hot_zone_tab (a_zone: SD_TAB_ZONE): SD_HOT_ZONE_TAB is
+	hot_zone_tab (a_zone: SD_TAB_ZONE): SD_HOT_ZONE_TAB
 			-- Hot zone for SD_TAB_ZONE.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -83,7 +83,7 @@ feature {NONE}-- Implementation
 			not_void: Result /= Void
 		end
 
-	hot_zone_tab_upper (a_zone: SD_TAB_ZONE_UPPER): SD_HOT_ZONE_TAB_UPPER is
+	hot_zone_tab_upper (a_zone: SD_TAB_ZONE_UPPER): SD_HOT_ZONE_TAB_UPPER
 			-- Hot zone for SD_TAB_ZONE_UPPER
 		require
 			not_void: a_zone /= Void
@@ -93,7 +93,7 @@ feature {NONE}-- Implementation
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

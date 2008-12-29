@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Rebar Mask (RBBIM) messages."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,14 +10,14 @@ class
 
 feature -- Access
 
-	Rbim_imagelist: INTEGER is
+	Rbim_imagelist: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RBIM_IMAGELIST"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

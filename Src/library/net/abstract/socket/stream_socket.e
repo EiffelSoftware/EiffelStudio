@@ -1,4 +1,4 @@
-indexing
+note
 
         description:
                 "Connexion oriented socket."
@@ -25,12 +25,12 @@ create {STREAM_SOCKET}
 
 feature -- Status report
 
-	support_storable: BOOLEAN is True
+	support_storable: BOOLEAN = True
 			-- Can medium be used to store an Eiffel structure?
 
 feature
 
-	listen (queue: INTEGER) is
+	listen (queue: INTEGER)
 			-- Listen on socket for at most `queue' connections.
 		require
 			socket_exists: exists
@@ -41,7 +41,7 @@ feature
 	accepted: like Current
 			-- Last accepted socket.
 
-	accept is
+	accept
 			-- Accept a new connection on listen socket.
 			-- Accepted service socket available in `accepted'.
 		require
@@ -62,20 +62,20 @@ feature
 
 feature {NONE} -- Externals
 
-	c_accept (soc: INTEGER; addr: POINTER; length: INTEGER): INTEGER is
+	c_accept (soc: INTEGER; addr: POINTER; length: INTEGER): INTEGER
 			-- External c routine to accept a socket connection
 		external
 			"C blocking"
 		end;
 
-	c_listen (soc, backlog: INTEGER) is
+	c_listen (soc, backlog: INTEGER)
 			-- External c routine to make socket passive and accept
 			-- at most `backlog' number of pending connections
 		external
 			"C blocking"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

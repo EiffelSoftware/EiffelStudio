@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision vertical box. Carbon implementation."
 	legal: "See notice at end of class."
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a vertical box.
 		local
 			control_ptr : POINTER
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 
 feature -- Measturement
 
-	calculate_minimum_sizes is
+	calculate_minimum_sizes
 			local
 		min_width, min_height, i: INTEGER
 		do
@@ -82,11 +82,11 @@ feature -- Measturement
 		buffered_minimum_width := min_width.max (internal_minimum_width)
 	end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			do
 				Result := buffered_minimum_height
 			end
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			do
 				Result := buffered_minimum_width
 			end
@@ -96,7 +96,7 @@ feature -- Implementation
 
 	dummy_control : POINTER
 
-	layout is
+	layout
 			-- Setup positioning constraints for all children
 		local
 			w1, w2 : EV_WIDGET_IMP
@@ -192,7 +192,7 @@ feature -- Implementation
 		end
 
 
-		setup_bottom_binding ( lower_control : POINTER; left_of, right_of, bottom_of, top_of, a_padding: INTEGER ) is
+		setup_bottom_binding ( lower_control : POINTER; left_of, right_of, bottom_of, top_of, a_padding: INTEGER )
 		external
 			"C inline use <Carbon/Carbon.h>"
 		alias
@@ -214,7 +214,7 @@ feature -- Implementation
 			]"
 		end
 
-		setup_binding ( upper_control, lower_control : POINTER; left_of, right_of, bottom_of, top_of, a_padding: INTEGER ) is
+		setup_binding ( upper_control, lower_control : POINTER; left_of, right_of, bottom_of, top_of, a_padding: INTEGER )
 		external
 			"C inline use <Carbon/Carbon.h>"
 		alias
@@ -261,7 +261,7 @@ feature {NONE} -- Events
 
 
 
-	bounds_changed ( options : NATURAL_32; original_bounds, current_bounds : CGRECT_STRUCT ) is
+	bounds_changed ( options : NATURAL_32; original_bounds, current_bounds : CGRECT_STRUCT )
 			-- Handler for the bounds changed event
 		do
 			if count > 0 then
@@ -274,7 +274,7 @@ feature {EV_ANY_I} -- Implementation
 
     interface: EV_VERTICAL_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows implementation of dockable source."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,22 +15,22 @@ inherit
 
 feature -- Status setting
 
-	release_capture is
+	release_capture
 			-- Release a capture on `Current'.
 		deferred
 		end
 
-	set_capture is
+	set_capture
 			-- Start a capture on `Current'.
 		deferred
 		end
 
-	wel_has_capture: BOOLEAN is
+	wel_has_capture: BOOLEAN
 			-- Is a WEL capture currently set on `Current'?
 		deferred
 		end
 
-	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER)
 			-- Process `a_button' to start/stop the drag/pick and
 			-- drop mechanism.
 		do
@@ -40,7 +40,7 @@ feature -- Status setting
 			end
 		end
 
-	dragable_motion (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	dragable_motion (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- If in drag/pick and drop then update.
 			--| This is executed every time the pointer is moved over
 			--| `Current' while pick/drag and drop is in process.
@@ -68,7 +68,7 @@ feature -- Status setting
 			end
 		end
 
-	check_dragable_release (a_x, a_y: INTEGER) is
+	check_dragable_release (a_x, a_y: INTEGER)
 			-- End transport if in drag and drop.
 			--| Releasing the left button ends drag and drop.
 			--| Only called when the left button is released after
@@ -89,7 +89,7 @@ feature -- Status setting
 feature {EV_ANY_I} -- Implementation
 
 	end_dragable (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
-		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Terminate the pick and drop mechanism.
 		local
 			text_component: EV_TEXT_COMPONENT_IMP
@@ -125,7 +125,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	internal_enable_dockable, internal_disable_dockable is
+	internal_enable_dockable, internal_disable_dockable
 			-- Enable or disable dockable.
 			-- This has no implementation on Windows, as we do not need it.
 			-- On Gtk, this is necessary, so that the necessary signal
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 		end
 
 	start_docking (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
-		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; source: EV_DOCKABLE_SOURCE) is
+		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER; source: EV_DOCKABLE_SOURCE)
 			-- Initialize the docking mechanism.
 		local
 			source_imp: EV_DOCKABLE_SOURCE_IMP
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 		-- this, as the current source may not be
 
 	real_start_dragging (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
-		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Actually start the pick/drag and drop mechanism.
 		do
 			if not is_dock_executing then
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER) is
+	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER)
 			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
 			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
 			-- as on some platforms, they end up in an invalid state, and need refreshing.
@@ -211,32 +211,32 @@ feature {NONE} -- Implementation
 	orig_cursor: EV_POINTER_STYLE
 		-- Cursor originally used on `Current'.
 
-	application_imp: EV_APPLICATION_IMP is
+	application_imp: EV_APPLICATION_IMP
 			-- Access to current EV_APPLICATION.
 		deferred
 		end
 
-	set_pointer_style (a_cursor: EV_POINTER_STYLE) is
+	set_pointer_style (a_cursor: EV_POINTER_STYLE)
 			-- Assign `a_cursor' to `pointer_style'.
 		deferred
 		end
 
-	pointer_style: EV_POINTER_STYLE is
+	pointer_style: EV_POINTER_STYLE
 			-- Cursor used on `Current'.
 		deferred
 		end
 
-	internal_enable_capture is
+	internal_enable_capture
 			-- Internal enable capture.
 		deferred
 		end
 
-	disable_capture is
+	disable_capture
 			-- Remove any capture from `Current'.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

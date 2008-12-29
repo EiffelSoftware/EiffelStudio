@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Constructs whose specimens are obtained %
@@ -21,7 +21,7 @@ deferred class AGGREGATE inherit
 
 feature -- Status report 
 
-	left_recursion: BOOLEAN is
+	left_recursion: BOOLEAN
 			-- Is the construct's definition left-recursive?
 		local
 			end_loop: BOOLEAN;
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Transformation 
 
-	commit is
+	commit
 			-- If this construct is one among several possible ones,
 			-- discard the others.
 		require else
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 			-- above which the construct is commited
 
 
-	expand is
+	expand
 			-- Expand the next field of the aggregate.
 		do
 			expand_next;
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	parse_body is
+	parse_body
 			-- Attempt to find input matching the components of
 			-- the aggregate starting at current position.
 			-- Set parsed to true if successful.
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	in_action is
+	in_action
 			-- Perform semantics of the child constructs.
 		do
 			from
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 
 feature {CONSTRUCT} -- Implementation
 
-	check_recursion is
+	check_recursion
 			-- Check the aggregate for left recursion.
 		local
 			not_optional_found, b: BOOLEAN
@@ -167,7 +167,7 @@ feature {CONSTRUCT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	print_children is
+	print_children
 			-- Print content of aggregate.
 		do
 			from
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 			io.new_line
 		end;
 
-	print_child is
+	print_child
 			-- Print active child name,
 			-- with square brackets if optional.
 		do
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Widget that contains other widgets.
@@ -68,7 +68,7 @@ inherit
 
 feature -- Access
 
-	item: EV_WIDGET is
+	item: EV_WIDGET
 			-- Current item.
 		require
 			not_destroyed: not is_destroyed
@@ -79,14 +79,14 @@ feature -- Access
 			bridge_ok: Result = implementation.item
 		end
 		
-	count: INTEGER is
+	count: INTEGER
 			-- Number of elements in `Current'.
 		require
 			not_destroyed: not is_destroyed	
 		deferred
 		end
 
-	has_recursive (an_item: like item): BOOLEAN is
+	has_recursive (an_item: like item): BOOLEAN
 			-- Does structure include `an_item' or
 			-- does any structure recursively included by structure,
 			-- include `an_item'.
@@ -120,7 +120,7 @@ feature -- Access
 			end
 		end
 		
-	background_pixmap: EV_PIXMAP is
+	background_pixmap: EV_PIXMAP
 			-- `Result' is pixmap displayed on background of `Current'.
 			-- It is tessellated and fills whole of `Current'.
 		do
@@ -129,7 +129,7 @@ feature -- Access
 
 feature -- Status setting
 
-	merge_radio_button_groups (other: EV_CONTAINER) is
+	merge_radio_button_groups (other: EV_CONTAINER)
 			-- Merge `Current' radio button group with that of `other'.
 		require
 			not_destroyed: not is_destroyed
@@ -138,7 +138,7 @@ feature -- Status setting
 			implementation.merge_radio_button_groups (other)
 		end
 		
-	unmerge_radio_button_groups (other: EV_CONTAINER) is
+	unmerge_radio_button_groups (other: EV_CONTAINER)
 			-- Remove `other' from radio button group of `Current'.
 			-- If no radio button of `other' was checked before removal
 			-- then first radio button contained will be checked.
@@ -166,7 +166,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	merged_radio_button_groups: ARRAYED_LIST [EV_CONTAINER] is
+	merged_radio_button_groups: ARRAYED_LIST [EV_CONTAINER]
 			-- `Result' is all other radio button groups
 			-- merged with `Current'. Void if no other containers
 			-- are merged.
@@ -179,14 +179,14 @@ feature -- Status report
 		end
 		
 
-	writable: BOOLEAN is
+	writable: BOOLEAN
 			-- Is there a current item that may be modified?
 		require
 			not_destroyed: not is_destroyed
 		deferred
 		end
 
-	readable: BOOLEAN is
+	readable: BOOLEAN
 			-- Is there a current item that may be accessed?
 		require
 			not_destroyed: not is_destroyed
@@ -195,7 +195,7 @@ feature -- Status report
 
 feature -- Element change
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Ensure that structure includes `v'.
 			-- Do not move cursor.
 		require
@@ -212,7 +212,7 @@ feature -- Element change
 			has_v: has (v)
 		end
 
-	put, replace (v: like item) is
+	put, replace (v: like item)
 			-- Replace `item' with `v'.
 		require
 			not_destroyed: not is_destroyed
@@ -231,7 +231,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	client_width: INTEGER is
+	client_width: INTEGER
 			-- Width of the area available to children in pixels. 
 		require
 			not_destroyed: not is_destroyed
@@ -241,7 +241,7 @@ feature -- Measurement
 			bridge_ok: Result = implementation.client_width
 		end
 	
-	client_height: INTEGER is
+	client_height: INTEGER
 			-- Height of the area available to children in pixels. 
 		require
 			not_destroyed: not is_destroyed
@@ -253,7 +253,7 @@ feature -- Measurement
 		
 feature -- Basic operations
 
-	propagate_foreground_color is
+	propagate_foreground_color
 			-- Propagate `foreground_color' recursively, to all children.
 		require
 			not_destroyed: not is_destroyed
@@ -263,7 +263,7 @@ feature -- Basic operations
 			foreground_color_propagated: foreground_color_propagated
 		end
 
-	propagate_background_color is
+	propagate_background_color
 			-- Propagate `background_color' recursively, to all children.
 		require
 			not_destroyed: not is_destroyed
@@ -275,7 +275,7 @@ feature -- Basic operations
 
 feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 
-	parent_of_items_is_current: BOOLEAN is
+	parent_of_items_is_current: BOOLEAN
 			-- Do all items have parent `Current'?
 		require
 			not_destroyed: not is_destroyed
@@ -283,7 +283,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			Result := implementation.parent_of_items_is_current
 		end
 
-	items_unique: BOOLEAN is
+	items_unique: BOOLEAN
 			-- Are all items unique?
 			-- (ie Are there no duplicates?)
 		require
@@ -292,7 +292,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			Result := implementation.items_unique
 		end
 
-	foreground_color_propagated: BOOLEAN is
+	foreground_color_propagated: BOOLEAN
 			-- Do all children have same foreground color as `Current'?
 		require
 			not_destroyed: not is_destroyed
@@ -300,7 +300,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			Result := implementation.foreground_color_propagated
 		end
 
-	background_color_propagated: BOOLEAN is
+	background_color_propagated: BOOLEAN
 			-- Do all children have same background color as `Current'?
 		require
 			not_destroyed: not is_destroyed
@@ -308,7 +308,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			Result := implementation.background_color_propagated
 		end
 
-	all_radio_buttons_connected: BOOLEAN is
+	all_radio_buttons_connected: BOOLEAN
 			-- Are all radio buttons in this container connected?
 		require
 			not_destroyed: not is_destroyed
@@ -316,19 +316,19 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			Result := implementation.all_radio_buttons_connected
 		end
 
-	first_radio_button_selected: BOOLEAN is
+	first_radio_button_selected: BOOLEAN
 			-- Is first radio button contained in `Current',
 			-- selected?
 		do
 			Result := implementation.first_radio_button_selected
 		end
-	has_selected_radio_button: BOOLEAN is
+	has_selected_radio_button: BOOLEAN
 			-- Does `Current' contain a selected radio button?
 		do
 			Result := implementation.has_selected_radio_button
 		end
 		
-	has_radio_button: BOOLEAN is
+	has_radio_button: BOOLEAN
 			-- Does `Current' contain one or more radio buttons?
 		do
 			Result := implementation.has_radio_button
@@ -337,7 +337,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 		
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_WIDGET} and Precursor {EV_PIXMAPABLE}
@@ -345,7 +345,7 @@ feature {NONE} -- Contract support
 		
 feature -- Contract support
 		
-	is_parent_recursive (a_widget: EV_WIDGET): BOOLEAN is
+	is_parent_recursive (a_widget: EV_WIDGET): BOOLEAN
 			-- Is `a_widget' `parent', or recursivly, `parent' of `parent'.
 		require
 			not_destroyed: not is_destroyed
@@ -354,7 +354,7 @@ feature -- Contract support
 				(parent /= Void and then parent.is_parent_recursive (a_widget))
 		end
 		
-	may_contain (v: EV_WIDGET): BOOLEAN is
+	may_contain (v: EV_WIDGET): BOOLEAN
 			-- May `v' be inserted in `Current'.
 			-- Instances of EV_WINDOW may not be inserted
 			-- in a container even though they are widgets.
@@ -372,17 +372,17 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	changeable_comparison_criterion: BOOLEAN is False
+	changeable_comparison_criterion: BOOLEAN = False
 			-- May `object_comparison' be changed?
 			-- (Answer: no by default.)
 
-	cl_put (v: like item) is
+	cl_put (v: like item)
 			-- Replace `item' with `v'.
 		do
 			put (v)
 		end
 
-	cl_extend (v: like item) is
+	cl_extend (v: like item)
 			-- Ensure that structure includes `v'.
 		do
 			extend (v)
@@ -398,7 +398,7 @@ invariant
 	parent_of_items_is_current: is_usable implies parent_of_items_is_current
 	items_unique: is_usable implies items_unique
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

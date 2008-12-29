@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision Implementation of global cursor."
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Element change
 
-	restore_cursors is
+	restore_cursors
 			-- Restore the cursors as they were before `set_global_cursors'.
 		local
 			widget_m: WIDGET_IMP;
@@ -53,7 +53,7 @@ feature -- Element change
 			no_global_cursor_anymore: (global_cursor = Void)
 		end;
 
-	set_global_cursor (cursor: SCREEN_CURSOR) is
+	set_global_cursor (cursor: SCREEN_CURSOR)
 			-- Set a global cursor for the whole application.
 			-- Warning: the effect of modifying a SCREEN_CURSOR class between
 			-- `set_global_cursors' and `restore_global_cursors' is not defined.
@@ -81,7 +81,7 @@ feature -- Element change
 			correctly_set: global_cursor = cursor
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

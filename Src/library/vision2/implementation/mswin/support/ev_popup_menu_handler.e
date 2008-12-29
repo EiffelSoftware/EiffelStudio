@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision popup menu handler. Invisible window that lets%N%
 		%`menu_item_list' receive click commands."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_menu (a_menu: EV_MENU_ITEM_LIST_IMP; a_window: WEL_WINDOW) is
+	make_with_menu (a_menu: EV_MENU_ITEM_LIST_IMP; a_window: WEL_WINDOW)
 			-- Initialize with `a_menu'.
 		require
 			a_menu_not_void: a_menu /= Void
@@ -57,13 +57,13 @@ feature {NONE} -- Implementation
 	menu_item_list: EV_MENU_ITEM_LIST_IMP
 			-- Connected menu.
 
-	on_menu_command (an_id: INTEGER) is
+	on_menu_command (an_id: INTEGER)
 			-- Propagate to `menu'.
 		do
 			menu_item_list.menu_item_clicked (an_id)
 		end
 
-	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER)
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
@@ -74,14 +74,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU) is
+	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU)
 			-- The menu char `char_code' has been typed within `corresponding_menu'.
 		do
 			set_message_return_value (
 				menu_item_list.on_menu_char (char_code, corresponding_menu))
 		end
 
-	class_requires_icon: BOOLEAN is
+	class_requires_icon: BOOLEAN
 			-- Does `Current' require an icon to be registered?
 			-- If `True' `register_class' assigns a class icon, otherwise
 			-- no icon is assigned.
@@ -89,7 +89,7 @@ feature {NONE} -- WEL Implementation
 			Result := False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

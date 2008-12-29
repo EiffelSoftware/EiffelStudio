@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An ellipse that can be rotated. See EV_FIGURE_ROTATED_ELLIPTIC."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 	
 feature -- Events
 
-	position_on_figure (ax, ay: INTEGER): BOOLEAN is
+	position_on_figure (ax, ay: INTEGER): BOOLEAN
 			-- Is (`ax', `ay') on this figure?
 		local
 			l_point_array: like point_array
@@ -51,7 +51,7 @@ feature -- Events
 		end	
 		
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

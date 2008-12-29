@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window style (WS) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,160 +10,160 @@ class
 
 feature -- Basic window types
 
-	Ws_overlapped, Ws_tiled: INTEGER is 0
+	Ws_overlapped, Ws_tiled: INTEGER = 0
 			-- Declared in Windows as WS_OVERLAPPED
 
-	Ws_popup: INTEGER is -2147483648
+	Ws_popup: INTEGER = -2147483648
 			-- Declared in Windows as WS_POPUP
 
-	Ws_child: INTEGER is 1073741824
+	Ws_child: INTEGER = 1073741824
 			-- Declared in Windows as WS_CHILD
 
 feature -- Clipping styles
 
-	Ws_clipsiblings: INTEGER is 67108864
+	Ws_clipsiblings: INTEGER = 67108864
 			-- Declared in Windows as WS_CLIPSIBLINGS
 
-	Ws_clipchildren: INTEGER is 33554432
+	Ws_clipchildren: INTEGER = 33554432
 			-- Declared in Windows as WS_CLIPCHILDREN
 
 feature -- Generic window states
 
-	Ws_visible: INTEGER is 268435456
+	Ws_visible: INTEGER = 268435456
 			-- Declared in Windows as WS_VISIBLE
 
-	Ws_disabled: INTEGER is 134217728
+	Ws_disabled: INTEGER = 134217728
 			-- Declared in Windows as WS_DISABLED
 
 feature -- Main window states
 
-	Ws_minimize, Ws_iconic: INTEGER is 536870912
+	Ws_minimize, Ws_iconic: INTEGER = 536870912
 			-- Declared in Windows as WS_MINIMIZE
 
-	Ws_maximize: INTEGER is 16777216
+	Ws_maximize: INTEGER = 16777216
 			-- Declared in Windows as WS_MAXIMIZE
 
 feature -- Main window styles
 
-	Ws_caption: INTEGER is 12582912
+	Ws_caption: INTEGER = 12582912
 			-- Declared in Windows as WS_CAPTION
 
-	Ws_border: INTEGER is 8388608
+	Ws_border: INTEGER = 8388608
 			-- Declared in Windows as WS_BORDER
 
-	Ws_dlgframe: INTEGER is 4194304
+	Ws_dlgframe: INTEGER = 4194304
 			-- Declared in Windows as WS_DLGFRAME
 
-	Ws_vscroll: INTEGER is 2097152
+	Ws_vscroll: INTEGER = 2097152
 			-- Declared in Windows as WS_VSCROLL
 
-	Ws_hscroll: INTEGER is 1048576
+	Ws_hscroll: INTEGER = 1048576
 			-- Declared in Windows as WS_HSCROLL
 
-	Ws_sysmenu: INTEGER is 524288
+	Ws_sysmenu: INTEGER = 524288
 			-- Declared in Windows as WS_SYSMENU
 
-	Ws_thickframe, Ws_sizebox: INTEGER is 262144
+	Ws_thickframe, Ws_sizebox: INTEGER = 262144
 			-- Declared in Windows as WS_THICKFRAME
 
-	Ws_minimizebox: INTEGER is 131072
+	Ws_minimizebox: INTEGER = 131072
 			-- Declared in Windows as WS_MINIMIZEBOX
 
-	Ws_maximizebox: INTEGER is 65536
+	Ws_maximizebox: INTEGER = 65536
 			-- Declared in Windows as WS_MAXIMIZEBOX
 
 feature -- Control window styles
 
-	Ws_group: INTEGER is 131072
+	Ws_group: INTEGER = 131072
 			-- Declared in Windows as WS_GROUP
 
-	Ws_tabstop: INTEGER is 65536
+	Ws_tabstop: INTEGER = 65536
 			-- Declared in Windows as WS_TABSTOP
 
 feature -- Common window styles
 
-	Ws_overlappedwindow, Ws_tiledwindow: INTEGER is 13565952
+	Ws_overlappedwindow, Ws_tiledwindow: INTEGER = 13565952
 			-- Declared in Windows as WS_OVERLAPPEDWINDOW
 
-	Ws_popupwindow: INTEGER is -2138570752
+	Ws_popupwindow: INTEGER = -2138570752
 			-- Declared in Windows as WS_POPUPWINDOW
 
-	Ws_childwindow: INTEGER is 1073741824
+	Ws_childwindow: INTEGER = 1073741824
 			-- Declared in Windows as WS_CHILDWINDOW
 
 feature -- Extended window styles
 
-	Ws_ex_acceptfiles: INTEGER is 16
+	Ws_ex_acceptfiles: INTEGER = 16
 			-- Declared in Windows as WS_EX_ACCEPTFILES
 
-	Ws_ex_clientedge: INTEGER is 512
+	Ws_ex_clientedge: INTEGER = 512
 			-- Declared in Windows as WS_EX_CLIENTEDGE
 
-	Ws_ex_contexthelp: INTEGER is 1024
+	Ws_ex_contexthelp: INTEGER = 1024
 			-- Declared in Windows as WS_EX_CONTEXTHELP
 
-	Ws_ex_controlparent: INTEGER is 65536
+	Ws_ex_controlparent: INTEGER = 65536
 			-- Declared in Windows as WS_EX_CONTROLPARENT
 
-	Ws_ex_dlgmodalframe: INTEGER is 1
+	Ws_ex_dlgmodalframe: INTEGER = 1
 			-- Declared in Windows as WS_EX_DLGMODALFRAME
 
-	Ws_ex_appwindow: INTEGER is 262144
+	Ws_ex_appwindow: INTEGER = 262144
 
-	Ws_ex_left: INTEGER is 0
+	Ws_ex_left: INTEGER = 0
 			-- Declared in Windows as WS_EX_LEFT
 
-	Ws_ex_leftscrollbar: INTEGER is 16384
+	Ws_ex_leftscrollbar: INTEGER = 16384
 			-- Declared in Windows as WS_EX_LEFTSCROLLBAR
 
-	Ws_ex_ltrreading: INTEGER is 0
+	Ws_ex_ltrreading: INTEGER = 0
 			-- Declared in Windows as WS_EX_LTRREADING
 
-	Ws_ex_mdichild: INTEGER is 64
+	Ws_ex_mdichild: INTEGER = 64
 			-- Declared in Windows as WS_EX_MDICHILD
 
-	Ws_ex_noparentnotify: INTEGER is 4
+	Ws_ex_noparentnotify: INTEGER = 4
 			-- Declared in Windows as WS_EX_NOPARENTNOTIFY
 
-	Ws_ex_overlappedwindow: INTEGER is 768
+	Ws_ex_overlappedwindow: INTEGER = 768
 			-- Declared in Windows as WS_EX_OVERLAPPEDWINDOW
 
-	Ws_ex_palettewindow: INTEGER is 392
+	Ws_ex_palettewindow: INTEGER = 392
 			-- Declared in Windows as WS_EX_PALETTEWINDOW
 
-	Ws_ex_right: INTEGER is 4096
+	Ws_ex_right: INTEGER = 4096
 			-- Declared in Windows as WS_EX_RIGHT
 
-	Ws_ex_rightscrollbar: INTEGER is 0
+	Ws_ex_rightscrollbar: INTEGER = 0
 			-- Declared in Windows as WS_EX_RIGHTSCROLLBAR
 
-	Ws_ex_rtlreading: INTEGER is 8192
+	Ws_ex_rtlreading: INTEGER = 8192
 			-- Declared in Windows as WS_EX_RTLREADING
 
-	Ws_ex_staticedge: INTEGER is 131072
+	Ws_ex_staticedge: INTEGER = 131072
 			-- Declared in Windows as WS_EX_STATICEDGE
 
-	Ws_ex_toolwindow: INTEGER is 128
+	Ws_ex_toolwindow: INTEGER = 128
 			-- Declared in Windows as WS_EX_TOOLWINDOW
 
-	Ws_ex_topmost: INTEGER is 8
+	Ws_ex_topmost: INTEGER = 8
 			-- Declared in Windows as WS_EX_TOPMOST
 
-	Ws_ex_transparent: INTEGER is 32
+	Ws_ex_transparent: INTEGER = 32
 			-- Declared in Windows as WS_EX_TRANSPARENT
 
-	Ws_ex_windowedge: INTEGER is 256
+	Ws_ex_windowedge: INTEGER = 256
 			-- Declared in Windows as WS_EX_WINDOWEDGE
 
-	Ws_ex_layered: INTEGER is 0x00080000
+	Ws_ex_layered: INTEGER = 0x00080000
 			-- Declared in Windows as WS_EX_LAYERED
 
 feature -- Miscellaneous
 
-	Cw_usedefault: INTEGER is -2147483648;
+	Cw_usedefault: INTEGER = -2147483648;
 			-- Declared in Windows as CW_USEDEFAULT
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

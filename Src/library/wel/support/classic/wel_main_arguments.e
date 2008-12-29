@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main arguments received in the WinMain Windows function."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	current_instance, resource_instance: WEL_INSTANCE is
+	current_instance, resource_instance: WEL_INSTANCE
 			-- Current instance argument received in WinMain
 		once
 			create Result.make (cwel_hinstance)
@@ -18,7 +18,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	previous_instance: WEL_INSTANCE is
+	previous_instance: WEL_INSTANCE
 			-- Previous instance argument received in WinMain
 		once
 			create Result.make (cwel_previous_hinstance)
@@ -26,7 +26,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	command_line: STRING_32 is
+	command_line: STRING_32
 			-- Command line argument received in WinMain
 		local
 			l_str: WEL_STRING
@@ -37,7 +37,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	command_show: INTEGER is
+	command_show: INTEGER
 			-- Command show argument received in WinMain
 		once
 			Result := cwel_command_show
@@ -45,27 +45,27 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	cwel_hinstance: POINTER is
+	cwel_hinstance: POINTER
 		external
 			"C [macro <mainarg.h>]: EIF_POINTER"
 		end
 
-	cwel_previous_hinstance: POINTER is
+	cwel_previous_hinstance: POINTER
 		external
 			"C [macro <mainarg.h>]: EIF_POINTER"
 		end
 
-	cwel_command_line: POINTER is
+	cwel_command_line: POINTER
 		external
 			"C [macro <mainarg.h>]: EIF_POINTER"
 		end
 
-	cwel_command_show: INTEGER is
+	cwel_command_show: INTEGER
 		external
 			"C [macro <mainarg.h>]: EIF_INTEGER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

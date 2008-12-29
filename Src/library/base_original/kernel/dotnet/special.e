@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Special objects: homogeneous sequences of values, 
 		used to represent arrays and strings
@@ -24,7 +24,7 @@ create
 
 feature {INTERNAL} -- Initialization
 
-	frozen make (n: INTEGER) is
+	frozen make (n: INTEGER)
 			-- Creates a special object for `n' entries.
 		require
 			non_negative_argument: n >= 0
@@ -36,7 +36,7 @@ feature {INTERNAL} -- Initialization
 
 feature {NONE} -- Initializaiton
 
-	frozen make_from_native_array (an_array: like native_array) is
+	frozen make_from_native_array (an_array: like native_array)
 			-- Creates a special object from `an_array'.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -50,7 +50,7 @@ feature {NONE} -- Initializaiton
 
 feature -- Access
 
-	frozen item alias "[]", frozen infix "@" (i: INTEGER): T assign put is
+	frozen item alias "[]", frozen infix "@" (i: INTEGER): T assign put
 			-- Item at `i'-th position
 			-- (indices begin at 0)
 		require
@@ -60,7 +60,7 @@ feature -- Access
 			Result := internal_native_array.item (i)
 		end
 
-	frozen index_of (v: T; start_position: INTEGER): INTEGER is
+	frozen index_of (v: T; start_position: INTEGER): INTEGER
 			-- Index of first occurrence of item identical to `v'.
 			-- -1 if none.
 		require
@@ -83,7 +83,7 @@ feature -- Access
 			found_or_not_found: Result = -1 or else (Result >= 0 and then Result < count)
 		end
 
-	frozen item_address (i: INTEGER): POINTER is
+	frozen item_address (i: INTEGER): POINTER
 			-- Address of element at position `i'.
 		require
 			not_dotnet: not {PLATFORM}.is_dotnet
@@ -94,7 +94,7 @@ feature -- Access
 			element_address_not_null: Result /= default_pointer
 		end
 
-	frozen base_address: POINTER is
+	frozen base_address: POINTER
 			-- Address of element at position `0'.
 		require
 			not_dotnet: not {PLATFORM}.is_dotnet
@@ -103,7 +103,7 @@ feature -- Access
 			base_address_not_null: Result /= default_pointer
 		end
 		
-	frozen native_array: NATIVE_ARRAY [T] is
+	frozen native_array: NATIVE_ARRAY [T]
 			-- Only for compatibility with .NET
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -113,16 +113,16 @@ feature -- Access
 
 feature -- Measurement
 
-	lower: INTEGER is 0
+	lower: INTEGER = 0
 			-- Minimum index of Current
 			
-	frozen upper: INTEGER is 
+	frozen upper: INTEGER 
 			-- Maximum index of Current
 		do
 			Result := internal_native_array.count - 1
 		end
 
-	frozen count, frozen capacity: INTEGER is
+	frozen count, frozen capacity: INTEGER
 			-- Count of the special area
 		do
 			Result := internal_native_array.count
@@ -130,7 +130,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	frozen all_default (upper_bound: INTEGER): BOOLEAN is
+	frozen all_default (upper_bound: INTEGER): BOOLEAN
 			-- Are all items between index `0' and `upper_bound'
 			-- set to default values?
 		require
@@ -158,7 +158,7 @@ feature -- Status report
 			valid_on_empty_area: upper_bound = -1 implies Result
 		end
 
-	frozen same_items (other: like Current; upper_bound: INTEGER): BOOLEAN is
+	frozen same_items (other: like Current; upper_bound: INTEGER): BOOLEAN
 			-- Do all items between index `0' and `upper_bound' have
 			-- same value?
 		require
@@ -188,7 +188,7 @@ feature -- Status report
 			valid_on_empty_area: upper_bound = -1 implies Result
 		end
 
-	frozen valid_index (i: INTEGER): BOOLEAN is
+	frozen valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of Current?
 		do
 			Result := (0 <= i) and then (i < count)
@@ -196,7 +196,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		local
@@ -214,7 +214,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	frozen put (v: T; i: INTEGER) is
+	frozen put (v: T; i: INTEGER)
 			-- Replace `i'-th item by `v'.
 			-- (Indices begin at 0.)
 		require
@@ -224,7 +224,7 @@ feature -- Element change
 			internal_native_array.put (i, v)
 		end
 
-	frozen fill_with (v: T; start_index, end_index: INTEGER) is
+	frozen fill_with (v: T; start_index, end_index: INTEGER)
 			-- Set items between `start_index' and `end_index' with `v'.
 		require
 			start_index_non_negative: start_index >= 0
@@ -246,7 +246,7 @@ feature -- Element change
 			end
 		end
 
-	frozen copy_data (other: like Current; source_index, destination_index, n: INTEGER) is
+	frozen copy_data (other: like Current; source_index, destination_index, n: INTEGER)
 			-- Copy `n' elements of `other' from `source_start' position to Current at
 			-- `destination_index'. Other elements of Current remain unchanged.
 		require
@@ -260,7 +260,7 @@ feature -- Element change
 			{SYSTEM_ARRAY}.copy (other.internal_native_array, source_index, internal_native_array, destination_index, n)
 		end
 
-	frozen move_data (source_index, destination_index, n: INTEGER) is
+	frozen move_data (source_index, destination_index, n: INTEGER)
 			-- Move `n' elements of Current from `source_start' position to `destination_index'.
 			-- Other elements remain unchanged.
 		require
@@ -276,7 +276,7 @@ feature -- Element change
 			{SYSTEM_ARRAY}.copy (l_array, source_index, l_array, destination_index, n)
 		end
 
-	frozen overlapping_move (source_index, destination_index, n: INTEGER) is
+	frozen overlapping_move (source_index, destination_index, n: INTEGER)
 			-- Move `n' elements of Current from `source_start' position to `destination_index'.
 			-- Other elements remain unchanged.
 		require
@@ -293,7 +293,7 @@ feature -- Element change
 			{SYSTEM_ARRAY}.copy (l_array, source_index, l_array, destination_index, n)
 		end
 
-	frozen non_overlapping_move (source_index, destination_index, n: INTEGER) is
+	frozen non_overlapping_move (source_index, destination_index, n: INTEGER)
 			-- Move `n' elements of Current from `source_start' position to `destination_index'.
 			-- Other elements remain unchanged.
 		require
@@ -315,7 +315,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		local
@@ -334,7 +334,7 @@ feature -- Duplication
 
 feature -- Resizing
 
-	frozen resized_area (n: INTEGER): like Current is
+	frozen resized_area (n: INTEGER): like Current
 			-- Create a copy of Current with a count of `n'.
 		require
 			valid_new_count: n > count
@@ -350,7 +350,7 @@ feature -- Resizing
 			new_count: Result.count = n
 		end
 	
-	frozen aliased_resized_area (n: INTEGER): like Current is
+	frozen aliased_resized_area (n: INTEGER): like Current
 			-- Try to resize `Current' with a count of `n', if not
 			-- possible a new copy.
 		require
@@ -362,7 +362,7 @@ feature -- Resizing
 			new_count: Result.count = n
 		end
 
-	frozen aliased_resized_area_and_keep (n, j, k: INTEGER): like Current is
+	frozen aliased_resized_area_and_keep (n, j, k: INTEGER): like Current
 			-- Try to resize `Current' with a count of `n' and keeping the old
 			-- content between indices `j', `k'. If not possible a new copy.
 		require
@@ -380,7 +380,7 @@ feature -- Resizing
 	
 feature -- Removal
 
-	frozen clear_all is
+	frozen clear_all
 			-- Reset all items to default values.
 		local
 			l_array: like internal_native_array
@@ -394,7 +394,7 @@ feature {SPECIAL} -- Implementation: Access
 	internal_native_array: like native_array;
 			-- Access to memory location.
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

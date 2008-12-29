@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make (a_widget: WIDGET; code, pos: INTEGER; direction: BOOLEAN) is
+	make (a_widget: WIDGET; code, pos: INTEGER; direction: BOOLEAN)
 			-- Create a context data for `scrolling' events
 		do
 			widget := a_widget
@@ -39,7 +39,7 @@ feature -- Access
 	is_vertical: BOOLEAN;
 			-- Did this come from a VSCROLL?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

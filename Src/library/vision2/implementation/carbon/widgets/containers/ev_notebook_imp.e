@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision notebook. Carbon implementation."
 	legal: "See notice at end of class."
@@ -69,7 +69,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a fixed widget.
 		local
 			err : INTEGER
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			tab_position := interface.tab_top
 		end
 
-	initialize is
+	initialize
 			-- Initialize the notebook.
 		do
 			Precursor {EV_WIDGET_LIST_IMP}
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 			last_selected := 0
 		end
 
-	install_event_handlers is
+	install_event_handlers
 			-- Install carbon event handlers
 		local
 			target, h_ret: POINTER
@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	pointed_tab_index: INTEGER is
+	pointed_tab_index: INTEGER
 			-- index of tab currently under mouse pointer, or 0 if none.
 		local
 			err: INTEGER
@@ -134,7 +134,7 @@ feature -- Access
 
 		end
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		do
@@ -143,13 +143,13 @@ feature -- Access
 
 feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 
-	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
+	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB
 			-- Tab associated with `an_item'.
 		do
 			create Result.make_with_widgets (interface, an_item)
 		end
 
-	item_text (an_item: like item): STRING_32 is
+	item_text (an_item: like item): STRING_32
 			-- Label of `an_item'.
 		local
 			item_index : INTEGER
@@ -169,7 +169,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 			Result := cf_string.string
 		end
 
-	item_pixmap (an_item: like item): EV_PIXMAP is
+	item_pixmap (an_item: like item): EV_PIXMAP
 			-- Pixmap of `an_item'.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -181,13 +181,13 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Access
 
 feature -- Status report
 
-	selected_item: like item is
+	selected_item: like item
 			-- Page displayed topmost.
 		do
 			Result := i_th ( selected_item_index )
 		end
 
-	selected_item_index: INTEGER is
+	selected_item_index: INTEGER
 			-- Page index of selected item
 		do
 			Result := get_control32bit_value_external ( c_object )
@@ -198,7 +198,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	child_offset_top: INTEGER is
+	child_offset_top: INTEGER
 			do
 				if tab_position = interface.Tab_top  then
 					Result := internal_offset + tab_offset
@@ -207,7 +207,7 @@ feature -- Measurement
 				end
 			end
 
-	child_offset_bottom: INTEGER is
+	child_offset_bottom: INTEGER
 			do
 				if tab_position = interface.Tab_bottom  then
 					Result := internal_offset + tab_offset
@@ -216,7 +216,7 @@ feature -- Measurement
 				end
 			end
 
-	child_offset_right: INTEGER is
+	child_offset_right: INTEGER
 			do
 				if tab_position = interface.Tab_right  then
 					Result := internal_offset + tab_offset
@@ -225,7 +225,7 @@ feature -- Measurement
 				end
 			end
 
-	child_offset_left: INTEGER is
+	child_offset_left: INTEGER
 			do
 				if tab_position = interface.Tab_left  then
 					Result := internal_offset + tab_offset
@@ -235,7 +235,7 @@ feature -- Measurement
 			end
 
 
-	calculate_minimum_sizes  is
+	calculate_minimum_sizes
 			-- minimum_width is the largest minimum_width of all items + tab_offset if tabs are on left or right
 		local
 			i : INTEGER
@@ -268,21 +268,21 @@ feature -- Measurement
 				buffered_minimum_width := buffered_minimum_width.max (internal_minimum_width)
 		end
 
-	minimum_height : INTEGER is
+	minimum_height : INTEGER
 		do
 			Result := buffered_minimum_height
 		end
 
-	minimum_width : INTEGER is
+	minimum_width : INTEGER
 		do
 			Result := buffered_minimum_width
 		end
 
-	internal_offset: INTEGER is 2
+	internal_offset: INTEGER = 2
 
 feature {EV_NOTEBOOK} -- Status setting
 
-	set_tab_position (a_tab_position: INTEGER) is
+	set_tab_position (a_tab_position: INTEGER)
 			-- Display tabs at `a_position'.
 			-- Recreate the tab control with changed settings
 		local
@@ -378,7 +378,7 @@ feature {EV_NOTEBOOK} -- Status setting
 			install_event_handlers
 		end
 
-	select_item (an_item: like item) is
+	select_item (an_item: like item)
 			-- Display `an_item' above all others.
 		local
 			w_imp, item_imp: EV_WIDGET_IMP
@@ -403,14 +403,14 @@ feature {EV_NOTEBOOK} -- Status setting
 
 feature -- Element change
 
-	remove_i_th (i: INTEGER) is
+	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		do
 			Precursor {EV_WIDGET_LIST_IMP} (i)
 			set_control32bit_maximum_external ( c_object, count )
 		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			info_rec : CONTROL_TAB_INFO_REC_V1_STRUCT
@@ -450,14 +450,14 @@ feature -- Element change
 
 		end
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace current item by `v'.
 		do
 			remove_i_th (index)
 			insert_i_th (v, index)
 		end
 
-	child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER) is
+	child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER)
 			-- propagate it to the top (or if we could resize, resize)
 			-- calculate minimum sizes for containers with just one element
 		local
@@ -475,7 +475,7 @@ feature -- Element change
 
 		end
 
-		setup_layout is
+		setup_layout
 			local
 				w: EV_WIDGET_IMP
 				c: EV_CONTAINER_IMP
@@ -497,7 +497,7 @@ feature -- Element change
 				end
 			end
 
-		layout  is
+		layout
 				-- Sets the child control's size to the container site minus some spacing
 		local
 			a_rect : CGRECT_STRUCT
@@ -535,16 +535,16 @@ feature -- Element change
 
 feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 
-	ensure_tab_label (tab_widget: POINTER) is
+	ensure_tab_label (tab_widget: POINTER)
 			-- Ensure the is a tab label widget for `tab_widget'.
 		do
 
 		end
 
-	default_tab_label_spacing: INTEGER is 3
+	default_tab_label_spacing: INTEGER = 3
 		-- Space between pixmap and text in the tab label.
 
-	set_item_text (an_item: like item; a_text: STRING_GENERAL) is
+	set_item_text (an_item: like item; a_text: STRING_GENERAL)
 			-- Assign `a_text' to the label for `an_item'.
 		local
 			item_index : INTEGER
@@ -566,7 +566,7 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 
 		end
 
-	set_item_pixmap (an_item: like item; a_pixmap: EV_PIXMAP) is
+	set_item_pixmap (an_item: like item; a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to the tab for `an_item'.
 		do
 
@@ -574,18 +574,18 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Element change
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	tab_offset : INTEGER is 30
+	tab_offset : INTEGER = 30
 		-- Offset between the tabs and the content
 
 	last_selected : INTEGER
 
-	page_switch is
+	page_switch
 			-- Called when the page is switched.
 		do
 			select_item ( i_th ( selected_item_index ) )
 		end
 
-	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER is
+	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER
 			-- Feature that is called if an event occurs
 		local
 			event_class, event_kind : INTEGER
@@ -603,7 +603,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				end
 		end
 
-	bind_to_tabcontrol ( a_control, a_tabcontrol: POINTER ) is
+	bind_to_tabcontrol ( a_control, a_tabcontrol: POINTER )
 		external
 			"C inline use <Carbon/Carbon.h>"
 		alias
@@ -641,7 +641,7 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_NOTEBOOK_IMP
 

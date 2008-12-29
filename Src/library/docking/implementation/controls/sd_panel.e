@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Container used for hold SD_TITLE_BAR and SD_CONTENT's widget."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_style: INTEGER; a_zone: SD_ZONE) is
+	make (a_style: INTEGER; a_zone: SD_ZONE)
 			-- Creation method.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -56,13 +56,13 @@ feature {NONE} -- Initlization
 
 feature   -- Access
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Has focus?
 		do
 			Result := internal_title_bar.is_focus_color_enable
 		end
 
-	set_stick (a_bool: BOOLEAN) is
+	set_stick (a_bool: BOOLEAN)
 			-- Set whether current is sticked.
 		do
 			internal_title_bar.set_stick (a_bool)
@@ -70,19 +70,19 @@ feature   -- Access
 			set: a_bool = internal_title_bar.is_stick
 		end
 
-	title_bar: like internal_title_bar is
+	title_bar: like internal_title_bar
 			-- Title bar which on the top.
 		do
 			Result := internal_title_bar
 		end
 
-	user_widget: like internal_user_widget assign set_user_widget is
+	user_widget: like internal_user_widget assign set_user_widget
 			-- Client programmer's widget.
 		do
 			Result := internal_user_widget
 		end
 
-	set_user_widget (a_widget: like internal_user_widget) is
+	set_user_widget (a_widget: like internal_user_widget)
 			-- Set the client programmer's widget.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -109,7 +109,7 @@ feature {NONE} -- Two widgets
 
 feature -- Basic operation
 
-	set_show_normal_max (a_show: BOOLEAN) is
+	set_show_normal_max (a_show: BOOLEAN)
 			-- Set show or not show normal\max button.
 		do
 			internal_title_bar.set_show_normal_max (a_show)
@@ -117,13 +117,13 @@ feature -- Basic operation
 			set: a_show = internal_title_bar.is_show_normal_max
 		end
 
-	is_show_normal_max: BOOLEAN is
+	is_show_normal_max: BOOLEAN
 			-- If titile bar show normal max button?
 		do
 			Result := internal_title_bar.is_show_normal_max
 		end
 
-	set_show_stick (a_show: BOOLEAN) is
+	set_show_stick (a_show: BOOLEAN)
 			-- Set show or not show stick button.
 		do
 			internal_title_bar.set_show_stick (a_show)
@@ -131,7 +131,7 @@ feature -- Basic operation
 			set: a_show = internal_title_bar.is_show_stick
 		end
 
-	set_focus_color (a_focus: BOOLEAN) is
+	set_focus_color (a_focus: BOOLEAN)
 			-- Set focus color of title bar and surround focus color.
 		do
 			if a_focus then
@@ -145,7 +145,7 @@ feature -- Basic operation
 
 feature -- Actions
 
-	close_request_actions: like internal_close_request_actions is
+	close_request_actions: like internal_close_request_actions
 			-- `internal_close_request_actions'
 		do
 			if internal_close_request_actions = Void then
@@ -156,7 +156,7 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
-	stick_actions: like internal_stick_actions is
+	stick_actions: like internal_stick_actions
 			-- `internal_stick_actions'
 		do
 			if internal_stick_actions = Void then
@@ -167,7 +167,7 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
-	drag_actions: like internal_drag_actions is
+	drag_actions: like internal_drag_actions
 			-- `internal_drag_actions'
 		do
 			if internal_drag_actions = Void then
@@ -178,7 +178,7 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
-	normal_max_action: like internal_normal_max_action is
+	normal_max_action: like internal_normal_max_action
 			-- `internal_normal_max_action'
 		do
 			if internal_normal_max_action = Void then
@@ -191,36 +191,36 @@ feature -- Actions
 
 feature {NONE} -- Implemention
 
-	close is
+	close
 			-- Handle close window,
 		do
 			close_request_actions.call (Void)
 		end
 
-	on_normal_max_window is
+	on_normal_max_window
 			-- Handle normal\max window.
 		do
 			normal_max_action.call (Void)
 		end
 
-	stick is
+	stick
 			-- Handle stick window.
 		do
 			stick_actions.call (Void)
 		end
 
-	drag_window (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	drag_window (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Handle drag window.
 		do
 			drag_actions.call ([a_x, a_y, tile_a, tile_b, a_pressure, a_screen_x, a_screen_y])
 		end
 
-	pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Handle pointer motion.
 		do
 		end
 
-	pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Handle pointer release.
 		do
 		end
@@ -250,7 +250,7 @@ invariant
 	internal_shared_not_void: internal_shared /= Void
 	internal_title_bar_not_void: internal_title_bar /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects to synthesize keystrokes, mouse motions %
 				  %and button clicks."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature -- Keyboard events
 
-	send_keyboard_key_down (virtual_key_code: INTEGER) is
+	send_keyboard_key_down (virtual_key_code: INTEGER)
 			-- The keybd_event function synthesizes a keystroke. The system
 			-- can use such a synthesized keystroke to generate a
 			-- WM_KEYDOWN message.
@@ -39,7 +39,7 @@ feature -- Keyboard events
 			cwin_keybd_event (virtual_key_code, 0, 0, Default_pointer)
 		end
 
-	send_keyboard_key_up (virtual_key_code: INTEGER) is
+	send_keyboard_key_up (virtual_key_code: INTEGER)
 			-- The keybd_event function synthesizes a keystroke. The system
 			-- can use such a synthesized keystroke to generate a
 			-- WM_KEYUP message.
@@ -56,7 +56,7 @@ feature -- Keyboard events
 
 feature -- Mouse events
 
-	send_mouse_absolute_move (a_x, a_y: INTEGER) is
+	send_mouse_absolute_move (a_x, a_y: INTEGER)
 			-- Synthesize a fake mouse move to absolute
 			-- screen position `a_x', `a_y'.
 			--
@@ -79,7 +79,7 @@ feature -- Mouse events
 				)
 		end
 
-	send_mouse_relative_move (a_x, a_y: INTEGER) is
+	send_mouse_relative_move (a_x, a_y: INTEGER)
 			-- Synthesize a fake mouse move.
 			-- `a_x' and `a_y' are the number of mickeys moved.
 			--
@@ -95,55 +95,55 @@ feature -- Mouse events
 				)
 		end
 
-	send_mouse_left_button_down is
+	send_mouse_left_button_down
 			-- Synthesize a fake press on the left button of the
 			-- mouse.
 		do
 			cwin_mouse_event (Mouseeventf_leftdown, 0, 0, 0, Default_pointer);
 		end
 
-	send_mouse_left_button_up is
+	send_mouse_left_button_up
 			-- Synthesize a fake press on the left button of the
 			-- mouse.
 		do
 			cwin_mouse_event (Mouseeventf_leftup, 0, 0, 0, Default_pointer);
 		end
 
-	send_mouse_right_button_down is
+	send_mouse_right_button_down
 			-- Synthesize a fake press on the right button of the
 			-- mouse.
 		do
 			cwin_mouse_event (Mouseeventf_rightdown, 0, 0, 0, Default_pointer);
 		end
 
-	send_mouse_right_button_up is
+	send_mouse_right_button_up
 			-- Synthesize a fake press on the right button of the
 			-- mouse.
 		do
 			cwin_mouse_event (Mouseeventf_rightup, 0, 0, 0, Default_pointer);
 		end
 
-	send_mouse_middle_button_down is
+	send_mouse_middle_button_down
 			-- Synthesize a fake press on the middle button of the
 			-- mouse.
 		do
 			cwin_mouse_event (Mouseeventf_middledown, 0, 0, 0, Default_pointer);
 		end
 
-	send_mouse_middle_button_up is
+	send_mouse_middle_button_up
 			-- Synthesize a fake press on the middle button of the
 			-- mouse.
 		do
 			cwin_mouse_event (Mouseeventf_middleup, 0, 0, 0, Default_pointer);
 		end
 
-	send_mouse_wheel_up is
+	send_mouse_wheel_up
 			-- Synthesize a fake mouse wheel rotation forward.
 		do
 			cwin_mouse_event (Mouseeventf_wheel, 0, 0, Wheel_delta, Default_pointer)
 		end
 
-	send_mouse_wheel_down is
+	send_mouse_wheel_down
 			-- Synthesize a fake mouse wheel rotation backward.
 		do
 			cwin_mouse_event (Mouseeventf_wheel, 0, 0, -Wheel_delta, Default_pointer)
@@ -157,7 +157,7 @@ feature {NONE} -- External
   		dy		: INTEGER -- vertical position or change
   		dwData	: INTEGER -- wheel movement
   		dwExtraInfo: POINTER -- application-defined information
-	) is
+	)
 			-- The mouse_event function synthesizes mouse motion and button
 			-- clicks.
 		external
@@ -171,7 +171,7 @@ feature {NONE} -- External
 		bScan	: INTEGER -- hardware scan code
 		dwFlags	: INTEGER -- function options
   		dwExtraInfo: POINTER -- application-defined information
-	) is
+	)
 			-- The keybd_event function synthesizes a keystroke. The system
 			-- can use such a synthesized keystroke to generate a WM_KEYUP or
 			-- WM_KEYDOWN message. The keyboard driver's interrupt handler
@@ -182,7 +182,7 @@ feature {NONE} -- External
 			"keybd_event"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

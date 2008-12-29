@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstraction for objects that have geometric position."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Measurement
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -28,7 +28,7 @@ feature -- Measurement
 			bridge_ok: Result = implementation.x_position
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -38,7 +38,7 @@ feature -- Measurement
 			bridge_ok: Result = implementation.y_position
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		require
 			not_destroyed: not is_destroyed
@@ -48,7 +48,7 @@ feature -- Measurement
 			bridge_ok: Result = implementation.screen_x
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		require
 			not_destroyed: not is_destroyed
@@ -58,7 +58,7 @@ feature -- Measurement
 			bridge_ok: Result = implementation.screen_y
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size in pixels.
 			-- Same as `minimum_width' when not displayed.
 		require
@@ -69,7 +69,7 @@ feature -- Measurement
 			bridge_ok: Result = implementation.width
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size in pixels.
 			-- Same as `minimum_height' when not displayed.
 		require
@@ -80,7 +80,7 @@ feature -- Measurement
 			bridge_ok: Result = implementation.height
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Lower bound on `width' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -91,7 +91,7 @@ feature -- Measurement
 			positive_or_zero: Result >= 0
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Lower bound on `height' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -113,7 +113,7 @@ invariant
 	minimum_width_not_negative: is_usable implies minimum_width >= 0
 	minimum_height_not_negative: is_usable implies minimum_height >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

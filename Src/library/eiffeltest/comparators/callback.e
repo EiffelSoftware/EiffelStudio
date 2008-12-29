@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Callback objects"
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (r: like callback) is
+	make (r: like callback)
 			-- Create callback to `r'.
 		require
 			non_void_reference: r /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		
 feature -- Status setting
 
-	set_callback (r: like callback) is
+	set_callback (r: like callback)
 			-- Set callback to `r'.
 		require
 			non_void_reference: r /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	callback: ANY;
 			-- Reference to callback object
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

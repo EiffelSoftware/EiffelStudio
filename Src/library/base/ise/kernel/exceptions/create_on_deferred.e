@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Exception raised when creating deferred classes
 		]"
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	frozen code: INTEGER is
+	frozen code: INTEGER
 			-- Exception code
 		do
 			Result := {EXCEP_CONST}.create_on_deferred
@@ -24,6 +24,6 @@ feature -- Access
 
 feature {NONE} -- Accesss
 
-	frozen internal_meaning: STRING is "Create on deferred."
+	frozen internal_meaning: STRING = "Create on deferred."
 
 end

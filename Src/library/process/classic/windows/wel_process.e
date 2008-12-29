@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a launched process"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Implementation
 
-	make is
+	make
 			-- Initialize instance.
 		do
 			is_std_input_open := False
@@ -51,7 +51,7 @@ feature{NONE} -- Implementation
 
 feature -- Process operations
 
-	launch (a_cmd: STRING; a_working_directory: STRING; has_separate_console: BOOLEAN; has_detached_console: BOOLEAN; use_unicode: BOOLEAN; environs: POINTER) is
+	launch (a_cmd: STRING; a_working_directory: STRING; has_separate_console: BOOLEAN; has_detached_console: BOOLEAN; use_unicode: BOOLEAN; environs: POINTER)
 			-- Launch a process whose command is `a_cmd' in `a_working_directory'.
 			-- If `has_separate_console' is True, launch process in a separate console.
 			-- If `has_detached_console' is True, launch process without any console.
@@ -89,7 +89,7 @@ feature -- Process operations
 			end
 		end
 
-	check_process_state is
+	check_process_state
 		-- Try to get the last state that the child process has returned.
 		-- after calling this feature, check `last_operation_successful'
 		-- to see whether it succeeded. If so, the last process state is stored
@@ -102,7 +102,7 @@ feature -- Process operations
 
 feature -- Status setting
 
-	set_input_direction (direction: INTEGER) is
+	set_input_direction (direction: INTEGER)
 			-- Set `input_direction' with `direction'
 		do
 			input_direction := direction
@@ -110,7 +110,7 @@ feature -- Status setting
 			input_direction_set: input_direction = direction
 		end
 
-	set_output_direction (direction: INTEGER) is
+	set_output_direction (direction: INTEGER)
 			-- Set `output_direction' with `direction'
 		do
 			output_direction := direction
@@ -118,7 +118,7 @@ feature -- Status setting
 			output_direction_set: output_direction = direction
 		end
 
-	set_error_direction (direction: INTEGER) is
+	set_error_direction (direction: INTEGER)
 			-- Set `error_direction' with `direction'
 		do
 			error_direction := direction
@@ -126,7 +126,7 @@ feature -- Status setting
 			error_direction_set: error_direction = direction
 		end
 
-	set_input_file_name (a_name: STRING) is
+	set_input_file_name (a_name: STRING)
 			-- Set `input_file_name' with `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -137,7 +137,7 @@ feature -- Status setting
 			file_name_set: input_file_name.is_equal (a_name)
 		end
 
-	set_output_file_name (a_name: STRING) is
+	set_output_file_name (a_name: STRING)
 			-- Set `output_file_name' with `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -148,7 +148,7 @@ feature -- Status setting
 			file_name_set: output_file_name.is_equal (a_name)
 		end
 
-	set_error_file_name (a_name: STRING) is
+	set_error_file_name (a_name: STRING)
 			-- Set `error_file_name' with `a_name'.
 		require
 			a_name_not_void: a_name /= Void
@@ -161,7 +161,7 @@ feature -- Status setting
 
 feature -- Status reporting
 
-	has_exited: BOOLEAN is
+	has_exited: BOOLEAN
 			-- Has the process exited?
 		require
 			process_launched: launched
@@ -179,31 +179,31 @@ feature -- Status reporting
 	launched: BOOLEAN
 			-- Has process been launched?
 
-	is_error_same_as_output: BOOLEAN is
+	is_error_same_as_output: BOOLEAN
 			-- Is error redirected to same direction as output?
 		do
 			Result := error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output
 		end
 
-	input_pipe_needed: BOOLEAN is
+	input_pipe_needed: BOOLEAN
 			-- Is a pipe needed to write input from current process?
 		do
 			Result := input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream
 		end
 
-	output_pipe_needed: BOOLEAN is
+	output_pipe_needed: BOOLEAN
 			-- Is a pipe needed to read output from current process?
 		do
 			Result := output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
 		end
 
-	error_pipe_needed: BOOLEAN is
+	error_pipe_needed: BOOLEAN
 			-- Is a pipe needed to read error from current process?			
 		do
 			Result := error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
 		end
 
-	is_io_redirected: BOOLEAN is
+	is_io_redirected: BOOLEAN
 			-- Is input, output or error redirected?
 		do
 			Result := input_direction /= {PROCESS_REDIRECTION_CONSTANTS}.no_redirection or
@@ -248,7 +248,7 @@ feature -- Access
 
 feature -- Handle operation
 
-	close_std_output is
+	close_std_output
 			-- Close standard output handle.
 		local
 			l_success: BOOLEAN
@@ -263,7 +263,7 @@ feature -- Handle operation
 			handle_closed: not is_std_output_open
 		end
 
-	close_std_input is
+	close_std_input
 			-- Close standard input handle.
 		local
 			l_success: BOOLEAN
@@ -278,7 +278,7 @@ feature -- Handle operation
 			handle_closed: not is_std_input_open
 		end
 
-	close_std_error is
+	close_std_error
 			-- Close standard error handle.
 		local
 			l_success: BOOLEAN
@@ -293,7 +293,7 @@ feature -- Handle operation
 			handle_closed: not is_std_error_open
 		end
 
-	close_io is
+	close_io
 			-- Close input, output and error handles.
 		do
 			close_std_input
@@ -301,7 +301,7 @@ feature -- Handle operation
 			close_std_error
 		end
 
-	close_process_handle is
+	close_process_handle
 			-- Close process handle.
 		require
 			process_launched: launched
@@ -312,7 +312,7 @@ feature -- Handle operation
 
 feature
 
-	startup_info: WEL_STARTUP_INFO is
+	startup_info: WEL_STARTUP_INFO
 			-- Process startup information
 		local
 			l_tuple: TUPLE [p1: POINTER; p2: POINTER]
@@ -392,7 +392,7 @@ feature{NONE} -- Implementation
 	internal_has_exited: BOOLEAN
 			-- Internal status indicating whether process has exited
 
-	file_handle: FILE_HANDLE is
+	file_handle: FILE_HANDLE
 			-- Factory for managing HANDLE
 		once
 			create Result
@@ -400,7 +400,7 @@ feature{NONE} -- Implementation
 			file_handle_not_void: Result /= Void
 		end
 
-	stdin: POINTER is
+	stdin: POINTER
 			-- Standard input handle
 		external
 			"C inline use <windows.h>"
@@ -408,7 +408,7 @@ feature{NONE} -- Implementation
 			"GetStdHandle (STD_INPUT_HANDLE)"
 		end
 
-	stdout: POINTER is
+	stdout: POINTER
 			-- Standard output handle
 		external
 			"C inline use <windows.h>"
@@ -416,7 +416,7 @@ feature{NONE} -- Implementation
 			"GetStdHandle (STD_OUTPUT_HANDLE)"
 		end
 
-	stderr: POINTER is
+	stderr: POINTER
 			-- Standard error handle
 		external
 			"C inline use <windows.h>"
@@ -424,7 +424,7 @@ feature{NONE} -- Implementation
 			"GetStdHandle (STD_ERROR_HANDLE)"
 		end
 
-	spawn_process (a_command_line, a_working_directory: STRING_GENERAL; a_flags: INTEGER; a_environs: POINTER) is
+	spawn_process (a_command_line, a_working_directory: STRING_GENERAL; a_flags: INTEGER; a_environs: POINTER)
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void
@@ -448,7 +448,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

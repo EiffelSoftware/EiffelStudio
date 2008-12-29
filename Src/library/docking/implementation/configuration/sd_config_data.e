@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent the data about inner container's structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ create
 	make
 
 feature {NONE} -- Initlization
-	make is
+	make
 			-- Creation method.
 		do
 			create internal_inner_container_data.make (1)
@@ -28,7 +28,7 @@ feature -- Properties
 	name: STRING_32
 			-- Name of this layout.
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name'
 		require
 			not_void: a_name /= Void
@@ -38,7 +38,7 @@ feature -- Properties
 			set: name = a_name
 		end
 
-	set_is_docking_locked (a_bool: BOOLEAN) is
+	set_is_docking_locked (a_bool: BOOLEAN)
 			-- Set `is_docking_locked' with `a_bool'
 		do
 			is_docking_locked := a_bool
@@ -49,7 +49,7 @@ feature -- Properties
 	is_docking_locked: BOOLEAN
 			-- If tools docking mechanism locked?
 
-	set_is_tool_bar_locked (a_bool: BOOLEAN) is
+	set_is_tool_bar_locked (a_bool: BOOLEAN)
 			--  Set `is_tool_bar_locked' with `a_bool'
 		do
 			is_tool_bar_locked := a_bool
@@ -60,7 +60,7 @@ feature -- Properties
 	is_tool_bar_locked: BOOLEAN
 			-- If tool bar manager is locked?
 
-	set_is_editor_docking_locked (a_bool: BOOLEAN) is
+	set_is_editor_docking_locked (a_bool: BOOLEAN)
 			-- Set `is_editor_docking_locked' with `a_bool'
 		do
 			is_editor_docking_locked := a_bool
@@ -71,13 +71,13 @@ feature -- Properties
 	is_editor_docking_locked: BOOLEAN
 			-- If editors docking mechanism locked?
 
-	inner_container_data: like internal_inner_container_data is
+	inner_container_data: like internal_inner_container_data
 			-- Value of `internal_inner_container_data'
 		do
 			Result := internal_inner_container_data
 		end
 
-	set_inner_container_data (a_data: like internal_inner_container_data) is
+	set_inner_container_data (a_data: like internal_inner_container_data)
 			-- Set `internal_inner_container_data' with `a_data'.
 		require
 			a_data_not_void: a_data /= Void
@@ -87,7 +87,7 @@ feature -- Properties
 			a_data_set: a_data = internal_inner_container_data
 		end
 
-	auto_hide_panels_data: like internal_auto_hide_zones_data is
+	auto_hide_panels_data: like internal_auto_hide_zones_data
 			-- Value of `auto_hide_panels_data'
 		do
 			Result := internal_auto_hide_zones_data
@@ -99,7 +99,7 @@ feature -- Properties
 	resizable_items_data: ARRAYED_LIST [TUPLE [name: STRING_GENERAL; width: INTEGER]]
 			-- Tool bar resizable items data.
 
-	set_resizable_items_data (a_data: like resizable_items_data) is
+	set_resizable_items_data (a_data: like resizable_items_data)
 			-- Set `tool_bar_data' with `a_data'.
 		require
 			not_void: a_data /= Void
@@ -114,7 +114,7 @@ feature -- Data for only one editor zone
 	is_one_editor_zone: BOOLEAN
 			-- If only one editor zone in Current layout?
 
-	set_is_one_editor_zone (a_bool: BOOLEAN) is
+	set_is_one_editor_zone (a_bool: BOOLEAN)
 			-- Set `is_one_editor_zone' with `a_bool'
 		do
 			is_one_editor_zone := a_bool
@@ -125,7 +125,7 @@ feature -- Data for only one editor zone
 	is_editor_minimized: BOOLEAN
 			-- If `is_one_editor_zone', is the only one editor zone minimized?
 
-	set_is_editor_minimized (a_bool: BOOLEAN) is
+	set_is_editor_minimized (a_bool: BOOLEAN)
 			-- Set `is_editor_minimized' with `a_bool'
 		do
 			is_editor_minimized := a_bool
@@ -150,7 +150,7 @@ invariant
 	not_void: maximized_tools /= Void
 	not_void: resizable_items_data /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

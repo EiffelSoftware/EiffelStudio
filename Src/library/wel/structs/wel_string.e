@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A low-level string class to convert Eiffel strings to Win32 unicode strings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature --{NONE} -- Initialization
 
-	make (a_string: STRING_GENERAL) is
+	make (a_string: STRING_GENERAL)
 			-- Make a C string from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -33,7 +33,7 @@ feature --{NONE} -- Initialization
 			set_string (a_string)
 		end
 
-	make_empty (a_length: INTEGER) is
+	make_empty (a_length: INTEGER)
 			-- Make an empty C string of `a_length' characters.
 			-- C memory area is not initialized.
 		require
@@ -43,7 +43,7 @@ feature --{NONE} -- Initialization
 			count := 0
 		end
 
-	make_by_pointer (a_ptr: POINTER) is
+	make_by_pointer (a_ptr: POINTER)
 			-- Make a copy of string pointed by `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -51,7 +51,7 @@ feature --{NONE} -- Initialization
 			make_by_pointer_and_count (a_ptr, buffer_length (a_ptr))
 		end
 
-	make_by_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
+	make_by_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
 			-- Make a copy of first `a_length' byte of string pointed by `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -65,7 +65,7 @@ feature --{NONE} -- Initialization
 
 feature -- Initialization
 
-	share_from_pointer (a_ptr: POINTER) is
+	share_from_pointer (a_ptr: POINTER)
 			-- New instance sharing `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -73,7 +73,7 @@ feature -- Initialization
 			share_from_pointer_and_count (a_ptr, buffer_length (a_ptr))
 		end
 
-	share_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
+	share_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
 			-- New instance sharing `a_ptr' of `a_length' byte.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -90,7 +90,7 @@ feature -- Initialization
 
 feature -- Access
 
-	substring (start_pos, end_pos: INTEGER): STRING_32 is
+	substring (start_pos, end_pos: INTEGER): STRING_32
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos'.
 		require
@@ -108,7 +108,7 @@ feature -- Access
 			susbstring_not_void: Result /= Void
 		end
 
-	string: STRING_32 is
+	string: STRING_32
 			-- Eiffel string, ignoring `count'. Reads until a null character is being read.
 		do
 			Result := substring (1, c_strlen (item))
@@ -116,7 +116,7 @@ feature -- Access
 			string_not_void: Result /= Void
 		end
 
-	read_substring_into (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER) is
+	read_substring_into (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER)
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_string'.
 		require
@@ -141,7 +141,7 @@ feature -- Access
 			end
 		end
 
-	read_string_into (a_string: STRING_GENERAL) is
+	read_string_into (a_string: STRING_GENERAL)
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_string' replacing any
 			-- existing characters.
@@ -152,7 +152,7 @@ feature -- Access
 			read_substring_into (a_string, 1, count)
 		end
 
-	item: POINTER is
+	item: POINTER
 			-- Get pointer to allocated area.
 		do
 			Result := managed_data.item
@@ -163,7 +163,7 @@ feature -- Access
 	managed_data: MANAGED_POINTER
 			-- Hold data of Current.
 
-	null_separated_strings: LIST [STRING_32] is
+	null_separated_strings: LIST [STRING_32]
 			-- Retrieve all string contained in `item'. Strings are
 			-- NULL separared inside `item'.
 		local
@@ -188,7 +188,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	space_separated_strings: LIST [STRING_32] is
+	space_separated_strings: LIST [STRING_32]
 			-- Retrieve all string contained in `item'. Strings are
 			-- space-separared inside `item'.
 		do
@@ -199,19 +199,19 @@ feature -- Access
 
 feature -- Measurement
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Number of bytes in Current.
 		do
 			Result := managed_data.count
 		end
 
-	character_capacity: INTEGER is
+	character_capacity: INTEGER
 			-- Number of characters in Current.
 		do
 			Result := managed_data.count // character_size
 		end
 
-	bytes_count: INTEGER is
+	bytes_count: INTEGER
 			-- Number of bytes which makes up Current.
 		do
 			Result := count * character_size
@@ -222,7 +222,7 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of characters in Current.
 
-	length: INTEGER is
+	length: INTEGER
 			-- Synonym for `count'.
 		do
 			Result := count
@@ -230,7 +230,7 @@ feature -- Measurement
 			length_not_negative: Result >= 0
 		end
 
-	frozen character_size: INTEGER is
+	frozen character_size: INTEGER
 			-- Number of bytes occupied by a TCHAR.
 		external
 			"C inline use <tchar.h>"
@@ -240,7 +240,7 @@ feature -- Measurement
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is content of string identical to content of string `other'?
 		do
 			Result := item.is_equal (other.item)
@@ -248,7 +248,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_string (a_string: STRING_GENERAL) is
+	set_string (a_string: STRING_GENERAL)
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -256,7 +256,7 @@ feature -- Element change
 			set_substring (a_string, 1, a_string.count)
 		end
 
-	set_substring (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER) is
+	set_substring (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER)
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -287,7 +287,7 @@ feature -- Element change
 			managed_data.put_natural_16 (0, new_size - character_size)
 		end
 
-	set_count (a_count: INTEGER) is
+	set_count (a_count: INTEGER)
 			-- Set `count' with `a_count'.
 			-- Note: Current content from index `1' to
 			-- `count.min (a_count)' is unchanged.
@@ -305,7 +305,7 @@ feature -- Element change
 			count_set: count = a_count
 		end
 
-	fill_blank is
+	fill_blank
 			-- Fill Current with zeros.
 		do
 			fill_value (0)
@@ -313,7 +313,7 @@ feature -- Element change
 			-- all_values: For every `i' in 1..`count', `item' (`i') = `0'
 		end
 
-	fill_value (a_value: INTEGER_8) is
+	fill_value (a_value: INTEGER_8)
 			-- Fill Current with `a_value'.
 		do
 			managed_data.item.memory_set (a_value, managed_data.count)
@@ -321,7 +321,7 @@ feature -- Element change
 			-- all_values: For every `i' in 1..`count', `item' (`i') = `a_value'
 		end
 
-	set_null_character (offset: INTEGER) is
+	set_null_character (offset: INTEGER)
 			-- Set `%U' at `offset' position of `Current'.
 			-- First position being  at `0' index.
 		require
@@ -332,7 +332,7 @@ feature -- Element change
 			string_set: managed_data.read_integer_16 (offset) = 0
 		end
 
-	set_size_in_string (n: INTEGER) is
+	set_size_in_string (n: INTEGER)
 			-- Set two first bytes of string pointed by `item' to
 			-- value represented by `n' in a two bytes representation.
 		require
@@ -342,7 +342,7 @@ feature -- Element change
 			managed_data.put_integer_16 (n.to_integer_16, 0)
 		end
 
-	initialize is
+	initialize
 			-- Fill Current with zeros.
 		obsolete
 			"Use `fill_blank' instead."
@@ -352,7 +352,7 @@ feature -- Element change
 			-- all_values: For every `i' in 1..`count', `item' (`i') = `0'
 		end
 
-	initialize_with_character (a_character: CHARACTER) is
+	initialize_with_character (a_character: CHARACTER)
 			-- Fill current with `a_character'.
 		obsolete
 			"Use `fill_value (a_character.code.to_integer_8)' instead"
@@ -364,7 +364,7 @@ feature -- Element change
 
 feature -- Status report
 
-	to_integer: INTEGER is
+	to_integer: INTEGER
 			-- Converts `item' to an integer.
 		obsolete
 			"Use `item' instead to ensure portability between 32 and 64 bits version of Windows."
@@ -372,18 +372,18 @@ feature -- Status report
 			Result := item.to_integer_32
 		end
 
-	exists: BOOLEAN is True
+	exists: BOOLEAN = True
 			-- `item' is always valid.
 
 feature {NONE} -- Implementation
 
-	buffer_length (ptr: POINTER): INTEGER is
+	buffer_length (ptr: POINTER): INTEGER
 			-- Number of bytes to hold `ptr'.
 		do
 			Result := c_strlen (ptr) * character_size
 		end
 
-	c_strlen (ptr: POINTER): INTEGER is
+	c_strlen (ptr: POINTER): INTEGER
 			-- Number of characters in `ptr'.
 		external
 			"C inline use <tchar.h>"
@@ -396,7 +396,7 @@ invariant
 	count_not_negative: count >= 0
 	bytes_count_valid: (bytes_count \\ character_size) = 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

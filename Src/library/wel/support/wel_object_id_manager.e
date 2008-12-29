@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Ancestor for every class using a 'Object vs Id' conversion in WEL."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ obsolete
 inherit
 	IDENTIFIED_ROUTINES
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

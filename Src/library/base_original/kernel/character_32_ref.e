@@ -1,4 +1,4 @@
-indexing
+note
 	description: "References to objects containing a unicode character value"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,28 +29,28 @@ feature -- Access
 	item: WIDE_CHARACTER
 			-- Unicde character value
 
-	hash_code, code: INTEGER is
+	hash_code, code: INTEGER
 			-- Associated integer value and hash code value
 		do
 			Result := item.code
 		end
 
-	natural_32_code: NATURAL_32 is
+	natural_32_code: NATURAL_32
 			-- Associated integer value
 		do
 			Result := item.natural_32_code
 		end
 
-	Min_value: NATURAL_32 is 0
-	Max_value: NATURAL_32 is 4294967295
+	Min_value: NATURAL_32 = 0
+	Max_value: NATURAL_32 = 4294967295
 			-- Bounds for integer representation of CHARACTER_32
 
 feature -- Status report
 
-	is_hashable: BOOLEAN is True
+	is_hashable: BOOLEAN = True
 			-- May current object be hashed?
 
-	is_space: BOOLEAN is
+	is_space: BOOLEAN
 			-- Is `item' a white space?
 		require
 			is_character_8_compatible: is_character_8
@@ -58,7 +58,7 @@ feature -- Status report
 			Result := to_character_8.is_space
 		end
 
-	is_character_8: BOOLEAN is
+	is_character_8: BOOLEAN
 			-- Can current be represented on a CHARACTER_8?
 		do
 			Result := natural_32_code <= {CHARACTER}.max_value.to_natural_32
@@ -66,13 +66,13 @@ feature -- Status report
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	infix "<" (other: like Current): BOOLEAN
 			-- Is `other' greater than current character?
 		do
 			Result := item < other.item
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object of the same type
 			-- as current object and identical to it?
 		do
@@ -81,7 +81,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	set_item (c: WIDE_CHARACTER) is
+	set_item (c: WIDE_CHARACTER)
 			-- Make `c' the `item' value.
 		do
 			item := c
@@ -89,7 +89,7 @@ feature -- Element change
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Printable representation of wide character
 		do
 			create Result.make (6)
@@ -100,7 +100,7 @@ feature -- Output
 
 feature {NONE} -- Initialization
 
-	make_from_reference (v: WIDE_CHARACTER_REF) is
+	make_from_reference (v: WIDE_CHARACTER_REF)
 			-- Initialize `Current' with `v.item'.
 		require
 			v_not_void: V /= Void
@@ -112,7 +112,7 @@ feature {NONE} -- Initialization
 
 feature -- Conversion
 
-	to_reference: WIDE_CHARACTER_REF is
+	to_reference: WIDE_CHARACTER_REF
 			-- Associated reference of Current
 		do
 			create Result
@@ -121,7 +121,7 @@ feature -- Conversion
 			to_reference_not_void: Result /= Void
 		end
 
-	to_character_8: CHARACTER is
+	to_character_8: CHARACTER
 			-- Convert current to CHARACTER
 		require
 			is_character_8_compatible: is_character_8
@@ -129,13 +129,13 @@ feature -- Conversion
 			Result := item.to_character_8
 		end
 
-	to_character_32: WIDE_CHARACTER is
+	to_character_32: WIDE_CHARACTER
 			-- Convert current to WIDE_CHARACTER
 		do
 			Result := item
 		end
 
-	as_upper, upper: WIDE_CHARACTER is
+	as_upper, upper: WIDE_CHARACTER
 			-- Uppercase value of `item'
 			-- Returns `item' if not `is_lower'
 		require
@@ -144,7 +144,7 @@ feature -- Conversion
 			Result := to_character_8.upper
 		end
 
-	as_lower, lower: WIDE_CHARACTER is
+	as_lower, lower: WIDE_CHARACTER
 			-- Lowercase value of `item'
 			-- Returns `item' if not `is_upper'
 		require
@@ -153,7 +153,7 @@ feature -- Conversion
 			Result := to_character_8.lower
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

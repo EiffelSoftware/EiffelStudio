@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision menu item. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Encoder parameter used by {WEL_GDIP_IMAGE_ENCODER_PARAMETERS}
 																					]"
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_guid: !WEL_GUID; a_value: NATURAL_64) is
+	make (a_guid: !WEL_GUID; a_value: NATURAL_64)
 			-- Creation method
 		require
 			valid: (create {WEL_GDIP_IMAGE_ENCODER}.make_empty).is_valid (a_guid)
@@ -38,7 +38,7 @@ feature -- Command
 	item: !MANAGED_POINTER
 			-- Convert current to C pointer
 
-	set_guid (a_guid: !WEL_GUID) is
+	set_guid (a_guid: !WEL_GUID)
 			-- Set `gudi' with `a_guid'
 		do
 			c_set_guid (item.item, a_guid.item)
@@ -46,7 +46,7 @@ feature -- Command
 			set: guid.is_equal (a_guid)
 		end
 
-	set_value_type (a_type: NATURAL_64) is
+	set_value_type (a_type: NATURAL_64)
 			-- Set `value_type' with `a_value'
 		do
 			c_set_type (item.item, a_type)
@@ -54,7 +54,7 @@ feature -- Command
 			set: value_type = a_type
 		end
 
-	set_number_of_values (a_number: NATURAL_64) is
+	set_number_of_values (a_number: NATURAL_64)
 			-- Set `number_of_value' with `a_number'
 		do
 			c_set_number_of_values (item.item, a_number)
@@ -62,7 +62,7 @@ feature -- Command
 			set: number_of_values = a_number
 		end
 
-	set_value (a_value: NATURAL_64) is
+	set_value (a_value: NATURAL_64)
 			-- Set `value' with `a_value'
 		do
 			create value_cache.make (natural_64_byte)
@@ -74,13 +74,13 @@ feature -- Command
 
 feature -- Query
 
-	guid: !WEL_GUID is
+	guid: !WEL_GUID
 			-- Parameter GUID.
 		do
 			create Result.share_from_pointer (c_guid (item.item))
 		end
 
-	value: NATURAL_64 is
+	value: NATURAL_64
 			-- Value of this parameter
 		local
 			l_result: MANAGED_POINTER
@@ -91,13 +91,13 @@ feature -- Query
 			Result := l_result.read_natural_64 (0)
 		end
 
-	value_type: NATURAL_64 is
+	value_type: NATURAL_64
 			-- `value''s type
 		do
 			Result := c_type (item.item)
 		end
 
-	number_of_values: NATURAL_64 is
+	number_of_values: NATURAL_64
 			-- `value' number count
 		do
 			Result := c_number_of_values (item.item)
@@ -105,7 +105,7 @@ feature -- Query
 
 feature {WEL_GDIP_IMAGE_ENCODER_PARAMETER} -- Internal query
 
-	size: INTEGER is
+	size: INTEGER
 			-- C structure size
 		external
 			"C inline use <wel_gdi_plus.h>"
@@ -120,12 +120,12 @@ feature {NONE} -- Implementation
 			-- We have to cache it here,
 			-- otherwise the value will be collected by GC
 
-	natural_64_byte: INTEGER is 8
+	natural_64_byte: INTEGER = 8
 			--  NATURAL_64 is 8 bits
 
 feature {NONE} -- C externals
 
-	c_guid (a_item: POINTER): POINTER is
+	c_guid (a_item: POINTER): POINTER
 			-- Get structure `a_item''s Guid
 		require
 			exists: a_item /= default_pointer
@@ -135,7 +135,7 @@ feature {NONE} -- C externals
 			"return (EIF_POINTER) &(((ImageEncoderParameter *)$a_item)->Guid);"
 		end
 
-	c_set_guid (a_item: POINTER; a_guid: POINTER) is
+	c_set_guid (a_item: POINTER; a_guid: POINTER)
 			-- Set structure `a_item''s Guid with `a_guid'.
 		require
 			exists: a_item /= default_pointer
@@ -145,7 +145,7 @@ feature {NONE} -- C externals
 			"((ImageEncoderParameter *)$a_item)->Guid = * ((GUID *)$a_guid);"
 		end
 
-	c_number_of_values (a_item: POINTER): NATURAL_64 is
+	c_number_of_values (a_item: POINTER): NATURAL_64
 			-- Get structure `a_item''s NumberOfValues
 		require
 			exists: a_item /= default_pointer
@@ -155,7 +155,7 @@ feature {NONE} -- C externals
 			"return (EIF_NATURAL_64) ((ImageEncoderParameter *)$a_item)->NumberOfValues;"
 		end
 
-	c_set_number_of_values (a_item: POINTER; a_number: NATURAL_64) is
+	c_set_number_of_values (a_item: POINTER; a_number: NATURAL_64)
 			-- Set structure `a_item''s NumberOfValues with `a_number'.
 		require
 			exists: a_item /= default_pointer
@@ -165,7 +165,7 @@ feature {NONE} -- C externals
 			"((ImageEncoderParameter *)$a_item)->NumberOfValues = (ULONG)$a_number;"
 		end
 
-	c_type (a_item: POINTER): NATURAL_64 is
+	c_type (a_item: POINTER): NATURAL_64
 			-- Get structure `a_item''s Type
 		require
 			exists: a_item /= default_pointer
@@ -175,7 +175,7 @@ feature {NONE} -- C externals
 			"return (EIF_NATURAL_64) ((ImageEncoderParameter *)$a_item)->Type;"
 		end
 
-	c_set_type (a_item: POINTER; a_type: NATURAL_64) is
+	c_set_type (a_item: POINTER; a_type: NATURAL_64)
 			-- Set structure `a_item''s Type with `a_type'.
 		require
 			exists: a_item /= default_pointer
@@ -185,7 +185,7 @@ feature {NONE} -- C externals
 			"((ImageEncoderParameter *)$a_item)->Type = (ULONG)$a_type;"
 		end
 
-	c_value (a_item: POINTER): POINTER is
+	c_value (a_item: POINTER): POINTER
 			-- Get structure `a_item''s Value
 		require
 			exists: a_item /= default_pointer
@@ -195,7 +195,7 @@ feature {NONE} -- C externals
 			"return (EIF_POINTER) ((ImageEncoderParameter *)$a_item)->Value;"
 		end
 
-	c_set_value (a_item: POINTER; a_value: POINTER) is
+	c_set_value (a_item: POINTER; a_value: POINTER)
 			-- Set structure `a_item''s Value with `a_value'.
 		require
 			exists: a_item /= default_pointer
@@ -205,7 +205,7 @@ feature {NONE} -- C externals
 			"((ImageEncoderParameter *)$a_item)->Value = $a_value;"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

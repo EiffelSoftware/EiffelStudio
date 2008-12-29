@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of MOTIF shell."
@@ -33,14 +33,14 @@ inherit
 
 feature -- Geometry operations
 
-	allow_resize is
+	allow_resize
 			-- Allow geometry resize to all geometry requests
 			-- from its children.
 		do
 			allow_shell_resize 
 		end;
 
-	forbid_resize is
+	forbid_resize
 			-- Forbid geometry resize to all geometry requests
 			-- from its children.
 		do
@@ -49,7 +49,7 @@ feature -- Geometry operations
 
 feature  -- Status Setting
 
-	set_override (flag: BOOLEAN) is
+	set_override (flag: BOOLEAN)
 			-- Enable or disable the keyboard focus
 			-- away from the application windows according
 			-- to `flag'.
@@ -63,7 +63,7 @@ feature  -- Status Setting
 
 feature {ALL_CURS_X} -- Implementation
 
-	define_cursor_if_shell (a_cursor: SCREEN_CURSOR) is
+	define_cursor_if_shell (a_cursor: SCREEN_CURSOR)
 			-- Define `cursor' if the current widget is a shell.
 		local
 			cursor_implementation: SCREEN_CURSOR_IMP
@@ -74,14 +74,14 @@ feature {ALL_CURS_X} -- Implementation
 			display.flush
 		end;
 
-	undefine_cursor_if_shell is
+	undefine_cursor_if_shell
 			-- Undefine the cursor if the current widget is a shell.
 		do
 			undefine_cursor;
 			display.flush
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Command to quit the application immediately"
 	legal: "See notice at end of class.";
@@ -21,13 +21,13 @@ inherit
 
 feature -- Basic operations
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Quit the application.
 		do
 			exit
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

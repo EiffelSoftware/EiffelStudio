@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "EiffelVision pixmap. Mswindows implementation for %
 				  %drawable pixmap (drawable, not self-displayable)"
 	legal: "See notice at end of class."
@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_simple (other: EV_PIXMAP_IMP) is
+	make_with_simple (other: EV_PIXMAP_IMP)
 			-- Create the current implementation using `other's
 			-- attributes.
 		do
@@ -70,13 +70,13 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_with_pixel_buffer (a_dc: WEL_MEMORY_DC) is
+	make_with_pixel_buffer (a_dc: WEL_MEMORY_DC)
 			-- Creation method for EV_PIXEL_BUFFER specially
 		do
 			dc := a_dc
 		end
 
-	promote_from_simple (other: EV_PIXMAP_IMP) is
+	promote_from_simple (other: EV_PIXMAP_IMP)
 			-- Retrieve all common attributes between `other'
 			-- and `Current' & make `Current' have the same
 			-- attributes than `other'.
@@ -132,7 +132,7 @@ feature {NONE} -- Initialization
 			other.safe_destroy
 		end
 
-	copy_tab_status (other: EV_PIXMAP_IMP) is
+	copy_tab_status (other: EV_PIXMAP_IMP)
 			-- Retrieve all common attributes between `other'
 			-- and `Current' & make `Current' have the same
 			-- attributes than `other'.
@@ -152,7 +152,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	adapt_from_simple (other: EV_PIXMAP_IMP) is
+	adapt_from_simple (other: EV_PIXMAP_IMP)
 			-- Adapt the current implementation to `other'.
 		do
 			promote_from_simple (other)
@@ -175,7 +175,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	read_from_named_file (file_name: STRING_GENERAL) is
+	read_from_named_file (file_name: STRING_GENERAL)
 			-- Load the pixmap described in 'file_name'.
 			--
 			-- Exceptions "Unable to retrieve icon information",
@@ -192,13 +192,13 @@ feature {NONE} -- Initialization
 			adapt_from_simple (simple_pixmap)
 		end
 
-	refresh_now is
+	refresh_now
 			-- Force `Current' to be redrawn immediately.
 		do
 			-- No implementation needed as `Current' is always offscreen
 		end
 
-	set_with_default is
+	set_with_default
 			-- Initialize the pixmap with the default
 			-- pixmap (Vision2 logo)
 			--
@@ -215,7 +215,7 @@ feature {NONE} -- Initialization
 			adapt_from_simple (simple_pixmap)
 		end
 
-	set_default_colors is
+	set_default_colors
 			-- Set foreground and background color to their default values.
 		local
 			a_default_colors: EV_STOCK_COLORS
@@ -225,13 +225,13 @@ feature {NONE} -- Initialization
 			set_foreground_color (a_default_colors.default_foreground_color)
 		end
 
-	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE)
 			-- Initialize from `a_pointer_style'
 		do
 			check should_not_be_called: False end
 		end
 
-	initialize is
+	initialize
 		do
 			disable_tabable_from
 			disable_tabable_to
@@ -240,7 +240,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Saving
 
-	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME; a_raw_image_data: like raw_image_data) is
+	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME; a_raw_image_data: like raw_image_data)
 			-- Call `save' on `a_format'. Implemented in descendant of EV_PIXMAP_IMP_STATE
 			-- since `save' from EV_GRAPHICAL_FORMAT is only exported to EV_PIXMAP_I.
 		do
@@ -249,7 +249,7 @@ feature {NONE} -- Saving
 
 feature -- Access
 
-	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
 			-- Return the subpixmap of `Current' described by rectangle `area'.
 		local
 			a_pixmap_imp: EV_PIXMAP_IMP
@@ -285,17 +285,17 @@ feature -- Access
 	mask_dc: WEL_MEMORY_DC
 			-- The device context corresponding to the mask
 
-	icon: WEL_ICON is
+	icon: WEL_ICON
 			-- Current icon used.
 		do
 		end
 
-	cursor: WEL_CURSOR is
+	cursor: WEL_CURSOR
 			-- Current cursor used.
 		do
 		end
 
-	get_bitmap: WEL_BITMAP is
+	get_bitmap: WEL_BITMAP
 			-- Current bitmap used. Void if not initialized, not
 			-- Void otherwise (see Invariant at the end of class).
 			--
@@ -308,7 +308,7 @@ feature -- Access
 			dc.select_bitmap (internal_bitmap)
 		end
 
-	get_mask_bitmap: WEL_BITMAP is
+	get_mask_bitmap: WEL_BITMAP
 			-- Monochrome bitmap used as mask. Void if none.
 			--
 			-- Call `WEL_BITMAP.decrement_reference' when you don't
@@ -322,7 +322,7 @@ feature -- Access
 			end
 		end
 
-	has_mask: BOOLEAN is
+	has_mask: BOOLEAN
 			-- Has the current pixmap a mask?
 		do
 			Result := internal_mask_bitmap /= Void
@@ -336,7 +336,7 @@ feature -- Access
 
 feature -- Status setting
 
-	stretch (new_width, new_height: INTEGER) is
+	stretch (new_width, new_height: INTEGER)
 			-- Stretch the image to fit in size
 			-- `new_width' by `new_height'.
 		local
@@ -352,7 +352,7 @@ feature -- Status setting
 			adapt_from_simple (simple_pixmap)
 		end
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Resize the current bitmap. If the new size
 			-- is smaller than the old one, the bitmap is
 			-- clipped.
@@ -407,7 +407,7 @@ feature -- Status setting
 			height := internal_bitmap.height
 		end
 
-	reset_for_buffering (a_width, a_height: INTEGER) is
+	reset_for_buffering (a_width, a_height: INTEGER)
 			-- Resets the size of the pixmap without keeping original image or clearing background.
 		local
 			new_bitmap: WEL_BITMAP
@@ -458,7 +458,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	set_transparent_color (value: EV_COLOR) is
+	set_transparent_color (value: EV_COLOR)
 			-- Make `value' the new transparent color.
 		do
 			transparent_color := value
@@ -467,7 +467,7 @@ feature -- Element change
 			end
 		end
 
-	set_mask (a_mask: EV_BITMAP) is
+	set_mask (a_mask: EV_BITMAP)
 			-- Set bitmap mask of `Current' to `a_mask'.
 		local
 			l_bitmap_imp: EV_BITMAP_IMP
@@ -498,32 +498,32 @@ feature -- Navigation
 	internal_tabable_info: NATURAL_8
 			-- Storage for `is_tabable_from' and `is_tabable_to'.
 
-	is_tabable_to: BOOLEAN is
+	is_tabable_to: BOOLEAN
 		do
 			Result := internal_tabable_info.bit_test (1)
 		end
 
-	is_tabable_from: BOOLEAN is
+	is_tabable_from: BOOLEAN
 		do
 			Result := internal_tabable_info.bit_test (2)
 		end
 
-	enable_tabable_from is
+	enable_tabable_from
 		do
 			internal_tabable_info := internal_tabable_info.set_bit (True, 2)
 		end
 
-	disable_tabable_from is
+	disable_tabable_from
 		do
 			internal_tabable_info := internal_tabable_info.set_bit (False, 2)
 		end
 
-	enable_tabable_to is
+	enable_tabable_to
 		do
 			internal_tabable_info := internal_tabable_info.set_bit (True, 1)
 		end
 
-	disable_tabable_to is
+	disable_tabable_to
 		do
 			internal_tabable_info := internal_tabable_info.set_bit (False, 1)
 		end
@@ -545,7 +545,7 @@ feature {
 			-- Bitmap mapped onto the current mask DC and
 			-- representing the current mask.
 
-	destroy is
+	destroy
 			-- Destroy actual object.
 		do
 				-- Turn off invariant checking.
@@ -572,7 +572,7 @@ feature {
 
 feature {EV_PIXMAP} -- Duplication
 
-	copy_pixmap (other_interface: EV_PIXMAP) is
+	copy_pixmap (other_interface: EV_PIXMAP)
 			-- Update `Current' to have same appearence as `other_interface'.
 			-- (So as to satisfy `is_equal'.)
 		local
@@ -598,12 +598,12 @@ feature {EV_PIXMAP} -- Duplication
 
 feature {NONE} -- Private Implementation
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Initialize the bridge pattern.
 		do
 		end
 
-	create_simple_pixmap: EV_PIXMAP_IMP is
+	create_simple_pixmap: EV_PIXMAP_IMP
 			-- Create an empty pixmap implementation.
 			--| Used to delegate some feature already
 			--| implemented in the simple pixmap version.
@@ -615,7 +615,7 @@ feature {NONE} -- Private Implementation
 			Result ?= dummy_interface.implementation
 		end
 
-	promote_to_widget is
+	promote_to_widget
 			-- Promote the current implementation to
 			-- EV_PIXMAP_IMP_WIDGET which allows
 			-- drawing operations on the pixmap and
@@ -632,7 +632,7 @@ feature {NONE} -- Private Implementation
 			new_width	: INTEGER
 			new_height	: INTEGER
 			a_brush		: WEL_BRUSH
-		): WEL_BITMAP is
+		): WEL_BITMAP
 			-- Resize `old_bitmap'. If the new size
 			-- is smaller than the old one, the bitmap is
 			-- clipped. If the new size is bigger than the
@@ -714,7 +714,7 @@ feature -- Delegated features
 			Result := interface.implementation.create_file_drop_actions
 		end
 
-	widget_imp_at_pointer_position: EV_WIDGET_IMP is
+	widget_imp_at_pointer_position: EV_WIDGET_IMP
 			-- `Result' is widget implementation at current
 			-- cursor position.
 		do
@@ -723,7 +723,7 @@ feature -- Delegated features
 			end
 		end
 
-	pnd_screen: EV_SCREEN is
+	pnd_screen: EV_SCREEN
 			-- `Result' is screen used for pick and drop.
 		do
 			check
@@ -731,14 +731,14 @@ feature -- Delegated features
 			end
 		end
 
-	on_parented is
+	on_parented
 			-- `Current' has just been added to a container
 		do
 			promote_to_widget
 			interface.implementation.on_parented
 		end
 
-	disable_capture is
+	disable_capture
             -- Ungrab the user input.
 		local
 			new_imp: EV_PIXMAP_IMP_WIDGET
@@ -748,28 +748,28 @@ feature -- Delegated features
 			new_imp.disable_capture
 		end
 
-	set_pebble (a_pebble: like pebble) is
+	set_pebble (a_pebble: like pebble)
 			-- Assign `a_pebble' to `pebble'.
 		do
 			promote_to_widget
 			interface.implementation.set_pebble (a_pebble)
 		end
 
-	set_actual_drop_target_agent (an_agent: like actual_drop_target_agent) is
+	set_actual_drop_target_agent (an_agent: like actual_drop_target_agent)
 			-- Assign `an_agent' to `actual_drop_target_agent'.
 		do
 			promote_to_widget
 			interface.implementation.set_actual_drop_target_agent (an_agent)
 		end
 
-	disable_transport is
+	disable_transport
 			-- Deactivate pick/drag and drop mechanism.
 		do
 			promote_to_widget
 			interface.implementation.disable_transport
 		end
 
-	draw_rubber_band is
+	draw_rubber_band
 			-- Erase previously drawn rubber band.
 			-- Draw a rubber band between initial pick point and cursor.
 		do
@@ -777,7 +777,7 @@ feature -- Delegated features
 			interface.implementation.draw_rubber_band
 		end
 
-	enable_capture is
+	enable_capture
             -- Grab the user input.
 		local
 			new_imp: EV_PIXMAP_IMP_WIDGET
@@ -787,7 +787,7 @@ feature -- Delegated features
 			new_imp.enable_capture
 		end
 
-	enable_transport is
+	enable_transport
             -- Activate pick/drag and drop mechanism.
 		do
 			promote_to_widget
@@ -800,7 +800,7 @@ feature -- Delegated features
 			a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER
-		) is
+		)
 			-- Terminate the pick and drop mechanism.
 		do
 			promote_to_widget
@@ -813,40 +813,40 @@ feature -- Delegated features
 			)
 		end
 
-	internal_enable_dockable is
+	internal_enable_dockable
 			-- Platform specific implementation of `enable_drag'.
 			-- Does nothing in this implementation.
 		do
 		end
 
-	internal_disable_dockable is
+	internal_disable_dockable
 			-- Platform specific implementation of `disable_drag'.
 			-- Does nothing in this implementation.
 		do
 		end
 
-	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER) is
+	update_buttons (a_parent: EV_TOOL_BAR; start_index, end_index: INTEGER)
 			-- Ensure that buttons from `start_index' to `end_index' in `a_parent' are
 			-- refreshed. This is called at the end of  a dockable transport from a tool bar button
 			-- as on some platforms, they end up in an invalid state, and need refreshing.
 		do
 		end
 
-	erase_rubber_band is
+	erase_rubber_band
 			-- Erase previously drawn rubber band.
 		do
 			promote_to_widget
 			interface.implementation.erase_rubber_band
 		end
 
-	real_pointed_target: EV_PICK_AND_DROPABLE is
+	real_pointed_target: EV_PICK_AND_DROPABLE
 			-- Target at mouse position
 		do
 			promote_to_widget
 			Result := interface.implementation.real_pointed_target
 		end
 
-	set_pointer_style (c: EV_POINTER_STYLE) is
+	set_pointer_style (c: EV_POINTER_STYLE)
 			-- Set `c' as new cursor pixmap.
 			-- Can be called through `interface'.
 		local
@@ -857,7 +857,7 @@ feature -- Delegated features
 			new_imp.set_pointer_style(c)
 		end
 
-	internal_set_pointer_style (c: EV_POINTER_STYLE) is
+	internal_set_pointer_style (c: EV_POINTER_STYLE)
 			-- Assign `c' to cursor pixmap.
 			-- Only called from implementation.
 		local
@@ -879,7 +879,7 @@ feature -- Delegated features
 			a_screen_x: INTEGER
 			a_screen_y: INTEGER
 			a_menu_only: BOOLEAN
-		) is
+		)
 			-- Start a pick and drop transport.
 		do
 			promote_to_widget
@@ -897,67 +897,67 @@ feature -- Delegated features
 				)
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Disable sensitivity to user input events.
 		do
 			promote_to_widget
 			interface.implementation.disable_sensitive
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Enable sensitivity to user input events.
 		do
 			promote_to_widget
 			interface.implementation.enable_sensitive
 		end
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does widget have the keyboard focus?
 		do
 			promote_to_widget
 			Result := interface.implementation.has_focus
 		end
 
-	hide is
+	hide
 			-- Request that `Current' not be displayed when its parent is.
 		do
 			promote_to_widget
 			interface.implementation.hide
 		end
 
-	is_displayed: BOOLEAN is
+	is_displayed: BOOLEAN
 			-- Is `Current' visible on the screen?
 			-- False if `Current' is entirely obscured by another window.
 		do
 			Result := False
 		end
 
-	is_sensitive: BOOLEAN is
+	is_sensitive: BOOLEAN
 			-- Does `Current' respond to user input events.
 		do
 			Result := False
 		end
 
-	is_show_requested: BOOLEAN is
+	is_show_requested: BOOLEAN
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
 		do
 			Result := False
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum vertical size in pixels of `Current'.
 		do
 			Result := height
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels `Current'.
 		do
 			Result := width
 		end
 
-	parent: EV_CONTAINER is
+	parent: EV_CONTAINER
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 		do
@@ -965,26 +965,26 @@ feature -- Delegated features
 			Result := Void
 		end
 
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 		do
 			-- Simple pixmap => not in a container.
 			Result := False
 		end
 
-	has_capture: BOOLEAN is
+	has_capture: BOOLEAN
 			-- Does widget have capture?
 		do
 			-- Simple pixmap => not in a container.
 			Result := False
 		end
 
-	parent_is_sensitive: BOOLEAN is
+	parent_is_sensitive: BOOLEAN
 		do
 			-- Simple pixmap => not in a container.
 			Result := False
 		end
 
-	pointer_position: EV_COORDINATE is
+	pointer_position: EV_COORDINATE
             -- Position of the screen pointer relative to `Current'.
 		do
 				-- The pixmap is not on the screen, we
@@ -993,35 +993,35 @@ feature -- Delegated features
 			Result.set (0, 0)
 		end
 
-	pointer_style: EV_POINTER_STYLE is
+	pointer_style: EV_POINTER_STYLE
 			-- Cursor displayed when screen pointer is over `Current'.
 		do
 			promote_to_widget
 			Result := interface.implementation.pointer_style
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset relative to screen in pixels.
 		do
 			promote_to_widget
 			Result := interface.implementation.screen_x
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset relative to screen in pixels.
 		do
 			promote_to_widget
 			Result := interface.implementation.screen_y
 		end
 
-	set_focus is
+	set_focus
 			-- Grab keyboard focus.
 		do
 			promote_to_widget
 			interface.implementation.set_focus
 		end
 
-	set_minimum_height (a_minimum_height: INTEGER) is
+	set_minimum_height (a_minimum_height: INTEGER)
 			-- Set the minimum vertical size to `a_minimum_height' in pixels.
 		do
 			promote_to_widget
@@ -1031,7 +1031,7 @@ feature -- Delegated features
 	set_minimum_size (
 			a_minimum_width: INTEGER
 			a_minimum_height: INTEGER
-		) is
+		)
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
 			-- Set the minimum vertical size to `a_minimum_height' in pixels.
 		do
@@ -1042,49 +1042,49 @@ feature -- Delegated features
 				)
 		end
 
-	set_minimum_width (a_minimum_width: INTEGER) is
+	set_minimum_width (a_minimum_width: INTEGER)
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
 		do
 			promote_to_widget
 			interface.implementation.set_minimum_width(a_minimum_width)
 		end
 
-	set_tooltip (a_text: STRING_GENERAL) is
+	set_tooltip (a_text: STRING_GENERAL)
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
 		do
 			promote_to_widget
 			interface.implementation.set_tooltip(a_text)
 		end
 
-	show is
+	show
 			-- Request that `Current' be displayed when its parent is.
 		do
 			promote_to_widget
 			interface.implementation.show
 		end
 
-	tooltip: STRING_32 is
+	tooltip: STRING_32
 			-- Text displayed when user moves mouse over widget.
 		do
 			promote_to_widget
 			Result := interface.implementation.tooltip
 		end
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
 			promote_to_widget
 			Result := interface.implementation.x_position
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
 			promote_to_widget
 			Result := interface.implementation.y_position
 		end
 
-	redraw is
+	redraw
 			-- Force `Current' to redraw itself.
 		do
 			-- Do nothing as `Current' is not displayed on-screen.
@@ -1111,7 +1111,7 @@ invariant
 	mask_dc_reference_tracked:
 		mask_dc /= Void implies mask_dc.reference_tracked;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

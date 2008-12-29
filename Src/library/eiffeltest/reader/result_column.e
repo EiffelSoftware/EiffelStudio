@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Result columns in test input data tables"
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ class RESULT_COLUMN inherit
 		
 feature -- Status report
 
-	input_accepted (s: STRING): BOOLEAN is
+	input_accepted (s: STRING): BOOLEAN
 			-- Is `s' acceptable input for this column?
 		do
 			Result := s /= Void and then expected_result (s) /= Void
@@ -29,7 +29,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	inject_data (s: STRING) is
+	inject_data (s: STRING)
 			-- Inject data `s' into `test case'?
 		local
 			res: TEST_RUN_RESULT
@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 			expected_result_set: test_case.has_expected_result
 		end
 			
-	expected_result (s: STRING): TEST_RUN_RESULT is
+	expected_result (s: STRING): TEST_RUN_RESULT
 			-- Expected result encoded in `s'
 		local
 			res: STRING
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

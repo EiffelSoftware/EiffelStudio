@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "EiffelVision Combo-box. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 	
 feature -- Status report
 
-	is_list_shown: BOOLEAN is
+	is_list_shown: BOOLEAN
 			-- Is drop down list currently shown?
 		deferred
 		end
@@ -32,7 +32,7 @@ feature {EV_COMBO_BOX_I} -- Implementation
 
 	interface: EV_COMBO_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

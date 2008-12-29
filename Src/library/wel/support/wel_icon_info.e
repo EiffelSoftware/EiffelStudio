@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Information about an icon or a cursor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {WEL_GRAPHICAL_RESOURCE}-- Initialization
 
-	initialize_bitmaps is
+	initialize_bitmaps
 			-- Initialize the bitmaps from the structure.
 		require
 			not_yet_initialized: not is_initialized
@@ -44,7 +44,7 @@ feature {WEL_GRAPHICAL_RESOURCE}-- Initialization
 
 feature -- Access
 
-	mask_bitmap: WEL_BITMAP is
+	mask_bitmap: WEL_BITMAP
 			-- bitmap representing the mask.
 			--
 			-- Specifies the icon bitmask bitmap. If this structure defines a black
@@ -62,7 +62,7 @@ feature -- Access
 			Result_exists: Result.exists
 		end
 
-	color_bitmap: WEL_BITMAP is
+	color_bitmap: WEL_BITMAP
 			-- bitmap representing the image (as opposed to the mask)
 			--
 			-- Handle to the icon color bitmap. This member can be optional if
@@ -85,14 +85,14 @@ feature -- Status Report
 	is_initialized: BOOLEAN
 			-- Is the structure initialized (i.e. filled)?
 
-	is_icon: BOOLEAN is
+	is_icon: BOOLEAN
 			-- Specifies whether this structure defines and icon or a cursor.
 			-- True specifies an icon; False specifies a cursor.
 		do
 			Result := fIcon_ext (item)
 		end
 
-	has_color_bitmap: BOOLEAN is
+	has_color_bitmap: BOOLEAN
 			-- Is `color_bitmap' valid?
 			--
 			-- In the case of a black & white icon/cursor, `mask_bitmap' is
@@ -103,7 +103,7 @@ feature -- Status Report
 			Result := (hbmColor_ext (item) /= Default_pointer)
 		end
 
-	x_hotspot: INTEGER is
+	x_hotspot: INTEGER
 			-- Specifies the x-coordinate of a cursor's hotspot.
 			-- If this structure defines an icon, the hot spot is
 			-- always in the center of the icon, and this member is ignored.
@@ -111,7 +111,7 @@ feature -- Status Report
 			Result := xHotspot_ext (item)
 		end
 
-	y_hotspot: INTEGER is
+	y_hotspot: INTEGER
 			-- Specifies the y-coordinate of a cursor's hotspot.
 			-- If this structure defines an icon, the hot spot is
 			-- always in the center of the icon, and this member is ignored.
@@ -119,7 +119,7 @@ feature -- Status Report
 			Result := yHotspot_ext (item)
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of icon.
 		do
 			if not has_color_bitmap then
@@ -129,7 +129,7 @@ feature -- Status Report
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Width of icon.
 		do
 			if not has_color_bitmap then
@@ -146,7 +146,7 @@ feature -- Status Report
 
 feature -- Status Setting
 
-	enable_reference_tracking_on_bitmaps is
+	enable_reference_tracking_on_bitmaps
 			-- Enable the tracking of references on `mask_bitmap' and
 			-- `color_bitmap'.
 			--
@@ -164,19 +164,19 @@ feature -- Status Setting
 			end
 		end
 
-	set_x_hotspot (xvalue: INTEGER) is
+	set_x_hotspot (xvalue: INTEGER)
 			-- Assign `xvalue' to xHotspot.
 		do
 			set_xHotspot_ext (item, xvalue)
 		end
 
-	set_y_hotspot (yvalue: INTEGER) is
+	set_y_hotspot (yvalue: INTEGER)
 			-- Assign `yvalue' to yHotspot.
 		do
 			set_yHotspot_ext (item, yvalue)
 		end
 
-	set_mask_bitmap (a_mask_bitmap: WEL_BITMAP) is
+	set_mask_bitmap (a_mask_bitmap: WEL_BITMAP)
 			-- Assign `a_mask_bitmap' to hbmMask
 		do
 				-- Remove the existing mask bitmap if any.
@@ -198,7 +198,7 @@ feature -- Status Setting
 			is_initialized := True
 		end
 
-	set_color_bitmap (a_color_bitmap: WEL_BITMAP) is
+	set_color_bitmap (a_color_bitmap: WEL_BITMAP)
 			-- Assign `a_color_bitmap' to hbmColor
 		do
 				-- Remove the existing bitmap if any.
@@ -220,7 +220,7 @@ feature -- Status Setting
 			is_initialized := True
 		end
 
-	set_is_icon (a_is_icon: BOOLEAN) is
+	set_is_icon (a_is_icon: BOOLEAN)
 			-- Assign `a_is_icon' to fIcon.
 		do
 			set_fIcon_ext (item, a_is_icon)
@@ -228,7 +228,7 @@ feature -- Status Setting
 
 feature --  Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_iconinfo
@@ -236,37 +236,37 @@ feature --  Measurement
 
 feature -- Obsolete
 
-	fIcon: BOOLEAN is
+	fIcon: BOOLEAN
 		obsolete "use `is_icon' instead"
 		do
 			Result := is_icon
 		end
 
-	xHotspot: INTEGER is
+	xHotspot: INTEGER
 		obsolete "use `x_hotspot' instead"
 		do
 			Result := x_hotspot
 		end
 
-	yHotspot: INTEGER is
+	yHotspot: INTEGER
 		obsolete "use `y_hotspot' instead"
 		do
 			Result := y_hotspot
 		end
 
-	set_xHotspot (xvalue: INTEGER) is
+	set_xHotspot (xvalue: INTEGER)
 		obsolete "use `set_x_hotspot' instead"
 		do
 			set_x_hotspot (xvalue)
 		end
 
-	set_yHotspot (yvalue: INTEGER) is
+	set_yHotspot (yvalue: INTEGER)
 		obsolete "use `set_y_hotspot' instead"
 		do
 			set_y_hotspot (yvalue)
 		end
 
-	set_fIcon (a_is_icon: BOOLEAN) is
+	set_fIcon (a_is_icon: BOOLEAN)
 		obsolete "use `set_is_icon' instead"
 		do
 			set_is_icon (a_is_icon)
@@ -274,7 +274,7 @@ feature -- Obsolete
 
 feature -- Removal
 
-	delete is
+	delete
 			-- Free allocated C memory and GDI objects.
 		require
 			not_shared: not shared
@@ -286,7 +286,7 @@ feature -- Removal
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- Free allocated C memory and GDI objects.
 		local
 			a_bitmap: WEL_BITMAP
@@ -320,14 +320,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_size_of_iconinfo: INTEGER is
+	c_size_of_iconinfo: INTEGER
 		external
 			"C [macro <winuser.h>]"
 		alias
 			"sizeof (ICONINFO)"
 		end
 
-	fIcon_ext (p: POINTER): BOOLEAN is
+	fIcon_ext (p: POINTER): BOOLEAN
 			-- Access field fIcon of struct pointed to by `p'.
 		external
 			"C [struct %"winuser.h%"] (ICONINFO): EIF_BOOLEAN"
@@ -335,7 +335,7 @@ feature {NONE} -- Externals
 			"fIcon"
 		end
 
-	xHotspot_ext (p: POINTER): INTEGER is
+	xHotspot_ext (p: POINTER): INTEGER
 			-- Access field xHotspot of struct pointed to by `p'.
 		external
 			"C [struct %"winuser.h%"] (ICONINFO): EIF_INTEGER"
@@ -343,7 +343,7 @@ feature {NONE} -- Externals
 			"xHotspot"
 		end
 
-	yHotspot_ext (p: POINTER): INTEGER is
+	yHotspot_ext (p: POINTER): INTEGER
 			-- Access field yHotspot of struct pointed to by `p'.
 		external
 			"C [struct %"winuser.h%"] (ICONINFO): EIF_INTEGER"
@@ -351,7 +351,7 @@ feature {NONE} -- Externals
 			"yHotspot"
 		end
 
-	hbmMask_ext (p: POINTER): POINTER is
+	hbmMask_ext (p: POINTER): POINTER
 			-- Access field hbmMask of stuct pointer to by `p'.
 		external
 			"C [struct %"winuser.h%"] (ICONINFO): EIF_POINTER"
@@ -359,7 +359,7 @@ feature {NONE} -- Externals
 			"hbmMask"
 		end
 
-	hbmColor_ext (p: POINTER): POINTER is
+	hbmColor_ext (p: POINTER): POINTER
 			-- Access field hbmColor of stuct pointer to by `p'.
 		external
 			"C [struct %"winuser.h%"] (ICONINFO): EIF_POINTER"
@@ -368,7 +368,7 @@ feature {NONE} -- Externals
 		end
 
 
-	set_fIcon_ext (p: POINTER; value: BOOLEAN) is
+	set_fIcon_ext (p: POINTER; value: BOOLEAN)
 			-- Set field fIcon of struct pointed to by `p' to `value'.
 		external
 			"C [struct %"winuser.h%"] (ICONINFO, unsigned char)"
@@ -376,7 +376,7 @@ feature {NONE} -- Externals
 			"fIcon"
 		end
 
-	set_xHotspot_ext (p: POINTER; value: INTEGER) is
+	set_xHotspot_ext (p: POINTER; value: INTEGER)
 			-- Set field xHotspot of struct pointed to by `p' to `value'.
 		external
 			"C [struct %"winuser.h%"] (ICONINFO, int)"
@@ -384,7 +384,7 @@ feature {NONE} -- Externals
 			"xHotspot"
 		end
 
-	set_yHotspot_ext (p: POINTER; value: INTEGER) is
+	set_yHotspot_ext (p: POINTER; value: INTEGER)
 			-- Set field yHotspot of struct pointed to by `p' to `value'.
 		external
 			"C [struct %"winuser.h%"] (ICONINFO, int)"
@@ -392,7 +392,7 @@ feature {NONE} -- Externals
 			"yHotspot"
 		end
 
-	set_hbmMask_ext (p, value: POINTER) is
+	set_hbmMask_ext (p, value: POINTER)
 			-- Set field hbmMask of struct pointed to by `p' to `value'
 		external
 			"C [struct %"winuser.h%"] (ICONINFO, HBITMAP)"
@@ -400,7 +400,7 @@ feature {NONE} -- Externals
 			"hbmMask"
 		end
 
-	set_hbmColor_ext (p, value: POINTER) is
+	set_hbmColor_ext (p, value: POINTER)
 			-- Set field hbmColor of struct pointed to by `p' to `value'
 		external
 			"C [struct %"winuser.h%"] (ICONINFO, HBITMAP)"
@@ -408,7 +408,7 @@ feature {NONE} -- Externals
 			"hbmColor"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

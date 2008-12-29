@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class that allows formatting of a DATE, TIME, or DATE_TIME according to the information in a I18N_DATE_TIME_INFO"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature	-- Creation
 
-	make (locale_info: I18N_LOCALE_INFO) is
+	make (locale_info: I18N_LOCALE_INFO)
 			-- Initialize with informations  in `locale_info'
 		require
 			locale_info_exists: locale_info /= Void
@@ -25,7 +25,7 @@ feature	-- Creation
 
 feature	-- Access
 
-	format_date (date: DATE): STRING_32 is
+	format_date (date: DATE): STRING_32
 			-- formats an EiffelTime date according to the long date format
 		require
 			date_not_void: date /= Void
@@ -33,7 +33,7 @@ feature	-- Access
 			Result := long_date_format.filled (date, create {TIME}.make_now)
 		end
 
-	format_time (time: TIME): STRING_32 is
+	format_time (time: TIME): STRING_32
 		-- formats an EiffelTime time according to the long time format
 		require
 			time_not_void: time /= Void
@@ -41,7 +41,7 @@ feature	-- Access
 			Result := long_time_format.filled (create {DATE}.make_now, time)
 		end
 
-	format_date_time (date_time: DATE_TIME): STRING_32 is
+	format_date_time (date_time: DATE_TIME): STRING_32
 			--formats an EiffelTime time according to the date time format
 		require
 			date_time_not_void: date_time /= Void
@@ -60,7 +60,7 @@ invariant
 	long_time_format_exists: long_time_format /= Void
 	date_time_format_exists: date_time_format /= Void
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

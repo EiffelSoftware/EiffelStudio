@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of point (implementation for X)"
 	legal: "See notice at end of class.";
@@ -51,7 +51,7 @@ create
 
 feature -- Initialization 
 
-	make is
+	make
 			-- Create a point.
 		do
 			init_fig (Void);
@@ -61,7 +61,7 @@ feature -- Initialization
 
 feature -- Duplication
 
-	duplicate: like Current is
+	duplicate: like Current
 			-- Create a copy of current point.
 		do
 			Result := coord_duplicate;
@@ -73,7 +73,7 @@ feature -- Duplication
 
 feature -- Output
 
-	draw is
+	draw
 			-- Draw current point.
 		do
 			if drawing.is_drawable then
@@ -85,7 +85,7 @@ feature -- Output
 
 feature {CONFIGURE_NOTIFY} -- Updating
 
-	conf_recompute is
+	conf_recompute
 		do
 			surround_box.set (x, y, 1, 1);
 		end;
@@ -94,7 +94,7 @@ invariant
 
 	origin_user_type <= 2
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

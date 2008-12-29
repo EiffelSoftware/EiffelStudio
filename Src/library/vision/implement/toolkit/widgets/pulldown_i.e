@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General pulldown menu implementation"
 	legal: "See notice at end of class.";
@@ -16,29 +16,29 @@ inherit
 	
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Label of menu button
 		deferred
 		end;
 
 feature -- Status setting
 
-	allow_recompute_size is
+	allow_recompute_size
 		deferred
 		end;
 
-	forbid_recompute_size is
+	forbid_recompute_size
 		deferred
 		end;
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set button text to `a_text'.
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

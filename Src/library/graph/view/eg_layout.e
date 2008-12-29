@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that can layout nodes and clusters in a given world."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 	
 feature {NONE} -- Initialization
 
-	make_with_world (a_world: like world) is
+	make_with_world (a_world: like world)
 			-- Make
 		require
 			a_world /= Void
@@ -28,7 +28,7 @@ feature -- Access
 			
 feature -- Element change
 
-	set_world (a_world: like world) is
+	set_world (a_world: like world)
 			-- Set `world' to `a_world'.
 		require
 			a_world_not_void: a_world /= Void
@@ -38,7 +38,7 @@ feature -- Element change
 			set: world = a_world
 		end
 
-	layout is
+	layout
 			-- Arrange the elements in `graph'.
 		local
 			cluster_figure: EG_CLUSTER_FIGURE
@@ -64,7 +64,7 @@ feature -- Element change
 			layout_linkables (world.root_cluster, 1, void)
 		end
 		
-	layout_cluster (cluster: EG_CLUSTER_FIGURE; level: INTEGER) is
+	layout_cluster (cluster: EG_CLUSTER_FIGURE; level: INTEGER)
 			-- Arrange the elements in `cluster' (recursive).
 		require
 			cluster_not_void: cluster /= Void
@@ -97,7 +97,7 @@ feature -- Element change
 			layout_linkables (figures_in_cluster, level, cluster)
 		end
 		
-	layout_cluster_only (cluster: EG_CLUSTER_FIGURE) is
+	layout_cluster_only (cluster: EG_CLUSTER_FIGURE)
 			-- Arrange the elements in `cluster' (not recursive).
 		require
 			cluster_not_void: cluster /= Void
@@ -122,7 +122,7 @@ feature -- Element change
 		
 feature {NONE} -- Implementation
 		
-	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE) is
+	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE)
 			-- arrange `linkables' that are elements of `clusters' at `level'.
 		require
 			linkables_not_void: linkables /= Void
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 invariant
 	world_not_void: world /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -10,9 +10,9 @@ deferred class
 
 feature -- Constants
 
-    ipv4: INTEGER is 1
+    ipv4: INTEGER = 1
 
-    ipv6: INTEGER is 2
+    ipv6: INTEGER = 2
 
 feature
 
@@ -20,7 +20,7 @@ feature
 
 feature
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 		do
 			if other /= Void then
 				Result :=
@@ -30,58 +30,58 @@ feature
 			end
 		end
 
-	is_multicast_address: BOOLEAN is
+	is_multicast_address: BOOLEAN
 		deferred
 		end
 
-	is_any_local_address: BOOLEAN is
+	is_any_local_address: BOOLEAN
 		deferred
     	end
 
-	is_loopback_address: BOOLEAN is
+	is_loopback_address: BOOLEAN
 		deferred
 		end
 
-	is_link_local_address: BOOLEAN is
+	is_link_local_address: BOOLEAN
 		deferred
 		end
 
-	is_site_local_address: BOOLEAN is
+	is_site_local_address: BOOLEAN
 		deferred
 		end
 
-	is_mc_global: BOOLEAN is
+	is_mc_global: BOOLEAN
 		deferred
 		end
 
-	is_mc_link_local: BOOLEAN is
+	is_mc_link_local: BOOLEAN
 		deferred
 		end
 
-	is_mc_site_local: BOOLEAN is
+	is_mc_site_local: BOOLEAN
 		deferred
 		end
 
-	is_mc_org_local: BOOLEAN is
+	is_mc_org_local: BOOLEAN
 		deferred
 		end
 
-	host_name: STRING is
+	host_name: STRING
 		do
 			Result := get_host_name
 		end
 
-	host_address: STRING is
+	host_address: STRING
 		deferred
 		end
 
-	raw_address: ARRAY [NATURAL_8] is
+	raw_address: ARRAY [NATURAL_8]
 		deferred
 		end
 
 feature {NETWORK_SOCKET_ADDRESS}
 
-	sockaddr (port: INTEGER): MANAGED_POINTER is
+	sockaddr (port: INTEGER): MANAGED_POINTER
 		deferred
 		end
 
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 
     the_host_name: STRING
 
-    get_host_name: STRING is
+    get_host_name: STRING
 		do
 			if the_host_name = Void then
 				-- TODO For now we provide just the textual representation of the IP address
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	sockaddr_size: INTEGER is
+	sockaddr_size: INTEGER
 		external
 			"C"
 		alias

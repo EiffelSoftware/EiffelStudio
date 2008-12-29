@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision list, gtk implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ create
 
 feature -- Initialize
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a list widget with `par' as parent.
 			-- By default, a list allow only one selection.
 		do
@@ -53,7 +53,7 @@ feature -- Initialize
 	scrollable_area: POINTER
 		-- Scrollable area used for `Current'
 
-	initialize is
+	initialize
 			-- Initialize the list.
 		local
 			a_column, a_cell_renderer: POINTER
@@ -101,7 +101,7 @@ feature -- Initialize
 
 feature -- Access
 
-	selected_item: EV_LIST_ITEM is
+	selected_item: EV_LIST_ITEM
 			-- Item which is currently selected, for a multiple
 			-- selection.
 		local
@@ -125,7 +125,7 @@ feature -- Access
 			end
 		end
 
-	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
+	selected_items: ARRAYED_LIST [EV_LIST_ITEM]
 			-- List of all the selected items. For a single
 			-- selection list, it gives a list with only one
 			-- element which is `selected_item'. Therefore, one
@@ -160,7 +160,7 @@ feature -- Access
 
 feature -- Status Report
 
-	multiple_selection_enabled: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN
 			-- True if the user can choose several items
 			-- False otherwise.
 		local
@@ -172,7 +172,7 @@ feature -- Status Report
 
 feature -- Status setting
 
-	ensure_item_visible (an_item: EV_LIST_ITEM) is
+	ensure_item_visible (an_item: EV_LIST_ITEM)
 			-- Ensure item `an_index' is visible in `Current'.
 		local
 			list_item_imp: EV_LIST_ITEM_IMP
@@ -184,7 +184,7 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
 		end
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
 		local
@@ -194,7 +194,7 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum)
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list.
 		local
@@ -204,7 +204,7 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, {EV_GTK_EXTERNALS}.gtk_selection_single_enum)
 		end
 
-	select_item (an_index: INTEGER) is
+	select_item (an_index: INTEGER)
 			-- Select an item at the one-based `index' of the list.
 		local
 			a_selection: POINTER
@@ -215,7 +215,7 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, a_item_imp.list_iter.item)
 		end
 
-	deselect_item (an_index: INTEGER) is
+	deselect_item (an_index: INTEGER)
 			-- Unselect the item at the one-based `index'.
 		local
 			a_selection: POINTER
@@ -226,7 +226,7 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, a_item_imp.list_iter.item)
 		end
 
-	clear_selection is
+	clear_selection
 			-- Clear the selection of the list.
 		local
 			a_selection: POINTER
@@ -237,7 +237,7 @@ feature -- Status setting
 
 feature -- PND
 
-	row_index_from_coords (a_x, a_y: INTEGER): INTEGER is
+	row_index_from_coords (a_x, a_y: INTEGER): INTEGER
 			-- Returns the row index at relative coordinate `a_y'.
 		local
 			a_tree_path, a_tree_column: POINTER
@@ -254,7 +254,7 @@ feature -- PND
 			end
 		end
 
-	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM is
+	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM
 			-- Returns the row at relative coordinate `a_y'
 		local
 			a_row_index: INTEGER
@@ -265,7 +265,7 @@ feature -- PND
 			end
 		end
 
-	on_mouse_button_event (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_mouse_button_event (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Initialize a pick and drop transport.
 		local
 			a_row_index: INTEGER
@@ -282,7 +282,7 @@ feature -- PND
 			Precursor {EV_LIST_ITEM_LIST_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
-	row_height: INTEGER is
+	row_height: INTEGER
 			-- Height of rows in `Current'
 			-- (export status {NONE})
 		local
@@ -301,7 +301,7 @@ feature -- PND
 
 feature {EV_ANY_I} -- Implementation
 
-	visual_widget: POINTER is
+	visual_widget: POINTER
 		do
 			Result := tree_view
 		end
@@ -313,7 +313,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	previous_selection: ARRAYED_LIST [EV_LIST_ITEM]
 		-- List of selected items from last selection change
 
-	call_selection_action_sequences is
+	call_selection_action_sequences
 			-- Call appropriate selection and deselection action sequences
 		local
 			new_selection: ARRAYED_LIST [EV_LIST_ITEM]
@@ -366,7 +366,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {NONE} -- Implementation
 
-	disable_default_key_processing is
+	disable_default_key_processing
 			-- Ensure default key processing is not performed.
 		do
 			Precursor {EV_LIST_I}
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 	tree_view: POINTER
 		-- Pointer to the view widget used to display the model within `Current'
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		do
@@ -384,13 +384,13 @@ feature {NONE} -- Implementation
 			--| For now, do nothing.
 		end
 
-	vertical_adjustment_struct: POINTER is
+	vertical_adjustment_struct: POINTER
 			-- Pointer to vertical adjustment struct use in the scrollbar.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment ({EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (scrollable_area))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

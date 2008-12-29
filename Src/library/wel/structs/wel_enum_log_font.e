@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Defines the attributes, the complete name, the style of a %
 		%font. This structure is used by WEL_FONT_FAMILY_ENUMERATOR."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Creation
 
-	make_with_pointer (a_pointer: POINTER) is
+	make_with_pointer (a_pointer: POINTER)
 			-- Copy structure pointed by `a_pointer' into `item'.
 			-- Caution: `a_pointer' must be a pointer
 			-- coming from Windows.
@@ -28,7 +28,7 @@ feature -- Creation
 
 feature -- Access
 
-	log_font: WEL_LOG_FONT is
+	log_font: WEL_LOG_FONT
 			-- Defines the attribut of a font
 		do
 			create Result.make_with_pointer (cwel_enumlogfont_get_elflogfont (item))
@@ -36,7 +36,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	full_name: STRING_32 is
+	full_name: STRING_32
 			-- Specifies a unique name for the font
 		local
 			l_str: WEL_STRING
@@ -47,7 +47,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	style: STRING_32 is
+	style: STRING_32
 			-- Specifies the style of the font
 		local
 			l_str: WEL_STRING
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_enumlogfont
@@ -68,29 +68,29 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_enumlogfont: INTEGER is
+	c_size_of_enumlogfont: INTEGER
 		external
 			"C [macro <enumlf.h>]"
 		alias
 			"sizeof (ENUMLOGFONT)"
 		end
 
-	cwel_enumlogfont_get_elflogfont (ptr: POINTER): POINTER is
+	cwel_enumlogfont_get_elflogfont (ptr: POINTER): POINTER
 		external
 			"C [macro <enumlf.h>] (ENUMLOGFONT*): EIF_POINTER"
 		end
 
-	cwel_enumlogfont_get_elffullname (ptr: POINTER): POINTER is
+	cwel_enumlogfont_get_elffullname (ptr: POINTER): POINTER
 		external
 			"C [macro <enumlf.h>] (ENUMLOGFONT*): EIF_POINTER"
 		end
 
-	cwel_enumlogfont_get_elfstyle (ptr: POINTER): POINTER is
+	cwel_enumlogfont_get_elfstyle (ptr: POINTER): POINTER
 		external
 			"C [macro <enumlf.h>] (ENUMLOGFONT*): EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

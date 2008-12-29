@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common ancestors to all STRING classes."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,14 +25,14 @@ convert
 
 feature -- Access
 
-	code (i: INTEGER): NATURAL_32 is
+	code (i: INTEGER): NATURAL_32
 			-- Code at position `i'
 		require
 			valid_index: valid_index (i)
 		deferred
 		end
 
-	index_of_code (c: like code; start_index: INTEGER): INTEGER is
+	index_of_code (c: like code; start_index: INTEGER): INTEGER
 			-- Position of first occurrence of `c' at or after `start_index';
 			-- 0 if none.
 		require
@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Settings
 
-	put_code (v: like code; i: INTEGER) is
+	put_code (v: like code; i: INTEGER)
 			-- Put code `v' at position `i'.
 		require
 			valid_code: valid_code (v)
@@ -79,7 +79,7 @@ feature -- Settings
 
 feature {STRING_HANDLER} -- Settings
 
-	set_count (number: INTEGER) is
+	set_count (number: INTEGER)
 			-- Set `count' to `number' of characters.
 		require
 			valid_count: 0 <= number and number <= capacity
@@ -88,7 +88,7 @@ feature {STRING_HANDLER} -- Settings
 			new_count: count = number
 		end
 
-	set_internal_hash_code (v: like internal_hash_code) is
+	set_internal_hash_code (v: like internal_hash_code)
 			-- Set `internal_hash_code' with `v'.
 		require
 			v_nonnegative: v >= 0
@@ -99,51 +99,51 @@ feature {STRING_HANDLER} -- Settings
 
 feature -- Status report
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of characters in Current
 		deferred
 		ensure
 			count_non_negative: Result >= 0
 		end
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Number of characters allocated in Current
 		deferred
 		ensure
 			capacity_non_negative: Result >= 0
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of the string?
 		deferred
 		end
 
-	valid_code (v: like code): BOOLEAN is
+	valid_code (v: like code): BOOLEAN
 			-- Is `v' a valid code for Current?
 		deferred
 		end
 
-	is_string_8: BOOLEAN is
+	is_string_8: BOOLEAN
 			-- Is `Current' a STRING_8?
 		deferred
 		end
 
-	is_string_32: BOOLEAN is
+	is_string_32: BOOLEAN
 			-- Is `Current' a STRING_32?
 		deferred
 		end
 
-	is_valid_as_string_8: BOOLEAN is
+	is_valid_as_string_8: BOOLEAN
 			-- Is `Current' convertible to STRING_8 without information loss?
 		deferred
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is structure empty?
 		deferred
 		end
 
-	has_code (c: like code): BOOLEAN is
+	has_code (c: like code): BOOLEAN
 			-- Does string include `c'?
 		local
 			i, nb: INTEGER
@@ -168,7 +168,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	frozen to_cil: SYSTEM_STRING is
+	frozen to_cil: SYSTEM_STRING
 			-- Create an instance of SYSTEM_STRING using characters
 			-- of Current between indices `1' and `count'.
 		require
@@ -179,7 +179,7 @@ feature -- Conversion
 			to_cil_not_void: Result /= Void
 		end
 
-	to_string_8: STRING is
+	to_string_8: STRING
 			-- Convert `Current' as a STRING_8.
 		require
 			is_valid_as_string_8: is_valid_as_string_8
@@ -190,7 +190,7 @@ feature -- Conversion
 			identity: (is_string_8 and Result = Current) or (not is_string_8 and Result /= Current)
 		end
 
-	as_string_8: STRING is
+	as_string_8: STRING
 			-- Convert `Current' as a STRING_8. If a code of `Current' is
 			-- node a valid code for a STRING_8 it is replaced with the null
 			-- character.
@@ -223,7 +223,7 @@ feature -- Conversion
 			identity: (is_string_8 and Result = Current) or (not is_string_8 and Result /= Current)
 		end
 
-	as_string_32, to_string_32: STRING_32 is
+	as_string_32, to_string_32: STRING_32
 			-- Convert `Current' as a STRING_32.
 		local
 			i, nb: INTEGER
@@ -250,7 +250,7 @@ feature -- Conversion
 
 feature -- Duplication
 
-	substring (start_index, end_index: INTEGER): like Current is
+	substring (start_index, end_index: INTEGER): like Current
 			-- Copy of substring containing all characters at indices
 			-- between `start_index' and `end_index'
 		deferred
@@ -264,7 +264,7 @@ feature -- Duplication
 
 feature -- Element change
 
-	append_code (c: like code) is
+	append_code (c: like code)
 			-- Append `c' at end.
 		require
 			valid_code: valid_code (c)
@@ -283,7 +283,7 @@ feature -- Element change
 			stable_before: elks_checking implies substring (1, count - 1).is_equal (old twin)
 		end
 
-	append (s: STRING_GENERAL) is
+	append (s: STRING_GENERAL)
 			-- Append a copy of `s' at end.
 		require
 			argument_not_void: s /= Void
@@ -317,7 +317,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove `i'-th character.
 		require
 			valid_index: valid_index (i)
@@ -330,7 +330,7 @@ feature -- Removal
 
 feature -- Resizing
 
-	resize (newsize: INTEGER) is
+	resize (newsize: INTEGER)
 			-- Rearrange string so that it can accommodate
 			-- at least `newsize' characters.
 			-- Do not lose any previously entered character.
@@ -341,17 +341,17 @@ feature -- Resizing
 
 feature {NONE} -- Assertion helper
 
-	elks_checking: BOOLEAN is False
+	elks_checking: BOOLEAN = False
 			-- Are ELKS checkings verified? Must be True when changing implementation of STRING_GENERAL or descendant.
 
 feature {NONE} -- Implementation
 
-	internal_hash_code: INTEGER is
+	internal_hash_code: INTEGER
 			--
 		deferred
 		end
 
-	string_searcher: STRING_SEARCHER is
+	string_searcher: STRING_SEARCHER
 			-- Facilities to search string in another string.
 		once
 			create Result.make
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 			string_searcher_not_void: Result /= Void
 		end
 
-	c_string_provider: C_STRING is
+	c_string_provider: C_STRING
 			-- To create Eiffel strings from C string.
 		once
 			create Result.make_empty (0)
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 			c_string_provider_not_void: Result /= Void
 		end
 
-	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR is
+	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR
 			-- Convertor used to convert string to integer or natural
 		once
 			create Result.make
@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 			ctoi_convertor_not_void: Result /= Void
 		end
 
-	ctor_convertor: STRING_TO_REAL_CONVERTOR is
+	ctor_convertor: STRING_TO_REAL_CONVERTOR
 			-- Convertor used to convert string to real or double
 		once
 			create Result.make
@@ -391,7 +391,7 @@ feature {NONE} -- Implementation
 			ctor_convertor_not_void: Result /= Void
 		end
 
-	dotnet_convertor: SYSTEM_STRING_FACTORY is
+	dotnet_convertor: SYSTEM_STRING_FACTORY
 			-- Convertor used to convert from and to SYSTEM_STRING.
 		once
 			create Result

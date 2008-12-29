@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_HOT_ZONEs for SD_TAB_ZONEs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_zone: SD_TAB_ZONE; a_rect: EV_RECTANGLE; a_docker_mediator: SD_DOCKER_MEDIATOR) is
+	make (a_zone: SD_TAB_ZONE; a_rect: EV_RECTANGLE; a_docker_mediator: SD_DOCKER_MEDIATOR)
 			-- Creation method.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initlization
 
 feature -- Redefine
 
-	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Redefine.
 		local
 			l_caller: SD_ZONE
@@ -86,7 +86,7 @@ feature -- Redefine
 			end
 		end
 
-	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
+	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
 			-- Redefine.
 		local
 			l_item: EV_RECTANGLE
@@ -113,7 +113,7 @@ feature -- Redefine
 
 feature -- Query
 
-	tab_zone_of (a_zone: SD_ZONE): SD_TAB_ZONE is
+	tab_zone_of (a_zone: SD_ZONE): SD_TAB_ZONE
 			-- Type convertion.
 		require
 			not_void: a_zone /= Void
@@ -121,7 +121,7 @@ feature -- Query
 			Result ?= a_zone
 		end
 
-	zone_type_valid (a_zone: SD_ZONE): BOOLEAN is
+	zone_type_valid (a_zone: SD_ZONE): BOOLEAN
 			-- Redefine.
 		do
 			Result := tab_zone_of (a_zone) /= Void
@@ -129,7 +129,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	set_rectangle (a_rect: EV_RECTANGLE) is
+	set_rectangle (a_rect: EV_RECTANGLE)
 			-- Redefine
 		local
 			l_tabs: DS_HASH_TABLE [SD_NOTEBOOK_TAB, INTEGER]
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 	internal_tab_area: DS_HASH_TABLE [EV_RECTANGLE, INTEGER];
 			-- Tab area's rectangle
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

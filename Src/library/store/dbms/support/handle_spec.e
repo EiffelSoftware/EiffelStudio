@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Handle to actual database"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	db_spec: DATABASE is
+	db_spec: DATABASE
 			-- Handle to actual database
 		do
 			Result := db_spec_impl.item
@@ -20,7 +20,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	update_handle is
+	update_handle
 			-- Update handle according to current connection.
 		local
 			obj: G
@@ -29,7 +29,7 @@ feature {NONE} -- Implementation
 			db_spec_impl.replace (obj)
 		end
 
-	db_spec_impl : CELL [DATABASE] is
+	db_spec_impl : CELL [DATABASE]
 			-- Unique reference to application database handle.
 		local
 			obj: G
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 			create Result.put (obj)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

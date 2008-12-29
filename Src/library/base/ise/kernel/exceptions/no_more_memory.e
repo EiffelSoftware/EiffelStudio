@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Exception raised when no more memory can be allocated.
 		]"
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	frozen code: INTEGER is
+	frozen code: INTEGER
 			-- Exception code
 		do
 			Result := {EXCEP_CONST}.no_more_memory
@@ -24,6 +24,6 @@ feature -- Access
 
 feature {NONE} -- Accesss
 
-	frozen internal_meaning: STRING is "No more memory."
+	frozen internal_meaning: STRING = "No more memory."
 
 end

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract OCI handle wrapper with access to attributes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,13 +25,13 @@ inherit
 
 feature -- Access
 
-	Default_max_str_attr_size: INTEGER is 512
+	Default_max_str_attr_size: INTEGER = 512
 		-- Default maximum size for a string attribute
 	
 	max_str_attr_size: INTEGER
 		-- Maximum size for a string attribute value
 
-	str_attr (type: INTEGER; errh: OCI_ERROR_HANDLER): STRING is
+	str_attr (type: INTEGER; errh: OCI_ERROR_HANDLER): STRING
 			-- Obtain value of handle's string attribute
 		require
 			allocated: is_allocated
@@ -59,7 +59,7 @@ feature -- Access
 			initialized_max_str_attr_size: max_str_attr_size > 0
 		end
 		
-	int_attr (type: INTEGER; errh: OCI_ERROR_HANDLER): INTEGER is
+	int_attr (type: INTEGER; errh: OCI_ERROR_HANDLER): INTEGER
 			-- Obtain value of handle's integer attribute
 		require
 			allocated: is_allocated
@@ -76,7 +76,7 @@ feature -- Access
 			errh.check_error (status)
 		end
 		
-	int16_attr (type: INTEGER; errh: OCI_ERROR_HANDLER): INTEGER_16 is
+	int16_attr (type: INTEGER; errh: OCI_ERROR_HANDLER): INTEGER_16
 			-- Obtain value of handle's short integer attribute
 		require
 			allocated: is_allocated
@@ -93,7 +93,7 @@ feature -- Access
 			errh.check_error (status)
 		end
 		
-	int8_attr (type: INTEGER; errh: OCI_ERROR_HANDLER): INTEGER_8 is
+	int8_attr (type: INTEGER; errh: OCI_ERROR_HANDLER): INTEGER_8
 			-- Obtain value of handle's byte attribute
 		require
 			allocated: is_allocated
@@ -112,7 +112,7 @@ feature -- Access
 		
 feature -- Element change
 
-	set_str_attr (type: INTEGER; value: STRING; errh: OCI_ERROR_HANDLER) is
+	set_str_attr (type: INTEGER; value: STRING; errh: OCI_ERROR_HANDLER)
 			-- Set handle's string attribute value
 		require
 			allocated: is_allocated
@@ -131,7 +131,7 @@ feature -- Element change
 --			definition: str_attr (type, errh).is_equal (value)
 		end
 
-	set_int_attr (type: INTEGER; value: INTEGER; errh: OCI_ERROR_HANDLER) is
+	set_int_attr (type: INTEGER; value: INTEGER; errh: OCI_ERROR_HANDLER)
 			-- Set handle's integer attribute value
 		require
 			allocated: is_allocated
@@ -150,7 +150,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	set_max_str_attr_size (size: INTEGER) is
+	set_max_str_attr_size (size: INTEGER)
 			-- Set maximum size for a string attribute value
 		require
 			positive_size: size > 0
@@ -162,7 +162,7 @@ feature -- Basic operations
 			
 feature {OCI_HANDLE} -- Implementation
 		
-	pointer_attr (type: INTEGER; errh: OCI_ERROR_HANDLER): POINTER is
+	pointer_attr (type: INTEGER; errh: OCI_ERROR_HANDLER): POINTER
 			-- Obtain value of handle's pointer attribute (e.g. a sub-handle)
 		require
 			allocated: is_allocated
@@ -179,7 +179,7 @@ feature {OCI_HANDLE} -- Implementation
 			errh.check_error (status)
 		end
 		
-	set_pointer_attr (type: INTEGER; value: POINTER; errh: OCI_ERROR_HANDLER) is
+	set_pointer_attr (type: INTEGER; value: POINTER; errh: OCI_ERROR_HANDLER)
 			-- Set handle's integer attribute value
 		require
 			allocated: is_allocated
@@ -197,7 +197,7 @@ feature {OCI_HANDLE} -- Implementation
 feature {NONE} -- Externals
 
 	oci_attr_get (trgthndlp: POINTER; trghndltyp: INTEGER; attributep: POINTER; sizep: POINTER; 
-			attrtype: INTEGER; errhp: POINTER): INTEGER_16 is
+			attrtype: INTEGER; errhp: POINTER): INTEGER_16
 		external
 			"C (dvoid *, ub4, dvoid *, ub4 *, ub4, OCIError *): short | %"oci.h%""
 		alias
@@ -205,7 +205,7 @@ feature {NONE} -- Externals
 		end
 				
 	oci_attr_set (trgthndlp: POINTER; trghndltyp: INTEGER; attributep: POINTER; size: INTEGER; 
-			attrtype: INTEGER; errhp: POINTER): INTEGER_16 is
+			attrtype: INTEGER; errhp: POINTER): INTEGER_16
 		external
 			"C (dvoid *, ub4, dvoid *, ub4, ub4, OCIError *): short | %"oci.h%""
 		alias
@@ -215,7 +215,7 @@ feature {NONE} -- Externals
 invariant
 	non_negative_max_str_attr_size: max_str_attr_size >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Deferred implementation of scrollbar"
 	legal: "See notice at end of class.";
@@ -16,7 +16,7 @@ inherit
 	
 feature -- Access
 
-	initial_delay: INTEGER is
+	initial_delay: INTEGER
 			-- Amount of time to wait (milliseconds) before starting
 			-- continuous slider movement
 		deferred
@@ -24,7 +24,7 @@ feature -- Access
 			positive_value: Result > 0
 		end;
 
-	line_increment: INTEGER is
+	line_increment: INTEGER
 			-- Distance (amount) to scroll on arrows
 		deferred
 		ensure
@@ -32,7 +32,7 @@ feature -- Access
 			increment_small_enough: Result <= (maximum - minimum)
 		end;
 
-	page_increment: INTEGER is
+	page_increment: INTEGER
 			-- Distance (amount) to scroll on page down or up
 		deferred
 		ensure
@@ -41,21 +41,21 @@ feature -- Access
 		end;		
 
 
-	maximum: INTEGER is
+	maximum: INTEGER
 			-- Maximum value of slider position
 		deferred
 		ensure
 			maximum_greater_than_mini: Result > minimum
 		end;
 
-	minimum: INTEGER is
+	minimum: INTEGER
 			-- Minimum value of slider position
 		deferred
 		ensure
 			minimum_smaller_than_maxi: Result < maximum
 		end;
 
-	position: INTEGER is
+	position: INTEGER
 			-- Slider position
 		deferred
 		ensure
@@ -63,7 +63,7 @@ feature -- Access
 			position_small_enough: Result <= maximum
 		end;
 
-	repeat_delay: INTEGER is
+	repeat_delay: INTEGER
 			-- Amount of time to wait (milliseconds) between subsequent
 			-- slider movements after the initial delay
 		deferred
@@ -71,7 +71,7 @@ feature -- Access
 			positive_delay: Result > 0
 		end;
 
-	slider_size: INTEGER is
+	slider_size: INTEGER
 			-- Size of slider.
 		deferred
 		ensure
@@ -81,12 +81,12 @@ feature -- Access
 
 feature -- Status report
 
-	is_horizontal: BOOLEAN is
+	is_horizontal: BOOLEAN
 			-- Is scrollbar oriented horizontaly?
 		deferred
 		end;
 
-	is_maximum_right_bottom: BOOLEAN is
+	is_maximum_right_bottom: BOOLEAN
 			-- Is maximum value on the right side when orientation
 			-- is horizontal or on the bottom side when orientation
 			-- is vertical?
@@ -95,7 +95,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_horizontal (flag: BOOLEAN) is
+	set_horizontal (flag: BOOLEAN)
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
 		deferred
@@ -105,7 +105,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_maximum_right_bottom (flag: BOOLEAN) is
+	set_maximum_right_bottom (flag: BOOLEAN)
 			-- Set maximum value on the right side when orientation
 			-- is horizontal or on the bottom side when orientation
 			-- is vertical if `flag', and at the opposite side otherwise.
@@ -116,7 +116,7 @@ feature -- Element change
 
 feature -- Element change
 
-	set_line_increment (inc: INTEGER) is
+	set_line_increment (inc: INTEGER)
 			-- Set amount (distance) to scroll when on arrows
 		require
 			increment_large_enough: inc >= 1;
@@ -126,7 +126,7 @@ feature -- Element change
 			line_increment = inc
 		end;
 
-	set_page_increment (inc: INTEGER) is
+	set_page_increment (inc: INTEGER)
 			-- Set amount (distance) to move on page up or down
 		require
 			increment_large_enough: inc >= 1;
@@ -136,7 +136,7 @@ feature -- Element change
 			page_increment = inc
 		end;
 
-	add_move_action (a_command: COMMAND; argument: ANY) is
+	add_move_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when slide
 			-- is moved.
 		require
@@ -144,7 +144,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_value_changed_action (a_command: COMMAND; argument: ANY) is
+	add_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when value
 			-- is changed.
 		require
@@ -152,7 +152,7 @@ feature -- Element change
 		deferred
 		end;
 
-	set_initial_delay (new_delay: INTEGER) is
+	set_initial_delay (new_delay: INTEGER)
 			-- Set the amount of time to wait (milliseconds) before
 			-- starting continuous slider movement to `new_delay'.
 		require
@@ -162,7 +162,7 @@ feature -- Element change
 			set: initial_delay = new_delay
 		end;
 
-	set_maximum (new_maximum: INTEGER) is
+	set_maximum (new_maximum: INTEGER)
 			-- Set maximum value of slider position to `new_maximum'.
 		require
 			maximum_greater_than_mini: new_maximum > minimum
@@ -171,7 +171,7 @@ feature -- Element change
 			set: maximum = new_maximum
 		end;
 
-	set_minimum (new_minimum: INTEGER) is
+	set_minimum (new_minimum: INTEGER)
 			-- Set minimum value of slider position to `new_minimum'.
 		require
 			minimum_smaller_than_maxi: new_minimum < maximum
@@ -180,7 +180,7 @@ feature -- Element change
 			set: minimum = new_minimum
 		end;
 
-	set_position (new_position: INTEGER) is
+	set_position (new_position: INTEGER)
 			-- Set slider position to `new_position'.
 		require
 			position_small_enough: new_position <= maximum;
@@ -190,7 +190,7 @@ feature -- Element change
 			set: position = new_position
 		end;
 
-	set_repeat_delay (new_delay: INTEGER) is
+	set_repeat_delay (new_delay: INTEGER)
 			-- Set the amount of time to wait (milliseconds) between
 			-- subsequent movements after the initial delay to 'new_delay'.
 		require
@@ -200,7 +200,7 @@ feature -- Element change
 			set: repeat_delay = new_delay
 		end;
 
-	set_slider_size (new_size: INTEGER) is
+	set_slider_size (new_size: INTEGER)
 			-- Set size of slider to 'new_size'.
 		require
 			new_size_small_enough: new_size <= (maximum - minimum);
@@ -212,7 +212,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_move_action (a_command: COMMAND; argument: ANY) is
+	remove_move_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- slide is moved.
 		require
@@ -220,7 +220,7 @@ feature -- Removal
 		deferred
 		end;
 
-	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+	remove_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- value is changed.
 		require
@@ -228,7 +228,7 @@ feature -- Removal
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent effects applicable to EiffelVision2 character formats.
 			]"
@@ -22,7 +22,7 @@ feature -- Status report
 			-- Vertical offset of character from base line in pixels.
 			-- A positive value indicates a superscript, negative indicating a subscript.
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is current in default state?
 		do
 			Result := not is_striked_out and not is_underlined and vertical_offset = 0
@@ -30,7 +30,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_striked_out is
+	enable_striked_out
 			-- Ensure characters are displayed as striken out, and set `is_striked_out' to True.
 		do
 			is_striked_out := True
@@ -38,7 +38,7 @@ feature -- Status setting
 			is_striked_out: is_striked_out
 		end
 
-	disable_striked_out is
+	disable_striked_out
 			-- Ensure characters are not displayed as striken out, and set `is_striked_out' to False.
 		do
 			is_striked_out := False
@@ -46,7 +46,7 @@ feature -- Status setting
 			not_striked_out: not is_striked_out
 		end
 
-	enable_underlined is
+	enable_underlined
 			-- Ensure characters are displayed as underlined, and set `is_underlined' to True.
 		do
 			is_underlined := True
@@ -54,7 +54,7 @@ feature -- Status setting
 			is_underlined: is_underlined
 		end
 
-	disable_underlined is
+	disable_underlined
 			-- Ensure characters are not displayed as underlined, and set `is_underlined' to False.
 		do
 			is_underlined := False
@@ -62,7 +62,7 @@ feature -- Status setting
 			not_underlined: not is_underlined
 		end
 
-	set_vertical_offset (an_offset: INTEGER) is
+	set_vertical_offset (an_offset: INTEGER)
 			-- Assign `an_offset' to `vertical_offset'.
 		do
 			vertical_offset := an_offset
@@ -70,7 +70,7 @@ feature -- Status setting
 			vertical_offset_set: vertical_offset = an_offset
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

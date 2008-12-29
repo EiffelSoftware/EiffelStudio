@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision multi-column list row, gtk implementation."
@@ -33,13 +33,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a row with one empty column.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Create the linked lists.
 		do
 			tooltip := ""
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is the item selected.
 		do
 			Result := (parent_imp.selected_item = interface)
@@ -57,7 +57,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	destroy is
+	destroy
 			-- Destroy actual object.
 		do
 			if parent_imp /= Void then
@@ -66,7 +66,7 @@ feature -- Status setting
 			set_is_destroyed (True)
 		end
 
-	enable_select is
+	enable_select
 			-- Select the row in the list.
 		do
 			if not is_selected then
@@ -74,7 +74,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_select is
+	disable_select
 			-- Deselect the row from the list.
 		do
 			if is_selected then
@@ -84,7 +84,7 @@ feature -- Status setting
 
 feature -- PND
 
-	enable_transport is
+	enable_transport
 		do
 			is_transport_enabled := True
 			if parent_imp /= Void then
@@ -92,7 +92,7 @@ feature -- PND
 			end
 		end
 
-	disable_transport is
+	disable_transport
 		do
 			is_transport_enabled := False
 			if parent_imp /= Void then
@@ -100,28 +100,28 @@ feature -- PND
 			end
 		end
 
-	draw_rubber_band is
+	draw_rubber_band
 		do
 			check
 				do_not_call: False
 			end
 		end
 
-	erase_rubber_band is
+	erase_rubber_band
 		do
 			check
 				do_not_call: False
 			end
 		end
 
-	enable_capture is
+	enable_capture
 		do
 			check
 				do_not_call: False
 			end
 		end
 
-	disable_capture is
+	disable_capture
 		do
 			check
 				do_not_call: False
@@ -131,7 +131,7 @@ feature -- PND
 	start_transport (
         	a_x, a_y, a_button: INTEGER; a_press: BOOLEAN
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        	a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN) is
+        	a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN)
 		do
 			check
 				do_not_call: False
@@ -140,14 +140,14 @@ feature -- PND
 
 	end_transport (a_x, a_y, a_button: INTEGER;
 		a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-		a_screen_x, a_screen_y: INTEGER) is
+		a_screen_x, a_screen_y: INTEGER)
 		do
 			check
 				do_not_call: False
 			end
 		end
 
-	set_pointer_style, internal_set_pointer_style (c: EV_POINTER_STYLE) is
+	set_pointer_style, internal_set_pointer_style (c: EV_POINTER_STYLE)
 		do
 			check
 				do_not_call: False
@@ -156,7 +156,7 @@ feature -- PND
 
 feature -- Element Change
 
-	set_pixmap (a_pix: EV_PIXMAP) is
+	set_pixmap (a_pix: EV_PIXMAP)
 			-- Set the rows `pixmap' to `a_pix'.
 		do
 			internal_pixmap := a_pix.twin
@@ -165,7 +165,7 @@ feature -- Element Change
 			end
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove the rows pixmap.
 		do
 			internal_pixmap := Void
@@ -174,7 +174,7 @@ feature -- Element Change
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 		do
 			tooltip := a_tooltip.twin
@@ -185,7 +185,7 @@ feature -- Element Change
 
 feature -- Measurement
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		local
 			l_h_adjust: POINTER
@@ -199,7 +199,7 @@ feature -- Measurement
 			end
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		local
 			l_v_adjust: POINTER
@@ -213,7 +213,7 @@ feature -- Measurement
 			end
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		do
 			if parent_imp /= Void then
@@ -221,7 +221,7 @@ feature -- Measurement
 			end
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		do
 			if parent_imp /= Void then
@@ -229,7 +229,7 @@ feature -- Measurement
 			end
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size in pixels.
 		do
 			if parent_imp /= Void then
@@ -237,7 +237,7 @@ feature -- Measurement
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size in pixels.
 		do
 			if parent_imp /= Void then
@@ -245,7 +245,7 @@ feature -- Measurement
 			end
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels.
 		do
 			if parent_imp /= Void then
@@ -253,7 +253,7 @@ feature -- Measurement
 			end
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
 		do
 			if parent_imp /= Void then
@@ -263,7 +263,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	on_item_added_at (an_item: STRING_GENERAL; item_index: INTEGER) is
+	on_item_added_at (an_item: STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been added to index `item_index'.
 		local
 			a_parent_imp: like parent_imp
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_item_removed_at (an_item: STRING_GENERAL; item_index: INTEGER) is
+	on_item_removed_at (an_item: STRING_GENERAL; item_index: INTEGER)
 			-- `an_item' has been removed from index `item_index'.
 		do
 			if parent_imp /= Void then
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 
 feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 
-	set_pebble_void is
+	set_pebble_void
 			-- Resets pebble from MCL_Imp.
 		do
 			pebble := Void
@@ -299,7 +299,7 @@ feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 			Result := (mode_is_drag_and_drop and then a_button = 1) or (mode_is_pick_and_drop and then a_button = 3 and then not mode_is_configurable_target_menu)
 		end
 
-	real_pointed_target: EV_PICK_AND_DROPABLE is
+	real_pointed_target: EV_PICK_AND_DROPABLE
 		do
 			check do_not_call: False end
 		end
@@ -319,7 +319,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Do nothing
 		end
 
-	set_list_iter (a_iter: EV_GTK_TREE_ITER_STRUCT) is
+	set_list_iter (a_iter: EV_GTK_TREE_ITER_STRUCT)
 			-- Set `list_iter' to `a_iter'
 		do
 			list_iter := a_iter
@@ -329,7 +329,7 @@ feature {EV_ANY_I} -- Implementation
 		-- Object representing position of `Current' in parent tree model
 
 
-	set_parent_imp (par_imp: EV_MULTI_COLUMN_LIST_IMP) is
+	set_parent_imp (par_imp: EV_MULTI_COLUMN_LIST_IMP)
 			-- Set the rows parent to `par_imp'.
 		do
 			parent_imp := par_imp
@@ -338,7 +338,7 @@ feature {EV_ANY_I} -- Implementation
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 			-- Implementation of the rows parent.
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of the row in the list
 			-- (starting from 1).
 		do
@@ -350,7 +350,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST_ROW;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

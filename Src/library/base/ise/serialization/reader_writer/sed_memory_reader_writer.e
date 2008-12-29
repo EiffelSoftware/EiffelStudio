@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Serialize/Deserialize data from memory."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize current to read or write from `a_medium'.
 		do
 			create {MANAGED_POINTER} buffer.make (default_buffer_size)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			buffer_size_set: buffer_size = default_buffer_size
 		end
 
-	make_with_buffer (a_buffer: like buffer) is
+	make_with_buffer (a_buffer: like buffer)
 			-- Initialize current to read or write from `a_medium' using a buffer of size `a_buffer_size'.
 			-- `buffer_size' will be overriden during read operation by the value of `buffer_size' used
 			-- when writing.
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	data: MANAGED_POINTER is
+	data: MANAGED_POINTER
 			-- Copy of `buffer' containing ONLY the serialized/deserialized data.
 		do
 			create Result.make_from_pointer (buffer.item, count)
@@ -59,7 +59,7 @@ feature -- Access
 
 feature {NONE} -- Implementation: Status report
 
-	buffer_position: INTEGER is
+	buffer_position: INTEGER
 			-- Equivalent to `count'.
 		obsolete "Use `count' instead."
 		do
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation: Status report
 
 feature {NONE} -- Buffer update
 
-	check_buffer (n: INTEGER) is
+	check_buffer (n: INTEGER)
 			-- If there is enough space in `buffer' to read `n' bytes, do nothing.
 			-- Otherwise, read/write to `medium' to free some space.
 		do
@@ -78,7 +78,7 @@ feature {NONE} -- Buffer update
 			end
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

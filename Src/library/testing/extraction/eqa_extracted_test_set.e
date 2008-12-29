@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Sets of tests which make use of an extracted application state to reproduce a failure.
 	]"
@@ -35,7 +35,7 @@ inherit
 
 feature {NONE} -- Access
 
-	context: !ARRAY [!TUPLE [type: !TYPE [ANY]; attributes: !TUPLE; inv: BOOLEAN]] is
+	context: !ARRAY [!TUPLE [type: !TYPE [ANY]; attributes: !TUPLE; inv: BOOLEAN]]
 			-- List of objects needed to reconstruct application state as it was when test routines were
 			--     extracted. Once the content is restored (after `prepare' was called), each object can
 			--     be accessed through `object_for_id', where id is is in the form of '#' + index.
@@ -261,7 +261,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Object initialization
 
-	fill_object_cache is
+	fill_object_cache
 			-- Set up `object_under_test' and `routine_arguments' with content from `context'.
 		local
 			i, l_gtype: INTEGER
@@ -353,7 +353,7 @@ feature {NONE} -- Object initialization
 			object_cache_loaded: is_cache_loaded
 		end
 
-	create_special_object (a_special: !TYPE [SPECIAL [ANY]]; a_count: INTEGER): !SPECIAL [ANY] is
+	create_special_object (a_special: !TYPE [SPECIAL [ANY]]; a_count: INTEGER): !SPECIAL [ANY]
 			-- Creates a special object of type `a_class_name' for `a_count' elements.
 		require
 			a_count_not_negative: a_count >= 0
@@ -407,7 +407,7 @@ feature {NONE} -- Object initialization
 			end
 		end
 
-	set_attributes (an_object: !ANY; an_attributes: !TUPLE) is
+	set_attributes (an_object: !ANY; an_attributes: !TUPLE)
 			-- TODO: Missing header comment.
 		require
 			an_object_not_void: an_object /= Void
@@ -518,7 +518,7 @@ feature {NONE} -- Object initialization
 			end
 		end
 
-	set_tuple_attributes (a_tuple: !TUPLE; an_attributes: !TUPLE; a_offset: NATURAL) is
+	set_tuple_attributes (a_tuple: !TUPLE; an_attributes: !TUPLE; a_offset: NATURAL)
 			-- Set items of `a_tuple' with values from `an_attribute_list'.
 		local
 			i, j: INTEGER
@@ -602,7 +602,7 @@ feature {NONE} -- Object initialization
 			end
 		end
 
-	set_special_attributes (a_special: !SPECIAL [ANY]; an_attributes: !TUPLE) is
+	set_special_attributes (a_special: !SPECIAL [ANY]; an_attributes: !TUPLE)
 			-- Assign items of `an_attributes' to items of `a_special'.
 		require
 			attributes_uniform: is_valid_item_tuple (a_special, an_attributes)

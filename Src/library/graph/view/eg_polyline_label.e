@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						The `label_group' is attached to the polyline defined
 						through the `polyline_points' from 0 to count - 1.
@@ -26,7 +26,7 @@ inherit
 	
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a EG_POLYLINE_LABEL.
 		do	
 			create label_move_handle
@@ -55,12 +55,12 @@ feature -- Access
 			-- The label group moved allong the line.
 			-- Fill it with your labels.
 		
-	line_width: INTEGER is
+	line_width: INTEGER
 			-- The with of the polyline.
 		deferred
 		end
 		
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml node representing `Current's state.
 		do
 			Result := node
@@ -70,7 +70,7 @@ feature -- Access
 			Result.put_last (xml_routines.xml_node (Result, once "IS_LEFT", boolean_representation (is_left)))
 		end
 		
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
 			p, q: EV_COORDINATE
@@ -85,7 +85,7 @@ feature -- Access
 		
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free `Current's resources.
 		do
 			label_move_handle.move_actions.prune_all (agent on_label_move)
@@ -93,7 +93,7 @@ feature -- Element change
 			label_move_handle.scale_y_actions.prune_all (agent on_scale)
 		end
 
-	set_left (a_left: BOOLEAN) is
+	set_left (a_left: BOOLEAN)
 			-- Set `is_left' to `a_left'.
 		do
 			if a_left /= is_left then
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			-- and `label_line_end_point'. 0.0 is closest to `label_line_start_point'
 			-- 1.0 is closest to `label_line_end_point'.
 
-	set_label_line_start_and_end is
+	set_label_line_start_and_end
 			-- Set `label_line_start_point' and `label_line_end_point' such that the line
 			-- (`label_line_start_point',`label_line_end_point') is closest to `label_move_handle'.
 		local
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			position_on_line := -1.0
 		end
 		
-	set_label_position_on_line (nearest_start, nearest_end: EV_COORDINATE) is
+	set_label_position_on_line (nearest_start, nearest_end: EV_COORDINATE)
 			-- Set the `label_move_handle' position such that its point is
 			-- on the segment from `nearest_start' to `nearest_end'.
 		local
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 			set_label_group_position_on_line (new_x, new_y, nearest_start, nearest_end)
 		end
 
-	set_label_group_position_on_line (new_x, new_y: DOUBLE; p, q: EV_COORDINATE) is
+	set_label_group_position_on_line (new_x, new_y: DOUBLE; p, q: EV_COORDINATE)
 			-- Set `label_group' position to left or right of line from `p' to `q' depending on `is_left'.
 			-- such that `label_group' does not intersect with the line.
 		require
@@ -319,13 +319,13 @@ feature {NONE} -- Implementation
 			label_group.set_point_position (label_move_handle.point_x - shift_x, label_move_handle.point_y - shift_y)
 		end
 		
-	transition (start_value, end_value: INTEGER; progress: DOUBLE): INTEGER is
+	transition (start_value, end_value: INTEGER; progress: DOUBLE): INTEGER
 			-- Value between `start_value' and `end_value'.
 		do
 			Result := start_value + as_integer ((end_value - start_value) * progress)
 		end
 
-	project_to_line (ax, ay, x1, y1, x2, y2: DOUBLE): TUPLE [DOUBLE, DOUBLE] is
+	project_to_line (ax, ay, x1, y1, x2, y2: DOUBLE): TUPLE [DOUBLE, DOUBLE]
 			-- Project point `ax' `ay' to the line [(`x1', `y1'), (`x2', `y2')].
 		local
 			d_x, d_y: DOUBLE
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	has_projection (ax, ay, x1, y1, x2, y2: DOUBLE): BOOLEAN is
+	has_projection (ax, ay, x1, y1, x2, y2: DOUBLE): BOOLEAN
 			-- Does a line perpendicular to line [(`x1', `y1), (`x2', `y2')] exist
 			-- that goes through point (`ax', `ay') and intersects with the segment [(`x1', `y1), (`x2', `y2')]?
 		local
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 			Result := between (nx, x1, x2) and between (ny, y1, y2)
 		end
 		
-	distance_from_segment (ax, ay, x1, y1, x2, y2: DOUBLE): DOUBLE is
+	distance_from_segment (ax, ay, x1, y1, x2, y2: DOUBLE): DOUBLE
 			-- Calculate distance between (`x', `y') and (`x1', `y1')-(`x2', `y2').
 			-- The line is NOT considered to be infinite.
 		local
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	on_label_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	on_label_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- `label_move_handler' was moved for `ax' `ay'.
 		do
 			is_left := left_from_segment (screen_x, screen_y, label_line_start_point.x_precise, label_line_start_point.y_precise, label_line_end_point.x_precise, label_line_end_point.y_precise)
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 			set_label_position_on_line (label_line_start_point, label_line_end_point)
 		end
 		
-	left_from_segment (ax, ay, x1, y1, x2, y2: DOUBLE): BOOLEAN is
+	left_from_segment (ax, ay, x1, y1, x2, y2: DOUBLE): BOOLEAN
 			-- Is (`ax', `ay') on the left side of segment from (`x1', `y1') to (`x2', `y2')?
 			-- (See `is_left' for a definition of left).
 		local
@@ -422,19 +422,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update is
+	update
 			-- A point in `polyline_points' has changed its position.
 		do
 			set_label_position_on_line (label_line_start_point, label_line_end_point)
 		end
 		
-	on_scale (scale: DOUBLE) is
+	on_scale (scale: DOUBLE)
 			-- `label_move_handle' was scaled by user.
 		do
 			set_label_position_on_line (label_line_start_point, label_line_end_point)
 		end
 		
-	point_with_position (ax, ay: INTEGER): EV_COORDINATE is
+	point_with_position (ax, ay: INTEGER): EV_COORDINATE
 			-- Point at position `ax' `ay' or Void if none.
 		local
 			l_points: like polyline_points
@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	point_number (a_point: EV_COORDINATE): INTEGER is
+	point_number (a_point: EV_COORDINATE): INTEGER
 			-- Position in `polyline_points' of `a_point'.
 		require
 			a_point_not_void: a_point /= Void
@@ -482,12 +482,12 @@ feature {NONE} -- Implementation
 			
 feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 
-	polyline_points: SPECIAL [EV_COORDINATE] is
+	polyline_points: SPECIAL [EV_COORDINATE]
 			-- All points of the Figure.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

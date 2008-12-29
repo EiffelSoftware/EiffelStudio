@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Drawer who can draw grayscale images base on original images.
 																						]"
@@ -12,7 +12,7 @@ class
 
 feature -- Command
 
-	draw_grayscale_bitmap (a_image: WEL_GDIP_BITMAP; a_dest_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER) is
+	draw_grayscale_bitmap (a_image: WEL_GDIP_BITMAP; a_dest_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER)
 			-- Draw grayscale version of `a_image' on `a_dest_dc' at `a_dest_x', `a_dest_y'.
 		require
 			not_void: a_image /= Void
@@ -39,7 +39,7 @@ feature -- Command
 			l_image_attributes.destroy_item
 		end
 
-	draw_grayscale_bitmap_or_icon_with_memory_buffer (a_bitmap: WEL_BITMAP; a_icon: WEL_ICON; a_control_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER; a_background_color: WEL_COLOR_REF; a_pixmap_has_mask: BOOLEAN) is
+	draw_grayscale_bitmap_or_icon_with_memory_buffer (a_bitmap: WEL_BITMAP; a_icon: WEL_ICON; a_control_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER; a_background_color: WEL_COLOR_REF; a_pixmap_has_mask: BOOLEAN)
 			-- This feature will use one of `draw_grayscale_icon_with_memory_buffer' or `draw_grayscale_bitmap_with_memory_buffer' automatically.
 		require
 			not_void: a_bitmap /= Void and a_icon /= Void and a_control_dc /= Void and a_background_color /= Void
@@ -58,7 +58,7 @@ feature -- Command
 			l_log_bitmap.dispose
 		end
 
-	draw_grayscale_icon_with_memory_buffer (a_orignal_icon: WEL_ICON; a_control_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER; a_background_color: WEL_COLOR_REF) is
+	draw_grayscale_icon_with_memory_buffer (a_orignal_icon: WEL_ICON; a_control_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER; a_background_color: WEL_COLOR_REF)
 			-- Draw grayscale version of `a_orignal_icon' on `a_control_dc'
 		require
 			not_void: a_orignal_icon /= Void and a_control_dc /= Void and a_background_color /= Void
@@ -70,7 +70,7 @@ feature -- Command
 			l_gdip_bitmap.dispose
 		end
 
-	draw_grayscale_bitmap_with_memory_buffer (a_gdip_bitmap: WEL_GDIP_BITMAP; a_control_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER; a_background_color: WEL_COLOR_REF) is
+	draw_grayscale_bitmap_with_memory_buffer (a_gdip_bitmap: WEL_GDIP_BITMAP; a_control_dc: WEL_DC; a_dest_x, a_dest_y: INTEGER; a_background_color: WEL_COLOR_REF)
 			-- Draw grayscale version of `a_orignal_icon' on `a_control_dc'
 			-- We must draw on a buffer dc first, otherwise in Windows Remote Desktop (at least Windows Vista), the generated grayscale icon will distorted.
 		require
@@ -104,7 +104,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	disabled_color_matrix: WEL_COLOR_MATRIX is
+	disabled_color_matrix: WEL_COLOR_MATRIX
 			-- Disable color matrix.
 		do
 			Result := mulitply_color_matrix (disabled_color_matrix_2, disabled_color_matrix_1)
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	disabled_color_matrix_1: WEL_COLOR_MATRIX is
+	disabled_color_matrix_1: WEL_COLOR_MATRIX
 			-- Disabled color matrix used by GDI+ DrawImage.
 			-- See MSDN "A Twist in Color Space"
 		do
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	disabled_color_matrix_2: WEL_COLOR_MATRIX is
+	disabled_color_matrix_2: WEL_COLOR_MATRIX
 			-- Disabled color matrix used by GDI+ DrawImage.
 			-- See MSDN "A Twist in Color Space"
 		do
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	mulitply_color_matrix (a_matrix_1, a_matrix_2: WEL_COLOR_MATRIX): WEL_COLOR_MATRIX is
+	mulitply_color_matrix (a_matrix_1, a_matrix_2: WEL_COLOR_MATRIX): WEL_COLOR_MATRIX
 			-- Mulitply `a_matrix_1' and `a_matrix_2'
 		require
 			not_void: a_matrix_1 /= Void
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

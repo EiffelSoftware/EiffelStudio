@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about message Wm_size which is sent to a %
 		%window after its size has changed."
 	legal: "See notice at end of class."
@@ -22,20 +22,20 @@ create
 
 feature -- Access
 
-	size_type: INTEGER is
+	size_type: INTEGER
 			-- Type of resizing requested.
 			-- See class WEL_SIZE_CONSTANTS for different values.
 		do
 			Result := w_param.to_integer_32
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- New width of the client area
 		do
 			Result := cwin_lo_word (l_param)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- New height of the client area
 		do
 			Result := cwin_hi_word (l_param)
@@ -43,25 +43,25 @@ feature -- Access
 
 feature -- Status report
 
-	maximized: BOOLEAN is
+	maximized: BOOLEAN
 			-- Has the window been maximized?
 		do
 			Result := size_type = Size_maximized
 		end
 
-	minimized: BOOLEAN is
+	minimized: BOOLEAN
 			-- Has the window been minimized?
 		do
 			Result := size_type = Size_minimized
 		end
 
-	restored: BOOLEAN is
+	restored: BOOLEAN
 			-- Has the window been restored?
 		do
 			Result := size_type = Size_restored
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

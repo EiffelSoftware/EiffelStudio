@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access to the vision2 application through a once feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	ev_application: EV_APPLICATION is
+	ev_application: EV_APPLICATION
 			-- Current application. This once feature must be called
 			-- only if the application has been created
 		once
@@ -20,7 +20,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	process_events_and_idle is
+	process_events_and_idle
 		obsolete
 			"Call ev_application.process_events instead"
 			-- Call `process_events'.
@@ -29,7 +29,7 @@ feature -- Access
 				-- Idle actions are called when all events are processed.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

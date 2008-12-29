@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Rectangular outline with its window text at the top. %
 		%Group boxes are often used to enclose other button controls."
 	legal: "See notice at end of class."
@@ -26,14 +26,14 @@ create
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
 				Ws_tabstop + Bs_groupbox
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that creates a window that lets the user inspect the vision layout of current application"
 	author: ""
 	date: "$Date$"
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Implementation
 
-	initialize is
+	initialize
 			-- Initialize `Current' to set up tests.
 		do
 			Precursor {EV_TITLED_WINDOW}
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 			set_x_position (600)
 		end
 
-	update_tree is
+	update_tree
 			--
 		local
 			n: EV_TREE_NODE
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	check_removal (a_node: EV_TREE_NODE) is
+	check_removal (a_node: EV_TREE_NODE)
 			--
 		local
 			p, c: EV_CONTAINER
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	add_element (an_element: EV_WIDGET; a_parent: EV_TREE_NODE): EV_TREE_NODE is
+	add_element (an_element: EV_WIDGET; a_parent: EV_TREE_NODE): EV_TREE_NODE
 			--
 		local
 			node: EV_TREE_NODE
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	update_recursive (a_node: EV_TREE_NODE; a_container: EV_CONTAINER) is
+	update_recursive (a_node: EV_TREE_NODE; a_container: EV_CONTAINER)
 			-- If the item is already in the view just continue. If not add it.
 		local
 			node: EV_TREE_NODE
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	add_recursive (a_node: EV_TREE_NODE; a_container: EV_CONTAINER) is
+	add_recursive (a_node: EV_TREE_NODE; a_container: EV_CONTAINER)
 			-- Add all the children of a_container to a_node (and then the children of the children, etc.)
 		local
 			node: EV_TREE_NODE
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_info (a_widget: EV_WIDGET) is
+	show_info (a_widget: EV_WIDGET)
 			--
 		local
 			any: EV_ANY_IMP
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 
 	selected_widget: EV_WIDGET
 
-	show_widget is
+	show_widget
 			--
 		do
 			if selected_widget /= Void then
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	hide_widget is
+	hide_widget
 			--
 		do
 			if selected_widget /= Void then
@@ -288,7 +288,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 			-- Currently do not care about this check, so we
 			-- are turning it off.

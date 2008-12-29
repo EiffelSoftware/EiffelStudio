@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstraction for objects that have a font property."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Typeface appearance for `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Assign `a_font' to `font'.
 		require
 			not_destroyed: not is_destroyed
@@ -47,7 +47,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_FONTABLE_I;
 		-- Responsible for interaction with native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

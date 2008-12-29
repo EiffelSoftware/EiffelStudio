@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of the callback mechanism."
@@ -16,7 +16,7 @@ feature -- Access
 			-- The callback structure is set by MEL when
 			-- Current command is invoked as a callback
 
-	is_executable (arg: ANY): BOOLEAN is
+	is_executable (arg: ANY): BOOLEAN
 			-- Is the Current command able to be executed?
 			-- (By defauult, it is True).
 		do
@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_callback_struct (a_callback_struct: MEL_CALLBACK_STRUCT) is
+	set_callback_struct (a_callback_struct: MEL_CALLBACK_STRUCT)
 			-- Set the callback structure.
 		do
 			callback_struct := a_callback_struct
@@ -35,7 +35,7 @@ feature -- Element change
 
 feature -- Execution
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Execute current command.
 			-- the argument is automatically passed by MEL when Current
 			-- command is invoked as a callback.
@@ -44,7 +44,7 @@ feature -- Execution
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

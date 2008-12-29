@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object which is colorable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Settings
 
-	set_color(red,green,blue: INTEGER) is
+	set_color(red,green,blue: INTEGER)
 			-- Set color defined by the rgb 3-tuple 
 			-- (red,green,blue).	
 		require
@@ -26,7 +26,7 @@ feature -- Settings
 			possible: color_index>=0
 		end
 
-	set_color_transparent(red,green,blue: INTEGER) is
+	set_color_transparent(red,green,blue: INTEGER)
 			-- Set color transparent to the one defined by the rgb 3-tuple 
 			-- (red,green,blue).	
 		require
@@ -45,7 +45,7 @@ feature -- Settings
 
 feature -- Access
 
-	color(red,green,blue: INTEGER):INTEGER is
+	color(red,green,blue: INTEGER):INTEGER
 			-- Index of Color obtained in rgb mode for Current Image.
 		require
 			red_possible: red >=0 and red <256
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Access
 
-	color_index: INTEGER is
+	color_index: INTEGER
 			-- Return the color index corresponding to the 
 			-- color Currrent is going to be draw in.
 		do
@@ -74,7 +74,7 @@ feature -- Access
 			end
 		end
 	
-	image: GD_IMAGE is deferred end
+	image: GD_IMAGE deferred end
 
 feature {NONE} -- Implementation
 	
@@ -82,21 +82,21 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Externals
 
-	c_get_color_exact (p: POINTER; r,g,b: INTEGER):INTEGER is
+	c_get_color_exact (p: POINTER; r,g,b: INTEGER):INTEGER
 		external
 			"c"
 		alias
 			"gdImageColorExact"
 		end
 
-   gdImageColorAllocate(p: POINTER; red,green,blue: INTEGER): INTEGER is
+   gdImageColorAllocate(p: POINTER; red,green,blue: INTEGER): INTEGER
 		external
 			"c"
 		alias
 			"gdImageColorAllocate"
 		end
 
-   gdImageColorTransparent(im:POINTER; col: INTEGER)  is
+   gdImageColorTransparent(im:POINTER; col: INTEGER)
 		external
 			"C"
 		alias
@@ -109,7 +109,7 @@ invariant
 	image_exists: image /= Void
 	index_possible: color_index <= image.color_index_bound
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

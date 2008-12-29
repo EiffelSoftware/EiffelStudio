@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Callback Marshal to deal with gtk signal emissions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,13 +35,13 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create the dispatcher, one object per system.
 		do
 			initialize
 		end
 
-	initialize is
+	initialize
 			-- Initialize callbacks
 		once
 			c_ev_gtk_callback_marshal_init ($Current, $marshal)
@@ -53,7 +53,7 @@ feature {EV_ANY_IMP} -- Access
 	translate_and_call (
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
-	) is
+	)
 			-- Call `an_agent' using `translate' to convert `args' and `n_args'
 		require
 			an_agent_not_void: an_agent /= Void
@@ -62,7 +62,7 @@ feature {EV_ANY_IMP} -- Access
 			an_agent.call (translate.item (integer_pointer_tuple))
 		end
 
-	dimension_tuple (a_x, a_y, a_width, a_height: INTEGER): like internal_dimension_tuple is
+	dimension_tuple (a_x, a_y, a_width, a_height: INTEGER): like internal_dimension_tuple
 			-- Return a dimension tuple from given arguments.
 		do
 			Result := internal_dimension_tuple
@@ -72,7 +72,7 @@ feature {EV_ANY_IMP} -- Access
 			Result.height := a_height
 		end
 
-	key_tuple (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN): like internal_key_tuple is
+	key_tuple (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN): like internal_key_tuple
 			-- Return a key tuple from given arguments.
 		do
 			Result := internal_key_tuple
@@ -88,7 +88,7 @@ feature -- Implementation
 		a_signal_name: EV_GTK_C_STRING;
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
-		invoke_after_handler: BOOLEAN) is
+		invoke_after_handler: BOOLEAN)
 				--
 		local
 			l_agent: PROCEDURE [ANY, TUPLE]
@@ -113,7 +113,7 @@ feature -- Implementation
 
 feature -- Agent functions.
 
-	set_focus_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
+	set_focus_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
 			-- Translation agent used for set-focus events
 		once
 			Result :=
@@ -124,7 +124,7 @@ feature -- Agent functions.
 				end
 		end
 
-	configure_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
+	configure_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
 			-- Translation agent used for size allocation events
 		once
 			Result :=
@@ -142,7 +142,7 @@ feature -- Agent functions.
 			end
 		end
 
-	size_allocate_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
+	size_allocate_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
 			-- Translation agent used for size allocation events
 		once
 			Result :=
@@ -160,7 +160,7 @@ feature -- Agent functions.
 				end
 		end
 
-	expose_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
+	expose_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
 			-- Translation agent used for size allocation events
 		once
 			Result :=
@@ -182,14 +182,14 @@ feature -- Agent functions.
 
 feature {EV_ANY_IMP} -- Agent implementation routines
 
-	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
+	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER]
 			-- Tuple containing integer value from first of `args'.
 		do
 			Result := integer_tuple
 			Result.put_integer ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (args), 1)
 		end
 
-	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE [INTEGER, INTEGER] is
+	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE [INTEGER, INTEGER]
 			-- Translate function for MCL
 		local
 			gtkarg2: POINTER
@@ -204,7 +204,7 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 
 feature {EV_APPLICATION_IMP} -- Destruction
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			--c_ev_gtk_callback_marshal_destroy
@@ -215,7 +215,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER; args: POINTER) is
+	marshal (action: PROCEDURE [ANY, TUPLE]; n_args: INTEGER; args: POINTER)
 			-- Call `action' with GTK+ event data from `args'.
 			-- There are `n_args' GtkArg*s in `args'.
 			-- Called by C function `c_ev_gtk_callback_marshal'.
@@ -248,34 +248,34 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Tuple optimizations.
 
-	internal_dimension_tuple: TUPLE [x: INTEGER; y: INTEGER; width: INTEGER; height: INTEGER] is
+	internal_dimension_tuple: TUPLE [x: INTEGER; y: INTEGER; width: INTEGER; height: INTEGER]
 			-- Once function used for global access of dimension tuple.
 		once
 			create Result
 		end
 
-	internal_key_tuple: TUPLE [key: EV_KEY; string: STRING_32; key_press: BOOLEAN] is
+	internal_key_tuple: TUPLE [key: EV_KEY; string: STRING_32; key_press: BOOLEAN]
 			-- Once function used for global access of key tuple.
 		once
 			create Result
 		end
 
-	pointer_tuple: TUPLE [pointer: POINTER] is
+	pointer_tuple: TUPLE [pointer: POINTER]
 		once
 			create Result
 		end
 
-	integer_tuple: TUPLE [integer: INTEGER] is
+	integer_tuple: TUPLE [integer: INTEGER]
 		once
 			create Result
 		end
 
-	integer_pointer_tuple: TUPLE [integer: INTEGER; pointer: POINTER] is
+	integer_pointer_tuple: TUPLE [integer: INTEGER; pointer: POINTER]
 		once
 			create Result
 		end
 
-	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [pointer: POINTER] is
+	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [pointer: POINTER]
 			-- Tuple containing integer value from first of `args'.
 		do
 			Result := pointer_tuple
@@ -286,7 +286,7 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 
 	frozen c_ev_gtk_callback_marshal_init (
 		object: POINTER; a_marshal: POINTER
-		) is
+		)
 			-- See ev_gtk_callback_marshal.c
 		external
 			"C inline use %"ev_gtk_callback_marshal.h%""
@@ -295,7 +295,7 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 		end
 
 	frozen c_ev_gtk_callback_marshal_destroy
-		is
+		
 			-- See ev_gtk_callback_marshal.c
 		external
 			"C | %"ev_gtk_callback_marshal.h%""
@@ -303,7 +303,7 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 
 feature -- Implementation
 
-	frozen c_ev_gtk_callback_marshal_set_is_enabled (a_enabled_state: BOOLEAN) is
+	frozen c_ev_gtk_callback_marshal_set_is_enabled (a_enabled_state: BOOLEAN)
 			-- See ev_gtk_callback_marshal.c
 		external
 			"C signature (int) use %"ev_gtk_callback_marshal.h%""
@@ -312,7 +312,7 @@ feature -- Implementation
 feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 
 	frozen set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;
-		c_object_dispose_address: POINTER) is
+		c_object_dispose_address: POINTER)
 				-- Store Eiffel object_id in `gtk_object'.
 				-- Set up signal handlers.
 		external
@@ -322,7 +322,7 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 		end
 
 	frozen c_signal_connect (a_c_object: POINTER; a_signal_name: POINTER;
-		an_agent: PROCEDURE [ANY, TUPLE]; invoke_after_handler: BOOLEAN): INTEGER is
+		an_agent: PROCEDURE [ANY, TUPLE]; invoke_after_handler: BOOLEAN): INTEGER
 			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
 		external
 			"C (GtkObject*, gchar*, EIF_OBJECT, gboolean): guint | %"ev_gtk_callback_marshal.h%""
@@ -331,7 +331,7 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 		end
 
 	frozen c_signal_connect_true (a_c_object: POINTER; a_signal_name: POINTER;
-		an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
+		an_agent: PROCEDURE [ANY, TUPLE]): INTEGER
 			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
 		external
 			"C (GtkObject*, gchar*, EIF_OBJECT): guint | %"ev_gtk_callback_marshal.h%""
@@ -342,13 +342,13 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 
 	frozen c_ev_gtk_callback_marshal_timeout_connect
-		(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
+		(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]): INTEGER
 			-- Call `an_agent' after `a_delay'.
 		external
 			"C (gint, EIF_OBJECT): EIF_INTEGER | %"ev_gtk_callback_marshal.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

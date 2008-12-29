@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision popup window, GTK+ implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,19 +32,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		do
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	default_wm_decorations: INTEGER is
+	default_wm_decorations: INTEGER
 			-- Default Window Manager decorations of `Current'.
 		do
 		end
@@ -55,7 +55,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

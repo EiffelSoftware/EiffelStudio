@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "This class represent a MS WINDOWS Window with children"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class."; 
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Status report
 
-	children_count: INTEGER is
+	children_count: INTEGER
 			-- Return the number of children
 		do
 			if exists then
@@ -37,17 +37,17 @@ feature -- Status report
 
 feature -- Status setting
 
-	propagate_event is
+	propagate_event
 			-- Propagate the events.
 		do
 		end
 
-	set_no_event_propagation is
+	set_no_event_propagation
 			-- Do not propagate the events.
 		do
 		end
 
-	set_initial_input_focus (a_widget: WIDGET) is
+	set_initial_input_focus (a_widget: WIDGET)
 			--Set child which will initialy have input focus
 		do
 			initial_focus ?= a_widget.implementation
@@ -55,12 +55,12 @@ feature -- Status setting
 		
 feature -- Element change
 
-	child_has_resized is
+	child_has_resized
 			-- Respond to a resize of a child.
 		do
 		end
 
-	realize is
+	realize
 			-- Realize current widget and children.
 		do
 			if not realized then
@@ -70,12 +70,12 @@ feature -- Element change
 			end
 		end
 
-	realize_current is
+	realize_current
 			-- Realize current composite without the children.
 		deferred
 		end
 
-	show is
+	show
 			-- Show composite.
 		do
 			if exists then 
@@ -87,7 +87,7 @@ feature -- Element change
 			end
 		end
 
-	show_children is
+	show_children
 			-- Show the children of current composite.
 		local
 			local_children: ARRAYED_LIST [WIDGET_IMP]
@@ -112,7 +112,7 @@ feature -- Element change
 			end
 		end
 
-	realize_children is
+	realize_children
 			-- Realize the children of current composite.
 		local
 			local_children: ARRAYED_LIST [WIDGET_IMP]
@@ -130,7 +130,7 @@ feature -- Element change
 			end
 		end
 
-	unrealize is
+	unrealize
 			-- Unrealize current composite and its children.
 		local
 			unrealize_list: LIST [WIDGET_IMP]
@@ -154,13 +154,13 @@ feature -- Element change
 
 feature {WIDGET_IMP} -- Implementation
 
-	children: ARRAY [WIDGET_IMP] is
+	children: ARRAY [WIDGET_IMP]
 			-- Array of children
 		do
 			Result := children_list
 		end
 
-	children_list: ARRAYED_LIST [WIDGET_IMP] is
+	children_list: ARRAYED_LIST [WIDGET_IMP]
 			-- List of children
 		local
 			widget_area: SPECIAL [WIDGET]
@@ -207,17 +207,17 @@ feature {WIDGET_IMP} -- Implementation
 
 feature -- Implementation
 
-	wel_children: LIST [WEL_WINDOW] is
+	wel_children: LIST [WEL_WINDOW]
 			-- List of implementation children
 		deferred
 		end
 
-	wel_set_menu (a_menu: WEL_MENU) is
+	wel_set_menu (a_menu: WEL_MENU)
 			-- Set `menu' with `a_menu'.
 		deferred
 		end
 
-	associate_menu (a_menu: POPUP_IMP) is
+	associate_menu (a_menu: POPUP_IMP)
 			-- Set the menu
 		require
 			a_menu_exists: a_menu /= Void
@@ -227,14 +227,14 @@ feature -- Implementation
 			menu_set: popup_menu = a_menu
 		end;
 
-	remove_menu is
+	remove_menu
 		do
 			popup_menu := Void
 		end
 
 feature -- Behaviour
 
-	on_draw_item (control_id: POINTER; draw_item: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_item (control_id: POINTER; draw_item: WEL_DRAW_ITEM_STRUCT)
 			-- Wm_drawitem message.
 			-- A owner-draw control identified by `control_id' has
 			-- been changed and must be drawn. `draw_item' contains
@@ -249,7 +249,7 @@ feature -- Behaviour
 			end
 		end
 
-	on_menu_command (id_menu: INTEGER) is
+	on_menu_command (id_menu: INTEGER)
 			-- Respond to a menu command message.
 		do
 			popup_menu.execute (id_menu)
@@ -257,7 +257,7 @@ feature -- Behaviour
 
 feature {NONE} -- Implementation
 
-	set_enclosing_size is
+	set_enclosing_size
 			-- Set the enclozing size.
 		local
 			c: ARRAYED_LIST [WIDGET_IMP]
@@ -304,32 +304,32 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inaplicable
 
-	circulate_down is
+	circulate_down
 			-- Circulate the children down.
 		do
 		end
 
-	circulate_up is
+	circulate_up
 			-- Circulate the children up.
 		do
 		end
 
-	restack_children (a_stackable_array: ARRAY [STACKABLE]) is
+	restack_children (a_stackable_array: ARRAY [STACKABLE])
 			-- Restack the children
 		do
 		end
 
-	set_default_position (flag: BOOLEAN) is
+	set_default_position (flag: BOOLEAN)
 			-- Set default position to `flag'
 		do
 		end
 
-	is_stackable : BOOLEAN is
+	is_stackable : BOOLEAN
 			-- Is current widget stackable?
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

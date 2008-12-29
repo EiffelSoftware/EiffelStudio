@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class processes the scroll messages associated to %
 		%a window."
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 feature -- Initialization
 
 	make (a_window: WEL_COMPOSITE_WINDOW; horizontal_size,
-			vertical_size, line, page: INTEGER) is
+			vertical_size, line, page: INTEGER)
 			-- Make a scroller associated to `a_window' using
 			-- `horizontal_size' and `vertical_size' as the
 			-- size of the scrollable area. `line' and `page'
@@ -62,7 +62,7 @@ feature -- Initialization
 			a_minimal_horizontal_position, a_maximal_horizontal_position,
 			a_minimal_vertical_position, a_maximal_vertical_position,
 			a_horizontal_line, a_horizontal_page, a_vertical_line,
-			a_vertical_page: INTEGER) is
+			a_vertical_page: INTEGER)
 			-- Make a scroller associated to `a_window'.
 			-- `a_minimal_horizontal_position' and
 			-- `a_maximal_horizontal_position' specify the
@@ -122,7 +122,7 @@ feature -- Access
 	vertical_line: INTEGER
 			-- Number of vertical scroll units per line
 
-	horizontal_position: INTEGER is
+	horizontal_position: INTEGER
 			-- Current position of the horizontal scroll box
 		require
 			window_exists: window.exists
@@ -132,7 +132,7 @@ feature -- Access
 			Result := scroll_info_struct.position
 		end
 
-	vertical_position: INTEGER is
+	vertical_position: INTEGER
 			-- Current position of the vertical scroll box
 		require
 			window_exists: window.exists
@@ -142,7 +142,7 @@ feature -- Access
 			Result := scroll_info_struct.position
 		end
 
-	horizontal_page: INTEGER is
+	horizontal_page: INTEGER
 			-- Number of scroll units per page
 		require
 			window_exists: window.exists
@@ -152,7 +152,7 @@ feature -- Access
 			Result := scroll_info_struct.page
 		end
 
-	vertical_page: INTEGER is
+	vertical_page: INTEGER
 			-- Number of scroll units per page
 		require
 			window_exists: window.exists
@@ -162,7 +162,7 @@ feature -- Access
 			Result := scroll_info_struct.page
 		end
 
-	minimal_horizontal_position: INTEGER is
+	minimal_horizontal_position: INTEGER
 			-- Minimum position of the horizontal scroll box
 		require
 			window_exists: window.exists
@@ -172,7 +172,7 @@ feature -- Access
 			Result := scroll_info_struct.minimum
 		end
 
-	minimal_vertical_position: INTEGER is
+	minimal_vertical_position: INTEGER
 			-- Minimum position of the vertical scroll box
 		require
 			window_exists: window.exists
@@ -182,7 +182,7 @@ feature -- Access
 			Result := scroll_info_struct.minimum
 		end
 
-	maximal_horizontal_position: INTEGER is
+	maximal_horizontal_position: INTEGER
 			-- Maxium position of the horizontal scroll box
 		require
 			window_exists: window.exists
@@ -192,7 +192,7 @@ feature -- Access
 			Result := scroll_info_struct.maximum
 		end
 
-	maximal_vertical_position: INTEGER is
+	maximal_vertical_position: INTEGER
 			-- Maxium position of the vertical scroll box
 		require
 			window_exists: window.exists
@@ -204,13 +204,13 @@ feature -- Access
 
 feature -- Status report
 
-	valid_maximal_horizontal_position (a_position: INTEGER): BOOLEAN is
+	valid_maximal_horizontal_position (a_position: INTEGER): BOOLEAN
 			-- Is `a_position' valid for setting the `horizontal_position'.
 		do
 			Result := a_position <= (maximal_horizontal_position - (horizontal_page - 1).max (0)).max (0)
 		end
 
-	valid_maximal_vertical_position (a_position: INTEGER): BOOLEAN is
+	valid_maximal_vertical_position (a_position: INTEGER): BOOLEAN
 			-- Is `a_position' valid for setting the `vertical_position'.
 		do
 			Result := a_position <= (maximal_vertical_position - (vertical_page - 1).max (0)).max (0)
@@ -218,7 +218,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_horizontal_position (position: INTEGER) is
+	set_horizontal_position (position: INTEGER)
 			-- Set `horizontal_position' with `position'.
 		require
 			window_exists: window.exists
@@ -232,7 +232,7 @@ feature -- Element change
 			horizontal_position_set: horizontal_position = position
 		end
 
-	set_vertical_position (position: INTEGER) is
+	set_vertical_position (position: INTEGER)
 			-- Set `vertical_position' with `position'.
 		require
 			window_exists: window.exists
@@ -246,7 +246,7 @@ feature -- Element change
 			vertical_position_set: vertical_position = position
 		end
 
-	set_horizontal_range (minimum, maximum: INTEGER) is
+	set_horizontal_range (minimum, maximum: INTEGER)
 			-- Set `horizontal_minimum_range' and
 			-- `horizontal_maximal_range' with `minimum' and
 			-- `maximum'.
@@ -265,7 +265,7 @@ feature -- Element change
 				maximal_horizontal_position = maximum
 		end
 
-	set_vertical_range (minimum, maximum: INTEGER) is
+	set_vertical_range (minimum, maximum: INTEGER)
 			-- Set `minimal_vertical_position' and
 			-- `maximal_vertical_position' with `minimum' and
 			-- `maximum'.
@@ -284,7 +284,7 @@ feature -- Element change
 				maximal_vertical_position = maximum
 		end
 
-	set_horizontal_line (unit: INTEGER) is
+	set_horizontal_line (unit: INTEGER)
 			-- Set `horizontal_line' with `unit'.
 		require
 			positive_unit: unit >= 0
@@ -294,7 +294,7 @@ feature -- Element change
 			horizontal_line_set: horizontal_line = unit
 		end
 
-	set_vertical_line (unit: INTEGER) is
+	set_vertical_line (unit: INTEGER)
 			-- Set `vertical_line' with `unit'.
 		require
 			positive_unit: unit >= 0
@@ -304,7 +304,7 @@ feature -- Element change
 			vertical_line_set: vertical_line = unit
 		end
 
-	set_horizontal_page (page_magnitude: INTEGER) is
+	set_horizontal_page (page_magnitude: INTEGER)
 			-- Set `horizontal_page' with `unit'.
 		require
 			window_exists: window.exists
@@ -317,7 +317,7 @@ feature -- Element change
 			horizontal_page_set: horizontal_page = page_magnitude
 		end
 
-	set_vertical_page (page_magnitude: INTEGER) is
+	set_vertical_page (page_magnitude: INTEGER)
 			-- Set `vertical_page' with `unit'.
 		require
 			window_exists: window.exists
@@ -332,7 +332,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	on_horizontal_scroll (scroll_code, pos: INTEGER) is
+	on_horizontal_scroll (scroll_code, pos: INTEGER)
 			-- Scroll the window horizontaly.
 		require
 			window_exists: window.exists
@@ -388,7 +388,7 @@ feature -- Basic operations
 			end
 		end
 
-	on_vertical_scroll (scroll_code, pos: INTEGER) is
+	on_vertical_scroll (scroll_code, pos: INTEGER)
 			-- Scroll the window verticaly.
 		require
 			window_exists: window.exists
@@ -444,7 +444,7 @@ feature -- Basic operations
 			end
 		end
 
-	horizontal_update (inc, position: INTEGER) is
+	horizontal_update (inc, position: INTEGER)
 			-- Update the window and the horizontal scroll box with
 			-- `inc' and `position'.
 		require
@@ -459,7 +459,7 @@ feature -- Basic operations
 			horizontal_position_set: horizontal_position = position
 		end
 
-	vertical_update (inc, position: INTEGER) is
+	vertical_update (inc, position: INTEGER)
 			-- Update the window and the vertical scroll box with
 			-- `inc' and `position'.
 		require
@@ -484,14 +484,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_set_scroll_info (hwnd: POINTER; direction: INTEGER; info: POINTER; redraw: BOOLEAN) is
+	cwin_set_scroll_info (hwnd: POINTER; direction: INTEGER; info: POINTER; redraw: BOOLEAN)
 		external
 			"C [macro <windows.h>] (HWND, int, LPSCROLLINFO, BOOL)"
 		alias
 			"SetScrollInfo"
 		end
 
-	cwin_get_scroll_info (hwnd: POINTER; direction: INTEGER; info: POINTER) is
+	cwin_get_scroll_info (hwnd: POINTER; direction: INTEGER; info: POINTER)
 		external
 			"C [macro <windows.h>] (HWND, int, LPSCROLLINFO)"
 		alias
@@ -524,7 +524,7 @@ invariant
 	positive_horizontal_page: horizontal_page >= 0
 	positive_vertical_page: vertical_page >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

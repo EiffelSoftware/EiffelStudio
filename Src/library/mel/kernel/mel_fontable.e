@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"A widget that has a font."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	font_list: MEL_FONT_LIST is
+	font_list: MEL_FONT_LIST
 			-- Font list of gadget label
 		require
 			exists: not is_destroyed
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_font_list (a_font_list: MEL_FONT_LIST) is
+	set_font_list (a_font_list: MEL_FONT_LIST)
 			-- Set `font_list' to `a_font_list'.
 		require
 			exists: not is_destroyed;
@@ -43,7 +43,7 @@ feature -- Status setting
 			set_xm_font_list (screen_object, XmNFontList, a_font_list)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

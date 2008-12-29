@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Receives and dispatch the Windows messages to the Eiffel objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,7 +39,7 @@ inherit
 
 feature -- Settings
 
-	set_exception_callback (an_action: like exception_callback) is
+	set_exception_callback (an_action: like exception_callback)
 			-- Set `exception_callback' with `an_action'.
 		do
 			exception_callback := an_action
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Implementation
 
-	frozen window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	frozen window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- Window messages dispatcher routine
 		local
 			window: WEL_WINDOW
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	frozen dialog_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	frozen dialog_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- Dialog box messages dispatcher routine
 		local
 			window: WEL_WINDOW
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	new_exception: EXCEPTION is
+	new_exception: EXCEPTION
 			-- New exception object representating the last exception caught in Current
 		do
 			Result := exception_manager.last_exception
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_def_window_proc (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	cwin_def_window_proc (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- SDK DefWindowProc
 		external
 			"C [macro <windows.h>] (HWND, UINT, WPARAM, LPARAM): LRESULT"
@@ -213,7 +213,7 @@ feature {NONE} -- Externals
 			"DefWindowProc"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

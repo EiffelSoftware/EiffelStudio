@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a user passed argument property value, that is <property>=<value>."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -112,7 +112,7 @@ invariant
 	has_name_or_value: has_value implies (has_property_name or has_property_value)
 	not_has_name_or_value: not has_value implies (not has_property_name and not has_property_value)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

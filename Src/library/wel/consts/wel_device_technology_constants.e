@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Device technology (DT) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Dt_plotter: INTEGER is
+	Dt_plotter: INTEGER
 			-- Vector plotter
 		external
 			"C [macro %"wel.h%"]"
@@ -18,7 +18,7 @@ feature -- Access
 			"DT_PLOTTER"
 		end
 
-	Dt_rasdisplay: INTEGER is
+	Dt_rasdisplay: INTEGER
 			-- Raster display
 		external
 			"C [macro %"wel.h%"]"
@@ -26,7 +26,7 @@ feature -- Access
 			"DT_RASDISPLAY"
 		end
 
-	Dt_rasprinter: INTEGER is
+	Dt_rasprinter: INTEGER
 			-- Raster printer
 		external
 			"C [macro %"wel.h%"]"
@@ -34,7 +34,7 @@ feature -- Access
 			"DT_RASPRINTER"
 		end
 
-	Dt_rascamera: INTEGER is
+	Dt_rascamera: INTEGER
 			-- Raster camera
 		external
 			"C [macro %"wel.h%"]"
@@ -42,7 +42,7 @@ feature -- Access
 			"DT_RASCAMERA"
 		end
 
-	Dt_charstream: INTEGER is
+	Dt_charstream: INTEGER
 			-- Character stream
 		external
 			"C [macro %"wel.h%"]"
@@ -50,7 +50,7 @@ feature -- Access
 			"DT_CHARSTREAM"
 		end
 
-	Dt_metafile: INTEGER is
+	Dt_metafile: INTEGER
 			-- Metafile
 		external
 			"C [macro %"wel.h%"]"
@@ -58,7 +58,7 @@ feature -- Access
 			"DT_METAFILE"
 		end
 
-	Dt_dispfile: INTEGER is
+	Dt_dispfile: INTEGER
 			-- Display file
 		external
 			"C [macro %"wel.h%"]"
@@ -66,7 +66,7 @@ feature -- Access
 			"DT_DISPFILE"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

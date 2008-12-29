@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Pulldown menu of a menu button, it is attached to a menu button %
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: MENU) is
+	make (a_name: STRING; a_parent: MENU)
 			-- Create a pulldown menu with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: MENU) is
+	make_unmanaged (a_name: STRING; a_parent: MENU)
 			-- Create an unmanaged pulldown menu with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: MENU; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: MENU; man: BOOLEAN)
 			-- Create a pulldown menu with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	menu_button: MENU_B is
+	menu_button: MENU_B
 			-- Menu button
 		require
 			exists: not destroyed
@@ -79,12 +79,12 @@ feature -- Access
 			Result := implementation.menu_button
 		end;
 
-	button: BUTTON is
+	button: BUTTON
 		do
 			Result := menu_button
 		end;
 
-	parent: MENU is
+	parent: MENU
 			-- Parent of pulldown menu
 		do
 			Result ?= widget_manager.parent (Current)
@@ -97,12 +97,12 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current pulldown menu.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

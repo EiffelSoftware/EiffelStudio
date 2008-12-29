@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of general lines (implementation for X)"
 	legal: "See notice at end of class.";
@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	origin: COORD_XY_FIG is
+	origin: COORD_XY_FIG
 			-- Origin of line
 		do
 			inspect
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Element change
 
-	set (o1, o2: like p1) is
+	set (o1, o2: like p1)
 			-- Set the two end points of the line.
 		require
 			o1_exists: o1 /= Void;
@@ -64,7 +64,7 @@ feature -- Element change
 			p2_set: p2 = o2
 		end;
 
-	set_origin_to_first_point is
+	set_origin_to_first_point
 			-- Set origin to first point of line.
 		do
 			origin_user_type := 2;
@@ -72,13 +72,13 @@ feature -- Element change
 			origin.is_superimposable (p1)
 		end;
 
-	set_origin_to_middle is
+	set_origin_to_middle
 			-- Set origin to middle of the segment [`p1', `p2'].
 		do
 			origin_user_type := 4;
 		end;
 
-	set_origin_to_second_point is
+	set_origin_to_second_point
 			-- Set origin to second point of line.
 		do
 			origin_user_type := 3;
@@ -86,7 +86,7 @@ feature -- Element change
 			origin.is_superimposable (p2)
 		end;
 
-	set_p1 (p: like p1) is
+	set_p1 (p: like p1)
 			-- Set the first point.
 		require
 			p_exists: p /= Void
@@ -95,7 +95,7 @@ feature -- Element change
 			p1_set: p1 = p
 		end;
 
-	set_p2 (p: like p2) is
+	set_p2 (p: like p2)
 			-- Set the second point.
 		require
 			p_exists: p /= Void
@@ -104,7 +104,7 @@ feature -- Element change
 			p2_set: p2 = p
 		end;
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: REAL; px, py: INTEGER)
 			-- Rotate figure by `a' relative to (`px', `py').
 			-- Angle `a' is measured in degrees.
 		require else
@@ -116,7 +116,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xyscale (f: REAL; px,py: INTEGER) is
+	xyscale (f: REAL; px,py: INTEGER)
 			-- Scale figure by `f' relative to (`px', `py').
 		require else
 			scale_factor_positive: f > 0.0
@@ -126,7 +126,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xytranslate (vx, vy: INTEGER) is
+	xytranslate (vx, vy: INTEGER)
 			-- Translate by `vx' horizontally and `vy' vertically.
 		do
 			p1.xytranslate (vx, vy);
@@ -136,18 +136,18 @@ feature -- Element change
 
 feature -- Status report
 
-	is_horizontal: BOOLEAN is
+	is_horizontal: BOOLEAN
 			-- Is the line horizontal ?
 		do
 			Result := (p1.y = p2.y)
 		end; 
 
-	is_null: BOOLEAN is
+	is_null: BOOLEAN
 			-- Is the line null ?
 		deferred
 		end; 
 
-	is_vertical: BOOLEAN is
+	is_vertical: BOOLEAN
 			-- Is the line vertical ?
 		do
 			Result := (p1.x = p2.x)
@@ -155,7 +155,7 @@ feature -- Status report
 
 feature -- Updating
 
-	conf_recompute is
+	conf_recompute
 		require else
 			p1 /= Void and p2 /= Void
 		do
@@ -170,7 +170,7 @@ invariant
 	start_exists: p1 /= Void;
 	end_exists: p2 /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

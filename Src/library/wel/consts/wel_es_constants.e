@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Edit control style (ES) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,33 +10,33 @@ class
 
 feature -- Access
 
-	Es_left: INTEGER is 0
+	Es_left: INTEGER = 0
 
-	Es_center: INTEGER is 1
+	Es_center: INTEGER = 1
 
-	Es_right: INTEGER is 2
+	Es_right: INTEGER = 2
 
-	Es_multiline: INTEGER is 4
+	Es_multiline: INTEGER = 4
 
-	Es_uppercase: INTEGER is 8
+	Es_uppercase: INTEGER = 8
 
-	Es_lowercase: INTEGER is 16
+	Es_lowercase: INTEGER = 16
 
-	Es_password: INTEGER is 32
+	Es_password: INTEGER = 32
 
-	Es_autovscroll: INTEGER is 64
+	Es_autovscroll: INTEGER = 64
 
-	Es_autohscroll: INTEGER is 128
+	Es_autohscroll: INTEGER = 128
 
-	Es_nohidesel: INTEGER is 256
+	Es_nohidesel: INTEGER = 256
 
-	Es_oemconvert: INTEGER is 1024
+	Es_oemconvert: INTEGER = 1024
 
-	Es_readonly: INTEGER is 2048
+	Es_readonly: INTEGER = 2048
 
-	Es_wantreturn: INTEGER is 4096;
+	Es_wantreturn: INTEGER = 4096;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

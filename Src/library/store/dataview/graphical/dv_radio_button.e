@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Radio button."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature -- Access
 
-	checked: BOOLEAN is
+	checked: BOOLEAN
 			-- Boolean value held.
 		do
 			Result := is_selected
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	disable_select is
+	disable_select
 			-- Do nothing.
 		do
 			check
@@ -44,13 +44,13 @@ feature -- Basic operations
 			end
 		end
 
-	request_sensitive is
+	request_sensitive
 			-- Request display sensitive.
 		do
 			enable_sensitive
 		end
 
-	request_insensitive is
+	request_insensitive
 			-- Request display insensitive.
 		do
 			disable_sensitive
@@ -62,13 +62,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {DV_RADIO_BUTTON_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

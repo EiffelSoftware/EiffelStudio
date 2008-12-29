@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fixed integer array for WEL_STRUCTURE. Used internally by WEL. %
 				 % useful to protect string arrays within an external call"
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_array: ARRAY [STRING]) is
+	make (a_array: ARRAY [STRING])
 			-- Create a fixed string array
 			-- from an existing standard string array.
 		require
@@ -66,7 +66,7 @@ invariant
 	attached_item: item /= Void
 	attached_strings: strings /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

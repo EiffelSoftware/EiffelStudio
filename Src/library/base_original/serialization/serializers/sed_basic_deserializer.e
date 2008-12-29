@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Decoding of arbitrary objects graphs between sessions of a same program."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature {NONE} -- Implementation: Access
 	dynamic_type_table: SPECIAL [INTEGER]
 			-- Mapping between old dynamic types and new ones.
 
-	new_dynamic_type_id (a_old_type_id: INTEGER): INTEGER is
+	new_dynamic_type_id (a_old_type_id: INTEGER): INTEGER
 			-- Given `a_old_type_id', dynamic type id in stored system, retrieve dynamic
 			-- type id in current system.
 		do
@@ -37,7 +37,7 @@ feature {NONE} -- Implementation: Access
 		
 feature {NONE} -- Implementation
 
-	read_header (a_count: NATURAL_32) is
+	read_header (a_count: NATURAL_32)
 			-- Read header which contains mapping between dynamic type and their
 			-- string representation.
 		local
@@ -81,14 +81,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Cleaning
 
-	clear_internal_data is
+	clear_internal_data
 			-- Clear all allocated data
 		do
 			Precursor {SED_SESSION_DESERIALIZER}
 			dynamic_type_table := Void
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

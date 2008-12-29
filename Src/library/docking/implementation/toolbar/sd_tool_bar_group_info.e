@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that store tool bar items group infomation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method.
 		do
 			create internal_group_info.make (1)
@@ -29,7 +29,7 @@ feature {NONE} -- Initlization
 
 feature -- Query
 
-	total_items_count: INTEGER is
+	total_items_count: INTEGER
 			-- How many items.
 		do
 			from
@@ -44,7 +44,7 @@ feature -- Query
 			valid: Result >= 0
 		end
 
-	maximum_width_sub: INTEGER is
+	maximum_width_sub: INTEGER
 			-- Maximum width
 			-- Calculation include sub level items.
 		local
@@ -61,7 +61,7 @@ feature -- Query
 			end
 		end
 
-	maximum_width: INTEGER is
+	maximum_width: INTEGER
 			-- Maximum width
 			-- The calculation include sub level groups.
 		local
@@ -82,7 +82,7 @@ feature -- Query
 			end
 		end
 
-	maximum_width_only_top_level: TUPLE [max_width: INTEGER; item_count: INTEGER] is
+	maximum_width_only_top_level: TUPLE [max_width: INTEGER; item_count: INTEGER]
 			-- Maximum width
 			-- The calculation not include sub level groups.
 		local
@@ -128,7 +128,7 @@ feature -- Query
 			end
 		end
 
-	maximum_width_group_index: TUPLE [max_index: INTEGER; max_row_item_count: INTEGER] is
+	maximum_width_group_index: TUPLE [max_index: INTEGER; max_row_item_count: INTEGER]
 			-- Maximum width group index.
 			-- It compute sub-level groups
 		local
@@ -156,7 +156,7 @@ feature -- Query
 			valid: Result.max_index > 0 and Result.max_index <= group_count
 		end
 
-	maximum_width_top_group: SD_TOOL_BAR_GROUP_INFO is
+	maximum_width_top_group: SD_TOOL_BAR_GROUP_INFO
 			-- The group which have maximum width.
 			-- The maximum width calculation inlucde sub level group items width calculation.
 		local
@@ -172,7 +172,7 @@ feature -- Query
 			end
 		end
 
-	maximum_width_top_group_index: INTEGER is
+	maximum_width_top_group_index: INTEGER
 			-- Maximum width top group index.
 			-- Calculation include sub level items width.
 		local
@@ -198,7 +198,7 @@ feature -- Query
 			valid: Result > 0 and Result <= total_group_count
 		end
 
-	group_maximum_width (a_group_index: INTEGER): TUPLE [max_width: INTEGER; item_count: INTEGER] is
+	group_maximum_width (a_group_index: INTEGER): TUPLE [max_width: INTEGER; item_count: INTEGER]
 			-- Maximum group width of a_group_index.
 			-- `a_group_index' is top level group index.
 		require
@@ -249,7 +249,7 @@ feature -- Query
 			valid: Result.max_width >= 0
 		end
 
-	row_width (a_row_index: INTEGER): INTEGER is
+	row_width (a_row_index: INTEGER): INTEGER
 			-- Row width.
 		require
 			valid: a_row_index > 0 and a_row_index <= row_count
@@ -269,13 +269,13 @@ feature -- Query
 			valid: Result >= 0
 		end
 
-	row_count: INTEGER is
+	row_count: INTEGER
 			-- Row count
 		do
 			Result := internal_group_info.count
 		end
 
-	row_total_count: INTEGER is
+	row_total_count: INTEGER
 			-- Total row count.
 		do
 			from
@@ -294,7 +294,7 @@ feature -- Query
 			valid: Result >= 0
 		end
 
-	group_count: INTEGER is
+	group_count: INTEGER
 			-- Group count. Start from 1 (not 0).
 		do
 			Result := 1
@@ -312,7 +312,7 @@ feature -- Query
 			valid: Result >= 0
 		end
 
-	total_group_count: INTEGER is
+	total_group_count: INTEGER
 			-- Total group count, include sub group count.
 		do
 			Result := 1
@@ -337,7 +337,7 @@ feature -- Query
 			end
 		end
 
-	group_item_count (a_group_index: INTEGER): INTEGER is
+	group_item_count (a_group_index: INTEGER): INTEGER
 			-- How many items in a group.
 		require
 			valid: a_group_index > 0 and a_group_index <= group_count
@@ -362,7 +362,7 @@ feature -- Query
 			valid: Result > 0
 		end
 
-	group_item_start_index (a_group_index: INTEGER): INTEGER is
+	group_item_start_index (a_group_index: INTEGER): INTEGER
 			-- Group item start index.
 		require
 			valid: a_group_index > 0 and a_group_index <= group_count
@@ -381,7 +381,7 @@ feature -- Query
 
 feature -- Command
 
-	set_sub_group_info (a_sub_grouping_info: SD_TOOL_BAR_GROUP_INFO; a_group_index: INTEGER) is
+	set_sub_group_info (a_sub_grouping_info: SD_TOOL_BAR_GROUP_INFO; a_group_index: INTEGER)
 			-- Set sub grouping info.
 		require
 			valid: a_group_index > 0 and a_group_index <= count
@@ -391,7 +391,7 @@ feature -- Command
 			has: sub_grouping.has_item (a_sub_grouping_info)
 		end
 
-	out: STRING is
+	out: STRING
 			-- Redefine
 		do
 			Result := "%NSD_TOOL_BAR_GROUP_INFO:"
@@ -419,55 +419,55 @@ feature -- Command
 
 feature -- Query for iteration
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- If no items left?
 		do
 			Result := internal_group_info.after
 		end
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- If no items before?
 		do
 			Result := internal_group_info.before
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Count of how many rows.
 		do
 			Result := internal_group_info.count
 		end
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of current row.
 		do
 			Result := internal_group_info.index
 		end
 
-	item: DS_HASH_TABLE [INTEGER, INTEGER] is
+	item: DS_HASH_TABLE [INTEGER, INTEGER]
 			-- One row info.
 		do
 			Result := internal_group_info.item
 		end
 
-	has_any_sub_info: BOOLEAN is
+	has_any_sub_info: BOOLEAN
 			-- Do current grouping has any sub infos?
 		do
 			Result := sub_grouping.count > 0
 		end
 
-	has_sub_info: BOOLEAN is
+	has_sub_info: BOOLEAN
 			-- Do current index has sub grouping information?
 		do
 			Result := sub_grouping.has (index)
 		end
 
-	i_th (a_index: INTEGER): DS_HASH_TABLE [INTEGER, INTEGER] is
+	i_th (a_index: INTEGER): DS_HASH_TABLE [INTEGER, INTEGER]
 			-- Item at a_index.
 		do
 			Result := internal_group_info.i_th (a_index)
 		end
 
-	is_new_group: BOOLEAN is
+	is_new_group: BOOLEAN
 			-- If current `item' is new group base on last `item'?
 		do
 			Result := internal_is_new_group.item
@@ -475,35 +475,35 @@ feature -- Query for iteration
 
 feature -- Command for iteration
 
-	start is
+	start
 			-- Go to first item.
 		do
 			internal_group_info.start
 			internal_is_new_group.start
 		end
 
-	finish is
+	finish
 			-- Go to last position.
 		do
 			internal_group_info.finish
 			internal_is_new_group.finish
 		end
 
-	forth is
+	forth
 			-- Go to next row info.
 		do
 			internal_group_info.forth
 			internal_is_new_group.forth
 		end
 
-	back is
+	back
 			-- Go to row info before.
 		do
 			internal_group_info.back
 			internal_is_new_group.back
 		end
 
-	extend (a_group_index_info: DS_HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN) is
+	extend (a_group_index_info: DS_HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN)
 			-- Extend a_group_info
 		require
 			not_void:a_group_index_info /= Void
@@ -514,14 +514,14 @@ feature -- Command for iteration
 			same_size: internal_group_info.count = internal_is_new_group.count
 		end
 
-	go_i_th (a_index: INTEGER) is
+	go_i_th (a_index: INTEGER)
 			-- Go to `a_index' position.
 		do
 			internal_group_info.go_i_th (a_index)
 			internal_is_new_group.go_i_th (a_index)
 		end
 
-	replace (a_item: DS_HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN) is
+	replace (a_item: DS_HASH_TABLE [INTEGER, INTEGER]; a_new_group: BOOLEAN)
 			-- Replace current item by a_item.
 		do
 			internal_group_info.replace (a_item)
@@ -530,7 +530,7 @@ feature -- Command for iteration
 
 feature {NONE} -- Implementation
 
-	go_group_i_th (a_group_index: INTEGER) is
+	go_group_i_th (a_group_index: INTEGER)
 			-- Move index to a_group_index
 		require
 			valid: a_group_index > 0
@@ -570,7 +570,7 @@ invariant
 	not_void: internal_group_info /= Void
 	same_size: internal_group_info.count = internal_is_new_group.count
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

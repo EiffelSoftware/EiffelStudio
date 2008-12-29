@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	frozen thread_id: POINTER is
+	frozen thread_id: POINTER
             	-- Thread-id of the current thread object.
 		do
 				-- There are no explicit routines for changing an INTEGER to a POINTER
@@ -26,12 +26,12 @@ feature -- Access
 
 feature -- Initialization
 
-	execute is
+	execute
 			-- Routine executed by new thread.
 		deferred
 		end
 
-	launch is
+	launch
 			-- Initialize a new thread running `execute'.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -41,7 +41,7 @@ feature -- Initialization
 			add_children (Current)
 		end
 
-	launch_with_attributes (attr: THREAD_ATTRIBUTES) is
+	launch_with_attributes (attr: THREAD_ATTRIBUTES)
 			-- Initialize a new thread running `execute', using attributes.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -58,7 +58,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	frozen call_execute is
+	frozen call_execute
 			-- Call thread routine.
 		do
 			internal_thread_id := current_thread_id
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

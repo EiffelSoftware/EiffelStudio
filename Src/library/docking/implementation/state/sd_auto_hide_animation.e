@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Helper for SD_AUTO_HIDE_STATE to deal with animation issues."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_auto_hide_state: SD_AUTO_HIDE_STATE; a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_auto_hide_state: SD_AUTO_HIDE_STATE; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method
 		require
 			not_void: a_auto_hide_state /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initlization
 
 feature {SD_AUTO_HIDE_STATE} -- Command
 
-	close_animation is
+	close_animation
 			-- Close window animation.
 		local
 			l_rect: EV_RECTANGLE
@@ -72,7 +72,7 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 			end
 		end
 
-	show (a_animation: BOOLEAN) is
+	show (a_animation: BOOLEAN)
 			-- Show internal widgets.
 		local
 			l_rect: EV_RECTANGLE
@@ -123,7 +123,7 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 			end
 		end
 
-	remove_moving_timer (a_open: BOOLEAN) is
+	remove_moving_timer (a_open: BOOLEAN)
 			-- Remove `internal_moving_timer'.
 		do
 			if internal_moving_timer /= Void then
@@ -140,7 +140,7 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 			timer_void: internal_moving_timer = Void
 		end
 
-	remove_close_timer is
+	remove_close_timer
 			-- Remove close timer.
 		do
 			if internal_close_timer /= Void then
@@ -162,7 +162,7 @@ feature {SD_AUTO_HIDE_STATE} -- Command
 
 feature -- Query
 
-	is_close_timer_exist: BOOLEAN is
+	is_close_timer_exist: BOOLEAN
 			-- If `internal_close_timer' /= Void?
 		do
 			Result := internal_close_timer /= Void
@@ -173,7 +173,7 @@ feature -- Query
 
 feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 
-	on_timer_for_close is
+	on_timer_for_close
 			-- Handle close timer event.
 		require
 			internal_timer_not_void: is_close_timer_exist
@@ -186,7 +186,7 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 			timer_void: pointer_outside and not state.zone.has_focus implies internal_close_timer = Void
 		end
 
-	on_pointer_motion (a_widget: EV_WIDGET; a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_motion (a_widget: EV_WIDGET; a_screen_x, a_screen_y: INTEGER)
 			-- Use timer to detect pointer outside zone and tab stub?
 		local
 			l_rect, l_rect_zone: EV_RECTANGLE
@@ -204,7 +204,7 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 			end
 		end
 
-	on_timer_for_moving (a_open: BOOLEAN) is
+	on_timer_for_moving (a_open: BOOLEAN)
 			-- Use timer to play a animation.
 		do
 			if a_open then
@@ -218,7 +218,7 @@ feature {SD_DOCKING_MANAGER_AGENTS} -- Agents
 
 feature {NONE} -- Implementation functions
 
-	internal_set_position_and_final_position (a_whole_area: EV_RECTANGLE) is
+	internal_set_position_and_final_position (a_whole_area: EV_RECTANGLE)
 			-- When `internal_show' set first animation position and calculate final position.
 		require
 			not_void: a_whole_area /= Void
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	internal_set_size (a_whole_area: EV_RECTANGLE) is
+	internal_set_size (a_whole_area: EV_RECTANGLE)
 			-- When show, set size of `zone'
 		require
 			not_void: a_whole_area /= Void
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	internal_open_moving is
+	internal_open_moving
 			-- Zone open animation.
 		do
 			inspect
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	internal_close_moving is
+	internal_close_moving
 			-- Zone close animation.
 		do
 			inspect
@@ -342,7 +342,7 @@ feature {NONE} -- Implementation
 	internal_motion_procedure: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER]]
 			-- Motion procedure for animation.
 
-	internal_show_step: INTEGER is 20
+	internal_show_step: INTEGER = 20
 			-- Step when tear-off window appear.
 
 	internal_final_position: INTEGER
@@ -361,7 +361,7 @@ invariant
 	not_void: state /= Void
 	not_void: internal_docking_manager /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

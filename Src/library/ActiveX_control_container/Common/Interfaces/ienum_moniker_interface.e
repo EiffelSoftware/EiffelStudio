@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,28 +12,28 @@ inherit
 
 feature -- Status Report
 
-	next_user_precondition (celt: INTEGER; rgelt: ARRAY [IMONIKER_INTERFACE]; pcelt_fetched: INTEGER_REF): BOOLEAN is
+	next_user_precondition (celt: INTEGER; rgelt: ARRAY [IMONIKER_INTERFACE]; pcelt_fetched: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `next'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	skip_user_precondition (celt: INTEGER): BOOLEAN is
+	skip_user_precondition (celt: INTEGER): BOOLEAN
 			-- User-defined preconditions for `skip'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	reset_user_precondition: BOOLEAN is
+	reset_user_precondition: BOOLEAN
 			-- User-defined preconditions for `reset'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	clone1_user_precondition (ppenum: CELL [IENUM_MONIKER_INTERFACE]): BOOLEAN is
+	clone1_user_precondition (ppenum: CELL [IENUM_MONIKER_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `clone1'.
 			-- Redefine in descendants if needed.
 		do
@@ -42,7 +42,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	next (celt: INTEGER; rgelt: ARRAY [IMONIKER_INTERFACE]; pcelt_fetched: INTEGER_REF) is
+	next (celt: INTEGER; rgelt: ARRAY [IMONIKER_INTERFACE]; pcelt_fetched: INTEGER_REF)
 			-- No description available.
 			-- `celt' [in].  
 			-- `rgelt' [out].  
@@ -56,7 +56,7 @@ feature -- Basic Operations
 			valid_rgelt: pcelt_fetched /= Void implies rgelt.count = pcelt_fetched.item
 		end
 
-	skip (celt: INTEGER) is
+	skip (celt: INTEGER)
 			-- No description available.
 			-- `celt' [in].  
 		require
@@ -65,7 +65,7 @@ feature -- Basic Operations
 
 		end
 
-	reset is
+	reset
 			-- No description available.
 		require
 			reset_user_precondition: reset_user_precondition
@@ -73,7 +73,7 @@ feature -- Basic Operations
 
 		end
 
-	clone1 (ppenum: CELL [IENUM_MONIKER_INTERFACE]) is
+	clone1 (ppenum: CELL [IENUM_MONIKER_INTERFACE])
 			-- No description available.
 			-- `ppenum' [out].  
 		require
@@ -85,7 +85,7 @@ feature -- Basic Operations
 			valid_ppenum: ppenum.item /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

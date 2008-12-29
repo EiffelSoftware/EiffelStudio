@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of Drawable object."
@@ -12,22 +12,22 @@ deferred class
 
 feature -- Access
 
-	identifier: POINTER is
+	identifier: POINTER
 			-- C identifier for drawable object
 		deferred
 		end;
 
-	display: MEL_DISPLAY is
+	display: MEL_DISPLAY
 			-- Assocated display
 		deferred
 		end;
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the drawable valid?
 		deferred
 		end;
 
-	depth: INTEGER is
+	depth: INTEGER
 			-- Depth of drawable
 		require
 			is_valid: is_valid
@@ -36,7 +36,7 @@ feature -- Access
 			depth_large_enough: Result > 0
 		end;
 
-	display_handle: POINTER is
+	display_handle: POINTER
 			-- Associated C handle to the display
 		deferred
 		end;
@@ -45,7 +45,7 @@ feature -- Element change
 
 	copy_area (a_drawable: MEL_DRAWABLE; gc: MEL_GC;
 			src_x, src_y, a_width, a_height: INTEGER;
-			dest_x, dest_y: INTEGER) is
+			dest_x, dest_y: INTEGER)
 			-- Copy the area specified by `src_x', `src_x', `src_x', `a_width' and
 			-- `a_height' of `a_drawable' at `dest_x' and `dest_y' of Current drawable.
 		require
@@ -63,7 +63,7 @@ feature -- Element change
 	copy_plane (a_drawable: MEL_DRAWABLE; gc: MEL_GC;
 			src_x, src_y, a_width, a_height: INTEGER;
 			dest_x, dest_y: INTEGER;
-			a_plane: INTEGER) is
+			a_plane: INTEGER)
 			-- Copy the area specified by `src_x', `src_x', `src_x', `a_width' and
 			-- `a_height' of `a_drawable' at `dest_x' and `dest_y' of Current drawable
 			-- with source bit-plane `a_plane'.
@@ -81,7 +81,7 @@ feature -- Element change
 feature {NONE} -- External features
 
 	x_copy_area (dspl_pointer, src_d, target_d, gc: POINTER; val1, val2,
-					bm_wdth, bm_hght, x_val, y_val: INTEGER) is
+					bm_wdth, bm_hght, x_val, y_val: INTEGER)
 		external
 			"C (Display *, Drawable, Drawable, %
 				%GC, int, int, unsigned int, unsigned int, int, int) | <X11/Xlib.h>"
@@ -90,7 +90,7 @@ feature {NONE} -- External features
 		end;
 
 	x_copy_plane (dspl_pointer, res_x, wndw_obj, gc: POINTER; val1, val2,
-					bm_wdth, bm_hght, x_val, y_val, val3: INTEGER) is
+					bm_wdth, bm_hght, x_val, y_val, val3: INTEGER)
 		external
 			"C (Display *, Drawable, Drawable, %
 				%GC, int, int, unsigned int, unsigned int, int, int, unsigned long) | <X11/Xlib.h>"
@@ -98,7 +98,7 @@ feature {NONE} -- External features
 			"XCopyPlane"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

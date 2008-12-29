@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A silly window that doesn't do anything. Used as default parent.
 		
@@ -38,13 +38,13 @@ create
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Windows default style used in creation of `Current'.
 		do
 			Result := ws_popup
 		end
 
-	on_wm_vscroll (wparam, lparam: POINTER) is
+	on_wm_vscroll (wparam, lparam: POINTER)
  			-- Wm_vscroll message.
  			-- Should be implementated in EV_CONTAINER_IMP,
 			-- But as we can't implement a deferred feature
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			end
  		end
 
- 	on_wm_hscroll (wparam, lparam: POINTER) is
+ 	on_wm_hscroll (wparam, lparam: POINTER)
  			-- Wm_hscroll message.
  		local
  			range: EV_RANGE_IMP
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			end
  		end
 
-	on_wm_notify (wparam, lparam: POINTER) is
+	on_wm_notify (wparam, lparam: POINTER)
 			-- Wm_notify message
 		local
 			info: WEL_NMHDR
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implemetation
 
-	has_child (w: WEL_WINDOW): BOOLEAN is
+	has_child (w: WEL_WINDOW): BOOLEAN
 			-- Is `w' a child of Current?
 		require
 			exists: exists
@@ -170,7 +170,7 @@ feature {NONE} -- Implemetation
 			end
 		end
 
-	class_requires_icon: BOOLEAN is
+	class_requires_icon: BOOLEAN
 			-- Does `Current' require an icon to be registered?
 			-- If `True' `register_class' assigns a class icon, otherwise
 			-- no icon is assigned.
@@ -178,7 +178,7 @@ feature {NONE} -- Implemetation
 			Result := False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

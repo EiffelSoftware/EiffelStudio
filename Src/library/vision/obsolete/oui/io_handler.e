@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A I/O handler manager. %
@@ -27,7 +27,7 @@ create
 
 feature 
 
-	make is
+	make
 			-- Create a io_handler.
 		local
 			ot: OBSOLETE_TOOLKIT
@@ -46,7 +46,7 @@ feature {NONE}
 
 feature 
 
-	is_call_back_set: BOOLEAN is
+	is_call_back_set: BOOLEAN
 			-- Is a call back already set ?
 		require
 			exists: not destroyed
@@ -54,7 +54,7 @@ feature
 			Result := implementation.is_call_back_set
 		end;
 
-	set_error_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
+	set_error_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when an operation
 			-- on `a_file' had raised an I/O error.
 			--| the behave of this routine should be examined when other
@@ -69,7 +69,7 @@ feature
 			is_call_back_set
 		end;
 
-	set_no_call_back is
+	set_no_call_back
 			-- Remove any call-back already set.
 		require
 			exists: not destroyed;
@@ -80,7 +80,7 @@ feature
 			not is_call_back_set
 		end;
 
-	set_read_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
+	set_read_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when `a_file' has
 			-- data available.
 		require
@@ -93,7 +93,7 @@ feature
 			is_call_back_set
 		end;
 
-	set_write_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
+	set_write_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when `a_file' is
 			-- available for writing.
 		require
@@ -106,12 +106,12 @@ feature
 			is_call_back_set
 		end;
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 		do
 			Result := implementation = Void
 		end;
 
-	destroy is
+	destroy
 			-- Destroy Current.
 		require
 			exists: not destroyed
@@ -122,7 +122,7 @@ feature
 			destroyed: implementation = Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

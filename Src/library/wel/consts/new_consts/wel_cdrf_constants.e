@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to Windows CDRF%
 		%constants used with custom draw."
 	legal: "See notice at end of class."
@@ -11,32 +11,32 @@ class
 
 feature -- Access
 
-	cdrf_dodefault: INTEGER is 0
+	cdrf_dodefault: INTEGER = 0
 		-- Declared in Windows as CDRF_DODEFAULT.
 		
-	cdrf_newfont: INTEGER is 2
+	cdrf_newfont: INTEGER = 2
 		-- Declared in Windows as CDRF_NEWFONT.
 		
-	cdrf_skipdefault: INTEGER is 4
+	cdrf_skipdefault: INTEGER = 4
 		-- Declared in Windows as CDRF_SKIPDEFAULT.
 		
-	cdrf_notifypostpaint: INTEGER is 16
+	cdrf_notifypostpaint: INTEGER = 16
 		-- Declared in Windows as CDRF_NOTIFYPOSTPAINT.
 		
-	cdrf_notifyitemdraw: INTEGER is 32
+	cdrf_notifyitemdraw: INTEGER = 32
 		-- Declared in Windows as CDRF_NOTIFYITEMDRAW.
 		-- Identical to `cdrf_notifyitemsubdraw', distinguished
 		-- by context.
 		
-	cdrf_notifyitemsubdraw: INTEGER is 32
+	cdrf_notifyitemsubdraw: INTEGER = 32
 		-- Declared in Windows as CDRF_NOTIFYSUBITEMDRAW
 		-- Identical to `cdrf_notifyitemdraw', distinguished
 		-- by context.
 		
-	cdrf_notifyposterase: INTEGER is 64;
+	cdrf_notifyposterase: INTEGER = 64;
 		-- Declared in Windows as CDRF_NOTIFYPOSTERASE.
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

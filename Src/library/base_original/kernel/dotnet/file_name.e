@@ -1,4 +1,4 @@
-indexing
+note
 	description: "File name abstraction"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_temporary_name is
+	make_temporary_name
 			-- Create a temporary filename.
 		do
 			make_from_cil ({PATH}.get_temp_file_name)
@@ -23,19 +23,19 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the file name valid for the operating system?
 		do
 			Result := True
 		end
 
-	is_file_name_valid (f_name: STRING): BOOLEAN is
+	is_file_name_valid (f_name: STRING): BOOLEAN
 			-- Is `f_name' a valid file name part for the operating system?
 		do
 			Result := True
 		end
 
-	is_extension_valid (ext: STRING): BOOLEAN is
+	is_extension_valid (ext: STRING): BOOLEAN
 			-- Is `ext' a valid extension for the operating system?
 		do
 			Result := True
@@ -43,7 +43,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_file_name (file_name: STRING) is
+	set_file_name (file_name: STRING)
 			-- Set the value of the file name part.
 		require
 			string_exists: file_name /= Void
@@ -62,7 +62,7 @@ feature -- Status setting
 			valid_file_name: is_valid
 		end
 
-	add_extension (ext: STRING) is
+	add_extension (ext: STRING)
 			-- Append the extension `ext' to the file name
 		require
 			string_exists: ext /= Void
@@ -73,7 +73,7 @@ feature -- Status setting
 			append (ext)
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

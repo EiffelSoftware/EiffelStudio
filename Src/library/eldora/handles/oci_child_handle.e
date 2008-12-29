@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract OCI Child Handle, i.e. a handle for which OCI_ENVIRONMENT is parent"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (parent: OCI_HANDLE; errh: OCI_ERROR_HANDLER) is
+	make (parent: OCI_HANDLE; errh: OCI_ERROR_HANDLER)
 		require
 			valid_parent: parent /= Void and parent.is_allocated
 			valid_error_handler: valid_error_handle (errh)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			not_external: not is_external
 		end
 		
-	make_child_by_handle (value: POINTER; errh: OCI_ERROR_HANDLER) is
+	make_child_by_handle (value: POINTER; errh: OCI_ERROR_HANDLER)
 			-- Initialize using a pre-allocated OCI handle
 		require
 			valid_error_handler: valid_error_handle (errh)
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 	
 feature -- Access
 
-	environment: OCI_ENVIRONMENT is
+	environment: OCI_ENVIRONMENT
 			-- The environment handle
 		local
 			env_handle: POINTER
@@ -58,7 +58,7 @@ feature -- Access
 	
 feature -- Basic operations
 
-	set_error_handler (errh: OCI_ERROR_HANDLER) is
+	set_error_handler (errh: OCI_ERROR_HANDLER)
 			-- Set error handler
 		require
 			valid_error_handler: valid_error_handle (errh)
@@ -71,7 +71,7 @@ feature -- Basic operations
 invariant
 	valid_error_handler: valid_error_handle (error_handler)
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

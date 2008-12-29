@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision item id. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make_id is
+	make_id
 			-- Generate new ID and assign it to `id'.
 		do
 			id := counter.item
@@ -24,7 +24,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	counter: CELL [INTEGER] is
+	counter: CELL [INTEGER]
 			-- Counter to set unique id's to items.
 		once
 			create Result.put (1)
@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 invariant
 	make_called: id > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

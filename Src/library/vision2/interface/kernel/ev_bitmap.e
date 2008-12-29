@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Bitmap object used for EV_PIXMAP masking"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_size (a_width, a_height: INTEGER) is
+	make_with_size (a_width, a_height: INTEGER)
 			-- Create with `a_width' and `a_height'.
 		require
 			a_width_positive: a_width > 0
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
-	set_size (a_width, a_height: INTEGER) is
+	set_size (a_width, a_height: INTEGER)
 			-- Assign `a_width' and `a_height' to `width' and `weight'.
 			-- Do not stretch image.
 			-- May cause cropping.
@@ -51,7 +51,7 @@ feature -- Status Setting
 
 feature -- Access
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size in pixels.
 		do
 			Result := implementation.width
@@ -60,7 +60,7 @@ feature -- Access
 			positive: Result > 0
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size in pixels.
 		do
 			Result := implementation.height
@@ -76,7 +76,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_BITMAP_IMP} implementation.make (Current)

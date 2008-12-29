@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Abstract notion of a Motif callback structure. %
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_widget: MEL_OBJECT; a_callback_struct_ptr: POINTER) is
+	make (a_widget: MEL_OBJECT; a_callback_struct_ptr: POINTER)
 			-- Make the MEL_CALLBACK_STRUCT associated with the widget
 			-- that triggered the callback and the callback_structure
 			-- associated with this callback.
@@ -51,7 +51,7 @@ feature -- Access
 	handle: POINTER
 			-- Pointer to the C XmAnyCallbackStruct structure
 
-	reason: INTEGER is
+	reason: INTEGER
 			-- Callback reason
 			-- (Look in class MEL_CALLBACK_STRUCT_CONSTANTS for all
 			-- reasons)
@@ -59,7 +59,7 @@ feature -- Access
 			Result := reason_from (handle)
 		end;
 
-	reason_from (cb_ptr: POINTER): INTEGER is
+	reason_from (cb_ptr: POINTER): INTEGER
 			-- Retrieve the reason from the Xm callback structure `cb_ptr'
 		require
 			valid_cb_pt: cb_ptr /= default_pointer
@@ -67,7 +67,7 @@ feature -- Access
 			Result := c_reason (cb_ptr)
 		end;
 
-	reasons_list: ARRAY [INTEGER] is
+	reasons_list: ARRAY [INTEGER]
 			-- List of reasons that is valid for this 
 			-- callback structure
 			-- (bulletin - XmCR_FOCUS, XmCR_MAP, XmCR_UNMAP
@@ -85,7 +85,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	retrieve_widget_from_window (d, w_ptr: POINTER): MEL_WIDGET is
+	retrieve_widget_from_window (d, w_ptr: POINTER): MEL_WIDGET
 			-- Retrieve mel widget from window pointer `ptr'
 		do
 			if w_ptr /= default_pointer then
@@ -93,12 +93,12 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	c_reason (a_callback_struct_ptr: POINTER): INTEGER is
+	c_reason (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmAnyCallbackStruct *): EIF_INTEGER"
 		end;
 
-	c_event (a_callback_struct_ptr: POINTER): POINTER is
+	c_event (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmAnyCallbackStruct *): EIF_POINTER"
 		end;
@@ -108,7 +108,7 @@ invariant
 	widget_not_void: widget /= Void;
 	handle_not_null: handle /= default_pointer
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

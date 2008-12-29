@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Enumeration class for text alignment. Default is left."
 	legal: "See notice at end of class."
@@ -18,24 +18,24 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_left_alignment is
+	make_with_left_alignment
 		do
 			set_left_alignment
 		end
 
-	make_with_center_alignment is
+	make_with_center_alignment
 		do
 			set_center_alignment
 		end
 
-	make_with_right_alignment is
+	make_with_right_alignment
 		do
 			set_right_alignment
 		end
 
 feature -- Status setting
 
-	set_left_alignment is
+	set_left_alignment
 			-- Set the horizontal alignment to "left"
 		do
 			alignment_code := left_alignment
@@ -43,7 +43,7 @@ feature -- Status setting
 			is_left_aligned: is_left_aligned
 		end
 
-	set_center_alignment is
+	set_center_alignment
 			-- Set the horizontal alignment to "center"
 		do
 			alignment_code := center_alignment
@@ -51,7 +51,7 @@ feature -- Status setting
 			is_center_aligned: is_center_aligned
 		end
 
-	set_right_alignment is
+	set_right_alignment
 			-- Set the horizontal alignment to "right"
 		do
 			alignment_code := right_alignment
@@ -61,17 +61,17 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_left_aligned: BOOLEAN is
+	is_left_aligned: BOOLEAN
 		do
 			Result := alignment_code = left_alignment
 		end
 
-	is_center_aligned: BOOLEAN is
+	is_center_aligned: BOOLEAN
 		do
 			Result := alignment_code = center_alignment
 		end
 
-	is_right_aligned: BOOLEAN is
+	is_right_aligned: BOOLEAN
 		do
 			Result := alignment_code = right_alignment
 		end
@@ -81,11 +81,11 @@ feature {EV_ANY_I} -- Implementation
 	alignment_code: INTEGER
 		-- Used internally to represent one of the three alignment states.
 
-	left_alignment: INTEGER is 0
+	left_alignment: INTEGER = 0
 		-- Constant representing left alignment.
-	center_alignment: INTEGER is 1
+	center_alignment: INTEGER = 1
 		-- Constant representing center alignment.
-	right_alignment: INTEGER is 2
+	right_alignment: INTEGER = 2
 		-- Constants representing right alignment.
 
 invariant
@@ -93,7 +93,7 @@ invariant
 		alignment_code >= left_alignment and 
 		alignment_code <= right_alignment
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

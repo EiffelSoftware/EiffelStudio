@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -30,14 +30,14 @@ feature -- Access
 
 	widget_group: WIDGET
 
-	icon_mask: PIXMAP is
+	icon_mask: PIXMAP
 			-- Bitmap that could be used by window manager
 			-- to clip `icon_pixmap' bitmap to make the
 			-- icon nonrectangular 
 		do
 		end;
 
-	icon_pixmap: PIXMAP is
+	icon_pixmap: PIXMAP
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon
 		local
@@ -54,17 +54,17 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_widget_group (a_widget: WIDGET) is
+	set_widget_group (a_widget: WIDGET)
 			-- Set `widget_group' to `a_widget'.
 		do
 		end;
 
-	set_icon_mask (a_mask: PIXMAP) is
+	set_icon_mask (a_mask: PIXMAP)
 			-- Set `icon_mask' to `a_mask'.
 		do
 		end;
 
-	set_icon_pixmap (a_pixmap: PIXMAP) is
+	set_icon_pixmap (a_pixmap: PIXMAP)
 			-- Set `icon_pixmap' to `a_pixmap'.
 		local
 			pixmap_implementation: PIXMAP_IMP
@@ -85,7 +85,7 @@ feature {PIXMAP_IMP} -- Implementation
 	private_icon_pixmap: PIXMAP;
 			-- Icon pixmap for Current Shell
 
-	update_pixmap is
+	update_pixmap
 			-- Update the X pixmap after a change inside the Eiffel pixmap.
 		local
 			pixmap_implementation: PIXMAP_IMP
@@ -94,7 +94,7 @@ feature {PIXMAP_IMP} -- Implementation
 			mel_set_icon_pixmap (pixmap_implementation)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

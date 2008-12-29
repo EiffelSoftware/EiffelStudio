@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Motif Eiffel Library widget manager."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a widget manager.
 		do
 			hash_table_make (0)
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Miscellaneous
 
-	add (a_widget: MEL_OBJECT) is
+	add (a_widget: MEL_OBJECT)
 			-- Add `a_widget' to the manager.
 		require
 			widget_not_null: a_widget /= Void;
@@ -51,7 +51,7 @@ feature -- Miscellaneous
 			has_widget: has (a_widget.screen_object)
 		end;
 
-	add_popup_shell (a_popup: MEL_SHELL) is
+	add_popup_shell (a_popup: MEL_SHELL)
 			-- Add a popup shell `a_shell' to the manager.
 		require
 			widget_not_null: a_popup /= Void;
@@ -67,7 +67,7 @@ feature -- Miscellaneous
 			has_popup_child: a_popup.parent.mel_popup_children.has (a_popup)
 		end;
 
-	add_without_parent (a_widget: MEL_OBJECT) is
+	add_without_parent (a_widget: MEL_OBJECT)
 			-- Add `a_widget' to the manager without
 			-- checking the consistency of the `a_widget' parent.
 		require
@@ -80,7 +80,7 @@ feature -- Miscellaneous
 			has_widget: has (a_widget.screen_object)
 		end;
 
-	window_to_widget (a_display: POINTER; a_window: POINTER): MEL_WIDGET is
+	window_to_widget (a_display: POINTER; a_window: POINTER): MEL_WIDGET
 			-- Mel widget associated with window `a_window' in
 			-- display 	`a_display' (Useful in MEL_EVENTS or external
 			-- routines returning window identifier instead of a
@@ -97,14 +97,14 @@ feature -- Miscellaneous
 			end
 		end;
 
-    xt_window_to_widget (a_display, a_window: POINTER): POINTER is
+    xt_window_to_widget (a_display, a_window: POINTER): POINTER
         external
             "C (Display *, Window): EIF_POINTER | <X11/Intrinsic.h>"
         alias
             "XtWindowToWidget"
         end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

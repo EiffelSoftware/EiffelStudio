@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Fillable figure"
 	legal: "See notice at end of class.";
@@ -21,14 +21,14 @@ feature -- Access
 
 feature -- Element change
 
-	set_even_odd_rule is
+	set_even_odd_rule
 			-- Specifies that areas are not filled if they overlap an odd
 			-- number of times.
 		do
 			is_even_odd_rule := true;
 		end;
 
-	set_opaque_stippled_fill is
+	set_opaque_stippled_fill
 			-- Specifies that graphics sould be drawn using stipple, using
 			-- the foreground pixel value for set bits in stipple and the
 			-- background pixel value for unset bits in stipple.
@@ -36,14 +36,14 @@ feature -- Element change
 			fill_style := FillOpaqueStippled;
 		end;
 
-	set_solid_fill is
+	set_solid_fill
 			-- Specifies that graphics should be drawn using the foreground
 			-- pixel value.
 		do
 			fill_style := FillSolid;
 		end;
 
-	set_stipple (a_pixmap: PIXMAP) is
+	set_stipple (a_pixmap: PIXMAP)
 			-- Set `stipple' to `a_pixmap'.
 		require
 			a_pixmap_valid: (a_pixmap /= Void) implies a_pixmap.is_valid
@@ -53,7 +53,7 @@ feature -- Element change
 			stipple = a_pixmap
 		end;
 
-	set_stippled_fill is
+	set_stippled_fill
 			-- Specifies that graphics sould be drawn using the foreground
 			-- pixel value masked by stipple. In otherwords, bits set in
 			-- the source and stipple are drawn in the foreground pixel
@@ -62,7 +62,7 @@ feature -- Element change
 			fill_style := FillStippled;
 		end;
 
-	set_tile (a_pixmap: PIXMAP) is
+	set_tile (a_pixmap: PIXMAP)
 			-- Set `tile' to `a_pixmap'.
 		require
 			a_pixmap_valid: (a_pixmap /= Void) implies a_pixmap.is_valid
@@ -72,13 +72,13 @@ feature -- Element change
 			tile = a_pixmap
 		end;
 
-	set_tiled_fill is
+	set_tiled_fill
 			-- Specifies that graphics sould be drawn using the tile pixmap.
 		do
 			fill_style := FillTiled;
 		end;
 
-	set_winding_rule is
+	set_winding_rule
 			-- Specifies that overlapping areas are always filled.
 		do
 			is_even_odd_rule := false;
@@ -89,7 +89,7 @@ feature -- Status report
 	is_even_odd_rule: BOOLEAN;
 			-- Are areas filled if they overlap an odd number of times ?
 
-	is_opaque_stippled_fill: BOOLEAN is
+	is_opaque_stippled_fill: BOOLEAN
 			-- Is graphics drawn using stipple, using the foreground pixel
 			-- value for set bits in stipple and the background pixel value
 			-- for unset bits in stipple ?
@@ -97,13 +97,13 @@ feature -- Status report
 			Result := fill_style = FillOpaqueStippled
 		end;
 
-	is_solid_fill: BOOLEAN is
+	is_solid_fill: BOOLEAN
 			-- Is graphics drawn using the foreground pixel value ?
 		do
 			Result := fill_style = FillSolid
 		end;
 
-	is_stippled_fill: BOOLEAN is
+	is_stippled_fill: BOOLEAN
 			-- Is graphics drawn using the foreground pixel value masked by
 			-- stipple. In otherwords, bits set in the source and stipple are
 			-- drawn in the foreground pixel value ?
@@ -111,7 +111,7 @@ feature -- Status report
 			Result := fill_style = FillStippled
 		end;
 
-	is_tiled_fill: BOOLEAN is
+	is_tiled_fill: BOOLEAN
 			-- Is graphics drawn using the tile pixmap ?
 		do
 			Result := fill_style = FillTiled
@@ -122,16 +122,16 @@ feature {NONE} -- Access
 	fill_style: INTEGER;
 			-- Style of fill of the graphic
 
-	FillOpaqueStippled: INTEGER is 3;
+	FillOpaqueStippled: INTEGER = 3;
 			-- Code to define opaque stippled fill style
 
-	FillSolid: INTEGER is 0;
+	FillSolid: INTEGER = 0;
 			-- Code to define solid fill style
 
-	FillStippled: INTEGER is 2;
+	FillStippled: INTEGER = 2;
 			-- Code to define stippled fill style
 
-	FillTiled: INTEGER is 1;
+	FillTiled: INTEGER = 1;
 			-- Code to define tiled fill style
 
 invariant
@@ -139,7 +139,7 @@ invariant
 	valid_stipple: (stipple /= Void) implies stipple.is_valid;
 	valid_tile: (tile /= Void) implies tile.is_valid
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

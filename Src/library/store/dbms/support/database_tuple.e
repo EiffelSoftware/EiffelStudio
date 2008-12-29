@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of DB_TUPLE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -18,7 +18,7 @@ create -- Creation procedure
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create `implementation'.
 		do
 			create data
@@ -31,7 +31,7 @@ feature -- Status report
 	data: DATABASE_DATA [G]
 			-- Associated data description
 
-	item (index: INTEGER): ANY is
+	item (index: INTEGER): ANY
 			-- Value of `index' column in current row
 			-- pointed to by active database cursor
 		require
@@ -40,13 +40,13 @@ feature -- Status report
 			Result := data.item (index)
 		end
 
-	valid_index (index: INTEGER): BOOLEAN is
+	valid_index (index: INTEGER): BOOLEAN
 			-- Is `index' valid for `item'?
 		do
 			Result := data.valid_index (index)
 		end
 
-	map_table: ARRAY [INTEGER] is
+	map_table: ARRAY [INTEGER]
 			-- Association table returning k-th field 	
 			-- position mapping i-th column value of current active tuple
 		do
@@ -55,7 +55,7 @@ feature -- Status report
 			resulting_data: Result = data.map_table
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items
 		do
 			Result := data.count
@@ -63,7 +63,7 @@ feature -- Status report
 			resulting_data: Result = data.count
 		end
 
-	column_name (position: INTEGER): STRING is
+	column_name (position: INTEGER): STRING
 			-- Name of the `position'-th column
 		do
 			Result := data.column_name (position)
@@ -73,7 +73,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	fill_in (no_descriptor: INTEGER) is
+	fill_in (no_descriptor: INTEGER)
 			-- Fill in current tuple with database cursor.
 		require else
 			data_exists: data /= Void
@@ -81,7 +81,7 @@ feature -- Status setting
 			data.fill_in (no_descriptor)
 		end
 
-	update_map_table (object: ANY) is
+	update_map_table (object: ANY)
 			-- Update map table according to new `object'.
 		require else
 			data_exists: data /= Void
@@ -89,7 +89,7 @@ feature -- Status setting
 			data.update_map_table (object)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

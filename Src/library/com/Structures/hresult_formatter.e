@@ -1,4 +1,4 @@
-indexing
+note
 	description: "HRESULT_FORMATTER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Implementation
 
-	formatter: POINTER is
+	formatter: POINTER
 			-- Error messages formatter.
 		do
 			if impl_formatter = default_pointer then
@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 	impl_formatter: POINTER
 			-- Pointer holder.
 
-	dispose is
+	dispose
 			-- Free formatter first.
 		do
 			if impl_formatter /= default_pointer then
@@ -40,22 +40,22 @@ feature {NONE} -- Implementation
 			
 feature {NONE} -- Externals
 
-	ccom_format_message (a_pointer: POINTER; code: INTEGER): STRING is
+	ccom_format_message (a_pointer: POINTER; code: INTEGER): STRING
 		external
 			"C++ [Formatter %"ecom_exception.h%"] (EIF_INTEGER): EIF_REFERENCE"
 		end
 
-	ccom_initialize_formatter: POINTER is
+	ccom_initialize_formatter: POINTER
 		external
 			"C++ [new Formatter %"ecom_exception.h%"] ()"
 		end
 
-	ccom_delete_formatter (a_pointer: POINTER) is
+	ccom_delete_formatter (a_pointer: POINTER)
 		external
 			"C++ [delete Formatter %"ecom_exception.h%"]()"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

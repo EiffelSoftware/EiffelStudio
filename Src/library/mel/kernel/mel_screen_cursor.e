@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Representation of an X screen cursor."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_type (a_display: MEL_DISPLAY; a_type: INTEGER) is
+	make_from_type (a_display: MEL_DISPLAY; a_type: INTEGER)
 			-- Create a cursor font from `a_type' for display
 			-- `a_display'. (Cursor types are defined in class
 			-- MEL_CURSOR_TYPE).
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 		end;
 
 	make_from_pixmap (a_pixmap, a_mask: MEL_PIXMAP;
-			x_hot, y_hot: INTEGER) is
+			x_hot, y_hot: INTEGER)
 			-- Create a cursor from `a_pixmap' with `a_mask' with 
 			-- white background and black foreground. 
 		require
@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 			a_pixmap, a_mask: MEL_PIXMAP;
 			fg_red, fg_green, fg_blue: INTEGER;
 			bg_red, bg_green, bg_blue: INTEGER;
-			x_hot, y_hot: INTEGER) is
+			x_hot, y_hot: INTEGER)
 			-- Create a cursor from `a_pixmap' with `a_mask' for display
 			-- `a_display' with background and foreground rgb values.
 	   require
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 
 feature -- Removal
 
-	destroy is
+	destroy
 			-- Destroy the cursor.
 		do
 			check
@@ -114,7 +114,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	x_create_font_cursor (a_display: POINTER; a_type: INTEGER): POINTER is
+	x_create_font_cursor (a_display: POINTER; a_type: INTEGER): POINTER
 		external
 			"C (Display *, unsigned int): EIF_POINTER | <X11/Xlib.h>"
 		alias
@@ -125,12 +125,12 @@ feature {NONE} -- Implementation
 			a_pix, a_mask: POINTER;
 			fg_red, fg_green, fg_blue: INTEGER;
 			bg_red, bg_green, bg_blue: INTEGER;
-			x_hot, y_hot: INTEGER): POINTER is
+			x_hot, y_hot: INTEGER): POINTER
 		external
 			"C"
 		end;
 
-	x_free_cursor (a_display: POINTER; a_cursor: POINTER) is
+	x_free_cursor (a_display: POINTER; a_cursor: POINTER)
 		external
 			"C (Display *, Cursor) | <X11/Xlib.h> "
 		alias
@@ -141,7 +141,7 @@ invariant
 	
 	valid_display: has_valid_display
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tool to clean any strings when retrieving data from a client"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- initialization
 		do
 			input:= ""
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_input (input_string: STRING) is
+	set_input (input_string: STRING)
 			-- Set the current input
 		require
 			not_void: input_string /= Void
@@ -43,7 +43,7 @@ feature -- Setting
 
 feature -- Tools
 
-	convert_filename is
+	convert_filename
 			-- Convert the input such that the input can be a filename
 		require
 			input_is_set: input/= Void and then input /= ""
@@ -53,7 +53,7 @@ feature -- Tools
 			new_output: output /= Void
 		end
 
-	convert_database is
+	convert_database
 			-- Convert the input such that all complicated character are remove by basic ones.
 			-- For example, all the accent will be remove
 		require
@@ -64,7 +64,7 @@ feature -- Tools
 			new_output: output /= Void
 		end
 
-	convert_eiffel_lace is
+	convert_eiffel_lace
 			-- Convert the input such that the input can be the name of an Eiffel system in the Lace file
 		require
 			input_is_set: input/= Void and then input /= ""
@@ -74,7 +74,7 @@ feature -- Tools
 			new_output: output /= Void
 		end
 
-	is_filename_compatible: BOOLEAN is
+	is_filename_compatible: BOOLEAN
 			-- Can the input be a filename
 		require
 			input_is_set: input/= Void and then input /= ""
@@ -87,7 +87,7 @@ feature -- Tools
 					l_input.has ('|')
 		end
 
-	is_database_compatible: BOOLEAN is
+	is_database_compatible: BOOLEAN
 			-- Can the input be inserted in a database
 		require
 			input_is_set: input/= Void and then input /= ""
@@ -112,7 +112,7 @@ feature -- Tools
 			end		
 		end
 
-	is_eiffel_lace_compatible: BOOLEAN is
+	is_eiffel_lace_compatible: BOOLEAN
 			-- Can the input be the name of an Eiffel Project
 		require
 			input_is_set: input/= Void and then input /= ""
@@ -141,7 +141,7 @@ feature -- Tools
 		end
 
 
-	set_test_mode is
+	set_test_mode
 		do
 			test_mode:= True
 		end
@@ -153,7 +153,7 @@ feature -- Implementation
 
 feature {NONE} -- Process
 
-	remove_file_char is
+	remove_file_char
 		do
 			if not output_error then
 				output:= input
@@ -174,7 +174,7 @@ feature {NONE} -- Process
 			output_error:= True
 		end
 
-	 change_illegal_characters is
+	 change_illegal_characters
 		do
 			if not output_error then
 				output:= input
@@ -217,18 +217,18 @@ feature {NONE} -- Process
 			end
 		end
 
-	is_valid_char_for_database (c: CHARACTER): BOOLEAN is
+	is_valid_char_for_database (c: CHARACTER): BOOLEAN
 		do
 			Result:=  (c >= 'A' and c <= 'Z') or (c >= 'a' and c <= 'z') or (c >= '0' and c <= '9')
 					 or c = '_' 
 		end
 
-	test_filename is
+	test_filename
 		do
 
 		end
 
-	remove_database_char is
+	remove_database_char
 		do
 			if not output_error then
 			end
@@ -237,7 +237,7 @@ feature {NONE} -- Process
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

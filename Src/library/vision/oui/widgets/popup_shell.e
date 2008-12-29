@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General popup shell"
 	legal: "See notice at end of class.";
@@ -19,7 +19,7 @@ inherit
 	
 feature -- Status report
 
-	is_cascade_grab: BOOLEAN is
+	is_cascade_grab: BOOLEAN
 			-- Is the shell popped up with cascade grab (allowing the other
 			-- shells popped up with grab to receive events) ?
 		require
@@ -28,7 +28,7 @@ feature -- Status report
 			Result := implementation.is_cascade_grab
 		end; 
 
-	is_exclusive_grab: BOOLEAN is
+	is_exclusive_grab: BOOLEAN
 			-- Is the shell popped up with exclusive grab ?
 		require
 			exists: not destroyed
@@ -36,7 +36,7 @@ feature -- Status report
 			Result := implementation.is_exclusive_grab
 		end;
 
-	is_no_grab: BOOLEAN is
+	is_no_grab: BOOLEAN
 			-- Is the shell popped up with no grab ?
 		require
 			exists: not destroyed
@@ -44,7 +44,7 @@ feature -- Status report
 			Result := implementation.is_no_grab
 		end;
 
-	is_popped_up: BOOLEAN is
+	is_popped_up: BOOLEAN
 			-- Is the popup widget popped up on screen ?
 		require
 			exists: not destroyed
@@ -54,7 +54,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	popdown is
+	popdown
 			-- Popdown popup shell.
 		require
 			exists: not destroyed
@@ -64,7 +64,7 @@ feature -- Status setting
 			not_popped_up: not is_popped_up
 		end;
 
-	popup is
+	popup
 			-- Popup a popup shell with no grab on it.
 		require
 			exists: not destroyed
@@ -72,7 +72,7 @@ feature -- Status setting
 			implementation.popup
 		end;
 
-	set_cascade_grab is
+	set_cascade_grab
 			-- Specifies that the shell would be popped up with cascade grab.
 			-- (Allowing the other shells popped up with grab to receive events).
 		require
@@ -83,7 +83,7 @@ feature -- Status setting
 			Has_cascade_grab: is_cascade_grab
 		end;
 
-	set_exclusive_grab is
+	set_exclusive_grab
 			-- Specifies that the shell would be popped up with exclusive grab.
 			-- (Allowing only the current shell to receive events);
 		require
@@ -94,7 +94,7 @@ feature -- Status setting
 			Has_exclusive_grab: is_exclusive_grab
 		end; 
 
-	set_no_grab is
+	set_no_grab
 			-- Specifies that the shell would be popped up with no grab.
 		require
 			exists: not destroyed
@@ -114,7 +114,7 @@ invariant
 	Positive_depth: depth > 0;
 	Valid_parent: parent /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

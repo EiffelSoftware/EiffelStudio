@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"List resources."
@@ -12,7 +12,7 @@ class
 
 feature  -- Implementation
 
-	XmNautomaticSelection: POINTER is
+	XmNautomaticSelection: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -20,7 +20,7 @@ feature  -- Implementation
 			"XmNautomaticSelection"
 		end;
 
-	XmNdoubleClickInterval: POINTER is
+	XmNdoubleClickInterval: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -28,7 +28,7 @@ feature  -- Implementation
 			"XmNdoubleClickInterval"
 		end;
 
-	XmNitemCount: POINTER is
+	XmNitemCount: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -36,7 +36,7 @@ feature  -- Implementation
 			"XmNitemCount"
 		end;
 
-	XmNitems: POINTER is
+	XmNitems: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -44,7 +44,7 @@ feature  -- Implementation
 			"XmNitems"
 		end;
 
-	XmNlistMarginHeight: POINTER is
+	XmNlistMarginHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -52,7 +52,7 @@ feature  -- Implementation
 			"XmNlistMarginHeight"
 		end;
 
-	XmNlistMarginWidth: POINTER is
+	XmNlistMarginWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -60,7 +60,7 @@ feature  -- Implementation
 			"XmNlistMarginWidth"
 		end;
 
-	XmNlistSizePolicy: POINTER is
+	XmNlistSizePolicy: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -68,7 +68,7 @@ feature  -- Implementation
 			"XmNlistSizePolicy"
 		end;
 
-	XmNlistSpacing: POINTER is
+	XmNlistSpacing: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -76,7 +76,7 @@ feature  -- Implementation
 			"XmNlistSpacing"
 		end;
 
-	XmNscrollBarDisplayPolicy: POINTER is
+	XmNscrollBarDisplayPolicy: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -84,7 +84,7 @@ feature  -- Implementation
 			"XmNscrollBarDisplayPolicy"
 		end;
 
-	XmNselectedItemCount: POINTER is
+	XmNselectedItemCount: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -92,7 +92,7 @@ feature  -- Implementation
 			"XmNselectedItemCount"
 		end;
 
-	XmNselectedItems: POINTER is
+	XmNselectedItems: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -100,7 +100,7 @@ feature  -- Implementation
 			"XmNselectedItems"
 		end;
 
-	XmNselectionPolicy: POINTER is
+	XmNselectionPolicy: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -108,7 +108,7 @@ feature  -- Implementation
 			"XmNselectionPolicy"
 		end;
 
-	XmNstringDirection: POINTER is
+	XmNstringDirection: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -116,7 +116,7 @@ feature  -- Implementation
 			"XmNstringDirection"
 		end;
 
-	XmNtopItemPosition: POINTER is
+	XmNtopItemPosition: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -124,7 +124,7 @@ feature  -- Implementation
 			"XmNtopItemPosition"
 		end;
 
-	XmNvisibleItemCount: POINTER is
+	XmNvisibleItemCount: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -132,7 +132,7 @@ feature  -- Implementation
 			"XmNvisibleItemCount"
 		end;
 
-	XmNbrowseSelectionCallback: POINTER is
+	XmNbrowseSelectionCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -140,7 +140,7 @@ feature  -- Implementation
 			"XmNbrowseSelectionCallback"
 		end;
 
-	XmNdefaultActionCallback: POINTER is
+	XmNdefaultActionCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -148,7 +148,7 @@ feature  -- Implementation
 			"XmNdefaultActionCallback"
 		end;
 
-	XmNextendedSelectionCallback: POINTER is
+	XmNextendedSelectionCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -156,7 +156,7 @@ feature  -- Implementation
 			"XmNextendedSelectionCallback"
 		end;
 
-	XmNmultipleSelectionCallback: POINTER is
+	XmNmultipleSelectionCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -164,7 +164,7 @@ feature  -- Implementation
 			"XmNmultipleSelectionCallback"
 		end;
 
-	XmNsingleSelectionCallback: POINTER is
+	XmNsingleSelectionCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/List.h>] : EIF_POINTER"
@@ -172,7 +172,7 @@ feature  -- Implementation
 			"XmNsingleSelectionCallback"
 		end;
 
-	XmVARIABLE: INTEGER is
+	XmVARIABLE: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/List.h>] : EIF_INTEGER"
@@ -180,7 +180,7 @@ feature  -- Implementation
 			"XmVARIABLE"
 		end;
  
-	XmCONSTANT: INTEGER is
+	XmCONSTANT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/List.h>] : EIF_INTEGER"
@@ -188,7 +188,7 @@ feature  -- Implementation
 			"XmCONSTANT"
 		end;
 
-	XmRESIZE_IF_POSSIBLE: INTEGER is
+	XmRESIZE_IF_POSSIBLE: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/List.h>] : EIF_INTEGER"
@@ -196,7 +196,7 @@ feature  -- Implementation
 			"XmRESIZE_IF_POSSIBLE"
 		end;
 
-	XmSINGLE_SELECT: INTEGER is
+	XmSINGLE_SELECT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/List.h>] : EIF_INTEGER"
@@ -204,7 +204,7 @@ feature  -- Implementation
 			"XmSINGLE_SELECT"
 		end;
 
-	XmMULTIPLE_SELECT: INTEGER is
+	XmMULTIPLE_SELECT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/List.h>] : EIF_INTEGER"
@@ -212,7 +212,7 @@ feature  -- Implementation
 			"XmMULTIPLE_SELECT"
 		end;
 
-	XmEXTENDED_SELECT: INTEGER is
+	XmEXTENDED_SELECT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/List.h>] : EIF_INTEGER"
@@ -220,7 +220,7 @@ feature  -- Implementation
 			"XmEXTENDED_SELECT"
 		end;
 
-	XmBROWSE_SELECT: INTEGER is
+	XmBROWSE_SELECT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/List.h>] : EIF_INTEGER"
@@ -228,7 +228,7 @@ feature  -- Implementation
 			"XmBROWSE_SELECT"
 		end;
 
-	XmSTATIC: INTEGER is
+	XmSTATIC: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/List.h>] : EIF_INTEGER"
@@ -236,7 +236,7 @@ feature  -- Implementation
 			"XmSTATIC"
 		end;
 
-	XmAS_NEEDED: INTEGER is
+	XmAS_NEEDED: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/List.h>] : EIF_INTEGER"
@@ -244,7 +244,7 @@ feature  -- Implementation
 			"XmAS_NEEDED"
 		end;
 
-	XmSTRING_DIRECTION_L_TO_R: INTEGER is
+	XmSTRING_DIRECTION_L_TO_R: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Label.h>] : EIF_INTEGER"
@@ -252,7 +252,7 @@ feature  -- Implementation
 			"XmSTRING_DIRECTION_L_TO_R"
 		end;
 
-	XmSTRING_DIRECTION_R_TO_L: INTEGER is
+	XmSTRING_DIRECTION_R_TO_L: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Label.h>] : EIF_INTEGER"
@@ -260,7 +260,7 @@ feature  -- Implementation
 			"XmSTRING_DIRECTION_R_TO_L"
 		end;
 
-	XmSTRING_DIRECTION_DEFAULT: INTEGER is
+	XmSTRING_DIRECTION_DEFAULT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Label.h>] : EIF_INTEGER"
@@ -268,7 +268,7 @@ feature  -- Implementation
 			"XmSTRING_DIRECTION_DEFAULT"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

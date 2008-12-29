@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,13 +20,13 @@ create
 
 feature -- Status report
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Text length
 		do
 			Result := selected_string.count
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Window text
 		do
 			Result := selected_string
@@ -34,14 +34,14 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_border
 				+ Cbs_dropdownlist + Cbs_autohscroll
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

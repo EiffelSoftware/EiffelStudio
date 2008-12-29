@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Sequential, one-way linked lists that call add/remove features
 		when an item is removed or added.
@@ -35,13 +35,13 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize linked list.
 		do
 			make (4)
 		end
 
-	make_from_array (a: ARRAY [like item]) is
+	make_from_array (a: ARRAY [like item])
 			-- Create list from array `a'.
 		local
 			l_index: INTEGER
@@ -59,14 +59,14 @@ feature {NONE} -- Initialization
 
 feature -- Miscellaneous
 
-	on_item_added_at (an_item: like item; item_index: INTEGER) is
+	on_item_added_at (an_item: like item; item_index: INTEGER)
 			-- `an_item' has just been added at index `item_index'.
 		require
 			item_index_valid: (1 <= item_index) and (item_index <= count)
 		do
 		end
 
-	on_item_removed_at (an_item: like item; item_index: INTEGER) is
+	on_item_removed_at (an_item: like item; item_index: INTEGER)
 			-- `an_item' has just been removed from index `item_index'.
 		require
 			item_index_valid: (1 <= item_index) and (item_index <= count + 1)
@@ -75,7 +75,7 @@ feature -- Miscellaneous
 
 feature -- Element Change
 
-	put_front (v: like item) is
+	put_front (v: like item)
 			-- Add `v' to beginning.
 			-- Do not move cursor.
 		do
@@ -86,7 +86,7 @@ feature -- Element Change
 			added_item (v, 1)
 		end
 
-	append (s: SEQUENCE [like item]) is
+	append (s: SEQUENCE [like item])
 			-- Append a copy of `s'.
 		local
 			i: INTEGER
@@ -105,7 +105,7 @@ feature -- Element Change
 			end
 		end
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -116,7 +116,7 @@ feature -- Element Change
 			added_item (v, index - 1)
 		end
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		do
@@ -127,7 +127,7 @@ feature -- Element Change
 			added_item (v, index + 1)
 		end
 
-	put_i_th (v: like i_th; i: INTEGER) is
+	put_i_th (v: like i_th; i: INTEGER)
 			-- Replace `i'-th entry, if in index interval, by `v'.
 		local
 			original_item: like item
@@ -146,7 +146,7 @@ feature -- Element Change
 			added_item (v, i)
 		end
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace current item by `v'.
 		local
 			original_index: INTEGER
@@ -162,7 +162,7 @@ feature -- Element Change
 			added_item (v, original_index)
 		end
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor).
@@ -180,7 +180,7 @@ feature -- Element Change
 			removed_item (original_item, original_index)
 		end
 
-	remove_right is
+	remove_right
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		local
@@ -194,7 +194,7 @@ feature -- Element Change
 			removed_item (item_removed, index + 1)
 		end
 
-	merge_left (other: like Current) is
+	merge_left (other: like Current)
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'
 		local
@@ -208,7 +208,7 @@ feature -- Element Change
 			index := original_index + original_other_count
 		end
 
-	merge_right (other: like Current) is
+	merge_right (other: like Current)
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'
 		local
@@ -225,7 +225,7 @@ feature -- Element Change
 			go_i_th (original_index)
 		end
 
-	prune_all (v: like item) is
+	prune_all (v: like item)
 			-- Remove all occurrences of `v'.
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
@@ -272,7 +272,7 @@ feature -- Element Change
 			is_after: after
 		end
 
-	update_for_added (start_index: INTEGER) is
+	update_for_added (start_index: INTEGER)
 			-- Call `added_item' for all items from index `start_index' to `count'
 		local
 			a_cursor: CURSOR
@@ -291,7 +291,7 @@ feature -- Element Change
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		local
 			l: like area
@@ -312,7 +312,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	add_all (other: like Current; start_index: INTEGER) is
+	add_all (other: like Current; start_index: INTEGER)
 			-- Call `on_item_added' for all elements in `other'.
 		local
 			cur: CURSOR
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 	in_operation: BOOLEAN
 			-- Are we executing an operation from ARRAYED_LIST?
 
-	added_item (an_item: like item; item_index: INTEGER) is
+	added_item (an_item: like item; item_index: INTEGER)
 			-- `an_item' is has been added.
 		do
 			if not in_operation then
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	removed_item (an_item: like item; item_index: INTEGER) is
+	removed_item (an_item: like item; item_index: INTEGER)
 			-- `an_item' has been removed.
 		do
 			if not in_operation then
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

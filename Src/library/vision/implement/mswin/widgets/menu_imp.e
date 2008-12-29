@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Menus with a windows implementation"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	realize_current is
+	realize_current
 			-- Realize current widget.
 		do
 			associated_root ?= parent
@@ -44,12 +44,12 @@ feature -- Access
 
 feature -- Status report
 
-	checked_widget (widget: TOGGLE_B_IMP): BOOLEAN is
+	checked_widget (widget: TOGGLE_B_IMP): BOOLEAN
 		do
 			Result := widget.state
 		end
 
-	disabled: BOOLEAN is
+	disabled: BOOLEAN
 			-- Is current menu disabled?
 		do
 		end
@@ -59,7 +59,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_managed (flag: BOOLEAN) is
+	set_managed (flag: BOOLEAN)
 			-- Enable geometry managment on screen widget implementation,
 			-- by window manager of parent widget if `flag', disable it
 			-- otherwise.
@@ -97,7 +97,7 @@ feature -- Status setting
 			end
 		end
 
-	set_insensitive (flag: BOOLEAN) is
+	set_insensitive (flag: BOOLEAN)
 			-- Set current widget in insensitive mode if `flag'. This means
 			-- that any events with an event type of KeyPress,
 			-- KeyRelease, ButtonPress, ButtonRelease, MotionNotify,
@@ -117,7 +117,7 @@ feature -- Status setting
 			private_attributes.set_insensitive (flag)
 		end
 
-	check_widget (widget: TOGGLE_B_IMP) is
+	check_widget (widget: TOGGLE_B_IMP)
 		local
 			id: INTEGER
 		do
@@ -127,7 +127,7 @@ feature -- Status setting
 			end
 		end
 
-	uncheck_widget (widget: TOGGLE_B_IMP) is
+	uncheck_widget (widget: TOGGLE_B_IMP)
 		local
 			id: INTEGER
 		do
@@ -137,7 +137,7 @@ feature -- Status setting
 			end
 		end
 
-	enable_widget (widget: WIDGET_IMP) is
+	enable_widget (widget: WIDGET_IMP)
 		local
 			id: INTEGER
 		do
@@ -147,7 +147,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_widget (widget: WIDGET_IMP) is
+	disable_widget (widget: WIDGET_IMP)
 		local
 			id: INTEGER
 		do
@@ -157,7 +157,7 @@ feature -- Status setting
 			end
 		end
 
-	put_children_in_menu is
+	put_children_in_menu
 			-- Put the children back in the menu when
 			-- item is managed.
 		local
@@ -174,7 +174,7 @@ feature -- Status setting
 			end
 		end
 
-	add_a_child (widget: WIDGET_IMP) is
+	add_a_child (widget: WIDGET_IMP)
 			-- Add `widget' to the menu.
 		require
 			menu_realized: realized
@@ -248,7 +248,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_insensitive_widget (w: WIDGET_IMP; flag: BOOLEAN) is
+	set_insensitive_widget (w: WIDGET_IMP; flag: BOOLEAN)
 			-- Set a widget insensitive in the menu.
 		do
 			if flag then
@@ -258,7 +258,7 @@ feature -- Element change
 			end
 		end
 
-	manage_item (w: WIDGET_IMP) is
+	manage_item (w: WIDGET_IMP)
 			-- Manage a item in the menu.
 		local
 			mp: MENU_PULL_IMP
@@ -322,7 +322,7 @@ feature -- Element change
 			end
 		end
 
-	unmanage_item (w: WIDGET_IMP) is
+	unmanage_item (w: WIDGET_IMP)
 			-- Unmanage a item in the menu
 		local
 			ba: BAR_IMP
@@ -382,7 +382,7 @@ feature -- Element change
 
 feature -- Removal
 
-	unrealize is
+	unrealize
 			-- Unrealize current widget.
 		do
 			Precursor
@@ -391,7 +391,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	realize_children is
+	realize_children
 			-- Realize the children of Current.
 		local
 			local_children: ARRAYED_LIST [WIDGET_IMP]
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	unmanaged_count (w: WIDGET_IMP): INTEGER is
+	unmanaged_count (w: WIDGET_IMP): INTEGER
 			-- Number of unmanaged widgets before `w'.
 			--| Excluding MENU_BUTTON_IMPbecause they
 			--| come with MENU_PULL_IMP
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	index_of (w: WIDGET_IMP): INTEGER is
+	index_of (w: WIDGET_IMP): INTEGER
 			-- The index of the popup `w' in the `button_list'.
 			--| Excluding MENU_B_IMP because they
 			--| come with MENU_PULL_IMP
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	associated_shell: WM_SHELL_IMP is
+	associated_shell: WM_SHELL_IMP
 		local
 			p : COMPOSITE_IMP
 		do
@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 			Result_exists: Result /= Void
 		end
 
-	id_children: HASH_TABLE [INTEGER, WIDGET_IMP] is
+	id_children: HASH_TABLE [INTEGER, WIDGET_IMP]
 			-- id in menu for a child
 		once
 			create Result.make (5)
@@ -490,7 +490,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	id_of_child (w: WIDGET_IMP): INTEGER is
+	id_of_child (w: WIDGET_IMP): INTEGER
 			-- id of child `w'
 		do
 			if id_children /= Void then
@@ -498,7 +498,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_menu_id (new_id: INTEGER): INTEGER is
+	new_menu_id (new_id: INTEGER): INTEGER
 			-- Starting from `new_id' find closest non used id.
 			-- By default returns `new_id' if no already used.
 		do
@@ -511,22 +511,22 @@ feature {NONE} -- Implementation
 
 feature -- Inapplicable
 
-	default_style: INTEGER is
+	default_style: INTEGER
 		do
 		end
 
-	class_name: STRING is
+	class_name: STRING
 		do
 		end
 
-	set_title (s: STRING) is
+	set_title (s: STRING)
 		do
 			title := s
 		end
 
 	title: STRING
 
-	remove_title is
+	remove_title
 		do
 		end
 
@@ -538,28 +538,28 @@ feature -- Inapplicable
 	invalidate,
 	wel_release_capture,
 	wel_set_capture,
-	wel_show  is
+	wel_show
 		do
 		end
 
-	wel_set_text (s: STRING) is
+	wel_set_text (s: STRING)
 		do
 		end
 
-	wel_set_menu (a_menu: WEL_MENU) is
+	wel_set_menu (a_menu: WEL_MENU)
 		do
 		end
 
-	wel_parent: WEL_COMPOSITE_WINDOW is
+	wel_parent: WEL_COMPOSITE_WINDOW
 		do
 		end
 
-	client_rect: WEL_RECT is
+	client_rect: WEL_RECT
 		do
 		end
 
 	wel_shown,
-	enabled: BOOLEAN is
+	enabled: BOOLEAN
 		do
 		end
 
@@ -568,7 +568,7 @@ feature -- Inapplicable
 	wel_set_width,
 	wel_set_height,
 	wel_set_x,
-	wel_set_y (i:INTEGER) is
+	wel_set_y (i:INTEGER)
 		do
 		end
 
@@ -577,28 +577,28 @@ feature -- Inapplicable
 	wel_width,
 	wel_height,
 	wel_x,
-	wel_y: INTEGER is
+	wel_y: INTEGER
 		do
 		end
 
-	wel_text: STRING_32 is
+	wel_text: STRING_32
 		do
 		end
 
-	set_z_order (flags: POINTER) is
+	set_z_order (flags: POINTER)
 		do
 		end
 
 	resize,
-	wel_move (new_width, new_height: INTEGER) is
+	wel_move (new_width, new_height: INTEGER)
 		do
 		end
 
-	disable_default_processing is
+	disable_default_processing
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

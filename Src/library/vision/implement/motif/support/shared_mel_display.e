@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Save the last open display."
@@ -11,18 +11,18 @@ class SHARED_MEL_DISPLAY
 
 feature {NONE} -- Access
 
-	last_open_display: MEL_DISPLAY is
+	last_open_display: MEL_DISPLAY
 			-- Last open display
 		do
 			Result := display_cell.item
 		end;
 
-	display_cell: CELL [MEL_DISPLAY] is
+	display_cell: CELL [MEL_DISPLAY]
 		once
 			create Result.put (Void)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help engine, displays help context, Windows implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create HTML Help handler.
 		do
 			create hh_handler
@@ -27,13 +27,13 @@ feature {NONE} -- Initialization
 		end
 feature -- Status Report
 
-	last_show_successful: BOOLEAN is
+	last_show_successful: BOOLEAN
 			-- Was last call to `show' successful?
 		do
 			Result := internal_show_successful
 		end
 	
-	last_error_message: STRING is
+	last_error_message: STRING
 			-- Last error message, if any
 		do
 			Result := internal_error_message
@@ -41,7 +41,7 @@ feature -- Status Report
 			
 feature -- Basic Operations
 
-	show (a_help_context: WIZARD_HELP_CONTEXT) is
+	show (a_help_context: WIZARD_HELP_CONTEXT)
 			-- Show help with context `a_help_context'.
 		do
 			hh_handler.show (Url_prefix + a_help_context.url)
@@ -53,10 +53,10 @@ feature -- Basic Operations
 
 feature -- Access
 
-	Eiffel_key: STRING is "ISE_EIFFEL"
+	Eiffel_key: STRING = "ISE_EIFFEL"
 			-- Environment variable for Eiffel delivery
 	
-	Url_prefix: STRING is 
+	Url_prefix: STRING 
 			-- Path to `wizard.chm' (relatively to $ISE_EIFFEL value)
 		once
 			Result := wizard_source + "\wizard.chm::"
@@ -76,10 +76,10 @@ feature {NONE} -- Implementation
 	hh_handler: WIZARD_HTML_HELP_HANDLER
 			-- Control content of Microsoft HTML Help
 
-	Generic_error_message: STRING is "Could not display the help topic, please check your Eiffel installation.";
+	Generic_error_message: STRING = "Could not display the help topic, please check your Eiffel installation.";
 			-- Error message displayed when topic could not be displayed
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

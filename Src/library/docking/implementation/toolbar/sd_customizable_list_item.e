@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Used to store EB_TOOLBARABLE's in an EV_ITEM_LIST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (a_dlg: SD_TOOL_BAR_CUSTOMIZE_DIALOG; v: SD_TOOL_BAR_ITEM) is
+	make (a_dlg: SD_TOOL_BAR_CUSTOMIZE_DIALOG; v: SD_TOOL_BAR_ITEM)
 			-- Creation method
 		require
 			not_void: v /= Void
@@ -48,7 +48,7 @@ feature -- Initialization
 
 feature -- Interactivity
 
-	add_to_parent_list (an_item: SD_CUSTOMIZABLE_LIST_ITEM) is
+	add_to_parent_list (an_item: SD_CUSTOMIZABLE_LIST_ITEM)
 			-- Add `an_item' to `parent'
 			-- `from_pool' and `to_pool' determine the behavior of separators
 		local
@@ -85,7 +85,7 @@ feature -- Access
 	data: SD_TOOL_BAR_ITEM
 			-- the corresponding button
 
-	custom_parent: SD_CUSTOM_TOOLBAR_LIST is
+	custom_parent: SD_CUSTOM_TOOLBAR_LIST
 			-- Convert `parent' into a EB_CUSTOM_TOOLBAR_LIST
 		do
 			Result ?= parent
@@ -99,7 +99,7 @@ feature -- Status report
 	is_separator: BOOLEAN;
 			-- Is button a separator?
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

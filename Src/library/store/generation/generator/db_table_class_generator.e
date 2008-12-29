@@ -1,4 +1,4 @@
-indexing
+note
 	Description: "Objects that enable to create a class related%
 			%to a specific database table from a template and%
 			%a class description (class DB_REPOSITORY)."
@@ -20,7 +20,7 @@ inherit
 	
 feature -- Access
 
-	generated_file_name: STRING is
+	generated_file_name: STRING
 			-- File name possibility for the generated file:
 			-- maps the class name and has the ".e" extension.
 		require
@@ -31,7 +31,7 @@ feature -- Access
 		
 feature -- Status report
 
-	description_set: BOOLEAN is
+	description_set: BOOLEAN
 			-- Is table description set?
 		do
 			Result := table_description /= Void
@@ -39,7 +39,7 @@ feature -- Status report
 	
 feature -- Basic operations
 
-	set_table_description (a_table_description: DB_REPOSITORY) is
+	set_table_description (a_table_description: DB_REPOSITORY)
 			-- Set table description to map template to the database table.
 		require
 			not_void: a_table_description /= Void
@@ -50,7 +50,7 @@ feature -- Basic operations
 			table_description_set: description_set
 		end
 
-	generate_file is
+	generate_file
 			-- Generate file with table description and
 			-- template file content.
 		local
@@ -73,7 +73,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	append_block (attribute_block: STRING; column_number: INTEGER) is
+	append_block (attribute_block: STRING; column_number: INTEGER)
 			-- Replace tags in `attribute_block' with values of attribute in
 			-- `column' (which is at `column_number').
 			-- Append result to `result_block'.
@@ -108,13 +108,13 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	description_count: INTEGER is
+	description_count: INTEGER
 			-- Count of database entities (table or attribute) in description.
 		do
 			Result := table_description.column_number
 		end
 		
-	Class_file_extension: STRING is ".e"
+	Class_file_extension: STRING = ".e"
 			-- Extension for an Eiffel class file.
 
 	type_correspond: BOOLEAN
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 	type_code: STRING
 			-- Code of last managed attribute column type.
 
-	manage_type (column: COLUMNS [DATABASE]) is
+	manage_type (column: COLUMNS [DATABASE])
 			-- Manage type of attribute in `column': set `type_correspond',
 			-- `type_name' and `type_default_value'.
 		do
@@ -170,43 +170,43 @@ feature {NONE} -- Implementation
 	table_description: DB_REPOSITORY
 			-- Description of database table to map in class to generate.
 
-	Integer_type_name: STRING is "INTEGER"
+	Integer_type_name: STRING = "INTEGER"
 			-- Integer type name.
 			
-	Double_type_name: STRING is "DOUBLE"
+	Double_type_name: STRING = "DOUBLE"
 			-- Double type name.
 			
-	Boolean_type_name: STRING is "BOOLEAN"
+	Boolean_type_name: STRING = "BOOLEAN"
 			-- Boolean type name.
 			
-	Character_type_name: STRING is "CHARACTER"
+	Character_type_name: STRING = "CHARACTER"
 			-- Character type name.
 			
-	String_type_name: STRING is "STRING"
+	String_type_name: STRING = "STRING"
 			-- String type name.
 			
-	Date_type_name: STRING is "DATE_TIME"
+	Date_type_name: STRING = "DATE_TIME"
 			-- Date type name.
 			
-	Integer_type_default_value: STRING is "0"
+	Integer_type_default_value: STRING = "0"
 			-- Integer type default_value.
 			
-	Double_type_default_value: STRING is "0.0"
+	Double_type_default_value: STRING = "0.0"
 			-- Double type default_value.
 			
-	Boolean_type_default_value: STRING is "False"
+	Boolean_type_default_value: STRING = "False"
 			-- Boolean type default_value.
 			
-	Character_type_default_value: STRING is "'%U'"
+	Character_type_default_value: STRING = "'%U'"
 			-- Character type default_value.
 			
-	String_type_default_value: STRING is "%"%""
+	String_type_default_value: STRING = "%"%""
 			-- String type default_value.
 						
-	Date_type_default_value: STRING is "create {DATE_TIME}.make_now";
+	Date_type_default_value: STRING = "create {DATE_TIME}.make_now";
 			-- Date type default_value.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

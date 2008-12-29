@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control with a text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_parent: WEL_WINDOW; a_name: STRING;
-			a_x, a_y, a_width, a_height, an_id: INTEGER) is
+			a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Make a static control
 		local
 			bitmap_dib: WEL_DIB
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_by_bitmap_id (a_parent: WEL_WINDOW; bitmap_id: INTEGER;
-			a_x, a_y, a_width, a_height, an_id: INTEGER) is
+			a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Make a static control
 		do
 			internal_window_make (a_parent, Void, default_style, a_x, a_y, a_width, a_height, an_id, default_pointer)
@@ -79,14 +79,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
 				Ws_tabstop + Ss_bitmap + Ss_centerimage
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Singleton instance of format factory"
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ class
 
 feature {NONE} -- Initialization
 
-	format_factory: HASHED_PROTOTYPE_FACTORY [LOG_OUTPUT_FORMAT] is
+	format_factory: HASHED_PROTOTYPE_FACTORY [LOG_OUTPUT_FORMAT]
 			-- Format factory singleton
 		local
 			f: LOG_OUTPUT_FORMAT
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			not_empty: Result /= Void and then not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

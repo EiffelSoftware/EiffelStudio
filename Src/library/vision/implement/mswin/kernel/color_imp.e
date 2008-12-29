@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_WINDOWS color"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -36,14 +36,14 @@ create
 
 feature -- Initialization
 
-	make (a_color: COLOR) is
+	make (a_color: COLOR)
 			-- Make a color implementation
 			-- for `a_color'.
 		do
 			wel_color_ref_make
 		end
 
-	make_for_screen (a_color: COLOR; a_screen: SCREEN) is
+	make_for_screen (a_color: COLOR; a_screen: SCREEN)
 			-- Make a color implementation
 			-- for `a_color'.
 		do
@@ -51,13 +51,13 @@ feature -- Initialization
 		end
 
 
-	make_system (color_id: INTEGER) is
+	make_system (color_id: INTEGER)
 			-- Make a color according to `color_id'
 		do
 			wel_make_system (color_id)
 		end
 
-	make_by_wel (a_color_ref: WEL_COLOR_REF) is
+	make_by_wel (a_color_ref: WEL_COLOR_REF)
 			-- Make a color implementation
 			-- with information from `a_color_ref'.
 		require
@@ -80,17 +80,17 @@ feature  -- Access
 	allocated_blue: INTEGER
 			-- Blue saturation level
 
-	red: INTEGER is
+	red: INTEGER
 		do
 			Result := allocated_red
 		end
 
-	green: INTEGER is
+	green: INTEGER
 		do
 			Result := allocated_green
 		end
 
-	blue: INTEGER is
+	blue: INTEGER
 		do
 			Result := allocated_blue
 		end
@@ -102,7 +102,7 @@ feature  -- Access
 	name: STRING
 			-- Name of desired color for current
 
-	rgb: INTEGER is
+	rgb: INTEGER
 			-- Return a RGB for Windows
 		do
 			Result := item
@@ -110,7 +110,7 @@ feature  -- Access
 
 feature -- Settings
 
-	set_red (r: INTEGER) is
+	set_red (r: INTEGER)
 			-- Set red saturation level to `green_value'.
 		do
 			allocated_red := r
@@ -118,7 +118,7 @@ feature -- Settings
 			name := Void
 		end
 
-	set_green (g: INTEGER) is
+	set_green (g: INTEGER)
 			-- Set green saturation level to `green_value'.
 		do
 			allocated_green := g
@@ -126,7 +126,7 @@ feature -- Settings
 			name := Void
 		end
 
-	set_blue (b: INTEGER) is
+	set_blue (b: INTEGER)
 			-- Set blue saturation level to `green_value'.
 		do
 			allocated_blue := b
@@ -134,7 +134,7 @@ feature -- Settings
 			name := Void
 		end
 
-	set_rgb (r, g, b: INTEGER) is
+	set_rgb (r, g, b: INTEGER)
 			-- Set red, green and blue saturation level respectivly to
 			-- `red_value', `green_value' and `blue_value'.
 		do
@@ -145,7 +145,7 @@ feature -- Settings
 			name := Void
 		end
 
-	set_black_default is
+	set_black_default
 			-- Set black color to be used by default if
 			-- it is impossible to allocate desire color.
 		do
@@ -154,13 +154,13 @@ feature -- Settings
 			not is_white_by_default
 		end
 
-	set_colorref (colorref_value: INTEGER) is
+	set_colorref (colorref_value: INTEGER)
 			-- Set the colorref
 		do
 			item := colorref_value
 		end
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
                         -- Set color name to `a_name'.
 		local
 			rgb_tripple: RGB_TRIPLE
@@ -185,7 +185,7 @@ feature -- Settings
 			end
 		end
 
-	set_white_default is
+	set_white_default
 			-- Set white color to be used by default if
 			-- it is impossible to allocate desire color.
 		do
@@ -194,7 +194,7 @@ feature -- Settings
 			is_white_by_default
 		end
 
-	brush: WEL_BRUSH is
+	brush: WEL_BRUSH
 			-- Windows Brush corresponding to this color.
 		do
 			create Result.make_solid (Current)
@@ -202,7 +202,7 @@ feature -- Settings
 
 feature {NONE} -- Implementation
 
-	has (color_name: STRING): BOOLEAN is
+	has (color_name: STRING): BOOLEAN
 			-- Test if the color_name exists in the hash_table
 		local
 			s: STRING
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			Result := names.has (s)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

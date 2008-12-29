@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -26,7 +26,7 @@ create {HTML_TABLE}
 
 feature
 
-	make(nb_row, nb_col: INTEGER) is
+	make(nb_row, nb_col: INTEGER)
 			-- Create a table
 		do
 			array2_make(nb_row, nb_col);
@@ -36,7 +36,7 @@ feature
 
 feature -- Inputs in the table
 
-	put_row(a_row: ARRAY[STRING]) is
+	put_row(a_row: ARRAY[STRING])
 			-- Put a row (of STRING) in the table in the current row
 		require
 			a_row /= Void;
@@ -56,7 +56,7 @@ feature -- Inputs in the table
 			end;
 		end;
 
-	put_col(a_row: ARRAY[STRING]) is
+	put_col(a_row: ARRAY[STRING])
 			-- Put a col (of STRING) in the table in the current col
 		require
 			a_row /= Void;
@@ -76,7 +76,7 @@ feature -- Inputs in the table
 			end;
 		end;
 
-	add_row(a_row: ARRAY[STRING]) is
+	add_row(a_row: ARRAY[STRING])
 			-- Add a row in the table and update the current row
 		require
 			a_row /= Void;
@@ -86,7 +86,7 @@ feature -- Inputs in the table
 			set_row(row_value+1);
 		end;
 
-	add_col(a_row: ARRAY[STRING]) is
+	add_col(a_row: ARRAY[STRING])
 			-- Add a col in the table and update the current col
 		require
 			a_row /= Void;
@@ -98,7 +98,7 @@ feature -- Inputs in the table
 
 feature -- Routines out: provide STRING representations 
 
-	out: STRING is
+	out: STRING
 			-- Provide a STRING representation for the current table
 		do
 			Result := Table_start.twin
@@ -110,7 +110,7 @@ feature -- Routines out: provide STRING representations
 			Result.append(Table_end);
 		end;
 
-	body_out: STRING is 
+	body_out: STRING 
 		local
 			row, col: INTEGER;
 		do
@@ -149,7 +149,7 @@ feature -- Routines out: provide STRING representations
 			end;
 		end;
 
-	col_attributes_out(row, col: INTEGER): STRING is
+	col_attributes_out(row, col: INTEGER): STRING
 			-- String representation for the attributes
 			-- of the cell '(row, col)'
 			-- Modify 'col_value'
@@ -168,7 +168,7 @@ feature -- Routines out: provide STRING representations
 			end;
 		end;
 
-	row_attributes_out(row, col: INTEGER): STRING is
+	row_attributes_out(row, col: INTEGER): STRING
 			-- String representation for the attributes
 			-- of the row 'row'
 			-- Modify 'row_value'
@@ -179,7 +179,7 @@ feature -- Routines out: provide STRING representations
 			Result := "";
 		end;
 
-	attributes_out: STRING is
+	attributes_out: STRING
 			-- String representation for the attributes
 			-- of the table
 		do
@@ -191,7 +191,7 @@ feature -- Routines out: provide STRING representations
 			end;
 		end;
 
-	caption_attributes_out: STRING is
+	caption_attributes_out: STRING
 			-- String representation for the attributes
 			-- of the caption
 		do
@@ -202,7 +202,7 @@ feature -- Routines out: provide STRING representations
 			end;
 		end;
 
-	caption_out: STRING is
+	caption_out: STRING
 			-- String representation for the caption
 		do
 			if (caption /= Void) and then (not caption.is_equal("")) then
@@ -217,7 +217,7 @@ feature -- Routines out: provide STRING representations
 			end;
 		end;
 
-	attribute_out(an_attribute, its_value: STRING): STRING is
+	attribute_out(an_attribute, its_value: STRING): STRING
 			-- String representation for the pair 'an_attribute' and 'its_value'
 		do
 			Result := an_attribute.twin
@@ -236,7 +236,7 @@ feature -- Attributes
 
 feature -- Set attributes
 
-	set_caption(s: STRING) is
+	set_caption(s: STRING)
 			-- Set the caption element
 		do
 			if s /= Void then
@@ -244,31 +244,31 @@ feature -- Set attributes
 			end;
 		end;
 
-	set_caption_to_top is
+	set_caption_to_top
 			-- Set the caption to be displayed on the top of the table
 		do
 			caption_attributes := attribute_out(Align, Top);
 		end;
 
-	set_caption_to_bottom is
+	set_caption_to_bottom
 			-- Set the caption to be displayed on the bottom of the table
 		do
 			caption_attributes := attribute_out(Align, Bottom);
 		end;
 
-	set_border(n: INTEGER) is
+	set_border(n: INTEGER)
 			-- Set the attribute 'BORDER' of the table to 'n'
 		do
 			border_value := n;
 		end;
 
-	set_row(n: INTEGER) is
+	set_row(n: INTEGER)
 			-- Set the current working value for row to 'n'
 		do
 			row_value := n;
 		end;
 	
-	set_col(n: INTEGER) is
+	set_col(n: INTEGER)
 			-- Set the current working value for col to 'n'
 		do
 			col_value := n;
@@ -279,7 +279,7 @@ feature {NONE}
 
 	caption_attributes: STRING;
 
-	is_text(s: STRING): BOOLEAN is
+	is_text(s: STRING): BOOLEAN
 			-- Is 's' simple text or key word?
 		do
 			if (s /= Void) and then not
@@ -288,7 +288,7 @@ feature {NONE}
 			end;
 		end;
 
-	get_Colspan(row, col: INTEGER): INTEGER is
+	get_Colspan(row, col: INTEGER): INTEGER
 			-- Number of Colspan for the cell 'row, col'
 			-- in the row 'row' (number of Colspan >= 1)
 			-- Modify 'col_value'
@@ -309,7 +309,7 @@ feature {NONE}
 			Result := col_value - col;
 		end;
 
-	get_Rowspan(row, col: INTEGER): INTEGER is
+	get_Rowspan(row, col: INTEGER): INTEGER
 			-- Number of Rowspan for the cell 'row, col'
 			-- in the col  'col' (number of Rowspan >= 1)
 			-- Modify 'row_value'
@@ -330,7 +330,7 @@ feature {NONE}
 			Result := row_value - row;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

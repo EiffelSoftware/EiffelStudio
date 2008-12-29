@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow insertion of a Vision2 control%
 		%within a WEL system."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 	
 feature {NONE} -- initialization
 
-	set_real_parent (a_parent: WEL_WINDOW; x_pos, y_pos, a_width, a_height: INTEGER) is
+	set_real_parent (a_parent: WEL_WINDOW; x_pos, y_pos, a_width, a_height: INTEGER)
 			-- Actually target `Current' to `a_parent' and set x_position to `x_pos',
 			-- y_position to `y_pos', width to `a_width' and height to `a_height'.
 			-- Create EV_APPLICATION if one has not been created.
@@ -55,7 +55,7 @@ feature {NONE} -- initialization
 		
 feature {WEL_EV_CONTAINER_I}-- Access
 
-	implementation_window: WEL_WINDOW is
+	implementation_window: WEL_WINDOW
 			-- Window containing `item'.
 		do
 			Result := Current
@@ -63,7 +63,7 @@ feature {WEL_EV_CONTAINER_I}-- Access
 
 feature {NONE} -- Implementation
 
-	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP) is
+	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP)
 			-- Notify the current widget that the change identify by
 			-- type have been done. For types, see `internal_changes'
 			-- in class EV_SIZEABLE_IMP. If the container is shown, 
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	ev_set_minimum_size (a_width, a_height: INTEGER) is
+	ev_set_minimum_size (a_width, a_height: INTEGER)
 			-- Assign `mw' to minimum_width and `mh' to minimum_height.
 			-- Should check if the user didn't set the minimum width
 			-- before to set the new value.
@@ -170,7 +170,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: WEL_EV_CONTAINER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision font selection dialog, implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,26 +27,26 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Connect `interface' and initialize `c_object'.
 		do
 		end
 
-	initialize is
+	initialize
 			-- Initialize the dialog.
 		do
 		end
 
 feature -- Access
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Current selected font.
 		do
 		end
 
 feature -- Element change
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Select `a_font'.
 		do
 		end
@@ -57,7 +57,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_FONT_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

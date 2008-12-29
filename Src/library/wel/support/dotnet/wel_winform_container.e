@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Container that will hold a WinForms control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; an_item: WINFORMS_CONTROL) is
+	make (a_parent: WEL_WINDOW; an_item: WINFORMS_CONTROL)
 			-- Create current containing `an_item'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Messages
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		local
@@ -55,7 +55,7 @@ feature {NONE} -- Messages
 			winform.set_size (l_size)
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -84,7 +84,7 @@ invariant
 	winform_not_void: winform /= Void
 	winform_container_not_void: winform_container /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

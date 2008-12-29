@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about the Wm_paint message."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,13 +16,13 @@ create
 
 feature -- Access
 
-	erase: BOOLEAN is
+	erase: BOOLEAN
 			-- Must the background be erased?
 		do
 			Result := cwel_paintstruct_get_ferase (item)
 		end
 
-	rect_paint: WEL_RECT is
+	rect_paint: WEL_RECT
 			-- Rectangle that specifies which part
 			-- must be painted.
 		do
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_paintstruct
@@ -42,24 +42,24 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_paintstruct: INTEGER is
+	c_size_of_paintstruct: INTEGER
 		external
 			"C [macro <paint.h>]"
 		alias
 			"sizeof (PAINTSTRUCT)"
 		end
 
-	cwel_paintstruct_get_ferase (ptr: POINTER): BOOLEAN is
+	cwel_paintstruct_get_ferase (ptr: POINTER): BOOLEAN
 		external
 			"C [macro <paint.h>]"
 		end
 
-	cwel_paintstruct_get_rcpaint (ptr: POINTER): POINTER is
+	cwel_paintstruct_get_rcpaint (ptr: POINTER): POINTER
 		external
 			"C [macro <paint.h>] (PAINTSTRUCT*): EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

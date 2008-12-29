@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Defines the attributes of a palette."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_version, a_num_entries: INTEGER) is
+	make (a_version, a_num_entries: INTEGER)
 			-- Make a logical palette version `a_version'
 			-- with `a_num_entries' entries
 		do
@@ -35,20 +35,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	version: INTEGER is
+	version: INTEGER
 			-- Windows version number for the structure
 			-- Must be 768 for Windows 3.0 and later
 		do
 			Result := cwel_log_palette_get_version (item)
 		end
 
-	num_entries: INTEGER is
+	num_entries: INTEGER
 			-- Number of palette color entries
 		do
 			Result := cwel_log_palette_get_num_entries (item)
 		end
 
-	pal_entry (index: INTEGER): WEL_PALETTE_ENTRY is
+	pal_entry (index: INTEGER): WEL_PALETTE_ENTRY
 			-- Palette entry at `index'
 		require
 			index_inf: index >= 0
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_version (a_version: INTEGER) is
+	set_version (a_version: INTEGER)
 			-- Set `version' with `a_version'
 		do
 			cwel_log_palette_set_version (item, a_version)
@@ -70,7 +70,7 @@ feature -- Element change
 			version_set: version = a_version
 		end
 
-	set_num_entries (a_num_entries: INTEGER) is
+	set_num_entries (a_num_entries: INTEGER)
 			-- Set `num_entries' with `a_num_entries'
 		do
 			cwel_log_palette_set_num_entries (item, a_num_entries)
@@ -78,7 +78,7 @@ feature -- Element change
 			num_entries_set: num_entries = a_num_entries
 		end
 
-	set_pal_entry (index: INTEGER; a_pal_entry: WEL_PALETTE_ENTRY) is
+	set_pal_entry (index: INTEGER; a_pal_entry: WEL_PALETTE_ENTRY)
 			-- Set `a_pal_entry' at `index'
 		require
 			a_pal_entry_not_void: a_pal_entry /= Void
@@ -95,7 +95,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		do
 			Result := c_size_of_log_palette +
@@ -109,70 +109,70 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_size_of_log_palette: INTEGER is
+	c_size_of_log_palette: INTEGER
 		external
 			"C [macro <logpal.h>]"
 		alias
 			"sizeof (LOGPALETTE)"
 		end
 
-	c_size_of_pal_entry: INTEGER is
+	c_size_of_pal_entry: INTEGER
 		external
 			"C [macro <logpal.h>]"
 		alias
 			"sizeof (PALETTEENTRY)"
 		end
 
-	cwel_log_palette_set_version (ptr: POINTER; value: INTEGER) is
+	cwel_log_palette_set_version (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <logpal.h>]"
 		end
 
-	cwel_log_palette_set_num_entries (ptr: POINTER; value: INTEGER) is
+	cwel_log_palette_set_num_entries (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <logpal.h>]"
 		end
 
 	cwel_log_palette_set_pal_entry_red (ptr: POINTER; index,
-			value: INTEGER) is
+			value: INTEGER)
 		external
 			"C [macro <logpal.h>]"
 		end
 
 	cwel_log_palette_set_pal_entry_green (ptr: POINTER; index,
-			value: INTEGER) is
+			value: INTEGER)
 		external
 			"C [macro <logpal.h>]"
 		end
 
 	cwel_log_palette_set_pal_entry_blue (ptr: POINTER; index,
-			value: INTEGER) is
+			value: INTEGER)
 		external
 			"C [macro <logpal.h>]"
 		end
 
 	cwel_log_palette_set_pal_entry_flags (ptr: POINTER; index,
-			value: INTEGER) is
+			value: INTEGER)
 		external
 			"C [macro <logpal.h>]"
 		end
 
-	cwel_log_palette_get_version (ptr: POINTER): INTEGER is
+	cwel_log_palette_get_version (ptr: POINTER): INTEGER
 		external
 			"C [macro <logpal.h>]"
 		end
 
-	cwel_log_palette_get_num_entries (ptr: POINTER): INTEGER is
+	cwel_log_palette_get_num_entries (ptr: POINTER): INTEGER
 		external
 			"C [macro <logpal.h>]"
 		end
 
-	cwel_log_palette_get_pal_entry (ptr: POINTER; i: INTEGER): POINTER is
+	cwel_log_palette_get_pal_entry (ptr: POINTER; i: INTEGER): POINTER
 		external
 			"C [macro <logpal.h>]  (LOGPALETTE*, int): EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

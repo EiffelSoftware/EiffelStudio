@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -10,13 +10,13 @@ class HANDLE_USE
 
 feature {NONE} -- Status report
 
-	handle: HANDLE is
+	handle: HANDLE
 			-- Shared handle to switchable database implementations
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

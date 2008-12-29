@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						cURL curl_easy_setopt callback functions' Eiffel wrappers.
 						We need this class since cURL need a c function pointer as value but
@@ -18,7 +18,7 @@ inherit
 
 feature -- Interactive with C
 
-	set_object_and_function_address is
+	set_object_and_function_address
 			-- Set object and function addresses.
 			-- Call this feature before call `c_set_progress_function', `c_set_debug_function' and `c_set_write_function'.
 		do
@@ -28,7 +28,7 @@ feature -- Interactive with C
 			c_set_debug_function_address ($debug_function)
 		end
 
-	c_set_progress_function (a_setopt_api: POINTER; a_curl_handle: POINTER) is
+	c_set_progress_function (a_setopt_api: POINTER; a_curl_handle: POINTER)
 				-- Setting CURLOPT_PROGRESSFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
 		require
@@ -46,7 +46,7 @@ feature -- Interactive with C
 			]"
 		end
 
-	c_set_debug_function (a_setopt_api: POINTER; a_curl_handle: POINTER) is
+	c_set_debug_function (a_setopt_api: POINTER; a_curl_handle: POINTER)
 				-- Setting CURLOPT_DEBUGFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
 		require
@@ -65,7 +65,7 @@ feature -- Interactive with C
 			]"
 		end
 
-	c_set_write_function (a_setopt_api: POINTER; a_curl_handle: POINTER) is
+	c_set_write_function (a_setopt_api: POINTER; a_curl_handle: POINTER)
 				-- Setting CURLOPT_WRITEFUNCTION option of `a_curl_handle'.
 				-- We need this function since cURL need a c function pointer as value.
 		require
@@ -85,21 +85,21 @@ feature -- Interactive with C
 
 feature -- cURL curl_easy_setopt functions
 
-	progress_function (a_object_id: POINTER; a_download_total, a_download_now, a_upload_total, a_upload_now: REAL_64): INTEGER is
+	progress_function (a_object_id: POINTER; a_download_total, a_download_now, a_upload_total, a_upload_now: REAL_64): INTEGER
 			-- Function correspond to {CURL_OPT_CONSTANTS}.curlopt_progressfunction
 			-- Note, pass a {IDENTIFIED}.object_id as `a_object_id' value is helpful since we can't directly pass an Eiffel Object address which
 			-- may changed during GC.
 		deferred
 		end
 
-	write_function (a_data_pointer: POINTER; a_size, a_nmemb: INTEGER; a_object_id: POINTER): INTEGER is
+	write_function (a_data_pointer: POINTER; a_size, a_nmemb: INTEGER; a_object_id: POINTER): INTEGER
 			-- Function correspond to {CURL_OPT_CONSTANTS}.curlopt_writefunction
 			-- Note, pass a {IDENTIFIED}.object_id as `a_object_id' value is helpful since we can't directly pass an Eiffel Object address which
 			-- may changed during GC.
 		deferred
 		end
 
-	debug_function (a_curl_handle: POINTER; a_curl_infotype: INTEGER; a_char_pointer: POINTER; a_size: INTEGER; a_object_id: POINTER): INTEGER is
+	debug_function (a_curl_handle: POINTER; a_curl_infotype: INTEGER; a_char_pointer: POINTER; a_size: INTEGER; a_object_id: POINTER): INTEGER
 			-- Function correspond to {CURL_OPT_CONSTANTS}.curlopt_debugfunction
 			-- Note, pass a {IDENTIFIED}.object_id as `a_object_id' value is helpful since we can't directly pass an Eiffel Object address which
 			-- may changed during GC.			
@@ -110,31 +110,31 @@ feature -- cURL curl_easy_setopt functions
 
 feature {NONE} -- Externals
 
-	c_set_object (a_object: POINTER) is
+	c_set_object (a_object: POINTER)
 			-- Set Current object address.
 		external
 			"C signature (EIF_REFERENCE) use %"eiffel_curl.h%""
 		end
 
-	c_release_object is
+	c_release_object
 			-- Release Current pointer in C
 		external
 			"C use %"eiffel_curl.h%""
 		end
 
-	c_set_progress_function_address (a_address: POINTER) is
+	c_set_progress_function_address (a_address: POINTER)
 			-- Set progress function address.
 		external
 			"C use %"eiffel_curl.h%""
 		end
 
-	c_set_write_function_address (a_address: POINTER) is
+	c_set_write_function_address (a_address: POINTER)
 			-- Set write function address.
 		external
 			"C use %"eiffel_curl.h%""
 		end
 
-	c_set_debug_function_address (a_address: POINTER) is
+	c_set_debug_function_address (a_address: POINTER)
 			-- Set write function address.
 		external
 			"C use %"eiffel_curl.h%""
@@ -142,14 +142,14 @@ feature {NONE} -- Externals
 
 feature {NONE} -- Implementation
 
-	dispose is
+	dispose
 			-- Wean `Current'
 		do
 			c_release_object
 			c_set_object (default_pointer)
 		end
 
-indexing
+note
 	library:   "cURL: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

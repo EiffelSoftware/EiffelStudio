@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Push button widget that displays text and/or a pixmap.
@@ -58,7 +58,7 @@ create
 feature {NONE} -- Initialization
 
 	make_with_text_and_action
-		(a_text: STRING_GENERAL; an_action: PROCEDURE [ANY, TUPLE]) is
+		(a_text: STRING_GENERAL; an_action: PROCEDURE [ANY, TUPLE])
 			-- Create with 'a_text' as `text' and `an_action' in `select_actions'.
 		require
 			text_not_void: a_text /= Void
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_identifier_name: STRING is
+	default_identifier_name: STRING
 			-- Default `identifier_name' if no specific name is set.
 		do
 			if text.is_empty then
@@ -87,7 +87,7 @@ feature -- Access
 
 feature {EV_DIALOG_I, EV_WINDOW} -- Default push button handling
 
-	is_default_push_button: BOOLEAN is
+	is_default_push_button: BOOLEAN
 			-- Is `Current' a default push button for a container?
 		require
 			not_destroyed: not is_destroyed
@@ -97,7 +97,7 @@ feature {EV_DIALOG_I, EV_WINDOW} -- Default push button handling
 			bridge_ok: Result = implementation.is_default_push_button
 		end
 
-	enable_default_push_button is
+	enable_default_push_button
 			-- Enable style of `Current' corresponding
 			-- to a default push button.
 		require
@@ -109,7 +109,7 @@ feature {EV_DIALOG_I, EV_WINDOW} -- Default push button handling
 			is_default_push_button: is_default_push_button
 		end
 
-	disable_default_push_button is
+	disable_default_push_button
 			-- Remove style of `Current' corresponding
 			-- to a default push button.
 		require
@@ -123,7 +123,7 @@ feature {EV_DIALOG_I, EV_WINDOW} -- Default push button handling
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_TEXT_ALIGNABLE} and
@@ -137,13 +137,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_BUTTON_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -17,14 +17,14 @@ create
 	
 feature
 
-	make is
+	make
 		do
 			create html_text.make (1)
 		end
 
 feature -- Redefinition
 
-	put_basic (s: STRING) is
+	put_basic (s: STRING)
 			-- Append 's' to the temporary string
 		do
 			html_text.append (s)
@@ -32,7 +32,7 @@ feature -- Redefinition
 
 feature -- Out representation
 
-	out: STRING is
+	out: STRING
 			-- Provide a STRING representation for the HTML text
 		do
 			if html_text /= Void then
@@ -42,7 +42,7 @@ feature -- Out representation
 
 feature -- Add some new features
 
-	wipe_out is
+	wipe_out
 			-- Restore a empty HTML text
 		do
 			html_text.wipe_out
@@ -50,7 +50,7 @@ feature -- Add some new features
 				-- a new object just for displaying HTML text
 		end
 
-	put_center (s: STRING) is
+	put_center (s: STRING)
 			-- Put 's' centered on the window
 		do
 			put_basic ("<CENTER>")
@@ -59,7 +59,7 @@ feature -- Add some new features
 			put_basic ("%N")
 		end;
 
-	put_font (s: STRING; n: INTEGER) is
+	put_font (s: STRING; n: INTEGER)
 			-- Put 's' with font size set to 'n'
 		do
 			put_basic ("<FONT SIZE=")
@@ -73,7 +73,7 @@ feature -- Add some new features
 			put_basic ("%N")
 		end
 
-	put_indent (s: STRING) is
+	put_indent (s: STRING)
 		do
 			put_basic ("<BLOCKQUOTE>")
 			put_basic (s)
@@ -81,7 +81,7 @@ feature -- Add some new features
 			put_basic ("%N")
 		end
 
-	put_blink (s: STRING) is
+	put_blink (s: STRING)
 		do
 			put_basic("<BLINK>")
 			put_basic(s)
@@ -89,7 +89,7 @@ feature -- Add some new features
 			put_basic("%N")
 		end
 
-	put_address (s: STRING) is
+	put_address (s: STRING)
 		do
 			put_basic ("<ADDRESS>")
 			put_basic (s)
@@ -102,7 +102,7 @@ feature {NONE}
 
 	html_text: STRING;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

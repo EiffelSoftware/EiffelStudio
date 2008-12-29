@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Stat flags, used in feature `stat' of EOLE_STREAM"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	Statflag_default: INTEGER is
+	Statflag_default: INTEGER
 			-- Indicate that this is not used for property
 		external
 			"C [macro <wtypes.h>]"
@@ -19,7 +19,7 @@ feature -- Access
 			"STATFLAG_DEFAULT"
 		end
 
-	Statflag_noname: INTEGER is
+	Statflag_noname: INTEGER
 			-- Indicate that this is not used for property
 		external
 			"C [macro <wtypes.h>]"
@@ -27,14 +27,14 @@ feature -- Access
 			"STATFLAG_NONAME"
 		end
 		
-	is_valid_stat_flag (flag: INTEGER): BOOLEAN is
+	is_valid_stat_flag (flag: INTEGER): BOOLEAN
 			-- Is `flag' a valid stat flag?
 		do
 			Result := flag = Statflag_default or
 						flag = Statflag_noname
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

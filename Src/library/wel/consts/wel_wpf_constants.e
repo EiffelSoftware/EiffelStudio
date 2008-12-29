@@ -1,4 +1,4 @@
-indexing
+note
 	description: "WindowPlacement Flag (WPF) constant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,21 +10,21 @@ class
 
 feature -- Access
 
-	Wpf_setminposition: INTEGER is
+	Wpf_setminposition: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"WPF_SETMINPOSITION"
 		end
 
-	Wpf_restoretomaximized: INTEGER is
+	Wpf_restoretomaximized: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"WPF_RESTORETOMAXIMIZED"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

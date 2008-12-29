@@ -1,4 +1,4 @@
-indexing
+note
 	description: "OLE Automation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- No description available.
 		require
 			name_user_precondition: name_user_precondition
@@ -20,7 +20,7 @@ feature -- Access
 
 		end
 
-	size: ECOM_CURRENCY is
+	size: ECOM_CURRENCY
 			-- No description available.
 		require
 			size_user_precondition: size_user_precondition
@@ -28,7 +28,7 @@ feature -- Access
 
 		end
 
-	bold: BOOLEAN is
+	bold: BOOLEAN
 			-- No description available.
 		require
 			bold_user_precondition: bold_user_precondition
@@ -36,7 +36,7 @@ feature -- Access
 
 		end
 
-	italic: BOOLEAN is
+	italic: BOOLEAN
 			-- No description available.
 		require
 			italic_user_precondition: italic_user_precondition
@@ -44,7 +44,7 @@ feature -- Access
 
 		end
 
-	underline: BOOLEAN is
+	underline: BOOLEAN
 			-- No description available.
 		require
 			underline_user_precondition: underline_user_precondition
@@ -52,7 +52,7 @@ feature -- Access
 
 		end
 
-	strikethrough: BOOLEAN is
+	strikethrough: BOOLEAN
 			-- No description available.
 		require
 			strikethrough_user_precondition: strikethrough_user_precondition
@@ -60,7 +60,7 @@ feature -- Access
 
 		end
 
-	weight: INTEGER is
+	weight: INTEGER
 			-- No description available.
 		require
 			weight_user_precondition: weight_user_precondition
@@ -68,7 +68,7 @@ feature -- Access
 
 		end
 
-	charset: INTEGER is
+	charset: INTEGER
 			-- No description available.
 		require
 			charset_user_precondition: charset_user_precondition
@@ -78,112 +78,112 @@ feature -- Access
 
 feature -- Status Report
 
-	name_user_precondition: BOOLEAN is
+	name_user_precondition: BOOLEAN
 			-- User-defined preconditions for `name'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_name_user_precondition (a_value: STRING): BOOLEAN is
+	set_name_user_precondition (a_value: STRING): BOOLEAN
 			-- User-defined preconditions for `set_name'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	size_user_precondition: BOOLEAN is
+	size_user_precondition: BOOLEAN
 			-- User-defined preconditions for `size'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_size_user_precondition (a_value: ECOM_CURRENCY): BOOLEAN is
+	set_size_user_precondition (a_value: ECOM_CURRENCY): BOOLEAN
 			-- User-defined preconditions for `set_size'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	bold_user_precondition: BOOLEAN is
+	bold_user_precondition: BOOLEAN
 			-- User-defined preconditions for `bold'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_bold_user_precondition (a_value: BOOLEAN): BOOLEAN is
+	set_bold_user_precondition (a_value: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_bold'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	italic_user_precondition: BOOLEAN is
+	italic_user_precondition: BOOLEAN
 			-- User-defined preconditions for `italic'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_italic_user_precondition (a_value: BOOLEAN): BOOLEAN is
+	set_italic_user_precondition (a_value: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_italic'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	underline_user_precondition: BOOLEAN is
+	underline_user_precondition: BOOLEAN
 			-- User-defined preconditions for `underline'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_underline_user_precondition (a_value: BOOLEAN): BOOLEAN is
+	set_underline_user_precondition (a_value: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_underline'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	strikethrough_user_precondition: BOOLEAN is
+	strikethrough_user_precondition: BOOLEAN
 			-- User-defined preconditions for `strikethrough'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_strikethrough_user_precondition (a_value: BOOLEAN): BOOLEAN is
+	set_strikethrough_user_precondition (a_value: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_strikethrough'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	weight_user_precondition: BOOLEAN is
+	weight_user_precondition: BOOLEAN
 			-- User-defined preconditions for `weight'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_weight_user_precondition (a_value: INTEGER): BOOLEAN is
+	set_weight_user_precondition (a_value: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_weight'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	charset_user_precondition: BOOLEAN is
+	charset_user_precondition: BOOLEAN
 			-- User-defined preconditions for `charset'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_charset_user_precondition (a_value: INTEGER): BOOLEAN is
+	set_charset_user_precondition (a_value: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_charset'.
 			-- Redefine in descendants if needed.
 		do
@@ -192,7 +192,7 @@ feature -- Status Report
 
 feature -- Element Change
 
-	set_name (a_value: STRING) is
+	set_name (a_value: STRING)
 			-- Set 'name' with 'a_value'
 		require
 			set_name_user_precondition: set_name_user_precondition (a_value)
@@ -200,7 +200,7 @@ feature -- Element Change
 
 		end
 
-	set_size (a_value: ECOM_CURRENCY) is
+	set_size (a_value: ECOM_CURRENCY)
 			-- Set 'size' with 'a_value'
 		require
 			non_void_a_value: a_value /= Void
@@ -210,7 +210,7 @@ feature -- Element Change
 
 		end
 
-	set_bold (a_value: BOOLEAN) is
+	set_bold (a_value: BOOLEAN)
 			-- Set 'bold' with 'a_value'
 		require
 			set_bold_user_precondition: set_bold_user_precondition (a_value)
@@ -218,7 +218,7 @@ feature -- Element Change
 
 		end
 
-	set_italic (a_value: BOOLEAN) is
+	set_italic (a_value: BOOLEAN)
 			-- Set 'italic' with 'a_value'
 		require
 			set_italic_user_precondition: set_italic_user_precondition (a_value)
@@ -226,7 +226,7 @@ feature -- Element Change
 
 		end
 
-	set_underline (a_value: BOOLEAN) is
+	set_underline (a_value: BOOLEAN)
 			-- Set 'underline' with 'a_value'
 		require
 			set_underline_user_precondition: set_underline_user_precondition (a_value)
@@ -234,7 +234,7 @@ feature -- Element Change
 
 		end
 
-	set_strikethrough (a_value: BOOLEAN) is
+	set_strikethrough (a_value: BOOLEAN)
 			-- Set 'strikethrough' with 'a_value'
 		require
 			set_strikethrough_user_precondition: set_strikethrough_user_precondition (a_value)
@@ -242,7 +242,7 @@ feature -- Element Change
 
 		end
 
-	set_weight (a_value: INTEGER) is
+	set_weight (a_value: INTEGER)
 			-- Set 'weight' with 'a_value'
 		require
 			set_weight_user_precondition: set_weight_user_precondition (a_value)
@@ -250,7 +250,7 @@ feature -- Element Change
 
 		end
 
-	set_charset (a_value: INTEGER) is
+	set_charset (a_value: INTEGER)
 			-- Set 'charset' with 'a_value'
 		require
 			set_charset_user_precondition: set_charset_user_precondition (a_value)
@@ -258,7 +258,7 @@ feature -- Element Change
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class EXAMPLE
@@ -7,7 +7,7 @@ create
 	make
 
 feature -- Init
-	make is 
+	make 
 		local
 			fi: FILE_NAME
 			i: INTEGER
@@ -30,7 +30,7 @@ feature -- Access
 		-- Example which create, then displays 3-d tunnel on a png image.
 		-- Save it at the end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

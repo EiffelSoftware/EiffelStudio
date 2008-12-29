@@ -1,4 +1,4 @@
-indexing
+note
 	description:"Scanners for Eiffel parsers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ feature {NONE} -- Local variables
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new Eiffel scanner.
 		do
 			make_with_buffer (Empty_buffer)
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Start Job / Reinitialization
 
-	execute(a_string: STRING) is
+	execute(a_string: STRING)
 			-- Analyze a string.
 			-- `a_string' in UTF8.
 		require
@@ -75,7 +75,7 @@ feature -- Start Job / Reinitialization
 			scan
 		end
 
-	execute_with_wide_string (a_string: STRING_32) is
+	execute_with_wide_string (a_string: STRING_32)
 			-- Analyze a string.
 			-- `a_string' in UTF32.
 		require
@@ -95,7 +95,7 @@ feature -- Start Job / Reinitialization
 			execute (l_string)
 		end
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input.
 		do
 			reset_compressed_scanner_skeleton
@@ -127,7 +127,7 @@ feature -- Access
 			-- Cell that contains the size of tabulations
 			-- blank spaces.
 
-	current_encoding: ENCODING is
+	current_encoding: ENCODING
 			-- Current encoding of the scanning text.
 		do
 			Result := utf8
@@ -146,7 +146,7 @@ feature -- Query
 
 feature -- Status Setting
 
-	set_in_verbatim_string (a_flag: BOOLEAN) is
+	set_in_verbatim_string (a_flag: BOOLEAN)
 			-- Set `in_verbatim_string' to `a_flag'
 		do
 			in_verbatim_string := a_flag
@@ -161,7 +161,7 @@ feature -- Status Setting
 
 feature -- Element Change
 
-	set_tab_size (size: INTEGER) is
+	set_tab_size (size: INTEGER)
 			-- Set `tab_size' to `size'.
 		do
 			tab_size := size
@@ -169,7 +169,7 @@ feature -- Element Change
 
 feature {NONE} -- Factory
 
-	new_text_token (a_text: STRING): EDITOR_TOKEN is
+	new_text_token (a_text: STRING): EDITOR_TOKEN
 			-- Create text token from `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -181,7 +181,7 @@ feature {NONE} -- Factory
 
 feature {NONE} -- Encoding implementation
 
-	lexer_encoding_to_utf32 (a_text: STRING): STRING_32 is
+	lexer_encoding_to_utf32 (a_text: STRING): STRING_32
 			-- Convert `a_text' of lexer encoding to UTF-32.
 		require
 			a_text_not_void: a_text /= Void
@@ -202,7 +202,7 @@ feature {NONE} -- Encoding implementation
 
 feature {NONE} -- Processing
 
-	update_token_list is
+	update_token_list
 			-- Link the current token to the last one.
 		do
 			if end_token = Void then
@@ -216,7 +216,7 @@ feature {NONE} -- Processing
 
 feature {NONE} -- Constants
 
-	Init_buffer_size: INTEGER is 80
+	Init_buffer_size: INTEGER = 80
 				-- Initial size for `eif_buffer'
 
 	in_comments: BOOLEAN
@@ -226,7 +226,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	is_verbatim_string_closer: BOOLEAN is
+	is_verbatim_string_closer: BOOLEAN
 			-- Is `text' a valid Verbatim_string_closer?
 		local
 			i, j, nb: INTEGER
@@ -256,13 +256,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	INITIAL_st: INTEGER is 0
-	VERBATIM_st: INTEGER is 1
+	INITIAL_st: INTEGER = 0
+	VERBATIM_st: INTEGER = 1
 
 invariant
 	eif_buffer_not_void: eif_buffer /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

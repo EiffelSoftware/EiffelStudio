@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision list item list. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ inherit
 
 feature -- Access
 
-	selected_item: EV_LIST_ITEM is
+	selected_item: EV_LIST_ITEM
 			-- `Result' is currently selected item.
 			-- Topmost selected item if multiple items are selected.
 		deferred
@@ -36,21 +36,21 @@ feature -- Access
 
 feature -- Status setting
 
-	select_item (an_index: INTEGER) is
+	select_item (an_index: INTEGER)
 			-- Select item at one based index, `an_index'.
 		require
 			index_within_range: an_index > 0 and an_index <= count
 		deferred
 		end
 
-	deselect_item (an_index: INTEGER) is
+	deselect_item (an_index: INTEGER)
 			-- Deselect item at one based index, `an_index'.
 		require
 			index_within_range: an_index > 0 and an_index <= count
 		deferred
 		end
 
-	clear_selection is
+	clear_selection
 			-- Ensure there is no `selected_item' in `Current'.
 		deferred
 		end
@@ -59,7 +59,7 @@ feature {EV_LIST_ITEM_LIST_I, EV_LIST_ITEM_IMP} -- Implementation
 
 	interface: EV_LIST_ITEM_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

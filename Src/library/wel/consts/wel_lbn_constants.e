@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ListBox notification (LBN) messages."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,19 +10,19 @@ class
 
 feature -- Access
 
-	Lbn_errspace: INTEGER is -2
+	Lbn_errspace: INTEGER = -2
 
-	Lbn_selchange: INTEGER is 1
+	Lbn_selchange: INTEGER = 1
 
-	Lbn_dblclk: INTEGER is 2
+	Lbn_dblclk: INTEGER = 2
 
-	Lbn_selcancel: INTEGER is 3
+	Lbn_selcancel: INTEGER = 3
 
-	Lbn_setfocus: INTEGER is 4
+	Lbn_setfocus: INTEGER = 4
 
-	Lbn_killfocus: INTEGER is 5;
+	Lbn_killfocus: INTEGER = 5;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

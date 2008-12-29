@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of circle"
 	legal: "See notice at end of class.";
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create a circle.
 		do
 			init_fig (Void);
@@ -44,7 +44,7 @@ feature -- Access
 	center: COORD_XY_FIG;
 			-- Center of the circle.
 
-	contains (p: COORD_XY_FIG): BOOLEAN is
+	contains (p: COORD_XY_FIG): BOOLEAN
 			-- Is 'p' in the current circle ?
 		local
 			distance: INTEGER
@@ -53,7 +53,7 @@ feature -- Access
 			Result := distance <= radius
 		end;
 
-	origin: COORD_XY_FIG is
+	origin: COORD_XY_FIG
 			-- Origin of circle
 		do
 			inspect
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_center (a_point: like center) is
+	set_center (a_point: like center)
 			-- Set `center' to `a_point'.
 		require
 			a_point_exits: a_point /= Void
@@ -82,7 +82,7 @@ feature -- Element change
 			center = a_point
 		end;
 
-	set_origin_to_center is
+	set_origin_to_center
 	   		-- Set origin to `center'.
 		do
 	   		origin_user_type := 2;
@@ -90,7 +90,7 @@ feature -- Element change
 	   		origin.is_superimposable (center)
 		end;
 
-	set_radius (new_radius: like radius) is
+	set_radius (new_radius: like radius)
 			-- Set `radius' to `new_radius', change `size_of_side'.
 		require
 			size_positive: new_radius > 0
@@ -101,7 +101,7 @@ feature -- Element change
 	   		radius = new_radius
 		end;
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: REAL; px, py: INTEGER)
    			-- Rotate figure by `a' relative to (`px', `py').
 	   		-- Angle `a' is measured in degrees.
 		do
@@ -109,7 +109,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xyscale (f: REAL; px,py: INTEGER) is
+	xyscale (f: REAL; px,py: INTEGER)
 			-- Scale figure by `f' relative to (`px', `py').
 		require else
 			scale_factor_positive: f > 0.0
@@ -119,7 +119,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xytranslate (vx, vy: INTEGER) is
+	xytranslate (vx, vy: INTEGER)
 			-- Translate by `vx' horizontally and `vy' vertically.
 		do
 			center.xytranslate (vx, vy);
@@ -128,7 +128,7 @@ feature -- Element change
 
 feature -- Output
 
-	draw is
+	draw
 			-- Draw the circle.
 		do
 			if drawing.is_drawable then
@@ -145,7 +145,7 @@ feature -- Output
 
 feature -- Status report
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the current circle superimposable to `other' ?
 			--| not finished
 		do
@@ -155,7 +155,7 @@ feature -- Status report
 
 feature {CONFIGURE_NOTIFY} -- Updating
 
-	conf_recompute  is
+	conf_recompute
 		local
 			diameter: INTEGER;
 		do
@@ -170,7 +170,7 @@ invariant
 	meaningful_radius: radius >= 0;
 	center_exists: center /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

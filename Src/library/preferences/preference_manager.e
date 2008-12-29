@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Manager of related preference values.
 		]"
@@ -15,7 +15,7 @@ create {PREFERENCES}
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES; a_namespace: STRING) is
+	make (a_preferences: PREFERENCES; a_namespace: STRING)
 			-- New manager.
 		require
 			preferences_not_void: a_preferences /= Void
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Query
 
-	known_preference (a_name: STRING): BOOLEAN is
+	known_preference (a_name: STRING): BOOLEAN
 			-- Is the preference with `a_name' in the system?
 		require
 			name_not_void: a_name /= Void
@@ -48,7 +48,7 @@ feature -- Query
 			Result := preferences.has_preference (namespace + "." + a_name)
 		end
 
-	known_resource (a_name: STRING): BOOLEAN is
+	known_resource (a_name: STRING): BOOLEAN
 		obsolete "use know_preference instead of know_resource"
 		do
 			Result := known_preference (a_name)
@@ -64,7 +64,7 @@ invariant
 	has_namespace: namespace /= Void
 	namespace_valid: not namespace.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$";
@@ -18,7 +18,7 @@ feature -- Status report
 	ecp_parsed: BOOLEAN
 			-- Did last operation succeeded?
 
-	ecp_message: STRING is
+	ecp_message: STRING
 			-- Error message if `sql_parsed' is false
 		once
 			create Result.make (0)
@@ -32,7 +32,7 @@ feature -- Status report
 
 feature  -- Status setting
 
-	set_descriptor (e: EC_DESCRIPTOR) is
+	set_descriptor (e: EC_DESCRIPTOR)
 			-- Set `ecl_descriptor' with `e'.
 		require
 			descriptor_exits: e /= Void
@@ -40,7 +40,7 @@ feature  -- Status setting
 			descriptor := e
 		end;
 
-	ecp_parse (at: ARRAY[TOKEN]) is
+	ecp_parse (at: ARRAY[TOKEN])
 			-- Perform syntactical analysis on a lexical item list.
 		require
 			token_array_exists: at /= Void
@@ -88,7 +88,7 @@ feature {NONE} -- Status report
 	ecp_current_field: INTEGER
 		-- Field number
 	
-	tmps: STRING is
+	tmps: STRING
 			-- Temporary buffer
 		once
 			create Result.make (0)
@@ -96,7 +96,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	set_ecp_reference (object: ANY) is
+	set_ecp_reference (object: ANY)
 			-- Set `ecp_reference' with `object'.
 		require
 			object_exists: object /= Void
@@ -104,7 +104,7 @@ feature {NONE} -- Status setting
 			ecp_reference := object
 		end;
 
-	set_ecp_parse_error (message: STRING) is
+	set_ecp_parse_error (message: STRING)
 			-- Set error flag, and initialize error message.
 		do
 			ecp_parsed := False;
@@ -114,7 +114,7 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Implementation
 
-	ecp_parse_separator is
+	ecp_parse_separator
 			-- Parse current token which must be the field separator.
 		do
 			if ecp_parsed and then ecp_token.type = Field_sep_ttype
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	ecp_parse_field is
+	ecp_parse_field
 			-- Parse an object field.
 		do
 			if ecp_parsed then 
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	ecp_parse_last_field is
+	ecp_parse_last_field
 			-- Parse the last field of an object.
 		do
 			if ecp_parsed then 
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 			end
 		end;	
 
-	ecp_parse_label_name is
+	ecp_parse_label_name
 			-- Parse current token which must be an identifier
 			-- matching the current field name.
 		local
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	ecp_parse_label_sep is
+	ecp_parse_label_sep
 			-- Parse current token which must be an label separator
 			-- matching the current field label separator.
 		do
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	ecp_parse_left_delimiter is
+	ecp_parse_left_delimiter
 			-- Parse current token which must be a left delimiter
 			-- matching the current field value left delim. .
 		do
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	ecp_parse_right_delimiter (i:INTEGER) is
+	ecp_parse_right_delimiter (i:INTEGER)
 			-- Parse current token which must be a right delimiter
 			-- matching the current field value right delim.
 			-- `i' is 0 if this is the last token to be read, else >0
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	ecp_parse_value (i:INTEGER) is
+	ecp_parse_value (i:INTEGER)
 			-- Parse and skip next token which
 			-- will be converted in an object.
 			-- `i' is 0 if this is the last token to be read, else >0
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			end	
 		end;
 
-	ecp_remove_word is 
+	ecp_remove_word 
 			-- Remove current token and checks for the 
 			-- next token to exist.
 		do
@@ -350,13 +350,13 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	check_end_of_line is
+	check_end_of_line
 			-- Check if the last token read was the last of the array
 		do
 			-- Not implemented yet
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

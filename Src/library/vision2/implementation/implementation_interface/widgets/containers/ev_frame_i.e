@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Eiffel Vision frame. Implementation interface."
 	legal: "See notice at end of class."
@@ -30,14 +30,14 @@ inherit
 
 feature -- Access
 
-	style: INTEGER is
+	style: INTEGER
 			-- Visual appearance. See: EV_FRAME_CONSTANTS.
 		deferred
 		end
 
 feature -- Element change
 
-	set_style (a_style: INTEGER) is
+	set_style (a_style: INTEGER)
 			-- Assign `a_style' to `style'.
 		require
 			a_style_valid: valid_frame_border (a_style)
@@ -54,14 +54,14 @@ feature {EV_ANY_I} -- Implementation
 			
 feature {NONE} -- Implementation
 			
-	default_alignment: INTEGER is
+	default_alignment: INTEGER
 			-- Default alignment used during
 			-- creation of real implementation
 		do
 			Result := {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

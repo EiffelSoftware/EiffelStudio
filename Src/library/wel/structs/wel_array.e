@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fixed array for WEL_STRUCTURE. Used internally by WEL."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_count, an_item_size: INTEGER) is
+	make (a_count, an_item_size: INTEGER)
 			-- Create a fixed array.
 			-- `a_count' specifies the number of items and
 			-- `an_item_size' specifies the item_size of an item.
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	put (an_item: G; index: INTEGER) is
+	put (an_item: G; index: INTEGER)
 			-- Put `an_item' at zero based index `index'.
 		require
 			an_item_not_void: an_item /= Void
@@ -48,7 +48,7 @@ feature -- Element change
 			(item + (index * item_size)).memory_copy (an_item.item, item_size)
 		end
 
-	i_th_item (index: INTEGER): POINTER is
+	i_th_item (index: INTEGER): POINTER
 			-- Retrieve the pointer at the zero-based `index'.
 		require
 			index_large_enough: index >= 0
@@ -65,7 +65,7 @@ feature -- Measurement
 	item_size: INTEGER
 			-- Size of an item (in bytes)
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of the array (in bytes)
 		do
 				-- We need to return at least 1 to preserve the postcondition.
@@ -76,7 +76,7 @@ invariant
 	positive_count: count >= 0
 	positive_item_size: item_size >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

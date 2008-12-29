@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Windows that used for notify EV_APPLICATION_IMP theme change actions.
 					This is a invisible window.
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initlixation
 
-	make is
+	make
 			-- Creation method
 		do
 			register_class
@@ -36,7 +36,7 @@ feature {NONE} -- Initlixation
 
 feature -- Implementation
 
-	on_wm_theme_changed is
+	on_wm_theme_changed
 			-- Redefine
 		local
 			l_env: EV_ENVIRONMENT
@@ -45,7 +45,7 @@ feature -- Implementation
 			l_env.application.theme_changed_actions.call (Void)
 		end
 
-	on_wm_syscolor_change is
+	on_wm_syscolor_change
 			-- Redefine
 		local
 			l_env: EV_ENVIRONMENT

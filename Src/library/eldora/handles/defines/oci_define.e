@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract Define Variable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ feature -- Status report
 	
 feature -- Basic operations
 
-	define_by_pos (stmt: OCI_STATEMENT; errh: OCI_ERROR_HANDLER; pos: INTEGER) is
+	define_by_pos (stmt: OCI_STATEMENT; errh: OCI_ERROR_HANDLER; pos: INTEGER)
 			-- Associate an item in a select-list with the output data buffer
 		require
 			not_defined: not is_defined
@@ -44,7 +44,7 @@ feature -- Basic operations
 		
 feature {NONE} -- Implementation
 
-	handle_type: INTEGER is -- Handle type
+	handle_type: INTEGER -- Handle type
 		do
 			Result := Oci_htype_define
 		end
@@ -53,7 +53,7 @@ feature {NONE} -- Externals
 
 	oci_define_by_pos (stmtp: POINTER; defnpp: POINTER; errhp: POINTER; position: INTEGER; 
 			valuep: POINTER; value_sz: INTEGER; dty: INTEGER_16; indp: POINTER; rlenp: POINTER;
-			rcodep: POINTER; mode: INTEGER): INTEGER is
+			rcodep: POINTER; mode: INTEGER): INTEGER
 		external
 			"C (void *, void **, void *, int, void *, int, short, void *, short *, short *, int):%
 			%short | %"oci.h%""
@@ -61,7 +61,7 @@ feature {NONE} -- Externals
 			"OCIDefineByPos"
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

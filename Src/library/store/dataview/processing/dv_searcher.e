@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that enable to perform a database selection."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,13 +15,13 @@ inherit
 
 feature -- Status report
 
-	user_component_set: BOOLEAN is
+	user_component_set: BOOLEAN
 			-- Is component user set?
 		do
 			Result := db_table_component /= Void
 		end
 
-	can_be_activated: BOOLEAN is
+	can_be_activated: BOOLEAN
 			-- Can the component be activated?
 		do
 			Result := table_code /= 0
@@ -29,7 +29,7 @@ feature -- Status report
 
 feature {DV_COMPONENT} -- Basic operations
 
-	set_table_code (tcode: INTEGER) is
+	set_table_code (tcode: INTEGER)
 			-- Set `tcode' as code of database table from which table rows
 			-- will be selected.
 			-- This can be changed during activation phase.
@@ -39,7 +39,7 @@ feature {DV_COMPONENT} -- Basic operations
 			table_code := tcode
 		end
 
-	set_user_component (db_table_comp: DV_TABLE_COMPONENT) is
+	set_user_component (db_table_comp: DV_TABLE_COMPONENT)
 			-- Set `db_table_comp' to component user.
 		require
 			not_activated: not is_activated
@@ -48,7 +48,7 @@ feature {DV_COMPONENT} -- Basic operations
 			db_table_component := db_table_comp
 		end
 
-	refresh: ARRAYED_LIST [DB_TABLE] is
+	refresh: ARRAYED_LIST [DB_TABLE]
 			-- Return tablerows corresponding to last database reading, i.e.
 			-- table rows may have changed but query is the same.
 		require
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 	db_table_component: DV_TABLE_COMPONENT;
 			-- Component user.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

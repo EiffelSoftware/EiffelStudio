@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A command line switch that accepts a property setting, e.g property=value."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 			create Result.make_with_value (a_value, Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

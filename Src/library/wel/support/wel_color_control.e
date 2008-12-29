@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common type for several control which%
 				% backgound and foreground colors can be%
 				% changed"
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	foreground_color: WEL_COLOR_REF is
+	foreground_color: WEL_COLOR_REF
 			-- foreground color used for the text of the
 			-- control
 		require
@@ -25,7 +25,7 @@ feature -- Access
 			foreground_color_not_void: Result /= Void
 		end
 
-	background_color: WEL_COLOR_REF is
+	background_color: WEL_COLOR_REF
 			-- Background color used for the background of the
 			-- control
 		require
@@ -37,12 +37,12 @@ feature -- Access
 
 feature -- Status report
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does the control exists ?
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

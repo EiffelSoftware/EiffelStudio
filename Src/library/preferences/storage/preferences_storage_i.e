@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Interface to preference storage implementation which provides access to the underlying data store.
 			If you wish to store preference values in a data store implement this class.
@@ -11,7 +11,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make_empty is
+	make_empty
 			-- Create preferences storage.
 			-- Location to store preferences will be generated based on name of application.
 		deferred
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 			has_location: location /= Void
 		end
 
-	make_with_location (a_location: STRING) is
+	make_with_location (a_location: STRING)
 			-- Create preference storage in the at location `a_location'.
 			-- Try to read preference at `a_location' if it exists, if not create new one.
 
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature {PREFERENCES} -- Initialization
 
-	initialize_with_preferences (a_preferences: PREFERENCES) is
+	initialize_with_preferences (a_preferences: PREFERENCES)
 			-- Initialize current with `a_preferences'.
 		require
 			not_initialized: not initialized
@@ -58,7 +58,7 @@ feature {PREFERENCES} -- Initialization
 
 feature {PREFERENCES} -- Query
 
-	has_preference (a_name: STRING): BOOLEAN is
+	has_preference (a_name: STRING): BOOLEAN
 			-- Does the underlying store contain a preference with `a_name'?
 		require
 			initialized: initialized
@@ -67,14 +67,14 @@ feature {PREFERENCES} -- Query
 		deferred
 		end
 
-	get_preference_value (a_name: STRING): STRING is
+	get_preference_value (a_name: STRING): STRING
 			-- Retrieve the preference string value from the underlying store.
 		require
 			initialized: initialized
 		deferred
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does storage exists ?
 		require
 			initialized: initialized
@@ -94,7 +94,7 @@ feature {PREFERENCES} -- Access
 
 feature {PREFERENCES} -- Save
 
-	save_preferences (a_preferences: ARRAYED_LIST [PREFERENCE]; a_save_modified_values_only: BOOLEAN) is
+	save_preferences (a_preferences: ARRAYED_LIST [PREFERENCE]; a_save_modified_values_only: BOOLEAN)
 			-- Save all preferences in `a_preferences' to storage device.
 			-- If `a_save_modified_values_only' then only preferences whose value is different
 			-- from the default one are saved, otherwise all preferences are saved.
@@ -116,7 +116,7 @@ feature {PREFERENCES} -- Save
 			end
 		end
 
-	save_preference (a_preference: PREFERENCE) is
+	save_preference (a_preference: PREFERENCE)
 			-- Save `a_preference' to underlying data store
 		require
 			initialized: initialized
@@ -126,7 +126,7 @@ feature {PREFERENCES} -- Save
 			preference_saved: True
 		end
 
-	remove_preference (a_preference: PREFERENCE) is
+	remove_preference (a_preference: PREFERENCE)
 			-- Remove `preference' from storage device.
 		require
 			initialized: initialized
@@ -139,7 +139,7 @@ invariant
 
 	preferences_not_void_when_initialized: initialized implies preferences /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

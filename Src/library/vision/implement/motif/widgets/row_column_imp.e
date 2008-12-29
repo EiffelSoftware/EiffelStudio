@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision implementaiton of a Motif row_column."
@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_row_column: ROW_COLUMN; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_row_column: ROW_COLUMN; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif row_column.
 		local
 			mc: MEL_COMPOSITE
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_row_layout: BOOLEAN is
+	is_row_layout: BOOLEAN
 			-- Is current row column layout items preferably in row ?
 		do
 			Result := is_horizontal
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_free_size is
+	set_free_size
 			-- Set size of items to be free, in vertical layout mode
 			-- only width is set to be the same as the widest one, in
 			-- horizontal layout mode only height is set to be the same
@@ -71,7 +71,7 @@ feature -- Status setting
 			set_packing_tight
 		end; 
 
-	set_preferred_count (a_number: INTEGER) is
+	set_preferred_count (a_number: INTEGER)
 			-- Set preferably count of row or column, according to
 			-- row layout mode or column layout mode, to `a_number'.
 		do
@@ -79,7 +79,7 @@ feature -- Status setting
 			set_num_columns (a_number)
 		end;
 
-	set_row_layout (flag: BOOLEAN) is
+	set_row_layout (flag: BOOLEAN)
 			-- Set row column to layout items preferably in row if `flag',
 			-- in column otherwise.
 		do
@@ -90,14 +90,14 @@ feature -- Status setting
 			end
 		end; 
 
-	set_same_size is
+	set_same_size
 			-- Set width of items to be the same as the widest one
 			-- and height as the tallest one.
 		do
 			set_packing_column
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

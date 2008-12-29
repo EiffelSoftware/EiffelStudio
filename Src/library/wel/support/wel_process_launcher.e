@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Launch processes and redirect output:
 					  - Use `spawn' to launch a process asynchronously.
@@ -35,7 +35,7 @@ inherit
 
 feature -- Element settings
 
-	set_block_size (a_size: INTEGER) is
+	set_block_size (a_size: INTEGER)
 			-- Set `block_size' woth `a_size'
 		require
 			valid_size: a_size > 0
@@ -45,7 +45,7 @@ feature -- Element settings
 			size_set: block_size = a_size
 		end
 
-	run_hidden is
+	run_hidden
 			-- Should process be run hidden?
 		do
 			hidden := True
@@ -55,7 +55,7 @@ feature -- Element settings
 
 feature -- Basic Operations
 
-	spawn (a_command_line, a_working_directory: STRING_GENERAL) is
+	spawn (a_command_line, a_working_directory: STRING_GENERAL)
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void
@@ -64,7 +64,7 @@ feature -- Basic Operations
 			spawn_with_flags (a_command_line, a_working_directory, detached_process)
 		end
 
-	spawn_with_console (a_command_line, a_working_directory: STRING_GENERAL) is
+	spawn_with_console (a_command_line, a_working_directory: STRING_GENERAL)
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void
@@ -73,7 +73,7 @@ feature -- Basic Operations
 			spawn_with_flags (a_command_line, a_working_directory, create_new_console)
 		end
 
-	launch (a_command_line, a_working_directory: STRING_GENERAL; a_output_handler: ROUTINE [ANY, TUPLE [STRING]]) is
+	launch (a_command_line, a_working_directory: STRING_GENERAL; a_output_handler: ROUTINE [ANY, TUPLE [STRING]])
 			-- Launch process described in `a_command_line' from `a_working_directory'.
 			-- Wait for end of process and send output to `a_output_handler' if not void.
 		require
@@ -114,7 +114,7 @@ feature -- Basic Operations
 			input_pipe.close_output
 		end
 
-	launch_and_refresh (a_command_line, a_working_directory: STRING_GENERAL; a_refresh_handler: ROUTINE [ANY, TUPLE]) is
+	launch_and_refresh (a_command_line, a_working_directory: STRING_GENERAL; a_refresh_handler: ROUTINE [ANY, TUPLE])
 			-- Launch process described in `a_command_line' from `a_working_directory'.
 			-- Calls `a_refresh_handler' regularly while waiting for end of process.
 		require
@@ -151,7 +151,7 @@ feature -- Basic Operations
 			terminate_process
 		end
 
-	terminate_process is
+	terminate_process
 			-- Terminate current process (corresponding to `process_info').
 		local
 			l_boolean: BOOLEAN
@@ -181,7 +181,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	spawn_with_flags (a_command_line, a_working_directory: STRING_GENERAL; a_flags: INTEGER) is
+	spawn_with_flags (a_command_line, a_working_directory: STRING_GENERAL; a_flags: INTEGER)
 			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
 		require
 			non_void_command_line: a_command_line /= Void
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 	output_pipe: WEL_PIPE
 			-- Output redirection pipe
 
-	startup_info: WEL_STARTUP_INFO is
+	startup_info: WEL_STARTUP_INFO
 			-- Process startup information
 		do
 			create input_pipe.make
@@ -232,10 +232,10 @@ feature {NONE} -- Implementation
 	process_info: WEL_PROCESS_INFO
 			-- Process information
 
-	Default_block_size: INTEGER is 255
+	Default_block_size: INTEGER = 255
 			-- Default output block size
 
-	Block_size: INTEGER is
+	Block_size: INTEGER
 			-- Read block size
 		do
 			Result := internal_block_size
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_close_handle (a_handle: POINTER) is
+	cwin_close_handle (a_handle: POINTER)
 			-- SDK CloseHandle
 		external
 			"C [macro <winbase.h>] (HANDLE)"
@@ -260,7 +260,7 @@ feature {NONE} -- Externals
 
 	cwin_create_process (a_name, a_command_line, a_sec_attributes1, a_sec_attributes2: POINTER;
 							a_herit_handles: BOOLEAN; a_flags: INTEGER; an_environment, a_directory,
-							a_startup_info, a_process_info: POINTER): BOOLEAN is
+							a_startup_info, a_process_info: POINTER): BOOLEAN
 			-- SDK CreateProcess
 		external
 			"C [macro <winbase.h>] (LPCTSTR, LPTSTR, LPSECURITY_ATTRIBUTES, LPSECURITY_ATTRIBUTES, BOOL, DWORD, LPVOID, LPCTSTR, LPSTARTUPINFO, LPPROCESS_INFORMATION) :EIF_BOOLEAN"
@@ -268,21 +268,21 @@ feature {NONE} -- Externals
 			"CreateProcess"
 		end
 
-	cwin_wait_for_single_object (handle: POINTER; type: INTEGER): INTEGER is
+	cwin_wait_for_single_object (handle: POINTER; type: INTEGER): INTEGER
 		external
 			"C blocking macro signature (HANDLE, DWORD): EIF_INTEGER use <windows.h>"
 		alias
 			"WaitForSingleObject"
 		end
 
-	cwin_exit_code_process (handle: POINTER; ptr: POINTER): BOOLEAN is
+	cwin_exit_code_process (handle: POINTER; ptr: POINTER): BOOLEAN
 		external
 			"C [macro <winbase.h>] (HANDLE, LPDWORD): EIF_BOOLEAN"
 		alias
 			"GetExitCodeProcess"
 		end
 
-	cwin_wait_object_0: INTEGER is
+	cwin_wait_object_0: INTEGER
 			-- SDK WAIT_OBJECT_0 constant
 		external
 			"C blocking macro use <windows.h>"
@@ -290,7 +290,7 @@ feature {NONE} -- Externals
 			"WAIT_OBJECT_0"
 		end
 
-	cwin_infinite: INTEGER is
+	cwin_infinite: INTEGER
 			-- SDK INFINITE constant
 		external
 			"C [macro <winbase.h>]: EIF_INTEGER"
@@ -298,7 +298,7 @@ feature {NONE} -- Externals
 			"INFINITE"
 		end
 
-	cwin_terminate_process (handle: POINTER; exit_code: INTEGER): BOOLEAN is
+	cwin_terminate_process (handle: POINTER; exit_code: INTEGER): BOOLEAN
 			-- SDK TerminateProcess
 		external
 			"C [macro <winbase.h>] (HANDLE, DWORD): EIF_BOOLEAN"
@@ -306,7 +306,7 @@ feature {NONE} -- Externals
 			"TerminateProcess"
 		end
 
-	cwin_still_active: INTEGER is
+	cwin_still_active: INTEGER
 			-- SDK STILL_ACTIVE constant
 		external
 			"C [macro <windows.h>]: EIF_INTEGER"
@@ -314,7 +314,7 @@ feature {NONE} -- Externals
 			"STILL_ACTIVE"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "COM generic interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make_from_pointer (other_pointer: POINTER) is
+	make_from_pointer (other_pointer: POINTER)
 			-- Create interface from other interface pointer.
 		do
 			initializer := create_wrapper (other_pointer)
@@ -26,13 +26,13 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	create_wrapper (a_pointer: POINTER): POINTER is
+	create_wrapper (a_pointer: POINTER): POINTER
 			-- Create C++ wrapper
 		do
 			Result := ccom_create_wrapper (a_pointer)
 		end
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete C++ wrapper
 		do
 			ccom_delete_wrapper (initializer)
@@ -40,23 +40,23 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External
 
-	ccom_create_wrapper (a_interface_ptr: POINTER): POINTER is
+	ccom_create_wrapper (a_interface_ptr: POINTER): POINTER
 		external
 			"C++ [new E_generic_interface %"E_generic_interface.h%"](IUnknown *)"
 		end
 
-	ccom_delete_wrapper (cpp_obj: POINTER) is
+	ccom_delete_wrapper (cpp_obj: POINTER)
 		external
 			"C++ [delete E_generic_interface %"E_generic_interface.h%"]()"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 		external
 			"C++ [E_generic_interface %"E_generic_interface.h%"](): EIF_POINTER"
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

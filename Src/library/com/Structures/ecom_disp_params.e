@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of DISPPARAMS structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -25,13 +25,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	rgvarg: ECOM_VARIANT is
+	rgvarg: ECOM_VARIANT
 			-- No description available.
 		do
 			Result := ccom_dispparams_rgvarg (item)
 		end
 
-	rgdispid_named_args: INTEGER_REF is
+	rgdispid_named_args: INTEGER_REF
 			-- No description available.
 		do
 			Result := ccom_dispparams_rgdispid_named_args (item)
@@ -39,13 +39,13 @@ feature -- Access
 			non_void_rgdispid_named_args: Result /= Void
 		end
 
-	c_args: INTEGER is
+	c_args: INTEGER
 			-- No description available.
 		do
 			Result := ccom_dispparams_c_args (item)
 		end
 
-	c_named_args: INTEGER is
+	c_named_args: INTEGER
 			-- No description available.
 		do
 			Result := ccom_dispparams_c_named_args (item)
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of DISPPARAMS structure
 		do
 			Result := c_size_of_disp_params
@@ -61,7 +61,7 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_rgvarg (a_rgvarg: ECOM_VARIANT) is
+	set_rgvarg (a_rgvarg: ECOM_VARIANT)
 			-- Set `rgvarg' with `a_rgvarg'.
 		require
 			non_void_a_rgvarg: a_rgvarg /= Void
@@ -70,7 +70,7 @@ feature -- Basic Operations
 			ccom_dispparams_set_rgvarg (item, a_rgvarg.item)
 		end
 
-	set_rgdispid_named_args (a_rgdispid_named_args: INTEGER_REF) is
+	set_rgdispid_named_args (a_rgdispid_named_args: INTEGER_REF)
 			-- Set `rgdispid_named_args' with `a_rgdispid_named_args'.
 		require
 			non_void_a_rgdispid_named_args: a_rgdispid_named_args /= Void
@@ -78,13 +78,13 @@ feature -- Basic Operations
 			ccom_dispparams_set_rgdispid_named_args (item, a_rgdispid_named_args)
 		end
 
-	set_c_args (a_c_args: INTEGER) is
+	set_c_args (a_c_args: INTEGER)
 			-- Set `c_args' with `a_c_args'.
 		do
 			ccom_dispparams_set_c_args (item, a_c_args)
 		end
 
-	set_c_named_args (a_c_named_args: INTEGER) is
+	set_c_named_args (a_c_named_args: INTEGER)
 			-- Set `c_named_args' with `a_c_named_args'.
 		do
 			ccom_dispparams_set_c_named_args (item, a_c_named_args)
@@ -92,7 +92,7 @@ feature -- Basic Operations
 		
 feature {NONE} -- Externals
 
-	c_size_of_disp_params: INTEGER is
+	c_size_of_disp_params: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_DISPPARAMS.h%"]"
@@ -100,55 +100,55 @@ feature {NONE} -- Externals
 			"sizeof(DISPPARAMS)"
 		end
 
-	ccom_dispparams_rgvarg (a_pointer: POINTER): ECOM_VARIANT is
+	ccom_dispparams_rgvarg (a_pointer: POINTER): ECOM_VARIANT
 			-- No description available.
 		external
 			"C++ [macro %"ecom_DISPPARAMS.h%"](DISPPARAMS *):EIF_REFERENCE"
 		end
 
-	ccom_dispparams_set_rgvarg (a_pointer: POINTER; arg2: POINTER) is
+	ccom_dispparams_set_rgvarg (a_pointer: POINTER; arg2: POINTER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_DISPPARAMS.h%"](DISPPARAMS *, VARIANT *)"
 		end
 
-	ccom_dispparams_rgdispid_named_args (a_pointer: POINTER): INTEGER_REF is
+	ccom_dispparams_rgdispid_named_args (a_pointer: POINTER): INTEGER_REF
 			-- No description available.
 		external
 			"C++ [macro %"ecom_DISPPARAMS.h%"](DISPPARAMS *):EIF_REFERENCE"
 		end
 
-	ccom_dispparams_set_rgdispid_named_args (a_pointer: POINTER; arg2: INTEGER_REF) is
+	ccom_dispparams_set_rgdispid_named_args (a_pointer: POINTER; arg2: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_DISPPARAMS.h%"](DISPPARAMS *, EIF_OBJECT)"
 		end
 
-	ccom_dispparams_c_args (a_pointer: POINTER): INTEGER is
+	ccom_dispparams_c_args (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_DISPPARAMS.h%"](DISPPARAMS *):EIF_INTEGER"
 		end
 
-	ccom_dispparams_set_c_args (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_dispparams_set_c_args (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_DISPPARAMS.h%"](DISPPARAMS *, UINT)"
 		end
 
-	ccom_dispparams_c_named_args (a_pointer: POINTER): INTEGER is
+	ccom_dispparams_c_named_args (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_DISPPARAMS.h%"](DISPPARAMS *):EIF_INTEGER"
 		end
 
-	ccom_dispparams_set_c_named_args (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_dispparams_set_c_named_args (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_DISPPARAMS.h%"](DISPPARAMS *, UINT)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

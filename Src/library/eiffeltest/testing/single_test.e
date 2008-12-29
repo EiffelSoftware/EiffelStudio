@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Testable components consisting out of a single test"
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Measurement
 	run_count: INTEGER
 			-- Number of runs
 
-	total_run_count: INTEGER is
+	total_run_count: INTEGER
 			-- Number of runs
 			-- (Equal to `run_count' for single tests.)
 		do
@@ -35,46 +35,46 @@ feature -- Measurement
 
 feature -- Status report
 	
-	Is_test_container: BOOLEAN is False
+	Is_test_container: BOOLEAN = False
 			-- is test a container? (Answer: no)
 	 
-	Has_random_generator: BOOLEAN is False
+	Has_random_generator: BOOLEAN = False
 			-- Does current object have access to a random number generator?
 			-- (Answer: no)
 	 
-	is_rescue_enabled: BOOLEAN is
+	is_rescue_enabled: BOOLEAN
 			-- Is exception trapping enabled?
 		do
 			Result := not rescue_disabled_flag
 		end
 	
-	is_prefix_set: BOOLEAN is
+	is_prefix_set: BOOLEAN
 			-- Is prefix set?
 		do
 			Result := prefix_string /= Void
 		end
 
-	is_reason_set: BOOLEAN is
+	is_reason_set: BOOLEAN
 			-- Is reason set?
 		do
 			Result := reason /= Void
 		end
 
-	has_current_result: BOOLEAN is
+	has_current_result: BOOLEAN
 			-- Has a current result been recorded?
 		do
 			Result := test_results /= Void and then
 				test_results.has_current_result
 		end
 		
-	is_ready: BOOLEAN is
+	is_ready: BOOLEAN
 			-- Is test ready to be executed?
 		do
 			Result := (not Top_level_allowed implies is_container_set) and 
 				is_number_set and is_name_set
 		end
 
-	has_passed (n: INTEGER): BOOLEAN is
+	has_passed (n: INTEGER): BOOLEAN
 			-- Has run `n' of test passed?
 		local
 			old_run: INTEGER
@@ -85,7 +85,7 @@ feature -- Status report
 			test_results.select_run (old_run)
 		end
 	 
-	is_exception (n: INTEGER): BOOLEAN is
+	is_exception (n: INTEGER): BOOLEAN
 			-- Did run `n' of test throw an exception?
 		local
 			old_run: INTEGER
@@ -98,7 +98,7 @@ feature -- Status report
 			end
 		end
 	 
-	has_execution_time (n: INTEGER): BOOLEAN is
+	has_execution_time (n: INTEGER): BOOLEAN
 			-- Has run `n' of test a recorded execution time?
 		local
 			old_run: INTEGER
@@ -109,7 +109,7 @@ feature -- Status report
 			test_results.select_run (old_run)
 		end
 	 
-	has_any_execution_time: BOOLEAN is
+	has_any_execution_time: BOOLEAN
 			-- Does any test have a recorded execution time?
 		local
 			old_run: INTEGER
@@ -132,7 +132,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_prefix (s: STRING) is
+	set_prefix (s: STRING)
 			-- Set prefix to `s'.
 		require
 			not_set: not is_prefix_set
@@ -143,7 +143,7 @@ feature -- Status setting
 			prefix_set: prefix_string = s
 		end
 
-	set_reason (s: STRING) is
+	set_reason (s: STRING)
 			-- Set reason to `s'.
 		require
 			not_set: not is_reason_set
@@ -154,7 +154,7 @@ feature -- Status setting
 			reason_set: reason = s
 		end
 
-	reset_messages is
+	reset_messages
 			-- Reset optional messages.
 		do
 			prefix_string := Void
@@ -164,7 +164,7 @@ feature -- Status setting
 			no_reason: not is_reason_set
 		end
 		
-	enable_rescue is
+	enable_rescue
 			-- Enable exception trapping.
 		do
 			rescue_disabled_flag := False
@@ -172,7 +172,7 @@ feature -- Status setting
 			enabled: is_rescue_enabled
 		end
 	 
-	disable_rescue is
+	disable_rescue
 			-- Disable exception trapping.
 		do
 			rescue_disabled_flag := True
@@ -180,7 +180,7 @@ feature -- Status setting
 			disabled: not is_rescue_enabled
 		end
 	 
-	clear_results is
+	clear_results
 			-- Clear results.
 		do
 			test_results.clear_results
@@ -188,7 +188,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Execute test.
 		do
 			run_count := run_count + 1
@@ -212,14 +212,14 @@ feature -- Basic operations
 					(run_count = test_results.run_count)
 		end
 
-	do_test is
+	do_test
 			-- Do test action.
 		deferred
 		end
 	
 feature {NONE} -- Basic operations
 
-	assert (a: BOOLEAN; n: STRING) is
+	assert (a: BOOLEAN; n: STRING)
 			-- Check if assertion `a' with name `n' holds.
 		require
 			produces_result: produces_result
@@ -232,7 +232,7 @@ feature {NONE} -- Basic operations
 			reason_reset: not is_reason_set
 		end
 
-	assert_equal (a, b: ANY) is
+	assert_equal (a, b: ANY)
 			-- Assert that `a' and `b' are equal.
 		require
 			produces_result: produces_result
@@ -244,7 +244,7 @@ feature {NONE} -- Basic operations
 			reason_reset: not is_reason_set
 		end
 
-	assert_not_equal (a, b: ANY) is
+	assert_not_equal (a, b: ANY)
 			-- Assert that `a' and `b' are not equal.
 		require
 			produces_result: produces_result
@@ -256,7 +256,7 @@ feature {NONE} -- Basic operations
 			reason_reset: not is_reason_set
 		end
 
-	assert_equal_double (a, b, delta: DOUBLE) is
+	assert_equal_double (a, b, delta: DOUBLE)
 			-- Assert that floating point number `a' and `b' are equal.
 		require
 			produces_result: produces_result
@@ -274,7 +274,7 @@ feature {NONE} -- Basic operations
 			reason_reset: not is_reason_set
 		end
 
-	assert_void (a: ANY; n: STRING) is
+	assert_void (a: ANY; n: STRING)
 			-- Assert that `a' is Void and supply name `n'.
 		require
 			produces_result: produces_result
@@ -286,7 +286,7 @@ feature {NONE} -- Basic operations
 			reason_reset: not is_reason_set
 		end
 
-	assert_not_void (a: ANY; n: STRING) is
+	assert_not_void (a: ANY; n: STRING)
 			-- Assert that `a' is not Void and supply name `n'.
 		require
 			produces_result: produces_result
@@ -298,7 +298,7 @@ feature {NONE} -- Basic operations
 			reason_reset: not is_reason_set
 		end
 
-	assert_same (a, b: ANY) is
+	assert_same (a, b: ANY)
 			-- Assert that `a' and `b' are the same objects.
 		require
 			produces_result: produces_result
@@ -310,7 +310,7 @@ feature {NONE} -- Basic operations
 			reason_reset: not is_reason_set
 		end
 
-	assert_not_same (a, b: ANY) is
+	assert_not_same (a, b: ANY)
 			-- Assert that `a' and `b' are not the same objects.
 		require
 			produces_result: produces_result
@@ -322,7 +322,7 @@ feature {NONE} -- Basic operations
 			reason_reset: not is_reason_set
 		end
 
-	assert_exception is
+	assert_exception
 			-- Assert that an exception is thrown.
 			-- ATTENTION: Has to be called *before* the exception occurs.
 		require
@@ -333,7 +333,7 @@ feature {NONE} -- Basic operations
 			exception_flag_set: exception_expected
 		end
 		
-	pass is
+	pass
 			-- Add a pass.
 		require
 			produces_result: produces_result
@@ -344,7 +344,7 @@ feature {NONE} -- Basic operations
 			reason_reset: not is_reason_set
 		end
 
-	fail (r: STRING) is
+	fail (r: STRING)
 			-- Add a failure with reason `r'.
 		require
 			produces_result: produces_result
@@ -358,19 +358,19 @@ feature {NONE} -- Basic operations
 
 feature -- Output
 
-	put_summary (f: LOG_FACILITY) is
+	put_summary (f: LOG_FACILITY)
 			-- Output test summary to `f'.
 		do
 			f.put_summary (Current)
 		end
 	 
-	 put_failure_information (f: LOG_FACILITY; n: INTEGER) is
+	 put_failure_information (f: LOG_FACILITY; n: INTEGER)
 	 		-- Output failure information for run `n' to `f'.
 		do
 			f.put_failure_information (Current, n)
 		end
 	 
-	 put_timing_information (f: LOG_FACILITY; n: INTEGER) is
+	 put_timing_information (f: LOG_FACILITY; n: INTEGER)
 	 		-- Output timing information for run `n' to `f'.
 		do
 			f.put_timing_information (Current, n)
@@ -378,12 +378,12 @@ feature -- Output
 	 
 feature {NONE} -- Inapplicable
 
-	seed: INTEGER is
+	seed: INTEGER
 			-- Random seed
 		do
 		end
 	 
-	set_seed (s: INTEGER) is
+	set_seed (s: INTEGER)
 			-- Set seed to `s'.
 		do
 		end
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 	prefix_string: STRING
 			-- Optional prefix
 	
-	check_assertion (a: BOOLEAN; m: STRING) is
+	check_assertion (a: BOOLEAN; m: STRING)
 			-- Check if assertion `a' holds. If not, register failure with
 			-- failure message `m' or alternate message `reason', if set.
 		require
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 			no_reason: not is_reason_set
 		end
 
-	run_with_rescue is
+	run_with_rescue
 			-- Run test with exception trapping.
 		require
 			trapping_enabled: is_rescue_enabled
@@ -472,7 +472,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	run_without_rescue is
+	run_without_rescue
 			-- Run test without exception trapping.
 		do
 			set_up
@@ -480,7 +480,7 @@ feature {NONE} -- Implementation
 	 		tear_down
 		end
 
-	compare_exception_info (src, dest: EXCEPTION_INFO): BOOLEAN is
+	compare_exception_info (src, dest: EXCEPTION_INFO): BOOLEAN
 			-- Does `src' denote the same exception as `dest'?
 		require
 			no_void_source: src /= Void
@@ -533,7 +533,7 @@ invariant
 	no_empty_reason: reason /= Void implies not reason.is_empty
 	run_count_equality: run_count = total_run_count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Margin control for use with TEXT_PANEL."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE}-- Initialization
 
-	make_with_panel (a_text_panel: like text_panel) is
+	make_with_panel (a_text_panel: like text_panel)
 			-- Associate an text panel/editor
 		require
 			text_panel_not_void: a_text_panel /= Void
@@ -55,7 +55,7 @@ feature {NONE}-- Initialization
 			set_text_panel (a_text_panel)
 		end
 
-	set_text_panel (a_text_panel: like text_panel) is
+	set_text_panel (a_text_panel: like text_panel)
 			-- Associate an text panel/editor
 		require
 			text_panel_not_void: a_text_panel /= Void
@@ -69,7 +69,7 @@ feature {NONE}-- Initialization
 			margin_area.focus_in_actions.extend (agent text_panel.set_focus)
 		end
 
-	user_initialization is
+	user_initialization
 		do
 			margin_area.expose_actions.extend (agent on_repaint)
 			update_width_cell
@@ -77,7 +77,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixels calculated based on which tokens should be displayed
 		do
 			if text_panel.line_numbers_enabled and then line_numbers_visible then
@@ -85,7 +85,7 @@ feature -- Access
 			end
 		end
 
-	line_numbers_visible: BOOLEAN is
+	line_numbers_visible: BOOLEAN
 			-- Are line numbers hidden?
 		do
 		    Result := text_panel.line_numbers_visible
@@ -93,14 +93,14 @@ feature -- Access
 
 feature -- Status setting
 
-	set_margin_width (a_width: INTEGER) is
+	set_margin_width (a_width: INTEGER)
 			-- If `a_width' is greater than `width', assign `a_width' to `width'
 			-- update display if necessary.
 		do
 			margin_viewport.set_minimum_width (a_width)
 		end
 
-	synch_with_panel is
+	synch_with_panel
 			--
 		do
  			margin_viewport.set_y_offset (text_panel.editor_viewport.y_offset)
@@ -117,13 +117,13 @@ feature -- Graphical Interface
 
 feature -- Basic operations
 
-	show is
+	show
 			-- Show `Current'.
 		do
 			margin_viewport.show
 		end
 
-	destroy is
+	destroy
 			-- Destroy
 		do
 			margin_viewport.destroy
@@ -133,27 +133,27 @@ feature -- Basic operations
 			end
 		end
 
-	refresh is
+	refresh
 			-- Refresh
 		do
 			set_margin_width (width)
 			margin_area.redraw
 		end
 
-	refresh_now is
+	refresh_now
 			-- Update display without waiting for next idle
 		do
 			refresh
 			margin_area.flush
 		end
 
-	setup_margin is
+	setup_margin
 			-- Update `Current' as the first page of the new content has been loaded.
 		do
 			refresh_now
 		end
 
-	on_font_changed is
+	on_font_changed
 			-- Font was changed so must update some internal values
 		do
 				-- Width cell
@@ -166,22 +166,22 @@ feature {NONE} -- Implementation
 	in_resize: BOOLEAN
 			-- Are we in a call to on_resize that was not triggered by the function itself?
 
-	first_line_displayed: INTEGER is
+	first_line_displayed: INTEGER
 			-- First line currently displayed
 		do
 			Result := text_panel.first_line_displayed
 		end
 
-	default_width: INTEGER is 5
+	default_width: INTEGER = 5
 			-- Default character width of margin for when number of lines is less than 100,000
 
-	default_line_number_area_width_cell: CELL [INTEGER] is
+	default_line_number_area_width_cell: CELL [INTEGER]
 			-- Value of line number area width for files with less than 100,000 lines).
 		once
 			create Result.put (0)
 		end
 
-	update_width_cell is
+	update_width_cell
 			-- Update `default_line_number_area_width_cell'.
 		local
 			l_max_token: EDITOR_TOKEN_LINE_NUMBER
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			default_line_number_area_width_cell.put (l_max_token.width)
 		end
 
-	internal_line_number_area_width: INTEGER is
+	internal_line_number_area_width: INTEGER
 			-- Width of line number display area of Current
 		local
 			l_max_token: EDITOR_TOKEN_LINE_NUMBER
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	viewable_height: INTEGER is
+	viewable_height: INTEGER
 			-- Height of `Current' available to view displayed items. Does
 			-- not include width of any displayed scroll bars and/or header if shown.
 		do
@@ -223,18 +223,18 @@ feature {NONE} -- Implementation
 
 	flip_count: INTEGER
 
-	buffered_drawable_width: INTEGER is 500
+	buffered_drawable_width: INTEGER = 500
 
-	buffered_drawable_height: INTEGER is
+	buffered_drawable_height: INTEGER
 			-- Default size of `drawable' used for scrolling purposes.
 		once
 			Result := text_panel.buffered_drawable_height
 		end
 
-	separator_width: INTEGER is 1
+	separator_width: INTEGER = 1
 			-- Width of vertical separator
 
-	separator_color: EV_COLOR is
+	separator_color: EV_COLOR
 			-- Color of separator between margin and editor
 		do
 			Result := editor_preferences.margin_separator_color
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 
 feature {TEXT_PANEL} -- Display functions
 
-	on_repaint (x, y, a_width, a_height: INTEGER) is
+	on_repaint (x, y, a_width, a_height: INTEGER)
 			-- Repaint the part of the panel between in the rectangle between
 			-- (`x', `y') and (`x' + `a_width', `y' + `a_height').
 			--| Actually, rectangle defined by (0, y) -> (margin_area.width, y + height) is redrawn.
@@ -254,7 +254,7 @@ feature {TEXT_PANEL} -- Display functions
 			on_paint := False
 		end
 
-	update_area (top: INTEGER; bottom: INTEGER; buffered: BOOLEAN) is
+	update_area (top: INTEGER; bottom: INTEGER; buffered: BOOLEAN)
  			-- Update buffered pixmap between lines number `top' and `bottom'.
  		require
  			in_synch_with_panel: margin_viewport.y_offset = text_panel.editor_viewport.y_offset
@@ -306,7 +306,7 @@ feature {TEXT_PANEL} -- Display functions
  			in_scroll := False
  		end
 
-	update_lines (first, last: INTEGER; buffered: BOOLEAN) is
+	update_lines (first, last: INTEGER; buffered: BOOLEAN)
 			-- Update the lines from `first' to `last'.  If `buffered' then draw to `buffered_line'
  			-- before drawing to screen, otherwise draw straight to screen.
 		require
@@ -345,7 +345,7 @@ feature {TEXT_PANEL} -- Display functions
 			end
 		end
 
-	draw_line_to_screen (x, y: INTEGER; a_line: EDITOR_LINE; xline: INTEGER) is
+	draw_line_to_screen (x, y: INTEGER; a_line: EDITOR_LINE; xline: INTEGER)
 			-- Update display by drawing `line' onto the `editor_drawing_area' directly at co-ordinates x,y.
 		local
  			curr_token	: EDITOR_TOKEN
@@ -399,7 +399,7 @@ feature {TEXT_PANEL} -- Display functions
 			margin_area.set_background_color (editor_preferences.margin_background_color)
 		end
 
- 	draw_flash (x, y, a_width, height: INTEGER; buffered: BOOLEAN) is
+ 	draw_flash (x, y, a_width, height: INTEGER; buffered: BOOLEAN)
  			--
  		do
  			if buffered then
@@ -416,12 +416,12 @@ feature {TEXT_PANEL} -- Display functions
 
 feature {NONE} -- Implementation
 
-	text_displayed_type: TEXT is
+	text_displayed_type: TEXT
 			-- Type of `text_panel.text_displayed'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

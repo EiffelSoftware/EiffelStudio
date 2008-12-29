@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that wrap an Array of EventTypeSpec structs."
 	author: "Eiffel.Mac Team"
 	date: "$Date$"
@@ -17,12 +17,12 @@ create
 	make_shared
 
 feature {NONE} -- Implementation
-	new_shared_struct_wrapper_from_pointer (a_pointer: POINTER): EVENT_TYPE_SPEC_STRUCT is
+	new_shared_struct_wrapper_from_pointer (a_pointer: POINTER): EVENT_TYPE_SPEC_STRUCT
 		do
 			create Result.make_shared ( a_pointer )
 		end
 		
-	item_size : INTEGER is
+	item_size : INTEGER
 			-- Size of one item
 		external
 			"C [macro <Carbon/Carbon.h>]: EIF_INTEGER"

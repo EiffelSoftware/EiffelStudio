@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_WINDOWS timer"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -25,20 +25,20 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			make_top ("")
 		end
  
 feature -- Status report
 
- 	is_call_back_set: BOOLEAN is
+ 	is_call_back_set: BOOLEAN
 			-- Is a call back already set ?
 		do
 			Result := call_back_set
 		end
 
-	is_regular_call_back: BOOLEAN is
+	is_regular_call_back: BOOLEAN
 			-- Is the call back set a regular one ?
 		do
 			Result := call_back_regular
@@ -46,7 +46,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_next_call_back (a_delay: INTEGER; a_command: COMMAND; an_argument: ANY) is
+	set_next_call_back (a_delay: INTEGER; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when `a_delay'
 			-- in milliseconds has expired.
 		do
@@ -57,7 +57,7 @@ feature -- Status setting
 			set_timer (timer_id, a_delay)
 		end 
 
-	set_no_call_back is
+	set_no_call_back
 			-- Remove any call-back already set.
 		do
 			call_back_set := False
@@ -65,7 +65,7 @@ feature -- Status setting
 			kill_timer (timer_id)
 		end 
 
-	set_regular_call_back (a_time: INTEGER; a_command: COMMAND; an_argument: ANY) is
+	set_regular_call_back (a_time: INTEGER; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute all the `a_time'
 			-- milliseconds.
 		do
@@ -76,7 +76,7 @@ feature -- Status setting
 			set_timer (timer_id, a_time)
 		end
 
-	destroy is
+	destroy
 		do
 			if is_call_back_set then
 				kill_timer (timer_id)
@@ -86,7 +86,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	on_timer (a_timer_id: INTEGER) is
+	on_timer (a_timer_id: INTEGER)
 		do
 			check
 				valid_id: a_timer_id = timer_id
@@ -105,10 +105,10 @@ feature {NONE} -- Implementation
 
 	call_back_regular: BOOLEAN
 
-	timer_id: INTEGER is 1;
+	timer_id: INTEGER = 1;
 			-- Timer identifier
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

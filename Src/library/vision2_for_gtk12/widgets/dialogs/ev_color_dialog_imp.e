@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "EiffelVision color selection dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a directory selection dialog with `par' as
 			-- parent.
 		local
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			)
 		end
 
-	initialize is
+	initialize
 			-- Connect action sequences to button signals.
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	color: EV_COLOR is
+	color: EV_COLOR
 			-- Currently selected color.
 		local
 			a_colorsel: POINTER
@@ -90,7 +90,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_color (a_color: EV_COLOR) is
+	set_color (a_color: EV_COLOR)
 			-- Set `color' to `a_color'.
 		local
 			a_color_array: ARRAY [DOUBLE]
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Externals
 
-	double_array_i_th (double_array: POINTER; index: INTEGER): REAL is
+	double_array_i_th (double_array: POINTER; index: INTEGER): REAL
 			-- EIF_DOUBLE double_array_i_th (double *double_array, int index) {
 			--	return double_array [index];
 			-- }
@@ -123,35 +123,35 @@ feature {NONE} -- Externals
 			"C | %"ev_c_util.h%""
 		end
 
-	gtk_color_selection_dialog_struct_colorsel (a_c_struct: POINTER): POINTER is
+	gtk_color_selection_dialog_struct_colorsel (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
 		alias
 			"colorsel"
 		end
 
-	gtk_color_selection_dialog_struct_ok_button (a_c_struct: POINTER): POINTER is
+	gtk_color_selection_dialog_struct_ok_button (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
 		alias
 			"ok_button"
 		end
 
-	gtk_color_selection_dialog_struct_cancel_button (a_c_struct: POINTER): POINTER is
+	gtk_color_selection_dialog_struct_cancel_button (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
 		alias
 			"cancel_button"
 		end
 
-	gtk_color_selection_dialog_struct_help_button (a_c_struct: POINTER): POINTER is
+	gtk_color_selection_dialog_struct_help_button (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
 		alias
 			"help_button"
 		end
 
-	gtk_color_selection_struct_values (a_c_struct: POINTER): POINTER is
+	gtk_color_selection_struct_values (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkColorSelection): EIF_POINTER"
 		alias
@@ -162,7 +162,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_COLOR_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow access to the operating %N%
 	%system clipboard."
 	legal: "See notice at end of class."
@@ -26,14 +26,14 @@ create
 
 feature {NONE}-- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			set_c_object (gtk_text_new (NULL, NULL))
 		end
 
-	initialize is
+	initialize
 			-- initialize `Current'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_container_add (App_implementation.default_window_imp.container_widget, clipboard_widget)
@@ -43,7 +43,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- `Result' is current clipboard content.
 		local
 			a_success: INTEGER
@@ -64,7 +64,7 @@ feature -- Access
 			{EV_GTK_EXTERNALS}.g_free (edit_chars)
 		end
 
-	has_text: BOOLEAN is
+	has_text: BOOLEAN
 			-- Does clipboard contain text?
 		do
 			Result := not text.is_empty
@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Assign `a_text' to clipboard.
 		local
 			clip_text: STRING
@@ -92,14 +92,14 @@ feature -- Status Setting
 
 feature {NONE} -- Externals
 
-	gtk_text_new (a_hadj: POINTER; a_vadj: POINTER): POINTER is
+	gtk_text_new (a_hadj: POINTER; a_vadj: POINTER): POINTER
                         -- GtkWidget* gtk_text_new             (GtkAdjustment *hadj,
                         --                                   GtkAdjustment *vadj);
 		external
 			"C (GtkAdjustment*, GtkAdjustment*): GtkWidget* | <gtk/gtk.h>"
 		end
 
-	gtk_text_insert (a_text: POINTER; a_font: POINTER; a_fore: POINTER; a_back: POINTER; a_chars: POINTER; a_length: INTEGER) is
+	gtk_text_insert (a_text: POINTER; a_font: POINTER; a_fore: POINTER; a_back: POINTER; a_chars: POINTER; a_length: INTEGER)
 			-- void       gtk_text_insert          (GtkText       *text,
 			-- 				     GdkFont       *font,
 			-- 				     GdkColor      *fore,
@@ -115,7 +115,7 @@ feature {EV_ANY_I}
 	interface: EV_CLIPBOARD;
 		-- Interface of `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

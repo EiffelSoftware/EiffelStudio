@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manager that help docking manager manage all zones."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
@@ -28,7 +28,7 @@ feature {NONE}  -- Initlization
 			set: internal_docking_manager = a_docking_manager
 		end
 
-	init_place_holder is
+	init_place_holder
 			-- Init `place_holder_content'
 		local
 			l_shared: SD_SHARED
@@ -44,7 +44,7 @@ feature -- Zones managements
 	zones: ACTIVE_LIST [SD_ZONE]
 			-- All SD_ZONE in current system.
 
-	maximized_zones: ARRAYED_LIST [SD_ZONE] is
+	maximized_zones: ARRAYED_LIST [SD_ZONE]
 			-- Maximized zone, maybe void if not exists.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
@@ -65,7 +65,7 @@ feature -- Zones managements
 			not_void: Result /= Void
 		end
 
-	maximized_zone_in_main_window: SD_ZONE is
+	maximized_zone_in_main_window: SD_ZONE
 			-- Maximized zone in main window.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
@@ -87,7 +87,7 @@ feature -- Zones managements
 			end
 		end
 
-	upper_zones: ARRAYED_LIST [SD_UPPER_ZONE] is
+	upper_zones: ARRAYED_LIST [SD_UPPER_ZONE]
 			-- ALl upper zones existing.
 		local
 			l_zones: ARRAYED_LIST [SD_ZONE]
@@ -110,7 +110,7 @@ feature -- Zones managements
 			not_void: Result /= Void
 		end
 
-	zone_by_content (a_content: SD_CONTENT): SD_ZONE is
+	zone_by_content (a_content: SD_CONTENT): SD_ZONE
 			-- If main container has zone with a_content?
 		do
 			from
@@ -127,13 +127,13 @@ feature -- Zones managements
 			end
 		end
 
-	has_zone (a_zone: SD_ZONE): BOOLEAN is
+	has_zone (a_zone: SD_ZONE): BOOLEAN
 			-- If the main container has zone?
 		do
 			Result := zones.has (a_zone)
 		end
 
-	has_zone_by_content (a_content: SD_CONTENT): BOOLEAN is
+	has_zone_by_content (a_content: SD_CONTENT): BOOLEAN
 			-- If the main container has zone with a_content?
 		do
 			from
@@ -146,7 +146,7 @@ feature -- Zones managements
 			end
 		end
 
-	zone_parent_void (a_zone: SD_ZONE): BOOLEAN is
+	zone_parent_void (a_zone: SD_ZONE): BOOLEAN
 			-- Contract support
 		require
 			a_zone_not_void: a_zone /= Void
@@ -165,7 +165,7 @@ feature -- Zones managements
 			end
 		end
 
-	add_zone (a_zone: SD_ZONE) is
+	add_zone (a_zone: SD_ZONE)
 			-- Add a zone to show.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -176,7 +176,7 @@ feature -- Zones managements
 			extended: zones.has (a_zone)
 		end
 
-	prune_zone (a_zone: SD_ZONE) is
+	prune_zone (a_zone: SD_ZONE)
 			-- Prune a zone which was managed by docking manager.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -198,7 +198,7 @@ feature -- Zones managements
 			a_zone_pruned: not zones.has (a_zone)
 		end
 
-	prune_zone_by_content (a_content: SD_CONTENT) is
+	prune_zone_by_content (a_content: SD_CONTENT)
 			-- Prune a zone which contain a_content.
 		require
 			has_content: has_content (a_content)
@@ -220,7 +220,7 @@ feature -- Zones managements
 			end
 		end
 
-	set_zone_size (a_zone: SD_ZONE; a_width, a_height: INTEGER) is
+	set_zone_size (a_zone: SD_ZONE; a_width, a_height: INTEGER)
 			-- Set a zone size.
 		require
 			has_zone: has_zone (a_zone)
@@ -244,7 +244,7 @@ feature -- Zones managements
 			set: a_zone.width = a_width and a_zone.height =  a_height
 		end
 
-	disable_all_zones_focus_color (a_except: SD_ZONE) is
+	disable_all_zones_focus_color (a_except: SD_ZONE)
 			-- Disable all zones focus color except `a_except'.
 		do
 			from
@@ -269,7 +269,7 @@ feature -- Query
 
 feature -- Contract support
 
-	has_content (a_content: SD_CONTENT): BOOLEAN is
+	has_content (a_content: SD_CONTENT): BOOLEAN
 			-- If `internal_docking_manager' has `a_content'?
 		do
 			Result := internal_docking_manager.has_content (a_content)
@@ -286,7 +286,7 @@ invariant
 	not_void: internal_docking_manager /= Void
 	not_void: place_holder_content /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

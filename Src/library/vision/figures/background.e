@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Figures which have a background color"
 	legal: "See notice at end of class.";
@@ -17,7 +17,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_background_color (a_color: COLOR) is
+	set_background_color (a_color: COLOR)
 			-- Set `background_color' to `a_color'.
 		do
 			background_color := a_color;
@@ -25,7 +25,7 @@ feature -- Element change
 			background_color = a_color
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Simple manager widget for interactive drawing."
@@ -30,7 +30,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif drawing area widget.
 		require
 			name_exists: a_name /= Void;
@@ -54,19 +54,19 @@ feature -- Initialization
 
 feature -- Access
 
-	expose_command: MEL_COMMAND_EXEC is
+	expose_command: MEL_COMMAND_EXEC
 			-- Command set for the expose callback
 		do
 			Result := motif_command (XmNexposeCallback)
 		end;
 
-	input_command: MEL_COMMAND_EXEC is
+	input_command: MEL_COMMAND_EXEC
 			-- Command set for the input callback
 		do
 			Result := motif_command (XmNinputCallback)
 		end;
 
-	resize_command: MEL_COMMAND_EXEC is
+	resize_command: MEL_COMMAND_EXEC
 			-- Command set for the resize callback
 		do
 			Result := motif_command (XmNresizeCallback)
@@ -74,7 +74,7 @@ feature -- Access
 
 feature -- Status report
 
-	margin_height: INTEGER is
+	margin_height: INTEGER
 			-- Space between the top and bottom side and any child
 		require
 			exists: not is_destroyed
@@ -84,7 +84,7 @@ feature -- Status report
 			vlaid_result: Result >= 0
 		end;
 
-	margin_width: INTEGER is
+	margin_width: INTEGER
 			-- Space between the left and right side and any child
 		require
 			exists: not is_destroyed
@@ -94,7 +94,7 @@ feature -- Status report
 			valid_result: Result >= 0
 		end;
 
-	is_resize_none: BOOLEAN is
+	is_resize_none: BOOLEAN
 			-- Will the widget remain at fixed size?
 		require
 			exists: not is_destroyed
@@ -102,7 +102,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNresizePolicy) = XmRESIZE_NONE
 		end;
 
-	is_resize_grow: BOOLEAN is
+	is_resize_grow: BOOLEAN
 			-- Can the widget only expand?
 		require
 			exists: not is_destroyed
@@ -110,7 +110,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNresizePolicy) = XmRESIZE_GROW
 		end;
 
-	is_resize_any: BOOLEAN is
+	is_resize_any: BOOLEAN
 			-- Can the widget shrink or expand as needed?
 		require
 			exists: not is_destroyed
@@ -120,7 +120,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_margin_height (a_height: INTEGER) is
+	set_margin_height (a_height: INTEGER)
 			-- Set `margin_height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -131,7 +131,7 @@ feature -- Status setting
 			margin_height_set: margin_height = a_height
 		end;
 
-	set_margin_width (a_width: INTEGER) is
+	set_margin_width (a_width: INTEGER)
 			-- Set `margin_width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -142,7 +142,7 @@ feature -- Status setting
 			margin_width_set: margin_width = a_width
 		end;
 
-	set_resize_none is
+	set_resize_none
 			-- The widget remains at fixed size.
 		require
 			exists: not is_destroyed
@@ -152,7 +152,7 @@ feature -- Status setting
 			resize_none_set: is_resize_none
 		end;
 
-	set_resize_grow is
+	set_resize_grow
 			-- Allow the widget to expand only.
 		require
 			exists: not is_destroyed
@@ -162,7 +162,7 @@ feature -- Status setting
 			resize_grow_set: is_resize_grow
 		end;
 
-	set_resize_any is
+	set_resize_any
 			-- Allow the widget to shrink or expand as needed.
 		require
 			exists: not is_destroyed
@@ -174,7 +174,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_expose_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_expose_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the widget 
 			-- receives an exposure event.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -187,7 +187,7 @@ feature -- Element change
 			command_set: command_set (expose_command, a_command, an_argument)
 		end;
 
-	set_input_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_input_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the widget 
 			-- receives a keyboard or mouse event.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -200,7 +200,7 @@ feature -- Element change
 			command_set: command_set (input_command, a_command, an_argument)
 		end;
 
-	set_resize_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_resize_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the widget 
 			-- receives a resize event.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -215,7 +215,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_expose_callback is
+	remove_expose_callback
 			-- Remove the command for the expose callback.
 		do
 			remove_callback (XmNexposeCallback)
@@ -223,7 +223,7 @@ feature -- Removal
 			removed: expose_command = Void
 		end;
 
-	remove_input_callback is
+	remove_input_callback
 			-- Remove the command for the input callback.
 		do
 			remove_callback (XmNinputCallback)
@@ -231,7 +231,7 @@ feature -- Removal
 			removed: input_command = Void
 		end;
 
-	remove_resize_callback is
+	remove_resize_callback
 			-- Remove the command for the resize callback.
 		do
 			remove_callback (XmNresizeCallback)
@@ -242,7 +242,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr: POINTER;
-			 resource_name: POINTER): MEL_DRAWING_AREA_CALLBACK_STRUCT is
+			 resource_name: POINTER): MEL_DRAWING_AREA_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -251,14 +251,14 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	xm_create_drawing_area (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_drawing_area (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/DrawingA.h>"
 		alias
 			"XmCreateDrawingArea"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

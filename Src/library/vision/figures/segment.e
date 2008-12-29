@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of segments (implementation for X)"
 	legal: "See notice at end of class.";
@@ -27,7 +27,7 @@ create
 	
 feature -- Initialization
 
-	make is
+	make
 			-- Create current segment.
 		do
 			init_fig (Void);
@@ -39,7 +39,7 @@ feature -- Initialization
 
 feature -- Access
 
-	contains (p: COORD_XY_FIG): BOOLEAN is
+	contains (p: COORD_XY_FIG): BOOLEAN
 			-- Is `p' on segment?
 		require else
 			point_exists: p /= Void
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Element change
 
-	set (o1, o2: like p1) is
+	set (o1, o2: like p1)
 			-- Set the two end points of the line.
 		require else
 			o1_exists: o1 /= Void;
@@ -77,7 +77,7 @@ feature -- Element change
 			p2 = o2
 		end;
 
-	set_p1 (p: like p1) is
+	set_p1 (p: like p1)
 			-- Set the first point.
 		require else
 			p_exists: p /= Void
@@ -88,7 +88,7 @@ feature -- Element change
 			p1 = p
 		end;
 
-	set_p2 (p: like p2) is
+	set_p2 (p: like p2)
 			-- Set the second point.
 		require else
 			p_exists: p /= Void
@@ -101,7 +101,7 @@ feature -- Element change
 
 feature -- Output
 
-	draw is
+	draw
 			-- Draw the segment.
 		do
 			if drawing.is_drawable then
@@ -113,13 +113,13 @@ feature -- Output
 
 feature -- Status report
 
-	is_null: BOOLEAN is
+	is_null: BOOLEAN
 			-- Is the segment null ?
 		do
 			Result := p1.is_superimposable (p2)
 		end;
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the line superimposable to `other' ?
 		require else
 			other_exists: other /= Void
@@ -130,7 +130,7 @@ feature -- Status report
 				p2.is_superimposable (other.p1))
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

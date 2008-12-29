@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Strategy that executes tests in a suite linearly from first to last"
 	legal: "See notice at end of class."
@@ -13,17 +13,17 @@ class LINEAR_ACCESS_STRATEGY inherit
 
 feature -- Status report
 
-	Is_context_needed: BOOLEAN is False
+	Is_context_needed: BOOLEAN = False
 			-- Does strategy need context? (Answer: no)
 
-	Is_context_ok: BOOLEAN is True
+	Is_context_ok: BOOLEAN = True
 			-- Is context value ok? (Answer: yes)
 
-	Has_random_generator: BOOLEAN is False
+	Has_random_generator: BOOLEAN = False
 			-- Does current object have access to a random number generator?
 			-- (Answer: no)
 	 
-	is_last: BOOLEAN is
+	is_last: BOOLEAN
 			-- Is current test the last test?
 		do
 			Result := (suite.index = suite.test_count)
@@ -31,14 +31,14 @@ feature -- Status report
 		
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Select next test.
 		do
 			suite.select_test (suite.index + 1)
 			is_reset := False
 		end
 
-	start is
+	start
 			-- Select first test.
 		do
 			reset
@@ -47,17 +47,17 @@ feature -- Cursor movement
 
 feature {NONE} -- Inapplicable
 
-	seed: INTEGER is
+	seed: INTEGER
 			-- Random seed
 		do
 		end
 	 
-	set_seed (s: INTEGER) is
+	set_seed (s: INTEGER)
 			-- Set seed to `s'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

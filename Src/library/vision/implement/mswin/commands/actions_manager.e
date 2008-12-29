@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manager of actions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create the table
 		do
 			create  widget_actions_table.make (1)
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	add (widget: WIDGET_IMP; c: COMMAND; arg: ANY) is
+	add (widget: WIDGET_IMP; c: COMMAND; arg: ANY)
 		local
 			action: ACTION_WINDOWS
 			wa: WIDGET_ACTIONS
@@ -44,7 +44,7 @@ feature -- Element change
 
 feature -- Removal
 
-	delete (widget: WIDGET_IMP) is
+	delete (widget: WIDGET_IMP)
 			-- Delete all actions for `widget'
 		do
 			if widget_actions_table.has (widget) then
@@ -52,7 +52,7 @@ feature -- Removal
 			end
 		end
 
-	remove (widget: WIDGET_IMP; c: COMMAND; arg: ANY) is
+	remove (widget: WIDGET_IMP; c: COMMAND; arg: ANY)
 		local
 			e: WIDGET_ACTIONS
 		do
@@ -64,7 +64,7 @@ feature -- Removal
 
 feature -- Basic operations
 
-	execute (w: WIDGET_IMP; context_data: CONTEXT_DATA) is
+	execute (w: WIDGET_IMP; context_data: CONTEXT_DATA)
 			-- Execute the actions on widget with `context_data'
 		local
 			wa: WIDGET_ACTIONS
@@ -77,7 +77,7 @@ feature -- Basic operations
 
 feature -- Implementation
 
-	widget_actions (widget: WIDGET_IMP): WIDGET_ACTIONS is
+	widget_actions (widget: WIDGET_IMP): WIDGET_ACTIONS
 			-- Actions for `widget'
 		do
 			Result := widget_actions_table.item (widget)
@@ -86,7 +86,7 @@ feature -- Implementation
 	widget_actions_table: HASH_TABLE [WIDGET_ACTIONS, WIDGET_IMP];
 			-- Table of Widget actions for a Widget
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

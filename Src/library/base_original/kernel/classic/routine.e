@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Objects representing delayed calls to a routine,
@@ -22,7 +22,7 @@ inherit
 
 feature -- Initialization
 
-	adapt (other: like Current) is
+	adapt (other: like Current)
 			-- Initialize from `other'.
 			-- Useful in descendants.
 		require
@@ -47,7 +47,7 @@ feature -- Access
 
 	frozen operands: OPEN_ARGS
 
-	target: ANY is
+	target: ANY
 			-- Target of call.
 		do
 			if is_target_closed then
@@ -57,7 +57,7 @@ feature -- Access
 			end
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value.
 		do
 			Result := rout_disp.hash_code.bit_xor (
@@ -65,7 +65,7 @@ feature -- Access
 					feature_id.hash_code)
 		end
 
-	precondition (args: like operands): BOOLEAN is
+	precondition (args: like operands): BOOLEAN
 			-- Do `args' satisfy routine's precondition
 			-- in current state?
 		do
@@ -73,7 +73,7 @@ feature -- Access
 			--| FIXME compiler support needed!
 		end
 
-	postcondition (args: like operands): BOOLEAN is
+	postcondition (args: like operands): BOOLEAN
 			-- Does current state satisfy routine's
 			-- postcondition for `args'?
 		do
@@ -81,7 +81,7 @@ feature -- Access
 			--| FIXME compiler support needed!
 		end
 
-	empty_operands: OPEN_ARGS is
+	empty_operands: OPEN_ARGS
 			-- Empty tuple matching open operands
 		do
 			create Result
@@ -91,10 +91,10 @@ feature -- Access
 
 feature -- Status report
 
-	callable: BOOLEAN is True
+	callable: BOOLEAN = True
 			-- Can routine be called on current object?
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is associated routine the same as the one
 			-- associated with `other'.
 		do
@@ -109,7 +109,7 @@ feature -- Status report
 				and then (calc_rout_addr = other.calc_rout_addr)
 		end
 
-	valid_operands (args: OPEN_ARGS): BOOLEAN is
+	valid_operands (args: OPEN_ARGS): BOOLEAN
 			-- Are `args' valid operands for this routine?
 		local
 			i, arg_type_code: INTEGER
@@ -147,7 +147,7 @@ feature -- Status report
 			end
 		end
 
-	valid_target (args: TUPLE): BOOLEAN is
+	valid_target (args: TUPLE): BOOLEAN
 			-- Is the first element of tuple `args' a valid target
 		do
 			if args /= Void and then args.count > 0 then
@@ -166,7 +166,7 @@ feature -- Measurement
 
 feature -- Settings
 
-	frozen set_operands (args: OPEN_ARGS) is
+	frozen set_operands (args: OPEN_ARGS)
 			-- Use `args' as operands for next call.
 		require
 			valid_operands: valid_operands (args)
@@ -179,7 +179,7 @@ feature -- Settings
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Use same routine as `other'.
 		do
 			open_map := other.open_map
@@ -200,14 +200,14 @@ feature -- Duplication
 
 feature -- Basic operations
 
-	call (args: OPEN_ARGS) is
+	call (args: OPEN_ARGS)
 			-- Call routine with `args'.
 		require
 			valid_operands: valid_operands (args)
 		deferred
 		end
 
-	apply is
+	apply
 			-- Call routine with `operands' as last set.
 		require
 			valid_operands: valid_operands (operands)
@@ -216,7 +216,7 @@ feature -- Basic operations
 
 feature -- Obsolete
 
-	adapt_from (other: like Current) is
+	adapt_from (other: like Current)
 			-- Adapt from `other'. Useful in descendants.
 		obsolete
 			"Please use `adapt' instead (it's also a creation procedure)"
@@ -232,7 +232,7 @@ feature {ROUTINE} -- Implementation
 	frozen closed_operands: TUPLE
 			-- All closed arguments provided at creation time
 
-	closed_count: INTEGER is
+	closed_count: INTEGER
 			-- The number of closed operands (including the target if it is closed)
 		do
 			if closed_operands /= Void then
@@ -267,7 +267,7 @@ feature {ROUTINE} -- Implementation
 	frozen set_rout_disp (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER
 						  a_class_id, a_feature_id: INTEGER; a_open_map: SPECIAL [INTEGER]
 						  a_is_precompiled, a_is_basic, a_is_target_closed, a_is_inline_agent: BOOLEAN
-						  a_closed_operands: TUPLE; a_open_count: INTEGER) is
+						  a_closed_operands: TUPLE; a_open_count: INTEGER)
 			-- Initialize object.
 		require
 			target_valid: a_is_target_closed implies valid_target (a_closed_operands)
@@ -278,7 +278,7 @@ feature {ROUTINE} -- Implementation
 		end
 
 	frozen set_rout_disp_final (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER
-						  		a_closed_operands: TUPLE; a_is_target_closed: BOOLEAN; a_open_count: INTEGER) is
+						  		a_closed_operands: TUPLE; a_is_target_closed: BOOLEAN; a_open_count: INTEGER)
 			-- Initialize object.
 		do
 			rout_disp := a_rout_disp
@@ -292,7 +292,7 @@ feature {ROUTINE} -- Implementation
 	frozen set_rout_disp_int (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER
 						  	  a_class_id, a_feature_id: INTEGER; a_open_map: SPECIAL [INTEGER]
 	 						  a_is_precompiled, a_is_basic, a_is_target_closed, a_is_inline_agent: BOOLEAN
-							  a_closed_operands: TUPLE; a_open_count: INTEGER) is
+							  a_closed_operands: TUPLE; a_open_count: INTEGER)
 			-- Initialize object.
 		require
 			a_class_id_valid: a_class_id > -1
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 	frozen open_types: ARRAY [INTEGER]
 			-- Types of open operands
 
-	open_operand_type (i: INTEGER): INTEGER is
+	open_operand_type (i: INTEGER): INTEGER
 			-- Type of `i'th open operand.
 		require
 			positive: i >= 1
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	eif_gen_typecode_str (obj: POINTER): STRING is
+	eif_gen_typecode_str (obj: POINTER): STRING
 			-- Code name for generic parameter `pos' in `obj'.
 		external
 			"C signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_gen_conf.h%""
@@ -360,21 +360,21 @@ feature {NONE} -- Externals
 
 feature -- Obsolete
 
-	arguments: OPEN_ARGS is
+	arguments: OPEN_ARGS
 		obsolete
 			"use operands"
 		do
 			Result := operands
 		end
 
-	set_arguments (args: OPEN_ARGS) is
+	set_arguments (args: OPEN_ARGS)
 		obsolete
 			"use set_operands"
 		do
 			set_operands (args)
 		end
 
-	valid_arguments (args: OPEN_ARGS): BOOLEAN is
+	valid_arguments (args: OPEN_ARGS): BOOLEAN
 		obsolete
 			"use valid_operands"
 		do
@@ -384,7 +384,7 @@ feature -- Obsolete
 invariant
 	callable: callable
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

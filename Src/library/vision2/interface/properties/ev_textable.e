@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstraction for objects that have a text label."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING_GENERAL) is
+	make_with_text (a_text: STRING_GENERAL)
 			-- Create `Current' and assign `a_text' to `text'
 		require
 			a_text_not_void: a_text /= Void
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text displayed in textable.
 		require
 			not_destroyed: not is_destroyed
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			not_destroyed: not is_destroyed
@@ -59,7 +59,7 @@ feature -- Element change
 			text_cloned: text.is_equal (a_text) and then text /= a_text
 		end
 
-	remove_text is
+	remove_text
 			-- Make `text' `is_empty'.
 		require
 			not_destroyed: not is_destroyed
@@ -71,7 +71,7 @@ feature -- Element change
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_ANY} and text.is_empty
@@ -85,7 +85,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 invariant
 	text_not_void: is_usable implies text /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

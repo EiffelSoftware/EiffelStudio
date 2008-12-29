@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Watches an IO_MEDIUM and performs arbitrary actions when%
 		%its state changes.%N%
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create action sequences.
 		do
 			create read_actions
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			create exception_actions
 		end
 
-	make_with_medium (a_medium: IO_MEDIUM) is
+	make_with_medium (a_medium: IO_MEDIUM)
 			-- Create with `a_medium'.
 		require
 			medium_void: medium = Void
@@ -47,7 +47,7 @@ feature -- Access
 	medium: IO_MEDIUM
 			-- Medium watched for state changes.
 
-	set_medium (a_medium: IO_MEDIUM) is
+	set_medium (a_medium: IO_MEDIUM)
 			-- Assign `a_medium' to `medium'.
 			-- `remove_medium' must be called to release resources allocated
 			-- by this feature.
@@ -68,7 +68,7 @@ feature -- Access
 			medium_assigned: a_medium = medium
 		end
 
-	remove_medium is
+	remove_medium
 			-- Make `medium' `Void'.
 		require
 			medium_not_void: medium /= Void
@@ -102,7 +102,7 @@ feature -- Event handling
 
 feature {NONE} -- Implementation
 
-	on_event (condition: INTEGER) is
+	on_event (condition: INTEGER)
 			-- Call action sequence corresponding to `condition'.
 		do
 			if condition & G_io_in /= 0 then
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	G_io_in: INTEGER is
+	G_io_in: INTEGER
 			-- There is data to be read.
 		external
 			"C macro use <glib.h>"
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 			"G_IO_IN"
 		end
 
-	G_io_out: INTEGER is
+	G_io_out: INTEGER
 			-- Data can be written.
 		external
 			"C macro use <glib.h>"
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			"G_IO_OUT"
 		end
 
-	G_io_pri: INTEGER is
+	G_io_pri: INTEGER
 			-- There is urgent data to read.
 		external
 			"C macro use <glib.h>"
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			"G_IO_PRI"
 		end
 
-	G_io_err: INTEGER is
+	G_io_err: INTEGER
 			-- Error condition.
 		external
 			"C macro use <glib.h>"
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			"G_IO_ERR"
 		end
 
-	G_io_hup: INTEGER is
+	G_io_hup: INTEGER
 			-- Hung up (the connection has been broken, usually for pipes and sockets).
 		external
 			"C macro use <glib.h>"
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			"G_IO_HUP"
 		end
 
-	G_io_nval: INTEGER is
+	G_io_nval: INTEGER
 			-- Invalid request. The file descriptor is not open.
 		external
 			"C macro use <glib.h>"
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			"G_IO_NVAL"
 		end
 
-	add_watch_callback (io_watcher: IO_WATCHER; handle: INTEGER; condition: INTEGER; connection_id: TYPED_POINTER [NATURAL_32]) is
+	add_watch_callback (io_watcher: IO_WATCHER; handle: INTEGER; condition: INTEGER; connection_id: TYPED_POINTER [NATURAL_32])
 			-- Set up `on_event' callback for `io_watcher' when an event occurs
 			-- on medium referenced by `handle'.
 		external
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			"C signature (EIF_OBJECT, EIF_INTEGER, GIOCondition, gint*) use %"ev_c_util.h%""
 		end
 
-	initialize_c_callback (on_event_address: POINTER) is
+	initialize_c_callback (on_event_address: POINTER)
 			-- Pass `on_event_address' to C side to enable callbacks.
 		external
 			"C inline use %"ev_c_util.h%""
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 	callback_handle: NATURAL_32
 			-- GLib callback handle.
 
-	g_source_remove (a_tag: NATURAL_32): BOOLEAN is
+	g_source_remove (a_tag: NATURAL_32): BOOLEAN
 			-- gboolean g_source_remove (guint tag);
 		external
 			"C (guint): gboolean | <gtk/gtk.h>"
@@ -204,7 +204,7 @@ invariant
 	exception_actions_not_void: exception_actions /= Void
 	medium_has_callback_handle: not (medium /= Void xor callback_handle > 0)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

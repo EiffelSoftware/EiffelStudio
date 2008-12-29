@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Top level window. Contains a single widget.
@@ -58,7 +58,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_title (a_title: STRING_GENERAL) is
+	make_with_title (a_title: STRING_GENERAL)
 			-- Initialize with `a_title'.
 		require
 			a_title_not_void: a_title /= Void
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			set_title (a_title)
 		end
 
-	initialize is
+	initialize
 			-- Initialize
 		do
 			Precursor {EV_CELL}
@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	upper_bar: EV_VERTICAL_BOX is
+	upper_bar: EV_VERTICAL_BOX
 			-- Room at top of window. (Example use: toolbars.)
 			-- Positioned below menu bar.
 		require
@@ -90,7 +90,7 @@ feature -- Access
 			bridge_ok: Result = implementation.upper_bar
 		end
 
-	lower_bar: EV_VERTICAL_BOX is
+	lower_bar: EV_VERTICAL_BOX
 			-- Room at bottom of window. (Example use: statusbar.)
 		require
 			not_destroyed: not is_destroyed
@@ -100,7 +100,7 @@ feature -- Access
 			bridge_ok: Result = implementation.lower_bar
 		end
 
-	maximum_width: INTEGER is
+	maximum_width: INTEGER
 			-- Upper bound on `width' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -111,7 +111,7 @@ feature -- Access
 				(Result = implementation.minimum_width)
 		end
 
-	maximum_height: INTEGER is
+	maximum_height: INTEGER
 			-- Upper bound on `height' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -122,7 +122,7 @@ feature -- Access
 				(Result = implementation.minimum_height)
 		end
 
-	title: STRING_32 is
+	title: STRING_32
 			-- A textual name used by the window manager.
 		require
 			not_destroyed: not is_destroyed
@@ -134,7 +134,7 @@ feature -- Access
 			cloned: Result /= implementation.title
 		end
 
-	menu_bar: EV_MENU_BAR is
+	menu_bar: EV_MENU_BAR
 			-- Horizontal bar at top of client area that contains menu's.
 		require
 			not_destroyed: not is_destroyed
@@ -144,10 +144,10 @@ feature -- Access
 			bridge_ok: Result = implementation.menu_bar
 		end
 
-	maximum_dimension: INTEGER is 32000
+	maximum_dimension: INTEGER = 32000
 			-- Maximum width/height that a window can be set to.
 
-	accelerators: EV_ACCELERATOR_LIST is
+	accelerators: EV_ACCELERATOR_LIST
 			-- Key combination shortcuts associated with this window.
 		require
 			not_destroyed: not is_destroyed
@@ -160,13 +160,13 @@ feature -- Access
 
 feature -- Status report
 
-	has (v: EV_WIDGET): BOOLEAN is
+	has (v: EV_WIDGET): BOOLEAN
 			-- Does structure include `v'?
 		do
 			Result := implementation.has (v)
 		end
 
-	user_can_resize: BOOLEAN is
+	user_can_resize: BOOLEAN
 			-- Can the user resize?
 		require
 			not_destroyed: not is_destroyed
@@ -176,7 +176,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.user_can_resize
 		end
 
-	is_border_enabled: BOOLEAN is
+	is_border_enabled: BOOLEAN
 			-- Is a border displayed around `Current'?
 		require
 			not_destroyed: not is_destroyed
@@ -186,7 +186,7 @@ feature -- Status report
 
 feature -- Command
 
-	destroy_and_exit_if_last is
+	destroy_and_exit_if_last
 			-- Destroy current window and destroy instance of EV_APPLICATION if
 			-- no more top level windows remain in the system.
 		do
@@ -198,7 +198,7 @@ feature -- Command
 
 feature -- Status setting
 
-	enable_user_resize is
+	enable_user_resize
 			-- Allow user to resize.
 		require
 			not_destroyed: not is_destroyed
@@ -208,7 +208,7 @@ feature -- Status setting
 			user_can_resize: user_can_resize
 		end
 
-	disable_user_resize is
+	disable_user_resize
 			-- Prevent user from resizing.
 		require
 			not_destroyed: not is_destroyed
@@ -218,7 +218,7 @@ feature -- Status setting
 			not_user_can_resize: not user_can_resize
 		end
 
-	enable_border is
+	enable_border
 			-- Ensure a border is displayed around `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -228,7 +228,7 @@ feature -- Status setting
 			is_border_enabled: is_border_enabled
 		end
 
-	disable_border is
+	disable_border
 			-- Ensure no border is displayed around `Current'.
 			-- Has no immediate effect if `user_can_resize', although
 			-- is reflected at next call to `disable_user_resize'.
@@ -240,7 +240,7 @@ feature -- Status setting
 			border_disabled: not user_can_resize implies not is_border_enabled
 		end
 
-	set_maximum_width (a_maximum_width: INTEGER) is
+	set_maximum_width (a_maximum_width: INTEGER)
 			-- Assign `a_maximum_width' to `maximum_width' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -255,7 +255,7 @@ feature -- Status setting
 			maximum_width_assigned: maximum_width = a_maximum_width
 		end
 
-	set_maximum_height (a_maximum_height: INTEGER) is
+	set_maximum_height (a_maximum_height: INTEGER)
 			-- Assign `a_maximum_height' to `maximum_height' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -270,7 +270,7 @@ feature -- Status setting
 			maximum_height_assigned: maximum_height = a_maximum_height
 		end
 
-	set_maximum_size (a_maximum_width, a_maximum_height: INTEGER) is
+	set_maximum_size (a_maximum_width, a_maximum_height: INTEGER)
 			-- Assign `a_maximum_width' to `maximum_width'
 			-- and `a_maximum_height' to `maximum_height' in pixels.
 		require
@@ -290,7 +290,7 @@ feature -- Status setting
 			maximum_height_assigned: maximum_height = a_maximum_height
 		end
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Assign `a_title' to `title'.
 		require
 			not_destroyed: not is_destroyed
@@ -302,7 +302,7 @@ feature -- Status setting
 			cloned: title /= a_title
 		end
 
-	remove_title is
+	remove_title
 			-- Make `title' empty.
 		require
 			not_destroyed: not is_destroyed
@@ -312,7 +312,7 @@ feature -- Status setting
 			title_empty: title.is_empty
 		end
 
-	set_menu_bar (a_menu_bar: EV_MENU_BAR) is
+	set_menu_bar (a_menu_bar: EV_MENU_BAR)
 			-- Assign `a_menu_bar' to `menu_bar'.
 		require
 			not_destroyed: not is_destroyed
@@ -325,7 +325,7 @@ feature -- Status setting
 			assigned: menu_bar = a_menu_bar
 		end
 
-	remove_menu_bar is
+	remove_menu_bar
 			-- Make `menu_bar' `Void'.
 		require
 			not_destroyed: not is_destroyed
@@ -335,7 +335,7 @@ feature -- Status setting
 			menu_bar_void: menu_bar = Void
 		end
 
-	lock_update is
+	lock_update
 			-- Lock drawing updates for this window on certain platforms until
 			-- `unlock_update' is called.
 			--
@@ -352,7 +352,7 @@ feature -- Status setting
 				(create {EV_ENVIRONMENT}).application.locked_window = Current
 		end
 
-	unlock_update is
+	unlock_update
 			-- Unlock updates for this widget on certain platforms.
 		require
 			not_destroyed: not is_destroyed
@@ -365,7 +365,7 @@ feature -- Status setting
 				((create {EV_ENVIRONMENT}).application.locked_window = Void)
 		end
 
-	show_relative_to_window (a_parent: EV_WINDOW) is
+	show_relative_to_window (a_parent: EV_WINDOW)
 			-- Show `Current' with respect to `a_parent'.
 		require
 			not_void: a_parent /= Void
@@ -383,7 +383,7 @@ feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_CELL} and Precursor {EV_POSITIONABLE} and
@@ -392,13 +392,13 @@ feature {NONE} -- Contract support
 				menu_bar = Void and maximum_width = maximum_dimension and maximum_height = maximum_dimension
 		end
 
-	user_can_resize_default_state: BOOLEAN is
+	user_can_resize_default_state: BOOLEAN
 			-- Is the default state of `Current' `user_can_resize'?
 		do
 			Result := True
 		end
 
-	is_border_enabled_default_state: BOOLEAN is
+	is_border_enabled_default_state: BOOLEAN
 			-- Is the default state of `Current' `is_border_enabled'?
 		do
 			Result := True
@@ -406,7 +406,7 @@ feature {NONE} -- Contract support
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_WINDOW_IMP} implementation.make (Current)
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 
 feature {EV_IDENTIFIABLE} -- Implementation
 
-	identifier_path_separator: CHARACTER is
+	identifier_path_separator: CHARACTER
 			-- Character used to separate path to children.
 		once
 			Result := ':'
@@ -428,7 +428,7 @@ invariant
 	upper_bar_not_void: is_usable implies upper_bar /= Void
 	lower_bar_not_void: is_usable implies lower_bar /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Command to popdown a shell"
 	legal: "See notice at end of class.";
@@ -16,7 +16,7 @@ inherit
 
 feature -- Basic operations
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Popdown a shell.
 		local
 			shell: POPUP_SHELL;
@@ -31,7 +31,7 @@ feature -- Basic operations
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

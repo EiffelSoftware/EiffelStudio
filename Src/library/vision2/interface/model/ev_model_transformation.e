@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					An EV_TRANSFORMATION is basicaly a matrix
 					discribing a projection from one coordinate system
@@ -65,13 +65,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make_zero is
+	make_zero
 			-- Create a transformation matrix with all elements 0.0
 		do
 			create area.make (9)
 		end
 
-	make_id is
+	make_id
 			-- Create an identity transformation matrix
 		do
 			create area.make (9)
@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (row, column: INTEGER): DOUBLE is
+	item (row, column: INTEGER): DOUBLE
 			-- Entry at position (`row', `column')
 		require
 			valid_row: (1 <= row) and (row <= height)
@@ -91,15 +91,15 @@ feature -- Access
 			Result := area.item ((column-1) + (row - 1) * 3)
 		end
 
-	height: INTEGER is 3
+	height: INTEGER = 3
 			-- Number of rows in the matrix.
 
-	width: INTEGER is 3
+	width: INTEGER = 3
 			-- Number of columns in the matrix.
 
 feature -- Element change
 
-	put (v: like item; row, column: INTEGER) is
+	put (v: like item; row, column: INTEGER)
 			-- Put `v' to position (`row', `column')
 		require
 			valid_row: (1 <= row) and (row <= height)
@@ -110,7 +110,7 @@ feature -- Element change
 
 feature -- Basic operation
 
-	rotate (an_angle: like item; a_x: like item; a_y: like item) is
+	rotate (an_angle: like item; a_x: like item; a_y: like item)
 			-- Set values of matrix describing a
 			-- rotation around the point (`a_x', `a_y') for
 			-- angle (clockwise).
@@ -129,7 +129,7 @@ feature -- Basic operation
 			l_area.put (0.0, 6); l_area.put (0.0, 7);  l_area.put (1.0, 8)
 		end
 
-	translate (a_x: like item; a_y: like item) is
+	translate (a_x: like item; a_y: like item)
 			-- Build a matrix describing a translation for
 			-- `a_x' `a_y' pixel.
 		local
@@ -141,7 +141,7 @@ feature -- Basic operation
 			l_area.put (0.0, 6); l_area.put (0.0, 7); l_area.put (1.0, 8)
 		end
 
-	scale (a_scale_x: like item; a_scale_y: like item; a_x: like item; a_y: like item; an_angle: like item) is
+	scale (a_scale_x: like item; a_scale_y: like item; a_x: like item; a_y: like item; an_angle: like item)
 			-- Build a matrix describing a rotation around (`a_x', `a_y') for -`an_angle', a scale
 			-- of `a_scale_x' in x direction and a scale of `a_scale_y' in
 			-- y direction and a rotation of `angle' around (`a_x', `a_y')
@@ -181,7 +181,7 @@ feature -- Basic operation
 			end
 		end
 
-	scale_abs (a_scale_x: like item; a_scale_y: like item; a_x: like item; a_y: like item) is
+	scale_abs (a_scale_x: like item; a_scale_y: like item; a_x: like item; a_y: like item)
 			-- Build a matrix describing a translation to -`ax' -`ay', a scale
 			-- of `a_scale_x' in x direction and a scale of `a_scale_y' in
 			-- y direction and a translation to `ax' `ay'.
@@ -194,7 +194,7 @@ feature -- Basic operation
 			l_area.put (0.0, 6);		l_area.put (0.0, 7);		l_area.put (1.0, 8)
 		end
 
-	infix "*" (other: like Current): like Current is
+	infix "*" (other: like Current): like Current
 			-- Calculate result := Current * other.
 		require
 			other_not_void: other /= Void
@@ -220,7 +220,7 @@ feature -- Basic operation
 			result_not_void: Result /= Void
 		end
 
-	project (point: EV_COORDINATE) is
+	project (point: EV_COORDINATE)
 			-- Project `point' using `Current' transformation.
 		do
 			point.set_precise ((area.item (0) * point.x_precise + area.item (1) * point.y_precise + area.item (2)),
@@ -241,7 +241,7 @@ invariant
 
 	area_not_void: area /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision application, Carbon implementation."
 	legal: "See notice at end of class."
@@ -79,7 +79,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Set up the callback marshalL
 		do
 			base_make (an_interface)
@@ -101,12 +101,12 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
-	initial_widget_list_size : INTEGER is 200
-	initial_custom_control_list_size : INTEGER is 5
+	initial_widget_list_size : INTEGER = 200
+	initial_custom_control_list_size : INTEGER = 5
 
 feature {NONE} -- Event loop
 
-	 launch is
+	 launch
 			-- Display the first window, set up the post_launch_actions,
 			-- and start the event loop.
 		local
@@ -134,7 +134,7 @@ feature {NONE} -- Event loop
 --			end
 		end
 
-	enable_foreground_operation is
+	enable_foreground_operation
 			-- Transform the application into a foreground process with manubar and Dock icon
 		local
 			psn: PROCESS_SERIAL_NUMBER_STRUCT
@@ -149,22 +149,22 @@ feature {NONE} -- Event loop
 
 feature -- Access
 
-	ctrl_pressed: BOOLEAN is
+	ctrl_pressed: BOOLEAN
 			-- Is ctrl key currently pressed?
 		do
 		end
 
-	alt_pressed: BOOLEAN is
+	alt_pressed: BOOLEAN
 			-- Is alt key currently pressed?
 		do
 		end
 
-	shift_pressed: BOOLEAN is
+	shift_pressed: BOOLEAN
 			-- Is shift key currently pressed?
 		do
 		end
 
-	caps_lock_on: BOOLEAN is
+	caps_lock_on: BOOLEAN
 			-- Is the Caps or Shift Lock key currently on?
 		do
 		end
@@ -174,14 +174,14 @@ feature -- Access
 
 feature -- Basic operation
 
-	process_events_until_stopped is
+	process_events_until_stopped
 			-- Process all events until one event is received
 			-- by `widget'.
 		do
 			run_application_event_loop_external
 		end
 
-	process_events is
+	process_events
 			-- Process all pending events and redraws.
 		local
 			ret: INTEGER
@@ -189,38 +189,38 @@ feature -- Basic operation
 			ret := run_current_event_loop_external (100)
 		end
 
-	stop_processing is
+	stop_processing
 			-- Exit `process_events_until_stopped'.
 		do
 			quit_application_event_loop_external
 		end
 
-	process_underlying_toolkit_event_queue is
+	process_underlying_toolkit_event_queue
 			-- ??
 		do
 		end
 
-	process_graphical_events is
+	process_graphical_events
 			-- Process all pending graphical events and redraws.
 		do
 		end
 
-	motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER] is
+	motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
 			-- Tuple optimizations
 		once
 		end
 
-	handle_dnd (a_event: POINTER) is
+	handle_dnd (a_event: POINTER)
 			-- Handle drag and drop event.
 		do
 		end
 
-	sleep (msec: INTEGER) is
+	sleep (msec: INTEGER)
 			-- Wait for `msec' milliseconds and return.
 		do
 		end
 
-	destroy is
+	destroy
 			-- End the application.
 		do
 			quit_application_event_loop_external
@@ -234,7 +234,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_tooltip_delay (a_delay: INTEGER) is
+	set_tooltip_delay (a_delay: INTEGER)
 			-- Set `tooltip_delay' to `a_delay'.
 		do
 			tooltip_delay := a_delay
@@ -243,12 +243,12 @@ feature -- Status setting
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 
-	on_pick (a_pebble: ANY) is
+	on_pick (a_pebble: ANY)
 			-- Called by EV_PICK_AND_DROPABLE_IMP.start_transport
 		do
 		end
 
-	on_drop (a_pebble: ANY) is
+	on_drop (a_pebble: ANY)
 			-- Called by EV_PICK_AND_DROPABLE_IMP.end_transport
 		do
 		end
@@ -261,7 +261,7 @@ feature {EV_ANY} -- Implementation
 
 feature -- Implementation
 
-	wait_for_input (msec: INTEGER) is
+	wait_for_input (msec: INTEGER)
 			-- Wait for at most `msec' milliseconds for an event.
 		do
 		end
@@ -275,31 +275,31 @@ feature -- Implementation
 			--Result := internal_pick_and_drop_source
 		end
 
-	enable_is_in_transport is
+	enable_is_in_transport
 			-- Set `is_in_transport' to True.
 		require
 			not_in_transport: not is_in_transport
 		do
 		end
 
-	disable_is_in_transport is
+	disable_is_in_transport
 			-- Set `is_in_transport' to False.
 		require
 			in_transport: is_in_transport
 		do
 		end
 
-	keyboard_modifier_mask: INTEGER is
+	keyboard_modifier_mask: INTEGER
 			-- Mask representing current keyboard modifiers state.
 		do
 		end
 
-	enable_debugger is
+	enable_debugger
 			-- Enable the Eiffel debugger.
 		do
 		end
 
-	disable_debugger is
+	disable_debugger
 			-- Disable the Eiffel debugger.
 		do
 		end
@@ -310,31 +310,31 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pnd Handling
 	old_pointer_y: INTEGER
 		-- Position of pointer on previous PND draw.
 
-	set_old_pointer_x_y_origin (a_old_pointer_x, a_old_pointer_y: INTEGER) is
+	set_old_pointer_x_y_origin (a_old_pointer_x, a_old_pointer_y: INTEGER)
 			-- Set PND pointer origins to `a_old_pointer_x' and `a_old_pointer_y'.
 		do
 		end
 
 feature -- Thread Handling.
 
-	initialize_threading is
+	initialize_threading
 			-- Initialize thread support.
 		do
 		end
 
-	lock is
+	lock
 			-- Lock the Mutex.
 		do
 		end
 
-	try_lock: BOOLEAN is
+	try_lock: BOOLEAN
 			-- Try to see if we can lock, False means no lock could be attained
 		do
 			Result := True
 			-- TODO: Uhhh, this could be dangerous
 		end
 
-	unlock is
+	unlock
 			-- Unlock the Mutex.
 		do
 		end
@@ -348,7 +348,7 @@ feature {NONE} -- Idle handling
 			-- `on_idle'. Whenn its C function gets called, the dispatcher
 			-- calls `on_idle' in the connected Eiffel object
 
-	on_idle (a_intimer: POINTER; a_instate: INTEGER; a_inuserdata: POINTER) is
+	on_idle (a_intimer: POINTER; a_instate: INTEGER; a_inuserdata: POINTER)
 			-- Callback target. This feature gets called when the application idles
 		do
 				idle_actions_internal.call (Void)
@@ -364,7 +364,7 @@ feature {NONE} -- callback handling for events
 			-- calls `on_callback' in the connected Eiffel object
 
 
-	on_callback (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER is
+	on_callback (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER
 			-- Callback target. This feature gets called
 			-- anytime somebody calls `trigger_event_external'
 		local
@@ -387,7 +387,7 @@ feature {EV_CARBON_EVENTABLE} -- event handling
 
 	widget_list: ARRAY[EV_CARBON_EVENTABLE]
 
-	get_id (a_widget : EV_CARBON_EVENTABLE) : INTEGER is
+	get_id (a_widget : EV_CARBON_EVENTABLE) : INTEGER
 			-- Get a unique ID so we can associate an event by its ID with a control
 		do
 			if free_ids.is_empty then
@@ -403,7 +403,7 @@ feature {EV_CARBON_EVENTABLE} -- event handling
 			--io.put_string ("Get ID: " + Result.out + "%N")
 		end
 
-	dispose_id (a_id: INTEGER) is
+	dispose_id (a_id: INTEGER)
 				-- Give an id back (it will be recycled)
 			do
 				widget_list.force (void, a_id)
@@ -413,7 +413,7 @@ feature {EV_CARBON_EVENTABLE} -- event handling
 
 feature -- event handling
 
-	install_event_handler (a_id: INTEGER ; a_target: POINTER; a_event_class: INTEGER; a_event_kind: INTEGER): POINTER is
+	install_event_handler (a_id: INTEGER ; a_target: POINTER; a_event_class: INTEGER; a_event_kind: INTEGER): POINTER
 			-- install a carbon event handler
 		local
 			ret: INTEGER
@@ -428,7 +428,7 @@ feature -- event handling
 			Result := handler
 		end
 
-	install_event_handlers (a_id: INTEGER ; a_target: POINTER; a_event_array : EVENT_TYPE_SPEC_ARRAY ): POINTER is
+	install_event_handlers (a_id: INTEGER ; a_target: POINTER; a_event_array : EVENT_TYPE_SPEC_ARRAY ): POINTER
 			-- install a carbon event handler for multiple events
 		local
 			ret: INTEGER
@@ -439,7 +439,7 @@ feature -- event handling
 			Result := handler
 		end
 
-	frozen int_to_pointer ( a_int: INTEGER ) : POINTER is
+	frozen int_to_pointer ( a_int: INTEGER ) : POINTER
 		external
 			"C inline"
 		alias
@@ -450,7 +450,7 @@ feature -- event handling
 			]"
 		end
 
-	frozen pointer_to_int ( a_pointer: POINTER ) : INTEGER is
+	frozen pointer_to_int ( a_pointer: POINTER ) : INTEGER
 		external
 			"C inline"
 		alias
@@ -464,7 +464,7 @@ feature -- event handling
 invariant
 	dispatcher_exists : dispatcher /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_APPLICATION_IMP
 

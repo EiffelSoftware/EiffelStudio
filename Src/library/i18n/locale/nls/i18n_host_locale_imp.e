@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of HOST_LOCALE using the Windows NLS API. Does not require Windows Vista."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Creation
 
-	create_locale_info_from_user_locale: I18N_LOCALE_INFO is
+	create_locale_info_from_user_locale: I18N_LOCALE_INFO
 			-- fill in
 		do
 			current_lcid := user_locale
@@ -24,7 +24,7 @@ feature -- Creation
 			Result.set_id (lcid_tools.lcid_to_locale_id (current_lcid))
 		end
 
-	create_locale_info (locale: I18N_LOCALE_ID):I18N_LOCALE_INFO is
+	create_locale_info (locale: I18N_LOCALE_ID):I18N_LOCALE_INFO
 			-- fill in
 		do
 			current_lcid := lcid_tools.locale_id_to_lcid (locale)
@@ -34,25 +34,25 @@ feature -- Creation
 
 feature -- Information
 
-	available_locales : LINEAR[I18N_LOCALE_ID] is
+	available_locales : LINEAR[I18N_LOCALE_ID]
 			-- All supported locales on the system
 		do
 			Result := lcid_tools.supported_locales
 		end
 
-	default_locale_id: I18N_LOCALE_ID is
+	default_locale_id: I18N_LOCALE_ID
 			--
 		do
 			Result := lcid_tools.lcid_to_locale_id (user_locale)
 		end
 
-	system_locale_id: I18N_LOCALE_ID is
+	system_locale_id: I18N_LOCALE_ID
 			--
 		do
 			Result := lcid_tools.lcid_to_locale_id (system_locale)
 		end
 
-	is_available (a_locale_id : I18N_LOCALE_ID) : BOOLEAN is
+	is_available (a_locale_id : I18N_LOCALE_ID) : BOOLEAN
 			--
 		do
 			Result := lcid_tools.is_supported_locale (lcid_tools.locale_id_to_lcid (a_locale_id))
@@ -60,7 +60,7 @@ feature -- Information
 
 feature {NONE} -- fill
 
-	fill: I18N_LOCALE_INFO is
+	fill: I18N_LOCALE_INFO
 			-- fills an locale_info
 		do
 			create Result.make
@@ -103,19 +103,19 @@ feature {NONE} -- fill
 
 feature -- Code page
 
-	ansi_code_page: STRING_32 is
+	ansi_code_page: STRING_32
 		do
 			Result := extract_locale_string (current_lcid, nls_constants.locale_idefaultansicodepage,
 											nls_constants.locale_idefaultansicodepage_maxlen)
 		end
 
-	oem_code_page: STRING_32 is
+	oem_code_page: STRING_32
 		do
 			Result := extract_locale_string (current_lcid, nls_constants.locale_idefaultcodepage,
 											nls_constants.locale_idefaultcodepage_maxlen)
 		end
 
-	mac_code_page: STRING_32 is
+	mac_code_page: STRING_32
 		do
 			Result := extract_locale_string (current_lcid, nls_constants.locale_idefaultmaccodepage,
 											nls_constants.locale_idefaultmaccodepage_maxlen)
@@ -123,34 +123,34 @@ feature -- Code page
 
 feature {NONE} -- Value formatting
 
-	get_value_group_separator: STRING_32 is
+	get_value_group_separator: STRING_32
 			--
 		do
 			Result := extract_locale_string (current_lcid, nls_constants.locale_sthousand,
 											nls_constants.locale_sthousand_maxlen)
 		end
 
-	get_value_grouping: ARRAY[INTEGER] is
+	get_value_grouping: ARRAY[INTEGER]
 			--
 		do
 			Result := grouping_string_to_integer(extract_locale_string (current_lcid,
 									nls_constants.locale_sgrouping, nls_constants.locale_sgrouping ))
 		end
 
-	get_value_decimal_separator: STRING_32 is
+	get_value_decimal_separator: STRING_32
 			--
 		do
 			Result := extract_locale_string (current_lcid, nls_constants.locale_sdecimal,
 											nls_constants.locale_sdecimal_maxlen)
 		end
 
-	get_value_numbers_after_decimal_separator: INTEGER is
+	get_value_numbers_after_decimal_separator: INTEGER
 			--
 		do
 			Result := extract_locale_integer(current_lcid, nls_constants.locale_idigits)
 		end
 
-	get_value_number_list_separator: STRING_32 is
+	get_value_number_list_separator: STRING_32
 			--
 		do
 			Result := extract_locale_string (current_lcid, nls_constants.locale_slist,
@@ -159,34 +159,34 @@ feature {NONE} -- Value formatting
 
 feature {NONE} -- Currency formatting
 
-	get_currency_decimal_separator: STRING_32 is
+	get_currency_decimal_separator: STRING_32
 			--
 		do
 			Result := extract_locale_string (current_lcid, nls_constants.locale_smondecimalsep,
 												nls_constants.locale_smondecimalsep_maxlen )
 		end
 
-	get_currency_grouping: ARRAY[INTEGER] is
+	get_currency_grouping: ARRAY[INTEGER]
 			--
 		do
 			Result := grouping_string_to_integer(extract_locale_string (current_lcid,
 									nls_constants.locale_smongrouping, nls_constants.locale_smongrouping ))
 		end
 
-	get_currency_number_list_separator: STRING_32 is
+	get_currency_number_list_separator: STRING_32
 			--
 		do
 			Result := get_value_number_list_separator
 		end
 
-	get_currency_symbol: STRING_32 is
+	get_currency_symbol: STRING_32
 			--
 		do
 			Result := extract_locale_string (current_lcid, nls_constants.locale_scurrency,
 											nls_constants.locale_scurrency_maxlen)
 		end
 
-	get_currency_symbol_location: INTEGER is
+	get_currency_symbol_location: INTEGER
 			--
 		local
 			i: INTEGER
@@ -199,20 +199,20 @@ feature {NONE} -- Currency formatting
 			end
 		end
 
-	get_currency_numbers_after_decimal_separator: INTEGER is
+	get_currency_numbers_after_decimal_separator: INTEGER
 			--
 		do
 			Result := extract_locale_integer(current_lcid, nls_constants.locale_icurrdigits)
 		end
 
-	get_currency_group_separator: STRING_32 is
+	get_currency_group_separator: STRING_32
 			--
 		do
 			Result := extract_locale_string (current_lcid, nls_constants.locale_spositivesign,
 											nls_constants.locale_spositivesign_maxlen)
 		end
 
-	get_currency_positive_sign: STRING_32 is
+	get_currency_positive_sign: STRING_32
 			--
 		do
 		--	Result := extract_locale_string (current_lcid, nls_constants.locale_snegativesign,
@@ -220,21 +220,21 @@ feature {NONE} -- Currency formatting
 			Result := ""
 		end
 
-	get_currency_negative_sign: STRING_32 is
+	get_currency_negative_sign: STRING_32
 			--
 		do
 			Result := extract_locale_string (current_lcid, nls_constants.locale_smonthousandsep,
 											nls_constants.locale_smonthousandsep_maxlen)
 		end
 
-	get_international_currency_symbol: STRING_32 is
+	get_international_currency_symbol: STRING_32
 			--
 		do
 			Result := extract_locale_string (current_lcid, nls_constants.locale_sintlsymbol,
 											nls_constants.locale_sintlsymbol_maxlen)
 		end
 
-	get_international_currency_numbers_after_decimal_separator: INTEGER is
+	get_international_currency_numbers_after_decimal_separator: INTEGER
 			--
 		do
 			Result := extract_locale_integer (current_lcid, nls_constants.locale_iintlcurrdigits)
@@ -242,7 +242,7 @@ feature {NONE} -- Currency formatting
 
 feature {NONE} -- Default locales
 
-	system_locale: INTEGER is
+	system_locale: INTEGER
 			-- Encapsulation of GetSystemDefaultLCID
 		external
 			"C (): LCID | <windows.h>"
@@ -250,7 +250,7 @@ feature {NONE} -- Default locales
 			"GetSystemDefaultLCID"
 		end
 
-	user_locale: INTEGER is
+	user_locale: INTEGER
 			-- Encapsulation of GetUserDefaultLCID
 		external
 			"C (): LCID| <windows.h>"
@@ -260,7 +260,7 @@ feature {NONE} -- Default locales
 
 feature {NONE} -- date and time formatting
 
-	get_short_date_format: STRING_32 is
+	get_short_date_format: STRING_32
 			--
 		do
 			Result:= translate_date_format (
@@ -268,7 +268,7 @@ feature {NONE} -- date and time formatting
 											nls_constants.locale_sshortdate_maxlen))
 		end
 
-	get_long_date_format: STRING_32 is
+	get_long_date_format: STRING_32
 			--
 		do
 			Result:= translate_date_format (
@@ -276,14 +276,14 @@ feature {NONE} -- date and time formatting
 											nls_constants.locale_slongdate_maxlen))
 		end
 
-	get_date_time_format: STRING_32 is
+	get_date_time_format: STRING_32
 			--
 		do
 			--NLS doesn't support this. I'll just concatenate date and time.
 			Result:= get_long_date_format + " " + get_short_time_format
 		end
 
-	get_day_names: ARRAY[STRING_32] is
+	get_day_names: ARRAY[STRING_32]
 			--
 		do
 			Result := <<
@@ -304,7 +304,7 @@ feature {NONE} -- date and time formatting
 						>>
 		end
 
-	get_abbreviated_day_names: ARRAY[STRING_32] is
+	get_abbreviated_day_names: ARRAY[STRING_32]
 			--
 		do
 			Result := <<
@@ -325,7 +325,7 @@ feature {NONE} -- date and time formatting
 						>>
 		end
 
-	get_month_names: ARRAY[STRING_32] is
+	get_month_names: ARRAY[STRING_32]
 			--
 		do
 			Result := <<
@@ -357,7 +357,7 @@ feature {NONE} -- date and time formatting
 		end
 
 
-get_abbreviated_month_names: ARRAY[STRING_32] is
+get_abbreviated_month_names: ARRAY[STRING_32]
 			--
 		do
 			Result := <<
@@ -390,21 +390,21 @@ get_abbreviated_month_names: ARRAY[STRING_32] is
 
 feature {NONE} -- time formatting
 
-	get_am_suffix: STRING_32 is
+	get_am_suffix: STRING_32
 			--
 		do
 			Result := extract_locale_string (current_lcid, nls_constants.locale_s1159,
 											nls_constants.locale_s1159_maxlen)
 		end
 
-	get_pm_suffix: STRING_32 is
+	get_pm_suffix: STRING_32
 			--
 		do
 			Result:= extract_locale_string (current_lcid, nls_constants.locale_s2359,
 											nls_constants.locale_s2359_maxlen)
 		end
 
-	get_short_time_format: STRING_32 is
+	get_short_time_format: STRING_32
 			-- TODO: Returns native string, this needs to fixed when we get the time formatter sorted out!
 		do
 			Result:= translate_time_format (
@@ -412,7 +412,7 @@ feature {NONE} -- time formatting
 											nls_constants.locale_stimeformat_maxlen))
 		end
 
-	get_long_time_format: STRING_32 is
+	get_long_time_format: STRING_32
 			--
 		do
 			Result := get_short_time_format
@@ -424,7 +424,7 @@ feature {NONE} -- Current locale
 
 feature {NONE} -- Transformation
 
-	grouping_string_to_integer(string: STRING_32): ARRAY[INTEGER] is
+	grouping_string_to_integer(string: STRING_32): ARRAY[INTEGER]
 				--
 		local
 			temp: LIST[STRING_32]
@@ -444,7 +444,7 @@ feature {NONE} -- Transformation
 			end
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision combo box, Carbon implementation."
@@ -76,7 +76,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a combo-box.
 			-- How can we do this in carbon? We probably need a normal textfield alongside with an disclosure button control and ..?
 		local
@@ -103,14 +103,14 @@ feature {NONE} -- Initialization
 			event_id := app_implementation.get_id ( current )
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			--
 		do
 			Result := Precursor {EV_TEXT_FIELD_IMP}
 		end
 
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Strangely GetOptimalBounds doesn't seem to work here
 		do
 			Result := 30
@@ -118,7 +118,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Initialization
 
-	call_selection_action_sequences is
+	call_selection_action_sequences
 			-- Call the appropriate selection action sequences
 		do
 
@@ -127,13 +127,13 @@ feature {NONE} -- Initialization
 	previous_selected_item_imp: EV_LIST_ITEM_IMP
 		-- Item that was selected previously.
 
-	initialize is
+	initialize
 			-- Connect action sequences to signals.
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			ret: INTEGER
@@ -144,7 +144,7 @@ feature {NONE} -- Initialization
 			ret := hicombo_box_append_text_item_external ( c_object, cfstring.item, null )
 		end
 
-	remove_i_th (an_index: INTEGER) is
+	remove_i_th (an_index: INTEGER)
 		local
 			ret: INTEGER
 		do
@@ -157,13 +157,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does widget have the keyboard focus?
 		do
 
 		end
 
-	selected_item: EV_LIST_ITEM is
+	selected_item: EV_LIST_ITEM
 			-- Item which is currently selected, for a multiple
 			-- selection.
 		local
@@ -183,25 +183,25 @@ feature -- Status report
 			end
 		end
 
-	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
+	selected_items: ARRAYED_LIST [EV_LIST_ITEM]
 			-- List of all the selected items. Used for list_item.is_selected implementation.
 		do
 
 		end
 
-	select_item (an_index: INTEGER) is
+	select_item (an_index: INTEGER)
 			-- Select an item at the one-based `index' of the list.
 		do
 
 		end
 
-	deselect_item (an_index: INTEGER) is
+	deselect_item (an_index: INTEGER)
 			-- Unselect the item at the one-based `index'.
 		do
 
 		end
 
-	clear_selection is
+	clear_selection
 			-- Clear the item selection of `Current'.
 		do
 
@@ -209,13 +209,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_maximum_text_length (len: INTEGER) is
+	set_maximum_text_length (len: INTEGER)
 			-- Set the length of the longest text size in characters that `Current' can display.
 		do
 
 		end
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			str: EV_CARBON_CF_STRING
@@ -225,7 +225,7 @@ feature -- Status setting
 			ret := hiview_set_text_external (c_object, str.item)
 		end
 
-	append_text (a_text: STRING_GENERAL) is
+	append_text (a_text: STRING_GENERAL)
 			-- Append `a_text' to the end of the text.
 		local
 			ptr: POINTER
@@ -241,7 +241,7 @@ feature -- Status setting
 
 		end
 
-	prepend_text (a_text: STRING_GENERAL) is
+	prepend_text (a_text: STRING_GENERAL)
 			-- Prepend `a_text' to the end of the text.
 		local
 			ptr: POINTER
@@ -259,7 +259,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	on_focus_changed (a_has_focus: BOOLEAN) is
+	on_focus_changed (a_has_focus: BOOLEAN)
 			-- Focus for `Current' has changed'.
 		do
 		end
@@ -272,13 +272,13 @@ feature {NONE} -- Implementation
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
-	retrieve_toggle_button is
+	retrieve_toggle_button
 			-- Retrieve the toggle button from the GtkComboBox structure.
 		do
 
 		end
 
-	toggle_button_toggled is
+	toggle_button_toggled
 			-- The toggle button has been toggled.
 		do
 		end
@@ -291,13 +291,13 @@ feature {EV_LIST_ITEM_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	container_widget: POINTER
 
 feature {NONE} -- Implementation
-	dispose is
+	dispose
 			do
 				precursor {EV_LIST_ITEM_LIST_IMP}
 				precursor {EV_TEXT_FIELD_IMP}
 			end
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		do
@@ -307,7 +307,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_COMBO_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

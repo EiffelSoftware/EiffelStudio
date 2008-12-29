@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Menu which can be popped up"
 	legal: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a popup menu with `a_name' as identifier,
 			-- `a_parent' as parent.
 		 require
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	popup is
+	popup
 			-- Popup Current popup menu.
 		require
 			exists: not destroyed
@@ -57,12 +57,12 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values of current popup menu.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Available encodings in the OS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	system_encoding: ENCODING is
+	system_encoding: ENCODING
 			-- System encoding
 		once
 			create Result.make (system_encodings_i.system_code_page)
@@ -18,7 +18,7 @@ feature -- Access
 			console_encoding_not_void: Result /= Void
 		end
 
-	console_encoding: ENCODING is
+	console_encoding: ENCODING
 			-- Console encoding
 		once
 			create Result.make (system_encodings_i.console_code_page)
@@ -26,7 +26,7 @@ feature -- Access
 			console_encoding_not_void: Result /= Void
 		end
 
-	utf8: ENCODING is
+	utf8: ENCODING
 			-- UTF8 Encoding.
 		once
 			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf8)
@@ -34,7 +34,7 @@ feature -- Access
 			utf8_not_void: Result /= Void
 		end
 
-	utf16: ENCODING is
+	utf16: ENCODING
 			-- UTF16 Encoding.
 		once
 			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf16)
@@ -42,7 +42,7 @@ feature -- Access
 			utf16_not_void: Result /= Void
 		end
 
-	utf32: ENCODING is
+	utf32: ENCODING
 			-- UTF32 Encoding.
 		once
 			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf32)
@@ -52,13 +52,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	system_encodings_i: SYSTEM_ENCODINGS_I is
+	system_encodings_i: SYSTEM_ENCODINGS_I
 			-- Implementation bridge.
 		once
 			create {SYSTEM_ENCODINGS_IMP}Result
 		end
 
-indexing
+note
 	library:   "Encoding: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

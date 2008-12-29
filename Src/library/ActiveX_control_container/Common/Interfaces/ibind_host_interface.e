@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,21 +12,21 @@ inherit
 
 feature -- Status Report
 
-	create_moniker_user_precondition (sz_name: STRING; pbc: IBIND_CTX_INTERFACE; ppmk: CELL [IMONIKER_INTERFACE]; dw_reserved: INTEGER): BOOLEAN is
+	create_moniker_user_precondition (sz_name: STRING; pbc: IBIND_CTX_INTERFACE; ppmk: CELL [IMONIKER_INTERFACE]; dw_reserved: INTEGER): BOOLEAN
 			-- User-defined preconditions for `create_moniker'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	moniker_bind_to_storage_user_precondition (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]): BOOLEAN is
+	moniker_bind_to_storage_user_precondition (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `moniker_bind_to_storage'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	moniker_bind_to_object_user_precondition (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]): BOOLEAN is
+	moniker_bind_to_object_user_precondition (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `moniker_bind_to_object'.
 			-- Redefine in descendants if needed.
 		do
@@ -35,7 +35,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	create_moniker (sz_name: STRING; pbc: IBIND_CTX_INTERFACE; ppmk: CELL [IMONIKER_INTERFACE]; dw_reserved: INTEGER) is
+	create_moniker (sz_name: STRING; pbc: IBIND_CTX_INTERFACE; ppmk: CELL [IMONIKER_INTERFACE]; dw_reserved: INTEGER)
 			-- No description available.
 			-- `sz_name' [in].  
 			-- `pbc' [in].  
@@ -50,7 +50,7 @@ feature -- Basic Operations
 			valid_ppmk: ppmk.item /= Void
 		end
 
-	moniker_bind_to_storage (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
+	moniker_bind_to_storage (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `pmk' [in].  
 			-- `pbc' [in].  
@@ -68,7 +68,7 @@ feature -- Basic Operations
 			valid_ppv_obj: ppv_obj.item /= Void
 		end
 
-	moniker_bind_to_object (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
+	moniker_bind_to_object (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `pmk' [in].  
 			-- `pbc' [in].  
@@ -86,7 +86,7 @@ feature -- Basic Operations
 			valid_ppv_obj: ppv_obj.item /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

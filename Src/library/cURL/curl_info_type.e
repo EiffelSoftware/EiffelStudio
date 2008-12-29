@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						cURL library info type constants.
 																			]"
@@ -12,30 +12,30 @@ class
 
 feature -- Enumeration
 
-	curlinfo_text: INTEGER is 0
+	curlinfo_text: INTEGER = 0
 			-- Declared as CURLINFO_TEXT
 
-	curlinfo_header_in: INTEGER is 1
+	curlinfo_header_in: INTEGER = 1
 			-- Declared as CURLINFO_HEADER_IN
 
-	curlinfo_header_out: INTEGER is 2
+	curlinfo_header_out: INTEGER = 2
 			-- Declared as CURLINFO_HEADER_OUT
 
-	curlinfo_data_in: INTEGER is 3
+	curlinfo_data_in: INTEGER = 3
 			-- Declared as CURLINFO_DATA_IN
 
-	curlinfo_data_out: INTEGER is 4
+	curlinfo_data_out: INTEGER = 4
 			-- Declared as CURLINFO_DATA_OUT
 
-	curlinfo_ssl_data_in: INTEGER is 5
+	curlinfo_ssl_data_in: INTEGER = 5
 	 		-- Declared as CURLINFO_SSL_DATA_IN
 
-	curlinfo_ssl_data_out: INTEGER is 6
+	curlinfo_ssl_data_out: INTEGER = 6
 			-- Declared as CURLINFO_SSL_DATA_OUT
 
 feature -- Contract support
 
-	is_valid (a_type: INTEGER): BOOLEAN is
+	is_valid (a_type: INTEGER): BOOLEAN
 			-- If `a_type' valid?
 		do
 			Result := 	a_type = curlinfo_data_in or
@@ -47,7 +47,7 @@ feature -- Contract support
 						a_type = curlinfo_text
 		end
 
-indexing
+note
 	library:   "cURL: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

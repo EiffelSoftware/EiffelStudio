@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object is a view for an EG_LINKABLE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ inherit
 		
 feature {NONE} -- Initialisation
 
-	default_create is
+	default_create
 			-- Create a EG_LINKABLE_FIGURE.
 		do
 			Precursor {EG_FIGURE}
@@ -51,7 +51,7 @@ feature -- Status report
 	is_fixed: BOOLEAN
 			-- Does the layouter not move `Current'?
 			
-	has_visible_link: BOOLEAN is
+	has_visible_link: BOOLEAN
 			-- Has `Current' at least one visible link?
 		local
 			l_internal_links: like internal_links
@@ -73,7 +73,7 @@ feature -- Status report
 			end
 		end
 		
-	is_cluster_above: BOOLEAN is
+	is_cluster_above: BOOLEAN
 			-- Is a cluster above `Current'?
 		local
 			p, q, c: EG_CLUSTER_FIGURE
@@ -111,27 +111,27 @@ feature -- Access
 	model: EG_LINKABLE
 			-- The model for `Current'.
 			
-	port_x: INTEGER is
+	port_x: INTEGER
 			-- x position where links are starting.
 		deferred
 		end
 		
-	port_y: INTEGER is
+	port_y: INTEGER
 			-- y position where links are starting.
 		deferred
 		end
 		
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of the xml node returned by `xml_element'.
 		do
 			Result := once "EG_LINKABLE_FIGURE"
 		end
 
-	is_fixed_string: STRING is "IS_FIXED"
-	port_x_string: STRING is "PORT_X"
-	port_y_string: STRING is "PORT_Y"
+	is_fixed_string: STRING = "IS_FIXED"
+	port_x_string: STRING = "PORT_X"
+	port_y_string: STRING = "PORT_Y"
 		
-	xml_element (node: XM_ELEMENT): XM_ELEMENT is
+	xml_element (node: XM_ELEMENT): XM_ELEMENT
 			-- Xml element representing `Current's state.
 		local
 			l_xml_routines: like xml_routines
@@ -143,7 +143,7 @@ feature -- Access
 			Result.put_last (l_xml_routines.xml_node (Result, port_y_string, port_y.out))
 		end
 		
-	set_with_xml_element (node: XM_ELEMENT) is
+	set_with_xml_element (node: XM_ELEMENT)
 			-- Retrive state from `node'.
 		local
 			ax, ay: INTEGER
@@ -158,28 +158,28 @@ feature -- Access
 			set_port_position (ax, ay)
 		end
 
-	size: EV_RECTANGLE is
+	size: EV_RECTANGLE
 			-- Size of `Current'.
 		deferred
 		ensure
 			result_not_void: Result /= Void
 		end
 		
-	height: INTEGER is
+	height: INTEGER
 			-- Height in pixels.
 		deferred
 		ensure
 			result_not_negative: Result >= 0
 		end
 		
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixels.
 		deferred
 		ensure
 			result_not_negative: Result >= 0
 		end
 
-	minimum_size: EV_RECTANGLE is
+	minimum_size: EV_RECTANGLE
 			-- `Current' has to be of `Result' size
 			-- to include all visible elements starting from `number_of_figures' + 1.
 		local
@@ -224,14 +224,14 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	number_of_figures: INTEGER is 
+	number_of_figures: INTEGER 
 			-- number of figures used to visialize `Current'.
 		deferred
 		ensure
 			result_greater_equal_zero: Result >= 0
 		end
 		
-	links: like internal_links is
+	links: like internal_links
 			-- Links to other linkables
 		do
 			Result := internal_links.twin
@@ -239,7 +239,7 @@ feature -- Access
 		
 feature -- Status settings
 
-	request_update is
+	request_update
 			-- 
 		local
 			l_internal_links: like internal_links
@@ -261,7 +261,7 @@ feature -- Status settings
 		
 feature -- Element change
 
-	recycle is
+	recycle
 			-- Free resources of `Current' such that GC can collect it.
 			-- Leave it in an unstable state.
 		do
@@ -270,7 +270,7 @@ feature -- Element change
 			end_actions.prune_all (agent on_handle_end)
 		end
 
-	set_port_position (ax, ay: INTEGER) is
+	set_port_position (ax, ay: INTEGER)
 			-- Set `port_x' to `ax' and `port_y' to `ay'.
 		local
 			d_x, d_y: INTEGER
@@ -280,7 +280,7 @@ feature -- Element change
 			set_x_y (x + d_x, y + d_y)
 		end
 		
-	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE) is
+	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE)
 			-- Move `p' to a point on the edge of `Current' 
 			-- where the outline intersects a line from the 
 			-- center point in direction `an_angle'.
@@ -293,7 +293,7 @@ feature -- Element change
 		
 feature -- Status settings
 
-	set_is_fixed (b: BOOLEAN) is
+	set_is_fixed (b: BOOLEAN)
 			-- Set `is_fixed' to `b'.
 		do
 			is_fixed := b
@@ -303,7 +303,7 @@ feature -- Status settings
 
 feature {EG_FIGURE_WORLD} -- Element change
 		
-	add_link (a_link: EG_LINK_FIGURE) is
+	add_link (a_link: EG_LINK_FIGURE)
 			-- add `a_link' to `links'.
 		require
 			a_link_not_void: a_link /= Void
@@ -315,7 +315,7 @@ feature {EG_FIGURE_WORLD} -- Element change
 			links_has_a_link: links.has (a_link)
 		end
 		
-	remove_link (a_link: EG_LINK_FIGURE) is
+	remove_link (a_link: EG_LINK_FIGURE)
 			-- Remove `a_link' from `links'.
 		require
 			a_link_not_void: a_link /= Void
@@ -327,7 +327,7 @@ feature {EG_FIGURE_WORLD} -- Element change
 		
 feature {EG_CLUSTER_FIGURE, EG_FIGURE_WORLD} -- Element change
 
-	set_cluster (a_cluster: EG_CLUSTER_FIGURE) is
+	set_cluster (a_cluster: EG_CLUSTER_FIGURE)
 			-- set `cluster' to `a_cluster' without adding `Current' to `a_cluster'.
 		do
 			if a_cluster = Void then
@@ -346,7 +346,7 @@ feature {EG_CLUSTER_FIGURE, EG_FIGURE_WORLD} -- Element change
 
 feature {EV_MODEL_GROUP} -- Figure group
 
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
@@ -362,14 +362,14 @@ feature {EG_LAYOUT, EG_FIGURE} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	on_handle_start is
+	on_handle_start
 			-- User started to move `Current'.
 		do
 			was_fixed := is_fixed
 			set_is_fixed (True)
 		end
 		
-	on_handle_end is
+	on_handle_end
 			-- User ended to move `Current'.
 		do
 			set_is_fixed (was_fixed)
@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 invariant
 	links_not_void: links /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

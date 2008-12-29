@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Description of the JavaVMInitArgs structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,26 +16,26 @@ create
 
 feature -- Constants
 
-	Jni_version_1_1: INTEGER is 0x00010001
-	Jni_version_1_2: INTEGER is 0x00010002
-	Jni_version_1_4: INTEGER is 0x00010004
+	Jni_version_1_1: INTEGER = 0x00010001
+	Jni_version_1_2: INTEGER = 0x00010002
+	Jni_version_1_4: INTEGER = 0x00010004
 			-- Possible version numbers for `version'.
 
 feature -- Access
 
-	version: INTEGER is
+	version: INTEGER
 			-- Version of JNI.
 		do
 			Result := c_version (item)
 		end
 
-	number_of_option: INTEGER is
+	number_of_option: INTEGER
 			-- Number of version in Current.
 		do
 			Result := c_n_options (item)
 		end
 		
-	options: ARRAY [JAVA_VM_OPTION] is
+	options: ARRAY [JAVA_VM_OPTION]
 			-- List all options.
 		require
 			options_set: options_set
@@ -47,7 +47,7 @@ feature -- Access
 		
 feature -- Status report
 
-	is_valid_version (a_version: INTEGER): BOOLEAN is
+	is_valid_version (a_version: INTEGER): BOOLEAN
 		do
 			Result :=
 				a_version = Jni_version_1_1 or
@@ -55,7 +55,7 @@ feature -- Status report
 				a_version = Jni_version_1_4
 		end
 		
-	options_set: BOOLEAN is
+	options_set: BOOLEAN
 			-- Has `options' been set?
 		do
 			Result := internal_options /= Void
@@ -63,7 +63,7 @@ feature -- Status report
 		
 feature -- Settings
 
-	set_version (a_version: INTEGER) is
+	set_version (a_version: INTEGER)
 			-- Set `version' with `a_version'.
 		require
 			is_valid_version: is_valid_version (a_version)
@@ -73,7 +73,7 @@ feature -- Settings
 			version_set: version = a_version
 		end
 
-	set_options (a_options: ARRAY [JAVA_VM_OPTION]) is
+	set_options (a_options: ARRAY [JAVA_VM_OPTION])
 			-- Set `options' with `a_options'.
 		require
 			a_options_not_void: a_options /= Void
@@ -105,7 +105,7 @@ feature -- Settings
 		
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure being allocated.
 		do
 			Result := c_structure_size
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 	internal_options_area: MANAGED_POINTER
 			-- Hold area where value of `internal_options' are stored.
 
-	c_structure_size: INTEGER is
+	c_structure_size: INTEGER
 			-- Size of `JavaVMOption' structure.
 		external
 			"C macro use %"jni.h%""
@@ -127,37 +127,37 @@ feature {NONE} -- Implementation
 			"sizeof(JavaVMInitArgs)"
 		end
 		
-	c_version (an_item: POINTER): INTEGER is
+	c_version (an_item: POINTER): INTEGER
 			-- Access to `version'.
 		external
 			"C struct JavaVMInitArgs access version use %"jni.h%""
 		end
 
-	c_n_options (an_item: POINTER): INTEGER is
+	c_n_options (an_item: POINTER): INTEGER
 			-- Access to `version'.
 		external
 			"C struct JavaVMInitArgs access nOptions use %"jni.h%""
 		end
 
-	c_set_version (an_item: POINTER; a_version: INTEGER) is
+	c_set_version (an_item: POINTER; a_version: INTEGER)
 			-- Access to `version'.
 		external
 			"C struct JavaVMInitArgs access version type jint use %"jni.h%""
 		end
 
-	c_set_n_options (an_item: POINTER; a_nb: INTEGER) is
+	c_set_n_options (an_item: POINTER; a_nb: INTEGER)
 			-- Access to `version'.
 		external
 			"C struct JavaVMInitArgs access nOptions type jint use %"jni.h%""
 		end
 
-	c_set_options (an_item: POINTER; a_ptr: POINTER) is
+	c_set_options (an_item: POINTER; a_ptr: POINTER)
 			-- Access to `version'.
 		external
 			"C struct JavaVMInitArgs access options type JavaVMOption * use %"jni.h%""
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

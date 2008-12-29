@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Displays up to two widgets side by side, separated by an%
 		%adjustable divider."
 	legal: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Status Setting
 
-	set_first (v: like item) is
+	set_first (v: like item)
 			-- Assign `v' to `first'.
 		do
 			first := v
@@ -50,7 +50,7 @@ feature {NONE} -- Status Setting
 			new_item_actions.call ([v])
 		end
 
-	set_second (v: like item) is
+	set_second (v: like item)
 			-- Assign `v' to second.
 		do
 			second := v
@@ -75,14 +75,14 @@ feature {NONE} -- Status Setting
 
 feature {NONE} -- Implementation
 
-	set_click_position (x_pos, y_pos: INTEGER) is
+	set_click_position (x_pos, y_pos: INTEGER)
 			-- Assign coordinate relative to click position on splitter to
 			-- `click_relative_position'.
 		do
 			click_relative_position := x_pos - internal_split_position
 		end
 
-	compute_minimum_size is
+	compute_minimum_size
 			-- Recompute the minimum_size of `Current'.
 		local
 			mh, mw, sep_wid: INTEGER
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			ev_set_minimum_size (mw, mh)
 		end
 
-	compute_minimum_height is
+	compute_minimum_height
 			-- Recompute the minimum_height of `Current'.
 		local
 			mh: INTEGER
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			ev_set_minimum_height (mh)
 		end
 
-	compute_minimum_width is
+	compute_minimum_width
 			-- Recompute the minimum_width of `Current'.
 		local
 			mw: INTEGER
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			ev_set_minimum_width (mw)
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Wm_size message
 		do
 			Precursor {EV_SPLIT_AREA_IMP} (size_type, a_width, a_height)
@@ -137,14 +137,14 @@ feature {NONE} -- Implementation
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position,
-				a_width, a_height: INTEGER; repaint: BOOLEAN) is
+				a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
 			ev_move_and_resize
 				(a_x_position, a_y_position, a_width, a_height, repaint)
 			split_area_resizing (a_width, False)
 		end
 
-	layout_widgets (originator: BOOLEAN) is
+	layout_widgets (originator: BOOLEAN)
 		local
 			rect: WEL_RECT
 		do
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			invalidate_rect (rect, True)
 		end
 
-	split_area_resizing (a_width: INTEGER; originator: BOOLEAN) is
+	split_area_resizing (a_width: INTEGER; originator: BOOLEAN)
 			-- Compute new size
 		local
 			splitter_movement_factor: DOUBLE
@@ -227,14 +227,14 @@ feature {NONE} -- Implementation
 			layout_widgets (originator)
 		end
 
-	invert_split (a_dc: WEL_DC) is
+	invert_split (a_dc: WEL_DC)
 			-- Invert the split on `a_dc'.
 		do
 			invert_rectangle (a_dc, internal_split_position, -1, internal_split_position +
 				splitter_width, height)
 		end
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Wm_mousemove message
 		local
 			t: WEL_SYSTEM_PARAMETERS_INFO
@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Wm_lbuttondown message handling.
 		local
 			splitter_bitmap: WEL_BITMAP
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	position_is_over_splitter (x_pos: INTEGER): BOOLEAN is
+	position_is_over_splitter (x_pos: INTEGER): BOOLEAN
 			-- Does `x_position' fall within the splitter?
 		require
 			x_pos_valid: x_pos >= 0 and x_pos <= width
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			Result := x_pos - (internal_split_position + 1) <= splitter_width
 		end
 
-	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_up (keys, x_pos, y_pos: INTEGER)
 			-- Wm_lbuttondown message handling.
 		local
 			new_pos: INTEGER
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			on_button_up (x_pos, y_pos, {EV_POINTER_CONSTANTS}.left)
 		end
 
-	draw_vertical_line (paint_dc: WEL_PAINT_DC; a_pen: WEL_PEN; a_x: INTEGER) is
+	draw_vertical_line (paint_dc: WEL_PAINT_DC; a_pen: WEL_PEN; a_x: INTEGER)
 			-- Draw a vertical line at x position `a_x' from top to bottom
 			-- of current on `paint_dc' using `a_pen'.
 		do
@@ -376,7 +376,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- WEL internal
 
-	class_cursor: WEL_CURSOR is
+	class_cursor: WEL_CURSOR
 			-- Standard arrow cursor used to create the window
 			-- class.
 			-- Can be redefined to return a user-defined cursor.
@@ -389,7 +389,7 @@ feature {NONE} -- WEL internal
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

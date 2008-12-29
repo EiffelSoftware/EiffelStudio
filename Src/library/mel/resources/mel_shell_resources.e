@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Shell resources."
@@ -12,7 +12,7 @@ class
 
 feature {NONE} 
 
-	XmNallowShellResize: POINTER is
+	XmNallowShellResize: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -20,7 +20,7 @@ feature {NONE}
 			"XmNallowShellResize"
 		end;
 
-	XmNcreatePopupChildProc: POINTER is
+	XmNcreatePopupChildProc: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -28,7 +28,7 @@ feature {NONE}
 			"XmNcreatePopupChildProc"
 		end;
 
-	XmNgeometry: POINTER is
+	XmNgeometry: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -36,7 +36,7 @@ feature {NONE}
 			"XmNgeometry"
 		end;
 
-	XmNoverrideRedirect: POINTER is
+	XmNoverrideRedirect: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -44,7 +44,7 @@ feature {NONE}
 			"XmNoverrideRedirect"
 		end;
 
-	XmNpopdownCallback: POINTER is
+	XmNpopdownCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -52,7 +52,7 @@ feature {NONE}
 			"XmNpopdownCallback"
 		end;
 
-	XmNpopupCallback: POINTER is
+	XmNpopupCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -60,7 +60,7 @@ feature {NONE}
 			"XmNpopupCallback"
 		end;
 
-	XmNsaveUnder: POINTER is
+	XmNsaveUnder: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -68,7 +68,7 @@ feature {NONE}
 			"XmNsaveUnder"
 		end;
 
-	XmNvisual: POINTER is
+	XmNvisual: POINTER
 			-- Motif resource
 			-- From New R4 pseudo defines
 		external
@@ -77,7 +77,7 @@ feature {NONE}
 			"XmNvisual"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -35,7 +35,7 @@ create -- Creation procedure
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create an interface objet to query active base.
 		do
 			create ht.make (name_table_size)
@@ -48,7 +48,7 @@ feature -- Initialization
 
 feature -- Access
 
-	last_parsed_query : STRING is
+	last_parsed_query : STRING
 			-- Last parsed SQL query
 		do
 			Result := implementation.last_parsed_query
@@ -65,7 +65,7 @@ feature -- Status report
 	cursor: DB_RESULT
 			-- Cursor pointing to last fetched query result
 
-	is_exiting: BOOLEAN is
+	is_exiting: BOOLEAN
 			-- Is exit condition of `load_result' iteration loop met?
 		do
 			Result := not is_ok or else exhausted or else
@@ -80,13 +80,13 @@ feature -- Status report
 			-- Object providing an `execute' routine called
 			-- after each `load_result' iteration step
 
-	is_allocatable: BOOLEAN is
+	is_allocatable: BOOLEAN
 			-- Can `Current' be added to other concurrently opened selections?
 		do
 			Result := implementation.descriptor_available
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is the `container' after?
 		require
 			container_exists: container /= Void
@@ -94,7 +94,7 @@ feature -- Status report
 			Result := container.after
 		end
 
-	error_m: STRING is
+	error_m: STRING
 			-- Error message.
 		Obsolete
 			"Please use `{DB_CONTROL}.error_message'."
@@ -102,7 +102,7 @@ feature -- Status report
 			Result := error_message
 		end
 
-	error_c: INTEGER is
+	error_c: INTEGER
 			-- Error code.
 		Obsolete
 			"Please use `{DB_CONTROL}.error_code'."
@@ -112,7 +112,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_container (one_container: like container) is
+	set_container (one_container: like container)
 			-- Make results of selection query persist in container.
 		require
 			container_exists: one_container /= Void
@@ -123,7 +123,7 @@ feature -- Status setting
 			container_set: container = one_container
 		end
 
-	unset_container is
+	unset_container
 			-- Do not store in `container' results of selection.
 		require
 			container_exists: container /= Void
@@ -133,7 +133,7 @@ feature -- Status setting
 			container_is_void: container = Void
 		end
 
-	object_convert (ref: ANY) is
+	object_convert (ref: ANY)
 			-- Set `object' with `reference', reference to an Eiffel
 			-- object to be filled in with `cursor' field values.
 			-- Use this before `load_result' for performance.
@@ -149,7 +149,7 @@ feature -- Status setting
 			object_set: object = ref
 		end
 
-	no_object_convert is
+	no_object_convert
 			-- Do not transform `cursor' into an Eiffel object
 			-- while reading in selection results.
 		do
@@ -158,7 +158,7 @@ feature -- Status setting
 			object = Void
 		end
 
-	cursor_to_object is
+	cursor_to_object
 			-- Assign `object' attributes with `cursor' field values.
 		require
 			cursor_exists: cursor /= Void
@@ -175,7 +175,7 @@ feature -- Status setting
 			end
 		end
 
-	start is
+	start
 			-- Set `cursor' on first element of `container'.
 		require else
 			container_exists: container /= Void
@@ -187,7 +187,7 @@ feature -- Status setting
 			cursor_updated: cursor = container.item
 		end
 
-	forth is
+	forth
 			-- Move `cursor' to next element of `container'.
 		require else
 			container_exists: container /= Void
@@ -201,7 +201,7 @@ feature -- Status setting
 			cursor_updated: not after implies cursor = container.item
 		end
 
-	reset_cursor (c: DB_RESULT) is
+	reset_cursor (c: DB_RESULT)
 			-- Reset `cursor' with `c'.
 		require
 			arguments_exists: c /= Void
@@ -213,7 +213,7 @@ feature -- Status setting
 			cursor_reset: cursor = c
 		end
 
-	set_action (action: ACTION) is
+	set_action (action: ACTION)
 			-- Set `stop_condition' with `action'.
 		require
 			action_exists: action /= Void
@@ -223,7 +223,7 @@ feature -- Status setting
 			stop_condition_set: stop_condition = action
 		end
 
-	unset_action is
+	unset_action
 			-- Reset `stop_condition' to Void.
 		do
 			stop_condition := Void
@@ -233,7 +233,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	load_result is
+	load_result
 			-- Iterate through selection results,
 			-- load `container' if requested and call action routine
 			-- for each iteration step until `exit_condition' is met.
@@ -280,7 +280,7 @@ feature -- Basic operations
 			exit_condition_met: is_exiting
 		end
 
-	query (s: STRING) is
+	query (s: STRING)
 			-- Select stored objects using `s' and make
 			-- them retrievable using `load_result'.
 		require
@@ -303,7 +303,7 @@ feature -- Basic operations
 			last_query_changed: last_query = s
 		end
 
-	next is
+	next
 			-- Move to next element matching the query.
 		require
 			connected: is_connected
@@ -311,7 +311,7 @@ feature -- Basic operations
 			implementation.next
 		end
 
-	terminate is
+	terminate
 			-- Clear database cursor.
 		require
 			connected: is_connected
@@ -321,7 +321,7 @@ feature -- Basic operations
 			is_allocatable: is_allocatable
 		end
 
-	wipe_out is
+	wipe_out
 			-- Clear selection results.
 		do
 			if container /= Void then
@@ -336,7 +336,7 @@ feature -- Basic operations
 			cursor_void: cursor = Void
 		end
 
-	execute_query is
+	execute_query
 			-- Execute `query' with `last_query'.
 		do
 			query (last_query)
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Status report
 
-	active_selection_number: INTEGER is
+	active_selection_number: INTEGER
 			-- Rank of `Current' among concurrently open selections
 		do
 			Result := implementation.descriptor
@@ -358,7 +358,7 @@ feature {NONE} -- Status report
 	update_map_table: BOOLEAN;
 			-- Does `map_table' need to be updated?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

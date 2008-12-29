@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tool bar item which can resize its width directly at the end."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_widget: EV_WIDGET) is
+	make (a_widget: EV_WIDGET)
 			-- Creation method.
 		do
 			Precursor {SD_TOOL_BAR_WIDGET_ITEM} (a_widget)
@@ -32,7 +32,7 @@ feature {NONE} -- Initlization
 
 feature -- Query
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width
 		do
 			Result := Precursor + resize_bar_width
@@ -40,7 +40,7 @@ feature -- Query
 
 feature -- Command
 
-	clear is
+	clear
 			-- Clear state flags.
 		do
 			is_pointer_pressed := False
@@ -48,7 +48,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	resize_bar_width: INTEGER is 3
+	resize_bar_width: INTEGER = 3
 			-- With of the resize bar
 
 	setted: BOOLEAN
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Agents
 
-	on_pointer_motion (a_relative_x, a_relative_y: INTEGER_32) is
+	on_pointer_motion (a_relative_x, a_relative_y: INTEGER_32)
 			-- Handle pointer motion actions.
 		local
 			l_stock_pixmaps: EV_STOCK_PIXMAPS
@@ -112,7 +112,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_pointer_leave is
+	on_pointer_leave
 			-- Handle pointer leave actions.
 		local
 			l_stock_pixmaps: EV_STOCK_PIXMAPS
@@ -124,7 +124,7 @@ feature {NONE} -- Agents
 		 	end
 		end
 
-	on_pointer_press (a_relative_x, a_relative_y: INTEGER_32) is
+	on_pointer_press (a_relative_x, a_relative_y: INTEGER_32)
 			-- Handle pointer press actions.
 		local
 			l_widget_tool_bar: SD_WIDGET_TOOL_BAR
@@ -142,7 +142,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_pointer_release (a_relative_x, a_relative_y: INTEGER_32) is
+	on_pointer_release (a_relative_x, a_relative_y: INTEGER_32)
 			-- Handle pointer release actions.
 		do
 			is_pointer_pressed := False
@@ -155,7 +155,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

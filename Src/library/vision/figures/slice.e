@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of slice"
 	legal: "See notice at end of class.";
@@ -32,7 +32,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create a slice.
 		do
 			ell_make ;
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_angle1 (an_angle: like angle1) is
+	set_angle1 (an_angle: like angle1)
 			-- Set angle1 to `an_angle'._
 		require
 			angle1_smaller_than_360: an_angle < 360;
@@ -65,7 +65,7 @@ feature -- Element change
 			angle1 = an_angle
 		end;
 
-	set_angle2 (an_angle: like angle2) is
+	set_angle2 (an_angle: like angle2)
 			-- Set angle2 to `an_angle'.
 		require
 			angle2_smaller_than_360: an_angle <= 360;
@@ -80,7 +80,7 @@ feature -- Element change
 
 feature -- Output
 
-	draw is
+	draw
 			-- Draw the slice.
 		do
 			if drawing.is_drawable then
@@ -97,7 +97,7 @@ feature -- Output
 
 feature -- Status report
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the current slice superimposable to `other' ?
 			--| not finished
 		require else
@@ -117,7 +117,7 @@ invariant
 	angle2_large_enough: angle2 >= 0;
 	angles_not_equal: angle2 /= angle1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

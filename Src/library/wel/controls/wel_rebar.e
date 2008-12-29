@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Control window that contains one or more bands
 		that can be moved by the user.
@@ -77,7 +77,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; an_id: INTEGER)
 			-- Create a rebar with `a_parent' as parent and
 			-- `an_id' as id.
 		require
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	band_count: INTEGER is
+	band_count: INTEGER
 			-- Number of bands in the rebar control.
 		require
 			exists: exists
@@ -105,7 +105,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	row_count: INTEGER is
+	row_count: INTEGER
 			-- Number of rows of bands in the rebar control.
 		require
 			exists: exists
@@ -115,7 +115,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	row_height (index: INTEGER): INTEGER is
+	row_height (index: INTEGER): INTEGER
 			-- Retrieve the height of the zero-based `index' band.
 		require
 			exists: exists
@@ -125,7 +125,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	get_bar_info: WEL_REBARINFO is
+	get_bar_info: WEL_REBARINFO
 			-- Retrieve all the informations about the current rebar
 			-- control
 		require
@@ -136,7 +136,7 @@ feature -- Status report
 			{WEL_API}.send_message (item, Rb_getbarinfo, to_wparam (0), Result.item)
 		end
 
-	get_band_info (index: INTEGER): WEL_REBARBANDINFO is
+	get_band_info (index: INTEGER): WEL_REBARBANDINFO
 			-- Retrieve all the informations about the zero-based
 			-- `index' band of the rebar.
 		require
@@ -158,7 +158,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_bar_info (info: WEL_REBARINFO) is
+	set_bar_info (info: WEL_REBARINFO)
 			-- Make `info' the new informations about the rebar.
 		require
 			exists: exists
@@ -168,7 +168,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Rb_setbarinfo, to_wparam (0), info.item)
 		end
 
-	set_band_info (info: WEL_REBARBANDINFO; index: INTEGER) is
+	set_band_info (info: WEL_REBARBANDINFO; index: INTEGER)
 			-- Make `info' the new informations about the zero-based
 			-- `index' band of the rebar.
 		require
@@ -183,7 +183,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (a_parent: WEL_WINDOW) is
+	set_parent (a_parent: WEL_WINDOW)
 			-- Change the parent of the current window.
 			-- We need to use both windows methods to reparent
 			-- the rebar otherwise it doesn't work.
@@ -201,7 +201,7 @@ feature -- Element change
 			end
 		end
 
-	prepend_band (band: WEL_REBARBANDINFO) is
+	prepend_band (band: WEL_REBARBANDINFO)
 			-- Insert `band' in the rebar.
 		require
 			exists: exists
@@ -210,7 +210,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Rb_insertband, to_wparam (0), band.item)
 		end
 
-	append_band (band: WEL_REBARBANDINFO) is
+	append_band (band: WEL_REBARBANDINFO)
 			-- Insert `band' in the rebar.
 		require
 			exists: exists
@@ -219,7 +219,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Rb_insertband, to_wparam (-1), band.item)
 		end
 
-	insert_band (band: WEL_REBARBANDINFO; index: INTEGER) is
+	insert_band (band: WEL_REBARBANDINFO; index: INTEGER)
 			-- Insert `band' in the rebar.
 		require
 			exists: exists
@@ -231,7 +231,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Rb_insertband, to_wparam (index), band.item)
 		end
 
-	delete_band (index: INTEGER) is
+	delete_band (index: INTEGER)
 			-- Delete the zero-based `index' band from the rebar.
 		require
 			exists: exists
@@ -243,7 +243,7 @@ feature -- Element change
 
 feature -- Notifications
 
-	on_rbn_heightchanged is
+	on_rbn_heightchanged
 			-- The height of the rebar have changed.
 		require
 			exists: exists
@@ -252,7 +252,7 @@ feature -- Notifications
 
 feature -- Basic operations
 
-	reposition is
+	reposition
 			-- Reposition the window according to the parent.
 			-- This function needs to be called in the
 			-- `on_size' routine of the parent.
@@ -264,7 +264,7 @@ feature -- Basic operations
 
 feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
-	process_notification_info (notification_info: WEL_NMHDR) is
+	process_notification_info (notification_info: WEL_NMHDR)
 			-- Process a `notification_code' sent by Windows
 			-- through the Wm_notify message
 		local
@@ -278,16 +278,16 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
 feature {NONE} -- Implementation
 
-	buffer_size: INTEGER is 30
+	buffer_size: INTEGER = 30
 			-- Windows text retrieval buffer size
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := (create {WEL_STRING}.share_from_pointer (cwin_rebar_class)).string
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_clipsiblings
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 				+ Rbs_bandborders + Rbs_tooltips
 		end
 
-	on_wm_paint (wparam: POINTER) is
+	on_wm_paint (wparam: POINTER)
 			-- Wm_paint message.
 		do
 			-- Need to do nothing
@@ -303,14 +303,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_rebar_class: POINTER is
+	cwin_rebar_class: POINTER
 		external
 			"C [macro %"cctrl.h%"] : EIF_POINTER"
 		alias
 			"REBARCLASSNAME"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

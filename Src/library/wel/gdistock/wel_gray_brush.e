@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gray brush."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,13 +18,13 @@ create
 
 feature {NONE} -- Implementation
 
-	stock_id: INTEGER is
+	stock_id: INTEGER
 			-- GDI stock object identifier
 		once
 			Result := Gray_brush
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

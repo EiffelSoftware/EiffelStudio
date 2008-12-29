@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		" EiffelVision spin button, mswindows implementation."
 	legal: "See notice at end of class."
@@ -148,7 +148,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with `an_interface'.
 		local
 			text_comp: EV_TEXT_FIELD
@@ -159,7 +159,7 @@ feature {NONE} -- Initialization
 			wel_make (default_parent, "")
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_default_font
@@ -199,7 +199,7 @@ feature -- Alignment
 
 feature {EV_ANY_I} -- Access
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create `Current'.
 		do
 			Result := Precursor {WEL_CONTROL_WINDOW} + Ws_tabstop
@@ -208,7 +208,7 @@ feature {EV_ANY_I} -- Access
 	leap: INTEGER
 			-- Size of leap. Default: 10.
 
-	value: INTEGER is
+	value: INTEGER
 			-- Current value.
 		do
 			Result := internal_arrows_control.position
@@ -217,13 +217,13 @@ feature {EV_ANY_I} -- Access
 	step: INTEGER
 			-- Step of the scrolling
 
-	minimum: INTEGER is
+	minimum: INTEGER
 			-- Minimum value.
 		do
 			Result := internal_arrows_control.minimum
 		end
 
-	maximum: INTEGER is
+	maximum: INTEGER
 			-- Maximum value.
 		do
 			Result := internal_arrows_control.maximum
@@ -232,7 +232,7 @@ feature {EV_ANY_I} -- Access
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains `Current'.
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text of `Current'.
 		do
 			Result := internal_text_field.text
@@ -240,7 +240,7 @@ feature {EV_ANY_I} -- Access
 
 feature -- Setting
 
-	set_minimum_width (v: INTEGER) is
+	set_minimum_width (v: INTEGER)
 			-- Make `value' the new `minimum_width' of `Current'.
 			-- There is no need to grow `Current' if its size is
 			-- too small, the parent will do it if necessary.
@@ -249,7 +249,7 @@ feature -- Setting
 			internal_text_field.set_minimum_width (v - spin_width)
 		end
 
-	set_minimum_size (mw, mh: INTEGER) is
+	set_minimum_size (mw, mh: INTEGER)
 			-- Make `mw' the new minimum_width and `mh' the new
 			-- minimum_height of `Current'.
 		do
@@ -257,7 +257,7 @@ feature -- Setting
 			set_minimum_height (mh)
 		end
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		do
@@ -265,7 +265,7 @@ feature -- Setting
 				internal_text_field.minimum_height.max (default_spin_height))
 		end
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		do
@@ -273,13 +273,13 @@ feature -- Setting
 			internal_text_field.set_top_level_window_imp (a_window)
 		end
 
-	set_focus is
+	set_focus
 			-- Set focus to Current, ie its internal associated text field.
 		do
 			internal_text_field.set_focus
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 		do
 			Precursor {EV_GAUGE_IMP} (a_tooltip)
 			internal_arrows_control.set_tooltip (a_tooltip)
@@ -295,7 +295,7 @@ feature {NONE} -- Access
 
 feature {EV_ANY_I} -- Implementation
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make object sensitive to user input.
 		do
 			internal_text_field.enable_sensitive
@@ -303,7 +303,7 @@ feature {EV_ANY_I} -- Implementation
 			Precursor {EV_GAUGE_IMP}
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make object desensitive to user input.
 		do
 			internal_text_field.disable_sensitive
@@ -313,19 +313,19 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_SPIN_BUTTON_I} -- Status setting.
 
-	wel_set_leap (i :INTEGER) is
+	wel_set_leap (i :INTEGER)
 			-- Assign `i' to `leap'.
 		do
 			leap := i
 		end
 
-	wel_set_step (i :INTEGER) is
+	wel_set_step (i :INTEGER)
 			-- Assign `i' to `step'.
 		do
 			step := i
 		end
 
-	wel_set_value (i :INTEGER) is
+	wel_set_value (i :INTEGER)
 			-- Assign `i`' to `value'.
 		do
 			internal_arrows_control.set_position (i)
@@ -333,7 +333,7 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 			last_change_value := i
 		end
 
-	wel_set_range (i, j: INTEGER) is
+	wel_set_range (i, j: INTEGER)
 			-- Assign `i' and `j' as
 			-- bounds of `Current'.
 		do
@@ -349,7 +349,7 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 
 		end
 
-	set_font (ft: EV_FONT) is
+	set_font (ft: EV_FONT)
 			-- Make `ft' new font of `Current'.
 		local
 			local_font_windows: EV_FONT_IMP
@@ -372,95 +372,95 @@ feature -- action sequences
 	--| One downside of this is that the events will only be recieved by the
 	--| text part of the widget. No nice solution currently. Julian.	
 
-	text_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	text_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
 			Result := internal_text_field.change_actions
 		end
 
-	create_text_change_actions:  EV_NOTIFY_ACTION_SEQUENCE is
+	create_text_change_actions:  EV_NOTIFY_ACTION_SEQUENCE
 				-- Create a change action sequence.
 		do
 			Result := internal_text_field.create_change_actions
 		end
 
-	return_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	return_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
 			Result := internal_text_field.return_actions
 		end
 
-	create_return_actions:  EV_NOTIFY_ACTION_SEQUENCE is
+	create_return_actions:  EV_NOTIFY_ACTION_SEQUENCE
 				-- Create a return action sequence.
 		do
 			Result := internal_text_field.create_return_actions
 		end
 
-	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when keyboard focus is gained.
 		do
 			Result := internal_text_field.focus_in_actions
 		end
 
-	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when keyboard focus is lost.
 		do
 			Result := internal_text_field.focus_out_actions
 		end
 
-	key_press_actions: EV_KEY_ACTION_SEQUENCE is
+	key_press_actions: EV_KEY_ACTION_SEQUENCE
 			-- Actions to be performed when a keyboard key is pressed.
 		do
 			Result := internal_text_field.key_press_actions
 		end
 
-	key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE is
+	key_press_string_actions: EV_KEY_STRING_ACTION_SEQUENCE
 			-- Actions to be performed when a keyboard key is pressed.
 		do
 			Result := internal_text_field.key_press_string_actions
 		end
 
-	key_release_actions: EV_KEY_ACTION_SEQUENCE is
+	key_release_actions: EV_KEY_ACTION_SEQUENCE
 			-- Actions to be performed when a keyboard key is released.
 		do
 			Result := internal_text_field.key_release_actions
 		end
 
-	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is pressed.
 		do
 			Result := internal_text_field.pointer_button_press_actions
 		end
 
-	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is released.
 		do
 			Result := internal_text_field.pointer_button_release_actions
 		end
 
-	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer is double clicked.
 		do
 			Result := internal_text_field.pointer_double_press_actions
 		end
 
-	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer enters widget.
 		do
 			Result := internal_text_field.pointer_enter_actions
 		end
 
-	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer leaves widget.
 		do
 			Result := internal_text_field.pointer_leave_actions
 		end
 
-	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer moves.
 		do
 			Result := internal_text_field.pointer_motion_actions
 		end
 
-	resize_actions: EV_GEOMETRY_ACTION_SEQUENCE is
+	resize_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Actions to be performed when size changes.
 		do
 			Result := internal_text_field.resize_actions
@@ -468,105 +468,105 @@ feature -- action sequences
 
 feature -- EV_TEXT_COMPONENT_I implementation
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Maximum number of characters field can hold.
 		do
 			Result := internal_text_field.capacity
 		end
 
-	maximum_character_width: INTEGER is
+	maximum_character_width: INTEGER
 			-- Maximum width of a single character in `Current'.
 		do
 			Result := internal_text_field.maximum_character_width
 		end
 
-	clipboard_content: STRING_32 is
+	clipboard_content: STRING_32
 			-- `Result' is current clipboard content.
 		do
 			Result := internal_text_field.clipboard_content
 		end
 
-	is_editable: BOOLEAN is
+	is_editable: BOOLEAN
 			-- Is the text editable by the user?
 		do
 			Result := internal_text_field.is_editable
 		end
 
-	caret_position: INTEGER is
+	caret_position: INTEGER
 			-- Current caret position.
 		do
 			Result := internal_text_field.caret_position
 		end
 
-	has_selection: BOOLEAN is
+	has_selection: BOOLEAN
 			-- Does `Current' have a selection?
 		do
 			Result := internal_text_field.has_selection
 		end
 
-	selection_start: INTEGER is
+	selection_start: INTEGER
 			-- Index of the first character selected.
 		do
 			Result := internal_text_field.selection_start
 		end
 
-	selection_end: INTEGER is
+	selection_end: INTEGER
 			-- Index of the last character selected.
 		do
 			Result := internal_text_field.selection_end
 		end
 
-	set_capacity (a_capacity: INTEGER) is
+	set_capacity (a_capacity: INTEGER)
 			-- Assign `a_capacity' to `capacity'.
 		do
 			internal_text_field.set_capacity (a_capacity)
 		end
 
-	set_editable (flag: BOOLEAN) is
+	set_editable (flag: BOOLEAN)
 			-- if `flag' then make the component read-write.
 			-- if not `flag' then make the component read-only.
 		do
 			internal_text_field.set_editable (flag)
 		end
 
-	set_caret_position (pos: INTEGER) is
+	set_caret_position (pos: INTEGER)
 			-- set current insertion position
 		do
 			internal_text_field.set_caret_position (pos)
 		end
 
-	set_text (txt: STRING_GENERAL) is
+	set_text (txt: STRING_GENERAL)
 			-- Assign `txt' to text of `Current'.
 		do
 			internal_text_field.set_text (txt)
 		end
 
-	insert_text (txt: STRING_GENERAL) is
+	insert_text (txt: STRING_GENERAL)
 			-- Insert `txt' at the current caret position.
 		do
 			internal_text_field.insert_text (txt)
 		end
 
-	append_text (txt: STRING_GENERAL) is
+	append_text (txt: STRING_GENERAL)
 			-- append 'txt' into `Current'.
 		do
 			internal_text_field.append_text (txt)
 		end
 
-	prepend_text (txt: STRING_GENERAL) is
+	prepend_text (txt: STRING_GENERAL)
 			-- prepend 'txt' into `Current'.
 		do
 			internal_text_field.prepend_text (txt)
 		end
 
-	set_minimum_width_in_characters (nb: INTEGER) is
+	set_minimum_width_in_characters (nb: INTEGER)
 			-- Make a minimum of `nb' of the widest character visible
 			-- on one line.
 		do
 			internal_text_field.set_minimum_width_in_characters (nb)
 		end
 
-	select_region (start_pos, end_pos: INTEGER) is
+	select_region (start_pos, end_pos: INTEGER)
 			-- Select (hilight) the text between
 			-- `start_pos' and `end_pos'. Both `start_pos' and
 			-- `end_pos' are selected.
@@ -574,19 +574,19 @@ feature -- EV_TEXT_COMPONENT_I implementation
 			internal_text_field.select_region (start_pos, end_pos)
 		end
 
-	deselect_all is
+	deselect_all
 			-- Unselect the current selection.
 		do
 			internal_text_field.deselect_all
 		end
 
-	delete_selection is
+	delete_selection
 			-- Delete the current selection.
 		do
 			internal_text_field.delete_selection
 		end
 
-	cut_selection is
+	cut_selection
 			-- Cut `selected_region' by erasing it from
 			-- the text and putting it in the Clipboard to paste it later.
 			-- If `selectd_region' is empty, it does nothing.
@@ -594,14 +594,14 @@ feature -- EV_TEXT_COMPONENT_I implementation
 			internal_text_field.cut_selection
 		end
 
-	copy_selection is
+	copy_selection
 			-- Copy `selected_region' into the Clipboard.
 			-- If the `selected_region' is empty, it does nothing.
 		do
 			internal_text_field.copy_selection
 		end
 
-	paste (index: INTEGER) is
+	paste (index: INTEGER)
 			-- Insert the contents of the clipboard
 			-- at `index' postion of `text'.
 			-- If the Clipboard is empty, it does nothing.
@@ -611,7 +611,7 @@ feature -- EV_TEXT_COMPONENT_I implementation
 
 feature {EV_TEXT_FIELD_IMP} -- Implementation
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- A key has been pressed.
 			-- If `virtual_key' is Return then we update `Current' accordingly.
 		do
@@ -631,7 +631,7 @@ feature {EV_TEXT_FIELD_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	on_set_focus is
+	on_set_focus
 			-- Called when a `Wm_setfocus' message is recieved.
 		do
 				-- No need to call precursor because calling `set_focus'
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 			internal_text_field.set_focus
 		end
 
-	translate_text is
+	translate_text
 			-- Take a string and translate it to the corresponding
 			-- integer value. If it is not in the range or if it
 			-- not an integer value, it returns the minimum of the
@@ -664,7 +664,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_notify (control_id: INTEGER; info: WEL_NMHDR) is
+	on_notify (control_id: INTEGER; info: WEL_NMHDR)
 			-- A `wm_notify' message has been received by `Current'
 		local
 			up_down: WEL_NM_UP_DOWN_CONTROL
@@ -689,7 +689,7 @@ feature {NONE} -- Implementation
 		-- not changing, ie reached its maximum. We only want to call the
 		-- change actions when the value really does change.
 
-	on_wm_vscroll (wparam, lparam: POINTER) is
+	on_wm_vscroll (wparam, lparam: POINTER)
 			-- Wm_vscroll message.
 			-- Here, we know it's a spin button.
 		local
@@ -716,7 +716,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -726,7 +726,7 @@ feature {NONE} -- Implementation
 			disable_default_processing
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 		do
 			internal_arrows_control.move_and_resize
 				(a_width - spin_width, 0, spin_width, a_height, True)
@@ -735,7 +735,7 @@ feature {NONE} -- Implementation
 		end
 
 	ev_apply_new_size
-		(a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+		(a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
 			wel_move_and_resize (a_x, a_y, a_width, a_height, repaint)
 			internal_arrows_control.move_and_resize
@@ -744,7 +744,7 @@ feature {NONE} -- Implementation
 				(0, 0, a_width - spin_width, a_height, repaint)
 		end
 
-	tooltip_window: WEL_WINDOW is
+	tooltip_window: WEL_WINDOW
 			-- `Result' is WEL_WINDOW of `Current' used
 			-- to trigger tooltip events.
 		do
@@ -753,15 +753,15 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	spin_width: INTEGER is 20
+	spin_width: INTEGER = 20
 			-- Width of spin button.
 
-	default_spin_height: INTEGER is 16
+	default_spin_height: INTEGER = 16
 			-- Default height of spin button.
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
-	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
 			-- Encapsulation of the SDK GetNextDlgTabItem,
 			-- because we cannot do a deferred feature become an
 			-- external feature.
@@ -769,7 +769,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			Result := internal_text_field.next_dlgtabitem (hdlg, hctl, previous)
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		do
 			Result := generator
@@ -783,7 +783,7 @@ invariant
 	internal_text_field_not_void: internal_text_field /= Void
 	internal_arrows_control_not_void:  is_initialized implies internal_arrows_control /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

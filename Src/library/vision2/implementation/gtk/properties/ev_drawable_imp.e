@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision drawable. GTK implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	init_default_values is
+	init_default_values
 			-- Set default values. Call during initialization.
 		local
 			l_mem: INTEGER_16
@@ -58,12 +58,12 @@ feature {EV_ANY_I} -- Implementation
 			-- Is allocated during creation but has to be updated
 			-- every time it is accessed.
 
-	drawable: POINTER is
+	drawable: POINTER
 			-- Pointer to the GdkWindow of `c_object'.
 		deferred
 		end
 
-	mask: POINTER is
+	mask: POINTER
 			-- Pointer to the mask used by `Current'
 		deferred
 		end
@@ -73,13 +73,13 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 	line_style: INTEGER
 			-- Dash-style used when drawing lines.
 
-	cap_style: INTEGER is
+	cap_style: INTEGER
 			-- Style used for drawing end of lines.
 		do
 			Result := {EV_GTK_EXTERNALS}.gdk_cap_round_enum
 		end
 
-	join_style: INTEGER is
+	join_style: INTEGER
 			-- Way in which lines are joined together.				
 		do
 			Result := {EV_GTK_EXTERNALS}.Gdk_join_bevel_enum
@@ -88,19 +88,19 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 	gc_clip_area: EV_RECTANGLE
 			-- Clip area currently used by `gc'.
 
-	height: INTEGER is
+	height: INTEGER
 			-- Needed by `draw_straight_line'.
 		deferred
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Needed by `draw_straight_line'.
 		deferred
 		end
 
 feature -- Access
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Font used for drawing text.
 		do
 			if internal_font_imp /= Void then
@@ -110,7 +110,7 @@ feature -- Access
 			end
 		end
 
-	foreground_color: EV_COLOR is
+	foreground_color: EV_COLOR
 			-- Color used to draw primitives.
 		local
 			l_red, l_green, l_blue: INTEGER
@@ -125,7 +125,7 @@ feature -- Access
 			create Result.make_with_8_bit_rgb (l_red, l_green, l_blue)
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Color used for erasing of canvas.
 			-- Default: white.
 		local
@@ -144,7 +144,7 @@ feature -- Access
 			create Result.make_with_8_bit_rgb (l_red, l_green, l_blue)
 		end
 
-	line_width: INTEGER is
+	line_width: INTEGER
 			-- Line thickness.
 		do
 			gcvalues := {EV_GTK_EXTERNALS}.c_gdk_gcvalues_struct_allocate
@@ -153,7 +153,7 @@ feature -- Access
 			gcvalues.memory_free
 		end
 
-	drawing_mode: INTEGER is
+	drawing_mode: INTEGER
 			-- Logical operation on pixels when drawing.
 		local
 			gdk_drawing_mode: INTEGER
@@ -180,7 +180,7 @@ feature -- Access
 			end
 		end
 
-	clip_area: EV_RECTANGLE is
+	clip_area: EV_RECTANGLE
 			-- Clip area used to clip drawing.
 			-- If set to Void, no clipping is applied.
 		do
@@ -193,7 +193,7 @@ feature -- Access
 			-- Pixmap that is used to fill instead of background_color.
 			-- If set to Void, `background_color' is used to fill.
 
-	dashed_line_style: BOOLEAN is
+	dashed_line_style: BOOLEAN
 			-- Are lines drawn dashed?
 		local
 			style: INTEGER
@@ -207,7 +207,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Set `font' to `a_font'.
 		do
 			if internal_font_imp /= a_font.implementation then
@@ -215,7 +215,7 @@ feature -- Element change
 			end
 		end
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `background_color'.
 		local
 			color_struct: POINTER
@@ -235,7 +235,7 @@ feature -- Element change
 			end
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'
 		local
 			color_struct: POINTER
@@ -255,14 +255,14 @@ feature -- Element change
 			end
 		end
 
-	set_line_width (a_width: INTEGER) is
+	set_line_width (a_width: INTEGER)
 			-- Assign `a_width' to `line_width'.
 		do
 			{EV_GTK_EXTERNALS}.gdk_gc_set_line_attributes (gc, a_width,
 				line_style, cap_style, join_style)
 		end
 
-	set_drawing_mode (a_mode: INTEGER) is
+	set_drawing_mode (a_mode: INTEGER)
 			-- Set drawing mode to `a_mode'.
 		local
 			l_gc: like gc
@@ -287,7 +287,7 @@ feature -- Element change
 			end
 		end
 
-	set_clip_area (an_area: EV_RECTANGLE) is
+	set_clip_area (an_area: EV_RECTANGLE)
 			-- Set an area to clip to.
 		local
 			rectangle_struct: POINTER
@@ -303,7 +303,7 @@ feature -- Element change
 			rectangle_struct.memory_free
 		end
 
-	set_clip_region (a_region: EV_REGION) is
+	set_clip_region (a_region: EV_REGION)
 			-- Set a region to clip to.
 		local
 			a_region_imp: EV_REGION_IMP
@@ -324,7 +324,7 @@ feature -- Element change
 			rectangle_struct.memory_free
 		end
 
-	remove_clipping is
+	remove_clipping
 			-- Do not apply any clipping.
 		do
 			gc_clip_area := Void
@@ -332,7 +332,7 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_region (gc, default_pointer)
 		end
 
-	set_tile (a_pixmap: EV_PIXMAP) is
+	set_tile (a_pixmap: EV_PIXMAP)
 			-- Set tile used to fill figures.
 			-- Set to Void to use `background_color' to fill.
 		local
@@ -344,13 +344,13 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gdk_gc_set_tile (gc, tile_imp.drawable)
 		end
 
-	remove_tile is
+	remove_tile
 			-- Do not apply a tile when filling.
 		do
 			tile := Void
 		end
 
-	enable_dashed_line_style is
+	enable_dashed_line_style
 			-- Draw lines dashed.
 		do
 			line_style := {EV_GTK_EXTERNALS}.Gdk_line_on_off_dash_enum
@@ -358,7 +358,7 @@ feature -- Element change
 				line_style, cap_style, join_style)
 		end
 
-	disable_dashed_line_style is
+	disable_dashed_line_style
 			-- Draw lines solid.
 		do
 			line_style := {EV_GTK_EXTERNALS}.Gdk_line_solid_enum
@@ -368,13 +368,13 @@ feature -- Element change
 
 feature -- Clearing operations
 
-	clear is
+	clear
 			-- Erase `Current' with `background_color'.
 		do
 			clear_rectangle (0, 0, width, height)
 		end
 
-	clear_rectangle (x, y, a_width, a_height: INTEGER) is
+	clear_rectangle (x, y, a_width, a_height: INTEGER)
 			-- Erase rectangle specified with `background_color'.
 		local
 			tmp_fg_color: EV_COLOR
@@ -394,7 +394,7 @@ feature -- Clearing operations
 
 feature -- Drawing operations
 
-	draw_point (x, y: INTEGER) is
+	draw_point (x, y: INTEGER)
 			-- Draw point at (`x', `y').
 		do
 			if drawable /= default_pointer then
@@ -408,7 +408,7 @@ feature -- Drawing operations
 			end
 		end
 
-	draw_text (x, y: INTEGER; a_text: STRING_GENERAL) is
+	draw_text (x, y: INTEGER; a_text: STRING_GENERAL)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		do
 			draw_text_internal (
@@ -421,7 +421,7 @@ feature -- Drawing operations
 			)
 		end
 
-	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: STRING_GENERAL) is
+	draw_rotated_text (x, y: INTEGER; angle: REAL; a_text: STRING_GENERAL)
 			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Rotation is number of radians counter-clockwise from horizontal plane.
 		do
@@ -435,7 +435,7 @@ feature -- Drawing operations
 			)
 		end
 
-	draw_ellipsed_text (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER) is
+	draw_ellipsed_text (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -450,7 +450,7 @@ feature -- Drawing operations
 			)
 		end
 
-	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER) is
+	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -465,7 +465,7 @@ feature -- Drawing operations
 			)
 		end
 
-	draw_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL) is
+	draw_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
 			draw_text_internal (
@@ -478,7 +478,7 @@ feature -- Drawing operations
 			)
 		end
 
-	draw_text_internal (x, y: INTEGER; a_text: STRING_GENERAL; draw_from_baseline: BOOLEAN; a_width: INTEGER; a_angle: REAL) is
+	draw_text_internal (x, y: INTEGER; a_text: STRING_GENERAL; draw_from_baseline: BOOLEAN; a_width: INTEGER; a_angle: REAL)
 			-- Draw `a_text' at (`x', `y') using `font'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -598,7 +598,7 @@ feature -- Drawing operations
 			"(FUNCTION_CAST(void, (PangoLayout*, gint)) $a_function)((PangoLayout*) $a_layout, (gint) $a_ellipsize_mode);"
 		end
 
-	draw_segment (x1, y1, x2, y2: INTEGER) is
+	draw_segment (x1, y1, x2, y2: INTEGER)
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
 			if drawable /= default_pointer then
@@ -614,7 +614,7 @@ feature -- Drawing operations
 			end
 		end
 
-	draw_arc (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL) is
+	draw_arc (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL)
 			-- Draw a part of an ellipse bounded by top left (`x', `y') with
 			-- size `a_width' and `a_height'.
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
@@ -639,7 +639,7 @@ feature -- Drawing operations
 			end
 		end
 
-	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE) is
+	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE)
 			-- Draw `area' of `a_pixel_buffer' with upper-left corner on (`a_x', `a_y').
 		local
 			a_pixbuf_imp: EV_PIXEL_BUFFER_IMP
@@ -668,13 +668,13 @@ feature -- Drawing operations
 			Result := drawable /= {EV_GTK_EXTERNALS}.gdk_root_parent
 		end
 
-	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
+	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		do
 			draw_full_pixmap (x, y, a_pixmap, 0, 0, a_pixmap.width, a_pixmap.height)
 		end
 
-	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
+	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER)
 		local
 			l_source_full, l_source_clip, l_source_intersection: EV_RECTANGLE
 			l_dest_full, l_dest_clip, l_dest_intersection: EV_RECTANGLE
@@ -760,7 +760,7 @@ feature -- Drawing operations
 			end
 		end
 
-	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
 			-- Pixmap region of `Current' represented by rectangle `area'
 		local
 			pix_imp: EV_PIXMAP_IMP
@@ -773,13 +773,13 @@ feature -- Drawing operations
 			{EV_GTK_EXTERNALS}.object_unref (a_pix)
 		end
 
-	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
+	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE)
 			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
 		do
 			draw_full_pixmap (x, y, a_pixmap, area.x, area.y, area.width, area.height)
 		end
 
-	draw_rectangle (x, y, a_width, a_height: INTEGER) is
+	draw_rectangle (x, y, a_width, a_height: INTEGER)
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'.
 		do
@@ -800,7 +800,7 @@ feature -- Drawing operations
 			end
 		end
 
-	draw_ellipse (x, y, a_width, a_height: INTEGER) is
+	draw_ellipse (x, y, a_width, a_height: INTEGER)
 			-- Draw an ellipse bounded by top left (`x', `y') with
 			-- size `a_width' and `a_height'.
 		do
@@ -822,7 +822,7 @@ feature -- Drawing operations
 			end
 		end
 
-	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN) is
+	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN)
 			-- Draw line segments between subsequent points in
 			-- `points'. If `is_closed' draw line segment between first
 			-- and last point in `points'.
@@ -841,7 +841,7 @@ feature -- Drawing operations
 			end
 		end
 
-	draw_pie_slice (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL) is
+	draw_pie_slice (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL)
 			-- Draw a part of an ellipse bounded by top left (`x', `y') with
 			-- size `a_width' and `a_height'.
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
@@ -894,7 +894,7 @@ feature -- Drawing operations
 
 feature -- filling operations
 
-	fill_rectangle (x, y, a_width, a_height: INTEGER) is
+	fill_rectangle (x, y, a_width, a_height: INTEGER)
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'. Fill with `background_color'.
 		do
@@ -916,7 +916,7 @@ feature -- filling operations
 			end
 		end
 
-	fill_ellipse (x, y, a_width, a_height: INTEGER) is
+	fill_ellipse (x, y, a_width, a_height: INTEGER)
 			-- Draw an ellipse bounded by top left (`x', `y') with
 			-- size `a_width' and `a_height'.
 			-- Fill with `background_color'.
@@ -933,7 +933,7 @@ feature -- filling operations
 			end
 		end
 
-	fill_polygon (points: ARRAY [EV_COORDINATE]) is
+	fill_polygon (points: ARRAY [EV_COORDINATE])
 			-- Draw line segments between subsequent points in `points'.
 			-- Fill all enclosed area's with `background_color'.
 		local
@@ -950,7 +950,7 @@ feature -- filling operations
 			end
 		end
 
-	fill_pie_slice (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL) is
+	fill_pie_slice (x, y, a_width, a_height: INTEGER; a_start_angle, an_aperture: REAL)
 			-- Draw a part of an ellipse bounded by top left (`x', `y') with
 			-- size `a_width' and `a_height'.
 			-- Start at `a_start_angle' and stop at `a_start_angle' + `an_aperture'.
@@ -979,7 +979,7 @@ feature -- filling operations
 
 feature {NONE} -- Implemention
 
-	coord_array_to_gdkpoint_array (pts: ARRAY [EV_COORDINATE]): ARRAY [INTEGER] is
+	coord_array_to_gdkpoint_array (pts: ARRAY [EV_COORDINATE]): ARRAY [INTEGER]
 			-- Low-level conversion.
 		require
 			pts_exists: pts /= Void
@@ -1012,13 +1012,13 @@ feature {NONE} -- Implemention
 
 feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
-	pixbuf_from_drawable: POINTER is
+	pixbuf_from_drawable: POINTER
 			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
 		do
 			Result := pixbuf_from_drawable_at_position (0, 0, 0, 0, width, height)
 		end
 
-	pixbuf_from_drawable_at_position (src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER is
+	pixbuf_from_drawable_at_position (src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER
 			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
 		local
 			new_pix, new_mask_pix, l_image, l_mask_image, a_pix, a_mask_pix, l_temp_pix: POINTER
@@ -1056,7 +1056,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 			end
 		end
 
-	pixbuf_from_drawable_with_size (a_width, a_height: INTEGER): POINTER is
+	pixbuf_from_drawable_with_size (a_width, a_height: INTEGER): POINTER
 			-- Return a GdkPixbuf object from the current Gdkpixbuf structure with dimensions `a_width' * `a_height'
 		local
 			a_pixbuf: POINTER
@@ -1068,7 +1068,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	fg_color: POINTER is
+	fg_color: POINTER
 			-- Default allocated background color.
 		local
 			a_success: BOOLEAN
@@ -1077,7 +1077,7 @@ feature {NONE} -- Implementation
 			a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
 		end
 
-	bg_color: POINTER is
+	bg_color: POINTER
 			-- Default allocate foreground color.
 		local
 			a_success: BOOLEAN
@@ -1089,7 +1089,7 @@ feature {NONE} -- Implementation
 			a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
 		end
 
-	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER) is
+	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER)
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
@@ -1123,7 +1123,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	app_implementation: EV_APPLICATION_IMP is
+	app_implementation: EV_APPLICATION_IMP
 			-- Return the instance of EV_APPLICATION_IMP.
 		deferred
 		end
@@ -1142,33 +1142,33 @@ feature {NONE} -- Implementation
 			Result := True
 		end
 
-	flush is
+	flush
 			-- Force all queued expose events to be called.
 		deferred
 		end
 
-	update_if_needed is
+	update_if_needed
 			-- Force update of `Current' if needed
 		deferred
 		end
 
-	whole_circle: INTEGER is 23040
+	whole_circle: INTEGER = 23040
 		-- Number of 1/64 th degrees in a full circle (360 * 64)
 
-	radians_to_gdk_angle: INTEGER is 3667 --
+	radians_to_gdk_angle: INTEGER = 3667 --
 			-- Multiply radian by this to get no of (1/64) degree segments.
 
 	internal_font_imp: EV_FONT_IMP
 
 	interface: EV_DRAWABLE
 
-	gdk_gc_unref (a_gc: POINTER) is
+	gdk_gc_unref (a_gc: POINTER)
 			-- void   gdk_gc_unref		  (GdkGC	    *gc);
 		external
 			"C (GdkGC*) | <gtk/gtk.h>"
 		end
 
-	set_dashes_pattern (a_gc, dash_pattern: POINTER) is
+	set_dashes_pattern (a_gc, dash_pattern: POINTER)
 			-- Set the dashes pattern for gc `a_gc', `dash_pattern' is a pointer to a two count gint8[]] denoting the pattern.
 		external
 			"C inline use <gtk/gtk.h>"
@@ -1179,7 +1179,7 @@ feature {NONE} -- Implementation
 invariant
 	gc_not_void: is_usable implies gc /= default_pointer
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

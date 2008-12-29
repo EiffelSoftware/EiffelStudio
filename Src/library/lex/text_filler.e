@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Buffered files or strings for lexical analysis"
@@ -17,7 +17,7 @@ feature -- Access
 	buffer: STRING;
 			-- Buffer filled by fill_buffer
 
-	file_name : STRING is
+	file_name : STRING
 			-- Name of input file
 		do
 			if source_is_file then
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Status setting
 
-	create_buffers (buf, lin: INTEGER) is
+	create_buffers (buf, lin: INTEGER)
 			-- Create buffers and mask.
 		do
 			buffer_size := buf;
@@ -55,7 +55,7 @@ feature -- Status setting
 			line_length = lin
 		end; 
 
-	resize_and_fill_buffer (buf, b: INTEGER) is
+	resize_and_fill_buffer (buf, b: INTEGER)
 			-- When increasing `buffer_size': resize the buffer and then
 			-- fill the new buffer.
 			-- When decreasing `buffer_size': fill the buffer and then
@@ -106,7 +106,7 @@ feature -- Status setting
 			buffer_size = buf
 		end; 
 
-	exclude (i, j: INTEGER) is
+	exclude (i, j: INTEGER)
 			-- Discard columns `i' to `j' from the input.
 			-- A zero value for `j' means all the way to the
 			-- end of the line.
@@ -135,7 +135,7 @@ feature -- Status setting
 			end
 		end; 
 
-	set_file (f_name: STRING) is
+	set_file (f_name: STRING)
 			-- Use `f_name' as input file.
 		require
 			file_name_not_void: f_name /= Void
@@ -150,7 +150,7 @@ feature -- Status setting
 			reset_data
 		end; 
 
-	set_string (s: STRING) is
+	set_string (s: STRING)
 			-- Use `s' as the input string.
 		require
 			string_not_void: s /= Void
@@ -165,7 +165,7 @@ feature -- Status setting
 			reset_data
 		end; 
 
-	fill_buffer (b: INTEGER) is
+	fill_buffer (b: INTEGER)
 			-- Copy the characters from the `b'+1-st to the last one in
 			-- the beginning of the buffer and then fill the end of
 			-- the buffer with the text. This routine skips the columns
@@ -186,13 +186,13 @@ feature -- Status setting
 			end
 		end; 
 
-	fill_whole_buffer is
+	fill_whole_buffer
 			-- Fill with new characters.
 		do
 			fill_buffer (buffer_size)
 		end 
 
-	close_file is
+	close_file
 			-- Close input file if any.
 		do
 			if file /= Void and then not file.is_closed then
@@ -235,17 +235,17 @@ feature {NONE} -- Implementation
 	position_in_string: INTEGER
 			-- Position of last character read in `string'
 
-	initialize is
+	initialize
 			-- Set buffers
 		deferred
 		end;
 
-	reset_data is
+	reset_data
 			-- Initialize datas when set_file or set_string is used.
 		deferred
 		end 
 
-	reset is
+	reset
 			-- Initialize character position in document.
 		do
 			line_number := 1
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			position_in_string := 0
 		end
 
-	fill_from_file (position, old_size, new_size: INTEGER) is
+	fill_from_file (position, old_size, new_size: INTEGER)
 			-- Copy the characters from `position'+1-th to `old_size'-th
 			-- in beginning of `buffer', and fill other part of `buffer'
 			-- with characters from `file'.
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_from_string (position, old_size, new_size: INTEGER) is
+	fill_from_string (position, old_size, new_size: INTEGER)
 			-- Copy the characters from `position'+1-th to `old_size'-th
 			-- in beginning of `buffer', and fill other part of `buffer'
 			-- with characters from `string'.
@@ -470,7 +470,7 @@ feature {NONE} -- Implementation
 -- time it fills the buffer.
 -- Do not forget to create the buffers before using this class.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

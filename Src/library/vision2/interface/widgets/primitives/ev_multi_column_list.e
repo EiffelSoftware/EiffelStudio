@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Displays a list of multi item rows from which the user can select.
 
@@ -50,7 +50,7 @@ create
 
 feature -- Access
 
-	column_count: INTEGER is
+	column_count: INTEGER
 			-- Column count.
 		require
 			not_destroyed: not is_destroyed
@@ -60,7 +60,7 @@ feature -- Access
 			bridge_ok: Result = implementation.column_count
 		end
 
-	selected_item: like item is
+	selected_item: like item
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
 			-- (For multiple selections see `selected_items').
@@ -72,7 +72,7 @@ feature -- Access
 			bridge_ok: Result = implementation.selected_item
 		end
 
-	selected_items: DYNAMIC_LIST [like item] is
+	selected_items: DYNAMIC_LIST [like item]
 			-- Currently selected items.
 		require
 			not_destroyed: not is_destroyed
@@ -82,7 +82,7 @@ feature -- Access
 			bridge_ok: lists_equal (Result, implementation.selected_items)
 		end
 
-	row_height: INTEGER is
+	row_height: INTEGER
 			-- Height in pixels of each row.
 		require
 			not_destroyed: not is_destroyed
@@ -94,7 +94,7 @@ feature -- Access
 
 feature -- Status report
 
-	multiple_selection_enabled: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN
 			-- Can more than one item be selected?
 		require
 			not_destroyed: not is_destroyed
@@ -104,7 +104,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.multiple_selection_enabled
 		end
 
-	title_shown: BOOLEAN is
+	title_shown: BOOLEAN
 			-- Is a row displaying column titles shown?
 		require
 			not_destroyed: not is_destroyed
@@ -114,7 +114,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.title_shown
 		end
 
-	column_title (a_column: INTEGER): STRING_32 is
+	column_title (a_column: INTEGER): STRING_32
 			-- Title of `a_column'.
 			-- Returns "" if no title given yet.
 		require
@@ -127,7 +127,7 @@ feature -- Status report
 			cloned: Result /= implementation.column_title (a_column)
 		end
 
-	column_width (a_column: INTEGER): INTEGER is
+	column_width (a_column: INTEGER): INTEGER
 			-- Width of `a_column' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -138,7 +138,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.column_width (a_column)
 		end
 
-	column_alignment (a_column: INTEGER): EV_TEXT_ALIGNMENT is
+	column_alignment (a_column: INTEGER): EV_TEXT_ALIGNMENT
 			-- `Result' is alignment of column `a_column'.
 		require
 			not_destroyed: not is_destroyed
@@ -152,7 +152,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	ensure_item_visible (an_item: EV_MULTI_COLUMN_LIST_ROW) is
+	ensure_item_visible (an_item: EV_MULTI_COLUMN_LIST_ROW)
 			-- Ensure `an_item' is visible in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -162,7 +162,7 @@ feature -- Status setting
 			implementation.ensure_item_visible (an_item)
 		end
 
-	remove_selection is
+	remove_selection
 			-- Ensure that `selected_items' is empty.
 		require
 			not_destroyed: not is_destroyed
@@ -172,7 +172,7 @@ feature -- Status setting
 			selected_items_empty: selected_items.is_empty
 		end
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Allow more than one item to be selected.
 		require
 			not_destroyed: not is_destroyed
@@ -182,7 +182,7 @@ feature -- Status setting
 			multiple_selection_enabled: multiple_selection_enabled
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Allow only one item to be selected.
 		require
 			not_destroyed: not is_destroyed
@@ -192,7 +192,7 @@ feature -- Status setting
 			not_multiple_selection_enabled: not multiple_selection_enabled
 		end
 
-	show_title_row is
+	show_title_row
 			-- Show row displaying column titles.
 		require
 			not_destroyed: not is_destroyed
@@ -202,7 +202,7 @@ feature -- Status setting
 			title_shown: title_shown
 		end
 
-	hide_title_row is
+	hide_title_row
 			-- Hide row displaying column titles.
 		require
 			not_destroyed: not is_destroyed
@@ -212,7 +212,7 @@ feature -- Status setting
 			not_title_shown: not title_shown
 		end
 
-	align_text_left (a_column: INTEGER) is
+	align_text_left (a_column: INTEGER)
 			-- Display text of `a_column' left aligned.
 			-- First column is always left aligned.
 		require
@@ -224,7 +224,7 @@ feature -- Status setting
 			left_aligned: column_alignment (a_column).is_left_aligned
 		end
 
-	align_text_center (a_column: INTEGER) is
+	align_text_center (a_column: INTEGER)
 			-- Display text of `a_column' centered.
 			-- First column is always left aligned.
 		require
@@ -236,7 +236,7 @@ feature -- Status setting
 			center_aligned: column_alignment (a_column).is_center_aligned
 		end
 
-	align_text_right (a_column: INTEGER) is
+	align_text_right (a_column: INTEGER)
 			-- Display text of `a_column' right aligned.
 			-- First column is always left aligned.
 		require
@@ -250,7 +250,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_column_title (a_title: STRING_GENERAL; a_column: INTEGER) is
+	set_column_title (a_title: STRING_GENERAL; a_column: INTEGER)
 			-- Assign `a_title' to the `column_title'(`a_column').
 		require
 			not_destroyed: not is_destroyed
@@ -264,7 +264,7 @@ feature -- Element change
 			cloned: column_title (a_column) /= a_title
 		end
 
-	set_column_titles (titles: ARRAY [STRING_GENERAL]) is
+	set_column_titles (titles: ARRAY [STRING_GENERAL])
 			-- Assign `titles' to titles of columns in order.
 			-- `Current' will resize if the number of titles exceeds
 			-- `Column_count'.
@@ -278,7 +278,7 @@ feature -- Element change
 			column_titles_assigned: column_titles_assigned (titles)
 		end
 
-	set_column_width (a_width: INTEGER; a_column: INTEGER) is
+	set_column_width (a_width: INTEGER; a_column: INTEGER)
 			-- Assign `a_width' `column_width'(`a_column').
 		require
 			not_destroyed: not is_destroyed
@@ -291,7 +291,7 @@ feature -- Element change
 			a_width_assigned: a_width = column_width (a_column)
 		end
 
-	resize_column_to_content (a_column: INTEGER) is
+	resize_column_to_content (a_column: INTEGER)
 			-- Resize column `a_column' to width of its widest text.
 		require
 			not_destroyed: not is_destroyed
@@ -300,7 +300,7 @@ feature -- Element change
 			implementation.resize_column_to_content (a_column)
 		end
 
-	set_column_widths (widths: ARRAY [INTEGER]) is
+	set_column_widths (widths: ARRAY [INTEGER])
 				-- Assign `widths' to column widths in order.
 		require
 			not_destroyed: not is_destroyed
@@ -312,7 +312,7 @@ feature -- Element change
 			column_widths_assigned: column_widths_assigned (widths)
 		end
 
-	set_column_alignment (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
+	set_column_alignment (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER)
 			-- Align the text of column `a_column' to `an_alignment'
 			-- The first column must stay as left aligned as MSDN
 			-- states that the first column can only be set as left aligned
@@ -327,7 +327,7 @@ feature -- Element change
 			column_alignment_assigned: column_alignment (a_column).is_equal (an_alignment)
 		end
 
-	set_column_alignments (alignments: LINKED_LIST [EV_TEXT_ALIGNMENT]) is
+	set_column_alignments (alignments: LINKED_LIST [EV_TEXT_ALIGNMENT])
 			-- Assign `alignments' to column text alignments in order.
 			-- The first alignment element is ignored
 			-- (see set_column_alignment).
@@ -342,7 +342,7 @@ feature -- Element change
 
 feature -- Obsolete
 
-	clear_selection is
+	clear_selection
 			-- Make `selected_items' empty.
 		obsolete "Please use `remove_selection' instead."
 		require
@@ -355,7 +355,7 @@ feature -- Obsolete
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST} and title_shown and
@@ -364,7 +364,7 @@ feature {NONE} -- Contract support
 
 feature {NONE} -- Contract support
 
-	column_widths_assigned (widths: ARRAY [INTEGER]): BOOLEAN is
+	column_widths_assigned (widths: ARRAY [INTEGER]): BOOLEAN
 			-- Are widths of columns equal to `widths'?
 		require
 			widths_not_void: widths /= Void
@@ -384,7 +384,7 @@ feature {NONE} -- Contract support
 			end
 		end
 
-	column_titles_assigned (titles: ARRAY [STRING_GENERAL]): BOOLEAN is
+	column_titles_assigned (titles: ARRAY [STRING_GENERAL]): BOOLEAN
 			-- Are titles of columns equal to `titles'?
 		require
 			titles_not_void: titles /= Void
@@ -404,7 +404,7 @@ feature {NONE} -- Contract support
 			end
 		end
 
-	column_alignments_assigned (alignments: LINKED_LIST [EV_TEXT_ALIGNMENT]): BOOLEAN is
+	column_alignments_assigned (alignments: LINKED_LIST [EV_TEXT_ALIGNMENT]): BOOLEAN
 			-- Are alignments of columns equal to `alignments'.
 		require
 			alignment_not_void: alignments /= Void
@@ -426,7 +426,7 @@ feature {NONE} -- Contract support
 
 feature -- Contract support
 
-	is_parent_recursive (a_row: EV_MULTI_COLUMN_LIST_ROW): BOOLEAN is
+	is_parent_recursive (a_row: EV_MULTI_COLUMN_LIST_ROW): BOOLEAN
 			-- Is `a_row' a parent of `Current'?
 		do
 				-- As we cannot insert an EV_MULTI_COLUMN list into
@@ -441,13 +441,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_MULTI_COLUMN_LIST_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Modeless dialog box to use as a application's %
 		%main window."
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_by_id (an_id: INTEGER) is
+	make_by_id (an_id: INTEGER)
 			-- Initialize a loadable dialog box identified by
 			-- `an_id'.
 		do
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			dialog_children_not_void: dialog_children /= Void
 		end
 
-	make_by_name (a_name: STRING_GENERAL) is
+	make_by_name (a_name: STRING_GENERAL)
 			-- Initialize a loadable dialog box identified by
 			-- `a_name'.
 		require
@@ -55,14 +55,14 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	activate is
+	activate
 			-- Activate the dialog.
 		do
 			internal_dialog_make (parent, resource_id,
 				resource_name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

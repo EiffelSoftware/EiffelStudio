@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Generic flags class."
 	legal: "See notice at end of class."
@@ -11,19 +11,19 @@ class
 
 feature {NONE} -- Externals
 
-	binary_and (operand1, operand2: INTEGER): INTEGER is
+	binary_and (operand1, operand2: INTEGER): INTEGER
 			-- Binary 'and'.
 		external
 			"C [macro %"ecom_flags.h%"]"
 		end
 
-	binary_or (operand1, operand2: INTEGER): INTEGER is
+	binary_or (operand1, operand2: INTEGER): INTEGER
 			-- Binary 'or'.
 		external
 			"C [macro %"ecom_flags.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

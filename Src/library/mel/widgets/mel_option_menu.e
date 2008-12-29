@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"A MEL_ROW_COLUMN used as an option menu."
@@ -31,7 +31,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif option menu widget.
 		local
 			widget_name: ANY
@@ -50,7 +50,7 @@ feature -- Initialization
 			end
 		end;
 
-	make_with_label (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN; a_ms: MEL_STRING) is
+	make_with_label (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN; a_ms: MEL_STRING)
 			-- Create a motif option menu with a label.
 		require
 			name_exists: a_name /= Void;
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Status report
 
-    sub_menu: MEL_PULLDOWN_MENU is
+    sub_menu: MEL_PULLDOWN_MENU
             -- Pulldown menu to be associated with an option menu.
         require
             exists: not is_destroyed
@@ -95,7 +95,7 @@ feature -- Status report
 
 feature -- Status setting
 
-    set_sub_menu (a_widget: MEL_PULLDOWN_MENU) is
+    set_sub_menu (a_widget: MEL_PULLDOWN_MENU)
             -- Set `sub_menu' to `a_widget'.
         require
             exists: not is_destroyed
@@ -108,26 +108,26 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	xm_create_option_menu (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_option_menu (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C [macro <Xm/RowColumn.h>] (Widget, String, ArgList, Cardinal): EIF_POINTER"
 		alias
 			"XmCreateOptionMenu"
 		end;
 
-	xm_create_option_menu_with_label (a_parent, a_name, a_xmstring: POINTER): POINTER is
+	xm_create_option_menu_with_label (a_parent, a_name, a_xmstring: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	xm_option_button_gadget (a_parent: POINTER): POINTER is
+	xm_option_button_gadget (a_parent: POINTER): POINTER
 		external
 			"C (Widget): EIF_POINTER | <Xm/RowColumn.h>"
 		alias
 			"XmOptionButtonGadget"
 		end;
 
-	xm_option_label_gadget (a_parent: POINTER): POINTER is
+	xm_option_label_gadget (a_parent: POINTER): POINTER
 		external
 			"C (Widget): EIF_POINTER | <Xm/RowColumn.h>"
 		alias
@@ -138,7 +138,7 @@ invariant
 
 	valid_gadgets: button_gadget /= Void and then label_gadget /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

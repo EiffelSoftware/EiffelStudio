@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IRunningObjectTable' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_irunning_object_table_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	register (grf_flags: INTEGER; punk_object: ECOM_INTERFACE; pmk_object_name: IMONIKER_INTERFACE; pdw_register: INTEGER_REF) is
+	register (grf_flags: INTEGER; punk_object: ECOM_INTERFACE; pmk_object_name: IMONIKER_INTERFACE; pdw_register: INTEGER_REF)
 			-- No description available.
 			-- `grf_flags' [in].  
 			-- `punk_object' [in].  
@@ -59,14 +59,14 @@ feature -- Basic Operations
 			ccom_register (initializer, grf_flags, punk_object_item, pmk_object_name_item, pdw_register)
 		end
 
-	revoke (dw_register: INTEGER) is
+	revoke (dw_register: INTEGER)
 			-- No description available.
 			-- `dw_register' [in].  
 		do
 			ccom_revoke (initializer, dw_register)
 		end
 
-	is_running (pmk_object_name: IMONIKER_INTERFACE) is
+	is_running (pmk_object_name: IMONIKER_INTERFACE)
 			-- No description available.
 			-- `pmk_object_name' [in].  
 		local
@@ -85,7 +85,7 @@ feature -- Basic Operations
 			ccom_is_running (initializer, pmk_object_name_item)
 		end
 
-	get_object (pmk_object_name: IMONIKER_INTERFACE; ppunk_object: CELL [ECOM_INTERFACE]) is
+	get_object (pmk_object_name: IMONIKER_INTERFACE; ppunk_object: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `pmk_object_name' [in].  
 			-- `ppunk_object' [out].  
@@ -105,7 +105,7 @@ feature -- Basic Operations
 			ccom_get_object (initializer, pmk_object_name_item, ppunk_object)
 		end
 
-	note_change_time (dw_register: INTEGER; pfiletime: X_FILETIME_RECORD) is
+	note_change_time (dw_register: INTEGER; pfiletime: X_FILETIME_RECORD)
 			-- No description available.
 			-- `dw_register' [in].  
 			-- `pfiletime' [in].  
@@ -113,7 +113,7 @@ feature -- Basic Operations
 			ccom_note_change_time (initializer, dw_register, pfiletime.item)
 		end
 
-	get_time_of_last_change (pmk_object_name: IMONIKER_INTERFACE; pfiletime: X_FILETIME_RECORD) is
+	get_time_of_last_change (pmk_object_name: IMONIKER_INTERFACE; pfiletime: X_FILETIME_RECORD)
 			-- No description available.
 			-- `pmk_object_name' [in].  
 			-- `pfiletime' [out].  
@@ -133,7 +133,7 @@ feature -- Basic Operations
 			ccom_get_time_of_last_change (initializer, pmk_object_name_item, pfiletime.item)
 		end
 
-	enum_running (ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE]) is
+	enum_running (ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE])
 			-- No description available.
 			-- `ppenum_moniker' [out].  
 		do
@@ -142,7 +142,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_irunning_object_table_impl_proxy(initializer)
@@ -150,67 +150,67 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_register (cpp_obj: POINTER; grf_flags: INTEGER; punk_object: POINTER; pmk_object_name: POINTER; pdw_register: INTEGER_REF) is
+	ccom_register (cpp_obj: POINTER; grf_flags: INTEGER; punk_object: POINTER; pmk_object_name: POINTER; pdw_register: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](EIF_INTEGER,IUnknown *,::IMoniker *,EIF_OBJECT)"
 		end
 
-	ccom_revoke (cpp_obj: POINTER; dw_register: INTEGER) is
+	ccom_revoke (cpp_obj: POINTER; dw_register: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_is_running (cpp_obj: POINTER; pmk_object_name: POINTER) is
+	ccom_is_running (cpp_obj: POINTER; pmk_object_name: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](::IMoniker *)"
 		end
 
-	ccom_get_object (cpp_obj: POINTER; pmk_object_name: POINTER; ppunk_object: CELL [ECOM_INTERFACE]) is
+	ccom_get_object (cpp_obj: POINTER; pmk_object_name: POINTER; ppunk_object: CELL [ECOM_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](::IMoniker *,EIF_OBJECT)"
 		end
 
-	ccom_note_change_time (cpp_obj: POINTER; dw_register: INTEGER; pfiletime: POINTER) is
+	ccom_note_change_time (cpp_obj: POINTER; dw_register: INTEGER; pfiletime: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::_FILETIME *)"
 		end
 
-	ccom_get_time_of_last_change (cpp_obj: POINTER; pmk_object_name: POINTER; pfiletime: POINTER) is
+	ccom_get_time_of_last_change (cpp_obj: POINTER; pmk_object_name: POINTER; pfiletime: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](::IMoniker *,ecom_control_library::_FILETIME *)"
 		end
 
-	ccom_enum_running (cpp_obj: POINTER; ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE]) is
+	ccom_enum_running (cpp_obj: POINTER; ppenum_moniker: CELL [IENUM_MONIKER_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_delete_irunning_object_table_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_irunning_object_table_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_irunning_object_table_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_irunning_object_table_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IRunningObjectTable_impl_proxy %"ecom_control_library_IRunningObjectTable_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			A window which does not appear in the task bar and is, by default, borderless.
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_shadow is
+	make_with_shadow
 			-- Current current with a shadow if the underlying platform supports it.
 		do
 			has_shadow := True
@@ -43,7 +43,7 @@ feature -- Status report
 
 feature -- Status Setting
 
-	disconnect_from_window_manager is
+	disconnect_from_window_manager
 			-- Disconnect `Current' from Window manager.
 			-- This means that showing `Current' will not
 			-- grab focus from any other windows and will not
@@ -58,13 +58,13 @@ feature -- Status Setting
 
 feature {NONE} -- Contract support
 
-	user_can_resize_default_state: BOOLEAN is
+	user_can_resize_default_state: BOOLEAN
 			-- Is the default state of `Current' `user_can_resize'?
 		do
 			Result := False
 		end
 
-	is_border_enabled_default_state: BOOLEAN is
+	is_border_enabled_default_state: BOOLEAN
 			-- Is the default state of `Current' `is_border_enabled'?
 		do
 			Result := False
@@ -77,13 +77,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_POPUP_WINDOW_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

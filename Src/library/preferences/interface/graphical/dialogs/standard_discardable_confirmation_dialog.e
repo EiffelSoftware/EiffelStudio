@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Standard discardable dialog for EiffelStudio.%
 			%Same functionalities as a discardable dialog, %
 			%but not deferred to avoid having too many classes."
@@ -20,7 +20,7 @@ create
 feature {NONE} -- Initialization
 
 	make_initialized (button_count: INTEGER; res_name: STRING;
-				confirmation_text: STRING_GENERAL; check_label: STRING_GENERAL; app_prefs: PREFERENCES) is
+				confirmation_text: STRING_GENERAL; check_label: STRING_GENERAL; app_prefs: PREFERENCES)
 			-- Initialize `Current' based on these values.
 			-- `res_name' is the name of the boolean preference corresponding
 			-- to this dialog.
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	assume_ok: BOOLEAN is
+	assume_ok: BOOLEAN
 			-- Should `OK' be assumed?
 		local
 			l_pref: BOOLEAN_PREFERENCE
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	is_boolean_preference (s: STRING): BOOLEAN is
+	is_boolean_preference (s: STRING): BOOLEAN
 			-- Does `s' represent a boolean preference?
 		require
 			valid_string: s /= Void and not s.is_empty
@@ -85,7 +85,7 @@ feature -- Inapplicable
 
 feature {NONE} -- Implementation
 
-	save_check_button_state (checked: BOOLEAN) is
+	save_check_button_state (checked: BOOLEAN)
 			-- Update the preferences state.
 		local
 			l_pref: BOOLEAN_PREFERENCE
@@ -104,7 +104,7 @@ invariant
 			check_button_label /= Void and
 			confirmation_message_label /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

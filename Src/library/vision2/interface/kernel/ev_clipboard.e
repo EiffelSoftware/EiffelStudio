@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow access to the OS clipboard."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	has_text: BOOLEAN is
+	has_text: BOOLEAN
 			-- Does the clipboard currently contain text?
 		require
 			not_destroyed: not is_destroyed
@@ -28,7 +28,7 @@ feature -- Access
 			Result := implementation.has_text
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- `Result' is text of clipboard.
 		require
 			not_destroyed: not is_destroyed
@@ -41,7 +41,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to clipboard.
 		require
 			not_destroyed: not is_destroyed
@@ -52,7 +52,7 @@ feature -- Status setting
 			text_cloned: text.is_equal (a_text) and then text /= a_text
 		end
 
-	remove_text is
+	remove_text
 			-- Make `text' empty.
 		require
 			not_destroyed: not is_destroyed
@@ -69,7 +69,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_CLIPBOARD_IMP} implementation.make (Current)
@@ -79,7 +79,7 @@ invariant
 	has_text_implies_text_not_empty: has_text implies not text.is_empty
 	not_has_text_implies_text_empty: not has_text implies text.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "wrapper for anynymous enums from file Menus.h "
 
 class
@@ -6,1274 +6,1274 @@ class
 
 feature -- Carbon constants
 
-	frozen kMenuDrawMsg: INTEGER is
+	frozen kMenuDrawMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuDrawMsg"
 	end
 
-	frozen kMenuSizeMsg: INTEGER is
+	frozen kMenuSizeMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuSizeMsg"
 	end
 
-	frozen kMenuPopUpMsg: INTEGER is
+	frozen kMenuPopUpMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuPopUpMsg"
 	end
 
-	frozen kMenuCalcItemMsg: INTEGER is
+	frozen kMenuCalcItemMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuCalcItemMsg"
 	end
 
-	frozen kMenuThemeSavvyMsg: INTEGER is
+	frozen kMenuThemeSavvyMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuThemeSavvyMsg"
 	end
 
-	frozen kMenuInitMsg: INTEGER is
+	frozen kMenuInitMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuInitMsg"
 	end
 
-	frozen kMenuDisposeMsg: INTEGER is
+	frozen kMenuDisposeMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuDisposeMsg"
 	end
 
-	frozen kMenuFindItemMsg: INTEGER is
+	frozen kMenuFindItemMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuFindItemMsg"
 	end
 
-	frozen kMenuHiliteItemMsg: INTEGER is
+	frozen kMenuHiliteItemMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuHiliteItemMsg"
 	end
 
-	frozen kMenuDrawItemsMsg: INTEGER is
+	frozen kMenuDrawItemsMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuDrawItemsMsg"
 	end
 
-	frozen mDrawMsg: INTEGER is
+	frozen mDrawMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"mDrawMsg"
 	end
 
-	frozen mSizeMsg: INTEGER is
+	frozen mSizeMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"mSizeMsg"
 	end
 
-	frozen mPopUpMsg: INTEGER is
+	frozen mPopUpMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"mPopUpMsg"
 	end
 
-	frozen mCalcItemMsg: INTEGER is
+	frozen mCalcItemMsg: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"mCalcItemMsg"
 	end
 
-	frozen kThemeSavvyMenuResponse: INTEGER is
+	frozen kThemeSavvyMenuResponse: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSavvyMenuResponse"
 	end
 
-	frozen textMenuProc: INTEGER is
+	frozen textMenuProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"textMenuProc"
 	end
 
-	frozen hMenuCmd: INTEGER is
+	frozen hMenuCmd: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"hMenuCmd"
 	end
 
-	frozen kInsertHierarchicalMenu: INTEGER is
+	frozen kInsertHierarchicalMenu: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kInsertHierarchicalMenu"
 	end
 
-	frozen hierMenu: INTEGER is
+	frozen hierMenu: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"hierMenu"
 	end
 
-	frozen kHIMenuAppendItem: INTEGER is
+	frozen kHIMenuAppendItem: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuAppendItem"
 	end
 
-	frozen noMark: INTEGER is
+	frozen noMark: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"noMark"
 	end
 
-	frozen mctAllItems: INTEGER is
+	frozen mctAllItems: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"mctAllItems"
 	end
 
-	frozen mctLastIDIndic: INTEGER is
+	frozen mctLastIDIndic: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"mctLastIDIndic"
 	end
 
-	frozen kMenuStdMenuProc: INTEGER is
+	frozen kMenuStdMenuProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuStdMenuProc"
 	end
 
-	frozen kMenuStdMenuBarProc: INTEGER is
+	frozen kMenuStdMenuBarProc: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuStdMenuBarProc"
 	end
 
-	frozen kMenuNoModifiers: INTEGER is
+	frozen kMenuNoModifiers: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuNoModifiers"
 	end
 
-	frozen kMenuShiftModifier: INTEGER is
+	frozen kMenuShiftModifier: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuShiftModifier"
 	end
 
-	frozen kMenuOptionModifier: INTEGER is
+	frozen kMenuOptionModifier: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuOptionModifier"
 	end
 
-	frozen kMenuControlModifier: INTEGER is
+	frozen kMenuControlModifier: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuControlModifier"
 	end
 
-	frozen kMenuNoCommandModifier: INTEGER is
+	frozen kMenuNoCommandModifier: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuNoCommandModifier"
 	end
 
-	frozen kMenuNoIcon: INTEGER is
+	frozen kMenuNoIcon: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuNoIcon"
 	end
 
-	frozen kMenuIconType: INTEGER is
+	frozen kMenuIconType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuIconType"
 	end
 
-	frozen kMenuShrinkIconType: INTEGER is
+	frozen kMenuShrinkIconType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuShrinkIconType"
 	end
 
-	frozen kMenuSmallIconType: INTEGER is
+	frozen kMenuSmallIconType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuSmallIconType"
 	end
 
-	frozen kMenuColorIconType: INTEGER is
+	frozen kMenuColorIconType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuColorIconType"
 	end
 
-	frozen kMenuIconSuiteType: INTEGER is
+	frozen kMenuIconSuiteType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuIconSuiteType"
 	end
 
-	frozen kMenuIconRefType: INTEGER is
+	frozen kMenuIconRefType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuIconRefType"
 	end
 
-	frozen kMenuCGImageRefType: INTEGER is
+	frozen kMenuCGImageRefType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuCGImageRefType"
 	end
 
-	frozen kMenuSystemIconSelectorType: INTEGER is
+	frozen kMenuSystemIconSelectorType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuSystemIconSelectorType"
 	end
 
-	frozen kMenuIconResourceType: INTEGER is
+	frozen kMenuIconResourceType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuIconResourceType"
 	end
 
-	frozen kMenuNullGlyph: INTEGER is
+	frozen kMenuNullGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuNullGlyph"
 	end
 
-	frozen kMenuTabRightGlyph: INTEGER is
+	frozen kMenuTabRightGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuTabRightGlyph"
 	end
 
-	frozen kMenuTabLeftGlyph: INTEGER is
+	frozen kMenuTabLeftGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuTabLeftGlyph"
 	end
 
-	frozen kMenuEnterGlyph: INTEGER is
+	frozen kMenuEnterGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuEnterGlyph"
 	end
 
-	frozen kMenuShiftGlyph: INTEGER is
+	frozen kMenuShiftGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuShiftGlyph"
 	end
 
-	frozen kMenuControlGlyph: INTEGER is
+	frozen kMenuControlGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuControlGlyph"
 	end
 
-	frozen kMenuOptionGlyph: INTEGER is
+	frozen kMenuOptionGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuOptionGlyph"
 	end
 
-	frozen kMenuSpaceGlyph: INTEGER is
+	frozen kMenuSpaceGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuSpaceGlyph"
 	end
 
-	frozen kMenuDeleteRightGlyph: INTEGER is
+	frozen kMenuDeleteRightGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuDeleteRightGlyph"
 	end
 
-	frozen kMenuReturnGlyph: INTEGER is
+	frozen kMenuReturnGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuReturnGlyph"
 	end
 
-	frozen kMenuReturnR2LGlyph: INTEGER is
+	frozen kMenuReturnR2LGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuReturnR2LGlyph"
 	end
 
-	frozen kMenuNonmarkingReturnGlyph: INTEGER is
+	frozen kMenuNonmarkingReturnGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuNonmarkingReturnGlyph"
 	end
 
-	frozen kMenuPencilGlyph: INTEGER is
+	frozen kMenuPencilGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuPencilGlyph"
 	end
 
-	frozen kMenuDownwardArrowDashedGlyph: INTEGER is
+	frozen kMenuDownwardArrowDashedGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuDownwardArrowDashedGlyph"
 	end
 
-	frozen kMenuCommandGlyph: INTEGER is
+	frozen kMenuCommandGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuCommandGlyph"
 	end
 
-	frozen kMenuCheckmarkGlyph: INTEGER is
+	frozen kMenuCheckmarkGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuCheckmarkGlyph"
 	end
 
-	frozen kMenuDiamondGlyph: INTEGER is
+	frozen kMenuDiamondGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuDiamondGlyph"
 	end
 
-	frozen kMenuAppleLogoFilledGlyph: INTEGER is
+	frozen kMenuAppleLogoFilledGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuAppleLogoFilledGlyph"
 	end
 
-	frozen kMenuParagraphKoreanGlyph: INTEGER is
+	frozen kMenuParagraphKoreanGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuParagraphKoreanGlyph"
 	end
 
-	frozen kMenuDeleteLeftGlyph: INTEGER is
+	frozen kMenuDeleteLeftGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuDeleteLeftGlyph"
 	end
 
-	frozen kMenuLeftArrowDashedGlyph: INTEGER is
+	frozen kMenuLeftArrowDashedGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuLeftArrowDashedGlyph"
 	end
 
-	frozen kMenuUpArrowDashedGlyph: INTEGER is
+	frozen kMenuUpArrowDashedGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuUpArrowDashedGlyph"
 	end
 
-	frozen kMenuRightArrowDashedGlyph: INTEGER is
+	frozen kMenuRightArrowDashedGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuRightArrowDashedGlyph"
 	end
 
-	frozen kMenuEscapeGlyph: INTEGER is
+	frozen kMenuEscapeGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuEscapeGlyph"
 	end
 
-	frozen kMenuClearGlyph: INTEGER is
+	frozen kMenuClearGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuClearGlyph"
 	end
 
-	frozen kMenuLeftDoubleQuotesJapaneseGlyph: INTEGER is
+	frozen kMenuLeftDoubleQuotesJapaneseGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuLeftDoubleQuotesJapaneseGlyph"
 	end
 
-	frozen kMenuRightDoubleQuotesJapaneseGlyph: INTEGER is
+	frozen kMenuRightDoubleQuotesJapaneseGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuRightDoubleQuotesJapaneseGlyph"
 	end
 
-	frozen kMenuTrademarkJapaneseGlyph: INTEGER is
+	frozen kMenuTrademarkJapaneseGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuTrademarkJapaneseGlyph"
 	end
 
-	frozen kMenuBlankGlyph: INTEGER is
+	frozen kMenuBlankGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuBlankGlyph"
 	end
 
-	frozen kMenuPageUpGlyph: INTEGER is
+	frozen kMenuPageUpGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuPageUpGlyph"
 	end
 
-	frozen kMenuCapsLockGlyph: INTEGER is
+	frozen kMenuCapsLockGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuCapsLockGlyph"
 	end
 
-	frozen kMenuLeftArrowGlyph: INTEGER is
+	frozen kMenuLeftArrowGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuLeftArrowGlyph"
 	end
 
-	frozen kMenuRightArrowGlyph: INTEGER is
+	frozen kMenuRightArrowGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuRightArrowGlyph"
 	end
 
-	frozen kMenuNorthwestArrowGlyph: INTEGER is
+	frozen kMenuNorthwestArrowGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuNorthwestArrowGlyph"
 	end
 
-	frozen kMenuHelpGlyph: INTEGER is
+	frozen kMenuHelpGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuHelpGlyph"
 	end
 
-	frozen kMenuUpArrowGlyph: INTEGER is
+	frozen kMenuUpArrowGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuUpArrowGlyph"
 	end
 
-	frozen kMenuSoutheastArrowGlyph: INTEGER is
+	frozen kMenuSoutheastArrowGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuSoutheastArrowGlyph"
 	end
 
-	frozen kMenuDownArrowGlyph: INTEGER is
+	frozen kMenuDownArrowGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuDownArrowGlyph"
 	end
 
-	frozen kMenuPageDownGlyph: INTEGER is
+	frozen kMenuPageDownGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuPageDownGlyph"
 	end
 
-	frozen kMenuAppleLogoOutlineGlyph: INTEGER is
+	frozen kMenuAppleLogoOutlineGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuAppleLogoOutlineGlyph"
 	end
 
-	frozen kMenuContextualMenuGlyph: INTEGER is
+	frozen kMenuContextualMenuGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuContextualMenuGlyph"
 	end
 
-	frozen kMenuPowerGlyph: INTEGER is
+	frozen kMenuPowerGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuPowerGlyph"
 	end
 
-	frozen kMenuF1Glyph: INTEGER is
+	frozen kMenuF1Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF1Glyph"
 	end
 
-	frozen kMenuF2Glyph: INTEGER is
+	frozen kMenuF2Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF2Glyph"
 	end
 
-	frozen kMenuF3Glyph: INTEGER is
+	frozen kMenuF3Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF3Glyph"
 	end
 
-	frozen kMenuF4Glyph: INTEGER is
+	frozen kMenuF4Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF4Glyph"
 	end
 
-	frozen kMenuF5Glyph: INTEGER is
+	frozen kMenuF5Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF5Glyph"
 	end
 
-	frozen kMenuF6Glyph: INTEGER is
+	frozen kMenuF6Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF6Glyph"
 	end
 
-	frozen kMenuF7Glyph: INTEGER is
+	frozen kMenuF7Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF7Glyph"
 	end
 
-	frozen kMenuF8Glyph: INTEGER is
+	frozen kMenuF8Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF8Glyph"
 	end
 
-	frozen kMenuF9Glyph: INTEGER is
+	frozen kMenuF9Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF9Glyph"
 	end
 
-	frozen kMenuF10Glyph: INTEGER is
+	frozen kMenuF10Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF10Glyph"
 	end
 
-	frozen kMenuF11Glyph: INTEGER is
+	frozen kMenuF11Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF11Glyph"
 	end
 
-	frozen kMenuF12Glyph: INTEGER is
+	frozen kMenuF12Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF12Glyph"
 	end
 
-	frozen kMenuF13Glyph: INTEGER is
+	frozen kMenuF13Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF13Glyph"
 	end
 
-	frozen kMenuF14Glyph: INTEGER is
+	frozen kMenuF14Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF14Glyph"
 	end
 
-	frozen kMenuF15Glyph: INTEGER is
+	frozen kMenuF15Glyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuF15Glyph"
 	end
 
-	frozen kMenuControlISOGlyph: INTEGER is
+	frozen kMenuControlISOGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuControlISOGlyph"
 	end
 
-	frozen kMenuEjectGlyph: INTEGER is
+	frozen kMenuEjectGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuEjectGlyph"
 	end
 
-	frozen kMenuEisuGlyph: INTEGER is
+	frozen kMenuEisuGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuEisuGlyph"
 	end
 
-	frozen kMenuKanaGlyph: INTEGER is
+	frozen kMenuKanaGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuKanaGlyph"
 	end
 
-	frozen kMenuAttrExcludesMarkColumn: INTEGER is
+	frozen kMenuAttrExcludesMarkColumn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuAttrExcludesMarkColumn"
 	end
 
-	frozen kMenuAttrAutoDisable: INTEGER is
+	frozen kMenuAttrAutoDisable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuAttrAutoDisable"
 	end
 
-	frozen kMenuAttrUsePencilGlyph: INTEGER is
+	frozen kMenuAttrUsePencilGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuAttrUsePencilGlyph"
 	end
 
-	frozen kMenuAttrHidden: INTEGER is
+	frozen kMenuAttrHidden: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuAttrHidden"
 	end
 
-	frozen kMenuAttrCondenseSeparators: INTEGER is
+	frozen kMenuAttrCondenseSeparators: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuAttrCondenseSeparators"
 	end
 
-	frozen kMenuAttrDoNotCacheImage: INTEGER is
+	frozen kMenuAttrDoNotCacheImage: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuAttrDoNotCacheImage"
 	end
 
-	frozen kMenuAttrDoNotUseUserCommandKeys: INTEGER is
+	frozen kMenuAttrDoNotUseUserCommandKeys: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuAttrDoNotUseUserCommandKeys"
 	end
 
-	frozen kMenuItemAttrDisabled: INTEGER is
+	frozen kMenuItemAttrDisabled: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrDisabled"
 	end
 
-	frozen kMenuItemAttrIconDisabled: INTEGER is
+	frozen kMenuItemAttrIconDisabled: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrIconDisabled"
 	end
 
-	frozen kMenuItemAttrSubmenuParentChoosable: INTEGER is
+	frozen kMenuItemAttrSubmenuParentChoosable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrSubmenuParentChoosable"
 	end
 
-	frozen kMenuItemAttrDynamic: INTEGER is
+	frozen kMenuItemAttrDynamic: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrDynamic"
 	end
 
-	frozen kMenuItemAttrNotPreviousAlternate: INTEGER is
+	frozen kMenuItemAttrNotPreviousAlternate: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrNotPreviousAlternate"
 	end
 
-	frozen kMenuItemAttrHidden: INTEGER is
+	frozen kMenuItemAttrHidden: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrHidden"
 	end
 
-	frozen kMenuItemAttrSeparator: INTEGER is
+	frozen kMenuItemAttrSeparator: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrSeparator"
 	end
 
-	frozen kMenuItemAttrSectionHeader: INTEGER is
+	frozen kMenuItemAttrSectionHeader: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrSectionHeader"
 	end
 
-	frozen kMenuItemAttrIgnoreMeta: INTEGER is
+	frozen kMenuItemAttrIgnoreMeta: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrIgnoreMeta"
 	end
 
-	frozen kMenuItemAttrAutoRepeat: INTEGER is
+	frozen kMenuItemAttrAutoRepeat: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrAutoRepeat"
 	end
 
-	frozen kMenuItemAttrUseVirtualKey: INTEGER is
+	frozen kMenuItemAttrUseVirtualKey: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrUseVirtualKey"
 	end
 
-	frozen kMenuItemAttrCustomDraw: INTEGER is
+	frozen kMenuItemAttrCustomDraw: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrCustomDraw"
 	end
 
-	frozen kMenuItemAttrIncludeInCmdKeyMatching: INTEGER is
+	frozen kMenuItemAttrIncludeInCmdKeyMatching: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrIncludeInCmdKeyMatching"
 	end
 
-	frozen kMenuItemAttrAutoDisable: INTEGER is
+	frozen kMenuItemAttrAutoDisable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrAutoDisable"
 	end
 
-	frozen kMenuItemAttrUpdateSingleItem: INTEGER is
+	frozen kMenuItemAttrUpdateSingleItem: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemAttrUpdateSingleItem"
 	end
 
-	frozen kMenuTrackingModeMouse: INTEGER is
+	frozen kMenuTrackingModeMouse: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuTrackingModeMouse"
 	end
 
-	frozen kMenuTrackingModeKeyboard: INTEGER is
+	frozen kMenuTrackingModeKeyboard: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuTrackingModeKeyboard"
 	end
 
-	frozen kMenuEventIncludeDisabledItems: INTEGER is
+	frozen kMenuEventIncludeDisabledItems: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuEventIncludeDisabledItems"
 	end
 
-	frozen kMenuEventQueryOnly: INTEGER is
+	frozen kMenuEventQueryOnly: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuEventQueryOnly"
 	end
 
-	frozen kMenuEventDontCheckSubmenus: INTEGER is
+	frozen kMenuEventDontCheckSubmenus: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuEventDontCheckSubmenus"
 	end
 
-	frozen kMenuItemDataText: INTEGER is
+	frozen kMenuItemDataText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataText"
 	end
 
-	frozen kMenuItemDataMark: INTEGER is
+	frozen kMenuItemDataMark: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataMark"
 	end
 
-	frozen kMenuItemDataCmdKey: INTEGER is
+	frozen kMenuItemDataCmdKey: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataCmdKey"
 	end
 
-	frozen kMenuItemDataCmdKeyGlyph: INTEGER is
+	frozen kMenuItemDataCmdKeyGlyph: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataCmdKeyGlyph"
 	end
 
-	frozen kMenuItemDataCmdKeyModifiers: INTEGER is
+	frozen kMenuItemDataCmdKeyModifiers: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataCmdKeyModifiers"
 	end
 
-	frozen kMenuItemDataStyle: INTEGER is
+	frozen kMenuItemDataStyle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataStyle"
 	end
 
-	frozen kMenuItemDataEnabled: INTEGER is
+	frozen kMenuItemDataEnabled: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataEnabled"
 	end
 
-	frozen kMenuItemDataIconEnabled: INTEGER is
+	frozen kMenuItemDataIconEnabled: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataIconEnabled"
 	end
 
-	frozen kMenuItemDataIconID: INTEGER is
+	frozen kMenuItemDataIconID: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataIconID"
 	end
 
-	frozen kMenuItemDataIconHandle: INTEGER is
+	frozen kMenuItemDataIconHandle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataIconHandle"
 	end
 
-	frozen kMenuItemDataCommandID: INTEGER is
+	frozen kMenuItemDataCommandID: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataCommandID"
 	end
 
-	frozen kMenuItemDataTextEncoding: INTEGER is
+	frozen kMenuItemDataTextEncoding: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataTextEncoding"
 	end
 
-	frozen kMenuItemDataSubmenuID: INTEGER is
+	frozen kMenuItemDataSubmenuID: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataSubmenuID"
 	end
 
-	frozen kMenuItemDataSubmenuHandle: INTEGER is
+	frozen kMenuItemDataSubmenuHandle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataSubmenuHandle"
 	end
 
-	frozen kMenuItemDataFontID: INTEGER is
+	frozen kMenuItemDataFontID: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataFontID"
 	end
 
-	frozen kMenuItemDataRefcon: INTEGER is
+	frozen kMenuItemDataRefcon: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataRefcon"
 	end
 
-	frozen kMenuItemDataAttributes: INTEGER is
+	frozen kMenuItemDataAttributes: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataAttributes"
 	end
 
-	frozen kMenuItemDataCFString: INTEGER is
+	frozen kMenuItemDataCFString: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataCFString"
 	end
 
-	frozen kMenuItemDataProperties: INTEGER is
+	frozen kMenuItemDataProperties: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataProperties"
 	end
 
-	frozen kMenuItemDataIndent: INTEGER is
+	frozen kMenuItemDataIndent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataIndent"
 	end
 
-	frozen kMenuItemDataCmdVirtualKey: INTEGER is
+	frozen kMenuItemDataCmdVirtualKey: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataCmdVirtualKey"
 	end
 
-	frozen kMenuItemDataAllDataVersionOne: INTEGER is
+	frozen kMenuItemDataAllDataVersionOne: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataAllDataVersionOne"
 	end
 
-	frozen kMenuItemDataAllDataVersionTwo: INTEGER is
+	frozen kMenuItemDataAllDataVersionTwo: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuItemDataAllDataVersionTwo"
 	end
 
-	frozen kMenuDefProcPtr: INTEGER is
+	frozen kMenuDefProcPtr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuDefProcPtr"
 	end
 
-	frozen kMenuDefClassID: INTEGER is
+	frozen kMenuDefClassID: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuDefClassID"
 	end
 
-	frozen kHIMenuDismissedBySelection: INTEGER is
+	frozen kHIMenuDismissedBySelection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuDismissedBySelection"
 	end
 
-	frozen kHIMenuDismissedByUserCancel: INTEGER is
+	frozen kHIMenuDismissedByUserCancel: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuDismissedByUserCancel"
 	end
 
-	frozen kHIMenuDismissedByMouseDown: INTEGER is
+	frozen kHIMenuDismissedByMouseDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuDismissedByMouseDown"
 	end
 
-	frozen kHIMenuDismissedByMouseUp: INTEGER is
+	frozen kHIMenuDismissedByMouseUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuDismissedByMouseUp"
 	end
 
-	frozen kHIMenuDismissedByKeyEvent: INTEGER is
+	frozen kHIMenuDismissedByKeyEvent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuDismissedByKeyEvent"
 	end
 
-	frozen kHIMenuDismissedByAppSwitch: INTEGER is
+	frozen kHIMenuDismissedByAppSwitch: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuDismissedByAppSwitch"
 	end
 
-	frozen kHIMenuDismissedByTimeout: INTEGER is
+	frozen kHIMenuDismissedByTimeout: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuDismissedByTimeout"
 	end
 
-	frozen kHIMenuDismissedByCancelMenuTracking: INTEGER is
+	frozen kHIMenuDismissedByCancelMenuTracking: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuDismissedByCancelMenuTracking"
 	end
 
-	frozen kHIMenuDismissedByActivationChange: INTEGER is
+	frozen kHIMenuDismissedByActivationChange: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuDismissedByActivationChange"
 	end
 
-	frozen kHIMenuDismissedByFocusChange: INTEGER is
+	frozen kHIMenuDismissedByFocusChange: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuDismissedByFocusChange"
 	end
 
-	frozen kMenuPropertyPersistent: INTEGER is
+	frozen kMenuPropertyPersistent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuPropertyPersistent"
 	end
 
-	frozen kHierarchicalFontMenuOption: INTEGER is
+	frozen kHierarchicalFontMenuOption: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHierarchicalFontMenuOption"
 	end
 
-	frozen gestaltContextualMenuAttr: INTEGER is
+	frozen gestaltContextualMenuAttr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"gestaltContextualMenuAttr"
 	end
 
-	frozen gestaltContextualMenuUnusedBit: INTEGER is
+	frozen gestaltContextualMenuUnusedBit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"gestaltContextualMenuUnusedBit"
 	end
 
-	frozen gestaltContextualMenuTrapAvailable: INTEGER is
+	frozen gestaltContextualMenuTrapAvailable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"gestaltContextualMenuTrapAvailable"
 	end
 
-	frozen gestaltContextualMenuHasAttributeAndModifierKeys: INTEGER is
+	frozen gestaltContextualMenuHasAttributeAndModifierKeys: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"gestaltContextualMenuHasAttributeAndModifierKeys"
 	end
 
-	frozen gestaltContextualMenuHasUnicodeSupport: INTEGER is
+	frozen gestaltContextualMenuHasUnicodeSupport: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"gestaltContextualMenuHasUnicodeSupport"
 	end
 
-	frozen kCMHelpItemNoHelp: INTEGER is
+	frozen kCMHelpItemNoHelp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kCMHelpItemNoHelp"
 	end
 
-	frozen kCMHelpItemAppleGuide: INTEGER is
+	frozen kCMHelpItemAppleGuide: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kCMHelpItemAppleGuide"
 	end
 
-	frozen kCMHelpItemOtherHelp: INTEGER is
+	frozen kCMHelpItemOtherHelp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kCMHelpItemOtherHelp"
 	end
 
-	frozen kCMHelpItemRemoveHelp: INTEGER is
+	frozen kCMHelpItemRemoveHelp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kCMHelpItemRemoveHelp"
 	end
 
-	frozen kCMNothingSelected: INTEGER is
+	frozen kCMNothingSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kCMNothingSelected"
 	end
 
-	frozen kCMMenuItemSelected: INTEGER is
+	frozen kCMMenuItemSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kCMMenuItemSelected"
 	end
 
-	frozen kCMShowHelpSelected: INTEGER is
+	frozen kCMShowHelpSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kCMShowHelpSelected"
 	end
 
-	frozen keyContextualMenuName: INTEGER is
+	frozen keyContextualMenuName: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"keyContextualMenuName"
 	end
 
-	frozen keyContextualMenuCommandID: INTEGER is
+	frozen keyContextualMenuCommandID: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"keyContextualMenuCommandID"
 	end
 
-	frozen keyContextualMenuSubmenu: INTEGER is
+	frozen keyContextualMenuSubmenu: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"keyContextualMenuSubmenu"
 	end
 
-	frozen keyContextualMenuAttributes: INTEGER is
+	frozen keyContextualMenuAttributes: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"keyContextualMenuAttributes"
 	end
 
-	frozen keyContextualMenuModifiers: INTEGER is
+	frozen keyContextualMenuModifiers: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias

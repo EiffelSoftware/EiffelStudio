@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class used for encapsulating translations of a string"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature --creation
 
-	make (an_original_singular, a_translated_singular: STRING_GENERAL) is
+	make (an_original_singular, a_translated_singular: STRING_GENERAL)
 			-- create the entry for a singular-form string
 		require
 			singular_not_void: an_original_singular /= Void
@@ -30,7 +30,7 @@ feature --creation
 			singular_translation_set: singular_translation.is_equal (a_translated_singular.as_string_32)
 		end
 
-	make_with_plural(an_original_singular, a_translated_singular, an_original_plural: STRING_GENERAL) is
+	make_with_plural(an_original_singular, a_translated_singular, an_original_plural: STRING_GENERAL)
 			-- create the entry for a string with both plural and singular forms
 			-- the actual plural translations will have to be added by hand!
 		require
@@ -59,7 +59,7 @@ feature	-- Contents
 
 feature -- Order definition
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := original_singular < other.original_singular
@@ -69,7 +69,7 @@ invariant
 	no_plural_translations_if_no_plural: not has_plural implies plural_translations = Void
 	plural_translations_if_plural: has_plural implies plural_translations /= Void
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

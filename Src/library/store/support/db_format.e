@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Different formats of the database"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create -- Creation procedure
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create an interface object to format data.
 		do
 			implementation := handle.database.db_format
@@ -25,13 +25,13 @@ feature -- Initialization
 
 feature -- Conversion
 
-	boolean_format (object: BOOLEAN): STRING is
+	boolean_format (object: BOOLEAN): STRING
 			-- Converted string of `object' according to the database format
 		do
 			Result := implementation.boolean_format (object)
 		end
 
-	date_format (object: DATE_TIME): STRING is
+	date_format (object: DATE_TIME): STRING
 			-- Converted string of `object' according to the database format.
 		require
 			argument_not_void: object /= Void
@@ -39,7 +39,7 @@ feature -- Conversion
 			Result := implementation.date_format (object)
 		end
 
-	string_format (object: STRING): STRING is
+	string_format (object: STRING): STRING
 			-- Converted string of `object' according to the database format.
 		require
 			argument_not_void: object /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 
 	implementation: DATABASE_FORMAT [DATABASE];
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

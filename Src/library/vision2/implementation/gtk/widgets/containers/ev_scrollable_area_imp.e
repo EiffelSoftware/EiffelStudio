@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision scrollable area. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create scrollable area.
 		do
 			base_make (an_interface)
@@ -65,43 +65,43 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (scrolled_window, 1, 1)
 		end
 
-	needs_event_box: BOOLEAN is True
+	needs_event_box: BOOLEAN = True
 
 feature -- Access
 
-	horizontal_step: INTEGER is
+	horizontal_step: INTEGER
 			-- Number of pixels scrolled up or down when user clicks
 			-- an arrow on the horizontal scrollbar.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_step_increment (horizontal_adjustment).rounded
 		end
 
-	vertical_step: INTEGER is
+	vertical_step: INTEGER
 			-- Number of pixels scrolled left or right when user clicks
 			-- an arrow on the vertical scrollbar.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_step_increment (vertical_adjustment).rounded
 		end
 
-	is_horizontal_scroll_bar_visible: BOOLEAN is
+	is_horizontal_scroll_bar_visible: BOOLEAN
 			-- Should horizontal scroll bar be displayed?
 		do
 			Result := horizontal_policy = {EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM
 		end
 
-	is_vertical_scroll_bar_visible: BOOLEAN is
+	is_vertical_scroll_bar_visible: BOOLEAN
 			-- Should vertical scroll bar be displayed?
 		do
 			Result := vertical_policy = {EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM
 		end
 
-	x_offset: INTEGER is
+	x_offset: INTEGER
 			-- Horizontal position of viewport relative to `item'.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (horizontal_adjustment).rounded
 		end
 
-	y_offset: INTEGER is
+	y_offset: INTEGER
 			-- Vertical position of viewport relative to `item'.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (vertical_adjustment).rounded
@@ -109,7 +109,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_x_offset (a_x: INTEGER) is
+	set_x_offset (a_x: INTEGER)
 			-- Set `x_offset' to `a_x'.
 		do
 			internal_set_value_from_adjustment (horizontal_adjustment, a_x)
@@ -118,7 +118,7 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_adjustment_value_changed (horizontal_adjustment)
 		end
 
-	set_y_offset (a_y: INTEGER) is
+	set_y_offset (a_y: INTEGER)
 			-- Set `y_offset' to `a_y'.
 		do
 			internal_set_value_from_adjustment (vertical_adjustment, a_y)
@@ -127,7 +127,7 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_adjustment_value_changed (vertical_adjustment)
 		end
 
-	set_horizontal_step (a_step: INTEGER) is
+	set_horizontal_step (a_step: INTEGER)
 			-- Set `horizontal_step' to `a_step'.
 		do
 			if horizontal_step /= a_step then
@@ -136,7 +136,7 @@ feature -- Element change
 			end
 		end
 
-	set_vertical_step (a_step: INTEGER) is
+	set_vertical_step (a_step: INTEGER)
 			-- Set `vertical_step' to `a_step'.
 		do
 			if vertical_step /= a_step then
@@ -145,25 +145,25 @@ feature -- Element change
 			end
 		end
 
-	show_horizontal_scroll_bar is
+	show_horizontal_scroll_bar
 			-- Display horizontal scroll bar.
 		do
 			set_scrolling_policy ({EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM, vertical_policy)
 		end
 
-	hide_horizontal_scroll_bar is
+	hide_horizontal_scroll_bar
 			-- Do not display horizontal scroll bar.
 		do
 			set_scrolling_policy ({EV_GTK_EXTERNALS}.gTK_POLICY_NEVER_ENUM, vertical_policy)
 		end
 
-	show_vertical_scroll_bar is
+	show_vertical_scroll_bar
 			-- Display vertical scroll bar.
 		do
 			set_scrolling_policy (horizontal_policy, {EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM)
 		end
 
-	hide_vertical_scroll_bar is
+	hide_vertical_scroll_bar
 			-- Do not display vertical scroll bar.
 		do
 			set_scrolling_policy (horizontal_policy, {EV_GTK_EXTERNALS}.gTK_POLICY_NEVER_ENUM)
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 	fixed_widget: POINTER
 		-- Pointer to the fixed widget used for central positioning when `item' cannot be scrolled.
 
-	fixed_width: INTEGER is
+	fixed_width: INTEGER
 			-- Fixed Horizontal size measured in pixels.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width (
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 			).max (0)
 		end
 
-	fixed_height: INTEGER is
+	fixed_height: INTEGER
 			-- Fixed Vertical size measured in pixels.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height (
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 
 	scrolled_window: POINTER
 
-	on_size_allocate (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_size_allocate (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Set item in center of `Current' if smaller.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -204,19 +204,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	child_has_resized (item_imp: EV_WIDGET_IMP) is
+	child_has_resized (item_imp: EV_WIDGET_IMP)
 			-- If child has resized and smaller than parent then set position in center of `Current'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
 		end
 
-	horizontal_adjustment: POINTER is
+	horizontal_adjustment: POINTER
 			-- Pointer to the adjustment struct of the hscrollbar
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_hadjustment (scrolled_window)
 		end
 
-	vertical_adjustment: POINTER is
+	vertical_adjustment: POINTER
 			-- Pointer to the adjustment struct of the vscrollbar
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_vadjustment (scrolled_window)
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 	vertical_policy: INTEGER
 		-- Policy type used for the vertical scrollbar (ALWAYS, AUTOMATIC or NEVER)
 
-	set_scrolling_policy (hscrollpol, vscrollpol: INTEGER) is
+	set_scrolling_policy (hscrollpol, vscrollpol: INTEGER)
 			-- Set the policy for both scrollbars.
 		do
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
@@ -246,7 +246,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

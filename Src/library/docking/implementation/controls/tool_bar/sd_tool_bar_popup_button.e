@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Toolbar button for SD_TOOL_BAR which popup a widget after end user pressed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initlialization
 
-	make is
+	make
 			-- Creation method
 		do
 			Precursor
@@ -31,7 +31,7 @@ feature {NONE} -- Initlialization
 
 feature -- Command
 
-	set_menu (a_menu: EV_MENU) is
+	set_menu (a_menu: EV_MENU)
 			-- Set `menu' with `a_menu'
 		do
 			menu := a_menu
@@ -39,7 +39,7 @@ feature -- Command
 			set: menu = a_menu
 		end
 
-	set_menu_function (a_menu_function: like menu_function) is
+	set_menu_function (a_menu_function: like menu_function)
 			-- Set `menu_function' with `a_menu_function'
 		do
 			menu_function := a_menu_function
@@ -47,7 +47,7 @@ feature -- Command
 			set: menu_function = a_menu_function
 		end
 
-	set_popup_widget (a_widget: like popup_widget) is
+	set_popup_widget (a_widget: like popup_widget)
 			-- Set `popup_widget' with `a_widget'
 		do
 			popup_widget := a_widget
@@ -57,7 +57,7 @@ feature -- Command
 			set: popup_widget = a_widget and popup.has (popup_widget)
 		end
 
-	set_dropdown_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+	set_dropdown_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Set `pixel_buffer_imp' with `a_pixel_buffer'.
 		do
 			dropdown_pixel_buffer_imp := a_pixel_buffer
@@ -67,7 +67,7 @@ feature -- Command
 
 feature -- Query
 
-	width: INTEGER is
+	width: INTEGER
 			-- Redefine
 		do
 			Result := Precursor + gap + dropdrown_width
@@ -89,16 +89,16 @@ feature -- Query
 	popup_widget: EV_WIDGET
 			-- Widget to popup after end user pressed.
 
-	gap: INTEGER is 2
+	gap: INTEGER = 2
 			-- Gap size between front icon and dropdown icon.
 
-	dropdrown_width: INTEGER is
+	dropdrown_width: INTEGER
 			-- With of the dropdown area.
 		do
 			Result := dropdown_pixel_buffer.width
 		end
 
-	dropdown_pixel_buffer: EV_PIXEL_BUFFER is
+	dropdown_pixel_buffer: EV_PIXEL_BUFFER
 			-- Dropdown pixel buffer
 		do
 			if dropdown_pixel_buffer_imp /= Void then
@@ -110,7 +110,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	dropdown_left: INTEGER is
+	dropdown_left: INTEGER
 			--	X position where dropdown button should be drawn.
 		do
 			if tool_bar /= Void then
@@ -132,7 +132,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	popup: EV_POPUP_WINDOW is
+	popup: EV_POPUP_WINDOW
 			-- Lazy creator of `popup_imp'
 		do
 			if popup_imp = Void then
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 	popup_imp: EV_POPUP_WINDOW
 			-- Popup window which appears after end user pressed.
 
-	on_select is
+	on_select
 			-- Handle select actions.
 		require
 			set: menu /= Void or menu_function /= Void or popup_widget /= Void
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 	dropdown_pixel_buffer_imp: EV_PIXEL_BUFFER;
 			-- Pixel buffer for dropdown button.
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

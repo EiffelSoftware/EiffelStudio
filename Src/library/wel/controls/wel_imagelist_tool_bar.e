@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		Enhancement of the toolbar. This toolbar appears flat
 		and use imagelist to store bitmaps - Win95+IE3 required
@@ -31,7 +31,7 @@ create
 
 feature -- Access
 
-	bitmaps_width: INTEGER is
+	bitmaps_width: INTEGER
 			-- width of all bitmaps located in this imageList
 		local
 			loc_imagelist: WEL_IMAGE_LIST
@@ -41,7 +41,7 @@ feature -- Access
 			loc_imagelist.destroy
 		end
 
-	bitmaps_height: INTEGER is
+	bitmaps_height: INTEGER
 			-- height of all bitmaps located in this imageList
 		local
 			loc_imagelist: WEL_IMAGE_LIST
@@ -51,13 +51,13 @@ feature -- Access
 			loc_imagelist.destroy
 		end
 
-	buttons_width: INTEGER is
+	buttons_width: INTEGER
 			-- Width of the buttons in the toolbar.
 		do
 			Result := get_button_width
 		end
 
-	buttons_height: INTEGER is
+	buttons_height: INTEGER
 			-- Height of the buttons in the toolbar.
 		do
 			Result := get_button_height
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Status report
 
-	find_button (a_x, a_y: INTEGER): INTEGER is
+	find_button (a_x, a_y: INTEGER): INTEGER
 			-- Determines where a point lies in a toolbar control.
 			--
 			-- Returns an integer value. If the return value is zero or a positive value,
@@ -80,7 +80,7 @@ feature -- Status report
 			Result := {WEL_API}.send_message_result_integer (item, Tb_hittest, to_wparam (0), coordinates.item)
 		end
 
-	get_max_width: INTEGER is
+	get_max_width: INTEGER
 			-- Retrieves the total width of all of the visible buttons and separators in the toolbar.
 		local
 			l_rect: WEL_RECT
@@ -102,7 +102,7 @@ feature -- Status report
 			end
 		end
 
-	get_max_height: INTEGER is
+	get_max_height: INTEGER
 			-- Retrieves the common height of all of the visible buttons and separators in the toolbar.
 		local
 			l_rect: WEL_RECT
@@ -116,7 +116,7 @@ feature -- Status report
 			end
 		end
 
-	get_max_size: WEL_SIZE is
+	get_max_size: WEL_SIZE
 			-- Retrieves the total size of all of the visible buttons and separators in the toolbar
 		local
 			error_code: INTEGER
@@ -130,13 +130,13 @@ feature -- Status report
 
 feature -- Resizing
 
-	get_button_width: INTEGER  is
+	get_button_width: INTEGER
 			-- Get the width of the buttons.
 		do
 			Result := cwin_lo_word({WEL_API}.send_message_result (item, Tb_getbuttonsize, to_wparam (0), to_lparam (0)))
 		end
 
-	get_button_height: INTEGER  is
+	get_button_height: INTEGER
 			-- Get the height of the buttons.
 		do
 			Result := cwin_hi_word({WEL_API}.send_message_result (item, Tb_getbuttonsize, to_wparam (0), to_lparam (0)))
@@ -144,7 +144,7 @@ feature -- Resizing
 
 feature -- Element change
 
-	set_image_list (an_image_list: WEL_IMAGE_LIST) is
+	set_image_list (an_image_list: WEL_IMAGE_LIST)
 			-- Set the default imageList to `an_image_list'.
 			--
 			-- To remove the imagelist, set `an_image_list' to Void.
@@ -156,13 +156,13 @@ feature -- Element change
 			end
 		end
 
-	get_image_list: WEL_IMAGE_LIST is
+	get_image_list: WEL_IMAGE_LIST
 		do
 			create Result.make_by_pointer(
 				{WEL_API}.send_message_result (item, Tb_getimagelist, to_wparam (0), to_lparam (0)))
 		end
 
-	set_hot_image_list (an_image_list: WEL_IMAGE_LIST) is
+	set_hot_image_list (an_image_list: WEL_IMAGE_LIST)
 			-- Set the hot imageList to `an_image_list'.
 			--
 			-- To remove the imagelist, set `an_image_list' to Void.
@@ -176,13 +176,13 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Tbstyle_tooltips + Tbstyle_flat
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

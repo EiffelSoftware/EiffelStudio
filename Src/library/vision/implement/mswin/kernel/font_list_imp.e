@@ -1,4 +1,4 @@
-indexing 
+note 
 	status: "See notice at end of class."; 
 	date: "$Date$"; 
 	revision: "$Revision$" 
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make (a_font_list: FONT_LIST) is
+	make (a_font_list: FONT_LIST)
 			-- Make the list.
 		do
 			ll_make
@@ -35,18 +35,18 @@ feature -- Initialization
 
 feature -- Obsolete 
 
-	search_equal (v: FONT) is
+	search_equal (v: FONT)
 		obsolete "Use .compare_objects, search"
 		do
 		end
 
 feature -- Inapplicable
 
-	destroy is
+	destroy
 		do
 		end
  
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

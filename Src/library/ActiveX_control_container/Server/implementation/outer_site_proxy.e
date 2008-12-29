@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Proxy of outer site."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ feature -- Access
 
 	unknown_site: ECOM_INTERFACE
 	
-	service_provider: ISERVICE_PROVIDER_IMPL_PROXY is
+	service_provider: ISERVICE_PROVIDER_IMPL_PROXY
 			-- IServiceProvider interface of site.
 		require
 			non_void_site_unknown: unknown_site /= Void
@@ -27,7 +27,7 @@ feature -- Access
 			retry
 		end
 
-	ole_container: IOLE_CONTAINER_IMPL_PROXY is
+	ole_container: IOLE_CONTAINER_IMPL_PROXY
 			-- IOleContainer interface of site.
 		require
 			non_void_site_unknown: unknown_site /= Void
@@ -42,7 +42,7 @@ feature -- Access
 			retry
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

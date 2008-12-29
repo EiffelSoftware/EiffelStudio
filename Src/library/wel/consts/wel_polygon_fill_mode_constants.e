@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Polygon fill mode constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Alternate: INTEGER is
+	Alternate: INTEGER
 			-- Selects alternate mode (fills the area between
 			-- odd-numbered and even-numbered polygon sides on
 			-- each scan line).
@@ -20,7 +20,7 @@ feature -- Access
 			"ALTERNATE"
 		end
 
-	Winding: INTEGER is
+	Winding: INTEGER
 			-- Selects winding mode (fills any region with a
 			-- nonzero winding value).
 		external
@@ -31,13 +31,13 @@ feature -- Access
 
 feature -- Status report
 
-	valid_polygon_fill_mode_constant (c: INTEGER): BOOLEAN is
+	valid_polygon_fill_mode_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid polygon fill mode constant?
 		do
 			Result := c = Alternate or else c = Winding
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

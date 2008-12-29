@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision tree node. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -111,7 +111,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
@@ -126,7 +126,7 @@ feature {NONE} -- Initialization
 			set_image (image_index, image_index)
 		end
 
-	initialize is
+	initialize
 			-- Perfrom post creation initialization on `Current'.
 		do
 			Precursor
@@ -139,7 +139,7 @@ feature {EV_ANY_I}-- Access
 	parent_imp: EV_ITEM_LIST_IMP [EV_TREE_NODE, EV_TREE_NODE_IMP]
 			-- Parent implementation.
 
-	top_parent_imp: EV_TREE_IMP is
+	top_parent_imp: EV_TREE_IMP
 			-- Implementation of `parent_tree'.
 		local
 			loc_parent_tree: like parent_tree
@@ -153,7 +153,7 @@ feature {EV_ANY_I}-- Access
 			end
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap of `Current'.
 		local
 			pix_imp: EV_PIXMAP_IMP
@@ -187,19 +187,19 @@ feature {EV_ANY_I} -- Status report
 	ev_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
 			-- List of the direct children of `Current'.
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is `Current' selected?
 		do
 			Result := top_parent_imp.is_selected (Current)
 		end
 
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- is `Current' expanded ?
 		do
 			Result := top_parent_imp.is_expanded (Current)
 		end
 
-	is_parent: BOOLEAN is
+	is_parent: BOOLEAN
 			-- is `Current' the parent of other items?
 		do
 			if top_parent_imp /= Void then
@@ -211,7 +211,7 @@ feature {EV_ANY_I} -- Status report
 
 feature {EV_ANY_I} -- Status setting
 
-	set_parent_imp (a_parent_imp: like parent_imp) is
+	set_parent_imp (a_parent_imp: like parent_imp)
 			-- Make `a_parent_imp' the new parent of the widget.
 			-- `a_parent_imp' can be Void then the parent is the screen.
 		do
@@ -222,20 +222,20 @@ feature {EV_ANY_I} -- Status setting
 			end
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			Precursor {EV_ITEM_IMP}
 			internal_children := Void
 		end
 
-	enable_select is
+	enable_select
 			-- Select `Current'.
 		do
 			top_parent_imp.select_item (Current)
 		end
 
-	disable_select is
+	disable_select
 			-- Deselect `Current'.
 		do
 			if top_parent_imp /= Void then
@@ -243,7 +243,7 @@ feature {EV_ANY_I} -- Status setting
 			end
 		end
 
-	set_expand (flag: BOOLEAN) is
+	set_expand (flag: BOOLEAN)
 			-- Expand `Current' if `flag', else collapse `Current'.
 		do
 			if flag then
@@ -255,7 +255,7 @@ feature {EV_ANY_I} -- Status setting
 
 feature {EV_ANY_I} -- Element change
 
-	wel_text: STRING_32 is
+	wel_text: STRING_32
 			-- Text of `Current'.
 		do
 			if real_text /= Void then
@@ -263,7 +263,7 @@ feature {EV_ANY_I} -- Element change
 			end
 		end
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Number of characters in `text'.
 		do
 			Result := real_text.count
@@ -272,7 +272,7 @@ feature {EV_ANY_I} -- Element change
 	real_text: STRING_32
 			-- Internal `text'.
 
-	wel_set_text (txt: STRING_GENERAL) is
+	wel_set_text (txt: STRING_GENERAL)
 			-- Make `txt' the new label of `Current'.
 		local
 			tree: EV_TREE_IMP
@@ -288,7 +288,7 @@ feature {EV_ANY_I} -- Element change
 
 feature -- Measurement
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
 			if parent_tree /= Void then
@@ -296,7 +296,7 @@ feature -- Measurement
 			end
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
 			if parent_tree /= Void then
@@ -304,41 +304,41 @@ feature -- Measurement
 			end
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		do
 			load_bounds_rect
 			Result := bounds_rect.left
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		do
 			load_bounds_rect
 			Result := bounds_rect.top
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size in pixels.
 		do
 			load_bounds_rect
 			Result := bounds_rect.width
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size in pixels.
 		do
 			load_bounds_rect
 			Result := bounds_rect.height
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels.
 		do
 			Result := width
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
 		do
 			Result := height
@@ -354,34 +354,34 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	--| dependency without complicating the inheritance structure
 	--| unecessarily for pick and drop. Julian
 
-	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER)
 		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
 		do
 		end
 
 	internal_propagate_pointer_double_press
-		(keys, x_pos, y_pos, button: INTEGER) is
+		(keys, x_pos, y_pos, button: INTEGER)
 		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
 		do
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_NODE_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_NODE_IMP
 			-- `Result' is tree node at pixel position `x_pos', `y_pos'.
 		do
 		end
 
-	client_to_screen (a_x, a_y: INTEGER): WEL_POINT is
+	client_to_screen (a_x, a_y: INTEGER): WEL_POINT
 			-- `Result' is absolute screen coordinates in pixels
 			-- of coordinates `a_x', a_y_' on `Current'.
 		do
 		end
 
-	disable_default_processing is
+	disable_default_processing
 			-- Disable default window processing.
 		do
 		end
 
-	on_parented is
+	on_parented
 			-- `Current' has just been parented.
 			-- Because this message is only recieved when a tree item becomes
 			-- the child of a tree, we need to recurse through all children of
@@ -410,7 +410,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			index_not_changed: ev_children.index = old ev_children.index
 		end
 
-	on_orphaned is
+	on_orphaned
 			-- `Current' has just been orphaned.
 			-- Because this message is only recieved when a tree item becomes
 			-- the child of a tree, we need to recurse through all children of
@@ -426,7 +426,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			index_not_changed: ev_children.index = old ev_children.index
 		end
 
- 	remove_all_direct_references is
+ 	remove_all_direct_references
  			-- Recurse through all children and update
  			--`top_parent_imp.current_image_list_info' removing images
  			-- from image list as required.
@@ -454,7 +454,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 	image_index: INTEGER
 			-- Index of pixmap assigned with Current in the imageList.
 
-	set_pixmap (p: EV_PIXMAP) is
+	set_pixmap (p: EV_PIXMAP)
 			-- Assign `p' to the displayed pixmap.
 		do
 				-- We must destroy the pixmap before we set a new one,
@@ -473,7 +473,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 			end
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove pixmap from `Current'.
 		do
 			if has_pixmap then
@@ -491,7 +491,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 			end
 		end
 
-	set_pixmap_in_parent is
+	set_pixmap_in_parent
 			-- Add/Remove the pixmap to the parent by updating the
 			-- parent's image list.
 		local
@@ -522,7 +522,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 			root_imp.set_tree_item (Current)
 		end
 
-	remove_pixmap_in_parent is
+	remove_pixmap_in_parent
 			-- Remove the pixmap from the parent by updating the parent's image
 			-- list.
 		do
@@ -530,7 +530,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 			top_parent_imp.set_tree_item (Current)
 		end
 
-	general_reset_pixmap is
+	general_reset_pixmap
 			-- Reset the pixmap
 			--| For example: if the size of displayed has changed.
 		local
@@ -551,7 +551,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
 			internal_tooltip_string := a_tooltip.twin
@@ -559,7 +559,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 
 feature {EV_TREE_IMP} -- Implementation, pick and drop
 
-	set_pnd_original_parent is
+	set_pnd_original_parent
 			-- Assign `top_parent_imp' to `pnd_original_parent'.
 			--| Redefined as the widget is not parent_imp for this
 			--| item. See comment in this feature within
@@ -574,7 +574,7 @@ feature {EV_TREE_IMP} -- Implementation
 			-- Holds the children of `Current'.
 			--| May be void if `Current' is parented.
 
-	set_internal_children (list: ARRAYED_LIST [EV_TREE_NODE_IMP]) is
+	set_internal_children (list: ARRAYED_LIST [EV_TREE_NODE_IMP])
 			-- Make `list' the new list of children.
 		do
 			internal_children := list
@@ -582,7 +582,7 @@ feature {EV_TREE_IMP} -- Implementation
 			internal_children_set: internal_children = list
 		end
 
-	relative_position: TUPLE [x_pos: INTEGER; y_pos: INTEGER] is
+	relative_position: TUPLE [x_pos: INTEGER; y_pos: INTEGER]
 			-- `Result' is position relative to `parent_imp'.
 		local
 			loop_parent: EV_TREE_NODE_IMP
@@ -614,7 +614,7 @@ feature {EV_TREE_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	insert_item (item_imp: EV_TREE_NODE_IMP; pos: INTEGER) is
+	insert_item (item_imp: EV_TREE_NODE_IMP; pos: INTEGER)
 			-- Insert `item_imp' at the `index' position.
 		do
 			if top_parent_imp /= Void then
@@ -631,7 +631,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_item (item_imp: EV_TREE_NODE_IMP) is
+	remove_item (item_imp: EV_TREE_NODE_IMP)
 			-- Remove `item_imp' from `Current'.
 		do
 			if top_parent_imp /= Void then
@@ -641,7 +641,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER)
 			-- Process `a_button' to start/stop the drag/pick and
 			-- drop mechanism.
 		do
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 			-- of no harm to call this, as it will just do nothing and docking will not occur.
 		end
 
-	check_dragable_release (x_pos, y_pos: INTEGER) is
+	check_dragable_release (x_pos, y_pos: INTEGER)
 			-- End transport if in drag and drop.
 		do
 			-- Not applicable. Required by implementation of EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
@@ -658,7 +658,7 @@ feature {NONE} -- Implementation
 			-- of no harm to call this, as it will just do nothing and docking will not occur.
 		end
 
-	ensure_expandable is
+	ensure_expandable
 			-- Ensure `Current' is displayed as expandable.
 		do
 			insert_i_th (create {EV_TREE_ITEM}, 1)
@@ -667,7 +667,7 @@ feature {NONE} -- Implementation
 			ev_children.wipe_out
 		end
 
-	remove_expandable is
+	remove_expandable
 			-- Ensure `Current' is no longer displayed as expandable.
 		local
 			l_parent_tree: EV_TREE_IMP
@@ -687,14 +687,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	bounds_rect: WEL_RECT is
+	bounds_rect: WEL_RECT
 			-- Rect struct to hold size information
 			-- This is shared and should only be used right after a call to `load_bounds_rect'
 		once
 			create Result.make (0, 0, 0, 0)
 		end
 
-	load_bounds_rect is
+	load_bounds_rect
 			-- Load bounds rect.
 		local
 			a_rect: WEL_RECT
@@ -719,7 +719,7 @@ feature {EV_ANY_I} -- Implementation
 invariant
 	internal_children_not_void_when_not_parented: is_initialized and top_parent_imp = Void implies internal_children /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

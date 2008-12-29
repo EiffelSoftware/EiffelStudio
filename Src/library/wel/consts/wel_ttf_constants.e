@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tool Tip Flag (TTF) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,15 +10,15 @@ class
 
 feature -- Access
 
-	Ttf_idishwnd: INTEGER is 1
+	Ttf_idishwnd: INTEGER = 1
 
-	Ttf_centertip: INTEGER is 2
+	Ttf_centertip: INTEGER = 2
 
-	Ttf_rtlreading: INTEGER is 4
+	Ttf_rtlreading: INTEGER = 4
 
-	Ttf_subclass: INTEGER is 16;
+	Ttf_subclass: INTEGER = 16;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

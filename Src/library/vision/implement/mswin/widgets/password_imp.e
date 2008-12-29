@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "This class represents a MS_IMPone-line text editor for entering a password"
 	legal: "See notice at end of class.";
@@ -27,12 +27,12 @@ create
 	make
 
 feature
-	default_style: INTEGER is
+	default_style: INTEGER
 		once
 			Result := text_field_default_style + Es_password
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

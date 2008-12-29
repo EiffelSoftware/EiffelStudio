@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Contains information about a tab control item.
 
@@ -46,14 +46,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make a tab item structure.
 		do
 			structure_make
 			set_mask (Tcif_text + Tcif_param)
 		end
 
-	make_with_window (a_parent: WEL_TAB_CONTROL) is
+	make_with_window (a_parent: WEL_TAB_CONTROL)
 			-- Make a tab item structure and create a window
 			-- associated to the item.
 		local
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	mask: INTEGER is
+	mask: INTEGER
 			-- Array of flags that indicate which of the other
 			-- structure members contain valid data or which are
 			-- to be filled in. This member can be a combination
@@ -76,7 +76,7 @@ feature -- Access
 			Result := cwel_tc_item_get_mask (item)
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Item text
 		do
 			if str_text /= Void then
@@ -88,7 +88,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	window: WEL_WINDOW is
+	window: WEL_WINDOW
 			-- The current window associated to the item.
 		local
 			window_hwmd: POINTER
@@ -99,7 +99,7 @@ feature -- Access
 			end
 		end
 
-	iimage: INTEGER is
+	iimage: INTEGER
 			-- Index of image applied to `Current' from the tab
 			-- controls image list.
 		do
@@ -109,7 +109,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_mask (a_mask: INTEGER) is
+	set_mask (a_mask: INTEGER)
 			-- Set `mask' with `a_mask'.
 		do
 			cwel_tc_item_set_mask (item, a_mask)
@@ -117,7 +117,7 @@ feature -- Element change
 			mask_set: mask = a_mask
 		end
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -129,7 +129,7 @@ feature -- Element change
 			text_set: text.is_equal (a_text)
 		end
 
-	set_window (a_window: WEL_WINDOW) is
+	set_window (a_window: WEL_WINDOW)
 			-- Associate `a_window' to the current item.
 		require
 			a_window_not_void: a_window /= Void
@@ -140,7 +140,7 @@ feature -- Element change
 			window_set: window = a_window
 		end
 
-	set_iimage (image_index: INTEGER) is
+	set_iimage (image_index: INTEGER)
 			-- Apply image using image at position `image_index'
 			-- within the parent's image list.
 		do
@@ -149,7 +149,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_tc_item
@@ -157,7 +157,7 @@ feature -- Measurement
 
 feature {WEL_TAB_CONTROL} -- Implementation
 
-	set_cchtextmax (value: INTEGER) is
+	set_cchtextmax (value: INTEGER)
 			-- Set the maximum size of the text getting by get item)
 		do
 			cwel_tc_item_set_cchtextmax (item, value)
@@ -170,64 +170,64 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_size_of_tc_item: INTEGER is
+	c_size_of_tc_item: INTEGER
 		external
 			"C [macro <cctrl.h>]"
 		alias
 			"sizeof (TC_ITEM)"
 		end
 
-	cwel_tc_item_set_mask (ptr: POINTER; value: INTEGER) is
+	cwel_tc_item_set_mask (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tcitem.h>]"
 		end
 
-	cwel_tc_item_set_psztext (ptr: POINTER; value: POINTER) is
+	cwel_tc_item_set_psztext (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <tcitem.h>]"
 		end
 
-	cwel_tc_item_set_cchtextmax (ptr: POINTER; value: INTEGER) is
+	cwel_tc_item_set_cchtextmax (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tcitem.h>]"
 		end
 
-	cwel_tc_item_set_iimage (ptr: POINTER; value: INTEGER) is
+	cwel_tc_item_set_iimage (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tcitem.h>]"
 		end
 
-	cwel_tc_item_set_lparam (ptr: POINTER; value: POINTER) is
+	cwel_tc_item_set_lparam (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <tcitem.h>]"
 		end
 
-	cwel_tc_item_get_mask (ptr: POINTER): INTEGER is
+	cwel_tc_item_get_mask (ptr: POINTER): INTEGER
 		external
 			"C [macro <tcitem.h>]"
 		end
 
-	cwel_tc_item_get_psztext (ptr: POINTER): POINTER is
+	cwel_tc_item_get_psztext (ptr: POINTER): POINTER
 		external
 			"C [macro <tcitem.h>]"
 		end
 
-	cwel_tc_item_get_cchtextmax (ptr: POINTER): INTEGER is
+	cwel_tc_item_get_cchtextmax (ptr: POINTER): INTEGER
 		external
 			"C [macro <tcitem.h>]"
 		end
 
-	cwel_tc_item_get_iimage (ptr: POINTER): INTEGER is
+	cwel_tc_item_get_iimage (ptr: POINTER): INTEGER
 		external
 			"C [macro <tcitem.h>]"
 		end
 
-	cwel_tc_item_get_lparam (ptr: POINTER): POINTER is
+	cwel_tc_item_get_lparam (ptr: POINTER): POINTER
 		external
 			"C [macro <tcitem.h>]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

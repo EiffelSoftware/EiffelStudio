@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of geometric abstract coordinates"
 	legal: "See notice at end of class.";
@@ -47,7 +47,7 @@ inherit
 
 feature -- Access
 
-	origin: COORD_XY_FIG is
+	origin: COORD_XY_FIG
 			-- Origin of point
 		do
 			inspect
@@ -60,7 +60,7 @@ feature -- Access
 			end
 		end;
 
-	distance (other: like Current): INTEGER is
+	distance (other: like Current): INTEGER
 			-- Distance between current point and `other'
 		local
 			xr, yr: INTEGER
@@ -72,13 +72,13 @@ feature -- Access
 
 feature -- Comparison
 
-	infix ">" (p: like Current): BOOLEAN is
+	infix ">" (p: like Current): BOOLEAN
 			-- Make a comparison between coordinates of point.
 		do
 			Result := (x >= p.x and then y >= p.y) and then (x /= p.x or else y/= p.y)
 		end;
 
-   	infix "<" (p: like Current): BOOLEAN is
+   	infix "<" (p: like Current): BOOLEAN
 			-- Make a comparison between coordinates of point.
 		do
 			Result := (x <= p.x and then y <= p.y) and then (x /= p.x or else y/= p.y)
@@ -86,7 +86,7 @@ feature -- Comparison
 
 feature -- Status report
 	
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the point superimposable to `other' ?
 		do
 			Result := (x=other.x) and (y=other.y)
@@ -94,7 +94,7 @@ feature -- Status report
 	
 feature -- Basic operation
 
-	infix "-" (other: like Current): VECTOR is
+	infix "-" (other: like Current): VECTOR
 			-- Current point translated by -`other'
 		require
 			other_exists: other /= Void
@@ -106,7 +106,7 @@ feature -- Basic operation
 			y_set: Result.y = y - other.y
 		end;
 
-	infix "+" (other: VECTOR): like Current is
+	infix "+" (other: VECTOR): like Current
 			-- Current point translated by `other'
 		require
 			other_exists: other /= Void
@@ -118,7 +118,7 @@ feature -- Basic operation
 			y_set: Result.y = y + other.y
 		end;
 
-	prefix "-": like Current is
+	prefix "-": like Current
 			-- Make a negative copy of current point
 		do
 			create Result;
@@ -128,7 +128,7 @@ feature -- Basic operation
 			y_set: Result.y = -y
 		end;
 
-	prefix "+": like Current is
+	prefix "+": like Current
 			-- Make a positive copy of current point
 		do
 			create Result;
@@ -139,7 +139,7 @@ feature -- Basic operation
 
 feature -- Duplication
 
-	duplicate: like Current is
+	duplicate: like Current
 			-- Create a copy of current point.
 		do
 			create Result;
@@ -150,7 +150,7 @@ feature -- Duplication
 	
 feature -- Element change
 
-	add (v: VECTOR) is
+	add (v: VECTOR)
 			-- add `v' to the two_coord.
 		require
 			vector_exists: v /= Void
@@ -163,7 +163,7 @@ feature -- Element change
 			updated_y: y = old y + v.y
 		end;
   	
-	set_max (other: like Current) is
+	set_max (other: like Current)
 			-- Set both coordinates to the maximum between current and `other'.
 		require
 			other_exists: other /= Void
@@ -176,7 +176,7 @@ feature -- Element change
 			max_y: y =  other.y.max (old y)
 		end;
 
-	set_min (other: like Current) is
+	set_min (other: like Current)
 			-- Set both coordinates to the minimum between current and `other'.
 		require
 			other_exists: other /= Void
@@ -189,13 +189,13 @@ feature -- Element change
 			min_y: y =  other.y.min (old y)
 		end;
 
-	set_origin_to_himself is
+	set_origin_to_himself
 			-- Set origin of point to himself.
 		do
 			origin_user_type := 2
 		end;
 
-	set_x (x1: INTEGER) is
+	set_x (x1: INTEGER)
 			-- Set horizontal coordinate.
 		do
 			x := x1;
@@ -204,7 +204,7 @@ feature -- Element change
 			x_set: x = x1
 		end;
 
-	set_y (y1: INTEGER) is
+	set_y (y1: INTEGER)
 			-- Set vertical coordinate.
 		do
 			y := y1;
@@ -213,7 +213,7 @@ feature -- Element change
 			y_set: y = y1
 		end;
 
-	subtract (other: VECTOR) is
+	subtract (other: VECTOR)
 			-- Translate current point by -`other'.
 		require
 			other_exists: other /= Void
@@ -226,7 +226,7 @@ feature -- Element change
 			updated_y: y = old y - other.y
 		end;
 
-	xyrotate (a: REAL; px,py: INTEGER) is
+	xyrotate (a: REAL; px,py: INTEGER)
 			-- Rotate by `a' relative to (`px', `py').
 		local
 			xr, yr: INTEGER;
@@ -243,7 +243,7 @@ feature -- Element change
 			end;
 		end;
 
-	xyscale (f: REAL; px,py: INTEGER) is
+	xyscale (f: REAL; px,py: INTEGER)
 			-- Scale figure by `f' relative to (`px', `py').
 		require else
 			scale_factor_positive: f > 0.0
@@ -257,7 +257,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xytranslate (vx, vy: INTEGER) is
+	xytranslate (vx, vy: INTEGER)
 			-- Translate by `vx' horizontally and `vy' vertically.
 		do
 			x := x + vx;
@@ -270,7 +270,7 @@ feature -- Element change
 
 feature {NONE} -- Element change
 
-	set_conf_modified is
+	set_conf_modified
 		do
 		end;
 
@@ -278,7 +278,7 @@ invariant
 
 	origin_user_type_constraint: origin_user_type <= 2
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

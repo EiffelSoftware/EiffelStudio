@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			EiffelVision toolbar. Can only contain tool bar items.
@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create implementation of `Current'.
 		do
 			create {EV_TOOL_BAR_IMP} implementation.make (Current)
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 
 feature -- Status report
 
-	has_vertical_button_style: BOOLEAN is
+	has_vertical_button_style: BOOLEAN
 			-- Is the `pixmap' displayed vertically above `text' for
 			-- all buttons contained in `Current'? If `False', then
 			-- the `pixmap' is displayed to left of `text'.
@@ -61,7 +61,7 @@ feature -- Status report
 			bridge_ok: equal (Result, implementation.has_vertical_button_style)
 		end
 
-	is_vertical: BOOLEAN is
+	is_vertical: BOOLEAN
 			-- Are items in toolbar vertical orientated?
 		require
 			not_destroyed: not is_destroyed
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_vertical_button_style is
+	enable_vertical_button_style
 			-- Ensure `has_vertical_button_style' is `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -81,7 +81,7 @@ feature -- Status setting
 			vertical_button_style_assigned: has_vertical_button_style
 		end
 
-	disable_vertical_button_style is
+	disable_vertical_button_style
 			-- Ensure `has_vertical_button_style' is `False'.
 		require
 			not_destroyed: not is_destroyed
@@ -91,7 +91,7 @@ feature -- Status setting
 			vertical_button_style_not_assigned: not has_vertical_button_style
 		end
 
-	enable_vertical is
+	enable_vertical
 			-- Ensure `is_vertical' is `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -101,7 +101,7 @@ feature -- Status setting
 			is_vertical_assigned: is_vertical
 		end
 
-	disable_vertical is
+	disable_vertical
 			-- Ensure `is_vertical' is `False'.
 		require
 			not_destroyed: not is_destroyed
@@ -113,20 +113,20 @@ feature -- Status setting
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST} and has_vertical_button_style
 		end
 
-	is_in_default_state_for_tabs: BOOLEAN is
+	is_in_default_state_for_tabs: BOOLEAN
 		do
 			Result := not is_tabable_from and not is_tabable_to
 		end
 
 feature -- Constract support
 
-	is_parent_recursive (a_tool_bar_item: EV_TOOL_BAR_ITEM): BOOLEAN is
+	is_parent_recursive (a_tool_bar_item: EV_TOOL_BAR_ITEM): BOOLEAN
 			-- Is `a_tool_bar_item' a parent of `Current'?
 		do
 				-- As we cannot insert an EV_TOOL_BAR into an EV_TOOL_BAR_ITEM,
@@ -139,7 +139,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_TOOL_BAR_I;
 			-- Platform dependent access.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General separator implementation"
 	legal: "See notice at end of class.";
@@ -16,24 +16,24 @@ inherit
 	
 feature -- Status report
 
-	is_horizontal: BOOLEAN is
+	is_horizontal: BOOLEAN
 			-- Is separator oriented horizontal?
 		deferred
 		end;
 
 feature -- Status setting
 
-	set_double_dashed_line is
+	set_double_dashed_line
 			-- Set separator display to be double dashed line.
 		deferred
 		end;
 
-	set_double_line is
+	set_double_line
 			-- Set separator display to be double line.
 		deferred
 		end;
 
-	set_horizontal (flag: BOOLEAN) is
+	set_horizontal (flag: BOOLEAN)
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
 		deferred
@@ -41,22 +41,22 @@ feature -- Status setting
 			value_correctly_set: is_horizontal = flag
 		end;
 
-	set_no_line is
+	set_no_line
 			-- Make current separator invisible.
 		deferred
 		end;
 
-	set_single_dashed_line is
+	set_single_dashed_line
 			-- Set separator display to be single dashed line.
 		deferred
 		end;
 
-	set_single_line is
+	set_single_line
 			-- Set separator display to be single line.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

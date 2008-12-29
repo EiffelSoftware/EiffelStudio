@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ create
 
 feature -- Initialization
 
-	make (a_form: FORM; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_form: FORM; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a form.
 		do
 			create private_attributes
@@ -41,7 +41,7 @@ feature -- Initialization
 
 feature -- Status setting
 
-	child_has_resized is
+	child_has_resized
 			-- Child has been resized
 		do
 			if not updating then
@@ -52,14 +52,14 @@ feature -- Status setting
 			end
 		end
 
-	show is
+	show
 			-- Show current form.
 		do
 			update_all
 			Precursor {BULLETIN_IMP}
 		end
 
-	set_enclosing_size is
+	set_enclosing_size
 			-- Set the enclosing size of the form
 		local
 			h, w: INTEGER
@@ -73,7 +73,7 @@ feature -- Status setting
 			end
 		end
 
-	set_size (new_width, new_height : INTEGER) is
+	set_size (new_width, new_height : INTEGER)
 			-- Set the height to `new_height',
 			-- width to `new_width'.
 		do
@@ -86,7 +86,7 @@ feature -- Status setting
 			end
 		end
 
-	set_width (new_width : INTEGER) is
+	set_width (new_width : INTEGER)
 			-- Set width to `new_width'.
 		do
 			if private_attributes.width /= new_width then
@@ -97,7 +97,7 @@ feature -- Status setting
 			end
 		end
 
-	set_height (new_height : INTEGER) is
+	set_height (new_height : INTEGER)
 			-- Set height to `new_height'.
 		do
 			if private_attributes.height /= new_height then
@@ -108,7 +108,7 @@ feature -- Status setting
 			end
 		end
 
-	realize is
+	realize
 			-- Realize current form and children.
 		local
 			h, w: INTEGER
@@ -141,7 +141,7 @@ feature -- Status setting
 			end
 		end
 
-	realize_current is
+	realize_current
 			-- Realize current form.
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -154,7 +154,7 @@ feature -- Status setting
 
 feature	-- Implementation
 
-	initialize is
+	initialize
 			-- Initialize the current form
 		do
 			fraction_base := 100
@@ -165,7 +165,7 @@ feature	-- Implementation
 			-- Value used to compute child position with
 			-- position attachment
 
-	attach_bottom (a_child: WIDGET_I; bottom_offset: INTEGER) is
+	attach_bottom (a_child: WIDGET_I; bottom_offset: INTEGER)
 			-- Attach bottom side of `a_child' to the bottom side of current form
 			-- with `bottom_offset' spaces between each other.
 		local
@@ -178,7 +178,7 @@ feature	-- Implementation
 			end
 		end
 
-	attach_bottom_position (a_child: WIDGET_I; a_position: INTEGER) is
+	attach_bottom_position (a_child: WIDGET_I; a_position: INTEGER)
 			-- Attach bottom side of `a_child' to a position that is
 			-- relative to bottom side of current form and is a fraction
 			-- of the height of current form. This fraction is the value
@@ -193,7 +193,7 @@ feature	-- Implementation
 			end
 		end
 
-	attach_bottom_widget (a_widget: WIDGET_I; a_child: WIDGET_I; bottom_offset: INTEGER)  is
+	attach_bottom_widget (a_widget: WIDGET_I; a_child: WIDGET_I; bottom_offset: INTEGER)
 			-- Attach bottom side of `a_child' to the top side of
 			-- `a_widget' with `bottom_offset' spaces between each other.
 		local
@@ -209,7 +209,7 @@ feature	-- Implementation
 			end
 		end
 
-	attach_left (a_child: WIDGET_I; left_offset: INTEGER) is
+	attach_left (a_child: WIDGET_I; left_offset: INTEGER)
 			-- Attach left side of `a_child' to the left side of current form
 			-- with `left_offset' spaces between each other.
 		local
@@ -222,7 +222,7 @@ feature	-- Implementation
 			end
 		end
 
-	attach_left_position (a_child: WIDGET_I; a_position: INTEGER) is
+	attach_left_position (a_child: WIDGET_I; a_position: INTEGER)
 			-- Attach left side of `a_child' to a position that is
 			-- relative to left side of current form and is a fraction
 			-- of the width of current form. This fraction is the value
@@ -237,7 +237,7 @@ feature	-- Implementation
 			end
 		end
 
-	attach_left_widget (a_widget: WIDGET_I; a_child: WIDGET_I; left_offset: INTEGER) is
+	attach_left_widget (a_widget: WIDGET_I; a_child: WIDGET_I; left_offset: INTEGER)
 			-- Attach left side of `a_child' to the right side of
 			-- `a_widget' with `left_offset' spaces between each other.
 		local
@@ -253,7 +253,7 @@ feature	-- Implementation
 			end
 		end
 
-	attach_right (a_child: WIDGET_I; right_offset: INTEGER) is
+	attach_right (a_child: WIDGET_I; right_offset: INTEGER)
 			-- Attach right side of `a_child' to the left side of current form
 			-- with `right_offset' spaces between each other.
 		local
@@ -266,7 +266,7 @@ feature	-- Implementation
 			end
 		end
 
-	attach_right_position (a_child: WIDGET_I; a_position: INTEGER) is
+	attach_right_position (a_child: WIDGET_I; a_position: INTEGER)
 			-- Attach right side of `a_child' to a position that is
 			-- relative to right side of current form and is a fraction
 			-- of the width of current form. This fraction is the value
@@ -281,7 +281,7 @@ feature	-- Implementation
 			end
 		end
 
-	attach_right_widget (a_widget: WIDGET_I; a_child: WIDGET_I; right_offset: INTEGER) is
+	attach_right_widget (a_widget: WIDGET_I; a_child: WIDGET_I; right_offset: INTEGER)
 			-- Attach right side of `a_child' to the left side of
 			-- `a_widget' with `right_offset' spaces between each other.
 		local
@@ -297,7 +297,7 @@ feature	-- Implementation
 			end
 		end
 
-	attach_top (a_child: WIDGET_I; top_offset: INTEGER) is
+	attach_top (a_child: WIDGET_I; top_offset: INTEGER)
 			-- Attach top side of `a_child' to the bottom side of current form
 			-- with `top_offset' spaces between each other.
 		local
@@ -310,7 +310,7 @@ feature	-- Implementation
 			end
 		end
 
-	attach_top_position (a_child: WIDGET_I; a_position: INTEGER) is
+	attach_top_position (a_child: WIDGET_I; a_position: INTEGER)
 				-- Attach top side of `a_child' to a position that is
 				-- relative to top side of current form and is a fraction
 				-- of the height of current form. This fraction is the value
@@ -325,7 +325,7 @@ feature	-- Implementation
 			end
 		end
 
-	attach_top_widget (a_widget: WIDGET_I; a_child: WIDGET_I; top_offset: INTEGER) is
+	attach_top_widget (a_widget: WIDGET_I; a_child: WIDGET_I; top_offset: INTEGER)
 			-- Attach top side of `a_child' to the bottom side of
 			-- `a_widget' with `top_offset' spaces between each other.
 		local
@@ -341,7 +341,7 @@ feature	-- Implementation
 			end
 		end
 
-	detach_right (a_child: WIDGET_I) is
+	detach_right (a_child: WIDGET_I)
 			-- Detach right side of `a_child'.
 		local
 			a_childw : WIDGET_IMP
@@ -353,7 +353,7 @@ feature	-- Implementation
 			end
 		end
 
-	detach_left (a_child: WIDGET_I) is
+	detach_left (a_child: WIDGET_I)
 			-- Detach left side of `a_child'.
 		local
 			a_childw : WIDGET_IMP
@@ -365,7 +365,7 @@ feature	-- Implementation
 			end
 		end
 
-	detach_bottom (a_child: WIDGET_I) is
+	detach_bottom (a_child: WIDGET_I)
 			-- Detach bottom side of `a_child'.
 		local
 			a_childw : WIDGET_IMP
@@ -377,7 +377,7 @@ feature	-- Implementation
 			end
 		end
 
-	detach_top (a_child: WIDGET_I) is
+	detach_top (a_child: WIDGET_I)
 			-- Detach top side of `a_child'.
 		local
 			a_childw : WIDGET_IMP
@@ -389,7 +389,7 @@ feature	-- Implementation
 			end
 		end
 
-	set_fraction_base (a_value: INTEGER) is
+	set_fraction_base (a_value: INTEGER)
 			-- Set fraction_base to `a_value'.
 			-- Unsecure to set it after any position attachment,
 			-- contradictory constraints could occur.
@@ -399,7 +399,7 @@ feature	-- Implementation
 
 feature -- Implementation
 
-	resize_for_shell is
+	resize_for_shell
 			-- Resize current widget if the parent is a shell.			
 		local
 			tw: TOP_IMP
@@ -423,7 +423,7 @@ feature -- Implementation
 	form_child_list: ATTACHMENT_LIST_WINDOWS
 			-- Children of this widget
 
-	update_all is
+	update_all
 			-- Update all the attachments.
 		require
 			not_updating: not updating
@@ -463,7 +463,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 		once
 			Result := "EvisionForm"
 		end
@@ -471,7 +471,7 @@ feature {NONE} -- Implementation
 invariant
 	form_child_list_not_void: form_child_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

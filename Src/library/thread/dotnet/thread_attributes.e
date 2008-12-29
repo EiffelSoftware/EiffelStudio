@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Class defining thread attributes."
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Set default values to the thread attributes.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Attribute change
 
-	set_priority (prio: INTEGER) is
+	set_priority (prio: INTEGER)
 			-- Set thread priority to `prio'.
 		require
 			valid_priority:	(prio >= min_priority) and (prio <= max_priority)
@@ -34,7 +34,7 @@ feature -- Attribute change
 			priority := prio
 		end
 
-	set_policy (policy: INTEGER) is
+	set_policy (policy: INTEGER)
 			-- Set scheduling policy to `policy'.  Possible values are:
 			-- default_policy, other, fifo and round_robin.
 			-- Has no effect on .NET
@@ -44,7 +44,7 @@ feature -- Attribute change
 			scheduling_policy := policy
 		end
 
-	set_detached (bool: BOOLEAN) is
+	set_detached (bool: BOOLEAN)
 			-- Set the detached state of the thread attribute to `bool'. If
 			-- `bool' is True (default), the thread will be created detached
 			-- on the C level. You can always `join' a thread, even if it was
@@ -64,29 +64,29 @@ feature -- Access
 
 feature -- Implementation for scheduling_policy
 
-	default_policy: INTEGER is 0
+	default_policy: INTEGER = 0
 
-	other: INTEGER is 1
+	other: INTEGER = 1
 
-	fifo: INTEGER is 2
+	fifo: INTEGER = 2
 
-	round_robin: INTEGER is 3
+	round_robin: INTEGER = 3
 
 feature -- Externals
 
-	default_priority: INTEGER is
+	default_priority: INTEGER
 			-- Get default thread priority for the current architecture.
 		do
 			Result := {THREAD_PRIORITY}.normal.to_integer
 		end
 
-	min_priority: INTEGER is
+	min_priority: INTEGER
 			-- Get minimum thread priority for the current architecture.
 		do
 			Result := {THREAD_PRIORITY}.lowest.to_integer
 		end
 
-	max_priority: INTEGER is
+	max_priority: INTEGER
 			-- Get maximum thread priority for the current architecture.
 		do
 			Result := {THREAD_PRIORITY}.highest.to_integer
@@ -95,7 +95,7 @@ feature -- Externals
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

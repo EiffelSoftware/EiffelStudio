@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This are objects that are used internaly by the diff algorithm to store a list of indices that are a match."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_link: DIFF_INDEX_LINK; a_src: INTEGER; a_dst: INTEGER) is
+	make (a_link: DIFF_INDEX_LINK; a_src: INTEGER; a_dst: INTEGER)
 			-- Create the element
 		do
 			next := a_link
@@ -33,7 +33,7 @@ feature -- Access
 	next: DIFF_INDEX_LINK;
 			-- The next link (or void if none)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

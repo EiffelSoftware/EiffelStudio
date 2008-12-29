@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"A MEL_ROW_COLUMN used as a menu bar."
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif menu bar.
 		local
 			widget_name: ANY
@@ -46,14 +46,14 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	xm_create_menu_bar (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_menu_bar (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/RowColumn.h>"
 		alias
 			"XmCreateMenuBar"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision checkable list. Gtk implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -37,7 +37,7 @@ create
 
 feature -- Initialization
 
-	initialize is
+	initialize
 			-- Setup `Current'
 		local
 			a_column, a_cell_renderer: POINTER
@@ -54,9 +54,9 @@ feature -- Initialization
 			real_signal_connect (a_cell_renderer, "toggled", agent (app_implementation.gtk_marshal).boolean_cell_renderer_toggle_intermediary (internal_id, ?, ?), Void)
 		end
 
-	boolean_tree_model_column: INTEGER is 2
+	boolean_tree_model_column: INTEGER = 2
 
-	on_tree_path_toggle (a_tree_path_str: POINTER) is
+	on_tree_path_toggle (a_tree_path_str: POINTER)
 			--
 		local
 			a_tree_path, a_int_ptr: POINTER
@@ -97,7 +97,7 @@ feature -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 		end
 
-	initialize_model is
+	initialize_model
 			-- Create our data model for `Current'
 		local
 			a_type_array: MANAGED_POINTER
@@ -110,7 +110,7 @@ feature -- Initialization
 
 feature -- Access
 
-	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN is
+	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN
 			--
 		local
 			item_imp: EV_LIST_ITEM_IMP
@@ -125,7 +125,7 @@ feature -- Access
 
 feature -- Status setting
 
-	check_item (list_item: EV_LIST_ITEM) is
+	check_item (list_item: EV_LIST_ITEM)
 			-- Ensure check associated with `list_item' is
 			-- checked.
 		local
@@ -143,7 +143,7 @@ feature -- Status setting
 			end
 		end
 
-	uncheck_item (list_item: EV_LIST_ITEM) is
+	uncheck_item (list_item: EV_LIST_ITEM)
 			-- Ensure check associated with `list_item' is
 			-- checked.
 		local
@@ -165,7 +165,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

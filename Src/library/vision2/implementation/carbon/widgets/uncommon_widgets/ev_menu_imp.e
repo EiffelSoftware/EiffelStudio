@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu. Carbon implementation."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			Precursor {EV_MENU_ITEM_LIST_IMP}
 			Precursor {EV_MENU_ITEM_IMP}
@@ -42,12 +42,12 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	show is
+	show
 			-- Pop up on the current pointer position.
 		do
 		end
 
-	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
+	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget'.
 		do
@@ -59,12 +59,12 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy the menu
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, Eiffel.Mac Team"
 end -- class EV_MENU_IMP
 

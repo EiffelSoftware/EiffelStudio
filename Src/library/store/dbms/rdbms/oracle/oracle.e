@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Oracle specification"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -20,7 +20,7 @@ inherit
 
 feature
 
-	database_handle_name: STRING is "ORACLE"
+	database_handle_name: STRING = "ORACLE"
 
 feature -- For DATABASE_STATUS
 
@@ -32,25 +32,25 @@ feature -- For DATABASE_STATUS
 			-- Is there any record matching the last
 			-- selection condition used ?
 
-	clear_error is
+	clear_error
 			-- Reset database error status.
 		do
 			ora_clear_error
 		end
 
-	insert_auto_identity_column: BOOLEAN is True
+	insert_auto_identity_column: BOOLEAN = True
 			-- For INSERTs and UPDATEs should table auto-increment identity columns be explicitly included in the statement?
 
 feature -- For DATABASE_CHANGE
 
-	descriptor_is_available: BOOLEAN is
+	descriptor_is_available: BOOLEAN
 		do
 			Result := ora_available_descriptor = 1
 		end
 
 feature -- For DATABASE_FORMAT
 
-	date_to_str (object: DATE_TIME): STRING is
+	date_to_str (object: DATE_TIME): STRING
 			-- String representation in SQL of `object'
 		do
 			create Result.make (1)
@@ -59,7 +59,7 @@ feature -- For DATABASE_FORMAT
 			Result.append ("','MM/DD/YYYY HH24:MI:SS')")
 		end
 
-	string_format (object: STRING): STRING is
+	string_format (object: STRING): STRING
 			-- String representation in SQL of `object'.
 			-- WARNING: use "IS NULL" if object is empty instead of
 			-- "= NULL" which does not work.
@@ -77,13 +77,13 @@ feature -- For DATABASE_FORMAT
 			end
 		end
 
-	True_representation: STRING is "'T'"
+	True_representation: STRING = "'T'"
 
-	False_representation: STRING is "'F'"
+	False_representation: STRING = "'F'"
 
 feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
-	normal_parse: BOOLEAN is
+	normal_parse: BOOLEAN
 		do
 			if is_proc then
 				Result := False
@@ -93,7 +93,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			end
 		end
 
-	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
+	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN
 		do
 			if uhandle.execution_type.immediate_execution then
 				Result := True
@@ -104,7 +104,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			end
 		end
 
-	bind_parameter (value: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: STRING) is
+	bind_parameter (value: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: STRING)
 		local
 			i: INTEGER
 			tmp_c2, tmp_c, c_temp: C_STRING
@@ -123,7 +123,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			is_error_updated := False
 		end
 
-	bind_args_value (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; sql: STRING) is
+	bind_args_value (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; sql: STRING)
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 			-- `uht' can be empty (for stored procedures).
@@ -146,12 +146,12 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 feature -- DATABASE_STRING
 
-	sql_name_string: STRING is
+	sql_name_string: STRING
 		do
 			Result := "VARCHAR2"
 		end
 
-	map_var_name (a_para: STRING): STRING is
+	map_var_name (a_para: STRING): STRING
 		do
 		 	create Result.make_from_string (":")
 			Result.append (a_para)
@@ -159,43 +159,43 @@ feature -- DATABASE_STRING
 
 feature -- DATABASE_REAL
 
-	sql_name_real: STRING is "FLOAT"
+	sql_name_real: STRING = "FLOAT"
 
 feature -- DATABASE_DATETIME
 
-	sql_name_datetime: STRING is "DATE"
+	sql_name_datetime: STRING = "DATE"
 
 feature -- DATABASE_DOUBLE
 
-	sql_name_double: STRING is "FLOAT"
+	sql_name_double: STRING = "FLOAT"
 
 feature -- DATABASE_CHARACTER
 
-	sql_name_character: STRING is "CHAR"
+	sql_name_character: STRING = "CHAR"
 
 feature -- DATABASE_INTEGER
 
-	sql_name_integer: STRING is "NUMBER"
+	sql_name_integer: STRING = "NUMBER"
 
 feature -- DATABASE_BOOLEAN
 
-	sql_name_boolean: STRING is "CHAR"
+	sql_name_boolean: STRING = "CHAR"
 
 feature -- LOGIN and DATABASE_APPL only for password_ok
 
-	password_ok (upasswd: STRING): BOOLEAN is
+	password_ok (upasswd: STRING): BOOLEAN
 		do
 			Result := upasswd /= Void
 		end
 
-	password_ensure (name, passwd, uname, upasswd: STRING): BOOLEAN is
+	password_ensure (name, passwd, uname, upasswd: STRING): BOOLEAN
 		do
 			Result := name.is_equal (uname) and passwd.is_equal (upasswd)
 		end
 
 feature -- For database types
 
-	convert_string_type (r_any: ANY; field_name, class_name: STRING): ANY is
+	convert_string_type (r_any: ANY; field_name, class_name: STRING): ANY
 			-- Convert `r_any' to the expected object.
 			-- By default returns `r_any', redefined in ORACLE to return
 			-- an INTEGER_REF when `field_name' is "data_type".
@@ -239,38 +239,38 @@ feature -- For database types
 
 feature -- For DATABASE_PROC
 
-	support_sql_of_proc: BOOLEAN is True
+	support_sql_of_proc: BOOLEAN = True
 
-	support_stored_proc: BOOLEAN is
+	support_stored_proc: BOOLEAN
 		do
 			Result := True
 			is_proc := True
 		end
 
-	sql_as: STRING is " AS BEGIN "
+	sql_as: STRING = " AS BEGIN "
 
-	sql_end: STRING is "; END;"
+	sql_end: STRING = "; END;"
 
-	sql_execution: STRING is "BEGIN "
+	sql_execution: STRING = "BEGIN "
 
-	sql_creation: STRING is "create procedure "
+	sql_creation: STRING = "create procedure "
 
-	sql_after_exec: STRING is "; END;"
+	sql_after_exec: STRING = "; END;"
 
-	support_drop_proc: BOOLEAN is True
+	support_drop_proc: BOOLEAN = True
 
-	name_proc_lower: BOOLEAN is False
+	name_proc_lower: BOOLEAN = False
 
-	map_var_between: STRING is ""
+	map_var_between: STRING = ""
 
-	Select_text (proc_name: STRING): STRING is
+	Select_text (proc_name: STRING): STRING
 		do
 			Result := "select text from all_source %
 			%where Name = :name and %
 			%Type = 'PROCEDURE'"
 		end
 
-	Select_exists (name: STRING): STRING is
+	Select_exists (name: STRING): STRING
 		do
 			Result := "select count (*) from all_objects %
 			%where (object_type = 'PROCEDURE') and %
@@ -279,7 +279,7 @@ feature -- For DATABASE_PROC
 
 feature -- For DATABASE_REPOSITORY
 
-	Selection_string (rep_qualifier, rep_owner, rep_name: STRING): STRING is
+	Selection_string (rep_qualifier, rep_owner, rep_name: STRING): STRING
 		do
 			repository_name := rep_name
 					-- This query request all the Tables of the database
@@ -289,9 +289,9 @@ feature -- For DATABASE_REPOSITORY
 			Result := "SELECT * FROM USER_TAB_COLUMNS WHERE Table_Name =:rep order by Column_ID"
 		end
 
-	sql_string: STRING is "VARCHAR2 ("
+	sql_string: STRING = "VARCHAR2 ("
 
-	sql_string2 (int: INTEGER): STRING is
+	sql_string2 (int: INTEGER): STRING
 		do
 			Result := "VARCHAR2 ("
 			Result.append (int.out)
@@ -300,31 +300,31 @@ feature -- For DATABASE_REPOSITORY
 
 feature -- External features
 
-	get_error_message: POINTER is
+	get_error_message: POINTER
 		do
 			Result := ora_get_error_message
 			is_error_updated := True
 		end
 
-	get_error_code: INTEGER is
+	get_error_code: INTEGER
 		do
 			Result := ora_get_error_code
 			is_error_updated := True
 		end
 
-	get_warn_message: POINTER is
+	get_warn_message: POINTER
 		do
 			Result := ora_get_warn_message
 			is_error_updated := True
 		end
 
-	new_descriptor: INTEGER is
+	new_descriptor: INTEGER
 		do
 			Result := ora_new_descriptor
 			is_error_updated := False
 		end
 
-	init_order (no_descriptor: INTEGER; command: STRING) is
+	init_order (no_descriptor: INTEGER; command: STRING)
 		local
 			c_temp: C_STRING
 		do
@@ -333,30 +333,30 @@ feature -- External features
 			is_error_updated := False
 		end
 
-	start_order (no_descriptor: INTEGER) is
+	start_order (no_descriptor: INTEGER)
 		do
 			ora_start_order (no_descriptor)
 			is_error_updated := False
 		end
 
-	next_row (no_descriptor: INTEGER) is
+	next_row (no_descriptor: INTEGER)
 		do
 			found := ora_next_row (no_descriptor) = 0
 			is_error_updated := False
 		end
 
-	terminate_order (no_descriptor: INTEGER) is
+	terminate_order (no_descriptor: INTEGER)
 		do
 			ora_terminate_order (no_descriptor)
 			is_error_updated := False
 		end
 
-	close_cursor (no_descriptor: INTEGER) is
+	close_cursor (no_descriptor: INTEGER)
 			-- Do nothing, for ODBC prepared statement
 		do
 		end
 
-	exec_immediate (no_descriptor: INTEGER; command: STRING) is
+	exec_immediate (no_descriptor: INTEGER; command: STRING)
 		local
 			c_temp: C_STRING
 		do
@@ -365,7 +365,7 @@ feature -- External features
 			is_error_updated := False
 		end
 
-	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
+	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER
 		local
 			l_area: MANAGED_POINTER
 			i: INTEGER
@@ -390,7 +390,7 @@ feature -- External features
 			end
 		end
 
-	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
+	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER
 		local
 			l_area: MANAGED_POINTER
 			i: INTEGER
@@ -415,63 +415,63 @@ feature -- External features
 			end
 		end
 
-	conv_type (indicator: INTEGER; index: INTEGER): INTEGER is
+	conv_type (indicator: INTEGER; index: INTEGER): INTEGER
 		do
 			Result := ora_conv_type (index)
 		end
 
-	get_count (no_descriptor: INTEGER): INTEGER is
+	get_count (no_descriptor: INTEGER): INTEGER
 		do
 			Result := ora_get_count (no_descriptor)
 		end
 
-	get_data_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_data_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := ora_get_data_len (ind, no_descriptor)
 		end
 
-	get_col_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_col_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := ora_get_col_len (no_descriptor, ind)
 		end
 
-	get_col_type (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_col_type (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := ora_get_col_type (no_descriptor,ind)
 		end
 
-	get_integer_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_integer_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := ora_get_integer_data (no_descriptor, ind)
 		end
 
-	get_float_data (no_descriptor: INTEGER; ind: INTEGER): DOUBLE is
+	get_float_data (no_descriptor: INTEGER; ind: INTEGER): DOUBLE
 		do
 			Result := ora_get_float_data (no_descriptor, ind)
 		end
 
-	get_real_data (no_descriptor: INTEGER; ind: INTEGER): REAL is
+	get_real_data (no_descriptor: INTEGER; ind: INTEGER): REAL
 		do
 			Result := ora_get_real_data (no_descriptor, ind)
 		end
 
-	get_boolean_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
+	get_boolean_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN
 		do
 			Result := ora_get_boolean_data (no_descriptor, ind)
 		end
 
-	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
+	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN
 			-- is last retrieved data null?
 		do
 			Result := ora_is_null_data (no_descriptor, ind)
 		end
 
-	get_date_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_date_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := ora_get_date_data (no_descriptor, ind)
 		end
 
-	get_hour (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_hour (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		local
 			tmp_strg: STRING
 		do
@@ -480,7 +480,7 @@ feature -- External features
 			Result := tmp_strg.to_integer
 		end
 
-	get_sec (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_sec (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		local
 			tmp_strg: STRING
 		do
@@ -489,7 +489,7 @@ feature -- External features
 			Result := tmp_strg.to_integer
 		end
 
-	get_min (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_min (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		local
 			tmp_strg: STRING
 		do
@@ -498,7 +498,7 @@ feature -- External features
 			Result := tmp_strg.to_integer
 		end
 
-	get_year (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_year (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		local
 			tmp_strg: STRING
 		do
@@ -507,7 +507,7 @@ feature -- External features
 			Result := tmp_strg.to_integer
 		end
 
-	get_day (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_day (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		local
 			tmp_strg: STRING
 		do
@@ -516,7 +516,7 @@ feature -- External features
 			Result := tmp_strg.to_integer
 		end
 
-	get_month (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_month (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		local
 			tmp_strg: STRING
 		do
@@ -525,47 +525,47 @@ feature -- External features
 			Result := tmp_strg.to_integer
 		end
 
-	c_string_type: INTEGER is
+	c_string_type: INTEGER
 		do
 			Result := ora_c_string_type
 		end
 
-	c_character_type: INTEGER is
+	c_character_type: INTEGER
 		do
 			Result := ora_c_character_type
 		end
 
-	c_integer_type: INTEGER is
+	c_integer_type: INTEGER
 		do
 			Result := ora_c_integer_type
 		end
 
-	c_float_type: INTEGER is
+	c_float_type: INTEGER
 		do
 			Result := ora_c_float_type
 		end
 
-   	c_real_type: INTEGER is
+   	c_real_type: INTEGER
 		do
 			Result := ora_c_real_type
 		end
 
-	c_boolean_type: INTEGER is
+	c_boolean_type: INTEGER
 		do
 			Result := ora_c_boolean_type
 		end
 
-	c_date_type: INTEGER is
+	c_date_type: INTEGER
 		do
 			Result := ora_c_date_type
 		end
 
-	database_make (i: INTEGER) is
+	database_make (i: INTEGER)
 		do
 			ora_database_make (i)
 		end
 
-	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING) is
+	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING)
         local
 			c_temp1, c_temp2: C_STRING
 		do
@@ -575,31 +575,31 @@ feature -- External features
 			is_error_updated := False
        	end
 
-	disconnect is
+	disconnect
 		do
 			ora_disconnect
 			is_error_updated := False
 			found := False
 		end
 
-	commit is
+	commit
 		do
 			ora_commit
 			is_error_updated := False
 		end
 
-	rollback is
+	rollback
 		do
 			ora_rollback
 			is_error_updated := False
 		end
 
-	trancount: INTEGER is
+	trancount: INTEGER
 		do
 			Result := ora_trancount
 		end
 
- 	begin is
+ 	begin
 		do
 		end
 
@@ -609,265 +609,265 @@ feature {NONE} -- External features
 
 	is_proc: BOOLEAN
 
-	ora_get_error_message: POINTER is
+	ora_get_error_message: POINTER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_error_code: INTEGER is
+	ora_get_error_code: INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_warn_message: POINTER is
+	ora_get_warn_message: POINTER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_new_descriptor: INTEGER is
+	ora_new_descriptor: INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_init_order (command: POINTER; no_descriptor: INTEGER) is
+	ora_init_order (command: POINTER; no_descriptor: INTEGER)
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_start_order (no_descriptor: INTEGER) is
+	ora_start_order (no_descriptor: INTEGER)
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_next_row (no_descriptor: INTEGER): INTEGER is
+	ora_next_row (no_descriptor: INTEGER): INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_terminate_order (no_descriptor: INTEGER) is
+	ora_terminate_order (no_descriptor: INTEGER)
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_exec_immediate (no_descriptor: INTEGER; command: POINTER) is
+	ora_exec_immediate (no_descriptor: INTEGER; command: POINTER)
 		external
 			"C (EIF_INTEGER, text *) | %"oracle.h%""
 		end
 
-	ora_put_select_name (no_descriptor: INTEGER; index: INTEGER; ar: POINTER): INTEGER is
+	ora_put_select_name (no_descriptor: INTEGER; index: INTEGER; ar: POINTER): INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_put_data (no_descriptor: INTEGER; index: INTEGER; ar: POINTER): INTEGER is
+	ora_put_data (no_descriptor: INTEGER; index: INTEGER; ar: POINTER): INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_conv_type (index: INTEGER): INTEGER is
+	ora_conv_type (index: INTEGER): INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_count (no_descriptor: INTEGER): INTEGER is
+	ora_get_count (no_descriptor: INTEGER): INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_data_len (ind: INTEGER; no_descriptor: INTEGER): INTEGER is
+	ora_get_data_len (ind: INTEGER; no_descriptor: INTEGER): INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_col_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	ora_get_col_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_col_type (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	ora_get_col_type (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_integer_data (no_descriptor:INTEGER; ind: INTEGER): INTEGER is
+	ora_get_integer_data (no_descriptor:INTEGER; ind: INTEGER): INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_float_data (no_descriptor:INTEGER; ind: INTEGER): DOUBLE is
+	ora_get_float_data (no_descriptor:INTEGER; ind: INTEGER): DOUBLE
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_real_data (no_descriptor:INTEGER; ind: INTEGER): REAL is
+	ora_get_real_data (no_descriptor:INTEGER; ind: INTEGER): REAL
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_boolean_data (no_descriptor:INTEGER; ind: INTEGER): BOOLEAN is
+	ora_get_boolean_data (no_descriptor:INTEGER; ind: INTEGER): BOOLEAN
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_is_null_data (no_descriptor:INTEGER; ind: INTEGER): BOOLEAN is
+	ora_is_null_data (no_descriptor:INTEGER; ind: INTEGER): BOOLEAN
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_date_data (desc: INTEGER; index: INTEGER): INTEGER is
+	ora_get_date_data (desc: INTEGER; index: INTEGER): INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_hour: POINTER is
+	ora_get_hour: POINTER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_sec: POINTER is
+	ora_get_sec: POINTER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_min: POINTER is
+	ora_get_min: POINTER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_year: POINTER is
+	ora_get_year: POINTER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_day: POINTER is
+	ora_get_day: POINTER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_get_month: POINTER is
+	ora_get_month: POINTER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_database_make (i: INTEGER) is
+	ora_database_make (i: INTEGER)
 		external
 			"C | %"oracle.h%""
 		alias
 			"c_ora_make"
 		end
 
-	ora_disconnect is
+	ora_disconnect
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_commit is
+	ora_commit
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_rollback is
+	ora_rollback
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_trancount: INTEGER is
+	ora_trancount: INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
 
-	ora_connect (user_name, user_passwd: POINTER) is
+	ora_connect (user_name, user_passwd: POINTER)
 		external
 			"C (text *, text*) | %"oracle.h%""
 		end
 
-	ora_available_descriptor: INTEGER is
+	ora_available_descriptor: INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_set_parameter (descriptor: INTEGER; sql: POINTER; ph: POINTER; value: POINTER) is
+	ora_set_parameter (descriptor: INTEGER; sql: POINTER; ph: POINTER; value: POINTER)
 		external
 			"C (EIF_INTEGER, text *, text *, char *) | %"oracle.h%""
 		end
 
-	ora_string_type: INTEGER is
+	ora_string_type: INTEGER
 		external
 			"C [macro %"oracle.h%"]"
 		alias
 			"VARCHAR2_TYPE"
 		end
 
-	ora_int_type: INTEGER is
+	ora_int_type: INTEGER
 		external
 			"C [macro %"oracle.h%"]"
 		alias
 			"INT_TYPE"
 		end
 
-	ora_float_type: INTEGER is
+	ora_float_type: INTEGER
 		external
 			"C [macro %"oracle.h%"]"
 		alias
 			"FLOAT_TYPE"
 		end
 
-	ora_number_type: INTEGER is
+	ora_number_type: INTEGER
 		external
 			"C [macro %"oracle.h%"]"
 		alias
 			"NUMBER_TYPE"
 		end
 
-	ora_date_type: INTEGER is
+	ora_date_type: INTEGER
 		external
 			"C [macro %"oracle.h%"]"
 		alias
 			"DATE_TYPE"
 		end
 
-	ora_c_string_type: INTEGER is
+	ora_c_string_type: INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_c_character_type: INTEGER is
+	ora_c_character_type: INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_c_integer_type: INTEGER is
+	ora_c_integer_type: INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_c_float_type: INTEGER is
+	ora_c_float_type: INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_c_real_type: INTEGER is
+	ora_c_real_type: INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_c_boolean_type: INTEGER is
+	ora_c_boolean_type: INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_c_date_type: INTEGER is
+	ora_c_date_type: INTEGER
 		external
 			"C | %"oracle.h%""
 		end
 
-	ora_clear_error is
+	ora_clear_error
 		external
 			"C | %"oracle.h%""
 		end
 
-	break (s: STRING): STRING is
+	break (s: STRING): STRING
 			-- Broken long string using
 			-- Oracle's concatenation character.
 		require
@@ -889,9 +889,9 @@ feature {NONE} -- External features
 			end
 		end
 
-	Concat_string: STRING is "'||'";
+	Concat_string: STRING = "'||'";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

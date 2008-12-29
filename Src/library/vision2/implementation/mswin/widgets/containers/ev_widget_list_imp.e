@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision widget list. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			notify_change (Nc_minsize, Current)
 		end
 
-	remove_i_th (i: INTEGER) is
+	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- WEL Implementation
 
-	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
+	is_control_in_window (hwnd_control: POINTER): BOOLEAN
 			-- Is the control of handle `hwnd_control'
 			-- located inside the current window?
 		local
@@ -103,13 +103,13 @@ feature {EV_ANY_I} -- WEL Implementation
 			index_not_changed: old ev_children.index = ev_children.index
 		end
 
-	index_of_child (child: EV_WIDGET_IMP): INTEGER is
+	index_of_child (child: EV_WIDGET_IMP): INTEGER
 			-- `Result' is 1 based index of `child' within `Current'.
 		do
 			Result := index_of (child.interface, 1)
 		end
 
-	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP
 			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
 			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
 			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
@@ -164,7 +164,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_WIDGET_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

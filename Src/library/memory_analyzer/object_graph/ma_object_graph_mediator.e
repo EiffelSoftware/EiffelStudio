@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Analyze the objects in the memory on a graph"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_drawable (a_drawable: EV_FRAME) is
+	make_with_drawable (a_drawable: EV_FRAME)
 			-- Create function.
 		require
 			a_drawable_not_void: a_drawable /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	arrange_in_grid is
+	arrange_in_grid
 			-- Arrange nodes in a circle.
 		local
 			math: DOUBLE_MATH
@@ -60,7 +60,7 @@ feature -- Command
 			end
 		end
 
-	find_draw_node_by_object (a_object: ANY): EG_NODE is
+	find_draw_node_by_object (a_object: ANY): EG_NODE
 			-- Find in `objects_already_draw' return a EG_NODE which corresponding to object.
 		require
 			a_object_not_void : a_object /= Void
@@ -86,7 +86,7 @@ feature -- Command
 			result_not_void : Result /= Void
 		end
 
-	object_already_draw (a_object: ANY): BOOLEAN is
+	object_already_draw (a_object: ANY): BOOLEAN
 			-- if a_object already have a represent figure drawed ?
 		require
 			a_object_not_void : a_object /= Void
@@ -101,7 +101,7 @@ feature -- Command
 			end
 		end
 
-	clear_graph is
+	clear_graph
 			-- Clear graph.
 		do
 			graph.wipe_out
@@ -109,7 +109,7 @@ feature -- Command
 			objects_already_draw.wipe_out
 		end
 
-	add_nodes_refer_to (a_object: ANY) is
+	add_nodes_refer_to (a_object: ANY)
 			-- Add the a_object node and all the nodes refers to it.
 		require
 			a_object_not_void: a_object /= Void
@@ -136,7 +136,7 @@ feature -- Command
 			end
 		end
 
-	add_node_random_pos(a_object:ANY) is
+	add_node_random_pos(a_object:ANY)
 			-- Add a node into the graph at a random position
 		require
 			a_object_not_void: a_object /= Void
@@ -144,7 +144,7 @@ feature -- Command
 			add_node (random.next_item_in_range (0, object_drawing.width),random.next_item_in_range (0,object_drawing.height), a_object)
 		end
 
-	add_node (ax, ay: INTEGER;a_object:ANY) is
+	add_node (ax, ay: INTEGER;a_object:ANY)
 			-- Add a new node to `graph' position it at (`ax', `ay') in `world'.
 		require
 			a_object_not_void: a_object /= Void
@@ -188,7 +188,7 @@ feature -- Command
 			objects_already_draw.force (l_tuple, fig)
 		end
 
-	on_select_node (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_select_node (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Set the refernce lines red, others black.
 		local
 			l_node_figure: EG_FIGURE
@@ -200,7 +200,7 @@ feature -- Command
 			nodes_visited.wipe_out
 		end
 
-	add_link (n1, n2: EG_LINKABLE) is
+	add_link (n1, n2: EG_LINKABLE)
 			-- Add a link to `graph' connecting `n1' with `n2'.
 		require
 			n1_not_void: n1 /= Void
@@ -211,7 +211,7 @@ feature -- Command
 
 feature -- Implementation for agents
 
-	drop_a_object (a_object: ANY) is
+	drop_a_object (a_object: ANY)
 			-- When user pick a object from the object_grid (in main_book's 2nd tab).
 		require
 			a_object_not_void: a_object /= Void
@@ -226,7 +226,7 @@ feature -- Implementation for agents
 			end
 		end
 
-	find_refers is
+	find_refers
 			-- Find the refers to current slected node and draw the nodes which refer to it.
 		local
 			l_nodes: ARRAYED_LIST [EG_FIGURE]
@@ -274,7 +274,7 @@ feature -- Implementation for agents
 			world.update
 		end
 
-	find_object_by_type_name (a_type_name: STRING) is
+	find_object_by_type_name (a_type_name: STRING)
 			-- Find all the objects in the system which type is "a_type_name".
 		local
 			l_temp : ANY
@@ -294,7 +294,7 @@ feature -- Implementation for agents
 
 
 
-	zoom_changed (a_value:INTEGER) is
+	zoom_changed (a_value:INTEGER)
 			-- Change the graph size base on the zoom value.
 		require
 			a_value_not_zeor: a_value /= 0
@@ -303,7 +303,7 @@ feature -- Implementation for agents
 			last_zoom_value := a_value
 		end
 
-	find_object_by_instance_name (a_object_name: STRING) is
+	find_object_by_instance_name (a_object_name: STRING)
 			-- Find all the objects which name (the field name) is a_object_name then put then all on the graph.
 		local
 			l_object:ANY
@@ -330,7 +330,7 @@ feature -- Implementation for agents
 
 feature {NONE} -- Graphics Implementation
 
-	node_reference_change_color (a_node: EG_FIGURE) is
+	node_reference_change_color (a_node: EG_FIGURE)
 			-- Change the reference line color, and set other reference lines' color back.
 		local
 			l_links: ARRAYED_LIST [EG_LINK]
@@ -364,7 +364,7 @@ feature {NONE} -- Graphics Implementation
 			end
 		end
 
-	set_reference_line_color_back is
+	set_reference_line_color_back
 			-- Set the lines' color  which is should be orignal color.
 		local
 			l_links: ARRAYED_LIST [EG_LINK]
@@ -388,7 +388,7 @@ feature {NONE} -- Graphics Implementation
 
 feature {NONE} -- Low Level Logic Implementation
 
-	add_objects_of_same_type (a_type_name: STRING) is
+	add_objects_of_same_type (a_type_name: STRING)
 			-- Add all objects of the given dynamic type.
 		require
 			a_type_name_not_void: a_type_name /= Void
@@ -417,7 +417,7 @@ feature {NONE} -- Low Level Logic Implementation
 			end
 		end
 
-	random: MA_RANGED_RANDOM is
+	random: MA_RANGED_RANDOM
 		once
 			create Result.make
 		end
@@ -465,7 +465,7 @@ invariant
 	grid_layout_not_void: grid_layout /= Void
 	objects_already_draw_has_no_void_item: True-- No Void items in `objects_already_draw'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

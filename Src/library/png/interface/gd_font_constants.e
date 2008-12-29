@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used to select a font"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,19 +11,19 @@ class
 
 feature -- Implementation
 
-	large_font: INTEGER is 1
+	large_font: INTEGER = 1
 
-	tiny_font: INTEGER is 2
+	tiny_font: INTEGER = 2
 
-	small_font: INTEGER is 3
+	small_font: INTEGER = 3
 
-	medium_bold_font: INTEGER is 4
+	medium_bold_font: INTEGER = 4
 
-	giant_font: INTEGER is 5
+	giant_font: INTEGER = 5
 
 feature -- Access
 
-	font_possible(i: INTEGER): BOOLEAN is
+	font_possible(i: INTEGER): BOOLEAN
 		-- Select a font thanks to its associated value.
 		-- Please refer to GD_FONT_CONSTANTS for possible values.
 		do
@@ -37,7 +37,7 @@ feature -- Access
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

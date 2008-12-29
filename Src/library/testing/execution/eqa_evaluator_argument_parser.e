@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that parse and evaluate comand line options for the test interpreter.
 	]"
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'.
 		do
 			make_parser (False)
@@ -95,7 +95,7 @@ feature -- Status report
 
 feature {NONE} -- Access
 
-	switches: ARRAYED_LIST [!ARGUMENT_SWITCH] is
+	switches: ARRAYED_LIST [!ARGUMENT_SWITCH]
 			-- <Precursor>
 		once
 			create Result.make (4)

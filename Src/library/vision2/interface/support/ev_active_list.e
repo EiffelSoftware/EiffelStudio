@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Active lists that provide internal actions only exported to the
 		EiffelVision2 implementation.
@@ -27,7 +27,7 @@ create {EV_ACTIVE_LIST}
 	
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize.
 		do
 			Precursor {ACTIVE_LIST}
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I, EV_ANY} -- Implementation
 
-	on_item_added_at (an_item: like item; item_index: INTEGER) is
+	on_item_added_at (an_item: like item; item_index: INTEGER)
 			-- `an_item' has just been added at index `item_index'.
 		local
 			a_cursor: CURSOR
@@ -49,7 +49,7 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			go_to (a_cursor)
 		end
 
-	on_item_removed_at (an_item: like item; item_index: INTEGER) is
+	on_item_removed_at (an_item: like item; item_index: INTEGER)
 			-- `an_item' has just been removed at index `item_index'.
 		local
 			a_cursor: CURSOR
@@ -74,7 +74,7 @@ invariant
 	internal_add_actions_not_void: internal_add_actions /= Void
 	internal_remove_actions_not_void: internal_remove_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

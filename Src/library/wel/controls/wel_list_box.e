@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains a list of strings from which the user can %
 		%select. Common ancestor of WEL_SINGLE_SELECTION_LIST_BOX and %
 		%WEL_MULTIPLE_SELECTION_LIST_BOX."
@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Make a list box
 		require
 			a_parent_not_void: a_parent /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	strings: ARRAY [STRING_32] is
+	strings: ARRAY [STRING_32]
 			-- Strings contained in the list box
 		require
 			exists: exists
@@ -69,7 +69,7 @@ feature -- Access
 			count_ok: Result.count = count
 		end
 
-	i_th_text (i: INTEGER): STRING_32 is
+	i_th_text (i: INTEGER): STRING_32
 			-- Text at the zero-based index `i'
 		require
 			exists: exists
@@ -88,7 +88,7 @@ feature -- Access
 			same_result_as_strings: Result.is_equal (strings.item (i))
 		end
 
-	i_th_text_length (i: INTEGER): INTEGER is
+	i_th_text_length (i: INTEGER): INTEGER
 			-- Length text at the zero-based index `i'
 		require
 			exists: exists
@@ -102,7 +102,7 @@ feature -- Access
 			same_result_as_strings: Result = strings.item (i).count
 		end
 
-	foreground_color: WEL_COLOR_REF is
+	foreground_color: WEL_COLOR_REF
 			-- foreground color used for the text of the
 			-- control
 			-- Can be redefined by the user
@@ -110,7 +110,7 @@ feature -- Access
 			create Result.make_system (Color_windowtext)
 		end
 
-	background_color: WEL_COLOR_REF is
+	background_color: WEL_COLOR_REF
 			-- Background color used for the background of the
 			-- control
 			-- Can be redefined by the user
@@ -120,7 +120,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_string (a_string: STRING_GENERAL) is
+	add_string (a_string: STRING_GENERAL)
 			-- Add `a_string' in the list box.
 			-- If the list box does not have the
 			-- `Lbs_sort' style, `a_string' is added
@@ -139,7 +139,7 @@ feature -- Element change
 			count_increased: count = old count + 1
 		end
 
-	insert_string_at (a_string: STRING_GENERAL; index: INTEGER) is
+	insert_string_at (a_string: STRING_GENERAL; index: INTEGER)
 			-- Add `a_string' at the zero-based `index'
 		require
 			exists: exists
@@ -155,7 +155,7 @@ feature -- Element change
 			count_increased: count = old count + 1
 		end
 
-	delete_string (index: INTEGER) is
+	delete_string (index: INTEGER)
 			-- Delete the item at the zero-based `index'
 		require
 			exists: exists
@@ -167,7 +167,7 @@ feature -- Element change
 			count_decreased: count = old count - 1
 		end
 
-	add_files (attribut: INTEGER; files: STRING_GENERAL) is
+	add_files (attribut: INTEGER; files: STRING_GENERAL)
 			-- Add `files' to the list box. `files' may contain
 			-- wildcards (?*). See class WEL_DDL_CONSTANTS for
 			-- `attribut' values.
@@ -181,7 +181,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Lb_dir, to_wparam (attribut), a_wel_string.item)
 		end
 
-	reset_content is
+	reset_content
 			-- Reset the content of the list.
 		require
 			exists: exists
@@ -193,7 +193,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	set_top_index (index: INTEGER) is
+	set_top_index (index: INTEGER)
 			-- Ensure that the zero-based `index'
 			-- in the list box is visible.
 		require
@@ -206,7 +206,7 @@ feature -- Status setting
 			index_visible: top_index <= index  
 		end
 
-	select_item (index: INTEGER) is
+	select_item (index: INTEGER)
 			-- Select item at the zero-based `index'.
 		require
 			exists: exists
@@ -217,7 +217,7 @@ feature -- Status setting
 			is_selected: is_selected (index)
 		end
 
-	set_horizontal_extent (a_width: INTEGER) is
+	set_horizontal_extent (a_width: INTEGER)
 			-- Set the width, in pixels, by which a list box can
 			-- be scrolled horizontally.
 		require
@@ -231,14 +231,14 @@ feature -- Status setting
 
 feature -- Status report
 
-	selected: BOOLEAN is
+	selected: BOOLEAN
 			-- Is an item selected?
 		require
 			exists: exists
 		deferred
 		end
 
-	top_index: INTEGER is
+	top_index: INTEGER
 			-- Index of the first visible item
 		require
 			exists: exists
@@ -250,7 +250,7 @@ feature -- Status report
 			result_small_enough: Result <= count
 		end
 
-	is_selected (index: INTEGER): BOOLEAN is
+	is_selected (index: INTEGER): BOOLEAN
 			-- Is item at position `index' selected?
 		require
 			exists: exists
@@ -261,7 +261,7 @@ feature -- Status report
 				to_wparam (index), to_lparam (0)) > 0
 		end
 
-	item_height: INTEGER is
+	item_height: INTEGER
 			-- Height of an item
 		require
 			exists: exists
@@ -278,7 +278,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	horizontal_extent: INTEGER is
+	horizontal_extent: INTEGER
 			-- Width, in pixels, by which the list box can be
 			-- scrolled horizontally
 		require
@@ -293,7 +293,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	find_string (index: INTEGER; a_string: STRING_GENERAL): INTEGER is
+	find_string (index: INTEGER; a_string: STRING_GENERAL): INTEGER
 			-- Find the first string that contains the
 			-- prefix `a_string'. `index' specifies the
 			-- zero-based index of the item before the first
@@ -313,7 +313,7 @@ feature -- Basic operations
 				Lb_findstring, to_wparam (index), a_wel_string.item)
 		end
 
-	find_string_exact (index: INTEGER; a_string: STRING_GENERAL): INTEGER is
+	find_string_exact (index: INTEGER; a_string: STRING_GENERAL): INTEGER
 			-- Find the first string that matches `a_string'.
 			-- `index' specifies the zero-based index of the
 			-- item before the first item to be searched.
@@ -334,7 +334,7 @@ feature -- Basic operations
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of lines
 		require
 			exists: exists
@@ -347,14 +347,14 @@ feature -- Measurement
 
 feature -- Notifications
 
-	on_lbn_selchange is
+	on_lbn_selchange
 			-- The selection is about to change
 		require
 			exists: exists
 		do
 		end
 
-	on_lbn_errspace is
+	on_lbn_errspace
 			-- Cannot allocate enough memory
 			-- to meet a specific request
 		require
@@ -362,28 +362,28 @@ feature -- Notifications
 		do
 		end
 
-	on_lbn_dblclk is
+	on_lbn_dblclk
 			-- Double click on a string
 		require
 			exists: exists
 		do
 		end
 
-	on_lbn_selcancel is
+	on_lbn_selcancel
 			-- Cancel the selection
 		require
 			exists: exists
 		do
 		end
 
-	on_lbn_setfocus is
+	on_lbn_setfocus
 			-- Receive the keyboard focus
 		require
 			exists: exists
 		do
 		end
 
-	on_lbn_killfocus is
+	on_lbn_killfocus
 			-- Lose the keyboard focus
 		require
 			exists: exists
@@ -392,7 +392,7 @@ feature -- Notifications
 
 feature {NONE} -- Implementation
 
-	process_notification (notification_code: INTEGER) is
+	process_notification (notification_code: INTEGER)
 		do
 			if notification_code = Lbn_selchange then
 				on_lbn_selchange
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := "LISTBOX"
@@ -420,7 +420,7 @@ feature {NONE} -- Implementation
 invariant
 	consistent_count: exists and then selected implies count > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

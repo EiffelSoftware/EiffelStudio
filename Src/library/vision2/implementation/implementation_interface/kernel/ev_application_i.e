@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision application. Implementation interface.%N%
 		%See ev_application.e"
@@ -25,7 +25,7 @@ inherit
 
 feature {EV_APPLICATION} -- Initialization
 
-	initialize is
+	initialize
 			-- Create pick and drop target list.
 			-- Set F1 as default help key.
 			-- Create default help engine.
@@ -56,7 +56,7 @@ feature {EV_APPLICATION} -- Initialization
 			set_is_initialized (True)
 		end
 
-	 launch is
+	 launch
 			-- Call the `post_launch_actions' and start the event loop.
 		do
 			from
@@ -70,13 +70,13 @@ feature {EV_APPLICATION} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
-	cpu_relinquishment_time: INTEGER is 20
+	cpu_relinquishment_time: INTEGER = 20
 		-- Number of milliseconds to relinquish CPU when idling.
 
 	idle_iteration_count: NATURAL_32
 		-- Number of iterations that the application has been idle.
 
-	idle_iteration_boundary: NATURAL_32 is 1500
+	idle_iteration_boundary: NATURAL_32 = 1500
 		-- Number of iterations before forcing Garbage Collector to kick in.
 		-- 30 Seconds = 30 * 1000 / sleep time
 
@@ -135,7 +135,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	process_underlying_toolkit_event_queue is
+	process_underlying_toolkit_event_queue
 			-- Process event queue from underlying toolkit.
 			-- `events_process_from_toolkit
 		deferred
@@ -156,7 +156,7 @@ feature -- Access
 	pnd_targets: HASH_TABLE [INTEGER, INTEGER]
 			-- Global list of pick and drop target object ids.
 
-	windows: LINEAR [EV_WINDOW] is
+	windows: LINEAR [EV_WINDOW]
 			-- Global list of windows.
 		deferred
 		end
@@ -170,7 +170,7 @@ feature -- Access
 	captured_widget: EV_WIDGET
 			-- Widget currently captured. Void if none.
 
-	pick_and_drop_source: EV_PICK_AND_DROPABLE_I is
+	pick_and_drop_source: EV_PICK_AND_DROPABLE_I
 			-- The current pick and drop source.
 		deferred
 		end
@@ -184,7 +184,7 @@ feature -- Access
 	help_engine: EV_HELP_ENGINE
 			-- Object that handle contextual help display requests
 
-	clipboard: EV_CLIPBOARD is
+	clipboard: EV_CLIPBOARD
 			-- Native platform clipboard access.
 		do
 			if clipboard_internal = Void then
@@ -193,22 +193,22 @@ feature -- Access
 			Result := clipboard_internal
 		end
 
-	ctrl_pressed: BOOLEAN is
+	ctrl_pressed: BOOLEAN
 			-- Is ctrl key currently pressed?
 		deferred
 		end
 
-	shift_pressed: BOOLEAN is
+	shift_pressed: BOOLEAN
 			-- Is shift key currently pressed?
 		deferred
 		end
 
-	alt_pressed: BOOLEAN is
+	alt_pressed: BOOLEAN
 			-- Is alt key currently pressed?
 		deferred
 		end
 
-	caps_lock_on: BOOLEAN is
+	caps_lock_on: BOOLEAN
 			-- Is the Caps Lock key currently on?
 		deferred
 		end
@@ -233,7 +233,7 @@ feature -- Element Change
 			invoke_garbage_collection_when_inactive := a_enabled
 		end
 
-	set_captured_widget (a_captured_widget: EV_WIDGET) is
+	set_captured_widget (a_captured_widget: EV_WIDGET)
 			-- Set `captured_widget' to the widget that has the current capture 'a_capture_widget'.
 		do
 			captured_widget := a_captured_widget
@@ -241,7 +241,7 @@ feature -- Element Change
 			captured_widget_set: captured_widget = a_captured_widget
 		end
 
-	set_help_accelerator (an_accelerator: EV_ACCELERATOR) is
+	set_help_accelerator (an_accelerator: EV_ACCELERATOR)
 			-- Assign `an_accelerator' to `help_accelerator'
 		require
 			an_accelerator_not_void: an_accelerator /= Void
@@ -255,7 +255,7 @@ feature -- Element Change
 			help_accelerator_complete: help_accelerator.actions.has (help_handler_procedure)
 		end
 
-	set_contextual_help_accelerator (an_accelerator: EV_ACCELERATOR) is
+	set_contextual_help_accelerator (an_accelerator: EV_ACCELERATOR)
 			-- Assign `an_accelerator' to `contextual_help_accelerator'
 		require
 			an_accelerator_not_void: an_accelerator /= Void
@@ -269,7 +269,7 @@ feature -- Element Change
 			contextual_help_accelerator_complete: contextual_help_accelerator.actions.has (contextual_help_handler_procedure)
 		end
 
-	set_help_engine (an_engine:  EV_HELP_ENGINE) is
+	set_help_engine (an_engine:  EV_HELP_ENGINE)
 			-- Assign `an_engine' to `help_engine'
 		require
 			an_engine_not_void: an_engine /= Void
@@ -279,7 +279,7 @@ feature -- Element Change
 			help_engine_set: help_engine = an_engine
 		end
 
-	set_locked_window (a_window: EV_WINDOW) is
+	set_locked_window (a_window: EV_WINDOW)
 			-- Set `locked_window' to `a_window'.
 			--
 			-- See `{EV_WINDOW}.lock_update' for more details
@@ -289,7 +289,7 @@ feature -- Element Change
 
 feature -- Basic operation
 
-	process_events is
+	process_events
 			-- Process any pending events.
 			--| Pass control to the GUI toolkit so that it can
 			--| handle any events that may be in its queue.
@@ -297,14 +297,14 @@ feature -- Basic operation
 			process_event_queue (False)
 		end
 
-	process_graphical_events is
+	process_graphical_events
 			-- Process any pending paint events.
 			-- Pass control to the GUI toolkit so that it can
 			-- handle any paint events that may be in its queue.
 		deferred
 		end
 
-	process_events_until_stopped is
+	process_events_until_stopped
 			-- Process all events until 'stop_processing' is called.
 		do
 			from
@@ -316,20 +316,20 @@ feature -- Basic operation
 			end
 		end
 
-	stop_processing is
+	stop_processing
 			--  Exit `process_events_until_stopped'.
 		do
 			stop_processing_requested := True
 		end
 
-	sleep (msec: INTEGER) is
+	sleep (msec: INTEGER)
 			-- Wait for `msec' milliseconds and return.
 		require
 			msec_non_negative: msec >= 0
 		deferred
 		end
 
-	enable_contextual_help is
+	enable_contextual_help
 			-- Change mouse cursor to help cursor
 			-- Capture mouse input
 			-- Send help context of widget under mouse cursor when left mouse button is pressed to help engine.
@@ -346,7 +346,7 @@ feature -- Basic operation
 			end
 		end
 
-	display_help_for_widget (a_widget: EV_WIDGET) is
+	display_help_for_widget (a_widget: EV_WIDGET)
 			-- Display contextual help for `a_widget', if any.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -359,7 +359,7 @@ feature -- Basic operation
 			end
 		end
 
-	add_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is
+	add_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE])
 			-- Extend `idle_actions' with `a_idle_action'.
 			-- Thread safe
 		require
@@ -372,7 +372,7 @@ feature -- Basic operation
 			unlock
 		end
 
-	remove_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is
+	remove_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE])
 			-- Remove `a_idle_action' from `idle_actions'
 			-- Thread safe
 		require
@@ -391,24 +391,24 @@ feature -- Basic operation
 			unlock
 		end
 
-	lock is
+	lock
 			-- Lock the Mutex.
 		deferred
 		end
 
-	try_lock: BOOLEAN is
+	try_lock: BOOLEAN
 			-- Try to see if we can lock, False means no lock could be attained
 		deferred
 		end
 
-	unlock is
+	unlock
 			-- Unlock the Mutex.
 		deferred
 		end
 
 feature -- Events
 
-	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE]) is
+	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE])
 			-- Perform `an_action' one time only on idle.
 		do
 			lock
@@ -420,7 +420,7 @@ feature -- Events
 
 feature -- Event handling
 
-	accelerator_actions (an_accelerator: EV_ACCELERATOR): EV_NOTIFY_ACTION_SEQUENCE is
+	accelerator_actions (an_accelerator: EV_ACCELERATOR): EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `an_accelerator' key sequence is
 			-- pressed.
 		do
@@ -431,12 +431,12 @@ feature -- Event handling
 
 feature -- Status report
 
-	tooltip_delay: INTEGER is
+	tooltip_delay: INTEGER
 			-- Time in milliseconds before tooltips pop up.
 		deferred
 		end
 
-	focused_widget: EV_WIDGET is
+	focused_widget: EV_WIDGET
 			-- Widget with keyboard focus
 		local
 			current_windows: like windows
@@ -462,7 +462,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_tooltip_delay (a_delay: INTEGER) is
+	set_tooltip_delay (a_delay: INTEGER)
 			-- Set `tooltip_delay' to `a_delay'.
 		require
 			a_delay_non_negative: a_delay >= 0
@@ -482,7 +482,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 	x_origin, y_origin: INTEGER
 		-- Temp coordinate values for origin of Pick and Drop.
 
-	set_x_y_origin (a_x_origin, a_y_origin: INTEGER) is
+	set_x_y_origin (a_x_origin, a_y_origin: INTEGER)
 			-- Set `x_origin' and `y_origin' to `a_x_origin' and `a_y_origin' respectively.
 		do
 			x_origin := a_x_origin
@@ -492,14 +492,14 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 	rubber_band_is_drawn: BOOLEAN
 		-- Is the PnD rubber band drawn on screen?
 
-	draw_rubber_band is
+	draw_rubber_band
 			-- Draw a segment between initial pick point and `destination'.
 		do
 			pnd_screen.draw_segment (x_origin, y_origin, pnd_pointer_x, pnd_pointer_y)
 			rubber_band_is_drawn := True
 		end
 
-	erase_rubber_band is
+	erase_rubber_band
 			-- Erase previously drawn rubber band.
 		do
 			if rubber_band_is_drawn then
@@ -508,7 +508,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			end
 		end
 
-	pnd_screen: EV_SCREEN is
+	pnd_screen: EV_SCREEN
 			-- Screen object used for drawing PND transport line
 		once
 			create Result
@@ -521,14 +521,14 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 	pnd_pointer_y: INTEGER
 		-- Position of pointer on previous PND draw.
 
-	set_pnd_pointer_coords (a_pnd_pointer_x, a_pnd_pointer_y: INTEGER) is
+	set_pnd_pointer_coords (a_pnd_pointer_x, a_pnd_pointer_y: INTEGER)
 			-- Set PND pointer origins to `a_pnd_pointer_x' and `a_pnd_pointer_y'.
 		do
 			pnd_pointer_x := a_pnd_pointer_x
 			pnd_pointer_y := a_pnd_pointer_y
 		end
 
-	create_target_menu (a_x, a_y, a_screen_x, a_screen_y: INTEGER; a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_configure_agent: PROCEDURE [ANY, TUPLE]; a_menu_only: BOOLEAN) is
+	create_target_menu (a_x, a_y, a_screen_x, a_screen_y: INTEGER; a_pnd_source: EV_PICK_AND_DROPABLE; a_pebble: ANY; a_configure_agent: PROCEDURE [ANY, TUPLE]; a_menu_only: BOOLEAN)
 			-- Menu of targets that accept `a_pebble'.
 		local
 			cur: CURSOR
@@ -652,7 +652,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 
 feature {NONE} -- Debug
 
-	trace is
+	trace
 			-- Output all PND targets.
 		local
 			cur: CURSOR
@@ -677,7 +677,7 @@ feature {NONE} -- Debug
 
 feature -- Implementation
 
-	call_post_launch_actions is
+	call_post_launch_actions
 			-- Call the post launch actions.
 		local
 			retried: BOOLEAN
@@ -694,7 +694,7 @@ feature -- Implementation
 			end
 		end
 
-	on_exception_action (an_exception: EXCEPTION) is
+	on_exception_action (an_exception: EXCEPTION)
 			-- Call exception actions.
 		require
 			an_exception_not_void: an_exception /= Void
@@ -792,14 +792,14 @@ feature -- Implementation
 	exception_dialog: EV_DIALOG
 		-- Dialog used for showing uncaught exceptions.
 
-	show_exception_dialog: BOOLEAN is True
+	show_exception_dialog: BOOLEAN = True
 		-- Should the exception dialog be shown by default?
 
 	uncaught_exception_actions_called: BOOLEAN
 			-- Are the `uncaught_exceptions_actions' currently being called?
 			-- This is used to prevent infinite looping should an exception be raised as part of calling `uncaught_exception_actions'.
 
-	new_exception: EXCEPTION is
+	new_exception: EXCEPTION
 			-- New exception object representating the last exception caught in Current
 		do
 			Result := exception_manager.last_exception
@@ -821,19 +821,19 @@ feature {NONE} -- Implementation
  	old_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Button press actions of window being used whie contextual help is enabled
 
-	screen: EV_SCREEN is
+	screen: EV_SCREEN
 			-- Screen object used to retrieve widget under mouse pointer
 		once
 			create Result
 		end
 
-	help_handler_procedure: PROCEDURE [ANY, TUPLE] is
+	help_handler_procedure: PROCEDURE [ANY, TUPLE]
 			-- Help handler procedure associated with help accelerator
 		once
 			Result := agent help_handler
 		end
 
-	help_handler is
+	help_handler
 			-- Display contextual help for currently focused widget.
 		local
 			w: EV_WIDGET
@@ -844,19 +844,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	contextual_help_handler_procedure: PROCEDURE [ANY, TUPLE] is
+	contextual_help_handler_procedure: PROCEDURE [ANY, TUPLE]
 			-- Help handler procedure associated with context help accelerator
 		once
 			Result := agent enable_contextual_help
 		end
 
-	contextual_help_procedure: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]] is
+	contextual_help_procedure: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]]
 			-- Called when mouse pointer is pressed while contextual help is enabled
 		once
 			Result := agent contextual_help
 		end
 
-	contextual_help (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+	contextual_help (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Send help context of widget under mouse cursor when left mouse button is pressed to help engine.
 			-- Cancel contextual help mode when right mouse button is pressed.
 		local
@@ -871,7 +871,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	disable_contextual_help is
+	disable_contextual_help
 			-- Disable contextual help: remove capture and restore mouse pointer style.
 		do
 			check
@@ -887,7 +887,7 @@ feature {NONE} -- Implementation
 			captured_widget.disable_capture
 		end
 
-	focused_widget_from_container (a_widget: EV_WIDGET): EV_WIDGET is
+	focused_widget_from_container (a_widget: EV_WIDGET): EV_WIDGET
 			-- Child widget of `a_widget' with keyboard focus, if any
 		local
 			a_container: EV_CONTAINER
@@ -922,7 +922,7 @@ feature {NONE} -- Implementation
 			focused_widget: Result /= Void implies Result.has_focus
 		end
 
-	wait_for_input (msec: INTEGER) is
+	wait_for_input (msec: INTEGER)
 			-- Wait for at most `msec' milliseconds for an input.
 		require
 			msec_non_negative: msec >= 0
@@ -934,7 +934,7 @@ invariant
 	pnd_targets_not_void: is_usable implies pnd_targets /= void
 	windows_not_void: is_usable implies windows /= void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

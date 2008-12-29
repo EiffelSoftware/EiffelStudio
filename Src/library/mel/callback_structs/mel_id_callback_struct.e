@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback structure for MEL_IDENTIFIERs of input, %
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_id: like identifier) is
+	make (an_id: like identifier)
 			-- Create an id callback structure.
 		require
 			valid_id: an_id /= Void and then an_id.is_valid
@@ -39,10 +39,10 @@ feature -- Access
 			-- Mel identfier return from input or work_proc 
 			-- or timer callback registration
 
-	has_widget: BOOLEAN is False;
+	has_widget: BOOLEAN = False;
 			-- Does not need widget
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision Combo-box. Implementation interface"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -166,7 +166,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
@@ -176,7 +176,7 @@ feature {NONE} -- Initialization
  			id := 0
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_default_font
@@ -237,7 +237,7 @@ feature -- Access
 
 feature -- Measurement
 
-	height: INTEGER is
+	height: INTEGER
 			-- height of `Current' when the list is hidden.
 		do
 			Result := window_rect.height
@@ -245,7 +245,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	text: STRING_32 is
+	text: STRING_32
 			-- `Result' is text of `Current'. Void if none.
 		local
 			loc_selected_item: like selected_item
@@ -265,7 +265,7 @@ feature -- Status report
 			end
 		end
 
-	item_height: INTEGER is
+	item_height: INTEGER
 			-- height required by an item.
 		do
 			if private_font /= Void then
@@ -275,7 +275,7 @@ feature -- Status report
 			end
 		end
 
-	is_selected (an_id: INTEGER): BOOLEAN is
+	is_selected (an_id: INTEGER): BOOLEAN
 			-- Is item addressed by the one-based index `an_id' selected?
 		do
 			if selected then
@@ -283,7 +283,7 @@ feature -- Status report
 			end
 		end
 
-	selected_item: EV_LIST_ITEM is
+	selected_item: EV_LIST_ITEM
 			-- Currently selected item.
 		local
 			new_selected_item: EV_LIST_ITEM_IMP
@@ -295,7 +295,7 @@ feature -- Status report
 			end
 		end
 
-	has_selection: BOOLEAN is
+	has_selection: BOOLEAN
 			-- Is there a current text selection?
 		local
 			wel_sel: POINTER
@@ -312,7 +312,7 @@ feature -- Status report
 			Result :=  start_pos /= end_pos
 		end
 
-	internal_caret_position: INTEGER is
+	internal_caret_position: INTEGER
 			-- Caret position.
 		local
 			sel_end: INTEGER
@@ -323,7 +323,7 @@ feature -- Status report
 			Result := sel_end
 		end
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does `Current' have focus?
 		do
 			Result := combo.has_focus
@@ -334,7 +334,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_focus is
+	set_focus
 			-- Set the focus to `Current'
 		do
 			if not has_focus then
@@ -346,7 +346,7 @@ feature -- Status setting
 			end
 		end
 
-	select_item (an_index: INTEGER) is
+	select_item (an_index: INTEGER)
 			-- Select the item at the one-based index `an_index'.
 			--|--------------------------------------------------
 			--| We cannot redefine this feature because then a
@@ -361,13 +361,13 @@ feature -- Status setting
 			on_cbn_selchange
 		end
 
-	deselect_item (an_index: INTEGER) is
+	deselect_item (an_index: INTEGER)
 			-- Unselect the item at the one-based index `an_index'.
 		do
 			clear_selection
 		end
 
-	clear_selection is
+	clear_selection
 			-- Clear selection of `Current'.
 		do
 				-- Unselect the item in the combo box
@@ -377,7 +377,7 @@ feature -- Status setting
 			on_cbn_selchange
 		end
 
-	set_editable (flag: BOOLEAN) is
+	set_editable (flag: BOOLEAN)
 			-- If `flag' then make `Current' read-write.
 			-- If not `flag' then make `Current' read only.
 		do
@@ -388,13 +388,13 @@ feature -- Status setting
 			end
 		end
 
-	internal_set_caret_position (pos: INTEGER) is
+	internal_set_caret_position (pos: INTEGER)
 			-- Set the caret position to `pos'.
 		do
 			{WEL_API}.send_message (edit_item, Em_setsel, to_wparam (pos), to_lparam (pos))
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to tooltip.
 		do
 				-- We need to set the tooltip on all the components of the combobox.
@@ -407,38 +407,38 @@ feature -- Status setting
 
 feature -- Basic operation
 
-	deselect_all is
+	deselect_all
 			-- Unselect the currently selected text.
 		do
 			{WEL_API}.send_message (edit_item, Em_setsel, to_wparam (-1), to_lparam (0))
 		end
 
-	delete_selection is
+	delete_selection
 			-- Delete the current selection.
 		do
 			{WEL_API}.send_message (edit_item, Wm_clear, to_wparam (0), to_lparam (0))
 		end
 
-	cut_selection is
+	cut_selection
 			-- Cut the current selection to the clipboard.
 		do
 			{WEL_API}.send_message (edit_item, Wm_cut, to_wparam (0), to_lparam (0))
 		end
 
-	copy_selection is
+	copy_selection
 			-- Copy the current selection to the clipboard.
 		do
 			{WEL_API}.send_message (edit_item, Wm_copy, to_wparam (0), to_lparam (0))
 		end
 
-	clip_paste is
+	clip_paste
 			-- Paste the contents of the clipboard to the current
 			-- caret position.
 		do
 			{WEL_API}.send_message (edit_item, Wm_paste, to_wparam (0), to_lparam (0))
 		end
 
-	replace_selection (txt: STRING_GENERAL) is
+	replace_selection (txt: STRING_GENERAL)
 			-- Replace the current selection with `txt'.
 			-- If there is no selection, `txt' is inserted
 			-- at the current `caret_position'.
@@ -454,7 +454,7 @@ feature -- Basic operation
 
 feature {EV_LIST_ITEM_IMP} -- Pixmap handling
 
-	setup_image_list is
+	setup_image_list
 			-- Create the image list and associate it
 			-- to `Current' if not already associated.
 		do
@@ -468,7 +468,7 @@ feature {EV_LIST_ITEM_IMP} -- Pixmap handling
 			set_image_list(image_list)
 		end
 
-	remove_image_list is
+	remove_image_list
 			-- Destroy the image list and remove it
 			-- from `Current'.
 		do
@@ -486,7 +486,7 @@ feature {EV_LIST_ITEM_IMP} -- Pixmap handling
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
 
-	set_pixmap_of_child (an_item: EV_LIST_ITEM_IMP; position, image_index: INTEGER) is
+	set_pixmap_of_child (an_item: EV_LIST_ITEM_IMP; position, image_index: INTEGER)
 			-- Set pixmap of `an_item' at position `position' in `Current'
 			-- to the `image_index'th image in `image_list'.
 		local
@@ -500,7 +500,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			wel_insert_item (cb_item)
 		end
 
-	remove_pixmap_of_child (an_item: EV_LIST_ITEM_IMP; position: INTEGER) is
+	remove_pixmap_of_child (an_item: EV_LIST_ITEM_IMP; position: INTEGER)
 			-- Remove pixmap of `an_item' located at position `position' in
 			-- `Current'.
 		local
@@ -513,31 +513,31 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			wel_insert_item (cb_item)
 		end
 
-	internal_select_item (item_imp: EV_LIST_ITEM_IMP) is
+	internal_select_item (item_imp: EV_LIST_ITEM_IMP)
 			-- Select `item_imp'.
 		do
 			select_item (internal_get_index (item_imp))
 		end
 
-	internal_is_selected (item_imp: EV_LIST_ITEM_IMP): BOOLEAN is
+	internal_is_selected (item_imp: EV_LIST_ITEM_IMP): BOOLEAN
 			-- Is `item_imp' selected?
 		do
 			Result := is_selected (internal_get_index (item_imp))
 		end
 
-	internal_deselect_item (item_imp: EV_LIST_ITEM_IMP) is
+	internal_deselect_item (item_imp: EV_LIST_ITEM_IMP)
 			-- Deselect `item_imp'.
 		do
 			deselect_item (internal_get_index (item_imp))
 		end
 
-	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER is
+	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER
 			-- `Result' is index of `item_imp'.
 		do
 			Result := ev_children.index_of (item_imp, 1)
 		end
 
-   	get_item_position (an_index: INTEGER): WEL_POINT is
+   	get_item_position (an_index: INTEGER): WEL_POINT
    			-- Retrieves the position of the zero-based `index'-th item.
    			-- in the drop-down list.
    		local
@@ -551,7 +551,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
    			end
    		end
 
-	visible_count: INTEGER is
+	visible_count: INTEGER
    			-- Number of items that can be displayed in the list.
    		local
    			wel_rect: WEL_RECT
@@ -564,7 +564,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 
 feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 
-	on_set_focus is
+	on_set_focus
 			-- Called when a `Wm_setfocus' message is recieved.
 		local
 			l_top_level_window: EV_WINDOW_IMP
@@ -604,7 +604,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 			end
 		end
 
-	on_kill_focus is
+	on_kill_focus
 			-- Called when a `Wm_killfocus' message is received.
 		do
 			if not has_focus then
@@ -614,14 +614,14 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 
 feature {NONE} -- Implementation
 
-	propagate_key_event_to_toplevel_window (is_pressed: BOOLEAN): BOOLEAN is
+	propagate_key_event_to_toplevel_window (is_pressed: BOOLEAN): BOOLEAN
 			-- Should we propagate a key event if `Current' is parented in a dialog?
 			-- If `is_pressed', then it is a key_press event, otherwise a key_release event.
 		do
 			Result := not is_list_shown
 		end
 
-	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER)
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer button press.
 		local
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 		end
 
 	internal_propagate_pointer_double_press
-		(keys, x_pos, y_pos, button: INTEGER) is
+		(keys, x_pos, y_pos, button: INTEGER)
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer double press.
 		do
@@ -647,13 +647,13 @@ feature {NONE} -- Implementation
 			--| combo box will not recieve double click events.
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_LIST_ITEM_IMP
 			-- `Result' is item at pixel position `x_pos', `y_pos'.
 		do
 			--| FIXME to be implemented for pick-and-dropable.	
 		end
 
-	recreate_combo_box (creation_flag: INTEGER) is
+	recreate_combo_box (creation_flag: INTEGER)
 			-- Destroy the existing combo box and recreate
 			-- a new one with `creation_flag' in the style
 		local
@@ -695,7 +695,7 @@ feature {NONE} -- Implementation
 			internal_copy_list
 		end
 
-	set_read_only is
+	set_read_only
 			-- Make `Current' read only.
 		local
 			sensitive: BOOLEAN
@@ -739,7 +739,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_read_write is
+	set_read_write
 			-- Make `Current' read-writeable.
 		local
 			sensitive: BOOLEAN
@@ -782,13 +782,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	read_only: BOOLEAN is
+	read_only: BOOLEAN
 			-- Is `Current' read-only?
 		do
 			Result := flag_set (style, Cbs_dropdownlist)
 		end
 
-	internal_copy_list is
+	internal_copy_list
 			-- Take an empty list and initialize all the children with
 			-- the contents of `ev_children'.
 		local
@@ -818,14 +818,14 @@ feature {NONE} -- Implementation
 			index_not_changed: index = old index
 		end
 
-	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
+	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER)
 			-- Insert `item_imp' at the one-based index `an_index'.
 		do
 			--FIXME must set the index as in LIST.
 			insert_string_at (item_imp.wel_text, an_index - 1)
 		end
 
-	on_cben_insert_item (an_item: WEL_COMBO_BOX_EX_ITEM) is
+	on_cben_insert_item (an_item: WEL_COMBO_BOX_EX_ITEM)
  			-- An item has been inserted in the control.
 		do
 				-- If this is the first item inserted in `Current' then
@@ -835,14 +835,14 @@ feature {NONE} -- Implementation
 			end
  		end
 
-	refresh_item (item_imp: EV_LIST_ITEM_IMP) is
+	refresh_item (item_imp: EV_LIST_ITEM_IMP)
 			-- Refresh current so that it take into account
 			-- changes made in `item_imp'
 		do
 			set_item_info (item_imp.index - 1, item_imp.cb_item)
 		end
 
-	remove_item (item_imp: EV_LIST_ITEM_IMP) is
+	remove_item (item_imp: EV_LIST_ITEM_IMP)
 			-- Remove `item_imp' from `Current'.
 		local
 			an_index: INTEGER
@@ -851,7 +851,7 @@ feature {NONE} -- Implementation
 			delete_string (an_index - 1)
 		end
 
-	set_foreground_color (color: EV_COLOR) is
+	set_foreground_color (color: EV_COLOR)
 			-- Make `color' the new `foreground_color'
 		do
 			Precursor {EV_TEXT_COMPONENT_IMP} (color)
@@ -863,7 +863,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_background_color (color: EV_COLOR) is
+	set_background_color (color: EV_COLOR)
 			-- Make `color' the new `background_color'.
 		do
 			Precursor {EV_TEXT_COMPONENT_IMP} (color)
@@ -875,7 +875,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_font (ft: EV_FONT) is
+	set_font (ft: EV_FONT)
 			-- Make `ft' new font of `Current'.
 		do
 			Precursor {EV_FONTABLE_IMP} (ft)
@@ -885,7 +885,7 @@ feature {NONE} -- Implementation
 feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 	-- WEL Implementation
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- We check if the enter key is pressed.
 			--| 13 is the number of the return key.
 		local
@@ -928,7 +928,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 			end
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -941,7 +941,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 
 feature {NONE} -- WEL Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default windows style used to create `Current'.
 		do
 			Result := Ws_child | Ws_visible | Ws_group
@@ -956,7 +956,7 @@ feature {NONE} -- WEL Implementation
 	last_edit_change: STRING_32
 			-- The string resulting from the last edit change.
 
-	on_cbn_selchange is
+	on_cbn_selchange
 			-- The selection is about to change.
 		local
 			new_selected_item: EV_LIST_ITEM_IMP
@@ -998,7 +998,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_cbn_editchange is
+	on_cbn_editchange
 			-- The edit control portion is about to
 			-- display altered text.
 		do
@@ -1010,7 +1010,7 @@ feature {NONE} -- WEL Implementation
 			last_edit_change := text
 		end
 
-	on_cbn_dropdown is
+	on_cbn_dropdown
 			-- List box is about to be made visible.
 		local
 			pt: WEL_POINT
@@ -1026,7 +1026,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_cbn_closeup is
+	on_cbn_closeup
 			-- The combo box has been closed.
 		do
 			if list_hidden_actions_internal /= Void then
@@ -1034,7 +1034,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	set_selection (start_pos, end_pos: INTEGER) is
+	set_selection (start_pos, end_pos: INTEGER)
 			-- Hilight the text between `start_pos' and `end_pos'.
 			-- Both `start_pos' and `end_pos' are selected.
 		do
@@ -1043,21 +1043,21 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	wel_selection_start: INTEGER is
+	wel_selection_start: INTEGER
 			-- Zero based index of the first character selected.
 		do
 			Result := cwin_lo_word ({WEL_API}.send_message_result (edit_item,
 				Em_getsel, to_wparam (0), to_lparam (0)))
 		end
 
-	wel_selection_end: INTEGER is
+	wel_selection_end: INTEGER
 			-- Zero based index of the last character selected.
 		do
 			Result := cwin_hi_word ({WEL_API}.send_message_result (edit_item,
 				Em_getsel, to_wparam (0), to_lparam (0)))
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			wipe_out
@@ -1072,7 +1072,7 @@ invariant
 	combo_not_void: is_initialized implies combo /= Void
 	text_field_not_void: text_field /= Void implies is_editable
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

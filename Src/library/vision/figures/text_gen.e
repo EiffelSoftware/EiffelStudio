@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -31,7 +31,7 @@ feature -- Access
 	text: STRING;
 			-- Text to be drawn
 
-	top_center: like top_left is
+	top_center: like top_left
 			-- Top and center point of the rectangle containing the text
 		do
 			create Result;
@@ -41,49 +41,49 @@ feature -- Access
 	top_left: COORD_XY_FIG;
 			-- Top left coiner of the rectangle containing the text
 
-	top_right: like top_left is
+	top_right: like top_left
 			-- Top and right point of the rectangle containing the text
 		do
 			create Result;
    	Result.set (top_left.x+string_width, top_left.y)
 		end;
 
-	base_center: like top_left is
+	base_center: like top_left
 			-- Center point of the baseline of the text
 		do
 			create Result;
 			Result.set (top_left.x+(string_width // 2), top_left.y+ascent)
 		end;
 
-	base_left: like top_left is
+	base_left: like top_left
 			-- Left point of the baseline of the text
 		do
 			create Result;
 			Result.set (top_left.x, top_left.y+ascent)
 		end;
 
-	base_right: like top_left is
+	base_right: like top_left
 			-- Right point of the baseline of the text
 		do
 			create Result;
 			Result.set (top_left.x+string_width, top_left.y+ascent)
 		end; 
 
-	bottom_center: like top_left is
+	bottom_center: like top_left
 			-- Center and bottom point of the rectangle containing the text
 		do
 			create Result;
 			Result.set (top_left.x+(string_width // 2 ),top_left.y+ascent+descent )
 		end;
 
-	bottom_left: like top_left is
+	bottom_left: like top_left
 			-- Left and bottom point of the rectangle containing the text
 		do
 			create Result;
 			Result.set ( top_left.x, top_left.y+ascent+descent)
 		end; 
 
-	bottom_right: like top_left is
+	bottom_right: like top_left
 			-- Right and bottom point of the rectangle containing the text
 		do
 			create Result;
@@ -94,28 +94,28 @@ feature -- Access
 			-- Font to be used
 
 
-	middle_center: like top_left is
+	middle_center: like top_left
 			-- Center and middle point of the rectangle containing the text
 		do
 			create Result;
 			Result.set ( top_left.x+(string_width // 2), top_left.y+ascent+descent)
 		end;
 
-	middle_left: like top_left is
+	middle_left: like top_left
 			-- Left and middle point of the rectangle containing the text
 		do
 			create Result;
 			Result.set ( top_left.x, top_left.y+((ascent+descent) // 2))
 		end;
 
-	middle_right: like top_left is
+	middle_right: like top_left
 			-- Right and middle point of the rectangle containing the text
 		do
 			create Result;
 			Result.set (top_left.x+string_width, ((top_left.y+ascent+descent)//2))
 		end;
 
-	origin: COORD_XY_FIG is
+	origin: COORD_XY_FIG
 			-- Origin of picture
 		do
 			inspect
@@ -152,7 +152,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_base_center (a_point: like top_left) is
+	set_base_center (a_point: like top_left)
 			-- Set `base_center' to `a_point'.
 		require
 			a_point_exists: a_point /=Void
@@ -163,7 +163,7 @@ feature -- Element change
 			base_center.is_superimposable (a_point)
 		end;
 
-	set_base_left (a_point: like top_left) is
+	set_base_left (a_point: like top_left)
 			-- Set `base_left' to `a_point'.
 		require
 			a_point_exists: a_point /=Void
@@ -174,7 +174,7 @@ feature -- Element change
 			base_left.is_superimposable (a_point)
 		end;
 
-	set_base_right (a_point: like top_left) is
+	set_base_right (a_point: like top_left)
 			-- Set `base_right' to `a_point'.
 		require
 			a_point_exists: a_point /=Void
@@ -185,7 +185,7 @@ feature -- Element change
 			base_right.is_superimposable (a_point)
 		end;
 
-	set_bottom_center (a_point: like top_left) is
+	set_bottom_center (a_point: like top_left)
 			-- Set `bottom_center' to `a_point'.
 		require
 			a_point_exists: a_point /=Void
@@ -196,7 +196,7 @@ feature -- Element change
 			bottom_center.is_superimposable (a_point)
 		end;
 
-	set_bottom_left (a_point: like top_left) is
+	set_bottom_left (a_point: like top_left)
 			-- Set `bottom_left' to `a_point'.
 		require
 			a_point_exists: a_point /=Void
@@ -207,7 +207,7 @@ feature -- Element change
 			bottom_left.is_superimposable (a_point)
 		end;
 
-	set_bottom_right (a_point: like top_left) is
+	set_bottom_right (a_point: like top_left)
 			-- Set `bottom_right' to `a_point'.
 		require
 			a_point_exists: a_point /=Void;
@@ -218,7 +218,7 @@ feature -- Element change
 			bottom_right.is_superimposable (a_point)
 		end;
 
-	set_font (a_font: FONT) is
+	set_font (a_font: FONT)
 			-- Set `font' to `a_font'.
 		require
 			a_font_exists: a_font /= Void;
@@ -228,7 +228,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	set_middle_center (a_point: like top_left) is
+	set_middle_center (a_point: like top_left)
 			-- Set `middle_center' to `a_point'.
 		require
 			a_point_exists: a_point /=Void;
@@ -239,7 +239,7 @@ feature -- Element change
 			middle_center.is_superimposable (a_point)
 		end;
 
-	set_middle_left (a_point: like top_left) is
+	set_middle_left (a_point: like top_left)
 			-- Set `middle_left' to `a_point'.
 		require
 			a_point_exists: a_point /=Void;
@@ -250,7 +250,7 @@ feature -- Element change
 			middle_left.is_superimposable (a_point)
 		end;
 
-	set_middle_right (a_point: like top_left) is
+	set_middle_right (a_point: like top_left)
 			-- Set `middle_right' to `a_point'.
 		require
 			a_point_exists: a_point /=Void;
@@ -261,79 +261,79 @@ feature -- Element change
 			middle_right.is_superimposable (a_point)
 		end;
 
-	set_origin_to_base_center is
+	set_origin_to_base_center
 			-- Set `origin' to `base_center'.
 		do
 			origin_user_type := 9;
 		end;
 
-	set_origin_to_base_left is
+	set_origin_to_base_left
 			-- Set `origin' to `base_left'.
 		do
 			origin_user_type := 8;
 		end;
 
-	set_origin_to_base_right is
+	set_origin_to_base_right
 			-- Set `origin' to `base_right'.
 		do
 			origin_user_type := 10;
 		end;
 
-	set_origin_to_bottom_center is
+	set_origin_to_bottom_center
 			-- Set `origin' to `bottom_center'.
 		do
 			origin_user_type := 12;
 		end;
 
-	set_origin_to_bottom_left is
+	set_origin_to_bottom_left
 			-- Set `origin' to `bottom_left'.
 		do
 			origin_user_type := 11;
 		end;
 
-	set_origin_to_bottom_right is
+	set_origin_to_bottom_right
 			-- Set `origin' to `bottom_right'.
 		do
 			origin_user_type := 13;
 		end;
 
-	set_origin_to_middle_center is
+	set_origin_to_middle_center
 			-- Set `origin' to `middle_center'.
 		do
 			origin_user_type := 6;
 		end;
 
-	set_origin_to_middle_left is
+	set_origin_to_middle_left
 			-- Set `origin' to `middle_left'.
 		do
 			origin_user_type := 5;
 		end;
 
-	set_origin_to_middle_right is
+	set_origin_to_middle_right
 			-- Set `origin' to `middle_right'.
 		do
 			origin_user_type := 7;
 		end;
 
-	set_origin_to_top_center is
+	set_origin_to_top_center
 			-- Set `origin' to `top_center'.
 		do
 			origin_user_type := 3;
 		end;
 
-	set_origin_to_top_left is
+	set_origin_to_top_left
 			-- Set `origin' to `top_left'.
 		do
 			origin_user_type := 2;
 		end;
 
-	set_origin_to_top_right is
+	set_origin_to_top_right
 			-- Set `origin' to `top_right'.
 		do
 			origin_user_type := 4;
 		end; 
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set `text' to `a_text'.
 		require
 			a_text_exists: a_text /= Void
@@ -342,7 +342,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	set_top_center (a_point: like top_left) is
+	set_top_center (a_point: like top_left)
 			-- Set `top_center' to `a_point'.
 		require
 			a_point_exists: a_point /=Void;
@@ -353,7 +353,7 @@ feature -- Element change
 			top_center.is_superimposable (a_point)
 		end;
 
-	set_top_left (a_point: like top_left) is
+	set_top_left (a_point: like top_left)
 			-- Set `top_left' to `a_point'.
 		require
 			a_point_exists: a_point /=Void;
@@ -364,7 +364,7 @@ feature -- Element change
 			a_point = top_left
 		end;
 
-	set_top_right (a_point: like top_left) is
+	set_top_right (a_point: like top_left)
 			-- Set `top_right' to `a_point'.
 		require
 			a_point_exists: a_point /=Void;
@@ -376,7 +376,7 @@ feature -- Element change
 		end;
 
 
-	xyrotate (a: REAL; px,py: INTEGER) is
+	xyrotate (a: REAL; px,py: INTEGER)
 			-- Rotate by `a' relative to (`px', `py').
 			-- Warning: don't rotate `pixmap' but just `top_left'.
 		require else
@@ -387,7 +387,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xyscale (f: REAL; px,py: INTEGER) is
+	xyscale (f: REAL; px,py: INTEGER)
 			-- Scale figure by `f' relative to (`px', `py').
 			-- Warning: don't scale `pixmap' but just `top_left'.
 		require else
@@ -397,7 +397,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xytranslate (vx, vy: INTEGER) is
+	xytranslate (vx, vy: INTEGER)
 			-- Translate by `vx' horizontally and `vy' vertically.
 		do
 			top_left.xytranslate (vx, vy);
@@ -407,7 +407,7 @@ feature -- Element change
 
 feature -- Status report
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the current picture superimposable to other ?
 			-- Don't compare font in structure : Must be the
 			-- same in reference.
@@ -418,7 +418,7 @@ feature -- Status report
 
 feature {NONE} -- Access
 
-	drawing_i_to_widget_i (a_drawing: DRAWING_I): WIDGET_I is
+	drawing_i_to_widget_i (a_drawing: DRAWING_I): WIDGET_I
 			-- Conversion routine
 		do
 			Result ?= a_drawing;
@@ -426,7 +426,7 @@ feature {NONE} -- Access
 
 feature {CONFIGURE_NOTIFY} -- Updating
 
-	conf_recompute is
+	conf_recompute
 		do
 			if drawing /= Void and
 				font.implementation.is_valid then
@@ -446,7 +446,7 @@ invariant
 	font_exists: font /= Void;
 	font_is_specified: font.is_specified
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

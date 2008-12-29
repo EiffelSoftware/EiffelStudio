@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_COMBO_BOX_IMP."
 	legal: "See notice at end of class."
@@ -15,19 +15,19 @@ inherit
 
 feature -- Event handling
 
-	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a drop action sequence.
 		do
 			create Result
 		end
 
-	create_list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a drop action sequence.
 		do
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

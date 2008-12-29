@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains message information about thread's message %
 		%queue."
 	legal: "See notice at end of class."
@@ -31,25 +31,25 @@ create
 
 feature -- Access
 
-	hwnd: POINTER is
+	hwnd: POINTER
 			-- Window which has received the message
 		do
 			Result := cwel_msg_get_hwnd (item)
 		end
 
-	message: INTEGER is
+	message: INTEGER
 			-- Message identifier
 		do
 			Result := cwel_msg_get_message (item)
 		end
 
-	wparam: POINTER is
+	wparam: POINTER
 			-- Additional information about `message'
 		do
 			Result := cwel_msg_get_wparam (item)
 		end
 
-	lparam: POINTER is
+	lparam: POINTER
 			-- Additional information about `message'
 		do
 			Result := cwel_msg_get_lparam (item)
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_hwnd (a_hwnd: POINTER) is
+	set_hwnd (a_hwnd: POINTER)
 			-- Set `hwnd' with `a_hwnd'.
 		do
 			cwel_msg_set_hwnd (item, a_hwnd)
@@ -65,7 +65,7 @@ feature -- Element change
 			hwnd_set: hwnd = a_hwnd
 		end
 
-	set_message (a_message: INTEGER) is
+	set_message (a_message: INTEGER)
 			-- Set `message' with `a_message'.
 		do
 			cwel_msg_set_message (item, a_message)
@@ -73,7 +73,7 @@ feature -- Element change
 			message_set: message = a_message
 		end
 
-	set_wparam (a_wparam: POINTER) is
+	set_wparam (a_wparam: POINTER)
 			-- Set `wparam' with `a_wparam'.
 		do
 			cwel_msg_set_wparam (item, a_wparam)
@@ -81,7 +81,7 @@ feature -- Element change
 			wparam_set: wparam = a_wparam
 		end
 
-	set_lparam (a_lparam: POINTER) is
+	set_lparam (a_lparam: POINTER)
 			-- Set `lparam' with `a_lparam'.
 		do
 			cwel_msg_set_lparam (item, a_lparam)
@@ -125,7 +125,7 @@ feature -- Status report
 	dispatch_result: INTEGER
 			-- Last result of `dispatch' routine.
 
-	quit: BOOLEAN is
+	quit: BOOLEAN
 			-- Is `message' equal to `Wm_quit'?
 		do
 			--| We call directly the macro instead of `message'.
@@ -134,41 +134,41 @@ feature -- Status report
 
 feature -- Basic operations
 
-	get_all is
+	get_all
 			-- Get all messages.
 		do
 			last_boolean_result := cwin_get_message (item,
 				default_pointer, 0, 0)
 		end
 
-	peek_paint_messages is
+	peek_paint_messages
 			-- Peel all paint messages.
 		do
 			last_boolean_result := cwin_peek_message (item,
 				default_pointer, 0, 0, Pm_qs_paint | Pm_remove)
 		end
 
-	peek_all is
+	peek_all
 			-- Peek all messages.
 		do
 			last_boolean_result := cwin_peek_message (item,
 				default_pointer, 0, 0, Pm_remove)
 		end
 
-	peek_all_noremove is
+	peek_all_noremove
 			-- Peek all messages.
 		do
 			last_boolean_result := cwin_peek_message (item,
 				default_pointer, 0, 0, Pm_noremove)
 		end
 
-	dispatch is
+	dispatch
 			-- Dispatch the message to a window procedure
 		do
 			dispatch_result := cwin_dispatch_message (item)
 		end
 
-	translate is
+	translate
 			-- Translate virtual-key messages
 			-- into character messages.
 		do
@@ -176,7 +176,7 @@ feature -- Basic operations
 		end
 
 	translate_accelerator (window: WEL_WINDOW;
-			accelerators: WEL_ACCELERATORS) is
+			accelerators: WEL_ACCELERATORS)
 			-- Process accelerator keys for menu commands
 		require
 			window_not_void: window /= Void
@@ -189,7 +189,7 @@ feature -- Basic operations
 				accelerators.item, item)
 		end
 
-	translate_mdi_accelarator (window: WEL_WINDOW) is
+	translate_mdi_accelarator (window: WEL_WINDOW)
 			-- Process accelerator keys for system menu commands
 			-- of MDI interface child windows.
 		require
@@ -200,13 +200,13 @@ feature -- Basic operations
 				cwin_translate_mdi_sys_accel (window.item, item)
 		end
 
-	wait is
+	wait
 			-- Wait for a message.
 		do
 			last_boolean_result := cwin_wait_message
 		end
 
-	is_dialog_message (dialog: WEL_MODELESS_DIALOG) is
+	is_dialog_message (dialog: WEL_MODELESS_DIALOG)
 			-- Determines whether a message is intended for
 			-- `dialog' and, if it is, processes the message.
 		require
@@ -217,7 +217,7 @@ feature -- Basic operations
 				cwin_is_dialog_message (dialog.item, item)
 		end
 
-	process_dialog_message (dialog: POINTER) is
+	process_dialog_message (dialog: POINTER)
 			-- Process a dialog message for `dialog'.
 		do
 			last_boolean_result :=
@@ -226,7 +226,7 @@ feature -- Basic operations
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_msg
@@ -234,7 +234,7 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_msg: INTEGER is
+	c_size_of_msg: INTEGER
 		external
 			"C [macro <msg.h>]"
 		alias
@@ -242,7 +242,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_get_message (ptr, a_hwnd: POINTER;
-			first_msg, last_msg: INTEGER): BOOLEAN is
+			first_msg, last_msg: INTEGER): BOOLEAN
 			-- SDK GetMessage
 		external
 			"C [macro <wel.h>] (MSG *, HWND, UINT, UINT):%
@@ -252,7 +252,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_peek_message (ptr, a_hwnd: POINTER;
-			first_msg, last_msg, flags: INTEGER): BOOLEAN is
+			first_msg, last_msg, flags: INTEGER): BOOLEAN
 			-- SDK PeekMessage
 		external
 			"C [macro <wel.h>] (MSG *, HWND, UINT, UINT, UINT):%
@@ -261,7 +261,7 @@ feature {NONE} -- Externals
 			"PeekMessage"
 		end
 
-	cwin_translate_message (ptr: POINTER): BOOLEAN is
+	cwin_translate_message (ptr: POINTER): BOOLEAN
 			-- SDK TranslateMessage
 		external
 			"C [macro <wel.h>] (MSG *): EIF_BOOLEAN"
@@ -269,7 +269,7 @@ feature {NONE} -- Externals
 			"TranslateMessage"
 		end
 
-	cwin_translate_accelerator (a_hwnd, haccel, ptr: POINTER): BOOLEAN is
+	cwin_translate_accelerator (a_hwnd, haccel, ptr: POINTER): BOOLEAN
 			-- SDK TranslateAccelerator
 		external
 			"C [macro <wel.h>] (HWND, HACCEL, MSG *): EIF_BOOLEAN"
@@ -277,7 +277,7 @@ feature {NONE} -- Externals
 			"TranslateAccelerator"
 		end
 
-	cwin_translate_mdi_sys_accel (a_hwnd, ptr: POINTER): BOOLEAN is
+	cwin_translate_mdi_sys_accel (a_hwnd, ptr: POINTER): BOOLEAN
 			-- SDK TranslateMDISysAccel
 		external
 			"C [macro <wel.h>] (HWND, MSG *): EIF_BOOLEAN"
@@ -285,7 +285,7 @@ feature {NONE} -- Externals
 			"TranslateMDISysAccel"
 		end
 
-	cwin_dispatch_message (ptr: POINTER): INTEGER is
+	cwin_dispatch_message (ptr: POINTER): INTEGER
 			-- SDK DispatchMessage
 		external
 			"C [macro <wel.h>] (MSG *): EIF_INTEGER"
@@ -293,7 +293,7 @@ feature {NONE} -- Externals
 			"DispatchMessage"
 		end
 
-	cwin_is_dialog_message (hwindow, ptr: POINTER): BOOLEAN is
+	cwin_is_dialog_message (hwindow, ptr: POINTER): BOOLEAN
 			-- SDK IsDialogMessage
 		external
 			"C [macro <wel.h>] (HWND, MSG *): EIF_BOOLEAN"
@@ -301,7 +301,7 @@ feature {NONE} -- Externals
 			"IsDialogMessage"
 		end
 
-	cwin_wait_message: BOOLEAN is
+	cwin_wait_message: BOOLEAN
 			-- SDK WaitMessage
 		external
 			"C blocking macro use <wel.h>"
@@ -309,47 +309,47 @@ feature {NONE} -- Externals
 			"WaitMessage ()"
 		end
 
-	cwel_msg_set_hwnd (ptr: POINTER; value: POINTER) is
+	cwel_msg_set_hwnd (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <msg.h>]"
 		end
 
-	cwel_msg_set_message (ptr: POINTER; value: INTEGER) is
+	cwel_msg_set_message (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <msg.h>]"
 		end
 
-	cwel_msg_set_lparam (ptr: POINTER; value: POINTER) is
+	cwel_msg_set_lparam (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <msg.h>]"
 		end
 
-	cwel_msg_set_wparam (ptr: POINTER; value: POINTER) is
+	cwel_msg_set_wparam (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <msg.h>]"
 		end
 
-	cwel_msg_get_hwnd (ptr: POINTER): POINTER is
+	cwel_msg_get_hwnd (ptr: POINTER): POINTER
 		external
 			"C [macro <msg.h>] (MSG*): EIF_POINTER"
 		end
 
-	cwel_msg_get_message (ptr: POINTER): INTEGER is
+	cwel_msg_get_message (ptr: POINTER): INTEGER
 		external
 			"C [macro <msg.h>]"
 		end
 
-	cwel_msg_get_wparam (ptr: POINTER): POINTER is
+	cwel_msg_get_wparam (ptr: POINTER): POINTER
 		external
 			"C [macro <msg.h>]"
 		end
 
-	cwel_msg_get_lparam (ptr: POINTER): POINTER is
+	cwel_msg_get_lparam (ptr: POINTER): POINTER
 		external
 			"C [macro <msg.h>]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

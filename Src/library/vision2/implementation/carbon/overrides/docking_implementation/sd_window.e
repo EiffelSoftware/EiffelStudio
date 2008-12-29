@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows for SD_FLOATING_ZONE. Carbon"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,13 +18,13 @@ inherit
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Redefine
 		do
 			create {SD_WINDOW_IMP} implementation.make (Current)
 		end
 
-	initialize is
+	initialize
 			-- Redefine
 		local
 			l_env: EV_ENVIRONMENT
@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 
 feature -- Command
 
-	show_relative_to_window (a_parent: EV_WINDOW) is
+	show_relative_to_window (a_parent: EV_WINDOW)
 			-- Redefine
 		local
 			l_x, l_y: INTEGER
@@ -62,7 +62,7 @@ feature -- Command
 			Precursor {EV_WINDOW} (a_parent)
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

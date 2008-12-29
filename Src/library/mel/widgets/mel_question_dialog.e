@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Unmanaged MEL_MESSAGE_BOX as a child of a MEL_DIALOG_SHELL."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN) is
+	create_widget (p_so: POINTER; w_name: ANY; auto_manage_flag: BOOLEAN)
 			-- Create a motif question dialog with `auto_manage_flag'.
 		do
 			if auto_manage_flag then
@@ -42,14 +42,14 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	xm_create_question_dialog (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_question_dialog (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/MessageB.h>"
 		alias
 			"XmCreateQuestionDialog"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

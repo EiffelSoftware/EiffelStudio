@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -15,7 +15,7 @@ inherit
 
 feature -- Status Setting
 
-	set_size (a_x, a_y: INTEGER) is
+	set_size (a_x, a_y: INTEGER)
 			-- Set the size of the pixmap to `a_x' by `a_y' pixels.
 		require
 			x_coordinate_valid: a_x > 0

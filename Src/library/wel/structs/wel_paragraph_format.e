@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about paragraph formating %
 		%attributes in a rich edit control."
 	legal: "See notice at end of class."
@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make a paragraph format structure.
 		do
 			structure_make
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	mask: INTEGER is
+	mask: INTEGER
 			-- Valid information or attributes to set.
 			-- See class WEL_PFM_CONSTANTS for values.
 			-- This attribut is automatically set by the
@@ -60,33 +60,33 @@ feature -- Access
 			Result := cwel_paraformat_get_dwmask (item)
 		end
 
-	numbering: INTEGER is
+	numbering: INTEGER
 			-- Numbering type
 		do
 			Result := cwel_paraformat_get_wnumbering (item)
 		end
 
-	alignment: INTEGER is
+	alignment: INTEGER
 			-- Alignment type.
 			-- See class WEL_PFA_CONSTANTS for values.
 		do
 			Result := cwel_paraformat_get_walignment (item)
 		end
 
-	right_indent: INTEGER is
+	right_indent: INTEGER
 			-- Size of the right indentation, relative to the right
 			-- margin
 		do
 			Result := cwel_paraformat_get_dxrightindent (item)
 		end
 
-	start_indent: INTEGER is
+	start_indent: INTEGER
 			-- Indentation of the first line in the paragraph
 		do
 			Result := cwel_paraformat_get_dxstartindent (item)
 		end
 
-	offset: INTEGER is
+	offset: INTEGER
 			-- Indentation of the second line and subsequent
 			-- lines, relative to the starting indentation. The
 			-- first line is indented if this member is negative,
@@ -95,7 +95,7 @@ feature -- Access
 			Result := cwel_paraformat_get_dxoffset (item)
 		end
 
-	tabulations: ARRAY [INTEGER] is
+	tabulations: ARRAY [INTEGER]
 			-- Contains tab stops
 		local
 			i: INTEGER
@@ -116,7 +116,7 @@ feature -- Access
 
 feature -- Element change
 
-	no_numbering is
+	no_numbering
 			-- Remove any numbering.
 		do
 			add_mask (Pfm_numbering)
@@ -125,7 +125,7 @@ feature -- Element change
 			no_numbering: numbering = 0
 		end
 
-	bullet_numbering is
+	bullet_numbering
 			-- Add bullets.
 		do
 			add_mask (Pfm_numbering)
@@ -134,7 +134,7 @@ feature -- Element change
 			bullet_numbering: numbering = Pfn_bullet
 		end
 
-	set_start_indent (a_start_indent: INTEGER) is
+	set_start_indent (a_start_indent: INTEGER)
 			-- Set `start_indent' with `a_start_indent'.
 		do
 			add_mask (Pfm_startindent)
@@ -143,7 +143,7 @@ feature -- Element change
 			start_indent_set: start_indent = a_start_indent
 		end
 
-	set_right_indent (a_right_indent: INTEGER) is
+	set_right_indent (a_right_indent: INTEGER)
 			-- Set `right_indent' with `a_right_indent'.
 		do
 			add_mask (Pfm_rightindent)
@@ -152,7 +152,7 @@ feature -- Element change
 			right_indent_set: right_indent = a_right_indent
 		end
 
-	set_offset (an_offset: INTEGER) is
+	set_offset (an_offset: INTEGER)
 			-- Set `offset' with `an_offset'.
 		do
 			add_mask (Pfm_offset)
@@ -161,7 +161,7 @@ feature -- Element change
 			offset_set: offset = an_offset
 		end
 
-	set_alignment (an_alignment: INTEGER) is
+	set_alignment (an_alignment: INTEGER)
 			-- Set `alignment' with `an_alignment'.
 			-- See class WEL_PFA_CONSTANTS for values.
 		do
@@ -171,7 +171,7 @@ feature -- Element change
 			alignment_set: alignment = an_alignment
 		end
 
-	set_left_alignment is
+	set_left_alignment
 			-- Paragraphs are aligned with the left margin.
 		do
 			set_alignment (Pfa_left)
@@ -179,7 +179,7 @@ feature -- Element change
 			alignment_set: alignment = Pfa_left
 		end
 
-	set_right_alignment is
+	set_right_alignment
 			-- Paragraphs are aligned with the right margin.
 		do
 			set_alignment (Pfa_right)
@@ -187,7 +187,7 @@ feature -- Element change
 			alignment_set: alignment = Pfa_right
 		end
 
-	set_center_alignment is
+	set_center_alignment
 			-- Paragraphs are centered.
 		do
 			set_alignment (Pfa_center)
@@ -195,7 +195,7 @@ feature -- Element change
 			alignment_set: alignment = Pfa_center
 		end
 
-	set_tabulations (tabs: ARRAY [INTEGER]) is
+	set_tabulations (tabs: ARRAY [INTEGER])
 			-- Set tabulation stops using the values of `tabs'.
 		require
 			tabs_not_void: tabs /= Void
@@ -219,7 +219,7 @@ feature -- Element change
 			tabulations_set: tabulations.same_items (tabs)
 		end
 
-	set_tabulation (tab: INTEGER) is
+	set_tabulation (tab: INTEGER)
 			-- Set a tab stop at every `tab'.
 		local
 			a: ARRAY [INTEGER]
@@ -237,13 +237,13 @@ feature -- Element change
 			set_tabulations (a)
 		end
 
-	set_default_tabulation is
+	set_default_tabulation
 			-- Set the default tabulation.
 		do
 			set_tabulations (<<Default_tab_value>>)
 		end
 
-	set_mask (a_mask: INTEGER) is
+	set_mask (a_mask: INTEGER)
 			-- Set `mask' with `a_mask'.
 			-- See class WEL_PFM_CONSTANTS for `a_mask' values.
 		do
@@ -252,7 +252,7 @@ feature -- Element change
 			mask_set: mask = a_mask
 		end
 
-	add_mask (a_mask: INTEGER) is
+	add_mask (a_mask: INTEGER)
 			-- Add `a_mask' to `mask'.
 			-- See class WEL_PFM_CONSTANTS for `a_mask' values.
 		do
@@ -261,7 +261,7 @@ feature -- Element change
 			has_mask: has_mask (a_mask)
 		end
 
-	remove_mask (a_mask: INTEGER) is
+	remove_mask (a_mask: INTEGER)
 			-- Remove `a_mask' from `mask'.
 			-- See class WEL_PFM_CONSTANTS for `a_mask' values.
 		do
@@ -272,7 +272,7 @@ feature -- Element change
 
 feature -- Status report
 
-	has_mask (a_mask: INTEGER): BOOLEAN is
+	has_mask (a_mask: INTEGER): BOOLEAN
 			-- Is `a_mask' set in `mask'?
 			-- See class WEL_PFM_CONSTANTS for `a_mask' values.
 		do
@@ -281,13 +281,13 @@ feature -- Status report
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_paraformat
 		end
 
-	Max_tab_stops: INTEGER is
+	Max_tab_stops: INTEGER
 		external
 			"C [macro <redit.h>]"
 		alias
@@ -296,113 +296,113 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_paraformat: INTEGER is
+	c_size_of_paraformat: INTEGER
 		external
 			"C [macro <parafmt.h>]"
 		alias
 			"sizeof (PARAFORMAT)"
 		end
 
-	cwel_paraformat_set_cbsize (ptr: POINTER; value: INTEGER) is
+	cwel_paraformat_set_cbsize (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_set_dwmask (ptr: POINTER; value: INTEGER) is
+	cwel_paraformat_set_dwmask (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_set_wnumbering (ptr: POINTER; value: INTEGER) is
+	cwel_paraformat_set_wnumbering (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_set_dxstartindent (ptr: POINTER; value: INTEGER) is
+	cwel_paraformat_set_dxstartindent (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_set_dxrightindent (ptr: POINTER; value: INTEGER) is
+	cwel_paraformat_set_dxrightindent (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_set_dxoffset (ptr: POINTER; value: INTEGER) is
+	cwel_paraformat_set_dxoffset (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_set_walignment (ptr: POINTER; value: INTEGER) is
+	cwel_paraformat_set_walignment (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_set_ctabcount (ptr: POINTER; value: INTEGER) is
+	cwel_paraformat_set_ctabcount (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_set_rgxtabs (ptr: POINTER; value: INTEGER; index: INTEGER) is
+	cwel_paraformat_set_rgxtabs (ptr: POINTER; value: INTEGER; index: INTEGER)
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_get_dwmask (ptr: POINTER): INTEGER is
+	cwel_paraformat_get_dwmask (ptr: POINTER): INTEGER
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_get_wnumbering (ptr: POINTER): INTEGER is
+	cwel_paraformat_get_wnumbering (ptr: POINTER): INTEGER
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_get_dxstartindent (ptr: POINTER): INTEGER is
+	cwel_paraformat_get_dxstartindent (ptr: POINTER): INTEGER
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_get_dxrightindent (ptr: POINTER): INTEGER is
+	cwel_paraformat_get_dxrightindent (ptr: POINTER): INTEGER
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_get_dxoffset (ptr: POINTER): INTEGER is
+	cwel_paraformat_get_dxoffset (ptr: POINTER): INTEGER
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_get_walignment (ptr: POINTER): INTEGER is
+	cwel_paraformat_get_walignment (ptr: POINTER): INTEGER
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_get_ctabcount (ptr: POINTER): INTEGER is
+	cwel_paraformat_get_ctabcount (ptr: POINTER): INTEGER
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	cwel_paraformat_get_rgxtabs (ptr: POINTER; index: INTEGER): INTEGER is
+	cwel_paraformat_get_rgxtabs (ptr: POINTER; index: INTEGER): INTEGER
 		external
 			"C [macro <parafmt.h>]"
 		end
 
-	Pfn_bullet: INTEGER is
+	Pfn_bullet: INTEGER
 		external
 			"C [macro <redit.h>]"
 		alias
 			"PFN_BULLET"
 		end
 
-	Default_tab_value: INTEGER is
+	Default_tab_value: INTEGER
 		external
 			"C [macro <redit.h>]"
 		alias
 			"lDefaultTab"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

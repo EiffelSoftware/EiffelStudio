@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Implementation of an mult-plane pixmap."
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_pixmap: pixmap) is
+	make (a_pixmap: pixmap)
 			-- Create a pixmap.
 		require
 			last_open_display_not_null: last_open_display /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			display_handle := display.handle;
 		end; 
 
-	make_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN) is
+	make_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN)
 			-- Create a font.
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
@@ -89,7 +89,7 @@ feature -- Access
 	number_of_colors: INTEGER;	
 			-- Number of colors in the pixmap
 
-	last_operation_correct: BOOLEAN is
+	last_operation_correct: BOOLEAN
 			-- Was the last operation correctly performed ?
 		do
 			Result := last_operation_correct_ref.item
@@ -97,7 +97,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_default_pixmap (a_pixmap: MEL_PIXMAP) is
+	set_default_pixmap (a_pixmap: MEL_PIXMAP)
 			-- Set default pixmap for widget's screen object `src_obj'.
 		require
 			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid
@@ -112,7 +112,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	read_from_file (a_file_name: STRING) is
+	read_from_file (a_file_name: STRING)
 			-- Load the bitmap described in `a_file_name'.
 			-- `a_file_name' must be a X11 bitmap file.
 		local
@@ -179,7 +179,7 @@ feature -- Element change
 			last_operation_correct_ref.set_item (is_allocated)
 		end;
 
-	copy_from (a_widget: WIDGET_I; x, y, p_width, p_height: INTEGER) is
+	copy_from (a_widget: WIDGET_I; x, y, p_width, p_height: INTEGER)
 			-- Copy the area specified by `x', `y', `p_width', `p_height' of
 			-- `a_widget' into the pixmap.
 		local
@@ -214,7 +214,7 @@ feature -- Element change
 
 feature -- Output
 
-	store (a_file_name: STRING) is
+	store (a_file_name: STRING)
 			-- Store the pixmap into a file named `a_file_name'.
 			-- Create the file if it doesn't exist and override else.
 			-- Set `last_operation_correct'.
@@ -229,7 +229,7 @@ feature -- Output
 
 feature -- Element change
 
-	allocate_bitmap is
+	allocate_bitmap
 			-- Allocate a single plane bitmap.
 		require
 			is_valid: is_valid
@@ -253,7 +253,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	free_resources is
+	free_resources
 			-- Free the pixmap resources.
 		do
 			if bitmap /= Void then	
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			dispose
 		end;
 
-	dispose is
+	dispose
 			-- Called when the pixmap is garbaged
 		do
 			if is_allocated then
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	update_widget_resource (widget_m: WIDGET_IMP) is
+	update_widget_resource (widget_m: WIDGET_IMP)
 			-- Update resource for `widget_m'.
 		local
 			a_pixmap: PIXMAP;
@@ -309,13 +309,13 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	last_operation_correct_ref: BOOLEAN_REF is
+	last_operation_correct_ref: BOOLEAN_REF
 			-- Cell for storing the success of the last operation
 		once
 			create Result
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

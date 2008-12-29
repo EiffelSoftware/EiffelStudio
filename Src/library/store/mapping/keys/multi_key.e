@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Multiple keys"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ feature -- Initialization
 
 feature -- Access
 
-	hash_code is
+	hash_code
 		do
 		end
 
@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 
 	items: ARRAY [BASIC_KEY];
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

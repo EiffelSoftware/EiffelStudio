@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a user passed argument option for natural arguments."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -58,7 +58,7 @@ feature -- Access
 invariant
 	value_is_natural: has_value implies value.is_natural
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

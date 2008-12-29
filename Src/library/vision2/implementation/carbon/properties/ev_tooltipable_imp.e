@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision tooltipable. Carbon implementation."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature -- Initialization
 
-	tooltip: STRING_32 is
+	tooltip: STRING_32
 			-- Tooltip that has been set.
 		do
 			if tooltip_text = void then
@@ -36,7 +36,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	set_tooltip (a_text: STRING_GENERAL) is
+	set_tooltip (a_text: STRING_GENERAL)
 			-- Set `tooltip' to `a_text'.
 		local
 			ret: INTEGER
@@ -49,7 +49,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-		set_tool_tip_external (a_cf_string_ptr: POINTER; a_object: POINTER): INTEGER is
+		set_tool_tip_external (a_cf_string_ptr: POINTER; a_object: POINTER): INTEGER
 		-- set a boolean value with set_control_data
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-		get_tool_tip_external (out_cfstring: POINTER; a_object: POINTER): INTEGER is
+		get_tool_tip_external (out_cfstring: POINTER; a_object: POINTER): INTEGER
 			-- set a boolean value with set_control_data
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -92,7 +92,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOLTIPABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

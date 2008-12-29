@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Collections of windows externals."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 	
 feature -- Focus related features
 
-	frozen set_active_window (hwnd: POINTER): POINTER is
+	frozen set_active_window (hwnd: POINTER): POINTER
 			-- Activates window `hwnd'. Returns handle of previously
 			-- active window. If NULL, call `get_last_error' to get
 			-- extended error information.
@@ -20,7 +20,7 @@ feature -- Focus related features
 			"SetActiveWindow ($hwnd)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

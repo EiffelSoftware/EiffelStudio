@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequence used for versioning calls"
 	legal: "See notice at end of class."
@@ -33,7 +33,7 @@ create {EV_LITE_ACTION_SEQUENCE}
 
 feature -- Basic operations
 
-	call (event_data: ?EVENT_DATA) is
+	call (event_data: ?EVENT_DATA)
 			-- Call each procedure in order unless `is_blocked'.
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
@@ -45,7 +45,7 @@ feature -- Basic operations
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

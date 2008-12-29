@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IAdviseSink' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 	
 feature -- Basic Operations
 
-	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: STGMEDIUM_RECORD) is
+	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: STGMEDIUM_RECORD)
 			-- Advises that data has changed.
 			-- `p_formatetc' [in].  
 			-- `p_stgmed' [in].  
@@ -21,7 +21,7 @@ feature -- Basic Operations
 			-- No Implementation.
 		end
 
-	on_view_change (dw_aspect: INTEGER; lindex: INTEGER) is
+	on_view_change (dw_aspect: INTEGER; lindex: INTEGER)
 			-- Advises that view of object has changed.
 			-- `dw_aspect' [in].  
 			-- `lindex' [in].  
@@ -29,27 +29,27 @@ feature -- Basic Operations
 			-- No Implementation.
 		end
 
-	on_rename (pmk: IMONIKER_INTERFACE) is
+	on_rename (pmk: IMONIKER_INTERFACE)
 			-- Advises that name of object has changed.
 			-- `pmk' [in].  
 		do
 			-- No Implementation.
 		end
 
-	on_save is
+	on_save
 			-- Advises that object has been saved to disk.
 		do
 			-- No Implementation.
 		end
 
-	on_close is
+	on_close
 			-- Advises that object has been closed.
 		do
 			-- No Implementation.
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

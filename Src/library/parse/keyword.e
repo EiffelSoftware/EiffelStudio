@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Terminal constructs with just one specimen, %
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make (s: STRING) is
+	make (s: STRING)
 			-- Set up terminal to represent `s'.
 		do
 			construct_make;
@@ -45,16 +45,16 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	token_correct: BOOLEAN is
+	token_correct: BOOLEAN
 			-- Is this keyword the active token?
 		do
 			Result := document.token.is_keyword (lex_code)
 		end; 
 
-	token_type: INTEGER is 0;
+	token_type: INTEGER = 0;
 			-- Unused token type
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffleVision implementation of a MOTIF application shell widget."
@@ -55,7 +55,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_base: BASE) is
+	make (a_base: BASE)
 			-- Create an application shell.
 		local
 			x_display: MEL_DISPLAY
@@ -74,7 +74,7 @@ feature -- Access
 	mel_screen: MEL_SCREEN;
 			-- Screen of the shell
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

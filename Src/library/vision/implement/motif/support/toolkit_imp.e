@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Inititalization
 
-	make (app_class: STRING) is
+	make (app_class: STRING)
 			-- Create the toolkit.
 			-- `application_class' is used for the resource specifications.
 		local
@@ -47,7 +47,7 @@ feature -- Access
 --samik	application_context: MEL_APPLICATION_CONTEXT;
 			-- Xt context of current application
 
-	name: STRING is "MOTIF";
+	name: STRING = "MOTIF";
 			-- Toolkit implmentation name
 
 
@@ -93,7 +93,7 @@ feature -- Access
 	
 feature -- Iteration
 
-	iterate is
+	iterate
 			-- Loop the application.
 		do
 			application_context.main_loop
@@ -101,7 +101,7 @@ feature -- Iteration
 
 feature -- Status setting
 
-	set_default_resources (a_list: ARRAY [WIDGET_RESOURCE]) is
+	set_default_resources (a_list: ARRAY [WIDGET_RESOURCE])
 			-- Set the default resource setting's
 		local
 			mel_list: ARRAY [MEL_WIDGET_RESOURCE];
@@ -125,7 +125,7 @@ feature -- Status setting
 		end;
 	
 feature	
-		exit is
+		exit
 			-- Exit from the application
 		do
 			application_context.exit
@@ -135,7 +135,7 @@ invariant
 
 	non_void_application: application_context /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

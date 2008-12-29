@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision tree node. Implementation interface."
 	legal: "See notice at end of class.";
@@ -44,7 +44,7 @@ inherit
 
 feature -- Access
 
-	parent: EV_TREE_NODE_LIST is
+	parent: EV_TREE_NODE_LIST
 			-- Parent of `Current'.
 		do
 			if parent_imp /= Void then
@@ -52,7 +52,7 @@ feature -- Access
 			end
 		end
 
-	parent_tree: EV_TREE is
+	parent_tree: EV_TREE
 			-- Root tree that holds `Current'.
 		local
 			parent_item: EV_TREE_NODE_I
@@ -66,13 +66,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_selectable: BOOLEAN is
+	is_selectable: BOOLEAN
 			-- May the `Current' be selected?
 		do
 			Result := parent_tree /= Void
 		end
 
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- is `Current' expanded ?
 		require
 			in_tree: parent_tree /= Void
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature {EV_TREE_NODE} -- Status setting
 
-	set_expand (flag: BOOLEAN) is
+	set_expand (flag: BOOLEAN)
 			-- Expand `Current' if `flag', otherwise collapse it.
 		require
 			is_expandable: interface.is_expandable
@@ -92,7 +92,7 @@ feature {EV_TREE_NODE} -- Status setting
 
 feature -- Contract support
 
-	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
+	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN
 			-- Is `a_pixmap' equal to `pixmap'?
 		local
 			scaled_pixmap: EV_PIXMAP
@@ -108,7 +108,7 @@ feature -- Contract support
 
 feature {EV_ANY_I, EV_DYNAMIC_TREE_ITEM} -- Implementation
 
-	ensure_expandable is
+	ensure_expandable
 			-- Ensure `Current' is displayed as expandable.
 		require
 			is_empty: interface.is_empty
@@ -117,7 +117,7 @@ feature {EV_ANY_I, EV_DYNAMIC_TREE_ITEM} -- Implementation
 			is_empty: interface.is_empty
 		end
 
-	remove_expandable is
+	remove_expandable
 			-- Ensure `Current' is no longer displayed as expandable.
 		deferred
 		end
@@ -126,7 +126,7 @@ feature {EV_ANY_I, EV_TREE_NODE} -- Implementation
 
 	interface: EV_TREE_NODE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

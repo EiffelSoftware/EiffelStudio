@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (a_dialog_shell: DIALOG_SHELL; oui_parent: COMPOSITE) is
+	make (a_dialog_shell: DIALOG_SHELL; oui_parent: COMPOSITE)
 		do
 			create private_attributes
 			parent ?= oui_parent.implementation
@@ -32,32 +32,32 @@ feature -- Initialization
 
 feature -- Status report
 
-	is_popped_up: BOOLEAN is
+	is_popped_up: BOOLEAN
 			-- Is this widget currently popped up?
 		do
 		end
 
 feature -- Status setting
 
-	popup is
+	popup
 			-- Popup the shell
 		do
 		end
 
-	popdown is
+	popdown
 			-- Popdown the widget
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING
 			-- Class name
 		once
 			Result := "EvisionDialogShell"
 		end
  
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Deterministic finite automata, implemented as lists"
@@ -33,7 +33,7 @@ create {LINKED_DFA}
 
 feature -- Initialization
 
-	make (i: INTEGER) is
+	make (i: INTEGER)
 			-- Create automaton, enabling 0 to `i' inputs.
 		require
 			i_positive: i >= 0
@@ -44,7 +44,7 @@ feature -- Initialization
 
 feature -- Access
 
-	find_successor (source, input_doc: INTEGER): STATE_OF_DFA is
+	find_successor (source, input_doc: INTEGER): STATE_OF_DFA
 			-- Successor of `source' for `input_doc';
 			-- void if no successor
 		require else
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_state is
+	set_state
 			-- Create a new state.
 		local
 			current_state: STATE_OF_DFA
@@ -77,7 +77,7 @@ feature -- Status setting
 			current_state_is_last: islast
 		end; 
 
-	set_transition (source, input_doc, target: INTEGER) is
+	set_transition (source, input_doc, target: INTEGER)
 		-- Make a transition from `source' to `target'
 		-- for `input_doc'.
 		require else
@@ -98,7 +98,7 @@ feature -- Status setting
 			same_index: old index = index
 		end;
 
-	set_final (state, f: INTEGER) is
+	set_final (state, f: INTEGER)
 			-- Make `state' a final state for regular expression `f'.
 		do
 			l_set_final (state, f)
@@ -106,7 +106,7 @@ feature -- Status setting
 
 feature -- Duplication
 
-	lcopy: FIXED_DFA is
+	lcopy: FIXED_DFA
 			-- Copy of Current in a fixed_dfa
 		do
 			create Result.make (greatest_input, nb_states);
@@ -122,7 +122,7 @@ feature -- Duplication
 
 feature {NONE} -- Implementation
 
-	start_state: STATE_OF_DFA is
+	start_state: STATE_OF_DFA
 			-- Start_number-th state
 			-- (Used for the beginning of the course
 			-- through the automaton)
@@ -141,7 +141,7 @@ invariant
 
 	nb_states_right: nb_states = count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

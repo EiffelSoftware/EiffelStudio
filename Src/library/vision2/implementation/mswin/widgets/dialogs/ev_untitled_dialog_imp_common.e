@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision dialog. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	update_style is
+	update_style
 			-- Update the style of the window accordingly to the
 			-- options set (`user_can_resize', `is_closeable', ...)
 			-- and set the pixmap.
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 			set_style (new_style)
 		end
 
-	extra_minimum_height: INTEGER is
+	extra_minimum_height: INTEGER
 			-- Compute extra minimum height that does not count `item'.
 		do
 			Result := Precursor {EV_DIALOG_IMP_COMMON} - title_bar_height
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_title_bar: BOOLEAN is False
+	has_title_bar: BOOLEAN = False
 			-- Does Current have a title bar?
 
 feature {EV_DIALOG_I} -- Implementation
@@ -57,7 +57,7 @@ feature {EV_DIALOG_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	promote_to_dialog_window is
+	promote_to_dialog_window
 			-- Promote the current implementation to
 			-- EV_DIALOG_IMP which does not allows modality
 		local
@@ -72,7 +72,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: EV_UNTITLED_DIALOG;
 			-- Interface for `Current'.
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

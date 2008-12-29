@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is used for transport one object from object grid to object graph."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 	make
 
 feature {NONE} -- Initlization
-	make (a_object: ANY) is
+	make (a_object: ANY)
 			-- Creation method
 		require
 			a_object_not_void: a_object /= Void
@@ -27,7 +27,7 @@ feature {NONE} -- Initlization
 		
 feature -- Access
 
-	object: like internal_object is 
+	object: like internal_object 
 			-- `internal_object'
 		do
 			Result := internal_object
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 	internal_object: ANY;
 			-- The object be transported
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

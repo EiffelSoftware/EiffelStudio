@@ -1,4 +1,4 @@
-indexing
+note
 	description: "singleton for find objects in the system"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 	
 feature 
 
-	find_objects_by_object_name (a_object_name:STRING): ANY is
+	find_objects_by_object_name (a_object_name:STRING): ANY
 			-- Only the field name can be found (not include local instance names).
 		require
 			a_object_name_not_void: a_object_name /= Void or not a_object_name.is_equal ("")
@@ -63,7 +63,7 @@ feature
 			end
 		end
 	
-	find_key_for_type (a_type_name: STRING): INTEGER is
+	find_key_for_type (a_type_name: STRING): INTEGER
 			-- Calculate the key of a class base on the type name.
 		local
 			l_inter : INTERNAL
@@ -86,7 +86,7 @@ feature
 			end
 		end
 	
-	find_objects_by_type_name(a_type_name: STRING):ANY is
+	find_objects_by_type_name(a_type_name: STRING):ANY
 			--Find the SPECIAL[ANY] which represent a group of object have the same type.
 		local
 			l_ht: HASH_TABLE [ARRAYED_LIST[ANY], INTEGER]
@@ -116,7 +116,7 @@ feature
 				end
 		end	
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

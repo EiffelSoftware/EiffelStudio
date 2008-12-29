@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision tab controlable. Implementation interface."
 	legal: "See notice at end of class."
@@ -18,40 +18,40 @@ inherit
 
 feature -- Status report
 
-	is_tabable_to: BOOLEAN is
+	is_tabable_to: BOOLEAN
 			-- Is Current able to be tabbed to?
 		deferred
 		end
 
-	is_tabable_from: BOOLEAN is
+	is_tabable_from: BOOLEAN
 			-- Is Current able to be tabbed from?
 		deferred
 		end
 
 feature -- Status setting
 
-	enable_tabable_to is
+	enable_tabable_to
 			-- Make `is_tabable_to' `True'.
 		deferred
 		ensure
 			is_tabable_to: is_tabable_to
 		end
 
-	disable_tabable_to is
+	disable_tabable_to
 			-- Make `is_tabable_to' `False'.
 		deferred
 		ensure
 			not_is_tabable_to: not is_tabable_to
 		end
 
-	enable_tabable_from is
+	enable_tabable_from
 			-- Make `is_tabable_from' `True'.
 		deferred
 		ensure
 			is_tabable_from: is_tabable_from
 		end
 
-	disable_tabable_from is
+	disable_tabable_from
 			-- Make `is_tabable_from' `False'.
 		deferred
 		ensure
@@ -64,7 +64,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Access to information provided by a user through an HTML form. This %
@@ -26,7 +26,7 @@ inherit
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initiate input data parsing and process information.
 		local
 			retried: BOOLEAN
@@ -46,19 +46,19 @@ feature -- Initialization
 
 feature -- Miscellanous
 
-	execute is
+	execute
 			-- Process user provided information.
 		deferred
 		end
 
-	set_environment is
+	set_environment
 			-- Set environment variable to user value.
 		do
 		end
 
 feature {CGI_INTERFACE} -- Access	
 
-	debug_mode: BOOLEAN is 
+	debug_mode: BOOLEAN 
 			-- Is Current application executed in debug mode?
 		deferred
 		end
@@ -68,7 +68,7 @@ feature {CGI_FORMS}-- Access
 	form_data: HASH_TABLE [LINKED_LIST [STRING], STRING]
 			-- User provided data.
 
-	hexa_to_ascii (s: STRING) is
+	hexa_to_ascii (s: STRING)
 			-- Replace %xy by the corresponding ASCII character.
 		local
 			char: CHARACTER;
@@ -98,7 +98,7 @@ feature {CGI_FORMS}-- Access
 			s.make_from_string (new)
 		end
 
-	hexa_value (c: CHARACTER): INTEGER is
+	hexa_value (c: CHARACTER): INTEGER
 			-- Hexadecimal value of a character from the hexa alphabet.
 		require
 			valid_hexa_character: (c>='0' and c<='9') or (c>='A' and c<='F')
@@ -112,7 +112,7 @@ feature {CGI_FORMS}-- Access
 			end
 		end
 
-	Input_data: STRING is
+	Input_data: STRING
 			-- Data sent by the server.
 		once
 				-- Default method is "GET".
@@ -133,7 +133,7 @@ feature {CGI_FORMS}-- Access
 			input_data_exists: Result /= Void
 		end
 
-	insert_pair (name, val: STRING) is
+	insert_pair (name, val: STRING)
 			-- Insert pair (name,value) into form_data; take care of collisions.
 		local
 			vl: LINKED_LIST [STRING]
@@ -153,7 +153,7 @@ feature {CGI_FORMS}-- Access
 			end
 		end
 
-	parse_arguments (args: ARRAY[STRING]) is
+	parse_arguments (args: ARRAY[STRING])
 			-- Parse arguments array and set environment variables.
 		local
 			i, sep_index: INTEGER
@@ -179,7 +179,7 @@ feature {CGI_FORMS}-- Access
 			end
 		end
 
-	parse_input is
+	parse_input
 			-- Split input string and build (name,value) pairs.
 		local
 			data, pair, key, val: STRING;
@@ -228,13 +228,13 @@ feature {CGI_FORMS}-- Access
 
 feature {NONE} -- Implementation constants
 
-	Pair_separator: CHARACTER is '&'
+	Pair_separator: CHARACTER = '&'
 			-- Name / value pairs separator.
 
-	Value_separator: CHARACTER is '=';
+	Value_separator: CHARACTER = '=';
 			-- Name / value separator.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

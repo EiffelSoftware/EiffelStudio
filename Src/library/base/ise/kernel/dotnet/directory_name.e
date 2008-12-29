@@ -1,5 +1,5 @@
 
-indexing
+note
 
 	description:
 		"Directory name abstraction"
@@ -22,7 +22,7 @@ create {DIRECTORY_NAME}
 
 feature
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the directory name valid?
 		do
 			Result := True
@@ -30,13 +30,13 @@ feature
 
 feature {NONE} -- Implementation
 
-	new_string (n: INTEGER): like Current is
+	new_string (n: INTEGER): like Current
 			-- New instance of current with space for at least `n' characters.
 		do
 			create Result.string_make (n)
 		end
 		
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

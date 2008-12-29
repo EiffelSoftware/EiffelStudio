@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a keyboard for EiffelVision %
 		%implemented for WINDOWS"
 	legal: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature -- Initialization
 
-	make_from_key_state is
+	make_from_key_state
 			-- Creates current state of keyboard when
 			-- a keyboard button is pressed.
 		do
@@ -49,7 +49,7 @@ feature -- Initialization
 			modifiers.put (key_down (Vk_menu), 1)
 		end
 
-	make_from_mouse_state (flags: INTEGER) is
+	make_from_mouse_state (flags: INTEGER)
 			-- Creates current state of keyboard when
 			-- mouse button is pressed.
 		do
@@ -58,7 +58,7 @@ feature -- Initialization
 			set_control_pressed (flag_set (flags, Mk_control))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

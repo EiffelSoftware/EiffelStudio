@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Image format used by Gdi+"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_guid: WEL_GUID) is
+	make (a_guid: WEL_GUID)
 			-- Creation method
 		require
 			not_void: a_guid /= Void
@@ -31,7 +31,7 @@ feature -- Query
 	guid: WEL_GUID
 			-- Guid
 
-	find_encoder: WEL_GDIP_IMAGE_CODEC_INFO is
+	find_encoder: WEL_GDIP_IMAGE_CODEC_INFO
 			-- Find image encoder related.
 		local
 			l_all_encoders: ARRAYED_LIST [WEL_GDIP_IMAGE_CODEC_INFO]
@@ -51,7 +51,7 @@ feature -- Query
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

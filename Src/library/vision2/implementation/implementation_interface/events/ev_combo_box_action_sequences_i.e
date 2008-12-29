@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_COMBO_BOX_I."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Event handling
 
-	drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when drop down list is displayed.
 		do
 			if drop_down_actions_internal = Void then
@@ -27,7 +27,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a drop action sequence.
 		deferred
 		end
@@ -38,7 +38,7 @@ feature {EV_ANY_I} -- Implementation
 			
 feature -- Event handling
 
-	list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when drop down list is hidden.
 		do
 			if list_hidden_actions_internal = Void then
@@ -52,7 +52,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a list hidden action sequence.
 		deferred
 		end
@@ -60,7 +60,7 @@ feature {EV_ANY_I} -- Implementation
 	list_hidden_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Implementation of once per object `list_hidden_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

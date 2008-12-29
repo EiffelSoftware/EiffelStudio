@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generic message information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Initialization
 
-	make (a_window: WEL_WINDOW; a_message: INTEGER; a_w_param, a_l_param: POINTER) is
+	make (a_window: WEL_WINDOW; a_message: INTEGER; a_w_param, a_l_param: POINTER)
 			-- Set `window', `message', `w_param', `l_param' with
 			-- `a_window', `a_message', `a_w_param', `a_l_param'
 		do
@@ -55,21 +55,21 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	x_position_from_lparam (lparam: POINTER): INTEGER is
+	x_position_from_lparam (lparam: POINTER): INTEGER
 		external
 			"C inline use <windows.h>"
 		alias
 			"((int)(short)LOWORD($lparam))"
 		end
 
-	y_position_from_lparam (lparam: POINTER): INTEGER is
+	y_position_from_lparam (lparam: POINTER): INTEGER
 		external
 			"C inline use <windows.h>"
 		alias
 			"((int)(short)HIWORD($lparam))"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

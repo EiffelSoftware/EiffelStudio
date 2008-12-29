@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Shell is the base class for all shell widgets"
 	legal: "See notice at end of class.";
@@ -21,20 +21,20 @@ inherit
 	
 feature -- Status report
 
-	is_popup_shell: BOOLEAN is
+	is_popup_shell: BOOLEAN
 		do
 		end;
 
 feature -- Status setting
 
-	set_override (flag: BOOLEAN) is
+	set_override (flag: BOOLEAN)
 		require
 			exists: not destroyed
 		do
 			implementation.set_override (flag);
 		end;
 
-	allow_resize is
+	allow_resize
 			-- Allow geometry resize to all geometry requests
 			-- from its children.
 		require
@@ -43,7 +43,7 @@ feature -- Status setting
 			implementation.allow_resize
 		end;
 
-	forbid_resize is
+	forbid_resize
 			-- Forbid geometry resize to all geometry requests
 			-- from its children.
 		require
@@ -57,7 +57,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: SHELL_I;;
 			-- Implementation of shell
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Constructs whose specimens are sequences of specimens %
@@ -21,7 +21,7 @@ deferred class REPETITION inherit
 
 feature -- Status report
 
-	left_recursion: BOOLEAN is
+	left_recursion: BOOLEAN
 			-- Is the construct's definition left-recursive?
 		do
 			if structure_list.has (production) then
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature {CONSTRUCT} -- Implementation
 
-	expand_all is
+	expand_all
 			-- Expand all child constructs.
 		do
 			if no_components then
@@ -50,7 +50,7 @@ feature {CONSTRUCT} -- Implementation
 			end
 		end; 
 
-	check_recursion is
+	check_recursion
 			-- Check the sequence for left recursion.
 		do
 			if not check_recursion_list.has (production) then
@@ -66,13 +66,13 @@ feature {CONSTRUCT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	separator: STRING is 
+	separator: STRING 
 			-- List separator in the descendant,
 			-- must be defined as a keyword in the lexical analyzer
 		deferred 
 		end; 
 
-	separator_code: INTEGER is 
+	separator_code: INTEGER 
 			-- Code of the keyword-separator; -1 if none
 			-- (according to lexical code)
 		local
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	commit_on_separator : BOOLEAN is
+	commit_on_separator : BOOLEAN
 			-- Is one element of the sequence and a separator enough to
 			-- commit the sequence?
 			-- (This is true by default, but not where the same
@@ -99,13 +99,13 @@ feature {NONE} -- Implementation
 			Result := True
 		end; 
 
-	has_separator: BOOLEAN is
+	has_separator: BOOLEAN
 			-- Has the sequence a separator?
 		do
 			Result := separator_code /= -1
 		end; 
 
-	expand is
+	expand
 			-- Create next construct to be parsed and insert it in
 			-- the list of the items of the sequence.
 		local
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 			field (n)
 		end; 
 
-	parse_body is
+	parse_body
 			-- Attempt to find a sequence of constructs with separators
 			-- starting at current position. Set committed
 			-- at first separator if `commit_on_separator' is set.
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 			complete := first_child_found and not (committed and wrong)
 		end; 
 
-	parse_one: BOOLEAN is
+	parse_one: BOOLEAN
 			-- Parse one element of the sequence and
 			-- return true if successful.
 		local
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	in_action is
+	in_action
 			-- Execute semantic actions on current construct
 			-- by executing actions on children in sequence.
 		do
@@ -189,13 +189,13 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	middle_action is
+	middle_action
 			-- Execute this after parsing each child.
 			-- Does nothing by default; may be redefined in descendants.
 		do
 		end;
 
-	print_children is
+	print_children
 			-- Print content of sequence,
 			-- optional are between square brackets.
 		do
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 			io.new_line
 		end; 
 
-	print_keyword is
+	print_keyword
 			-- Print separator string.
 		do
 			io.put_character ('"');
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 			io.put_string ("%" ")
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

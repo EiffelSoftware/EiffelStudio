@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision text area. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -138,7 +138,7 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' empty.
 		do
 			base_make (an_interface)
@@ -149,7 +149,7 @@ feature -- Initialization
 			{WEL_API}.send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_default_font
@@ -158,7 +158,7 @@ feature -- Initialization
 
 feature -- Access
 
-	has_word_wrapping: BOOLEAN is
+	has_word_wrapping: BOOLEAN
 			-- Is word wrapping enabled?
 			-- If enabled, lines that are too long to be displayed
 			-- in `Current' will be wrapped onto new lines.
@@ -168,7 +168,7 @@ feature -- Access
 			Result := not flag_set (style, Ws_hscroll)
 		end
 
-	line (i: INTEGER): STRING_32 is
+	line (i: INTEGER): STRING_32
 			-- `Result' is content of the `i'th line.
 		do
 			Result := wel_line (i - 1)
@@ -187,14 +187,14 @@ feature -- Access
 			end
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- text of `Current'.
 		do
 			Result := wel_text
 			Result.prune_all ('%R')
 		end
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			exp: STRING_GENERAL
@@ -206,13 +206,13 @@ feature -- Access
 			wel_set_text (exp)
 		end
 
-	line_count: INTEGER is
+	line_count: INTEGER
 			-- Number of lines of text in `Current'.
 		do
 			Result := wel_line_count
 		end
 
-	caret_position: INTEGER is
+	caret_position: INTEGER
 			-- Current position of caret.
 		local
 			new_lines_to_caret_position: INTEGER
@@ -228,7 +228,7 @@ feature -- Access
 			end
 		end
 
-	insert_text (txt: STRING_GENERAL) is
+	insert_text (txt: STRING_GENERAL)
 			-- Insert `txt' at `caret_position'.
 		local
 			previous_caret_position: INTEGER
@@ -251,14 +251,14 @@ feature -- Access
 
 feature -- Status Report
 
-	current_line_number: INTEGER is
+	current_line_number: INTEGER
 			-- Returns the number of the line the cursor currently
 			-- is on.
 		do
 			Result := wel_current_line_number + 1
 		end
 
-	first_position_from_line_number (a_line: INTEGER): INTEGER is
+	first_position_from_line_number (a_line: INTEGER): INTEGER
 			-- Position of the first character on the `i'-th line.
 		local
 			new_lines_to_first_position: INTEGER
@@ -268,7 +268,7 @@ feature -- Status Report
 			Result := wel_line_index (a_line - 1) + 1 - new_lines_to_first_position
 		end
 
-	last_position_from_line_number (a_line: INTEGER): INTEGER is
+	last_position_from_line_number (a_line: INTEGER): INTEGER
 			-- Position of the last character on the `i'-th line.
 		local
 			new_lines_to_first_position: INTEGER
@@ -283,7 +283,7 @@ feature -- Status Report
 			end
 		end
 
-	line_number_from_position (i: INTEGER): INTEGER is
+	line_number_from_position (i: INTEGER): INTEGER
 			-- Line containing caret position `i'.
 		local
 			l_actual_caret_position: INTEGER
@@ -293,7 +293,7 @@ feature -- Status Report
 				to_wparam (l_actual_caret_position + 1), to_lparam (0)) + 1
 		end
 
-	selection_start: INTEGER is
+	selection_start: INTEGER
 			-- Index of first character selected.
 		local
 			new_lines_to_start: INTEGER
@@ -302,7 +302,7 @@ feature -- Status Report
 			Result := wel_selection_start + 1 - new_lines_to_start
 		end
 
-	selection_end: INTEGER is
+	selection_end: INTEGER
 			-- Index of last character selected.
 		local
 			new_lines_to_end: INTEGER
@@ -330,19 +330,19 @@ feature -- Status Report
 
 feature -- Status Settings
 
-	enable_word_wrapping is
+	enable_word_wrapping
 			-- Ensure `has_word_wrap' is True.
 		do
 			recreate_current (0)
 		end
 
-	disable_word_wrapping is
+	disable_word_wrapping
 			-- Ensure `has_word_wrap' is False.
 		do
 			recreate_current (ws_hscroll)
 		end
 
-	append_text (txt: STRING_GENERAL) is
+	append_text (txt: STRING_GENERAL)
 			-- Append `txt' to end of `text'.
 		local
 			previous_caret_position: INTEGER
@@ -356,14 +356,14 @@ feature -- Status Settings
 			internal_set_caret_position (previous_caret_position)
 		end
 
-	set_caret_position (pos: INTEGER) is
+	set_caret_position (pos: INTEGER)
 			-- set current caret position.
 			--| This position is used for insertions.
 		do
 			internal_set_caret_position (actual_position_from_caret_position (pos))
 		end
 
-	select_region (start_pos, end_pos: INTEGER) is
+	select_region (start_pos, end_pos: INTEGER)
 			-- Select (hilight) text between
 			-- 'start_pos' and 'end_pos'
 		local
@@ -390,13 +390,13 @@ feature -- Status Settings
 
 feature -- Basic operation
 
-	scroll_to_line (i: INTEGER) is
+	scroll_to_line (i: INTEGER)
 			-- Ensure that line `i' is visible in `Current'.
 		do
 			scroll (0, i - first_visible_line - 1)
 		end
 
-	scroll_to_end is
+	scroll_to_end
 			-- Ensure that the last line is visible in `Current'.
 		do
 			scroll_to_line (line_count)
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	convert_string (a_string: STRING_GENERAL): STRING_32 is
+	convert_string (a_string: STRING_GENERAL): STRING_32
 			-- Replace all "%N" with "%R%N" which is the Windows new line
 			-- character symbol.
 		require
@@ -506,7 +506,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	background_brush: WEL_BRUSH is
+	background_brush: WEL_BRUSH
 			-- Current window background color used to refresh the window when
 			-- requested by the WM_ERASEBKGND windows message.
 		local
@@ -525,7 +525,7 @@ feature {NONE} -- WEL Implementation
 			create Result.make_solid (back)
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default windows style used to create `Current'.
 		do
 			Result := Ws_child + Ws_visible + Ws_group
@@ -535,13 +535,13 @@ feature {NONE} -- WEL Implementation
 					+ Ws_clipsiblings + es_nohidesel
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 			-- Extended windows style used to create `Current'.
 		do
 			Result := Ws_ex_clientedge
 		end
 
-	on_en_change is
+	on_en_change
 			-- `Text' has been modified.
 			--| We call the change_actions.
 		do
@@ -550,19 +550,19 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	enable is
+	enable
 			-- Enable mouse and keyboard input.
 		do
 			cwin_enable_window (wel_item, True)
 		end
 
-	disable is
+	disable
 			-- Disable mouse and keyboard input
 		do
 			cwin_enable_window (wel_item, False)
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- Executed when a key is pressed.
 		local
 			dialog: EV_DIALOG
@@ -584,7 +584,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	recreate_current (a_additional_style: INTEGER) is
+	recreate_current (a_additional_style: INTEGER)
 			-- Destroy the existing widget and recreate current using the new style added with `a_additional_style'.
 		local
 			par_imp: WEL_WINDOW
@@ -650,7 +650,7 @@ feature {NONE} -- interface
 
 	interface: EV_TEXT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

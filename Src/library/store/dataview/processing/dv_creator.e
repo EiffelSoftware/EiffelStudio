@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that enable to create a%
 			%database table row."
 	legal: "See notice at end of class."
@@ -14,20 +14,20 @@ inherit
 
 feature -- Status report
 
-	can_be_activated: BOOLEAN is
+	can_be_activated: BOOLEAN
 			-- Can the component be activated?
 		do
 			Result := db_table_component /= Void
 		end
 
-	table_component_set: BOOLEAN is
+	table_component_set: BOOLEAN
 			-- Has a table component (where the created rows will be
 			-- displayed set?
 		do
 			Result := db_table_component /= Void
 		end
 
-	control_set: BOOLEAN is
+	control_set: BOOLEAN
 			-- Is creation control system set?
 		deferred
 		end
@@ -40,7 +40,7 @@ feature {DV_COMPONENT} -- Access
 
 feature {DV_COMPONENT} -- Basic operations
 
-	set_table_component (table_comp: DV_TABLE_COMPONENT) is
+	set_table_component (table_comp: DV_TABLE_COMPONENT)
 			-- Set associated table component.
 		require
 			not_activated: not is_activated
@@ -51,28 +51,28 @@ feature {DV_COMPONENT} -- Basic operations
 			table_component_set: table_component_set
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Enable creation.
 		require
 			control_set: control_set
 		deferred
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Disable creation.
 		require
 			control_set: control_set
 		deferred
 		end
 
-	refresh: ARRAYED_LIST [DB_TABLE] is
+	refresh: ARRAYED_LIST [DB_TABLE]
 			-- Refresh selection showing created table row.
 		require
 			is_activated: is_activated
 		deferred
 		end
 
-	set_calling_fkey_value (calling_fkey_val: ANY) is
+	set_calling_fkey_value (calling_fkey_val: ANY)
 			-- Set current calling component table row ID to `calling_fkey_val'.
 		require
 			is_activated: is_activated
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 	calling_fkey_value: ANY;
 			-- Current calling component table row ID.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

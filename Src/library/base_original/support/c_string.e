@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A low-level string class to solve some garbage %
 		%collector problems (mainly objects moving around) when %
 		%interfacing with C APIs."
@@ -23,7 +23,7 @@ create
 
 feature --{NONE} -- Initialization
 
-	make (a_string: STRING_GENERAL) is
+	make (a_string: STRING_GENERAL)
 			-- Make a C string from `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -32,7 +32,7 @@ feature --{NONE} -- Initialization
 			set_string (a_string)
 		end
 
-	make_empty (a_length: INTEGER) is
+	make_empty (a_length: INTEGER)
 			-- Make an empty C string of `a_length' characters.
 			-- C memory area is not initialized.
 		require
@@ -42,7 +42,7 @@ feature --{NONE} -- Initialization
 			count := 0
 		end
 
-	make_by_pointer (a_ptr: POINTER) is
+	make_by_pointer (a_ptr: POINTER)
 			-- Make a copy of string pointed by `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -50,7 +50,7 @@ feature --{NONE} -- Initialization
 			make_by_pointer_and_count (a_ptr, c_strlen (a_ptr))
 		end
 
-	make_by_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
+	make_by_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
 			-- Make a copy of first `a_length' byte of string pointed by `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -63,7 +63,7 @@ feature --{NONE} -- Initialization
 
 feature -- Initialization
 
-	share_from_pointer (a_ptr: POINTER) is
+	share_from_pointer (a_ptr: POINTER)
 			-- New instance sharing `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -71,7 +71,7 @@ feature -- Initialization
 			share_from_pointer_and_count (a_ptr, c_strlen (a_ptr))
 		end
 
-	share_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
+	share_from_pointer_and_count (a_ptr: POINTER; a_length: INTEGER)
 			-- New instance sharing `a_ptr' of `a_length' byte.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
@@ -87,7 +87,7 @@ feature -- Initialization
 
 feature -- Access
 
-	substring (start_pos, end_pos: INTEGER): STRING is
+	substring (start_pos, end_pos: INTEGER): STRING
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos'.
 		require
@@ -105,7 +105,7 @@ feature -- Access
 			susbstring_not_void: Result /= Void
 		end
 
-	string: STRING is
+	string: STRING
 			-- Eiffel string, ignoring `count'. Reads until a null character is being read.
 		do
 			Result := substring (1, c_strlen (item))
@@ -113,7 +113,7 @@ feature -- Access
 			string_not_void: Result /= Void
 		end
 
-	read_substring_into (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER) is
+	read_substring_into (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER)
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_string'.
 		require
@@ -138,7 +138,7 @@ feature -- Access
 			end
 		end
 
-	read_string_into (a_string: STRING_GENERAL) is
+	read_string_into (a_string: STRING_GENERAL)
 			-- Copy of substring containing all characters at indices
 			-- between `start_pos' and `end_pos' into `a_string' replacing any
 			-- existing characters.
@@ -149,7 +149,7 @@ feature -- Access
 			read_substring_into (a_string, 1, count)
 		end
 
-	item: POINTER is
+	item: POINTER
 			-- Get pointer to allocated area.
 		do
 			Result := managed_data.item
@@ -162,13 +162,13 @@ feature -- Access
 
 feature -- Measurement
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Number of characters in Current.
 		do
 			Result := managed_data.count
 		end
 
-	bytes_count: INTEGER is
+	bytes_count: INTEGER
 			-- Number of bytes represented by the string.
 		do
 			Result := count
@@ -177,12 +177,12 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of characters in Current.
 
-	character_size: INTEGER is 1
+	character_size: INTEGER = 1
 			-- Size of a character
 
 feature -- Element change
 
-	set_string (a_string: STRING_GENERAL) is
+	set_string (a_string: STRING_GENERAL)
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -191,7 +191,7 @@ feature -- Element change
 			set_substring (a_string, 1, a_string.count)
 		end
 
-	set_substring (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER) is
+	set_substring (a_string: STRING_GENERAL; start_pos, end_pos: INTEGER)
 			-- Set `string' with `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -222,7 +222,7 @@ feature -- Element change
 			managed_data.put_natural_8 (0, nb)
 		end
 
-	set_count (a_count: INTEGER) is
+	set_count (a_count: INTEGER)
 			-- Set `count' with `a_count'.
 			-- Note: Current content from index `1' to
 			-- `count.min (a_count)' is unchanged.
@@ -240,7 +240,7 @@ feature -- Element change
 			count_set: count = a_count
 		end
 
-	fill_blank is
+	fill_blank
 			-- Fill Current with zeros.
 		do
 			fill_value (0)
@@ -248,7 +248,7 @@ feature -- Element change
 			-- all_values: For every `i' in 1..`count', `item' (`i') = `0'
 		end
 
-	fill_value (a_value: INTEGER_8) is
+	fill_value (a_value: INTEGER_8)
 			-- Fill Current with `a_value'.
 		do
 			managed_data.item.memory_set (a_value, managed_data.count)
@@ -258,7 +258,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	c_strlen (ptr: POINTER): INTEGER is
+	c_strlen (ptr: POINTER): INTEGER
 		external
 			"C macro signature (char *): EIF_INTEGER use <string.h>"
 		alias
@@ -269,7 +269,7 @@ invariant
 	managed_data_not_void: managed_data /= Void
 	count_not_negative: count >= 0
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

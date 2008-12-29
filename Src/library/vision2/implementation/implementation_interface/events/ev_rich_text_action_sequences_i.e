@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_RICH_TEXT_I."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Event handling
 
-	caret_move_actions: EV_INTEGER_ACTION_SEQUENCE is
+	caret_move_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Actions to be performed when caret position changes.
 		do
 			if caret_move_actions_internal = Void then
@@ -25,7 +25,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 		
-	selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when selection changes.
 		do
 			if selection_change_actions_internal = Void then
@@ -37,7 +37,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 		
-	file_access_actions: EV_INTEGER_ACTION_SEQUENCE is
+	file_access_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Actions to be performed while loading or saving.
 			-- Event data is percentage of file written (0-100).
 		do
@@ -51,7 +51,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE is
+	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Create a caret move action sequence.
 		deferred
 		end
@@ -59,7 +59,7 @@ feature {EV_ANY_I} -- Implementation
 	caret_move_actions_internal: EV_INTEGER_ACTION_SEQUENCE
 			-- Implementation of once per object `caret_move_actions'.
 			
-	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a selection change action sequence.
 		deferred
 		end
@@ -67,7 +67,7 @@ feature {EV_ANY_I} -- Implementation
 	selection_change_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `selection_change_actions'.
 			
-	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE is
+	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE
 			-- Create a file access action sequence.
 		deferred
 		end
@@ -77,7 +77,7 @@ feature {EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
 	file_access_actions_internal: EV_INTEGER_ACTION_SEQUENCE;
 			-- Implementation of once per object `file_access_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

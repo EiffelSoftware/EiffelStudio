@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fillable figure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Actions
 
-	fill_closed_figure (red,green,blue: INTEGER ) is
+	fill_closed_figure (red,green,blue: INTEGER )
 		-- It floods a portion of the image with the specified color_index,
 		-- beginning at the specified point and stopping at the specified border color.
 		require
@@ -30,22 +30,22 @@ feature -- Actions
 			gdimagefilltoborder(image.image, x,y,color_index, ind)
 		end
 
-	x,y: INTEGER is deferred end
+	x,y: INTEGER deferred end
 		-- Point within Current Current.
 
-	image: GD_IMAGE is deferred end
+	image: GD_IMAGE deferred end
 		-- Image Current applies to.
 
 feature {NONE} -- Externals
 
-	gdimagefilltoborder(p: POINTER; x1,y1, stopping_color, color_ind: INTEGER) is
+	gdimagefilltoborder(p: POINTER; x1,y1, stopping_color, color_ind: INTEGER)
 		external
 			"c"
 		alias
 			"gdImageFillToBorder"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

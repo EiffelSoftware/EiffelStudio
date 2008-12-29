@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "EiffelVision pixmap. Common attributes between%
 				  %all different EV_PIXMAP Windows implementation"
 	legal: "See notice at end of class."
@@ -37,7 +37,7 @@ inherit
 
 feature -- Access
 
-	get_bitmap: WEL_BITMAP is
+	get_bitmap: WEL_BITMAP
 			-- Current bitmap used.
 			--
 			-- The number of references if incremented when calling
@@ -47,7 +47,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	get_mask_bitmap: WEL_BITMAP is
+	get_mask_bitmap: WEL_BITMAP
 			-- Monochrome bitmap used as mask.
 			--
 			-- The number of references if incremented when calling
@@ -59,31 +59,31 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	icon: WEL_ICON is
+	icon: WEL_ICON
 			-- Current pixmap in HICON format. Void if none.
 		deferred
 		end
 
-	cursor: WEL_CURSOR is
+	cursor: WEL_CURSOR
 			-- Current pixmap in HCURSOR format. Void if none.
 		deferred
 		end
 
-	has_mask: BOOLEAN is
+	has_mask: BOOLEAN
 			-- Has the current pixmap a mask?
 		deferred
 		ensure
 			has_mask_implies_mask_bitmap_not_void: Result implies get_mask_bitmap /= Void
 		end
 
-	palette: WEL_PALETTE is
+	palette: WEL_PALETTE
 		-- Current palette used. Void if none.
 		deferred
 		end
 
 feature -- Saving
 
-	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
+	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME)
 			-- Save `Current' to `a_filename' in `a_format' format.
 		require
 			a_format_not_void: a_format /= Void
@@ -141,7 +141,7 @@ feature -- Saving
 
 feature {NONE} -- Savings
 
-	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME; a_raw_image_data: like raw_image_data) is
+	save_with_format (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME; a_raw_image_data: like raw_image_data)
 			-- Call `save' on `a_format'. Implemented in descendant since `save' from
 			-- EV_GRAPHICAL_FORMAT is only exported to EV_PIXMAP_I.
 		require
@@ -154,7 +154,7 @@ feature {NONE} -- Savings
 
 feature -- Misc.
 
-	copy_events_from_other (other: EV_PIXMAP_IMP_STATE) is
+	copy_events_from_other (other: EV_PIXMAP_IMP_STATE)
 			-- Copy all events from `other' to `Current'.
 			-- Note that `other' is EV_PIXMAP_I and not EV_PIXMAP_IMP,
 			-- as we need to use this in cases where `other' will
@@ -179,7 +179,7 @@ feature -- Misc.
 			pick_ended_actions_internal := other.pick_ended_actions_internal
 		end
 
-	raw_image_data: EV_RAW_IMAGE_DATA is
+	raw_image_data: EV_RAW_IMAGE_DATA
 			-- RGBA representation of `Current'.
 		local
 			mask_dc, mem_dc: WEL_MEMORY_DC
@@ -255,13 +255,13 @@ feature -- Misc.
 			tmp_bitmap := Void
 		end
 
-	gdi_compact is
+	gdi_compact
 			-- Spare GDI resource by freeing icons, cursors, ... that
 			-- can be reloaded from file.
 		do
 		end
 
-	build_icon: WEL_ICON is
+	build_icon: WEL_ICON
 			-- Build a WEL_ICON from `bitmap' and `mask_bitmap'.
 		do
 			Result ?= build_graphical_resource (True)
@@ -269,7 +269,7 @@ feature -- Misc.
 			Result_not_void: Result /= Void
 		end
 
-	build_cursor: WEL_CURSOR is
+	build_cursor: WEL_CURSOR
 			-- Build a WEL_CURSOR from `bitmap' and `mask_bitmap'.
 		do
 			Result ?= build_graphical_resource (False)
@@ -277,7 +277,7 @@ feature -- Misc.
 			Result_not_void: Result /= Void
 		end
 
-	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER) is
+	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Initialize from `a_pixel_buffer'
 		local
 			l_pixel_buffer: EV_PIXEL_BUFFER_IMP
@@ -288,19 +288,19 @@ feature -- Misc.
 
 feature -- Measurement
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of the pixmap in pixels.
 		deferred
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of the pixmap in pixels.
 		deferred
 		end
 
 feature {EV_POINTER_STYLE_IMP} -- Implementation
 
-	build_graphical_resource (is_icon: BOOLEAN): WEL_GRAPHICAL_RESOURCE is
+	build_graphical_resource (is_icon: BOOLEAN): WEL_GRAPHICAL_RESOURCE
 			-- Build an icon if `is_icon' is set, or a cursor
 			-- otherwise.
 		local
@@ -386,7 +386,7 @@ feature {EV_POINTER_STYLE_IMP} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
+	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
 		do
@@ -395,7 +395,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- External
 
-	get_rvalue (color: NATURAL_32): NATURAL_8 is
+	get_rvalue (color: NATURAL_32): NATURAL_8
 			-- SDK GetRValue
 		external
 			"C [macro <windows.h>] (DWORD): BYTE"
@@ -403,7 +403,7 @@ feature {NONE} -- External
 			"GetRValue"
 		end
 
-	get_gvalue (color: NATURAL_32): NATURAL_8 is
+	get_gvalue (color: NATURAL_32): NATURAL_8
 			-- SDK GetGValue
 		external
 			"C [macro <windows.h>] (DWORD): BYTE"
@@ -411,7 +411,7 @@ feature {NONE} -- External
 			"GetGValue"
 		end
 
-	get_bvalue (color: NATURAL_32): NATURAL_8 is
+	get_bvalue (color: NATURAL_32): NATURAL_8
 			-- SDK GetBValue
 		external
 			"C [macro <windows.h>] (DWORD): BYTE"
@@ -420,7 +420,7 @@ feature {NONE} -- External
 		end
 
 
-	cwin_get_pixel (hdc: POINTER; x, y: INTEGER): NATURAL_32 is
+	cwin_get_pixel (hdc: POINTER; x, y: INTEGER): NATURAL_32
 			-- SDK GetPixel
 		external
 			"C [macro <windows.h>] (HDC, int, int): COLORREF"
@@ -433,7 +433,7 @@ feature {NONE} -- External
 			array_height,
 			a_scale_width,
 			a_scale_height,
-			a_colormode: INTEGER) is
+			a_colormode: INTEGER)
 		external
 			"C signature (char *, char *, int, int, int, int, int) use %"load_pixmap.h%""
 		end
@@ -446,7 +446,7 @@ feature {
 
 	interface: EV_PIXMAP;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

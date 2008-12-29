@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Registry manager"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Actions
 
-	create_new_key (key_path: STRING_GENERAL) is
+	create_new_key (key_path: STRING_GENERAL)
 				-- Create a new key, with as path 'path'
 				-- The path should be like "a\b\c"
 				-- Please refer to WEL_HKEY for possible value for a.
@@ -30,7 +30,7 @@ feature -- Actions
 			close_key (index_value)
 		end
 
-	open_key_with_access (key_path: STRING_GENERAL; acc: INTEGER): POINTER is
+	open_key_with_access (key_path: STRING_GENERAL; acc: INTEGER): POINTER
 				-- Open the key relative to the path 'key_path', with
 				-- the access 'acc'.
 				-- Return the key reference (default_pointer if the operation failed).
@@ -40,7 +40,7 @@ feature -- Actions
 			Result := key_from_path (key_path, False, acc)
 		end
 
-	open_key_value (key_path: STRING_GENERAL; value_name: STRING_GENERAL): WEL_REGISTRY_KEY_VALUE is
+	open_key_value (key_path: STRING_GENERAL; value_name: STRING_GENERAL): WEL_REGISTRY_KEY_VALUE
 				-- Open a key, with as path 'path' and
 				-- name 'key_name'.
 				-- The path should be like "a\b\c"
@@ -59,7 +59,7 @@ feature -- Actions
 			end
 		end
 
-	save_key_value (key_path, value_name: STRING_GENERAL; value: WEL_REGISTRY_KEY_VALUE) is
+	save_key_value (key_path, value_name: STRING_GENERAL; value: WEL_REGISTRY_KEY_VALUE)
 			-- Set value of key in `key_path' with name `value_name' to `value'.
 			-- Create key if needed.
 			-- The path should be like "a\b\c"
@@ -78,7 +78,7 @@ feature -- Actions
 			end
 		end
 
-	delete_key_value (key_path, value_name: STRING_GENERAL) is
+	delete_key_value (key_path, value_name: STRING_GENERAL)
 			-- Delete `key_path' key value `value_name'.
 			-- The path should be like "a\b\c"
 			-- Please refer to WEL_HKEY for possible value for a.
@@ -102,7 +102,7 @@ feature -- Status
 
 feature {NONE} -- Internal Results
 
-	value_keys_list (path: STRING_GENERAL): LIST [STRING_32] is
+	value_keys_list (path: STRING_GENERAL): LIST [STRING_32]
 			-- From a path ( "a\b\c\...\x")
 			-- Return a list of string: a,b,c,d,e,...x
 		require
@@ -113,7 +113,7 @@ feature {NONE} -- Internal Results
 			value_keys_list_not_void: Result /= Void
 		end
 
-	key_from_path (key_path: STRING_GENERAL; generate: BOOLEAN; access: INTEGER): POINTER is
+	key_from_path (key_path: STRING_GENERAL; generate: BOOLEAN; access: INTEGER): POINTER
 			-- Key at `key_path'.
 			-- Create keys if `generate'.
 		require
@@ -150,7 +150,7 @@ feature {NONE} -- Internal Results
 
 feature -- Access
 
-	key_from_remote_host (host_name: STRING_GENERAL; root_key: POINTER): POINTER is
+	key_from_remote_host (host_name: STRING_GENERAL; root_key: POINTER): POINTER
 			-- Connect the computer designed by its name 'host_name'.
 			-- 'Host_name' should be under the format: \\computer_name
 			-- 'root_key' is the key from where we want to start the
@@ -177,7 +177,7 @@ feature -- Access
 			end
 		end
 
-	enumerate_key (key: POINTER; index: INTEGER): WEL_REGISTRY_KEY is
+	enumerate_key (key: POINTER; index: INTEGER): WEL_REGISTRY_KEY
 			-- `index'th subkey of `key',
 			-- Void if `key' has less than `index' subkeys.
 		require
@@ -221,7 +221,7 @@ feature -- Access
 			end
 		end
 
-	default_key_value (key: POINTER; subkey: STRING_GENERAL): WEL_REGISTRY_KEY_VALUE is
+	default_key_value (key: POINTER; subkey: STRING_GENERAL): WEL_REGISTRY_KEY_VALUE
 			-- Retrieve value of `subkey' associated with open
 			-- `key'.
 		obsolete
@@ -252,7 +252,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_key_value (key: POINTER; value_name: STRING_GENERAL; value: WEL_REGISTRY_KEY_VALUE) is
+	set_key_value (key: POINTER; value_name: STRING_GENERAL; value: WEL_REGISTRY_KEY_VALUE)
 			-- Change value defined by `key' and `value_name' to `value'.
 	     	-- The key identified by the hKey parameter must have been
 			-- opened with KEY_SET_VALUE access
@@ -277,7 +277,7 @@ feature -- Settings
 
 feature -- Basic Actions
 
-	create_key (parent_key: POINTER; key_name: STRING_GENERAL; sam: INTEGER): POINTER is
+	create_key (parent_key: POINTER; key_name: STRING_GENERAL; sam: INTEGER): POINTER
 			-- Create `key_name' under `parent_key' according to `sam'.
 			-- Return handle to created key or default_pointer on failure.
 		require
@@ -304,7 +304,7 @@ feature -- Basic Actions
 			end
 		end
 
-	open_key (parent_key: POINTER; key_name: STRING_GENERAL; access_mode: INTEGER): POINTER is
+	open_key (parent_key: POINTER; key_name: STRING_GENERAL; access_mode: INTEGER): POINTER
 			-- Open subkey `key_name' of `parent_key' according to `access_mode'.
 			-- Return handle to created key or default_pointer on failure.
 		require
@@ -321,7 +321,7 @@ feature -- Basic Actions
 			end
 		end
 
-	close_key (key: POINTER) is
+	close_key (key: POINTER)
 			-- Close `key'.
 			-- Return True if succeeded, False otherwise.
 		require
@@ -330,7 +330,7 @@ feature -- Basic Actions
 			last_call_successful := cwin_reg_close_key (key) = Error_success
 		end
 
-	delete_key (parent_key: POINTER; key_name: STRING_GENERAL) is
+	delete_key (parent_key: POINTER; key_name: STRING_GENERAL)
 			-- Delete subkey `key_name' of `parent_key'.
 			-- Return True if succeeded, False otherwise.
 			-- Under Windows 95, all subkeys are deleted.
@@ -348,7 +348,7 @@ feature -- Basic Actions
 			last_call_successful := res = Error_success
 		end
 
-	enumerate_values (key: POINTER): LINKED_LIST [STRING_32] is
+	enumerate_values (key: POINTER): LINKED_LIST [STRING_32]
 		-- Find the names of the key values within the
 		-- key referenced by 'key'.
 		local
@@ -371,7 +371,7 @@ feature -- Basic Actions
 			end
 		end
 
-	enumerate_values_as_string_8 (key: POINTER): LINKED_LIST [STRING] is
+	enumerate_values_as_string_8 (key: POINTER): LINKED_LIST [STRING]
 		-- Find the names of the key values within the
 		-- key referenced by 'key'.
 		local
@@ -396,7 +396,7 @@ feature -- Basic Actions
 
 feature  -- New actions
 
-	delete_value (parent_key: POINTER; name: STRING_GENERAL) is
+	delete_value (parent_key: POINTER; name: STRING_GENERAL)
 		require
 			key_possible: valid_value_for_hkey(parent_key)
 			name_possible: name /= Void
@@ -409,7 +409,7 @@ feature  -- New actions
 			last_call_successful := res = Error_success
 		end
 
-	enumerate_value (key: POINTER; index: INTEGER): STRING_GENERAL is
+	enumerate_value (key: POINTER; index: INTEGER): STRING_GENERAL
 			-- Find the name of the key_value corresponding
 			-- to the key 'key and the index 'index'.
 		local
@@ -428,7 +428,7 @@ feature  -- New actions
 			end
 		end
 
-	number_of_subkeys (key: POINTER): INTEGER is
+	number_of_subkeys (key: POINTER): INTEGER
 		local
 			res, nbkey, size, values: INTEGER
 			p: POINTER
@@ -441,7 +441,7 @@ feature  -- New actions
 
 		end
 
-	number_of_values (key: POINTER): INTEGER is
+	number_of_values (key: POINTER): INTEGER
 		local
 			res, nbkeys, nbkey, size: INTEGER
 			p: POINTER
@@ -453,7 +453,7 @@ feature  -- New actions
 			end
 		end
 
-	valid_value_for_hkey (key: POINTER): BOOLEAN is
+	valid_value_for_hkey (key: POINTER): BOOLEAN
 			-- Does key pointed by 'key' exists
 		do
 			Result := (key /= default_pointer)
@@ -461,7 +461,7 @@ feature  -- New actions
 
 feature -- Access
 
-	key_value (key: POINTER; value_name: STRING_GENERAL): WEL_REGISTRY_KEY_VALUE is
+	key_value (key: POINTER; value_name: STRING_GENERAL): WEL_REGISTRY_KEY_VALUE
 			-- Retrieve value of `value_name' associated with open
 			-- `key'.
 			-- The identifier 'key' relative to the parent key must
@@ -499,70 +499,70 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	cwin_reg_create_key (parent_key: POINTER; key_name: POINTER; res: INTEGER; clas: POINTER; opt, sam: INTEGER; sec, resu, dis: POINTER): INTEGER is
+	cwin_reg_create_key (parent_key: POINTER; key_name: POINTER; res: INTEGER; clas: POINTER; opt, sam: INTEGER; sec, resu, dis: POINTER): INTEGER
 		external
 			"C macro signature (HKEY, LPCTSTR, DWORD, LPTSTR, DWORD, REGSAM, LPSECURITY_ATTRIBUTES, PHKEY, LPDWORD): EIF_INTEGER use <windows.h>"
 		alias
 			"RegCreateKeyEx"
 		end
 
-	cwin_reg_open_key (parent_key: POINTER; key_name: POINTER; options, access_mode: INTEGER; res: POINTER): INTEGER is
+	cwin_reg_open_key (parent_key: POINTER; key_name: POINTER; options, access_mode: INTEGER; res: POINTER): INTEGER
 		external
 			"C macro signature (HKEY, LPCTSTR, DWORD, REGSAM, PHKEY): EIF_INTEGER use <windows.h>"
 		alias
 			"RegOpenKeyEx"
 		end
 
-	cwin_reg_delete_key (key: POINTER; subkey: POINTER): INTEGER is
+	cwin_reg_delete_key (key: POINTER; subkey: POINTER): INTEGER
 		external
 			"C macro signature (HKEY, LPCTSTR): EIF_INTEGER use <windows.h>"
 		alias
 			"RegDeleteKey"
 		end
 
-	cwin_reg_enum_key (key: POINTER; index: INTEGER; name, cname, reserved, cl, ccl, lastwrite: POINTER): INTEGER is
+	cwin_reg_enum_key (key: POINTER; index: INTEGER; name, cname, reserved, cl, ccl, lastwrite: POINTER): INTEGER
 		external
 			"C macro signature (HKEY, DWORD, LPTSTR, LPDWORD, LPDWORD, LPTSTR, LPDWORD, PFILETIME): EIF_INTEGER use <windows.h>"
 		alias
 			"RegEnumKeyEx"
 		end
 
-	cwin_reg_set_key_value (key, keyname: POINTER; res, type: INTEGER; data: POINTER; siz: INTEGER): INTEGER is
+	cwin_reg_set_key_value (key, keyname: POINTER; res, type: INTEGER; data: POINTER; siz: INTEGER): INTEGER
 		external
 			"C macro signature (HKEY, LPCTSTR, DWORD, DWORD, BYTE *, DWORD): EIF_INTEGER use <windows.h>"
 		alias
 			"RegSetValueEx"
 		end
 
-	cwin_reg_close_key (key: POINTER): INTEGER is
+	cwin_reg_close_key (key: POINTER): INTEGER
 		external
 			"C macro signature (HKEY): EIF_INTEGER use <windows.h>"
 		alias
 			"RegCloseKey"
 		end
 
-	cwin_reg_query_value_ex (key, value_name, res, type, data, size: POINTER): INTEGER is
+	cwin_reg_query_value_ex (key, value_name, res, type, data, size: POINTER): INTEGER
 		external
 			"C macro signature (HKEY, LPCTSTR, LPDWORD, LPDWORD, LPBYTE, LPDWORD): EIF_INTEGER use <windows.h>"
 		alias
 			"RegQueryValueEx"
 		end
 
-	cwin_reg_delete_value (key, value_name: POINTER): INTEGER is
+	cwin_reg_delete_value (key, value_name: POINTER): INTEGER
 		external
 			"C macro signature (HKEY, LPCTSTR): EIF_INTEGER use <windows.h>"
 		alias
 			"RegDeleteValue"
 		end
 
-	cwin_reg_query_value (key: POINTER; subkey, value_name, size: POINTER): INTEGER is
+	cwin_reg_query_value (key: POINTER; subkey, value_name, size: POINTER): INTEGER
 		external
 			"C macro signature (HKEY, LPCTSTR, LPTSTR, PLONG): EIF_INTEGER use <windows.h>"
 		alias
 			"RegQueryValue"
 		end
 
-	cwin_reg_enum_value (key: POINTER; index: INTEGER; val_name, val_size, res, type, data, pcb_data: POINTER): INTEGER is
+	cwin_reg_enum_value (key: POINTER; index: INTEGER; val_name, val_size, res, type, data, pcb_data: POINTER): INTEGER
 		external
 			"[
 				C macro signature
@@ -573,7 +573,7 @@ feature {NONE} -- Externals
 			"RegEnumValue"
 		end
 
-	cwin_reg_value_number (key, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11: POINTER) : INTEGER is
+	cwin_reg_value_number (key, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11: POINTER) : INTEGER
 		external
 			"[
 			C macro signature
@@ -584,7 +584,7 @@ feature {NONE} -- Externals
 			"RegQueryInfoKey"
 		end
 
-	cwin_reg_connect_key (name, key, pkey: POINTER): INTEGER is
+	cwin_reg_connect_key (name, key, pkey: POINTER): INTEGER
 		external
 			"C macro signature (LPTSTR, HKEY, PHKEY): EIF_INTEGER use <windows.h>"
 		alias
@@ -593,35 +593,35 @@ feature {NONE} -- Externals
 
 feature {NONE} -- External constants
 
-	Error_success: INTEGER is
+	Error_success: INTEGER
 		external
 			"C [macro <windows.h>]"
 		alias
 			"ERROR_SUCCESS"
 		end
 
-	Error_more_data: INTEGER is
+	Error_more_data: INTEGER
 		external
 			"C [macro <windows.h>]"
 		alias
 			"ERROR_MORE_DATA"
 		end
 
-	Reg_none: POINTER is
+	Reg_none: POINTER
 		external
 			"C macro use <windows.h>"
 		alias
 			"REG_NONE"
 		end
 
-	Reg_option_non_volatile: INTEGER is
+	Reg_option_non_volatile: INTEGER
 		external
 			"C macro use <windows.h>"
 		alias
 			"REG_OPTION_NON_VOLATILE"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

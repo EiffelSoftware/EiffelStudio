@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_ZONE  want to be resized by user should inherit this."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature -- Resize stuffs.
 
-	start_resize_operation (a_bar: SD_RESIZE_BAR; a_screen_boundary: EV_RECTANGLE) is
+	start_resize_operation (a_bar: SD_RESIZE_BAR; a_screen_boundary: EV_RECTANGLE)
 			-- Things to do when start resize operation.
 		require
 			a_bar_not_void: a_bar /= Void
@@ -18,13 +18,13 @@ feature -- Resize stuffs.
 		deferred
 		end
 
-	end_resize_operation (a_bar: SD_RESIZE_BAR; a_delta: INTEGER) is
+	end_resize_operation (a_bar: SD_RESIZE_BAR; a_delta: INTEGER)
 			-- Things to do when end resize operation. Normally should resize the widget size.
 		require
 			a_bar_not_void: a_bar /= Void
 		deferred
 		end
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

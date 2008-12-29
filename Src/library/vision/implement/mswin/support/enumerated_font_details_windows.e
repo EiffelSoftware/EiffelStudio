@@ -1,4 +1,4 @@
-indexing	
+note	
 	description: "This class represents a font that has been enumerated"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make (font_name, font_style: STRING) is
+	make (font_name, font_style: STRING)
 			-- Create the enumertaed font details
 		do
 			name := font_name
@@ -37,13 +37,13 @@ feature -- Access
 
 feature -- Status setting
 
-	add (font_size: WEL_LOG_FONT) is
+	add (font_size: WEL_LOG_FONT)
 			-- Add another font of the same style for size `font_size'
 		do
 			sizes.extend (font_size)
 		end	
 
-	fill_sizes (sizes_list: WEL_SINGLE_SELECTION_LIST_BOX) is
+	fill_sizes (sizes_list: WEL_SINGLE_SELECTION_LIST_BOX)
 			-- Fill `sizes_list' with the sizes
 		local
 			i: INTEGER
@@ -70,7 +70,7 @@ feature -- Status setting
 			end
 		end
 
-	find_log_font (size: STRING): WEL_LOG_FONT is
+	find_log_font (size: STRING): WEL_LOG_FONT
 			-- Find the log font for `size'
 		local
 			c: CURSOR
@@ -107,12 +107,12 @@ feature -- Status setting
 			end
 		end
 
-	set_truetype_log_font (lf: WEL_LOG_FONT) is
+	set_truetype_log_font (lf: WEL_LOG_FONT)
 		do
 			truetype_log_font := lf
 		end
 
-	scaleable_sizes: ARRAY [INTEGER] is
+	scaleable_sizes: ARRAY [INTEGER]
 			-- Standard sizes for fonts that are scaleable.
 		once
 			create Result.make (1, 16)
@@ -137,7 +137,7 @@ feature -- Status setting
 invariant
 	truetype_no_sizes: truetype_log_font /= Void implies sizes.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPmanager"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -20,7 +20,7 @@ inherit
 	
 feature --Status setting
 	
-	realize is
+	realize
 		do
 			Precursor {COMPOSITE_IMP}
 				-- set initial focus
@@ -29,7 +29,7 @@ feature --Status setting
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

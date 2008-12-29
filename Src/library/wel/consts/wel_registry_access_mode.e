@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Hkey registry open access mode constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	frozen Key_create_link: INTEGER is
+	frozen Key_create_link: INTEGER
 			-- Permission to create a symbolic link.
 		external
 			"C [macro %"wel.h%"]"
@@ -18,7 +18,7 @@ feature -- Access
 			"KEY_CREATE_LINK"
 		end
 		
-	frozen Key_create_sub_key: INTEGER is
+	frozen Key_create_sub_key: INTEGER
 			-- Permission to create subkeys.
 		external
 			"C [macro %"wel.h%"]"
@@ -26,7 +26,7 @@ feature -- Access
 			"KEY_CREATE_SUB_KEY"
 		end
 		
-	frozen Key_enumerate_sub_keys: INTEGER is
+	frozen Key_enumerate_sub_keys: INTEGER
 			-- Permission to enumerate subkeys.
 		external
 			"C [macro %"wel.h%"]"
@@ -34,7 +34,7 @@ feature -- Access
 			"KEY_ENUMERATE_SUB_KEYS"
 		end
 		
-	frozen Key_execute: INTEGER is
+	frozen Key_execute: INTEGER
 			-- Permission for read access.
 		external
 			"C [macro %"wel.h%"]"
@@ -42,7 +42,7 @@ feature -- Access
 			"KEY_EXECUTE"
 		end
 		
-	frozen Key_notify: INTEGER is
+	frozen Key_notify: INTEGER
 			-- Permission for change notification.
 		external
 			"C [macro %"wel.h%"]"
@@ -50,7 +50,7 @@ feature -- Access
 			"KEY_NOTIFY"
 		end
 		
-	frozen Key_query_value: INTEGER is
+	frozen Key_query_value: INTEGER
 			-- Permission to query subkey data.
 		external
 			"C [macro %"wel.h%"]"
@@ -58,7 +58,7 @@ feature -- Access
 			"KEY_QUERY_VALUE"
 		end
 		
-	frozen Key_set_value: INTEGER is
+	frozen Key_set_value: INTEGER
 			-- Permission to set subkey data.
 		external
 			"C [macro %"wel.h%"]"
@@ -66,7 +66,7 @@ feature -- Access
 			"KEY_SET_VALUE"
 		end
 		
-	frozen Key_all_access: INTEGER is
+	frozen Key_all_access: INTEGER
 			-- Combines the KEY_QUERY_VALUE, KEY_ENUMERATE_SUB_KEYS, 
 			-- KEY_NOTIFY, KEY_CREATE_SUB_KEY, KEY_CREATE_LINK, and 
 			-- KEY_SET_VALUE access rights, plus all the standard 
@@ -77,7 +77,7 @@ feature -- Access
 			"KEY_ALL_ACCESS"
 		end
 		
-	frozen Key_read: INTEGER is
+	frozen Key_read: INTEGER
 			-- Combines the STANDARD_RIGHTS_READ, KEY_QUERY_VALUE, 
 			-- KEY_ENUMERATE_SUB_KEYS, and KEY_NOTIFY access rights.
 		external
@@ -86,7 +86,7 @@ feature -- Access
 			"KEY_READ"
 		end
 		
-	frozen Key_write: INTEGER is
+	frozen Key_write: INTEGER
 			-- Combines the STANDARD_RIGHTS_WRITE, KEY_SET_VALUE,
 			-- and KEY_CREATE_SUB_KEY access rights.
 		external
@@ -95,7 +95,7 @@ feature -- Access
 			"KEY_WRITE"
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

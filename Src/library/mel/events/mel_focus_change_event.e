@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XFocusChangeEvent."
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	mode: INTEGER is
+	mode: INTEGER
 			-- Crossing mode
 		do
 			Result := c_event_mode (handle)
@@ -28,25 +28,25 @@ feature -- Access
 					is_notify_ungrab
 		end;
 
-	is_notify_normal: BOOLEAN is
+	is_notify_normal: BOOLEAN
 			-- Is `mode' set to notify_normal?
 		do
 			Result := mode = NotifyNormal
 		end;
 
-	is_notify_grab: BOOLEAN is
+	is_notify_grab: BOOLEAN
 			-- Is `mode' set to notify_grab?
 		do
 			Result := mode = NotifyGrab
 		end;
 
-	is_notify_ungrab: BOOLEAN is
+	is_notify_ungrab: BOOLEAN
 			-- Is `mode' set to notify_ungrab?
 		do
 			Result := mode = NotifyUngrab
 		end;
 
-	detail: INTEGER is
+	detail: INTEGER
 			-- Focus detail
 		do
 			Result := c_event_detail (handle)
@@ -56,31 +56,31 @@ feature -- Access
 					is_notify_non_linear_virtual
 		end;
 
-	is_notify_ancestor: BOOLEAN is
+	is_notify_ancestor: BOOLEAN
 			-- Is the `detail' notify_ancestor?
 		do
 			Result := detail = NotifyAncestor
 		end;
 
-	is_notify_virtual: BOOLEAN is
+	is_notify_virtual: BOOLEAN
 			-- Is the `detail' notify_virtual?
 		do
 			Result := detail = NotifyVirtual
 		end;
 
-	is_notify_inferior: BOOLEAN is
+	is_notify_inferior: BOOLEAN
 			-- Is the `detail' notify_inferior?
 		do
 			Result := detail = NotifyInferior
 		end;
 
-	is_notify_non_linear: BOOLEAN is
+	is_notify_non_linear: BOOLEAN
 			-- Is the `detail' notify_non_linear?
 		do
 			Result := detail = NotifyNonlinear
 		end;
 
-	is_notify_non_linear_virtual: BOOLEAN is
+	is_notify_non_linear_virtual: BOOLEAN
 			-- Is the `detail' notify_non_linear_virtual?
 		do
 			Result := detail = NotifyNonlinearVirtual
@@ -88,17 +88,17 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_event_mode (event_ptr: POINTER): INTEGER is
+	c_event_mode (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XFocusChangeEvent *): EIF_INTEGER"
 		end;
 
-	c_event_detail (event_ptr: POINTER): INTEGER is
+	c_event_detail (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XFocusChangeEvent *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

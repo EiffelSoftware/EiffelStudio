@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Constants used in function SetClassLong"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,14 +13,14 @@ create
 
 feature -- GCL Constants
 
-	Gcl_cbclsextra: INTEGER is -20
+	Gcl_cbclsextra: INTEGER = -20
 			-- Sets the size, in bytes, of the extra memory associated with 
 			-- the class. Setting this value does not change the number of 
 			-- extra bytes already allocated.
 			--
 			-- Declared in Windows as GCL_CBCLSEXTRA
 
-	Gcl_cbwndextra: INTEGER is -18
+	Gcl_cbwndextra: INTEGER = -18
 			-- Sets the size, in bytes, of the extra window memory associated 
 			-- with each window in the class. Setting this value does not 
 			-- change the number of extra bytes already allocated. For 
@@ -28,50 +28,50 @@ feature -- GCL Constants
 			--
 			-- Declared in Windows as GCL_CBWNDEXTRA
 
-	Gcl_hbrbackground, gclp_hbrbackground: INTEGER is -10
+	Gcl_hbrbackground, gclp_hbrbackground: INTEGER = -10
 			-- Replaces a handle to the background brush associated with the 
 			-- class. 
 			--
 			-- Declared in Windows as GCL_HBRBACKGROUND
 
-	Gcl_hcursor, gclp_hcursor: INTEGER is -12
+	Gcl_hcursor, gclp_hcursor: INTEGER = -12
 			-- Replaces a handle to the cursor associated with the class. 
 			--
 			-- Declared in Windows as GCL_HCURSOR
 
-	Gcl_hicon, gclp_hicon: INTEGER is -14
+	Gcl_hicon, gclp_hicon: INTEGER = -14
 			-- Replaces a handle to the icon associated with the class. 
 			--
 			-- Declared in Windows as GCL_HICON
 
-	Gcl_hiconsm, gclp_hiconsm: INTEGER is -34
+	Gcl_hiconsm, gclp_hiconsm: INTEGER = -34
 			-- Replace a handle to the small icon associated with the class. 
 			--
 			-- Declared in Windows as GCL_HICONSM
 
-	Gcl_hmodule, gclp_hmodule: INTEGER is -16
+	Gcl_hmodule, gclp_hmodule: INTEGER = -16
 			-- Replaces a handle to the module that registered the class. 
 			--
 			-- Declared in Windows as GCL_HMODULE
 
-	Gcl_menuname, gclp_menuname: INTEGER is -8
+	Gcl_menuname, gclp_menuname: INTEGER = -8
 			-- Replaces the address of the menu name string. The string 
 			-- identifies the menu resource associated with the class. 
 			--
 			-- Declared in Windows as GCL_MENUNAME
 
-	Gcl_style: INTEGER is -26
+	Gcl_style: INTEGER = -26
 			-- Replaces the window-class style bits. 
 			--
 			-- Declared in Windows as GCL_STYLE
 
-	Gcl_wndproc, gclp_wndproc: INTEGER is -24;
+	Gcl_wndproc, gclp_wndproc: INTEGER = -24;
 			-- Replaces the address of the window procedure associated with 
 			-- the class. 
 			--
 			-- Declared in Windows as GCL_WNDPROC
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

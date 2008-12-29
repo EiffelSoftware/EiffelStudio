@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Picture that consists of a bitmapped image."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Implementation
 
-	load_item (hinstance, id: POINTER) is
+	load_item (hinstance, id: POINTER)
 			-- Load icon.
 		do
 			item := cwin_load_icon_image (hinstance, id)
@@ -29,7 +29,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	destroy_resource: BOOLEAN is
+	destroy_resource: BOOLEAN
 			-- SDK DestroyIcon/DestroyCursor
 		do
 			Result := cwin_destroy_icon (item)
@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_load_icon_image (hinstance, id: POINTER): POINTER is
+	cwin_load_icon_image (hinstance, id: POINTER): POINTER
 			--
 		external
 			"C inline use <winuser.h>"
@@ -47,7 +47,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	cwin_destroy_icon (hicon: POINTER): BOOLEAN is
+	cwin_destroy_icon (hicon: POINTER): BOOLEAN
 			-- SDK DestroyIcon
 		external
 			"C [macro <wel.h>] (HICON): BOOL"
@@ -57,14 +57,14 @@ feature {NONE} -- Externals
 
 feature {NONE} -- Implementation
 
-	Image_type: INTEGER is
+	Image_type: INTEGER
 		-- Constant defining the type of the image
 		-- See WEL_IMAGE_CONSTANTS for possible values.
 		do
 			Result := Image_icon
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

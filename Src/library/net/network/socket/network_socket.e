@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A network socket."
@@ -24,7 +24,7 @@ deferred class NETWORK_SOCKET inherit
 
 feature -- Initialization
 
-	create_from_descriptor (fd: INTEGER) is
+	create_from_descriptor (fd: INTEGER)
 			-- Create socket from descriptor `fd'.
 		do
 			Precursor (fd)
@@ -38,7 +38,7 @@ feature -- Status report
 	address: NETWORK_SOCKET_ADDRESS;
 			-- Local address of socket
 
-	port: INTEGER is
+	port: INTEGER
 			-- Port socket is bound to.
 		require
 			valid_socket: exists
@@ -50,7 +50,7 @@ feature -- Status report
 			Result := temp_addr.port
 		end
 
-	reuse_address: BOOLEAN is
+	reuse_address: BOOLEAN
 			-- Is reuse_address option set?
 		require
 			socket_exists: exists
@@ -61,13 +61,13 @@ feature -- Status report
 			Result := reuse /= 0
 		end
 
-	is_valid_peer_address (addr: like address): BOOLEAN is
+	is_valid_peer_address (addr: like address): BOOLEAN
 			-- Is `addr' a valid peer address?
 		do
 			Result := (addr.family = family)
 		end
 
-	ready_for_reading: BOOLEAN is
+	ready_for_reading: BOOLEAN
 			-- Is data available for reading from the socket within 
 			-- `timeout' seconds?
 		local
@@ -77,7 +77,7 @@ feature -- Status report
 			Result := (retval > 0)
 		end
 	
-	ready_for_writing: BOOLEAN is
+	ready_for_writing: BOOLEAN
 			-- Can data be written to the socket within `timeout' seconds?
 		local
 			retval: INTEGER
@@ -86,7 +86,7 @@ feature -- Status report
 			Result := (retval > 0)
 		end
 	
-	has_exception_state: BOOLEAN is
+	has_exception_state: BOOLEAN
 			-- Is socket in exception state within `timeout' seconds?
 		local
 			retval: INTEGER
@@ -100,7 +100,7 @@ feature -- Status report
 		
 feature -- Status setting
 
-	set_reuse_address is
+	set_reuse_address
 			-- Turn `reuse_address' option on.
 		require
 			socket_exists: exists
@@ -108,7 +108,7 @@ feature -- Status setting
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 1)
 		end;
 
-	do_not_reuse_address is
+	do_not_reuse_address
 			-- Turn `reuse_address' option off.
 		require
 			socket_exists: exists
@@ -116,7 +116,7 @@ feature -- Status setting
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 0)
 		end;
 
-	set_timeout (n: INTEGER) is
+	set_timeout (n: INTEGER)
 			-- Set timeout to `n' seconds.
 		require
 			non_negative: n >= 0
@@ -132,19 +132,19 @@ feature -- Status setting
 
 feature {NONE} -- Constants
 
-	default_timeout: INTEGER is 20
+	default_timeout: INTEGER = 20
 			-- Default timeout duration in seconds
 
 feature {NONE} -- Externals
 
 	c_select_poll_with_timeout (fd: INTEGER; is_read_mode: BOOLEAN;
-								timeout_secs: INTEGER): INTEGER is
+								timeout_secs: INTEGER): INTEGER
 		external
 			"C blocking"
 		end
 		
 	c_check_exception_with_timeout (fd: INTEGER;
-								timeout_secs: INTEGER): INTEGER is
+								timeout_secs: INTEGER): INTEGER
 		external
 			"C blocking"
 		end
@@ -153,7 +153,7 @@ invariant
 
 	timeout_set: timeout > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

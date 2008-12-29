@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -10,7 +10,7 @@ class ACTION
 
 feature -- Basic operations
 
-	start is
+	start
 			-- Execute something whenever 
 			-- routine `load_result' of DB_SELECTION is
 			-- called with Current set as `stop_condition',
@@ -19,7 +19,7 @@ feature -- Basic operations
 		do
 		end
 
-	execute is
+	execute
 			-- Execute something whenever 
 			-- routine `load_result' of DB_SELECTION is
 			-- called with Current set as `stop_condition',
@@ -28,7 +28,7 @@ feature -- Basic operations
 		do
 		end
 
-	found: BOOLEAN is
+	found: BOOLEAN
 			-- Is there any exit condition found
 			-- while iterating on selection results in
 			-- `load_result' of DB_SELECTION?
@@ -38,17 +38,17 @@ feature -- Basic operations
 
 feature -- Obsolete
 
-	init is obsolete "Use ``start''"
+	init obsolete "Use ``start''"
 		do
 			start
 		end
 
-	status: BOOLEAN is obsolete "Use ``found''"
+	status: BOOLEAN obsolete "Use ``found''"
 		do
 			Result := found
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

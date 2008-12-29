@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPfont box"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -40,7 +40,7 @@ create
 
 feature -- Initialization
 
-	make (a_font_box: FONT_BOX; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_font_box: FONT_BOX; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a font box
 		do
 			parent ?= oui_parent.implementation
@@ -49,7 +49,7 @@ feature -- Initialization
 			create private_attributes
 		end
 
-	build is
+	build
 			-- Build the box.
 		do
 			if parent.realized and managed then
@@ -57,7 +57,7 @@ feature -- Initialization
 			end
 		end
 
-	realize_children is
+	realize_children
 			-- Realize the children.
 		local
 			dc: WEL_CLIENT_DC
@@ -126,13 +126,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_font (a_font: FONT) is
+	set_font (a_font: FONT)
 			-- Edit `a_font'.
 		do
 			font := a_font
 		end
 
-	set_form_height (a_height: INTEGER) is
+	set_form_height (a_height: INTEGER)
 			-- Set height to `new_height'.
 		do
 			if form_height /= a_height then
@@ -144,7 +144,7 @@ feature -- Status setting
 			end
 		end
 
-	set_form_width (a_width: INTEGER) is
+	set_form_width (a_width: INTEGER)
 			-- Set the width for form.
 		do
 			if form_width /= a_width then
@@ -156,7 +156,7 @@ feature -- Status setting
 			end
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set height to `new_height'.
 		do
 			if private_attributes.height /= a_height then
@@ -171,7 +171,7 @@ feature -- Status setting
 			end
 		end
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set the height to new_height,
 			-- width to `new_width'.
 		do
@@ -190,7 +190,7 @@ feature -- Status setting
 			end
 		end
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set width to `new_width'.
 		do
 			if private_attributes.width /= new_width then
@@ -207,28 +207,28 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_ok_action (a_command: COMMAND; arg: ANY) is
+	add_ok_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		do
 			ok_actions.add (Current, a_command, arg)
 		end
 
-	add_cancel_action (a_command: COMMAND; arg: ANY) is
+	add_cancel_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		do
 			cancel_actions.add (Current, a_command, arg)
 		end
 
-	add_apply_action (a_command: COMMAND; arg: ANY) is
+	add_apply_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- apply button is activated.
 		do
 			apply_actions.add (Current, a_command, arg)
 		end
 
-	hide_apply_button is
+	hide_apply_button
 			-- Hide the apply button
 		do
 			apply_button_hidden := true
@@ -237,7 +237,7 @@ feature -- Element change
 			end
 		end
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Show the cancel button
 		do
 			cancel_button_hidden := true
@@ -246,7 +246,7 @@ feature -- Element change
 			end
 		end
 
-	hide_ok_button is
+	hide_ok_button
 			-- Hide the ok button
 		do
 			ok_button_hidden := true
@@ -255,7 +255,7 @@ feature -- Element change
 			end
 		end
 
-	show_apply_button is
+	show_apply_button
 			-- Show the apply button
 		do
 			apply_button_hidden := false
@@ -264,7 +264,7 @@ feature -- Element change
 			end
 		end
 
-	show_cancel_button is
+	show_cancel_button
 			-- Show the cancel button
 		do
 			cancel_button_hidden := false
@@ -273,7 +273,7 @@ feature -- Element change
 			end
 		end
 
-	show_ok_button is
+	show_ok_button
 			-- Show the ok button
 		do
 			ok_button_hidden := false
@@ -284,21 +284,21 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_apply_action (a_command: COMMAND; arg: ANY) is
+	remove_apply_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
 		do
 			apply_actions.remove (Current, a_command, arg)
 		end
 
-	remove_cancel_action (a_command: COMMAND; arg: ANY) is
+	remove_cancel_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		do
 			cancel_actions.remove (Current, a_command, arg)
 		end
 
-	remove_ok_action (a_command: COMMAND; arg: ANY) is
+	remove_ok_action (a_command: COMMAND; arg: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		do
@@ -307,7 +307,7 @@ feature -- Removal
 
 feature -- Implementation
 
-	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+	notify (control: WEL_CONTROL; notify_code: INTEGER)
 			-- Process notification messages
 		local
 			a_name, a_style: STRING
@@ -351,7 +351,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	action (elf: WEL_ENUM_LOG_FONT; tm: WEL_TEXT_METRIC; font_type: INTEGER) is
+	action (elf: WEL_ENUM_LOG_FONT; tm: WEL_TEXT_METRIC; font_type: INTEGER)
 			-- Called for each font found.
 			-- `elf', `tm' and `font_type' contain informations
 			-- about the font.
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 			fonts.extend (efw)
 		end
 
-	fill is
+	fill
 			-- Initial fill of lists
 		local
 			fw: FONT_IMP
@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 			efw.fill (font_styles, font_sizes)
 		end
 
-	select_new_font (new_font: STRING) is
+	select_new_font (new_font: STRING)
 			-- Action to perform when a font is selected
 		local
 			current_style, current_size: STRING;
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 			create_font
 		end
 
-	select_new_size (new_font, new_style, new_size: STRING) is
+	select_new_size (new_font, new_style, new_size: STRING)
 			-- Action to perform when a size is selected
 		require
 			new_size_exists: new_size /= Void
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 			create_font
 		end
 
-	select_new_style (new_font, new_style: STRING) is
+	select_new_style (new_font, new_style: STRING)
 			-- Action to perform when a style is selected
 		require
 			new_style_exists: new_style /= Void
@@ -481,7 +481,7 @@ feature {NONE} -- Implementation
 	fonts: SORTED_TWO_WAY_LIST [ENUMERATED_FONT_WINDOWS]
 			-- List of fonts in system
 
-	find_font_name (font_name: STRING): ENUMERATED_FONT_WINDOWS is
+	find_font_name (font_name: STRING): ENUMERATED_FONT_WINDOWS
 			-- Find the font given the name
 		local
 			c: CURSOR
@@ -500,7 +500,7 @@ feature {NONE} -- Implementation
 			fonts.go_to (c)
 		end
 
-	adjust_controls_height is
+	adjust_controls_height
 			-- Resize control heights
 		require
 			exists: exists
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 			example_text.set_height (nearest_possible_height // 4)
 		end
 
-	adjust_controls_width is
+	adjust_controls_width
 			-- Resize control widths
 		require
 			exists: exists
@@ -558,7 +558,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_font is
+	create_font
 			-- Create font
 		local
 			efw: ENUMERATED_FONT_WINDOWS
@@ -592,13 +592,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionFontBox"
 		end
 
-	Border_height: INTEGER is
+	Border_height: INTEGER
 			-- Height of the border
 		once
 			Result := window_border_height
@@ -606,7 +606,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Dispose feature
 
-	dispose is
+	dispose
 		do
 			Precursor {TERMINAL_IMP}
 			Precursor {WEL_FONT_FAMILY_ENUMERATOR}
@@ -615,7 +615,7 @@ feature {NONE} -- Dispose feature
 invariant
 	fonts_exist: fonts /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

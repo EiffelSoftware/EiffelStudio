@@ -1,4 +1,4 @@
-indexing 
+note 
 	description:
 		"[
 			Input field for a single line of `text', displayed
@@ -36,13 +36,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			
 feature {NONE} -- Initialization
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_PASSWORD_FIELD_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

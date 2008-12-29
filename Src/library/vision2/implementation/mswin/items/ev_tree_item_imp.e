@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision tree item. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Implementation
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
 			internal_tooltip_string := a_tooltip.twin
@@ -40,7 +40,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

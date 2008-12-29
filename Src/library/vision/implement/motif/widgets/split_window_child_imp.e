@@ -1,4 +1,4 @@
-indexing
+note
 
 	descriotion:
 		"Child for a SPLIT_WINDOW.";
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: SPLIT_WINDOW) is
+	make (a_name: STRING; a_parent: SPLIT_WINDOW)
 			-- Initialize Current.
 		do
 			parent:= a_parent
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Sizing policy
 
-	set_size (new_width:INTEGER; new_height: INTEGER) is
+	set_size (new_width:INTEGER; new_height: INTEGER)
 		do
 debug ("SPLIT")
 			io.put_string ("%NSet_size: ");
@@ -61,14 +61,14 @@ end
 	
 feature -- Widget Management
 
-	set_child_managed is
+	set_child_managed
 			-- Manage Current.
 			--| Ie. Make it visible on the screen.
 		do
 			implementation.set_managed(True)
 		end;
 
-	set_child_unmanaged is
+	set_child_unmanaged
 			-- Unmanage Current.
 			--| Ie. Make ir invisible on the screen.
 		do
@@ -79,14 +79,14 @@ feature -- Widget Management
 feature -- Widget Management
 
 
-	manage is
+	manage
 			-- Manage Current.
 			--| Ie. Make it visible on the screen.
 		do
 			-- redefine it in descdendant
 		end;
 
-	unmanage is
+	unmanage
 			-- Unmanage Current.
 			--| Ie. Make ir invisible on the screen.
 		do
@@ -103,43 +103,43 @@ feature -- Implementation
 
 feature --PanedWindow...
 
-	allow_pane_resize is
+	allow_pane_resize
 			-- Set `allow_pane_to_resize' to True.
 		do
 			set_xt_boolean (screen_object, XmNallowResize, True)
 		end;
 
-	forbid_pane_resize is
+	forbid_pane_resize
 			-- Set `allow_pane_to_resize' to False.
 		do
 			set_xt_boolean (screen_object, XmNallowResize, False)
 		end;
 
-	set_pane_minimum (a_dimension: INTEGER) is
+	set_pane_minimum (a_dimension: INTEGER)
 			-- Set `pane_minimum' to `a_dimension'.
 		do
 			set_xt_dimension (screen_object, XmNpaneMinimum, a_dimension)
 		end;
 
-	set_pane_maximum (a_dimension: INTEGER) is
+	set_pane_maximum (a_dimension: INTEGER)
 			-- Set `pane_maximum' to `a_dimension'.
 		do
 			set_xt_dimension (screen_object, XmNpaneMaximum, a_dimension)
 		end;
 
-	pane_minimum: INTEGER is
+	pane_minimum: INTEGER
 			-- Get the value of `XmNpaneMinimun'.
 		do
 			Result := get_xt_dimension (screen_object, XmNpaneMinimum)
 		end
 
-	pane_maximum: INTEGER is
+	pane_maximum: INTEGER
 			-- Get the value of `XmNpaneMaximum'.
 		do
 			Result := get_xt_dimension (screen_object, XmNpaneMaximum)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	descriotion:
 		"Child for a SPLIT_WINDOW.";
@@ -21,14 +21,14 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: SPLIT_WINDOW) is
+	make (a_name: STRING; a_parent: SPLIT_WINDOW)
 			-- Initialize Current.
 		do
 			make_imp (a_name, a_parent)
 			parent.add_child (Current)
 		end
 
-	make_unmanaged (a_name: STRING; a_parent: SPLIT_WINDOW) is
+	make_unmanaged (a_name: STRING; a_parent: SPLIT_WINDOW)
 			-- Initialize Current.
 		do
 			make_imp (a_name, a_parent)
@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature -- Widget Management
 
-	manage is
+	manage
 			-- Manage Current.
 			--| Ie. Make it visible on the screen.
 		do
@@ -45,7 +45,7 @@ feature -- Widget Management
 			parent.add_managed_child (Current)
 		end;
 
-	unmanage is
+	unmanage
 			-- Unmanage Current.
 			--| Ie. Make ir invisible on the screen.
 		do
@@ -54,7 +54,7 @@ feature -- Widget Management
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

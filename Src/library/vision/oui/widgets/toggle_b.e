@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Toggle button"
 	legal: "See notice at end of class.";
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a toggle button with `a_name' as label,
 			-- 'a_parent' as parent and call `set_default'.
 		require
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged toggle button with `a_name' as label,
 			-- 'a_parent' as parent and call `set_default'.
 		require
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a toggle button with `a_name' as label,
 			-- 'a_parent' as parent and call `set_default'.
 		do
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_parent_menu_pull: BOOLEAN is
+	is_parent_menu_pull: BOOLEAN
 			-- Is `parent' a menu pull?
 		local
 			a_menu_pull: MENU_PULL
@@ -80,7 +80,7 @@ feature -- Status report
 			Result := a_menu_pull /= Void
 		end;
 
-	state: BOOLEAN is
+	state: BOOLEAN
 			-- State of current toggle button.
 		require
 			exists: not destroyed
@@ -90,7 +90,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_toggle_on is
+	set_toggle_on
 			-- Set Current toggle on and set
 			-- state to True.
 		require
@@ -101,7 +101,7 @@ feature -- Status setting
 			state_is_true: state
 		end;
 
-	set_toggle_off is
+	set_toggle_off
 			-- Set Current toggle off and set
 			-- state to False.
 		require
@@ -112,7 +112,7 @@ feature -- Status setting
 			state_is_false: not state
 		end;
 
-	arm is
+	arm
 			-- Set `state' to True and call
 			-- callback (if set).
 		require
@@ -123,7 +123,7 @@ feature -- Status setting
 			state_is_true: state
 		end;
 
-	disarm is
+	disarm
 			-- Set `state' to False and call
 			-- callback (if set).
 		require
@@ -134,7 +134,7 @@ feature -- Status setting
 			state_is_false: not state
 		end;
 
-	set_default is
+	set_default
 			-- Set default values to current toggle button.
 		do
 		ensure then
@@ -143,7 +143,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_value_changed_action (a_command: COMMAND; argument: ANY) is
+	add_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when value
 			-- is changed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -155,7 +155,7 @@ feature -- Element change
 			implementation.add_value_changed_action (a_command, argument)
 		end;
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when
 			-- arrow button is activated.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -165,7 +165,7 @@ feature -- Element change
 			add_value_changed_action (a_command, argument)
 		end;
 
-	set_accelerator_action (a_translation: STRING) is
+	set_accelerator_action (a_translation: STRING)
 			-- Set the accerlator action (modifiers and key to use as a shortcut
 			-- in selecting a button) to `a_translation'.
 			-- `a_translation' must be specified with the X toolkit conventions.
@@ -179,7 +179,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+	remove_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' with `argument' from the list of action
 			-- to be executed when value is changed.
 		require
@@ -189,7 +189,7 @@ feature -- Removal
 			implementation.remove_value_changed_action (a_command, argument)
 		end;
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to be executed when
 			-- arrow button is activated.
 		do
@@ -201,7 +201,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: TOGGLE_B_I;;
 			-- Implementation of current toggle button
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

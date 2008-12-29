@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General notion of undoable command"
 	legal: "See notice at end of class.";
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	history: HISTORY is
+	history: HISTORY
 			-- History in which Current command
 			-- is to be recorded
 		deferred
@@ -28,21 +28,21 @@ feature -- Access
 			Result_exists: Result /= Void
 		end;
 
-	name: STRING is
+	name: STRING
 			-- Name of Current command
 		deferred
 		end
 
 feature -- Update
 
-	redo is
+	redo
 			-- Re-execute Current command. 
 			-- (After it has previously been
 			-- executed).
 		deferred
 		end;
 
-	undo is
+	undo
 			-- Undo the effect of execution
 			-- of Current command.
 		deferred
@@ -50,7 +50,7 @@ feature -- Update
 
 feature -- Basic operations
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Execute Current command and insert it
 			-- into the history if it is successful. 
 			-- `argument' is automatically passed by
@@ -65,7 +65,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	update_history is
+	update_history
 			-- Update history.
 			-- Default action is to record Current
 			-- command in the history.
@@ -73,19 +73,19 @@ feature {NONE} -- Implementation
 			history.record (Current)
 		end; 
 
-	work (argument: ANY) is
+	work (argument: ANY)
 			-- Execute actual semantics of
 			-- current command.
 		deferred
 		end;
 
-	failed: BOOLEAN is
+	failed: BOOLEAN
 			-- Was execution of Current command
 			-- successful?
 		deferred
 		end; 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

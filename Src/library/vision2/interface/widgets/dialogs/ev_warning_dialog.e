@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision warning dialog."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			Precursor {EV_MESSAGE_DIALOG}
 			set_title (ev_warning_dialog_title)
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (button (ev_ok))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

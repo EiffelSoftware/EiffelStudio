@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
 		MSWindows implementation.
@@ -66,7 +66,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		local
 			color_imp: EV_COLOR_IMP
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	string_size (s: STRING_GENERAL; f: EV_FONT; tuple: TUPLE [width: INTEGER; height: INTEGER]) is
+	string_size (s: STRING_GENERAL; f: EV_FONT; tuple: TUPLE [width: INTEGER; height: INTEGER])
 			-- `Result' contains width and height required to
 			-- fully display string `s' in font `f'.
 			-- This should be used instead of `string_size' from EV_FONT
@@ -122,14 +122,14 @@ feature -- Access
 
 feature {NONE} -- Status setting
 
-	set_background_color (color: EV_COLOR) is
+	set_background_color (color: EV_COLOR)
 			-- Make `color' the new `background_color'
 		do
 			background_color_imp ?= color.implementation
 			redraw_client_area
 		end
 
-	set_foreground_color (color: EV_COLOR) is
+	set_foreground_color (color: EV_COLOR)
 			-- Make `color' the new `foreground_color'
 		do
 			foreground_color_imp ?= color.implementation
@@ -138,13 +138,13 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			Precursor {EV_CELL_IMP}
 		end
 
-	extra_text_spacing: INTEGER is
+	extra_text_spacing: INTEGER
 			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
 		do
 			Result := 3
@@ -154,7 +154,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_GRID;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

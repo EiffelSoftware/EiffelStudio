@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A Unix process launcher with IO redirection capability"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -48,7 +48,7 @@ create
 
 feature {PROCESS_UNIX_OS} -- Creation
 
-	make (fname: STRING; args: LIST [STRING]; working_dir: STRING) is
+	make (fname: STRING; args: LIST [STRING]; working_dir: STRING)
 			-- Create a process object which represents an
 			-- independent process that can execute the
 			-- program residing in file `fname'
@@ -85,7 +85,7 @@ feature -- Access
 	status: INTEGER
 			-- last reported process status if `is_status_available' is True
 
-	exit_code: INTEGER is
+	exit_code: INTEGER
 			-- Exit code
 		do
 			if not is_executing and then is_last_wait_successful and then is_status_available then
@@ -107,13 +107,13 @@ feature -- Status report
 	is_executing: BOOLEAN
 			-- Is launched process executing?
 
-	is_stopped: BOOLEAN is
+	is_stopped: BOOLEAN
 			-- Is current process stopped by a signal?
 		do
 			Result := is_status_available and then signaled_flag_from_status (status)
 		end
 
-	is_last_process_spawn_successful: BOOLEAN is
+	is_last_process_spawn_successful: BOOLEAN
 			-- Is last process spawn successful?
 			-- Check it after invoking `spawn_nowait'.
 		do
@@ -123,7 +123,7 @@ feature -- Status report
 	is_status_available: BOOLEAN
 			-- Is process status available when `wait_for_process' is called last time?	
 
-	is_terminated_by_signal: BOOLEAN is
+	is_terminated_by_signal: BOOLEAN
 			-- Is process terminated by a signal?
 		do
 			Result := is_status_available and then signaled_flag_from_status (status)
@@ -131,7 +131,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_arguments (arg_list: LIST [STRING]) is
+	set_arguments (arg_list: LIST [STRING])
 			-- Set `arguments' to `args'.
 		local
 			count: INTEGER
@@ -155,7 +155,7 @@ feature -- Setting
 			end
 		end
 
-	set_close_nonstandard_files (b: BOOLEAN) is
+	set_close_nonstandard_files (b: BOOLEAN)
 			-- Set `close_nonstandard_files' to `b'
 		do
 			close_nonstandard_files := b;
@@ -163,7 +163,7 @@ feature -- Setting
 			value_set: close_nonstandard_files = b
 		end
 
-	set_input_file_name (fname: STRING) is
+	set_input_file_name (fname: STRING)
 			-- Set `input_file_name' to `fname', which must
 			-- be the name of an existing file readable by
 			-- the parent process
@@ -172,7 +172,7 @@ feature -- Setting
 			input_piped := (fname = Void)
 		end
 
-	set_output_file_name (fname: STRING) is
+	set_output_file_name (fname: STRING)
 			-- Set `output_file_name' to `fname', which must
 			-- be the name of a file writable by the parent
 			-- process.  File is created if it does not exist
@@ -182,7 +182,7 @@ feature -- Setting
 			output_piped := (fname = Void)
 		end
 
-	set_error_file_name (fname: STRING) is
+	set_error_file_name (fname: STRING)
 			-- Set `error_file_name' to `fname', which must
 			-- be the name of a file writable by the parent
 			-- process.  File is created if it does not exist
@@ -195,7 +195,7 @@ feature -- Setting
 			error_not_output: not error_same_as_output
 		end
 
-	set_error_same_as_output is
+	set_error_same_as_output
 			-- Set `error_same_as_output' to true
 		do
 			error_same_as_output := True
@@ -209,7 +209,7 @@ feature -- Setting
 
 feature {PROCESS_IMP} -- Process management
 
-	wait_for_process (pid: INTEGER; is_block: BOOLEAN) is
+	wait_for_process (pid: INTEGER; is_block: BOOLEAN)
 			-- Wait for any process specified by process
 			-- id `pid' to return status.
 			-- Block if `is_block' is True.
@@ -238,7 +238,7 @@ feature {PROCESS_IMP} -- Process management
 			end
 		end
 
-	close_pipes is
+	close_pipes
 			-- Close opened pipes.
 		do
 			if input_piped then
@@ -252,7 +252,7 @@ feature {PROCESS_IMP} -- Process management
 			end
 		end
 
-	spawn_nowait (is_control_terminal_enabled: BOOLEAN; evnptr: POINTER; a_new_process_group: BOOLEAN) is
+	spawn_nowait (is_control_terminal_enabled: BOOLEAN; evnptr: POINTER; a_new_process_group: BOOLEAN)
 			-- Spawn a process and return immediately.
 			-- If `is_control_terminal_enabled' is true, attach controlling terminals to spawned process.
 			-- Environment variables for new process is stored in `envptr'. If `envptr' is `default_pointer',
@@ -309,7 +309,7 @@ feature {PROCESS_IMP} -- Process management
             internal_set_debug_mode (d)
         end
 
-	terminate_hard (is_tree: BOOLEAN) is
+	terminate_hard (is_tree: BOOLEAN)
 			-- Send a kill signal (SIGKILL) to process(es).
 			-- if `is_tree' is True, send signal to whole process group,
 			-- otherwise only send signal to current launched process.
@@ -321,7 +321,7 @@ feature {PROCESS_IMP} -- Process management
 			end
 		end
 
-	read_output_stream (buf_size: INTEGER) is
+	read_output_stream (buf_size: INTEGER)
 			-- Read at most `buf_size' bytes of data from output pipe.
 			-- Set data in `lasT_outp
 		require
@@ -335,7 +335,7 @@ feature {PROCESS_IMP} -- Process management
 			end
 		end
 
-	read_error_stream (buf_size: INTEGER) is
+	read_error_stream (buf_size: INTEGER)
 			-- Read at most `buf_size' bytes of data from error pipe.
 			-- Set data in `last_error'.
 		require
@@ -350,7 +350,7 @@ feature {PROCESS_IMP} -- Process management
 			end
 		end
 
-	put_string (s: STRING) is
+	put_string (s: STRING)
 			-- Put `s' into input pipe of process.
 		require
 			s_not_void: s /= Void
@@ -426,7 +426,7 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Implementation
 
-	build_argument_list is
+	build_argument_list
 			-- Build argument list for `exec_process' call
 			-- and put it in `arguments_for_exec'.
 			-- Make `process_name' argument 0 and append
@@ -458,7 +458,7 @@ feature {NONE} -- Implementation
 			arguments_for_exec := a;
 		end
 
-	open_files_and_pipes is
+	open_files_and_pipes
 		local
 			pipe_fac: UNIX_PIPE_FACTORY
 		do
@@ -501,7 +501,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	setup_parent_process_files is
+	setup_parent_process_files
 		do
 			if input_piped then
 				shared_input_unnamed_pipe.close_read_descriptor
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	setup_child_process_files is
+	setup_child_process_files
 		do
 			if input_piped then
 				move_desc (shared_input_unnamed_pipe.read_descriptor, stdin_descriptor)
@@ -569,7 +569,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	move_desc (source, dest: INTEGER) is
+	move_desc (source, dest: INTEGER)
 			-- If descriptor `source' is different than
 			-- descriptor `dest', duplicate `source' onto `dest'
 			-- and close `source'
@@ -594,13 +594,13 @@ feature {NONE} -- Implementation
 			-- File to be used by child process for standard error
 			-- when it goes to a file
 
-	Stdin_descriptor: INTEGER is 0
+	Stdin_descriptor: INTEGER = 0
 			-- File descriptor for standard input
 
-	Stdout_descriptor: INTEGER is 1
+	Stdout_descriptor: INTEGER = 1
 			-- File descriptor for standard output
 
-	Stderr_descriptor: INTEGER is 2
+	Stderr_descriptor: INTEGER = 2
 			-- File descriptor for standard error
 
 feature {NONE} -- Implementation
@@ -614,7 +614,7 @@ feature {NONE} -- Implementation
 	shared_error_unnamed_pipe: UNIX_UNNAMED_PIPE
 			-- Pipe used to redirect error of process
 
-	exit_code_from_status (a_status: INTEGER): INTEGER is
+	exit_code_from_status (a_status: INTEGER): INTEGER
 			-- Exit code evaluated from status returned by process
 		external
 			"C inline use <sys/wait.h>"
@@ -622,7 +622,7 @@ feature {NONE} -- Implementation
 			"WEXITSTATUS($a_status)"
 		end
 
-	terminate_flag_from_status (a_status: INTEGER): BOOLEAN is
+	terminate_flag_from_status (a_status: INTEGER): BOOLEAN
 			-- Returns true if the child terminated normally.
 		external
 			"C inline use <sys/wait.h>"
@@ -630,7 +630,7 @@ feature {NONE} -- Implementation
 			"WIFEXITED($a_status)"
 		end
 
-	signaled_flag_from_status (a_status: INTEGER): BOOLEAN is
+	signaled_flag_from_status (a_status: INTEGER): BOOLEAN
 			-- Returns true if the child process was terminated by a signal.
 		external
 			"C inline use <sys/wait.h>"
@@ -638,7 +638,7 @@ feature {NONE} -- Implementation
 			"WIFSIGNALED($a_status)"
 		end
 
-	stopped_flag_from_status (a_status: INTEGER): BOOLEAN is
+	stopped_flag_from_status (a_status: INTEGER): BOOLEAN
 			-- Returns true if the child process was stopped by delivery of a signal.
 		external
 			"C inline use <sys/wait.h>"
@@ -646,7 +646,7 @@ feature {NONE} -- Implementation
 			"WIFSTOPPED($a_status)"
 		end
 
-	continued_flag_from_status (a_status: INTEGER): BOOLEAN is
+	continued_flag_from_status (a_status: INTEGER): BOOLEAN
 			-- Returns true if the child process was stopped by delivery of a signal.
 		external
 			"C inline use <sys/wait.h>"
@@ -654,7 +654,7 @@ feature {NONE} -- Implementation
 			"WIFSTOPPED($a_status)"
 		end
 
-	set_is_executing (b: BOOLEAN) is
+	set_is_executing (b: BOOLEAN)
 			-- Set `is_executing' with `b'.
 		do
 			is_executing := b
@@ -664,7 +664,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Debugger access
 
-    internal_set_debug_mode (a_debug_mode: INTEGER) is
+    internal_set_debug_mode (a_debug_mode: INTEGER)
             --
         external
             "C inline use%"eif_main.h%""
@@ -676,7 +676,7 @@ feature {NONE} -- Debugger access
 			]"
         end
 
-    internal_debug_mode: INTEGER is
+    internal_debug_mode: INTEGER
             -- State of debugger.
         external
             "C inline use %"eif_main.h%""
@@ -703,7 +703,7 @@ invariant
 	valid_stdout_descriptor: valid_file_descriptor (Stdout_descriptor)
 	valid_stderr_descriptor: valid_file_descriptor (Stderr_descriptor)
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

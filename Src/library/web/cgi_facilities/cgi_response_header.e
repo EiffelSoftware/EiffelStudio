@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class which deals with the output header"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Basic Operations
 
-	send_to_browser is
+	send_to_browser
 			-- Send the header to browser.
 			-- This operation has to be performed before
 			-- you send anything else to the browser.
@@ -30,7 +30,7 @@ feature -- Basic Operations
 			header_sent: is_sent
 		end
 
-	generate_text_header is
+	generate_text_header
 			-- Generate header for a future text (generally HTML) 
 			-- you are going to send.
 		require
@@ -41,7 +41,7 @@ feature -- Basic Operations
 			is_complete_header := True
 		end
 
-	generate_http_redirection (an_url: STRING;is_secure: BOOLEAN) is	
+	generate_http_redirection (an_url: STRING;is_secure: BOOLEAN)	
 			-- Generate CGI secure re-direction, via 'https' protocol if secure,
 			--	via http if not.
 		require
@@ -56,7 +56,7 @@ feature -- Basic Operations
 			end
 		end
 
-	return_status (a_status: INTEGER;a_message: STRING) is
+	return_status (a_status: INTEGER;a_message: STRING)
 				-- Set the status of the user request.
 				-- A complete list of status may be found at : 
 				-- http://www.w3.org/hypertext/WWW/protocols/HTTP/HTRESP.html
@@ -69,7 +69,7 @@ feature -- Basic Operations
 			header.append ("%NStatus: " + a_status.out + " " + a_message)
 		end	
 
-	reinitialize_header is
+	reinitialize_header
 			-- Re-initialize header.
 			-- May be called if the header built sor far 
 			-- has to be re-build from scratch.
@@ -84,7 +84,7 @@ feature -- Basic Operations
 
 feature {CGI_ERROR_HANDLING} -- Exception handling
 
-	send_trace (s: STRING) is
+	send_trace (s: STRING)
 			-- Send the exception trace 's' to the browser, when
 			-- possible ( most cases ).
 		do
@@ -103,7 +103,7 @@ feature {CGI_ERROR_HANDLING} -- Exception handling
 
 feature -- Advanced Settings
 
-	set_expiration (a_date: STRING) is
+	set_expiration (a_date: STRING)
 			-- Set the expiration date before which the page needs to be 
 			-- refreshed
 		 require
@@ -115,7 +115,7 @@ feature -- Advanced Settings
 			header.append ("%NExpires: " + a_date)
 		end
 
-	set_pragma (a_pragma: STRING) is
+	set_pragma (a_pragma: STRING)
 			-- Set the pragma which indicates whether
 			-- the page accepts to be cached
 			-- or not. An example of pragam is "no-cache"
@@ -128,7 +128,7 @@ feature -- Advanced Settings
 			header.append ("%NPragma: " + a_pragma)
 		end	
 
-	set_cookie (key, value, expiration, path, domain, secure: STRING) is
+	set_cookie (key, value, expiration, path, domain, secure: STRING)
 			-- Set a cookie on the client's machine
 			-- with key 'key' and value 'value'.
 		require
@@ -168,7 +168,7 @@ feature -- Access
 	is_complete_header: BOOLEAN;
 			-- Is Current header a complete header ?
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

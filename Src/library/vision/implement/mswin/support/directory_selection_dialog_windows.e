@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog box which can select directories."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; a_widget: FILE_SEL_D_IMP) is
+	make (a_parent: WEL_COMPOSITE_WINDOW; a_widget: FILE_SEL_D_IMP)
 			-- Create the directory selection dialog
 		do
 			make_by_id (a_parent, directory_dialog_id)
@@ -48,7 +48,7 @@ feature -- Initialization
 
 feature {NONE} -- Initialization
 
-	setup_dialog is
+	setup_dialog
 			-- Initialize the dialog.
 		local
 			pos: INTEGER
@@ -116,13 +116,13 @@ feature -- Access
 
 feature -- Status setting
 
-	set_no_selection_made is
+	set_no_selection_made
 			-- Set `selection_made' to false
 		do
 			selection_made := false
 		end
 
-	set_search_directory (s: STRING) is
+	set_search_directory (s: STRING)
 			-- Set `search_directory' to `s'
 		do
 			search_directory := s
@@ -130,7 +130,7 @@ feature -- Status setting
 			search_directory_set: search_directory = s
 		end
 
-	set_title (s: STRING) is
+	set_title (s: STRING)
 			-- Set `title' to `s'
 		require
 			title_exists: s /= Void
@@ -142,7 +142,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+	notify (control: WEL_CONTROL; notify_code: INTEGER)
 			-- A `notify_code' is received for `control'.
 		do
 			if control = combo_box then
@@ -154,14 +154,14 @@ feature -- Basic operations
 			end
 		end
 
-	on_cancel is
+	on_cancel
 			-- `cancel_button' is pressed.
 		do
 			selection_made := false
 			cancel_actions.execute (action_widget, Void)
 		end
 
-	on_ok is
+	on_ok
 			-- `ok_button' is pressed.
 		do
 			ok_button_action
@@ -170,7 +170,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	combo_box_action (notify_code: INTEGER) is
+	combo_box_action (notify_code: INTEGER)
 			-- Combo box action
 		local
 			tmp: STRING
@@ -200,10 +200,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	directory_dialog_id: INTEGER is 100
+	directory_dialog_id: INTEGER = 100
 			-- Select directory dialog identifier
 
-	directory_list_action (notify_code: INTEGER) is
+	directory_list_action (notify_code: INTEGER)
 			-- Action on directory list
 		do
 			if notify_code = lbn_selchange then
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	drive_list_action (notify_code: INTEGER) is
+	drive_list_action (notify_code: INTEGER)
 			-- Action on drive list
 		do
 			if notify_code = cbn_selchange then
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	ok_button_action is
+	ok_button_action
 			-- Action on ok button
 		local
 			tmp: STRING
@@ -252,19 +252,19 @@ feature {NONE} -- Implementation
 			action_widget.set_filter (directory)
 		end
 
-	selection_text_id: INTEGER is 101
+	selection_text_id: INTEGER = 101
 			-- Selection text static identifier
 
-	combo_box_id: INTEGER is 102
+	combo_box_id: INTEGER = 102
 			-- Selected directory identifier
 
-	drive_list_id: INTEGER is 103
+	drive_list_id: INTEGER = 103
 			-- List of drives identifier
 
-	directory_list_id: INTEGER is 104
+	directory_list_id: INTEGER = 104
 			-- List of directories identifier
 
-	add_to_recently_used (s: STRING) is
+	add_to_recently_used (s: STRING)
 			-- Add to the recently used directories
 		require
 			string_exists: s /= Void
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_recently_used is
+	fill_recently_used
 			-- Fill list of most recently used values
 		local
 			i, nb, pos, old_pos: INTEGER
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 	private_title: STRING
 			-- Title of dialog
 
-	process_list_selection (selected_string: STRING): STRING is
+	process_list_selection (selected_string: STRING): STRING
 			-- Process the selection in the list.
 		local
 			ls : STRING
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 	remembered_list: LINKED_LIST [STRING]
 			-- List of most recently used directories
 
-	save_recently_used is
+	save_recently_used
 			-- Save list of most recently used directories
 		local
 			list: STRING
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 			put (list, "DirectoryList")
 		end
 
-	update_directories is
+	update_directories
 			-- Update the directories and drive list
 			-- and the text based on the value in `directory'
 		local
@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 			action_widget.set_directory (directory)
 		end
 
-	insert_in_directory_list (dir: STRING) is
+	insert_in_directory_list (dir: STRING)
 			-- Fill `directory_list' with current found item in `dir' directory.
 		require
 			dir_not_void: dir /= Void
@@ -458,13 +458,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionDirSelectDialog"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

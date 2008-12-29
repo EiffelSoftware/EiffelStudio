@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A network socket."
@@ -24,7 +24,7 @@ deferred class NETWORK_SOCKET inherit
 
 feature
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does socket exist?
 		do
 			Result := descriptor_available and then (fd > 0 or else fd1 > 0)
@@ -32,7 +32,7 @@ feature
 			definition: Result implies descriptor_available
 		end
 
-	close_socket is
+	close_socket
 			--
 		do
 			if not is_closed then
@@ -46,13 +46,13 @@ feature
 			is_open_write := False
 		end
 
-	descriptor: INTEGER is
+	descriptor: INTEGER
 			-- Socket descriptor of current socket
 		do
 			Result := fd
 		end
 
-	connect is
+	connect
 		local
 			retried: BOOLEAN
 		do
@@ -72,7 +72,7 @@ feature
 			end
 		end
 
-	bind is
+	bind
 		local
 			retried: BOOLEAN
 		do
@@ -92,7 +92,7 @@ feature
 
 feature -- Status report
 
-	address_type: NETWORK_SOCKET_ADDRESS is
+	address_type: NETWORK_SOCKET_ADDRESS
 			-- <Precursor>
 		do
 		end
@@ -105,7 +105,7 @@ feature -- Status report
 
 	is_bound: BOOLEAN
 
-	port: INTEGER is
+	port: INTEGER
 			--
 		do
 			if not is_connected then
@@ -115,7 +115,7 @@ feature -- Status report
 			end
 		end
 
-	local_port: INTEGER is
+	local_port: INTEGER
 			--
 		do
 			if not is_bound then
@@ -125,7 +125,7 @@ feature -- Status report
 			end
 		end
 
-	reuse_address: BOOLEAN is
+	reuse_address: BOOLEAN
 			-- Is reuse_address option set?
 		require
 			socket_exists: exists
@@ -136,17 +136,17 @@ feature -- Status report
 			Result := reuse /= 0
 		end
 
-	is_valid_peer_address (addr: like address): BOOLEAN is
+	is_valid_peer_address (addr: like address): BOOLEAN
 		do
 			Result := (addr.family = af_inet or else addr.family = af_inet6)
 		end
 
-	is_valid_family (addr: like address): BOOLEAN is
+	is_valid_family (addr: like address): BOOLEAN
 		do
 			Result := (addr.family = af_inet or else addr.family = af_inet6)
 		end
 
-	ready_for_reading: BOOLEAN is
+	ready_for_reading: BOOLEAN
 			-- Is data available for reading from the socket within
 			-- `timeout' seconds?
 		require
@@ -158,7 +158,7 @@ feature -- Status report
 			Result := (retval > 0)
 		end
 
-	ready_for_writing: BOOLEAN is
+	ready_for_writing: BOOLEAN
 			-- Can data be written to the socket within `timeout' seconds?
 		require
 			socket_exists: exists
@@ -169,7 +169,7 @@ feature -- Status report
 			Result := (retval > 0)
 		end
 
-	has_exception_state: BOOLEAN is
+	has_exception_state: BOOLEAN
 			-- Is socket in exception state within `timeout' seconds?
 		require
 			socket_exists: exists
@@ -185,7 +185,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_reuse_address is
+	set_reuse_address
 			-- Turn `reuse_address' option on.
 		require
 			socket_exists: exists
@@ -193,7 +193,7 @@ feature -- Status setting
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 1)
 		end;
 
-	do_not_reuse_address is
+	do_not_reuse_address
 			-- Turn `reuse_address' option off.
 		require
 			socket_exists: exists
@@ -201,7 +201,7 @@ feature -- Status setting
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_reuse_addr, 0)
 		end;
 
-	set_timeout (n: INTEGER) is
+	set_timeout (n: INTEGER)
 			-- Set timeout to `n' seconds.
 		require
 			non_negative: n >= 0
@@ -217,7 +217,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	make_socket is
+	make_socket
 		do
 			do_create
 			if fd > - 1 then
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	shutdown is
+	shutdown
 		do
 			c_shutdown (fd, fd1)
 		end
@@ -242,26 +242,26 @@ feature {NONE} -- Implementation
 
 	the_local_port: INTEGER
 
-	do_create is
+	do_create
 		deferred
 		end
 
-	do_connect is
+	do_connect
 		deferred
 		end
 
-	do_bind is
+	do_bind
 		deferred
 		end
 
 feature {NONE} -- Constants
 
-	default_timeout: INTEGER is 20
+	default_timeout: INTEGER = 20
 			-- Default timeout duration in seconds
 
 feature {NONE} -- Externals
 
-	c_close (an_fd: INTEGER; an_fd1: INTEGER) is
+	c_close (an_fd: INTEGER; an_fd1: INTEGER)
 		external
 			"C"
 		alias
@@ -269,18 +269,18 @@ feature {NONE} -- Externals
 		end
 
 	c_select_poll_with_timeout (an_fd: INTEGER; is_read_mode: BOOLEAN;
-								timeout_secs: INTEGER): INTEGER is
+								timeout_secs: INTEGER): INTEGER
 		external
 			"C blocking"
 		end
 
 	c_check_exception_with_timeout (an_fd: INTEGER;
-								timeout_secs: INTEGER): INTEGER is
+								timeout_secs: INTEGER): INTEGER
 		external
 			"C blocking"
 		end
 
-	c_shutdown (an_fd: INTEGER; an_fd1: INTEGER) is
+	c_shutdown (an_fd: INTEGER; an_fd1: INTEGER)
 		external
 			"C blocking"
 		alias
@@ -291,7 +291,7 @@ invariant
 
 	timeout_set: timeout > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

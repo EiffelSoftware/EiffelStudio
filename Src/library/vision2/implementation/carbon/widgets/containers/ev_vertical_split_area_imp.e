@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision Split Area, Carbon implementation."
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Implementation
 
-	initialize is
+	initialize
 			--
 		do
 			Precursor
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	calculate_rects is
+	calculate_rects
 			-- Calculate the CGRECTS rect_a, rect_b and splitter_rect
 		local
 			bounds : CGRECT_STRUCT
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			rect_b_origin.set_y ( splitter_rect_origin.y + splitter_rect_size.height )
 		end
 
-	calculate_minimum_sizes is
+	calculate_minimum_sizes
 			--calculate the minimum sizes for buffered_minimum_heigth and width
 		local
 			first_width, second_width, first_height, second_height: INTEGER
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			buffered_minimum_height := first_height + second_height + splitter_width
 		end
 
-	track ( event :POINTER ) : TUPLE[INTEGER, INTEGER_16] is
+	track ( event :POINTER ) : TUPLE[INTEGER, INTEGER_16]
 			-- Tracking event handler
 		local
 			err : INTEGER
@@ -197,14 +197,14 @@ feature {NONE} -- Implementation
 
 feature -- access
 
-	client_width: INTEGER is
+	client_width: INTEGER
 			-- Width of the client area of container.
 			-- Redefined in children.
 		do
 			Result := width - child_offset_left - child_offset_right
 		end
 
-	client_height: INTEGER is
+	client_height: INTEGER
 			-- Height of the client area of container
 			-- Redefined in children.
 		do
@@ -217,7 +217,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_VERTICAL_SPLIT_AREA_IMP
 

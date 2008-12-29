@@ -1,4 +1,4 @@
-indexing
+note
 	description: "GetWindow (GW) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,49 +10,49 @@ class
 
 feature -- Access
 
-	Gw_hwndfirst: INTEGER is
+	Gw_hwndfirst: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"GW_HWNDFIRST"
 		end
 
-	Gw_hwndlast: INTEGER is
+	Gw_hwndlast: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"GW_HWNDLAST"
 		end
 
-	Gw_hwndnext: INTEGER is
+	Gw_hwndnext: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"GW_HWNDNEXT"
 		end
 
-	Gw_hwndprev: INTEGER is
+	Gw_hwndprev: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"GW_HWNDPREV"
 		end
 
-	Gw_owner: INTEGER is
+	Gw_owner: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"GW_OWNER"
 		end
 
-	Gw_child: INTEGER is
+	Gw_child: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"GW_CHILD"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

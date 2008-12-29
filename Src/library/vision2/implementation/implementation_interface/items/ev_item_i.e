@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision item. Implementation interface."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature -- Access
 
-	parent: EV_ITEM_LIST [EV_ITEM] is
+	parent: EV_ITEM_LIST [EV_ITEM]
 			-- Item list containing `Current'.
 		do
 			if parent_imp /= Void then
@@ -36,7 +36,7 @@ feature -- Access
 			end
 		end
 
-	parent_imp: EV_ITEM_LIST_I [EV_ITEM] is
+	parent_imp: EV_ITEM_LIST_I [EV_ITEM]
 			-- The parent of the Current widget
 			-- Can be void.
 		deferred
@@ -44,7 +44,7 @@ feature -- Access
 
 feature {EV_ANY_I} -- Implementation
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
+	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
 		deferred
@@ -54,7 +54,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

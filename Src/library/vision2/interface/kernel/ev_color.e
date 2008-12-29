@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Color modeled as red, green, blue intensities%
 		%each with range [0,1]."
@@ -36,7 +36,7 @@ create
 feature {NONE} -- Initialization
 
 	make_with_8_bit_rgb
-		(an_8_bit_red, an_8_bit_green, an_8_bit_blue: INTEGER) is
+		(an_8_bit_red, an_8_bit_green, an_8_bit_blue: INTEGER)
 			-- Create with `a_red', `a_green', `a_blue', and default name.
 		require
 			red_within_range: an_8_bit_red >= 0 and an_8_bit_red <= Max_8_bit
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			blue_assigned: blue_8_bit = an_8_bit_blue
 		end
 
-	make_with_rgb (a_red, a_green, a_blue: REAL) is
+	make_with_rgb (a_red, a_green, a_blue: REAL)
 			-- Create with `a_red', `a_green', `a_blue', and default name.
 		require
 			a_red_within_range: a_red >= 0 and then a_red <= 1
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	red: REAL is
+	red: REAL
 			-- Intensity of red component. Range: [0,1]
 		require
 			not_destroyed: not is_destroyed
@@ -84,7 +84,7 @@ feature -- Access
 			bridge_ok: Result = implementation.red
 		end
 
-	green: REAL is
+	green: REAL
 			-- Intensity of green component. Range: [0,1]
 		require
 			not_destroyed: not is_destroyed
@@ -94,7 +94,7 @@ feature -- Access
 			bridge_ok: Result = implementation.green
 		end
 
-	blue: REAL is
+	blue: REAL
 			-- Intensity of blue component. Range: [0,1]
 		require
 			not_destroyed: not is_destroyed
@@ -104,7 +104,7 @@ feature -- Access
 			bridge_ok: Result = implementation.blue
 		end
 
-	lightness: REAL is
+	lightness: REAL
 			-- Lightness of the color
 		require
 			not_destroyed: not is_destroyed
@@ -121,7 +121,7 @@ feature -- Access
 			Result := (max_color + min_color) / 2
 		end
 
-	saturation: REAL is
+	saturation: REAL
 			-- Saturation of the color
 		require
 			not_destroyed: not is_destroyed
@@ -150,7 +150,7 @@ feature -- Access
 			end
 		end
 
-	hue: REAL is
+	hue: REAL
 			-- Hue of the color
 		require
 			not_destroyed: not is_destroyed
@@ -181,7 +181,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_rgb (a_red, a_green, a_blue: REAL) is
+	set_rgb (a_red, a_green, a_blue: REAL)
 			-- Assign `a_red', `a_green' and `a_blue'
 			-- to `red', `green' and `blue' respectively.
 		require
@@ -199,7 +199,7 @@ feature -- Element change
 			blue_assigned: (blue - a_blue).abs <= delta
 		end
 
-	set_red (a_red: REAL) is
+	set_red (a_red: REAL)
 			-- Assign `a_red' to `red'.
 		require
 			not_destroyed: not is_destroyed
@@ -210,7 +210,7 @@ feature -- Element change
 			red_assigned: (red - a_red).abs <= delta
 		end
 
-	set_green (a_green: REAL) is
+	set_green (a_green: REAL)
 			-- Assign `a_green' to `green'.
 		require
 			not_destroyed: not is_destroyed
@@ -221,7 +221,7 @@ feature -- Element change
 			green_assigned: (green - a_green).abs <= delta
 		end
 
-	set_blue (a_blue: REAL) is
+	set_blue (a_blue: REAL)
 			-- Assign `a_blue' to `blue'.
 		require
 			not_destroyed: not is_destroyed
@@ -234,7 +234,7 @@ feature -- Element change
 
 feature -- Conversion
 
-	rgb_24_bit: INTEGER is
+	rgb_24_bit: INTEGER
 			-- `red', `green' and `blue' intensities packed into 24 bits
 			-- with 8 bits per colour and blue in the least significant 8 bits.
 		require
@@ -245,7 +245,7 @@ feature -- Conversion
 			bridge_ok: Result = implementation.rgb_24_bit
 		end
 
-	set_rgb_with_24_bit (a_24_bit_rgb: INTEGER) is
+	set_rgb_with_24_bit (a_24_bit_rgb: INTEGER)
 			-- Set intensities from `a_24_bit_rgb' value
 			-- with blue in the least significant 8 bits.
 		require
@@ -257,7 +257,7 @@ feature -- Conversion
 			rgb_assigned: rgb_24_bit = a_24_bit_rgb
 		end
 
-	set_rgb_with_8_bit (an_8_bit_red, an_8_bit_green, an_8_bit_blue: INTEGER) is
+	set_rgb_with_8_bit (an_8_bit_red, an_8_bit_green, an_8_bit_blue: INTEGER)
 			-- Set intensities  from `an_8_bit_red', `an_8_bit_green', and
 			-- `an_8_bit_blue' intensity. (8 bits per channel.)
 		require
@@ -276,7 +276,7 @@ feature -- Conversion
 			blue_assigned: blue_8_bit = an_8_bit_blue
 		end
 
-	red_8_bit: INTEGER is
+	red_8_bit: INTEGER
 			-- Intensity of `red' component as an 8 bit unsigned integer.
 			-- Range [0,255]
 		require
@@ -287,7 +287,7 @@ feature -- Conversion
 			bridge_ok: Result = implementation.red_8_bit
 		end
 
-	green_8_bit: INTEGER is
+	green_8_bit: INTEGER
 			-- Intensity of `green' component as an 8 bit unsigned integer.
 			-- Range [0,255]
 		require
@@ -298,7 +298,7 @@ feature -- Conversion
 			bridge_ok: Result = implementation.green_8_bit
 		end
 
-	blue_8_bit: INTEGER is
+	blue_8_bit: INTEGER
 			-- Intensity of `blue' component as an 8 bit unsigned integer.
 			-- Range [0,255]
 		require
@@ -309,7 +309,7 @@ feature -- Conversion
 			bridge_ok: Result = implementation.blue_8_bit
 		end
 
-	set_red_with_8_bit (an_8_bit_red: INTEGER) is
+	set_red_with_8_bit (an_8_bit_red: INTEGER)
 			-- Set `red' from `an_8_bit_red' intinsity.
 		require
 			not_destroyed: not is_destroyed
@@ -321,7 +321,7 @@ feature -- Conversion
 			red_assigned: red_8_bit = an_8_bit_red
 		end
 
-	set_green_with_8_bit (an_8_bit_green: INTEGER) is
+	set_green_with_8_bit (an_8_bit_green: INTEGER)
 			-- Set `green' from `an_8_bit_green' intinsity.
 		require
 			not_destroyed: not is_destroyed
@@ -333,7 +333,7 @@ feature -- Conversion
 			green_assigned: green_8_bit = an_8_bit_green
 		end
 
-	set_blue_with_8_bit (an_8_bit_blue: INTEGER) is
+	set_blue_with_8_bit (an_8_bit_blue: INTEGER)
 			-- Set `blue' from `an_8_bit_blue' intinsity.
 		require
 			not_destroyed: not is_destroyed
@@ -346,7 +346,7 @@ feature -- Conversion
 		end
 
 	set_rgb_with_16_bit (a_16_bit_red, a_16_bit_green, a_16_bit_blue: INTEGER)
-		is
+		
 			-- Set intensities  from `a_16_bit_red', `a_16_bit_green', and
 			-- `a_16_bit_blue' intensity. (16 bits per channel.)
 		require
@@ -366,7 +366,7 @@ feature -- Conversion
 			blue_assigned: blue_16_bit = a_16_bit_blue
 		end
 
-	red_16_bit: INTEGER is
+	red_16_bit: INTEGER
 			-- Intensity of red component as an 16 bit unsigned integer.
 			-- Range [0,65535]
 		require
@@ -377,7 +377,7 @@ feature -- Conversion
 			bridge_ok: Result = implementation.red_16_bit
 		end
 
-	green_16_bit: INTEGER is
+	green_16_bit: INTEGER
 			-- Intensity of green component as an 16 bit unsigned integer.
 			-- Range [0,65535]
 		require
@@ -388,7 +388,7 @@ feature -- Conversion
 			bridge_ok: Result = implementation.green_16_bit
 		end
 
-	blue_16_bit: INTEGER is
+	blue_16_bit: INTEGER
 			-- Intensity of blue component as an 16 bit unsigned integer.
 			-- Range [0,65535]
 		require
@@ -399,7 +399,7 @@ feature -- Conversion
 			bridge_ok: Result = implementation.blue_16_bit
 		end
 
-	set_red_with_16_bit (a_16_bit_red: INTEGER) is
+	set_red_with_16_bit (a_16_bit_red: INTEGER)
 			-- Set `red' from `a_8_bit_red' intinsity.
 		require
 			not_destroyed: not is_destroyed
@@ -411,7 +411,7 @@ feature -- Conversion
 			red_assigned: red_16_bit = a_16_bit_red
 		end
 
-	set_green_with_16_bit (a_16_bit_green: INTEGER) is
+	set_green_with_16_bit (a_16_bit_green: INTEGER)
 			-- Set `green' from `a_16_bit_green' intinsity.
 		require
 			not_destroyed: not is_destroyed
@@ -423,7 +423,7 @@ feature -- Conversion
 			green_assigned: green_16_bit = a_16_bit_green
 		end
 
-	set_blue_with_16_bit (a_16_bit_blue: INTEGER) is
+	set_blue_with_16_bit (a_16_bit_blue: INTEGER)
 			-- Set `blue' from `a_16_bit_blue' intinsity.
 		require
 			not_destroyed: not is_destroyed
@@ -437,7 +437,7 @@ feature -- Conversion
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Textual representation.
 		local
 			f: FORMAT_DOUBLE
@@ -451,7 +451,7 @@ feature -- Output
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Does `Current' look the same color as `other'?
 		do
 			Result := (other.red - red).abs < delta and then
@@ -459,7 +459,7 @@ feature -- Comparison
 				(other.blue - blue).abs < delta
 		end
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Update `Current' by setting attributes from `other'.
 		do
 			if implementation = Void then
@@ -470,7 +470,7 @@ feature -- Comparison
 
 feature -- Hashable
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := rgb_24_bit
@@ -478,18 +478,18 @@ feature -- Hashable
 
 feature -- Constants
 
-	Max_8_bit: INTEGER is 255
+	Max_8_bit: INTEGER = 255
 			-- Maximum value for 8 bit unsigned integers.
 
-	Max_16_bit: INTEGER is 65535
+	Max_16_bit: INTEGER = 65535
 			-- Maximum value for 16 bit unsigned integers.
 
-	Max_24_bit: INTEGER is 16777215
+	Max_24_bit: INTEGER = 16777215
 			-- Maximum value for 24 bit unsigned integers.
 
 feature {NONE} -- Contract support
 
-	delta: REAL is
+	delta: REAL
 			-- Amount by which two intensities can differ but still be
 			-- considered equal by `is_equal'.
 		do
@@ -503,7 +503,7 @@ feature {EV_ANY, EV_ANY_I, EV_STOCK_COLORS_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_COLOR_IMP} implementation.make (Current)
@@ -533,7 +533,7 @@ invariant
 	blue_8_bit_conversion: ((blue * Max_8_bit) - blue_8_bit).abs <
 		delta * Max_8_bit
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

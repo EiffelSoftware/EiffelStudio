@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Definition of some constants used in process launcher"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -9,13 +9,13 @@ class
 	PROCESS_REDIRECTION_CONSTANTS
 
 feature -- Access
-	to_stream: INTEGER is 0 
-	to_file: INTEGER is 1
-	to_agent: INTEGER is 2
-	no_redirection: INTEGER is 3
-	to_same_as_output: INTEGER is 5;
+	to_stream: INTEGER = 0 
+	to_file: INTEGER = 1
+	to_agent: INTEGER = 2
+	no_redirection: INTEGER = 3
+	to_same_as_output: INTEGER = 5;
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

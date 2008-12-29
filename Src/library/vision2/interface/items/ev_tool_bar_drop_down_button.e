@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Press dropdown button for use with EV_TOOL_BAR
@@ -29,7 +29,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TOOL_BAR_DROP_DOWN_BUTTON_IMP} implementation.make (Current)

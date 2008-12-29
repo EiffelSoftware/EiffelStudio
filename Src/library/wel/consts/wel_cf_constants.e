@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Choose font (CF) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,60 +10,60 @@ class
 
 feature -- Access
 
-	Cf_screenfonts: INTEGER is 1
+	Cf_screenfonts: INTEGER = 1
 
-	Cf_printerfonts: INTEGER is 2
+	Cf_printerfonts: INTEGER = 2
 
-	Cf_both: INTEGER is 3
+	Cf_both: INTEGER = 3
 			-- `Cf_screenfonts' | `Cf_printerfonts'.
 
-	Cf_showhelp: INTEGER is 4
+	Cf_showhelp: INTEGER = 4
 
-	Cf_enablehook: INTEGER is 8
+	Cf_enablehook: INTEGER = 8
 
-	Cf_enabletemplate: INTEGER is 16
+	Cf_enabletemplate: INTEGER = 16
 
-	Cf_enabletemplatehandle: INTEGER is 32
+	Cf_enabletemplatehandle: INTEGER = 32
 
-	Cf_inittologfontstruct: INTEGER is 64
+	Cf_inittologfontstruct: INTEGER = 64
 
-	Cf_usestyle: INTEGER is 128
+	Cf_usestyle: INTEGER = 128
 
-	Cf_effects: INTEGER is 256
+	Cf_effects: INTEGER = 256
 
-	Cf_apply: INTEGER is 512
+	Cf_apply: INTEGER = 512
 
-	Cf_ansionly: INTEGER is 1024
+	Cf_ansionly: INTEGER = 1024
 
-	Cf_novectorfonts: INTEGER is 2048
+	Cf_novectorfonts: INTEGER = 2048
 
-	Cf_nooemfonts: INTEGER is 2048
+	Cf_nooemfonts: INTEGER = 2048
 			-- Same as `Cf_novectorfonts'.
 
-	Cf_nosimulations: INTEGER is 4096
+	Cf_nosimulations: INTEGER = 4096
 
-	Cf_limitsize: INTEGER is 8192
+	Cf_limitsize: INTEGER = 8192
 
-	Cf_fixedpitchonly: INTEGER is 16384
+	Cf_fixedpitchonly: INTEGER = 16384
 
-	Cf_wysiwyg: INTEGER is 32768
+	Cf_wysiwyg: INTEGER = 32768
 			-- To be used with `Cf_both'.
 
-	Cf_forcefontexist: INTEGER is 65536
+	Cf_forcefontexist: INTEGER = 65536
 
-	Cf_scalableonly: INTEGER is 131072
+	Cf_scalableonly: INTEGER = 131072
 
-	Cf_ttonly: INTEGER is 262144
+	Cf_ttonly: INTEGER = 262144
 
-	Cf_nofacesel: INTEGER is 524288
+	Cf_nofacesel: INTEGER = 524288
 
-	Cf_nostylesel: INTEGER is 1048576
+	Cf_nostylesel: INTEGER = 1048576
 
-	Cf_nosizesel: INTEGER is 2097152
+	Cf_nosizesel: INTEGER = 2097152
 
-	Cf_noscriptsel: INTEGER is 8388608;
+	Cf_noscriptsel: INTEGER = 8388608;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

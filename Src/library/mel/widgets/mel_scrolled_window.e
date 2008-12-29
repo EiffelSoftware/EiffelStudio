@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Manager widget that provides scroll bars for the data display."
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif scrolled window.
 		require
 			name_exists: a_name /= Void;
@@ -57,7 +57,7 @@ feature -- Initialization
 			name_set: name.is_equal (a_name)
 		end;
 
-	make_with_automatic_scrolling (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make_with_automatic_scrolling (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif scrolled window with an automatic scrolling.
 		require
 			name_exists: a_name /= Void;
@@ -87,7 +87,7 @@ feature -- Initialization
 
 feature -- Access
 
-	traverse_obscured_command: MEL_COMMAND_EXEC is
+	traverse_obscured_command: MEL_COMMAND_EXEC
 			-- Command set for the traverse obscured callback
 		do
 			Result := motif_command (XmNtraverseObscuredCallback)
@@ -99,7 +99,7 @@ feature -- Status report
 			-- Clipping area 
 			--| Implemented as a drawing area (6A-page298)
 
-	horizontal_scroll_bar: MEL_SCROLL_BAR is
+	horizontal_scroll_bar: MEL_SCROLL_BAR
 			-- Horizontal scroll_bar
 		require
 			exists: not is_destroyed
@@ -115,7 +115,7 @@ feature -- Status report
 			end
 		end;
 
-	vertical_scroll_bar: MEL_SCROLL_BAR is
+	vertical_scroll_bar: MEL_SCROLL_BAR
 			-- Vertical scroll_bar
 		require
 			exists: not is_destroyed
@@ -131,7 +131,7 @@ feature -- Status report
 			end
 		end;
 
-	is_scroll_bar_display_policy_static: BOOLEAN is
+	is_scroll_bar_display_policy_static: BOOLEAN
 			-- Is the vertical scroll bar always shown?
 		require
 			exists: not is_destroyed
@@ -139,7 +139,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNscrollBarDisplayPolicy) = XmSTATIC
 		end;
 
-	is_scroll_bar_display_policy_as_needed: BOOLEAN is
+	is_scroll_bar_display_policy_as_needed: BOOLEAN
 			-- Is the vertical scroll bar always shown?
 		require
 			exists: not is_destroyed
@@ -148,7 +148,7 @@ feature -- Status report
 				(screen_object, XmNscrollBarDisplayPolicy) = XmAS_NEEDED
 		end;
 
-	scroll_bar_placement_top_left: BOOLEAN is
+	scroll_bar_placement_top_left: BOOLEAN
 			-- Are the scroll bars shown at the top and the left side?
 		require
 			exists: not is_destroyed
@@ -156,7 +156,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNscrollBarPlacement) = XmTOP_LEFT
 		end;
 
-	scroll_bar_placement_bottom_left: BOOLEAN is
+	scroll_bar_placement_bottom_left: BOOLEAN
 			-- Are the scroll bars shown at the bottom and the left side?
 		require
 			exists: not is_destroyed
@@ -164,7 +164,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNscrollBarPlacement) = XmBOTTOM_LEFT
 		end;
 
-	scroll_bar_placement_top_right: BOOLEAN is
+	scroll_bar_placement_top_right: BOOLEAN
 			-- Are the scroll bars shown at the top and the right side?
 		require
 			exists: not is_destroyed
@@ -172,7 +172,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNscrollBarPlacement) = XmTOP_RIGHT
 		end;
 
-	scroll_bar_placement_bottom_right: BOOLEAN is
+	scroll_bar_placement_bottom_right: BOOLEAN
 			-- Are the scroll bars shown at the bottom and the right side?
 		require
 			exists: not is_destroyed
@@ -180,7 +180,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNscrollBarPlacement) = XmBOTTOM_RIGHT
 		end;
 
-	margin_height: INTEGER is
+	margin_height: INTEGER
 			-- Spacing at the top and bottom of Current
 		require
 			exists: not is_destroyed
@@ -190,7 +190,7 @@ feature -- Status report
 			margin_height_large_enough: Result >= 0
 		end;
 
-	margin_width: INTEGER is
+	margin_width: INTEGER
 			-- Spacing at the right and left sides of Current
 		require
 			exists: not is_destroyed
@@ -200,7 +200,7 @@ feature -- Status report
 			margin_width_large_enough: Result >= 0
 		end;
 
-	is_scrolling_policy_automatic: BOOLEAN is
+	is_scrolling_policy_automatic: BOOLEAN
 			-- Is scrolling handled by Current?
 		require	
 			exists: not is_destroyed
@@ -208,7 +208,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNscrollingPolicy) = XmAUTOMATIC
 		end;
 
-	spacing: INTEGER is
+	spacing: INTEGER
 			-- Distance between each of the scrollbars and `work_window'.
 		require
 			exists: not is_destroyed
@@ -218,7 +218,7 @@ feature -- Status report
 			spacing_large_enough: Result >= 0
 		end;
 
-	is_visual_policy_constant: BOOLEAN is
+	is_visual_policy_constant: BOOLEAN
 			-- Is the viewing area clipped if needed?
 		require
 			exists: not is_destroyed
@@ -231,7 +231,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_horizontal_scroll_bar (a_scroll_bar: MEL_SCROLL_BAR) is
+	set_horizontal_scroll_bar (a_scroll_bar: MEL_SCROLL_BAR)
 			-- Set `horizontal_scroll_bar' to `a_scroll_bar'.
 		require
 			exists: not is_destroyed;
@@ -242,7 +242,7 @@ feature -- Status setting
 			horizontal_scroll_bar_set: horizontal_scroll_bar.is_equal (a_scroll_bar)
 		end;
 
-	set_vertical_scroll_bar (a_scroll_bar: MEL_SCROLL_BAR) is
+	set_vertical_scroll_bar (a_scroll_bar: MEL_SCROLL_BAR)
 			-- Set `vertical_scroll_bar' to `a_scroll_bar'.
 		require
 			exists: not is_destroyed;
@@ -253,7 +253,7 @@ feature -- Status setting
 			vertical_scroll_bar_set: vertical_scroll_bar.is_equal (a_scroll_bar)
 		end;
 
-	set_scroll_bar_display_policy_static is
+	set_scroll_bar_display_policy_static
 			-- Set `scroll_bar_display_policy_static' to True.
 		require
 			exists: not is_destroyed
@@ -263,7 +263,7 @@ feature -- Status setting
 			display_policy_is_static: is_scroll_bar_display_policy_static 
 		end;
 
-	set_scroll_bar_display_policy_as_needed is
+	set_scroll_bar_display_policy_as_needed
 			-- Set `scroll_bar_display_policy_as_needed' to True.
 		require
 			exists: not is_destroyed
@@ -273,7 +273,7 @@ feature -- Status setting
 			display_policy_as_need: is_scroll_bar_display_policy_as_needed
 		end;
 
-	set_scroll_bar_placement_top_left is
+	set_scroll_bar_placement_top_left
 			-- Set `scroll_bar_placement_top_left'.
 		require
 			exists: not is_destroyed
@@ -283,7 +283,7 @@ feature -- Status setting
 			scroll_bar_placement_set: scroll_bar_placement_top_left
 		end;
 
-	set_scroll_bar_placement_bottom_left is
+	set_scroll_bar_placement_bottom_left
 			-- Set `scroll_bar_placement_bottom_left'.
 		require
 			exists: not is_destroyed
@@ -293,7 +293,7 @@ feature -- Status setting
 			scroll_bar_placement_set: scroll_bar_placement_bottom_left
 	   end;
 
-	set_scroll_bar_placement_top_right is
+	set_scroll_bar_placement_top_right
 			-- Set `scroll_bar_placement_top_right'.
 		require
 			exists: not is_destroyed
@@ -303,7 +303,7 @@ feature -- Status setting
 			scroll_bar_placement_set: scroll_bar_placement_top_right
 		end;
 
-	set_scroll_bar_placement_bottom_right is
+	set_scroll_bar_placement_bottom_right
 			-- Set `scroll_bar_placement_bottom_right'.
 		require
 			exists: not is_destroyed
@@ -313,7 +313,7 @@ feature -- Status setting
 			scroll_bar_placement_set: scroll_bar_placement_bottom_right
 		end;
 
-	set_margin_height (a_height: INTEGER) is
+	set_margin_height (a_height: INTEGER)
 			-- Set `margin_height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -324,7 +324,7 @@ feature -- Status setting
 			margin_height_set: margin_height = a_height
 		end;
 
-	set_margin_width (a_width: INTEGER) is
+	set_margin_width (a_width: INTEGER)
 			-- Set `margin_width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -335,7 +335,7 @@ feature -- Status setting
 			margin_width_set: margin_width = a_width
 		end;
 
-	set_spacing (a_distance: INTEGER) is
+	set_spacing (a_distance: INTEGER)
 			-- Set `spacing' to `a_distance'.
 		require
 			exists: not is_destroyed;
@@ -346,7 +346,7 @@ feature -- Status setting
 			spacing_set: spacing = a_distance
 		end;
 
-	set_work_window (a_widget: like work_window) is
+	set_work_window (a_widget: like work_window)
 			-- Set `work_window' to `a_widget'.
 		require
 			exists: not is_destroyed;
@@ -359,7 +359,7 @@ feature -- Status setting
 			work_window_set: work_window.is_equal (a_widget)
 		end;
 
-	set_scroll_visible (a_widget: MEL_OBJECT; left_right_margin, top_bottom_margin: INTEGER) is
+	set_scroll_visible (a_widget: MEL_OBJECT; left_right_margin, top_bottom_margin: INTEGER)
 			-- Make `a_widget' visible and use the `left_right_margin' and `top_bottom_margin'
 			-- if `clip_window' needs to be adjusted to make the `a_widget' visible.
 		require
@@ -372,7 +372,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_traverse_obscured_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_traverse_obscured_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the keyboard focus is
 			-- moved to a widget of a gadget that is obscured from view.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -388,7 +388,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_traverse_obscured_callback is
+	remove_traverse_obscured_callback
 			-- Remove the command for traverse obscured callback.
 		do
 			remove_callback (XmNtraverseObscuredCallback)
@@ -399,7 +399,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr: POINTER;
-				resource_name: POINTER): MEL_TRAVERSE_OBSCURED_CALLBACK_STRUCT is
+				resource_name: POINTER): MEL_TRAVERSE_OBSCURED_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -408,26 +408,26 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	xm_create_scrolled_window (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_scrolled_window (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/ScrolledW.h>"
 		alias
 			"XmCreateScrolledWindow"
 		end
 
-	xm_scroll_visible (scr, widget: POINTER; lm, rm: INTEGER) is
+	xm_scroll_visible (scr, widget: POINTER; lm, rm: INTEGER)
 		external
 			"C (Widget, Widget, Dimension, Dimension) | <Xm/ScrolledW.h>"
 		alias
 			"XmScrollVisible"
 		end
 
-	xm_create_scrolled_window_with_automatic_scrolling (a_parent, a_name: POINTER): POINTER is
+	xm_create_scrolled_window_with_automatic_scrolling (a_parent, a_name: POINTER): POINTER
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

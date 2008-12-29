@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation interface for dockable target."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_docking is
+	enable_docking
 			-- Ensure `is_docking_enabled' is True.
 			-- `Current' will accept docking from a
 			-- compatible EV_DOCKABLE_SOURCE.
@@ -38,7 +38,7 @@ feature -- Status setting
 			id_stored_in_application: (create {EV_ENVIRONMENT}).application.implementation.dockable_targets.has (interface.object_id)
 		end
 		
-	disable_docking is
+	disable_docking
 			-- Ensure `is_docking_enabled' is False.
 			-- `Current' will not accept docking.
 		do
@@ -49,7 +49,7 @@ feature -- Status setting
 			id_not_stored_in_application: not (create {EV_ENVIRONMENT}).application.implementation.dockable_targets.has (interface.object_id)
 		end
 		
-	set_veto_dock_function (a_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN]) is
+	set_veto_dock_function (a_function: FUNCTION [ANY, TUPLE [EV_DOCKABLE_SOURCE], BOOLEAN])
 			-- Assign `a_function' to `veto_dock_function'.
 		require
 			a_function_not_void: a_function /= Void
@@ -63,7 +63,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_DOCKABLE_TARGET;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that traverse object graphs starting at the root object in a depth first manner."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,13 +14,13 @@ inherit
 
 feature {NONE} -- Implementation
 
-	new_dispenser: ARRAYED_STACK [ANY] is
+	new_dispenser: ARRAYED_STACK [ANY]
 			-- Create the dispenser to use for storing visited objects.
 		do
 			create Result.make (default_size)
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

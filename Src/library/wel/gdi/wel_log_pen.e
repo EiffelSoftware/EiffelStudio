@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Defines the style, width and color of a pen."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_style, a_width: INTEGER; a_color: WEL_COLOR_REF) is
+	make (a_style, a_width: INTEGER; a_color: WEL_COLOR_REF)
 			-- Make a log pen using `a_style', `a_width' and
 			-- `a_color'.
 			-- See class WEL_PS_CONSTANTS for `a_style' values.
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			set_color: color.item = a_color.item
 		end
 
-	make_by_pen (pen: WEL_PEN) is
+	make_by_pen (pen: WEL_PEN)
 			-- Make a log pen using the information of `pen'.
 		require
 			pen_not_void: pen /= Void
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	style: INTEGER is
+	style: INTEGER
 			-- Pen style
 		do
 			Result := cwel_logpen_get_style (item)
@@ -67,7 +67,7 @@ feature -- Access
 			valid_result: valid_pen_style_constant (Result)
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Pen width
 		do
 			Result := cwel_logpen_get_width (item)
@@ -75,7 +75,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	color: WEL_COLOR_REF is
+	color: WEL_COLOR_REF
 			-- Pen color
 		do
 			create Result.make_by_color (cwel_logpen_get_color (item))
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_style (a_style: INTEGER) is
+	set_style (a_style: INTEGER)
 			-- Set `style' with `a_style'
 		require
 			valid_pen_style_constant: valid_pen_style_constant (a_style)
@@ -95,7 +95,7 @@ feature -- Element change
 			set_style: style = a_style
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' with `a_width'
 		require
 			positive_width: a_width >= 0
@@ -106,7 +106,7 @@ feature -- Element change
 			set_width: width = a_width
 		end
 
-	set_color (a_color: WEL_COLOR_REF) is
+	set_color (a_color: WEL_COLOR_REF)
 			-- Set `color' with `a_color'
 		require
 			a_color_not_void: a_color /= Void
@@ -118,7 +118,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_logpen
@@ -126,50 +126,50 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_logpen: INTEGER is
+	c_size_of_logpen: INTEGER
 		external
 			"C [macro <logpen.h>]"
 		alias
 			"sizeof (LOGPEN)"
 		end
 
-	cwel_logpen_get_style (ptr: POINTER): INTEGER is
+	cwel_logpen_get_style (ptr: POINTER): INTEGER
 		external
 			"C [macro <logpen.h>]"
 		end
 
-	cwel_logpen_get_width (ptr: POINTER): INTEGER is
+	cwel_logpen_get_width (ptr: POINTER): INTEGER
 		external
 			"C [macro <logpen.h>]"
 		end
 
-	cwel_logpen_get_color (ptr: POINTER): INTEGER is
+	cwel_logpen_get_color (ptr: POINTER): INTEGER
 		external
 			"C [macro <logpen.h>]"
 		end
 
-	cwel_logpen_set_style (ptr: POINTER; value: INTEGER) is
+	cwel_logpen_set_style (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <logpen.h>]"
 		end
 
-	cwel_logpen_set_width (ptr: POINTER; value: INTEGER) is
+	cwel_logpen_set_width (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <logpen.h>]"
 		end
 
-	cwel_logpen_set_color (ptr: POINTER; value: INTEGER) is
+	cwel_logpen_set_color (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <logpen.h>]"
 		end
 
-	cwel_logpen_set_y (ptr: POINTER; value: INTEGER) is
+	cwel_logpen_set_y (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <logpen.h>]"
 		end
 
 	cwin_get_object (hgdi_object: POINTER; buffer_size: INTEGER;
-			object: POINTER) is
+			object: POINTER)
 		external
 			"C [macro <windows.h>] (HGDIOBJ, int, LPVOID)"
 		alias
@@ -180,7 +180,7 @@ invariant
 	color_not_void: color /= Void
 	positive_width: width >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

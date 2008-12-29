@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Character format containing color, font and effects information for text formatting.
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_font (a_font: EV_FONT) is
+	make_with_font (a_font: EV_FONT)
 			-- Create `Current' with font `a_font'.
 		require
 			font_not_void: a_font /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			font_set: font.is_equal (a_font)
 		end
 
-	make_with_font_and_color (a_font: EV_FONT; a_color, a_background_color: EV_COLOR) is
+	make_with_font_and_color (a_font: EV_FONT; a_color, a_background_color: EV_COLOR)
 			-- Create `Current' with font `a_font', color `a_color' and
 			-- background_color `a_background_color'.
 		require
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			color_set: color.is_equal (a_color)
 		end
 
-	make_with_values (a_font: EV_FONT; a_color, a_background_color: EV_COLOR; an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
+	make_with_values (a_font: EV_FONT; a_color, a_background_color: EV_COLOR; an_effect: EV_CHARACTER_FORMAT_EFFECTS)
 			-- Create `Current' with font `a_font', color `a_color', background color `a_background_color' and effects `an_effect'.
 		require
 			font_not_void: a_font /= Void
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Font of the current format.
 		require
 			not_destroyed: not is_destroyed
@@ -91,7 +91,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	color: EV_COLOR is
+	color: EV_COLOR
 			-- Color of the current format.
 		require
 			not_destroyed: not is_destroyed
@@ -101,7 +101,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	effects: EV_CHARACTER_FORMAT_EFFECTS is
+	effects: EV_CHARACTER_FORMAT_EFFECTS
 			-- Character format effects applicable to `font'.
 		require
 			not_destroyed: not is_destroyed
@@ -111,7 +111,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Background color of the current format.
 		require
 			not_destroyed: not is_destroyed
@@ -123,7 +123,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Make `a_font' the new font.
 		require
 			not_destroyed: not is_destroyed
@@ -135,7 +135,7 @@ feature -- Element change
 			font_set: font.is_equal (a_font)
 		end
 
-	set_color (a_color: EV_COLOR) is
+	set_color (a_color: EV_COLOR)
 			-- Make `a_color' the new color.
 		require
 			not_destroyed: not is_destroyed
@@ -147,7 +147,7 @@ feature -- Element change
 			color_set: color.is_equal (a_color)
 		end
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Make `a_color' the new background_color.
 		require
 			not_destroyed: not is_destroyed
@@ -159,7 +159,7 @@ feature -- Element change
 			color_set: background_color.is_equal (a_color)
 		end
 
-	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
+	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS)
 			-- Make `an_effect' the new `effects'.
 		require
 			not_destroyed: not is_destroyed
@@ -171,7 +171,7 @@ feature -- Element change
 			effects_set: effects.is_equal (an_effect)
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `Current' considered equal to `other'?
 		do
 			Result := other.color.is_equal (color) and
@@ -180,7 +180,7 @@ feature -- Element change
 				other.effects.is_equal (effects)
 		end
 
-	out: STRING is
+	out: STRING
 			-- New string containing terse printable representation
 			-- of current object
 		do
@@ -189,7 +189,7 @@ feature -- Element change
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := color.is_equal ((create {EV_STOCK_COLORS}).black) and
@@ -215,7 +215,7 @@ feature -- Duplication
 
 feature {EV_RICH_TEXT_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
-	hash_value: STRING is
+	hash_value: STRING
 			-- A hashable representation of `Current'.
 		do
 			if internal_out = Void or changed then
@@ -238,7 +238,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create implementation of drawing area.
 		do
 			create {EV_CHARACTER_FORMAT_IMP} implementation.make (Current)
@@ -249,7 +249,7 @@ invariant
 	color_not_void: color /= Void
 	effects_not_void: effects /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision tree node. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,13 +51,13 @@ create
 
 feature {NONE} -- Initialization
 
-	destroy is
+	destroy
 			-- Clean up `Current'
 		do
 			set_is_destroyed (True)
 		end
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the tree item.
 		do
 			base_make (an_interface)
@@ -66,12 +66,12 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is the item selected?
 		do
 		end
 
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- is the item expanded?
 		do
 			Result := internal_is_expanded
@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		local
 			l_tree_imp: like parent_tree_imp
@@ -90,7 +90,7 @@ feature -- Measurement
 			end
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		local
 			l_tree_imp: like parent_tree_imp
@@ -100,7 +100,7 @@ feature -- Measurement
 			end
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		local
 			l_tree_imp: like parent_tree_imp
@@ -111,7 +111,7 @@ feature -- Measurement
 			end
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		local
 			l_tree_imp: like parent_tree_imp
@@ -122,7 +122,7 @@ feature -- Measurement
 			end
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size in pixels.
 		local
 			l_tree_imp: like parent_tree_imp
@@ -133,7 +133,7 @@ feature -- Measurement
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size in pixels.
 		local
 			l_tree_imp: like parent_tree_imp
@@ -144,7 +144,7 @@ feature -- Measurement
 			end
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels.
 		local
 			l_tree_imp: like parent_tree_imp
@@ -155,7 +155,7 @@ feature -- Measurement
 			end
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
 		local
 			l_tree_imp: like parent_tree_imp
@@ -168,17 +168,17 @@ feature -- Measurement
 
 feature {EV_ANY_I} -- Status setting
 
-	enable_select is
+	enable_select
 			-- Select `Current' in its parent.
 		do
 		end
 
-	disable_select is
+	disable_select
 			-- Disable selection of `Current' in its parent.
 		do
 		end
 
-	set_expand (a_flag: BOOLEAN) is
+	set_expand (a_flag: BOOLEAN)
 			-- Expand the item if `flag', collapse it otherwise.
 		local
 			ret: INTEGER
@@ -203,7 +203,7 @@ feature {EV_ANY_I} -- Status setting
 			end
 		end
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Set 'text' to 'a_text'
 		local
 			ret: INTEGER
@@ -216,29 +216,29 @@ feature {EV_ANY_I} -- Status setting
 
 feature -- PND
 
-	enable_transport is
+	enable_transport
 			-- Enable PND transport
 		do
 		end
 
-	disable_transport is
+	disable_transport
 			-- Disable PND transport
 		do
 		end
 
-	draw_rubber_band is
+	draw_rubber_band
 		do
 		end
 
-	erase_rubber_band is
+	erase_rubber_band
 		do
 		end
 
-	enable_capture is
+	enable_capture
 		do
 		end
 
-	disable_capture is
+	disable_capture
 		do
 			check
 				do_not_call: False
@@ -248,7 +248,7 @@ feature -- PND
 	start_transport (
         	a_x, a_y, a_button: INTEGER; a_press: BOOLEAN;
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        	a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN) is
+        	a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN)
         	-- Start PND transport (not needed)
 		do
 			check
@@ -258,7 +258,7 @@ feature -- PND
 
 	end_transport (a_x, a_y, a_button: INTEGER;
 		a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-		a_screen_x, a_screen_y: INTEGER) is
+		a_screen_x, a_screen_y: INTEGER)
 			-- End PND transport (not needed)
 		do
 			check
@@ -266,7 +266,7 @@ feature -- PND
 			end
 		end
 
-	set_pointer_style, internal_set_pointer_style (curs: EV_POINTER_STYLE) is
+	set_pointer_style, internal_set_pointer_style (curs: EV_POINTER_STYLE)
 			-- Set 'pointer_style' to 'curs' (not needed)
 		do
 			check
@@ -274,34 +274,34 @@ feature -- PND
 			end
 		end
 
-	is_transport_enabled_iterator: BOOLEAN is
+	is_transport_enabled_iterator: BOOLEAN
 			-- Has 'Current' or a child of 'Current' pnd transport enabled?
 		do
 		end
 
 feature {EV_TREE_IMP} -- Implementation
 
-	set_pebble_void is
+	set_pebble_void
 			-- Resets pebble from Tree_Imp.
 		do
 			pebble := Void
 		end
 
-	able_to_transport (a_button: INTEGER): BOOLEAN is
+	able_to_transport (a_button: INTEGER): BOOLEAN
 			-- Is the row able to transport data with `a_button' click.
 		do
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	set_parent_imp (par_imp: like parent_imp) is
+	set_parent_imp (par_imp: like parent_imp)
 		do
 			parent_imp := par_imp
 		end
 
 	parent_imp: EV_ITEM_LIST_IMP [EV_TREE_NODE]
 
-	parent_tree_imp: EV_TREE_IMP is
+	parent_tree_imp: EV_TREE_IMP
 		do
 			if parent_tree /= Void then
 				Result ?= parent_tree.implementation
@@ -321,17 +321,17 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			-- Do nothing
 		end
 
-	ensure_expandable is
+	ensure_expandable
 			-- Ensure `Current' is displayed as expandable.
 		do
 		end
 
-	remove_expandable is
+	remove_expandable
 			-- Ensure `Current' is no longer displayed as expandable.
 		do
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text displayed.
 		do
 			if internal_text = Void then
@@ -343,7 +343,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			text_not_void: Result /= Void
 		end
 
-	tooltip: STRING_32 is
+	tooltip: STRING_32
 			-- Tooltip if any.
 		do
 			if internal_tooltip = Void then
@@ -355,13 +355,13 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			tooltip_not_void: Result /= Void
 		end
 
-	remove_internal_text is
+	remove_internal_text
 			-- Make `internal_text' Void
 		do
 			internal_text := Void
 		end
 
-	set_internal_text (a_text: STRING_GENERAL) is
+	set_internal_text (a_text: STRING_GENERAL)
 			-- Set `internal_text' to `a_text'
 		do
 			internal_text := a_text
@@ -373,19 +373,19 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	internal_tooltip: STRING_32
 		-- Internal representation of `tooltip'.
 
-	set_tooltip (a_text: STRING_GENERAL) is
+	set_tooltip (a_text: STRING_GENERAL)
 			-- Set `a_text' to `tooltip'.
 		do
 			internal_tooltip := a_text
 		end
 
-	remove_tooltip is
+	remove_tooltip
 			-- Remove text of `tooltip'.
 		do
 			internal_tooltip := ""
 		end
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set the pixmap for 'Current'.
 		local
 			ret: INTEGER
@@ -400,7 +400,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	pix_width, pix_height: INTEGER
 			-- Height and width of pixmap in Tree.
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove the pixmap for `Current'
 		local
 			par_tree: EV_TREE_IMP
@@ -411,12 +411,12 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			end
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap displayed in 'Current' if any.
 		do
 		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_TREE_NODE_IMP
@@ -436,7 +436,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			--item_imp.set_item_id (id)
 		end
 
-	remove_i_th (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER)
 			-- Remove item at `a_position'
 		do
 		end
@@ -446,14 +446,14 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 feature {NONE} -- Redundant implementation
 
-	real_pointed_target: EV_PICK_AND_DROPABLE is
+	real_pointed_target: EV_PICK_AND_DROPABLE
 		do
 			check do_not_call: False end
 		end
 
 feature {NONE} -- Implementation
 
-	dispose is
+	dispose
 			-- Clean up
 		do
 		end
@@ -462,7 +462,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_NODE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_TREE_NODE_IMP
 

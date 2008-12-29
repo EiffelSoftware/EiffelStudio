@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents windows shared memory"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialisation
 	
-	make_from_handle (a_handle: POINTER) is
+	make_from_handle (a_handle: POINTER)
 			-- Set `handle' with `a_handle'.
 			-- Since `item' is shared, it does not need
 			-- to be freed.
@@ -36,14 +36,14 @@ feature -- Access
 			
 feature -- Status report
 
-	size: INTEGER is
+	size: INTEGER
 		do
 			Result := global_size (handle)
 		end
 	
 feature -- Element change
 
-	lock is
+	lock
 			-- Locks the memory and returns a pointer to the actual data
 		do
 			item := global_lock (handle)
@@ -54,7 +54,7 @@ feature -- Element change
 			end
 		end
 
-	unlock is
+	unlock
 			-- Unlocks the memory
 		local
 			b_result: BOOLEAN
@@ -65,7 +65,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	destroy_item is
+	destroy_item
 			-- Do nothing, because we have not created the shared
 			-- memory.
 		local
@@ -79,49 +79,49 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	global_lock (a_handle: POINTER): POINTER is
+	global_lock (a_handle: POINTER): POINTER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"GlobalLock"
 		end
 
-	global_unlock (a_handle: POINTER): BOOLEAN is
+	global_unlock (a_handle: POINTER): BOOLEAN
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"GlobalUnlock"
 		end
 
-	global_size (a_handle: POINTER): INTEGER is
+	global_size (a_handle: POINTER): INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"GlobalSize"
 		end
 
-	global_free (a_handle: POINTER): POINTER is
+	global_free (a_handle: POINTER): POINTER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"GlobalFree"
 		end
 
-	global_alloc (flags, bytes: INTEGER): POINTER is
+	global_alloc (flags, bytes: INTEGER): POINTER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"GlobalAlloc"
 		end
 
-	gmem_moveable: INTEGER is
+	gmem_moveable: INTEGER
 		external
 			"C [macro %"windows.h%"]"
 		alias
 			"GMEM_MOVEABLE"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

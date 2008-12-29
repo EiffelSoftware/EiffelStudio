@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -39,14 +39,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a menu.
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_new)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			list_widget := {EV_GTK_EXTERNALS}.gtk_menu_new
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	show is
+	show
 			-- Pop up on the current pointer position.
 		local
 			pc: EV_COORDINATE
@@ -76,7 +76,7 @@ feature -- Basic operations
 			show_at (Void, pc.x + bw, pc.y + bw)
 		end
 
-	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
+	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER)
 			-- Pop up on `a_x', `a_y' relative to the top-left corner
 			-- of `a_widget'.
 		local
@@ -104,7 +104,7 @@ feature -- Basic operations
 
 feature {NONE} -- Externals
 
-	frozen c_gtk_menu_popup (a_menu: POINTER; a_x, a_y, a_button: INTEGER; a_event_time: NATURAL_32) is
+	frozen c_gtk_menu_popup (a_menu: POINTER; a_x, a_y, a_button: INTEGER; a_event_time: NATURAL_32)
 		external
 			"C inline use %"ev_c_util.h%""
 		alias
@@ -120,7 +120,7 @@ feature {NONE} -- Externals
 
 feature {EV_ANY_I} -- Implementation
 
-	on_activate is
+	on_activate
 			-- `Current' has been activated.
 		local
 			p_imp: EV_MENU_ITEM_LIST_IMP
@@ -144,14 +144,14 @@ feature {NONE} -- Implementation
 	list_widget: POINTER
 		-- Pointer to the GtkMenuShell used for holding the items of `Current'.
 
-	destroy is
+	destroy
 			-- Destroy the menu
 		do
 			interface.wipe_out
 			Precursor {EV_MENU_ITEM_IMP}
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

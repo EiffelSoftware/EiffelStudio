@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision tree item. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_TREE_ITEM_IMP
 

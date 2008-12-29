@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Values of date"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,25 +18,25 @@ inherit
 
 feature -- Access
 
-	day: INTEGER is
+	day: INTEGER
 			-- Day of the current object
 		do
 			Result := ordered_compact_date & day_mask
 		end
 
-	month: INTEGER is
+	month: INTEGER
 			-- Month of the current object
 		do
 			Result := (ordered_compact_date & month_mask) |>> month_shift
 		end
 
-	year: INTEGER is
+	year: INTEGER
 			-- Year of the current object
 		do
 			Result := ((ordered_compact_date & year_mask) |>> year_shift) & 0x0000FFFF
 		end
 
-	compact_date: INTEGER is
+	compact_date: INTEGER
 			-- Day, month and year coded.
 		obsolete
 			"Use `ordered_compact_date' instead. But be careful in your update %
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_date (y, m, d: INTEGER) is
+	set_date (y, m, d: INTEGER)
 			-- Set `year' with `y', `month' with `m' and `day' with `d'.
 		local
 			l_date: like ordered_compact_date
@@ -69,7 +69,7 @@ feature -- Element change
 			ordered_compact_date := l_date
 		end
 
-	set_day (d: INTEGER) is
+	set_day (d: INTEGER)
 			-- Set `day' to `d'.
 		local
 			l_date: like ordered_compact_date
@@ -80,7 +80,7 @@ feature -- Element change
 			ordered_compact_date := l_date
 		end
 
-	set_month (m: INTEGER) is
+	set_month (m: INTEGER)
 			-- Set `month' to `m'.
 		local
 			l_date: like ordered_compact_date
@@ -91,7 +91,7 @@ feature -- Element change
 			ordered_compact_date := l_date
 		end
 
-	set_year (y: INTEGER) is
+	set_year (y: INTEGER)
 			-- Set `year' to `y'.
 		local
 			l_date: like ordered_compact_date
@@ -102,7 +102,7 @@ feature -- Element change
 			ordered_compact_date := l_date
 		end
 
-	set_internal_compact_date (a_compact_date: like compact_date) is
+	set_internal_compact_date (a_compact_date: like compact_date)
 			-- Set `a_compact_date' to `compact_date'.
 		obsolete
 			"Use `ordered_compact_date' instead. But be careful in your update %
@@ -114,7 +114,7 @@ feature -- Element change
 			compact_date_set: year | (month |<< 16) | (day |<< 24) = a_compact_date
 		end
 
-	set_internal_ordered_compact_date (a_ordered_compact_date: like ordered_compact_date) is
+	set_internal_ordered_compact_date (a_ordered_compact_date: like ordered_compact_date)
 			-- Set `a_ordered_compact_date' to `ordered_compact_date'.
 		do
 			ordered_compact_date := a_ordered_compact_date
@@ -124,7 +124,7 @@ feature -- Element change
 
 feature -- Correction
 
-	correct_mismatch is
+	correct_mismatch
 			-- Attempt to correct object mismatch using `mismatch_information'.
 		local
 			l_compact_date: INTEGER_REF
@@ -143,20 +143,20 @@ feature -- Correction
 
 feature {NONE} -- Implementation
 
-	day_mask: INTEGER is 0x000000FF
-	month_mask: INTEGER is 0x0000FF00
-	year_mask: INTEGER is 0xFFFF0000
+	day_mask: INTEGER = 0x000000FF
+	month_mask: INTEGER = 0x0000FF00
+	year_mask: INTEGER = 0xFFFF0000
 			-- Mask used to extract/set `year', `month' and `day'.
 
-	year_shift: INTEGER is 16
-	month_shift: INTEGER is 8
-	day_shift: INTEGER is 0
+	year_shift: INTEGER = 16
+	month_shift: INTEGER = 8
+	day_shift: INTEGER = 0
 			-- Shift needed to extract/set `year', `month' and `day'.
 
-	compact_date_attribute_name: STRING is "compact_date"
+	compact_date_attribute_name: STRING = "compact_date"
 			-- Name of `compacte_date' attribute in 5.3 and older version.
 
-	set_private_internal_compact_date (a_compact_date: like compact_date) is
+	set_private_internal_compact_date (a_compact_date: like compact_date)
 			-- Set `a_compact_date' to `compact_date'.
 		do
 			set_date (
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			compact_date_set: year | (month |<< 16) | (day |<< 24) = a_compact_date
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

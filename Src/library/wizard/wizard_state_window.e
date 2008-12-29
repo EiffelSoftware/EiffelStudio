@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Sub-Window which displays user entries needed in order to proceed"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_info: like wizard_information) is
+	make (an_info: like wizard_information)
 			-- Create current object with information
 			-- relative to current state 'an_info'.
 			-- Should be redefined when needed.
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	current_help_context: WIZARD_HELP_CONTEXT is
+	current_help_context: WIZARD_HELP_CONTEXT
 			-- Help context for this window
 		deferred
 		end
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	clean_screen is
+	clean_screen
 			-- Clean Current screen, in order to display only
 			-- the current sub-window.
 		do
@@ -48,7 +48,7 @@ feature -- Basic Operations
 			done: main_box.count=0
 		end
 
-	display is
+	display
 			-- Display Current
 		require
 			clean_screen: main_box.count=0
@@ -57,7 +57,7 @@ feature -- Basic Operations
 			at_least_one_entry_asked_to_the_user: main_box.count>0
 		end
 
-	display_state_text is
+	display_state_text
 			-- Display message text relative to current state.
 		require
 			texts_exists: title /= Void and message /= Void
@@ -66,7 +66,7 @@ feature -- Basic Operations
 			texts_written: title.text /= Void
 		end
 
-	display_pixmap is
+	display_pixmap
 			-- Draw pixmap
 		local
 			fi: FILE_NAME
@@ -87,7 +87,7 @@ feature -- Basic Operations
 			end
 		end
 
-	proceed_with_current_info is
+	proceed_with_current_info
 			-- Process user entries, and
 			-- perform actions accordingly.
 			-- This is executed when user press 'Next'.
@@ -97,7 +97,7 @@ feature -- Basic Operations
 			entries_processed: not entries_changed
 		end
 
-	update_state_information is
+	update_state_information
 			-- Check User entries.
 		require
 			user_types_something: entries_changed
@@ -107,20 +107,20 @@ feature -- Basic Operations
 			read_the_entries: entries_checked
 		end
 
-	cancel is
+	cancel
 			-- Action performed by Current when the user
 			-- exits the wizard ( he presses "Cancel") .
 		do
 		end
 
-	build is
+	build
 			-- Build widgets
 		deferred
 		ensure
 			main_box_has_at_least_one_element: main_box.count > 0
 		end
 
-	display_help is
+	display_help
 			-- Show contextual help.
 		local
 			hc: WIZARD_HELP_CONTEXT
@@ -131,7 +131,7 @@ feature -- Basic Operations
 			end
 		end
 
-	create_help_context (args: TUPLE): WIZARD_HELP_CONTEXT is
+	create_help_context (args: TUPLE): WIZARD_HELP_CONTEXT
 			-- Create help context
 		do
 			create Result.make (Help_filename)
@@ -141,7 +141,7 @@ feature -- Basic Operations
 
 feature -- Settings
 
-	set_updatable_entries (a_table: ARRAY [ACTION_SEQUENCE [TUPLE[]]]) is
+	set_updatable_entries (a_table: ARRAY [ACTION_SEQUENCE [TUPLE[]]])
 			-- Set the actions which imply a change
 			-- in the user entries, so that we know that going forward
 			-- will be done by re-computed the data.
@@ -159,7 +159,7 @@ feature -- Settings
 			end
 		end
 
-	change_entries is
+	change_entries
 			-- The user clicked on the page, which
 			-- implies state_information re-computation.
 		do
@@ -168,7 +168,7 @@ feature -- Settings
 			entries_changed: entries_changed
 		end
 
-	set_help_filename (a_filename: like help_filename) is
+	set_help_filename (a_filename: like help_filename)
 			-- Set `help_filename' with `a_filename'.
 		require
 			non_void_filename: a_filename /= Void
@@ -187,7 +187,7 @@ feature -- Access
 			-- Did the user entries changed since last time ?
 			-- This boolean is used in order to do a smart "next".
 
-	pixmap_location: STRING is
+	pixmap_location: STRING
 			-- Path in which can be found the pixmap associated with
 			-- the current state.
 		deferred
@@ -204,18 +204,18 @@ feature -- Access
 	subtitle: EV_LABEL
 			-- Page subtitle
 
-	is_final_state: BOOLEAN is
+	is_final_state: BOOLEAN
 		do
 		end
 
 feature -- Tools
 
-	string_cleaner: STRING_CLEANER is
+	string_cleaner: STRING_CLEANER
 		once
 			create Result.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

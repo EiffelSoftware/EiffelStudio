@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control which combines a list box and an edit control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Make a combo box.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	i_th_text (i: INTEGER): STRING_32 is
+	i_th_text (i: INTEGER): STRING_32
 			-- Text at the zero-based index `i'
 		require
 			exists: exists
@@ -58,7 +58,7 @@ feature -- Access
 			result_exists: Result /= Void
 		end
 
-	i_th_text_length (i: INTEGER): INTEGER is
+	i_th_text_length (i: INTEGER): INTEGER
 			-- Length text at the zero-based index `i'
 		require
 			exists: exists
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	find_string (index: INTEGER; a_string: STRING_GENERAL): INTEGER is
+	find_string (index: INTEGER; a_string: STRING_GENERAL): INTEGER
 			-- Find the first string that contains the
 			-- prefix `a_string'. `index' specifies the
 			-- zero-based index of the item before the first
@@ -92,7 +92,7 @@ feature -- Basic operations
 				Cb_findstring, to_wparam (index), a_wel_string.item)
 		end
 
-	find_string_exact (index: INTEGER; a_string: STRING_GENERAL): INTEGER is
+	find_string_exact (index: INTEGER; a_string: STRING_GENERAL): INTEGER
 			-- Find the first string that matches `a_string'.
 			-- `index' specifies the zero-based index of the
 			-- item before the first item to be searched.
@@ -112,7 +112,7 @@ feature -- Basic operations
 
 feature -- Element change
 
-	add_string (a_string: STRING_GENERAL) is
+	add_string (a_string: STRING_GENERAL)
 			-- Add `a_string' in the combo box.
 		require
 			exists: exists
@@ -126,7 +126,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	insert_string_at (a_string: STRING_GENERAL; index: INTEGER) is
+	insert_string_at (a_string: STRING_GENERAL; index: INTEGER)
 			-- Add `a_string' at the zero-based `index'.
 		require
 			exists: exists
@@ -142,7 +142,7 @@ feature -- Element change
 			new_count: count = old count + 1
 		end
 
-	delete_string (index: INTEGER) is
+	delete_string (index: INTEGER)
 			-- Delete the item at the zero-based `index'.
 		require
 			exists: exists
@@ -154,7 +154,7 @@ feature -- Element change
 			new_count: count = old count - 1
 		end
 
-	add_files (attribut: INTEGER; files: STRING_GENERAL) is
+	add_files (attribut: INTEGER; files: STRING_GENERAL)
 			-- Add `files' to the combo box. `files' may contain
 			-- wildcards (?*). See class WEL_DDL_CONSTANTS for
 			-- `attribut' values.
@@ -168,7 +168,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Cb_dir, to_wparam (attribut), a_wel_string.item)
 		end
 
-	reset_content is
+	reset_content
 			-- Reset the content of the list.
 		require
 			exists: exists
@@ -180,7 +180,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	select_item (index: INTEGER) is
+	select_item (index: INTEGER)
 			-- Select item at the zero-based `index'.
 		require
 			exists: exists
@@ -192,7 +192,7 @@ feature -- Status setting
 			selected_item: selected and then selected_item = index
 		end
 
-	unselect is
+	unselect
 			-- Clear the selection.
 		require
 			exists: exists
@@ -204,12 +204,12 @@ feature -- Status setting
 
 feature -- Status report
 
-	get_text_limit: INTEGER is
+	get_text_limit: INTEGER
 			-- Return the maximum text length.
 		do
 		end
 
-	selected: BOOLEAN is
+	selected: BOOLEAN
 			-- Is an item selected?
 		require
 			exists: exists
@@ -218,7 +218,7 @@ feature -- Status report
 				Cb_getcursel, to_wparam (0), to_lparam (0)) /= Cb_err
 		end
 
-	selected_item: INTEGER is
+	selected_item: INTEGER
 			-- Zero-based index of the selected item
 		require
 			exists: exists
@@ -231,7 +231,7 @@ feature -- Status report
 			result_small_enough: Result < count
 		end
 
-	selected_string: STRING_32 is
+	selected_string: STRING_32
 			-- String currently selected
 		require
 			exists: exists
@@ -242,7 +242,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	dropped_rect: WEL_RECT is
+	dropped_rect: WEL_RECT
 			-- Rectangle of the drop down list box
 		require
 			exists: exists
@@ -253,13 +253,13 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Text length
 		do
 			Result := cwin_get_window_text_length (item)
 		end
 
-	top_index: INTEGER is
+	top_index: INTEGER
 			-- Zero-based index of the first visible item in the list
 			-- box portion of a combo box.
 			-- Initially, the item with index 0 is at the top of the
@@ -271,7 +271,7 @@ feature -- Status report
 			operation_successful: Result /= Cb_err
 		end
 
-	list_item_height: INTEGER is
+	list_item_height: INTEGER
 			-- height of list items in a combo box
 		do
 			Result := {WEL_API}.send_message_result_integer (item, Cb_getitemheight, to_wparam (0), to_lparam (0))
@@ -279,7 +279,7 @@ feature -- Status report
 			operation_successful: Result /= Cb_err
 		end
 
-	selection_field_height: INTEGER is
+	selection_field_height: INTEGER
 			-- height of the selection field in a combo box
 		do
 			Result := {WEL_API}.send_message_result_integer (item, Cb_getitemheight, to_wparam (-1), to_lparam (0))
@@ -289,7 +289,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of lines
 		require
 			exists: exists
@@ -301,28 +301,28 @@ feature -- Measurement
 
 feature -- Notifications
 
-	on_cbn_closeup is
+	on_cbn_closeup
 			-- The combo box has been closed.
 		require
 			exists: exists
 		do
 		end
 
-	on_cbn_dblclk is
+	on_cbn_dblclk
 			-- The user double-clicks a string in the list box.
 		require
 			exists: exists
 		do
 		end
 
-	on_cbn_dropdown is
+	on_cbn_dropdown
 			-- The list box is about to be made visible.
 		require
 			exists: exists
 		do
 		end
 
-	on_cbn_editchange is
+	on_cbn_editchange
 			-- The user has taken an action that may have altered
 			-- the text in the edit control portion.
 		require
@@ -330,7 +330,7 @@ feature -- Notifications
 		do
 		end
 
-	on_cbn_editupdate is
+	on_cbn_editupdate
 			-- The edit control portion is about to
 			-- display altered text.
 		require
@@ -338,7 +338,7 @@ feature -- Notifications
 		do
 		end
 
-	on_cbn_errspace is
+	on_cbn_errspace
 			-- The combo box cannot allocate enough memory to
 			-- meet a specific request.
 		require
@@ -346,21 +346,21 @@ feature -- Notifications
 		do
 		end
 
-	on_cbn_killfocus is
+	on_cbn_killfocus
 			-- The combo box loses the keyboard focus.
 		require
 			exists: exists
 		do
 		end
 
-	on_cbn_selchange is
+	on_cbn_selchange
 			-- The selection is about to be changed.
 		require
 			exists: exists
 		do
 		end
 
-	on_cbn_selendcancel is
+	on_cbn_selendcancel
 			-- The user selects an item, but then selects another
 			-- control or closes the dialog box.
 		require
@@ -368,7 +368,7 @@ feature -- Notifications
 		do
 		end
 
-	on_cbn_selendok is
+	on_cbn_selendok
 			-- The user selects a list item, or selects
 			-- an item an then closes the list.
 		require
@@ -376,7 +376,7 @@ feature -- Notifications
 		do
 		end
 
-	on_cbn_setfocus is
+	on_cbn_setfocus
 			-- The combo box receives the keyboard focus.
 		require
 			exists: exists
@@ -385,7 +385,7 @@ feature -- Notifications
 
 feature {NONE} -- Implementation
 
-	process_notification (notification_code: INTEGER) is
+	process_notification (notification_code: INTEGER)
 		do
 			if notification_code = Cbn_closeup then
 				on_cbn_closeup
@@ -414,13 +414,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := "ComboBox"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

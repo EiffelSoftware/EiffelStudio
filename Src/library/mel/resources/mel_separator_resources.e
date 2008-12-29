@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Separator resources."
@@ -12,7 +12,7 @@ class
 
 feature  -- Implementation
 
-	XmNmargin: POINTER is
+	XmNmargin: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Separator.h>] : EIF_POINTER"
@@ -21,7 +21,7 @@ feature  -- Implementation
 		end;
 
 
-	XmNseparatorType: POINTER is
+	XmNseparatorType: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Separator.h>] : EIF_POINTER"
@@ -29,7 +29,7 @@ feature  -- Implementation
 			"XmNseparatorType"
 		end;
 
-	XmNorientation: POINTER is
+	XmNorientation: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Separator.h>] : EIF_POINTER"
@@ -37,7 +37,7 @@ feature  -- Implementation
 			"XmNorientation"
 		end;
 
-	XmVERTICAL: INTEGER is
+	XmVERTICAL: INTEGER
 			-- Motif constant value
 		external
 			 "C [macro <Xm/Separator.h>] : EIF_INTEGER"
@@ -45,7 +45,7 @@ feature  -- Implementation
 			"XmVERTICAL"
 		end;
 
-	XmHORIZONTAL: INTEGER is
+	XmHORIZONTAL: INTEGER
 			-- Motif constant value
 		external
 			 "C [macro <Xm/Separator.h>] : EIF_INTEGER"
@@ -53,7 +53,7 @@ feature  -- Implementation
 			"XmHORIZONTAL"
 		end;
 
-	XmNO_LINE: INTEGER is
+	XmNO_LINE: INTEGER
 			-- Motif constant value
 		external
 			 "C [macro <Xm/Separator.h>] : EIF_INTEGER"
@@ -61,7 +61,7 @@ feature  -- Implementation
 			"XmNO_LINE"
 		end;
 
-	XmSINGLE_LINE: INTEGER is
+	XmSINGLE_LINE: INTEGER
 			-- Motif constant value
 		external
 			 "C [macro <Xm/Separator.h>] : EIF_INTEGER"
@@ -69,7 +69,7 @@ feature  -- Implementation
 			"XmSINGLE_LINE"
 		end;
 
-	XmDOUBLE_LINE: INTEGER is
+	XmDOUBLE_LINE: INTEGER
 			-- Motif constant value
 		external
 			 "C [macro <Xm/Separator.h>] : EIF_INTEGER"
@@ -77,7 +77,7 @@ feature  -- Implementation
 			"XmDOUBLE_LINE"
 		end;
 
-	XmSINGLE_DASHED_LINE: INTEGER is
+	XmSINGLE_DASHED_LINE: INTEGER
 			-- Motif constant value
 		external
 			 "C [macro <Xm/Separator.h>] : EIF_INTEGER"
@@ -85,7 +85,7 @@ feature  -- Implementation
 			"XmSINGLE_DASHED_LINE"
 		end;
 
-	XmDOUBLE_DASHED_LINE: INTEGER is
+	XmDOUBLE_DASHED_LINE: INTEGER
 			-- Motif constant value
 		external
 			 "C [macro <Xm/Separator.h>] : EIF_INTEGER"
@@ -93,7 +93,7 @@ feature  -- Implementation
 			"XmDOUBLE_DASHED_LINE"
 		end;
 
-	XmSHADOW_ETCHED_IN: INTEGER is
+	XmSHADOW_ETCHED_IN: INTEGER
 			-- Motif constant value
 		external
 			 "C [macro <Xm/Separator.h>] : EIF_INTEGER"
@@ -101,7 +101,7 @@ feature  -- Implementation
 			"XmSHADOW_ETCHED_IN"
 		end;
 
-	XmSHADOW_ETCHED_OUT: INTEGER is
+	XmSHADOW_ETCHED_OUT: INTEGER
 			-- Motif constant value
 		external
 			 "C [macro <Xm/Separator.h>] : EIF_INTEGER"
@@ -109,7 +109,7 @@ feature  -- Implementation
 			"XmSHADOW_ETCHED_OUT"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

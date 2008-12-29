@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about wizards."
 	date: "$Date$"
 	revision: "$Revision$"

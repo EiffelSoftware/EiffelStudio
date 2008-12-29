@@ -1,4 +1,4 @@
-indexing
+note
 	
 	description: "This class can be used as a%
 		%scrollable_element in scrollable_list."
@@ -28,13 +28,13 @@ create
 
 feature -- Access
 
-	value: STRING is
+	value: STRING
 			-- String to appear in scrollable list box
 		do
 			Result := Current
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

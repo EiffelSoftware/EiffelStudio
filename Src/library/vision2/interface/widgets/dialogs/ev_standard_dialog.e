@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision standard dialog."
 	legal: "See notice at end of class."
@@ -30,7 +30,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_title (a_title: STRING_GENERAL) is
+	make_with_title (a_title: STRING_GENERAL)
 			-- Initialize `Current' and assign `a_title' to `title'.
 		require
 			a_title_not_void: a_title /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Title of `Current' displayed in title bar.
 		require
 			not_destroyed: not is_destroyed
@@ -56,7 +56,7 @@ feature -- Access
 			cloned: Result /= implementation.title
 		end
 
-	blocking_window: EV_WINDOW is
+	blocking_window: EV_WINDOW
 			-- Window `Current' is a transient for.
 		require
 			not_destroyed: not is_destroyed
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Status report
 
-	selected_button: STRING_32 is
+	selected_button: STRING_32
 			-- Label of last clicked button.
 		require
 			not_destroyed: not is_destroyed
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show and wait until `Current' is closed.
 			-- `Current' is shown modal with respect to `a_window'.
 		require
@@ -99,7 +99,7 @@ feature -- Status setting
 				not is_destroyed implies blocking_window = Void
 		end
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Assign `a_title' to `title'.
 		require
 			not_destroyed: not is_destroyed
@@ -119,7 +119,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 invariant
 	title_not_void: is_usable implies title /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

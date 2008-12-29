@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			EiffelVision tree.
@@ -47,7 +47,7 @@ create
 
 feature -- Access
 
-	selected_item: EV_TREE_NODE is
+	selected_item: EV_TREE_NODE
 			-- Currently selected item at any level
 			-- within tree hierarchy.
 		require
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Status report
 
-	ensure_item_visible (an_item: EV_TREE_NODE) is
+	ensure_item_visible (an_item: EV_TREE_NODE)
 			-- Ensure `an_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		require
@@ -71,7 +71,7 @@ feature -- Status report
 			implementation.ensure_item_visible (an_item)
 		end
 
-	selected: BOOLEAN is
+	selected: BOOLEAN
 			-- Is an item selected in `Current' ?
 		obsolete "Use selected_item /= Void instead."
 		require
@@ -82,7 +82,7 @@ feature -- Status report
 
 feature -- Contract support
 
-	is_parent_recursive (a_tree_node: EV_TREE_NODE): BOOLEAN is
+	is_parent_recursive (a_tree_node: EV_TREE_NODE): BOOLEAN
 			-- Is `a_tree_node' a parent of `Current'?
 		do
 				-- As we cannot insert a EV_TREE into a EV_TREE_NODE,
@@ -92,7 +92,7 @@ feature -- Contract support
 		
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_TREE_NODE_LIST}
@@ -105,13 +105,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TREE_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "HITRESULT enumeration. From <ocidl.h>"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,16 +11,16 @@ class
 
 feature -- Access 
 
-	Hitresult_outside: INTEGER is  0
+	Hitresult_outside: INTEGER =  0
 	
-	Hitresult_transparent: INTEGER is  1
+	Hitresult_transparent: INTEGER =  1
 	
-	Hitresult_close: INTEGER is  2
+	Hitresult_close: INTEGER =  2
 	
-	Hitresult_hit: INTEGER is  3;
+	Hitresult_hit: INTEGER =  3;
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision gauge. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,21 +24,21 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the horizontal scroll bar.
 		do
 			base_make (an_interface)
 			adjustment := {EV_GTK_EXTERNALS}.gtk_adjustment_new (0.0, 0.0, 100.0, 1.0, 10.0, 0.0)
 		end
 
-	initialize is
+	initialize
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			ev_gauge_imp_initialize
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, True)
 		end
 
-	ev_gauge_imp_initialize is
+	ev_gauge_imp_initialize
 			-- Initialize without calling precursor.
 			--| Separate function so it can be called from
 			--| widgets that inherit twice from EV_WIDGET_IMP,
@@ -57,25 +57,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: INTEGER is
+	value: INTEGER
 			-- Current value of the gauge.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (adjustment).rounded
 		end
 
-	step: INTEGER is
+	step: INTEGER
 			-- Value by which `value' is increased after `step_forward'.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_step_increment (adjustment).rounded
 		end
 
-	leap: INTEGER is
+	leap: INTEGER
 			-- Value by which `value' is increased after `leap_forward'.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_page_increment (adjustment).rounded
 		end
 
-	page_size: INTEGER is
+	page_size: INTEGER
 			-- Size of slider.
 			--| We define it here to add to the internal maximum.
 			--| Value should be zero for ranges but not for scrollbars.
@@ -85,25 +85,25 @@ feature -- Access
 
 feature -- Status setting
 
-	step_forward is
+	step_forward
 			-- Increment `value' by `step' if possible.
 		do
 			set_value (value_range.upper.min (value + step))
 		end
 
-	step_backward is
+	step_backward
 			-- Decrement `value' by `step' if possible.
 		do
 			set_value (value_range.lower.max (value - step))
 		end
 
-	leap_forward is
+	leap_forward
 			-- Increment `value' by `leap' if possible.
 		do
 			set_value (value_range.upper.min (value + leap))
 		end
 
-	leap_backward is
+	leap_backward
 			-- Decrement `value' by `leap' if possible.
 		do
 			set_value (value_range.lower.max (value - leap))
@@ -111,7 +111,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_value (a_value: INTEGER) is
+	set_value (a_value: INTEGER)
 			-- Set `value' to `a_value'.
 		do
 			internal_set_value (a_value)
@@ -123,7 +123,7 @@ feature -- Element change
 			range_same: value_range.is_equal (old value_range)
 		end
 
-	set_step (a_step: INTEGER) is
+	set_step (a_step: INTEGER)
 			-- Set `step' to `a_step'.
 		do
 			if step /= a_step then
@@ -136,7 +136,7 @@ feature -- Element change
 			range_same: value_range.is_equal (old value_range)
 		end
 
-	set_leap (a_leap: INTEGER) is
+	set_leap (a_leap: INTEGER)
 			-- Set `leap' to `a_leap'.
 		do
 			if leap /= a_leap then
@@ -146,7 +146,7 @@ feature -- Element change
 			end
 		end
 
-	set_range is
+	set_range
 			-- Update widget range from `value_range'
 		local
 			temp_value: INTEGER
@@ -165,7 +165,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	internal_set_upper is
+	internal_set_upper
 			-- Set the upper value of the adjustment struct
 		do
 			{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 	old_value: INTEGER
 			-- Value of `value' when last "value-changed" signal occurred.
 
-	internal_set_value (a_value: INTEGER) is
+	internal_set_value (a_value: INTEGER)
 			-- Set `value' to `a_value'.
 		do
 			if value /= a_value then
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	value_changed_handler is
+	value_changed_handler
 			-- Called when `value' changes.
 		do
 			if change_actions_internal /= Void then
@@ -203,7 +203,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 invariant
 	adjustment_not_void: adjustment /= NULL
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

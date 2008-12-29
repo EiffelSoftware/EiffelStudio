@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Sequences of continuous segments"
 	legal: "See notice at end of class.";
@@ -87,7 +87,7 @@ create
 
 feature -- Initialization	 
 
-	make  is
+	make
 			-- Create a world as a figure with f as a figure 
 			-- for visual modification notification
 		do
@@ -108,7 +108,7 @@ feature -- Access
 
 feature -- Duplication
 
-	duplicate (n: INTEGER): like Current is
+	duplicate (n: INTEGER): like Current
 			-- Copy of the sub-list beginning at cursor position
 			-- and comprising min (`n', count-position+1) items
 		require else
@@ -122,7 +122,7 @@ feature -- Duplication
 
 feature  -- Element change
 
-	add (v: like first) is
+	add (v: like first)
 			-- Append `v' to list.
 		do
 			v.attach_drawing_imp (drawing);
@@ -130,7 +130,7 @@ feature  -- Element change
 			set_conf_modified
 		end;
 
-	put_left (v: like first) is
+	put_left (v: like first)
 			-- Put item `v' to the left of cursor position.
 			-- Do not move cursor.
 		do
@@ -139,7 +139,7 @@ feature  -- Element change
 			set_conf_modified
 		end;
 
-	put_right (v: like first) is
+	put_right (v: like first)
 			-- Put item `v' to the right of cursor position.
 			-- Do not move cursor.
 		do
@@ -148,7 +148,7 @@ feature  -- Element change
 			set_conf_modified
 		end;
 
-	attach_drawing (a_drawing: DRAWING) is
+	attach_drawing (a_drawing: DRAWING)
 			-- Attach a drawing to the figure.
 		local
 			keep_cursor: CURSOR;
@@ -167,7 +167,7 @@ feature  -- Element change
 			set_conf_modified_with (surround_box)
 		end;
 
-	merge_left (other: like Current) is
+	merge_left (other: like Current)
 			-- Merge `other' into the current list before
 			-- cursor position.
 			-- Do not move cursor.
@@ -185,7 +185,7 @@ feature  -- Element change
 			set_conf_modified
 		end;
 
-	merge_right (other: like Current) is
+	merge_right (other: like Current)
 			-- Merge `other' into the current list after
 			-- cursor position.
 			-- Do not move cursor.
@@ -203,7 +203,7 @@ feature  -- Element change
 			set_conf_modified
 		end;
 
-	put (v: like first) is
+	put (v: like first)
 			-- Put item `v' at cursor position.
 		require else
 			not_off: not off
@@ -213,7 +213,7 @@ feature  -- Element change
 			set_conf_modified
 		end;
 
-	put_i_th (v: like first; i: INTEGER) is
+	put_i_th (v: like first; i: INTEGER)
 			-- Put item `v' at `i'-th position.
 		do
 			v.attach_drawing_imp (drawing);
@@ -221,7 +221,7 @@ feature  -- Element change
 			set_conf_modified
 		end;
 
-	rotate (a: REAL; p: like origin) is
+	rotate (a: REAL; p: like origin)
 			-- Rotate figure by `a' relative to `p'.
 			-- Angle `a' is measured in degrees.
 		require else
@@ -244,7 +244,7 @@ feature  -- Element change
 			set_conf_modified
 		end;
 
-	scale (f: REAL; p: like origin) is
+	scale (f: REAL; p: like origin)
 			-- Scale figure by `f' relative to `p'.
 		require else
 			scale_factor_positive: f > 0.0;
@@ -265,7 +265,7 @@ feature  -- Element change
 			set_conf_modified
 		end;
 
-	self_rotate (a: REAL) is
+	self_rotate (a: REAL)
 			-- Rotate figure by `a' relative to `origin'.
 			-- Angle is measured in degrees.
 		require else
@@ -288,7 +288,7 @@ feature  -- Element change
 			set_conf_modified
 		end;
 
-	self_scale (f: REAL) is
+	self_scale (f: REAL)
 			-- Scale figure by `f' relative to `origin'.
 		require else
 			scale_factor_positive: f > 0.0;
@@ -310,7 +310,7 @@ feature  -- Element change
 		end;
 
 
-	set_origin (p: like origin) is
+	set_origin (p: like origin)
 			-- Set `origin' to `p'.
 		require else
 			p_exists: p /= Void
@@ -320,7 +320,7 @@ feature  -- Element change
 			origin_set: origin = p
 		end;
 
-	translate (v: VECTOR) is
+	translate (v: VECTOR)
 			-- Translate current figure by `v'.
 		require else
 			vector_exists: v /= Void
@@ -340,7 +340,7 @@ feature  -- Element change
 			set_conf_modified
 		end;
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: REAL; px, py: INTEGER)
 			-- Rotate figure by `a' relative to (`px', `py').
 			-- Angle `a' is measured in degrees.
 		require else
@@ -362,7 +362,7 @@ feature  -- Element change
 			set_conf_modified
 		end;
 
-	xyscale (f: REAL; px,py: INTEGER) is
+	xyscale (f: REAL; px,py: INTEGER)
 			-- Scale figure by `f' relative to (`px', `py').
 		require else
 			scale_factor_positive: f > 0.0
@@ -382,7 +382,7 @@ feature  -- Element change
 			set_conf_modified	
 		end;
 
-	xytranslate (vx, vy: INTEGER) is
+	xytranslate (vx, vy: INTEGER)
 			-- Translate by `vx' horizontally and `vy' vertically.
 		local
 			keep_cursor: CURSOR;
@@ -402,7 +402,7 @@ feature  -- Element change
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 		do
 			linked_list_wipe_out;
 			set_conf_modified
@@ -410,7 +410,7 @@ feature -- Removal
 
 feature -- Output
 			
-	draw is
+	draw
 			-- Draw the figure in `drawing'.
 		require else
 			a_drawing_attached: drawing /= Void;
@@ -442,7 +442,7 @@ feature -- Output
 			end
 		end;
 
-	clip_draw (clip: CLIP) is
+	clip_draw (clip: CLIP)
 		do
 			if conf_receive then
 				if conf_modified then
@@ -458,7 +458,7 @@ feature -- Output
 
 feature -- Status report
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the figure superimposable to `other' ?
 		local
 			keep_cursor: CURSOR;
@@ -484,7 +484,7 @@ feature -- Status report
 
 feature {NONE} -- Element change
 
-	set_no_origin is
+	set_no_origin
 			-- Erase definition of `origin'.
 		do
 			origin := Void
@@ -494,7 +494,7 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Updating
 
-	conf_recompute is
+	conf_recompute
 		local
 			keep_cursor: CURSOR;
 		do
@@ -513,7 +513,7 @@ feature {NONE} -- Updating
 			unset_conf_modified
 		end;
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

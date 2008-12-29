@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Container looks like a spliter area which have a gap between childs, but it can't be dragged by end users.
 					It's be used when a zone is minimized.
@@ -44,7 +44,7 @@ inherit
 
 feature {NONE} -- Initlization
 
-	count_except_spliter: INTEGER is
+	count_except_spliter: INTEGER
 			-- Count except `fake_spliter'
 		do
 			Result := count
@@ -53,13 +53,13 @@ feature {NONE} -- Initlization
 			end
 		end
 
-	full_docking: BOOLEAN is
+	full_docking: BOOLEAN
 			-- Redefine
 		do
 			Result := first /= Void and second /= Void
 		end
 
-	initialize	is
+	initialize
 			-- Redefine
 		do
 			Precursor {EV_VERTICAL_BOX}
@@ -72,7 +72,7 @@ feature {NONE} -- Initlization
 	fake_spliter: EV_CELL
 			-- Fake spiter which can't be dragged.
 
-	extend (a_widget: EV_WIDGET) is
+	extend (a_widget: EV_WIDGET)
 			-- Redefine
 		local
 			l_index: INTEGER
@@ -96,7 +96,7 @@ feature {NONE} -- Initlization
 			end
 		end
 
-	first: EV_WIDGET is
+	first: EV_WIDGET
 			-- Redefine
 		do
 			if i_th (1) /= Void then
@@ -109,13 +109,13 @@ feature {NONE} -- Initlization
 	second_was_void: BOOLEAN
 			-- If second is void?
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Redefine
 		do
 			Result := True
 		end
 
-	last: EV_WIDGET is
+	last: EV_WIDGET
 			-- Redefine
 		do
 			if Result = Void and count = 1 then
@@ -129,19 +129,19 @@ feature {NONE} -- Initlization
 			end
 		end
 
-	may_contain (v: EV_WIDGET): BOOLEAN is
+	may_contain (v: EV_WIDGET): BOOLEAN
 			-- Redefine
 		do
 			Result := Precursor {EV_VERTICAL_BOX} (v)
 			Result := Result and count <= 3
 		end
 
-	spliter_width: INTEGER is 4
+	spliter_width: INTEGER = 4
 			-- Fake spliter width.
 
 feature -- Access
 
-	second: EV_WIDGET is
+	second: EV_WIDGET
 			-- Redefine	
 		do
 			if first = Void then
@@ -153,12 +153,12 @@ feature -- Access
 			end
 		end
 
-	minimum_split_position: INTEGER is
+	minimum_split_position: INTEGER
 			-- Redefine
 		do
 		end
 
-	maximum_split_position: INTEGER is
+	maximum_split_position: INTEGER
 			-- Redefine
 			-- This value is useful when executing SD_MULTI_DOCK_AREA.restore_spliter_position.
 		do
@@ -170,7 +170,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_split_position (a_pos: INTEGER) is
+	set_split_position (a_pos: INTEGER)
 			-- Redefine
 		do
 			split_position := a_pos
@@ -178,7 +178,7 @@ feature -- Setting
 			set: split_position = a_pos
 		end
 
-	set_splitter_visible (a_visible: BOOLEAN) is
+	set_splitter_visible (a_visible: BOOLEAN)
 			-- Redefine
 		do
 			if fake_spliter /= Void then
@@ -190,7 +190,7 @@ feature -- Setting
 			end
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

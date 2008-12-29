@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Track Mouse Event (TME) constants for use by %
 		% WEL_TRACK_MOUSE_EVENT."
 	legal: "See notice at end of class."
@@ -11,19 +11,19 @@ class
 
 feature -- Access
 
-	Tme_cancel: INTEGER is -2147483648
+	Tme_cancel: INTEGER = -2147483648
 			-- Declared in Windows as TME_CANCEL
 
-	Tme_hover: INTEGER is 1
+	Tme_hover: INTEGER = 1
 			-- Declared in Windows as TME_HOVER
 
-	Tme_leave: INTEGER is 2
+	Tme_leave: INTEGER = 2
 			-- Declared in Windows as TME_LEAVE
 
-	Tme_query: INTEGER is 1073741824;
+	Tme_query: INTEGER = 1073741824;
 			-- Declared in Windows as TME_QUERY
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

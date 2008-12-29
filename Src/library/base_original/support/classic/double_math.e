@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Basic mathematical operations, double-precision.
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	log_2 (v: DOUBLE): DOUBLE is
+	log_2 (v: DOUBLE): DOUBLE
 			-- Base 2 logarithm of `v'
 		local
 			a: DOUBLE
@@ -27,7 +27,7 @@ feature -- Access
 			Result := log (v) / log (a)
 		end
 
-	cosine (v: DOUBLE): DOUBLE is
+	cosine (v: DOUBLE): DOUBLE
 			-- Trigonometric cosine of radian `v' approximated
 			-- in the range [-pi/4, +pi/4]
 		external
@@ -36,7 +36,7 @@ feature -- Access
 			"cos"
 		end
 
-	arc_cosine (v: DOUBLE): DOUBLE is
+	arc_cosine (v: DOUBLE): DOUBLE
 			-- Trigonometric arccosine of radian `v'
 			-- in the range [0, pi]
 		external
@@ -45,7 +45,7 @@ feature -- Access
 			"acos"
 		end
 
-	sine (v: DOUBLE): DOUBLE is
+	sine (v: DOUBLE): DOUBLE
 			-- Trigonometric sine of radian `v' approximated
 			-- in range [-pi/4, +pi/4]
 		external
@@ -54,7 +54,7 @@ feature -- Access
 			"sin"
 		end
 
-	arc_sine (v: DOUBLE): DOUBLE is
+	arc_sine (v: DOUBLE): DOUBLE
 			-- Trigonometric arcsine of radian `v'
 			-- in the range [-pi/2, +pi/2]
 		external
@@ -63,7 +63,7 @@ feature -- Access
 			"asin"
 		end
 
-	tangent (v: DOUBLE): DOUBLE is
+	tangent (v: DOUBLE): DOUBLE
 			-- Trigonometric tangent of radian `v' approximated
 			-- in range [-pi/4, +pi/4]
 		external
@@ -72,7 +72,7 @@ feature -- Access
 			"tan"
 		end
 
-	arc_tangent (v: DOUBLE): DOUBLE is
+	arc_tangent (v: DOUBLE): DOUBLE
 			-- Trigonometric arctangent of radian `v'
 			-- in the range [-pi/2, +pi/2]
 		external
@@ -81,37 +81,37 @@ feature -- Access
 			"atan"
 		end
 
-	sqrt (v: DOUBLE): DOUBLE is
+	sqrt (v: DOUBLE): DOUBLE
 			-- Square root of `v'
 		external
 			"C signature (double): double use <math.h>"
 		end
 
-	exp (x: DOUBLE): DOUBLE is
+	exp (x: DOUBLE): DOUBLE
 			-- Exponential of `v'.
 		external
 			"C signature (double): double use <math.h>"
 		end
 
-	log (v: DOUBLE): DOUBLE is
+	log (v: DOUBLE): DOUBLE
 			-- Natural logarithm of `v'
 		external
 			"C signature (double): double use <math.h>"
 		end
 
-	log10 (v: DOUBLE): DOUBLE is
+	log10 (v: DOUBLE): DOUBLE
 			-- Base 10 logarithm of `v'
 		external
 			"C signature (double): double use <math.h>"
 		end
 
-	floor (v: DOUBLE): DOUBLE is
+	floor (v: DOUBLE): DOUBLE
 			-- Greatest integral less than or equal to `v'
 		external
 			"C signature (double): double use <math.h>"
 		end
 
-	ceiling (v: DOUBLE): DOUBLE is
+	ceiling (v: DOUBLE): DOUBLE
 			-- Least integral greater than or equal to `v'
 		external
 			"C signature (double): double use <math.h>"
@@ -119,7 +119,7 @@ feature -- Access
 			"ceil"
 		end
 
-	dabs (v: DOUBLE): DOUBLE is
+	dabs (v: DOUBLE): DOUBLE
 			-- Absolute of `v'
 		external
 			"C signature (double): double use <math.h>"
@@ -127,7 +127,7 @@ feature -- Access
 			"fabs"
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

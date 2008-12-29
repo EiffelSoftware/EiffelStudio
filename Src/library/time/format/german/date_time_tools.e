@@ -1,4 +1,4 @@
-indexing
+note
 	description: "German settings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,9 +13,9 @@ inherit
 
 feature 
 
-	name: STRING is "German"
+	name: STRING = "German"
 
-	days_text: ARRAY [STRING] is
+	days_text: ARRAY [STRING]
 		once
 			Result := <<
 				"SON",
@@ -30,7 +30,7 @@ feature
 			Result.compare_objects
 		end
 
-	months_text: ARRAY [STRING] is
+	months_text: ARRAY [STRING]
 		once
 			Result := <<
 				"JAN",
@@ -49,7 +49,7 @@ feature
 			Result.compare_objects
 		end
 
-	long_days_text: ARRAY [STRING] is
+	long_days_text: ARRAY [STRING]
 		once
 			Result := <<
 				"SONNTAG",
@@ -64,7 +64,7 @@ feature
 			Result.compare_objects
 		end
 
-	long_months_text: ARRAY [STRING] is
+	long_months_text: ARRAY [STRING]
 		once
 			Result := <<
 				"JANUAR",
@@ -83,13 +83,13 @@ feature
 			Result.compare_objects
 		end
 
-	date_default_format_string: STRING is "[0]dd/[0]mm/yyyy"
+	date_default_format_string: STRING = "[0]dd/[0]mm/yyyy"
 
-	time_default_format_string: STRING is "[0]hh:[0]mi:[0]ss.ff3"
+	time_default_format_string: STRING = "[0]hh:[0]mi:[0]ss.ff3"
 
-	default_format_string: STRING is "[0]dd/[0]mm/yyyy [0]hh:[0]mi:[0]ss.ff3";
+	default_format_string: STRING = "[0]dd/[0]mm/yyyy [0]hh:[0]mi:[0]ss.ff3";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

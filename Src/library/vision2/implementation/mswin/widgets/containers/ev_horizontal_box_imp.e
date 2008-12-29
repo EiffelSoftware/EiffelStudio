@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		EiffelVision horizontal box. The children stand
 		one beside an other. Mswindows implementation.
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_homogeneous (flag: BOOLEAN) is
+	set_homogeneous (flag: BOOLEAN)
 			-- set `is_homogeneous' to `flag'.
 			-- Recompute widths of children.
 		do
@@ -44,14 +44,14 @@ feature -- Status setting
 			notify_change (Nc_minwidth, Current)
 		end
 
-	set_padding (value: INTEGER) is
+	set_padding (value: INTEGER)
 			-- Make `value' the new spacing of `Current'.
 		do
 			padding := value
 			notify_change (Nc_minwidth, Current)
 		end
 
-	set_border_width (value: INTEGER) is
+	set_border_width (value: INTEGER)
 			-- Make `value' the new border width of `Current'.
 		do
 			border_width := value
@@ -60,19 +60,19 @@ feature -- Status setting
 
 feature {NONE} -- Basic operation
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 		do
 			Precursor {EV_BOX_IMP} (size_type, a_width, a_height)
 			set_children_width (client_width + 2 * border_width, True)
 		end
 
-	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
 			set_children_width (client_width + 2 * border_width, False)
 		end
 
-	set_children_width (a_width: INTEGER; originator: BOOLEAN) is
+	set_children_width (a_width: INTEGER; originator: BOOLEAN)
 			-- Move and resize the children to have them adapted to the
 			-- current width.
 		local
@@ -200,7 +200,7 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Implementation for automatic size compute
 
-	compute_minimum_height is
+	compute_minimum_height
 			-- Recompute the minimum_height of `Current'.
 		local
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation for automatic size compute
 			ev_set_minimum_height (value + 2 * border_width)
 		end
 
-	compute_minimum_width is
+	compute_minimum_width
 			-- Recompute the minimum_width of `Current'.
 		local
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation for automatic size compute
 			end
 		end
 
-	compute_minimum_size is
+	compute_minimum_size
 			-- Recompute both the minimum_width and the minimum_height of
 			-- `Current'.
 		local
@@ -355,7 +355,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Mutex synchronization object, allows threads to access global %
 		%data through critical sections."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create mutex.
 		obsolete
 			"Use make instead"
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			is_set: is_set
 		end
 
-	make is
+	make
 			-- Create mutex.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_set: BOOLEAN is
+	is_set: BOOLEAN
 			-- Is mutex initialized?
 		do
 			Result := (mutex_imp /= Void)
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Status setting
 
-	lock is
+	lock
 			-- Lock mutex, waiting if necessary until that becomes possible.
 		require
 			is_set: is_set
@@ -65,7 +65,7 @@ feature -- Status setting
 			l_lock_succeed := mutex_imp.wait_one
 		end
 
-	try_lock: BOOLEAN is
+	try_lock: BOOLEAN
 			-- Has client been successful in locking mutex without waiting?
 		require
 			is_set: is_set
@@ -73,7 +73,7 @@ feature -- Status setting
 			Result := mutex_imp.wait_one (0, True)
 		end
 
-	unlock is
+	unlock
 			-- Unlock mutex.
 		require
 			is_set: is_set
@@ -81,7 +81,7 @@ feature -- Status setting
 			mutex_imp.release_mutex
 		end
 
-	destroy is
+	destroy
 			-- Destroy mutex.
 		require
 			is_set: is_set
@@ -92,7 +92,7 @@ feature -- Status setting
 
 feature -- Obsolete
 
-	trylock, has_locked: BOOLEAN is
+	trylock, has_locked: BOOLEAN
 			-- Has client been successful in locking mutex without waiting?
 		obsolete
 			"Use try_lock instead"
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstraction for objects whos position can be set."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 		
 feature -- Status setting
 
-	set_x_position (a_x: INTEGER) is
+	set_x_position (a_x: INTEGER)
 			-- Assign `a_x' to `x_position' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -28,7 +28,7 @@ feature -- Status setting
 			x_position_assigned: x_position = a_x
 		end
 
-	set_y_position (a_y: INTEGER) is
+	set_y_position (a_y: INTEGER)
 			-- Assign `a_y' to `y_position' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -38,7 +38,7 @@ feature -- Status setting
 			y_position_assigned: y_position = a_y
 		end
 
-	set_position (a_x, a_y: INTEGER) is
+	set_position (a_x, a_y: INTEGER)
 			-- Assign `a_x' to `x_position' and `a_y' to `y_position' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -49,7 +49,7 @@ feature -- Status setting
 			y_position_assigned: y_position = a_y
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Assign `a_width' to `width' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -60,7 +60,7 @@ feature -- Status setting
 			width_assigned: width = minimum_width or else width = a_width
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Assign `a_height' to `height' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -71,7 +71,7 @@ feature -- Status setting
 			height_assigned: height = minimum_height or else height = a_height
 		end
 
-	set_size (a_width, a_height: INTEGER) is
+	set_size (a_width, a_height: INTEGER)
 			-- Assign `a_width' to `width' and `a_height' to `height' in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -89,7 +89,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_POSITIONABLE_I;
 			-- Responsible for interaction with native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

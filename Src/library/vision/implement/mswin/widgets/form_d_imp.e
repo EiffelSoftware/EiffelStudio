@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -87,7 +87,7 @@ create
 
 feature -- Initialization
 
-	make (a_form_d: FORM_D; oui_parent: COMPOSITE) is
+	make (a_form_d: FORM_D; oui_parent: COMPOSITE)
 			-- Create the form dialog.
 		do
 			create private_attributes
@@ -105,7 +105,7 @@ feature -- Initialization
 			max_height := full_screen_client_area_height
 		end
 
-	initialize is
+	initialize
 			-- Initialize the current form
 		do
 			fraction_base := 100
@@ -119,7 +119,7 @@ feature -- Access
 
 feature -- Status setting
 
-	realize is
+	realize
 			-- Realize the current widget
 		local
 			xpos, ypos: INTEGER
@@ -146,7 +146,7 @@ feature -- Status setting
 			end
 		end
 
-	set_form_height (new_height: INTEGER) is
+	set_form_height (new_height: INTEGER)
 			-- Set height for form to `new_height'
 		do
 			if height /= new_height then
@@ -157,7 +157,7 @@ feature -- Status setting
 			end
 		end
 
-	set_form_width (new_width: INTEGER) is
+	set_form_width (new_width: INTEGER)
 			-- Set height for form to `new_height'
 		do
 			if width /= new_width then
@@ -168,7 +168,7 @@ feature -- Status setting
 			end
 		end
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 			-- Set height to `new_height'.
 		do
 			if private_attributes.height /= new_height then
@@ -182,7 +182,7 @@ feature -- Status setting
 			end
 		end
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set size to `new_width' and `new_height'.
 		do
 			if private_attributes.width /= new_width
@@ -196,7 +196,7 @@ feature -- Status setting
 			end
 		end
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set width to `new_width'.
 		do
 			if private_attributes.width /= new_width then
@@ -210,14 +210,14 @@ feature -- Status setting
 			end
 		end
 
-	show is
+	show
 			-- Show current form dialog and children.
 		do
 			set_enclosing_size
 			Precursor {FORM_IMP}
 		end
 
-	unrealize is
+	unrealize
 		do
 			if insensitive_list /= Void then
 				set_windows_sensitive
@@ -225,13 +225,13 @@ feature -- Status setting
 			Precursor {FORM_IMP}
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Set the class name for WEL.
 		once
 			Result := "EVisionFormDialog"
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Wm_size message
 		do
 			if size_type = size_restored then
@@ -243,13 +243,13 @@ feature -- Status setting
 			end
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Deafult style for a dialog
 		once
 			Result := Ws_overlapped + Ws_dlgframe + Ws_thickframe
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

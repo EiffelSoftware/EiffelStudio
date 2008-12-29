@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access to Java array of booleans. In Java it would %
                  %be declared as 'boolean arr[]'"
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 	
 feature -- Initialization
 
-	make (size: INTEGER) is
+	make (size: INTEGER)
 			-- create a new Java array and an Eiffel accessor object
 			-- Note: Java arrays are indexed from zero
 		require
@@ -32,7 +32,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item (index: INTEGER): BOOLEAN is
+	item (index: INTEGER): BOOLEAN
 			-- Item at `index'.
 		require
 			valid_index: valid_index (index)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (an_item: BOOLEAN; index: INTEGER) is
+	put (an_item: BOOLEAN; index: INTEGER)
 			-- Put `an_item' at `index'.
 		require
 			valid_index: valid_index (index)
@@ -62,7 +62,7 @@ feature -- Element change
 			inserted: item (index) = an_item
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

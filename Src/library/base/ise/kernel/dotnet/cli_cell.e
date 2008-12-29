@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Enables Eiffel generic classes to hold references on SYSTEM_OBJECT classes"
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Element change
 
-	put, replace (v: like item) is
+	put, replace (v: like item)
 			-- Make `v' the cell's `item'.
 		do
 			item := v
@@ -35,7 +35,7 @@ feature -- Element change
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			if item /= Void then
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		local
@@ -59,7 +59,7 @@ feature -- Comparison
 			end
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

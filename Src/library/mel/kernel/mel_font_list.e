@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of Motif Font List."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	append_entry (an_entry: MEL_FONT_LIST_ENTRY) is
+	append_entry (an_entry: MEL_FONT_LIST_ENTRY)
 			-- Append font list entry `an_entry' to
 			-- Current font list.
 		require
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	font_context: MEL_FONT_CONTEXT is
+	font_context: MEL_FONT_CONTEXT
 			-- Font context from Current font list
 		require
 			is_valid: is_valid
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Removal
 
-	destroy is
+	destroy
 			-- Free the font list.
 		do
 			xm_font_list_free (handle);	
@@ -52,21 +52,21 @@ feature -- Removal
 
 feature {NONE} -- External features
 
-	xm_font_list_append_entry (a_font_list, an_entry: POINTER): POINTER is
+	xm_font_list_append_entry (a_font_list, an_entry: POINTER): POINTER
 		external
 			"C (XmFontList, XmFontListEntry): EIF_POINTER | <Xm/Xm.h>"
 		alias
 			"XmFontListAppendEntry"
 		end;
 
-	xm_font_list_free (a_font_list: POINTER) is
+	xm_font_list_free (a_font_list: POINTER)
 		external
 			"C (XmFontList) | <Xm/Xm.h>"
 		alias
 			"XmFontListFree"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

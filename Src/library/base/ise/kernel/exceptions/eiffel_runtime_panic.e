@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Eiffel runtime panic
 		]"
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	frozen code: INTEGER is
+	frozen code: INTEGER
 			-- Exception code
 		do
 			Result := {EXCEP_CONST}.eiffel_runtime_panic
@@ -24,6 +24,6 @@ feature -- Access
 
 feature {NONE} -- Accesss
 
-	frozen internal_meaning: STRING is "Eiffel run-time panic."
+	frozen internal_meaning: STRING = "Eiffel run-time panic."
 
 end

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Draw the histogram of the memory useage at a time."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}-- Initlization
 
-	make_default  is
+	make_default
 			-- creation method
 		do
 			graph_height := 80
@@ -31,7 +31,7 @@ feature {NONE}-- Initlization
 		end
 feature -- Command
 	
-	draw_graph (a_used_percent, a_overhead_percent: DOUBLE) is
+	draw_graph (a_used_percent, a_overhead_percent: DOUBLE)
 			-- Do draw_pixmap.
 		do
 			internal_pixmap.set_foreground_color (graph_pixmap_background_color)
@@ -39,7 +39,7 @@ feature -- Command
 			draw_histogram (a_used_percent, a_overhead_percent)
 		end
 		
-	draw_text (a_info: STRING) is
+	draw_text (a_info: STRING)
 			-- draw the text which is a number of current statistic
 		do
 			internal_pixmap.set_foreground_color (graph_text_color)
@@ -48,7 +48,7 @@ feature -- Command
 		
 feature {NONE} -- Implementation
 
-	draw_histogram (used_percent, overhead_percent: DOUBLE)is
+	draw_histogram (used_percent, overhead_percent: DOUBLE)
 			-- Draw the graph for eiffel/c/total memory useage.
 		require
 			used_percent_valid: used_percent >= 0 and used_percent <= 1
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

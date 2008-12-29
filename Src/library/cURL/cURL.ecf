@@ -10,7 +10,7 @@
 			<exclude>/EIFGEN.{0,1}$</exclude>
 			<exclude>/temp$</exclude>
 		</file_rule>
-		<option warning="true" namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library" syntax_level="1">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_include location="$(ISE_LIBRARY)\library\cURL\spec\include">

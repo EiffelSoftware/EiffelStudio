@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -21,13 +21,13 @@ create -- Creation procedures
 
 feature -- Status report
 
-	data: DB_DATA_SQL is
+	data: DB_DATA_SQL
 			-- Loaded data returned from last SQL query result
 		do
 			Result := implementation.data
 		end
 
-	item (index: INTEGER): ANY is
+	item (index: INTEGER): ANY
 			-- Retrieved value at `index' position in `data'.
 		require
 			valid_index: valid_index (index)
@@ -35,25 +35,25 @@ feature -- Status report
 			Result := implementation.item (index)
 		end
 
-	column_name (index: INTEGER): STRING is
+	column_name (index: INTEGER): STRING
 			-- Name of `index'-th item in Current tuple.
 		do
 			Result := implementation.column_name (index)
 		end
 
-	valid_index (index: INTEGER): BOOLEAN is
+	valid_index (index: INTEGER): BOOLEAN
 			-- Is `index' a valid index for Current?
 		do
 			Result := implementation.valid_index (index)
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of columns in Current tuple
 		do
 			Result := implementation.count
 		end
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 			-- Is Curren tuple empty?
 		obsolete
 			"Please use `is_empty' instead to remain %
@@ -62,7 +62,7 @@ feature -- Status report
 			Result := is_empty
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is Curren tuple empty?
 		do
 			if implementation = Void then
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 	implementation: DATABASE_TUPLE [DATABASE];
 			-- Handle reference to specific database implementation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

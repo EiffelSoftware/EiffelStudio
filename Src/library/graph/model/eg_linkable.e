@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An EG_ITEM can have links to other EG_LINKABLE through an EG_LINK"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EG_LINKABLE
 		do
 			Precursor {EG_ITEM}
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	link_name: STRING is
+	link_name: STRING
 			-- Name for linking
 		do
 			Result := name
@@ -34,7 +34,7 @@ feature -- Access
 	cluster: EG_CLUSTER
 			-- cluster `Current' is part of.
 
-	links: like internal_links is
+	links: like internal_links
 			-- Links to other EG_LINKABLEs.
 		do
 			Result := internal_links.twin
@@ -42,7 +42,7 @@ feature -- Access
 
 feature {EG_LINK} -- Element change
 
-	add_link (a_link: EG_LINK) is
+	add_link (a_link: EG_LINK)
 			-- Add `a_link' to `links'.
 		require
 			a_link_not_void: a_link /= Void
@@ -56,7 +56,7 @@ feature {EG_LINK} -- Element change
 
 feature {EG_CLUSTER} -- Element change
 
-	set_cluster (a_cluster: like cluster) is
+	set_cluster (a_cluster: like cluster)
 			-- Set `cluster' to `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -68,7 +68,7 @@ feature {EG_CLUSTER} -- Element change
 			set: cluster = a_cluster
 		end
 
-	remove_cluster is
+	remove_cluster
 			-- Set `cluster' to Void.
 		do
 			cluster := Void
@@ -79,7 +79,7 @@ feature {EG_CLUSTER} -- Element change
 
 feature {EG_GRAPH} -- Element change
 
-	remove_link (a_link: EG_LINK) is
+	remove_link (a_link: EG_LINK)
 			-- Remove `a_link' from `links'.
 		require
 			a_link_not_void: a_link /= Void
@@ -98,7 +98,7 @@ feature {EG_FIGURE_WORLD, EG_GRAPH} -- Access
 invariant
 	internal_links_not_void: internal_links /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

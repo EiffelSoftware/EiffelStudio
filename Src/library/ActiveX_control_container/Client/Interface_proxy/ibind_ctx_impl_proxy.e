@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IBindCtx' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_ibind_ctx_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	register_object_bound (punk: ECOM_INTERFACE) is
+	register_object_bound (punk: ECOM_INTERFACE)
 			-- No description available.
 			-- `punk' [in].  
 		local
@@ -46,7 +46,7 @@ feature -- Basic Operations
 			ccom_register_object_bound (initializer, punk_item)
 		end
 
-	revoke_object_bound (punk: ECOM_INTERFACE) is
+	revoke_object_bound (punk: ECOM_INTERFACE)
 			-- No description available.
 			-- `punk' [in].  
 		local
@@ -65,34 +65,34 @@ feature -- Basic Operations
 			ccom_revoke_object_bound (initializer, punk_item)
 		end
 
-	release_bound_objects is
+	release_bound_objects
 			-- No description available.
 		do
 			ccom_release_bound_objects (initializer)
 		end
 
-	set_bind_options (pbindopts: TAG_BIND_OPTS2_RECORD) is
+	set_bind_options (pbindopts: TAG_BIND_OPTS2_RECORD)
 			-- No description available.
 			-- `pbindopts' [in].  
 		do
 			ccom_set_bind_options (initializer, pbindopts.item)
 		end
 
-	get_bind_options (pbindopts: TAG_BIND_OPTS2_RECORD) is
+	get_bind_options (pbindopts: TAG_BIND_OPTS2_RECORD)
 			-- No description available.
 			-- `pbindopts' [in, out].  
 		do
 			ccom_get_bind_options (initializer, pbindopts.item)
 		end
 
-	get_running_object_table (pprot: CELL [IRUNNING_OBJECT_TABLE_INTERFACE]) is
+	get_running_object_table (pprot: CELL [IRUNNING_OBJECT_TABLE_INTERFACE])
 			-- No description available.
 			-- `pprot' [out].  
 		do
 			ccom_get_running_object_table (initializer, pprot)
 		end
 
-	register_object_param (psz_key: STRING; punk: ECOM_INTERFACE) is
+	register_object_param (psz_key: STRING; punk: ECOM_INTERFACE)
 			-- No description available.
 			-- `psz_key' [in].  
 			-- `punk' [in].  
@@ -112,7 +112,7 @@ feature -- Basic Operations
 			ccom_register_object_param (initializer, psz_key, punk_item)
 		end
 
-	get_object_param (psz_key: STRING; ppunk: CELL [ECOM_INTERFACE]) is
+	get_object_param (psz_key: STRING; ppunk: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `psz_key' [in].  
 			-- `ppunk' [out].  
@@ -120,14 +120,14 @@ feature -- Basic Operations
 			ccom_get_object_param (initializer, psz_key, ppunk)
 		end
 
-	enum_object_param (ppenum: CELL [IENUM_STRING_INTERFACE]) is
+	enum_object_param (ppenum: CELL [IENUM_STRING_INTERFACE])
 			-- No description available.
 			-- `ppenum' [out].  
 		do
 			ccom_enum_object_param (initializer, ppenum)
 		end
 
-	revoke_object_param (psz_key: STRING) is
+	revoke_object_param (psz_key: STRING)
 			-- No description available.
 			-- `psz_key' [in].  
 		do
@@ -136,7 +136,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_ibind_ctx_impl_proxy(initializer)
@@ -144,85 +144,85 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_register_object_bound (cpp_obj: POINTER; punk: POINTER) is
+	ccom_register_object_bound (cpp_obj: POINTER; punk: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_revoke_object_bound (cpp_obj: POINTER; punk: POINTER) is
+	ccom_revoke_object_bound (cpp_obj: POINTER; punk: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_release_bound_objects (cpp_obj: POINTER) is
+	ccom_release_bound_objects (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"]()"
 		end
 
-	ccom_set_bind_options (cpp_obj: POINTER; pbindopts: POINTER) is
+	ccom_set_bind_options (cpp_obj: POINTER; pbindopts: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"](ecom_control_library::tagBIND_OPTS2 *)"
 		end
 
-	ccom_get_bind_options (cpp_obj: POINTER; pbindopts: POINTER) is
+	ccom_get_bind_options (cpp_obj: POINTER; pbindopts: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"](ecom_control_library::tagBIND_OPTS2 *)"
 		end
 
-	ccom_get_running_object_table (cpp_obj: POINTER; pprot: CELL [IRUNNING_OBJECT_TABLE_INTERFACE]) is
+	ccom_get_running_object_table (cpp_obj: POINTER; pprot: CELL [IRUNNING_OBJECT_TABLE_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_register_object_param (cpp_obj: POINTER; psz_key: STRING; punk: POINTER) is
+	ccom_register_object_param (cpp_obj: POINTER; psz_key: STRING; punk: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"](EIF_OBJECT,IUnknown *)"
 		end
 
-	ccom_get_object_param (cpp_obj: POINTER; psz_key: STRING; ppunk: CELL [ECOM_INTERFACE]) is
+	ccom_get_object_param (cpp_obj: POINTER; psz_key: STRING; ppunk: CELL [ECOM_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
 		end
 
-	ccom_enum_object_param (cpp_obj: POINTER; ppenum: CELL [IENUM_STRING_INTERFACE]) is
+	ccom_enum_object_param (cpp_obj: POINTER; ppenum: CELL [IENUM_STRING_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_revoke_object_param (cpp_obj: POINTER; psz_key: STRING) is
+	ccom_revoke_object_param (cpp_obj: POINTER; psz_key: STRING)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_delete_ibind_ctx_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_ibind_ctx_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_ibind_ctx_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_ibind_ctx_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IBindCtx_impl_proxy %"ecom_control_library_IBindCtx_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

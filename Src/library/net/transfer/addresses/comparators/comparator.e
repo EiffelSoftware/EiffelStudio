@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Comparators for characters"
 	legal: "See notice at end of class."
@@ -12,12 +12,12 @@ deferred class
 
 feature -- Access
 
-	character_set: STRING is
+	character_set: STRING
 			-- Character set represented by comparator
 		deferred
 		end
 
-	contains (c: CHARACTER): BOOLEAN is
+	contains (c: CHARACTER): BOOLEAN
 			-- Does comparator contain `c'?
 		deferred
 		end
@@ -27,7 +27,7 @@ invariant
 	no_empty_comparator: character_set /= Void and then 
 			not character_set.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

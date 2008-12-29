@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Constants for resource errors"
 	legal: "See notice at end of class."
@@ -12,29 +12,29 @@ class
 
 feature {NONE} -- Constants
 
-	File_not_found: INTEGER is 1
+	File_not_found: INTEGER = 1
 
-	Write_error: INTEGER is 2
+	Write_error: INTEGER = 2
 	
-	Connection_refused: INTEGER is 3
+	Connection_refused: INTEGER = 3
 	
-	No_such_user: INTEGER is 4
+	No_such_user: INTEGER = 4
 
-	Access_denied: INTEGER is 5
+	Access_denied: INTEGER = 5
 
-	Wrong_command: INTEGER is 6
+	Wrong_command: INTEGER = 6
 
-	Permission_denied: INTEGER is 7
+	Permission_denied: INTEGER = 7
 
-	Transfer_failed: INTEGER is 8
+	Transfer_failed: INTEGER = 8
 	
-	Transmission_error: INTEGER is 9
+	Transmission_error: INTEGER = 9
 	
-	Connection_timeout: INTEGER is 10
+	Connection_timeout: INTEGER = 10
 	
 feature -- Status report
 
-	error_text (code: INTEGER): STRING is
+	error_text (code: INTEGER): STRING
 			-- Textual description of error
 		require
 			positive_code: code > 0
@@ -64,7 +64,7 @@ feature -- Status report
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Facilities for accessing default pixmaps."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	Information_pixmap: EV_PIXMAP is
+	Information_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing a piece of information.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -24,7 +24,7 @@ feature -- Access
 			pixmap_imp.set_from_xpm_data (information_pixmap_xpm)
 		end
 
-	Error_pixmap: EV_PIXMAP is
+	Error_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing an error.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -34,7 +34,7 @@ feature -- Access
 			pixmap_imp.set_from_xpm_data (error_pixmap_xpm)
 		end
 
-	Warning_pixmap: EV_PIXMAP is
+	Warning_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing a warning.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -44,7 +44,7 @@ feature -- Access
 			pixmap_imp.set_from_xpm_data (warning_pixmap_xpm)
 		end
 
-	Question_pixmap: EV_PIXMAP is
+	Question_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing a question.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -54,7 +54,7 @@ feature -- Access
 			pixmap_imp.set_from_xpm_data (question_pixmap_xpm)
 		end
 
-	Collate_pixmap: EV_PIXMAP is
+	Collate_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing collated printing.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -64,7 +64,7 @@ feature -- Access
 			pixmap_imp.set_from_xpm_data (collate_pixmap_xpm)
 		end
 
-	No_collate_pixmap: EV_PIXMAP is
+	No_collate_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing non collated printing.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -74,7 +74,7 @@ feature -- Access
 			pixmap_imp.set_from_xpm_data (no_collate_pixmap_xpm)
 		end
 
-	Landscape_pixmap: EV_PIXMAP is
+	Landscape_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing landscape printing.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -84,7 +84,7 @@ feature -- Access
 			pixmap_imp.set_from_xpm_data (landscape_pixmap_xpm)
 		end
 
-	Portrait_pixmap: EV_PIXMAP is
+	Portrait_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing portrait printing.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -94,7 +94,7 @@ feature -- Access
 			pixmap_imp.set_from_xpm_data (portrait_pixmap_xpm)
 		end
 
-	Default_window_icon: EV_PIXMAP is
+	Default_window_icon: EV_PIXMAP
 			-- Pixmap used as default icon for new windows.
 		local
 			pixmap_imp: EV_PIXMAP_I
@@ -113,19 +113,19 @@ feature -- Access
 
 feature -- Default cursors
 
-	Busy_cursor: EV_POINTER_STYLE is
+	Busy_cursor: EV_POINTER_STYLE
 			-- Standard arrow and small hourglass
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor)
 		end
 
-	Standard_cursor: EV_POINTER_STYLE is
+	Standard_cursor: EV_POINTER_STYLE
 			-- Standard arrow
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.standard_cursor)
 		end
 
-	Crosshair_cursor: EV_POINTER_STYLE is
+	Crosshair_cursor: EV_POINTER_STYLE
 			-- Crosshair
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor)
@@ -133,13 +133,13 @@ feature -- Default cursors
 			Result.set_y_hotspot (15)
 		end
 
-	Help_cursor: EV_POINTER_STYLE is
+	Help_cursor: EV_POINTER_STYLE
 			-- Arrow and question mark
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.help_cursor)
 		end
 
-	Ibeam_cursor: EV_POINTER_STYLE is
+	Ibeam_cursor: EV_POINTER_STYLE
 			-- I-beam
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor)
@@ -147,7 +147,7 @@ feature -- Default cursors
 			Result.set_y_hotspot (10)
 		end
 
-	No_cursor: EV_POINTER_STYLE is
+	No_cursor: EV_POINTER_STYLE
 			-- Slashed_circle
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.no_cursor)
@@ -155,7 +155,7 @@ feature -- Default cursors
 			Result.set_y_hotspot (10)
 		end
 
-	Sizeall_cursor: EV_POINTER_STYLE is
+	Sizeall_cursor: EV_POINTER_STYLE
 			-- Four-pointed arrow pointing north, south, east and west
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor)
@@ -163,7 +163,7 @@ feature -- Default cursors
 			Result.set_y_hotspot (8)
 		end
 
-	Sizens_cursor: EV_POINTER_STYLE is
+	Sizens_cursor: EV_POINTER_STYLE
 			-- Double-pointed arrow pointing north and south
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizens_cursor)
@@ -171,7 +171,7 @@ feature -- Default cursors
 			Result.set_y_hotspot (7)
 		end
 
-	Sizenwse_cursor: EV_POINTER_STYLE is
+	Sizenwse_cursor: EV_POINTER_STYLE
 			-- Double-pointed arrow pointing north-west and south-east
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor)
@@ -179,7 +179,7 @@ feature -- Default cursors
 			Result.set_y_hotspot (7)
 		end
 
-	Sizenesw_cursor: EV_POINTER_STYLE is
+	Sizenesw_cursor: EV_POINTER_STYLE
 			-- Double-pointed arrow pointing north-east and south-west
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor)
@@ -187,7 +187,7 @@ feature -- Default cursors
 			Result.set_y_hotspot (7)
 		end
 
-	Sizewe_cursor: EV_POINTER_STYLE is
+	Sizewe_cursor: EV_POINTER_STYLE
 			-- Double-pointed arrow pointing west and east
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor)
@@ -195,7 +195,7 @@ feature -- Default cursors
 			Result.set_y_hotspot (5)
 		end
 
-	Uparrow_cursor: EV_POINTER_STYLE is
+	Uparrow_cursor: EV_POINTER_STYLE
 			-- Vertical arrow
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor)
@@ -203,7 +203,7 @@ feature -- Default cursors
 			Result.set_y_hotspot (5)
 		end
 
-	Wait_cursor: EV_POINTER_STYLE is
+	Wait_cursor: EV_POINTER_STYLE
 			-- Hourglass
 		do
 			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor)
@@ -213,154 +213,154 @@ feature -- Default cursors
 
 feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 
-	frozen information_pixmap_xpm: POINTER is
+	frozen information_pixmap_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"information_pixmap_xpm"
 		end
 
-	frozen error_pixmap_xpm: POINTER is
+	frozen error_pixmap_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"error_pixmap_xpm"
 		end
 
-	frozen warning_pixmap_xpm: POINTER is
+	frozen warning_pixmap_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"warning_pixmap_xpm"
 		end
 
-	frozen question_pixmap_xpm: POINTER is
+	frozen question_pixmap_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"question_pixmap_xpm"
 		end
 
-	frozen collate_pixmap_xpm: POINTER is
+	frozen collate_pixmap_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"collate_pixmap_xpm"
 		end
 
-	frozen no_collate_pixmap_xpm: POINTER is
+	frozen no_collate_pixmap_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"no_collate_pixmap_xpm"
 		end
 
-	frozen landscape_pixmap_xpm: POINTER is
+	frozen landscape_pixmap_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"landscape_pixmap_xpm"
 		end
 
-	frozen portrait_pixmap_xpm: POINTER is
+	frozen portrait_pixmap_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"portrait_pixmap_xpm"
 		end
 
-	frozen busy_cursor_xpm: POINTER is
+	frozen busy_cursor_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"busy_cursor_xpm"
 		end
 
-	frozen crosshair_cursor_xpm: POINTER is
+	frozen crosshair_cursor_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"crosshair_cursor_xpm"
 		end
 
-	frozen help_cursor_xpm: POINTER is
+	frozen help_cursor_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"help_cursor_xpm"
 		end
 
-	frozen ibeam_cursor_xpm: POINTER is
+	frozen ibeam_cursor_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"ibeam_cursor_xpm"
 		end
 
-	frozen no_cursor_xpm: POINTER is
+	frozen no_cursor_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"no_cursor_xpm"
 		end
 
-	frozen sizeall_cursor_xpm: POINTER is
+	frozen sizeall_cursor_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizeall_cursor_xpm"
 		end
 
-	frozen sizenesw_cursor_xpm: POINTER is
+	frozen sizenesw_cursor_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizenesw_cursor_xpm"
 		end
 
-	frozen sizens_cursor_xpm: POINTER is
+	frozen sizens_cursor_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizens_cursor_xpm"
 		end
 
-	frozen sizenwse_cursor_xpm: POINTER is
+	frozen sizenwse_cursor_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizenwse_cursor_xpm"
 		end
 
-	frozen sizewe_cursor_xpm: POINTER is
+	frozen sizewe_cursor_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizewe_cursor_xpm"
 		end
 
-	frozen standard_cursor_xpm: POINTER is
+	frozen standard_cursor_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"standard_cursor_xpm"
 		end
 
-	frozen uparrow_cursor_xpm: POINTER is
+	frozen uparrow_cursor_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"uparrow_cursor_xpm"
 		end
 
-	frozen wait_cursor_xpm: POINTER is
+	frozen wait_cursor_xpm: POINTER
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"wait_cursor_xpm"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

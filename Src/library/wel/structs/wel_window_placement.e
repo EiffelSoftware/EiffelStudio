@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about the placement of a window on %
 		%the screen."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_window: WEL_WINDOW) is
+	make (a_window: WEL_WINDOW)
 			-- Make a window placement for `a_window'.
 		require
 			a_window_not_void: a_window /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Flags that control the position of the
 			-- minimized window and the method by which
 			-- the window is restored.
@@ -42,14 +42,14 @@ feature -- Access
 			Result := cwel_window_placement_get_flags (item)
 		end
 
-	show_command: INTEGER is
+	show_command: INTEGER
 			-- Show state of the window.
 			-- See class WEL_SW_CONSTANTS for possible values
 		do
 			Result := cwel_window_placement_get_show_command (item)
 		end
 
-	minimum_position: WEL_POINT is
+	minimum_position: WEL_POINT
 			-- Coordinates of the window's upper left
 			-- corner when the window is minimized.
 		do
@@ -60,7 +60,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	maximum_position: WEL_POINT is
+	maximum_position: WEL_POINT
 			-- Coordinates of the window's upper left
 			-- corner when the window is maximized.
 		do
@@ -71,7 +71,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	normal_position: WEL_RECT is
+	normal_position: WEL_RECT
 			-- Window's coordinates when the
 			-- windows is in the restored position
 		do
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_flags (a_flags: INTEGER) is
+	set_flags (a_flags: INTEGER)
 			-- Set `flags' with `a_flags'
 		do
 			cwel_window_placement_set_flags (item, a_flags)
@@ -92,7 +92,7 @@ feature -- Element change
 			flags_set: flags = a_flags
 		end
 
-	set_show_command (a_show_command: INTEGER) is
+	set_show_command (a_show_command: INTEGER)
 			-- Set `show_command' with `a_show_command'
 		do
 			cwel_window_placement_set_show_command (item,
@@ -101,7 +101,7 @@ feature -- Element change
 			show_command_set: show_command = a_show_command
 		end
 
-	set_minimum_position (a_point: WEL_POINT) is
+	set_minimum_position (a_point: WEL_POINT)
 			-- Set `minimum_position' with `a_point'
 		require
 			a_point_not_void: a_point /= Void
@@ -112,7 +112,7 @@ feature -- Element change
 			-- minimum_position_set: minimum_position = a_point
 		end
 
-	set_maximum_position (a_point: WEL_POINT) is
+	set_maximum_position (a_point: WEL_POINT)
 			-- Set `maximum_position' with `a_point'
 		require
 			a_point_not_void: a_point /= Void
@@ -123,7 +123,7 @@ feature -- Element change
 			-- maximum_position_set: maximum_position = a_point
 		end
 
-	set_normal_position (a_rect: WEL_RECT) is
+	set_normal_position (a_rect: WEL_RECT)
 			-- Set `normal_position' with `a_rect'
 		require
 			a_rect_not_void: a_rect /= Void
@@ -136,7 +136,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_window_placement
@@ -144,72 +144,72 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_window_placement: INTEGER is
+	c_size_of_window_placement: INTEGER
 		external
 			"C [macro <winplace.h>]"
 		alias
 			"sizeof (WINDOWPLACEMENT)"
 		end
 
-	cwel_window_placement_set_length (ptr: POINTER; value: INTEGER) is
+	cwel_window_placement_set_length (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <winplace.h>]"
 		end
 
-	cwel_window_placement_set_flags (ptr: POINTER; value: INTEGER) is
+	cwel_window_placement_set_flags (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <winplace.h>]"
 		end
 
-	cwel_window_placement_set_show_command (ptr: POINTER; value: INTEGER) is
+	cwel_window_placement_set_show_command (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <winplace.h>]"
 		end
 
 	cwel_window_placement_set_minimum_position (ptr: POINTER;
-			value: POINTER) is
+			value: POINTER)
 		external
 			"C [macro <winplace.h>]"
 		end
 
 	cwel_window_placement_set_maximum_position (ptr: POINTER;
-			value: POINTER) is
+			value: POINTER)
 		external
 			"C [macro <winplace.h>]"
 		end
 
 	cwel_window_placement_set_normal_position (ptr: POINTER;
-			value: POINTER) is
+			value: POINTER)
 		external
 			"C [macro <winplace.h>]"
 		end
 
-	cwel_window_placement_get_flags (ptr: POINTER): INTEGER is
+	cwel_window_placement_get_flags (ptr: POINTER): INTEGER
 		external
 			"C [macro <winplace.h>]"
 		end
 
-	cwel_window_placement_get_show_command (ptr: POINTER): INTEGER is
+	cwel_window_placement_get_show_command (ptr: POINTER): INTEGER
 		external
 			"C [macro <winplace.h>]"
 		end
 
-	cwel_window_placement_get_minimum_position (ptr: POINTER): POINTER is
+	cwel_window_placement_get_minimum_position (ptr: POINTER): POINTER
 		external
 			"C [macro <winplace.h>]"
 		end
 
-	cwel_window_placement_get_maximum_position (ptr: POINTER): POINTER is
+	cwel_window_placement_get_maximum_position (ptr: POINTER): POINTER
 		external
 			"C [macro <winplace.h>]"
 		end
 
-	cwel_window_placement_get_normal_position (ptr: POINTER): POINTER is
+	cwel_window_placement_get_normal_position (ptr: POINTER): POINTER
 		external
 			"C [macro <winplace.h>]"
 		end
 
-	cwin_get_window_placement (hwnd, ptr: POINTER) is
+	cwin_get_window_placement (hwnd, ptr: POINTER)
 			-- SDK GetWindowPlacement
 		external
 			"C [macro <winplace.h>] (HWND, WINDOWPLACEMENT *)"
@@ -217,7 +217,7 @@ feature {NONE} -- Externals
 			"GetWindowPlacement"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

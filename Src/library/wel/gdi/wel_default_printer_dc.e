@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Device context to use the default printer which is %
 		%connected."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make a dc associated to the default printer.
 			-- If there is no default printer connected, `exists'
 			-- is equal to False.
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	retrieve_default_printer is
+	retrieve_default_printer
 			-- Retrieve the default printer installed and set
 			-- `device', `driver', `output'.
 		local
@@ -89,20 +89,20 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	Windows_const: STRING is "windows"
+	Windows_const: STRING = "windows"
 
-	Device_const: STRING is "device"
+	Device_const: STRING = "device"
 
-	Comma_const: CHARACTER is ','
+	Comma_const: CHARACTER = ','
 
-	Options_const: STRING is ",,,"
+	Options_const: STRING = ",,,"
 
-	Max_printer_name: INTEGER is 255
+	Max_printer_name: INTEGER = 255
 
 feature {NONE} -- Externals
 
 	cwin_get_profile_string (section, entry, def, dest: POINTER;
-			size: INTEGER): INTEGER is
+			size: INTEGER): INTEGER
 			-- SDK GetProfileString
 		external
 			"C [macro <wel.h>] (LPCTSTR, LPCTSTR, LPCTSTR, LPTSTR, %
@@ -116,7 +116,7 @@ invariant
 	driver_not_void: driver /= Void
 	output_not_void: output /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

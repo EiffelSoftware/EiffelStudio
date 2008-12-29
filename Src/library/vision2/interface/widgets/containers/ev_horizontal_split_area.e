@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Displays two widgets side by side, seperated by an adjustable divider.
@@ -36,13 +36,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_HORIZONTAL_SPLIT_AREA_IMP} implementation.make (Current)
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

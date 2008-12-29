@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Owner-draw Static control"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Status report
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Text length
 		do
 			if internal_text /= Void then
@@ -35,7 +35,7 @@ feature -- Status report
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Window text
 		do
 			if internal_text /= Void then
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_new_text: STRING_GENERAL) is
+	set_text (a_new_text: STRING_GENERAL)
 			-- Set the window text
 		do
 			if a_new_text /= Void then
@@ -63,13 +63,13 @@ feature {NONE} -- Implementation
 			-- Text set to this control. When we use the SS_OWNERDRAW
 			-- flag, Windows does not handle the text anymore.
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Precursor + Ss_ownerdraw
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

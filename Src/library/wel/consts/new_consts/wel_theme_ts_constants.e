@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Theme states constants for part TOOL_BAR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,25 +10,25 @@ class
 
 feature  -- Enumeration
 
-		 ts_normal: INTEGER	 is 1
+		 ts_normal: INTEGER	 = 1
 		 	-- Normal
 
-		 ts_hot: INTEGER is 2
+		 ts_hot: INTEGER = 2
 		 	-- Hot
 
-		 ts_pressed: INTEGER	is 3
+		 ts_pressed: INTEGER	= 3
 		 	-- Pressed
 
-		 ts_disabled: INTEGER	is 4
+		 ts_disabled: INTEGER	= 4
 		 	-- Disabled
 
-		 ts_checked: INTEGER is 5
+		 ts_checked: INTEGER = 5
 		 	-- Checked
 
-		 ts_hotchecked: INTEGER is 6;
+		 ts_hotchecked: INTEGER = 6;
 		 	-- Hot checked
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

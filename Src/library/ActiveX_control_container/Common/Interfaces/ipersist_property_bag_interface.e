@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,21 +12,21 @@ inherit
 
 feature -- Status Report
 
-	init_new_user_precondition: BOOLEAN is
+	init_new_user_precondition: BOOLEAN
 			-- User-defined preconditions for `init_new'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	load_user_precondition (p_prop_bag: IPROPERTY_BAG_INTERFACE; p_error_log: IERROR_LOG_INTERFACE): BOOLEAN is
+	load_user_precondition (p_prop_bag: IPROPERTY_BAG_INTERFACE; p_error_log: IERROR_LOG_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `load'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	save_user_precondition (p_prop_bag: IPROPERTY_BAG_INTERFACE; f_clear_dirty: INTEGER; f_save_all_properties: INTEGER): BOOLEAN is
+	save_user_precondition (p_prop_bag: IPROPERTY_BAG_INTERFACE; f_clear_dirty: INTEGER; f_save_all_properties: INTEGER): BOOLEAN
 			-- User-defined preconditions for `save'.
 			-- Redefine in descendants if needed.
 		do
@@ -35,7 +35,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	init_new is
+	init_new
 			-- No description available.
 		require
 			init_new_user_precondition: init_new_user_precondition
@@ -43,7 +43,7 @@ feature -- Basic Operations
 
 		end
 
-	load (p_prop_bag: IPROPERTY_BAG_INTERFACE; p_error_log: IERROR_LOG_INTERFACE) is
+	load (p_prop_bag: IPROPERTY_BAG_INTERFACE; p_error_log: IERROR_LOG_INTERFACE)
 			-- No description available.
 			-- `p_prop_bag' [in].  
 			-- `p_error_log' [in].  
@@ -53,7 +53,7 @@ feature -- Basic Operations
 
 		end
 
-	save (p_prop_bag: IPROPERTY_BAG_INTERFACE; f_clear_dirty: INTEGER; f_save_all_properties: INTEGER) is
+	save (p_prop_bag: IPROPERTY_BAG_INTERFACE; f_clear_dirty: INTEGER; f_save_all_properties: INTEGER)
 			-- No description available.
 			-- `p_prop_bag' [in].  
 			-- `f_clear_dirty' [in].  
@@ -64,7 +64,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

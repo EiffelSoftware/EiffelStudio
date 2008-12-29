@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision implementation of a Motif gadget toggle button."
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_toggle_bg: TOGGLE_BG; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_toggle_bg: TOGGLE_BG; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif toggle button gadget.
 		local
 			mc: MEL_COMPOSITE
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	add_arm_action (a_command: COMMAND; argument: ANY) is
+	add_arm_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when current
 			-- toggle button is armed.
 		local
@@ -68,7 +68,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_release_action (a_command: COMMAND; argument: ANY) is
+	add_release_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when current
 			-- toggle button is released.
 		local
@@ -82,7 +82,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_activate_action, add_value_changed_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action, add_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when value
 			-- is changed.
 		local
@@ -96,7 +96,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	set_accelerator_action (a_translation: STRING) is
+	set_accelerator_action (a_translation: STRING)
 			-- Set the accerlator action (modifiers and key to use as a shortcut
 			-- in selecting a button) to `a_translation'.
 			-- `a_translation' must be specified with the X toolkit conventions.
@@ -105,33 +105,33 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_arm_action (a_command: COMMAND; argument: ANY) is
+	remove_arm_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current toggle button is armed.
 		do
 			remove_command (arm_command, a_command, argument)
 		end;
 
-	remove_release_action (a_command: COMMAND; argument: ANY) is
+	remove_release_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current toggle button is released.
 		do
 			remove_command (disarm_command, a_command, argument)
 		end;
 
-	remove_activate_action, remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action, remove_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- value is changed.
 		do
 			remove_command (value_changed_command, a_command, argument)
 		end;
 
-	remove_accelerator_action is
+	remove_accelerator_action
 			-- Remove the accelerator action.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

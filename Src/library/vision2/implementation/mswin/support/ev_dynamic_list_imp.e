@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Eiffel Vision dynamic list. Mswindows implementation.
 
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	i_th (i: INTEGER): like item is
+	i_th (i: INTEGER): like item
 			-- Item at `i'-th position.
 		do
 			Result ?= ev_children.i_th (i).interface
@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items.
 		do
 			Result := ev_children.count
@@ -33,7 +33,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			l_item: G_IMP
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 			ev_children.put_left (l_item)
 		end
 
-	remove_i_th (i: INTEGER) is
+	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		do
 			ev_children.go_i_th (i)
@@ -52,12 +52,12 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	ev_children: ARRAYED_LIST [G_IMP] is
+	ev_children: ARRAYED_LIST [G_IMP]
 			-- Internal list of children.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

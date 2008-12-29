@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision beep routines. Gtk implementation"
 	legal: "See notice at end of class."
 	keywords: "color, pixel, rgb, 8, 16, 24"
@@ -18,19 +18,19 @@ create
 
 feature {NONE} -- Initlization
 
-	make (an_interface: EV_BEEP) is
+	make (an_interface: EV_BEEP)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_is_initialized (True)
 		end
 
-	destroy is
+	destroy
 			-- Render `Current' unusable.
 			-- No externals to deallocate, just set the flags.
 		do
@@ -39,38 +39,38 @@ feature {NONE} -- Initlization
 
 feature -- Commands
 
-	asterisk is
+	asterisk
 			-- Asterisk beep.
 		do
 			{EV_GTK_EXTERNALS}.gdk_beep
 		end
 
-	exclamation is
+	exclamation
 			-- Exclamation beep.
 		do
 			{EV_GTK_EXTERNALS}.gdk_beep
 		end
 
-	hand is
+	hand
 			-- Hand beep.
 		do
 			{EV_GTK_EXTERNALS}.gdk_beep
 		end
 
-	question is
+	question
 			-- Question beep.
 		do
 			{EV_GTK_EXTERNALS}.gdk_beep
 		end
 
-	ok is
+	ok
 			-- Ok beep.
 			-- System default beep.
 		do
 			{EV_GTK_EXTERNALS}.gdk_beep
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

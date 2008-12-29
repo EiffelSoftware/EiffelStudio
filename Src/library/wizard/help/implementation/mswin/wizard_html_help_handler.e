@@ -1,4 +1,4 @@
-indexing
+note
 	"Controls access to Microsoft HTML Help, allows to display given urls"
 
 class
@@ -16,13 +16,13 @@ feature -- Access
 
 feature -- Status Report
 
-	is_valid_chm_url (a_chm_url: STRING): BOOLEAN is
+	is_valid_chm_url (a_chm_url: STRING): BOOLEAN
 			-- Is `a_chm_url' a valid Microsoft HTML Help URL?
 		do
 			Result := True
 		end
 
-	last_show_successful: BOOLEAN is
+	last_show_successful: BOOLEAN
 			-- Was last call to `show' successful?
 		do
 			Result := help_window_handle /= 0
@@ -30,7 +30,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	show (a_chm_url: STRING) is
+	show (a_chm_url: STRING)
 			-- Display help page page with url `a_chm_url'.
 		require
 			valid_chm_url: is_valid_chm_url (a_chm_url)
@@ -43,7 +43,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	Chm_url: STRING is 
+	Chm_url: STRING 
 			-- Path to `wizard.chm' (relatively to $ISE_EIFFEL value)
 		once
 			Result := wizard_source + "\wizard.chm"
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_desktop_window: POINTER is
+	cwin_desktop_window: POINTER
 			-- Help Workshop `HtmlHelp' API.
 		external
 			"C [macro <Htmlhelp.h>]: HWND"
@@ -62,7 +62,7 @@ feature {NONE} -- Externals
 			"GetDesktopWindow()"
 		end
 	
-	cwin_shell_execute (hwnd, verb, file, parameters, directory: POINTER; show_cmd:INTEGER): INTEGER is
+	cwin_shell_execute (hwnd, verb, file, parameters, directory: POINTER; show_cmd:INTEGER): INTEGER
 			-- Shell API `ShellExecute' function
 		external
 			"C [macro <shellapi.h>] (HWND, LPCTSTR, LPCTSTR, LPCTSTR, LPCTSTR, INT): EIF_INTEGER"
@@ -70,7 +70,7 @@ feature {NONE} -- Externals
 			"ShellExecute"
 		end
 		
-	cwin_html_help (hwnd, pszFile: POINTER; command: INTEGER; data: INTEGER): INTEGER is
+	cwin_html_help (hwnd, pszFile: POINTER; command: INTEGER; data: INTEGER): INTEGER
 			-- Help Workshop `HtmlHelp' API.
 		external
 			"C [macro <Htmlhelp.h>] (HWND, LPCSTR, UINT, DWORD): EIF_INTEGER"
@@ -78,7 +78,7 @@ feature {NONE} -- Externals
 			"HtmlHelp"
 		end
 
-	Hh_display_topic: INTEGER is
+	Hh_display_topic: INTEGER
 			-- Help Workshop HH_DISPLAY_TOPIC constant
 		external
 			"C [macro <Htmlhelp.h>]: EIF_INTEGER"
@@ -86,7 +86,7 @@ feature {NONE} -- Externals
 			"HH_DISPLAY_TOPIC"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

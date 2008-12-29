@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ convert
 
 feature -- Status setting
 
-	set_with_eiffel_string (a_string: STRING_GENERAL) is
+	set_with_eiffel_string (a_string: STRING_GENERAL)
 			-- Set `string' with `a_string'.
 		do
 			if managed_data = Void then
@@ -35,7 +35,7 @@ feature -- Status setting
 			Precursor (a_string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

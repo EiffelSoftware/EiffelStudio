@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -6,45 +6,45 @@ class
 
 feature
 
-	Table_start: STRING is "<TABLE";
-	Table_end  : STRING is "</TABLE>";
+	Table_start: STRING = "<TABLE";
+	Table_end  : STRING = "</TABLE>";
 
-	Caption_start: STRING is "<CAPTION";
-	Caption_end  : STRING is "</CAPTION>";
+	Caption_start: STRING = "<CAPTION";
+	Caption_end  : STRING = "</CAPTION>";
 
-	Colspan: STRING is " COLSPAN=";
-	Rowspan: STRING is " ROWSPAN=";
-	Border : STRING is " BORDER=";
+	Colspan: STRING = " COLSPAN=";
+	Rowspan: STRING = " ROWSPAN=";
+	Border : STRING = " BORDER=";
 
-	Col_start: STRING is "<TD";
-	Col_end  : STRING is "</TD>";
+	Col_start: STRING = "<TD";
+	Col_end  : STRING = "</TD>";
 
-	Row_start: STRING is "<TR";
-	Row_end  : STRING is "</TR>";
+	Row_start: STRING = "<TR";
+	Row_end  : STRING = "</TR>";
 
-	Tag_start: STRING is "<";
-	Tag_end  : STRING is ">";
+	Tag_start: STRING = "<";
+	Tag_end  : STRING = ">";
 
-	NewLine: STRING is "%N";
+	NewLine: STRING = "%N";
 
-	Top   : STRING is "TOP";
-	Bottom: STRING is "BOTTOM";
-	Left  : STRING is "LEFT";
-	Right : STRING is "RIGHT";
-	Center: STRING is "CENTER";
+	Top   : STRING = "TOP";
+	Bottom: STRING = "BOTTOM";
+	Left  : STRING = "LEFT";
+	Right : STRING = "RIGHT";
+	Center: STRING = "CENTER";
 
-	Width : STRING is " WIDTH=";
-	Align : STRING is " ALIGN=";
-	Valign: STRING is " VALIGN=";
-	NoWrap: STRING is " NOWRAP";
+	Width : STRING = " WIDTH=";
+	Align : STRING = " ALIGN=";
+	Valign: STRING = " VALIGN=";
+	NoWrap: STRING = " NOWRAP";
 
-	BgColor   : STRING is " BGCOLOR=";
-	BackGround: STRING is " BACKGROUND=";
-	BorderColor     : STRING is " BORDERCOLOR=";
-	BorderColorLight: STRING is " BORDERCOLORLIGHT=";
-	BorderColorDark : STRING is " BORDERCOLORDARK=";;
+	BgColor   : STRING = " BGCOLOR=";
+	BackGround: STRING = " BACKGROUND=";
+	BorderColor     : STRING = " BORDERCOLOR=";
+	BorderColorLight: STRING = " BORDERCOLORLIGHT=";
+	BorderColorDark : STRING = " BORDERCOLORDARK=";;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

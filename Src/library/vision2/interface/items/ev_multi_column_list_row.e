@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Row item for use in EV_MULTI_COLUMN_LIST
@@ -54,7 +54,7 @@ create {EV_MULTI_COLUMN_LIST_ROW}
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_ITEM} and Precursor {EV_DESELECTABLE}
@@ -62,7 +62,7 @@ feature {NONE} -- Contract support
 
 feature -- Element change
 
-	fill_with_strings_8 (other: CONTAINER [STRING]) is
+	fill_with_strings_8 (other: CONTAINER [STRING])
 			-- Fill with as many items of `other' as possible.
 			-- The representations of `other' and current structure
 			-- need not be the same.
@@ -91,20 +91,20 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			interactive_list_make
 			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make (Current)
 		end
 
-	on_item_added_at (an_item: like item; item_index: INTEGER) is
+	on_item_added_at (an_item: like item; item_index: INTEGER)
 			-- `an_item' is about to be added.
 		do
 			implementation.on_item_added_at (an_item, item_index)
 		end
 
-	on_item_removed_at (an_item: like item; item_index: INTEGER) is
+	on_item_removed_at (an_item: like item; item_index: INTEGER)
 			-- `an_item' is about to be removed.
 		do
 			implementation.on_item_removed_at (an_item, item_index)
@@ -112,13 +112,13 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

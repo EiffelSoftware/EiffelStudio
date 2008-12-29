@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window which can be used to design custom control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 feature {NONE} -- Intialization
 
 	make_with_coordinates (a_parent: WEL_WINDOW; a_name: STRING_GENERAL;
-			a_x, a_y, a_width, a_height: INTEGER) is
+			a_x, a_y, a_width, a_height: INTEGER)
 			-- Make a control using `a_parent' as parent and
 			-- `a_name' as name. `a_x', `a_y', `a_width', and
 			-- `a_height' are used to place and size the control
@@ -51,7 +51,7 @@ feature {NONE} -- Intialization
 
 feature -- Access
 
-	font: WEL_FONT is
+	font: WEL_FONT
 			-- Font with which the control is drawing its text.
 		require
 			exists: exists
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_font (a_font: WEL_FONT) is
+	set_font (a_font: WEL_FONT)
 			-- Set `font' with `a_font'.
 		require
 			exists: exists
@@ -85,7 +85,7 @@ feature -- Element change
 
 feature -- Status report
 
-	has_system_font: BOOLEAN is
+	has_system_font: BOOLEAN
 			-- Does the control use the system font?
 		require
 			exists: exists
@@ -94,25 +94,25 @@ feature -- Status report
 				default_pointer, default_pointer) = default_pointer
 		end
 
-	minimal_width: INTEGER is
+	minimal_width: INTEGER
 			-- Minimal width allowed for the window
 		do
 			Result := 0
 		end
 
-	minimal_height: INTEGER is
+	minimal_height: INTEGER
 			-- Minimal height allowed for the window
 		do
 			Result := 0
 		end
 
-	maximal_width: INTEGER is
+	maximal_width: INTEGER
 			-- Maximal width allowed for the window
 		once
 			Result := c_int_max
 		end
 
-	maximal_height: INTEGER is
+	maximal_height: INTEGER
 			-- Maximal height allowed for the window
 		once
 			Result := c_int_max
@@ -120,7 +120,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN)
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		do
@@ -129,25 +129,25 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Child and visible style
 		once
 			Result := Ws_child | Ws_visible
 		end
 
-	class_background: WEL_BRUSH is
+	class_background: WEL_BRUSH
 			-- Standard window background color
 		once
 			create Result.make_by_sys_color (Color_window + 1)
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := "WELControlWindowClass"
 		end
 
-	class_requires_icon: BOOLEAN is
+	class_requires_icon: BOOLEAN
 			-- Does `Current' require an icon to be registered?
 			-- If `True' `register_class' assigns a class icon, otherwise
 			-- no icon is assigned.
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_int_max: INTEGER is
+	c_int_max: INTEGER
 			-- Maximum integer value
 		external
 			"C [macro <limits.h>]"
@@ -165,7 +165,7 @@ feature {NONE} -- Externals
 			"INT_MAX"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

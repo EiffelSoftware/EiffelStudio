@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision radio button. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -44,7 +44,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create radio button.
 		local
 			ret: INTEGER
@@ -59,28 +59,28 @@ feature {NONE} -- Initialization
 			event_id := app_implementation.get_id (current)  --getting an id from the application
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		do
 		end
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is toggle button pressed?
 		do
 		end
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Set `is_selected' `True'.
 		do
 		end
 
 feature -- Minimum size
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum height that the widget may occupy.
 		local
 			err : INTEGER
@@ -92,7 +92,7 @@ feature -- Minimum size
 			Result := rect.bottom - rect.top
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		local
 			err : INTEGER
@@ -106,12 +106,12 @@ feature -- Minimum size
 
 feature {EV_ANY_I} -- Implementation
 
-	widget_object (a_list: POINTER): POINTER is
+	widget_object (a_list: POINTER): POINTER
 			-- Returns c_object relative to a_list data.
 		do
 		end
 
-	radio_group: LINKED_LIST [like current] is
+	radio_group: LINKED_LIST [like current]
 			-- List of all radio item implementations
 		do
 		end
@@ -121,7 +121,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RADIO_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_RADIO_BUTTON_IMP
 

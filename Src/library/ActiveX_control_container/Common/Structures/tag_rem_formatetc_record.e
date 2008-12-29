@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,31 +33,31 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	cf_format: INTEGER is
+	cf_format: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rem_formatetc_cf_format (item)
 		end
 
-	ptd: INTEGER is
+	ptd: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rem_formatetc_ptd (item)
 		end
 
-	dw_aspect: INTEGER is
+	dw_aspect: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rem_formatetc_dw_aspect (item)
 		end
 
-	lindex: INTEGER is
+	lindex: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rem_formatetc_lindex (item)
 		end
 
-	tymed: INTEGER is
+	tymed: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rem_formatetc_tymed (item)
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_tag_rem_formatetc
@@ -73,31 +73,31 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_cf_format (a_cf_format: INTEGER) is
+	set_cf_format (a_cf_format: INTEGER)
 			-- Set `cf_format' with `a_cf_format'.
 		do
 			ccom_tag_rem_formatetc_set_cf_format (item, a_cf_format)
 		end
 
-	set_ptd (a_ptd: INTEGER) is
+	set_ptd (a_ptd: INTEGER)
 			-- Set `ptd' with `a_ptd'.
 		do
 			ccom_tag_rem_formatetc_set_ptd (item, a_ptd)
 		end
 
-	set_dw_aspect (a_dw_aspect: INTEGER) is
+	set_dw_aspect (a_dw_aspect: INTEGER)
 			-- Set `dw_aspect' with `a_dw_aspect'.
 		do
 			ccom_tag_rem_formatetc_set_dw_aspect (item, a_dw_aspect)
 		end
 
-	set_lindex (a_lindex: INTEGER) is
+	set_lindex (a_lindex: INTEGER)
 			-- Set `lindex' with `a_lindex'.
 		do
 			ccom_tag_rem_formatetc_set_lindex (item, a_lindex)
 		end
 
-	set_tymed (a_tymed: INTEGER) is
+	set_tymed (a_tymed: INTEGER)
 			-- Set `tymed' with `a_tymed'.
 		do
 			ccom_tag_rem_formatetc_set_tymed (item, a_tymed)
@@ -105,7 +105,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_tag_rem_formatetc: INTEGER is
+	c_size_of_tag_rem_formatetc: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library_tagRemFORMATETC_s.h%"]"
@@ -113,67 +113,67 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::tagRemFORMATETC)"
 		end
 
-	ccom_tag_rem_formatetc_cf_format (a_pointer: POINTER): INTEGER is
+	ccom_tag_rem_formatetc_cf_format (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemFORMATETC_s_impl.h%"](ecom_control_library::tagRemFORMATETC *):EIF_INTEGER"
 		end
 
-	ccom_tag_rem_formatetc_set_cf_format (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rem_formatetc_set_cf_format (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemFORMATETC_s_impl.h%"](ecom_control_library::tagRemFORMATETC *, ULONG)"
 		end
 
-	ccom_tag_rem_formatetc_ptd (a_pointer: POINTER): INTEGER is
+	ccom_tag_rem_formatetc_ptd (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemFORMATETC_s_impl.h%"](ecom_control_library::tagRemFORMATETC *):EIF_INTEGER"
 		end
 
-	ccom_tag_rem_formatetc_set_ptd (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rem_formatetc_set_ptd (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemFORMATETC_s_impl.h%"](ecom_control_library::tagRemFORMATETC *, ULONG)"
 		end
 
-	ccom_tag_rem_formatetc_dw_aspect (a_pointer: POINTER): INTEGER is
+	ccom_tag_rem_formatetc_dw_aspect (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemFORMATETC_s_impl.h%"](ecom_control_library::tagRemFORMATETC *):EIF_INTEGER"
 		end
 
-	ccom_tag_rem_formatetc_set_dw_aspect (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rem_formatetc_set_dw_aspect (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemFORMATETC_s_impl.h%"](ecom_control_library::tagRemFORMATETC *, ULONG)"
 		end
 
-	ccom_tag_rem_formatetc_lindex (a_pointer: POINTER): INTEGER is
+	ccom_tag_rem_formatetc_lindex (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemFORMATETC_s_impl.h%"](ecom_control_library::tagRemFORMATETC *):EIF_INTEGER"
 		end
 
-	ccom_tag_rem_formatetc_set_lindex (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rem_formatetc_set_lindex (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemFORMATETC_s_impl.h%"](ecom_control_library::tagRemFORMATETC *, LONG)"
 		end
 
-	ccom_tag_rem_formatetc_tymed (a_pointer: POINTER): INTEGER is
+	ccom_tag_rem_formatetc_tymed (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemFORMATETC_s_impl.h%"](ecom_control_library::tagRemFORMATETC *):EIF_INTEGER"
 		end
 
-	ccom_tag_rem_formatetc_set_tymed (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rem_formatetc_set_tymed (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemFORMATETC_s_impl.h%"](ecom_control_library::tagRemFORMATETC *, ULONG)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

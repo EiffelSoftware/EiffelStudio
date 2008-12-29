@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IObjectWithSite' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iobject_with_site_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	set_site (p_unk_site: ECOM_INTERFACE) is
+	set_site (p_unk_site: ECOM_INTERFACE)
 			-- No description available.
 			-- `p_unk_site' [in].  
 		local
@@ -46,7 +46,7 @@ feature -- Basic Operations
 			ccom_set_site (initializer, p_unk_site_item)
 		end
 
-	get_site (riid: ECOM_GUID; ppv_site: CELL [POINTER]) is
+	get_site (riid: ECOM_GUID; ppv_site: CELL [POINTER])
 			-- No description available.
 			-- `riid' [in].  
 			-- `ppv_site' [out].  
@@ -56,7 +56,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iobject_with_site_impl_proxy(initializer)
@@ -64,37 +64,37 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_set_site (cpp_obj: POINTER; p_unk_site: POINTER) is
+	ccom_set_site (cpp_obj: POINTER; p_unk_site: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IObjectWithSite_impl_proxy %"ecom_control_library_IObjectWithSite_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_get_site (cpp_obj: POINTER; riid: POINTER; ppv_site: CELL [POINTER]) is
+	ccom_get_site (cpp_obj: POINTER; riid: POINTER; ppv_site: CELL [POINTER])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IObjectWithSite_impl_proxy %"ecom_control_library_IObjectWithSite_impl_proxy_s.h%"](GUID *,EIF_OBJECT)"
 		end
 
-	ccom_delete_iobject_with_site_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iobject_with_site_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IObjectWithSite_impl_proxy %"ecom_control_library_IObjectWithSite_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iobject_with_site_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iobject_with_site_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IObjectWithSite_impl_proxy %"ecom_control_library_IObjectWithSite_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IObjectWithSite_impl_proxy %"ecom_control_library_IObjectWithSite_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

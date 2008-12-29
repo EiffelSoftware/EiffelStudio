@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Fixed container implementation interface which used by Smart Docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,19 +13,19 @@ inherit
 
 feature -- Contract support
 
-	line_width: INTEGER is
+	line_width: INTEGER
 			-- We need this feature to make sure contract not borken with invariant.
 			-- See bug#13387.
 		do
 		end
 
-	drawing_mode: INTEGER is
+	drawing_mode: INTEGER
 			-- We need this feature to make sure contract not borken with invariant.
 			-- See bug#13387.
 		do
 		end
 		
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

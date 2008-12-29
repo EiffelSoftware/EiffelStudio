@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		" EiffelVision tool-bar radio button. implementation%
 		% interface."
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Make a radio button with a default of selected.
 		do
 			base_make (an_interface)
@@ -56,13 +56,13 @@ feature {NONE} -- Initialization
 			avoid_reselection := False
 		end
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Redefined to prevent unwanted signal connection.
 		do
 			create Result
 		end
 
-	initialize is
+	initialize
 			-- Initialize default settings for radio item.
 		do
 			Precursor
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Select `Current' in its grouping.
 		do
 			if not is_selected then
@@ -84,7 +84,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is `Current' selected.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (visual_widget)
@@ -92,12 +92,12 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	parent_imp: EV_TOOL_BAR_IMP is
+	parent_imp: EV_TOOL_BAR_IMP
 		do
 			Result ?= Precursor
 		end
 
-	connect_signals is
+	connect_signals
 			-- Connect on_activate to toggled signal.
 		do
 			real_signal_connect (visual_widget, "toggled", agent (App_implementation.gtk_marshal).on_tool_bar_radio_button_activate (c_object), Void)
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 		
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		
-	on_activate is
+	on_activate
 			-- The button has been activated by the user (pushed).
 		local
 			a_peers: like peers
@@ -139,7 +139,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	disable_select is
+	disable_select
 			-- Unselect the radio button.
 		do
 			if is_selected then
@@ -150,7 +150,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 		
-	enable_sensitive is
+	enable_sensitive
 			-- 
 		do
 			if not is_sensitive then
@@ -159,7 +159,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 	
-	disable_sensitive is
+	disable_sensitive
 			-- 
 		do
 			if is_sensitive then
@@ -173,7 +173,7 @@ feature {EV_ANY_I} -- Implementation
 
 	avoid_reselection: BOOLEAN
 
-	radio_group: POINTER is
+	radio_group: POINTER
 		do
 			if parent_imp /= Void then
 				Result := parent_imp.radio_group
@@ -190,7 +190,7 @@ feature {EV_ANY_I} -- Implementation
 
 	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

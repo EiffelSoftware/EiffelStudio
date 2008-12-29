@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Information about a network resource.		
 		The structure is returned during enumeration of network resources. 
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			structure_make
 			initialize
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	scope: INTEGER is
+	scope: INTEGER
 			-- Value that contains the scope of the enumeration.
 		do
 			Result := cwel_net_resource_get_scope (item)
@@ -62,7 +62,7 @@ feature -- Access
 				Result = Resource_remembered
 		end
 
-	type: INTEGER is
+	type: INTEGER
 			-- Value that contains a set of bit flags identifying the 
 			-- type of resource.
 		do
@@ -74,7 +74,7 @@ feature -- Access
 				Result = Resource_type_print
 		end
 		
-	display_type: INTEGER is
+	display_type: INTEGER
 			-- Value that indicates how the network object should be
 			-- displayed in a network browsing user interface.
 		do
@@ -88,7 +88,7 @@ feature -- Access
 		end
 		
 		
-	usage: INTEGER is
+	usage: INTEGER
 			-- Value that contains a set of bit flags describing how
 			-- the resource can be used.
 		do
@@ -99,7 +99,7 @@ feature -- Access
 				Result = Resource_usage_container
 		end
 
-	local_name: STRING_32 is
+	local_name: STRING_32
 			-- If `scope' is equal to `Resource_connected' or 
 			-- `Resource_remembered', it specifies the name of a local
 			-- device. It is Void if the connection does not use a device.
@@ -113,7 +113,7 @@ feature -- Access
 			valid_result: (Result /= Void) = (scope = Resource_connected or scope = Resource_remembered)
 		end
 		
-	remote_name: STRING_32 is
+	remote_name: STRING_32
 			-- If the entry is a network resource, it specifies the remote
 			-- network name.
 			--
@@ -131,7 +131,7 @@ feature -- Access
 			end
 		end
 		
-	comment: STRING_32 is
+	comment: STRING_32
 			-- Comment supplied by the network provider.
 			-- It can be Void if there is no supplied comment.
 		do
@@ -142,7 +142,7 @@ feature -- Access
 			end
 		end
 		
-	provider: STRING_32 is
+	provider: STRING_32
 			-- Name of the provider that owns the resource.
 			-- It can be Void if the provider name is unknown.
 			--
@@ -158,7 +158,7 @@ feature -- Access
 		
 feature -- Element change
 
-	set_scope (a_value: INTEGER) is
+	set_scope (a_value: INTEGER)
 			-- Set `scope' to `a_value'
 		require
 			valid_value: 
@@ -171,7 +171,7 @@ feature -- Element change
 			value_set: scope = a_value
 		end
 
-	set_type (a_value: INTEGER) is
+	set_type (a_value: INTEGER)
 			-- Set `type' to `a_value'
 		require
 			valid_value:
@@ -184,7 +184,7 @@ feature -- Element change
 			value_set: type = a_value
 		end
 
-	set_display_type (a_value: INTEGER) is
+	set_display_type (a_value: INTEGER)
 			-- Set `display_type' to `a_value'
 		require
 			valid_value:
@@ -198,7 +198,7 @@ feature -- Element change
 			value_set: display_type = a_value
 		end
 
-	set_usage (a_value: INTEGER) is
+	set_usage (a_value: INTEGER)
 			-- Set `usage' to `a_value'
 			--
 			-- Note that this member can be specified only if `scope' 
@@ -214,7 +214,7 @@ feature -- Element change
 			value_set: usage = a_value
 		end
 
-	set_local_name (a_value: STRING_GENERAL) is
+	set_local_name (a_value: STRING_GENERAL)
 			-- Set `local_name' to `a_value'
 			--
 			-- Can only be set if `scope' is equal to `Resource_connected'
@@ -235,7 +235,7 @@ feature -- Element change
 			value_set: equal (local_name, a_value)
 		end
 		
-	set_remote_name (a_value: STRING_GENERAL) is
+	set_remote_name (a_value: STRING_GENERAL)
 			-- Set `remote_name' to `a_value'
 			--
 			-- The string can be MAX_PATH characters in length, and it must
@@ -256,7 +256,7 @@ feature -- Element change
 			value_set: equal (remote_name, a_value)
 		end
 		
-	set_comment (a_value: STRING_GENERAL) is
+	set_comment (a_value: STRING_GENERAL)
 			-- Set `comment' to `a_value'
 		local
 			string_pointer: POINTER
@@ -272,7 +272,7 @@ feature -- Element change
 			value_set: equal (comment, a_value)
 		end
 		
-	set_provider (a_value: STRING_GENERAL) is
+	set_provider (a_value: STRING_GENERAL)
 			-- Set `provider' to `a_value'
 		local
 			string_pointer: POINTER
@@ -290,7 +290,7 @@ feature -- Element change
 		
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_netresource
@@ -312,94 +312,94 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_size_of_netresource: INTEGER is
+	c_size_of_netresource: INTEGER
 		external
 			"C [macro <wel_net_resource.h>]"
 		alias
 			"sizeof (NETRESOURCE)"
 		end
 
-	cwel_net_resource_get_scope (ptr: POINTER): INTEGER is
+	cwel_net_resource_get_scope (ptr: POINTER): INTEGER
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_get_type (ptr: POINTER): INTEGER is
+	cwel_net_resource_get_type (ptr: POINTER): INTEGER
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_get_display_type (ptr: POINTER): INTEGER is
+	cwel_net_resource_get_display_type (ptr: POINTER): INTEGER
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_get_usage (ptr: POINTER): INTEGER is
+	cwel_net_resource_get_usage (ptr: POINTER): INTEGER
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_get_local_name (ptr: POINTER): POINTER is
+	cwel_net_resource_get_local_name (ptr: POINTER): POINTER
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_get_remote_name (ptr: POINTER): POINTER is
+	cwel_net_resource_get_remote_name (ptr: POINTER): POINTER
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_get_comment (ptr: POINTER): POINTER is
+	cwel_net_resource_get_comment (ptr: POINTER): POINTER
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_get_provider (ptr: POINTER): POINTER is
+	cwel_net_resource_get_provider (ptr: POINTER): POINTER
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_set_scope (ptr: POINTER; value: INTEGER) is
+	cwel_net_resource_set_scope (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_set_type (ptr: POINTER; value: INTEGER) is
+	cwel_net_resource_set_type (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_set_display_type (ptr: POINTER; value: INTEGER) is
+	cwel_net_resource_set_display_type (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_set_usage (ptr: POINTER; value: INTEGER) is
+	cwel_net_resource_set_usage (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_set_local_name (ptr: POINTER; value: POINTER) is
+	cwel_net_resource_set_local_name (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_set_remote_name (ptr: POINTER; value: POINTER) is
+	cwel_net_resource_set_remote_name (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_set_comment (ptr: POINTER; value: POINTER) is
+	cwel_net_resource_set_comment (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-	cwel_net_resource_set_provider (ptr: POINTER; value: POINTER) is
+	cwel_net_resource_set_provider (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <wel_net_resource.h>]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

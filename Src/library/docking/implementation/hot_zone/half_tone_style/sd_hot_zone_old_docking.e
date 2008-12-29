@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_HOT_ZONE for SD_DOCKING_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_zone: SD_DOCKING_ZONE; a_docker_mediator: SD_DOCKER_MEDIATOR) is
+	make (a_zone: SD_DOCKING_ZONE; a_docker_mediator: SD_DOCKER_MEDIATOR)
 			-- Creation method.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initlization
 
 feature -- Redefine
 
-	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
+	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
 			-- Redefine
 		local
 			l_half_height, l_half_width: INTEGER
@@ -100,7 +100,7 @@ feature -- Redefine
 			end
 		end
 
-	set_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+	set_pointer_style (a_pointer_style: EV_POINTER_STYLE)
 			-- Set GLOBAL mouse cursor
 			-- On Windows, we can just set pointer style to main window
 			-- On GTK, we must set current focused widget top window's pointer style
@@ -124,7 +124,7 @@ feature -- Redefine
 			end
 		end
 
-	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	apply_change  (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Redefine
 		local
 			l_docking_zone: SD_DOCKING_ZONE
@@ -156,31 +156,31 @@ feature -- Redefine
 			internal_shared.feedback.reset_feedback_clearing
 		end
 
-	clear_indicator is
+	clear_indicator
 			-- Redefine
 		do
 --			internal_zone.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 		end
 
-	build_indicator is
+	build_indicator
 			-- Redefine
 		do
 
 		end
 
-	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Redefine
 		do
 		end
 
-	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
+	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER)
 			-- Redefine
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	set_rectangle (a_rect: EV_RECTANGLE) is
+	set_rectangle (a_rect: EV_RECTANGLE)
 			-- Set the rectangle which allow user to dock.
 		require
 			a_rect_not_void: a_rect /= Void
@@ -215,7 +215,7 @@ invariant
 	internal_shared_not_void: internal_shared /= Void
 	rectangle_not_void: internal_rectangle_left /= Void and internal_rectangle_right /= Void and internal_rectangle_top /= Void and internal_rectangle_bottom /= Void and internal_rectangle_center /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

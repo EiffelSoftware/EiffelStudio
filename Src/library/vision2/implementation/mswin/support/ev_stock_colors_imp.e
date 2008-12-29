@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of default colors used by the system.%
 				% Mswindows implementation"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	Color_dialog, Color_3d_face: EV_COLOR is
+	Color_dialog, Color_3d_face: EV_COLOR
 			-- Color usually used for the background of dialogs.
 		local
 			color_imp: EV_COLOR_IMP
@@ -21,7 +21,7 @@ feature -- Access
 			color_imp.set_with_system_id (Wel_color_constants.Color_btnface)
 		end
 
-	Color_3d_highlight: EV_COLOR is
+	Color_3d_highlight: EV_COLOR
 			-- Used for 3D-effects (light color)
 			-- Name "color highlight"
 		local
@@ -33,7 +33,7 @@ feature -- Access
 				(Wel_color_constants.Color_btnhighlight)
 		end
 
-	Color_3d_shadow: EV_COLOR is
+	Color_3d_shadow: EV_COLOR
 			-- Used for 3D-effects (dark color)
 			-- Name "color shadow"
 		local
@@ -44,7 +44,7 @@ feature -- Access
 			color_imp.set_with_system_id (Wel_color_constants.Color_btnshadow)
 		end
 
-	Color_read_only: EV_COLOR is
+	Color_read_only: EV_COLOR
 			-- Color usually used for the background of editable
 			-- widgets when they are read_only.
 		local
@@ -56,20 +56,20 @@ feature -- Access
 				(Wel_color_constants.Color_inactiveborder)
 		end
 
-	Color_read_write: EV_COLOR is
+	Color_read_write: EV_COLOR
 			-- Color usely used for the background of editable
 			-- widgets when they are in read / write mode.
 		do
 			create Result.make_with_rgb (1, 1, 1)
 		end
 
-	default_background_color: EV_COLOR is
+	default_background_color: EV_COLOR
 			-- Default background color for most widgets.
 		do
 			Result := Color_dialog
 		end
 
-	default_foreground_color: EV_COLOR is
+	default_foreground_color: EV_COLOR
 			-- Default foreground color for most widgets.
 		do
 			create Result.make_with_rgb (0, 0, 0)
@@ -77,12 +77,12 @@ feature -- Access
 
 feature {NONE} -- Constants
 
-	wel_color_constants: WEL_COLOR_CONSTANTS is
+	wel_color_constants: WEL_COLOR_CONSTANTS
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

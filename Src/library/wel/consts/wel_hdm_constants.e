@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Messages associated with WEL_HEADER_CONTROL."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,31 +10,31 @@ class
 
 feature -- Access
 
-	Hdm_first: INTEGER is 4608
+	Hdm_first: INTEGER = 4608
 
-	Hdm_delete_item: INTEGER is 4610
+	Hdm_delete_item: INTEGER = 4610
 
-	Hdm_get_item: INTEGER is 4619
+	Hdm_get_item: INTEGER = 4619
 
-	Hdm_get_item_count: INTEGER is 4608
+	Hdm_get_item_count: INTEGER = 4608
 
-	Hdm_hit_test: INTEGER is 4614
+	Hdm_hit_test: INTEGER = 4614
 
-	Hdm_insert_item: INTEGER is 4618
+	Hdm_insert_item: INTEGER = 4618
 
-	Hdm_layout: INTEGER is 4613
+	Hdm_layout: INTEGER = 4613
 
-	Hdm_set_item: INTEGER is 4620
+	Hdm_set_item: INTEGER = 4620
 
-	Hdm_set_image_list: INTEGER is 4616
+	Hdm_set_image_list: INTEGER = 4616
 
-	Hdm_get_image_list: INTEGER is 4617
+	Hdm_get_image_list: INTEGER = 4617
 
-	Hdm_get_item_rect: INTEGER is 4615
+	Hdm_get_item_rect: INTEGER = 4615
 
-	Hdm_get_bitmap_margin: INTEGER is 4629;
+	Hdm_get_bitmap_margin: INTEGER = 4629;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

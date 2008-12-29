@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "EiffelVision widget manager"
 	legal: "See notice at end of class.";
@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a widget manager.
 		do
 			array_make (1, 100)
@@ -53,7 +53,7 @@ feature -- Access
 	last_inserted_position: INTEGER;
 			-- Index position of last widget inserted into Current
 
-	item: WIDGET is
+	item: WIDGET
 			-- Item at cursor position
 		require
 			not_off: not off
@@ -65,21 +65,21 @@ feature -- Access
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid cursor position 
 			-- to the right of cursor?
 		do
 			Result := index = count + 1
 		end;
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid cursor position 
 			-- to the left of cursor?
 		do
 			Result := index = 0
 		end;
 
-	off: BOOLEAN is
+	off: BOOLEAN
 		do
 			Result := after or else before
 		end;
@@ -91,7 +91,7 @@ feature -- Measurement
 
 feature -- Cursor movement
   
-	back is
+	back
 			-- Move cursor back one position.
 		require
 			not_before: not before
@@ -101,13 +101,13 @@ feature -- Cursor movement
 			moved_back: index = old index - 1
 		end;
 
-	finish is
+	finish
 			-- Move cursor to end position
 		do
 			index := count
 		end
 
-	forth is
+	forth
 			-- Move cursor forward one position.
 		require
 			not_after: not after
@@ -117,7 +117,7 @@ feature -- Cursor movement
 			moved_forth: index = old index + 1
 		end;
 
-	start is
+	start
 			-- Move cursor to first position.
 		do
 			index := 1
@@ -125,7 +125,7 @@ feature -- Cursor movement
 
 feature -- Basic operations
 
-	new (widget, a_parent: WIDGET) is
+	new (widget, a_parent: WIDGET)
 			-- Add `widget' to the list as a child of `parent'.
 		require
 			widget_exists: widget /= Void;
@@ -178,7 +178,7 @@ feature -- Basic operations
 			widget_added: has (widget);
 		end;
 
-	implementation_to_oui (widget_i: WIDGET_I): WIDGET is
+	implementation_to_oui (widget_i: WIDGET_I): WIDGET
 			-- Object user interface widget associated with current
 			-- implementation
 		require
@@ -206,7 +206,7 @@ feature -- Basic operations
 			valid_implemenation: Result.implementation = widget_i
 		end; 
 
-	parent (widget: WIDGET): WIDGET is
+	parent (widget: WIDGET): WIDGET
 			-- Parent of `widget'
 		require
 			widget_exists: widget /= Void
@@ -234,7 +234,7 @@ feature -- Basic operations
 			is_child: (Result /= Void) implies (Result.depth+1 = widget.depth)
 		end;
 
-	destroy (widget: WIDGET) is
+	destroy (widget: WIDGET)
 			-- Destroy `widget', i.e. destroy the screen object
 			-- and remove it from the list of managed widgets.
 			-- Also destroy children (iteratively).
@@ -311,7 +311,7 @@ feature -- Basic operations
 			no_void_entries: not has_void_entries 
 		end;
 
-	screen (widget: WIDGET): SCREEN is
+	screen (widget: WIDGET): SCREEN
 			-- Screen of widget
 		require
 			widget_exists: widget /= Void;
@@ -322,7 +322,7 @@ feature -- Basic operations
 			valid_result: Result /= Void
 		end;
 
-	screen_object_to_oui (screen_object: POINTER): WIDGET is
+	screen_object_to_oui (screen_object: POINTER): WIDGET
 			-- Object user interface widget associated with an
 			-- implementation with same `screen_object'
 		local
@@ -346,7 +346,7 @@ feature -- Basic operations
 			end;
 		end;
 
-	show_tree (a_file: PLAIN_TEXT_FILE) is
+	show_tree (a_file: PLAIN_TEXT_FILE)
 			-- Print a textual representation of the widgets tree on `a_file'.
 		require
 			a_file_exists: a_file /= Void;
@@ -381,7 +381,7 @@ feature -- Basic operations
 			end
 		end;
 
-	top (widget: WIDGET): TOP is
+	top (widget: WIDGET): TOP
 			-- Top shell or base of the widget
 		require
 			widget_exists: widget /= Void;
@@ -412,7 +412,7 @@ feature -- Basic operations
 
 feature {COMPOSITE} -- Basic operations
 
-	children_of (w: WIDGET): ARRAYED_LIST [WIDGET] is
+	children_of (w: WIDGET): ARRAYED_LIST [WIDGET]
 			-- Children of widget `w'
 		require
 			valid_w: w /= Void;
@@ -447,7 +447,7 @@ feature {COMPOSITE} -- Basic operations
 			valid_result: Result /= Void
 		end;
 
-	descendants_of (w: WIDGET; desc: ARRAYED_LIST [WIDGET]) is
+	descendants_of (w: WIDGET; desc: ARRAYED_LIST [WIDGET])
 			-- Add all descendant children of widget `w' into
 			-- `desc'. 
 		require
@@ -481,7 +481,7 @@ feature {COMPOSITE} -- Basic operations
 
 feature {G_ANY_I} -- Basic operations
 
-	widget_at (i: INTEGER): WIDGET is
+	widget_at (i: INTEGER): WIDGET
 			-- Widget at index position `i'.
 		require
 			valid_index: valid_index (i);
@@ -491,7 +491,7 @@ feature {G_ANY_I} -- Basic operations
 			valid_result: Result /= Void
 		end;
 
-	screen_i_using_index (widget_index: INTEGER): SCREEN_I is
+	screen_i_using_index (widget_index: INTEGER): SCREEN_I
 			-- Top shell or base of the widget
 		require
 			valid_index: valid_index (widget_index);
@@ -516,7 +516,7 @@ feature {G_ANY_I} -- Basic operations
 			valid_result: Result /= Void
 		end;
 
-	parent_using_index (widget: WIDGET; w_index: INTEGER): WIDGET is
+	parent_using_index (widget: WIDGET; w_index: INTEGER): WIDGET
 			-- Parent of `widget'. Start at `w_index'.
 		require
 			widget_exists: widget /= Void;
@@ -547,16 +547,16 @@ feature {G_ANY_I} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	Chunk: INTEGER is 50;
+	Chunk: INTEGER = 50;
 			-- Array chunk
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 			-- Is the list empty ?
 		do
 			Result := count = 0
 		end;
 
-	index_of (widget: WIDGET): INTEGER is
+	index_of (widget: WIDGET): INTEGER
 			-- Index of `widget' in list
 		require
 			widget_exists: widget /= Void;
@@ -583,7 +583,7 @@ feature {NONE} -- Implementation
 			Widget_found: widget.same (area.item (Result))
 		end;
 
-	has_void_entries: BOOLEAN is
+	has_void_entries: BOOLEAN
 			-- Are there void entries in the array?
 		do
 			from	
@@ -604,7 +604,7 @@ invariant
 	Stay_on: index <= count+1;
 	Empty_implies_zero_position: empty implies (index = 0)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

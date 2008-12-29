@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Memory device context compatible with a given %
 		%device context."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_dc: WEL_DC) is
+	make (a_dc: WEL_DC)
 			-- Make a compatible dc with `a_dc'
 		require
 			a_dc_not: a_dc /= Void
@@ -38,19 +38,19 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	get is
+	get
 			-- Get the device context
 		do
 		end
 
-	release is
+	release
 			-- Release the device context
 		do
 		end
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 		do
 			unselect_all
 			delete
@@ -58,7 +58,7 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Externals
 
-	cwin_create_compatible_dc (hdc: POINTER): POINTER is
+	cwin_create_compatible_dc (hdc: POINTER): POINTER
 			-- SDK CreateCompatibleDC
 		external
 			"C [macro <wel.h>] (HDC): EIF_POINTER"
@@ -66,7 +66,7 @@ feature {NONE} -- Externals
 			"CreateCompatibleDC"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

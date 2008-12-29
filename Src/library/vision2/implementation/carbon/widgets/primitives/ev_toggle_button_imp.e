@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision toggle button, Carbon implementation."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a Carbon toggle button.
 		local
 			ret: INTEGER
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	align_text_center is
+	align_text_center
 			-- Display `text' centered.
 		local
 			ret: INTEGER
@@ -63,7 +63,7 @@ feature -- Status setting
 			ret := hiview_set_needs_display_external (c_object, 1)
 		end
 
-	align_text_left is
+	align_text_left
 			-- Display `text' left aligned.
 		local
 			ret: INTEGER
@@ -72,7 +72,7 @@ feature -- Status setting
 			ret := hiview_set_needs_display_external (c_object, 1)
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display `text' right aligned.
 		local
 			ret: INTEGER
@@ -83,7 +83,7 @@ feature -- Status setting
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Set `is_selected' `True'.
 		local
 			ret: INTEGER
@@ -91,7 +91,7 @@ feature -- Status setting
 			ret := hiview_set_value_external (c_object, 1)
 		end
 
-	disable_select is
+	disable_select
 				-- Set `is_selected' `False'.
 		local
 			ret: INTEGER
@@ -101,7 +101,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is toggle button pressed?
 		do
 			Result := hiview_get_value_external (c_object).to_boolean
@@ -110,7 +110,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 
 			-- Display image of `a_pixmap' on `Current'.
 			-- Image of `pixmap' will be a copy of `a_pixmap'.
@@ -141,7 +141,7 @@ feature -- Element change
 
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove image displayed on `Current'.
 
 			local
@@ -166,7 +166,7 @@ feature -- Element change
 
 --feature -- Helper features
 
-	set_control_data_picture (incontrol: POINTER; inpart: INTEGER; intagname: INTEGER; inpixmap: POINTER): INTEGER is
+	set_control_data_picture (incontrol: POINTER; inpart: INTEGER; intagname: INTEGER; inpixmap: POINTER): INTEGER
 			-- set a boolean value with set_control_data
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -187,7 +187,7 @@ feature {EV_ANY_I}
 
 	interface: EV_TOGGLE_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_TOGGLE_BUTTON_IMP
 

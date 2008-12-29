@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Equivalent of HASH_TABLE [NATURAL_32, ANY], since this type cannot be written
 		as ANY does not inherit from HASHABLE
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: NATURAL_32) is
+	make (n: NATURAL_32)
 			-- Initialize current instance
 		do
 			create table.make (n.to_integer_32, Void, create {RT_REFERENCE_COMPARER}.make)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Lookup
 
-	index (an_obj: ANY): NATURAL_32 is
+	index (an_obj: ANY): NATURAL_32
 			-- Index of `an_obj' in Current		
 		local
 			l_obj: SYSTEM_OBJECT
@@ -47,7 +47,7 @@ feature -- Lookup
 
 feature -- Status report
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Default capacity of current.
 		do
 				-- No way to get the capacity on .NET, so we return `count'.
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			last_index := 0
@@ -72,7 +72,7 @@ invariant
 	is_dotnet: {PLATFORM}.is_dotnet
 	table_not_void: table /= Void
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

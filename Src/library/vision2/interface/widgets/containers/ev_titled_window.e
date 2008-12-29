@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Top level titled window. Contains a single widget.
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
    			-- Mark `Current' as initialized.
    			-- This must be called during the creation procedure
    			-- to satisfy the `is_initialized' invariant.
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	icon_name: STRING_32 is
+	icon_name: STRING_32
 			-- Name displayed when `Current is minimized.
 			-- If `is_empty' then `title' is displayed.
 		require
@@ -66,7 +66,7 @@ feature -- Access
 			cloned: Result /= implementation.icon_name
 		end
 
-	icon_pixmap: EV_PIXMAP is
+	icon_pixmap: EV_PIXMAP
 			-- Window icon.
 		require
 			not_destroyed: not is_destroyed
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_minimized: BOOLEAN is
+	is_minimized: BOOLEAN
 			-- Is displayed iconified/minimised?
 		require
 			not_destroyed: not is_destroyed
@@ -88,7 +88,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_minimized
 		end
 
-	is_maximized: BOOLEAN is
+	is_maximized: BOOLEAN
 			-- Is displayed at maximum size?
 		require
 			not_destroyed: not is_destroyed
@@ -100,7 +100,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	raise is
+	raise
 			-- Request that window be displayed above all other windows
 			-- (if `is_minimized', window is restored).
 		require
@@ -109,7 +109,7 @@ feature -- Status setting
 			implementation.raise
 		end
 
-	lower is
+	lower
 			-- Request that window be displayed below all other windows.
 		require
 			not_destroyed: not is_destroyed
@@ -117,7 +117,7 @@ feature -- Status setting
 			implementation.lower
 		end
 
-	minimize is
+	minimize
 			-- Display iconified/minimised.
 			-- It is not possible to guarantee this on some
 			-- platform configurations.
@@ -130,7 +130,7 @@ feature -- Status setting
 			not_displayed: not is_displayed
 		end
 
-	maximize is
+	maximize
 			-- Display at maximum size.
 		require
 			not_destroyed: not is_destroyed
@@ -141,7 +141,7 @@ feature -- Status setting
 			is_maximized: is_maximized
 		end
 
-	restore is
+	restore
 			-- Restore to original position when minimized or maximized.
 		require
 			not_destroyed: not is_destroyed
@@ -154,7 +154,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (an_icon_name: STRING_GENERAL) is
+	set_icon_name (an_icon_name: STRING_GENERAL)
 			-- Assign `an_icon_name' to `icon_name'.
 		require
 			not_destroyed: not is_destroyed
@@ -166,7 +166,7 @@ feature -- Element change
 			cloned: icon_name /= an_icon_name
 		end
 
-	remove_icon_name is
+	remove_icon_name
 			-- Make `icon_name' empty.
 		require
 			not_destroyed: not is_destroyed
@@ -177,7 +177,7 @@ feature -- Element change
 		end
 
 
-	set_icon_pixmap (an_icon: EV_PIXMAP) is
+	set_icon_pixmap (an_icon: EV_PIXMAP)
 			-- Assign `an_icon' to `icon'.
 		require
 			not_destroyed: not is_destroyed
@@ -195,7 +195,7 @@ feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Responsible for interaction with native graphics toolkit.
 		do
 			create {EV_TITLED_WINDOW_IMP} implementation.make (Current)
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 invariant
 	accelerators_not_void: is_usable implies accelerators /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

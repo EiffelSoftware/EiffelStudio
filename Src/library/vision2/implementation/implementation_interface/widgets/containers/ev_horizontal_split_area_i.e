@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Displays two widgets side by side, seperated by an adjustable divider."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature
 
-	minimum_split_position: INTEGER is
+	minimum_split_position: INTEGER
 			-- Minimum position the splitter can have.
 		do
 			if first_visible then
@@ -26,7 +26,7 @@ feature
 			end
 		end
 
-	maximum_split_position: INTEGER is
+	maximum_split_position: INTEGER
 			-- Maximum position the splitter can have.
 		local
 			a_sec_width: INTEGER
@@ -44,7 +44,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_SPLIT_AREA;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

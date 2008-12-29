@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -22,21 +22,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a selection list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			create_ev_widget (a_name, a_parent, True)
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged selection list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			create_ev_widget (a_name, a_parent, False)
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a selection list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
+	add_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		require
@@ -63,7 +63,7 @@ feature -- Element change
 			implementation.add_cancel_action (a_command, argument)
 		end;
 
-	add_filter_action (a_command: COMMAND; argument: ANY) is
+	add_filter_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- filter button is activated.
 		require
@@ -73,7 +73,7 @@ feature -- Element change
 			implementation.add_filter_action (a_command, argument)
 		end;
 
-	add_help_action (a_command: COMMAND; argument: ANY) is
+	add_help_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- help button is activated.
 		require
@@ -83,7 +83,7 @@ feature -- Element change
 			implementation.add_help_action (a_command, argument)
 		end;
 
-	add_ok_action (a_command: COMMAND; argument: ANY) is
+	add_ok_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		require
@@ -93,7 +93,7 @@ feature -- Element change
 			implementation.add_ok_action (a_command, argument)
 		end;
 
-	dir_count: INTEGER is
+	dir_count: INTEGER
 			-- Number of items in directory list
 		require
 			exists: not destroyed
@@ -101,7 +101,7 @@ feature -- Element change
 			Result := implementation.dir_count
 		end;
 
-	dir_list: LINKED_LIST [STRING] is
+	dir_list: LINKED_LIST [STRING]
 			-- Items of current directory list
 		require
 			exists: not destroyed
@@ -109,7 +109,7 @@ feature -- Element change
 			Result := implementation.dir_list
 		end;
 
-	directory: STRING is
+	directory: STRING
 			-- Base directory used in determining files and directories
 			-- to be displayed
 		require
@@ -118,7 +118,7 @@ feature -- Element change
 			Result := implementation.directory
 		end;
 
-	file_count: INTEGER is
+	file_count: INTEGER
 			-- Number of items in file list
 		require
 			exists: not destroyed
@@ -126,7 +126,7 @@ feature -- Element change
 			Result := implementation.file_count
 		end;
 
-	file_list: LINKED_LIST [STRING_GENERAL] is
+	file_list: LINKED_LIST [STRING_GENERAL]
 			-- Items of current file list
 		require
 			exists: not destroyed
@@ -134,7 +134,7 @@ feature -- Element change
 			Result := implementation.file_list
 		end;
 
-	filter: STRING is
+	filter: STRING
 			-- Current filter value
 		require
 			exists: not destroyed
@@ -142,7 +142,7 @@ feature -- Element change
 			Result := implementation.filter
 		end;
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Make cancel button invisible.
 		require
 			exists: not destroyed
@@ -150,7 +150,7 @@ feature -- Element change
 			implementation.hide_cancel_button
 		end;
 
-	hide_filter_button is
+	hide_filter_button
 			-- Make filter button invisible.
 		require
 			exists: not destroyed
@@ -158,7 +158,7 @@ feature -- Element change
 			implementation.hide_filter_button
 		end;
 
-	hide_help_button is
+	hide_help_button
 			-- Make help button invisible.
 		require
 			exists: not destroyed
@@ -166,7 +166,7 @@ feature -- Element change
 			implementation.hide_help_button
 		end;
 
-	hide_ok_button is
+	hide_ok_button
 			-- Make ok button invisible.
 		require
 			exists: not destroyed
@@ -174,7 +174,7 @@ feature -- Element change
 			implementation.hide_ok_button
 		end;
 
-	set_directory_selection is
+	set_directory_selection
 			-- Sets selection to directories only.
 		require
 			exists: not destroyed
@@ -182,7 +182,7 @@ feature -- Element change
 			implementation.set_directory_selection
 		end;
 
-   	set_file_selection is
+   	set_file_selection
 	   		-- Sets selection to files (default value).
 		require
 			exists: not destroyed
@@ -190,7 +190,7 @@ feature -- Element change
    			implementation.set_file_selection
 	   	end;
 
-   	set_all_selection is
+   	set_all_selection
 	   		-- Sets selection to files and directories.
 		require
 			exists: not destroyed
@@ -205,7 +205,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
 feature
 
-	is_dir_valid: BOOLEAN is
+	is_dir_valid: BOOLEAN
 			-- Is current search directory valid?
 		require
 			exists: not destroyed
@@ -213,7 +213,7 @@ feature
 			Result := implementation.is_dir_valid
 		end;
 
-	is_list_updated: BOOLEAN is
+	is_list_updated: BOOLEAN
 			-- Is file od directory list updated during last search?
 		require
 			exists: not destroyed
@@ -221,7 +221,7 @@ feature
 			Result := implementation.is_list_updated
 		end;
 
-	pattern: STRING is
+	pattern: STRING
 			-- Search pattern used in combination with `directory'
 			-- files and directories to be displayed
 		require
@@ -230,7 +230,7 @@ feature
 			Result := implementation.pattern
 		end;
 
-	pattern_name: STRING is
+	pattern_name: STRING
 			-- Name of the search pattern
 		require
 			exists: not destroyed
@@ -238,7 +238,7 @@ feature
 			Result := implementation.pattern_name
 		end;
 
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+	remove_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		require
@@ -248,7 +248,7 @@ feature
 			implementation.remove_cancel_action (a_command, argument)
 		end;
 
-	remove_filter_action (a_command: COMMAND; argument: ANY) is
+	remove_filter_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- filter button is activated.
 		require
@@ -258,7 +258,7 @@ feature
 			implementation.remove_filter_action (a_command, argument)
 		end;
 
-	remove_help_action (a_command: COMMAND; argument: ANY) is
+	remove_help_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- help button is activated.
 		require
@@ -268,7 +268,7 @@ feature
 			implementation.remove_help_action (a_command, argument)
 		end;
 
-	remove_ok_action (a_command: COMMAND; argument: ANY) is
+	remove_ok_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		require
@@ -278,7 +278,7 @@ feature
 			implementation.remove_ok_action (a_command, argument)
 		end;
 
-	selected_file: STRING is
+	selected_file: STRING
 			-- Current selected file
 		require
 			exists: not destroyed;
@@ -286,7 +286,7 @@ feature
 			Result := implementation.selected_file
 		end;
 
-	set_dir_list_label (a_label: STRING) is
+	set_dir_list_label (a_label: STRING)
 			-- Set `a_label' as dir list label,
 			-- by default this label is `Directories'.
 		require
@@ -295,7 +295,7 @@ feature
 			implementation.set_dir_list_label (a_label)
 		end;
 
-	set_directory (a_directory_name: STRING) is
+	set_directory (a_directory_name: STRING)
 			-- Set base directory used in determining files and directories
 			-- to be displayed to `a_directory_name'.
 		require
@@ -305,7 +305,7 @@ feature
 			implementation.set_directory (a_directory_name)
 		end;
 
-	set_file_list_label (a_label: STRING) is
+	set_file_list_label (a_label: STRING)
 			-- Set `a_label' as file list label,
 			-- by default this label is `Files'.
 		require
@@ -315,7 +315,7 @@ feature
 			implementation.set_file_list_label (a_label)
 		end;
 
-	set_filter (a_filter: STRING) is
+	set_filter (a_filter: STRING)
 			-- Set current filter to `a_filter'.
 		require
 			exists: not destroyed;
@@ -324,7 +324,7 @@ feature
 			implementation.set_filter (a_filter)
 		end;
 
-	set_filter_label (a_label: STRING) is
+	set_filter_label (a_label: STRING)
 			-- Set `a_label' as filter label,
 			-- by default this label is `Filter'.
 		require
@@ -334,7 +334,7 @@ feature
 			implementation.set_filter_label (a_label)
 		end;
 
-	set_pattern (a_pattern: STRING) is
+	set_pattern (a_pattern: STRING)
 			-- Set pattern to `a_pattern'.
 		require
 			exists: not destroyed;
@@ -343,7 +343,7 @@ feature
 			implementation.set_pattern (a_pattern)
 		end;
 
-	set_pattern_name (a_name: STRING) is
+	set_pattern_name (a_name: STRING)
 			-- Give `a_name' to a pattern.
 		require
 			exists: not destroyed
@@ -352,7 +352,7 @@ feature
 			implementation.set_pattern_name (a_name)
 		end
 
-	show_cancel_button is
+	show_cancel_button
 			-- Make cancel button visible.
 		require
 			exists: not destroyed
@@ -360,7 +360,7 @@ feature
 			implementation.show_cancel_button
 		end;
 
-	show_filter_button is
+	show_filter_button
 			-- Make filter button visible.
 		require
 			exists: not destroyed
@@ -368,7 +368,7 @@ feature
 			implementation.show_filter_button
 		end;
 
-	show_help_button is
+	show_help_button
 			-- Make help button visible.
 		require
 			exists: not destroyed
@@ -376,7 +376,7 @@ feature
 			implementation.show_help_button
 		end;
 
-	show_ok_button is
+	show_ok_button
 			-- Make ok button visible.
 		require
 			exists: not destroyed
@@ -384,35 +384,35 @@ feature
 			implementation.show_ok_button
 		end;
 
-	hide_file_selection_list is
+	hide_file_selection_list
 		require
 			exists: not destroyed
 		do
 			implementation.hide_file_selection_list;
 		end;
 
-	show_file_selection_list is
+	show_file_selection_list
 		require
 			exists: not destroyed
 		do
 			implementation.show_file_selection_list;
 		end;
 
-	hide_file_selection_label is
+	hide_file_selection_label
 		require
 			exists: not destroyed
 		do
 			implementation.hide_file_selection_label;
 		end;
 
-	show_file_selection_label is
+	show_file_selection_label
 		require
 			exists: not destroyed
 		do
 			implementation.show_file_selection_label;
 		end;
 
-	set_file_list_width (new_width: INTEGER) is
+	set_file_list_width (new_width: INTEGER)
 		require
 			exists: not destroyed;
 			width_large_enough: new_width >= 1;
@@ -420,7 +420,7 @@ feature
 			implementation.set_file_list_width (new_width);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

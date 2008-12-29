@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Transactions consisting of multiple transfers"
 	legal: "See notice at end of class."
@@ -44,7 +44,7 @@ create {MULTIPLE_TRANSACTION}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create transaction list.
 		do
 			list_make (1)
@@ -53,13 +53,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	source: DATA_RESOURCE is
+	source: DATA_RESOURCE
 			-- Current source
 		do
 			Result := transaction.source
 		end
 	
-	target: DATA_RESOURCE is
+	target: DATA_RESOURCE
 			-- Current target
 		do
 			Result := transaction.target
@@ -67,25 +67,25 @@ feature -- Access
 	
 feature -- Status report
 
-	is_correct: BOOLEAN is
+	is_correct: BOOLEAN
 			-- Is transaction set up correctly?
 		do
 			Result := check_query (agent transaction.is_correct)
 		end
 	 
-	error: BOOLEAN is
+	error: BOOLEAN
 			-- Has an error occurred in current transaction?
 		do
 			Result := check_query (agent transaction.error)
 		end
 
-	succeeded: BOOLEAN is
+	succeeded: BOOLEAN
 			-- Has the transaction succeeded?
 		do
 			Result := check_query (agent transaction.succeeded)
 		end
 	 
-	insertable (t: TRANSACTION): BOOLEAN is
+	insertable (t: TRANSACTION): BOOLEAN
 	 		-- Can transaction `t' be inserted in container?
 		do
 			Result := t.source.supports_multiple_transactions and then
@@ -94,7 +94,7 @@ feature -- Status report
 	 
 feature -- Status setting
 
-	reset_error is
+	reset_error
 			-- Reset error flags.
 		do
 			execute_command (agent reset_error_flags)
@@ -102,7 +102,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Execute transaction.
 		do
 			start
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 	first_source: DATA_RESOURCE
 			-- Handle to first source in collection
 			
-	reset_error_flags is
+	reset_error_flags
 			-- Reset error flags for selected transaction.
 		require
 			not_empty: not is_empty
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			target.reset_error
 		end
 
-	do_transaction is
+	do_transaction
 			-- Execute selected transaction.
 		require
 			not_empty: not is_empty
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			target.close
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

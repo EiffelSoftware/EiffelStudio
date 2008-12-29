@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A very simple view for a EG_NODE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create {EG_SIMPLE_NODE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an EG_SIMPLE_NODE.
 		do
 			Precursor {EG_LINKABLE_FIGURE}
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			set_center
 		end
 
-	make_with_model (a_model: EG_NODE) is
+	make_with_model (a_model: EG_NODE)
 			-- Create a EG_SIMPLE_NODE using `a_model'.
 		require
 			a_model_not_void: a_model /= Void
@@ -51,37 +51,37 @@ feature -- Access
 	model: EG_NODE
 			-- Model `Current' is a view for.
 
-	port_x: INTEGER is
+	port_x: INTEGER
 			-- x position where links are starting.
 		do
 			Result := point_x
 		end
 
-	port_y: INTEGER is
+	port_y: INTEGER
 			-- y position where links are starting.
 		do
 			Result := point_y
 		end
 
-	size: EV_RECTANGLE is
+	size: EV_RECTANGLE
 			-- Size of `Current'.
 		do
 			Result := node_figure.bounding_box
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height in pixels.
 		do
 			Result := node_figure.radius2 * 2
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixels.
 		do
 			Result := node_figure.radius1 * 2
 		end
 
-	xml_node_name: STRING is
+	xml_node_name: STRING
 			-- Name of `xml_element'.
 		do
 			Result := "EG_SIMPLE_NODE"
@@ -89,7 +89,7 @@ feature -- Access
 
 feature -- Element change
 
-	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE) is
+	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE)
 			-- Set `p' position such that it is on a point on the edge of `Current'.
 		local
 			ax, ay, l: DOUBLE
@@ -141,7 +141,7 @@ feature -- Element change
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
-	update is
+	update
 			-- Some properties may have changed.
 		do
 			if is_label_shown then
@@ -152,7 +152,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 feature {NONE} -- Implementation
 
-	set_is_selected (an_is_selected: like is_selected) is
+	set_is_selected (an_is_selected: like is_selected)
 			-- Set `is_selected' to `an_is_selected'.
 		do
 			if is_selected /= an_is_selected then
@@ -165,13 +165,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	figure_size: INTEGER is
+	figure_size: INTEGER
 			-- Size of figure in pixel.
 		do
 			Result := 20
 		end
 
-	color: EV_COLOR is
+	color: EV_COLOR
 			-- color of figure.
 		once
 			create Result.make_with_rgb (1,0,0)
@@ -182,13 +182,13 @@ feature {NONE} -- Implementation
 	node_figure: EV_MODEL_ELLIPSE
 			-- The figure visualizing `Current'.
 
-	number_of_figures: INTEGER is 2
+	number_of_figures: INTEGER = 2
 			-- Number of figures used to visualize `Current'.
 			-- (`name_label' and `node_figure')
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 invariant
 	node_figure_not_void: node_figure /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

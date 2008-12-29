@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Set of tests which have been creating using AutoTest.
 		

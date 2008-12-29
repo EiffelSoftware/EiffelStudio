@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Top is the abstract class for TOP_SHELL and BASE"
 	legal: "See notice at end of class.";
@@ -27,7 +27,7 @@ feature  -- Access
 	screen: SCREEN;
 			-- Screen of current top-level
 
-	icon_name: STRING is
+	icon_name: STRING
 			-- Short form of application name to be displayed
 			-- by the window manager when application is iconified
 		require
@@ -36,7 +36,7 @@ feature  -- Access
 			Result := implementation.icon_name
 		end; 
 
-	top: TOP is
+	top: TOP
 			-- Top shell or base of widget (itself here)
 		do
 			Result := Current
@@ -46,7 +46,7 @@ feature  -- Access
 
 feature -- Status report
 
-	is_iconic_state: BOOLEAN is
+	is_iconic_state: BOOLEAN
 			-- Does application start in iconic state?
 		require
 			exists: not destroyed
@@ -54,7 +54,7 @@ feature -- Status report
 			Result := implementation.is_iconic_state
 		end;
 
-	is_maximized_state: BOOLEAN is
+	is_maximized_state: BOOLEAN
 			-- Does application start in maximized state?
 		require
 			exists: not destroyed
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_iconic_state is
+	set_iconic_state
 			-- Set start state of the application to be iconic.
 		require
 			exists: not destroyed
@@ -72,7 +72,7 @@ feature -- Status setting
 			implementation.set_iconic_state
 		end;
 
-	set_normal_state is
+	set_normal_state
 			-- Set start state of the application to be normal.
 		require
 			exists: not destroyed
@@ -80,7 +80,7 @@ feature -- Status setting
 			implementation.set_normal_state
 		end;
 
-	set_maximized_state is
+	set_maximized_state
 			-- Set start state of the application to be maximized.
 		require
 			exists: not destroyed
@@ -90,7 +90,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (a_name: STRING) is
+	set_icon_name (a_name: STRING)
 			-- Set `icon_name' to `a_name'.
 		require
 			exists: not destroyed;
@@ -99,7 +99,7 @@ feature -- Element change
 			implementation.set_icon_name (a_name)
 		end;
 
-	delete_window_action is
+	delete_window_action
 			-- Called when 'top' is destroyed.
 			-- (Will exit application if
 			-- `delete_command' is not set).
@@ -113,7 +113,7 @@ feature -- Element change
 
 feature -- Removal
 
-	set_delete_command (c: COMMAND) is
+	set_delete_command (c: COMMAND)
 		do
 			delete_command := c;
 		end;
@@ -132,7 +132,7 @@ invariant
 	Depth_is_zero: depth = 0;
 	Has_no_parent: parent = Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

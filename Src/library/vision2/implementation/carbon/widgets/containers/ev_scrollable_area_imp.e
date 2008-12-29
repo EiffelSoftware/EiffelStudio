@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision scrollable area. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create scrollable area.
 		local
 			ptr: POINTER
@@ -111,18 +111,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	child_offset_right: INTEGER is
+	child_offset_right: INTEGER
 			do
 				Result := 0
 			end
 
-	child_offset_bottom: INTEGER is
+	child_offset_bottom: INTEGER
 			do
 				Result := 0
 			end
 
 
-	initialize is
+	initialize
 			local
 				h_ret, target: POINTER
 				 event_array : EVENT_TYPE_SPEC_ARRAY
@@ -141,7 +141,7 @@ feature -- Access
 
 			end
 
-	replace (v: like item) is
+	replace (v: like item)
 			local
 				a_event: POINTER
 				ret: INTEGER
@@ -152,7 +152,7 @@ feature -- Access
 				release_event_external (a_event)
 			end
 
-	setup_layout is
+	setup_layout
 			local
 				a_event: POINTER
 				ret: INTEGER
@@ -169,53 +169,53 @@ feature -- Access
 
 	vertical_step: INTEGER
 
-	is_horizontal_scroll_bar_visible: BOOLEAN is
+	is_horizontal_scroll_bar_visible: BOOLEAN
 			-- Should horizontal scroll bar be displayed?
 		do
 		end
 
-	is_vertical_scroll_bar_visible: BOOLEAN is
+	is_vertical_scroll_bar_visible: BOOLEAN
 			-- Should vertical scroll bar be displayed?
 		do
 		end
 
 feature -- Element change
 
-	set_horizontal_step (a_step: INTEGER) is
+	set_horizontal_step (a_step: INTEGER)
 			-- Set `horizontal_step' to `a_step'.
 		do
 			horizontal_step := a_step
 		end
 
-	set_vertical_step (a_step: INTEGER) is
+	set_vertical_step (a_step: INTEGER)
 			-- Set `vertical_step' to `a_step'.
 		do
 			vertical_step := a_step
 		end
 
-	show_horizontal_scroll_bar is
+	show_horizontal_scroll_bar
 			-- Display horizontal scroll bar.
 		do
 		end
 
-	hide_horizontal_scroll_bar is
+	hide_horizontal_scroll_bar
 			-- Do not display horizontal scroll bar.
 		do
 		--	print (hiview_count_subviews_external (c_object).out + "%N")
 		end
 
-	show_vertical_scroll_bar is
+	show_vertical_scroll_bar
 			-- Display vertical scroll bar.
 		do
 		end
 
-	hide_vertical_scroll_bar is
+	hide_vertical_scroll_bar
 			-- Do not display vertical scroll bar.
 		do
 		end
 
 feature {NONE} -- Implementation
-		on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER is
+		on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER
 			-- Feature that is called if an event occurs
 		local
 			event_class, event_kind : INTEGER
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 				end
 		end
 
-	frozen kEventScrollableInfoChanged: INTEGER is
+	frozen kEventScrollableInfoChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 		"kEventScrollableInfoChanged"
 	end
 
-	frozen kEventAttributeUserEvent: INTEGER is
+	frozen kEventAttributeUserEvent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 		"kEventAttributeUserEvent"
 	end
 
-	frozen kEventClassScrollable: INTEGER is
+	frozen kEventClassScrollable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 		"kEventClassScrollable"
 	end
 
-	frozen kEventScrollableScrollTo: INTEGER is
+	frozen kEventScrollableScrollTo: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 		"kEventScrollableScrollTo"
 	end
 
-	frozen kEventScrollableGetInfo: INTEGER is
+	frozen kEventScrollableGetInfo: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 		"kEventScrollableGetInfo"
 	end
 
-	frozen kEventParamLineSize: INTEGER is
+	frozen kEventParamLineSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 		"kEventParamLineSize"
 	end
 
-	frozen kEventParamImageSize: INTEGER is
+	frozen kEventParamImageSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 		"kEventParamImageSize"
 	end
 
-	frozen kEventParamViewSize: INTEGER is
+	frozen kEventParamViewSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 		"kEventParamViewSize"
 	end
 
-	frozen kEventParamOrigin: INTEGER is
+	frozen kEventParamOrigin: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 		"kEventParamOrigin"
 	end
 
-		setup_binding (a_control : POINTER) is
+		setup_binding (a_control : POINTER)
 			-- Binds the viewport to the scroll bars
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -366,17 +366,17 @@ feature {NONE} -- Implementation
 
 	fixed_widget: POINTER
 
-	fixed_height: INTEGER is
+	fixed_height: INTEGER
 			-- Fixed Vertical size measured in pixels.
 		do
 		end
 
-	on_size_allocate (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_size_allocate (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Set item in center of `Current' if smaller.
 		do
 		end
 
-	child_has_resized (item_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER_32) is
+	child_has_resized (item_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER_32)
 			-- If child has resized and smaller than parent then set position in center of `Current'.
 		local
 			a: CGSIZE_STRUCT
@@ -400,7 +400,7 @@ feature {NONE} -- Implementation
 	vertical_policy: INTEGER
 		-- Policy type used for the vertical scrollbar (ALWAYS, AUTOMATIC or NEVER)
 
-	set_scrolling_policy (hscrollpol, vscrollpol: INTEGER) is
+	set_scrolling_policy (hscrollpol, vscrollpol: INTEGER)
 			-- Set the policy for both scrollbars.
 		do
 		end
@@ -411,7 +411,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_SCROLLABLE_AREA_IMP
 

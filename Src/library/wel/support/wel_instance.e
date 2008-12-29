@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Instance of an application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_hinstance: POINTER) is
+	make (a_hinstance: POINTER)
 			-- Make an instance identified by `a_hinstance'.
 		do
 			item := a_hinstance
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING_32 is
+	name: STRING_32
 			-- Module name
 		local
 			a_wel_string: WEL_STRING
@@ -43,7 +43,7 @@ feature -- Access
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 		do
 			-- We don't have to destroy an instance.
 			item := default_pointer
@@ -51,13 +51,13 @@ feature {NONE} -- Removal
 
 feature {NONE} -- Implementation
 
-	Max_name_length: INTEGER is 255
+	Max_name_length: INTEGER = 255
 			-- Maximum module name length
 
 feature {NONE} -- Externals
 
 	cwin_get_module_file_name (hinstance, buffer: POINTER;
-			length: INTEGER): INTEGER is
+			length: INTEGER): INTEGER
 			-- SDK GetModuleFileName
 		external
 			"C [macro <wel.h>] (HINSTANCE, LPTSTR, %
@@ -66,7 +66,7 @@ feature {NONE} -- Externals
 			"GetModuleFileName"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

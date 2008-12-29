@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision textable. Implementation interface."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text displayed in label.
 		deferred
 		ensure
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
             -- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

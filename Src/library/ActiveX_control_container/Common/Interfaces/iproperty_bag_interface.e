@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,14 +12,14 @@ inherit
 
 feature -- Status Report
 
-	read_user_precondition (psz_prop_name: STRING; p_var: ECOM_VARIANT; p_error_log: IERROR_LOG_INTERFACE): BOOLEAN is
+	read_user_precondition (psz_prop_name: STRING; p_var: ECOM_VARIANT; p_error_log: IERROR_LOG_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `read'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	write_user_precondition (psz_prop_name: STRING; p_var: ECOM_VARIANT): BOOLEAN is
+	write_user_precondition (psz_prop_name: STRING; p_var: ECOM_VARIANT): BOOLEAN
 			-- User-defined preconditions for `write'.
 			-- Redefine in descendants if needed.
 		do
@@ -28,7 +28,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	read (psz_prop_name: STRING; p_var: ECOM_VARIANT; p_error_log: IERROR_LOG_INTERFACE) is
+	read (psz_prop_name: STRING; p_var: ECOM_VARIANT; p_error_log: IERROR_LOG_INTERFACE)
 			-- No description available.
 			-- `psz_prop_name' [in].  
 			-- `p_var' [out].  
@@ -41,7 +41,7 @@ feature -- Basic Operations
 
 		end
 
-	write (psz_prop_name: STRING; p_var: ECOM_VARIANT) is
+	write (psz_prop_name: STRING; p_var: ECOM_VARIANT)
 			-- No description available.
 			-- `psz_prop_name' [in].  
 			-- `p_var' [in].  
@@ -53,7 +53,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

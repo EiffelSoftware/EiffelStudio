@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		Default widget for viewing and editing key shortcut preferences.
 		]"
@@ -42,7 +42,7 @@ feature -- Access
 	change_item_widget: EV_GRID_EDITABLE_ITEM
 			-- Widget to change the value of this preference.
 
-	graphical_type: STRING is
+	graphical_type: STRING
 			-- Graphical type identfier
 		do
 			Result := "TEXT"
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_preference (new_preference: like preference) is
+	set_preference (new_preference: like preference)
 			-- Set the preference.
 		local
 			tmpstr: STRING
@@ -63,7 +63,7 @@ feature -- Status Setting
 			tmpstr := new_preference.string_value
 		end
 
-	show is
+	show
 			-- Show the widget in its editable state
 		do
 			activate
@@ -71,7 +71,7 @@ feature -- Status Setting
 
 feature {NONE} -- Command
 
-	update_changes is
+	update_changes
 			-- Update the changes made in `change_item_widget' to `preference'.
 		do
 			if valid_shortcut_text then
@@ -80,7 +80,7 @@ feature {NONE} -- Command
 			Precursor {PREFERENCE_WIDGET}
 		end
 
-	update_preference is
+	update_preference
 			-- Updates preference.
 		local
 			sc: SHORTCUT_PREFERENCE
@@ -93,7 +93,7 @@ feature {NONE} -- Command
 			end
 		end
 
-	refresh is
+	refresh
 			-- Refresh
 		local
 			l_preference: SHORTCUT_PREFERENCE
@@ -105,7 +105,7 @@ feature {NONE} -- Command
 
 feature {NONE} -- Implementation
 
-	build_change_item_widget is
+	build_change_item_widget
 			-- Create and setup `change_item_widget'.
 		local
 			l_preference: SHORTCUT_PREFERENCE
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			change_item_widget.pointer_button_press_actions.force_extend (agent activate)
 		end
 
-	on_change_item_widget_deactivated is
+	on_change_item_widget_deactivated
 			-- Triggered when `change_item_widget' is deactivated
 		do
 			--| We need to use idle action, otherwise the current active grid item
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 				end)
 		end
 
-	activate is
+	activate
 			-- Activate the text
 		do
 			change_item_widget.activate
@@ -140,14 +140,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	setup_text_field is
+	setup_text_field
 			-- Setup the text field on activation to handle properly key sequence rules.
 		do
 			change_item_widget.text_field.key_press_actions.extend (agent on_key_pressed)
 			change_item_widget.text_field.disable_edit
 		end
 
-	on_key_pressed (a_key: EV_KEY) is
+	on_key_pressed (a_key: EV_KEY)
 			-- User is pressing a key to change the shortcut
 		local
 			l_app: EV_APPLICATION
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	application: EV_APPLICATION is
+	application: EV_APPLICATION
 			--Application
 		once
 			Result := (create {EV_SHARED_APPLICATION}).ev_application
@@ -213,13 +213,13 @@ feature {NONE} -- Implementation
 	valid_shortcut_text: BOOLEAN
 			-- Is the text entered into the `change_item_widget' a valif format for a shortcut?
 
-    validate_preference_text (a_text: STRING_32): BOOLEAN is
+    validate_preference_text (a_text: STRING_32): BOOLEAN
             -- Validate `a_text'.  Disallow input if text is not a valid shortcut key combination.
         do
             Result := valid_shortcut_text
         end
 
-	converted_saveable_string (a_string: STRING): STRING is
+	converted_saveable_string (a_string: STRING): STRING
 			-- Convert `a_string' into saveable format.
 			-- `Alt+Ctrl+Shift+Key' becomes `True+True+True+Key'
 		local
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 			Result.append (l_key)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

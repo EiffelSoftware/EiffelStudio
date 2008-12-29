@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Projectors for widgets."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_drawable_widget (a_world: like world; a_drawable: EV_DRAWABLE; a_widget: like widget) is
+	make_with_drawable_widget (a_world: like world; a_drawable: EV_DRAWABLE; a_widget: like widget)
 			-- Create with `a_world' and `a_drawable' (= `a_widget').
 		require
 			a_world_not_void: a_world /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 		a_world: like world;
 		a_drawable: EV_DRAWABLE;
 		a_buffer: EV_PIXMAP;
-		a_widget: like widget) is
+		a_widget: like widget)
 			-- Create with `a_world', `a_drawable' (= `a_widget') and `a_buffer'.
 		require
 			a_world_not_void: a_world /= Void
@@ -76,7 +76,7 @@ feature -- Access
 
 feature -- Status report
 
-	buffer_used: BOOLEAN is
+	buffer_used: BOOLEAN
 			-- Is `drawable' only a buffer area for `area'?
 		do
 			Result := area /= Void
@@ -87,7 +87,7 @@ feature -- Status report
 
 feature -- Element change
 
-	change_area_position (a_x, a_y: INTEGER) is
+	change_area_position (a_x, a_y: INTEGER)
 			-- `area' has moved to (`a_x', `a_y') of `drawable'.
 		local
 			u: EV_RECTANGLE
@@ -100,7 +100,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	project is
+	project
 			-- Make a standard projection of world on device.
 		local
 			e, u: EV_RECTANGLE
@@ -125,7 +125,7 @@ feature -- Basic operations
 			is_projecting := False
 		end
 
-	project_rectangle (u: EV_RECTANGLE) is
+	project_rectangle (u: EV_RECTANGLE)
 			-- Project area under `u'.
 		local
 			pixmap: EV_PIXMAP
@@ -163,7 +163,7 @@ feature -- Basic operations
 			end
 		end
 
-	full_project is
+	full_project
 			-- Project entire area.
 		local
 			pixmap: EV_PIXMAP
@@ -197,7 +197,7 @@ feature -- Basic operations
 			end
 		end
 
-	update_rectangle (u: EV_RECTANGLE; a_x, a_y: INTEGER) is
+	update_rectangle (u: EV_RECTANGLE; a_x, a_y: INTEGER)
 			-- Flush `u' on `area' at (`a_x', `a_y').
 		require
 			buffer_used: buffer_used
@@ -212,7 +212,7 @@ feature -- Basic operations
 			end
 		end
 
-	clear_device is
+	clear_device
 			-- Erase entire canvas.
 		do
 			drawable.set_background_color (world.background_color)
@@ -232,7 +232,7 @@ feature {NONE} -- Event implementation
 	has_mouse: BOOLEAN
 			-- Does canvas have mouse on it?
 
-	figure_on_position (group: EV_MODEL_GROUP; x, y: INTEGER): EV_MODEL is
+	figure_on_position (group: EV_MODEL_GROUP; x, y: INTEGER): EV_MODEL
 			-- Figure mouse-cursor is on.
 		local
 			grp: EV_MODEL_GROUP
@@ -278,7 +278,7 @@ feature {NONE} -- Event implementation
 		end
 
 	button_press (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE;
-		screen_x, screen_y: INTEGER) is
+		screen_x, screen_y: INTEGER)
 			-- Pointer button down happened.
 		local
 			event_fig: EV_MODEL
@@ -319,7 +319,7 @@ feature {NONE} -- Event implementation
 		end
 
 	double_press (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE;
-		screen_x, screen_y: INTEGER) is
+		screen_x, screen_y: INTEGER)
 			-- Pointer double click happened.
 		local
 			event_fig: EV_MODEL
@@ -356,7 +356,7 @@ feature {NONE} -- Event implementation
 		end
 
 	button_release (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE;
-		screen_x, screen_y: INTEGER) is
+		screen_x, screen_y: INTEGER)
 			-- Pointer button up happened.
 		local
 			event_fig: EV_MODEL
@@ -393,13 +393,13 @@ feature {NONE} -- Event implementation
 			end
 		end
 
-	pointer_leave is
+	pointer_leave
 			-- Pointer left canvas.
 		do
 			has_mouse := False
 		end
 
-	has_focus (a_figure: EV_MODEL): BOOLEAN is
+	has_focus (a_figure: EV_MODEL): BOOLEAN
 			-- Is mouse cursor on `a_figure'?
 		local
 			grp: EV_MODEL_GROUP
@@ -417,7 +417,7 @@ feature {NONE} -- Event implementation
 			end
 		end
 
-	change_current (new_current_figure: EV_MODEL) is
+	change_current (new_current_figure: EV_MODEL)
 			-- Change current to `new_focused_figure'.
 			--| Generate leave and/or enter events accordingly.
 		local
@@ -490,7 +490,7 @@ feature {NONE} -- Event implementation
 		end
 
 	mouse_move (x, y: INTEGER; x_tilt, y_tilt, pressure: DOUBLE;
-		screen_x, screen_y: INTEGER) is
+		screen_x, screen_y: INTEGER)
 			-- Fire events that belong to mouse movement.
 			--| i.e. leave, enter, motion.
 		local
@@ -531,7 +531,7 @@ feature {NONE} -- Event implementation
 			end
 		end
 
-	on_pebble_request (a_x, a_y: INTEGER): ANY is
+	on_pebble_request (a_x, a_y: INTEGER): ANY
 			-- Pebble of current figure.
 			-- If figure is `Void', return pebble of world.
 			--| Because when a context menu is up, no events are sent
@@ -566,7 +566,7 @@ feature {NONE} -- Event implementation
 			end
 		end
 
-	on_drop_target_request (a_x, a_y: INTEGER): EV_ABSTRACT_PICK_AND_DROPABLE is
+	on_drop_target_request (a_x, a_y: INTEGER): EV_ABSTRACT_PICK_AND_DROPABLE
 			-- Find actual drop target.
 		local
 			event_fig: EV_MODEL
@@ -589,16 +589,16 @@ feature {NONE} -- Event implementation
 
 feature {NONE} -- Implementation
 
-	default_cursor: EV_POINTER_STYLE is
+	default_cursor: EV_POINTER_STYLE
 			-- Default cursor on world.
 		do
 			Result := default_pixmaps.standard_cursor
 		end
 
-	axle_length: INTEGER is 15
+	axle_length: INTEGER = 15
 			-- Length of x and y axles when points are displayed.
 
-	draw_points (figure: EV_MODEL) is
+	draw_points (figure: EV_MODEL)
 			-- Draw representation of all points in `figure' to canvas.
 		require
 			figure_not_void: figure /= Void
@@ -645,7 +645,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

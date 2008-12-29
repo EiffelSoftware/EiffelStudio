@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Set of static routines belonging to System.Char"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create {NONE}
 
 feature -- Statics
 
-	frozen numeric_value (c: CHARACTER): DOUBLE is
+	frozen numeric_value (c: CHARACTER): DOUBLE
 			-- (Static)
 			-- Converts the specified numeric Unicode character to a
 			-- double-precision floating point number.
@@ -32,7 +32,7 @@ feature -- Statics
 			"GetNumericValue"
 		end
 
-	frozen numeric_value_from_string (s: SYSTEM_STRING; index: INTEGER): DOUBLE is
+	frozen numeric_value_from_string (s: SYSTEM_STRING; index: INTEGER): DOUBLE
 			-- Converts the numeric Unicode character at the specified
 			-- position in a specified string to a double-precision
 			-- floating point number.
@@ -55,7 +55,7 @@ feature -- Statics
 			"GetNumericValue"
 		end
 
-	frozen unicode_category (c: CHARACTER): UNICODE_CATEGORY is
+	frozen unicode_category (c: CHARACTER): UNICODE_CATEGORY
 			-- Categorizes a specified Unicode character into a group
 			-- identified by one of the System.Globalization.UnicodeCategory
 			-- values.
@@ -72,7 +72,7 @@ feature -- Statics
 			"GetUnicodeCategory"
 		end
 
-	frozen unicode_category_from_string (s: SYSTEM_STRING; index: INTEGER): UNICODE_CATEGORY is
+	frozen unicode_category_from_string (s: SYSTEM_STRING; index: INTEGER): UNICODE_CATEGORY
 			-- Categorizes the character at the specified position in a
 			-- specified string into a group identified by one of the
 			-- System.Globalization.UnicodeCategory values.
@@ -96,7 +96,7 @@ feature -- Statics
 			"GetUnicodeCategory"
 		end
 
-	frozen is_lower (c: CHARACTER): BOOLEAN is
+	frozen is_lower (c: CHARACTER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the specified Unicode character is
 			-- categorized as a lowercase letter.
@@ -112,7 +112,7 @@ feature -- Statics
 			"IsLower"
 		end
 
-	frozen is_lower_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is
+	frozen is_lower_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the character at the specified position
 			-- in a specified string is categorized as a lowercase letter.
@@ -135,7 +135,7 @@ feature -- Statics
 			"IsLower"
 		end
 
-	frozen is_upper (c: CHARACTER): BOOLEAN is
+	frozen is_upper (c: CHARACTER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the specified Unicode character is
 			-- categorized as an uppercase letter.
@@ -151,7 +151,7 @@ feature -- Statics
 			"IsUpper"
 		end
 
-	frozen is_upper_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is
+	frozen is_upper_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the character at the specified position
 			-- in a specified string is categorized as an uppercase letter.
@@ -174,7 +174,7 @@ feature -- Statics
 			"IsUpper"
 		end
 
-	frozen is_white_space (c: CHARACTER): BOOLEAN is
+	frozen is_white_space (c: CHARACTER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the specified Unicode character is categorized
 			-- as white space.
@@ -190,7 +190,7 @@ feature -- Statics
 			"IsWhiteSpace"
 		end
 
-	frozen is_white_space_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is
+	frozen is_white_space_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the character at the specified position in a
 			-- specified string is categorized as white space.
@@ -213,7 +213,7 @@ feature -- Statics
 			"IsWhiteSpace"
 		end
 
-	frozen is_symbol (c: CHARACTER): BOOLEAN is
+	frozen is_symbol (c: CHARACTER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the specified Unicode character is categorized
 			-- as a symbol character.
@@ -230,7 +230,7 @@ feature -- Statics
 		end
 
 
-	frozen is_symbol_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is
+	frozen is_symbol_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the character at the specified position in a
 			-- specified string is categorized as a symbol character.
@@ -253,7 +253,7 @@ feature -- Statics
 			"IsSymbol"
 		end
 
-	frozen is_digit (c: CHARACTER): BOOLEAN is
+	frozen is_digit (c: CHARACTER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the specified Unicode character is
 			-- categorized as a decimal digit.
@@ -269,7 +269,7 @@ feature -- Statics
 			"IsDigit"
 		end
 
-	frozen is_digit_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is
+	frozen is_digit_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the character at the specified position in a
 			-- specified string is categorized as a decimal digit.
@@ -292,7 +292,7 @@ feature -- Statics
 			"IsDigit"
 		end
 
-	frozen is_separator (c: CHARACTER): BOOLEAN is
+	frozen is_separator (c: CHARACTER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the specified Unicode character is
 			-- categorized as a separator character.
@@ -308,7 +308,7 @@ feature -- Statics
 			"IsSeparator"
 		end
 
-	frozen is_separator_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is
+	frozen is_separator_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the character at the specified position in
 			-- a specified string is categorized as a separator character.
@@ -331,7 +331,7 @@ feature -- Statics
 			"IsSeparator"
 		end
 
-	frozen is_letter (c: CHARACTER): BOOLEAN is
+	frozen is_letter (c: CHARACTER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the specified Unicode character is
 			-- categorized as an alphabetic letter.
@@ -347,7 +347,7 @@ feature -- Statics
 			"IsLetter"
 		end
 
-	frozen is_letter_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is
+	frozen is_letter_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the character at the specified position in
 			-- a specified string is categorized as an alphabetic character.
@@ -370,7 +370,7 @@ feature -- Statics
 			"IsLetter"
 		end
 
-	frozen is_punctuation (c: CHARACTER): BOOLEAN is
+	frozen is_punctuation (c: CHARACTER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the specified Unicode character is
 			-- categorized as a punctuation mark.
@@ -386,7 +386,7 @@ feature -- Statics
 			"IsPunctuation"
 		end
 
-	frozen is_punctuation_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is
+	frozen is_punctuation_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the character at the specified position in
 			-- a specified string is categorized as a punctuation mark.
@@ -409,7 +409,7 @@ feature -- Statics
 			"IsPunctuation"
 		end
 
-	frozen is_surrogate (c: CHARACTER): BOOLEAN is
+	frozen is_surrogate (c: CHARACTER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the specified Unicode character is
 			-- categorized as a surrogate character.
@@ -425,7 +425,7 @@ feature -- Statics
 			"IsSurrogate"
 		end
 
-	frozen is_surrogate_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is
+	frozen is_surrogate_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the character at the specified position
 			-- in a specified string is categorized as a surrogate character.
@@ -448,7 +448,7 @@ feature -- Statics
 			"IsSurrogate"
 		end
 
-	frozen is_number (c: CHARACTER): BOOLEAN is
+	frozen is_number (c: CHARACTER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the specified Unicode character is
 			-- categorized as a number.
@@ -464,7 +464,7 @@ feature -- Statics
 			"IsNumber"
 		end
 
-	frozen is_number_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is
+	frozen is_number_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the character at the specified position
 			-- in a specified string is categorized as a number.
@@ -487,7 +487,7 @@ feature -- Statics
 			"IsNumber"
 		end
 
-	frozen is_letter_or_digit (c: CHARACTER): BOOLEAN is
+	frozen is_letter_or_digit (c: CHARACTER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the specified Unicode character is categorized
 			-- as an alphabetic letter or a decimal digit.
@@ -504,7 +504,7 @@ feature -- Statics
 			"IsLetterOrDigit"
 		end
 
-	frozen is_letter_or_digit_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is
+	frozen is_letter_or_digit_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the character at the specified position
 			-- in a specified string is categorized as an alphabetic
@@ -528,7 +528,7 @@ feature -- Statics
 			"IsLetterOrDigit"
 		end
 
-	frozen is_control (c: CHARACTER): BOOLEAN is
+	frozen is_control (c: CHARACTER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the specified Unicode character
 			-- is categorized as a control character.
@@ -544,7 +544,7 @@ feature -- Statics
 			"IsControl"
 		end
 
-	frozen is_control_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN is
+	frozen is_control_in_string (s: SYSTEM_STRING; index: INTEGER): BOOLEAN
 			-- (Static)
 			-- Indicates whether the character at the specified position
 			-- in a specified string is categorized as a control character.
@@ -567,7 +567,7 @@ feature -- Statics
 			"IsControl"
 		end
 
-	frozen from_string (s: SYSTEM_STRING): CHARACTER is
+	frozen from_string (s: SYSTEM_STRING): CHARACTER
 			-- (Static)
 			-- Converts the value of the specified string to its equivalent
 			-- Unicode character.
@@ -587,7 +587,7 @@ feature -- Statics
 			"Parse"
 		end
 
-	frozen static_to_string (c: CHARACTER): SYSTEM_STRING is
+	frozen static_to_string (c: CHARACTER): SYSTEM_STRING
 			-- (Static)
 			-- Converts the specified Unicode character to its equivalent
 			-- string representation.
@@ -603,7 +603,7 @@ feature -- Statics
 			"ToString"
 		end
 
-	frozen to_upper (c: CHARACTER): CHARACTER is
+	frozen to_upper (c: CHARACTER): CHARACTER
 			-- (Static)
 			-- Converts the value of a Unicode character to its uppercase
 			-- equivalent.
@@ -619,7 +619,7 @@ feature -- Statics
 			"ToUpper"
 		end
 
-	frozen to_upper_with_culture (c: CHARACTER; culture: CULTURE_INFO): CHARACTER is
+	frozen to_upper_with_culture (c: CHARACTER; culture: CULTURE_INFO): CHARACTER
 			-- (Static)
 			-- Converts the value of a specified Unicode character to
 			-- its uppercase equivalent using specified culture-specific
@@ -643,7 +643,7 @@ feature -- Statics
 			"ToUpper"
 		end
 
-	frozen to_lower (c: CHARACTER): CHARACTER is
+	frozen to_lower (c: CHARACTER): CHARACTER
 			-- (Static)
 			-- Converts the value of a Unicode character to its
 			-- lowercase equivalent.
@@ -660,7 +660,7 @@ feature -- Statics
 			"ToLower"
 		end
 
-	frozen to_lower_with_culture (c: CHARACTER; culture: CULTURE_INFO): CHARACTER is
+	frozen to_lower_with_culture (c: CHARACTER; culture: CULTURE_INFO): CHARACTER
 			-- (Static)
 			-- Converts the value of a specified Unicode character to
 			-- its lowercase equivalent using specified culture-specific
@@ -684,7 +684,7 @@ feature -- Statics
 			"ToLower"
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

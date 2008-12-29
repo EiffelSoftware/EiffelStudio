@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class is used to initially load the JVM into %
                  %the running program"
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ create {SHARED_JNI_ENVIRONMENT}
 
 feature {NONE} -- Initialization
 
-	make (class_path: STRING) is 
+	make (class_path: STRING) 
 			-- Create a JVM execution environment and specify a CLASSPATH
 		require
 			class_path_valid: class_path /= Void
@@ -74,7 +74,7 @@ feature {JNI_ENVIRONMENT} -- Access
 
 feature -- Disposal
 
-	destroy_vm is
+	destroy_vm
 			-- Destroy the JVM
 		local
 			err: INTEGER
@@ -91,7 +91,7 @@ feature -- Disposal
 
 feature -- Thread
 
-	attach_current_thread is
+	attach_current_thread
 			-- Attach to current thread of execution.
 		local
 			err: INTEGER
@@ -114,7 +114,7 @@ feature -- Thread
 			end
 		end
 
-	detach_current_thread is
+	detach_current_thread
 			-- Detach from current thread of execution.
 		local
 			err: INTEGER
@@ -144,35 +144,35 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- externals
 
-	c_create_jvm (jvm: POINTER; env: POINTER; args: POINTER): INTEGER is
+	c_create_jvm (jvm: POINTER; env: POINTER; args: POINTER): INTEGER
 		external
 			"C signature (JavaVM **, void **, void *): EIF_INTEGER use %"jni.h%""
 		alias
 			"JNI_CreateJavaVM"
 		end
 
-	c_destroy_jvm (jvm: POINTER): INTEGER is
+	c_destroy_jvm (jvm: POINTER): INTEGER
 		external
 			"C++ JavaVM use %"jni.h%""
 		alias
 			"DestroyJavaVM"
 		end
 
-	c_attach_current_thread (jvm: POINTER; env: POINTER; args: POINTER): INTEGER is
+	c_attach_current_thread (jvm: POINTER; env: POINTER; args: POINTER): INTEGER
 		external
 			"C++ JavaVM signature (void **, void *): EIF_INTEGER use %"jni.h%""
 		alias
 			"AttachCurrentThread"
 		end
 
-	c_detach_current_thread (jvm: POINTER): INTEGER is
+	c_detach_current_thread (jvm: POINTER): INTEGER
 		external
 			"C++ JavaVM use %"jni.h%""
 		alias
 			"DetachCurrentThread"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

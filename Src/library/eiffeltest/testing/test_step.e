@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Single test steps that can be added to a test suite"
 	legal: "See notice at end of class."
@@ -32,7 +32,7 @@ deferred class TEST_STEP inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create test step.
 		do
 			list_make (0)
@@ -40,20 +40,20 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	Is_complete_test: BOOLEAN is False
+	Is_complete_test: BOOLEAN = False
 			-- Is test a complete test? (Answer: no)
 
-	Top_level_allowed: BOOLEAN is False
+	Top_level_allowed: BOOLEAN = False
 			-- Can test be inserted in the top level of test hierarchy?
 			-- (Answer: no)
 
-	produces_result: BOOLEAN is
+	produces_result: BOOLEAN
 			-- Does test produce result?
 		do
 			Result := not is_empty
 		end
 
-	insertable (v: EVALUATOR): BOOLEAN is
+	insertable (v: EVALUATOR): BOOLEAN
 			-- Can evaluator `v' be inserted?
 		do
 			Result := True
@@ -61,7 +61,7 @@ feature -- Status report
 		
 feature -- Element change
 
-	extend (v: EVALUATOR) is
+	extend (v: EVALUATOR)
 			-- Add evaluator `v' at end.
 		do
 			if test_results = Void then create test_results.make end
@@ -76,7 +76,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove `i'-th item.
 		do
 			Precursor (i)
@@ -87,12 +87,12 @@ feature -- Removal
 
 feature {NONE} -- Constants
 
-	Name_prefix: STRING is "Evaluator #"
+	Name_prefix: STRING = "Evaluator #"
 			-- Name prefix for evaluators
 			
 feature {NONE} -- Implementation
 
-	run_without_rescue is
+	run_without_rescue
 			-- Run without exception trapping.
 		do
 			Precursor
@@ -108,7 +108,7 @@ invariant
 
 	evaluators_produce_result: not is_empty = produces_result
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

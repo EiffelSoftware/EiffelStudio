@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class is the main window of MEMORY ANALYZER.%
 		%May the memory analyzer communicate with other program which can surround the target debugged application%
 		% and send the MEMORY's memory map to a pipe? It should be nice, because it will only analyze the objects which%
@@ -28,7 +28,7 @@ create
 	make
 
 feature {NONE} -- Initialization
-	make (a_dir: STRING) is
+	make (a_dir: STRING)
 			--
 		require
 			a_dir_not_void: a_dir /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 --			dir_set: icon
 		end
 
-	user_initialization is
+	user_initialization
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			auto_refresh_button_selected: auto_refresh.is_selected
 		end
 
-	init_icons is
+	init_icons
 			-- Initialize the icons in the system.
 		require
 
@@ -129,7 +129,7 @@ feature {NONE} -- Initialization
 
 feature -- Redefine
 
-	destroy is
+	destroy
 			-- Destroy window, clear singleton.
 		do
 			timer.set_interval (0)
@@ -148,7 +148,7 @@ feature -- Redefine
 
 feature {NONE} -- Implementation for agents
 
-	update_splitter_proportion_once (a_splitter: EV_SPLIT_AREA; a_proportion: REAL) is
+	update_splitter_proportion_once (a_splitter: EV_SPLIT_AREA; a_proportion: REAL)
 			-- Set `a_splitter' with `a_proportion'.
 			-- Wipe out `a_splitter' `resize_actions' when `a_splitter' is shown.
 		require
@@ -165,31 +165,31 @@ feature {NONE} -- Implementation for agents
 			a_splitter_resize_actions_empty: a_splitter.is_displayed implies a_splitter.resize_actions.is_empty
 		end
 
-	eiffel_view_frame_size_change (a_x, a_y, a_width, a_height: INTEGER) is
+	eiffel_view_frame_size_change (a_x, a_y, a_width, a_height: INTEGER)
 			-- Handle frame change.
 		do
 
 		end
 
-	retreive_states is
+	retreive_states
 			-- Retreive object states from a file.
 		do
 			increase_detector.states_open_from_file
 		end
 
-	save_data_clicked is
+	save_data_clicked
 			-- Save current system datas to a file.
 		do
 			increase_detector.states_save_to_file
 		end
 
-	filter_clicked is
+	filter_clicked
 			-- When the user click the filter button.
 		do
 			filter_window.show
 		end
 
-	auto_refresh_enable is
+	auto_refresh_enable
 			-- Enable or disable auto refresh memory graph.
 		do
 			if auto_refresh.is_selected then
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation for agents
 			auto_refresh_tooltip_changed: old auto_refresh.tooltip /= auto_refresh.tooltip
 		end
 
-	collect_statics_enable is
+	collect_statics_enable
 			-- Enable or disable collect static memory object references.
 		do
 			if collect_statics.is_selected then
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation for agents
 			auto_refresh_tooltip_changed: old auto_refresh.tooltip /= auto_refresh.tooltip
 		end
 
-	auto_refresh_change_speed is
+	auto_refresh_change_speed
 			-- Change the refresh speed.
 		do
 			if timer.interval /= 0 then
@@ -243,13 +243,13 @@ feature {NONE} -- Implementation for agents
 			timer_interval_changed: timer.interval /= 0 implies old timer.interval /= timer.interval
 		end
 
-	arrange_circle_clicked is
+	arrange_circle_clicked
 			-- Arrage the nodes in a circle.
 		do
 			analyze_object_gra.arrange_in_grid
 		end
 
-	main_book_drop_pebble (a_item: MA_OBJECT_STONE) is
+	main_book_drop_pebble (a_item: MA_OBJECT_STONE)
 			-- Things to do when user drop a pebble on the main_boon's tab.
 		require
 			a_item_not_void: a_item /= Void
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation for agents
 			main_book.select_item (tab_object_graph)
 		end
 
-	main_book_dropable (a_item: MA_OBJECT_STONE): BOOLEAN is
+	main_book_dropable (a_item: MA_OBJECT_STONE): BOOLEAN
 			-- If the tab where user pointer is at dropable?
 		do
 			if a_item /= Void then
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation for agents
 			end
 		end
 
-	handle_filter_button_drop (a_stone: MA_CLASS_STONE) is
+	handle_filter_button_drop (a_stone: MA_CLASS_STONE)
 			-- Handle when user drop a class item from object grid to filter button.
 		require
 			a_stone_not_void: a_stone /= Void
@@ -280,37 +280,37 @@ feature {NONE} -- Implementation for agents
 --			
 --		end
 
-	split_incre_hori_double_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	split_incre_hori_double_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- When user double click the horizontal split in the memory increase dector window.
 		do
 			increase_detector.adjust_split_horizontal
 		end
 
-	split_info_double_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	split_info_double_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- When user double click the split in the memory statistics window.
 		do
 			tab_garbage_collector_info.set_split_position (tab_garbage_collector_info.maximum_split_position)
 		end
 
-	split_area_incre_double_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	split_area_incre_double_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- When user double click the vertical split in the memory increase dector window.
 		do
 			increase_detector.adjust_split_vertical
 		end
 
-	show_diff_in_grid is
+	show_diff_in_grid
 			-- When button "show_diff_grid" clicked, to show the difference in grid.
 		do
 			increase_detector.show_object_count_changed
 		end
 
-	add_current_state is
+	add_current_state
 			-- When button "add_current" clicked, to add current memory state.
 		do
 			increase_detector.add_current_state
 		end
 
-	resize_histogram (a_x, a_y, a_width, a_height: INTEGER) is
+	resize_histogram (a_x, a_y, a_width, a_height: INTEGER)
 			-- Do things when the eiffel_histogram size change.
 		require else
 			a_height_valid: a_height >= 0 and a_height <= 800
@@ -318,38 +318,38 @@ feature {NONE} -- Implementation for agents
 			analyze_gc.resize (a_x, a_y, a_width, a_height)
 		end
 
-	resize_history (a_x, a_y, a_width, a_height: INTEGER) is
+	resize_history (a_x, a_y, a_width, a_height: INTEGER)
 			-- Do things when the eiffel_histogram size change.
 		do
 			analyze_gc.resize_history (a_x, a_y, a_width, a_height)
 		end
 
-	timer_event is
+	timer_event
 			-- The event request by the timer.
 		do
 			analyze_gc.update_gc_info
 		end
 
-	clear_graph_clicked is
+	clear_graph_clicked
 			-- Clear the object graph.
 		do
 			analyze_object_gra.clear_graph
 		end
 
-	find_refers_clicked is
+	find_refers_clicked
 			-- Find the refers to current selected node (which represent a object), then put the refers to the graph.
 		do
 			analyze_object_gra.find_refers
 		end
 
-	zoom_changed (a_value: INTEGER) is
+	zoom_changed (a_value: INTEGER)
 			-- Scale the object graph.
 		do
 			zoom.set_tooltip (zoom.value.out)
 			analyze_object_gra.zoom_changed (a_value)
 		end
 
-	find_by_type_name is
+	find_by_type_name
 			-- Find all the objects which belong to the same type name.
 		local
 			l_item: EV_LIST_ITEM
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation for agents
 			type_name_recorded: type_name.count = old type_name.count + 1
 		end
 
-	refresh_info_clicked is
+	refresh_info_clicked
 			-- Clients want to refresh all the infomation .
 		do
 			analyze_gc.redraw
@@ -371,25 +371,25 @@ feature {NONE} -- Implementation for agents
 			analyze_object_snap.show_memory_map
 		end
 
-	gc_now_clicked is
+	gc_now_clicked
 			-- Clients want to gc now.
 		do
 			system_util.collect
 		end
 
-	redraw_histogram (a_x, a_y, a_width, a_height: INTEGER) is
+	redraw_histogram (a_x, a_y, a_width, a_height: INTEGER)
 			-- Redraw histogram (left side graph) in the gc statistics notebook tab.
 		do
 			analyze_gc.redraw_histogram
 		end
 
-	redraw_history (a_x, a_y, a_width, a_height: INTEGER) is
+	redraw_history (a_x, a_y, a_width, a_height: INTEGER)
 			-- Redraw history (right side graph)  in the gc statistics notebook tab.
 		do
 			analyze_gc.redraw_history
 		end
 
-	find_object_by_instance_name is
+	find_object_by_instance_name
 			-- Find a object by its field name.
 		local
 			l_item : EV_LIST_ITEM
@@ -401,13 +401,13 @@ feature {NONE} -- Implementation for agents
 			object_name_recorded: object_name_1.count = old object_name_1.count + 1
 		end
 
-	gc_enable_click  is
+	gc_enable_click
 			-- Enable or disable gc.
 		do
 			system_util.toggle_gc (gc_enable)
 		end
 
-	search_route is
+	search_route
 			-- Start search a route
 		do
 			analyze_route_searcher.build_next_route
@@ -436,13 +436,13 @@ feature {NONE} -- Implementation
 	refresh_interval: INTEGER
 			-- The time of interval between refersh.
 
-	refresh_interval_hi: INTEGER is 300
+	refresh_interval_hi: INTEGER = 300
 			-- The hi speed value of refresh interval.
 
-	refresh_interval_normal: INTEGER is 2000
+	refresh_interval_normal: INTEGER = 2000
 			-- The normal speed value of refresh interval.
 
-	refresh_interval_low: INTEGER is 5000
+	refresh_interval_low: INTEGER = 5000
 			-- The low speed value of refresh interval.
 
 invariant
@@ -461,7 +461,7 @@ invariant
 	main_book_has_tab_object_graph: main_book.has (tab_object_graph)
 	main_book_has_tab_states_compare: main_book.has (tab_states_compare)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

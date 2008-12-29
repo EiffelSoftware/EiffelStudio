@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents windows shared memory"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make_from_string (a_string: STRING_GENERAL) is
+	make_from_string (a_string: STRING_GENERAL)
 			-- Create `Current' from `a_string'.
 		do
 			create internal_string.make (a_string)
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Element change
 
-	retrieve_string is
+	retrieve_string
 		do
 			lock
 			check
@@ -52,7 +52,7 @@ feature {NONE} -- Access
 	internal_string: WEL_STRING;
 			-- Wrapper around non-moveable buffer.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

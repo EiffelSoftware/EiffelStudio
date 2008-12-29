@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Compute the difference between two arrays."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ feature -- Access
 
 feature -- Status report
 
-	values_set: BOOLEAN is
+	values_set: BOOLEAN
 			-- Are the values to compare set?
 		do
 			Result := src /= Void and dst /= Void
@@ -26,7 +26,7 @@ feature -- Status report
 
 feature -- Change elements
 
-	set (a_src: ARRAY[G]; a_dst: ARRAY[G]) is
+	set (a_src: ARRAY[G]; a_dst: ARRAY[G])
 			-- Set the source array `a_src' and the destination `a_dst'.
 		require
 			a_src_not_void: a_src /= Void
@@ -38,7 +38,7 @@ feature -- Change elements
 			values_set: values_set
 		end
 
-	compute_diff is
+	compute_diff
 			-- Compute the diff between `src' and `dst'
 		require
 			values_set: values_set
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 	all_matches: HASH_TABLE[INTEGER, INTEGER]
 			-- All the matches.
 
-	compute_lcs is
+	compute_lcs
 			-- Compute the longest common subsequence.
 		require
 			values_set: values_set
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,5 +1,5 @@
 
-indexing
+note
 
 	description:
 		"Directory name abstraction"
@@ -19,13 +19,13 @@ create
 
 feature
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the directory name valid?
 		do
 			Result := True
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A group shortcuts. Confliction is detected among shortcuts with the same group."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialization
 		do
 			create shortcuts.make (5)
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Status Report
 
-	has_key_combination (a_key: EV_KEY; alt, ctrl, shift: BOOLEAN): BOOLEAN is
+	has_key_combination (a_key: EV_KEY; alt, ctrl, shift: BOOLEAN): BOOLEAN
 			-- Does this group has `a_shortcut' with the key combination?
 		local
 			l_cursor: CURSOR
@@ -51,7 +51,7 @@ feature -- Status Report
 			has_item_implies_found_item_not_void: Result implies found_item /= Void
 		end
 
-	has (a_shortcut: MANAGED_SHORTCUT): BOOLEAN is
+	has (a_shortcut: MANAGED_SHORTCUT): BOOLEAN
 			-- Does this group has `a_shortcut'?
 		do
 			if a_shortcut /= Void then
@@ -65,7 +65,7 @@ feature -- Status Report
 
 feature {MANAGED_SHORTCUT} -- Element change
 
-	add_shortcut (a_shortcut: MANAGED_SHORTCUT) is
+	add_shortcut (a_shortcut: MANAGED_SHORTCUT)
 			-- Add a shortcut to this group.
 		require
 			not_has: not has (a_shortcut)
@@ -73,7 +73,7 @@ feature {MANAGED_SHORTCUT} -- Element change
 			shortcuts.extend (a_shortcut)
 		end
 
-	remove_shortcut (a_shortcut: MANAGED_SHORTCUT) is
+	remove_shortcut (a_shortcut: MANAGED_SHORTCUT)
 			-- Add a shortcut to this group.
 		do
 			shortcuts.prune (a_shortcut)
@@ -84,7 +84,7 @@ feature {MANAGED_SHORTCUT} -- Element change
 invariant
 	shortcuts_not_void: shortcuts /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XKeymapEvent."
@@ -19,7 +19,7 @@ create
 
 feature -- Pointer access
 
-	key_vector: POINTER is
+	key_vector: POINTER
 			-- Key vector pointer
 		do
 			Result := c_event_key_vector (handle)
@@ -27,12 +27,12 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_event_key_vector (event_ptr: POINTER): POINTER is
+	c_event_key_vector (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XKeymapEvent *): EIF_POINTER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

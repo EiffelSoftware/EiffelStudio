@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
 
@@ -416,7 +416,7 @@ inherit
 
 feature -- Access
 
-	row (a_row: INTEGER): EV_GRID_ROW is
+	row (a_row: INTEGER): EV_GRID_ROW
 			-- Row at index `a_row'.
 		require
 			not_destroyed: not is_destroyed
@@ -428,7 +428,7 @@ feature -- Access
 			row_not_void: Result /= Void
 		end
 
-	displayed_column (i: INTEGER): EV_GRID_COLUMN is
+	displayed_column (i: INTEGER): EV_GRID_COLUMN
 			-- `i'-th displayed column. May not correspond
 			-- to `column' if one or more columns have been
 			--- hidden via `hide'.
@@ -442,7 +442,7 @@ feature -- Access
 			column_not_void: Result /= Void
 		end
 
-	column (a_column: INTEGER): EV_GRID_COLUMN is
+	column (a_column: INTEGER): EV_GRID_COLUMN
 			-- Column at index `a_column'.
 		require
 			not_destroyed: not is_destroyed
@@ -454,7 +454,7 @@ feature -- Access
 			column_not_void: Result /= Void
 		end
 
-	item (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM is
+	item (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM
 			-- Cell at `a_row' and `a_column' position, Void if none.
 		require
 			not_destroyed: not is_destroyed
@@ -466,7 +466,7 @@ feature -- Access
 			Result := implementation.item (a_column, a_row)
 		end
 
-	activated_item: EV_GRID_ITEM is
+	activated_item: EV_GRID_ITEM
 			-- Item that has currently been activated, if any.
 		require
 			not_destroyed: not is_destroyed
@@ -474,7 +474,7 @@ feature -- Access
 			Result := implementation.currently_active_item
 		end
 
-	item_at_virtual_position (a_virtual_x, a_virtual_y: INTEGER): EV_GRID_ITEM is
+	item_at_virtual_position (a_virtual_x, a_virtual_y: INTEGER): EV_GRID_ITEM
 			-- Cell at virtual position `a_virtual_x', `a_virtual_y' or
 			-- `Void' if none.
 		require
@@ -483,7 +483,7 @@ feature -- Access
 			Result := implementation.item_at_virtual_position (a_virtual_x, a_virtual_y)
 		end
 
-	row_at_virtual_position (a_virtual_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW is
+	row_at_virtual_position (a_virtual_y: INTEGER; ignore_locked_rows: BOOLEAN): EV_GRID_ROW
 			-- Row at virtual y position `a_virtual_y'.
 		require
 			not_destroyed: not is_destroyed
@@ -491,7 +491,7 @@ feature -- Access
 			Result := implementation.row_at_virtual_position (a_virtual_y, ignore_locked_rows)
 		end
 
-	column_at_virtual_position (a_virtual_x: INTEGER): EV_GRID_COLUMN is
+	column_at_virtual_position (a_virtual_x: INTEGER): EV_GRID_COLUMN
 			-- Column at virtual x position `a_virtual_x'.
 		require
 			not_destroyed: not is_destroyed
@@ -499,7 +499,7 @@ feature -- Access
 			Result := implementation.column_at_virtual_position (a_virtual_x)
 		end
 
-	selected_columns: ARRAYED_LIST [EV_GRID_COLUMN] is
+	selected_columns: ARRAYED_LIST [EV_GRID_COLUMN]
 			-- All columns selected in `Current'.
 			-- Returned list is unsorted so no particular ordering is guaranteed.
 		require
@@ -510,7 +510,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	selected_rows: ARRAYED_LIST [EV_GRID_ROW] is
+	selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 			-- All rows selected in `Current'.
 			-- Returned list is unsorted so no particular ordering is guaranteed.
 		require
@@ -521,7 +521,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
+	selected_items: ARRAYED_LIST [EV_GRID_ITEM]
 			-- All items selected in `Current'.
 			-- Returned list is unsorted so no particular ordering is guaranteed.
 		require
@@ -532,7 +532,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	remove_selection is
+	remove_selection
 			-- Ensure that `selected_items', `selected_rows' and `selected_columns' are empty.
 		require
 			not_destroyed: not is_destroyed
@@ -544,7 +544,7 @@ feature -- Access
 			selected_columns_empty: selected_columns.is_empty
 		end
 
-	header: EV_GRID_HEADER is
+	header: EV_GRID_HEADER
 			-- Header control used for resizing columns of `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -554,7 +554,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR is
+	horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR
 			-- Horizontal scrollbar used for scrolling `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -564,7 +564,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR is
+	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR
 			-- Vertical scrollbar used for scrolling `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -574,7 +574,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	is_header_displayed: BOOLEAN is
+	is_header_displayed: BOOLEAN
 			-- Is the header displayed in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -582,7 +582,7 @@ feature -- Access
 			Result := implementation.is_header_displayed
 		end
 
-	is_resizing_divider_enabled: BOOLEAN is
+	is_resizing_divider_enabled: BOOLEAN
 			-- Is a vertical divider displayed during column resizing?
 			-- Note that if `is_column_resize_immediate' is `True', `Result'
 			-- is ignored by `Current' and no resizing divider is displayed.
@@ -592,7 +592,7 @@ feature -- Access
 			Result := implementation.is_resizing_divider_enabled
 		end
 
-	is_resizing_divider_solid: BOOLEAN is
+	is_resizing_divider_solid: BOOLEAN
 			-- Is resizing divider displayed during column resizing drawn as a solid line?
 			-- If `False', a dashed line style is used.
 		require
@@ -601,7 +601,7 @@ feature -- Access
 			Result := implementation.is_resizing_divider_solid
 		end
 
-	is_horizontal_scrolling_per_item: BOOLEAN is
+	is_horizontal_scrolling_per_item: BOOLEAN
 			-- Is horizontal scrolling performed on a per-item basis?
 			-- If `True', each change of the horizontal scroll bar increments the horizontal
 			-- offset by the current column width.
@@ -612,7 +612,7 @@ feature -- Access
 			Result := implementation.is_horizontal_scrolling_per_item
 		end
 
-	is_vertical_scrolling_per_item: BOOLEAN is
+	is_vertical_scrolling_per_item: BOOLEAN
 			-- Is vertical scrolling performed on a per-item basis?
 			-- If `True', each change of the vertical scroll bar increments the vertical
 			-- offset by the current row height.
@@ -623,7 +623,7 @@ feature -- Access
 			Result := implementation.is_vertical_scrolling_per_item
 		end
 
-	is_vertical_overscroll_enabled: BOOLEAN is
+	is_vertical_overscroll_enabled: BOOLEAN
 			-- Does the virtual height of `Current' include the
 			-- position of the final row plus the `viewable_height'.
 			-- If `True', this enables vertical scrolling until the last row
@@ -636,7 +636,7 @@ feature -- Access
 			Result := implementation.is_vertical_overscroll_enabled
 		end
 
-	is_horizontal_overscroll_enabled: BOOLEAN is
+	is_horizontal_overscroll_enabled: BOOLEAN
 			-- Does the virtual width of `Current' include the
 			-- position of the final column plus the `viewable_width'.
 			-- If `True', this enables horizontal scrolling until the last column
@@ -649,7 +649,7 @@ feature -- Access
 			Result := implementation.is_horizontal_overscroll_enabled
 		end
 
-	dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM] is
+	dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]
 			-- Function which computes the item that resides in a particular position of the
 			-- grid while `is_content_partially_dynamic'.
 		require
@@ -658,7 +658,7 @@ feature -- Access
 			Result := implementation.dynamic_content_function
 		end
 
-	is_content_partially_dynamic: BOOLEAN is
+	is_content_partially_dynamic: BOOLEAN
 			-- Is the content of `Current' partially dynamic? If `True' then
 			-- whenever an item must be re-drawn and it is not already set within `Current',
 			-- then it is queried via execution of `dynamic_content_function'. The returned item is added
@@ -669,7 +669,7 @@ feature -- Access
 			Result := implementation.is_content_partially_dynamic
 		end
 
-	is_row_height_fixed: BOOLEAN is
+	is_row_height_fixed: BOOLEAN
 			-- Must all rows in `Current' have the same height?
 		require
 			not_destroyed: not is_destroyed
@@ -677,7 +677,7 @@ feature -- Access
 			Result := implementation.is_row_height_fixed
 		end
 
-	is_column_resize_immediate: BOOLEAN is
+	is_column_resize_immediate: BOOLEAN
 			-- Is the user resizing of a column reflected immediately in `Current'?
 			-- If `True', the column width is updated continuosly and the state of `is_resizing_divider_enabled'
 			-- is ignored with no divider displayed.
@@ -688,7 +688,7 @@ feature -- Access
 			Result := implementation.is_column_resize_immediate
 		end
 
-	row_height: INTEGER is
+	row_height: INTEGER
 			-- Height of all rows within `Current'. Only has an effect on `Current'
 			-- while `is_row_height_fixed', otherwise the individual height of each
 			-- row is used directly.
@@ -701,7 +701,7 @@ feature -- Access
 			result_non_negative: result >= 0
 		end
 
-	subrow_indent: INTEGER is
+	subrow_indent: INTEGER
 			-- Number of pixels horizontally by which each subrow is indented
 			-- from its `parent_row'.
 		require
@@ -712,7 +712,7 @@ feature -- Access
 			result_non_negative: result >= 0
 		end
 
-	expand_node_pixmap: EV_PIXMAP is
+	expand_node_pixmap: EV_PIXMAP
 			-- Pixmap displayed within tree structures when a row with one or more
 			-- subrows is collapsed. Clicking the area occupied by this pixmap in `Current'
 			-- expands the row.
@@ -724,7 +724,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	collapse_node_pixmap: EV_PIXMAP is
+	collapse_node_pixmap: EV_PIXMAP
 			-- Pixmap displayed within tree structures when a row with one or more
 			-- subrows is expanded. Clicking the area occupied by this pixmap in `Current'
 			-- collapses the row.
@@ -736,7 +736,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	are_tree_node_connectors_shown: BOOLEAN is
+	are_tree_node_connectors_shown: BOOLEAN
 			-- Are connectors between tree nodes shown in `Current'?
 		require
 			not_destroyed: not is_destroyed
@@ -744,7 +744,7 @@ feature -- Access
 			Result := implementation.are_tree_node_connectors_shown
 		end
 
-	virtual_x_position: INTEGER is
+	virtual_x_position: INTEGER
 			-- Horizontal offset of viewable area in relation to the left edge of
 			-- the virtual area in pixels.
 		require
@@ -755,7 +755,7 @@ feature -- Access
 			valid_result: Result >= 0 and Result <= maximum_virtual_x_position
 		end
 
-	virtual_y_position: INTEGER is
+	virtual_y_position: INTEGER
 			-- Vertical offset of viewable area in relation to the top edge of
 			-- the virtual area in pixels.
 		require
@@ -766,7 +766,7 @@ feature -- Access
 			valid_result: Result >= 0 and Result <= maximum_virtual_y_position
 		end
 
-	maximum_virtual_x_position: INTEGER is
+	maximum_virtual_x_position: INTEGER
 			-- Maximum permitted virtual x position based on current dimensions and properties.
 			-- Properties that affect this value are `is_vertical_scrolling_per_item' and
 			-- `is_vertical_overscroll_enabled'.
@@ -778,7 +778,7 @@ feature -- Access
 			result_non_negative: Result >= 0
 		end
 
-	maximum_virtual_y_position: INTEGER is
+	maximum_virtual_y_position: INTEGER
 			-- Maximum permitted virtual y position based on current dimensions and properties.
 			-- Properties that affect this value are `is_horizontal_scrolling_per_item' and
 			-- `is_horizontal_overscroll_enabled'.
@@ -790,7 +790,7 @@ feature -- Access
 			result_non_negative: Result >= 0
 		end
 
-	virtual_width: INTEGER is
+	virtual_width: INTEGER
 			-- Width of virtual area in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -800,7 +800,7 @@ feature -- Access
 			result_non_negative: Result >= 0
 		end
 
-	virtual_height: INTEGER is
+	virtual_height: INTEGER
 			-- Height of virtual area in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -810,7 +810,7 @@ feature -- Access
 			result_non_negative: Result >= 0
 		end
 
-	viewable_width: INTEGER is
+	viewable_width: INTEGER
 			-- Width of `Current' available to view displayed items. Does
 			-- not include width of any displayed scroll bars.
 		require
@@ -821,7 +821,7 @@ feature -- Access
 			viewable_width_valid: is_displayed implies viewable_width >= 0 and viewable_width <= width
 		end
 
-	viewable_height: INTEGER is
+	viewable_height: INTEGER
 			-- Height of `Current' available to view displayed items. Does
 			-- not include width of any displayed scroll bars and/or header if shown.
 		require
@@ -832,7 +832,7 @@ feature -- Access
 			viewable_height_valid: is_displayed implies viewable_height >= 0 and viewable_height <= height
 		end
 
-	viewable_x_offset: INTEGER is
+	viewable_x_offset: INTEGER
 			-- Horizontal distance in pixels from the left edge of `Current' to
 			-- the left edge of the viewable area (defined by `viewable_width', `viewable_height')
 			-- in which all content is displayed.
@@ -844,7 +844,7 @@ feature -- Access
 			viewable_x_offset_valid: Result >=0 and Result <= width
 		end
 
-	viewable_y_offset: INTEGER is
+	viewable_y_offset: INTEGER
 			-- Vertical distance in pixels from the top edge of `Current' to
 			-- the top edge of the viewable area (defined by `viewable_width', `viewable_height')
 			-- in which all content is displayed.
@@ -856,7 +856,7 @@ feature -- Access
 			viewable_y_offset_valid: Result >=0 and Result <= height
 		end
 
-	item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY] is
+	item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 			-- It will be called once each time a pick on the item area of the grid occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.
@@ -868,7 +868,7 @@ feature -- Access
 			Result := implementation.item_pebble_function
 		end
 
-	item_veto_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN] is
+	item_veto_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]
 			-- Function used to determine whether dropping is allowed on a particular item.
 			-- When called during PND transport, the grid item currently under the pebble
 			-- and the pebble itself are passed to the function.  A return value of True means
@@ -880,7 +880,7 @@ feature -- Access
 			Result := implementation.item_veto_pebble_function
 		end
 
-	item_accept_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE] is
+	item_accept_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
 			-- Function used to retrieve the PND accept cursor for a particular item.
 			-- Called directly after `item_pebble_function' has executed.
 		require
@@ -889,7 +889,7 @@ feature -- Access
 			Result := implementation.item_accept_cursor_function
 		end
 
-	item_deny_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE] is
+	item_deny_cursor_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]
 			-- Function used to retrieve the PND deny cursor for a particular item.
 			-- Called directly after `item_pebble_function' has executed.
 		require
@@ -898,7 +898,7 @@ feature -- Access
 			Result := implementation.item_deny_cursor_function
 		end
 
-	are_column_separators_enabled: BOOLEAN is
+	are_column_separators_enabled: BOOLEAN
 			-- Is a vertical separator displayed in color `separator_color' between each column?
 		require
 			not_destroyed: not is_destroyed
@@ -906,7 +906,7 @@ feature -- Access
 			Result := implementation.are_column_separators_enabled
 		end
 
-	are_row_separators_enabled: BOOLEAN is
+	are_row_separators_enabled: BOOLEAN
 			-- Is a horizontal separator displayed in color `separator_color' between each row?
 		require
 			not_destroyed: not is_destroyed
@@ -914,7 +914,7 @@ feature -- Access
 			Result := implementation.are_row_separators_enabled
 		end
 
-	separator_color: EV_COLOR is
+	separator_color: EV_COLOR
 			-- Color used to display column and row separators.
 		require
 			not_destroyed: not is_destroyed
@@ -924,7 +924,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	focused_selection_color: EV_COLOR is
+	focused_selection_color: EV_COLOR
 			-- Color used to show selection within items while focused.
 		require
 			not_is_destroyed: not is_destroyed
@@ -934,7 +934,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	non_focused_selection_color: EV_COLOR is
+	non_focused_selection_color: EV_COLOR
 			-- Color used to show selection within items while not focused.
 		require
 			not_is_destroyed: not is_destroyed
@@ -944,7 +944,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	focused_selection_text_color: EV_COLOR is
+	focused_selection_text_color: EV_COLOR
 			-- Color used to for text of selected items while focused.
 		require
 			not_is_destroyed: not is_destroyed
@@ -954,7 +954,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	non_focused_selection_text_color: EV_COLOR is
+	non_focused_selection_text_color: EV_COLOR
 			-- Color used for text of selected items while not focused.
 		require
 			not_is_destroyed: not is_destroyed
@@ -964,7 +964,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	is_full_redraw_on_virtual_position_change_enabled: BOOLEAN is
+	is_full_redraw_on_virtual_position_change_enabled: BOOLEAN
 			-- Is complete client area invalidated as a result of virtual position changing?
 			-- Note that enabling this causes a large performance penalty in redrawing during
 			-- scrolling, but may be used to achieve effects not otherwise possible unless the
@@ -975,7 +975,7 @@ feature -- Access
 			Result := implementation.is_full_redraw_on_virtual_position_change_enabled
 		end
 
-	is_locked: BOOLEAN is
+	is_locked: BOOLEAN
 			-- Are all graphical updates to `Current' suppressed until
 			-- `unlock_update' is called.
 		require
@@ -984,7 +984,7 @@ feature -- Access
 			Result := implementation.is_locked
 		end
 
-	locked_rows: ARRAYED_LIST [EV_GRID_ROW] is
+	locked_rows: ARRAYED_LIST [EV_GRID_ROW]
 			-- All rows locked within `Current' in order of locking.
 		require
 			not_destroyed: not is_destroyed
@@ -994,7 +994,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	locked_columns: ARRAYED_LIST [EV_GRID_COLUMN] is
+	locked_columns: ARRAYED_LIST [EV_GRID_COLUMN]
 			-- All columns locked within `Current' in order of locking.
 		require
 			not_destroyed: not is_destroyed
@@ -1006,7 +1006,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]) is
+	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN])
 			-- Assign `a_function' to `item_veto_pebble_function'.
 		require
 			not_destroyed: not is_destroyed
@@ -1016,7 +1016,7 @@ feature -- Status setting
 			item_veto_pebble_function_set: item_veto_pebble_function = a_function
 		end
 
-	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]) is
+	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY])
 			-- Assign `a_function' to `item_pebble_function'.
 		require
 			not_destroyed: not is_destroyed
@@ -1026,7 +1026,7 @@ feature -- Status setting
 			item_pebble_function_set: item_pebble_function = a_function
 		end
 
-	set_item_accept_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]) is
+	set_item_accept_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE])
 			-- Assign `a_function' to `item_accept_cursor_function'.
 		require
 			not_destroyed: not is_destroyed
@@ -1036,7 +1036,7 @@ feature -- Status setting
 			item_accept_cursor_function_set: item_accept_cursor_function = a_function
 		end
 
-	set_item_deny_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE]) is
+	set_item_deny_cursor_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], EV_POINTER_STYLE])
 			-- Assign `a_function' to `item_deny_cursor_function'.
 		require
 			not_destroyed: not is_destroyed
@@ -1046,7 +1046,7 @@ feature -- Status setting
 			item_deny_cursor_function_set: item_deny_cursor_function = a_function
 		end
 
-	enable_tree is
+	enable_tree
 			-- Enable tree functionality for `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -1056,7 +1056,7 @@ feature -- Status setting
 			tree_enabled: is_tree_enabled
 		end
 
-	disable_tree is
+	disable_tree
 			-- Disable tree functionality for `Current'.
 			-- All subrows of rows contained are unparented,
 			-- which flattens the tree structure.
@@ -1068,7 +1068,7 @@ feature -- Status setting
 			tree_disabled: not is_tree_enabled
 		end
 
-	show_column (a_column: INTEGER) is
+	show_column (a_column: INTEGER)
 			-- Ensure column `a_column' is visible in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -1079,7 +1079,7 @@ feature -- Status setting
 			column_displayed: column_displayed (a_column)
 		end
 
-	hide_column (a_column: INTEGER) is
+	hide_column (a_column: INTEGER)
 			-- Ensure column `a_column' is not visible in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -1090,7 +1090,7 @@ feature -- Status setting
 			column_not_displayed: not column_displayed (a_column)
 		end
 
-	select_column (a_column: INTEGER) is
+	select_column (a_column: INTEGER)
 			-- Ensure all items in `a_column' are selected.
 		require
 			not_destroyed: not is_destroyed
@@ -1102,7 +1102,7 @@ feature -- Status setting
 			column_selected: column (a_column).is_selected
 		end
 
-	select_row (a_row: INTEGER) is
+	select_row (a_row: INTEGER)
 			-- Ensure all items in `a_row' are selected.
 		require
 			not_destroyed: not is_destroyed
@@ -1113,7 +1113,7 @@ feature -- Status setting
 			row_selected: row (a_row).is_selected
 		end
 
-	enable_selection_on_single_button_click is
+	enable_selection_on_single_button_click
 			-- Enable selection handling of items when clicked upon via mouse button `1'.
 			-- This is useful when implementing Contextual Menus where the selection may need
 			-- to remain unchanged when using mouse button `3' to handle the menu.
@@ -1125,7 +1125,7 @@ feature -- Status setting
 			selection_on_single_click_enabled: is_selection_on_single_button_click_enabled and then is_selection_on_click_enabled
 		end
 
-	enable_selection_on_click is
+	enable_selection_on_click
 			-- Enable selection handling of items when clicked upon via mouse button.
 		require
 			not_destroyed: not is_destroyed
@@ -1136,7 +1136,7 @@ feature -- Status setting
 			selection_on_single_click_disabled: not is_selection_on_single_button_click_enabled
 		end
 
-	disable_selection_on_click is
+	disable_selection_on_click
 			-- Disable selection handling when items are clicked upon.
 		require
 			not_destroyed: not is_destroyed
@@ -1146,7 +1146,7 @@ feature -- Status setting
 			selection_on_click_disabled: not is_selection_on_click_enabled and then not is_selection_on_single_button_click_enabled
 		end
 
-	enable_selection_key_handling is
+	enable_selection_key_handling
 			-- Enable selection handling of items via the keyboard.
 		require
 			not_destroyed: not is_destroyed
@@ -1156,7 +1156,7 @@ feature -- Status setting
 			selection_key_handling_enabled: is_selection_keyboard_handling_enabled
 		end
 
-	disable_selection_key_handling is
+	disable_selection_key_handling
 			-- Disable selection handling of items via the keyboard.
 		require
 			not_destroyed: not is_destroyed
@@ -1166,7 +1166,7 @@ feature -- Status setting
 			selection_key_handling_disabled: not is_selection_keyboard_handling_enabled
 		end
 
-	enable_single_row_selection is
+	enable_single_row_selection
 			-- Allow the user to select a single row via clicking or navigating using the keyboard arrow keys.
 		require
 			not_destroyed: not is_destroyed
@@ -1176,7 +1176,7 @@ feature -- Status setting
 			single_row_selection_enabled: is_single_row_selection_enabled
 		end
 
-	enable_multiple_row_selection is
+	enable_multiple_row_selection
 			-- Allow the user to select more than one row via clicking or navigating using the keyboard arrow keys.
 			-- Multiple rows may be selected via Ctrl and Shift keys.
 		require
@@ -1187,7 +1187,7 @@ feature -- Status setting
 			multiple_row_selection_enabled: is_multiple_row_selection_enabled
 		end
 
-	enable_single_item_selection is
+	enable_single_item_selection
 			-- Allow the user to select a single item via clicking or navigating using the keyboard arrow keys.
 		require
 			not_destroyed: not is_destroyed
@@ -1197,7 +1197,7 @@ feature -- Status setting
 			single_item_selection_enabled: is_single_item_selection_enabled
 		end
 
-	enable_multiple_item_selection is
+	enable_multiple_item_selection
 			-- Allow the user to select more than one item via clicking or navigating using the keyboard arrow keys.
 			-- Multiple items may be selected via Ctrl and Shift keys.
 		require
@@ -1208,7 +1208,7 @@ feature -- Status setting
 			multiple_item_selection_enabled: is_multiple_item_selection_enabled
 		end
 
-	enable_always_selected is
+	enable_always_selected
 			-- Ensure that the user may not completely remove the selection from `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -1218,7 +1218,7 @@ feature -- Status setting
 			item_is_always_selected_enabled: is_always_selected
 		end
 
-	disable_always_selected is
+	disable_always_selected
 			-- Allow the user to completely remove the selection from `Current' via clicking on an item,
 			-- clicking on a Void area or by Ctrl clicking the selected item itself.
 		require
@@ -1229,7 +1229,7 @@ feature -- Status setting
 			not_is_item_always_selected_enabled: not is_always_selected
 		end
 
-	is_always_selected: BOOLEAN is
+	is_always_selected: BOOLEAN
 			-- May the user completely remove the selection from the grid.
 			-- If `True' then the user of the grid may only deselect items by selecting other items.
 		require
@@ -1238,7 +1238,7 @@ feature -- Status setting
 			Result := implementation.is_always_selected
 		end
 
-	show_header is
+	show_header
 			-- Ensure header displayed.
 		require
 			not_destroyed: not is_destroyed
@@ -1248,7 +1248,7 @@ feature -- Status setting
 			header_displayed: is_header_displayed
 		end
 
-	hide_header is
+	hide_header
 			-- Ensure header is hidden.
 		require
 			not_destroyed: not is_destroyed
@@ -1258,7 +1258,7 @@ feature -- Status setting
 			header_not_displayed: not is_header_displayed
 		end
 
-	set_first_visible_row (a_row: INTEGER) is
+	set_first_visible_row (a_row: INTEGER)
 			-- Set `a_row' as the first row visible in `Current' as long
 			-- as there are enough rows after `a_row' to fill the remainder of `Current'.
 		require
@@ -1270,7 +1270,7 @@ feature -- Status setting
 			to_implement_assertion ("EV_GRID.set_first_visible_row - Enough following rows implies `first_visible_row' = a_row, Can be calculated from `height' of `Current' and row heights.")
 		end
 
-	enable_resizing_divider is
+	enable_resizing_divider
 			-- Ensure a vertical divider is displayed during column resizing.
 		require
 			not_destroyed: not is_destroyed
@@ -1280,7 +1280,7 @@ feature -- Status setting
 			resizing_divider_enabled: is_resizing_divider_enabled
 		end
 
-	disable_resizing_divider is
+	disable_resizing_divider
 			-- Ensure no vertical divider is displayed during column resizing.
 		require
 			not_destroyed: not is_destroyed
@@ -1290,7 +1290,7 @@ feature -- Status setting
 			resizing_divider_disabled: not is_resizing_divider_enabled
 		end
 
-	enable_solid_resizing_divider is
+	enable_solid_resizing_divider
 			-- Ensure resizing divider displayed during column resizing
 			-- is displayed as a solid line.
 		require
@@ -1301,7 +1301,7 @@ feature -- Status setting
 			solid_resizing_divider: is_resizing_divider_solid
 		end
 
-	disable_solid_resizing_divider is
+	disable_solid_resizing_divider
 			-- Ensure resizing divider displayed during column resizing
 			-- is displayed as a dashed line.
 		require
@@ -1312,7 +1312,7 @@ feature -- Status setting
 			dashed_resizing_divider: not is_resizing_divider_solid
 		end
 
-	enable_horizontal_scrolling_per_item is
+	enable_horizontal_scrolling_per_item
 			-- Ensure horizontal scrolling is performed on a per-item basis.
 		require
 			not_destroyed: not is_destroyed
@@ -1322,7 +1322,7 @@ feature -- Status setting
 			horizontal_scrolling_performed_per_item: is_horizontal_scrolling_per_item
 		end
 
-	disable_horizontal_scrolling_per_item is
+	disable_horizontal_scrolling_per_item
 			-- Ensure horizontal scrolling is performed on a per-pixel basis.
 		require
 			not_destroyed: not is_destroyed
@@ -1332,7 +1332,7 @@ feature -- Status setting
 			horizontal_scrolling_performed_per_pixel: not is_horizontal_scrolling_per_item
 		end
 
-	enable_vertical_scrolling_per_item is
+	enable_vertical_scrolling_per_item
 			-- Ensure vertical scrolling is performed on a per-item basis.
 		require
 			not_destroyed: not is_destroyed
@@ -1342,7 +1342,7 @@ feature -- Status setting
 			vertical_scrolling_performed_per_item: is_vertical_scrolling_per_item
 		end
 
-	disable_vertical_scrolling_per_item is
+	disable_vertical_scrolling_per_item
 			-- Ensure vertical scrolling is performed on a per-pixel basis.
 		require
 			not_destroyed: not is_destroyed
@@ -1354,7 +1354,7 @@ feature -- Status setting
 			vertical_scrolling_performed_per_pixel: not is_vertical_scrolling_per_item
 		end
 
-	enable_vertical_overscroll is
+	enable_vertical_overscroll
 			-- Ensure `is_vertical_overscroll_enabled' is `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -1364,7 +1364,7 @@ feature -- Status setting
 			is_vertical_overscroll_enabled: is_vertical_overscroll_enabled
 		end
 
-	disable_vertical_overscroll is
+	disable_vertical_overscroll
 			-- Ensure `is_vertical_overscroll_enabled' is `False'.
 		require
 			not_destroyed: not is_destroyed
@@ -1376,7 +1376,7 @@ feature -- Status setting
 			not_is_vertical_overscroll_enabled: not is_vertical_overscroll_enabled
 		end
 
-	enable_horizontal_overscroll is
+	enable_horizontal_overscroll
 			-- Ensure `is_horizontal_overscroll_enabled' is `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -1386,7 +1386,7 @@ feature -- Status setting
 			is_horizontal_overscroll_enabled: is_horizontal_overscroll_enabled
 		end
 
-	disable_horizontal_overscroll is
+	disable_horizontal_overscroll
 			-- Ensure `is_horizontal_overscroll_enabled' is `False'.
 		require
 			not_destroyed: not is_destroyed
@@ -1396,7 +1396,7 @@ feature -- Status setting
 			not_is_horizontal_overscroll_enabled: not is_horizontal_overscroll_enabled
 		end
 
-	set_row_height (a_row_height: INTEGER) is
+	set_row_height (a_row_height: INTEGER)
 			-- Set height of all rows within `Current' to `a_row_height
 			-- If not `is_row_height_fixed' then use the height individually per row instead.
 		require
@@ -1409,7 +1409,7 @@ feature -- Status setting
 			row_height_set: row_height = a_row_height
 		end
 
-	enable_partial_dynamic_content is
+	enable_partial_dynamic_content
 			-- Ensure contents of `Current' must be retrieved when required via execution of
 			-- `dynamic_content_function' only if the item is not already set
 			-- in `Current'.
@@ -1425,7 +1425,7 @@ feature -- Status setting
 			content_partially_dynamic: is_content_partially_dynamic
 		end
 
-	disable_dynamic_content is
+	disable_dynamic_content
 			-- Ensure contents of `Current' are not dynamic and are no longer retrieved as such.
 		require
 			not_destroyed: not is_destroyed
@@ -1435,7 +1435,7 @@ feature -- Status setting
 			content_not_dynamic: not is_content_partially_dynamic
 		end
 
-	enable_row_height_fixed is
+	enable_row_height_fixed
 			-- Ensure all rows have the same height.
 		require
 			not_destroyed: not is_destroyed
@@ -1445,7 +1445,7 @@ feature -- Status setting
 			row_height_fixed: is_row_height_fixed
 		end
 
-	disable_row_height_fixed is
+	disable_row_height_fixed
 			-- Permit rows to have varying heights.
 		require
 			not_destroyed: not is_destroyed
@@ -1457,7 +1457,7 @@ feature -- Status setting
 			row_height_variable: not is_row_height_fixed
 		end
 
-	set_column_count_to (a_column_count: INTEGER) is
+	set_column_count_to (a_column_count: INTEGER)
 			-- Resize `Current' to have `a_column_count' columns.
 		require
 			not_destroyed: not is_destroyed
@@ -1468,7 +1468,7 @@ feature -- Status setting
 			column_count_set: column_count = a_column_count
 		end
 
-	set_row_count_to (a_row_count: INTEGER) is
+	set_row_count_to (a_row_count: INTEGER)
 			-- Resize `Current' to have `a_row_count' columns.
 		require
 			not_destroyed: not is_destroyed
@@ -1479,7 +1479,7 @@ feature -- Status setting
 			row_count_set: row_count = a_row_count
 		end
 
-	set_dynamic_content_function (a_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]) is
+	set_dynamic_content_function (a_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM])
 			-- Function which computes the item that resides in a particular position of the
 			-- grid while `is_content_partially_dynamic'.
 		require
@@ -1491,7 +1491,7 @@ feature -- Status setting
 			dynamic_content_function_set: dynamic_content_function = a_function
 		end
 
-	set_subrow_indent (a_subrow_indent: INTEGER) is
+	set_subrow_indent (a_subrow_indent: INTEGER)
 			-- Set `subrow_indent' to `a_subrow_indent'.
 		require
 			not_destroyed: not is_destroyed
@@ -1502,7 +1502,7 @@ feature -- Status setting
 			subrow_indent_set: subrow_indent = a_subrow_indent
 		end
 
-	set_node_pixmaps (an_expand_node_pixmap, a_collapse_node_pixmap: EV_PIXMAP) is
+	set_node_pixmaps (an_expand_node_pixmap, a_collapse_node_pixmap: EV_PIXMAP)
 			-- Assign `an_expand_node_pixmap' to `expand_node_pixmap' and `a_collapse_node_pixmap'
 			-- to `collapse_node_pixmap'. These pixmaps are used in rows containing subrows for
 			-- expanding/collapsing the row.
@@ -1517,7 +1517,7 @@ feature -- Status setting
 			pixmaps_set: expand_node_pixmap = an_expand_node_pixmap and collapse_node_pixmap = a_collapse_node_pixmap
 		end
 
-	show_tree_node_connectors is
+	show_tree_node_connectors
 			-- Ensure connectors are displayed between nodes of tree structure in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -1527,7 +1527,7 @@ feature -- Status setting
 			tree_node_connectors_shown: are_tree_node_connectors_shown
 		end
 
-	hide_tree_node_connectors is
+	hide_tree_node_connectors
 			-- Ensure no connectors are displayed between nodes of tree structure in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -1537,7 +1537,7 @@ feature -- Status setting
 			tree_node_connectors_hidden: not are_tree_node_connectors_shown
 		end
 
-	set_virtual_position (virtual_x, virtual_y: INTEGER) is
+	set_virtual_position (virtual_x, virtual_y: INTEGER)
 			-- Move viewable area of `Current' to virtual position `virtual_x', `virtual_y'.
 		require
 			not_destroyed: not is_destroyed
@@ -1549,7 +1549,7 @@ feature -- Status setting
 			virtual_position_set: virtual_x_position = virtual_x and virtual_y_position = virtual_y
 		end
 
-	set_tree_node_connector_color (a_color: EV_COLOR) is
+	set_tree_node_connector_color (a_color: EV_COLOR)
 			-- Set `a_color' as `tree_node_connector_color'.
 		require
 			not_destroyed: not is_destroyed
@@ -1560,7 +1560,7 @@ feature -- Status setting
 			tree_node_connector_color_set: tree_node_connector_color = a_color
 		end
 
-	enable_columns_drawn_above_rows is
+	enable_columns_drawn_above_rows
 			-- Ensure `are_columns_drawn_above_rows' is `True'.
 
 		require
@@ -1571,7 +1571,7 @@ feature -- Status setting
 			columns_drawn_above_rows: are_columns_drawn_above_rows
 		end
 
-	disable_columns_drawn_above_rows is
+	disable_columns_drawn_above_rows
 			-- Ensure `are_columns_drawn_above_rows' is `False'.
 		require
 			not_destroyed: not is_destroyed
@@ -1581,7 +1581,7 @@ feature -- Status setting
 			columns_drawn_below_rows: not are_columns_drawn_above_rows
 		end
 
-	enable_column_resize_immediate is
+	enable_column_resize_immediate
 			-- Ensure `is_column_resize_immediate' is `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -1591,7 +1591,7 @@ feature -- Status setting
 			is_column_resize_immediate: is_column_resize_immediate
 		end
 
-	disable_column_resize_immediate is
+	disable_column_resize_immediate
 			-- Ensure `is_column_resize_immediate' is `False'.
 		require
 			not_destroyed: not is_destroyed
@@ -1601,7 +1601,7 @@ feature -- Status setting
 			not_is_column_resize_immediate: not is_column_resize_immediate
 		end
 
-	enable_column_separators is
+	enable_column_separators
 			-- Ensure `are_column_separators_enabled' is `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -1611,7 +1611,7 @@ feature -- Status setting
 			column_separators_enabled: are_column_separators_enabled
 		end
 
-	disable_column_separators is
+	disable_column_separators
 			-- Ensure `are_column_separators_enabled' is `False'.
 		require
 			not_destroyed: not is_destroyed
@@ -1621,7 +1621,7 @@ feature -- Status setting
 			column_separators_disabled: not are_column_separators_enabled
 		end
 
-	enable_row_separators is
+	enable_row_separators
 			-- Ensure `are_row_separators_enabled' is `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -1631,7 +1631,7 @@ feature -- Status setting
 			row_separators_enabled: are_row_separators_enabled
 		end
 
-	disable_row_separators is
+	disable_row_separators
 			-- Ensure `are_row_separators_enabled' is `False'.
 		require
 			not_destroyed: not is_destroyed
@@ -1641,7 +1641,7 @@ feature -- Status setting
 			row_separators_disabled: not are_row_separators_enabled
 		end
 
-	set_separator_color (a_color: EV_COLOR) is
+	set_separator_color (a_color: EV_COLOR)
 			-- Set `a_color' as `separator_color'.
 		require
 			not_destroyed: not is_destroyed
@@ -1652,7 +1652,7 @@ feature -- Status setting
 			separator_color_set: separator_color = a_color
 		end
 
-	set_focused_selection_color (a_color: EV_COLOR) is
+	set_focused_selection_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `focused_selection_color'.
 		require
 			not_is_destroyed: not is_destroyed
@@ -1663,7 +1663,7 @@ feature -- Status setting
 			focused_selection_color_set: focused_selection_color = a_color
 		end
 
-	set_non_focused_selection_color (a_color: EV_COLOR) is
+	set_non_focused_selection_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `non_focused_selection_color'.
 		require
 			not_is_destroyed: not is_destroyed
@@ -1674,7 +1674,7 @@ feature -- Status setting
 			non_focused_selection_color_set: non_focused_selection_color = a_color
 		end
 
-	set_focused_selection_text_color (a_color: EV_COLOR) is
+	set_focused_selection_text_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `focused_selection_text_color'.
 		require
 			not_is_destroyed: not is_destroyed
@@ -1685,7 +1685,7 @@ feature -- Status setting
 			focused_selection_text_color_set: focused_selection_text_color = a_color
 		end
 
-	set_non_focused_selection_text_color (a_color: EV_COLOR) is
+	set_non_focused_selection_text_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `non_focused_selection_text_color'.
 		require
 			not_is_destroyed: not is_destroyed
@@ -1696,7 +1696,7 @@ feature -- Status setting
 			non_focused_selection_text_color_set: non_focused_selection_text_color = a_color
 		end
 
-	redraw is
+	redraw
 			-- Force `Current' to be re-drawn when next idle.
 		require
 			not_destroyed: not is_destroyed
@@ -1704,7 +1704,7 @@ feature -- Status setting
 			implementation.redraw
 		end
 
-	enable_full_redraw_on_virtual_position_change is
+	enable_full_redraw_on_virtual_position_change
 			-- Ensure `is_full_redraw_on_virtual_position_change_enabled' is `True'.
 		require
 			not_is_destroyed: not is_destroyed
@@ -1714,7 +1714,7 @@ feature -- Status setting
 			is_full_redraw_on_virtual_position_change_enabled: is_full_redraw_on_virtual_position_change_enabled
 		end
 
-	disable_full_redraw_on_virtual_position_change is
+	disable_full_redraw_on_virtual_position_change
 			-- Ensure `is_full_redraw_on_virtual_position_change_enabled' is `False'.
 		require
 			not_is_destroyed: not is_destroyed
@@ -1724,7 +1724,7 @@ feature -- Status setting
 			not_is_full_redraw_on_virtual_position_change_enabled: not is_full_redraw_on_virtual_position_change_enabled
 		end
 
-	lock_update is
+	lock_update
 			-- Ensure `is_locked' is `True', thereby preventing graphical
 			-- updates until `unlock_update' is called.
 		require
@@ -1735,7 +1735,7 @@ feature -- Status setting
 			is_locked: is_locked
 		end
 
-	unlock_update is
+	unlock_update
 			-- Ensure `is_locked' is `False', thereby ensuring graphical
 			-- updates occur as normal. The complete client area
 			-- is refreshed to synchronize the display with the contents.
@@ -1747,7 +1747,7 @@ feature -- Status setting
 			not_is_locked: not is_locked
 		end
 
-	hide_vertical_scroll_bar is
+	hide_vertical_scroll_bar
 			-- Ensure no vertical scroll bar is displayed in `Current'
 			-- at any time.
 		require
@@ -1758,7 +1758,7 @@ feature -- Status setting
 			not_is_vertical_scroll_bar_show_requested: not is_vertical_scroll_bar_show_requested
 		end
 
-	show_vertical_scroll_bar is
+	show_vertical_scroll_bar
 			-- Ensure a vertical scroll bar is displayed in `Current'
 			-- when required. Note that this does not force the vertical
 			-- scroll bar to be visible, simply ensures that when `virtual_height'
@@ -1771,7 +1771,7 @@ feature -- Status setting
 			is_vertical_scroll_bar_show_requested: is_vertical_scroll_bar_show_requested
 		end
 
-	is_vertical_scroll_bar_show_requested: BOOLEAN is
+	is_vertical_scroll_bar_show_requested: BOOLEAN
 			-- Will a vertical scroll bar be displayed in `Current' when
 			-- `virtual_height' exceeds `viewable_height'?
 		require
@@ -1780,7 +1780,7 @@ feature -- Status setting
 			Result := implementation.is_vertical_scroll_bar_show_requested
 		end
 
-	hide_horizontal_scroll_bar is
+	hide_horizontal_scroll_bar
 			-- Ensure no horizontal scroll bar is displayed in `Current'
 			-- at any time.
 		require
@@ -1791,7 +1791,7 @@ feature -- Status setting
 			not_is_horizontal_scroll_bar_show_requested: not is_horizontal_scroll_bar_show_requested
 		end
 
-	show_horizontal_scroll_bar is
+	show_horizontal_scroll_bar
 			-- Ensure a horizontal scroll bar is displayed in `Current'
 			-- when required. Note that this does not force the horizontal
 			-- scroll bar to be visible, simply ensures that when `virtual_width'
@@ -1804,7 +1804,7 @@ feature -- Status setting
 			is_horizontal_scroll_bar_show_requested: is_horizontal_scroll_bar_show_requested
 		end
 
-	is_horizontal_scroll_bar_show_requested: BOOLEAN is
+	is_horizontal_scroll_bar_show_requested: BOOLEAN
 			-- Will a horizontal scroll bar be displayed in `Current' when
 			-- `virtual_width' exceeds `viewable_width'?
 		require
@@ -1815,16 +1815,16 @@ feature -- Status setting
 
 feature -- Status report
 
-	prunable: BOOLEAN is False
+	prunable: BOOLEAN = False
 			-- May items be removed?
 
-	writable: BOOLEAN is False
+	writable: BOOLEAN = False
 			-- Is there a current item that may be modified?
 
-	readable: BOOLEAN is False
+	readable: BOOLEAN = False
 			-- Is there a current item that may be accessed?
 
-	is_tree_enabled: BOOLEAN is
+	is_tree_enabled: BOOLEAN
 			-- Is tree functionality enabled?
 			-- Must be `True' to perform any tree structure functions on `Current'.
 			-- Use `enable_tree' and `disable_tree' to set this state.
@@ -1834,7 +1834,7 @@ feature -- Status report
 			Result := implementation.is_tree_enabled
 		end
 
-	column_displayed (a_column: INTEGER): BOOLEAN is
+	column_displayed (a_column: INTEGER): BOOLEAN
 			-- May column `a_column' be displayed when `Current' is?
 			-- Will return False if `hide' has been called on column `a_column'.
 			-- A value of True does not signify that column `a_column' is visible on screen at that particular time.
@@ -1845,7 +1845,7 @@ feature -- Status report
 			Result := implementation.column_displayed (a_column)
 		end
 
-	is_single_row_selection_enabled: BOOLEAN is
+	is_single_row_selection_enabled: BOOLEAN
 			-- Does clicking or keyboard navigating via arrow keys select the whole row, unselecting
 			-- any previously rows?
 		require
@@ -1854,7 +1854,7 @@ feature -- Status report
 			Result := implementation.is_single_row_selection_enabled
 		end
 
-	is_multiple_row_selection_enabled: BOOLEAN is
+	is_multiple_row_selection_enabled: BOOLEAN
 			-- Does clicking or keyboard navigating via arrow keys select the whole row, with multiple
 			-- row selection permitted via the use of Ctrl and Shift keys?
 		require
@@ -1863,7 +1863,7 @@ feature -- Status report
 			Result := implementation.is_multiple_row_selection_enabled
 		end
 
-	is_single_item_selection_enabled: BOOLEAN is
+	is_single_item_selection_enabled: BOOLEAN
 			-- Does clicking or keyboard navigating via arrow keys select an item, unselecting
 			-- any previously selected items?
 		require
@@ -1872,7 +1872,7 @@ feature -- Status report
 			Result := implementation.is_single_item_selection_enabled
 		end
 
-	is_multiple_item_selection_enabled: BOOLEAN is
+	is_multiple_item_selection_enabled: BOOLEAN
 			-- Does clicking or keyboard navigating via arrow keys select an item, with multiple
 			-- item selection permitted via the use of Ctrl and Shift keys?
 		require
@@ -1881,7 +1881,7 @@ feature -- Status report
 			Result := implementation.is_multiple_item_selection_enabled
 		end
 
-	is_selection_on_click_enabled: BOOLEAN is
+	is_selection_on_click_enabled: BOOLEAN
 			-- Will an item be selected if clicked upon?
 		require
 			not_destroyed: not is_destroyed
@@ -1889,7 +1889,7 @@ feature -- Status report
 			Result := implementation.is_selection_on_click_enabled
 		end
 
-	is_selection_on_single_button_click_enabled: BOOLEAN is
+	is_selection_on_single_button_click_enabled: BOOLEAN
 			-- Will an item be selected if clicked upon via mouse button `1' only?
 		require
 			not_destroyed: not is_destroyed
@@ -1897,7 +1897,7 @@ feature -- Status report
 			Result := implementation.is_selection_on_single_button_click_enabled
 		end
 
-	is_selection_keyboard_handling_enabled: BOOLEAN is
+	is_selection_keyboard_handling_enabled: BOOLEAN
 			-- May items be selected via the keyboard?
 		require
 			not_destroyed: not is_destroyed
@@ -1905,7 +1905,7 @@ feature -- Status report
 			Result := implementation.is_selection_keyboard_handling_enabled
 		end
 
-	first_visible_row: EV_GRID_ROW is
+	first_visible_row: EV_GRID_ROW
 			-- First row visible in `Current' or Void if `row_count' = 0
 			-- If `is_vertical_scrolling_per_item', the first visible row may be only partially visible.
 		require
@@ -1918,7 +1918,7 @@ feature -- Status report
 			no_rows_implies_result_void: row_count = 0 implies result = Void
 		end
 
-	first_visible_column: EV_GRID_COLUMN is
+	first_visible_column: EV_GRID_COLUMN
 			-- First column visible in `Current' or Void if `column_count' = 0
 			-- If `is_horizontal_scrolling_per_item', the first visible column may be only partially visible.
 		require
@@ -1931,7 +1931,7 @@ feature -- Status report
 			no_columns_implies_result_void: column_count = 0 implies result = Void
 		end
 
-	last_visible_row: EV_GRID_ROW is
+	last_visible_row: EV_GRID_ROW
 			-- Last row visible in `Current' or Void if `row_count' = 0
 			-- The last visible row may be only partially visible.
 		require
@@ -1944,7 +1944,7 @@ feature -- Status report
 			no_rows_implies_result_void: row_count = 0 implies result = Void
 		end
 
-	last_visible_column: EV_GRID_COLUMN is
+	last_visible_column: EV_GRID_COLUMN
 			-- Index of last column visible in `Current' or 0 if `column_count' = 0.
 			-- The last visible column may be only partially visible.
 		require
@@ -1957,7 +1957,7 @@ feature -- Status report
 			no_columns_implies_result_void: column_count = 0 implies result = Void
 		end
 
-	visible_row_indexes: ARRAYED_LIST [INTEGER] is
+	visible_row_indexes: ARRAYED_LIST [INTEGER]
 			-- Indexes of all rows that are currently visible in `Current'.
 			-- `Result' may not be contiguous if `is_tree_enabled' and one or more of the
 			-- visible rows have subrows and are not expanded.
@@ -1970,7 +1970,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	viewable_row_indexes: ARRAYED_LIST [INTEGER] is
+	viewable_row_indexes: ARRAYED_LIST [INTEGER]
 			-- Indexes of all rows that are currently viewable in the grid in its present state.
 			-- For example, if the first node is a non expanded tree that has 10 subrows, the contents
 			-- would be 1, 11, 12, 13, 14, ...
@@ -1984,7 +1984,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	visible_column_indexes: ARRAYED_LIST [INTEGER] is
+	visible_column_indexes: ARRAYED_LIST [INTEGER]
 			-- All columns that are currently visible in `Current'.
 			-- `Result' may not be contiguous if one or more columns are hidden.
 		require
@@ -1996,7 +1996,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	tree_node_connector_color: EV_COLOR is
+	tree_node_connector_color: EV_COLOR
 			-- Color of connectors drawn between tree nodes within `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -2006,7 +2006,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	are_columns_drawn_above_rows: BOOLEAN is
+	are_columns_drawn_above_rows: BOOLEAN
 			-- For drawing purposes, are columns drawn above rows?
 			-- If `True', for all cells within `Current' whose `column' and `row' have non-Void
 			-- foreground or background colors, the column colors are given priority.
@@ -2019,7 +2019,7 @@ feature -- Status report
 
 feature -- Element change
 
-	insert_new_row (i: INTEGER) is
+	insert_new_row (i: INTEGER)
 			-- Insert a new row immediately before row at index `i'.
 		require
 			not_destroyed: not is_destroyed
@@ -2031,7 +2031,7 @@ feature -- Element change
 			row_count_set: row_count = old row_count + 1
 		end
 
-	insert_new_rows (rows_to_insert, i: INTEGER) is
+	insert_new_rows (rows_to_insert, i: INTEGER)
 			-- Insert `rows_to_insert' rows immediately before row at index `i'.
 		require
 			not_destroyed: not is_destroyed
@@ -2044,7 +2044,7 @@ feature -- Element change
 			row_count_set: row_count = old row_count + rows_to_insert
 		end
 
-	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is
+	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW)
 			-- Insert a new row immediately before row at index `i' and make that row a subnode of `a_parent_row'.
 		require
 			not_destroyed: not is_destroyed
@@ -2063,7 +2063,7 @@ feature -- Element change
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1
 		end
 
-	insert_new_rows_parented (rows_to_insert, i: INTEGER; a_parent_row: EV_GRID_ROW) is
+	insert_new_rows_parented (rows_to_insert, i: INTEGER; a_parent_row: EV_GRID_ROW)
 			-- Insert `rows_to_insert' new rows immediately before row at index `i'.
 			-- Make these newly inserted rows subnodes of `a_parent_row'.
 		require
@@ -2083,7 +2083,7 @@ feature -- Element change
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + rows_to_insert
 		end
 
-	insert_new_column (a_index: INTEGER) is
+	insert_new_column (a_index: INTEGER)
 			-- Insert a new column immediately before column at index `a_index'.
 		require
 			not_destroyed: not is_destroyed
@@ -2095,7 +2095,7 @@ feature -- Element change
 			column_count_set: column_count = old column_count + 1
 		end
 
-	move_row (i, j: INTEGER) is
+	move_row (i, j: INTEGER)
 			-- Move row at index `i' immediately before row at index `j'.
 			-- If `j' = `row_count + 1' then row `i' is moved to the last index in the grid.
 			-- Row `i' will be unparented if it has a `parent_row'.
@@ -2119,7 +2119,7 @@ feature -- Element change
 			row_count_unchanged: row_count = old row_count
 		end
 
-	move_rows (i, j, n: INTEGER) is
+	move_rows (i, j, n: INTEGER)
 			-- Move `n' rows starting at index `i' immediately before row at index `j'.
 			-- If `j' = `row_count + 1' the rows are moved to the very bottom of the grid.
 			-- If `is_tree_enabled', all rows moved that share the same tree structure depth
@@ -2146,7 +2146,7 @@ feature -- Element change
 			row_count_unchanged: row_count = old row_count
 		end
 
-	move_row_to_parent (i, j: INTEGER; a_parent_row: EV_GRID_ROW) is
+	move_row_to_parent (i, j: INTEGER; a_parent_row: EV_GRID_ROW)
 			-- Move row at index `i' immediately before row at index `j'.
 			-- Row `i' is re-parented as a subrow of `a_parent_row'.
 			-- If `j' = `row_count + 1' then row `i' is moved to the last index in the grid.
@@ -2174,7 +2174,7 @@ feature -- Element change
 			row_count_unchanged: row_count = old row_count
 		end
 
-	 move_rows_to_parent (i, j, n: INTEGER; a_parent_row: EV_GRID_ROW) is
+	 move_rows_to_parent (i, j, n: INTEGER; a_parent_row: EV_GRID_ROW)
 			-- Move `n' rows starting at index `i' immediately before row at index `j'.
 			-- All rows moved that share the same tree structure depth
 			-- as row `i' are reparented as a subrow of `a_parent_row'.
@@ -2203,7 +2203,7 @@ feature -- Element change
 			row_count_unchanged: row_count = old row_count
 		end
 
-	move_column (i, j: INTEGER) is
+	move_column (i, j: INTEGER)
 			-- Move column at index `i' and insert immediately before column at index `j'.
 			-- To move column `i' to the last index in the grid, use `j' = `column_count + 1'.
 		require
@@ -2223,7 +2223,7 @@ feature -- Element change
 			column_count_unchanged: column_count = old column_count
 		end
 
-	move_columns (i, j, n: INTEGER) is
+	move_columns (i, j, n: INTEGER)
 			-- Move `n' columns starting at column `i' and insert immediately before column `j'.
 		require
 			not_destroyed: not is_destroyed
@@ -2242,7 +2242,7 @@ feature -- Element change
 			column_count_unchanged: column_count = old column_count
 		end
 
-	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
+	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM)
 			-- Set grid item at position (`a_column', `a_row') to `a_item'.
 			-- If `a_item' is `Void', the current item (if any) is removed.
 		require
@@ -2258,7 +2258,7 @@ feature -- Element change
 			item_set: item (a_column, a_row) = a_item
 		end
 
-	remove_item (a_column, a_row: INTEGER) is
+	remove_item (a_column, a_row: INTEGER)
 			-- Remove grid item at position (`a_column', `a_row').
 		require
 			not_destroyed: not is_destroyed
@@ -2271,7 +2271,7 @@ feature -- Element change
 			item_removed: item (a_column, a_row) = Void
 		end
 
-	clear is
+	clear
 			-- Remove all items from `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -2281,7 +2281,7 @@ feature -- Element change
 			to_implement_assertion ("EV_GRID.clear - All items positions return `Void'.")
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all columns and rows from `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -2294,7 +2294,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_column (a_column: INTEGER) is
+	remove_column (a_column: INTEGER)
 			-- Remove column `a_column'.
 		require
 			not_destroyed: not is_destroyed
@@ -2308,7 +2308,7 @@ feature -- Removal
 			old_column_removed: (old column (a_column)).parent = Void
 		end
 
-	remove_row (a_row: INTEGER) is
+	remove_row (a_row: INTEGER)
 			-- Remove row `a_row' and all subrows recursively.
 			-- If `row (a_row).subrow_count_recursive' is greater than 0 then
 			-- all subrows of the row are also removed from `Current'.
@@ -2324,7 +2324,7 @@ feature -- Removal
 			to_implement_assertion ("EV_GRID.remove_row		All old recursive subrows removed.")
 		end
 
-	remove_rows (lower_index, upper_index: INTEGER) is
+	remove_rows (lower_index, upper_index: INTEGER)
 			-- Remove all rows from `lower_index' to `upper_index' inclusive.
 		require
 			not_destroyed: not is_destroyed
@@ -2355,7 +2355,7 @@ feature -- Removal
 
 feature -- Measurements
 
-	column_count: INTEGER is
+	column_count: INTEGER
 			-- Number of columns in Current.
 		require
 			not_destroyed: not is_destroyed
@@ -2365,7 +2365,7 @@ feature -- Measurements
 			result_not_negative: Result >= 0
 		end
 
-	displayed_column_count: INTEGER is
+	displayed_column_count: INTEGER
 			-- Number of non-hidden columns displayed in Current.
 			-- Equal to `column_count' if no columns have been
 			-- hidden via `hide'.
@@ -2377,7 +2377,7 @@ feature -- Measurements
 			result_valid: Result >= 0 and Result <= column_count
 		end
 
-	row_count: INTEGER is
+	row_count: INTEGER
 			-- Number of rows in Current
 		require
 			not_destroyed: not is_destroyed
@@ -2387,7 +2387,7 @@ feature -- Measurements
 			result_not_negative: Result >= 0
 		end
 
-	visible_row_count: INTEGER is
+	visible_row_count: INTEGER
 			-- Number of visible rows in `Current'. When `is_tree_enabled',
 			-- a number of rows may be within a collapsed parent row, so these
 			-- are ignored.
@@ -2399,7 +2399,7 @@ feature -- Measurements
 			result_not_negative: Result >= 0
 		end
 
-	tree_node_spacing: INTEGER is
+	tree_node_spacing: INTEGER
 			-- Spacing value used around the expand/collapse node of a
 			-- subrow. For example, to determine the height available for the node image
 			-- within a subrow, subtract 2 * tree_node_spacing from the `row_height'.
@@ -2413,7 +2413,7 @@ feature -- Measurements
 
 feature -- Contract support
 
-	are_columns_removable (a_index, n: INTEGER): BOOLEAN is
+	are_columns_removable (a_index, n: INTEGER): BOOLEAN
 			-- Are `n' columns starting at column index `a_index' removable from `Current'?
 		require
 			a_index_positive: a_index > 0
@@ -2434,7 +2434,7 @@ feature -- Contract support
 			end
 		end
 
-	highest_parent_row_within_bounds (lower_index, upper_index: INTEGER): EV_GRID_ROW is
+	highest_parent_row_within_bounds (lower_index, upper_index: INTEGER): EV_GRID_ROW
 			-- Return the highest level `parent_row' recursively of row `upper_index'
 			-- that has an index greater or equal to `lower_index'.
 		require
@@ -2459,7 +2459,7 @@ feature -- Contract support
 			result_not_void: Result /= Void
 		end
 
-	rows_may_be_moved (a_first_row_index, a_row_count: INTEGER): BOOLEAN is
+	rows_may_be_moved (a_first_row_index, a_row_count: INTEGER): BOOLEAN
 			-- Do rows from `a_first_row_index' to `a_first_row_index' + `a_row_count' - 1 represent a complete tree structure?
 			-- and if row (`a_first_row_index') has a `parent_row', are all rows to be moved nested within that parent
 			-- within the tree structure? If `Result' is `True', the rows may be moved without breaking an existing
@@ -2494,7 +2494,7 @@ feature -- Contract support
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := row_count = 0 and column_count = 0 and not is_horizontal_scrolling_per_item and
@@ -2508,13 +2508,13 @@ feature {NONE} -- Contract support
 
 feature {EV_GRID_I} -- Implementation
 
-	frozen new_row: like row_type is
+	frozen new_row: like row_type
 			-- Create a new row.
 		do
 			create Result
 		end
 
-	frozen new_column: like column_type is
+	frozen new_column: like column_type
 			-- Create a new column.
 		do
 			create Result
@@ -2527,13 +2527,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_GRID_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

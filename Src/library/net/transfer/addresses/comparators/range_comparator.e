@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Comparators for character ranges"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (lo, up: CHARACTER) is
+	make (lo, up: CHARACTER)
 			-- Create comparator.
 		do
 			lower := lo
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	character_set: STRING is
+	character_set: STRING
 			-- Character set represented by comparator
 		do
 			create Result.make (3)
@@ -38,7 +38,7 @@ feature -- Access
 			Result.extend (upper)
 		end
 
-	contains (c: CHARACTER): BOOLEAN is
+	contains (c: CHARACTER): BOOLEAN
 			-- Does comparator contain `c'?
 		do
 			Result := lower <= c and c <= upper
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 	
 	upper: CHARACTER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

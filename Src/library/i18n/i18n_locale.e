@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Main interface to the i18n library. Provides access to translations and formatting objects for a given locale."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_dictionary: I18N_DICTIONARY; a_locale_info: I18N_LOCALE_INFO) is
+	make (a_dictionary: I18N_DICTIONARY; a_locale_info: I18N_LOCALE_INFO)
 			-- Initialize locale with dictionary and locale information.
 			--
 			-- `a_dictionary': Dictionary to use to translate strings
@@ -38,7 +38,7 @@ feature -- Access
 	info: I18N_LOCALE_INFO
 			-- Specific information about locale
 
-	translation (original: STRING_GENERAL): !STRING_32 is
+	translation (original: STRING_GENERAL): !STRING_32
 			-- Translation of `original' in locale
 			--
 			-- `original': String to translate
@@ -57,7 +57,7 @@ feature -- Access
 			Result := l_result
 		end
 
-	plural_translation (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): !STRING_32 is
+	plural_translation (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): !STRING_32
 			-- Translation of `original_singular' or `original_plural' in locale depending on `plural_number'
 			--
 			-- `original_singular': String to translate if singular is used
@@ -83,7 +83,7 @@ feature -- Access
 			Result := l_result
 		end
 
-	formatted_string (original: STRING_GENERAL; token_values: TUPLE): !STRING_32 is
+	formatted_string (original: STRING_GENERAL; token_values: TUPLE): !STRING_32
 			-- String which has it's tokens replaced by given values
 			--
 			-- The string given can have token placeholders in the form of '$1'
@@ -133,7 +133,7 @@ invariant
 	string_formatter_not_void: string_formatter /= Void
 	dictionary_not_void: dictionary /= Void
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

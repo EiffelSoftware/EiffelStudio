@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstraction for Window Manager controlled shells"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."; 
@@ -10,7 +10,7 @@ class
 
 feature -- Status report
 
- 	base_height: INTEGER is
+ 	base_height: INTEGER
 			-- Base for a progression of preferred heights
 			-- for current window manager to use in sizing
 			-- widgets.
@@ -22,7 +22,7 @@ feature -- Status report
 			Result >= 0
 		end
 
-	base_width: INTEGER is
+	base_width: INTEGER
 			-- Base for a progression of preferred widths
 			-- for current window manager to use in sizing
 			-- widgets.
@@ -34,7 +34,7 @@ feature -- Status report
 			Result >= 0
 		end
 
-	height_inc: INTEGER is
+	height_inc: INTEGER
 			-- Increment for a progression of preferred
 			-- heights for the window manager tu use in sizing 
 			-- widgets.
@@ -44,7 +44,7 @@ feature -- Status report
 			Result >= 0
 		end
 
-	icon_mask: PIXMAP is
+	icon_mask: PIXMAP
 			-- Bitmap that could be used by window manager
 			-- to clip `icon_pixmap' bitmap to make the
 			-- icon nonrectangular 
@@ -55,27 +55,27 @@ feature -- Status report
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon
 
-	icon_x: INTEGER is
+	icon_x: INTEGER
 			-- Place to put application's icon
 			-- Since the window manager controls icon placement
 			-- policy, this may be ignored.
 		do
 		end
 
-	icon_y: INTEGER is
+	icon_y: INTEGER
 			-- Place to put application's icon
 			-- Since the window manager controls icon placement
 			-- policy, this may be ignored.
 		do
 		end
 
-	max_aspect_x: INTEGER is
+	max_aspect_x: INTEGER
 			-- Numerator of maximum aspect ratio (X/Y) that
 			-- application wishes widget instance to have
 		do
 		end
 
-	max_aspect_y: INTEGER is
+	max_aspect_y: INTEGER
 			-- Denominator of maximum ration (X/Y) that
 			-- application wishes widget instance to have
 		do
@@ -89,13 +89,13 @@ feature -- Status report
 			-- Maximum width that application wishes widget
 			-- instance to have
  
-	min_aspect_x: INTEGER is
+	min_aspect_x: INTEGER
 			-- Numerator of minimum aspect ratio (X/Y) that
 			-- application wishes widget instance to have
 		do
 		end
 
-	min_aspect_y: INTEGER is
+	min_aspect_y: INTEGER
 			-- Denominator of minimum ration (X/Y) that
 			-- application wishes widget instance to have
 		do
@@ -109,7 +109,7 @@ feature -- Status report
 			-- minimum width that application wishes widget
 			-- instance to have
 
-	width_inc: INTEGER is
+	width_inc: INTEGER
 			-- Increment for a progression of preferred
 			-- widths for the window manager tu use in sizing
 			-- widgets.
@@ -123,40 +123,40 @@ feature -- Status report
 
 feature -- Status setting
 
- 	set_base_height (a_height: INTEGER) is
+ 	set_base_height (a_height: INTEGER)
 			-- Set `base_height' to `a_height'. 
 		do
 		ensure then
 			base_height = a_height
 		end
 
-	set_base_width (a_width: INTEGER) is
+	set_base_width (a_width: INTEGER)
 			-- Set `base_width' to `a_width'.
 		do
 		ensure then
 			base_width = a_width
 		end
 
-	set_height_inc (an_increment: INTEGER) is
+	set_height_inc (an_increment: INTEGER)
 			-- Set `height_inc' to `an_increment'.
 		do
 		ensure then
 			height_inc = an_increment
 		end
 
-	set_width_inc (an_increment: INTEGER) is
+	set_width_inc (an_increment: INTEGER)
 			-- Set `width_inc' to `an_increment'.
 		do
 		ensure then
 			width_inc = an_increment
 		end
 
-	set_icon_mask (a_mask: PIXMAP) is
+	set_icon_mask (a_mask: PIXMAP)
 			-- Set `icon_mask' to `a_mask'.
 		do
 		end
 
-	set_icon_pixmap (a_pixmap: PIXMAP) is
+	set_icon_pixmap (a_pixmap: PIXMAP)
 			-- Set `icon_pixmap' to `a_pixmap'.
 		do
 			icon_pixmap := a_pixmap
@@ -164,31 +164,31 @@ feature -- Status setting
 			icon_pixmap = a_pixmap
 		end
 
-	set_icon_x (x_value: INTEGER) is
+	set_icon_x (x_value: INTEGER)
 			-- Set `icon_x' to `x_value'.
 		do
 		end
 
-	set_icon_y (y_value: INTEGER) is
+	set_icon_y (y_value: INTEGER)
 			-- Set `icon_y' to `y_value'.
 		do
 		end 
 
-	set_max_aspect_x (a_max: INTEGER) is
+	set_max_aspect_x (a_max: INTEGER)
 			-- Set `max_aspect_x' to `a_max'.
 		do
 		ensure then
 			max_aspect_x = a_max
 		end
 
-	set_max_aspect_y (a_max: INTEGER) is
+	set_max_aspect_y (a_max: INTEGER)
 			-- Set `max_aspect_y' to `a_max'.
 		do
 		ensure then
 			max_aspect_y = a_max
 		end
 
-	set_max_height (a_height: INTEGER) is
+	set_max_height (a_height: INTEGER)
 			-- Set `max_height' to `a_height'.
 		do
 			max_height := a_height
@@ -196,7 +196,7 @@ feature -- Status setting
 			max_height = a_height
 		end
 
-	set_max_width (a_max: INTEGER) is
+	set_max_width (a_max: INTEGER)
 			-- Set `max_width' to `a_max'.
 		do
 			max_width := a_max
@@ -204,21 +204,21 @@ feature -- Status setting
 			max_width = a_max
 		end
 
-	set_min_aspect_x (a_min: INTEGER) is
+	set_min_aspect_x (a_min: INTEGER)
 			-- Set `min_aspect_x' to `a_min'.
 		do	
 		ensure then
 			min_aspect_x = a_min
 		end
 
-	set_min_aspect_y (a_min: INTEGER) is
+	set_min_aspect_y (a_min: INTEGER)
 			-- Set `min_aspect_y' to `a_min'.
 		do
 		ensure then
 			min_aspect_y = a_min
 		end
 
-	set_min_height (a_min: INTEGER) is
+	set_min_height (a_min: INTEGER)
 			-- Set `min_height' to `a_min'.
 		do
 			min_height := a_min
@@ -226,7 +226,7 @@ feature -- Status setting
 			min_height = a_min
 		end
 
-	set_min_width (a_min: INTEGER) is
+	set_min_width (a_min: INTEGER)
 			-- Set `min_width' to `a_min'.
 		do
 			min_width := a_min
@@ -234,12 +234,12 @@ feature -- Status setting
 			min_width = a_min
 		end
 
-	set_widget_group (a_widget: WIDGET) is
+	set_widget_group (a_widget: WIDGET)
 			-- Set `widget_group' to `a_widget'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

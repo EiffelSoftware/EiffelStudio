@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision font selection dialog, implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Connect `interface' and initialize `c_object'.
 		local
 			temp_font: EV_FONT
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			set_font (temp_font)
 		end
 
-	reset_dialog is
+	reset_dialog
 			-- Initialize the dialog when a font has been selected.
 		local
 			a_font_sel, a_pixels_button: POINTER
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_hide ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (a_pixels_button))
 		end
 
-	initialize is
+	initialize
 			-- Initialize the dialog.
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Current selected font.
 		local
 			a_fullname: STRING
@@ -116,7 +116,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Select `a_font'.
 		local
 			a_success_flag: BOOLEAN
@@ -135,7 +135,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	pointer_to_integer (pointer: POINTER): INTEGER is
+	pointer_to_integer (pointer: POINTER): INTEGER
 			-- int pointer_to_integer (void* pointer) {
 			--     return (int) pointer;
 			-- }
@@ -146,42 +146,42 @@ feature {NONE} -- Implementation
 			" "
 		end
 
-	gtk_font_selection_dialog_struct_ok_button (a_c_struct: POINTER): POINTER is
+	gtk_font_selection_dialog_struct_ok_button (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"
 		alias
 			"ok_button"
 		end
 
-	gtk_font_selection_dialog_struct_cancel_button (a_c_struct: POINTER): POINTER is
+	gtk_font_selection_dialog_struct_cancel_button (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"
 		alias
 			"cancel_button"
 		end
 
-	gtk_font_selection_dialog_struct_fontsel (a_c_struct: POINTER): POINTER is
+	gtk_font_selection_dialog_struct_fontsel (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"
 		alias
 			"fontsel"
 		end
 
-	gtk_font_selection_struct_pixels_button (a_c_struct: POINTER): POINTER is
+	gtk_font_selection_struct_pixels_button (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkFontSelection): EIF_POINTER"
 		alias
 			"pixels_button"
 		end
 
-	gtk_font_selection_struct_size_clist (a_c_struct: POINTER): POINTER is
+	gtk_font_selection_struct_size_clist (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkFontSelection): EIF_POINTER"
 		alias
 			"size_clist"
 		end
 
-	gtk_clist_struct_selection (a_c_struct: POINTER): POINTER is
+	gtk_clist_struct_selection (a_c_struct: POINTER): POINTER
 		external
 			"C [struct <gtk/gtk.h>] (GtkCList): EIF_POINTER"
 		alias
@@ -192,7 +192,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_FONT_DIALOG;	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

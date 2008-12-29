@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make(t:I18N_DICTIONARY; plural_form,datalength,seed:INTEGER) is
+	make(t:I18N_DICTIONARY; plural_form,datalength,seed:INTEGER)
 
 			-- Creation procedure.
 		do
@@ -32,7 +32,7 @@ feature -- Initialization
 
 feature	-- Data generation
 
-	data_generation(datalength,seed:INTEGER) is
+	data_generation(datalength,seed:INTEGER)
 		-- generate random data and put them in
 		--`ods'
 
@@ -113,7 +113,7 @@ feature	-- Data generation
 
 feature	-- data insertion
 
-	data_insert(t:I18N_DICTIONARY; datalength:INTEGER) is
+	data_insert(t:I18N_DICTIONARY; datalength:INTEGER)
 			-- fill 't' with datalength of `I18N_DICTIONARY_ENTRY' from `ods'
 		local
 			i:INTEGER
@@ -131,7 +131,7 @@ feature	-- data insertion
 
 
 feature -- data query
-	data_query(t:I18N_DICTIONARY; datalength:INTEGER) is
+	data_query(t:I18N_DICTIONARY; datalength:INTEGER)
 					-- check all query functions in `I18N_DICTIONARY': `has, has_plural'
 					-- check all data for every function
 					-- use `random' with same `seed'  to check whether they are in `t', one could also use a `linked_list'
@@ -252,7 +252,7 @@ feature -- data query
 
 feature -- Data access
 
-	data_get(t:I18N_DICTIONARY; datalength:INTEGER) is
+	data_get(t:I18N_DICTIONARY; datalength:INTEGER)
 				-- check data access functions in `I18N_DICTIONARY': `get_plural, get_sigular'
 
 		local
@@ -337,7 +337,7 @@ feature -- access
 		--original_data_set
 	faults_counter:INTEGER;
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

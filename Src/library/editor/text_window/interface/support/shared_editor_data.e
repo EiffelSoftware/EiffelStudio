@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for editor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Resources
 
-	panel_manager: TEXT_PANEL_MANAGER is
+	panel_manager: TEXT_PANEL_MANAGER
 			-- List of open panels
 		once
 			create Result
 		end
 
-	editor_preferences: EDITOR_DATA is
+	editor_preferences: EDITOR_DATA
 			-- Editor preferences
 		require
 			initialized: initialized
@@ -26,7 +26,7 @@ feature -- Resources
 
 feature -- Query
 
-	initialized: BOOLEAN is
+	initialized: BOOLEAN
 			--
 		do
 			Result := initialized_cell.item = True
@@ -34,25 +34,25 @@ feature -- Query
 
 feature {NONE} -- Implementation		
 
-	editor_preferences_cell: CELL [EDITOR_DATA] is
+	editor_preferences_cell: CELL [EDITOR_DATA]
 			--
 		once
 			create Result.put (Void)
 		end
 
-	initialized_cell: CELL [BOOLEAN] is
+	initialized_cell: CELL [BOOLEAN]
 			--
 		once
 			create Result.put (False)
 		end
 
-	preference_codes: SHARED_PREFERENCE_CODES is
+	preference_codes: SHARED_PREFERENCE_CODES
 	        -- Document preference codes
 	    once
 	        create Result
 	    end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

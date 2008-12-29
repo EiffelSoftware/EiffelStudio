@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Frame container for one display element"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make_with_text (title: STRING) is
+	make_with_text (title: STRING)
 			-- Initialize.
 		do
 			Precursor (title)
@@ -28,7 +28,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	set_default_title_color (new_title_color: EV_COLOR) is
+	set_default_title_color (new_title_color: EV_COLOR)
 			-- Set `new_title_color' as default title color.
 			-- Set frame title with `new_title_color'.
 		do
@@ -38,13 +38,13 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	default_title_color: EV_COLOR is
+	default_title_color: EV_COLOR
 			-- Default padding.
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

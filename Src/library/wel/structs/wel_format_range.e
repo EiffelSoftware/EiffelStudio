@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information that a rich edit control uses to %
 		%format its output for a particular device."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Access
 
-	rect: WEL_RECT is
+	rect: WEL_RECT
 			-- Area to render to.
 			-- Units are in TWIPS.
 		do
@@ -28,7 +28,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	rect_page: WEL_RECT is
+	rect_page: WEL_RECT
 			-- Entire area of rendering device.
 			-- Units are in TWIPS.
 		do
@@ -38,7 +38,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	character_range: WEL_CHARACTER_RANGE is
+	character_range: WEL_CHARACTER_RANGE
 			-- Range of text to format
 		do
 			create Result.make_by_pointer (
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_dc (a_dc: WEL_DC) is
+	set_dc (a_dc: WEL_DC)
 			-- Set the device to render to.
 		require
 			a_dc_not_void: a_dc /= Void
@@ -57,7 +57,7 @@ feature -- Element change
 			cwel_formatrange_set_hdc (item, a_dc.item)
 		end
 
-	set_dc_target (a_dc: WEL_DC) is
+	set_dc_target (a_dc: WEL_DC)
 			-- Set the target device to format for.
 		require
 			a_dc_not_void: a_dc /= Void
@@ -65,7 +65,7 @@ feature -- Element change
 			cwel_formatrange_set_hdctarget (item, a_dc.item)
 		end
 
-	set_rect (a_rect: WEL_RECT) is
+	set_rect (a_rect: WEL_RECT)
 			-- Set `rect' with `a_rect'.
 			-- Units are in TWIPS.
 		require
@@ -74,7 +74,7 @@ feature -- Element change
 			cwel_formatrange_set_rc (item, a_rect.item)
 		end
 
-	set_rect_page (a_rect: WEL_RECT) is
+	set_rect_page (a_rect: WEL_RECT)
 			-- Set `rect_page' with `a_rect'.
 			-- Units are in TWIPS.
 		require
@@ -83,7 +83,7 @@ feature -- Element change
 			cwel_formatrange_set_rcpage (item, a_rect.item)
 		end
 
-	set_character_range (a_character_range: WEL_CHARACTER_RANGE) is
+	set_character_range (a_character_range: WEL_CHARACTER_RANGE)
 			-- Set `character_range' with `a_character_range'.
 		require
 			a_character_range_not_void: a_character_range /= Void
@@ -91,7 +91,7 @@ feature -- Element change
 			cwel_formatrange_set_chrg (item, a_character_range.item)
 		end
 
-	set_range (min, max: INTEGER) is
+	set_range (min, max: INTEGER)
 			-- Set the range with `min' and `max'.
 		require
 			valid_min_max: max >= min
@@ -107,7 +107,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_formatrange
@@ -115,54 +115,54 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_formatrange: INTEGER is
+	c_size_of_formatrange: INTEGER
 		external
 			"C [macro <frange.h>]"
 		alias
 			"sizeof (FORMATRANGE)"
 		end
 
-	cwel_formatrange_set_hdc (ptr: POINTER; value: POINTER) is
+	cwel_formatrange_set_hdc (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <frange.h>]"
 		end
 
-	cwel_formatrange_set_hdctarget (ptr: POINTER; value: POINTER) is
+	cwel_formatrange_set_hdctarget (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <frange.h>]"
 		end
 
-	cwel_formatrange_set_rc (ptr: POINTER; value: POINTER) is
+	cwel_formatrange_set_rc (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <frange.h>]"
 		end
 
-	cwel_formatrange_set_rcpage (ptr: POINTER; value: POINTER) is
+	cwel_formatrange_set_rcpage (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <frange.h>]"
 		end
 
-	cwel_formatrange_set_chrg (ptr: POINTER; value: POINTER) is
+	cwel_formatrange_set_chrg (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <frange.h>]"
 		end
 
-	cwel_formatrange_get_rc (ptr: POINTER): POINTER is
+	cwel_formatrange_get_rc (ptr: POINTER): POINTER
 		external
 			"C [macro <frange.h>] (FORMATRANGE*): EIF_POINTER"
 		end
 
-	cwel_formatrange_get_rcpage (ptr: POINTER): POINTER is
+	cwel_formatrange_get_rcpage (ptr: POINTER): POINTER
 		external
 			"C [macro <frange.h>] (FORMATRANGE*): EIF_POINTER"
 		end
 
-	cwel_formatrange_get_chrg (ptr: POINTER): POINTER is
+	cwel_formatrange_get_chrg (ptr: POINTER): POINTER
 		external
 			"C [macro <frange.h>] (FORMATRANGE*): EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

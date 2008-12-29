@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract Bind or Define Variable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ inherit
 	
 feature {NONE} -- Initialization
 
-	make_variable (type: INTEGER_16; size: INTEGER) is
+	make_variable (type: INTEGER_16; size: INTEGER)
 			-- Create a bind/define variable
 		require
 			valid_data_type_and_size: valid_data_type_and_size (type, size)
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	value: ANY is
+	value: ANY
 			-- Current value of bind/define variable
 		require
 			not_null: not is_null
@@ -66,32 +66,32 @@ feature -- Access
 	data_size: INTEGER
 		-- (Maximum) Size of data in bytes
 
-	valid_data_type_and_size (type: INTEGER_16; size: INTEGER): BOOLEAN is
+	valid_data_type_and_size (type: INTEGER_16; size: INTEGER): BOOLEAN
 			-- Are `type' and `size' valid values for `data_type' and `data_size' ?
 		deferred
 		end
 	
 feature -- Status report
 
-	is_null: BOOLEAN is
+	is_null: BOOLEAN
 			-- Is current value of the variable `NULL' ?
 		do
 			Result := indicator = null
 		end
 		
-	is_truncated: BOOLEAN is
+	is_truncated: BOOLEAN
 			-- Has value been truncated ?
 		do
 			Result := indicator = -2 or indicator > 0
 		end
 		
-	value_too_large: BOOLEAN is
+	value_too_large: BOOLEAN
 			-- Is actual value greater than maximum length ?
 		do
 			Result := indicator = -2
 		end
 		
-	full_length: INTEGER is
+	full_length: INTEGER
 			-- Actual length of the value before truncation
 		require
 			truncated: is_truncated
@@ -105,10 +105,10 @@ feature -- Status report
 	
 feature {OCI_STATEMENT} -- Status setting
 
-	null: INTEGER_16 is -1
+	null: INTEGER_16 = -1
 		-- Indicator value that represents `NULL'
 			
-	set_null is
+	set_null
 			-- Set value of the variable to `NULL'
 		local
 			temp: INTEGER_16
@@ -119,7 +119,7 @@ feature {OCI_STATEMENT} -- Status setting
 	
 feature -- Removal
 
-	dispose is
+	dispose
 			-- Free `buffer' when disposing of `Current'
 		do
 			if buffer_allocated then
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 	indicator_ptr: POINTER
 		-- Address where indicator value will be stored
 	
-	indicator: INTEGER_16 is
+	indicator: INTEGER_16
 			-- Indicator variable;
 			-- for input, the following values can be assigned:
 			--   -1	- Oracle assigns a NULL to the column, ignoring the value of the input variable
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 	actual_length_ptr: POINTER
 		-- Address where actual length of data is stored
 		
-	actual_length: INTEGER_16 is
+	actual_length: INTEGER_16
 			-- Actual length of data
 		require
 			buffer_allocated: buffer_allocated
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 	return_code_ptr: POINTER
 			-- Address where return code is stored
 			
-	return_code: INTEGER_16 is
+	return_code: INTEGER_16
 			-- Column level return code
 		require
 			buffer_allocated: buffer_allocated
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			valid_result: Result >= 0
 		end
 	
-	allocate_buffer is
+	allocate_buffer
 			-- Allocate `buffer' according to `data_size'
 		require
 			valid_data_size: data_size > 0
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			buffer_allocated: buffer_allocated
 		end
 		
-	free_buffer is
+	free_buffer
 			-- Free `buffer'
 		require
 			buffer_allocated: buffer_allocated
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 invariant
 	valid_data_type_and_size: valid_data_type_and_size (data_type, data_size)
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

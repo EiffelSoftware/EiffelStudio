@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A token that describes an image glyph."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -38,13 +38,13 @@ feature -- Access
 	glyph: !EV_PIXEL_BUFFER
 			-- Graphical image.
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixel of the entire token.
 		do
 			Result := glyph.width
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			--
 		do
 			Result := glyph.height
@@ -52,14 +52,14 @@ feature -- Access
 
 feature -- Query
 
-	frozen get_substring_width (n: INTEGER): INTEGER is
+	frozen get_substring_width (n: INTEGER): INTEGER
 			-- Compute the width in pixels of the first
 			-- `n' characters of the current string.
 		do
 			Result := width
 		end
 
-	frozen retrieve_position_by_width(a_width: INTEGER): INTEGER is
+	frozen retrieve_position_by_width(a_width: INTEGER): INTEGER
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		do
@@ -68,7 +68,7 @@ feature -- Query
 
 feature -- Display
 
-	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		do
@@ -76,7 +76,7 @@ feature -- Display
 			device.draw_sub_pixel_buffer (position, d_y, glyph, create {EV_RECTANGLE}.make (1, 1, width, height))
 		end
 
-	display_with_offset (x, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_with_offset (x, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc' at the coordinates (`x',`d_y')
 		do
 			device.draw_sub_pixel_buffer (x, d_y, glyph, create {EV_RECTANGLE}.make (1, 1, width, height))
@@ -84,7 +84,7 @@ feature -- Display
 
 feature -- Visitor
 
-	process (a_visitor: TOKEN_VISITOR) is
+	process (a_visitor: TOKEN_VISITOR)
 			-- Visitor
 		do
 			a_visitor.process_editor_token_glyph (Current)
@@ -95,7 +95,7 @@ invariant
 	length_is_one: length = 1
 	is_fake: is_fake
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

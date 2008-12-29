@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Typed combo box."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -50,7 +50,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create display.
 		do
 			default_create
@@ -58,7 +58,7 @@ feature -- Initialization
 			has_normal_behavior: behavior_type = Normal
 		end
 
-	make_with_string_data is
+	make_with_string_data
 			-- Create display. Combo box has a string data behavior:
 			-- only predefined string values can be set from the GUI.
 		do
@@ -69,7 +69,7 @@ feature -- Initialization
 			has_string_data_behavior: behavior_type = String_data
 		end
 
-	make_with_integer_data is
+	make_with_integer_data
 			-- Create display. Combo box has a integer data behavior:
 			-- only predefined string values can be set from the GUI.
 		do
@@ -80,7 +80,7 @@ feature -- Initialization
 			has_integer_data_behavior: behavior_type = Integer_data
 		end
 
-	make_with_boolean_data is
+	make_with_boolean_data
 			-- Create display. Combo box has a boolean data behavior:
 			-- only predefined string values can be set from the GUI.
 		do
@@ -93,19 +93,19 @@ feature -- Initialization
 
 feature -- Access
 
-	Normal: INTEGER is 0
+	Normal: INTEGER = 0
 			-- Combo box enable access to selected row label.
 
-	String_data: INTEGER is 1
+	String_data: INTEGER = 1
 			-- Combo box enable access to selected string data.
 
-	Integer_data: INTEGER is 2
+	Integer_data: INTEGER = 2
 			-- Combo box enable access to selected integer data.
 
-	Boolean_data: INTEGER is 3
+	Boolean_data: INTEGER = 3
 			-- Combo box enable access to selected boolean data.
 
-	string_value: STRING is
+	string_value: STRING
 			-- Display string.
 		do
 			check
@@ -118,7 +118,7 @@ feature -- Access
 			end
 		end
 
-	value: INTEGER is
+	value: INTEGER
 			-- Integer value held.
 		local
 			integer_value: INTEGER_REF
@@ -133,7 +133,7 @@ feature -- Access
 				Result := integer_value.item
 		end
 
-	checked: BOOLEAN is
+	checked: BOOLEAN
 			-- Boolean value held.
 		local
 			boolean_value: BOOLEAN_REF
@@ -154,13 +154,13 @@ feature -- Status report
 			-- Component behavior type: normal (default), with string data,
 			-- with integer data or with boolean data.
 
-	valid_behavior_type (behavior: INTEGER): BOOLEAN is
+	valid_behavior_type (behavior: INTEGER): BOOLEAN
 			-- Is `behavior' valid?
 		do
 			Result := behavior >= Normal and then behavior <= Boolean_data
 		end
 
-	valid_data_type (a_data: ANY): BOOLEAN is
+	valid_data_type (a_data: ANY): BOOLEAN
 			-- Does `a_data' type correspond to combo box behavior type?
 		require
 			not_void: a_data /= Void
@@ -183,7 +183,7 @@ feature -- Status report
 		
 feature -- Basic operations
 
-	add_choice (a_choice: STRING) is
+	add_choice (a_choice: STRING)
 			-- Add `a_choice' to the combo box.
 		require
 			has_normal_behavior: behavior_type = Normal
@@ -196,7 +196,7 @@ feature -- Basic operations
 			extend (new_item)
 		end
 
-	add_data_choice (a_data: ANY; a_label: STRING) is
+	add_data_choice (a_data: ANY; a_label: STRING)
 			-- Add `a_data' to the combo box and enable its selection
 			-- with `a_label'.
 		require
@@ -213,7 +213,7 @@ feature -- Basic operations
 			extend (new_item)
 		end
 
-	set_string_value (a_text: STRING) is
+	set_string_value (a_text: STRING)
 			-- Set display string to `a_text'.
 		local
 			it: EV_LIST_ITEM
@@ -248,7 +248,7 @@ feature -- Basic operations
 			end
 		end
 
-	set_value (i: INTEGER) is
+	set_value (i: INTEGER)
 			-- Set `i' to integer value.
 		local
 			it: EV_LIST_ITEM
@@ -269,7 +269,7 @@ feature -- Basic operations
 			end
 		end
 
-	enable_checked is
+	enable_checked
 			-- Check property.
 		local
 			it: EV_LIST_ITEM
@@ -290,7 +290,7 @@ feature -- Basic operations
 			end
 		end
 
-	disable_checked is
+	disable_checked
 			-- Uncheck property.
 		local
 			it: EV_LIST_ITEM
@@ -311,7 +311,7 @@ feature -- Basic operations
 			end
 		end
 
-	request_sensitive is
+	request_sensitive
 			-- Request display sensitive.
 		do
 			if not is_locked then
@@ -319,7 +319,7 @@ feature -- Basic operations
 			end
 		end
 
-	request_insensitive is
+	request_insensitive
 			-- Request display insensitive.
 		do
 			if not is_locked then
@@ -327,13 +327,13 @@ feature -- Basic operations
 			end
 		end
 
-	lock_sensitiveness is
+	lock_sensitiveness
 			-- Lock display string sensitiveness.
 		do
 			is_locked := True
 		end
 
-	unlock_sensitiveness is
+	unlock_sensitiveness
 			-- Unlock display string sensitiveness.
 		do
 			is_locked := False
@@ -346,7 +346,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	add_boolean_choice (b: BOOLEAN) is
+	add_boolean_choice (b: BOOLEAN)
 			-- Add boolean `b' choice to combo box.
 		require
 			has_boolean_behavior: behavior_type = Boolean_data
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 			add_data_choice (b, b_ref.out)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

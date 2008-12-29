@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,42 +12,42 @@ inherit
 
 feature -- Status Report
 
-	draw_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD): BOOLEAN is
+	draw_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hdc_target_dev: INTEGER; hdc_draw: INTEGER; lprc_bounds: X_RECTL_RECORD; lprc_wbounds: X_RECTL_RECORD): BOOLEAN
 			-- User-defined preconditions for `draw'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_color_set_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]): BOOLEAN is
+	get_color_set_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]): BOOLEAN
 			-- User-defined preconditions for `get_color_set'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	freeze_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF): BOOLEAN is
+	freeze_user_precondition (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `freeze'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	unfreeze_user_precondition (dw_freeze: INTEGER): BOOLEAN is
+	unfreeze_user_precondition (dw_freeze: INTEGER): BOOLEAN
 			-- User-defined preconditions for `unfreeze'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_advise_user_precondition (aspects: INTEGER; advf: INTEGER; p_adv_sink: IADVISE_SINK_INTERFACE): BOOLEAN is
+	set_advise_user_precondition (aspects: INTEGER; advf: INTEGER; p_adv_sink: IADVISE_SINK_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `set_advise'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_advise_user_precondition (p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]): BOOLEAN is
+	get_advise_user_precondition (p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `get_advise'.
 			-- Redefine in descendants if needed.
 		do
@@ -63,7 +63,7 @@ feature -- Basic Operations
 			hdc_target_dev: INTEGER; 
 			hdc_draw: INTEGER; 
 			lprc_bounds: X_RECTL_RECORD; 
-			lprc_wbounds: X_RECTL_RECORD) is
+			lprc_wbounds: X_RECTL_RECORD)
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -83,7 +83,7 @@ feature -- Basic Operations
 
 		end
 
-	get_color_set (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD]) is
+	get_color_set (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; ptd: TAG_DVTARGETDEVICE_RECORD; hic_target_dev: INTEGER; pp_color_set: CELL [TAG_LOGPALETTE_RECORD])
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -102,7 +102,7 @@ feature -- Basic Operations
 			valid_pp_color_set: pp_color_set.item /= Void
 		end
 
-	freeze (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF) is
+	freeze (dw_draw_aspect: INTEGER; lindex: INTEGER; pv_aspect: INTEGER; pdw_freeze: INTEGER_REF)
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `lindex' [in].  
@@ -115,7 +115,7 @@ feature -- Basic Operations
 
 		end
 
-	unfreeze (dw_freeze: INTEGER) is
+	unfreeze (dw_freeze: INTEGER)
 			-- No description available.
 			-- `dw_freeze' [in].  
 		require
@@ -124,7 +124,7 @@ feature -- Basic Operations
 
 		end
 
-	set_advise (aspects: INTEGER; advf: INTEGER; p_adv_sink: IADVISE_SINK_INTERFACE) is
+	set_advise (aspects: INTEGER; advf: INTEGER; p_adv_sink: IADVISE_SINK_INTERFACE)
 			-- No description available.
 			-- `aspects' [in].  
 			-- `advf' [in].  
@@ -135,7 +135,7 @@ feature -- Basic Operations
 
 		end
 
-	get_advise (p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE]) is
+	get_advise (p_aspects: INTEGER_REF; p_advf: INTEGER_REF; pp_adv_sink: CELL [IADVISE_SINK_INTERFACE])
 			-- No description available.
 			-- `p_aspects' [out].  
 			-- `p_advf' [out].  
@@ -151,7 +151,7 @@ feature -- Basic Operations
 			valid_pp_adv_sink: pp_adv_sink.item /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision label, gtk implementation."
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a gtk label.
 		do
 			base_make (an_interface)
@@ -52,13 +52,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	fontable_widget: POINTER is
+	fontable_widget: POINTER
 			-- Pointer to `text_label'
 		do
 			Result := text_label
 		end
 
-	foreground_color_pointer: POINTER is
+	foreground_color_pointer: POINTER
 			-- Color of foreground features like text.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_fg (
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'
 		do
 			real_set_foreground_color (text_label, a_color)
@@ -76,7 +76,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_LABEL;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

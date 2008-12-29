@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision accelerator. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,41 +19,41 @@ feature -- Access
 	parented: BOOLEAN
 			-- Does `Current' have a parent?
 
-	enable_parented is
+	enable_parented
 			-- Assign True to `parented'.
 		do
 			parented := True
 		end
 
-	disable_parented is
+	disable_parented
 			-- Assign False to `parented'.
 		do
 			parented := False
 		end
 
-	key: EV_KEY is
+	key: EV_KEY
 			-- Key that has to pressed to trigger actions.
 		deferred
 		end
 
-	shift_required: BOOLEAN is
+	shift_required: BOOLEAN
 			-- Must the shift key be pressed?
 		deferred
 		end
 
-	alt_required: BOOLEAN is
+	alt_required: BOOLEAN
 			-- Must the alt key be pressed?
 		deferred
 		end
 
-	control_required: BOOLEAN is
+	control_required: BOOLEAN
 			-- Must the control key be pressed?
 		deferred
 		end
 
 feature -- Events
 
-	actions: EV_NOTIFY_ACTION_SEQUENCE is
+	actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `key' is pressed.
 		do
 			if actions_internal = Void then
@@ -64,44 +64,44 @@ feature -- Events
 
 feature -- Element change
 
-	set_key (a_key: EV_KEY) is
+	set_key (a_key: EV_KEY)
 			-- Set `a_key_code' as new key that has to be pressed.
 		deferred
 		end
 
-	enable_shift_required is
+	enable_shift_required
 			-- "Shift" must be pressed for the key combination.
 		deferred
 		end
 
-	disable_shift_required is
+	disable_shift_required
 			-- "Shift" is not part of the key combination.
 		deferred
 		end
 
-	enable_alt_required is
+	enable_alt_required
 			-- "Alt" must be pressed for the key combination.
 		deferred
 		end
 
-	disable_alt_required is
+	disable_alt_required
 			-- "Alt" is not part of the key combination.
 		deferred
 		end
 
-	enable_control_required is
+	enable_control_required
 			-- "Control" must be pressed for the key combination.
 		deferred
 		end
 
-	disable_control_required is
+	disable_control_required
 			-- "Control" is not part of the key combination.
 		deferred
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code to be used with `Current' when adding to accel list of a window.
 		require
 			key_set: key /= Void
@@ -131,7 +131,7 @@ feature {EV_ACCELERATOR_I} -- Implementation
 
 	interface: EV_ACCELERATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

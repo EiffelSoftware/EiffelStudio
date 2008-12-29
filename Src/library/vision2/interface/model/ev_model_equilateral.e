@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 	
 					 co
@@ -51,7 +51,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create with 8 sides.
 		do
 			side_count := 8
@@ -66,31 +66,31 @@ feature -- Access
 	side_count: INTEGER
 			-- Number of sides.
 			
-	corner_point_x: INTEGER is
+	corner_point_x: INTEGER
 			-- x position of `center_point'.
 		do
 			Result := point_array.item (1).x
 		end
 		
-	corner_point_y: INTEGER is
+	corner_point_y: INTEGER
 			-- y position of `center_point'.
 		do
 			Result := point_array.item (1).y
 		end
 		
-	center_point_x: INTEGER is
+	center_point_x: INTEGER
 			-- x position of `center_point'.
 		do
 			Result := point_array.item (0).x
 		end
 		
-	center_point_y: INTEGER is
+	center_point_y: INTEGER
 			-- y position of `center_point'.
 		do
 			Result := point_array.item (0).y
 		end
 		
-	angle: DOUBLE is
+	angle: DOUBLE
 			-- Upright position.
 		local
 			ce, co: EV_COORDINATE
@@ -102,20 +102,20 @@ feature -- Access
 			
 feature -- Status report
 
-	is_rotatable: BOOLEAN is True
+	is_rotatable: BOOLEAN = True
 			-- Is rotatable? (Yes)
 		
-	is_scalable: BOOLEAN is False
+	is_scalable: BOOLEAN = False
 			-- Is scalable? (No)
 			-- All sides must have the same length.
 			-- Use EV_FIGURE_POLYGONE if you need scaling abilities.
 			
-	is_transformable: BOOLEAN is False
+	is_transformable: BOOLEAN = False
 			-- Is transformable? (No)
 
 feature -- Status setting
 
-	set_side_count (n: INTEGER) is
+	set_side_count (n: INTEGER)
 			-- Assign `n' to `side_count'.
 		require
 			n_greater_than_two: n > 2
@@ -128,13 +128,13 @@ feature -- Status setting
 		
 feature -- Element change
 
-	set_point_a_position (ax, ay: INTEGER) is
+	set_point_a_position (ax, ay: INTEGER)
 			-- Set position of `center_point' to position of `a_point_a'.
 		do
 			set_x_y (ax, ay)
 		end
 		
-	set_point_b_position (ax, ay: INTEGER) is
+	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `corner_point' to position of `a_point_b'.
 		do
 			point_array.item (1).set_precise (ax, ay)
@@ -144,7 +144,7 @@ feature -- Element change
 
 feature -- Implementation
 
-	polygon_array: ARRAY [EV_COORDINATE] is
+	polygon_array: ARRAY [EV_COORDINATE]
 			-- Absolute coordinates of all corner points.
 		local
 			i, nb: INTEGER
@@ -181,7 +181,7 @@ feature -- Implementation
 			Result_correct_size: Result.count = side_count
 		end
 
-	position_on_figure (ax,ay: INTEGER): BOOLEAN is
+	position_on_figure (ax,ay: INTEGER): BOOLEAN
 			-- Is (`ax', `ay') on this figure?
 		local
 			i, nb: INTEGER
@@ -216,7 +216,7 @@ feature -- Implementation
 			Result := point_on_polygon (ax, ay, poly)
 		end
 
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
 			min_x, min_y, max_x, max_y, lw2: DOUBLE
@@ -259,7 +259,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_center is
+	set_center
 			-- Set center to center.
 		local
 			ce: EV_COORDINATE
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 invariant
 	side_count_bigger_than_two: side_count > 2
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

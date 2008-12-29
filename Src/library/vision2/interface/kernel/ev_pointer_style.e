@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Apearance of a screen pointer cursor, typically moved by a mouse."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ convert
 
 feature {NONE} -- Initlization
 
-	make_predefined (a_contants: INTEGER) is
+	make_predefined (a_contants: INTEGER)
 			-- Make a predefined pointer style
 		require
 			valid: (create {EV_POINTER_STYLE_CONSTANTS}).is_valid (a_contants)
@@ -37,7 +37,7 @@ feature {NONE} -- Initlization
 			implementation.init_predefined (a_contants)
 		end
 
-	make_with_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x, a_y: INTEGER) is
+	make_with_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x, a_y: INTEGER)
 			-- Create pointer style using `a_pixel_buffer' with hotspot (`a_x', `a_y').
 		require
 			a_pixel_buffer_not_void: a_pixel_buffer /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initlization
 			implementation.init_from_pixel_buffer (l_temp_buffer, a_x, a_y)
 		end
 
-	make_with_pixmap (a_pixmap: EV_PIXMAP; a_x, a_y: INTEGER) is
+	make_with_pixmap (a_pixmap: EV_PIXMAP; a_x, a_y: INTEGER)
 			-- Create pointer style using `a_pixmap' with hotspot (`a_x', `a_y').
 		require
 			a_pixmap_not_void: a_pixmap /= Void
@@ -58,7 +58,7 @@ feature {NONE} -- Initlization
 			implementation.init_from_pixmap (a_pixmap, a_x, a_y)
 		end
 
-	make_with_cursor (a_cursor: EV_CURSOR) is
+	make_with_cursor (a_cursor: EV_CURSOR)
 			-- Initialize from `a_cursor'.
 		local
 			l_temp: EV_CURSOR
@@ -73,7 +73,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_x_hotspot (a_x: INTEGER) is
+	set_x_hotspot (a_x: INTEGER)
 			-- Set `x_hotspot' to `a_x'.
 		require
 			not_destroyed: not is_destroyed
@@ -84,7 +84,7 @@ feature -- Command
 			set: x_hotspot = a_x
 		end
 
-	set_y_hotspot (a_y: INTEGER) is
+	set_y_hotspot (a_y: INTEGER)
 			-- Set `y_hotspot' to `a_y'.
 		require
 			not_destoryed: not is_destroyed
@@ -97,7 +97,7 @@ feature -- Command
 
 feature -- Query
 
-	x_hotspot: INTEGER is
+	x_hotspot: INTEGER
 			-- Specifies the x-coordinate of a cursor's hot spot.
 		do
 			Result := implementation.x_hotspot
@@ -105,7 +105,7 @@ feature -- Query
 			valid: Result <= width
 		end
 
-	y_hotspot: INTEGER is
+	y_hotspot: INTEGER
 			-- Specifies he y-coordinate of a cursor's hot spot.
 		do
 			Result := implementation.y_hotspot
@@ -113,13 +113,13 @@ feature -- Query
 			valid: Result <= height
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width
 		do
 			Result := implementation.width
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height
 		do
 			Result := implementation.height
@@ -127,7 +127,7 @@ feature -- Query
 
 feature -- Duplication
 
-	copy (other: like current) is
+	copy (other: like current)
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		do
@@ -145,7 +145,7 @@ feature -- Duplication
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Does `other' have the same appearance as `Current'.
 		do
 			if other /= Void then
@@ -158,7 +158,7 @@ feature -- Comparison
 
 feature -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create `implementation'.
 		do
 			create {EV_POINTER_STYLE_IMP} implementation.make (Current)
@@ -167,7 +167,7 @@ feature -- Implementation
 	implementation: EV_POINTER_STYLE_I;
 			-- Implementation.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

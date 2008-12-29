@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,28 +12,28 @@ inherit
 
 feature -- Status Report
 
-	in_place_deactivate_user_precondition: BOOLEAN is
+	in_place_deactivate_user_precondition: BOOLEAN
 			-- User-defined preconditions for `in_place_deactivate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	uideactivate_user_precondition: BOOLEAN is
+	uideactivate_user_precondition: BOOLEAN
 			-- User-defined preconditions for `uideactivate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_object_rects_user_precondition (lprc_pos_rect: TAG_RECT_RECORD; lprc_clip_rect: TAG_RECT_RECORD): BOOLEAN is
+	set_object_rects_user_precondition (lprc_pos_rect: TAG_RECT_RECORD; lprc_clip_rect: TAG_RECT_RECORD): BOOLEAN
 			-- User-defined preconditions for `set_object_rects'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	reactivate_and_undo_user_precondition: BOOLEAN is
+	reactivate_and_undo_user_precondition: BOOLEAN
 			-- User-defined preconditions for `reactivate_and_undo'.
 			-- Redefine in descendants if needed.
 		do
@@ -42,7 +42,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	in_place_deactivate is
+	in_place_deactivate
 			-- No description available.
 		require
 			in_place_deactivate_user_precondition: in_place_deactivate_user_precondition
@@ -50,7 +50,7 @@ feature -- Basic Operations
 
 		end
 
-	uideactivate is
+	uideactivate
 			-- No description available.
 		require
 			uideactivate_user_precondition: uideactivate_user_precondition
@@ -58,7 +58,7 @@ feature -- Basic Operations
 
 		end
 
-	set_object_rects (lprc_pos_rect: TAG_RECT_RECORD; lprc_clip_rect: TAG_RECT_RECORD) is
+	set_object_rects (lprc_pos_rect: TAG_RECT_RECORD; lprc_clip_rect: TAG_RECT_RECORD)
 			-- No description available.
 			-- `lprc_pos_rect' [in].  
 			-- `lprc_clip_rect' [in].  
@@ -72,7 +72,7 @@ feature -- Basic Operations
 
 		end
 
-	reactivate_and_undo is
+	reactivate_and_undo
 			-- No description available.
 		require
 			reactivate_and_undo_user_precondition: reactivate_and_undo_user_precondition
@@ -80,7 +80,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

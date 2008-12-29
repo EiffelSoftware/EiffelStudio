@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Enumeration class for text rich alignment       %
 		% (left, center, right) for horizontal alignment %
@@ -23,7 +23,7 @@ create
 
 feature -- Status setting
 
-	set_top_alignment is
+	set_top_alignment
 			-- Set the vertical alignment to "top"
 		do
 			vertical_alignment_code := top_alignment
@@ -31,7 +31,7 @@ feature -- Status setting
 			is_top_aligned: is_top_aligned
 		end
 
-	set_middle_alignment is
+	set_middle_alignment
 			-- Set the vertical alignment to "top"
 		do
 			vertical_alignment_code := middle_alignment
@@ -39,7 +39,7 @@ feature -- Status setting
 			is_middle_aligned: is_middle_aligned
 		end
 
-	set_bottom_alignment is
+	set_bottom_alignment
 			-- Set the vertical alignment to "top"
 		do
 			vertical_alignment_code := bottom_alignment
@@ -49,19 +49,19 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_top_aligned: BOOLEAN is
+	is_top_aligned: BOOLEAN
 			-- Is the vertical alignment set to "top"?
 		do
 			Result := vertical_alignment_code = top_alignment
 		end
 
-	is_middle_aligned: BOOLEAN is
+	is_middle_aligned: BOOLEAN
 			-- Is the vertical alignment set to "middle"?
 		do
 			Result := vertical_alignment_code = middle_alignment
 		end
 
-	is_bottom_aligned: BOOLEAN is
+	is_bottom_aligned: BOOLEAN
 			-- Is the vertical alignment set to "bottom"?
 		do
 			Result := vertical_alignment_code = bottom_alignment
@@ -73,11 +73,11 @@ feature {EV_ANY_I} -- Implementation
 		-- Used internally to represent one of the three 
 		-- vertical alignment states.
 
-	top_alignment: INTEGER is 0
+	top_alignment: INTEGER = 0
 		-- Constant representing top alignment.
-	middle_alignment: INTEGER is 1
+	middle_alignment: INTEGER = 1
 		-- Constant representing middle alignment.
-	bottom_alignment: INTEGER is 2
+	bottom_alignment: INTEGER = 2
 		-- Constant representing bottom alignment
 
 invariant
@@ -85,7 +85,7 @@ invariant
 		alignment_code >= top_alignment and 
 		alignment_code <= bottom_alignment
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

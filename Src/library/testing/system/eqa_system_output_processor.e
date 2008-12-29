@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects processing output retrieved from a system execution.
 	]"

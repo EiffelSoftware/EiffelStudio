@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that process `text' to include extra hidden characters %
 		%at the Windows level."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text displayed in `Current'.
 		do
 			Result := wel_text
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
 			wel_set_text (escaped_text (a_text))
@@ -35,7 +35,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	escaped_text (s: STRING_GENERAL): STRING_32 is
+	escaped_text (s: STRING_GENERAL): STRING_32
 			-- `text' with doubled ampersands.
 		do
 			if s /= Void then
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	escape_ampersands (s: STRING_32) is
+	escape_ampersands (s: STRING_32)
 			-- Replace all occurrences of "&" with "&&".
 			--| Cannot be replaced with `{STRING_32}.replace_substring_all' because
 			--| we only want it to happen once, not forever.
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 				(old s.twin).occurrences ('&') * 2
 		end
 
-	unescape_ampersands (s: STRING_32) is
+	unescape_ampersands (s: STRING_32)
 			-- Replace all occurrences of "&&" with "&".
 			--| Cannot be replaced with {STRING_32}.replace_substring_all because
 			--| it will replace any number of ampersands with only one.
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			ampersand_occurrences_halved: old s.twin.occurrences ('&') = s.occurrences ('&') * 2
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Shared font constants for the editor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,37 +11,37 @@ class
 
 feature -- Access
 
-	line_height: INTEGER is
+	line_height: INTEGER
 			-- Height of a line in the editor
 		do
 			Result := line_height_cell.item
 		end
 
-	font_offset: INTEGER is
+	font_offset: INTEGER
 			--
 		do
 			Result := font_offset_cell.item
 		end
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Font used in the editor
 		do
 			Result := font_cell.item.value
 		end
 
-	keyword_font: EV_FONT is
+	keyword_font: EV_FONT
 			-- Keyword Font used in the editor
 		do
 			Result := keyword_font_cell.item.value
 		end
 
-	header_font: EV_FONT is
+	header_font: EV_FONT
 			-- Font used in the header control
 		do
 			Result := header_font_cell.item.value
 		end
 
-	font_width: INTEGER is
+	font_width: INTEGER
 			-- Width of character in the editor.
 		require
 			is_fixed_width: is_fixed_width
@@ -49,7 +49,7 @@ feature -- Access
 			Result := font_width_cell.item
 		end
 
-	is_fixed_width: BOOLEAN is
+	is_fixed_width: BOOLEAN
 			-- Is `font' a fixed-width font?
 		do
 			Result := is_fixed_width_cell.item
@@ -57,31 +57,31 @@ feature -- Access
 
 feature {EDITOR_DATA} -- Implementation
 
-	font_cell: CELL [FONT_PREFERENCE] is
+	font_cell: CELL [FONT_PREFERENCE]
 			-- Cached version of `font'.
 		once
 			create Result.put (Void)
 		end
 
-	keyword_font_cell: CELL [FONT_PREFERENCE] is
+	keyword_font_cell: CELL [FONT_PREFERENCE]
 			-- Cached version of `font' for keywords.
 		once
 			create Result.put (Void)
 		end
 
-	font_zoom_factor_cell: CELL [INTEGER_PREFERENCE] is
+	font_zoom_factor_cell: CELL [INTEGER_PREFERENCE]
 			-- Cached version of font factory for `font' and `keyword_font'
 		once
 			create Result.put (Void)
 		end
 
-	header_font_cell: CELL [FONT_PREFERENCE] is
+	header_font_cell: CELL [FONT_PREFERENCE]
 			-- Cached version of `font' for header panel.
 		once
 			create Result.put (Void)
 		end
 
-	font_width_cell: CELL [INTEGER] is
+	font_width_cell: CELL [INTEGER]
 			-- Cached version of `font_width'
 		local
 			loc_font_width: INTEGER
@@ -90,7 +90,7 @@ feature {EDITOR_DATA} -- Implementation
 			create Result.put (loc_font_width)
 		end
 
-	is_fixed_width_cell: CELL [BOOLEAN] is
+	is_fixed_width_cell: CELL [BOOLEAN]
 			-- Cached version of `is_fixed_width'
 		once
 			create Result.put (False)
@@ -98,7 +98,7 @@ feature {EDITOR_DATA} -- Implementation
 			is_fixed_width_cell_not_void: Result /= Void
 		end
 
-	font_with_zoom_factor_cell: CELL [EV_FONT] is
+	font_with_zoom_factor_cell: CELL [EV_FONT]
 			-- Font with zoom factor cell
 		once
 			create Result.put (calculate_font_with_zoom_factor)
@@ -106,7 +106,7 @@ feature {EDITOR_DATA} -- Implementation
 			not_void: Result /= Void
 		end
 
-	keyword_font_with_zoom_factor_cell: CELL [EV_FONT] is
+	keyword_font_with_zoom_factor_cell: CELL [EV_FONT]
 			-- Keyword font with zoom factor cell
 		once
 			create Result.put (calculate_keyword_font_with_zoom_factor)
@@ -114,7 +114,7 @@ feature {EDITOR_DATA} -- Implementation
 			not_void: Result /= Void
 		end
 
-	line_height_font: EV_FONT is
+	line_height_font: EV_FONT
 			-- Font used to calculate line height
 		do
 			if keyword_font_with_zoom_factor_cell.item.height > font_with_zoom_factor_cell.item.height then
@@ -124,25 +124,25 @@ feature {EDITOR_DATA} -- Implementation
 			end
 		end
 
-	line_height_cell: CELL [INTEGER] is
+	line_height_cell: CELL [INTEGER]
 			-- Cached version of `line_height'.
 		once
 			create Result.put (calculate_line_height)
 		end
 
-	font_offset_cell: CELL [INTEGER] is
+	font_offset_cell: CELL [INTEGER]
 			-- Number of pixels from top of line to beginning of drawing operation
 		once
 			create Result.put (calculate_font_offset)
 		end
 
-	calculate_font_offset: INTEGER is
+	calculate_font_offset: INTEGER
 			-- Calculate `font_offset' based on current font sizes
 		do
 			Result := line_height - line_height_font.descent
 		end
 
-	calculate_line_height: INTEGER is
+	calculate_line_height: INTEGER
 			-- Calculate the  `line_height' based on current font sizes
 		local
 			loc_font: EV_FONT
@@ -152,7 +152,7 @@ feature {EDITOR_DATA} -- Implementation
 			Result := loc_font.ascent + loc_font.descent + {PLATFORM}.is_windows.to_integer
 		end
 
-	calculate_font_with_zoom_factor: EV_FONT is
+	calculate_font_with_zoom_factor: EV_FONT
 			-- Font with zoom factor
 		local
 			l_height: INTEGER
@@ -164,7 +164,7 @@ feature {EDITOR_DATA} -- Implementation
 			end
 		end
 
-	calculate_keyword_font_with_zoom_factor: EV_FONT is
+	calculate_keyword_font_with_zoom_factor: EV_FONT
 			-- Keyword font with zoom factor
 		local
 			l_height: INTEGER
@@ -176,7 +176,7 @@ feature {EDITOR_DATA} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

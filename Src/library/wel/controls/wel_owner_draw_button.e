@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A button of which the paint operation must be defined by %
 		%the developer."
 	legal: "See notice at end of class."
@@ -26,14 +26,14 @@ create
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
 				Ws_tabstop + Bs_ownerdraw
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

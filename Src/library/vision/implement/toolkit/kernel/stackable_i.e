@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -10,15 +10,15 @@ deferred class
 
 feature
 
-	is_stackable: BOOLEAN is
+	is_stackable: BOOLEAN
 		deferred
 		end;
 
-	screen_object: POINTER is
+	screen_object: POINTER
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "OCI Server Context"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_server (context: OCI_SERVICE_CONTEXT; errh: OCI_ERROR_HANDLER) is
+	make_server (context: OCI_SERVICE_CONTEXT; errh: OCI_ERROR_HANDLER)
 		require
 			valid_context: context /= Void and context.is_allocated
 			valid_error_handler: valid_error_handle (errh)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			error_handler_assigned: error_handler = errh
 		end
 		
-	make_server_by_handle (value: POINTER; errh: OCI_ERROR_HANDLER) is
+	make_server_by_handle (value: POINTER; errh: OCI_ERROR_HANDLER)
 			-- Initialize using a pre-allocated OCI handle
 		require
 			valid_error_handler: valid_error_handle (errh)
@@ -54,7 +54,7 @@ feature -- Status report
 	is_attached: BOOLEAN
 			-- Is server attached ?
 	
-	is_active_connection: BOOLEAN is
+	is_active_connection: BOOLEAN
 			-- Is there an active connection to the server?
 		require
 			allocated: is_allocated
@@ -64,7 +64,7 @@ feature -- Status report
 		
 feature -- Basic operations
 
-	attach (server: STRING) is
+	attach (server: STRING)
 			-- Create an access path to a data source for OCI operations
 		require
 			not_attached: not is_attached
@@ -82,7 +82,7 @@ feature -- Basic operations
 			attached: (not failed) implies is_attached
 		end
 		
-	detach is
+	detach
 			-- Delete an access to a data source for OCI operations
 		require
 			attached: is_attached
@@ -102,7 +102,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	handle_type: INTEGER is
+	handle_type: INTEGER
 			-- Handle type
 		do
 			Result := Oci_htype_server
@@ -111,21 +111,21 @@ feature {NONE} -- Implementation
 feature {NONE} -- Externals
 
 	oci_server_attach (srvhp: POINTER; errhp: POINTER; dblink: POINTER; dblink_len: INTEGER; 
-			mode: INTEGER): INTEGER_16 is
+			mode: INTEGER): INTEGER_16
 		external
 			"C (void *, void *, char *, int, int): short | %"oci.h%""
 		alias
 			"OCIServerAttach"
 		end
 		
-	oci_server_detach (srvhp: POINTER; errhp: POINTER; mode: INTEGER): INTEGER_16 is
+	oci_server_detach (srvhp: POINTER; errhp: POINTER; mode: INTEGER): INTEGER_16
 		external
 			"C (void *, void *, int): short | %"oci.h%""
 		alias
 			"OCIServerDetach"
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object brush which can be selected into a DC."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_by_sys_color (sys_color: INTEGER) is
+	make_by_sys_color (sys_color: INTEGER)
 			-- Make a brush using the system color `sys_color'.
 			-- See class WEL_COLOR_CONSTANTS for `sys_color' value.
 			-- Use only this creation routine for a WNDCLASS brush.
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			item_not_void: item /= Default_pointer
 		end
 
-	make_solid (a_color: WEL_COLOR_REF) is
+	make_solid (a_color: WEL_COLOR_REF)
 			-- Make a brush that has the solid `a_color'
 		require
 			a_color_not_void: a_color /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			item_not_void: item /= Default_pointer
 		end
 
-	make_hatch (a_hatch: INTEGER; a_color: WEL_COLOR_REF) is
+	make_hatch (a_hatch: INTEGER; a_color: WEL_COLOR_REF)
 			-- Make a brush that has the
 			-- `hatch_style' pattern and `a_color'
 			-- See class WEL_HS_CONSTANTS for `a_hatch'
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			item_not_void: item /= Default_pointer
 		end
 
-	make_by_pattern (bitmap: WEL_BITMAP) is
+	make_by_pattern (bitmap: WEL_BITMAP)
 			-- Make a brush with the specified `bitmap' pattern.
 		require
 			bitmap_not_void: bitmap /= Void
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			item_not_void: item /= Default_pointer
 		end
 
-	make_indirect (a_log_brush: WEL_LOG_BRUSH) is
+	make_indirect (a_log_brush: WEL_LOG_BRUSH)
 			-- Make a brush using `a_log_brush'
 		require
 			a_log_brush_not_void: a_log_brush /= Void
@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	style: INTEGER is
+	style: INTEGER
 			-- Brush style
 		require
 			exists: exists
@@ -93,7 +93,7 @@ feature -- Access
 			Result := log_brush.style
 		end
 
-	color: WEL_COLOR_REF is
+	color: WEL_COLOR_REF
 			-- Brush color
 		require
 			exists: exists
@@ -103,7 +103,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	hatch: INTEGER is
+	hatch: INTEGER
 			-- Brush hatch
 		require
 			exists: exists
@@ -111,7 +111,7 @@ feature -- Access
 			Result := log_brush.hatch
 		end
 
-	log_brush: WEL_LOG_BRUSH is
+	log_brush: WEL_LOG_BRUSH
 			-- Log brush structure associated to `Current'
 		require
 			exists: exists
@@ -123,7 +123,7 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	cwin_create_solid_brush (a_color: INTEGER): POINTER is
+	cwin_create_solid_brush (a_color: INTEGER): POINTER
 			-- SDK CreateSolidBrush
 		external
 			"C [macro <windows.h>] (COLORREF): EIF_POINTER"
@@ -131,7 +131,7 @@ feature {NONE} -- Externals
 			"CreateSolidBrush"
 		end
 
-	cwin_create_hatch_brush (hatch_style: INTEGER; a_color: INTEGER): POINTER is
+	cwin_create_hatch_brush (hatch_style: INTEGER; a_color: INTEGER): POINTER
 			-- SDK CreateHatchBrush
 		external
 			"C [macro <windows.h>] (int, COLORREF): EIF_POINTER"
@@ -139,7 +139,7 @@ feature {NONE} -- Externals
 			"CreateHatchBrush"
 		end
 
-	cwin_create_brush_indirect (a_log_brush: POINTER): POINTER is
+	cwin_create_brush_indirect (a_log_brush: POINTER): POINTER
 			-- SDK CreateBrushIndirect
 		external
 			"C [macro <windows.h>] (LOGBRUSH *): EIF_POINTER"
@@ -147,7 +147,7 @@ feature {NONE} -- Externals
 			"CreateBrushIndirect"
 		end
 
-	cwin_create_pattern_brush (a_bitmap: POINTER): POINTER is
+	cwin_create_pattern_brush (a_bitmap: POINTER): POINTER
 			-- SDK CreatePatternBrush
 		external
 			"C [macro <windows.h>] (HBITMAP): EIF_POINTER"
@@ -155,7 +155,7 @@ feature {NONE} -- Externals
 			"CreatePatternBrush"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

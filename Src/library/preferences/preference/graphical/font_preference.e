@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Font preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create {PREFERENCE_FACTORY}
 
 feature -- Access
 
-	string_value: STRING is
+	string_value: STRING
 			-- String representation of `value'.		
 		do
 			Result := generated_value
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_value (a_value: like value) is
+	set_value (a_value: like value)
 			-- Set the value with the wanted font.
 		require else
 			valid_font: a_value /= Void and then not a_value.is_destroyed
@@ -45,7 +45,7 @@ feature -- Status Setting
 			family := a_value.family			
 		end
 
-	string_type: STRING is
+	string_type: STRING
 			-- String description of this preference type.
 		once
 			Result := "FONT"
@@ -53,7 +53,7 @@ feature -- Status Setting
 
 feature -- Query
 
-	valid_value_string (a_string: STRING): BOOLEAN is
+	valid_value_string (a_string: STRING): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?
 			-- An valid string takes the form "faces-shape-weight-height-family".
 		local
@@ -65,7 +65,7 @@ feature -- Query
 
 feature {PREFERENCES} -- Access
 
-	generating_preference_type: STRING is
+	generating_preference_type: STRING
 			-- The generating type of the preference for graphical representation.
 		once
 			Result := "FONT"
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 	family: INTEGER
 		-- Attributes
 
-	set_value_from_string (a_value: STRING) is
+	set_value_from_string (a_value: STRING)
 			-- Parse the string value `a_value' and set `value'.
 		local
 			s: STRING
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generated_value: STRING is
+	generated_value: STRING
 			-- String generated value for display and saving purposes.
 		require
 			has_value: value /= Void
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			Result := v
 		end
 
-	set_shape (s: STRING) is
+	set_shape (s: STRING)
 			-- Set shape according to `s'.
 		require
 			not_void: s /= Void
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_weight (s: STRING) is
+	set_weight (s: STRING)
 			-- Set `weight' according to `s'.
 		require
 			not_void: s /= Void
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_family (s: STRING) is
+	set_family (s: STRING)
 			-- Set `family' according to `s'.
 		require
 			not_void: s /= Void
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_height (s: STRING) is
+	set_height (s: STRING)
 			-- Set `height' according to `s'
 		require
 			not_void: s /= Void
@@ -227,13 +227,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	auto_default_value: EV_FONT is
+	auto_default_value: EV_FONT
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

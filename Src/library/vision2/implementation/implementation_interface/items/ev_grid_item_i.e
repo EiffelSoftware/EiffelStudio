@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Item that can be inserted in a cell of an EV_GRID."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,13 +36,13 @@ create
 
 feature {EV_ANY} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the widget with `par' as parent.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			hash_code := 0
@@ -51,7 +51,7 @@ feature {EV_ANY} -- Initialization
 
 feature -- Access
 
-	column: EV_GRID_COLUMN is
+	column: EV_GRID_COLUMN
 			-- Column to which current item belongs.
 		require
 			is_parented: is_parented
@@ -61,7 +61,7 @@ feature -- Access
 			column_not_void: Result /= Void
 		end
 
-	parent: EV_GRID is
+	parent: EV_GRID
 			-- Grid to which `Current' is displayed in.
 		do
 			if parent_i /= Void then
@@ -69,7 +69,7 @@ feature -- Access
 			end
 		end
 
-	row: EV_GRID_ROW is
+	row: EV_GRID_ROW
 			-- Row to which current item belongs.
 		require
 			parented: is_parented
@@ -79,7 +79,7 @@ feature -- Access
 			row_not_void: Result /= Void
 		end
 
-	virtual_x_position: INTEGER is
+	virtual_x_position: INTEGER
 			-- Horizontal offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
 		require
@@ -97,7 +97,7 @@ feature -- Access
 			valid_result: parent /= Void implies Result >= 0 and Result <= parent.virtual_width - column.width + horizontal_indent
 		end
 
-	virtual_y_position: INTEGER is
+	virtual_y_position: INTEGER
 			-- Vertical offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
 		require
@@ -113,7 +113,7 @@ feature -- Access
 			valid_result_when_parent_row_height_not_fixed: parent /= Void and then not parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - row.height
 		end
 
-	horizontal_indent: INTEGER is
+	horizontal_indent: INTEGER
 			-- Horizontal distance in pixels from left edge of `Current' to left edge of `column'.
 			-- This may not be set, but the value is determined by the current tree structure
 			-- of `parent' and `row'.
@@ -128,7 +128,7 @@ feature -- Access
 			parent_tree_enabled_implies_result_greater_or_equal_to_zero: parent.is_tree_enabled implies Result >= 0
 		end
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Width in pixels required to fully display contents, based
 			-- on current settings.
 			-- Note that in some descendents such as EV_GRID_DRAWABLE_ITEM, this
@@ -145,7 +145,7 @@ feature -- Access
 			Result := parent_i /= Void and then parent_i.is_displayed and then column_i.is_show_requested and then row_i.is_show_requested
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of `Current' in pixels.
 		require
 			parented: is_parented
@@ -155,7 +155,7 @@ feature -- Access
 			Result_non_negative: Result >= 0
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of `Current' in pixels.
 		require
 			parented: is_parented
@@ -185,7 +185,7 @@ feature -- Access
 
 feature -- Status setting
 
-	activate is
+	activate
 			-- Setup `Current' for user interactive editing.
 		require
 			parented: is_parented
@@ -193,7 +193,7 @@ feature -- Status setting
 			parent_i.activate_item (interface)
 		end
 
-	deactivate is
+	deactivate
 			-- Cleanup from previous call to `activate'.
 		require
 			parented: is_parented
@@ -201,7 +201,7 @@ feature -- Status setting
 			parent_i.deactivate_item (interface)
 		end
 
-	enable_select is
+	enable_select
 			-- Set `is_selected' `True'.
 		local
 			l_selected: BOOLEAN
@@ -246,7 +246,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_select is
+	disable_select
 			-- Set `is_selected' `False'.
 		local
 			l_selected: BOOLEAN
@@ -293,7 +293,7 @@ feature -- Status setting
 			end
 		end
 
-	ensure_visible is
+	ensure_visible
 			-- Ensure `Current' is visible in viewable area of `parent'.
 		require
 			parented: parent /= Void
@@ -357,7 +357,7 @@ feature -- Status setting
 			virtual_x_position_visible_if_indent_less_than_row_indent: horizontal_indent < column.width implies virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
 		end
 
-	redraw is
+	redraw
 			-- Force `Current' to be re-drawn when next idle.
 		do
 			parent_i.redraw_item (Current)
@@ -365,13 +365,13 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_parented: BOOLEAN is
+	is_parented: BOOLEAN
 			-- Does current item belongs to an EV_GRID?
 		do
 			Result := parent_i /= Void
 		end
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is `Current' selected?
 		do
 			if parent_i /= Void and then parent_i.is_row_selection_enabled then
@@ -381,13 +381,13 @@ feature -- Status report
 			end
 		end
 
-	is_selectable: BOOLEAN is
+	is_selectable: BOOLEAN
 			-- Is `Current' selectable?
 		do
 			Result := is_parented
 		end
 
-	is_destroyed: BOOLEAN is
+	is_destroyed: BOOLEAN
 			-- Is `Current' destroyed?
 		do
 			Result := Precursor {EV_ANY_I} or (is_parented and then parent_i.is_destroyed)
@@ -395,7 +395,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_foreground_color (a_color: like foreground_color) is
+	set_foreground_color (a_color: like foreground_color)
 			-- Set `foreground_color' with `a_color'.
 		do
 			foreground_color := a_color
@@ -406,7 +406,7 @@ feature -- Element change
 			foreground_color_assigned: foreground_color = a_color
 		end
 
-	set_background_color (a_color: like background_color) is
+	set_background_color (a_color: like background_color)
 			-- Set `background_color' with `a_color'.
 		do
 			background_color := a_color
@@ -415,7 +415,7 @@ feature -- Element change
 			end
 		end
 
-	set_tooltip (a_tooltip: STRING_GENERAL) is
+	set_tooltip (a_tooltip: STRING_GENERAL)
 			-- Assign `a_tooltip' to `tooltip'.
 			-- pass `Void' to remove the tooltip.
 		do
@@ -435,7 +435,7 @@ feature -- Element change
 
 feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 
-	enable_select_internal is
+	enable_select_internal
 			-- Set `is_selected' to True.
 			-- Does not ask the grid to be redrawn.
 		do
@@ -456,7 +456,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implemen
 			end
 		end
 
-	disable_select_internal is
+	disable_select_internal
 			-- Set `is_selected' `False'.
 			-- Does not ask the grid to be redrawn.
 		do
@@ -482,7 +482,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implemen
 
 feature {EV_GRID_I} -- Implementation
 
-	set_parents (a_parent_i: EV_GRID_I; a_column_i: EV_GRID_COLUMN_I; a_row_i: EV_GRID_ROW_I; a_item_id: INTEGER) is
+	set_parents (a_parent_i: EV_GRID_I; a_column_i: EV_GRID_COLUMN_I; a_row_i: EV_GRID_ROW_I; a_item_id: INTEGER)
 			-- Set the appropriate grid, column and row parents along with item_id to identify `Current' within grid.
 		require
 			a_parent_i_not_void: a_parent_i /= Void
@@ -501,7 +501,7 @@ feature {EV_GRID_I} -- Implementation
 			item_id_set: hash_code = a_item_id
 		end
 
-	update_for_removal is
+	update_for_removal
 			-- Update settings in `Current' to reflect the fact that
 			-- it is being removed from `parent_i'.
 		require
@@ -532,7 +532,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 
 feature {EV_GRID_I} -- Implementation
 
-	unparent is
+	unparent
 			-- Sets` parent_i' to `Void'.
 		do
 			parent_i := Void
@@ -542,7 +542,7 @@ feature {EV_GRID_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			if parent_i /= Void then
@@ -551,14 +551,14 @@ feature {NONE} -- Implementation
 			set_is_destroyed (True)
 		end
 
-	internal_rectangle: EV_RECTANGLE is
+	internal_rectangle: EV_RECTANGLE
 			-- Once access to a rectangle object used by the drawer.
 			-- This is re-used to prevent repeatedly creating new objects.
 		once
 			create Result
 		end
 
-	row_locked_but_not_obscured_by_locked_column: BOOLEAN is
+	row_locked_but_not_obscured_by_locked_column: BOOLEAN
 			-- Is `row' locked and above `column' if also locked?
 		do
 			if row_i /= Void and then row_i.is_locked then
@@ -570,7 +570,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	column_locked_but_not_obscured_by_locked_row: BOOLEAN is
+	column_locked_but_not_obscured_by_locked_row: BOOLEAN
 			-- Is `column' locked and above `row' if also locked?
 		do
 			if column_i /= Void and then column_i.is_locked then
@@ -584,7 +584,7 @@ feature {NONE} -- Implementation
 
 feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 
-	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_DRAWABLE) is
+	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_DRAWABLE)
 			-- Redraw `Current'.
 		require
 			drawable_large_enough: drawable.width >= a_width + an_indent and drawable.height >= a_height
@@ -616,7 +616,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 			drawable.set_copy_mode
 		end
 
-	displayed_background_color: EV_COLOR is
+	displayed_background_color: EV_COLOR
 			-- `Result' is the background color in which `Current'
 			-- should be displayed. Based on the `Void' status of
 			-- `background_color', `row_i.background_color' and `parent_i.background_color'.
@@ -645,7 +645,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	displayed_foreground_color: EV_COLOR is
+	displayed_foreground_color: EV_COLOR
 			-- `Result' is the foreground color in which `Current'
 			-- should be displayed. Based on the `Void'/ non `Void' status of
 			-- `foreground_color', `row_i.foreground_color' and `parent_i.foreground_color'.
@@ -685,7 +685,7 @@ invariant
 	not_is_parented_implies_parents_not_set: not is_parented implies parent_i = Void and then column_i = Void and then row_i = Void
 	hash_code_valid: is_initialized implies ((not is_parented and hash_code = 0) or (is_parented and then hash_code > 0))
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

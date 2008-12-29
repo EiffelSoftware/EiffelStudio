@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Figures consisting of zero or more points."
 	legal: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	i_th_point_x (i: INTEGER): INTEGER is
+	i_th_point_x (i: INTEGER): INTEGER
 			-- `i'-th points x position.
 		require
 			i_within_bounds: i > 0 and then i <= point_count
@@ -25,7 +25,7 @@ feature -- Access
 			correct_entry: Result = point_array.item (i - 1).x
 		end
 		
-	i_th_point_y (i: INTEGER): INTEGER is
+	i_th_point_y (i: INTEGER): INTEGER
 			-- `i'-th points y position.
 		require
 			i_within_bounds: i > 0 and then i <= point_count
@@ -35,7 +35,7 @@ feature -- Access
 			correct_entry: Result = point_array.item (i - 1).y
 		end
 		
-	i_th_point (i: INTEGER): EV_COORDINATE is
+	i_th_point (i: INTEGER): EV_COORDINATE
 			-- `i'-th point of `Current'.
 		obsolete
 			"Use i_th_point_x or i_th_point_y."
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_i_th_point_x (i: INTEGER; a_x: INTEGER) is
+	set_i_th_point_x (i: INTEGER; a_x: INTEGER)
 			-- Assign `a_x' to `i'-ths point `x' position.
 		require
 			i_within_bounds: i > 0 and then i <= point_count
@@ -61,7 +61,7 @@ feature -- Status setting
 			assigned: i_th_point_x (i) = a_x
 		end
 		
-	set_i_th_point_y (i: INTEGER; a_y: INTEGER) is
+	set_i_th_point_y (i: INTEGER; a_y: INTEGER)
 			-- Assign `a_y' to `i'-ths point `y' position.
 		require
 			i_within_bounds: i > 0 and then i <= point_count
@@ -73,7 +73,7 @@ feature -- Status setting
 			assigned: i_th_point_y (i) = a_y
 		end
 		
-	set_i_th_point (i: INTEGER; a_point: EV_COORDINATE) is
+	set_i_th_point (i: INTEGER; a_point: EV_COORDINATE)
 			-- Set position of `i'-th point to position of `a_point'.
 		obsolete
 			"Use set_i_th_point_position."
@@ -86,7 +86,7 @@ feature -- Status setting
 			assigned: i_th_point_x (i) = a_point.x and i_th_point_y (i) = a_point.y
 		end
 		
-	set_i_th_point_position (i: INTEGER; ax, ay: INTEGER) is
+	set_i_th_point_position (i: INTEGER; ax, ay: INTEGER)
 			-- Set position of `i'-th point to (`ax', `ay').
 		require
 			i_within_bounds: i > 0 and then i <= point_count
@@ -98,7 +98,7 @@ feature -- Status setting
 			assigned: i_th_point_x (i) = ax and i_th_point_y (i) = ay
 		end
 
-	set_point_count (a_count: INTEGER) is
+	set_point_count (a_count: INTEGER)
 			-- Assign `a_count' to `point_count'.
 		require
 			a_count_non_negative: a_count >= 0
@@ -137,7 +137,7 @@ feature -- Status setting
 			point_count_assigned: point_count = a_count
 		end
 
-	extend_point (a_point: EV_COORDINATE) is
+	extend_point (a_point: EV_COORDINATE)
 			-- Add a twin of `a_point' to end of `Current'.
 		require
 			a_point_not_void: a_point /= Void
@@ -152,7 +152,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 		
-	set_center is
+	set_center
 			-- Set `x' and `y' to the center of the figure.
 		local
 			l_point_array: SPECIAL [EV_COORDINATE]
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			is_center_valid := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

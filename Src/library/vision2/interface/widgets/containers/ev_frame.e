@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Displays an optionally labeled border around a widget.
@@ -57,7 +57,7 @@ create
 
 feature -- Access
 
-	style: INTEGER is
+	style: INTEGER
 			-- Visual appearance. See: EV_FRAME_CONSTANTS.
 		require
 			not_destroyed: not is_destroyed
@@ -67,7 +67,7 @@ feature -- Access
 			bridge_ok: Result = implementation.style
 		end
 
-	default_identifier_name: STRING is
+	default_identifier_name: STRING
 			-- Default `identifier_name' if no specific name is set
 		do
 			if text.is_empty then
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_style (a_style: INTEGER) is
+	set_style (a_style: INTEGER)
 			-- Assign `a_style' to `style'.
 		require
 			not_destroyed: not is_destroyed
@@ -95,7 +95,7 @@ feature -- Element change
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_CELL} and Precursor {EV_TEXT_ALIGNABLE} and
@@ -110,7 +110,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create implementation of frame.
 		do
 			create {EV_FRAME_IMP} implementation.make (Current)
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 invariant
 	valid_style: is_usable implies valid_frame_border (style)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

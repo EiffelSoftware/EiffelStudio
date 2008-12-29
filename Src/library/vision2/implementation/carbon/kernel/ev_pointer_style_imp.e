@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Carbon implementation of EV_POINTER_STYLE_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,52 +27,52 @@ create
 
 feature {NONE} -- Initlization
 
-	make (an_interface: EV_POINTER_STYLE) is
+	make (an_interface: EV_POINTER_STYLE)
 			-- Creation method
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize
 		do
 			set_is_initialized (True)
 		end
 
-	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x_hotspot, a_y_hotspot: INTEGER) is
+	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x_hotspot, a_y_hotspot: INTEGER)
 			-- Initialize from `a_pixel_buffer'
 		do
 		end
 
-	init_predefined (a_constant: INTEGER) is
+	init_predefined (a_constant: INTEGER)
 			-- Initialized a predefined cursor.
 		do
 		end
 
-	init_from_cursor (a_cursor: EV_CURSOR) is
+	init_from_cursor (a_cursor: EV_CURSOR)
 			-- Initialize from `a_cursor'
 		do
 		end
 
-	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y: INTEGER_32) is
+	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y: INTEGER_32)
 			-- Initalize from `a_pixmap'
 		do
 		end
 
 feature -- Command
 
-	set_x_hotspot (a_x: INTEGER) is
+	set_x_hotspot (a_x: INTEGER)
 			-- Set `x_hotspot' to `a_x'.
 		do
 			x_hotspot := a_x
 		end
 
-	set_y_hotspot (a_y: INTEGER) is
+	set_y_hotspot (a_y: INTEGER)
 			-- Set `y_hotspot' to `a_y'.
 		do
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			set_is_in_destroy (True)
@@ -81,12 +81,12 @@ feature -- Command
 
 feature -- Query
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of pointer style.
 		do
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of pointer style.
 		do
 		end
@@ -111,11 +111,11 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	dispose is
+	dispose
 			-- Clean up `Current'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end

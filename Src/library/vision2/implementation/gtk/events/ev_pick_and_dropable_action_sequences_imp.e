@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_PICK_AND_DROPABLE_IMP."
 	legal: "See notice at end of class."
@@ -16,30 +16,30 @@ inherit
 
 feature -- Event handling
 
-	create_pick_actions: EV_PND_START_ACTION_SEQUENCE is
+	create_pick_actions: EV_PND_START_ACTION_SEQUENCE
 			-- Create a pick action sequence.
 		do
 			create Result
 		end
 
-	create_pick_ended_actions: EV_PND_FINISHED_ACTION_SEQUENCE is
+	create_pick_ended_actions: EV_PND_FINISHED_ACTION_SEQUENCE
 			-- Create a pick action sequence.
 		do
 			create Result
 		end
 
-	create_conforming_pick_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_conforming_pick_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a conforming_pick action sequence.
 		do
 			create Result
 		end
 
-	create_drop_actions: EV_PND_ACTION_SEQUENCE is
+	create_drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Create a drop action sequence.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

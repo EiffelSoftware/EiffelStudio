@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Most general notion of widget %
@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	get_multi_click_time: INTEGER is
+	get_multi_click_time: INTEGER
 			-- Get time granted for clicking
 		require
 			exists: not destroyed
@@ -35,7 +35,7 @@ feature -- Access
 			Result := implementation.get_multi_click_time
 		end;
 
-	background_color: COLOR is
+	background_color: COLOR
 			-- Background color of Current widget
 		require
 			exists: not destroyed
@@ -45,7 +45,7 @@ feature -- Access
 			valid_result: Result /= Void
 		end;
 
-	background_pixmap: PIXMAP is
+	background_pixmap: PIXMAP
 			-- Background pixmap of Current widget
 		require
 			exists: not destroyed
@@ -55,7 +55,7 @@ feature -- Access
 			valid_result: (Result /= Void) implies Result.is_valid
 		end;
 
-	cursor: SCREEN_CURSOR is
+	cursor: SCREEN_CURSOR
 			-- Cursor of current widget
 		require
 			exists: not destroyed
@@ -63,7 +63,7 @@ feature -- Access
 			Result := implementation.cursor
 		end;
 
-	top: TOP is
+	top: TOP
 			-- Top shell or base of Current widget
 		require
 			exists: not destroyed
@@ -73,13 +73,13 @@ feature -- Access
 			valid_result: Result /= Void
 		end;
 
-	parent: WIDGET is
+	parent: WIDGET
 			-- Parent of Current widget
 		do
 			Result := widget_manager.parent (Current)
 		end;
 
-	screen: SCREEN is
+	screen: SCREEN
 			-- Screen of Current widget
 		require
 			exists: not destroyed
@@ -94,13 +94,13 @@ feature -- Access
 
 feature -- Status report
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 			-- Is Current widget destroyed?
 		do
 			Result := (implementation = Void)
 		end;
 
-	managed: BOOLEAN is
+	managed: BOOLEAN
 			-- Is Current widget subject to
 			-- geometry managment?
 		require
@@ -109,7 +109,7 @@ feature -- Status report
 			Result := implementation.managed
 		end;
 
-	realized: BOOLEAN is
+	realized: BOOLEAN
 			-- Is Current widget realized?
 		require
 			exists: not destroyed;
@@ -117,7 +117,7 @@ feature -- Status report
 			Result := implementation.realized
 		end;
 
-	insensitive: BOOLEAN is
+	insensitive: BOOLEAN
 			-- Is current widget insensitive to
 			-- user actions? (If it is, events will
 			-- not be dispatched to Current widget or
@@ -130,7 +130,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	destroy is
+	destroy
 			-- Destroy actual screen object of Current
 			-- widget and of all children.
 		do
@@ -139,7 +139,7 @@ feature -- Status setting
 			end
 		end;
 
-	hide is
+	hide
 			-- Hide Current widget.
 		require
 			exists: not destroyed;
@@ -152,7 +152,7 @@ feature -- Status setting
 				(parent = Void implies not shown)
 		end;
 
-	show is
+	show
 			-- Show Current widget.
 		require
 			exists: not destroyed;
@@ -165,7 +165,7 @@ feature -- Status setting
 				(parent = Void implies shown)
 		end;
 
-	shown: BOOLEAN is
+	shown: BOOLEAN
 			-- Is current widget visible?
 		require
 			exists: not destroyed;
@@ -174,7 +174,7 @@ feature -- Status setting
 			Result := implementation.shown
 		end;
 
-	manage is
+	manage
 			-- Enable geometry managment.
 		require
 			exists: not destroyed
@@ -184,7 +184,7 @@ feature -- Status setting
 			managed: parent /= Void implies managed
 		end;
 
-	lower is
+	lower
 			-- lower current to the bottom
 			-- of its peer stacking order
 		require
@@ -194,7 +194,7 @@ feature -- Status setting
 			implementation.lower;
 		end;
 
-	set_managed (b: BOOLEAN) is
+	set_managed (b: BOOLEAN)
 		require
 			exists: not destroyed
 		do
@@ -205,7 +205,7 @@ feature -- Status setting
 			end
 		end;
 
-	unmanage is
+	unmanage
 			-- Disable geometry managment.
 		require
 			exists: not destroyed
@@ -215,7 +215,7 @@ feature -- Status setting
 			not_managed: parent /= Void implies not managed
 		end;
 
-	raise is
+	raise
 			-- raise the Current widget to the top
 			-- of its peer stacking order
 		require
@@ -225,7 +225,7 @@ feature -- Status setting
 			implementation.raise;
 		end;
 
-	realize is
+	realize
 			-- Create actual screen object of Current
 			-- widget and of all children (recursively) .
 		require
@@ -236,7 +236,7 @@ feature -- Status setting
 			Realized: realized
 		end;
 
-	unrealize is
+	unrealize
 			-- Destroy screen window implementation and all
 			-- screen window implementations of its children if `flag'.
 		require
@@ -247,7 +247,7 @@ feature -- Status setting
 			not_realized: not realized
 		end;
 
-	set_sensitive is
+	set_sensitive
 			-- Make Current widget sensitive.
 		require
 			exists: not destroyed
@@ -257,7 +257,7 @@ feature -- Status setting
 			Sensitive: not insensitive	
 		end;
 
-	set_insensitive is
+	set_insensitive
 			-- Make Current widget insensitive
 		require
 			exists: not destroyed
@@ -267,7 +267,7 @@ feature -- Status setting
 			Insensitive: insensitive
 		end;
 
-	set_no_event_propagation is
+	set_no_event_propagation
 			-- Do not propagate events to direct
 			-- parent.
 		require
@@ -277,7 +277,7 @@ feature -- Status setting
 			implementation.set_no_event_propagation
 		end;
 
-	propagate_event is
+	propagate_event
 			-- Propagate events not handled by Current
 			-- widget to direct parent.
 		require
@@ -287,7 +287,7 @@ feature -- Status setting
 			implementation.propagate_event
 		end;
 
-	grab (a_cursor: SCREEN_CURSOR) is
+	grab (a_cursor: SCREEN_CURSOR)
 			-- Grab the mouse and the keyboard , i.e.
 			-- channel all events to Current widget 
 			-- regardless of where they occur
@@ -300,7 +300,7 @@ feature -- Status setting
 			implementation.grab (a_cursor)
 		end;
 
-	ungrab is
+	ungrab
 			-- Release the mouse and the keyboard 
 			-- from an earlier grab.
 		require
@@ -312,7 +312,7 @@ feature -- Status setting
 
 feature -- Measurement
 
-	x: INTEGER is
+	x: INTEGER
 			-- Horizontal position relative to parent
 		require
 			exists: not destroyed
@@ -320,7 +320,7 @@ feature -- Measurement
 			Result := implementation.x
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 			-- Vertical position relative to parent
 		require
 			exists: not destroyed
@@ -328,7 +328,7 @@ feature -- Measurement
 			Result := implementation.y
 		end;
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of widget
 		require
 			exists: not destroyed
@@ -338,7 +338,7 @@ feature -- Measurement
 			Positive_width: Result >= 0
 		end;
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of widget
 		require
 			exists: not destroyed
@@ -348,7 +348,7 @@ feature -- Measurement
 			Positive_height: Result >= 0
 		end; 
 
-	real_x: INTEGER is
+	real_x: INTEGER
 			-- Vertical position relative to root window
 		require
 			exists: not destroyed
@@ -356,7 +356,7 @@ feature -- Measurement
 			Result := implementation.real_x
 		end; 
 
-	real_y: INTEGER is
+	real_y: INTEGER
 			-- Horizontal position relative to root window
 		require
 			exists: not destroyed
@@ -370,7 +370,7 @@ feature -- Measurement
 
 feature -- Resizing
 
-	set_size (new_width:INTEGER; new_height: INTEGER) is
+	set_size (new_width:INTEGER; new_height: INTEGER)
 			-- Set width and height to `new_width'
 			-- and `new_height'.
 		require
@@ -381,7 +381,7 @@ feature -- Resizing
 			implementation.set_size (new_width, new_height)
 		end; 
 
-	set_width (new_width :INTEGER) is
+	set_width (new_width :INTEGER)
 			-- Set width to `new_width'.
 		require
 			exists: not destroyed;
@@ -390,7 +390,7 @@ feature -- Resizing
 			implementation.set_width (new_width)
 		end;
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 			-- Set height to `new_height'.
 		require
 			exists: not destroyed;
@@ -399,7 +399,7 @@ feature -- Resizing
 			implementation.set_height (new_height)
 		end;
 
-	set_x (new_x: INTEGER) is
+	set_x (new_x: INTEGER)
 			-- Set  horizontal position relative
 			-- to parent to `new_x'.
 		require
@@ -408,7 +408,7 @@ feature -- Resizing
 			implementation.set_x (new_x)
 		end;
 
-	set_x_y (new_x: INTEGER; new_y: INTEGER) is
+	set_x_y (new_x: INTEGER; new_y: INTEGER)
 			-- Set horizontal position and
 			-- vertical position relative to parent
 			-- to `new_x' and `new_y'.
@@ -418,7 +418,7 @@ feature -- Resizing
 			implementation.set_x_y (new_x, new_y)
 		end;
 
-	set_y (new_y: INTEGER) is
+	set_y (new_y: INTEGER)
 			-- Set vertical position relative
 			-- to parent to `new_y'.
 		require
@@ -429,7 +429,7 @@ feature -- Resizing
 
 feature -- Comparison
 
-	same (other: like Current): BOOLEAN is
+	same (other: like Current): BOOLEAN
 			-- Does Current widget and `other' correspond
 			-- to the same screen object?
 		require
@@ -440,7 +440,7 @@ feature -- Comparison
 
 feature -- Element change
 
-	add_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to be executed 
 			-- when the mouse is moved while the `number'-th mouse 
 			-- button is pressed.
@@ -453,7 +453,7 @@ feature -- Element change
 			implementation.add_button_motion_action (number, a_command, argument)
 		end; 
 
-	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to be executed 
 			-- when the `number'-th mouse button is pressed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -465,7 +465,7 @@ feature -- Element change
 			implementation.add_button_press_action (number, a_command, argument)
 		end; 
 
-	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to be executed 
 			-- when the `number'-th mouse button is released.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -477,7 +477,7 @@ feature -- Element change
 			implementation.add_button_release_action (number, a_command, argument)
 		end; 
 
-	add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	add_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to be executed
 			-- when the `number'-th mouse button is clicked
 			-- `argument' will be passed to `a_command' whenever it is
@@ -491,7 +491,7 @@ feature -- Element change
 			implementation.add_button_click_action (number, a_command, argument)
 		end;
 
-	set_multi_click_time (time: INTEGER) is
+	set_multi_click_time (time: INTEGER)
 			-- Set time granted for clicking
 		require
 			exists: not destroyed
@@ -499,7 +499,7 @@ feature -- Element change
 			implementation.set_multi_click_time (time)
 		end;
 
-	add_destroy_action (a_command: COMMAND; argument: ANY) is
+	add_destroy_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to be executed 
 			-- when current widget is destroyed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -511,7 +511,7 @@ feature -- Element change
 			implementation.add_destroy_action (a_command, argument)
 		end; 
 
-	add_enter_action (a_command: COMMAND; argument: ANY) is
+	add_enter_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to be executed 
 			-- when the pointer enters Current widget.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -523,7 +523,7 @@ feature -- Element change
 			implementation.add_enter_action (a_command, argument)
 		end; 
 
-	add_key_press_action (a_command: COMMAND; argument: ANY) is
+	add_key_press_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to be executed 
 			-- when a key is pressed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -535,7 +535,7 @@ feature -- Element change
 			implementation.add_key_press_action (a_command, argument)
 		end;
 
-	add_key_release_action (a_command: COMMAND; argument: ANY) is
+	add_key_release_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to be executed 
 			-- when a key is released.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -547,7 +547,7 @@ feature -- Element change
 			implementation.add_key_release_action (a_command, argument)
 		end; 
 
-	add_leave_action (a_command: COMMAND; argument: ANY) is
+	add_leave_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to be executed 
 			-- when the pointer leaves Current widget.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -559,7 +559,7 @@ feature -- Element change
 			implementation.add_leave_action (a_command, argument)
 		end; 
 
-	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+	add_pointer_motion_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to be executed 
 			-- when the mouse is moved.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -571,7 +571,7 @@ feature -- Element change
 			implementation.add_pointer_motion_action (a_command, argument)
 		end; 
 
-	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
+	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY)
 			-- Set `a_command' to be executed when `a_translation' occurs.
 			-- `a_translation' must be specified with the X toolkit conventions.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -586,7 +586,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_action (a_translation: STRING) is
+	remove_action (a_translation: STRING)
 			-- Remove the command executed when `a_translation' occurs.
 			-- Do nothing if no command has been specified.
 		require
@@ -596,7 +596,7 @@ feature -- Removal
 			implementation.remove_action (a_translation)
 		end; 
 
-	remove_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	remove_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed when the
 			-- mouse is moved while the `number'-th mouse button is pressed.
 			-- Do nothing if the pair (`a_command', `argument') had not 
@@ -608,7 +608,7 @@ feature -- Removal
 			implementation.remove_button_motion_action (number, a_command, argument)
 		end; 
 
-	remove_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	remove_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed when the
 			-- `number'-th mouse button is pressed.
 			-- Do nothing if the pair (`a_command', `argument') had not 
@@ -620,7 +620,7 @@ feature -- Removal
 			implementation.remove_button_press_action (number, a_command, argument)
 		end; 
 
-	remove_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	remove_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed when the
 			-- `number'-th mouse button is released.
 			-- Do nothing if the pair (`a_command', `argument') had not 
@@ -632,7 +632,7 @@ feature -- Removal
 			implementation.remove_button_release_action (number, a_command, argument)
 		end; 
 
-	remove_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+	remove_button_click_action (number: INTEGER; a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed when the
 			-- `number'-th mouse button is clicked.
 			-- Do nothing if the pair (`a_command', `argument') had not
@@ -646,7 +646,7 @@ feature -- Removal
 			implementation.remove_button_click_action (number, a_command, argument)
 		end;
 
-	remove_destroy_action (a_command: COMMAND; argument: ANY) is
+	remove_destroy_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed when
 			-- Current widget is destroyed.
 			-- Do nothing if the pair (`a_command', `argument') had not 
@@ -658,7 +658,7 @@ feature -- Removal
 			implementation.remove_destroy_action (a_command, argument)
 		end; 
 
-	remove_enter_action (a_command: COMMAND; argument: ANY) is
+	remove_enter_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed when the
 			-- pointer enters Current widget.
 			-- Do nothing if the pair (`a_command', `argument') had not 
@@ -670,7 +670,7 @@ feature -- Removal
 			implementation.remove_enter_action (a_command, argument)
 		end;
 
-	remove_key_press_action (a_command: COMMAND; argument: ANY) is
+	remove_key_press_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed when
 			-- a key is pressed.
 			-- Do nothing if the pair (`a_command', `argument') had not 
@@ -682,7 +682,7 @@ feature -- Removal
 			implementation.remove_key_press_action (a_command, argument)
 		end;
 
-	remove_key_release_action (a_command: COMMAND; argument: ANY) is
+	remove_key_release_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed when
 			-- a key is released.
 			-- Do nothing if the pair (`a_command', `argument') had not 
@@ -694,7 +694,7 @@ feature -- Removal
 			implementation.remove_key_release_action (a_command, argument)
 		end;
 
-	remove_leave_action (a_command: COMMAND; argument: ANY) is
+	remove_leave_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed when the
 			-- pointer leaves Current widget.
 			-- Do nothing if the pair (`a_command', `argument') had not 
@@ -706,7 +706,7 @@ feature -- Removal
 			implementation.remove_leave_action (a_command, argument)
 		end;
 
-	remove_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+	remove_pointer_motion_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of actions to be executed when the
 			-- mouse is moved.
 			-- Do nothing if the pair (`a_command', `argument') had not 
@@ -718,7 +718,7 @@ feature -- Removal
 			implementation.remove_pointer_motion_action (a_command, argument)
 		end;
 
-	set_background_color (new_color: COLOR) is
+	set_background_color (new_color: COLOR)
 			-- Set background color to `new_color'.
 		require
 			exists: not destroyed;
@@ -730,7 +730,7 @@ feature -- Removal
 			--reset_background_pixmap_to_default:
 		end;
 
-	set_background_pixmap (a_pixmap: PIXMAP) is
+	set_background_pixmap (a_pixmap: PIXMAP)
 			-- Set background pixmap to `a_pixmap'.
 		require
 			exists: not destroyed;
@@ -742,7 +742,7 @@ feature -- Removal
 			--reset_background_color_to_default: 
 		end;
 
-	set_cursor (a_cursor: SCREEN_CURSOR) is
+	set_cursor (a_cursor: SCREEN_CURSOR)
 			-- Set `cursor' of current widget to `a_cursor'.
 		require
 			exists: not destroyed;
@@ -759,7 +759,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {W_MANAGER} -- Implementation
 	
-	remove_implementation is
+	remove_implementation
 			-- Remove implementation of Current widget.
 		do
 			implementation := Void
@@ -769,7 +769,7 @@ feature {W_MANAGER} -- Implementation
 
 feature {G_ANY, G_ANY_I, WIDGET_I} -- Implementation
 
-	is_fontable: BOOLEAN is
+	is_fontable: BOOLEAN
 			-- Can a font be set for Current
 			-- widget?
 		do
@@ -777,7 +777,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values of Current widget.
 		deferred
 		end;
@@ -786,7 +786,7 @@ invariant
 
 	Widget_Positive_depth:  depth >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Widget that represents a split window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make_horizontal (a_name: STRING; a_parent: COMPOSITE) is
+	make_horizontal (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an horizontal frame with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -28,7 +28,7 @@ feature -- Initialization
 			set_proportion(50)
 		end
 
-	make_horizontal_with_proportion (a_name: STRING; a_parent: COMPOSITE; proportion: INTEGER) is
+	make_horizontal_with_proportion (a_name: STRING; a_parent: COMPOSITE; proportion: INTEGER)
 			-- Create an horizontal frame with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -36,7 +36,7 @@ feature -- Initialization
 			set_proportion(proportion)
 		end
 
-	make_vertical (a_name: STRING; a_parent: COMPOSITE) is
+	make_vertical (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a vertical frame with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -44,7 +44,7 @@ feature -- Initialization
 			set_proportion(50)
 		end
 
-	make_vertical_with_proportion (a_name: STRING; a_parent: COMPOSITE; proportion: INTEGER) is
+	make_vertical_with_proportion (a_name: STRING; a_parent: COMPOSITE; proportion: INTEGER)
 			-- Create a vertical frame with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -54,7 +54,7 @@ feature -- Initialization
 
 feature {NONE} -- Implementation
 
-	make (a_name: STRING; a_parent: COMPOSITE; vertical: BOOLEAN) is
+	make (a_name: STRING; a_parent: COMPOSITE; vertical: BOOLEAN)
 			-- Create a frame with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -82,14 +82,14 @@ feature -- Access
 
 feature -- Sizing policy
 
-	update_split is
+	update_split
 		do
 			implementation.update_split
 		end
 
 feature -- Element change
 
-	set_proportion (p:INTEGER) is
+	set_proportion (p:INTEGER)
 			-- Set the split proportion from 0 to 100.
 		require
 			valid_proportion: p>=0 and then p<=100
@@ -97,25 +97,25 @@ feature -- Element change
 			implementation.set_proportion (p)
 		end
 
-	add_child (a_child: SPLIT_WINDOW_CHILD) is
+	add_child (a_child: SPLIT_WINDOW_CHILD)
 			-- Add `a_window' as currently lowest child.
 		do
 			implementation.add_child (a_child)
 		end
 
-	remove_child (a_child: SPLIT_WINDOW_CHILD) is
+	remove_child (a_child: SPLIT_WINDOW_CHILD)
 			-- Remove `a_child' from the display.
 		do
 			implementation.remove_child (a_child)
 		end
 
-	add_managed_child (a_child: SPLIT_WINDOW_CHILD) is
+	add_managed_child (a_child: SPLIT_WINDOW_CHILD)
 			-- Add `a_window' as managed.
 		do
 			implementation.add_managed_child (a_child)
 		end
 
-	remove_managed_child (a_child: SPLIT_WINDOW_CHILD) is
+	remove_managed_child (a_child: SPLIT_WINDOW_CHILD)
 			-- Remove `a_window' as managed.
 		do
 			implementation.remove_managed_child (a_child)
@@ -124,12 +124,12 @@ feature -- Element change
 
 feature -- Status Setting
 
-	set_default is
+	set_default
 			-- Set default values to current bulletin.
 		do
 		end
 
-	set_widget_pane_minimum (a_widget: WIDGET; a_dimension: INTEGER) is
+	set_widget_pane_minimum (a_widget: WIDGET; a_dimension: INTEGER)
 		local
 			--l: MEL_RECT_OBJ
 		do
@@ -137,7 +137,7 @@ feature -- Status Setting
 			--implementation.set_widget_pane_minimum (l, a_dimension)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

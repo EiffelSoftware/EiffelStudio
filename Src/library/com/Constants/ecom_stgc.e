@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "SToraGe Commit mode flags"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	Stgc_default: INTEGER is
+	Stgc_default: INTEGER
 			-- OLE 2 default commit mode
 		external
 			"C [macro <wtypes.h>]"
@@ -19,7 +19,7 @@ feature -- Access
 			"STGC_DEFAULT"
 		end
 
-	Stgc_overwrite: INTEGER is
+	Stgc_overwrite: INTEGER
 			-- EOLE_STGC_OVERWRITE allows new data to overwrite the old data,
 			-- reducing space requirements. EOLE_STGC_OVERWRITE is not recommended
 			-- for usual operation, but it could be useful in the following
@@ -42,7 +42,7 @@ feature -- Access
 			"STGC_OVERWRITE"
 		end
 
-	Stgc_onlyifcurrent: INTEGER is
+	Stgc_onlyifcurrent: INTEGER
 			-- EOLE_STGC_ONLYIFCURRENT prevents multiple users of an IStorage
 			-- from overwriting the other's changes. EOLE_STGC_ONLYIFCURRENT
 			-- commits changes only if no one else has made changes since the
@@ -56,7 +56,7 @@ feature -- Access
 			"STGC_ONLYIFCURRENT"
 		end
 
-	Stgc_dangerouslycommitmerelytodiskcache: INTEGER is
+	Stgc_dangerouslycommitmerelytodiskcache: INTEGER
 			-- EOLE_STGC_DANGEROUSLYCOMMITMERELYTODISKCACHE commits the changes,
 			-- but does not save them to the disk cache.
 		external
@@ -65,7 +65,7 @@ feature -- Access
 			"STGC_DANGEROUSLYCOMMITMERELYTODISKCACHE"
 		end
 
-	is_valid_stgc (stgc: INTEGER): BOOLEAN is
+	is_valid_stgc (stgc: INTEGER): BOOLEAN
 			-- Is `stgc' a valid storage commit mode flag?
 		do
 			Result := stgc = Stgc_default or
@@ -74,7 +74,7 @@ feature -- Access
 						stgc = Stgc_dangerouslycommitmerelytodiskcache
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

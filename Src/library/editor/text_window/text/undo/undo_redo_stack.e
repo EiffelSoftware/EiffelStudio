@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "undo/redo command stack"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_text: EDITABLE_TEXT) is
+	make (a_text: EDITABLE_TEXT)
 			-- Initialize the stack.
 		do
 			text := a_text
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 feature {EDITABLE_TEXT} -- Initialization
 
-	initialize is
+	initialize
 			-- Reinitialize the stack
 		do
 			create undo_list.make
@@ -37,7 +37,7 @@ feature {EDITABLE_TEXT} -- Initialization
 
 feature {EDITABLE_TEXT} -- Access
 
-	item: UNDO_CMD is
+	item: UNDO_CMD
 			-- First undo command, Void if none.
 		do
 			if undo_is_possible then
@@ -45,13 +45,13 @@ feature {EDITABLE_TEXT} -- Access
 			end
 		end
 
-	undo_is_possible: BOOLEAN is
+	undo_is_possible: BOOLEAN
 			-- Is the `undo' operation possible?
 		do
 			Result := not undo_list.is_empty
 		end
 
-	redo_is_possible: BOOLEAN is
+	redo_is_possible: BOOLEAN
 			-- Is the `undo' operation possible?
 		do
 			Result := not redo_list.is_empty
@@ -59,13 +59,13 @@ feature {EDITABLE_TEXT} -- Access
 
 feature {EDITABLE_TEXT} -- Element change
 
-	record_move is
+	record_move
 			-- Update `Current' state as the cursor as moved.
 		do
 			current_status := move
 		end
 
-	record_insert (c: CHARACTER_32) is
+	record_insert (c: CHARACTER_32)
 			-- Update `Current' as `c' is to be inserted at cursor position.
 		local
 			uic: UNDO_INSERT_CMD
@@ -110,7 +110,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_insert_eol (inserted_indentation: STRING_GENERAL) is
+	record_insert_eol (inserted_indentation: STRING_GENERAL)
 			-- Update `Current' as a new line with indentation `inserted_indentation'
 			-- is to be inserted at cursor position.
 		local
@@ -140,7 +140,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_paste (s: STRING_GENERAL) is
+	record_paste (s: STRING_GENERAL)
 			-- Update `Current' as `s' is to be inserted at cursor position.
 		local
 			uic: UNDO_INSERT_CMD
@@ -152,7 +152,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_delete (c: CHARACTER_32) is
+	record_delete (c: CHARACTER_32)
 			-- Update `Current' as `c' is to be deleted at cursor position.
 		local
 			udc: UNDO_DELETE_CMD
@@ -172,7 +172,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_delete_selection (s: STRING_GENERAL) is
+	record_delete_selection (s: STRING_GENERAL)
 			-- Update `Current' as `s' has just been deleted at cursor position.
 		local
 			udc: UNDO_DELETE_CMD
@@ -185,7 +185,7 @@ feature {EDITABLE_TEXT} -- Element change
 		end
 
 
-	record_replace (c1, c2: CHARACTER_32) is
+	record_replace (c1, c2: CHARACTER_32)
 		local
 			urc: UNDO_REPLACE_CMD
 		do
@@ -212,7 +212,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_replace_selection (s1, s2: STRING_GENERAL) is
+	record_replace_selection (s1, s2: STRING_GENERAL)
 		local
 			urc: UNDO_REPLACE_CMD
 		do
@@ -222,7 +222,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_replace_all (s1, s2: STRING_GENERAL) is
+	record_replace_all (s1, s2: STRING_GENERAL)
 		local
 			urac: UNDO_REPLACE_ALL_CMD
 			urc: UNDO_REPLACE_CMD
@@ -241,7 +241,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_back_delete (c: CHARACTER_32) is
+	record_back_delete (c: CHARACTER_32)
 		local
 			udc: UNDO_DELETE_CMD
 		do
@@ -260,7 +260,7 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-	record_symbol (lines: LINKED_LIST[INTEGER]; symbl: STRING_GENERAL) is
+	record_symbol (lines: LINKED_LIST[INTEGER]; symbl: STRING_GENERAL)
 		local
 			uisc: UNDO_SYMBOL_SELECTION_CMD
 		do
@@ -270,7 +270,7 @@ feature {EDITABLE_TEXT} -- Element change
 			current_status := symbol
 		end
 
-	record_unsymbol (lines: LINKED_LIST[INTEGER]; symbl: STRING_GENERAL) is
+	record_unsymbol (lines: LINKED_LIST[INTEGER]; symbl: STRING_GENERAL)
 			--| Warning : to be called after `unsymbol_selection'
 		local
 			uusc: UNDO_UNSYMBOL_SELECTION_CMD
@@ -281,7 +281,7 @@ feature {EDITABLE_TEXT} -- Element change
 			current_status := unsymbol
 		end
 
-	record_remove_trailing_blank (s: STRING_GENERAL) is
+	record_remove_trailing_blank (s: STRING_GENERAL)
 			-- Update `Current' as `s' has just been removed at cursor position.
 		local
 			undo_rtb_cmd: UNDO_DELETE_STRINGS_CMD
@@ -320,7 +320,7 @@ feature {EDITABLE_TEXT} -- Element change
 			end
 		end
 
-	record_uncomment (s: STRING_GENERAL) is
+	record_uncomment (s: STRING_GENERAL)
 			-- Update `Current' as `s' has just been removed at cursor position.
 		local
 			undo_rtb_cmd: UNDO_DELETE_STRINGS_CMD
@@ -345,7 +345,7 @@ feature {EDITABLE_TEXT} -- Element change
 
 feature {EDITABLE_TEXT} -- Basic operations
 
-	undo is
+	undo
 			-- undo command at the beginning of `undo_list'.
 			-- update `undo_list' and `redo_list'.
 		local
@@ -379,7 +379,7 @@ feature {EDITABLE_TEXT} -- Basic operations
 			end
 		end
 
-	redo is
+	redo
 			-- redo command at the beginning of `redo_list'.
 			-- update `undo_list' and `redo_list'.
 		local
@@ -408,7 +408,7 @@ feature {EDITABLE_TEXT} -- Basic operations
 			end
 		end
 
-	reset is
+	reset
 			-- empty the unde-redo stack.
 		do
 			undo_list.wipe_out
@@ -417,7 +417,7 @@ feature {EDITABLE_TEXT} -- Basic operations
 			notify_observers
 		end
 
-	forget_past is
+	forget_past
 			-- Destroy past undos. Used by "save" commands.
 		do
 			undo_list.wipe_out
@@ -426,21 +426,21 @@ feature {EDITABLE_TEXT} -- Basic operations
 		end
 
 
-	bind_current_item_to_next is
+	bind_current_item_to_next
 		do
 			if item /= Void then
 				item.bind_to_next
 			end
 		end
 
-	unbind_current_item_to_next is
+	unbind_current_item_to_next
 		do
 			if item /= Void then
 				item.unbind_to_next
 			end
 		end
 
-	remove_last_redo is
+	remove_last_redo
 		do
 			redo_list.start
 			if redo_list.writable then
@@ -450,7 +450,7 @@ feature {EDITABLE_TEXT} -- Basic operations
 
 feature {EDITABLE_TEXT} -- Mark management
 
-	set_mark is
+	set_mark
 			-- mark current item
 		do
 			if mark_enabled then
@@ -464,7 +464,7 @@ feature {EDITABLE_TEXT} -- Mark management
 			end
 		end
 
-	disable_mark is
+	disable_mark
 			-- Disable marking
 		do
 			mark_enabled := False
@@ -472,7 +472,7 @@ feature {EDITABLE_TEXT} -- Mark management
 			marked_cmd := Void
 		end
 
-	enable_mark is
+	enable_mark
 			-- Enable marking
 		do
 			mark_enabled := True
@@ -487,7 +487,7 @@ feature {EDITABLE_TEXT} -- Mark management
 	marked_cmd: UNDO_CMD
 			-- Marked command.
 
-	notify_text_of_mark_reached is
+	notify_text_of_mark_reached
 			-- Marked position was reached by calling `undo' and `redo'.
 		do
 			text.on_text_back_to_its_last_saved_state
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation
 
 	text: EDITABLE_TEXT
 
-	put (uc: UNDO_CMD) is
+	put (uc: UNDO_CMD)
 		do
 			undo_list.put_front (uc)
 			redo_list.wipe_out
@@ -515,11 +515,11 @@ feature {NONE} -- Constants
 	move, insert_char, delete_char, insert_eol,
 	replace, replace_selection, replace_all,
 	back_delete, back_delete_combo, cut_selection,
-	paste, symbol, unsymbol, remove_trailing_blank, uncomment : INTEGER is unique
+	paste, symbol, unsymbol, remove_trailing_blank, uncomment : INTEGER = unique
 
 feature -- Observer pattern
 
-	add_observer (an_observer: UNDO_REDO_OBSERVER) is
+	add_observer (an_observer: UNDO_REDO_OBSERVER)
 			-- Add `an_observer' to the list of observers for Current.
 		require
 			valid_observer: an_observer /= Void
@@ -530,7 +530,7 @@ feature -- Observer pattern
 			observers.extend (an_observer)
 		end
 
-	remove_observer (an_observer: UNDO_REDO_OBSERVER) is
+	remove_observer (an_observer: UNDO_REDO_OBSERVER)
 			-- Remove `an_observer' to the list of observers for Current.
 		require
 			valid_observer: an_observer /= Void
@@ -542,7 +542,7 @@ feature -- Observer pattern
 
 feature {NONE} -- Implementation
 
-	notify_observers is
+	notify_observers
 			-- Notify all observers about the change of Current.
 		do
 			if observers /= Void then
@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 	observers: ARRAYED_LIST [UNDO_REDO_OBSERVER];
 			-- All observers for Current.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

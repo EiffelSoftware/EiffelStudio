@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "An example application for internatioaliztion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_and_launch is
+	make_and_launch
 			-- Initialize and launch application
 		do
 			n := 1
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			launch
 		end
 
-	prepare is
+	prepare
 		local
 			pixmap : EV_PIXMAP
 		do
@@ -68,7 +68,7 @@ feature -- Informations
 feature -- Create window elements
 
 
-	build_menu_bar is
+	build_menu_bar
 			-- build the menu bar
 		local
 			about,
@@ -151,7 +151,7 @@ feature -- Create window elements
 
 		end
 
-	build_main_box is
+	build_main_box
 			-- create, initialize and add the labels
 		local
 			separator1, separator2: EV_HORIZONTAL_SEPARATOR
@@ -172,7 +172,7 @@ feature -- Create window elements
 			main_box.extend (explanation)
 		end
 
-	build_buttons_box is
+	build_buttons_box
 		do
 			create buttons_box
 			create buy_button.make_with_text (names.buy)
@@ -191,7 +191,7 @@ feature -- Create window elements
 			buttons_box.extend (update_time_button)
 		end
 
-	build_info_box is
+	build_info_box
 		local
 			separator: EV_VERTICAL_SEPARATOR
 		do
@@ -216,14 +216,14 @@ feature -- Create window elements
 
 feature -- Actions
 
-	buy is
+	buy
 			-- increment `n'
 		do
 			n := n + 1
 			amount_of_money := amount_of_money - hovercraft_buy_cost
 		end
 
-	sell is
+	sell
 			-- decrement `n'
 		do
 			n := n - 1
@@ -232,7 +232,7 @@ feature -- Actions
 
 feature -- Update features
 
-	update_language (a_lang: STRING) is
+	update_language (a_lang: STRING)
 			-- Reload strings in a new language
 		do
 			names.set_locale (a_lang)
@@ -245,7 +245,7 @@ feature -- Update features
 			first_window.refresh_now
 		end
 
-	update_menu (a_menu: EV_MENU_ITEM) is
+	update_menu (a_menu: EV_MENU_ITEM)
 			-- update the menu
 		local
 			sub_menu: EV_MENU
@@ -262,7 +262,7 @@ feature -- Update features
 			end
 		end
 
-	update_menu_bar is
+	update_menu_bar
 			-- update the menu bar
 		do
 			standard_menu_bar.do_all (agent update_menu(?))
@@ -270,7 +270,7 @@ feature -- Update features
 
 
 
-	update_money_labels is
+	update_money_labels
 			-- update all labels
 		do
 			money_label.set_text (names.amount_of_money (amount_of_money)+"%N"+
@@ -279,20 +279,20 @@ feature -- Update features
 								  names.mortage_rate (mortgage_rate))
 		end
 
-	update_date_time_labels is
+	update_date_time_labels
 			-- update the date/time labels
 		do
 			date_time_info.set_text (names.time+"%N"+names.date+"%N"+names.date_time)
 		end
 
-	update_labels is
+	update_labels
 		do
 			hovercraft_info.set_text (names.number_of_hovercraft (n))
 			explanation.set_text (names.explanation)
 		end
 
 
-	update_buttons is
+	update_buttons
 		do
 			buy_button.set_text (names.buy)
 			sell_button.set_text (names.sell)
@@ -301,7 +301,7 @@ feature -- Update features
 
 feature {NONE} -- About Dialog Implementation
 
-	on_about is
+	on_about
 			-- Display the About dialog.
 		local
 			about_dialog: ABOUT_DIALOG
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 	explanation: EV_LABEL;
 
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

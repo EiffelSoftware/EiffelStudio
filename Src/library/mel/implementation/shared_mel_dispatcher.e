@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Shared instance of dispatcher for MEL"
@@ -12,7 +12,7 @@ class
 
 feature {NONE} -- Access
 
-	Mel_dispatcher: MEL_DISPATCHER is
+	Mel_dispatcher: MEL_DISPATCHER
 			-- MEL dispatcher manager
 		once
 			create Result.make
@@ -20,7 +20,7 @@ feature {NONE} -- Access
 			valid_result: Result /= void
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

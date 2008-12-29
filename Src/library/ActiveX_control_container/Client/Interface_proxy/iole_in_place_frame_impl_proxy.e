@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IOleInPlaceFrame' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iole_in_place_frame_impl_proxy_from_pointer(cpp_obj)
@@ -27,42 +27,42 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	get_window (phwnd: CELL [POINTER]) is
+	get_window (phwnd: CELL [POINTER])
 			-- No description available.
 			-- `phwnd' [out].  
 		do
 			ccom_get_window (initializer, phwnd)
 		end
 
-	context_sensitive_help (f_enter_mode: INTEGER) is
+	context_sensitive_help (f_enter_mode: INTEGER)
 			-- No description available.
 			-- `f_enter_mode' [in].  
 		do
 			ccom_context_sensitive_help (initializer, f_enter_mode)
 		end
 
-	get_border (lprect_border: TAG_RECT_RECORD) is
+	get_border (lprect_border: TAG_RECT_RECORD)
 			-- No description available.
 			-- `lprect_border' [out].  
 		do
 			ccom_get_border (initializer, lprect_border.item)
 		end
 
-	request_border_space (pborderwidths: TAG_RECT_RECORD) is
+	request_border_space (pborderwidths: TAG_RECT_RECORD)
 			-- No description available.
 			-- `pborderwidths' [in].  
 		do
 			ccom_request_border_space (initializer, pborderwidths.item)
 		end
 
-	set_border_space (pborderwidths: TAG_RECT_RECORD) is
+	set_border_space (pborderwidths: TAG_RECT_RECORD)
 			-- No description available.
 			-- `pborderwidths' [in].  
 		do
 			ccom_set_border_space (initializer, pborderwidths.item)
 		end
 
-	set_active_object (p_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE; psz_obj_name: STRING) is
+	set_active_object (p_active_object: IOLE_IN_PLACE_ACTIVE_OBJECT_INTERFACE; psz_obj_name: STRING)
 			-- No description available.
 			-- `p_active_object' [in].  
 			-- `psz_obj_name' [in].  
@@ -82,7 +82,7 @@ feature -- Basic Operations
 			ccom_set_active_object (initializer, p_active_object_item, psz_obj_name)
 		end
 
-	insert_menus (hmenu_shared: POINTER; lp_menu_widths: TAG_OLE_MENU_GROUP_WIDTHS_RECORD) is
+	insert_menus (hmenu_shared: POINTER; lp_menu_widths: TAG_OLE_MENU_GROUP_WIDTHS_RECORD)
 			-- No description available.
 			-- `hmenu_shared' [in].  
 			-- `lp_menu_widths' [in, out].  
@@ -90,7 +90,7 @@ feature -- Basic Operations
 			ccom_insert_menus (initializer, hmenu_shared, lp_menu_widths.item)
 		end
 
-	set_menu (hmenu_shared: POINTER; holemenu: POINTER; hwnd_active_object: POINTER) is
+	set_menu (hmenu_shared: POINTER; holemenu: POINTER; hwnd_active_object: POINTER)
 			-- No description available.
 			-- `hmenu_shared' [in].  
 			-- `holemenu' [in].  
@@ -99,28 +99,28 @@ feature -- Basic Operations
 			ccom_set_menu (initializer, hmenu_shared, holemenu.item, hwnd_active_object)
 		end
 
-	remove_menus (hmenu_shared: POINTER) is
+	remove_menus (hmenu_shared: POINTER)
 			-- No description available.
 			-- `hmenu_shared' [in].  
 		do
 			ccom_remove_menus (initializer, hmenu_shared)
 		end
 
-	set_status_text (psz_status_text: STRING) is
+	set_status_text (psz_status_text: STRING)
 			-- No description available.
 			-- `psz_status_text' [in].  
 		do
 			ccom_set_status_text (initializer, psz_status_text)
 		end
 
-	enable_modeless (f_enable: INTEGER) is
+	enable_modeless (f_enable: INTEGER)
 			-- No description available.
 			-- `f_enable' [in].  
 		do
 			ccom_enable_modeless (initializer, f_enable)
 		end
 
-	translate_accelerator (lpmsg: TAG_MSG_RECORD; w_id: INTEGER) is
+	translate_accelerator (lpmsg: TAG_MSG_RECORD; w_id: INTEGER)
 			-- No description available.
 			-- `lpmsg' [in].  
 			-- `w_id' [in].  
@@ -130,7 +130,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iole_in_place_frame_impl_proxy(initializer)
@@ -138,97 +138,97 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_get_window (cpp_obj: POINTER; phwnd: CELL [POINTER]) is
+	ccom_get_window (cpp_obj: POINTER; phwnd: CELL [POINTER])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_context_sensitive_help (cpp_obj: POINTER; f_enter_mode: INTEGER) is
+	ccom_context_sensitive_help (cpp_obj: POINTER; f_enter_mode: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_get_border (cpp_obj: POINTER; lprect_border: POINTER) is
+	ccom_get_border (cpp_obj: POINTER; lprect_border: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](ecom_control_library::tagRECT *)"
 		end
 
-	ccom_request_border_space (cpp_obj: POINTER; pborderwidths: POINTER) is
+	ccom_request_border_space (cpp_obj: POINTER; pborderwidths: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](ecom_control_library::tagRECT *)"
 		end
 
-	ccom_set_border_space (cpp_obj: POINTER; pborderwidths: POINTER) is
+	ccom_set_border_space (cpp_obj: POINTER; pborderwidths: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](ecom_control_library::tagRECT *)"
 		end
 
-	ccom_set_active_object (cpp_obj: POINTER; p_active_object: POINTER; psz_obj_name: STRING) is
+	ccom_set_active_object (cpp_obj: POINTER; p_active_object: POINTER; psz_obj_name: STRING)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](ecom_control_library::IOleInPlaceActiveObject *,EIF_OBJECT)"
 		end
 
-	ccom_insert_menus (cpp_obj: POINTER; hmenu_shared: POINTER; lp_menu_widths: POINTER) is
+	ccom_insert_menus (cpp_obj: POINTER; hmenu_shared: POINTER; lp_menu_widths: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](EIF_POINTER,ecom_control_library::tagOleMenuGroupWidths *)"
 		end
 
-	ccom_set_menu (cpp_obj: POINTER; hmenu_shared: POINTER; holemenu: POINTER; hwnd_active_object: POINTER) is
+	ccom_set_menu (cpp_obj: POINTER; hmenu_shared: POINTER; holemenu: POINTER; hwnd_active_object: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](EIF_POINTER,ecom_control_library::tag_userHGLOBAL *,EIF_POINTER)"
 		end
 
-	ccom_remove_menus (cpp_obj: POINTER; hmenu_shared: POINTER) is
+	ccom_remove_menus (cpp_obj: POINTER; hmenu_shared: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](EIF_POINTER)"
 		end
 
-	ccom_set_status_text (cpp_obj: POINTER; psz_status_text: STRING) is
+	ccom_set_status_text (cpp_obj: POINTER; psz_status_text: STRING)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_enable_modeless (cpp_obj: POINTER; f_enable: INTEGER) is
+	ccom_enable_modeless (cpp_obj: POINTER; f_enable: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_translate_accelerator (cpp_obj: POINTER; lpmsg: POINTER; w_id: INTEGER) is
+	ccom_translate_accelerator (cpp_obj: POINTER; lpmsg: POINTER; w_id: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](ecom_control_library::tagMSG *,EIF_INTEGER)"
 		end
 
-	ccom_delete_iole_in_place_frame_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iole_in_place_frame_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iole_in_place_frame_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iole_in_place_frame_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IOleInPlaceFrame_impl_proxy %"ecom_control_library_IOleInPlaceFrame_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

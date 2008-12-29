@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Column of an EV_GRID, containing EV_GRID_ITEMs."
 	date: "$Date$"
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature -- Access
 
-	header_item: EV_GRID_HEADER_ITEM is
+	header_item: EV_GRID_HEADER_ITEM
 			-- Header item used for resizing `Current' in grid.
 		require
 			not_destroyed: not is_destroyed
@@ -42,7 +42,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	is_displayed: BOOLEAN is
+	is_displayed: BOOLEAN
 			-- Is `Current' visible on the screen?
 			-- `True' when show requested and parent displayed.
 			-- A column that `is_show_requested' does not necessarily have to be visible on screen at that particular time.
@@ -54,7 +54,7 @@ feature -- Access
 			bridge_ok: Result = implementation.is_displayed
 		end
 
-	is_show_requested: BOOLEAN is
+	is_show_requested: BOOLEAN
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
 		require
@@ -64,7 +64,7 @@ feature -- Access
 			Result := implementation.is_show_requested
 		end
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Title of Current column. Empty if none.
 		require
 			not_destroyed: not is_destroyed
@@ -75,7 +75,7 @@ feature -- Access
 			title_not_void: Result /= Void
 		end
 
-	item (i: INTEGER): EV_GRID_ITEM is
+	item (i: INTEGER): EV_GRID_ITEM
 			-- Item at `i'-th row, Void if none.
 		require
 			not_destroyed: not is_destroyed
@@ -86,7 +86,7 @@ feature -- Access
 			Result := implementation.item (i)
 		end
 
-	parent: EV_GRID is
+	parent: EV_GRID
 			-- Grid to which current column belongs.
 		require
 			not_destroyed: not is_destroyed
@@ -94,7 +94,7 @@ feature -- Access
 			Result := implementation.parent
 		end
 
-	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
+	selected_items: ARRAYED_LIST [EV_GRID_ITEM]
 			-- All items selected in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -105,7 +105,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- `Result' is width of `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -116,7 +116,7 @@ feature -- Access
 			Result_non_negative: Result >= 0
 		end
 
-	virtual_x_position: INTEGER is
+	virtual_x_position: INTEGER
 			-- Horizontal offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
 			-- `Result' is 0 if `parent' is `Void'.
@@ -129,7 +129,7 @@ feature -- Access
 			parent_void_implies_result_zero: parent = Void implies Result = 0
 		end
 
-	virtual_x_position_unlocked: INTEGER is
+	virtual_x_position_unlocked: INTEGER
 			-- Horizontal offset of unlocked position of `Current', in relation to the
 			-- virtual area of `parent' grid in pixels.
 			-- If not `is_locked', then `virtual_x_position' = `virtual_y_position_unlocked'.
@@ -144,7 +144,7 @@ feature -- Access
 			parent_void_implies_result_zero: parent = Void implies Result = 0
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Color displayed as background of `Current' except where there are items contained that
 			-- have a non-`Void' `background_color'. If `Void', `background_color' of `parent' is displayed.
 			-- See header of `EV_GRID' for a description of this behavior.
@@ -155,7 +155,7 @@ feature -- Access
 			Result := implementation.background_color
 		end
 
-	foreground_color: EV_COLOR is
+	foreground_color: EV_COLOR
 			-- Color displayed for foreground features of `Current' except where there are items contained that
 			-- have a non-`Void' `foreground_color'. If `Void', `foreground_color' of `parent' is displayed.
 			-- See header of `EV_GRID' for a description of this behavior.
@@ -166,7 +166,7 @@ feature -- Access
 			Result := implementation.foreground_color
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap display on header of `parent' to left of `title'.
 		require
 			not_destroyed: not is_destroyed
@@ -175,7 +175,7 @@ feature -- Access
 			Result := implementation.pixmap
 		end
 
-	is_locked: BOOLEAN is
+	is_locked: BOOLEAN
 			-- Is `Current' locked so that it no longer scrolls?
 		require
 			not_destroyed: not is_destroyed
@@ -184,7 +184,7 @@ feature -- Access
 			Result := implementation.is_locked
 		end
 
-	locked_position: INTEGER is
+	locked_position: INTEGER
 			-- Locked position of `Current' from left edge of viewable area of `parent'.
 			-- `Result' is 0 if not `is_locked'.
 		require
@@ -198,7 +198,7 @@ feature -- Access
 
 feature -- Status setting
 
-	lock is
+	lock
 			-- Ensure `is_locked' is `True'.
 			-- `Current' is locked at it's current horizontal offset from
 			-- the left edge of the viewable area of `parent'.
@@ -212,7 +212,7 @@ feature -- Status setting
 			locked_position_set: locked_position = virtual_x_position - parent.virtual_x_position
 		end
 
-	lock_at_position (a_position: INTEGER) is
+	lock_at_position (a_position: INTEGER)
 			-- Ensure `is_locked' is `True' with the horizontal offset from
 			-- the left edge of the viewable area of `parent' set to `a_position'.
 		require
@@ -225,7 +225,7 @@ feature -- Status setting
 			locked_position_set: locked_position = a_position
 		end
 
-	unlock is
+	unlock
 			-- Ensure `is_locked' is `False'.
 		require
 			not_destroyed: not is_destroyed
@@ -236,7 +236,7 @@ feature -- Status setting
 			not_is_locked: not is_locked
 		end
 
-	hide is
+	hide
 			-- Prevent column from being shown in `parent'.
 		require
 			not_destroyed: not is_destroyed
@@ -247,7 +247,7 @@ feature -- Status setting
 			not_is_show_requested: not is_show_requested
 		end
 
-	show is
+	show
 			-- Allow column to be displayed when `parent' is.
 			-- Does not signify that the column will be visible on screen but that it will be visible within its parent.
 		require
@@ -259,7 +259,7 @@ feature -- Status setting
 			is_show_requested: is_show_requested
 		end
 
-	ensure_visible is
+	ensure_visible
 			-- Ensure `Current' is visible in viewable area of `parent'.
 		require
 			not_destroyed: not is_destroyed
@@ -273,7 +273,7 @@ feature -- Status setting
 			column_visible: virtual_x_position >= parent.virtual_x_position and virtual_x_position + width <= parent.virtual_x_position + (parent.viewable_width).max (width)
 		end
 
-	required_width_of_item_span (start_row, end_row: INTEGER): INTEGER is
+	required_width_of_item_span (start_row, end_row: INTEGER): INTEGER
 			-- Result is greatest `required_width' of all items from
 			-- row index `start_row', `end_row'.
 		require
@@ -286,7 +286,7 @@ feature -- Status setting
 			result_non_negative: Result >= 0
 		end
 
-	resize_to_content is
+	resize_to_content
 			-- Resize `Current' to greatest `required_width' of all items contained.
 		require
 			not_destroyed: not is_destroyed
@@ -300,7 +300,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	index: INTEGER is
+	index: INTEGER
 			-- Position of Current in `parent'.
 		require
 			not_destroyed: not is_destroyed
@@ -312,7 +312,7 @@ feature -- Status report
 			index_less_than_column_count: Result <= parent.column_count
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in current.
 		require
 			not_destroyed: not is_destroyed
@@ -325,7 +325,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
+	set_item (i: INTEGER; a_item: EV_GRID_ITEM)
 			-- Set item at `i'-th row to be `a_item'.
 			-- If `a_item' is `Void', the current item (if any) is removed.
 		require
@@ -341,7 +341,7 @@ feature -- Element change
 			item_set: item (i) = a_item
 		end
 
-	set_title (a_title: like title) is
+	set_title (a_title: like title)
 			-- a_title_not_void: a_title /= Void.
 		require
 			not_destroyed: not is_destroyed
@@ -352,7 +352,7 @@ feature -- Element change
 			title_set: title.is_equal (a_title)
 		end
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Set `background_color' with `a_color'.
 		require
 			not_destroyed: not is_destroyed
@@ -363,7 +363,7 @@ feature -- Element change
 			background_color_set: background_color = a_color
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Set `foreground_color' with `a_color'.
 		require
 			not_destroyed: not is_destroyed
@@ -374,7 +374,7 @@ feature -- Element change
 			foreground_color_set: foreground_color = a_color
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Assign `a_width' to `width'.
 		require
 			not_destroyed: not is_destroyed
@@ -386,7 +386,7 @@ feature -- Element change
 			width_set: width = a_width
 		end
 
-	clear is
+	clear
 			-- Remove all items from `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -398,7 +398,7 @@ feature -- Element change
 			to_implement_assertion ("EV_GRID_COLUMN.clear - All items positions return `Void'.")
 		end
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Display image of `a_pixmap' on `Current' to left of `title'.
 		require
 			not_destroyed: not is_destroyed
@@ -409,7 +409,7 @@ feature -- Element change
 			pixmap_set: pixmap = a_pixmap
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove image displayed on `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -419,7 +419,7 @@ feature -- Element change
 			pixmap_removed: pixmap = Void
 		end
 
-	redraw is
+	redraw
 			-- Force all items within `Current' to be re-drawn when next idle.
 		require
 			not_destroyed: not is_destroyed
@@ -430,7 +430,7 @@ feature -- Element change
 
 feature -- Contract support
 
-	all_items_may_be_removed: BOOLEAN is
+	all_items_may_be_removed: BOOLEAN
 			-- May `Current' have all of its items removed?
 		require
 			not_destroyed: not is_destroyed
@@ -455,7 +455,7 @@ feature -- Contract support
 			end
 		end
 
-	all_items_may_be_set: BOOLEAN is
+	all_items_may_be_set: BOOLEAN
 			-- May `Current' be set with `count' items.
 		require
 			not_destroyed: not is_destroyed
@@ -487,7 +487,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_GRID_COLUMN_I} implementation.make (Current)
@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 invariant
 	virtual_position_and_virtual_position_unlocked_equal_when_not_locked: not is_locked implies virtual_x_position = virtual_x_position_unlocked
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

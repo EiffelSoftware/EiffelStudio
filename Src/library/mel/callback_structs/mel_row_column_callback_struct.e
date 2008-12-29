@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback structure specific to the row column. %
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	reasons_list: ARRAY [INTEGER] is 
+	reasons_list: ARRAY [INTEGER] 
 			-- List of reasons that is valid for this
 			-- callback structure
 			-- (Reasons - XmCR_ACTIVATE, XmCR_MAP, XmCR_TEAR_OFF_ACTIVATE,
@@ -33,7 +33,7 @@ feature -- Access
 				XmCR_TEAR_OFF_DEACTIVATE, XmCR_UNMAP>>
 		end;
 
-	activated_widget: MEL_ROW_COLUMN is
+	activated_widget: MEL_ROW_COLUMN
 			-- Widget of activated Row Column item
 		local
 			w: POINTER
@@ -46,13 +46,13 @@ feature -- Access
 
 feature -- Pointer access
 
-	data: POINTER is
+	data: POINTER
 			-- Value of application's client data
 		do
 			Result := c_data (handle)
 		end;
 
-	callback_struct: POINTER is
+	callback_struct: POINTER
 			-- Created when item is activated
 		do
 			Result := c_callback_struct (handle)
@@ -60,24 +60,24 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_widget (a_callback_struct_ptr: POINTER): POINTER is
+	c_widget (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmRowColumnCallbackStruct *): EIF_POINTER"
 		end;
 
-	c_data (a_callback_struct_ptr: POINTER): POINTER is
+	c_data (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmRowColumnCallbackStruct *): EIF_POINTER"
 		alias
 			"c_mdata"	
 		end;
 
-	c_callback_struct (a_callback_struct_ptr: POINTER): POINTER is
+	c_callback_struct (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmRowColumnCallbackStruct *): EIF_POINTER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

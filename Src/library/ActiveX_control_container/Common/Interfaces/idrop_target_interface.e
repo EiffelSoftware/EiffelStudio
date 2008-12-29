@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,28 +12,28 @@ inherit
 
 feature -- Status Report
 
-	drag_enter_user_precondition (p_data_obj: IDATA_OBJECT_INTERFACE; grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF): BOOLEAN is
+	drag_enter_user_precondition (p_data_obj: IDATA_OBJECT_INTERFACE; grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `drag_enter'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	drag_over_user_precondition (grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF): BOOLEAN is
+	drag_over_user_precondition (grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `drag_over'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	drag_leave_user_precondition: BOOLEAN is
+	drag_leave_user_precondition: BOOLEAN
 			-- User-defined preconditions for `drag_leave'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	drop_user_precondition (p_data_obj: IDATA_OBJECT_INTERFACE; grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF): BOOLEAN is
+	drop_user_precondition (p_data_obj: IDATA_OBJECT_INTERFACE; grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `drop'.
 			-- Redefine in descendants if needed.
 		do
@@ -42,7 +42,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	drag_enter (p_data_obj: IDATA_OBJECT_INTERFACE; grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF) is
+	drag_enter (p_data_obj: IDATA_OBJECT_INTERFACE; grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF)
 			-- No description available.
 			-- `p_data_obj' [in].  
 			-- `grf_key_state' [in].  
@@ -57,7 +57,7 @@ feature -- Basic Operations
 
 		end
 
-	drag_over (grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF) is
+	drag_over (grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF)
 			-- No description available.
 			-- `grf_key_state' [in].  
 			-- `pt' [in].  
@@ -71,7 +71,7 @@ feature -- Basic Operations
 
 		end
 
-	drag_leave is
+	drag_leave
 			-- No description available.
 		require
 			drag_leave_user_precondition: drag_leave_user_precondition
@@ -79,7 +79,7 @@ feature -- Basic Operations
 
 		end
 
-	drop (p_data_obj: IDATA_OBJECT_INTERFACE; grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF) is
+	drop (p_data_obj: IDATA_OBJECT_INTERFACE; grf_key_state: INTEGER; pt: X_POINTL_RECORD; pdw_effect: INTEGER_REF)
 			-- No description available.
 			-- `p_data_obj' [in].  
 			-- `grf_key_state' [in].  
@@ -94,7 +94,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

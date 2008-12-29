@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Recktangle for feedback drawing on Unix."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialization
 		do
 			create screen
@@ -42,7 +42,7 @@ feature -- Status report
 
 feature -- Drawing
 
-	show is
+	show
 			-- Show.
 		do
 			if not is_displayed then
@@ -52,7 +52,7 @@ feature -- Drawing
 			end
 		end
 
-	clear is
+	clear
 			-- Clear.
 		do
 			if is_displayed then
@@ -64,12 +64,12 @@ feature -- Drawing
 
 feature -- Element change.
 
-	set_color (a_color: EV_COLOR) is
+	set_color (a_color: EV_COLOR)
 			-- Do nothing.
 		do
 		end
 
-	set_size (a_width: INTEGER; a_height: INTEGER) is
+	set_size (a_width: INTEGER; a_height: INTEGER)
 			-- Set `width' with `a_width'.
 			-- Set `height' with `a_height'.
 		require
@@ -82,7 +82,7 @@ feature -- Element change.
 			show
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' with `a_width'.
 		require
 			a_width_not_negtive: a_width >= 0
@@ -92,7 +92,7 @@ feature -- Element change.
 			show
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' with `a_height'.
 		require
 			a_height_not_negtive: a_height >= 0
@@ -102,7 +102,7 @@ feature -- Element change.
 			show
 		end
 
-	set_position (a_x, a_y: INTEGER) is
+	set_position (a_x, a_y: INTEGER)
 			-- Set `x_position' with `a_x'
 			-- Set `y_position' with `a_y'
 		do
@@ -112,7 +112,7 @@ feature -- Element change.
 			show
 		end
 
-	 set_area (a_rect: EV_RECTANGLE) is
+	 set_area (a_rect: EV_RECTANGLE)
 	 		--
 	 	require
 	 		not_void: a_rect /= Void
@@ -125,7 +125,7 @@ feature -- Element change.
 			set: x_position = a_rect.x and y_position = a_rect.y and width = a_rect.width and height = a_rect.height
 	 	end
 
-	 set_tab_area (a_rect, a_rect_2: EV_RECTANGLE) is
+	 set_tab_area (a_rect, a_rect_2: EV_RECTANGLE)
 	 		--
 	 	require
 	 		to_implementated: False
@@ -139,10 +139,10 @@ feature {NONE} -- Implementation
 	screen: EV_SCREEN
 		-- Screen
 
-	border_width: INTEGER is 2;
+	border_width: INTEGER = 2;
 		-- Border width
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

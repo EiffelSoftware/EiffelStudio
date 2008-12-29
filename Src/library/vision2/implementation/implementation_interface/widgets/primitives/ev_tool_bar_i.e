@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision toolbar. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,42 +26,42 @@ inherit
 
 feature -- Status report
 
-	has_vertical_button_style: BOOLEAN is
+	has_vertical_button_style: BOOLEAN
 			-- Is the `pixmap' displayed vertically above `text' for
 			-- all buttons contained in `Current'? If `False', then
 			-- the `pixmap' is displayed to left of `text'.
 		deferred
 		end
 
-	is_vertical: BOOLEAN is
+	is_vertical: BOOLEAN
 			-- Is vertical items layout?
 		deferred
 		end
 
 feature -- Status setting
 
-	enable_vertical_button_style is
+	enable_vertical_button_style
 			-- Ensure `has_vertical_button_style' is `True'.
 		deferred
 		ensure
 			vertical_button_style_assigned: has_vertical_button_style
 		end
 
-	disable_vertical_button_style is
+	disable_vertical_button_style
 			-- Ensure `has_vertical_button_style' is `False'.
 		deferred
 		ensure
 			vertical_button_style_not_assigned: not has_vertical_button_style
 		end
 
-	enable_vertical is
+	enable_vertical
 			-- Enable vertical items layout.
 		deferred
 		ensure
 			vertical_layout:
 		end
 
-	disable_vertical is
+	disable_vertical
 			-- Disable vertical items layout. Then items will be horizontal layout.
 		deferred
 		ensure
@@ -70,14 +70,14 @@ feature -- Status setting
 
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
-	insertion_position: INTEGER is
+	insertion_position: INTEGER
 			-- `Result' is index to left of item beneath the
 			-- current mouse pointer or count + 1 if over the toolbar
 			-- and not over a button. i.e if over button 1, `Result' is 0.
 		deferred
 		end
 
-	block_selection_for_docking is
+	block_selection_for_docking
 			-- Ensure that a tool bar button is not selected as a
 			-- result of the transport ending.
 		deferred
@@ -85,7 +85,7 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
 feature {EV_ANY_I}
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
+	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearence of
 			-- all children.
 		local
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_TOOL_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

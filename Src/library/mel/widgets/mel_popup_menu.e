@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"A MEL_ROW_COLUMN used as a popup menu."
@@ -31,7 +31,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE)
 			-- Create a motif popup menuwidget.
 		require
 			name_exists: a_name /= Void
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Update
 
-	set_menu_position (a_button_event: MEL_BUTTON_EVENT) is
+	set_menu_position (a_button_event: MEL_BUTTON_EVENT)
 			-- Set the menu position from `a_button_event'.
 		require
 			exists: not is_destroyed;
@@ -71,21 +71,21 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	xm_create_popup_menu (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_popup_menu (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/RowColumn.h>"
 		alias
 			"XmCreatePopupMenu"
 		end;
 
-	xm_menu_position (a_widget: POINTER; an_event: POINTER) is
+	xm_menu_position (a_widget: POINTER; an_event: POINTER)
 		external
 			"C (Widget, XButtonPressedEvent *) | <Xm/RowColumn.h>"
 		alias
 			"XmMenuPosition"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

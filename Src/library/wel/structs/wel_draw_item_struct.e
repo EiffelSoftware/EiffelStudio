@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about the Wm_drawitem message."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_by_pointer (pointer: POINTER) is
+	make_by_pointer (pointer: POINTER)
 		do
 			structure_make_by_pointer (pointer)
 			create dc.make_by_pointer (cwel_drawitemstruct_get_hdc (item))
@@ -34,20 +34,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	ctl_type: INTEGER is
+	ctl_type: INTEGER
 			-- Control type.
 			-- See class WEL_ODT_CONSTANTS.
 		do
 			Result := cwel_drawitemstruct_get_ctltype (item)
 		end
 
-	ctl_id: INTEGER is
+	ctl_id: INTEGER
 			-- Control identifier
 		do
 			Result := cwel_drawitemstruct_get_ctlid (item)
 		end
 
-	item_id: INTEGER is
+	item_id: INTEGER
 			-- Menu item identifier for a menu item or
 			-- the index of the item in a list box or
 			-- combo box
@@ -55,14 +55,14 @@ feature -- Access
 			Result := cwel_drawitemstruct_get_itemid (item)
 		end
 
-	item_action: INTEGER is
+	item_action: INTEGER
 			-- Drawing action required.
 			-- See class WEL_ODA_CONSTANTS.
 		do
 			Result := cwel_drawitemstruct_get_itemaction (item)
 		end
 
-	item_state: INTEGER is
+	item_state: INTEGER
 			-- Visual state of the item after the current
 			-- drawing action takes place.
 			-- See class WEL_ODS_CONSTANTS.
@@ -70,7 +70,7 @@ feature -- Access
 			Result := cwel_drawitemstruct_get_itemstate (item)
 		end
 
-	window_item: WEL_CONTROL is
+	window_item: WEL_CONTROL
 			-- Identifies the control (cver all cases except menus).
 		require
 			feature_supported: ctl_type /= (create {WEL_ODT_CONSTANTS}).Odt_menu
@@ -78,7 +78,7 @@ feature -- Access
 			Result ?= window_of_item (cwel_drawitemstruct_get_hwnditem (item))
 		end
 
-	menu_item: WEL_MENU is
+	menu_item: WEL_MENU
 			-- Identifies the control (menus only).
 		require
 			feature_supported: ctl_type = (create {WEL_ODT_CONSTANTS}).Odt_menu
@@ -93,7 +93,7 @@ feature -- Access
 			-- Device context used when performing drawing
 			-- operations on the control.
 
-	rect_item: WEL_RECT is
+	rect_item: WEL_RECT
 			-- Rectangle that defines the boundaries
 			-- of the control to be drawn.
 		do
@@ -102,7 +102,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	item_data: POINTER is
+	item_data: POINTER
 			-- 32-bit value associated with the menu item.
 		do
 			Result := cwel_drawitemstruct_get_itemdata (item)
@@ -110,7 +110,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_drawitemstruct
@@ -118,54 +118,54 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_drawitemstruct: INTEGER is
+	c_size_of_drawitemstruct: INTEGER
 		external
 			"C [macro <drawitem.h>]"
 		alias
 			"sizeof (DRAWITEMSTRUCT)"
 		end
 
-	cwel_drawitemstruct_get_ctltype (ptr: POINTER): INTEGER is
+	cwel_drawitemstruct_get_ctltype (ptr: POINTER): INTEGER
 		external
 			"C [macro <drawitem.h>]"
 		end
 
-	cwel_drawitemstruct_get_ctlid (ptr: POINTER): INTEGER is
+	cwel_drawitemstruct_get_ctlid (ptr: POINTER): INTEGER
 		external
 			"C [macro <drawitem.h>]"
 		end
 
-	cwel_drawitemstruct_get_itemid (ptr: POINTER): INTEGER is
+	cwel_drawitemstruct_get_itemid (ptr: POINTER): INTEGER
 		external
 			"C [macro <drawitem.h>]"
 		end
 
-	cwel_drawitemstruct_get_itemaction (ptr: POINTER): INTEGER is
+	cwel_drawitemstruct_get_itemaction (ptr: POINTER): INTEGER
 		external
 			"C [macro <drawitem.h>]"
 		end
 
-	cwel_drawitemstruct_get_itemstate (ptr: POINTER): INTEGER is
+	cwel_drawitemstruct_get_itemstate (ptr: POINTER): INTEGER
 		external
 			"C [macro <drawitem.h>]"
 		end
 
-	cwel_drawitemstruct_get_hwnditem (ptr: POINTER): POINTER is
+	cwel_drawitemstruct_get_hwnditem (ptr: POINTER): POINTER
 		external
 			"C [macro <drawitem.h>] (DRAWITEMSTRUCT*): EIF_POINTER"
 		end
 
-	cwel_drawitemstruct_get_hdc (ptr: POINTER): POINTER is
+	cwel_drawitemstruct_get_hdc (ptr: POINTER): POINTER
 		external
 			"C [macro <drawitem.h>] (DRAWITEMSTRUCT*): EIF_POINTER"
 		end
 
-	cwel_drawitemstruct_get_rcitem (ptr: POINTER): POINTER is
+	cwel_drawitemstruct_get_rcitem (ptr: POINTER): POINTER
 		external
 			"C [macro <drawitem.h>] (DRAWITEMSTRUCT*): EIF_POINTER"
 		end
 
-	cwel_drawitemstruct_get_itemdata (ptr: POINTER): POINTER is
+	cwel_drawitemstruct_get_itemdata (ptr: POINTER): POINTER
 		external
 			"C [macro <drawitem.h>]"
 		end
@@ -173,7 +173,7 @@ feature {NONE} -- Externals
 invariant
 	dc_exists: dc /= Void and then dc.exists
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

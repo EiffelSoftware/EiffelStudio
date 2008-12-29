@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[         
 						rotated elliptic is defined by 4 points:
 						
@@ -44,7 +44,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create with no dimension.
 		do
 			Precursor {EV_MODEL_ATOMIC}
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 	
-	angle: DOUBLE is 
+	angle: DOUBLE 
 			-- Rotation angle of `Current'.
 		local
 			pa: like point_array
@@ -87,7 +87,7 @@ feature -- Access
 			end
 		end
 			
-	radius1: INTEGER is
+	radius1: INTEGER
 			-- Major radius.
 		local
 			l_point_array: like point_array
@@ -100,7 +100,7 @@ feature -- Access
 			Result := as_integer (distance (p0.x_precise, p0.y_precise, p1.x_precise, p1.y_precise) / 2)
 		end
 
-	radius2: INTEGER is
+	radius2: INTEGER
 			-- Minor radius.
 		local
 			l_point_array: like point_array
@@ -113,25 +113,25 @@ feature -- Access
 			Result := as_integer (distance (p0.x_precise, p0.y_precise, p3.x_precise, p3.y_precise) / 2)
 		end
 		
-	point_a_x: INTEGER is
+	point_a_x: INTEGER
 			-- x position of `point_a'.
 		do
 			Result := point_array.item (0).x
 		end
 		
-	point_a_y: INTEGER is
+	point_a_y: INTEGER
 			-- y position of `point_a'
 		do
 			Result := point_array.item (0).y
 		end
 		
-	point_b_x: INTEGER is
+	point_b_x: INTEGER
 			-- x position of `pint_b'.
 		do
 			Result := point_array.item (2).x
 		end
 		
-	point_b_y: INTEGER is
+	point_b_y: INTEGER
 			-- y position of `point_b'.
 		do
 			Result := point_array.item (2).y
@@ -139,18 +139,18 @@ feature -- Access
 			
 feature -- Status Report
 
-	is_rotatable: BOOLEAN is True
+	is_rotatable: BOOLEAN = True
 			-- Is rotatable? (Yes)
 			
-	is_scalable: BOOLEAN is False
+	is_scalable: BOOLEAN = False
 			-- Is scalable? (Yes)
 			
-	is_transformable: BOOLEAN is False
+	is_transformable: BOOLEAN = False
 			-- Is transformable? (No)
 			
 feature -- Element change
 
-	set_radius1 (radius: INTEGER) is
+	set_radius1 (radius: INTEGER)
 			-- Set `radius1' to `radius'.
 			-- (See EV_FIGURE_PARALLELOGRAM for information about implementation)
 		require
@@ -197,7 +197,7 @@ feature -- Element change
 			set: (distance (point_array.item (0).x_precise, point_array.item (0).y_precise, point_array.item (1).x_precise, point_array.item (1).y_precise) / 2).rounded = radius
 		end
 		
-	set_radius2 (radius: INTEGER) is
+	set_radius2 (radius: INTEGER)
 			-- Set `radius2' to `radius'
 		require
 			radius_positive: radius >= 0
@@ -243,7 +243,7 @@ feature -- Element change
 			set: (distance (point_array.item (0).x_precise, point_array.item (0).y_precise, point_array.item (3).x_precise, point_array.item (3).y_precise) / 2).rounded = radius
 		end
 		
-	set_point_a_position (ax, ay: INTEGER) is
+	set_point_a_position (ax, ay: INTEGER)
 			-- Set position of `point_a' to (`ax', `ay').
 			-- (See EV_FIGURE_PARALLELOGRAM) for more informations.)
 		local
@@ -331,7 +331,7 @@ feature -- Element change
 			center_invalidate
 		end
 		
-	set_point_b_position (ax, ay: INTEGER) is
+	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `point_b' to position of (`ax', `ay').
 			-- (See EV_FIGURE_PARALLELOGRAM for more informations)
 		local
@@ -421,7 +421,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	set_center is
+	set_center
 			-- Set the position of the center
 		local
 			p0, p2: EV_COORDINATE
@@ -435,7 +435,7 @@ feature {NONE} -- Implementation
 			is_center_valid := True
 		end	
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

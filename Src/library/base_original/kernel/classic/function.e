@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing delayed calls to a function,
 		with some arguments possibly still open.
@@ -26,7 +26,7 @@ feature -- Access
 	last_result: RESULT_TYPE
 			-- Result of last call, if any.
 
-	call (args: OPEN_ARGS) is
+	call (args: OPEN_ARGS)
 		local
 			l_closed_count: INTEGER
 		do
@@ -35,7 +35,7 @@ feature -- Access
 				is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
 		end
 
-	item (args: OPEN_ARGS): RESULT_TYPE is
+	item (args: OPEN_ARGS): RESULT_TYPE
 			-- Result of calling function with `args' as operands.
 		require
 			valid_operands: valid_operands (args)
@@ -47,7 +47,7 @@ feature -- Access
 				is_precompiled, is_basic, is_inline_agent, l_closed_count, open_count, $open_map)
 		end
 
-	apply is
+	apply
 			-- Call function with `operands' as last set.
 		local
 			l_closed_count: INTEGER
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is associated function the same as the one
 			-- associated with `other'?
 		do
@@ -69,7 +69,7 @@ feature -- Comparison
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Use same function as `other'.
 		do
 			Precursor (other)
@@ -78,7 +78,7 @@ feature -- Duplication
 
 feature -- Obsolete
 
-	eval (args: OPEN_ARGS): RESULT_TYPE is
+	eval (args: OPEN_ARGS): RESULT_TYPE
 			-- Result of evaluating function for `args'.
 		obsolete
 			"Please use `item' instead"
@@ -90,7 +90,7 @@ feature -- Obsolete
 
 feature -- Removal
 
-	clear_last_result is
+	clear_last_result
 			-- Reset content of `last_result' to its default value
 		local
 			l_result: RESULT_TYPE
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

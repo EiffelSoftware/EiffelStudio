@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface on the MessageBox function."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,14 +27,14 @@ create
 
 feature -- Basic operations
 
-	make is
+	make
 		-- initialize language
 		do
 			language := LANG_ENGLISH
 			sublanguage := SUBLANG_ENGLISH_US
 		end
 
-	information_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL) is
+	information_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL)
 			-- Show an information message box with message `a_text'
 			-- and caption `a_title'
 		require
@@ -47,7 +47,7 @@ feature -- Basic operations
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
-	warning_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL) is
+	warning_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL)
 			-- Show a warning message box with message `a_text'
 			-- and caption `a_title'
 		require
@@ -60,7 +60,7 @@ feature -- Basic operations
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
-	error_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL) is
+	error_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL)
 			-- Show an error message box with message `a_text'
 			-- and caption `a_title'
 		require
@@ -73,7 +73,7 @@ feature -- Basic operations
  			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
-	question_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL) is
+	question_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL)
 			-- Show a question message box with message `a_text'
 			-- and caption `a_title'
 		require
@@ -86,7 +86,7 @@ feature -- Basic operations
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
-	basic_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style: INTEGER) is
+	basic_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style: INTEGER)
 			-- Show a basic message box with `a_text' inside and
 			-- `a_title' using `a_style'. Basic means `a_style' should not contain
 			-- the flag `MB_USERICON'.
@@ -102,7 +102,7 @@ feature -- Basic operations
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
-	user_icon_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style, an_id: INTEGER) is
+	user_icon_message_box (a_window: WEL_WINDOW; a_text, a_title: STRING_GENERAL; a_style, an_id: INTEGER)
 			-- Show a message box with a user icon `an_id', 
 			-- `a_text' inside and `a_title' using `a_style'.
 			-- the flag `MB_USERICON' must be present in `a_style'.
@@ -118,7 +118,7 @@ feature -- Basic operations
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
-	set_language (a_language_id, a_sublanguage_id: INTEGER) is
+	set_language (a_language_id, a_sublanguage_id: INTEGER)
 			-- set language to a_language_id
 			-- and sublanguage to a_sublanguage_id
 		require
@@ -146,7 +146,7 @@ feature -- Status report
 		
 feature -- Implementation
 	
-	basic_msg_box (a_style: INTEGER): BOOLEAN is
+	basic_msg_box (a_style: INTEGER): BOOLEAN
 			-- does `a_style' contain the flag `Mb_usericon'?
 		do
 			Result := ((a_style // Mb_usericon) = ((a_style // (Mb_usericon*2))*2))
@@ -154,14 +154,14 @@ feature -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_message_box_indirect (a_msgboxparams: POINTER): INTEGER is
+	cwin_message_box_indirect (a_msgboxparams: POINTER): INTEGER
 		external
 			"C [macro <wel.h>] (LPMSGBOXPARAMS): EIF_INTEGER"
 		alias
 			"MessageBoxIndirect"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

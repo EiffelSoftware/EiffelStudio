@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Arrange the nodes in a grid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a EG_GRID_LAYOUT.
 		do
 			Precursor {EG_LAYOUT}
@@ -41,7 +41,7 @@ feature -- Access
 	point_b_y: INTEGER
 			-- The y position of the end of the grid.
 			
-	grid_width: INTEGER is
+	grid_width: INTEGER
 			-- The width of the grid.
 		do
 			Result := (point_b_x - point_a_x).abs
@@ -49,7 +49,7 @@ feature -- Access
 			result_greater_equal_zero: Result >= 0
 		end
 		
-	grid_height: INTEGER is
+	grid_height: INTEGER
 			-- The height of the grid.
 		do
 			Result := (point_b_y - point_a_y).abs
@@ -67,7 +67,7 @@ feature -- Access
 	
 feature -- Element change
 
-	set_point_a_position (ax, ay: INTEGER) is
+	set_point_a_position (ax, ay: INTEGER)
 			-- Set `point_a_x' to `ax' and `point_a_y' to `ay'.
 		do
 			point_a_x := ax
@@ -76,7 +76,7 @@ feature -- Element change
 			set: point_a_x = ax and point_a_y = ay
 		end
 		
-	set_point_b_position (ax, ay: INTEGER) is
+	set_point_b_position (ax, ay: INTEGER)
 			-- Set `point_b_x' to `ax' and `point_b_y' to `ay'.
 		do
 			point_b_x := ax
@@ -85,7 +85,7 @@ feature -- Element change
 			set: point_b_x = ax and point_b_y = ay
 		end
 		
-	set_exponent (an_exponent: like exponent) is
+	set_exponent (an_exponent: like exponent)
 			-- Set `exponent' to `an_exponent'.
 		do
 			exponent := an_exponent
@@ -93,7 +93,7 @@ feature -- Element change
 			set: exponent = an_exponent
 		end
 		
-	set_number_of_columns (a_number_of_columns: like number_of_columns) is
+	set_number_of_columns (a_number_of_columns: like number_of_columns)
 			-- Set `number_of_columns' to `a_number_of_columns'.
 		require
 			a_number_of_columns_greater_zero: a_number_of_columns > 0
@@ -105,7 +105,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE) is
+	layout_linkables (linkables: ARRAYED_LIST [EG_LINKABLE_FIGURE]; level: INTEGER; cluster: EG_CLUSTER_FIGURE)
 			-- arrange `linkables'.
 		local
 			d_x, d_y: INTEGER
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

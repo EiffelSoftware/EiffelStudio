@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		In an EG_PARTICLE_SIMULATION any number of EG_PARTICLEs are interacting with each
 		other in a way that is defined by the implementer of `n_body_force'. The force
@@ -26,7 +26,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make_with_particles (a_particles: like particles) is
+	make_with_particles (a_particles: like particles)
 			-- Make an EG_PARTICLE_SIMULATION with `a_particles' interacting with each other.
 		require
 			a_particles_not_void: a_particles /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	force (a_particle: like particle_type): G is
+	force (a_particle: like particle_type): G
 			-- The force affecting `a_particle'.
 		do
 			Result := external_force (a_particle) + nearest_neighbor_force (a_particle) + n_body_force_solver (a_particle)
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Element change.
 
-	set_particles (a_particles: like particles) is
+	set_particles (a_particles: like particles)
 			-- Set `particles' to `a_particles'
 		require
 			a_particles_not_void: a_particles /= Void
@@ -68,28 +68,28 @@ feature -- Element change.
 
 feature {NONE}
 
-	external_force (a_particle: like particle_type): G is
+	external_force (a_particle: like particle_type): G
 			-- Initial force for `a_particle'
 		deferred
 		ensure
 			Result_exists: Result /= Void
 		end
 
-	nearest_neighbor_force (a_particle: like particle_type): G is
+	nearest_neighbor_force (a_particle: like particle_type): G
 			-- Force between `a_particle' and its neighbors.
 		deferred
 		ensure
 			Result_exists: Result /= Void
 		end
 
-	n_body_force (a_particle, an_other: EG_PARTICLE): G is
+	n_body_force (a_particle, an_other: EG_PARTICLE): G
 			-- Force between `a_particle' and `an_other' particle.
 		deferred
 		ensure
 			Result_exists: Result /= Void
 		end
 
-	n_body_force_solver (a_particle: EG_PARTICLE): G is
+	n_body_force_solver (a_particle: EG_PARTICLE): G
 			-- Solve n_nody_force for `a_particle'.
 		deferred
 		ensure
@@ -98,7 +98,7 @@ feature {NONE}
 
 feature {NONE} -- Implementation
 
-	particle_type: EG_PARTICLE is
+	particle_type: EG_PARTICLE
 			-- Type of particles
 		do
 		end
@@ -107,7 +107,7 @@ invariant
 	particles_exist: particles /= Void
 	particles_not_empty: not particles.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

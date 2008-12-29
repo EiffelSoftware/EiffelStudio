@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Figures consisting of two points."
 	legal: "See notice at end of class."
@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_points (a_point_a, a_point_b: EV_COORDINATE) is
+	make_with_points (a_point_a, a_point_b: EV_COORDINATE)
 			-- Create on `a_point_a' and `a_point_b'.
 		require
 			a_point_a_not_void: a_point_a /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			set_point_b_position (a_point_b.x, a_point_b.y)
 		end
 		
-	make_with_positions (a_point_a_x, a_point_a_y, a_point_b_x, a_point_b_y: INTEGER) is
+	make_with_positions (a_point_a_x, a_point_a_y, a_point_b_x, a_point_b_y: INTEGER)
 			-- Create on position (`a_point_a_x' `a_point_a_y') and (`a_point_b_x', `a_point_b_y')
 		do
 			make_with_position (a_point_a_x, a_point_a_y)
@@ -46,13 +46,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	point_count: INTEGER is
+	point_count: INTEGER
 			-- `Current' has two points.
 		do
 			Result := 2
 		end
 
-	point_b: EV_COORDINATE is
+	point_b: EV_COORDINATE
 			-- Second point of `Current'.
 		do
 			create Result.make (point_b_x, point_b_y)
@@ -62,7 +62,7 @@ feature -- Access
 			Result_y_equal_point_b_y: Result.y = point_b_y
 		end
 		
-	point_b_relative: EV_COORDINATE is
+	point_b_relative: EV_COORDINATE
 			-- `point_b' relative to `group'.`point'.
 		do
 			create Result.make (point_b_x_relative, point_b_y_relative)
@@ -72,12 +72,12 @@ feature -- Access
 			Result_y_eqyal_point_b_y_relative: Result.y = point_b_y_relative
 		end
 		
-	point_b_x: INTEGER is
+	point_b_x: INTEGER
 			-- x position of `point_b'.
 		deferred
 		end
 		
-	point_b_x_relative: INTEGER is
+	point_b_x_relative: INTEGER
 			-- horizontal distance between `point_b_x' and `group'.`point_x'.
 		do
 			if group = Void then
@@ -87,13 +87,13 @@ feature -- Access
 			end
 		end
 		
-	point_b_y: INTEGER is
+	point_b_y: INTEGER
 			-- y position of `point_b'.
 		deferred
 		end
 
 
-	point_b_y_relative: INTEGER is
+	point_b_y_relative: INTEGER
 			-- vertical distance between `point_b_y' and `group'.`point_y'.
 		do
 			if group = Void then
@@ -105,7 +105,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_point_b (a_point: EV_COORDINATE) is
+	set_point_b (a_point: EV_COORDINATE)
 			-- Assign `a_point' to `point_b'.
 		obsolete
 			"Use set_point_b_position"
@@ -115,12 +115,12 @@ feature -- Status setting
 			set_point_b_position (a_point.x, a_point.y)
 		end
 		
-	set_point_b_position (ax, ay: INTEGER) is
+	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `point_b' to (`ax',`ay').
 		deferred
 		end
 		
-	set_point_b_position_relative (ax, ay: INTEGER) is
+	set_point_b_position_relative (ax, ay: INTEGER)
 			-- Set position of `point_b_relative' to (`ax', `ay').
 		do
 			if group /= Void then
@@ -130,7 +130,7 @@ feature -- Status setting
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

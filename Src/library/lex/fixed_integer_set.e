@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Sets of integers with a finite number of items"
@@ -27,7 +27,7 @@ create {FIXED_INTEGER_SET}
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Make set for at most `n' integers from 1 to `n'.
 		require
 			n_positive: n > 0
@@ -39,7 +39,7 @@ feature -- Initialization
 
 feature -- Access
 
-	has (i: INTEGER): BOOLEAN is
+	has (i: INTEGER): BOOLEAN
 			-- Is `i' in set?
 		require
 			index_large_enough: 1 <= i;
@@ -48,7 +48,7 @@ feature -- Access
 			Result := item (i)
 		end;
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is current set empty?
 		local
 			i, nb: INTEGER
@@ -65,7 +65,7 @@ feature -- Access
 			end
 		end
 
-	smallest: INTEGER is
+	smallest: INTEGER
 			-- Smallest integer in set;
 			-- `count' + 1 if set empty
 		local
@@ -86,7 +86,7 @@ feature -- Access
 			end	
 		end
 
-	largest: INTEGER is
+	largest: INTEGER
 			-- Largest integer in set;
 			-- 0 if set empty
 		local
@@ -105,7 +105,7 @@ feature -- Access
 			end
 		end
 
-	next (p: INTEGER): INTEGER is
+	next (p: INTEGER): INTEGER
 			-- Next integer in set following `p';
 			-- `count' + 1 if `p' equals `largest'
 		require
@@ -130,7 +130,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (i: INTEGER) is
+	put (i: INTEGER)
 			-- Insert `i' into set.
 		require
 			index_large_enough: 1 <= i;
@@ -143,7 +143,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Delete `i' from set.
 		require
 			index_large_enough: 1 <= i;
@@ -156,7 +156,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	to_c: ANY is
+	to_c: ANY
 		do
 			Result := area
 		end;
@@ -164,7 +164,7 @@ feature -- Conversion
 
 feature -- Output
 
-	print is
+	print
 			-- List all items in set.
 		local
 			i: INTEGER;
@@ -189,7 +189,7 @@ invariant
 
 	positive_size: count > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

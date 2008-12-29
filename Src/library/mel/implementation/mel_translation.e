@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Mel representation of an translation string. %
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_translation: STRING) is
+	make (a_translation: STRING)
 			-- Create a mel_translation from `a_translation'.
 		require
 			non_void_a_translation: a_translation /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			set: a_translation = translation_string
 		end;
 
-	make_no_adopted (a_translation: STRING) is
+	make_no_adopted (a_translation: STRING)
 			-- Create a mel_translation from `a_translation'
 			-- but do not adopt the string
 		do
@@ -62,7 +62,7 @@ feature -- Access
 	
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' translation_string equal to Current?
 		local
 			a: like Current
@@ -76,14 +76,14 @@ feature -- Comparison
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 		do
 			Result := translation_string.out
 		end;
 
 feature {MEL_WIDGET} -- Access
 
-	xt_translation_string: STRING is
+	xt_translation_string: STRING
 			-- Translation string to be passed out
 			-- to XtOverrideTranslations that will execute
 			-- the callback with arguments
@@ -97,7 +97,7 @@ feature {MEL_WIDGET} -- Access
 			Result.append (")%N");
 		end;
 
-	xt_translation_null_string: STRING is
+	xt_translation_null_string: STRING
 			-- An Translation string to be passed out
 			-- to XtOverrideTranslations that will execute
 			-- the callback with no arguments
@@ -112,7 +112,7 @@ feature {MEL_WIDGET} -- Access
 
 feature {MEL_DISPATCHER} -- Removal
 
-	dispose is
+	dispose
 			-- Dispose the adopted translation.
 		do
 			if adopted_trans /= default_pointer then
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 	adopted_trans: POINTER;
 			-- Translation adopted object
 
-	external_routine_name: STRING is
+	external_routine_name: STRING
 			-- External routine name for handling
 			-- translations
 		do
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External features
 
-	eif_wean (obj: POINTER) is
+	eif_wean (obj: POINTER)
 			-- eif_wean object `obj'.
 		external
 			"C [macro %"eif_macros.h%"]"
@@ -144,7 +144,7 @@ feature {NONE} -- External features
 			"eif_wean"
 		end
 
-	eif_adopt (obj: ANY): POINTER is
+	eif_adopt (obj: ANY): POINTER
 			-- Adopt object `obj'
 		external
 			"C [macro %"eif_macros.h%"]"
@@ -152,7 +152,7 @@ feature {NONE} -- External features
 			"eif_adopt"
 		end;
 
-	c_trans_name: POINTER is
+	c_trans_name: POINTER
 			-- Adopt object `obj'
 		external
 			"C [macro %"mel.h%"]"
@@ -164,7 +164,7 @@ invariant
 
 	non_void_translation: translation_string /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

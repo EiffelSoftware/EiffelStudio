@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access to array of Java objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 	
 feature -- Initialization
 
-	make (size: INTEGER; element_name: STRING) is
+	make (size: INTEGER; element_name: STRING)
 			-- create a new Java array and an Eiffel accessor object
 			-- Note: Java arrays are indexed from zero
 		require
@@ -35,7 +35,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item (index: INTEGER): JAVA_OBJECT is
+	item (index: INTEGER): JAVA_OBJECT
 			-- object at index-th position
 		require
 			valid_index: valid_index (index)
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (an_item: JAVA_OBJECT; index: INTEGER) is
+	put (an_item: JAVA_OBJECT; index: INTEGER)
 			-- put an object at index
 		require
 			valid_index: valid_index (index)
@@ -64,7 +64,7 @@ feature -- Element change
 			inserted: equal (item (index), an_item)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Bit sequences of length `count', with binary operations"
 	legal: "See notice at end of class."
@@ -27,13 +27,13 @@ create {BIT_REF}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Default initialization, with 32 bits.
 		do
 			make (32)
 		end
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- Initialize space for `n' bits.
 		require
 			positive_n: n > 0
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			count := n
 		end
 
-	make_initialized (l_area: SPECIAL [INTEGER]; l_count: INTEGER) is
+	make_initialized (l_area: SPECIAL [INTEGER]; l_count: INTEGER)
 			-- Initialize `Current' with a count of `l_count' and values of `l_area'.
 		require
 			valid_args: l_area /= Void and l_count > 0 and then l_area.count >= (l_count |>> 5)
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item alias "[]", at alias "@" (i: INTEGER): BOOLEAN assign put is
+	item alias "[]", at alias "@" (i: INTEGER): BOOLEAN assign put
 			-- `i'-th bit
 		require
 			index_large_enough: i >= 1
@@ -65,7 +65,7 @@ feature -- Access
 			Result := (values.item (i |>> 5)).bit_test (i & 31)
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is other similar to `Current'?
 		local
 			i, n, tmp: INTEGER
@@ -99,7 +99,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put (value: BOOLEAN; i: INTEGER) is
+	put (value: BOOLEAN; i: INTEGER)
 			-- Set the `i'-th bit to 1 if `value' is True, 0 if False
 		require
 			index_large_enough: i >= 1
@@ -119,7 +119,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	shift alias "^" (s: INTEGER): like Current is
+	shift alias "^" (s: INTEGER): like Current
 			-- Result of shifting bit sequence by `s' positions
 			-- (Positive `s' shifts right, negative `s' shifts left;
 			-- bits falling off the sequence's bounds are lost.)
@@ -231,7 +231,7 @@ feature -- Basic operations
 			create Result.make_initialized (tmp_values, count)
 		end
 
-	rotate alias "#" (s: INTEGER): like Current is
+	rotate alias "#" (s: INTEGER): like Current
 			-- Result of rotating bit sequence by `s' positions
 			-- (Positive `s' rotates right, negative `s' rotates left.)
 		local
@@ -297,7 +297,7 @@ feature -- Basic operations
 			end
 		end
 
-	conjuncted alias "and" (other: BIT_REF): BIT_REF is
+	conjuncted alias "and" (other: BIT_REF): BIT_REF
 			-- Bit-by-bit boolean conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -328,7 +328,7 @@ feature -- Basic operations
 			create Result.make_initialized (tmp_values, n)
 		end
 
-	implication alias "implies" (other: BIT_REF): BIT_REF is
+	implication alias "implies" (other: BIT_REF): BIT_REF
 			-- Bit-by-bit boolean implication of `other'
 		require
 			other_exists: other /= Void
@@ -368,7 +368,7 @@ feature -- Basic operations
 			create Result.make_initialized (tmp_values, n)
 		end
 
-	disjuncted alias "or", bit_or alias "|" (other: BIT_REF): BIT_REF is
+	disjuncted alias "or", bit_or alias "|" (other: BIT_REF): BIT_REF
 			-- Bit-by-bit boolean disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -400,7 +400,7 @@ feature -- Basic operations
 			create Result.make_initialized (tmp_values, n)
 		end
 
-	disjuncted_exclusive alias "xor" (other: BIT_REF): BIT_REF is
+	disjuncted_exclusive alias "xor" (other: BIT_REF): BIT_REF
 			-- Bit-by-bit exclusive or with `other'
 		require
 			other_exists: other /= Void
@@ -432,7 +432,7 @@ feature -- Basic operations
 			create Result.make_initialized (tmp_values, n)
 		end
 
-	negated alias "not": like Current is
+	negated alias "not": like Current
 			-- Bit-by-bit negation
 		local
 			i, n: INTEGER
@@ -453,7 +453,7 @@ feature -- Basic operations
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Tagged printable representation.
 		local
 			i, n, ci, j: INTEGER
@@ -498,7 +498,7 @@ feature -- Output
 
 feature -- Conversion
 
-	to_reference: BIT_REF is
+	to_reference: BIT_REF
 			-- Associated reference of Current.
 		do
 			create Result.make_initialized (values.twin, count)
@@ -512,7 +512,7 @@ feature {BIT_REF} -- Implementation
 invariant
 	valid_count: count > 0
 	
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

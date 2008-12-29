@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Version of INTERNAL which does not using the mapping of STRING to STRING_8, INTEGER to INTEGER_32, etc..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,14 +16,14 @@ inherit
 
 feature -- Access
 
-	is_pre_ecma_mapping_disabled: BOOLEAN is
+	is_pre_ecma_mapping_disabled: BOOLEAN
 			-- Are we mapping old names to new ECMA names?
 			-- No, because we are only using the ECMA names.
 		do
 			Result := True
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

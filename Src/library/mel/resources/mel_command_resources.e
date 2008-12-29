@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Motif Command resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNcommand: POINTER is
+	XmNcommand: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Command.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNcommand"
 		end;
 
-	XmNhistoryItems: POINTER is
+	XmNhistoryItems: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Command.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNhistoryItems"
 		end;
 
-	XmNhistoryItemCount: POINTER is
+	XmNhistoryItemCount: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Command.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNhistoryItemCount"
 		end;
 
-	XmNhistoryMaxItems: POINTER is
+	XmNhistoryMaxItems: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Command.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNhistoryMaxItems"
 		end;
 
-	XmNhistoryVisibleItemCount: POINTER is
+	XmNhistoryVisibleItemCount: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Command.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNhistoryVisibleItemCount"
 		end;
 
-	XmNpromptString: POINTER is
+	XmNpromptString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Command.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNpromptString"
 		end;
 
-	XmNcommandEnteredCallback: POINTER is
+	XmNcommandEnteredCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Command.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNcommandEnteredCallback"
 		end;
 
-	XmNcommandChangedCallback: POINTER is
+	XmNcommandChangedCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Command.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNcommandChangedCallback"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

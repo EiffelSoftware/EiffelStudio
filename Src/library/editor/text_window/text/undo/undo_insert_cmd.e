@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Undo command for string insertion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make_from_string (c: EDITOR_CURSOR; s: STRING_GENERAL; w: EDITABLE_TEXT) is
+	make_from_string (c: EDITOR_CURSOR; s: STRING_GENERAL; w: EDITABLE_TEXT)
 		do
 			y_start := c.y_in_lines
 			x_start := c.x_in_characters
@@ -35,19 +35,19 @@ feature -- Access
 
 feature -- Element change
 
-	extend (c: CHARACTER_32) is
+	extend (c: CHARACTER_32)
 		do
 			message.extend (c)
 		end
 
-	extend_string(s: STRING) is
+	extend_string(s: STRING)
 		do
 			message.append_string(s)
 		end
 
 feature -- Basic operations
 
-	undo is
+	undo
 		local
 			cur: EDITOR_CURSOR
 		do
@@ -57,7 +57,7 @@ feature -- Basic operations
 			text.delete_n_chars_at_cursor_pos (message.count)
 		end
 
-	redo is
+	redo
 		local
 			cur: EDITOR_CURSOR
 		do
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: -- Your invariant here
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Display button."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Basic operations
 
-	set_action (action: PROCEDURE [ANY, TUPLE]) is
+	set_action (action: PROCEDURE [ANY, TUPLE])
 			-- Set `action' to associated button action.
 		obsolete
 			"Use `add_action'."
@@ -31,19 +31,19 @@ feature -- Basic operations
 			select_actions.extend (action)
 		end
 
-	add_action (action: PROCEDURE [ANY, TUPLE]) is
+	add_action (action: PROCEDURE [ANY, TUPLE])
 			-- Set `action' to associated button action.
 		do
 			select_actions.extend (action)
 		end
 
-	activate is
+	activate
 			-- Activate control.
 		do
 			select_actions.call ([])
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

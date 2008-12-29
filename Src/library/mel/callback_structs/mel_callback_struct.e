@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"General notion of a callback structure."
@@ -24,7 +24,7 @@ create {MEL_APPLICATION_CONTEXT, MEL_WIDGET}
 
 feature {NONE} -- Initialization
 
-	make (a_widget: MEL_OBJECT; an_event_ptr: POINTER) is
+	make (a_widget: MEL_OBJECT; an_event_ptr: POINTER)
 			-- Make the MEL_CALLBACK_STRUCT associated with the widget
 			-- that triggered the callback and the event callback_structure
 			-- associated with this callback.
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			widget_set: a_widget = widget
 		end;
 
-	make_no_event (a_widget: MEL_OBJECT) is
+	make_no_event (a_widget: MEL_OBJECT)
 			-- Make the MEL_CALLBACK_STRUCT associated with the widget
 			-- that triggered the callback. Do not created associated
 			-- event.
@@ -57,7 +57,7 @@ end
 			widget_set: a_widget = widget
 		end;
 
-	make_event_only (an_event_ptr: POINTER) is
+	make_event_only (an_event_ptr: POINTER)
 			-- Make the event callback_structure.
 		require
 			valid_event_ptr: an_event_ptr /= default_pointer
@@ -75,21 +75,21 @@ feature -- Access
 	event: MEL_EVENT;
 			-- Event associated with the callback.
 
-	has_widget: BOOLEAN is
+	has_widget: BOOLEAN
 			-- Does current callback structure have a widget
 			-- associated with it (By default, it is True)
 		do
 			Result := True
 		end;
 
-	reason: INTEGER is
+	reason: INTEGER
 			-- Callback reason for motif callbacks
 			-- (Look in class MEL_CALLBACK_STRUCT_CONSTANTS for all
 			-- reasons)
 		do
 		end
 
-	is_motif_callback: BOOLEAN is
+	is_motif_callback: BOOLEAN
 			-- Is Current a motif callback structure?
 		do
 			Result := reason /= XmCR_NONE 
@@ -99,7 +99,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	create_event (event_ptr: POINTER) is
+	create_event (event_ptr: POINTER)
 			-- Create the event that triggered the callback.
 		local
 			type: INTEGER
@@ -175,12 +175,12 @@ debug ("MEL_CALLBACK")
 end
 		end;
 
-	c_event_type (event_ptr: POINTER): INTEGER is
+	c_event_type (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XEvent *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

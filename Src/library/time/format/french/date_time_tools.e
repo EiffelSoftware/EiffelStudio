@@ -1,4 +1,4 @@
-indexing
+note
 	description: "French settings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,9 +12,9 @@ inherit
 	DATE_TIME_LANGUAGE_CONSTANTS
 feature 
 
-	name: STRING is "French"
+	name: STRING = "French"
 
-	days_text: ARRAY [STRING] is
+	days_text: ARRAY [STRING]
 		once
 			Result := <<
 				"DIM",
@@ -29,7 +29,7 @@ feature
 			Result.compare_objects
 		end
 
-	months_text: ARRAY [STRING] is
+	months_text: ARRAY [STRING]
 		once
 			Result := <<
 				"JAN",
@@ -48,7 +48,7 @@ feature
 			Result.compare_objects
 		end
 
-	long_days_text: ARRAY [STRING] is
+	long_days_text: ARRAY [STRING]
 		once
 			Result := <<
 				"DIMANCHE",
@@ -62,7 +62,7 @@ feature
 			Result.compare_objects
 		end
 
-	long_months_text: ARRAY [STRING] is
+	long_months_text: ARRAY [STRING]
 		once
 			Result := <<
 				"JANVIER",
@@ -81,13 +81,13 @@ feature
 			Result.compare_objects
 		end
 	
-	default_format_string: STRING is "[0]dd/[0]mm/yyyy [0]hh:[0]mi:[0]ss.ff3"
+	default_format_string: STRING = "[0]dd/[0]mm/yyyy [0]hh:[0]mi:[0]ss.ff3"
 
-	date_default_format_string: STRING is "[0]dd/[0]mm/yyyy"
+	date_default_format_string: STRING = "[0]dd/[0]mm/yyyy"
 
-	time_default_format_string: STRING is "[0]hh:[0]mi:[0]ss.ff3";
+	time_default_format_string: STRING = "[0]hh:[0]mi:[0]ss.ff3";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

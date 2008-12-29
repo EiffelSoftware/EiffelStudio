@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Facility to find seperators in date or time strings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,13 +23,13 @@ inherit
 
 feature {NONE} -- Constants
 
-	Separator_characters: STRING is ":/-, ."
+	Separator_characters: STRING = ":/-, ."
 
 feature {NONE} -- Implementation
 
 	substrg, substrg2: STRING
 
-	find_separator (s: STRING; i: INTEGER): INTEGER is
+	find_separator (s: STRING; i: INTEGER): INTEGER
 			-- Position of the next separator in `s' starting at
 			-- `i'-th character.
 			-- ":", "/", "-", ",", " ", "."
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			not_zero: Result /= 0
 		end
 
-	extract_substrings (s: STRING; pos1, pos2: INTEGER) is
+	extract_substrings (s: STRING; pos1, pos2: INTEGER)
 			-- Extract `substrg' and `substrg2' from `s' and specified by the
 			-- range `pos1'..`pos2'.
 		require
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			substrings_extracted: substrg /= Void and substrg2 /= Void
 		end
 
-	has_separators (s: STRING): BOOLEAN is
+	has_separators (s: STRING): BOOLEAN
 			-- Does date string `s' contain any separators?
 		require
 			string_exists: s /= Void
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

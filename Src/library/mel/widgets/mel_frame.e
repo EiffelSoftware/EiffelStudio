@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Manager widget that places a border around a single child."
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif frame widget.
 		require
 			name_exists: a_name /= Void
@@ -52,12 +52,12 @@ feature -- Initialization
 
 feature -- Access
 
-	is_frame: BOOLEAN is True
+	is_frame: BOOLEAN = True
 			-- Is Current a frame?
 
 feature -- Status report
 
-	margin_height: INTEGER is
+	margin_height: INTEGER
 			-- Spacing between the top or the bottom of a child
 			-- and the shadow of Current
 		require
@@ -68,7 +68,7 @@ feature -- Status report
 			margin_height_large_enough: Result >= 0
 		end;
 
-	margin_width: INTEGER is
+	margin_width: INTEGER
 			-- Spacing between the left or right side of a child
 			-- and the shadow of Current
 		require
@@ -79,7 +79,7 @@ feature -- Status report
 			margin_width_large_enough: Result >= 0
 		end;
 
-	is_shadow_in: BOOLEAN is
+	is_shadow_in: BOOLEAN
 			-- Is Current widget appear inset?
 		require
 			exists: not is_destroyed
@@ -88,7 +88,7 @@ feature -- Status report
 					(screen_object, XmNshadowType) = XmSHADOW_IN) 
 		end;
 
-	is_shadow_out: BOOLEAN is
+	is_shadow_out: BOOLEAN
 			-- Is Current widget appear raised?
 		require
 			exists: not is_destroyed
@@ -97,7 +97,7 @@ feature -- Status report
 					(screen_object, XmNshadowType) = XmSHADOW_OUT)
 		end;
 
-	is_shadow_etched_in: BOOLEAN is
+	is_shadow_etched_in: BOOLEAN
 			-- Does Current appear with a double line shadow inset?
 		require
 			exists: not is_destroyed
@@ -106,7 +106,7 @@ feature -- Status report
 						(screen_object, XmNshadowType) = XmSHADOW_ETCHED_IN) 
 		end;
 
-	is_shadow_etched_out: BOOLEAN is
+	is_shadow_etched_out: BOOLEAN
 			-- Does Current appear with a double line shadow raised?
 		require
 			exists: not is_destroyed
@@ -117,7 +117,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_margin_height (a_height: INTEGER) is
+	set_margin_height (a_height: INTEGER)
 			-- Set `margin_height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -128,7 +128,7 @@ feature -- Status setting
 			margin_height_set: margin_height = a_height
 		end;
 
-	set_margin_width (a_width: INTEGER) is
+	set_margin_width (a_width: INTEGER)
 			-- Set `margin_width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -139,7 +139,7 @@ feature -- Status setting
 			margin_width_set: margin_width = a_width
 		end;
 
-	set_shadow_in is
+	set_shadow_in
 			-- Set `is_shadow_in' to True.
 		require
 			exists: not is_destroyed
@@ -149,7 +149,7 @@ feature -- Status setting
 			is_shadow_in: is_shadow_in 
 		end;
 
-	set_shadow_out is
+	set_shadow_out
 			-- Set `is_shadow_in' to False.
 		require
 			exists: not is_destroyed
@@ -159,7 +159,7 @@ feature -- Status setting
 			is_shadow_out: is_shadow_out 
 		end;
 
-	set_shadow_etched_in is
+	set_shadow_etched_in
 			-- Set `is_shadow_etched_in' to True.
 		require
 			exists: not is_destroyed
@@ -169,7 +169,7 @@ feature -- Status setting
 			is_shadow_etched_in: is_shadow_etched_in
 		end;
 
-	set_shadow_etched_out is
+	set_shadow_etched_out
 			-- Set `is_shadow_etched_out' to True.
 		require
 			exists: not is_destroyed
@@ -181,14 +181,14 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	xm_create_frame (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_frame (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/Frame.h>"
 		alias
 			"XmCreateFrame"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

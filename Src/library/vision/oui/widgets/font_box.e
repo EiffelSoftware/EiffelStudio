@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -22,21 +22,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a font box with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			create_ev_widget (a_name, a_parent, True);
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged font box with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			create_ev_widget (a_name, a_parent, False);
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a font box with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	font: FONT is
+	font: FONT
 			-- Font currently selected by the user
 		require
 			exists: not destroyed;
@@ -66,7 +66,7 @@ feature -- Access
 
 feature -- Status report
 
-	show_apply_button is
+	show_apply_button
 			-- Make apply button visible.
 		require
 			exists: not destroyed
@@ -74,7 +74,7 @@ feature -- Status report
 			implementation.show_apply_button
 		end;
 
-	show_cancel_button is
+	show_cancel_button
 			-- Make cancel button visible.
 		require
 			exists: not destroyed
@@ -82,7 +82,7 @@ feature -- Status report
 			implementation.show_cancel_button
 		end;
 
-	show_ok_button is
+	show_ok_button
 			-- Make ok button visible.
 		require
 			exists: not destroyed
@@ -90,7 +90,7 @@ feature -- Status report
 			implementation.show_ok_button
 		end
 
-	hide_apply_button is
+	hide_apply_button
 			-- Make apply button invisible.
 		require
 			exists: not destroyed
@@ -98,7 +98,7 @@ feature -- Status report
 			implementation.hide_apply_button
 		end;
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Make cancel button invisible.
 		require
 			exists: not destroyed
@@ -106,7 +106,7 @@ feature -- Status report
 			implementation.hide_cancel_button
 		end;
 
-	hide_ok_button is
+	hide_ok_button
 			-- Make ok button invisible.
 		require
 			exists: not destroyed
@@ -116,7 +116,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_font (a_font: FONT) is
+	set_font (a_font: FONT)
 			-- Edit `a_font'.
 		require
 			exists: not destroyed;
@@ -125,7 +125,7 @@ feature -- Element change
 			implementation.set_font (a_font)
 		end;
 
-	add_apply_action (a_command: COMMAND; argument: ANY) is
+	add_apply_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- apply button is activated.
 		require
@@ -135,7 +135,7 @@ feature -- Element change
 			implementation.add_apply_action (a_command, argument)
 		end;
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
+	add_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		require
@@ -145,7 +145,7 @@ feature -- Element change
 			implementation.add_cancel_action (a_command, argument)
 		end;
 
-	add_ok_action (a_command: COMMAND; argument: ANY) is
+	add_ok_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		require
@@ -157,7 +157,7 @@ feature -- Element change
 
 feature -- Remocal
 
-	remove_apply_action (a_command: COMMAND; argument: ANY) is
+	remove_apply_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
 		require
@@ -167,7 +167,7 @@ feature -- Remocal
 			implementation.remove_apply_action (a_command, argument)
 		end;
 
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+	remove_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		require
@@ -177,7 +177,7 @@ feature -- Remocal
 			implementation.remove_cancel_action (a_command, argument)
 		end;
 
-	remove_ok_action (a_command: COMMAND; argument: ANY) is
+	remove_ok_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		require
@@ -191,7 +191,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: FONT_BOX_I;;
 			-- Implementation of current font box
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

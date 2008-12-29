@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Button represented with a pixmap"
 	legal: "See notice at end of class.";
@@ -16,21 +16,21 @@ inherit
 
 feature -- Access
 
-	pixmap: PIXMAP is
+	pixmap: PIXMAP
 			-- Pixmap used
 		deferred
 		ensure
 			valid_result: Result.is_valid
 		end;
 
-	is_pressed: BOOLEAN is
+	is_pressed: BOOLEAN
 			-- Is the pict color button pressed?
 		deferred
 		end
 
 feature -- Element change
 
-	set_pixmap (a_pixmap: PIXMAP) is
+	set_pixmap (a_pixmap: PIXMAP)
 			-- Draw `a_pixmap' into the picture_button.
 		require
 			a_pixmap_exists: a_pixmap /= Void
@@ -40,14 +40,14 @@ feature -- Element change
 			pixmap = a_pixmap
 		end;
 
-	set_pressed (b: like is_pressed) is
+	set_pressed (b: like is_pressed)
 			-- Set `is_pressed' to `b'.
 		deferred
 		ensure
 			set: b = is_pressed
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

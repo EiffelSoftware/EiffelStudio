@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -15,20 +15,20 @@ inherit
 
 feature -- Status report
 
-	immediate_execution: BOOLEAN is
+	immediate_execution: BOOLEAN
 			-- Are requests immediately executed?
 			-- (default is `no').
 		do
 			Result := handle.execution_type.immediate_execution
 		end
 
-	is_tracing: BOOLEAN is
+	is_tracing: BOOLEAN
 			-- Is trace option for SQL queries on?
 		do
 			Result := handle.execution_type.is_tracing
 		end
 
-	trace_output: FILE is
+	trace_output: FILE
 			-- Trace destination file
 		do
 			Result := handle.execution_type.trace_output
@@ -36,7 +36,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_immediate is
+	set_immediate
 			-- Set queries to be executed with a
 			-- `EXECUTE IMMEDIATE' SQL  statement.
 		do
@@ -45,7 +45,7 @@ feature -- Status setting
 			execution_status: immediate_execution
 		end
 
-	unset_immediate is
+	unset_immediate
 			-- Set queries to be executed with a
 			-- `PREPARE' followed by a `EXECUTE' SQL statement.
 		do
@@ -54,7 +54,7 @@ feature -- Status setting
 			execution_status: not immediate_execution
 		end
 
-	set_trace is
+	set_trace
 			-- Trace queries sent to database server.
 		do
 			handle.execution_type.set_trace
@@ -62,7 +62,7 @@ feature -- Status setting
 			trace_status: is_tracing
 		end
 
-	unset_trace is
+	unset_trace
 			-- Do not trace queries sent to database server.
 		do
 			handle.execution_type.unset_trace
@@ -70,7 +70,7 @@ feature -- Status setting
 			trace_status: not is_tracing
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

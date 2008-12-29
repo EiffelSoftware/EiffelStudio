@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Defines the general notions of a stream out for the rich %
 		%edit control."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize the C variables.
 		do
 			Precursor {WEL_RICH_EDIT_STREAM}
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	write_buffer is
+	write_buffer
 			-- Write `buffer'.
 		require
 			buffer_not_void: buffer /= Void
@@ -42,7 +42,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	internal_callback (a_buffer: POINTER; a_length: INTEGER): INTEGER is
+	internal_callback (a_buffer: POINTER; a_length: INTEGER): INTEGER
 			-- `buffer' contains `length' characters.
 		do
 			if buffer = Void then
@@ -59,17 +59,17 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwel_editstream_set_pfncallback_out (ptr: POINTER) is
+	cwel_editstream_set_pfncallback_out (ptr: POINTER)
 		external
 			"C [macro %"estream.h%"]"
 		end
 
-	cwel_set_editstream_out_procedure_address (address: WEL_RICH_EDIT_STREAM_OUT_DELEGATE) is
+	cwel_set_editstream_out_procedure_address (address: WEL_RICH_EDIT_STREAM_OUT_DELEGATE)
 		external
 			"C [macro %"estream.h%"]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wrapper of IEnumSTATSTG interface, used to enumerate%
 		% through an array of STATSTG structures, which contains%
 		% statistical information about an open storage, stream,%
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	next_item: ECOM_STATSTG is
+	next_item: ECOM_STATSTG
 			-- Next item in enumeration sequence
 			-- Void if there is no next_item item
 		local
@@ -32,7 +32,7 @@ feature -- Access
 			end
 		end
 
-	is_valid_name (name: STRING): BOOLEAN is
+	is_valid_name (name: STRING): BOOLEAN
 			-- Is object with name `name' part of storage object?
 			-- Change position in enumeration.
 		require
@@ -54,7 +54,7 @@ feature -- Access
 			end
 		end
 
-	creation_time (a_name: STRING): WEL_FILE_TIME is
+	creation_time (a_name: STRING): WEL_FILE_TIME
 			-- Creation time of element `a_name'
 			-- Change position in enumeration.
 		require
@@ -79,7 +79,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-	access_time (a_name: STRING): WEL_FILE_TIME is
+	access_time (a_name: STRING): WEL_FILE_TIME
 			-- Access time of element `a_name'
 			-- Change position in enumeration.
 		require
@@ -104,7 +104,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-	modification_time (a_name: STRING): WEL_FILE_TIME is
+	modification_time (a_name: STRING): WEL_FILE_TIME
 			-- Modification time of element `a_name'
 			-- Change position in enumeration.
 		require
@@ -131,19 +131,19 @@ feature -- Access
 
 feature -- Basic Operations
 
-	skip (n: NATURAL_32) is
+	skip (n: NATURAL_32)
 			-- Skips over `n' items in enumeration sequence.
 		do
 			c_skip (item, n)
 		end
 
-	reset is
+	reset
 			-- Resets enumeration sequence to beginning.
 		do
 			c_reset (item)
 		end
 
-	clone_enum: like Current is
+	clone_enum: like Current
 			-- Creates another enumerator that has
 			-- same enumeration state as `Current'.
 		local
@@ -155,7 +155,7 @@ feature -- Basic Operations
 			end
 		end
 
-	memory_free is
+	memory_free
 			-- Free memory pointed by `item'.
 		do
 			c_release (item)
@@ -164,49 +164,49 @@ feature -- Basic Operations
 
 feature {NONE} -- Externals
 
-	c_next_item (a_item: POINTER; a_res: POINTER; a_count: TYPED_POINTER [NATURAL_32]): NATURAL_32 is
+	c_next_item (a_item: POINTER; a_res: POINTER; a_count: TYPED_POINTER [NATURAL_32]): NATURAL_32
 		external
 			"C inline use <windows.h>"
 		alias
 			"((IEnumSTATSTG*)$a_item)->lpVtbl->Next ((IEnumSTATSTG*)$a_item, 1, (STATSTG*)$a_res, (ULONG*)$a_count)"
 		end
 
-	c_skip (a_item: POINTER; n: NATURAL_32) is
+	c_skip (a_item: POINTER; n: NATURAL_32)
 		external
 			"C inline use <windows.h>"
 		alias
 			"((IEnumSTATSTG*)$a_item)->lpVtbl->Skip ((IEnumSTATSTG*)$a_item, (ULONG)$n)"
 		end
 
-	c_reset (a_item: POINTER) is
+	c_reset (a_item: POINTER)
 		external
 			"C inline use <windows.h>"
 		alias
 			"((IEnumSTATSTG*)$a_item)->lpVtbl->Reset((IEnumSTATSTG*)$a_item)"
 		end
 
-	c_clone (a_item, a_res: POINTER) is
+	c_clone (a_item, a_res: POINTER)
 		external
 			"C inline use <windows.h>"
 		alias
 			"((IEnumSTATSTG*)$a_item)->lpVtbl->Clone ((IEnumSTATSTG*)$a_item, (IEnumSTATSTG**)$a_res)"
 		end
 
-	c_release (a_item: POINTER) is
+	c_release (a_item: POINTER)
 		external
 			"C inline use <windows.h>"
 		alias
 			"((IEnumSTATSTG*)$a_item)->lpVtbl->Release((IEnumSTATSTG*)$a_item)"
 		end
 
-	c_sizeof_statstg: INTEGER is
+	c_sizeof_statstg: INTEGER
 		external
 			"C inline use <windows.h>"
 		alias
 			"sizeof(STATSTG)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

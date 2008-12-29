@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback structure specific to the push button. %
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	reasons_list: ARRAY [INTEGER] is 
+	reasons_list: ARRAY [INTEGER] 
 			-- List of reasons that is valid for this
 			-- callback structure
 			-- (Reasons - XmCR_ACTIVATE, XmCR_ARM, XmCR_DISARM)
@@ -31,7 +31,7 @@ feature -- Access
 			Result := <<XmCR_ACTIVATE, XmCR_ARM, XmCR_DISARM>>
 		end;
 
-	click_count: INTEGER is
+	click_count: INTEGER
 			-- Number of multi-clicks
 		do
 			Result := c_click_count (handle)
@@ -39,12 +39,12 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_click_count (a_callback_struct_ptr: POINTER): INTEGER is
+	c_click_count (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmPushButtonCallbackStruct *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

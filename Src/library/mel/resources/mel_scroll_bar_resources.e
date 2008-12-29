@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Scrollbar resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNincrement: POINTER is
+	XmNincrement: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNincrement"
 		end;
 
-	XmNinitialDelay: POINTER is
+	XmNinitialDelay: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNinitialDelay"
 		end;
 
-	XmNmaximum: POINTER is
+	XmNmaximum: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNmaximum"
 		end;
 
-	XmNminimum: POINTER is
+	XmNminimum: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNminimum"
 		end;
 
-	XmNorientation: POINTER is
+	XmNorientation: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNorientation"
 		end;
 
-	XmNpageIncrement: POINTER is
+	XmNpageIncrement: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNpageIncrement"
 		end;
 
-	XmNprocessingDirection: POINTER is
+	XmNprocessingDirection: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNprocessingDirection"
 		end;
 
-	XmNrepeatDelay: POINTER is
+	XmNrepeatDelay: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNrepeatDelay"
 		end;
 
-	XmNshowArrows: POINTER is
+	XmNshowArrows: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNshowArrows"
 		end;
 
-	XmNsliderSize: POINTER is
+	XmNsliderSize: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNsliderSize"
 		end;
 
-	XmNtroughColor: POINTER is
+	XmNtroughColor: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNtroughColor"
 		end;
 
-	XmNvalue: POINTER is
+	XmNvalue: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNvalue"
 		end;
 
-	XmNdecrementCallback: POINTER is
+	XmNdecrementCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmNdecrementCallback"
 		end;
 
-	XmNdragCallback: POINTER is
+	XmNdragCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmNdragCallback"
 		end;
 
-	XmNincrementCallback: POINTER is
+	XmNincrementCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmNincrementCallback"
 		end;
 
-	XmNpageDecrementCallback: POINTER is
+	XmNpageDecrementCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmNpageDecrementCallback"
 		end;
 
-	XmNpageIncrementCallback: POINTER is
+	XmNpageIncrementCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmNpageIncrementCallback"
 		end;
 
-	XmNtoBottomCallback: POINTER is
+	XmNtoBottomCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmNtoBottomCallback"
 		end;
 
-	XmNtoTopCallback: POINTER is
+	XmNtoTopCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmNtoTopCallback"
 		end;
 
-	XmNvalueChangedCallback: POINTER is
+	XmNvalueChangedCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/ScrollBar.h>]: EIF_POINTER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmNvalueChangedCallback"
 		end;
 
-	XmVERTICAL: INTEGER is
+	XmVERTICAL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrollBar.h>] : EIF_INTEGER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"XmVERTICAL"
 		end;
 
-	XmHORIZONTAL: INTEGER is
+	XmHORIZONTAL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrollBar.h>] : EIF_INTEGER"
@@ -188,7 +188,7 @@ feature -- Implementation
 			"XmHORIZONTAL"
 		end;
 
-	XmMAX_ON_TOP: INTEGER is
+	XmMAX_ON_TOP: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrollBar.h>] : EIF_INTEGER"
@@ -196,7 +196,7 @@ feature -- Implementation
 			"XmMAX_ON_TOP"
 		end;
 
-	XmMAX_ON_BOTTOM: INTEGER is
+	XmMAX_ON_BOTTOM: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrollBar.h>] : EIF_INTEGER"
@@ -204,7 +204,7 @@ feature -- Implementation
 			"XmMAX_ON_BOTTOM"
 		end;
 
-	XmMAX_ON_LEFT: INTEGER is
+	XmMAX_ON_LEFT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrollBar.h>] : EIF_INTEGER"
@@ -212,7 +212,7 @@ feature -- Implementation
 			"XmMAX_ON_LEFT"
 		end;
 
-	XmMAX_ON_RIGHT: INTEGER is
+	XmMAX_ON_RIGHT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/ScrollBar.h>] : EIF_INTEGER"
@@ -220,7 +220,7 @@ feature -- Implementation
 			"XmMAX_ON_RIGHT"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

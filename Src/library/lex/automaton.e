@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"General finite-state automata"
@@ -28,7 +28,7 @@ feature -- Measurement
 
 feature -- Status setting
 
-	set_start (n: INTEGER) is
+	set_start (n: INTEGER)
 			-- Select state `n' as the starting state.
 		require
 			no_other_start: start_number = 0 or start_number = n;
@@ -37,22 +37,22 @@ feature -- Status setting
 			start_number := n
 		end; 
 
-	set_transition (source, input_doc, target: INTEGER) is
+	set_transition (source, input_doc, target: INTEGER)
 			-- Set transition from source to target on `input_doc'.
 		deferred
 		end; 
 
-	set_final (state, f: INTEGER) is
+	set_final (state, f: INTEGER)
 			-- Make `state' final for regular expression `f'.
 		deferred
 		end; 
 
-	set_state is
+	set_state
 			-- Make a new state.
 		deferred
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Resources for paned window children."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNallowResize: POINTER is
+	XmNallowResize: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNallowResize"
 		end;
 
-	XmNpaneMaximum: POINTER is
+	XmNpaneMaximum: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNpaneMaximum"
 		end;
 
-	XmNpaneMinimum: POINTER is
+	XmNpaneMinimum: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNpaneMinimum"
 		end;
 
-	XmNpanePositionIndex: POINTER is
+	XmNpanePositionIndex: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNpositionIndex"
 		end;
 
-	XmNskipAdjust: POINTER is
+	XmNskipAdjust: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNskipAdjust"
 		end;
 
-	XmPANE_LAST_POSITION: INTEGER is
+	XmPANE_LAST_POSITION: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/PanedW.h>]: EIF_INTEGER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmLAST_POSITION"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

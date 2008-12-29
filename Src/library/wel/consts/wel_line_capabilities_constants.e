@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Line capabilities (LC) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Lc_none: INTEGER is
+	Lc_none: INTEGER
 			-- Supports no lines
 		external
 			"C [macro %"wel.h%"]"
@@ -18,7 +18,7 @@ feature -- Access
 			"LC_NONE"
 		end
 
-	Lc_polyline: INTEGER is
+	Lc_polyline: INTEGER
 			-- Supports polylines
 		external
 			"C [macro %"wel.h%"]"
@@ -26,7 +26,7 @@ feature -- Access
 			"LC_POLYLINE"
 		end
 
-	Lc_marker: INTEGER is
+	Lc_marker: INTEGER
 			-- Supports markers
 		external
 			"C [macro %"wel.h%"]"
@@ -34,7 +34,7 @@ feature -- Access
 			"LC_MARKER"
 		end
 
-	Lc_polymarker: INTEGER is
+	Lc_polymarker: INTEGER
 			-- Supports polymarkers
 		external
 			"C [macro %"wel.h%"]"
@@ -42,7 +42,7 @@ feature -- Access
 			"LC_POLYMARKER"
 		end
 
-	Lc_wide: INTEGER is
+	Lc_wide: INTEGER
 			-- Supports wide lines
 		external
 			"C [macro %"wel.h%"]"
@@ -50,7 +50,7 @@ feature -- Access
 			"LC_WIDE"
 		end
 
-	Lc_styled: INTEGER is
+	Lc_styled: INTEGER
 			-- Supports styled lines
 		external
 			"C [macro %"wel.h%"]"
@@ -58,7 +58,7 @@ feature -- Access
 			"LC_STYLED"
 		end
 
-	Lc_wide_styled: INTEGER is
+	Lc_wide_styled: INTEGER
 			-- Supports wide, styled lines
 		external
 			"C [macro %"wel.h%"]"
@@ -66,7 +66,7 @@ feature -- Access
 			"LC_WIDESTYLED"
 		end
 
-	Lc_interiors: INTEGER is
+	Lc_interiors: INTEGER
 			-- Supports interiors
 		external
 			"C [macro %"wel.h%"]"
@@ -74,7 +74,7 @@ feature -- Access
 			"LC_INTERIORS"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

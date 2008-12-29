@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Simple label"
 	legal: "See notice at end of class.";
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a label with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a unmanaged label with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a label with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Text of current label
 		require
 			exists: not destroyed
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Status setting
 
-	allow_recompute_size is
+	allow_recompute_size
 			-- Allow current label to recompute its size according to
 			-- changes on its value.
 		require
@@ -93,7 +93,7 @@ feature -- Status setting
 			implementation.allow_recompute_size
 		end;
 
-	forbid_recompute_size is
+	forbid_recompute_size
 			-- Forbid current label to recompute its size according to
 			-- changes on its value.
 		require
@@ -102,7 +102,7 @@ feature -- Status setting
 			implementation.forbid_recompute_size
 		end;
 
-	set_center_alignment is
+	set_center_alignment
 			-- Set text alignment of current label to center.
 		require
 			exists: not destroyed
@@ -110,7 +110,7 @@ feature -- Status setting
 			implementation.set_center_alignment
 		end;
 
-	set_right_alignment is
+	set_right_alignment
 			-- Set text alignment of current label to right.
 		require
 			exists: not destroyed
@@ -118,7 +118,7 @@ feature -- Status setting
 			implementation.set_right_alignment
 		end;
 
-	set_left_alignment is
+	set_left_alignment
 			-- Set text alignment of current label to left.
 		require
 			exists: not destroyed
@@ -128,7 +128,7 @@ feature -- Status setting
 
 feature -- Element chnage
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set text of current label to `a_text'.
 		require
 			exists: not destroyed;
@@ -146,17 +146,17 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {G_ANY, G_ANY_I, WIDGET_I} -- Implementatino
 
-	is_fontable: BOOLEAN is True;
+	is_fontable: BOOLEAN = True;
 			-- Is current widget an heir of FONTABLE ?
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current label.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Collection of features that are used to mark
@@ -14,7 +14,7 @@ class REFACTORING_HELPER
 
 feature -- Markers
 
-	fixme (comment: STRING) is
+	fixme (comment: STRING)
 			-- Mark code that has to be "fixed" with `comment'.
 		require
 			comment_not_void: comment /= Void
@@ -26,7 +26,7 @@ feature -- Markers
 			end
 		end
 
-	to_implement (comment: STRING) is
+	to_implement (comment: STRING)
 			-- Mark code that has to be "implemented" with `comment'.
 		require
 			comment_not_void: comment /= Void
@@ -38,7 +38,7 @@ feature -- Markers
 			end
 		end
 
-	to_implement_assertion (comment: STRING): BOOLEAN is
+	to_implement_assertion (comment: STRING): BOOLEAN
 			-- Mark assertion that has to be "implemented" with `comment'.
 		require
 			comment_not_void: comment /= Void
@@ -51,7 +51,7 @@ feature -- Markers
 			Result := True
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

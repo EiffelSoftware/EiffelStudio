@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Item for TEXT_PANEL_HEADER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 		
 feature -- Creation
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 		require else
 			no_unwanted_chars_in_name: not a_name.has ('%N') and not a_name.has ('%T')
 		do
@@ -64,7 +64,7 @@ feature -- Access
 	first_line_displayed: INTEGER
 		-- Stored first line displayed in text
 
-	document_type: STRING is
+	document_type: STRING
 			-- Return file extension for Current based on name, Void if none
 		do
 			create Result.make_empty
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Display
 
-	display (device: EV_PIXMAP; panel: TEXT_PANEL) is
+	display (device: EV_PIXMAP; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		do	
@@ -91,7 +91,7 @@ feature -- Display
  			draw_text_top_left (position + padding, text_font_offset (device.height), image, device)
 		end
 
-	display_selected (device: EV_PIXMAP; panel: TEXT_PANEL) is
+	display_selected (device: EV_PIXMAP; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state.
@@ -115,7 +115,7 @@ feature -- Width & height
 	width: INTEGER
 			-- Width in pixel of the entire token.		
 
-	retrieve_position_by_width(a_width: INTEGER): INTEGER is
+	retrieve_position_by_width(a_width: INTEGER): INTEGER
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		require
@@ -126,13 +126,13 @@ feature -- Width & height
 			Result_small_enough: Result <= length
 		end
 
-	update_width is
+	update_width
 			-- update value of `width'
 		do
 			width := get_substring_width (image.count) + (2 * padding)
 		end
 
-	update_position is
+	update_position
 			-- Update the value of `position' to its correct value
 		do
 				-- Update current position
@@ -145,7 +145,7 @@ feature -- Width & height
 			update_width
 		end
 
-	get_substring_width (n: INTEGER): INTEGER is
+	get_substring_width (n: INTEGER): INTEGER
 			-- Compute the width in pixels of the first
 			-- `n' characters of the current string.
 		do
@@ -158,7 +158,7 @@ feature -- Width & height
 
 feature {TEXT_PANEL_HEADER} -- Status Setting
 		
-	set_data (a_data: like data) is
+	set_data (a_data: like data)
 			-- Set `data'
 		require
 			data_not_void: a_data /= Void
@@ -168,25 +168,25 @@ feature {TEXT_PANEL_HEADER} -- Status Setting
 			data_set: data = a_data
 		end		
 
-	set_image (a_image: STRING) is
+	set_image (a_image: STRING)
 			-- Set `image'
 		do
 			image := short_name (a_image)
 		end		
 
-	set_cursor_line (a_cursor_line: like cursor_line) is
+	set_cursor_line (a_cursor_line: like cursor_line)
 			-- Set `cursor_line'
 		do
 			cursor_line := a_cursor_line
 		end	
 
-	set_cursor_char (a_cursor_char: like cursor_char) is
+	set_cursor_char (a_cursor_char: like cursor_char)
 			-- Set `cursor_char'
 		do
 			cursor_char := a_cursor_char
 		end	
 	
-	set_first_line_displayed (a_line_no: INTEGER) is
+	set_first_line_displayed (a_line_no: INTEGER)
 			-- Set `first_line_displayed'
 		do
 			first_line_displayed := a_line_no	
@@ -194,7 +194,7 @@ feature {TEXT_PANEL_HEADER} -- Status Setting
 
 feature {NONE} -- Implementation
 
-	short_name (a_name: STRING): STRING is
+	short_name (a_name: STRING): STRING
 			-- Short file/directory name (minus directory hierarchy) of `a_name'
 		require
 			name_not_void: a_name /= Void
@@ -214,26 +214,26 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Properties used to display the token
 
-	padding: INTEGER is 4
+	padding: INTEGER = 4
 		-- Left and right padding width for Current
 
-	text_color: EV_COLOR is
+	text_color: EV_COLOR
 		do
 			Result := editor_preferences.normal_text_color
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 		do
 			--| by default, no background...
 			Result := editor_preferences.normal_background_color
 		end
 
-	draw_text_top_left (pos, d_y: INTEGER; text_to_be_drawn: STRING; device: EV_PIXMAP) is
+	draw_text_top_left (pos, d_y: INTEGER; text_to_be_drawn: STRING; device: EV_PIXMAP)
 		do
 			device.draw_text (pos, d_y, text_to_be_drawn)
 		end
 
-	text_font_offset (a_height: INTEGER): INTEGER is
+	text_font_offset (a_height: INTEGER): INTEGER
 			-- 
 		do			
 			Result := (a_height / 2).ceiling + (header_font_cell.item.value.height / 2).floor	
@@ -244,7 +244,7 @@ invariant
 	width_positive_or_null: width >= 0
 	previous = Void implies position = 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Item of a 2-3-4 tree"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature -- Access
 		-- previous item
 		-- Void if Current is the last item.
 
-	index: INTEGER is
+	index: INTEGER
 			-- index of item in tree
 		require
 			is_valid: is_valid
@@ -47,25 +47,25 @@ feature -- Status report
 
 feature -- Element change
 
-	set_key (k: like key) is
+	set_key (k: like key)
 			-- Make `k' the value of `key'.
 		do
 			key := k
 		end
 
-	set_tree (t: like tree) is
+	set_tree (t: like tree)
 			-- Make `t' the value of `tree'.
 		do
 			tree := t
 		end
 
-	set_next (ti: like Current) is
+	set_next (ti: like Current)
 			-- Make `ti' the next item.
 		do
 			next := ti
 		end
 
-	set_previous (ti: like Current) is
+	set_previous (ti: like Current)
 			-- Make `ti' the previous item.
 		do
 			previous := ti
@@ -73,7 +73,7 @@ feature -- Element change
 
 feature -- Removal
 
-	delete is
+	delete
 			-- Supress Current.
 			-- If Current is the only line of `tree', prompt `tree' so.
 		do
@@ -81,7 +81,7 @@ feature -- Removal
 			unlink
 		end
 
-	unlink is
+	unlink
 			-- link `previous' to `next'. used in deletion.
 		do
 			if next /= Void then
@@ -105,7 +105,7 @@ feature -- Removal
 
 feature -- Basic Operations
 
-	add_right (other: like Current) is
+	add_right (other: like Current)
 			-- add `other' to the right of Current
 		require
 			other_not_void: other /= Void
@@ -122,7 +122,7 @@ feature -- Basic Operations
 			other_has_tree: other.tree /= void
 		end
 
-	add_left (other: like Current) is
+	add_left (other: like Current)
 			-- add `other' to the left of Current
 		local
 			ti: like key
@@ -137,7 +137,7 @@ feature -- Basic Operations
 			other_has_tree: other.tree /= void
 		end
 
-	link_right (other: like Current) is
+	link_right (other: like Current)
 			-- Add `other' to the right of current.
 			-- Change links
 		do
@@ -155,7 +155,7 @@ feature -- Basic Operations
 				--| with "if next /= Void ..." instruction
 		end
 
-	link_left (other: like Current) is
+	link_left (other: like Current)
 			-- Add `other' to the left of current.
 			-- Change links
 		do
@@ -173,7 +173,7 @@ feature -- Basic Operations
 				--| with "if previous /= Void ..." instruction
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

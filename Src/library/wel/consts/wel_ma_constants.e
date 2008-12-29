@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Mouse Activate (MA) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,19 +10,19 @@ class
 
 feature -- Access
 
-	Ma_activate: INTEGER is 1
+	Ma_activate: INTEGER = 1
 			-- Declared in Windows as MA_ACTIVATE
 
-	Ma_activateandeat: INTEGER is 2
+	Ma_activateandeat: INTEGER = 2
 			-- Declared in Windows as MA_ACTIVATEANDEAT
 
-	Ma_noactivate: INTEGER is 3
+	Ma_noactivate: INTEGER = 3
 			-- Declared in Windows as MA_NOACTIVATE
 
-	Ma_noactivateandeat: INTEGER is 4;
+	Ma_noactivateandeat: INTEGER = 4;
 			-- Declared in Windows as MA_NOACTIVATEANDEAT
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

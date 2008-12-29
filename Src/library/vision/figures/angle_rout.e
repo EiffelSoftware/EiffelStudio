@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Set of trigonometric routines"
 	legal: "See notice at end of class.";
@@ -21,7 +21,7 @@ inherit
 	
 feature -- Basic operation
 
-	cos (a: REAL): REAL is
+	cos (a: REAL): REAL
 			-- Trigonometric cosine of `a' degrees
 		require
 			a_smaller_than_360: a < 360;
@@ -30,7 +30,7 @@ feature -- Basic operation
 			Result := cosine (((Pi*a)/180.0).truncated_to_real)
 		end;
 
-	sin (a: REAL): REAL is
+	sin (a: REAL): REAL
 			-- Trigonometric sine of `a' degrees
 		require
 			a_smaller_than_360: a < 360;
@@ -39,7 +39,7 @@ feature -- Basic operation
 			Result := sine (((Pi*a)/180.0).truncated_to_real)
 		end;
 
-	mod360 (angle: REAL): REAL is
+	mod360 (angle: REAL): REAL
 			-- Convert `angle' to within range of 0 and 360 
 		do
 			Result := angle;
@@ -54,7 +54,7 @@ feature -- Basic operation
 			Result < 360
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

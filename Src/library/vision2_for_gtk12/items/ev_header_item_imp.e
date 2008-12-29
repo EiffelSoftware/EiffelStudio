@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,15 +35,15 @@ create
 
 feature -- Initialization
 
-	needs_event_box: BOOLEAN is False
+	needs_event_box: BOOLEAN = False
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the header item.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			textable_imp_initialize
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_text (a_text: STRING_32) is
+	set_text (a_text: STRING_32)
 			-- Assign `a_text' to `text'.
 		do
 			Precursor {EV_TEXTABLE_IMP} (a_text)
@@ -72,7 +72,7 @@ feature -- Status setting
 			end
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Assign `a_width' to `width'.
 		do
 			if parent_imp /= Void then
@@ -82,14 +82,14 @@ feature -- Status setting
 			end
 		end
 
-	internal_set_width (a_width: INTEGER) is
+	internal_set_width (a_width: INTEGER)
 			-- Assign `a_width' to `width'.
 		do
 			width := a_width
 		end
 
 
-	resize_to_content is
+	resize_to_content
 			-- Resize `Current' to fully display both `pixmap' and `text'.
 			-- As size of `text' is dependent on `font' of `parent', `Current'
 			-- must be parented.
@@ -100,40 +100,40 @@ feature -- Status setting
 
 feature -- PND
 
-	enable_transport is
+	enable_transport
 			-- Enable PND transport
 		do
 			is_transport_enabled := True
 		end
 
-	disable_transport is
+	disable_transport
 			-- Disable PND transport
 		do
 			is_transport_enabled := False
 		end
 
-	draw_rubber_band is
+	draw_rubber_band
 		do
 			check
 				do_not_call: False
 			end
 		end
 
-	erase_rubber_band is
+	erase_rubber_band
 		do
 			check
 				do_not_call: False
 			end
 		end
 
-	enable_capture is
+	enable_capture
 		do
 			check
 				do_not_call: False
 			end
 		end
 
-	disable_capture is
+	disable_capture
 		do
 			check
 				do_not_call: False
@@ -143,7 +143,7 @@ feature -- PND
 	start_transport (
         	a_x, a_y, a_button: INTEGER;
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        	a_screen_x, a_screen_y: INTEGER) is
+        	a_screen_x, a_screen_y: INTEGER)
         	-- Start PND transport (not needed)
 		do
 			check
@@ -153,7 +153,7 @@ feature -- PND
 
 	end_transport (a_x, a_y, a_button: INTEGER;
 		a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-		a_screen_x, a_screen_y: INTEGER) is
+		a_screen_x, a_screen_y: INTEGER)
 			-- End PND transport (not needed)
 		do
 			check
@@ -161,7 +161,7 @@ feature -- PND
 			end
 		end
 
-	set_pointer_style, internal_set_pointer_style (curs: EV_POINTER_STYLE) is
+	set_pointer_style, internal_set_pointer_style (curs: EV_POINTER_STYLE)
 			-- Set 'pointer_style' to 'curs' (not needed)
 		do
 			check
@@ -182,33 +182,33 @@ feature -- Access
 
 feature -- Status setting
 
-	disable_user_resize is
+	disable_user_resize
 			-- Prevent `Current' from being resized by users.
 		do
 			user_can_resize := False
 		end
 
-	enable_user_resize is
+	enable_user_resize
 			-- Permit `Current' to be resized by users.
 		do
 			user_can_resize := True
 		end
 
-	set_maximum_width (a_width: INTEGER) is
+	set_maximum_width (a_width: INTEGER)
 			-- Assign `a_maximum_width' in pixels to `maximum_width'.
 			-- If `width' is greater than `a_maximum_width', resize.
 		do
 			maximum_width := a_width
 		end
 
-	set_minimum_width (a_width: INTEGER) is
+	set_minimum_width (a_width: INTEGER)
 			-- Assign `a_minimum_width' in pixels to `minimum_width'.
 			-- If `width' is less than `a_minimum_width', resize.
 		do
 			minimum_width := a_width
 		end
 
-	set_parent_imp (par_imp: like parent_imp) is
+	set_parent_imp (par_imp: like parent_imp)
 			-- Set `parent_imp' to `par_imp'.
 		do
 			parent_imp := par_imp
@@ -217,21 +217,21 @@ feature -- Status setting
 	parent_imp: EV_HEADER_IMP
 		-- Parent of `Current'.
 
-	create_drop_actions: EV_PND_ACTION_SEQUENCE is
+	create_drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Create a drop action sequence.
 		do
 		end
 
 feature {NONE} -- Redundant implementation
 
-	real_pointed_target: EV_PICK_AND_DROPABLE is
+	real_pointed_target: EV_PICK_AND_DROPABLE
 		do
 			check do_not_call: False end
 		end
 
 feature {NONE} -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			set_is_destroyed (True)
@@ -242,7 +242,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_HEADER_ITEM;
 		-- Interface object for `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

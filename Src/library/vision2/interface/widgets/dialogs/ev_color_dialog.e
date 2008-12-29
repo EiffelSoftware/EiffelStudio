@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "EiffelVision color selection dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	color: EV_COLOR is
+	color: EV_COLOR
 			-- Currently selected color or last color
 			-- passed to `set_color' if user cancelled `Current'.
 		require
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_color (a_color: EV_COLOR) is
+	set_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `color'.
 		require
 			not_destroyed: not is_destroyed
@@ -49,13 +49,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_COLOR_DIALOG_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

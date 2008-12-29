@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XCrossingEvent."
@@ -19,43 +19,43 @@ create
 
 feature -- Access
 
-	time: INTEGER is
+	time: INTEGER
 			-- Timestamp in milliseconds
 		do
 			Result := c_event_time (handle)
 		end;
 
-	x: INTEGER is
+	x: INTEGER
 			-- X positive in window
 		do
 			Result := c_event_x (handle)
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 			-- Y positive in window
 		do
 			Result := c_event_y (handle)
 		end;
 
-	x_root: INTEGER is
+	x_root: INTEGER
 			-- X positive relative to root
 		do
 			Result := c_event_x_root (handle)
 		end;
 
-	y_root: INTEGER is
+	y_root: INTEGER
 			-- Y positive relative to root
 		do
 			Result := c_event_y_root (handle)
 		end;
 
-	state: INTEGER is
+	state: INTEGER
 			-- State of key and buttons
 		do
 			Result := c_event_state (handle)
 		end;
 
-	mode: INTEGER is
+	mode: INTEGER
 			-- Crossing mode
 		do
 			Result := c_event_mode (handle)
@@ -64,25 +64,25 @@ feature -- Access
 					is_notify_ungrab
 		end;
 
-	is_notify_normal: BOOLEAN is
+	is_notify_normal: BOOLEAN
 			-- Is `mode' set to notify_normal?
 		do	
 			Result := mode = NotifyNormal
 		end;
 
-	is_notify_grab: BOOLEAN is
+	is_notify_grab: BOOLEAN
 			-- Is `mode' set to notify_grab?
 		do	
 			Result := mode = NotifyGrab
 		end;
 
-	is_notify_ungrab: BOOLEAN is
+	is_notify_ungrab: BOOLEAN
 			-- Is `mode' set to notify_ungrab?
 		do	
 			Result := mode = NotifyUngrab
 		end;
 
-	detail: INTEGER is
+	detail: INTEGER
 			-- Crossing detail
 		do
 			Result := c_event_detail (handle)
@@ -92,49 +92,49 @@ feature -- Access
 					is_notify_non_linear_virtual
 		end;
 
-	is_notify_ancestor: BOOLEAN is
+	is_notify_ancestor: BOOLEAN
 			-- Is the `detail' notify_ancestor?
 		do
 			Result := detail = NotifyAncestor
 		end;
 
-	is_notify_virtual: BOOLEAN is
+	is_notify_virtual: BOOLEAN
 			-- Is the `detail' notify_virtual?
 		do
 			Result := detail = NotifyVirtual
 		end;
 
-	is_notify_inferior: BOOLEAN is
+	is_notify_inferior: BOOLEAN
 			-- Is the `detail' notify_inferior?
 		do
 			Result := detail = NotifyInferior
 		end;
 
-	is_notify_non_linear: BOOLEAN is
+	is_notify_non_linear: BOOLEAN
 			-- Is the `detail' notify_non_linear?
 		do
 			Result := detail = NotifyNonlinear
 		end;
 
-	is_notify_non_linear_virtual: BOOLEAN is
+	is_notify_non_linear_virtual: BOOLEAN
 			-- Is the `detail' notify_non_linear_virtual?
 		do
 			Result := detail = NotifyNonlinearVirtual
 		end;
 
-	same_screen: BOOLEAN is
+	same_screen: BOOLEAN
 			-- Is the pointer and `window' in the same screen?
 		do
 			Result := c_event_same_screen (handle)
 		end;
 
-	focus: BOOLEAN is
+	focus: BOOLEAN
 			-- Is there an input focus on `window'?
 		do
 			Result := c_event_focus (handle)
 		end
 
-	subwindow_widget: MEL_WIDGET is
+	subwindow_widget: MEL_WIDGET
 			-- Subwindow widget
 		do
 			Result := retrieve_widget_from_window (subwindow)
@@ -142,13 +142,13 @@ feature -- Access
 
 feature -- Pointer access
 
-	root: POINTER is
+	root: POINTER
 			-- Root window pointer
 		do
 			Result := c_event_root (handle)
 		end;
 
-	subwindow: POINTER is
+	subwindow: POINTER
 			-- Pointer is in this child
 		do
 			Result := c_event_subwindow (handle)
@@ -156,67 +156,67 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_event_root (event_ptr: POINTER): POINTER is
+	c_event_root (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XCrossingEvent *): EIF_POINTER"
 		end;
 
-	c_event_subwindow (event_ptr: POINTER): POINTEr is
+	c_event_subwindow (event_ptr: POINTER): POINTEr
 		external
 			"C [macro %"events.h%"] (XCrossingEvent *): EIF_INTEGER"
 		end;
 
-	c_event_time (event_ptr: POINTER): INTEGER is
+	c_event_time (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XCrossingEvent *): EIF_INTEGER"
 		end;
 
-	c_event_x (event_ptr: POINTER): INTEGER is
+	c_event_x (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XCrossingEvent *): EIF_INTEGER"
 		end;
 
-	c_event_y (event_ptr: POINTER): INTEGER is
+	c_event_y (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XCrossingEvent *): EIF_INTEGER"
 		end;
 
-	c_event_x_root (event_ptr: POINTER): INTEGER is
+	c_event_x_root (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XCrossingEvent *): EIF_INTEGER"
 		end;
 
-	c_event_y_root (event_ptr: POINTER): INTEGER is
+	c_event_y_root (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XCrossingEvent *): EIF_INTEGER"
 		end;
 
-	c_event_state (event_ptr: POINTER): INTEGER is
+	c_event_state (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XCrossingEvent *): EIF_INTEGER"
 		end;
 
-	c_event_mode (event_ptr: POINTER): INTEGER is
+	c_event_mode (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XCrossingEvent *): EIF_INTEGER"
 		end;
 
-	c_event_detail (event_ptr: POINTER): INTEGER is
+	c_event_detail (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XCrossingEvent *): EIF_INTEGER"
 		end;
 
-	c_event_same_screen (event_ptr: POINTER): BOOLEAN is
+	c_event_same_screen (event_ptr: POINTER): BOOLEAN
 		external
 			"C [macro %"events.h%"] (XCrossingEvent *): EIF_BOOLEAN"
 		end;
 
-	c_event_focus (event_ptr: POINTER): BOOLEAN is
+	c_event_focus (event_ptr: POINTER): BOOLEAN
 		external
 			"C [macro %"events.h%"] (XCrossingEvent *): EIF_BOOLEAN"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

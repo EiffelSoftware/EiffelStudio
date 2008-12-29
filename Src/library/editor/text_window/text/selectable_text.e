@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Read only text with cursor and selection.
 	]"
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	reset_text is
+	reset_text
 		do
 			if has_selection then
 				disable_selection
@@ -44,7 +44,7 @@ feature -- Access
 			-- cursor (and therefore represent the end of the
 			-- selection)
 
-	current_line_number : INTEGER is
+	current_line_number : INTEGER
 			-- Current line number.
 		require
 			text_is_not_empty: not is_empty
@@ -52,7 +52,7 @@ feature -- Access
 			Result := cursor.y_in_lines
 		end
 
-	selection_start: like cursor is
+	selection_start: like cursor
 			-- Beginning of the selection (always < than
 			-- `selection_end').
 		require
@@ -70,7 +70,7 @@ feature -- Access
 			result_cursor_position_lesser: Result <= selection_end
 		end
 
-	selection_end: like cursor is
+	selection_end: like cursor
 			-- End of the selection (always > than
 			-- `selection_start').
 		require
@@ -88,7 +88,7 @@ feature -- Access
 			result_cursor_position_greater: Result >= selection_start
 		end
 
-	selected_string: STRING is
+	selected_string: STRING
 		obsolete
 			"Use `selected_wide_string' instead."
 		require
@@ -102,7 +102,7 @@ feature -- Access
 			end
 		end
 
-	selected_wide_string: STRING_32 is
+	selected_wide_string: STRING_32
 		require
 			text_is_not_empty: not is_empty
 		do
@@ -111,7 +111,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_selection: BOOLEAN is
+	has_selection: BOOLEAN
 			-- Is there a selection?
 		do
 			if selection_cursor /= Void then
@@ -119,7 +119,7 @@ feature -- Status report
 			end
 		end
 
-	selection_is_empty: BOOLEAN is
+	selection_is_empty: BOOLEAN
 			-- Is the selection empty ?
 		require
 			text_is_not_empty: not is_empty
@@ -129,7 +129,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_selection is
+	enable_selection
 			-- Set that text can be selected in the editor
 		require
 			text_is_not_empty: not is_empty
@@ -138,7 +138,7 @@ feature -- Status setting
 			on_selection_begun
 		end
 
-	disable_selection is
+	disable_selection
 			-- Set that text cannot be selected in the editor
 		require
 			text_is_not_empty: not is_empty
@@ -154,7 +154,7 @@ feature -- Status setting
 
 feature -- Selection Changes
 
-	set_selection_cursor (c: like cursor) is
+	set_selection_cursor (c: like cursor)
 			-- Set the selection to be from `c' to `cursor'.
 			-- Allows empty selections. Be careful about this.
 		require
@@ -166,7 +166,7 @@ feature -- Selection Changes
 			selection_cursor.is_equal (c)
 		end
 
-	select_region (start_pos, end_pos: INTEGER) is
+	select_region (start_pos, end_pos: INTEGER)
 			-- Select characters between indexes start_pos and end_pos.
 		require
 			text_is_not_empty: not is_empty
@@ -190,7 +190,7 @@ feature -- Selection Changes
 			end
 		end
 
-	select_all is
+	select_all
 			-- Select the entire text.
 		require
 			text_is_not_empty: not is_empty
@@ -206,7 +206,7 @@ feature -- Selection Changes
 			selection_cursor_positioned: selection_cursor.line = first_line and then selection_cursor.token = first_line.first_token
 		end
 
-	forget_selection is
+	forget_selection
 			-- Unselect all.
 		require
 			text_is_not_empty: not is_empty
@@ -220,7 +220,7 @@ feature -- Selection Changes
 
 feature -- Search
 
-	search_string_from_cursor (searched_string: STRING) is
+	search_string_from_cursor (searched_string: STRING)
 			-- Search the text for the string `searched_string'.
 			-- Begin search from position of cursor.
 			-- If the search was successful, `successful_search' is
@@ -281,7 +281,7 @@ feature -- Search
 
 feature {NONE} -- Implementation
 
-	on_text_block_loaded (was_first_block: BOOLEAN) is
+	on_text_block_loaded (was_first_block: BOOLEAN)
 			-- Create cursors as the first block of text has been read.
 		do
 			if was_first_block then
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 			Precursor {TEXT} (was_first_block)
 		end
 
-	string_selected (start_sel, end_sel: like cursor): STRING_GENERAL is
+	string_selected (start_sel, end_sel: like cursor): STRING_GENERAL
 			-- String between cursors `start_sel' and `end_sel'.
 		require
 				right_order: start_sel < end_sel
@@ -358,7 +358,7 @@ invariant
 --	selection_cursor_exists: not is_empty implies selection_cursor /= Void
 	no_cursor_when_empty: is_empty implies cursor = Void and then selection_cursor = Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

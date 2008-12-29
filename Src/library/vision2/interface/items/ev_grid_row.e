@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a row of an EV_GRID"
 	date: "$Date$"
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature -- Access
 
-	is_part_of_tree_structure: BOOLEAN is
+	is_part_of_tree_structure: BOOLEAN
 			-- Is `Current' part of a tree structure within `parent_i'?
 		require
 			not_destroyed: not is_destroyed
@@ -42,7 +42,7 @@ feature -- Access
 			result_valid: Result = (parent_row /= Void or else subrow_count > 0)
 		end
 
-	subrow (i: INTEGER): EV_GRID_ROW is
+	subrow (i: INTEGER): EV_GRID_ROW
 			-- `i'-th child of Current.
 		require
 			not_destroyed: not is_destroyed
@@ -56,7 +56,7 @@ feature -- Access
 			subrow_valid: (Result.parent /= Void) and then has_subrow (Result) and then Result.parent_row = Current
 		end
 
-	has_subrow (a_row: EV_GRID_ROW): BOOLEAN is
+	has_subrow (a_row: EV_GRID_ROW): BOOLEAN
 			-- Is `a_row' a child of Current?
 		require
 			not_destroyed: not is_destroyed
@@ -70,7 +70,7 @@ feature -- Access
 				((a_row.parent /= Void and parent /= Void) and then a_row.parent = parent)
 		end
 
-	parent_row: EV_GRID_ROW is
+	parent_row: EV_GRID_ROW
 			-- Parent row of Current if any, Void otherwise.
 		require
 			not_destroyed: not is_destroyed
@@ -83,7 +83,7 @@ feature -- Access
 			has_parent: Result /= Void implies Result.has_subrow (Current)
 		end
 
-	parent: EV_GRID is
+	parent: EV_GRID
 			-- Grid to which current row belongs.
 		require
 			not_destroyed: not is_destroyed
@@ -91,7 +91,7 @@ feature -- Access
 			Result := implementation.parent
 		end
 
-	parent_row_root: EV_GRID_ROW is
+	parent_row_root: EV_GRID_ROW
 			-- Parent row which is the root of the tree structure
 			-- in which `Current' is contained. May be `Current' if
 			-- `Current' is the root node of a tree structure.
@@ -104,7 +104,7 @@ feature -- Access
 			result_consistent_with_parent_tree_properties: (parent = Void or else not parent.is_tree_enabled) = (Result = Void)
 		end
 
-	item (i: INTEGER): EV_GRID_ITEM is
+	item (i: INTEGER): EV_GRID_ITEM
 			-- Item at `i'-th column, Void if none.
 		require
 			not_destroyed: not is_destroyed
@@ -114,7 +114,7 @@ feature -- Access
 			Result := implementation.item (i)
 		end
 
-	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
+	selected_items: ARRAYED_LIST [EV_GRID_ITEM]
 			-- All items selected in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -126,7 +126,7 @@ feature -- Access
 			valid_count: Result.count <= count
 		end
 
-	is_expanded: BOOLEAN is
+	is_expanded: BOOLEAN
 			-- Are subrows of `Current' displayed?
 		require
 			not_destroyed: not is_destroyed
@@ -140,7 +140,7 @@ feature -- Access
 			-- and add no items.
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of `Current' when displayed in a `parent'
 			-- that has `is_row_height_fixed' set to `False'.
 			-- Note that `height' is ignored if the parent has
@@ -155,7 +155,7 @@ feature -- Access
 			result_not_negative: Result >= 0
 		end
 
-	virtual_y_position: INTEGER is
+	virtual_y_position: INTEGER
 			-- Vertical offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
 			-- `Result' is 0 if `parent' is `Void'.
@@ -168,7 +168,7 @@ feature -- Access
 			parent_void_implies_result_zero: parent = Void implies result = 0
 		end
 
-	virtual_y_position_unlocked: INTEGER is
+	virtual_y_position_unlocked: INTEGER
 			-- Vertical offset of unlocked position of `Current', in relation to the
 			-- virtual area of `parent' grid in pixels.
 			-- If not `is_locked', then `virtual_y_position' = `unlocked_virtual_y_position'.
@@ -183,7 +183,7 @@ feature -- Access
 			parent_void_implies_result_zero: parent = Void implies result = 0
 		end
 
-	index_of_first_item: INTEGER is
+	index_of_first_item: INTEGER
 			-- Return the index of the first non `Void' item within `Current'
 			-- or 0 if none.
 		require
@@ -195,7 +195,7 @@ feature -- Access
 			valid_result: Result >= 0 and Result <= count
 		end
 
-	is_expandable: BOOLEAN is
+	is_expandable: BOOLEAN
 			-- May `Current' be expanded?
 		require
 			not_destroyed: not is_destroyed
@@ -204,7 +204,7 @@ feature -- Access
 			Result := implementation.is_expandable
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Color displayed as background of `Current' except where there are items contained that
 			-- have a non-`Void' `background_color'. If `Void', `background_color' of `parent' is displayed.
 			-- See header of `EV_GRID' for a description of this behavior.
@@ -215,7 +215,7 @@ feature -- Access
 			Result := implementation.background_color
 		end
 
-	foreground_color: EV_COLOR is
+	foreground_color: EV_COLOR
 			-- Color displayed for foreground features of `Current' except where there are items contained that
 			-- have a non-`Void' `foreground_color'. If `Void', `foreground_color' of `parent' is displayed.
 			-- See header of `EV_GRID' for a description of this behavior.
@@ -240,7 +240,7 @@ feature -- Access
 			bridge_ok: Result = implementation.is_displayed
 		end
 
-	is_show_requested: BOOLEAN is
+	is_show_requested: BOOLEAN
 			-- May `Current' be displayed?
 			-- Will return `False' if `hide' has been called on `Current'.
 		require
@@ -252,7 +252,7 @@ feature -- Access
 
 feature -- Status report
 
-	subrow_count: INTEGER is
+	subrow_count: INTEGER
 			-- Number of children.
 		require
 			not_destroyed: not is_destroyed
@@ -264,7 +264,7 @@ feature -- Status report
 			subrow_count_in_range: subrow_count <= (parent.row_count - index)
 		end
 
-	subrow_count_recursive: INTEGER is
+	subrow_count_recursive: INTEGER
 			-- Number of child rows and their child rows recursively.
 		require
 			not_destroyed: not is_destroyed
@@ -276,7 +276,7 @@ feature -- Status report
 			subrow_count_recursive_in_range: subrow_count_recursive <= (parent.row_count - index)
 		end
 
-	index: INTEGER is
+	index: INTEGER
 			-- Position of Current in `parent'.
 		require
 			not_destroyed: not is_destroyed
@@ -288,7 +288,7 @@ feature -- Status report
 			index_less_than_row_count: Result <= parent.row_count
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in current.
 		require
 			not_destroyed: not is_destroyed
@@ -299,13 +299,13 @@ feature -- Status report
 			count_not_negative: count >= 0
 		end
 
-	is_locked: BOOLEAN is
+	is_locked: BOOLEAN
 			-- Is `Current' locked so that it no longer scrolls?
 		do
 			Result := implementation.is_locked
 		end
 
-	locked_position: INTEGER is
+	locked_position: INTEGER
 			-- Locked position of `Current' from top edge of viewable area of `parent'.
 			-- `Result' is 0 if not `is_locked'.
 		do
@@ -316,7 +316,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	lock is
+	lock
 			-- Ensure `is_locked' is `True'.
 			-- `Current' is locked at it's current vertical offset from
 			-- the top edge of the viewable area of `parent'.
@@ -327,7 +327,7 @@ feature -- Status setting
 			locked_position_set: locked_position = virtual_y_position - parent.virtual_y_position
 		end
 
-	lock_at_position (a_position: INTEGER) is
+	lock_at_position (a_position: INTEGER)
 			-- Ensure `is_locked' is `True' with the vertical offset from
 			-- the top edge of the viewable area of `parent' set to `a_position'.
 		do
@@ -337,7 +337,7 @@ feature -- Status setting
 			locked_position_set: locked_position = a_position
 		end
 
-	unlock is
+	unlock
 			-- Ensure `is_locked' is `False'.
 		do
 			implementation.unlock
@@ -345,7 +345,7 @@ feature -- Status setting
 			not_is_locked: not is_locked
 		end
 
-	expand is
+	expand
 			-- Display all subrows of `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -357,7 +357,7 @@ feature -- Status setting
 			is_expanded: action_sequence_call_counter = old action_sequence_call_counter implies (is_expanded or subrow_count = 0)
 		end
 
-	collapse is
+	collapse
 			-- Hide all subrows of `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -368,7 +368,7 @@ feature -- Status setting
 			not_is_expanded: action_sequence_call_counter = old action_sequence_call_counter implies not is_expanded
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Assign `a_height' to `height'.
 		require
 			not_destroyed: not is_destroyed
@@ -379,7 +379,7 @@ feature -- Status setting
 			height_set: height = a_height
 		end
 
-	ensure_visible is
+	ensure_visible
 			-- Ensure `Current' is visible in viewable area of `parent'.
 		require
 			not_destroyed: not is_destroyed
@@ -394,7 +394,7 @@ feature -- Status setting
 			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies virtual_y_position >= parent.virtual_y_position and virtual_y_position + height <= parent.virtual_y_position + (parent.viewable_height).max (height)
 		end
 
-	ensure_expandable is
+	ensure_expandable
 			-- Ensure `Current' displays an expand pixmap to simulate a `row_count' greater than 0.
 			-- May be used for dynamic behavior by filling subrows upon firing of `grid.row_expand_actions'.
 			-- If no items are added to `Current' during the firing of `grid.row_expand_actions' then
@@ -412,7 +412,7 @@ feature -- Status setting
 			is_expandable: is_expandable
 		end
 
-	ensure_non_expandable is
+	ensure_non_expandable
 			-- Restore expanded state of `Current' after a call to `ensure_expandable'. Note that if a row
 			-- has one or more subrows, it is always drawn as expanded, hence the "no_subrows_contained" precondition.
 		require
@@ -425,7 +425,7 @@ feature -- Status setting
 			not_is_expandable: not is_expandable
 		end
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Set `background_color' with `a_color'.
 		require
 			not_destroyed: not is_destroyed
@@ -436,7 +436,7 @@ feature -- Status setting
 			background_color_set: background_color = a_color
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Set `foreground_color' with `a_color'.
 		require
 			not_destroyed: not is_destroyed
@@ -447,7 +447,7 @@ feature -- Status setting
 			foreground_color_set: foreground_color = a_color
 		end
 
-	redraw is
+	redraw
 			-- Force all items within `Current' to be re-drawn when next idle.
 		require
 			not_destroyed: not is_destroyed
@@ -456,7 +456,7 @@ feature -- Status setting
 			implementation.redraw
 		end
 
-	hide is
+	hide
 			-- Prevent `Current' from being shown in `parent'.
 		require
 			not_destroyed: not is_destroyed
@@ -467,7 +467,7 @@ feature -- Status setting
 			not_is_show_requested: not is_show_requested
 		end
 
-	show is
+	show
 			-- Ensure `Current' is shown in `parent'.
 		require
 			not_destroyed: not is_destroyed
@@ -480,7 +480,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
+	set_item (i: INTEGER; a_item: EV_GRID_ITEM)
 			-- Set item at `i'-th column to be `a_item'.
 			-- If `a_item' is `Void', the current item (if any) is removed.
 		require
@@ -496,7 +496,7 @@ feature -- Element change
 			item_set: item (i) = a_item
 		end
 
-	add_subrow (a_row: EV_GRID_ROW) is
+	add_subrow (a_row: EV_GRID_ROW)
 			-- Make `a_row' a child row of Current.
 		require
 			not_destroyed: not is_destroyed
@@ -519,7 +519,7 @@ feature -- Element change
 			subrow (subrow_count) = a_row
 		end
 
-	insert_subrow (subrow_index: INTEGER) is
+	insert_subrow (subrow_index: INTEGER)
 			-- Add a new row to `parent' as a subrow of `Current'
 			-- with index in subrows of `Current' given by `subrow_index'.
 		require
@@ -534,7 +534,7 @@ feature -- Element change
 			parent_row_count_increased: parent.row_count = old parent.row_count + 1
 		end
 
-	insert_subrows (rows_to_insert, subrow_index: INTEGER) is
+	insert_subrows (rows_to_insert, subrow_index: INTEGER)
 			-- Add `rows_to_insert' rows to `parent' as a subrow of `Current'
 			-- with index in subrows of `Current' given by `subrow_index'.
 		require
@@ -550,7 +550,7 @@ feature -- Element change
 			parent_row_count_increased: parent.row_count = old parent.row_count + rows_to_insert
 		end
 
-	remove_subrow (a_row: EV_GRID_ROW) is
+	remove_subrow (a_row: EV_GRID_ROW)
 			-- Ensure that `a_row' is no longer a child row of `Current'.
 			-- Does not remove `a_row' from `parent_i'.
 		require
@@ -571,7 +571,7 @@ feature -- Element change
 			subrow_count_decreased: subrow_count = old subrow_count - 1
 		end
 
-	clear is
+	clear
 			-- Remove all items from `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -584,7 +584,7 @@ feature -- Element change
 
 feature -- Contract support
 
-	is_index_valid_for_item_setting_if_tree_node (a_index: INTEGER): BOOLEAN is
+	is_index_valid_for_item_setting_if_tree_node (a_index: INTEGER): BOOLEAN
 			-- May an item be set in `Current' at index `a_index' if `Current' is a tree node.
 		require
 			is_part_of_tree_structure: is_part_of_tree_structure
@@ -626,7 +626,7 @@ feature -- Contract support
 			end
 		end
 
-	is_index_valid_for_item_removal_if_tree_node (a_index: INTEGER): BOOLEAN is
+	is_index_valid_for_item_removal_if_tree_node (a_index: INTEGER): BOOLEAN
 			-- May an item be removed from `Current' at index `a_index' if `Current' is a tree node.
 		require
 			is_part_of_tree_structure: is_part_of_tree_structure
@@ -673,7 +673,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_GRID_ROW_I} implementation.make (Current)
@@ -686,7 +686,7 @@ invariant
 	tree_disabled_in_parent_implies_no_subrows: parent /= Void and then not parent.is_tree_enabled implies subrow_count = 0
 	virtual_position_and_virtual_position_unlocked_equal_when_not_locked: not is_locked implies virtual_y_position = virtual_y_position_unlocked
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Picture Object OLE Automation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,105 +12,105 @@ inherit
 
 feature -- Status Report
 
-	handle_user_precondition: BOOLEAN is
+	handle_user_precondition: BOOLEAN
 			-- User-defined preconditions for `handle'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	h_pal_user_precondition: BOOLEAN is
+	h_pal_user_precondition: BOOLEAN
 			-- User-defined preconditions for `h_pal'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	type_user_precondition: BOOLEAN is
+	type_user_precondition: BOOLEAN
 			-- User-defined preconditions for `type'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	width_user_precondition: BOOLEAN is
+	width_user_precondition: BOOLEAN
 			-- User-defined preconditions for `width'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	height_user_precondition: BOOLEAN is
+	height_user_precondition: BOOLEAN
 			-- User-defined preconditions for `height'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	render_user_precondition (hdc: INTEGER; x: INTEGER; y: INTEGER; cx: INTEGER; cy: INTEGER; x_src: INTEGER; y_src: INTEGER; cx_src: INTEGER; cy_src: INTEGER; prc_wbounds: POINTER): BOOLEAN is
+	render_user_precondition (hdc: INTEGER; x: INTEGER; y: INTEGER; cx: INTEGER; cy: INTEGER; x_src: INTEGER; y_src: INTEGER; cx_src: INTEGER; cy_src: INTEGER; prc_wbounds: POINTER): BOOLEAN
 			-- User-defined preconditions for `render'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_h_pal_user_precondition (phpal: INTEGER): BOOLEAN is
+	set_h_pal_user_precondition (phpal: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_h_pal'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	cur_dc_user_precondition: BOOLEAN is
+	cur_dc_user_precondition: BOOLEAN
 			-- User-defined preconditions for `cur_dc'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	select_picture_user_precondition (hdc_in: INTEGER; phdc_out: INTEGER_REF; phbmp_out: INTEGER_REF): BOOLEAN is
+	select_picture_user_precondition (hdc_in: INTEGER; phdc_out: INTEGER_REF; phbmp_out: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `select_picture'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	keep_original_format_user_precondition: BOOLEAN is
+	keep_original_format_user_precondition: BOOLEAN
 			-- User-defined preconditions for `keep_original_format'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_keep_original_format_user_precondition (pfkeep: BOOLEAN): BOOLEAN is
+	set_keep_original_format_user_precondition (pfkeep: BOOLEAN): BOOLEAN
 			-- User-defined preconditions for `set_keep_original_format'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	picture_changed_user_precondition: BOOLEAN is
+	picture_changed_user_precondition: BOOLEAN
 			-- User-defined preconditions for `picture_changed'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	save_as_file_user_precondition (pstm: POINTER; f_save_mem_copy: BOOLEAN; pcb_size: INTEGER_REF): BOOLEAN is
+	save_as_file_user_precondition (pstm: POINTER; f_save_mem_copy: BOOLEAN; pcb_size: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `save_as_file'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	attributes_user_precondition: BOOLEAN is
+	attributes_user_precondition: BOOLEAN
 			-- User-defined preconditions for `attributes'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_hdc_user_precondition (hdc: INTEGER): BOOLEAN is
+	set_hdc_user_precondition (hdc: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_hdc'.
 			-- Redefine in descendants if needed.
 		do
@@ -119,7 +119,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	handle: INTEGER is
+	handle: INTEGER
 			-- No description available.
 		require
 			handle_user_precondition: handle_user_precondition
@@ -127,7 +127,7 @@ feature -- Basic Operations
 
 		end
 
-	h_pal: INTEGER is
+	h_pal: INTEGER
 			-- No description available.
 		require
 			h_pal_user_precondition: h_pal_user_precondition
@@ -135,7 +135,7 @@ feature -- Basic Operations
 
 		end
 
-	type: INTEGER is
+	type: INTEGER
 			-- No description available.
 		require
 			type_user_precondition: type_user_precondition
@@ -143,7 +143,7 @@ feature -- Basic Operations
 
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- No description available.
 		require
 			width_user_precondition: width_user_precondition
@@ -151,7 +151,7 @@ feature -- Basic Operations
 
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- No description available.
 		require
 			height_user_precondition: height_user_precondition
@@ -159,7 +159,7 @@ feature -- Basic Operations
 
 		end
 
-	render (hdc: INTEGER; x: INTEGER; y: INTEGER; cx: INTEGER; cy: INTEGER; x_src: INTEGER; y_src: INTEGER; cx_src: INTEGER; cy_src: INTEGER; prc_wbounds: POINTER) is
+	render (hdc: INTEGER; x: INTEGER; y: INTEGER; cx: INTEGER; cy: INTEGER; x_src: INTEGER; y_src: INTEGER; cx_src: INTEGER; cy_src: INTEGER; prc_wbounds: POINTER)
 			-- No description available.
 			-- `hdc' [in].
 			-- `x' [in].
@@ -177,7 +177,7 @@ feature -- Basic Operations
 
 		end
 
-	set_h_pal (phpal: INTEGER) is
+	set_h_pal (phpal: INTEGER)
 			-- No description available.
 			-- `phpal' [in].
 		require
@@ -186,7 +186,7 @@ feature -- Basic Operations
 
 		end
 
-	cur_dc: INTEGER is
+	cur_dc: INTEGER
 			-- No description available.
 		require
 			cur_dc_user_precondition: cur_dc_user_precondition
@@ -194,7 +194,7 @@ feature -- Basic Operations
 
 		end
 
-	select_picture (hdc_in: INTEGER; phdc_out: INTEGER_REF; phbmp_out: INTEGER_REF) is
+	select_picture (hdc_in: INTEGER; phdc_out: INTEGER_REF; phbmp_out: INTEGER_REF)
 			-- No description available.
 			-- `hdc_in' [in].
 			-- `phdc_out' [out].
@@ -207,7 +207,7 @@ feature -- Basic Operations
 
 		end
 
-	keep_original_format: BOOLEAN is
+	keep_original_format: BOOLEAN
 			-- No description available.
 		require
 			keep_original_format_user_precondition: keep_original_format_user_precondition
@@ -215,7 +215,7 @@ feature -- Basic Operations
 
 		end
 
-	set_keep_original_format (pfkeep: BOOLEAN) is
+	set_keep_original_format (pfkeep: BOOLEAN)
 			-- No description available.
 			-- `pfkeep' [in].
 		require
@@ -224,7 +224,7 @@ feature -- Basic Operations
 
 		end
 
-	picture_changed is
+	picture_changed
 			-- No description available.
 		require
 			picture_changed_user_precondition: picture_changed_user_precondition
@@ -232,7 +232,7 @@ feature -- Basic Operations
 
 		end
 
-	save_as_file (pstm: POINTER; f_save_mem_copy: BOOLEAN; pcb_size: INTEGER_REF) is
+	save_as_file (pstm: POINTER; f_save_mem_copy: BOOLEAN; pcb_size: INTEGER_REF)
 			-- No description available.
 			-- `pstm' [in].
 			-- `f_save_mem_copy' [in].
@@ -244,7 +244,7 @@ feature -- Basic Operations
 
 		end
 
-	attributes: INTEGER is
+	attributes: INTEGER
 			-- No description available.
 		require
 			attributes_user_precondition: attributes_user_precondition
@@ -252,7 +252,7 @@ feature -- Basic Operations
 
 		end
 
-	set_hdc (hdc: INTEGER) is
+	set_hdc (hdc: INTEGER)
 			-- No description available.
 			-- `hdc' [in].
 		require
@@ -261,7 +261,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of default colors used by the system.%
 		% Gtk implementation."
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	color_read_write: EV_COLOR is
+	color_read_write: EV_COLOR
 			-- Color used for read write.
 		local
 			l_widget: POINTER
@@ -21,7 +21,7 @@ feature -- Access
 			{EV_GTK_EXTERNALS}.gtk_widget_destroy (l_widget)
 		end
 
-	color_read_only: EV_COLOR is
+	color_read_only: EV_COLOR
 			-- Color used for read only.
 		local
 			l_widget: POINTER
@@ -31,7 +31,7 @@ feature -- Access
 			{EV_GTK_EXTERNALS}.gtk_widget_destroy (l_widget)
 		end
 
-	default_background_color, Color_dialog, Color_3d_face: EV_COLOR is
+	default_background_color, Color_dialog, Color_3d_face: EV_COLOR
 			-- Color used for the background of dialogs
 		local
 			l_widget: POINTER
@@ -41,7 +41,7 @@ feature -- Access
 			{EV_GTK_EXTERNALS}.gtk_widget_destroy (l_widget)
 		end
 
-	default_foreground_color, Color_dialog_fg, Color_3d_highlight, Color_3d_shadow: EV_COLOR is
+	default_foreground_color, Color_dialog_fg, Color_3d_highlight, Color_3d_shadow: EV_COLOR
 			-- Color used for the foreground of dialogs.
 		local
 			l_widget: POINTER
@@ -53,7 +53,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	color_from_state (a_widget: POINTER; style_type, a_state: INTEGER): EV_COLOR is
+	color_from_state (a_widget: POINTER; style_type, a_state: INTEGER): EV_COLOR
 			-- Return color of either fg or bg representing `a_state'
 		require
 			a_state_valid: a_state >= {EV_GTK_EXTERNALS}.gtk_state_normal_enum and a_state <= {EV_GTK_EXTERNALS}.gtk_state_insensitive_enum
@@ -84,13 +84,13 @@ feature {NONE} -- Implementation
 			Result.set_rgb_with_16_bit (a_r, a_g, a_b)
 		end
 
-	text_style: INTEGER is 1
-	base_style: INTEGER is 2
-	fg_style: INTEGER is 3
-	bg_style: INTEGER is 4;
+	text_style: INTEGER = 1
+	base_style: INTEGER = 2
+	fg_style: INTEGER = 3
+	bg_style: INTEGER = 4;
 		-- Different coloring styles used in gtk.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

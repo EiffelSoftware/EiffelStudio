@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Combo-Box-Ex Item Flag (CBEIF) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,45 +13,45 @@ obsolete
 
 feature -- Access
 
-	Cbeif_text: INTEGER is 1
+	Cbeif_text: INTEGER = 1
 			-- The `text' member is valid or must be filled in.
 			--
 			-- Declared in Windows as CBEIF_TEXT
 
-	Cbeif_image: INTEGER is 2
+	Cbeif_image: INTEGER = 2
 			-- The `image' member is valid or must be filled in.
 			--
 			-- Declared in Windows as CBEIF_IMAGE
 
-	Cbeif_selectedimage: INTEGER is 4
+	Cbeif_selectedimage: INTEGER = 4
 			-- The `selected_image' member is valid or must be
 			-- filled in.
 			--
 			-- Declared in Windows as CBEIF_SELECTEDIMAGE
 
-	Cbeif_overlay: INTEGER is 8
+	Cbeif_overlay: INTEGER = 8
 			-- The `overlay' member is valid or must be filled in.
 			--
 			-- Declared in Windows as CBEIF_OVERLAY
 
-	Cbeif_indent: INTEGER is 16
+	Cbeif_indent: INTEGER = 16
 			-- The `indent' member is valid or must be filled in.
 			--
 			-- Declared in Windows as CBEIF_INDENT
 
-	Cbeif_di_setitem: INTEGER is 268435456
+	Cbeif_di_setitem: INTEGER = 268435456
 			-- The control should store the item data and not ask
 			-- for it again. This flag is used only with the
 			-- CBEN_GETDISPINFO notification message.
 			--
 			-- Declared in Windows as CBEIF_DI_SETITEM
 
-	Cbeif_lparam: INTEGER is 32;
+	Cbeif_lparam: INTEGER = 32;
 			-- The `lparam' member is valid or must be filled in.
 			--
 			-- Declared in Windows as CBEIF_LPARAM
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

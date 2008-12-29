@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A I/O handler manager. %
@@ -19,7 +19,7 @@ inherit
 
 feature -- Status setting
 
-	set_error_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
+	set_error_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when an operation
 			-- on `a_file' had raised an I/O error.
 			--| the behaviour of this routine should be examined when other
@@ -33,7 +33,7 @@ feature -- Status setting
 			command := a_command;
 		end; 
 
-	set_read_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
+	set_read_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when `a_file' has
 			-- data available.
 		local
@@ -46,7 +46,7 @@ feature -- Status setting
 		end;
 
 	set_write_call_back (a_file: IO_MEDIUM; a_command: COMMAND; 
-		an_argument: ANY) is
+		an_argument: ANY)
 			-- Set `a_command' with `argument' to execute when `a_file' is
 			-- available for writing.
 		local
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 	command: COMMAND;
 			-- Command to call
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Call the command.
 		local
 			command_clone: COMMAND
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			command_clone.execute (argument)
 		end; 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

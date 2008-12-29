@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Contains two widgets, each on either side of an adjustable separator."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ feature -- Access
 	second: like item
 			-- Second item of `Current'.
 
-	item: EV_WIDGET is
+	item: EV_WIDGET
 			-- Current item.
 		do
 			if item_refers_to_second then
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Status report
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in `Current'
 		do
 			if first /= Void then
@@ -49,13 +49,13 @@ feature -- Status report
 			end
 		end
 
-	has (v: like item): BOOLEAN is
+	has (v: like item): BOOLEAN
 			-- Does structure include `v'?
 		do
 			Result := v = first or else v = second
 		end
 
-	minimum_split_position: INTEGER is
+	minimum_split_position: INTEGER
 			-- Minimum position the splitter can have.
 		deferred
 		ensure
@@ -63,7 +63,7 @@ feature -- Status report
 			Result_valid: Result <= maximum_split_position
 		end
 
-	maximum_split_position: INTEGER is
+	maximum_split_position: INTEGER
 			-- Maximum position the splitter can have.
 		deferred
 		ensure
@@ -71,7 +71,7 @@ feature -- Status report
 			Result_valid: Result >= minimum_split_position
 		end
 
-	is_item_expanded (an_item: EV_WIDGET): BOOLEAN is
+	is_item_expanded (an_item: EV_WIDGET): BOOLEAN
 			-- Is `an_item' expanded relative to `Current'?
 		require
 			an_item_not_void: an_item /= Void
@@ -86,7 +86,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_first (an_item: like item) is
+	set_first (an_item: like item)
 			-- Assign `an_item' to first.
 		require
 			an_item_not_void: an_item /= Void
@@ -100,7 +100,7 @@ feature -- Status setting
 			an_item_not_expanded: not is_item_expanded (an_item)
 		end
 
-	set_second (an_item: like item) is
+	set_second (an_item: like item)
 			-- Assign `an_item' to second.
 		require
 			an_item_not_void: an_item /= Void
@@ -114,7 +114,7 @@ feature -- Status setting
 			an_item_expanded: is_item_expanded (an_item)
 		end
 
-	go_to_first is
+	go_to_first
 			-- Make `first' current `item'.
 		require
 			first_exist: first /= Void
@@ -124,7 +124,7 @@ feature -- Status setting
 			item_is_first: item = first
 		end
 
-	go_to_second is
+	go_to_second
 			-- Make `second' current `item'.
 		require
 			second_exists: second /= Void
@@ -134,7 +134,7 @@ feature -- Status setting
 			item_is_second: item = second
 		end
 
-	set_proportion (a_proportion: REAL) is
+	set_proportion (a_proportion: REAL)
 			-- Position `split_position' between minimum and maximum determined
 			-- by `a_proportion'.
 		require
@@ -149,28 +149,28 @@ feature -- Status setting
 				min_sp)
 		end
 
-	enable_item_expand (an_item: EV_WIDGET) is
+	enable_item_expand (an_item: EV_WIDGET)
 			-- When `Current' is resized, resize `an_item' respectively.
 		deferred
 		end
 
-	disable_item_expand (an_item: EV_WIDGET) is
+	disable_item_expand (an_item: EV_WIDGET)
 			-- When `Current' is resized, do not resize `an_item'.
 		deferred
 		end
 
-	set_split_position (a_split_position: INTEGER) is
+	set_split_position (a_split_position: INTEGER)
 			-- Make `a_split_position' position of splitter in pixels.
 		deferred
 		end
 
-	enable_flat_separator is
+	enable_flat_separator
 			-- Set the separator to be "flat"
 		obsolete "All split areas are now flat by default."
 		do
 		end
 
-	disable_flat_separator is
+	disable_flat_separator
 			-- Set the separator to be "raised"
 		obsolete "All split areas are now flat by default."
 		do
@@ -178,7 +178,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	put (an_item: like item) is
+	put (an_item: like item)
 			-- Replace `item' with `an_item'.
 		do
 			if item = first then
@@ -193,7 +193,7 @@ feature -- Element change
 				(old item = old second implies item = second)
 		end
 
-	extend (an_item: like item) is
+	extend (an_item: like item)
 			-- Assign `an_item' to `first_item' if not already assigned or to
 			-- `second_item' otherwise.
 		do
@@ -204,7 +204,7 @@ feature -- Element change
 			end
 		end
 
-	replace (an_item: like item) is
+	replace (an_item: like item)
 			-- Replace item with `an_item'.
 		do
 			prune (item)
@@ -217,12 +217,12 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove occurrence of `v' if any.
 		deferred
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			prune (first)
@@ -232,7 +232,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	linear_representation: LINEAR [like item] is
+	linear_representation: LINEAR [like item]
 			-- Representation as a linear structure.
 		local
 			l: LINKED_LIST [like item]
@@ -252,7 +252,7 @@ feature {EV_SPLIT_AREA} -- Implementation
 	item_refers_to_second: BOOLEAN
 			-- Is `item' referring to `second'.
 
-	split_position: INTEGER is
+	split_position: INTEGER
 			-- Offset of the splitter from the left or top.
 		deferred
 		end
@@ -263,20 +263,20 @@ feature {EV_SPLIT_AREA} -- Implementation
 	second_expandable: BOOLEAN
 			-- Is `second' expandable?
 
-	splitter_width: INTEGER is
+	splitter_width: INTEGER
 			-- Width of splitter.
 		deferred
 		end
 
 feature {EV_SPLIT_AREA_I} -- Status Report
 
-	first_visible: BOOLEAN is
+	first_visible: BOOLEAN
 			-- Is `first' not Void and visible?
 		do
 			Result := first /= Void and first.is_show_requested
 		end
 
-	second_visible: BOOLEAN is
+	second_visible: BOOLEAN
 			-- Is `second' not Void and visible?
 		do
 			Result := second /= Void and second.is_show_requested
@@ -286,7 +286,7 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
+	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so notify `first_imp' and `second_imp'.
 		do
 			if first /= Void then
@@ -299,7 +299,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_SPLIT_AREA;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Owner Draw Action (ODA) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,28 +10,28 @@ class
 
 feature -- Access
 
-	Oda_drawentire: INTEGER is
+	Oda_drawentire: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"ODA_DRAWENTIRE"
 		end
 
-	Oda_select: INTEGER is
+	Oda_select: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"ODA_SELECT"
 		end
 
-	Oda_focus: INTEGER is
+	Oda_focus: INTEGER
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"ODA_FOCUS"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

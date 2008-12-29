@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision key constants. Each constant defined here %N%
 		%corresponds to a possible value of {EV_KEY}.code"
@@ -13,109 +13,109 @@ class
 
 feature -- Constants
 
-	Key_0: INTEGER is 1
-	Key_1: INTEGER is 2
-	Key_2: INTEGER is 3
-	Key_3: INTEGER is 4
-	Key_4: INTEGER is 5
-	Key_5: INTEGER is 6
-	Key_6: INTEGER is 7
-	Key_7: INTEGER is 8
-	Key_8: INTEGER is 9
-	Key_9: INTEGER is 10
-	Key_numpad_0: INTEGER is 11
-	Key_numpad_1: INTEGER is 12
-	Key_numpad_2: INTEGER is 13
-	Key_numpad_3: INTEGER is 14
-	Key_numpad_4: INTEGER is 15
-	Key_numpad_5: INTEGER is 16
-	Key_numpad_6: INTEGER is 17
-	Key_numpad_7: INTEGER is 18
-	Key_numpad_8: INTEGER is 19
-	Key_numpad_9: INTEGER is 20
-	Key_numpad_add: INTEGER is 21
-	Key_numpad_divide: INTEGER is 22
-	Key_numpad_multiply: INTEGER is 23
-	key_num_lock: INTEGER is 24
-	Key_numpad_subtract: INTEGER is 25
-	Key_numpad_decimal: INTEGER is 26
-	Key_f1: INTEGER is 27
-	Key_f2: INTEGER is 28
-	Key_f3: INTEGER is 29
-	Key_f4: INTEGER is 30
-	Key_f5: INTEGER is 31
-	Key_f6: INTEGER is 32
-	Key_f7: INTEGER is 33
-	Key_f8: INTEGER is 34
-	Key_f9: INTEGER is 35
-	Key_f10: INTEGER is 36
-	Key_f11: INTEGER is 37
-	Key_f12: INTEGER is 38
-	Key_space: INTEGER is 39
-	Key_back_space: INTEGER is 40
-	Key_enter: INTEGER is 41
-	Key_escape: INTEGER is 42
-	Key_tab: INTEGER is 43
-	Key_pause: INTEGER is 44
-	Key_caps_lock: INTEGER is 45
-	Key_scroll_lock: INTEGER is 46
-	Key_comma: INTEGER is 47
-	Key_equal: INTEGER is 48
-	Key_period: INTEGER is 49
-	Key_semicolon: INTEGER is 50
-	Key_open_bracket: INTEGER is 51
-	Key_close_bracket: INTEGER is 52
-	Key_slash: INTEGER is 53
-	Key_backslash: INTEGER is 54
-	Key_quote: INTEGER is 55
-	Key_backquote: INTEGER is 56
-	Key_dash: INTEGER is 57
-	Key_up: INTEGER is 58
-	Key_down: INTEGER is 59
-	Key_left: INTEGER is 60
-	Key_right: INTEGER is 61
-	Key_page_up: INTEGER is 62
-	Key_page_down: INTEGER is 63
-	Key_home: INTEGER is 64
-	Key_end: INTEGER is 65
-	Key_insert: INTEGER is 66
-	Key_delete: INTEGER is 67
-	Key_a: INTEGER is 68
-	Key_b: INTEGER is 69
-	Key_c: INTEGER is 70
-	Key_d: INTEGER is 71
-	Key_e: INTEGER is 72
-	Key_f: INTEGER is 73
-	Key_g: INTEGER is 74
-	Key_h: INTEGER is 75
-	Key_i: INTEGER is 76
-	Key_j: INTEGER is 77
-	Key_k: INTEGER is 78
-	Key_l: INTEGER is 79
-	Key_m: INTEGER is 80
-	Key_n: INTEGER is 81
-	Key_o: INTEGER is 82
-	Key_p: INTEGER is 83
-	Key_q: INTEGER is 84
-	Key_r: INTEGER is 85
-	Key_s: INTEGER is 86
-	Key_t: INTEGER is 87
-	Key_u: INTEGER is 88
-	Key_v: INTEGER is 89
-	Key_w: INTEGER is 90
-	Key_x: INTEGER is 91
-	Key_y: INTEGER is 92
-	Key_z: INTEGER is 93
-	Key_shift: INTEGER is 94
-	Key_ctrl: INTEGER is 95
-	Key_alt: INTEGER is 96
-	Key_left_meta: INTEGER is 97
-	Key_right_meta: INTEGER is 98
-	Key_menu: INTEGER is 99
+	Key_0: INTEGER = 1
+	Key_1: INTEGER = 2
+	Key_2: INTEGER = 3
+	Key_3: INTEGER = 4
+	Key_4: INTEGER = 5
+	Key_5: INTEGER = 6
+	Key_6: INTEGER = 7
+	Key_7: INTEGER = 8
+	Key_8: INTEGER = 9
+	Key_9: INTEGER = 10
+	Key_numpad_0: INTEGER = 11
+	Key_numpad_1: INTEGER = 12
+	Key_numpad_2: INTEGER = 13
+	Key_numpad_3: INTEGER = 14
+	Key_numpad_4: INTEGER = 15
+	Key_numpad_5: INTEGER = 16
+	Key_numpad_6: INTEGER = 17
+	Key_numpad_7: INTEGER = 18
+	Key_numpad_8: INTEGER = 19
+	Key_numpad_9: INTEGER = 20
+	Key_numpad_add: INTEGER = 21
+	Key_numpad_divide: INTEGER = 22
+	Key_numpad_multiply: INTEGER = 23
+	key_num_lock: INTEGER = 24
+	Key_numpad_subtract: INTEGER = 25
+	Key_numpad_decimal: INTEGER = 26
+	Key_f1: INTEGER = 27
+	Key_f2: INTEGER = 28
+	Key_f3: INTEGER = 29
+	Key_f4: INTEGER = 30
+	Key_f5: INTEGER = 31
+	Key_f6: INTEGER = 32
+	Key_f7: INTEGER = 33
+	Key_f8: INTEGER = 34
+	Key_f9: INTEGER = 35
+	Key_f10: INTEGER = 36
+	Key_f11: INTEGER = 37
+	Key_f12: INTEGER = 38
+	Key_space: INTEGER = 39
+	Key_back_space: INTEGER = 40
+	Key_enter: INTEGER = 41
+	Key_escape: INTEGER = 42
+	Key_tab: INTEGER = 43
+	Key_pause: INTEGER = 44
+	Key_caps_lock: INTEGER = 45
+	Key_scroll_lock: INTEGER = 46
+	Key_comma: INTEGER = 47
+	Key_equal: INTEGER = 48
+	Key_period: INTEGER = 49
+	Key_semicolon: INTEGER = 50
+	Key_open_bracket: INTEGER = 51
+	Key_close_bracket: INTEGER = 52
+	Key_slash: INTEGER = 53
+	Key_backslash: INTEGER = 54
+	Key_quote: INTEGER = 55
+	Key_backquote: INTEGER = 56
+	Key_dash: INTEGER = 57
+	Key_up: INTEGER = 58
+	Key_down: INTEGER = 59
+	Key_left: INTEGER = 60
+	Key_right: INTEGER = 61
+	Key_page_up: INTEGER = 62
+	Key_page_down: INTEGER = 63
+	Key_home: INTEGER = 64
+	Key_end: INTEGER = 65
+	Key_insert: INTEGER = 66
+	Key_delete: INTEGER = 67
+	Key_a: INTEGER = 68
+	Key_b: INTEGER = 69
+	Key_c: INTEGER = 70
+	Key_d: INTEGER = 71
+	Key_e: INTEGER = 72
+	Key_f: INTEGER = 73
+	Key_g: INTEGER = 74
+	Key_h: INTEGER = 75
+	Key_i: INTEGER = 76
+	Key_j: INTEGER = 77
+	Key_k: INTEGER = 78
+	Key_l: INTEGER = 79
+	Key_m: INTEGER = 80
+	Key_n: INTEGER = 81
+	Key_o: INTEGER = 82
+	Key_p: INTEGER = 83
+	Key_q: INTEGER = 84
+	Key_r: INTEGER = 85
+	Key_s: INTEGER = 86
+	Key_t: INTEGER = 87
+	Key_u: INTEGER = 88
+	Key_v: INTEGER = 89
+	Key_w: INTEGER = 90
+	Key_x: INTEGER = 91
+	Key_y: INTEGER = 92
+	Key_z: INTEGER = 93
+	Key_shift: INTEGER = 94
+	Key_ctrl: INTEGER = 95
+	Key_alt: INTEGER = 96
+	Key_left_meta: INTEGER = 97
+	Key_right_meta: INTEGER = 98
+	Key_menu: INTEGER = 99
 
 feature -- Access
 
-	Key_strings: ARRAY [STRING_32] is
+	Key_strings: ARRAY [STRING_32]
 			-- String representations of all key codes.
 		once
 			create Result.make (Key_0, Key_menu)
@@ -220,7 +220,7 @@ feature -- Access
 			Result.put ("Menu", Key_menu)
 		end
 
-	key_code_from_key_string (key_string: STRING_GENERAL): INTEGER is
+	key_code_from_key_string (key_string: STRING_GENERAL): INTEGER
 			-- Key code value from `key_string'
 		require
 			key_string_not_void: key_string /= Void
@@ -249,13 +249,13 @@ feature -- Access
 
 feature -- Contract support
 
-	valid_key_code (a_code: INTEGER): BOOLEAN is
+	valid_key_code (a_code: INTEGER): BOOLEAN
 			-- Is ``a_code'' a valid key code?
 		do
 			Result := a_code >= Key_0 and then a_code <= Key_menu
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

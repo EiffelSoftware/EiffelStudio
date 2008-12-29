@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of ellipse"
 	legal: "See notice at end of class.";
@@ -28,7 +28,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create a ellipse.
 		do
 			init_fig (Void);
@@ -51,7 +51,7 @@ feature -- Access
 			-- (length `radius1') relative to the three-o'clock position
 			-- from the center
 
-	origin: COORD_XY_FIG is
+	origin: COORD_XY_FIG
 			-- Origin of ellipse
 		do
 			inspect
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_center (a_point: like center) is
+	set_center (a_point: like center)
 			-- Set `center' to `a_point'.
 		require
 			a_point_exits: a_point /= Void
@@ -82,7 +82,7 @@ feature -- Element change
 			center_set: center = a_point
 		end;
 
-	set_orientation (an_orientation: like orientation) is
+	set_orientation (an_orientation: like orientation)
 			-- Set `orientation' to `an_orientation'.
 		require
 			orientation_smaller_than_360: an_orientation < 360;
@@ -94,7 +94,7 @@ feature -- Element change
 			orientation = an_orientation
 		end;
 
-	set_origin_to_center is
+	set_origin_to_center
 			-- Set origin to `center'.
 		do
 			origin_user_type := 2;
@@ -102,7 +102,7 @@ feature -- Element change
 			origin.is_superimposable (center)
 		end;
 
-	set_radius1 (new_radius1: like radius1) is
+	set_radius1 (new_radius1: like radius1)
 			-- Set `radius1' to `new_radius1', change `size_of_side'.
 		require
 			size_positive: new_radius1 > 0
@@ -113,7 +113,7 @@ feature -- Element change
 			radius1 = new_radius1
 		end;
 
-	set_radius2 (new_radius2: like radius2) is
+	set_radius2 (new_radius2: like radius2)
 			-- Set `radius1' to `new_radius2', change `size_of_side'.
 		require
 			size_positive: new_radius2 > 0
@@ -124,7 +124,7 @@ feature -- Element change
 			radius2 = new_radius2
 		end;
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: REAL; px, py: INTEGER)
 			-- Rotate figure by `a' relative to (`px', `py').
 			-- Angle `a' is measured in degrees.
 		do
@@ -133,7 +133,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xyscale (f: REAL; px,py: INTEGER) is
+	xyscale (f: REAL; px,py: INTEGER)
 			-- Scale figure by `f' relative to (`px', `py').
 		require else
 			scale_factor_positive: f > 0.0
@@ -144,7 +144,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xytranslate (vx, vy: INTEGER) is
+	xytranslate (vx, vy: INTEGER)
 			-- Translate by `vx' horizontally and `vy' vertically.
 		do
 			center.xytranslate (vx, vy);
@@ -153,7 +153,7 @@ feature -- Element change
 
 feature -- Output
 
-	draw is
+	draw
 			-- Draw the ellipse.
 		do
 			if drawing.is_drawable then
@@ -170,7 +170,7 @@ feature -- Output
 
 feature -- Updating
 
-	conf_recompute is
+	conf_recompute
 		local
 			diameter: INTEGER;
 		do
@@ -186,7 +186,7 @@ feature -- Updating
 
 feature -- Status report
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the current ellipse superimposable to `other' ?
 			--| not finished
 		do
@@ -204,7 +204,7 @@ invariant
 	orientation_large_enough: orientation >= 0;
 	center_exists: center /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

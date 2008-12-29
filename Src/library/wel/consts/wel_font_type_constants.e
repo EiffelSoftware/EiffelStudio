@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Font type constants for WEL_CHOOSE_FONT_DIALOG class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,42 +10,42 @@ class
 
 feature -- Access
 
-	Simulated_fonttype: INTEGER is
+	Simulated_fonttype: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"SIMULATED_FONTTYPE"
 		end
 
-	Printer_fonttype: INTEGER is
+	Printer_fonttype: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"PRINTER_FONTTYPE"
 		end
 
-	Screen_fonttype: INTEGER is
+	Screen_fonttype: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"SCREEN_FONTTYPE"
 		end
 
-	Bold_fonttype: INTEGER is
+	Bold_fonttype: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"BOLD_FONTTYPE"
 		end
 
-	Italic_fonttype: INTEGER is
+	Italic_fonttype: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
 			"ITALIC_FONTTYPE"
 		end
 
-	Regular_fonttype: INTEGER is
+	Regular_fonttype: INTEGER
 		external
 			"C [macro %"cdlg.h%"]"
 		alias
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_font_type_constant (c: INTEGER): BOOLEAN is
+	valid_font_type_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid font type constant?
 		do
 			Result := c = Simulated_fonttype or else
@@ -65,7 +65,7 @@ feature -- Status report
 				c = Regular_fonttype
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

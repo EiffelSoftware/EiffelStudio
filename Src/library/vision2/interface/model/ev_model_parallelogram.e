@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 	
 						Parallelogram is defined by 4 points:
@@ -45,7 +45,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a EV_FIGURE_PARALELLOGRAM at (0,0) with no dimension.
 		do
 			Precursor {EV_MODEL_CLOSED}
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 		end
 
 
-	make_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+	make_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Create a EV_FIGURE_PARALELLOGRAM with top left position at (`a_x', `a_y')
 			-- and `width' `a_width' and `height' `a_height'
 		require
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	angle: DOUBLE is
+	angle: DOUBLE
 			-- Upright position is: p1.y=p2.y>=p4.y
 		local
 			pa: like point_array
@@ -110,25 +110,25 @@ feature -- Access
 			end
 		end
 
-	is_rotatable: BOOLEAN is
+	is_rotatable: BOOLEAN
 			-- parallelogram is rotatable.
 		do
 			Result := True
 		end
 
-	is_scalable: BOOLEAN is
+	is_scalable: BOOLEAN
 			-- parallelogram is scalable.
 		do
 			Result := True
 		end
 
-	is_transformable: BOOLEAN is
+	is_transformable: BOOLEAN
 			-- parallelogram is transformable.
 		do
 			Result := True
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- The `width' of the parallelogram.
 			-- If you scale a parallelogram or a group that contains
 			-- the parallelogram width may be differend from the width you set
@@ -145,7 +145,7 @@ feature -- Access
 			width_positive: width >= 0
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- The `height' of the parallelogram.
 		local
 			l_point_array: like point_array
@@ -159,7 +159,7 @@ feature -- Access
 			height_positive: height >= 0
 		end
 
-	top_left: EV_COORDINATE is
+	top_left: EV_COORDINATE
 			-- position of the top left corner.
 		local
 			l_array: like point_array
@@ -185,25 +185,25 @@ feature -- Access
 			end
 		end
 
-	point_a_x: INTEGER is
+	point_a_x: INTEGER
 			-- x position of `point_a'.
 		do
 			Result := point_array.item (0).x
 		end
 
-	point_a_y: INTEGER is
+	point_a_y: INTEGER
 			-- y position of `point_a'.
 		do
 			Result := point_array.item (0).y
 		end
 
-	point_b_x: INTEGER is
+	point_b_x: INTEGER
 			-- x position of `point_b'.
 		do
 			Result := point_array.item (2).x
 		end
 
-	point_b_y: INTEGER is
+	point_b_y: INTEGER
 			-- y position of `point_b'.
 		do
 			Result := point_array.item (2).y
@@ -211,7 +211,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' to `a_width'.
 			-- We use the theorem on intersecting lines here.
 			--                                 |         |
@@ -280,7 +280,7 @@ feature -- Element change
 			width_set: distance (point_array.item (0).x_precise, point_array.item (0).y_precise, point_array.item (1).x_precise, point_array.item (1).y_precise).rounded = a_width
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' to `a_height'.
 			-- (See set_width for more informations)
 		require
@@ -325,7 +325,7 @@ feature -- Element change
 			height_set: distance (point_array.item (0).x_precise, point_array.item (0).y_precise, point_array.item (3).x_precise, point_array.item (3).y_precise).rounded = a_height
 		end
 
-	set_point_a_position (ax, ay: INTEGER) is
+	set_point_a_position (ax, ay: INTEGER)
 			-- Set position of `point_a' to position of (`ax', `ay').
 			--
 			-- The line through (x1, y1) with slope m is given by the point-slope form:
@@ -445,7 +445,7 @@ feature -- Element change
 			center_invalidate
 		end
 
-	set_point_b_position (ax, ay: INTEGER) is
+	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `point_b' to position of (`ax', `ay').
 			-- (See set_point_a_position for more informations.)
 			-- for p1:
@@ -547,7 +547,7 @@ feature -- Element change
 
 feature -- Events
 
-	position_on_figure (a_x, a_y: INTEGER): BOOLEAN is
+	position_on_figure (a_x, a_y: INTEGER): BOOLEAN
 			-- Is the point on (`a_x', `a_y') on this figure?
 			--| Used to generate events.
 		local
@@ -572,7 +572,7 @@ feature -- Events
 
 feature {NONE} -- Implementation
 
-	set_center is
+	set_center
 			-- Set the position to the center
 		local
 			pa: like point_array
@@ -591,7 +591,7 @@ invariant
 	width_positive: width >= 0
 	height_positive: height >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

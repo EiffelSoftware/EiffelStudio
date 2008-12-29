@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Rectangle with two arrows placed at each end and a slider"
 	legal: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a scrollbar with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged scrollbar with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a scrollbar with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -69,13 +69,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	granularity: INTEGER is
+	granularity: INTEGER
 		obsolete "Use line_increment"
 		do
 			Result := line_increment
 		end
 
-	line_increment: INTEGER is
+	line_increment: INTEGER
 			-- Distance (amount) to scroll on arrows
 		require
 			exists: not destroyed;
@@ -86,7 +86,7 @@ feature -- Access
 			increment_small_enough: Result <= (maximum - minimum)
 		end;
 
-	page_increment: INTEGER is
+	page_increment: INTEGER
 			-- Distance (amount) to scroll on page down or up
 		require
 			exists: not destroyed;
@@ -97,7 +97,7 @@ feature -- Access
 			increment_small_enough: Result <= (maximum - minimum)
 		end;
 
-	maximum: INTEGER is
+	maximum: INTEGER
 			-- Maximum value of slider value
 		require
 			exists: not destroyed;
@@ -107,7 +107,7 @@ feature -- Access
 			maximum_greater_than_mini: Result > minimum
 		end;
 
-	minimum: INTEGER is
+	minimum: INTEGER
 			-- Minimum value of slider value
 		require
 			exists: not destroyed;
@@ -117,7 +117,7 @@ feature -- Access
 			minimum_smaller_than_maxi: Result < maximum
 		end;
 
-	initial_delay: INTEGER is
+	initial_delay: INTEGER
 			-- Amount of time to wait (milliseconds) before starting
 			-- continuous slider movement
 		require
@@ -128,7 +128,7 @@ feature -- Access
 			positive_value: Result > 0
 		end;
 
-	repeat_delay: INTEGER is
+	repeat_delay: INTEGER
 			-- Amount of time to wait (milliseconds) between subsequent
 			-- slider movements after the initial delay
 		require
@@ -139,7 +139,7 @@ feature -- Access
 			positive_delay: Result > 0
 		end;
 
-	slider_size: INTEGER is
+	slider_size: INTEGER
 			-- Size of slider.
 		do
 			Result := implementation.slider_size
@@ -148,7 +148,7 @@ feature -- Access
 			slider_size_large_enough: Result >= 0
 		end
 
-	value: INTEGER is
+	value: INTEGER
 			-- Slider value
 		require
 			exists: not destroyed
@@ -161,13 +161,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_horizontal: BOOLEAN is
+	is_horizontal: BOOLEAN
 			-- Is scrollbar oriented horizontal?
 		do
 			Result := implementation.is_horizontal
 		end;
 
-	is_maximum_right_bottom: BOOLEAN is
+	is_maximum_right_bottom: BOOLEAN
 			-- Is maximum value on the right side when orientation
 			-- is horizontal or on the bottom side when orientation
 			-- is vertical?
@@ -177,7 +177,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_horizontal (flag: BOOLEAN) is
+	set_horizontal (flag: BOOLEAN)
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
 		do
@@ -186,7 +186,7 @@ feature -- Status setting
 			value_correctly_set: is_horizontal = flag
 		end;
 
-	set_maximum_right_bottom (flag: BOOLEAN) is
+	set_maximum_right_bottom (flag: BOOLEAN)
 			-- Set maximum value on the right side when orientation
 			-- is horizontal or on the bottom side when orientation
 			-- is vertical if `flag', and at the opposite side otherwise.
@@ -198,13 +198,13 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_granularity (new_granularity: INTEGER) is
+	set_granularity (new_granularity: INTEGER)
 		obsolete "Use 'set_line_increment'."
 		do
 			set_line_increment (new_granularity)
 		end
 
-	set_line_increment (inc: INTEGER) is
+	set_line_increment (inc: INTEGER)
 			-- Set amount (distance) to scroll when on arrows
 		require
 			exists: not destroyed;
@@ -216,7 +216,7 @@ feature -- Element change
 			line_increment = inc
 		end;
 
-	set_page_increment (inc: INTEGER) is
+	set_page_increment (inc: INTEGER)
 			-- Set amount (distance) to move on page up or down
 		require
 			exists: not destroyed;
@@ -228,7 +228,7 @@ feature -- Element change
 			page_increment = inc
 		end;
 
-	set_maximum (new_maximum: INTEGER) is
+	set_maximum (new_maximum: INTEGER)
 			-- Set maximum value of slider value to `new_maximum'.
 		require
 			exists: not destroyed;
@@ -239,7 +239,7 @@ feature -- Element change
 			maximum = new_maximum
 		end;
 
-	set_minimum (new_minimum: INTEGER) is
+	set_minimum (new_minimum: INTEGER)
 			-- Set minimum value of slider value to `new_minimum'.
 		require
 			exists: not destroyed;
@@ -250,7 +250,7 @@ feature -- Element change
 			minimum = new_minimum
 		end;
 
-	set_repeat_delay (new_delay: INTEGER) is
+	set_repeat_delay (new_delay: INTEGER)
 			-- Set the amount of time to wait (milliseconds) between
 			-- subsequent movements after the initial delay to 'new_delay'.
 		require
@@ -262,7 +262,7 @@ feature -- Element change
 			repeat_delay = new_delay
 		end;
 
-	set_initial_delay (new_delay: INTEGER) is
+	set_initial_delay (new_delay: INTEGER)
 			-- Set the amount of time to wait (milliseconds) before
 			-- starting continuous slider movement to `new_delay'.
 		require
@@ -274,7 +274,7 @@ feature -- Element change
 			initial_delay = new_delay
 		end;
 
-	set_slider_size (new_size: INTEGER) is
+	set_slider_size (new_size: INTEGER)
 			-- Set size of slider to 'new_size'.
 		require
 			new_size_small_enough: new_size <= (maximum - minimum);
@@ -285,7 +285,7 @@ feature -- Element change
 			slider_size = new_size
 		end;
 
-	set_value (new_value: INTEGER) is
+	set_value (new_value: INTEGER)
 			-- Set slider value to `new_value'.
 		require
 			exists: not destroyed;
@@ -297,7 +297,7 @@ feature -- Element change
 			value = new_value
 		end;
 
-	add_move_action (a_command: COMMAND; argument: ANY) is
+	add_move_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when the
 			--  slider is moved.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -309,7 +309,7 @@ feature -- Element change
 			implementation.add_move_action (a_command, argument)
 		end;
 
-	add_value_changed_action (a_command: COMMAND; argument: ANY) is
+	add_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed when value
 			-- is changed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -323,7 +323,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_move_action (a_command: COMMAND; argument: ANY) is
+	remove_move_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to be executed when
 			-- slide is moved.
 		require
@@ -333,7 +333,7 @@ feature -- Removal
 			implementation.remove_move_action (a_command, argument)
 		end;
 
-	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+	remove_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to be executed when
 			-- value is changed.
 		require
@@ -350,13 +350,13 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values tu current scrollbar.
 		do
 			set_maximum_right_bottom (True)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

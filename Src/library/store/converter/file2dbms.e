@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$";
@@ -24,7 +24,7 @@ create -- Creation procedures
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			converter_make;
 			create store.make;
@@ -33,7 +33,7 @@ feature -- Initialization
 
 feature -- Status setting
 
-	set_repository (new_repository: DB_REPOSITORY) is
+	set_repository (new_repository: DB_REPOSITORY)
 			-- Set storage repository with `new_repository'.
 		require
 			repository_not_void: new_repository /= Void
@@ -45,7 +45,7 @@ feature -- Status setting
 
 feature  -- Status report
 
-	owns_repository: BOOLEAN is
+	owns_repository: BOOLEAN
 			-- Is Current attached to a repository?
 		do
 			Result := store.owns_repository
@@ -59,7 +59,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Basic operations
 
-	store_object is
+	store_object
 			-- Insert each retrieved object from external file into database.
 		do
 			store.put(parse.ecp_reference);
@@ -72,7 +72,7 @@ feature {NONE} -- Basic operations
 			end	
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

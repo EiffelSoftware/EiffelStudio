@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		This control is analogous to the dividers in a notebook
 		or the labels in a file cabinet. By using a tab control, an
@@ -79,7 +79,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Make a tab control.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of tabs in the tab control
 		require
 			exists: exists
@@ -106,7 +106,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	row_count: INTEGER is
+	row_count: INTEGER
 			-- Number of tab rows in the tab control
 		require
 			exists: exists
@@ -116,7 +116,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	sheet_rect: WEL_RECT is
+	sheet_rect: WEL_RECT
 			-- Client area of each tab sheet
 			-- (excluding the labeled index)
 			-- Windows require in multiline mode to have at least
@@ -131,7 +131,7 @@ feature -- Access
 			{WEL_API}.send_message (item, Tcm_adjustrect, to_wparam (0), Result.item)
 		end
 
-	label_index_rect: WEL_RECT is
+	label_index_rect: WEL_RECT
 			-- Labeled index area of selected tab
 			-- (excluding the tab sheet)
 		do
@@ -141,7 +141,7 @@ feature -- Access
 
 feature -- Status report
 
-	current_selection: INTEGER is
+	current_selection: INTEGER
 			-- Selected zero-based tab
 		require
 			exists: exists
@@ -151,13 +151,13 @@ feature -- Status report
 			consistent_result: Result /= -1 implies Result >= 0 and Result < count
 		end
 
-	selected_window: WEL_WINDOW is
+	selected_window: WEL_WINDOW
 			-- Window corresponding to currently selected tab
 		do
 			Result := get_item (current_selection).window
 		end
 
-	get_item (index: INTEGER): WEL_TAB_CONTROL_ITEM is
+	get_item (index: INTEGER): WEL_TAB_CONTROL_ITEM
 			-- Give the item at the zero-based index of tab.
 			-- As we must give a maximum size for the retrieving
 			-- of the label, we allow only `buffer_size' letters. If the
@@ -175,7 +175,7 @@ feature -- Status report
 			{WEL_API}.send_message (item, Tcm_getitem, to_wparam (index), Result.item)
 		end
 
-	background_region (invalid_rect: WEL_RECT): WEL_REGION is
+	background_region (invalid_rect: WEL_RECT): WEL_REGION
 			-- `Result' is a background region of `Current' that needs
 			-- re-drawing when `invalid_rect' is invalidated.
 		require
@@ -254,7 +254,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_current_selection (index: INTEGER) is
+	set_current_selection (index: INTEGER)
 			-- Set the zero-based tab `index'.
 		require
 			exists: exists
@@ -268,7 +268,7 @@ feature -- Status setting
 			current_selection_set: current_selection = index
 		end
 
-	set_vertical_font (fnt: WEL_FONT) is
+	set_vertical_font (fnt: WEL_FONT)
 			-- Assign `font' to the vertical tabs of this tab control.
 			-- (Cannot use `set_font' since its postcondition is not always fulfilled)
 			-- To use for a notebook with the tabs on the left or
@@ -279,7 +279,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	update_item (index: INTEGER; an_item: WEL_TAB_CONTROL_ITEM) is
+	update_item (index: INTEGER; an_item: WEL_TAB_CONTROL_ITEM)
 			-- Sets some or all of the `index'-th tab's attributes. Attributes values
 			-- are taken from `an_item'. See `an_item.mask' for selected attributes.
 		require
@@ -291,7 +291,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Tcm_setitem, to_wparam (index), an_item.item)
 		end
 
-	insert_item (index: INTEGER; an_item: WEL_TAB_CONTROL_ITEM) is
+	insert_item (index: INTEGER; an_item: WEL_TAB_CONTROL_ITEM)
 			-- Insert `an_item' at the zero-based `index'.
 		require
 			exists: exists
@@ -314,7 +314,7 @@ feature -- Element change
 			count_increased: count = old count + 1
 		end
 
-	delete_item (index: INTEGER) is
+	delete_item (index: INTEGER)
 			-- Delete the item at the zero-based `index'.
 		require
 			exists: exists
@@ -326,7 +326,7 @@ feature -- Element change
 			count_decreased: count = old count - 1
 		end
 
-	delete_all_items is
+	delete_all_items
 			-- Delete all items.
 		require
 			exists: exists
@@ -336,7 +336,7 @@ feature -- Element change
 			empty: count = 0
 		end
 
-	set_label_index_size (new_width, new_height: INTEGER) is
+	set_label_index_size (new_width, new_height: INTEGER)
 			-- Set size of labeled index area of each tab
 			-- Width is only reset if tabs are fixed-width; height is always reset
 		do
@@ -345,14 +345,14 @@ feature -- Element change
 
 feature -- Notifications
 
-	on_tcn_keydown (virtual_key, key_data: INTEGER) is
+	on_tcn_keydown (virtual_key, key_data: INTEGER)
 			-- A key has been pressed
 		require
 			exists: exists
 		do
 		end
 
-	on_tcn_selchange is
+	on_tcn_selchange
 			-- Selection has changed.
 			-- Shows the current selected page by default.
 		require
@@ -361,7 +361,7 @@ feature -- Notifications
 			show_current_selection
 		end
 
-	on_tcn_selchanging is
+	on_tcn_selchanging
 			-- Selection is about to change.
 			-- Hides the current selected page by default.
 		require
@@ -372,7 +372,7 @@ feature -- Notifications
 
 feature {NONE} -- Basic operation
 
-	hide_current_selection is
+	hide_current_selection
 			-- Hide the current selected page.
 		require
 			exists: exists
@@ -385,7 +385,7 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	show_current_selection is
+	show_current_selection
 			-- Show the current selected page.
 		require
 			exists: exists
@@ -398,7 +398,7 @@ feature {NONE} -- Basic operation
 			end
 		end
 
-	adjust_items is
+	adjust_items
 			-- Adjust the size of the windows of the items
 			-- to the current size.
 		local
@@ -416,7 +416,7 @@ feature {NONE} -- Basic operation
 
 feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
-	process_notification_info (notification_info: WEL_NMHDR) is
+	process_notification_info (notification_info: WEL_NMHDR)
 			-- Process a `notification_code' sent by Windows
 			-- through the Wm_notify message
 		local
@@ -434,14 +434,14 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			end
 		end
 
-	resize (a_width, a_height: INTEGER) is
+	resize (a_width, a_height: INTEGER)
    			-- Resize the window with `a_width', `a_height'.
  		do
  			Precursor {WEL_CONTROL} (a_width, a_height)
 			adjust_items
 		end
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN)
    			-- Move the window to `a_x', `a_y' position and
    			-- resize it with `a_width', `a_height'.
 		do
@@ -449,7 +449,7 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			adjust_items
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -480,43 +480,43 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := (create {WEL_STRING}.share_from_pointer (cwin_tabcontrol_class)).string
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group + Ws_tabstop
 						+ Tcs_multiline
 		end
 
-	buffer_size: INTEGER is 256
+	buffer_size: INTEGER = 256
 			-- Windows text retrieval buffer size
 
-  	on_wm_paint (wparam: POINTER) is
+  	on_wm_paint (wparam: POINTER)
    			-- Wm_paint message.
    			-- Need to do nothing
    		do
  		end
 
-	dummy_tab_item: WEL_TAB_CONTROL_ITEM is
+	dummy_tab_item: WEL_TAB_CONTROL_ITEM
 		once
 			create Result.make
 		end
 
 feature {NONE} -- Externals
 
-	cwin_tabcontrol_class: POINTER is
+	cwin_tabcontrol_class: POINTER
 		external
 			"C [macro %"cctrl.h%"] : EIF_POINTER"
 		alias
 			"WC_TABCONTROL"
 		end
 
-	cwin_set_item_size (hwnd: POINTER; cx, cy: INTEGER) is
+	cwin_set_item_size (hwnd: POINTER; cx, cy: INTEGER)
 			-- Change the parent of the given child
 		external
 			"C [macro <commctrl.h>] (HWND, EIF_INTEGER, EIF_INTEGER)"
@@ -524,7 +524,7 @@ feature {NONE} -- Externals
 			"TabCtrl_SetItemSize"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

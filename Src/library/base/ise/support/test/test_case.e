@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 							Common ancestor of all test case classes
 																														]"
@@ -10,7 +10,7 @@ indexing
 deferred class
 	TEST_CASE
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

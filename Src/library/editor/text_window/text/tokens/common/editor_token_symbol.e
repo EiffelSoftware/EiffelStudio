@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Token that describe a symbol ( [, {, ...)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Visitor
 
-	process (a_token_visitor: TOKEN_VISITOR) is
+	process (a_token_visitor: TOKEN_VISITOR)
 			--  Process
 		do
 			a_token_visitor.process_editor_token_symbol (Current)
@@ -28,7 +28,7 @@ feature -- Visitor
 
 feature {NONE} -- Implementation
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

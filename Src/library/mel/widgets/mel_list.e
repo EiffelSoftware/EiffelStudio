@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Widget that allows a user to select form a list of choices."
@@ -35,7 +35,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif list widget.
 		require
 			name_exists: a_name /= Void
@@ -59,7 +59,7 @@ feature -- Initialization
 
 feature -- Access
 
-	index_of (an_item: MEL_STRING; i: INTEGER): INTEGER is
+	index_of (an_item: MEL_STRING; i: INTEGER): INTEGER
 			-- Index of `i'-th occurrence of `an_item'
 			-- (Zero if not found.)
 		require
@@ -71,7 +71,7 @@ feature -- Access
 			valid_result: Result >= 0
 		end;
 
-	item_pos_from (an_item: MEL_STRING; from_pos: INTEGER): INTEGER is
+	item_pos_from (an_item: MEL_STRING; from_pos: INTEGER): INTEGER
 			-- Index of `an_item' beyond `from_pos' in `items'.
 			-- (Zero if not found.)
 		require
@@ -84,7 +84,7 @@ feature -- Access
 			valid_result: Result >= 0
 		end;
 
-	item_exists (an_item: MEL_STRING): BOOLEAN is
+	item_exists (an_item: MEL_STRING): BOOLEAN
 			-- Is `an_item' present?
 		require
 			exists: not is_destroyed;
@@ -93,7 +93,7 @@ feature -- Access
 			Result := xm_list_item_exists (screen_object, an_item.handle)
 		end;
 
-	item_pos (an_item: MEL_STRING): INTEGER is
+	item_pos (an_item: MEL_STRING): INTEGER
 			-- Index of `an_item'
 		require
 			exists: not is_destroyed;
@@ -104,31 +104,31 @@ feature -- Access
 			result_small_enough: Result <= item_count
 		end;
 
-	browse_selection_command: MEL_COMMAND_EXEC is
+	browse_selection_command: MEL_COMMAND_EXEC
 			-- Command set for the browse selection callback
 		do
 			Result := motif_command (XmNbrowseSelectionCallback)
 		end;
 
-	default_action_command: MEL_COMMAND_EXEC is
+	default_action_command: MEL_COMMAND_EXEC
 			-- Command set for the default action callback
 		do
 			Result := motif_command (XmNdefaultActionCallback)
 		end;
 
-	extended_selection_command: MEL_COMMAND_EXEC is
+	extended_selection_command: MEL_COMMAND_EXEC
 			-- Command set for the extended selection callback
 		do
 			Result := motif_command (XmNextendedSelectionCallback)
 		end;
 
-	multiple_selection_command: MEL_COMMAND_EXEC is
+	multiple_selection_command: MEL_COMMAND_EXEC
 			-- Command set for the multiple selection callback
 		do
 			Result := motif_command (XmNmultipleSelectionCallback)
 		end;
 
-	single_selection_command: MEL_COMMAND_EXEC is
+	single_selection_command: MEL_COMMAND_EXEC
 			-- Command set for the single selection callback
 		do
 			Result := motif_command (XmNsingleSelectionCallback)
@@ -136,7 +136,7 @@ feature -- Access
 
 feature -- Status report
 
-	double_click_interval: INTEGER is
+	double_click_interval: INTEGER
 			-- Time span (in milliseconds) within which two button clicks
 			-- must occur to be considered a double clisck rather than two single
 			-- clicks
@@ -148,7 +148,7 @@ feature -- Status report
 			double_click_interval_large_enough: Result >= 0
 		end;
 
-	item_count: INTEGER is
+	item_count: INTEGER
 			-- Number of items
 		require
 			exists: not is_destroyed
@@ -158,7 +158,7 @@ feature -- Status report
 			item_count_large_enough: Result >= 0
 		end;
 
-	items: MEL_STRING_TABLE is
+	items: MEL_STRING_TABLE
 			-- All items in Current
 		require
 			exists: not is_destroyed
@@ -171,7 +171,7 @@ feature -- Status report
 			items_is_shared: Result.is_shared
 		end;
 
-	margin_height: INTEGER is
+	margin_height: INTEGER
 			-- Amount of space between the top or bottom and the displayed items
 		require
 			exists: not is_destroyed
@@ -181,7 +181,7 @@ feature -- Status report
 			margin_height_large_enough: Result >= 0
 		end;
 
-	margin_width: INTEGER is
+	margin_width: INTEGER
 			-- Amount of space between the left and right and the displayed items.
 		require
 			exists: not is_destroyed
@@ -191,7 +191,7 @@ feature -- Status report
 			margin_width_large_enough: Result >= 0
 		end;
 
-	spacing: INTEGER is
+	spacing: INTEGER
 			-- Space between items
 		require
 			exists: not is_destroyed
@@ -201,7 +201,7 @@ feature -- Status report
 			spacing_large_enough: Result >= 0
 		end;
 
-	selected_item_count: INTEGER is
+	selected_item_count: INTEGER
 			-- Number of selected items
 		require
 			exists: not is_destroyed
@@ -211,7 +211,7 @@ feature -- Status report
 			selected_item_count_large_enough: Result >= 0
 		end;
 
-	selected_positions: LINKED_LIST [INTEGER] is
+	selected_positions: LINKED_LIST [INTEGER]
 			-- Positions of the selected items
 		local
 			int_table: POINTER;
@@ -235,7 +235,7 @@ feature -- Status report
 			valid_result: selected_item_count = Result.count
 		end;
 
-	selected_items: MEL_STRING_TABLE is
+	selected_items: MEL_STRING_TABLE
 			-- Table of selected items
 		require
 			exists: not is_destroyed
@@ -248,7 +248,7 @@ feature -- Status report
 			items_is_shared: Result.is_shared
 		end;
 
-	is_single_select: BOOLEAN is
+	is_single_select: BOOLEAN
 			-- Can the user select only one item at a time? 
 		require
 			exists: not is_destroyed
@@ -256,7 +256,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNselectionPolicy) = XmSINGLE_SELECT
 		end;
 
-	is_browse_select: BOOLEAN is
+	is_browse_select: BOOLEAN
 			-- Is there always an item selected, while selecting one item at a time?
 		require
 			exists: not is_destroyed
@@ -264,7 +264,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNselectionPolicy) = XmBROWSE_SELECT
 		end;
 
-	is_multiple_select: BOOLEAN is
+	is_multiple_select: BOOLEAN
 			-- Can the user select, in one range, more than one item?
 		require
 			exists: not is_destroyed
@@ -272,7 +272,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNselectionPolicy) = XmMULTIPLE_SELECT
 		end;
 
-	is_extended_select: BOOLEAN is
+	is_extended_select: BOOLEAN
 			-- Can the user select, in many ranges, more than one item?
 		require
 			exists: not is_destroyed
@@ -280,7 +280,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNselectionPolicy) = XmEXTENDED_SELECT
 		end;
 
-	is_string_direction_l_to_r: BOOLEAN is
+	is_string_direction_l_to_r: BOOLEAN
 			-- Are the strings displayed from left to right?
 		require
 			exists: not is_destroyed
@@ -288,7 +288,7 @@ feature -- Status report
 			Result := get_xm_string_direction (screen_object, XmNstringDirection) = XmSTRING_DIRECTION_L_TO_R
 		end;
 
-	is_string_direction_r_to_l: BOOLEAN is
+	is_string_direction_r_to_l: BOOLEAN
 			-- Are the strings displayed from right to left?
 		require
 			exists: not is_destroyed
@@ -297,7 +297,7 @@ feature -- Status report
 				(screen_object, XmNstringDirection) = XmSTRING_DIRECTION_R_TO_L
 		end;
 
-	top_item_position: INTEGER is
+	top_item_position: INTEGER
 			-- Position in `items' of the first visible item
 		require
 			exists: not is_destroyed
@@ -307,7 +307,7 @@ feature -- Status report
 			top_item_position_large_enough: Result > 0
 		end;
 
-	visible_item_count: INTEGER is
+	visible_item_count: INTEGER
 			-- Number of visible items
 		require
 			exists: not is_destroyed
@@ -317,7 +317,7 @@ feature -- Status report
 			visible_item_count_large_enough: Result >= 0
 		end;
 
-	is_pos_selected (a_position: INTEGER): BOOLEAN is
+	is_pos_selected (a_position: INTEGER): BOOLEAN
 			-- Is item at `a_position' selected?
 		require
 			exists: not is_destroyed;
@@ -329,7 +329,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_double_click_interval (a_time: INTEGER) is
+	set_double_click_interval (a_time: INTEGER)
 			-- Set `double_click_interval' to `a_time'.
 		require
 			exists: not is_destroyed;
@@ -340,7 +340,7 @@ feature -- Status setting
 			time_set: double_click_interval = a_time
 		end;
 
-	set_items (a_list: MEL_STRING_TABLE) is
+	set_items (a_list: MEL_STRING_TABLE)
 			-- Set `items' to `a_list'.
 		require
 			exists: not is_destroyed;
@@ -349,7 +349,7 @@ feature -- Status setting
 			set_xm_string_table (screen_object, XmNitems, a_list.handle)
 		end;
 
-	set_margin_height (a_height: INTEGER) is
+	set_margin_height (a_height: INTEGER)
 			-- Set `margin_height' to `a_height'.
 		require
 			exists: not is_destroyed
@@ -360,7 +360,7 @@ feature -- Status setting
 			margin_height_set: margin_height = a_height
 		end;
 
-	set_margin_width (a_width: INTEGER) is
+	set_margin_width (a_width: INTEGER)
 			-- Set `margin_width' to `a_width'.
 		require
 			exists: not is_destroyed
@@ -371,7 +371,7 @@ feature -- Status setting
 			margin_width_set: margin_width = a_width
 		end;
 
-	set_spacing (a_spacing: INTEGER) is
+	set_spacing (a_spacing: INTEGER)
 			-- Set `spacing' to `a_spacing'.
 		require
 			exists: not is_destroyed
@@ -382,7 +382,7 @@ feature -- Status setting
 			spacing_set: spacing = a_spacing
 		end;
 
-	set_selected_items (a_list: MEL_STRING_TABLE) is
+	set_selected_items (a_list: MEL_STRING_TABLE)
 			-- Set `selected_items' to `a_list'.
 		require
 			exists: not is_destroyed;
@@ -391,7 +391,7 @@ feature -- Status setting
 			set_xm_string_table (screen_object, XmNselectedItems, a_list.handle)
 		end;
 
-	set_single_select is
+	set_single_select
 			-- Set `is_single_select'.
 		require
 			exists: not is_destroyed
@@ -401,7 +401,7 @@ feature -- Status setting
 			single_select_set: is_single_select
 		end;
 
-	set_browse_select is
+	set_browse_select
 			-- Set `is_browse_select'.
 		require
 			exists: not is_destroyed
@@ -411,7 +411,7 @@ feature -- Status setting
 			browse_select_set: is_browse_select
 		end;
 
-	set_multiple_select is
+	set_multiple_select
 			-- Set `is_multiple_select'.
 		require
 			exists: not is_destroyed
@@ -421,7 +421,7 @@ feature -- Status setting
 			multiple_select_set: is_multiple_select
 		end;
 
-	set_extended_select is
+	set_extended_select
 			-- Set `is_extended_select'.
 		require
 			exists: not is_destroyed
@@ -431,7 +431,7 @@ feature -- Status setting
 			extended_select_set: is_extended_select
 		end;
 
-	set_string_direction_l_to_r is
+	set_string_direction_l_to_r
 			-- Set the direction in which to draw the string to left to right.
 		require
 			exists: not is_destroyed
@@ -442,7 +442,7 @@ feature -- Status setting
 			is_string_direction_l_to_r: is_string_direction_l_to_r
 		end;
 
-	set_string_direction_r_to_l is
+	set_string_direction_r_to_l
 			-- Set the direction in which to draw the string to right to left.
 		require
 			exists: not is_destroyed
@@ -453,7 +453,7 @@ feature -- Status setting
 			is_string_direction_r_to_l: is_string_direction_r_to_l
 		end;
 
-	set_top_item_position (a_position: INTEGER) is
+	set_top_item_position (a_position: INTEGER)
 			-- Set `top_item_position' to `a_position'.
 		require
 			exists: not is_destroyed;
@@ -465,7 +465,7 @@ feature -- Status setting
 			top_item_position_set: top_item_position = a_position
 		end;
 
-	set_visible_item_count (a_value: INTEGER) is
+	set_visible_item_count (a_value: INTEGER)
 			-- Set `visible_item_count' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -474,7 +474,7 @@ feature -- Status setting
 			set_xt_int (screen_object, XmNvisibleItemCount, a_value)
 		end;
 
-	set_pos (a_value: INTEGER) is
+	set_pos (a_value: INTEGER)
 			-- Set the first visible item to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -484,7 +484,7 @@ feature -- Status setting
 			xm_list_set_pos (screen_object, a_value)
 		end;
 
-	set_bottom_pos (a_value: INTEGER) is
+	set_bottom_pos (a_value: INTEGER)
 			-- Set index of last visible item to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -496,7 +496,7 @@ feature -- Status setting
 
 feature -- Element Change
 
-	add_item (an_item: MEL_STRING; a_position: INTEGER) is
+	add_item (an_item: MEL_STRING; a_position: INTEGER)
 			-- Put `an_item' at `a_position' and select it.
 		require
 			exists: not is_destroyed;
@@ -510,7 +510,7 @@ feature -- Element Change
 			item_selected: is_pos_selected (a_position)
 		end;
 
-	add_item_unselected (an_item: MEL_STRING; a_position: INTEGER) is
+	add_item_unselected (an_item: MEL_STRING; a_position: INTEGER)
 			-- Put `an_item' at `a_position'.
 		require
 			exists: not is_destroyed;
@@ -523,7 +523,7 @@ feature -- Element Change
 			item_added: item_count = old item_count + 1
 		end;
 
-	add_items (an_item_list: MEL_STRING_TABLE; a_position: INTEGER) is
+	add_items (an_item_list: MEL_STRING_TABLE; a_position: INTEGER)
 			-- Put `an_item_list' at `a_position' and select them.
 		require
 			exists: not is_destroyed;
@@ -536,7 +536,7 @@ feature -- Element Change
 			items_added: item_count = old item_count + an_item_list.count
 		end;
 
-	add_items_unselected (an_item_list: MEL_STRING_TABLE; a_position: INTEGER) is
+	add_items_unselected (an_item_list: MEL_STRING_TABLE; a_position: INTEGER)
 			-- Put `an_item_list' at `a_position'.
 		require
 			exists: not is_destroyed;
@@ -549,7 +549,7 @@ feature -- Element Change
 			items_added: item_count = old item_count + an_item_list.count
 		end;
 
-	replace_items_pos (new_items: MEL_STRING_TABLE; a_position: INTEGER) is
+	replace_items_pos (new_items: MEL_STRING_TABLE; a_position: INTEGER)
 			-- Replace the items from `position' by `new_items' and select them.
 		require
 			exists: not is_destroyed;
@@ -562,7 +562,7 @@ feature -- Element Change
 			no_items_added: item_count = old item_count
 		end;
 
-	replace_item_pos (new_item: MEL_STRING; a_position: INTEGER) is
+	replace_item_pos (new_item: MEL_STRING; a_position: INTEGER)
 			-- Replace the item at `position' by `new_item' and select it.
 		require
 			exists: not is_destroyed;
@@ -578,7 +578,7 @@ feature -- Element Change
 			item_not_added: item_count = old item_count
 		end;
 
-	replace_items_pos_unselected (new_items: MEL_STRING_TABLE; a_position: INTEGER) is
+	replace_items_pos_unselected (new_items: MEL_STRING_TABLE; a_position: INTEGER)
 			-- Replace the items from `position' by `new_items'.
 		require
 			exists: not is_destroyed;
@@ -591,7 +591,7 @@ feature -- Element Change
 			no_items_added: item_count = old item_count
 		end;
 
-	replace_items (old_items, new_items: MEL_STRING_TABLE) is
+	replace_items (old_items, new_items: MEL_STRING_TABLE)
 			-- Replace `old_items' by `new_items' and select `new_items'.
 		require
 			exists: not is_destroyed;
@@ -604,7 +604,7 @@ feature -- Element Change
 			no_items_added: item_count = old item_count
 		end;
 
-	replace_items_unselected (old_items, new_items: MEL_STRING_TABLE) is
+	replace_items_unselected (old_items, new_items: MEL_STRING_TABLE)
 			-- Replace `old_items' by `new_items'.
 		require
 			exists: not is_destroyed;
@@ -617,7 +617,7 @@ feature -- Element Change
 			no_items_added: item_count = old item_count
 		end;
 
-	select_item (an_item: MEL_STRING; notify: BOOLEAN) is
+	select_item (an_item: MEL_STRING; notify: BOOLEAN)
 			-- Select `an_item' and call the callback routines aaccording to `notify'.
 		require
 			exists: not is_destroyed;
@@ -627,7 +627,7 @@ feature -- Element Change
 			xm_list_select_item (screen_object, an_item.handle, notify)
 		end;
 
-	select_pos (a_position: INTEGER; notify: BOOLEAN) is
+	select_pos (a_position: INTEGER; notify: BOOLEAN)
 			-- Select item at `a_position' and call
 			-- the callback routines according to `notify'.
 		require
@@ -640,7 +640,7 @@ feature -- Element Change
 			pos_selected: is_pos_selected (a_position)
 		end;
 
-	deselect_item (an_item: MEL_STRING) is
+	deselect_item (an_item: MEL_STRING)
 			-- Deselect `an_item'.
 		require
 			exists: not is_destroyed;
@@ -650,7 +650,7 @@ feature -- Element Change
 			xm_list_deselect_item (screen_object, an_item.handle)
 		end;
 
-	deselect_pos (a_position: INTEGER) is
+	deselect_pos (a_position: INTEGER)
 			-- Deselect item at `a_position'.
 		require
 			exists: not is_destroyed;
@@ -662,7 +662,7 @@ feature -- Element Change
 			position_not_selected: not is_pos_selected (a_position)
 		end;
 
-	deselect_all_items is
+	deselect_all_items
 			-- Deselect all items.
 		require
 			exists: not is_destroyed
@@ -672,7 +672,7 @@ feature -- Element Change
 			no_item_selected: selected_item_count = 0
 		end;
 
-	set_browse_selection_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_browse_selection_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when an item is selected in
 			-- browse mode.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -685,7 +685,7 @@ feature -- Element Change
 			command_set: command_set (browse_selection_command, a_command, an_argument)
 		end;
 
-	set_default_action_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_default_action_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when an item is selected 
 			-- by pressing `RETURN' or double clicking it.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -698,7 +698,7 @@ feature -- Element Change
 			command_set: command_set (default_action_command, a_command, an_argument)
 		end;
 
-	set_extended_selection_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_extended_selection_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when items are selected in
 			-- extended mode.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -711,7 +711,7 @@ feature -- Element Change
 			command_set: command_set (extended_selection_command, a_command, an_argument)
 		end;
 
-	set_multiple_selection_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_multiple_selection_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when items are selected in
 			-- multiple mode.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -724,7 +724,7 @@ feature -- Element Change
 			command_set: command_set (multiple_selection_command, a_command, an_argument)
 		end;
 
-	set_single_selection_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_single_selection_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when items are selected in
 			-- single selected mode.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -739,7 +739,7 @@ feature -- Element Change
 
 feature -- Removal
 
-	delete_item (an_item: MEL_STRING) is
+	delete_item (an_item: MEL_STRING)
 			-- Delete `an_item'.
 		require
 			exists: not is_destroyed;
@@ -749,7 +749,7 @@ feature -- Removal
 			xm_list_delete_item (screen_object, an_item.handle)
 		end;
 
-	delete_pos (a_position: INTEGER) is
+	delete_pos (a_position: INTEGER)
 			-- Delete item at `a_position'.
 		require
 			exists: not is_destroyed;
@@ -759,7 +759,7 @@ feature -- Removal
 			xm_list_delete_pos (screen_object, a_position)
 		end;
 
-	delete_items (an_item_list: MEL_STRING_TABLE) is
+	delete_items (an_item_list: MEL_STRING_TABLE)
 			-- Delete all items of `an_item_list'.
 		require
 			exists: not is_destroyed;
@@ -768,7 +768,7 @@ feature -- Removal
 			xm_list_delete_items (screen_object, an_item_list.handle, an_item_list.count)
 		end;
 
-	delete_items_pos (an_item_count, a_position: INTEGER) is
+	delete_items_pos (an_item_count, a_position: INTEGER)
 			-- Delete `an_item_count' items starting at `a_position'.
 		require
 			exists: not is_destroyed;
@@ -780,7 +780,7 @@ feature -- Removal
 			xm_list_delete_items_pos (screen_object, an_item_count, a_position)
 		end;
 
-	delete_all_items is
+	delete_all_items
 			-- Delete all items.
 		require
 			exists: not is_destroyed
@@ -788,7 +788,7 @@ feature -- Removal
 			xm_list_delete_all_items (screen_object)
 		end;
 
-	remove_browse_selection_callback is
+	remove_browse_selection_callback
 			-- Remove the command for the selection callback.
 		do
 			remove_callback (XmNbrowseSelectionCallback)
@@ -796,7 +796,7 @@ feature -- Removal
 			removed: browse_selection_command = Void
 		end;
 
-	remove_default_action_callback is
+	remove_default_action_callback
 			-- Remove the command for the default action callback.
 		do
 			remove_callback (XmNdefaultActionCallback)
@@ -804,7 +804,7 @@ feature -- Removal
 			removed: default_action_command = Void
 		end;
 
-	remove_extended_selection_callback is
+	remove_extended_selection_callback
 			-- Remove the command for the extended selection callback.
 		do
 			remove_callback (XmNextendedSelectionCallback)
@@ -812,7 +812,7 @@ feature -- Removal
 			removed: extended_selection_command = Void
 		end;
 
-	remove_multiple_selection_callback is
+	remove_multiple_selection_callback
 			-- Remove the command for the multiple selection callback.
 		do
 			remove_callback (XmNmultipleSelectionCallback)
@@ -820,7 +820,7 @@ feature -- Removal
 			removed: multiple_selection_command = Void
 		end;
 
-	remove_single_selection_callback is
+	remove_single_selection_callback
 			-- Remove the command for the single selection callback.
 		do
 			remove_callback (XmNsingleSelectionCallback)
@@ -831,7 +831,7 @@ feature -- Removal
 feature {MEL_DISPATCHER} -- Basic operations
 
 	create_callback_struct (a_callback_struct_ptr: POINTER; 
-				resource_name: POINTER): MEL_LIST_CALLBACK_STRUCT is
+				resource_name: POINTER): MEL_LIST_CALLBACK_STRUCT
 			-- Create the callback structure specific to this widget
 			-- according to `a_callback_struct_ptr'.
 		do
@@ -840,195 +840,195 @@ feature {MEL_DISPATCHER} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	xm_create_list (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_list (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/List.h>"
 		alias
 			"XmCreateList"
 		end;
 
-	xm_list_add_item (a_target: POINTER; an_item: POINTER; a_position: INTEGER) is
+	xm_list_add_item (a_target: POINTER; an_item: POINTER; a_position: INTEGER)
 		external
 			"C (Widget, XmString, int) | <Xm/List.h>"
 		alias
 			"XmListAddItem"
 		end;
 
-	xm_list_add_item_unselected (a_target: POINTER; an_item: POINTER; a_position: INTEGER) is
+	xm_list_add_item_unselected (a_target: POINTER; an_item: POINTER; a_position: INTEGER)
 		external
 			"C (Widget, XmString, int) | <Xm/List.h>"
 		alias
 			"XmListAddItemUnselected"
 		end;
 
-	xm_list_add_items (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER; a_position: INTEGER) is
+	xm_list_add_items (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER; a_position: INTEGER)
 		external
 			"C (Widget, XmStringTable, int, int) | <Xm/List.h>"
 		alias
 			"XmListAddItems"
 		end;
 
-	xm_list_add_items_unselected (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER; a_position: INTEGER) is
+	xm_list_add_items_unselected (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER; a_position: INTEGER)
 		external
 			"C (Widget, XmStringTable, int, int) | <Xm/List.h>"
 		alias
 			"XmListAddItemsUnselected"
 		end;
 
-	xm_list_item_exists (a_target: POINTER; an_item: POINTER): BOOLEAN is
+	xm_list_item_exists (a_target: POINTER; an_item: POINTER): BOOLEAN
 		external
 			"C (Widget, XmString): EIF_BOOLEAN | <Xm/List.h>"
 		alias
 			"XmListItemExists"
 		end;
 
-	xm_list_item_pos (a_target: POINTER; an_item: POINTER): INTEGER is
+	xm_list_item_pos (a_target: POINTER; an_item: POINTER): INTEGER
 		external
 			"C (Widget, XmString): EIF_INTEGER | <Xm/List.h>"
 		alias
 			"XmListItemPos"
 		end;
 
-	xm_list_replace_items_pos (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER; a_position: INTEGER) is
+	xm_list_replace_items_pos (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER; a_position: INTEGER)
 		external
 			"C (Widget, XmStringTable, int, int) | <Xm/List.h>"
 		alias
 			"XmListReplaceItemsPos"
 		end;
 
-	xm_list_replace_items_pos_unselected (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER; a_position: INTEGER) is
+	xm_list_replace_items_pos_unselected (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER; a_position: INTEGER)
 		external
 			"C (Widget, XmStringTable, int, int) | <Xm/List.h>"
 		alias
 			"XmListReplaceItemsPosUnselected"
 		end;
 
-	 xm_list_replace_items (a_target: POINTER; old_item_list: POINTER; an_item_count: INTEGER; new_item_list: POINTER) is
+	 xm_list_replace_items (a_target: POINTER; old_item_list: POINTER; an_item_count: INTEGER; new_item_list: POINTER)
 		external
 			"C (Widget, XmStringTable, int, XmStringTable) | <Xm/List.h>"
 		alias
 			"XmListReplaceItems"
 		end;
 
-	 xm_list_replace_items_unselected (a_target: POINTER; old_item_list: POINTER; an_item_count: INTEGER; new_item_list: POINTER) is
+	 xm_list_replace_items_unselected (a_target: POINTER; old_item_list: POINTER; an_item_count: INTEGER; new_item_list: POINTER)
 		external
 			"C (Widget, XmStringTable, int, XmStringTable) | <Xm/List.h>"
 		alias
 			"XmListReplaceItemsUnselected"
 		end;
 
-	xm_list_delete_item (a_target: POINTER; an_item: POINTER) is
+	xm_list_delete_item (a_target: POINTER; an_item: POINTER)
 		external
 			"C (Widget, XmString) | <Xm/List.h>"
 		alias
 			"XmListDeleteItem"
 		end;
 
-	xm_list_delete_pos (a_target: POINTER; a_position: INTEGER) is
+	xm_list_delete_pos (a_target: POINTER; a_position: INTEGER)
 		external
 			"C (Widget, int) | <Xm/List.h>"
 		alias
 			"XmListDeletePos"
 		end;
 
-	xm_list_delete_items (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER) is
+	xm_list_delete_items (a_target: POINTER; an_item_list: POINTER; an_item_count: INTEGER)
 		external
 			"C (Widget, XmStringTable, int) | <Xm/List.h>"
 		alias
 			"XmListDeleteItems"
 		end;
 
-	xm_list_delete_items_pos (a_target: POINTER; an_item_count: INTEGER; a_position: INTEGER) is
+	xm_list_delete_items_pos (a_target: POINTER; an_item_count: INTEGER; a_position: INTEGER)
 		external
 			"C (Widget, int, int) | <Xm/List.h>"
 		alias
 			"XmListDeleteItemsPos"
 		end;
 
-	xm_list_delete_all_items (a_target: POINTER) is
+	xm_list_delete_all_items (a_target: POINTER)
 		external
 			"C (Widget) | <Xm/List.h>"
 		alias
 			"XmListDeleteAllItems"
 		end;
 
-	xm_list_select_item (a_target: POINTER; an_item: POINTER; notify: BOOLEAN) is
+	xm_list_select_item (a_target: POINTER; an_item: POINTER; notify: BOOLEAN)
 		external
 			"C (Widget, XmString, Boolean) | <Xm/List.h>"
 		alias
 			"XmListSelectItem"
 		end;
 
-	xm_list_select_pos (a_target: POINTER; a_position: INTEGER; notify: BOOLEAN) is
+	xm_list_select_pos (a_target: POINTER; a_position: INTEGER; notify: BOOLEAN)
 		external
 			"C (Widget, int, Boolean) | <Xm/List.h>"
 		alias
 			"XmListSelectPos"
 		end;
 
-	xm_list_deselect_item (a_target: POINTER; an_item: POINTER) is
+	xm_list_deselect_item (a_target: POINTER; an_item: POINTER)
 		external
 			"C (Widget, XmString) | <Xm/List.h>"
 		alias
 			"XmListDeselectItem"
 		end;
 
-	xm_list_deselect_pos (a_target: POINTER; a_position: INTEGER) is
+	xm_list_deselect_pos (a_target: POINTER; a_position: INTEGER)
 		external
 			"C (Widget, int) | <Xm/List.h>"
 		alias
 			"XmListDeselectPos"
 		end;
 
-	xm_list_deselect_all_items (a_target: POINTER) is
+	xm_list_deselect_all_items (a_target: POINTER)
 		external
 			"C (Widget) | <Xm/List.h>"
 		alias
 			"XmListDeselectAllItems"
 		end;
 
-	xm_list_pos_selected (a_target: POINTER; a_position: INTEGER): BOOLEAN is
+	xm_list_pos_selected (a_target: POINTER; a_position: INTEGER): BOOLEAN
 		external
 			"C  (Widget, int): EIF_BOOLEAN | <Xm/List.h>"
 		alias
 			"XmListPosSelected"
 		end;
 
-	xm_list_set_pos (a_target: POINTER; a_position: INTEGER) is
+	xm_list_set_pos (a_target: POINTER; a_position: INTEGER)
 		external
 			"C (Widget, int) | <Xm/List.h>"
 		alias
 			"XmListSetPos"
 		end;
 
-	xm_list_set_bottom_pos (a_target: POINTER; a_position: INTEGER) is
+	xm_list_set_bottom_pos (a_target: POINTER; a_position: INTEGER)
 		external
 			"C (Widget, int) | <Xm/List.h>"
 		alias
 			"XmListSetBottomPos"
 		end;
 
-	xm_list_index_of (a_target, a_str: POINTER; a_position: INTEGER): INTEGER is
+	xm_list_index_of (a_target, a_str: POINTER; a_position: INTEGER): INTEGER
 		external
 			"C"
 		end;
 
-	xm_list_get_i_int_table (a_target: POINTER; a_position: INTEGER): INTEGER is
+	xm_list_get_i_int_table (a_target: POINTER; a_position: INTEGER): INTEGER
 		external
 			"C"
 		end;
 
-	xm_list_item_pos_from (a_target, a_string: POINTER; a_position: INTEGER): INTEGER is
+	xm_list_item_pos_from (a_target, a_string: POINTER; a_position: INTEGER): INTEGER
 		external
 			"C"
 		end;
 
-	xm_list_get_selected_pos (a_target: POINTER): POINTER is
+	xm_list_get_selected_pos (a_target: POINTER): POINTER
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

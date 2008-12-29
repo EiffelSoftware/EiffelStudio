@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a tab associated with a notebook item. MsWindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,19 +34,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_is_initialized (True)
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Image displayed on `Current' or Void if none.
 		do
 			if notebook /= Void then
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to `pixmap'.
 		do
 			if notebook /= Void then
@@ -64,7 +64,7 @@ feature -- Element change
 			end
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Make `pixmap' `Void'.
 		do
 			if notebook /= Void then
@@ -72,7 +72,7 @@ feature -- Element change
 			end
 		end
 
-	wel_text: STRING_32 is
+	wel_text: STRING_32
 			-- Text displayed in label.
 		do
 			if notebook /= Void then
@@ -85,7 +85,7 @@ feature -- Element change
 			end
 		end
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Number of characters making up `text'.
 		do
 			Result := wel_text.count
@@ -93,7 +93,7 @@ feature -- Element change
 
 feature -- Element change
 
-	wel_set_text (a_text: STRING_GENERAL) is
+	wel_set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
 			if notebook /= Void then
@@ -103,7 +103,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	notebook_imp: EV_NOTEBOOK_IMP is
+	notebook_imp: EV_NOTEBOOK_IMP
 			-- Access to implementation of `notebook'.
 			-- Note that `Result' may be `Void' if `notebook' is.
 		do
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			not_void_if_notebook_not_void: notebook /= Void implies result /= Void
 		end
 
-	destroy is
+	destroy
 			-- Destroy underlying native toolkit objects.
 			-- Render `Current' unusable.
 			-- Any feature calls after a call to destroy are
@@ -125,7 +125,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_NOTEBOOK_TAB;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

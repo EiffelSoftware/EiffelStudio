@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"A sequence of actions to be performed on `call'"
 	legal: "See notice at end of class."
@@ -60,7 +60,7 @@ create {ACTION_SEQUENCE}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Begin in `Normal_state'.
 		do
 			arrayed_list_make (0)
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	call (event_data: EVENT_DATA) is
+	call (event_data: EVENT_DATA)
 			-- Call each procedure in order unless `is_blocked'.
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
@@ -141,7 +141,7 @@ feature -- Basic operations
 				old is_aborted_stack.is_equal (is_aborted_stack)
 		end
 
-	extend_kamikaze (an_item: like item) is
+	extend_kamikaze (an_item: like item)
 			-- Extend `an_item' and remove it again after it is called.
 		do
 			extend (an_item)
@@ -150,7 +150,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Textual description.
 		do
 			if name_internal /= Void then
@@ -160,7 +160,7 @@ feature -- Access
 			equal_to_name_internal: equal (Result, name_internal)
 		end
 
-	dummy_event_data: EVENT_DATA is
+	dummy_event_data: EVENT_DATA
 			-- Attribute of the generic type.
 			-- Useful for introspection and use in like statements.
 		obsolete "Not implemented. To be removed"
@@ -171,7 +171,7 @@ feature -- Access
 			Result := dummy_event_data_internal
 		end
 
-	event_data_names: ARRAY [STRING] is
+	event_data_names: ARRAY [STRING]
 			-- Textual description of each event datum.
 		obsolete "Not implemented. To be removed"
 		do
@@ -185,7 +185,7 @@ feature -- Access
 
 feature -- Status setting
 
-	abort is
+	abort
 			-- Abort the current `call'.
 			-- (The current item.call will be completed.)
 		require
@@ -196,7 +196,7 @@ feature -- Status setting
 			is_aborted_set: is_aborted_stack.item
 		end
 
-	block is
+	block
 			-- Ignore subsequent `call's.
 		do
 			state := Blocked_state
@@ -204,7 +204,7 @@ feature -- Status setting
 			blocked_state: state = Blocked_state
 		end
 
-	pause is
+	pause
 			-- Buffer subsequent `call's for later execution.
 			-- If `is_blocked' calls will simply be ignored.
 		do
@@ -213,7 +213,7 @@ feature -- Status setting
 			paused_state: state = Paused_state
 		end
 
-	resume is
+	resume
 			-- Used after `block' or `pause' to resume normal `call'
 			-- execution.  Executes any buffered `call's.
 		local
@@ -232,7 +232,7 @@ feature -- Status setting
 			normal_state: state = Normal_state
 		end
 
-	flush is
+	flush
 			-- Discard any buffered `call's.
 		do
 			call_buffer.wipe_out
@@ -245,11 +245,11 @@ feature -- Status report
 	state: INTEGER
 			-- One of `Normal_state' `Paused_state' or `Blocked_state'
 
-	Normal_state: INTEGER is 1
-	Paused_state: INTEGER is 2
-	Blocked_state: INTEGER is 3
+	Normal_state: INTEGER = 1
+	Paused_state: INTEGER = 2
+	Blocked_state: INTEGER = 3
 
-	call_is_underway: BOOLEAN is
+	call_is_underway: BOOLEAN
 			-- Is `call' currently being executed?
 		do
 			Result := not is_aborted_stack.is_empty
@@ -259,7 +259,7 @@ feature -- Status report
 
 feature -- Element Change
 
-	prune_when_called (an_action: like item) is
+	prune_when_called (an_action: like item)
 			-- Remove `an_action' after the next time it is called.
 		require
 			has (an_action)
@@ -289,7 +289,7 @@ feature -- Event handling
 
 feature {NONE} -- Implementation, ARRAYED_LIST
 
-	set_count (new_count: INTEGER) is
+	set_count (new_count: INTEGER)
 			-- Set `count' to `new_count'
 		do
 			if empty_actions_internal /= Void and then count /= 0 and new_count = 0 then
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation, ARRAYED_LIST
 
 feature {NONE} -- Implementation
 
-	call_action_list (actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]) is
+	call_action_list (actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]])
 			-- Call each action in `actions'.
 		require
 			actions_not_void: actions /= Void
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 
 feature -- Obsolete
 
-	make is
+	make
 		obsolete
 			"use default_create"
 		do
@@ -392,7 +392,7 @@ feature -- Obsolete
 		end
 
 	set_source_connection_agent
-				(a_source_connection_agent: PROCEDURE [ANY, TUPLE]) is
+				(a_source_connection_agent: PROCEDURE [ANY, TUPLE])
 			-- Set `a_source_connection_agent' that will connect sequence to an
 			-- actual event source. The agent will be called when the first action is
 			-- added to the sequence. If there are already actions in the
@@ -415,7 +415,7 @@ invariant
 	not_empty_actions_not_void: not_empty_actions /= Void
 	empty_actions_not_void: empty_actions /= Void
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

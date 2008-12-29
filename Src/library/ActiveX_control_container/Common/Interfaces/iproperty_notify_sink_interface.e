@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,14 +12,14 @@ inherit
 
 feature -- Status Report
 
-	on_changed_user_precondition (disp_id: INTEGER): BOOLEAN is
+	on_changed_user_precondition (disp_id: INTEGER): BOOLEAN
 			-- User-defined preconditions for `on_changed'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	on_request_edit_user_precondition (disp_id: INTEGER): BOOLEAN is
+	on_request_edit_user_precondition (disp_id: INTEGER): BOOLEAN
 			-- User-defined preconditions for `on_request_edit'.
 			-- Redefine in descendants if needed.
 		do
@@ -28,7 +28,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	on_changed (disp_id: INTEGER) is
+	on_changed (disp_id: INTEGER)
 			-- No description available.
 			-- `disp_id' [in].  
 		require
@@ -37,7 +37,7 @@ feature -- Basic Operations
 
 		end
 
-	on_request_edit (disp_id: INTEGER) is
+	on_request_edit (disp_id: INTEGER)
 			-- No description available.
 			-- `disp_id' [in].  
 		require
@@ -46,7 +46,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

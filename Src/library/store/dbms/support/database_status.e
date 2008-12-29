@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of DB_STATUS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,47 +21,47 @@ inherit
 
 feature -- Status report
 
-	is_error_updated: BOOLEAN is
+	is_error_updated: BOOLEAN
 			-- Has an Oracle/ODBC function been called since last update which may have
 			-- updated error code, error message or warning message?
 		do
 			Result := db_spec.is_error_updated
 		end	
 
-	error_message: STRING is
+	error_message: STRING
 			-- Error message from database server
 		do
 			create Result.make (10)
 			Result.from_c (db_spec.get_error_message)
 		end
 
-	error_code: INTEGER is
+	error_code: INTEGER
 			-- Error code from database server
 		do
 			Result := db_spec.get_error_code
 		end
 
-	warning_message: STRING is
+	warning_message: STRING
 			-- Warning message from database server
 		do
 			create Result.make (10)
 			Result.from_c (db_spec.get_warn_message)
 		end
 
-	found: BOOLEAN is
+	found: BOOLEAN
 			-- Is there any record matching the last
 			-- selection condition used ?
 		do
 			Result := db_spec.found
 		end
 
-	reset is
+	reset
 			--Reset database error status.
 		do
 			db_spec.clear_error
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

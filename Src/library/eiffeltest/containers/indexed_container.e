@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Containers that provide index access"
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class INDEXED_CONTAINER [G] inherit
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): G is
+	item, infix "@" (i: INTEGER): G
 			-- `i'-th item
 		require
 			not_empty: not is_empty
@@ -23,7 +23,7 @@ feature -- Access
 			non_void_result: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

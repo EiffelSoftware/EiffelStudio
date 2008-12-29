@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows implementation of EV_POINTER_STYLE_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,19 +27,19 @@ create
 
 feature {NONE} -- Initlization
 
-	make (an_interface: EV_POINTER_STYLE) is
+	make (an_interface: EV_POINTER_STYLE)
 			-- Creation method
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize
 		do
 			set_is_initialized (True)
 		end
 
-	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x_hotspot, a_y_hotspot: INTEGER) is
+	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x_hotspot, a_y_hotspot: INTEGER)
 			-- Initialize from `a_pixel_buffer'
 		local
 			l_pix_buf_imp: EV_PIXEL_BUFFER_IMP
@@ -50,7 +50,7 @@ feature {NONE} -- Initlization
 			set_y_hotspot (a_x_hotspot)
 		end
 
-	init_predefined (a_constant: INTEGER) is
+	init_predefined (a_constant: INTEGER)
 			-- Initialized a predefined cursor.
 		local
 			l_x_hotspot, l_y_hotspot: INTEGER
@@ -120,7 +120,7 @@ feature {NONE} -- Initlization
 			set_y_hotspot (l_y_hotspot)
 		end
 
-	init_from_cursor (a_cursor: EV_CURSOR) is
+	init_from_cursor (a_cursor: EV_CURSOR)
 			-- Initialize from `a_cursor'
 		local
 			a_pix_imp: EV_PIXMAP_IMP
@@ -131,7 +131,7 @@ feature {NONE} -- Initlization
 			set_y_hotspot (a_cursor.y_hotspot)
 		end
 
-	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y: INTEGER_32) is
+	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y: INTEGER_32)
 			-- Initalize from `a_pixmap'
 		local
 			a_pix_imp: EV_PIXMAP_IMP
@@ -144,19 +144,19 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_x_hotspot (a_x: INTEGER) is
+	set_x_hotspot (a_x: INTEGER)
 			-- Set `x_hotspot' to `a_x'.
 		do
 			x_hotspot := a_x
 		end
 
-	set_y_hotspot (a_y: INTEGER) is
+	set_y_hotspot (a_y: INTEGER)
 			-- Set `y_hotspot' to `a_y'.
 		do
 			y_hotspot := a_y
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			set_is_in_destroy (True)
@@ -166,7 +166,7 @@ feature -- Command
 
 feature -- Query
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of pointer style.
 		do
 			if gdk_pixbuf /= default_pointer then
@@ -176,7 +176,7 @@ feature -- Query
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of pointer style.
 		do
 			if gdk_pixbuf /= default_pointer then
@@ -194,7 +194,7 @@ feature -- Query
 
 feature -- Implementation
 
-	gdk_cursor_from_pointer_style: POINTER is
+	gdk_cursor_from_pointer_style: POINTER
 			-- Return a GdkCursor constructed from `a_cursor'
 		local
 			a_image: POINTER
@@ -251,7 +251,7 @@ feature -- Implementation
 			end
 		end
 
-	image_from_xpm_data (a_xpm_data: POINTER): POINTER is
+	image_from_xpm_data (a_xpm_data: POINTER): POINTER
 			-- Return image data from `a_xpm_data'.
 		require
 			a_xpm_not_null: a_xpm_data /= default_pointer
@@ -259,7 +259,7 @@ feature -- Implementation
 			Result := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_from_xpm_data (a_xpm_data)
 		end
 
-	set_gdkpixbuf (a_pixbuf: POINTER) is
+	set_gdkpixbuf (a_pixbuf: POINTER)
 			-- Set gdk_pixbuf to `a_pixbuf'.
 		do
 			if gdk_pixbuf /= default_pointer then
@@ -292,13 +292,13 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	dispose is
+	dispose
 			-- Clean up `Current'.
 		do
 			set_gdkpixbuf (default_pointer)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

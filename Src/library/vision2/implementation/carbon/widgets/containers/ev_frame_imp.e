@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision frame. Carbon implementation"
 	legal: "See notice at end of class."
@@ -54,7 +54,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create frame.
 		local
 			ret: INTEGER
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 			event_id := app_implementation.get_id (current)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		local
 			a_font: EV_FONT
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 
 feature -- layout information
 
-	child_offset_top: INTEGER is
+	child_offset_top: INTEGER
 			--
 		do
 			Result := child_offset_bottom + font.height + 1
@@ -108,7 +108,7 @@ feature -- layout information
 
 feature -- Access
 
-	style: INTEGER is
+	style: INTEGER
 			-- Visual appearance. See: EV_FRAME_CONSTANTS.
 		do
 			Result := {EV_FRAME_CONSTANTS}.Ev_frame_etched_in
@@ -116,12 +116,12 @@ feature -- Access
 
 feature -- Element change
 
-	set_style (a_style: INTEGER) is
+	set_style (a_style: INTEGER)
 			-- Assign `a_style' to `style'.
 		do
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 		local
 			a,b: INTEGER
 		do
@@ -129,7 +129,7 @@ feature -- Element change
 
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 		local
 			a,b: INTEGER
 		do
@@ -144,7 +144,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to possibly platform
 			-- dependent functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_FRAME_IMP
 

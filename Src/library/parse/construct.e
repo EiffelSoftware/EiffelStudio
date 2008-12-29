@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"The general notion of language construct,  %
@@ -26,7 +26,7 @@ inherit
 
 feature -- Initialization
 
-	make is
+	make
 			-- Set up construct.
 		do
 			twt_make (Current)
@@ -34,18 +34,18 @@ feature -- Initialization
 
 feature -- Access
 
-	document: INPUT is
+	document: INPUT
 			-- The document to be parsed
 		once
 			create Result.make
 		end
 
-	production: LINKED_LIST [CONSTRUCT] is 
+	production: LINKED_LIST [CONSTRUCT] 
 			-- Right-hand side of the production for the construct
 		deferred 
 		end
 
-	construct_name: STRING is 
+	construct_name: STRING 
 			-- Name of the construct in the grammar
 		deferred
 		end;
@@ -55,7 +55,7 @@ feature -- Status report
 	is_optional: BOOLEAN
 			-- Is construct optional? 
 
-	left_recursion: BOOLEAN is 
+	left_recursion: BOOLEAN 
 			-- Is the construct's definition left-recursive?
 		deferred 
 		end
@@ -70,7 +70,7 @@ feature -- Status report
 			-- (Otherwise the parsing process will backtrack, trying
 			-- other possible interpretations of the part already read.)
 
-	print_mode: CELL [BOOLEAN] is 
+	print_mode: CELL [BOOLEAN] 
 			-- Must the left-recursion test also print the production?
 			-- (Default: no.)
 		once 
@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_optional is
+	set_optional
 			-- Define this construct as optional.
 		do
 			is_optional := True
@@ -89,7 +89,7 @@ feature -- Status setting
 
 feature -- Transformation
 
-	process is
+	process
 			-- Parse a specimen of the construct, then apply
 			-- semantic actions if parsing successful.
 		do
@@ -99,7 +99,7 @@ feature -- Transformation
 			end
 		end
 
-	parse is
+	parse
 			-- Attempt to analyze incoming lexical
 			-- tokens according to current construct. 
 			-- Set `parsed' to true if successful; 
@@ -120,14 +120,14 @@ feature -- Transformation
 			end
 		end
 
-	commit is
+	commit
             -- If this construct is one among several possible ones,
             -- discard the others.
 				-- By default this does nothing.
 		do
 		end
 
-	semantics is
+	semantics
 			-- Apply semantic actions in order:
 			-- `pre_action', `in_action', `post_action'.
 		do
@@ -136,13 +136,13 @@ feature -- Transformation
 			post_action
 		end
 
-	pre_action is
+	pre_action
 			-- Semantic action executed before construct is parsed
 			-- (nothing by default; may be redefined in descendants).
 		do
 		end
 
-	post_action is
+	post_action
 			-- Semantic action executed after construct is parsed
 			-- (nothing by default; may be redefined in descendants).
 		do
@@ -150,7 +150,7 @@ feature -- Transformation
 
 feature -- Output 
 
-	print_name is
+	print_name
 			-- Print the construct name on standard output.
 		do
 			if construct_name /= Void then
@@ -168,19 +168,19 @@ feature {CONSTRUCT} -- Implementation
 	parent: CONSTRUCT
 			-- Parent of current construct
 
-	new_cell (v: like item): like item is
+	new_cell (v: like item): like item
 		do
 			Result := v
 			Result.twt_put (v)
 			Result.attach_to_parent (Current)
 		end
 
-	check_recursion is 
+	check_recursion 
 			-- Check construct for left recursion.
 		deferred 
 		end
 
-	expand_all is
+	expand_all
 			-- Used by recursion checking
 		do
 			if is_leaf then
@@ -196,7 +196,7 @@ feature {CONSTRUCT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	put (c: CONSTRUCT) is
+	put (c: CONSTRUCT)
 			-- Add a construct to the production.
 		do  
 			production.put_left (c)
@@ -206,13 +206,13 @@ feature {NONE} -- Implementation
 	last_sub_construct: CONSTRUCT;
 			-- Subconstruct most recently added to the production
 
-	make_optional is
+	make_optional
 			-- Make the last entered subconstruct optional.
 		do
 			last_sub_construct.set_optional
 		end
 
-	keyword (s: STRING) is
+	keyword (s: STRING)
 			-- Insert a keyword into the production.
 		local
 			key: KEYWORD
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			put (key)
 		end
 
-	expand_next is
+	expand_next
 			-- Expand the next child of current node
 			-- after current child.
 			-- This is the most likely version of expand
@@ -248,14 +248,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	expand is
+	expand
 			-- Create next construct to be parsed.
 			-- Used by `parse' to build the production
 			-- that is expected at each node, according to `production'.
 		deferred
 		end
 
-	put_component (new: CONSTRUCT) is
+	put_component (new: CONSTRUCT)
 			-- Add a new component to expand the production.
 			-- Note that the components are always added in
 			-- the tree node in left to right order.
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			child_forth
 		end
 
-	raise_syntax_error (s: STRING) is
+	raise_syntax_error (s: STRING)
 			-- Print error message s.
 		local
 			s2 : STRING
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 			document.raise_error (s2)
 		end
 
-	expected_found_error is
+	expected_found_error
 			-- Print an error message saying what was 
 			-- expected and what was found.
 		local
@@ -298,40 +298,40 @@ feature {NONE} -- Implementation
 			raise_syntax_error (err)
 		end
 
-	structure_list: LINKED_LIST [LINKED_LIST [CONSTRUCT]] is
+	structure_list: LINKED_LIST [LINKED_LIST [CONSTRUCT]]
 			-- List of the structures already examined when
 			-- searching for left recursion
 		once
 			create Result.make
 		end
 
-	check_recursion_list: LINKED_LIST [LINKED_LIST [CONSTRUCT]] is
+	check_recursion_list: LINKED_LIST [LINKED_LIST [CONSTRUCT]]
 			-- List of the structures already examined when
 			-- checking for left recursion
 		once
 			create Result.make
 		end
 
-	global_left_recursion: CELL [BOOLEAN] is 
+	global_left_recursion: CELL [BOOLEAN] 
 			-- Is there any left recursion in the whole program?
 		once 
 			create Result.put (False)
 		end
 
-	child_recursion: CELL [BOOLEAN] is 
+	child_recursion: CELL [BOOLEAN] 
 			-- Is there any recursion in the whole program?
 		once 
 			create Result.put (False)
 		end
 
-	recursion_message: STRING is
+	recursion_message: STRING
 			-- Error message when left recursion has been detected,
 			-- with all productions involved in the recursion chain
 		once
 			create Result.make (100)
 		end
 
-	message_construction: BOOLEAN is
+	message_construction: BOOLEAN
 			-- Has the message on left recursion been already printed?
 		do
 			child.expand_all
@@ -355,12 +355,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	in_action is
+	in_action
 			-- Perform a certain semantic operation.
 		deferred
 		end
 
-	parse_body is
+	parse_body
 			-- Perform any special parsing action for a particular
 			-- type of construct.
 			-- Call `parse_child' on each child construct.
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	parse_child is
+	parse_child
 			-- Parse child recursively to build the tree.
 			-- An error is output the first time a parse fails 
 			-- in an uncommitted child of a committed parent 
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

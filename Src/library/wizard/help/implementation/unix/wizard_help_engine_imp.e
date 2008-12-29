@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help engine, displays help context, GTK implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,18 +14,18 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 		end
 
 feature -- Status Report
 
-	last_show_successful: BOOLEAN is
+	last_show_successful: BOOLEAN
 			-- Was last call to `show' successful?
 		do
 		end
 	
-	last_error_message: STRING is
+	last_error_message: STRING
 			-- Last error message, if any
 		do
 			Result := "No help is available"
@@ -33,13 +33,13 @@ feature -- Status Report
 			
 feature -- Basic Operations
 
-	show (a_help_context: WIZARD_HELP_CONTEXT) is
+	show (a_help_context: WIZARD_HELP_CONTEXT)
 			-- Show help with context `a_help_context'.
 		do
 			(create {EXECUTION_ENVIRONMENT}).launch ("netscape " + a_help_context.url)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

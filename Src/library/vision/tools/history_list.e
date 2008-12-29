@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Graphic history based on a linear list of undoable commands, represented on %
@@ -35,7 +35,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create a history based on a list.
 		do
 			linked_list_make;
@@ -44,7 +44,7 @@ feature -- Initialization
 
 feature -- Cursor movement
 
-	back is
+	back
 			-- Move cursor backward one position.
 		require
 			not_off: not off
@@ -63,7 +63,7 @@ feature -- Cursor movement
 			index = old index - 1
 		end;
 
-	forth is
+	forth
 			-- Move cursor forward one position.
 		require
 			not_after: not after
@@ -82,7 +82,7 @@ feature -- Cursor movement
 			(index >= 1) and (index <= count)
 		end;
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to position `i'.
 		require
 			index_large_enough: i >= 0;
@@ -120,7 +120,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	record (a_command: UNDOABLE) is
+	record (a_command: UNDOABLE)
 			-- Insert `a_command' after the cursor position, and place
 			-- cursor upon it
 		do
@@ -138,7 +138,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_after is
+	remove_after
 			-- Remove all commands after the cursor position.
 		local
 			i, n: INTEGER
@@ -174,7 +174,7 @@ feature -- Removal
 			islast_unless_empty: (not is_empty) implies islast
 		end;
 
-	wipe_out is
+	wipe_out
 			-- Make history empty.
 		do
 			list_wipe_out;
@@ -193,7 +193,7 @@ feature {HISTORY_L_W} -- Implementation
 	history_windows: LINKED_LIST [HISTORY_L_W];
 			-- List of popup windows representing current history
 
-	add_history_window (history_window: HISTORY_L_W) is
+	add_history_window (history_window: HISTORY_L_W)
 			-- Add `history_window' to the list of the current history.
 		require
 			history_window_not_void: history_window /= Void
@@ -202,7 +202,7 @@ feature {HISTORY_L_W} -- Implementation
 			history_windows.put_right (history_window)
 		end;
 
-	remove_history_window (history_window: HISTORY_L_W) is
+	remove_history_window (history_window: HISTORY_L_W)
 			-- Remove `history_window' to the list of the current history.
 		require
 			history_window_not_void: history_window /= Void
@@ -211,7 +211,7 @@ feature {HISTORY_L_W} -- Implementation
 			history_windows.prune (history_window)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

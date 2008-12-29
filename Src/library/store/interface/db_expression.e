@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$"
@@ -17,7 +17,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_query (query: STRING) is
+	set_query (query: STRING)
 			-- Set `last_query' with `query'.
 		require
 			query_not_void: query /= Void
@@ -29,14 +29,14 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	execute_query is
+	execute_query
 			-- Execute `last_query'.
 		require
 			last_query_not_void: last_query /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

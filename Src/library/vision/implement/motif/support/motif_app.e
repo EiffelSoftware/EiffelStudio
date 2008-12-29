@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Parent of any graphic application based on motif implementation."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is 
+	make 
 			-- Create the application.
 		do
 			set_toolkit;
@@ -49,14 +49,14 @@ feature -- Access
 
 feature -- Element change
 
-	build is
+	build
 			-- Build an application.
 		do
 		end;
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Define default parameters for the application.
 		do
 		end;
@@ -64,14 +64,14 @@ feature {NONE} -- Implementation
 	init_toolkit: TOOLKIT_IMP; 
 			-- Toolkit of the application
 
-	set_toolkit  is
+	set_toolkit
 			-- Set motif as toolkit.
 		do
 			create init_toolkit.make (application_name);
 			if (toolkit = Void) then end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Objects that manage tool bar sizes for a SD_TOOL_BAR_ROW.
 																			]"
@@ -15,7 +15,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_tool_bar_row: SD_TOOL_BAR_ROW) is
+	make (a_tool_bar_row: SD_TOOL_BAR_ROW)
 			-- Creation method.
 		require
 			not_void: a_tool_bar_row /= Void
@@ -31,7 +31,7 @@ feature {NONE}  -- Initlization
 
 feature -- Command
 
-	start_drag_prepare is
+	start_drag_prepare
 			-- Do prepare works when user start drag.
 		local
 			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
@@ -51,13 +51,13 @@ feature -- Command
 			internal_mediator := l_shared.tool_bar_docker_mediator_cell.item
 		end
 
-	end_drag_clean is
+	end_drag_clean
 			-- Do clean works when user end drag.
 		do
 			all_sizes := Void
 		end
 
-	resize_on_extend (a_new_tool_bar: SD_TOOL_BAR_ZONE) is
+	resize_on_extend (a_new_tool_bar: SD_TOOL_BAR_ZONE)
 			-- When extend `a_new_tool_bar;, if not `is_enough_max_space', then resize tool bars.
 		require
 			has: has (a_new_tool_bar.tool_bar)
@@ -92,7 +92,7 @@ feature -- Command
 			enough_space: is_enough_space (True, 0)
 		end
 
-	resize_on_prune is
+	resize_on_prune
 			-- Just after prune a tool bar from `internal_tool_bar_row', we need to resize all tool bars if needed.
 		local
 			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
@@ -116,7 +116,7 @@ feature -- Command
 			end
 		end
 
-	on_resize (a_size: INTEGER) is
+	on_resize (a_size: INTEGER)
 			-- Handle docking manager main window resize events.
 			-- a_size is width when row is horizontal
 			-- a_size is height when row is vertical
@@ -160,7 +160,7 @@ feature -- Command
 			enought_space:
 		end
 
-	try_solve_no_space_left (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER): BOOLEAN is
+	try_solve_no_space_left (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER): BOOLEAN
 			-- After SD_POSITIONER calculation, there is not enough space at left side. Try to minmize some tool bars.
 		do
 			if not is_enough_max_space (True) then
@@ -175,7 +175,7 @@ feature -- Command
 			valid: Result implies is_enough_space (True, 0)
 		end
 
-	try_solve_no_space_right (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER; a_hot_position: INTEGER): BOOLEAN is
+	try_solve_no_space_right (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER; a_hot_position: INTEGER): BOOLEAN
 			-- After SD_POSITIONER calculation, there is not enough space at right side. Try to minmize some tool bars.
 		require
 			valid: a_hot_index = a_possible_positions.count implies a_hot_position > 0
@@ -190,7 +190,7 @@ feature -- Command
 			valid: Result implies is_enough_space (True, 0)
 		end
 
-	try_to_solve_no_space_hot_tool_bar_right (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_size_to_reduce, a_hot_position: INTEGER): BOOLEAN is
+	try_to_solve_no_space_hot_tool_bar_right (a_possible_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_size_to_reduce, a_hot_position: INTEGER): BOOLEAN
 			-- After SD_POSITIONER calculation, there is not enough space for dragged tool bar at right side. Try to minmize dragged tool bar.
 		require
 			valid: a_size_to_reduce > 0
@@ -202,7 +202,7 @@ feature -- Command
 
 feature -- Query
 
-	is_enough_max_space (a_inlcude_caller_size: BOOLEAN) : BOOLEAN is
+	is_enough_max_space (a_inlcude_caller_size: BOOLEAN) : BOOLEAN
 			-- If there is enough space without reduce size of all tool bar zones in Current?
 		local
 			l_all_size: INTEGER
@@ -232,13 +232,13 @@ feature -- Query
 			end
 		end
 
-	is_enough_space (a_dragging_state: BOOLEAN; a_new_size: INTEGER): BOOLEAN is
+	is_enough_space (a_dragging_state: BOOLEAN; a_new_size: INTEGER): BOOLEAN
 			-- If there is enough space for all tool bars' current size?
 		do
 			Result := space_to_resize (a_dragging_state, a_new_size) <= 0
 		end
 
-	space_to_resize (a_dragging_state: BOOLEAN; a_new_size: INTEGER): INTEGER is
+	space_to_resize (a_dragging_state: BOOLEAN; a_new_size: INTEGER): INTEGER
 			-- Space that not enough, so have to reduce tool bars size.
 			-- If space is enough, Result will negative, means size we can expand.
 		local
@@ -265,19 +265,19 @@ feature -- Query
 
 		end
 
-	has (a_tool_bar: EV_WIDGET): BOOLEAN is
+	has (a_tool_bar: EV_WIDGET): BOOLEAN
 			-- If `internal_tool_bar_row' has a_tool_bar?
 		do
 			Result := internal_tool_bar_row.has (a_tool_bar)
 		end
 
-	is_dragging: BOOLEAN is
+	is_dragging: BOOLEAN
 			-- If Current dragging?
 		do
 			Result := internal_mediator.caller /= Void
 		end
 
-	size_of (a_index: INTEGER): INTEGER is
+	size_of (a_index: INTEGER): INTEGER
 			-- Size of SD_TOOL_BAR_ZONE which index is `a_index'
 		require
 			valid: valid_index (a_index)
@@ -288,7 +288,7 @@ feature -- Query
 			Result := l_zones.item (a_index).size
 		end
 
-	valid_index (a_index: INTEGER): BOOLEAN is
+	valid_index (a_index: INTEGER): BOOLEAN
 			-- If `a_index' valid?
 		local
 			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
@@ -299,7 +299,7 @@ feature -- Query
 
 feature {NONE} -- Implementation for `try_solve_no_space_left'
 
-	can_solve_no_space_left (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index: INTEGER): BOOLEAN is
+	can_solve_no_space_left (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index: INTEGER): BOOLEAN
 			-- If possible slove no space left?
 		require
 			not_enough_space: not is_enough_max_space (True)
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_left'
 			end
 		end
 
-	solve_no_space_left (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index: INTEGER) is
+	solve_no_space_left (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index: INTEGER)
 			-- We really solve no space left problem by reduce/expand SD_TOOL_BAR_ZONR sizes.
 		require
 			not_void: a_possible_positions /= Void
@@ -411,7 +411,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_left'
 			end
 		end
 
-	calculate_size_to_expand_right (a_new_possible_size_position: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER):INTEGER is
+	calculate_size_to_expand_right (a_new_possible_size_position: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER):INTEGER
 			-- After really reduce size left, we calculate really size to expand for right side.
 		require
 			not_void: a_new_possible_size_position /= Void
@@ -452,7 +452,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_left'
 
 feature {NONE} -- Implementation for `try_solve_no_space_right'
 
-	can_solve_no_space_right (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index: INTEGER; a_hot_position: INTEGER): BOOLEAN is
+	can_solve_no_space_right (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index: INTEGER; a_hot_position: INTEGER): BOOLEAN
 			-- If possible slove no space right?
 		require
 			not_enough_space: not is_enough_max_space (True)
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_right'
 			end
 		end
 
-	total_zone_size (a_except_hot_zone: BOOLEAN): INTEGER is
+	total_zone_size (a_except_hot_zone: BOOLEAN): INTEGER
 			-- Total zones size.
 		local
 			l_zones: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_right'
 			end
 		end
 
-	solve_no_space_right (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index, a_hot_position: INTEGER) is
+	solve_no_space_right (a_possible_positions: ARRAYED_LIST [TUPLE [pos: INTEGER; size: INTEGER]]; a_hot_index, a_hot_position: INTEGER)
 			-- We really solve no space right problem by reduce/expand SD_TOOL_BAR_ZONR sizes.
 		require
 			not_void: a_possible_positions /= Void
@@ -577,7 +577,7 @@ feature {NONE} -- Implementation for `try_solve_no_space_right'
 
 		end
 
-	calculate_size_to_expand_left (a_new_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER): INTEGER is
+	calculate_size_to_expand_left (a_new_positions: ARRAYED_LIST [TUPLE [INTEGER, INTEGER]]; a_hot_index: INTEGER): INTEGER
 			-- After really reduce size right, we calculate really size to expand for left side.
 		require
 			not_void: a_new_positions /= Void
@@ -633,7 +633,7 @@ feature {NONE} -- Implementation attributes
 invariant
 	not_void: internal_tool_bar_row /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

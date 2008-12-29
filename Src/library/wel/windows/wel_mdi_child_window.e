@@ -1,4 +1,4 @@
-indexing
+note
 	description: "MDI child window to insert into a MDI client window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING_GENERAL) is
+	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING_GENERAL)
 			-- Make window as child of `a_parent' and `a_name' as title.
 		do
 			register_class
@@ -48,14 +48,14 @@ feature -- Access
 
 feature -- Basic operations
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN)
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		do
 			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint, 0)
 		end
 
-	move_absolute (a_x, a_y: INTEGER) is
+	move_absolute (a_x, a_y: INTEGER)
 			-- Move the window to `a_x', `a_y' absolute position.
 		local
 			point: WEL_POINT
@@ -65,7 +65,7 @@ feature -- Basic operations
 			move (point.x, point.y)
 		end
 
-	destroy is
+	destroy
 			-- Destroy the window.
 		do
 			parent.client_window.destroy_window (Current)
@@ -73,7 +73,7 @@ feature -- Basic operations
 
 feature -- Element change
 
-	set_parent (a_parent: WEL_WINDOW) is
+	set_parent (a_parent: WEL_WINDOW)
 			-- Change parent of current window if possible.
 		local
 			l_parent: like parent
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 
 	internal_window_make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING_GENERAL;
 			a_style, a_x, a_y, a_w, a_h, an_id: INTEGER;
-			data: POINTER) is
+			data: POINTER)
 			-- Create the window
 		local
 			mdi_cs: WEL_MDI_CREATE_STRUCT
@@ -109,19 +109,19 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	call_default_window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	call_default_window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 		do
 			Result := cwin_def_mdi_child_proc (hwnd, msg,
 				 wparam, lparam)
 		end
 
-	class_background: WEL_BRUSH is
+	class_background: WEL_BRUSH
 			-- Standard window background color
 		once
 			create Result.make_by_sys_color (Color_window + 1)
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := "WELMDIChildWindowClass"
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_def_mdi_child_proc (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	cwin_def_mdi_child_proc (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- SDK DefMDIChildProc
 		external
 			"C [macro <wel.h>] (HWND, UINT, WPARAM, %
@@ -138,7 +138,7 @@ feature {NONE} -- Externals
 			"DefMDIChildProc"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

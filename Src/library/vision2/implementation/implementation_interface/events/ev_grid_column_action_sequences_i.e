@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that contain action sequences for EV_GRID_COLUMN_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `Current' is selected.
 		do
 			if select_actions_internal = Void then
@@ -21,7 +21,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
-	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `Current' is deselected.
 		do
 			if deselect_actions_internal = Void then
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 	deselect_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Implementation of once per object `deselect_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

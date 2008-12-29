@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Example which shows some application of the merging facilities."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ class
 	make
 
 feature -- Init
-	make is 
+	make 
 		local
 			fn: FILE_NAME	
 		do 
@@ -45,7 +45,7 @@ feature -- Implementation
 
 	merger: GD_COPIER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Strategy executing all tests in the suite `n' times in random order"
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ class RANDOM_N_TIMES_STRATEGY inherit
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Select next test.
 		local
 			stop: BOOLEAN
@@ -30,7 +30,7 @@ feature -- Cursor movement
 			is_reset := False
 		end
 
-	reset is
+	reset
 			-- Reset strategy.
 		local
 			i: INTEGER
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 	runs: ARRAY [INTEGER] 
 			-- Number of remaining runs for each test
 
-	finish_run is
+	finish_run
 			-- Execute post-run actions.
 		local
 			i: INTEGER
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 			runs.put (i - 1, suite.index)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

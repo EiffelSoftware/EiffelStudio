@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Widget onto which graphical primatives may be drawn.
@@ -43,7 +43,7 @@ create
 
 feature -- Basic operations
 
-	redraw is
+	redraw
 			-- Call `expose_actions' for `Current' when next idle.
 		require
 			not_destroyed: not is_destroyed
@@ -51,7 +51,7 @@ feature -- Basic operations
 			implementation.redraw
 		end
 
-	clear_and_redraw is
+	clear_and_redraw
 			-- Clear the window.
 			-- Call `expose_actions' for `Current' when next idle.
 		require
@@ -60,7 +60,7 @@ feature -- Basic operations
 			implementation.clear_and_redraw
 		end
 
-	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Call `expose_actions' for rectangle described with upper-left
 			-- corner on (`a_x', `a_y') with size `a_width' and `a_height' when next idle.
 		require
@@ -69,7 +69,7 @@ feature -- Basic operations
 			implementation.redraw_rectangle (a_x, a_y, a_width, a_height)
 		end
 
-	clear_and_redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+	clear_and_redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Clear rectangle described with upper-left corner on (`a_x', `a_y')
 			-- with size `a_width' and `a_height'.
 			-- Call `expose_actions' for rectangle when next idle.
@@ -79,7 +79,7 @@ feature -- Basic operations
 			implementation.clear_and_redraw_rectangle (a_x, a_y, a_width, a_height)
 		end
 
-	flush is
+	flush
 			-- Execute any delayed calls to `expose_actions' without waiting
 			-- for next idle. Delayed calls to `expose_actions' happen as a
 			-- result of calling on of `redraw', `clear_and_redraw',
@@ -94,13 +94,13 @@ feature -- Basic operations
 
 feature {EV_ANY} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and then Precursor {EV_DRAWABLE}
 		end
 
-	is_in_default_state_for_tabs: BOOLEAN is
+	is_in_default_state_for_tabs: BOOLEAN
 			-- Is `Current' in its default state with regards to tabs?
 		do
 			Result := not is_tabable_to and not is_tabable_from
@@ -113,13 +113,13 @@ feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_DRAWING_AREA_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

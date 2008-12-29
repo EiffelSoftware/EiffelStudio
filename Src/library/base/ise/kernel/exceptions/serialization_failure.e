@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Exception for retrieval error, 
 			may be raised by `retrieved' in `IO_MEDIUM'.
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	frozen code: INTEGER is
+	frozen code: INTEGER
 			-- Exception code
 		do
 			Result := {EXCEP_CONST}.serialization_exception
@@ -25,6 +25,6 @@ feature -- Access
 
 feature {NONE} -- Accesss
 
-	frozen internal_meaning: STRING is "Serialization failed."
+	frozen internal_meaning: STRING = "Serialization failed."
 
 end

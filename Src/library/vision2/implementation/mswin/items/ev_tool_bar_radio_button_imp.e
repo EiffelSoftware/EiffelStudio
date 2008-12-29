@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision tool-bar radio button, mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Post creation initialization.
 		do
 			Precursor
@@ -41,7 +41,7 @@ feature -- Status report
 
 	is_selected: BOOLEAN
 
-	enable_select is
+	enable_select
 			-- Select `Current'.
 		do
 			update_radio_states
@@ -50,7 +50,7 @@ feature -- Status report
 			end
 		end
 
-	disable_select is
+	disable_select
 			-- Deselect `Current'
 		do
 			is_selected := False
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Implementation
 
-	update_radio_states is
+	update_radio_states
 			-- Unselect all members of `radio_group' except `Current',
 			-- and assign True to `is_selected'.
 		local
@@ -88,7 +88,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR_RADIO_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		Object that holds a list of images (Bitmaps or Icons).
 		
@@ -25,7 +25,7 @@ create
 
 feature -- Initialization
 
-	make (given_width: INTEGER; given_height: INTEGER; color_depth: INTEGER; masked_bitmap: BOOLEAN) is
+	make (given_width: INTEGER; given_height: INTEGER; color_depth: INTEGER; masked_bitmap: BOOLEAN)
 			-- Initialization with an empty image list. Images located
 			-- in this imageList must have the a width equal to `given_width'
 			-- and a height equal to `given_height'.
@@ -63,7 +63,7 @@ feature -- Initialization
 
 feature  -- Removal
 
-	destroy is
+	destroy
 			-- destroy `item' by calling the
 			-- corresponding Windows function and
 			-- set `item' to `default_pointer'.
@@ -74,7 +74,7 @@ feature  -- Removal
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- Called by the `dispose' routine to
 			-- destroy `item' by calling the
 			-- corresponding Windows function and
@@ -99,7 +99,7 @@ feature -- Access
 			-- Note: to use masked bitmap, create the ImageList
 			--       using `Ilc_mask + Ilc_colorXXXX' as `image_type'
 
-	count: INTEGER is
+	count: INTEGER
 			-- Retrieves the number of images in the image list.
 		do
 			Result := cwel_imagelist_get_image_count(item)
@@ -108,7 +108,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	add_bitmap (bitmap_to_add: WEL_BITMAP) is
+	add_bitmap (bitmap_to_add: WEL_BITMAP)
 			-- Add the bitmap `bitmap_to_add' into the image list.
 		require
 			bitmap_not_void: bitmap_to_add /= Void
@@ -119,7 +119,7 @@ feature -- Basic operations
 			last_position := cwel_imagelist_add(item, bitmap_to_add.item, Default_pointer)
 		end
 
-	replace_bitmap (bitmap_to_add: WEL_BITMAP; index: INTEGER) is
+	replace_bitmap (bitmap_to_add: WEL_BITMAP; index: INTEGER)
 			-- Replace the bitmap at position `index' in the imageList by
 			-- `bitmap_to_add'.
 		require
@@ -132,7 +132,7 @@ feature -- Basic operations
 			cwel_imagelist_replace(item, index, bitmap_to_add.item, Default_pointer)
 		end
 
-	add_masked_bitmap (bitmap_to_add: WEL_BITMAP; bitmap_mask: WEL_BITMAP) is
+	add_masked_bitmap (bitmap_to_add: WEL_BITMAP; bitmap_mask: WEL_BITMAP)
 			-- Add the bitmap `bitmap_to_add' into the image list.
 			-- `bitmap_mask' represents the mask for the bitmap.
 		require
@@ -148,7 +148,7 @@ feature -- Basic operations
 			last_position := cwel_imagelist_add(item, bitmap_to_add.item, bitmap_mask.item)
 		end
 
-	replace_masked_bitmap(bitmap_to_add: WEL_BITMAP; bitmap_mask: WEL_BITMAP; index: INTEGER) is
+	replace_masked_bitmap(bitmap_to_add: WEL_BITMAP; bitmap_mask: WEL_BITMAP; index: INTEGER)
 			-- Replace the bitmap at position `index' in the imageList by
 			-- `bitmap_to_add'.
 			-- `bitmap_mask' represents the mask for the bitmap.
@@ -167,7 +167,7 @@ feature -- Basic operations
 			cwel_imagelist_replace(item, index, bitmap_to_add.item, bitmap_mask.item)
 		end
 
-	add_color_masked_bitmap(bitmap_to_add: WEL_BITMAP; mask_color: WEL_COLOR_REF) is
+	add_color_masked_bitmap(bitmap_to_add: WEL_BITMAP; mask_color: WEL_COLOR_REF)
 			-- Add the bitmap `bitmap_to_add' into the image list.
 			-- `mask_color' represents the color used to generate the mask.
 			-- Each pixel of this color in the specified bitmap is changed to black
@@ -185,7 +185,7 @@ feature -- Basic operations
 			last_position := cwel_imagelist_add_masked(item, bitmap_to_add.item, mask_color.item)
 		end
 
-	add_icon (icon_to_add: WEL_GRAPHICAL_RESOURCE) is
+	add_icon (icon_to_add: WEL_GRAPHICAL_RESOURCE)
 			-- Adds the icon or cursor `icon_to_add' to this image list
 		require
 			icon_not_void: icon_to_add /= Void
@@ -194,7 +194,7 @@ feature -- Basic operations
 			last_position := cwel_imagelist_add_icon(item, icon_to_add.item)
 		end
 
-	draw_to_dc (index: INTEGER; a_dc: WEL_DC; a_x, a_y: INTEGER; a_style: NATURAL_32) is
+	draw_to_dc (index: INTEGER; a_dc: WEL_DC; a_x, a_y: INTEGER; a_style: NATURAL_32)
 			-- Draw image at index `index' to `a_dc' at (`a_x', `a_y') using `a_style'.
 		local
 			l_success: INTEGER
@@ -202,7 +202,7 @@ feature -- Basic operations
 			l_success := cwel_imagelist_draw (item, index, a_dc.item, a_x, a_y, a_style)
 		end
 
-	replace_icon (icon_to_add: WEL_GRAPHICAL_RESOURCE; index: INTEGER) is
+	replace_icon (icon_to_add: WEL_GRAPHICAL_RESOURCE; index: INTEGER)
 			-- Replace the bitmap at position `index' in the imageList by
 			-- the cursor or icon `icon_to_add'.
 		require
@@ -214,7 +214,7 @@ feature -- Basic operations
 			cwel_imagelist_replace_icon(item, index, icon_to_add.item)
 		end
 
-	get_icon (index, flags: INTEGER): WEL_ICON is
+	get_icon (index, flags: INTEGER): WEL_ICON
 		require
 			index_not_too_small: index >= 0
 			index_not_too_big: index < count
@@ -225,7 +225,7 @@ feature -- Basic operations
 		end
 
 
-	remove_image (index: INTEGER) is
+	remove_image (index: INTEGER)
 			-- Remove the image at index `index' from the image list.
 			--
 			-- When an image is removed, the indexes of the remaining images are
@@ -246,7 +246,7 @@ feature -- Basic operations
 			end
 		end
 
-	remove_all_images (index: INTEGER) is
+	remove_all_images (index: INTEGER)
 			-- Remove all images from the image list.
 		require
 			exists: exists
@@ -259,7 +259,7 @@ feature -- Basic operations
 			end
 		end
 
-	set_background_color(new_color: WEL_COLOR_REF) is
+	set_background_color(new_color: WEL_COLOR_REF)
 			-- Sets the background color for this image list.
 		require
 			new_color_not_void: new_color /= Void
@@ -276,7 +276,7 @@ feature -- Status report
 	bitmaps_height: INTEGER
 			-- height of all bitmaps located in this imageList
 
-	get_background_color: WEL_COLOR_REF is
+	get_background_color: WEL_COLOR_REF
 			-- Retrieves the current background color for this image list.
 		require
 			exists: exists
@@ -289,98 +289,98 @@ feature -- Status report
 
 feature {NONE} -- Externals
 
-	cwel_imagelist_get_icon (ptr: POINTER; index, flag: INTEGER): POINTER is
+	cwel_imagelist_get_icon (ptr: POINTER; index, flag: INTEGER): POINTER
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST, int, int): HICON"
 		alias
 			"ImageList_GetIcon"
 		end
 
-	cwel_imagelist_create (cx: INTEGER; cy: INTEGER; flag: INTEGER; c_initial: INTEGER; c_grow: INTEGER): POINTER is
+	cwel_imagelist_create (cx: INTEGER; cy: INTEGER; flag: INTEGER; c_initial: INTEGER; c_grow: INTEGER): POINTER
 		external
 			"C [macro %"wel_image_list.h%"] (int, int, UINT, int, int): HIMAGELIST"
 		alias
 			"ImageList_Create"
 		end
 
-	cwel_imagelist_destroy (ptr: POINTER) is
+	cwel_imagelist_destroy (ptr: POINTER)
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST)"
 		alias
 			"ImageList_Destroy"
 		end
 
-	cwel_imagelist_add (ptr, bitmap_to_add, mask_bitmap_to_add: POINTER): INTEGER is
+	cwel_imagelist_add (ptr, bitmap_to_add, mask_bitmap_to_add: POINTER): INTEGER
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST, HBITMAP, HBITMAP): int"
 		alias
 			"ImageList_Add"
 		end
 
-	cwel_imagelist_draw (ptr: POINTER; index: INTEGER; mem_dc: POINTER; a_x, a_y: INTEGER; style: NATURAL_32): INTEGER is
+	cwel_imagelist_draw (ptr: POINTER; index: INTEGER; mem_dc: POINTER; a_x, a_y: INTEGER; style: NATURAL_32): INTEGER
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST, int, HDC, int, int, UINT): int"
 		alias
 			"ImageList_Draw"
 		end
 
-	cwel_imagelist_replace (ptr: POINTER;  index: INTEGER; bitmap_to_add, mask_bitmap_to_add: POINTER) is
+	cwel_imagelist_replace (ptr: POINTER;  index: INTEGER; bitmap_to_add, mask_bitmap_to_add: POINTER)
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST, int, HBITMAP, HBITMAP)"
 		alias
 			"ImageList_Replace"
 		end
 
-	cwel_imagelist_add_masked (ptr: POINTER; bitmap_to_add: POINTER; mask_color: INTEGER): INTEGER is
+	cwel_imagelist_add_masked (ptr: POINTER; bitmap_to_add: POINTER; mask_color: INTEGER): INTEGER
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST, HBITMAP, COLORREF): int"
 		alias
 			"ImageList_AddMasked"
 		end
 
-	cwel_imagelist_add_icon (ptr: POINTER; icon_to_add: POINTER): INTEGER is
+	cwel_imagelist_add_icon (ptr: POINTER; icon_to_add: POINTER): INTEGER
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST, HICON): int"
 		alias
 			"ImageList_AddIcon"
 		end
 
-	cwel_imagelist_replace_icon (ptr: POINTER;  index: INTEGER; icon_to_add: POINTER) is
+	cwel_imagelist_replace_icon (ptr: POINTER;  index: INTEGER; icon_to_add: POINTER)
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST, int, HICON)"
 		alias
 			"ImageList_ReplaceIcon"
 		end
 
-	cwel_imagelist_get_bkcolor (ptr: POINTER): INTEGER is
+	cwel_imagelist_get_bkcolor (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST): COLORREF"
 		alias
 			"ImageList_GetBkColor"
 		end
 
-	cwel_imagelist_set_bkcolor (ptr: POINTER; bkcolor: INTEGER) is
+	cwel_imagelist_set_bkcolor (ptr: POINTER; bkcolor: INTEGER)
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST, COLORREF)"
 		alias
 			"ImageList_SetBkColor"
 		end
 
-	cwel_imagelist_get_image_count (ptr: POINTER): INTEGER is
+	cwel_imagelist_get_image_count (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST): int"
 		alias
 			"ImageList_GetImageCount"
 		end
 
-	cwel_imagelist_remove (ptr: POINTER; index: INTEGER): INTEGER is
+	cwel_imagelist_remove (ptr: POINTER; index: INTEGER): INTEGER
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST, int): BOOL"
 		alias
 			"ImageList_Remove"
 		end
 
-	cwel_imagelist_remove_all (ptr: POINTER): INTEGER is
+	cwel_imagelist_remove_all (ptr: POINTER): INTEGER
 		external
 			"C [macro %"wel_image_list.h%"] (HIMAGELIST): BOOL"
 		alias
@@ -389,16 +389,16 @@ feature {NONE} -- Externals
 
 feature {NONE} -- Private Constants
 
-	Initial_size	: INTEGER is 1
+	Initial_size	: INTEGER = 1
 		-- Number of images that the image list initially contains.
 
-	Grow_parameter	: INTEGER is 1;
+	Grow_parameter	: INTEGER = 1;
 		-- Number of images by which the image list can grow when the
 		-- system needs to make room for new images. This attribute
 		-- represents the number of new images that the resized image
 		-- list can contain.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

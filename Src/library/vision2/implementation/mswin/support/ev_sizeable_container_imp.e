@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision sizeable container. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize_sizeable is
+	initialize_sizeable
 			-- Initialize sizing attributes of `Current'.
 		do
 			create child_cell
@@ -46,7 +46,7 @@ feature -- Status report
 	is_in_min_width: BOOLEAN
 			-- Is current recomputing its minimum width?
 
-	is_in_notify: CELL [BOOLEAN] is
+	is_in_notify: CELL [BOOLEAN]
 			-- Is current already notified from a change in its children?
 		once
 			create Result.put (False)
@@ -54,13 +54,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_minwidth_recomputation_needed (flag: BOOLEAN) is
+	set_minwidth_recomputation_needed (flag: BOOLEAN)
 			-- Set `is_minwidth_recomputation_needed' with `flag'?
 		do
 			is_minwidth_recomputation_needed := flag
 		end
 
-	set_minheight_recomputation_needed (flag: BOOLEAN) is
+	set_minheight_recomputation_needed (flag: BOOLEAN)
 			-- Set `is_minheight_recomputation_needed' with `flag'?
 		do
 			is_minheight_recomputation_needed := flag
@@ -68,7 +68,7 @@ feature -- Status setting
 
 feature -- Access
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Lower bound on `width' in pixels.
 		do
 			if is_minwidth_recomputation_needed then
@@ -87,7 +87,7 @@ feature -- Access
 			Result := child_cell.minimum_width
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Lower bound on `height' in pixels.
 		do
 			if is_minheight_recomputation_needed then
@@ -108,7 +108,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	ev_set_minimum_width (value: INTEGER) is
+	ev_set_minimum_width (value: INTEGER)
 			-- Assign `value' to `minimum_width'.
 			-- Should check if the user didn't set the minimum width
 			-- before we set the new value.
@@ -145,7 +145,7 @@ feature -- Basic operations
 			end
 		end
 
-	ev_set_minimum_height (value: INTEGER) is
+	ev_set_minimum_height (value: INTEGER)
 			-- Assign `value' to `minimum_height'.
 			-- Should check if the user didn't set the minimum width
 			-- before we set the new value.
@@ -182,7 +182,7 @@ feature -- Basic operations
 			end
 		end
 
-	ev_set_minimum_size (a_width, a_height: INTEGER) is
+	ev_set_minimum_size (a_width, a_height: INTEGER)
 			-- Assign `mw' to minimum_width and `mh' to minimum_height.
 			-- Should check if the user didn't set the minimum width
 			-- before to set the new value.
@@ -235,7 +235,7 @@ feature -- Basic operations
 			end
 		end
 
-	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP) is
+	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP)
 			-- Notify the current widget that the change identify by
 			-- type have been done. For types, see `internal_changes'
 			-- in class EV_SIZEABLE_IMP. If the container is shown,
@@ -294,14 +294,14 @@ feature -- Basic operations
 			end
 		end
 
-	top_level_window_imp: EV_WINDOW_IMP is
+	top_level_window_imp: EV_WINDOW_IMP
 			-- Top window of Current.
 		require
 			not_is_destroyed: not is_destroyed
 		deferred
 		end
 
-	compute_minimum_width, compute_minimum_height, compute_minimum_size is
+	compute_minimum_width, compute_minimum_height, compute_minimum_size
 			-- Recompute the minimum_width of the object.
 			-- Should call only ev_set_minimum_xxxx.
 		require
@@ -309,7 +309,7 @@ feature -- Basic operations
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

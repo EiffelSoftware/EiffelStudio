@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make the main window
 		do
 			make_by_id (Id_main_dialog)
@@ -54,7 +54,7 @@ feature -- Access
 
 feature {NONE} -- Behaviors
 
-	on_menu_command (id_menu: INTEGER) is
+	on_menu_command (id_menu: INTEGER)
 		local
 			about: WEL_MODAL_DIALOG
 		do
@@ -75,12 +75,12 @@ feature {NONE} -- Behaviors
 			end
 		end
 
-	on_control_id_command (an_id: INTEGER) is
+	on_control_id_command (an_id: INTEGER)
 		do
 			on_menu_command (an_id)
 		end
 
-	on_file_select_h_file is
+	on_file_select_h_file
 		do
 			open_header_file_dialog.activate (Current)
 			if open_header_file_dialog.selected then
@@ -88,7 +88,7 @@ feature {NONE} -- Behaviors
 			end
 		end
 
-	on_file_select_eiffel_file is
+	on_file_select_eiffel_file
 		local
 			c: WEL_CURSOR
 		do
@@ -104,7 +104,7 @@ feature {NONE} -- Behaviors
 			end
 		end
 
-	on_translate is
+	on_translate
 		local
 			conv: CONVERTER
 			c: WEL_CURSOR
@@ -129,7 +129,7 @@ feature {NONE} -- Behaviors
 			end
 		end
 
-	notify (a_control: WEL_CONTROL; notify_code: INTEGER) is
+	notify (a_control: WEL_CONTROL; notify_code: INTEGER)
 		do
 			if notify_code = En_change then
 				if not class_name_edit.text.is_empty and then not
@@ -146,7 +146,7 @@ feature {NONE} -- Behaviors
 
 feature {NONE} -- Implementation
 
-	scan_file_for_classname (a_file_name: STRING) is
+	scan_file_for_classname (a_file_name: STRING)
 		require
 			file_exists: file_exists (a_file_name)
 		local
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 			a_file.close
 		end
 
-	scan_for_class_name (a_file: PLAIN_TEXT_FILE): BOOLEAN is
+	scan_for_class_name (a_file: PLAIN_TEXT_FILE): BOOLEAN
 			-- Scan for the classname and set it if it's found.
 		require
 			a_file_not_void: a_file /= Void
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	scan_for_next_string_terminator (a_file: PLAIN_TEXT_FILE): BOOLEAN is
+	scan_for_next_string_terminator (a_file: PLAIN_TEXT_FILE): BOOLEAN
 			-- Scan `a_file' until string terminator detected
 		require
 			a_file_not_void: a_file /= Void
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			Result := a_file.after
 		end
 
-	open_eiffel_file_dialog: WEL_OPEN_FILE_DIALOG is
+	open_eiffel_file_dialog: WEL_OPEN_FILE_DIALOG
 		once
 			create Result.make
 			Result.set_title ("Select the Eiffel file")
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	open_header_file_dialog: WEL_OPEN_FILE_DIALOG is
+	open_header_file_dialog: WEL_OPEN_FILE_DIALOG
 		once
 			create Result.make
 			Result.set_title ("Select the header/resource file")
@@ -233,14 +233,14 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	file_menu: WEL_MENU is
+	file_menu: WEL_MENU
 		once
 			Result := menu.popup_menu (0)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	file_exists (filename: STRING): BOOLEAN is
+	file_exists (filename: STRING): BOOLEAN
 			-- Does `filename' exist?
 		require
 			filename_not_void: filename /= Void
@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 			Result := a_file.exists
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

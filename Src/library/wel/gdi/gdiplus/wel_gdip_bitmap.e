@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Bitmap functions in Gdi+.
 					For more information, please see:
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make_with_size (a_width, a_height: INTEGER) is
+	make_with_size (a_width, a_height: INTEGER)
 			-- Creation method.
 		require
 			larger_than_0: a_width > 0
@@ -40,7 +40,7 @@ feature {NONE} -- Initlization
 			make_formatted (a_width, a_height, {WEL_GDIP_PIXEL_FORMAT}.Format32bppARGB)
 		end
 
-	make_formatted (a_width, a_height: INTEGER; a_format: INTEGER) is
+	make_formatted (a_width, a_height: INTEGER; a_format: INTEGER)
 			-- Creation method
 		require
 			larger_than_0: a_width > 0
@@ -54,7 +54,7 @@ feature {NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	make_with_graphics (a_width, a_height: INTEGER; a_graphics: WEL_GDIP_GRAPHICS) is
+	make_with_graphics (a_width, a_height: INTEGER; a_graphics: WEL_GDIP_GRAPHICS)
 			-- Creation method.
 		require
 			larger_than_0: a_width > 0
@@ -68,7 +68,7 @@ feature {NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	make_from_icon (a_icon: WEL_ICON) is
+	make_from_icon (a_icon: WEL_ICON)
 			-- Creation method.
 		require
 			a_icon_not_void: a_icon /= Void
@@ -80,7 +80,7 @@ feature {NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	make_from_bitmap (a_bitmap: WEL_BITMAP; a_palette: WEL_PALETTE) is
+	make_from_bitmap (a_bitmap: WEL_BITMAP; a_palette: WEL_PALETTE)
 			-- Creation method.
 			-- When convert from `a_bitmap' to Current, alpha channel data will lost.
 		require
@@ -97,7 +97,7 @@ feature {NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	make_from_dib_bitmap (a_bitmap_info: WEL_BITMAP_INFO; a_bitmap_data: POINTER) is
+	make_from_dib_bitmap (a_bitmap_info: WEL_BITMAP_INFO; a_bitmap_data: POINTER)
 			-- Creation method.
 			-- When convert from `a_bitmap_info' and `a_bitmap_data' to Current, alpha channel data will lost.
 		require
@@ -111,7 +111,7 @@ feature {NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	make_from_bitmap_with_alpha (a_bitmap: WEL_BITMAP) is
+	make_from_bitmap_with_alpha (a_bitmap: WEL_BITMAP)
 			-- Copy raw image data from `a_bitmap' directly.
 			-- `a_bitmap' must have alpha channel and bits order is argb.
 		require
@@ -144,7 +144,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_with_icon (a_icon: WEL_ICON) is
+	set_with_icon (a_icon: WEL_ICON)
 			-- Creation method.
 		require
 			a_icon_not_void: a_icon /= Void
@@ -153,7 +153,7 @@ feature -- Command
 			make_from_icon (a_icon)
 		end
 
-	load_image_from_file (a_file_name: STRING) is
+	load_image_from_file (a_file_name: STRING)
 			-- Redefine
 		local
 			l_temp: WEL_GDIP_BITMAP
@@ -183,7 +183,7 @@ feature -- Command
 			l_temp.dispose
 		end
 
-	lock_bits (a_rect: WEL_GDIP_RECT; a_lock_bitmode_flag: NATURAL_32; a_pixel_format: INTEGER): WEL_GDIP_BITMAP_DATA is
+	lock_bits (a_rect: WEL_GDIP_RECT; a_lock_bitmode_flag: NATURAL_32; a_pixel_format: INTEGER): WEL_GDIP_BITMAP_DATA
 			-- Lock image data bits.
 		require
 			not_void: a_rect /= Void
@@ -199,7 +199,7 @@ feature -- Command
 			not_void: Result /= Void
 		end
 
-	unlock_bits (a_locked_data: WEL_GDIP_BITMAP_DATA) is
+	unlock_bits (a_locked_data: WEL_GDIP_BITMAP_DATA)
 			-- Unlock `a_lock_data' which is from Current datas.
 		require
 			not_void: a_locked_data /= Void
@@ -210,7 +210,7 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	set_pixel (a_x, a_y, argb_value: NATURAL_32) is
+	set_pixel (a_x, a_y, argb_value: NATURAL_32)
 			-- Set ARGB pixel value at `a_x', `a_y' to `argb_value'.
 		local
 			l_result: INTEGER
@@ -219,7 +219,7 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32 is
+	get_pixel (a_x, a_y: NATURAL_32): NATURAL_32
 			-- Return ARGB pixel value at `a_x', `a_y'.
 		local
 			l_result: INTEGER
@@ -228,7 +228,7 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	new_bitmap: WEL_BITMAP is
+	new_bitmap: WEL_BITMAP
 			-- Create a 32bits DIB prmulitplied ARGB bitmap from current data.
 		local
 			l_header_info: WEL_BITMAP_INFO_HEADER
@@ -266,7 +266,7 @@ feature -- Command
 
 feature -- Query
 
-	raw_format: WEL_GUID is
+	raw_format: WEL_GUID
 			-- Redefine
 		do
 			Result := raw_format_recorded
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 
 feature -- C externals
 
-	c_gdip_create_bitmap_from_scan0 (a_gdiplus_handle: POINTER; a_width, a_height: INTEGER; a_pixel_format: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
+	c_gdip_create_bitmap_from_scan0 (a_gdiplus_handle: POINTER; a_width, a_height: INTEGER; a_pixel_format: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Create a bitmap object.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -310,7 +310,7 @@ feature -- C externals
 			]"
 		end
 
-	c_gdip_create_bitmap_from_graphics (a_gdiplus_handle: POINTER; a_width, a_height: INTEGER; a_target_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
+	c_gdip_create_bitmap_from_graphics (a_gdiplus_handle: POINTER; a_width, a_height: INTEGER; a_target_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Create a bitmap object.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -338,7 +338,7 @@ feature -- C externals
 			]"
 		end
 
-	c_gdip_create_bitmap_from_bitmap (a_gdiplus_handle: POINTER; a_image, a_palette: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
+	c_gdip_create_bitmap_from_bitmap (a_gdiplus_handle: POINTER; a_image, a_palette: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 				-- Create a bitmap object.	
 			require
 				a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -365,7 +365,7 @@ feature -- C externals
 				]"
 			end
 
-	c_gdip_create_bitmap_from_dib_bitmap (a_gdiplus_handle: POINTER; a_bitmap_info, a_bitmap_data: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
+	c_gdip_create_bitmap_from_dib_bitmap (a_gdiplus_handle: POINTER; a_bitmap_info, a_bitmap_data: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 				-- Create a bitmap object.	
 			require
 				a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -392,7 +392,7 @@ feature -- C externals
 				]"
 			end
 
-	c_gdip_create_bitmap_from_hicon (a_gdiplus_handle: POINTER; a_hicon: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER  is
+	c_gdip_create_bitmap_from_hicon (a_gdiplus_handle: POINTER; a_hicon: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Create a bitmap object.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -418,7 +418,7 @@ feature -- C externals
 			]"
 		end
 
-	c_gdip_bitmap_get_pixel (a_gdiplus_handle, a_bitmap: POINTER; a_x, a_y: NATURAL_32; a_color: TYPED_POINTER [NATURAL_32]; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_bitmap_get_pixel (a_gdiplus_handle, a_bitmap: POINTER; a_x, a_y: NATURAL_32; a_color: TYPED_POINTER [NATURAL_32]; a_result_status: TYPED_POINTER [INTEGER])
 				-- Get pixel of `a_bitmap' at `a_x', `a_y'
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -446,7 +446,7 @@ feature -- C externals
 			]"
 		end
 
-	c_gdip_bitmap_set_pixel (a_gdiplus_handle, a_bitmap: POINTER; a_x, a_y: NATURAL_32; a_color: NATURAL_32; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_bitmap_set_pixel (a_gdiplus_handle, a_bitmap: POINTER; a_x, a_y: NATURAL_32; a_color: NATURAL_32; a_result_status: TYPED_POINTER [INTEGER])
 				-- Set pixel of `a_bitmap' at `a_x', `a_y'
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -474,7 +474,7 @@ feature -- C externals
 			]"
 		end
 
-	c_gdip_bitmap_lock_bits (a_gdiplus_handle, a_bitmap: POINTER; a_gp_rect: POINTER; a_image_lock_flag: NATURAL_32; a_pixel_format: INTEGER; a_result_status: TYPED_POINTER [INTEGER]; a_bitmap_data: POINTER) is
+	c_gdip_bitmap_lock_bits (a_gdiplus_handle, a_bitmap: POINTER; a_gp_rect: POINTER; a_image_lock_flag: NATURAL_32; a_pixel_format: INTEGER; a_result_status: TYPED_POINTER [INTEGER]; a_bitmap_data: POINTER)
 			-- Lock data bits of `a_bitmap', Result is pointer to BitmapData.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -503,7 +503,7 @@ feature -- C externals
 			]"
 		end
 
-	c_gdip_bitmap_unlock_bits (a_gdiplus_handle, a_bitmap, a_locked_bitmap_data: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_bitmap_unlock_bits (a_gdiplus_handle, a_bitmap, a_locked_bitmap_data: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Unlock `a_locked_bitmap_data' which if from `a_bitmap'
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -528,7 +528,7 @@ feature -- C externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

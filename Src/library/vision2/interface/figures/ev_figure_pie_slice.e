@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Slices from an ellipse with `center_point'. Size is determined by%N%
 		%`aperture' [0..2*Pi]."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create with some `start_angle' and `aperture'.
 		do
 			Precursor {EV_CLOSED_FIGURE}
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_start_angle (a_start_angle: DOUBLE) is
+	set_start_angle (a_start_angle: DOUBLE)
 			-- Set `start_angle' to `a_start_angle'.
 		require
 			a_start_angle_within_bounds:
@@ -60,7 +60,7 @@ feature -- Status setting
 			start_angle_assigned: start_angle = a_start_angle
 		end
 
-	set_aperture (an_aperture: DOUBLE) is
+	set_aperture (an_aperture: DOUBLE)
 			-- Set `aperture' to `an_aperture'.
 		require
 			an_aperture_within_bounds:
@@ -73,7 +73,7 @@ feature -- Status setting
 
 feature -- Events
 
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
 			theta_start, theta_end: DOUBLE
@@ -159,7 +159,7 @@ feature -- Events
 			create Result.make (leftmost, topmost, rightmost - leftmost, bottommost - topmost)
 		end
 		
-	position_on_figure (x, y: INTEGER): BOOLEAN is
+	position_on_figure (x, y: INTEGER): BOOLEAN
 			-- Is (`x', `y') on this figure?
 		local
 			ay, ax, bx, by, cx, cy, top, left: INTEGER
@@ -190,7 +190,7 @@ feature -- Events
 
 feature {EV_FIGURE_DRAWING_ROUTINES} -- Access
 
-	metrics: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	metrics: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 			-- [`top_left_x', `top_left_y', `width', `height']
 		local
 			ay, ax, bx, by: INTEGER
@@ -206,7 +206,7 @@ invariant
 	start_angle_within_bounds: start_angle >= 0 and then start_angle <= 2 * Pi
 	aperture_within_bounds: aperture >= 0 and then aperture <= 2 * Pi
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

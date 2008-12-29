@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Arc figure"
 	legal: "See notice at end of class.";
@@ -35,7 +35,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create current arc.
 		do
 			init_fig (Void);
@@ -64,7 +64,7 @@ feature -- Access
 			-- (length `radius1') relative to the three-o'clock position
 			-- from the center
 
-	origin: COORD_XY_FIG is
+	origin: COORD_XY_FIG
 			-- Origin of line
 		do
 			inspect
@@ -84,7 +84,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_angle1 (an_angle: like angle1) is
+	set_angle1 (an_angle: like angle1)
 			-- Set angle1 to `an_angle'.
 		require
 	   		angle1_smaller_than_360: an_angle < 360;
@@ -96,7 +96,7 @@ feature -- Element change
 	   		angle1 = an_angle
 		end;
 
-	set_angle2 (an_angle: like angle2) is
+	set_angle2 (an_angle: like angle2)
    			-- Set angle2 to `an_angle'.
 		require
 	   		angle2_smaller_than_360: an_angle <= 360;
@@ -108,7 +108,7 @@ feature -- Element change
 	   		angle2 = an_angle
 		end;
 
-	set_center (a_center: like center) is
+	set_center (a_center: like center)
    			-- Set `center' to `an_center'.
 		require
 	   		a_center_exists: a_center /= Void
@@ -119,7 +119,7 @@ feature -- Element change
 	   		center = a_center
 		end;
 
-	set_orientation (an_orientation: like orientation) is
+	set_orientation (an_orientation: like orientation)
    			-- Set `orientation' to `an_orientation'.
 		require
 	   		orientation_smaller_than_360: an_orientation < 360;
@@ -131,7 +131,7 @@ feature -- Element change
    			orientation = an_orientation
 		end;
 
-	set_origin_to_center is
+	set_origin_to_center
 	   		-- Set origin to `center'.
 		do
 	   		origin_user_type := 2;
@@ -139,7 +139,7 @@ feature -- Element change
    			origin.is_superimposable (center)
 		end;
 
-	set_radius1 (a_radius: like radius1) is
+	set_radius1 (a_radius: like radius1)
 	   		-- Set `radius1' to `a_radius'.
 		require
 	   		a_radius_positive: a_radius >= 0
@@ -150,7 +150,7 @@ feature -- Element change
    			radius1 = a_radius
 		end;
 
-	set_radius2 (a_radius: like radius2) is
+	set_radius2 (a_radius: like radius2)
    			-- Set `radius2' to `a_radius'.
 		require
 	   		a_radius_positive: a_radius >= 0
@@ -161,7 +161,7 @@ feature -- Element change
 	   		radius2 = a_radius
 		end;
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: REAL; px, py: INTEGER)
 			-- Rotate figure by `a' relative to (`px', `py').
 			-- Angle `a' is measured in degrees.
 		require else
@@ -173,7 +173,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xyscale (f: REAL; px, py: INTEGER) is
+	xyscale (f: REAL; px, py: INTEGER)
 		-- Scale figure by `f' relative to (`px', `py').
 		require else
 			scale_factor_positive: f > 0.0
@@ -184,7 +184,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xytranslate (vx, vy: INTEGER) is
+	xytranslate (vx, vy: INTEGER)
 			-- Translate by `vx' horizontally and `vy' vertically.
 		do
 			center.xytranslate (vx, vy);
@@ -193,7 +193,7 @@ feature -- Element change
 
 feature -- Output
 
-	draw is
+	draw
 			-- draw the arc.
 		do
 			if drawing.is_drawable then
@@ -206,7 +206,7 @@ feature -- Output
 
 feature -- Status report
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is `other' superimposable to current arc ?
 			--| not done
 		do
@@ -214,7 +214,7 @@ feature -- Status report
 
 feature {CONFIGURE_NOTIFY} -- Updating
 
-	conf_recompute is
+	conf_recompute
 			-- Recompute.
 		local
 			diameter: INTEGER;
@@ -243,7 +243,7 @@ invariant
 	angle2_small_enough: angle2 <= 360;
 	angles2_large_enough: angle2 >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

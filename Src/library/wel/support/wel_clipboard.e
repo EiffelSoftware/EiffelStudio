@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class that handles Windows Clipboard operations"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,14 +18,14 @@ feature -- Access
 			-- Only valid after a successfull call to
 			-- `retrieve_clipboard_text'
 
-	is_clipboard_format_available (format: INTEGER): BOOLEAN is
+	is_clipboard_format_available (format: INTEGER): BOOLEAN
 		do
 			Result :=  cwel_is_clipboard_format_available (format)
 		end
 
 feature -- Element Change
 
-	retrieve_clipboard_text is
+	retrieve_clipboard_text
 			-- Retrieves text from the clipboard
 		require
 			clipboard_open: clipboard_open
@@ -46,7 +46,7 @@ feature -- Element Change
 			last_string_not_void: last_string /= Void
 		end
 
-	set_clipboard_text (a_text: STRING_GENERAL) is
+	set_clipboard_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to the clipboard
 		require
 			clipboard_open: clipboard_open
@@ -57,7 +57,7 @@ feature -- Element Change
 			cwel_set_clipboard_data ({WEL_CLIPBOARD_CONSTANTS}.Cf_unicodetext, shared_string.handle)
 		end
 
-	open_clipboard (window: WEL_WINDOW) is
+	open_clipboard (window: WEL_WINDOW)
 			-- Open clipboard for `window'. If `Void',
 			-- clipboard is opened to the current task.
 		require
@@ -70,7 +70,7 @@ feature -- Element Change
 			end
 		end
 
-	close_clipboard is
+	close_clipboard
 			-- Close clipboard.
 		require
 			clipboard_open: clipboard_open
@@ -83,7 +83,7 @@ feature -- Element Change
 			end
 		end
 
-	empty_clipboard is
+	empty_clipboard
 			-- Empty clipboard.
 		require
 			clipboard_open: clipboard_open
@@ -98,14 +98,14 @@ feature -- Element Change
 
 feature {NONE} -- Externals
 
-	cwel_empty_clipboard: BOOLEAN is
+	cwel_empty_clipboard: BOOLEAN
 		external
 			"C signature (): BOOL use %"wel.h%""
 		alias
 			"EmptyClipboard"
 		end
 
-	cwel_open_clipboard (hwnd_owner: POINTER): BOOLEAN is
+	cwel_open_clipboard (hwnd_owner: POINTER): BOOLEAN
 			-- Opens the clipboard
 			-- hwnd_owner is the handle to the window opening the clipboard
 		external
@@ -114,7 +114,7 @@ feature {NONE} -- Externals
 			"OpenClipboard"
 		end
 
-	cwel_close_clipboard: BOOLEAN is
+	cwel_close_clipboard: BOOLEAN
 			-- Closes the clipboard
 		external
 			"C signature (): BOOL use %"wel.h%""
@@ -122,7 +122,7 @@ feature {NONE} -- Externals
 			"CloseClipboard"
 		end
 
-	cwel_get_clipboard_data (format: INTEGER): POINTER is
+	cwel_get_clipboard_data (format: INTEGER): POINTER
 			-- Gets a shared memory handle which gives access to
 			-- the data currently stored in the clipboard.
 			-- Format is one of the constants in WEL_CLIPBOARD_CONSTANTS
@@ -132,7 +132,7 @@ feature {NONE} -- Externals
 			"GetClipboardData"
 		end
 
-	cwel_set_clipboard_data (format: INTEGER; text: POINTER) is
+	cwel_set_clipboard_data (format: INTEGER; text: POINTER)
 			-- Format is one of the constants in WEL_CLIPBOARD_CONSTANTS
 		external
 			"C signature (UINT, HANDLE) use %"wel.h%""
@@ -140,7 +140,7 @@ feature {NONE} -- Externals
 			"SetClipboardData"
 		end
 
-	cwel_is_clipboard_format_available (format: INTEGER): BOOLEAN is
+	cwel_is_clipboard_format_available (format: INTEGER): BOOLEAN
 			-- Determines whether the clipboard contains data in the specified format.
 		external
 			"C signature (UINT): BOOL use %"wel.h%""
@@ -148,7 +148,7 @@ feature {NONE} -- Externals
 			"IsClipboardFormatAvailable"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

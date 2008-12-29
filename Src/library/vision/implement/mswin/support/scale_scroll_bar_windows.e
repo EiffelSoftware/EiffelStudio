@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a scroll bar for scales"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -30,37 +30,37 @@ feature -- Access
 	parent: SCALE_IMP
 			-- parent of current scroll bar
 
-	on_left_button_down (keys, a_x, a_y: INTEGER) is
+	on_left_button_down (keys, a_x, a_y: INTEGER)
 			-- Respond to a 'left button down message'.
 		do
 			parent.on_left_button_down (keys, a_x + x, a_y + y)
 		end		
 
-	on_left_button_up (keys, a_x, a_y: INTEGER) is
+	on_left_button_up (keys, a_x, a_y: INTEGER)
 			-- Respond to a 'left button up message'.
 		do
 			parent.on_left_button_up (keys, a_x + x, a_y + y)
 		end		
 
-	on_right_button_down (keys, a_x, a_y: INTEGER) is
+	on_right_button_down (keys, a_x, a_y: INTEGER)
 			-- Respond to a `right button down message'.
 		do
 			parent.on_right_button_down (keys, a_x + x, a_y + y)
 		end		
 
-	on_right_button_up (keys, a_x, a_y: INTEGER) is
+	on_right_button_up (keys, a_x, a_y: INTEGER)
 			-- Respond to a `right button up message'.
 		do
 			parent.on_right_button_up (keys, a_x + x, a_y + y)
 		end		
 
-	on_mouse_move (keys, a_x, a_y: INTEGER) is
+	on_mouse_move (keys, a_x, a_y: INTEGER)
 			-- Respond to a `mouse move message'.
 		do
 			parent.on_mouse_move (keys, a_x + x, a_y + y)
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

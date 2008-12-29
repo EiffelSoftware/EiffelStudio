@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class is used to load the rich edit control %
 		%dll. See class WEL_RICH_EDIT."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 	make
 
 feature
-	make is
+	make
 			-- Load the rich edit DLL.
 		do
 			make_permanent (rich_edit_dll_name)
@@ -28,11 +28,11 @@ feature
 feature {NONE} -- Implementation
 
 --	rich_edit_dll_name: STRING is "riched20.dll"
-	rich_edit_dll_name: STRING is "riched32.dll";
+	rich_edit_dll_name: STRING = "riched32.dll";
 			-- Name of the rich edit DLL
 	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

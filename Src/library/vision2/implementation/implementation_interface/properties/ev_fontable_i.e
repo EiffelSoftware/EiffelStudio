@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision fontable, implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Typeface appearance for `Current'.
 		deferred
 		ensure
@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Assign `a_font' to `font'.
 		require
 			a_font_not_void: a_font /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of Motif pulldown menu for an option button."
@@ -74,7 +74,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_pulldown: OPT_PULL; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_pulldown: OPT_PULL; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif pulldown menu.
 		local
 			pulldown_identifier: STRING;
@@ -102,7 +102,7 @@ feature -- Access
 	parent: MEL_MENU_SHELL;
 			-- Parent of option pull
 
-	children_has_accelerators: BOOLEAN is
+	children_has_accelerators: BOOLEAN
 			-- Can children have accelerators?
 			-- (No it can't)
 		do
@@ -110,26 +110,26 @@ feature -- Access
 
 feature -- Status report
 
-	managed: BOOLEAN is
+	managed: BOOLEAN
 			-- Pass the manage test to the option button as it is
 			-- the screen object
 		do
 			Result := option_button.managed;
 		end;
 
-	caption: STRING is
+	caption: STRING
 			-- the title on the option label gadget
 		do
 			Result := option_button.title;
 		end;
 
-	insensitive: BOOLEAN is
+	insensitive: BOOLEAN
 			-- check the sensitivity of the option button
 		do
 			Result := option_button.insensitive;
 		end;
 
-	set_insensitive (flag: BOOLEAN) is
+	set_insensitive (flag: BOOLEAN)
 			-- set the sensitivity of the option button
 		do
 			if flag then
@@ -139,49 +139,49 @@ feature -- Status report
 			end;
 		end;
 	
-	height: INTEGER is
+	height: INTEGER
 			-- Height of the option button
 		do
 			Result := option_button.height;
 		end;
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of the option button
 		do
 			Result := option_button.width;
 		end;
 
-	real_x: INTEGER is
+	real_x: INTEGER
 			-- Screen x position of the option button
 		do
 			Result := option_button.real_x;
 		end;
 
-	real_y: INTEGER is
+	real_y: INTEGER
 			-- Screen y position of the option button
 		do
 			Result := option_button.real_y;
 		end;
 
-	x: INTEGER is
+	x: INTEGER
 			-- Window x position of the option button
 		do
 			Result := option_button.x;
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 			-- Window y position of the option button
 		do
 			Result := option_button.y;
 		end;
 
-	selected_button: BUTTON is
+	selected_button: BUTTON
 	   		-- Current Push Button selected in the option menu
 		do
 			Result := option_button.selected_button
 		end;
 
-	text: STRING is
+	text: STRING
 			-- Label of option button
 		do
 			Result := option_button.text
@@ -189,50 +189,50 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_managed (flag: BOOLEAN) is
+	set_managed (flag: BOOLEAN)
 			-- Pass the set_manage test to the option button as it is
 			-- the screen object
 		do
 			option_button.set_managed (flag);
 		end;
 
-	set_caption (new_title: STRING) is
+	set_caption (new_title: STRING)
 			-- Set the label of the option label gadget.
 		do
 			option_button.set_title (new_title);
 		end;
 
-	set_x (new_x: INTEGER) is
+	set_x (new_x: INTEGER)
 			-- Set the x position of the option button.
 		do
 			option_button.set_x (new_x);
 		end;
 
-	set_y (new_y: INTEGER) is
+	set_y (new_y: INTEGER)
 			-- Set the y position of the option button.
 		do
 			option_button.set_y (new_y);
 		end;
 
-	set_x_y (new_x, new_y: INTEGER) is
+	set_x_y (new_x, new_y: INTEGER)
 			-- Window  position of the option button
 		do
 			option_button.set_x_y (new_x, new_y);
 		end;
 
-   	set_selected_button (button: BUTTON) is
+   	set_selected_button (button: BUTTON)
 		   	-- Set `selected_button' to `button'
 		do
 			option_button.set_selected_button (button);	
 		end;
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set button text to `a_text'.
 		do
 			option_button.set_text (a_text)
 		end;
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set the size of the option button.
 		local
 			nw: INTEGER;
@@ -246,7 +246,7 @@ feature -- Status setting
 			option_button.set_size (new_width, new_height);
 		end;
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 			-- Set the width of the option button.
 		local
 			nw: INTEGER;
@@ -260,28 +260,28 @@ feature -- Status setting
 			option_button.set_width (new_width);
 		end;
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 			-- Set the height of the option button.
 		do
 			menu_set_height (new_height);
 			option_button.set_height (new_height);
 		end;
 
-	set_foreground_color (a_color: COLOR) is
+	set_foreground_color (a_color: COLOR)
 			-- Set foreground_color color on both option button and menu pane.
 		do
 			option_button.set_foreground_color (a_color);
 			menu_set_foreground_color (a_color);
 		end;
 
-	set_background_color (a_color: COLOR) is
+	set_background_color (a_color: COLOR)
 			--set background color on both option button and menu pane
 		do
 			option_button.set_background_color (a_color);
 			menu_set_background_color (a_color);
 		end;
 
-	allow_recompute_size  is
+	allow_recompute_size
 			-- Allow resize for pull down.
 		do
 			option_button.allow_recompute_size;
@@ -289,7 +289,7 @@ feature -- Status setting
 			enable_resize_height
 		end;
 
-	forbid_recompute_size  is
+	forbid_recompute_size
 			-- Allow resize for pull down.
 		do
 			option_button.forbid_recompute_size;
@@ -299,13 +299,13 @@ feature -- Status setting
 
 feature -- Removal
 	
-	remove_caption is
+	remove_caption
 			-- Remove the label of the option label gadget.
 		do
 			option_button.remove_title;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

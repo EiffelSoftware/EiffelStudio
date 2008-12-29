@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Information given by EiffelVision when an item is selected or unselected %
@@ -40,7 +40,7 @@ feature
 	items: LINKED_LIST [STRING];
 			-- Selected or unselected items
 
-	make (a_widget: WIDGET; a_position: INTEGER; an_item: STRING; a_positions_list: LINKED_LIST [INTEGER]; an_items_list: LINKED_LIST [STRING]) is
+	make (a_widget: WIDGET; a_position: INTEGER; an_item: STRING; a_positions_list: LINKED_LIST [INTEGER]; an_items_list: LINKED_LIST [STRING])
 			-- Create a context_data for `single' or `browse' action.
 		do
 			widget := a_widget;
@@ -50,7 +50,7 @@ feature
 			items := an_items_list
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Any medium that can perform input and/or output"
@@ -19,12 +19,12 @@ inherit
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- Medium name
 		deferred
 		end
 
-	retrieved: ANY is
+	retrieved: ANY
 			-- Retrieved object structure
 			-- To access resulting object under correct type,
 			-- use assignment attempt.
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Element change
 
-	basic_store (object: ANY) is
+	basic_store (object: ANY)
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
 			-- Retrievable within current system only.
@@ -51,7 +51,7 @@ feature -- Element change
 		deferred
 		end
 
-	general_store (object: ANY) is
+	general_store (object: ANY)
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
 			-- Retrievable from other systems for same platform
@@ -66,7 +66,7 @@ feature -- Element change
 		deferred
 		end
 
-	independent_store (object: ANY) is
+	independent_store (object: ANY)
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
 			-- Retrievable from other systems for the same or other
@@ -80,20 +80,20 @@ feature -- Element change
 
 feature -- Status report
 
-	handle: INTEGER is
+	handle: INTEGER
 			-- Handle to medium
 		require
 			valid_handle: handle_available
 		deferred
 		end
 
-	handle_available: BOOLEAN is
+	handle_available: BOOLEAN
 			-- Is the handle available after class has been
 			-- created?
 		deferred
 		end
 
-	is_plain_text: BOOLEAN is
+	is_plain_text: BOOLEAN
 			-- Is file reserved for text (character sequences)?
 		do
 		end
@@ -107,7 +107,7 @@ feature -- Status report
 	last_integer: INTEGER
 			-- Last integer read by `read_integer'
 
-	last_integer_32: INTEGER is
+	last_integer_32: INTEGER
 			-- Synonymy of `last_integer'
 		do
 			Result := last_integer
@@ -128,7 +128,7 @@ feature -- Status report
 	last_natural: NATURAL_32
 			-- Last 32-bit natural read by `read_natural'
 
-	last_natural_32: NATURAL_32 is
+	last_natural_32: NATURAL_32
 			-- Synonymy of `last_natural'
 		do
 			Result := last_natural
@@ -149,67 +149,67 @@ feature -- Status report
 	bytes_read: INTEGER
 			-- Last number of bytes read by `read_to_managed_pointer'.
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does medium exist?
 		deferred
 		end
 
-	is_open_read: BOOLEAN is
+	is_open_read: BOOLEAN
 			-- Is this medium opened for input
 		deferred
 		end
 
-	is_open_write: BOOLEAN is
+	is_open_write: BOOLEAN
 			-- Is this medium opened for output
 		deferred
 		end
 
-	is_readable: BOOLEAN is
+	is_readable: BOOLEAN
 			-- Is medium readable?
 		require
 			handle_exists: exists
 		deferred
 		end
 
-	is_executable: BOOLEAN is
+	is_executable: BOOLEAN
 			-- Is medium executable?
 		require
 			handle_exists: exists
 		deferred
 		end
 
-	is_writable: BOOLEAN is
+	is_writable: BOOLEAN
 			-- Is medium writable?
 		require
 			handle_exists: exists
 		deferred
 		end
 
-	readable: BOOLEAN is
+	readable: BOOLEAN
 			-- Is there a current item that may be read?
 		require
 			handle_exists: exists
 		deferred
 		end
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May new items be added?
 		deferred
 		end
 
-	is_closed: BOOLEAN is
+	is_closed: BOOLEAN
 			-- Is the I/O medium open
 		deferred
 		end
 
-	support_storable: BOOLEAN is
+	support_storable: BOOLEAN
 			-- Can medium be used to store an Eiffel object?
 		deferred
 		end
 
 feature -- Status setting
 
-	close is
+	close
 			-- Close medium.
 		require
 			medium_is_open: not is_closed
@@ -218,7 +218,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	dispose is
+	dispose
 			-- Ensure this medium is closed when garbage collected.
 		do
 			if not is_closed then
@@ -228,14 +228,14 @@ feature -- Removal
 
 feature -- Output
 
-	put_new_line, new_line is
+	put_new_line, new_line
 			-- Write a new line character to medium
 		require
 			extendible: extendible
 		deferred
 		end
 
-	put_string, putstring (s: STRING) is
+	put_string, putstring (s: STRING)
 			-- Write `s' to medium.
 		require
 			extendible: extendible
@@ -243,91 +243,91 @@ feature -- Output
 		deferred
 		end
 
-	put_character, putchar (c: CHARACTER) is
+	put_character, putchar (c: CHARACTER)
 			-- Write `c' to medium.
 		require
 			extendible: extendible
 		deferred
 		end
 
-	put_real, putreal (r: REAL) is
+	put_real, putreal (r: REAL)
 			-- Write `r' to medium.
 		require
 			extendible: extendible
 		deferred
 		end
 
-	put_integer, putint, put_integer_32 (i: INTEGER) is
+	put_integer, putint, put_integer_32 (i: INTEGER)
 			-- Write `i' to medium.
 		require
 			extendible: extendible
 		deferred
 		end
 
-	put_integer_8 (i: INTEGER_8) is
+	put_integer_8 (i: INTEGER_8)
 			-- Write `i' to medium.
 		require
 			extendible: extendible
 		deferred
 		end
 
-	put_integer_16 (i: INTEGER_16) is
+	put_integer_16 (i: INTEGER_16)
 			-- Write `i' to medium.
 		require
 			extendible: extendible
 		deferred
 		end
 
-	put_integer_64 (i: INTEGER_64) is
+	put_integer_64 (i: INTEGER_64)
 			-- Write `i' to medium.
 		require
 			extendible: extendible
 		deferred
 		end
 
-	put_natural_8 (i: NATURAL_8) is
+	put_natural_8 (i: NATURAL_8)
 			-- Write `i' to medium.
 		require
 			extendible: extendible
 		deferred
 		end
 
-	put_natural_16 (i: NATURAL_16) is
+	put_natural_16 (i: NATURAL_16)
 			-- Write `i' to medium.
 		require
 			extendible: extendible
 		deferred
 		end
 
-	put_natural, put_natural_32 (i: NATURAL_32) is
+	put_natural, put_natural_32 (i: NATURAL_32)
 			-- Write `i' to medium.
 		require
 			extendible: extendible
 		deferred
 		end
 
-	put_natural_64 (i: NATURAL_64) is
+	put_natural_64 (i: NATURAL_64)
 			-- Write `i' to medium.
 		require
 			extendible: extendible
 		deferred
 		end
 
-	put_boolean, putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN)
 			-- Write `b' to medium.
 		require
 			extendible: extendible
 		deferred
 		end
 
-	put_double, putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE)
 			-- Write `d' to medium.
 		require
 			extendible: extendible
 		deferred
 		end
 
-	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
+	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
 			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
 			-- current position.
 		require
@@ -340,7 +340,7 @@ feature -- Output
 
 feature -- Input
 
-	read_real, readreal is
+	read_real, readreal
 			-- Read a new real.
 			-- Make result available in `last_real'.
 		require
@@ -348,7 +348,7 @@ feature -- Input
 		deferred
 		end
 
-	read_double, readdouble is
+	read_double, readdouble
 			-- Read a new double.
 			-- Make result available in `last_double'.
 		require
@@ -356,7 +356,7 @@ feature -- Input
 		deferred
 		end
 
-	read_character, readchar is
+	read_character, readchar
 			-- Read a new character.
 			-- Make result available in `last_character'.
 		require
@@ -364,7 +364,7 @@ feature -- Input
 		deferred
 		end
 
-	read_integer, readint, read_integer_32 is
+	read_integer, readint, read_integer_32
 			-- Read a new 32-bit integer.
 			-- Make result available in `last_integer'.
 		require
@@ -372,7 +372,7 @@ feature -- Input
 		deferred
 		end
 
-	read_integer_8 is
+	read_integer_8
 			-- Read a new 8-bit integer.
 			-- Make result available in `last_integer_8'.
 		require
@@ -380,7 +380,7 @@ feature -- Input
 		deferred
 		end
 
-	read_integer_16 is
+	read_integer_16
 			-- Read a new 16-bit integer.
 			-- Make result available in `last_integer_16'.
 		require
@@ -388,7 +388,7 @@ feature -- Input
 		deferred
 		end
 
-	read_integer_64 is
+	read_integer_64
 			-- Read a new 64-bit integer.
 			-- Make result available in `last_integer_64'.
 		require
@@ -396,7 +396,7 @@ feature -- Input
 		deferred
 		end
 
-	read_natural_8 is
+	read_natural_8
 			-- Read a new 8-bit natural.
 			-- Make result available in `last_natural_8'.
 		require
@@ -404,7 +404,7 @@ feature -- Input
 		deferred
 		end
 
-	read_natural_16 is
+	read_natural_16
 			-- Read a new 16-bit natural.
 			-- Make result available in `last_natural_16'.
 		require
@@ -412,7 +412,7 @@ feature -- Input
 		deferred
 		end
 
-	read_natural, read_natural_32 is
+	read_natural, read_natural_32
 			-- Read a new 32-bit natural.
 			-- Make result available in `last_natural'.
 		require
@@ -420,7 +420,7 @@ feature -- Input
 		deferred
 		end
 
-	read_natural_64 is
+	read_natural_64
 			-- Read a new 64-bit natural.
 			-- Make result available in `last_natural_64'.
 		require
@@ -428,7 +428,7 @@ feature -- Input
 		deferred
 		end
 
-	read_stream, readstream (nb_char: INTEGER) is
+	read_stream, readstream (nb_char: INTEGER)
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of medium is encountered.
 			-- Make result available in `last_string'.
@@ -439,7 +439,7 @@ feature -- Input
 			last_string_not_void: last_string /= Void
 		end
 
-	read_line, readline is
+	read_line, readline
 			-- Read characters until a new line or
 			-- end of medium.
 			-- Make result available in `last_string'.
@@ -450,7 +450,7 @@ feature -- Input
 			last_string_not_void: last_string /= Void
 		end
 
-	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
+	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
 			-- Read at most `nb_bytes' bound bytes and make result
 			-- available in `p' at position `start_pos'.
 		require
@@ -466,37 +466,37 @@ feature -- Input
 
 feature -- Obsolete
 
-	lastchar: CHARACTER is
+	lastchar: CHARACTER
 			-- Last character read by `read_character'
 		do
 			Result := last_character
 		end
 
-	laststring: STRING is
+	laststring: STRING
 			-- Last string read
 		do
 			Result := last_string
 		end
 
-	lastint: INTEGER is
+	lastint: INTEGER
 			-- Last integer read by `read_integer'
 		do
 			Result := last_integer
 		end
 
-	lastreal: REAL is
+	lastreal: REAL
 			-- Last real read by `read_real'
 		do
 			Result := last_real
 		end
 
-	lastdouble: DOUBLE is
+	lastdouble: DOUBLE
 			-- Last double read by `read_double'
 		do
 			Result := last_double
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

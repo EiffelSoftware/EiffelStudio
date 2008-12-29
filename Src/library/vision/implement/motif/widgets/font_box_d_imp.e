@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision implementation of a font box dialog."
@@ -58,7 +58,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_font_box_dialog: FONT_BOX_D; oui_parent: COMPOSITE) is
+	make (a_font_box_dialog: FONT_BOX_D; oui_parent: COMPOSITE)
 			-- Create a motif dialog message box.
 		local
 			mc: MEL_COMPOSITE
@@ -75,7 +75,7 @@ feature -- Access
 	parent: MEL_DIALOG_SHELL;
 			-- Dialog shell of the working dialog
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Assertion results"
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_true is
+	make_true
 			-- Create a pass.
 		do
 			passed := True
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			pass: passed
 		end
 
-	make_false (reason: STRING) is
+	make_false (reason: STRING)
 			-- Create a no pass with `reason'.
 		require
 			non_empty: reason /= Void and then not reason.is_empty
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			failure_state: is_failure
 		end
 
-	make_exception (e: EXCEPTION_INFO) is
+	make_exception (e: EXCEPTION_INFO)
 			-- Create a no pass with exception `e'.
 		require
 			exception_info_exists: e /= Void
@@ -62,7 +62,7 @@ feature -- Status report
 	passed: BOOLEAN
 			-- Is result `True'?
 
-	is_failure: BOOLEAN is
+	is_failure: BOOLEAN
 			-- Is record in failure state?
 		do
 			Result := not passed and then failure_reason /= Void and then
@@ -70,7 +70,7 @@ feature -- Status report
 				equal (failure_reason, Exception_text)
 		end
 
-	is_exception: BOOLEAN is
+	is_exception: BOOLEAN
 			-- Is record in exception state?
 		do
 			Result := not passed and then exception_info /= Void and then
@@ -80,7 +80,7 @@ feature -- Status report
 
 feature {NONE} -- Constants
 
-	Exception_text: STRING is "Exception thrown"
+	Exception_text: STRING = "Exception thrown"
 			-- Failure reason when exception is thrown
 			
 invariant
@@ -91,7 +91,7 @@ invariant
 			exception_info.complete
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

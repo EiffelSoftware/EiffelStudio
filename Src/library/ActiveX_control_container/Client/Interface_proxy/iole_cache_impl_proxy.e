@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IOleCache' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iole_cache_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	cache (p_formatetc: TAG_FORMATETC_RECORD; advf: INTEGER; pdw_connection: INTEGER_REF) is
+	cache (p_formatetc: TAG_FORMATETC_RECORD; advf: INTEGER; pdw_connection: INTEGER_REF)
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `advf' [in].  
@@ -36,21 +36,21 @@ feature -- Basic Operations
 			ccom_cache (initializer, p_formatetc.item, advf, pdw_connection)
 		end
 
-	uncache (dw_connection: INTEGER) is
+	uncache (dw_connection: INTEGER)
 			-- No description available.
 			-- `dw_connection' [in].  
 		do
 			ccom_uncache (initializer, dw_connection)
 		end
 
-	enum_cache (ppenum_statdata: CELL [IENUM_STATDATA_INTERFACE]) is
+	enum_cache (ppenum_statdata: CELL [IENUM_STATDATA_INTERFACE])
 			-- No description available.
 			-- `ppenum_statdata' [out].  
 		do
 			ccom_enum_cache (initializer, ppenum_statdata)
 		end
 
-	init_cache (p_data_object: IDATA_OBJECT_INTERFACE) is
+	init_cache (p_data_object: IDATA_OBJECT_INTERFACE)
 			-- No description available.
 			-- `p_data_object' [in].  
 		local
@@ -69,7 +69,7 @@ feature -- Basic Operations
 			ccom_init_cache (initializer, p_data_object_item)
 		end
 
-	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER) is
+	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER)
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `pmedium' [in].  
@@ -80,7 +80,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iole_cache_impl_proxy(initializer)
@@ -88,55 +88,55 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_cache (cpp_obj: POINTER; p_formatetc: POINTER; advf: INTEGER; pdw_connection: INTEGER_REF) is
+	ccom_cache (cpp_obj: POINTER; p_formatetc: POINTER; advf: INTEGER; pdw_connection: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleCache_impl_proxy %"ecom_control_library_IOleCache_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,EIF_INTEGER,EIF_OBJECT)"
 		end
 
-	ccom_uncache (cpp_obj: POINTER; dw_connection: INTEGER) is
+	ccom_uncache (cpp_obj: POINTER; dw_connection: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleCache_impl_proxy %"ecom_control_library_IOleCache_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_enum_cache (cpp_obj: POINTER; ppenum_statdata: CELL [IENUM_STATDATA_INTERFACE]) is
+	ccom_enum_cache (cpp_obj: POINTER; ppenum_statdata: CELL [IENUM_STATDATA_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleCache_impl_proxy %"ecom_control_library_IOleCache_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_init_cache (cpp_obj: POINTER; p_data_object: POINTER) is
+	ccom_init_cache (cpp_obj: POINTER; p_data_object: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleCache_impl_proxy %"ecom_control_library_IOleCache_impl_proxy_s.h%"](::IDataObject *)"
 		end
 
-	ccom_set_data (cpp_obj: POINTER; p_formatetc: POINTER; pmedium: POINTER; f_release: INTEGER) is
+	ccom_set_data (cpp_obj: POINTER; p_formatetc: POINTER; pmedium: POINTER; f_release: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleCache_impl_proxy %"ecom_control_library_IOleCache_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,STGMEDIUM *,EIF_INTEGER)"
 		end
 
-	ccom_delete_iole_cache_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iole_cache_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IOleCache_impl_proxy %"ecom_control_library_IOleCache_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iole_cache_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iole_cache_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IOleCache_impl_proxy %"ecom_control_library_IOleCache_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IOleCache_impl_proxy %"ecom_control_library_IOleCache_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

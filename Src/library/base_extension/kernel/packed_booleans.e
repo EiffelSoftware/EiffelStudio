@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An array of BOOLEAN but in a packed forms, saving 7 bits for%
 				%every boolean contained by Current."
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 		require
 			non_negative_argument: n >= 0
 		do
@@ -26,7 +26,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item alias "[]" (i: INTEGER): BOOLEAN is
+	item alias "[]" (i: INTEGER): BOOLEAN
 			-- Access `i-th' boolean in Current.
 		require
 			valid_index: valid_index (i)
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status Report
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within bounds?
 		do
 			Result := (lower <= i) and (i <= upper)
@@ -44,16 +44,16 @@ feature -- Status Report
 
 feature -- Measurement
 
-	lower: INTEGER is 0
+	lower: INTEGER = 0
 			-- Minimum index
 
-	upper: INTEGER is
+	upper: INTEGER
 			-- Maximum index
 		do
 			Result := count - 1
 		end
 
-	count, capacity: INTEGER is
+	count, capacity: INTEGER
 			-- Number of available indices
 		do
 			Result := area.count * Integer_size
@@ -63,7 +63,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	put (v: BOOLEAN; i: INTEGER) is
+	put (v: BOOLEAN; i: INTEGER)
 			-- Insert `v' at `i-th' bit of Current.
 		require
 			valid_index: valid_index (i)
@@ -80,7 +80,7 @@ feature -- Element change
 			inserted: v = item (i)
 		end
 
-	force (v: BOOLEAN; i: INTEGER) is
+	force (v: BOOLEAN; i: INTEGER)
 		require
 			min_i: i >= 0
 		local
@@ -95,7 +95,7 @@ feature -- Element change
 			inserted: v = item (i)
 		end
 
-	include (other: PACKED_BOOLEANS) is
+	include (other: PACKED_BOOLEANS)
 			-- Include all items set to `True' from `other' in current.
 			-- (I.e. save a result of "Current or other" into current.)
 		require
@@ -120,7 +120,7 @@ feature -- Element change
 
 feature -- Resizing
 
-	resize (n: INTEGER) is
+	resize (n: INTEGER)
 			-- Rearrange array so that it can accommodate `n' items.
 			-- Do not lose any previously entered item.
 		local
@@ -136,7 +136,7 @@ feature -- Resizing
 
 feature -- Removal
 
-	clear_all is
+	clear_all
 			-- Reset all items to default values.
 		do
 			area.clear_all
@@ -146,7 +146,7 @@ feature -- Removal
 
 feature -- Constants
 
-	Integer_size: INTEGER is 32
+	Integer_size: INTEGER = 32
 			-- Size of INTEGER in bits.
 
 feature {PACKED_BOOLEANS} -- Implementation
@@ -158,7 +158,7 @@ invariant
 	area_not_void: area /= Void
 	area_not_empty: area.count > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

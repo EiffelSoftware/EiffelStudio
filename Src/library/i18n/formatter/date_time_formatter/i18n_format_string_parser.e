@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Object that allows parsing formatting strings,
 		as defined in the POSIX standard
@@ -29,7 +29,7 @@ create
 
 feature -- Parser
 
-	make (a_locale_info: I18N_LOCALE_INFO) is
+	make (a_locale_info: I18N_LOCALE_INFO)
 			-- Creation procedure
 		require
 			a_locale_info_exists: a_locale_info /= Void
@@ -192,7 +192,7 @@ feature -- Parser
 
  	locale_info: I18N_LOCALE_INFO
 
- 	parse_modified_1 (a_char: CHARACTER): I18N_FORMATTING_ELEMENT is
+ 	parse_modified_1 (a_char: CHARACTER): I18N_FORMATTING_ELEMENT
  			-- this function is called when the escape character
  			-- was followed my the `modifier_character_1' = 'E'
  			-- NOTE: the formatting element produced, does not
@@ -220,7 +220,7 @@ feature -- Parser
  			Result_exists: Result /= Void
  		end
 
- 	parse_modified_2 (a_char: CHARACTER): I18N_FORMATTING_ELEMENT is
+ 	parse_modified_2 (a_char: CHARACTER): I18N_FORMATTING_ELEMENT
  			-- this function is called when the escape character
  			-- was followed my the `modifier_character_1' = 'O'
  			-- NOTE: the formatting element produced, does not
@@ -267,7 +267,7 @@ feature -- Parser
 invariant
 	locale_info_exists: locale_info /= Void
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

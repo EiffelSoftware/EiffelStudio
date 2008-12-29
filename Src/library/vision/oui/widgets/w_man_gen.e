@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Generator of a widget manager"
 	legal: "See notice at end of class.";
@@ -12,7 +12,7 @@ class
 
 feature {NONE} -- Implementation
 
-	widget_manager: W_MANAGER is
+	widget_manager: W_MANAGER
 			-- EiffelVision widget manager 
 		once
 			create Result.make
@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 			Valid_result: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

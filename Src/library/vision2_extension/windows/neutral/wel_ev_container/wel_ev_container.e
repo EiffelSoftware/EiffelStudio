@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow insertion of a Vision2 control%
 		%within a WEL system."
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_parent (a_parent: WEL_WINDOW; x_pos, y_pos, a_width, a_height: INTEGER) is
+	make_with_parent (a_parent: WEL_WINDOW; x_pos, y_pos, a_width, a_height: INTEGER)
 			-- Create `Current' with parent `a_parent', x_position `x_pos', y_position `y_pos',
 			-- a width of `a_width' and a height of `a_height'.
 			-- If an instance of EV_APPLICATION does not exist in the system, then an EV_APPLICATION
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	implementation_window: WEL_WINDOW is
+	implementation_window: WEL_WINDOW
 			-- Window containing `item'.
 		do
 			Result := implementation.implementation_window
@@ -54,7 +54,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			-- For a normal Vision2 widget, this would be executed to build
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			-- as `Current' must be built using `make_with_parent'.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

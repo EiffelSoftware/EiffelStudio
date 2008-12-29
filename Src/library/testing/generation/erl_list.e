@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new empty list.
 		do
 			count := 0
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			capacity_set: capacity = 0
 		end
 
-	make_with_capacity (nb: INTEGER) is
+	make_with_capacity (nb: INTEGER)
 			-- Create a new empty list with capacity `nb'.
 		require
 			nb_positive: nb >= 0
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (i: INTEGER): G is
+	item (i: INTEGER): G
 			-- Item at index `i' in list
 		require
 			i_large_enough: i >= 1
@@ -57,7 +57,7 @@ feature -- Access
 			Result := storage.item (i)
 		end
 
-	first: like item is
+	first: like item
 			-- First item
 		require
 			not_empty: not is_empty
@@ -67,7 +67,7 @@ feature -- Access
 			definition: Result = item (1)
 		end
 
-	last: like item is
+	last: like item
 			-- Last item
 		require
 			not_empty: not is_empty
@@ -82,7 +82,7 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of items in list
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Maximum number of items in list
 		do
 			if storage /= Void then
@@ -92,7 +92,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is there no item in list?
 		do
 			Result := (count = 0)
@@ -100,7 +100,7 @@ feature -- Status report
 			definition: Result = (count = 0)
 		end
 
-	has (an_item: like item): BOOLEAN is
+	has (an_item: like item): BOOLEAN
 			-- Does list contain `an_item'?
 			-- (Use `=' as comparison criterion.)
 		local
@@ -119,7 +119,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put_last (an_item: like item) is
+	put_last (an_item: like item)
 			-- Put `an_item' at last position in list.
 		require
 			not_full: count < capacity
@@ -131,7 +131,7 @@ feature -- Element change
 			last_set: last = an_item
 		end
 
-	force_last (an_item: like item) is
+	force_last (an_item: like item)
 			-- Put `an_item' at last position in list.
 			-- Resize list if necessary.
 		local
@@ -154,7 +154,7 @@ feature -- Element change
 			last_set: last = an_item
 		end
 
-	put (an_item: like item; i: INTEGER) is
+	put (an_item: like item; i: INTEGER)
 			-- Put `an_item' at index `i' in list.
 		require
 			i_large_enough: i >= 1
@@ -166,7 +166,7 @@ feature -- Element change
 			inserted: item (i) = an_item
 		end
 
-	force_put (an_item: like item; i: INTEGER) is
+	force_put (an_item: like item; i: INTEGER)
 			-- Put `an_item' at index `i', resize the list when necessary.
 		require
 			i_large_enough: i >= 1
@@ -198,7 +198,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_last is
+	remove_last
 			-- Remove last item.
 		require
 			not_empty: not is_empty
@@ -211,7 +211,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove item at index `i'.
 		require
 			i_large_enough: i >= 1
@@ -232,7 +232,7 @@ feature -- Removal
 			one_less: count = old count - 1
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		local
 			i: INTEGER
@@ -249,7 +249,7 @@ feature -- Removal
 
 feature -- Resizing
 
-	resize (nb: INTEGER) is
+	resize (nb: INTEGER)
 			-- Resize to accommodate at least `n' items.
 		require
 			nb_positive: nb >= 0

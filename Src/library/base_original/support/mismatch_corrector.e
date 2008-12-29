@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Ancestor of all classes that need facility to retrieve an older version of an instance of current
 		class through storable.
@@ -15,7 +15,7 @@ class
 	
 feature -- Correction
 
-	correct_mismatch is
+	correct_mismatch
 			-- Attempt to correct object mismatch using `mismatch_information'.
 		local
 			l_msg: STRING
@@ -28,13 +28,13 @@ feature -- Correction
 			l_exc.raise_retrieval_exception (l_msg)
 		end
 
-	mismatch_information: MISMATCH_INFORMATION is
+	mismatch_information: MISMATCH_INFORMATION
 			-- Original attribute values of mismatched object
 		once
 			create Result
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

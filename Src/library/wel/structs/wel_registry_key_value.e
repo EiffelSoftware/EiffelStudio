@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Structure describing a registry key value"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	make (t: like type; v: STRING_GENERAL) is
+	make (t: like type; v: STRING_GENERAL)
 			-- Create a new string key value.
 		require
 			v_not_void: v /= Void
@@ -36,7 +36,7 @@ feature -- Initialization
 			string_value_set: string_value.is_equal (v)
 		end
 
-	make_with_data (t: like type; v: MANAGED_POINTER) is
+	make_with_data (t: like type; v: MANAGED_POINTER)
 			-- Create a new key value using data `v'.
 		require
 			v_not_void: v /= Void
@@ -48,7 +48,7 @@ feature -- Initialization
 			data_set: data = v
 		end
 
-	make_with_value (t: like type; v: like internal_value) is
+	make_with_value (t: like type; v: like internal_value)
 			-- Create a new key value of type `t' using `v'.
 		obsolete
 			"Use `make_with_data', `make' or `make_with_dword_value' instead."
@@ -63,7 +63,7 @@ feature -- Initialization
 			internal_value_set: internal_value.is_equal (v)
 		end
 
-	make_with_dword_value (v: like dword_value) is
+	make_with_dword_value (v: like dword_value)
 			-- Set `dword_value' with `v'.
 			-- Set `type' with `reg_dword'.
 		do
@@ -83,7 +83,7 @@ feature -- Access
 	data: MANAGED_POINTER
 			-- Hold data for registry key value
 
-	internal_value: WEL_STRING is
+	internal_value: WEL_STRING
 			-- Storage for Current.
 		obsolete
 			"Use `string_value' or `dword_value' instead."
@@ -92,7 +92,7 @@ feature -- Access
 			Result.item.memory_copy (data.item, data.count)
 		end
 
-	value: STRING_32 is
+	value: STRING_32
 			-- String data.
 		obsolete
 			"Use `string_value' instead."
@@ -104,7 +104,7 @@ feature -- Access
 			string_value_not_void: Result /= Void
 		end
 
-	string_value: STRING_32 is
+	string_value: STRING_32
 			-- String data.
 		require
 			valid_type: type = Reg_sz
@@ -131,7 +131,7 @@ feature -- Access
 			string_value_not_void: Result /= Void
 		end
 
-	dword_value: INTEGER is
+	dword_value: INTEGER
 			-- Data converted as integer.
 		require
 			valid_type: type = Reg_dword
@@ -141,7 +141,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_type (t: INTEGER) is
+	set_type (t: INTEGER)
 			-- Set type of value with `t'.
 			-- See class WEL_REGISTRY_KEY_VALUE_TYPE for possible
 			-- values for `t'.
@@ -151,7 +151,7 @@ feature -- Element Change
 			type_set: type = t
 		end
 
-	set_value (v: like value) is
+	set_value (v: like value)
 			-- Set `value' with `v'.
 		obsolete
 			"Use `set_string_value' instead'."
@@ -167,7 +167,7 @@ feature -- Element Change
 			value_set: value.is_equal (v)
 		end
 
-	set_dword_value (v: like dword_value) is
+	set_dword_value (v: like dword_value)
 			-- Set `dword_value' with `v'.
 			-- Set `type' with `reg_dword'.
 		do
@@ -179,7 +179,7 @@ feature -- Element Change
 			dword_value_set: dword_value = v
 		end
 
-	set_string_value (v: STRING_GENERAL) is
+	set_string_value (v: STRING_GENERAL)
 			-- Set `string_value' with `v'.
 			-- Set `type' with `reg_sz'.
 		require
@@ -196,7 +196,7 @@ feature -- Element Change
 			dword_value_set: string_value.is_equal (v)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

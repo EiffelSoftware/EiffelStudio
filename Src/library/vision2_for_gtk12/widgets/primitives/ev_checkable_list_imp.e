@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision checkable list. Gtk implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature -- Implementation
 
-	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
+	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP)
 			-- Add `v' to end of list.
 			-- (from EV_ITEM_LIST_IMP)
 			-- (export status {NONE})
@@ -42,7 +42,7 @@ feature -- Implementation
 		
 feature -- Access
 
-	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN is
+	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN
 			--
 		local
 			item_imp: EV_LIST_ITEM_IMP
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Status setting
 
-	check_item (list_item: EV_LIST_ITEM) is
+	check_item (list_item: EV_LIST_ITEM)
 			-- Ensure check associated with `list_item' is
 			-- checked.
 		local
@@ -63,7 +63,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (item_imp.check_box, True)
 		end
 
-	uncheck_item (list_item: EV_LIST_ITEM) is
+	uncheck_item (list_item: EV_LIST_ITEM)
 			-- Ensure check associated with `list_item' is
 			-- checked.
 		local
@@ -77,7 +77,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_LIST;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

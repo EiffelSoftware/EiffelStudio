@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A datagram socket."
@@ -30,12 +30,12 @@ inherit
 
 feature -- Creation
 
-	make is
+	make
 				-- Create a domain typed socket
 		deferred
 		end;
 
-	make_bound_to_address (a_local_address: like address) is
+	make_bound_to_address (a_local_address: like address)
 			-- Create a socket bound to its well-known address
 			-- `local_address'.
 		do
@@ -44,7 +44,7 @@ feature -- Creation
 			bind
 		end;
 
-	make_connected_to_peer (a_peer_address: like address) is
+	make_connected_to_peer (a_peer_address: like address)
 			-- Create a socket targeted to `peer_address'.
 		do
 			make;
@@ -53,7 +53,7 @@ feature -- Creation
 
 feature -- Basic operations
 
-	connect_to_peer (a_peer_address: like address) is
+	connect_to_peer (a_peer_address: like address)
 			-- Target socket to `a_peer_address'.
 		require
 			socket_exists: exists
@@ -61,14 +61,14 @@ feature -- Basic operations
 			set_peer_address (a_peer_address);
 		end;
 
-	bind is
+	bind
 			-- Bind socket to a local address.
 		do
 			socket_bind;
 			bound := True
 		end;
 
-	close is
+	close
 			-- Close socket.
 		do
 			socket_close;
@@ -82,7 +82,7 @@ feature -- Status report
 
 feature -- Input
 
-	received (size: INTEGER; flags: INTEGER): DATAGRAM_PACKET is
+	received (size: INTEGER; flags: INTEGER): DATAGRAM_PACKET
 			-- Receive a packet.
 			-- Who from is put into the `peer_address'.
 		require
@@ -104,7 +104,7 @@ feature -- Input
 
 feature -- Output
 
-	send_to (a_packet: DATAGRAM_PACKET; to_address: SOCKET_ADDRESS; flags: INTEGER) is
+	send_to (a_packet: DATAGRAM_PACKET; to_address: SOCKET_ADDRESS; flags: INTEGER)
 			-- Send `a_packet' to address `to_address'
 		require 
 			socket_exists: exists;
@@ -117,7 +117,7 @@ feature -- Output
 			return_val := c_send_to (descriptor, a_packet.data.item, a_packet.count, flags, to_address.socket_address.item, to_address.count)
 		end;
 
-	send (a_packet: PACKET; flags: INTEGER) is
+	send (a_packet: PACKET; flags: INTEGER)
 			-- Send `a_packet' to address in `peer_address'.
 		local
 			return_val: INTEGER
@@ -126,7 +126,7 @@ feature -- Output
 				peer_address.socket_address.item, peer_address.count)
 		end;
 
-	put_string, putstring (s: STRING) is
+	put_string, putstring (s: STRING)
 			-- Send string `s' through socket.
 		require else
 			socket_exists: exists;
@@ -140,7 +140,7 @@ feature -- Output
 				peer_address.socket_address.item, peer_address.count)
 		end;
 
-	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
+	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
 			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
 			-- current position.
 		require else
@@ -154,7 +154,7 @@ feature -- Output
 				peer_address.socket_address.item, peer_address.count)
 		end
 
-	put_character, putchar (c: CHARACTER) is
+	put_character, putchar (c: CHARACTER)
 			-- Send character `c' through socket.
 		require else
 			socket_exists: exists;
@@ -164,7 +164,7 @@ feature -- Output
 			c_send_char_to (descriptor, c, 0, peer_address.socket_address.item, peer_address.count)
 		end;
 
-	put_real, putreal (r: REAL) is
+	put_real, putreal (r: REAL)
 			-- Send real `r' through socket.
 		require else
 			socket_exists: exists;
@@ -174,7 +174,7 @@ feature -- Output
 			c_send_float_to (descriptor, r, 0, peer_address.socket_address.item, peer_address.count)
 		end;
 
-	put_integer, putint, put_integer_32 (i: INTEGER) is
+	put_integer, putint, put_integer_32 (i: INTEGER)
 			-- Send integer `i' through socket.
 		require else
 			socket_exists: exists;
@@ -184,7 +184,7 @@ feature -- Output
 			c_send_int_to (descriptor, i, 0, peer_address.socket_address.item, peer_address.count)
 		end;
 		
-	put_integer_8 (i: INTEGER_8) is
+	put_integer_8 (i: INTEGER_8)
 			-- Send integer `i' through socket.
 		require else
 			socket_exists: exists;
@@ -195,7 +195,7 @@ feature -- Output
 			put_managed_pointer (socket_buffer, 0, integer_8_bytes)
 		end
 		
-	put_integer_16 (i: INTEGER_16) is
+	put_integer_16 (i: INTEGER_16)
 			-- Send integer `i' through socket.
 		require else
 			socket_exists: exists;
@@ -206,7 +206,7 @@ feature -- Output
 			put_managed_pointer (socket_buffer, 0, integer_16_bytes)
 		end
 		
-	put_integer_64 (i: INTEGER_64) is
+	put_integer_64 (i: INTEGER_64)
 			-- Send integer `i' through socket.
 		require else
 			socket_exists: exists;
@@ -217,7 +217,7 @@ feature -- Output
 			put_managed_pointer (socket_buffer, 0, integer_64_bytes)
 		end
 		
-	put_natural_8 (i: NATURAL_8) is
+	put_natural_8 (i: NATURAL_8)
 			-- Send integer `i' through socket.
 		require else
 			socket_exists: exists;
@@ -228,7 +228,7 @@ feature -- Output
 			put_managed_pointer (socket_buffer, 0, natural_8_bytes)
 		end
 		
-	put_natural_16 (i: NATURAL_16) is
+	put_natural_16 (i: NATURAL_16)
 			-- Send integer `i' through socket.
 		require else
 			socket_exists: exists;
@@ -239,7 +239,7 @@ feature -- Output
 			put_managed_pointer (socket_buffer, 0, natural_16_bytes)
 		end
 		
-	put_natural, put_natural_32 (i: NATURAL_32) is
+	put_natural, put_natural_32 (i: NATURAL_32)
 			-- Send integer `i' through socket.
 		require else
 			socket_exists: exists;
@@ -250,7 +250,7 @@ feature -- Output
 			put_managed_pointer (socket_buffer, 0, natural_32_bytes)
 		end
 		
-	put_natural_64 (i: NATURAL_64) is
+	put_natural_64 (i: NATURAL_64)
 			-- Send integer `i' through socket.
 		require else
 			socket_exists: exists;
@@ -262,7 +262,7 @@ feature -- Output
 		end
 		
 
-	put_boolean, putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN)
 			-- Send boolean `b' through socket.
 		require else
 			socket_exists: exists;
@@ -276,7 +276,7 @@ feature -- Output
 			end
 		end;
 
-	put_double, putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE)
 			-- Send double `d' through socket.
 		require else
 			socket_exists: exists;
@@ -288,7 +288,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	make_peer_address is
+	make_peer_address
 			-- Create a peer address.
 		deferred
 		ensure
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_rcv_from (fd: INTEGER; buf: POINTER; len:INTEGER; flags: INTEGER; addr: POINTER; l: POINTER): INTEGER is
+	c_rcv_from (fd: INTEGER; buf: POINTER; len:INTEGER; flags: INTEGER; addr: POINTER; l: POINTER): INTEGER
 			-- External routine to read `l' length of data
 			-- from the socket identified by `fd' connected
 			-- to a peer address of `addr'.
@@ -305,7 +305,7 @@ feature {NONE} -- Externals
 			"C blocking"
 		end;
 
-	c_send_to (fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER; addr: POINTER; l: INTEGER): INTEGER is
+	c_send_to (fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER; addr: POINTER; l: INTEGER): INTEGER
 			-- External routine to write `l' length of data
 			-- from the socket identified by `fd' connected
 			-- to a peer address of `addr'.
@@ -313,42 +313,42 @@ feature {NONE} -- Externals
 			"C blocking"
 		end;
 
-	c_send_char_to (fd: INTEGER; c: CHARACTER; flags: INTEGER; addr: POINTER; length: INTEGER) is
+	c_send_char_to (fd: INTEGER; c: CHARACTER; flags: INTEGER; addr: POINTER; length: INTEGER)
 			-- External routine to send character `c' to address `addr'
 			-- through socket `fd'
 		external
 			"C blocking"
 		end;
 
-	c_send_int_to (fd: INTEGER; i: INTEGER; flags: INTEGER; addr: POINTER; length: INTEGER) is
+	c_send_int_to (fd: INTEGER; i: INTEGER; flags: INTEGER; addr: POINTER; length: INTEGER)
 			-- External routine to send integer `i' to address `addr'
 			-- through socket `fd'
 		external
 			"C blocking"
 		end;
 
-	c_send_float_to (fd: INTEGER; r: REAL; flags: INTEGER; addr: POINTER; length: INTEGER) is
+	c_send_float_to (fd: INTEGER; r: REAL; flags: INTEGER; addr: POINTER; length: INTEGER)
 			-- External routine to send real `r' to address `addr'
 			-- through socket `fd'
 		external
 			"C blocking"
 		end;
 
-	c_send_double_to (fd: INTEGER; d: DOUBLE; flags: INTEGER; addr: POINTER; length: INTEGER) is
+	c_send_double_to (fd: INTEGER; d: DOUBLE; flags: INTEGER; addr: POINTER; length: INTEGER)
 			-- External routine to send double `d' to address `addr'
 			-- through socket `fd'
 		external
 			"C blocking"
 		end;
 
-	c_send_stream_to (fd: INTEGER; s: POINTER; l: INTEGER; flags: INTEGER; addr: POINTER; length: INTEGER) is
+	c_send_stream_to (fd: INTEGER; s: POINTER; l: INTEGER; flags: INTEGER; addr: POINTER; length: INTEGER)
 			-- External routine to send stream pointed by `s'
 			-- to address `addr' through socket `fd'
 		external
 			"C blocking"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

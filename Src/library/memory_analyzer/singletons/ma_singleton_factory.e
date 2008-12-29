@@ -1,4 +1,4 @@
-	indexing
+	note
 	description: "Class that store all singletons in the system.%
 				 %Class want to use the singletons it contains should inherit this class."
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature  -- Singletons
 
-	filter: MA_FILTER_SINGLETON is
+	filter: MA_FILTER_SINGLETON
 			-- FILTER_SINGLETON instance
 		do
 			Result := internal_filter.item
@@ -19,7 +19,7 @@ feature  -- Singletons
 			filter_not_void: Result /= Void
 		end
 
-	filter_window: MA_FILTER_WINDOW is
+	filter_window: MA_FILTER_WINDOW
 			--
 		do
 			Result := internal_filter_window.item
@@ -27,7 +27,7 @@ feature  -- Singletons
 			filter_window_not_void: Result /= Void
 		end
 
-	grid_util: MA_GRID_UTIL_SINGLETON is
+	grid_util: MA_GRID_UTIL_SINGLETON
 			-- GRID_UTIL_SINGLETON instance
 		once
 			create Result
@@ -35,7 +35,7 @@ feature  -- Singletons
 			grid_util_not_void: Result /= Void
 		end
 
-	object_finder: MA_OBJECT_FINDER_SINGLETON is
+	object_finder: MA_OBJECT_FINDER_SINGLETON
 			-- OBJECT_FINDER_SINGLETON instance
 		once
 			create Result
@@ -43,7 +43,7 @@ feature  -- Singletons
 			object_finder_not_void: Result /= Void
 		end
 
-	system_util: MA_SYSTEM_UTIL_SINGLETON is
+	system_util: MA_SYSTEM_UTIL_SINGLETON
 			-- SYSTEM_UTIL_SINGLETON instance
 		once
 			create Result
@@ -51,7 +51,7 @@ feature  -- Singletons
 			system_util_not_void: Result /= Void
 		end
 
-	main_window: MA_WINDOW is
+	main_window: MA_WINDOW
 			-- MEMORY_TOOL_WINDOW instance
 		do
 			Result := internal_main_window.item
@@ -59,7 +59,7 @@ feature  -- Singletons
 			result_not_void: Result /= Void
 		end
 
-	internal: INTERNAL is
+	internal: INTERNAL
 			-- INTERNAL instance
 		once
 			create Result
@@ -67,7 +67,7 @@ feature  -- Singletons
 			internal_made: internal /= Void
 		end
 
-	memory: MEMORY is
+	memory: MEMORY
 			-- MEMORY singleton
 		once
 			create Result
@@ -75,7 +75,7 @@ feature  -- Singletons
 			memory_not_void: Result /= Void
 		end
 
-	icons: MA_ICONS_SINGLETON is
+	icons: MA_ICONS_SINGLETON
 			-- ICONS_SINGLETON instance
 		once
 			create Result
@@ -85,7 +85,7 @@ feature  -- Singletons
 
 feature {MA_WINDOW} -- Access
 
-	set_main_window (a_window: like main_window) is
+	set_main_window (a_window: like main_window)
 			-- Set main_window instance
 		require
 			a_window_not_void: a_window /= Void
@@ -99,7 +99,7 @@ feature {MA_WINDOW} -- Access
 
 feature -- States Report
 
-	main_window_not_void: BOOLEAN is
+	main_window_not_void: BOOLEAN
 			-- Is main_windows Void ?
 		do
 			Result := internal_main_window /= Void
@@ -107,7 +107,7 @@ feature -- States Report
 
 feature -- Cursors
 
-	accept_node: EV_POINTER_STYLE is
+	accept_node: EV_POINTER_STYLE
 			-- Icon used when picking
 		local
 			pix: EV_PIXMAP
@@ -118,7 +118,7 @@ feature -- Cursors
 			accept_node_not_void: Result /= Void
 		end
 
-	deny_node: EV_POINTER_STYLE is
+	deny_node: EV_POINTER_STYLE
 			-- Icon used when picking
 		local
 			pix: EV_PIXMAP
@@ -129,7 +129,7 @@ feature -- Cursors
 			deny_node_not_void: Result /= Void
 		end
 
-	accept_node_class: EV_POINTER_STYLE is
+	accept_node_class: EV_POINTER_STYLE
 			-- Icon used when picking
 		local
 			pix: EV_PIXMAP
@@ -140,7 +140,7 @@ feature -- Cursors
 			accept_node_class: Result /= Void
 		end
 
-	deny_node_class: EV_POINTER_STYLE is
+	deny_node_class: EV_POINTER_STYLE
 			-- Icon used when picking
 		local
 			pix: EV_PIXMAP
@@ -153,7 +153,7 @@ feature -- Cursors
 
 feature -- Colors
 
-	increased_color: EV_COLOR is
+	increased_color: EV_COLOR
 			-- Color used when object count increased.
 		once
 			Result := (create {EV_STOCK_COLORS}).red
@@ -161,7 +161,7 @@ feature -- Colors
 			red_color_set: Result /= Void
 		end
 
-	decreased_color: EV_COLOR is
+	decreased_color: EV_COLOR
 			-- Color used when obejct count decreased.
 		once
 			Result := (create {EV_STOCK_COLORS}).dark_green
@@ -171,31 +171,31 @@ feature -- Colors
 
 feature {NONE} -- misc
 
-	internal_main_window: CELL [MA_WINDOW] is
+	internal_main_window: CELL [MA_WINDOW]
 			-- MAIN_WINDOW instance's cell.
 		once
 			create Result.put (Void)
 		end
 
-	internal_filter: CELL [MA_FILTER_SINGLETON] is
+	internal_filter: CELL [MA_FILTER_SINGLETON]
 			-- MA_FILTER_SINGLETON instance's cell.
 		once
 			create Result.put (Void)
 		end
 
-	internal_filter_window: CELL [MA_FILTER_WINDOW] is
+	internal_filter_window: CELL [MA_FILTER_WINDOW]
 			-- MA_FILTER_WINDOW instance'e cell.
 		once
 			create Result.put (Void)
 		end
 
-	state_file_suffix: TUPLE [filter: STRING; text: STRING] is
+	state_file_suffix: TUPLE [filter: STRING; text: STRING]
 			-- Suffix of the States File name.
 		once
 			Result := ["*.ema", "Eiffel Memory Analyzer Datas (*.ema)"]
 		end
 
-	filter_filter_suffix: TUPLE [filter: STRING; text: STRING] is
+	filter_filter_suffix: TUPLE [filter: STRING; text: STRING]
 			-- Suffix of the Filter File name.
 		once
 			Result := ["*.emf", "Eiffel Memory Analyzer Filter (*.emf)"]
@@ -204,7 +204,7 @@ feature {NONE} -- misc
 invariant
 	internal_main_window_not_void: internal_main_window /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

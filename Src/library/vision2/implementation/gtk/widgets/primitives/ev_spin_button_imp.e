@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision spin button. GTK+ Implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -47,7 +47,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the spin button.
 		local
 			a_vbox: POINTER
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
 		end
 
-	initialize is
+	initialize
 		do
 			Precursor {EV_TEXT_FIELD_IMP}
 			ev_gauge_imp_initialize --| {EV_GAUGE} Precursor
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
 			Precursor {EV_TEXT_FIELD_IMP} (a_text)
@@ -80,7 +80,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_SPIN_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

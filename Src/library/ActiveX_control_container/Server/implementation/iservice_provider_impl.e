@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IServiceProvider' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Basic Operations
 
-	query_service (guid_service: ECOM_GUID; riid: ECOM_GUID; ppv_object: CELL [ECOM_INTERFACE]) is
+	query_service (guid_service: ECOM_GUID; riid: ECOM_GUID; ppv_object: CELL [ECOM_INTERFACE])
 			-- Acts as the factory method for any services
 			-- exposed through an implementation of IServiceProvider.
 			-- `guid_service' [in]. Unique identifier of the service.
@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 	m_service_provider: ISERVICE_PROVIDER_IMPL_PROXY; 
 			-- IServiceProvider interface of site.
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Every figure has a center. The position of the
 						center are the values x and y. It is the position
@@ -40,7 +40,7 @@ inherit
 
 feature {NONE} -- initialization
 
-	default_create is
+	default_create
 			-- Initialize a figure.
 		do
 			assign_draw_id
@@ -56,7 +56,7 @@ feature {NONE} -- initialization
 
 feature -- Access
 
-	x: INTEGER is
+	x: INTEGER
 			-- `X' position of the center on the screen.
 		do
 			if not is_center_valid then
@@ -65,7 +65,7 @@ feature -- Access
 			Result := center.x
 		end
 
-	y: INTEGER is
+	y: INTEGER
 			-- `Y' position of the center on the screen .
 		do
 			if not is_center_valid then
@@ -74,7 +74,7 @@ feature -- Access
 			Result := center.y
 		end
 
-	angle: DOUBLE is
+	angle: DOUBLE
 			-- `Current' has to be rotated around (`x',`y') for -`angle'
 			-- to be in upright position. Upright position has to
 			-- be defined for every figure. If a figure is in upright position
@@ -83,7 +83,7 @@ feature -- Access
 		deferred
 		end
 
-	point_count: INTEGER is
+	point_count: INTEGER
 			-- Number of points needed to describe `Current'.
 			-- Without center.
 		do
@@ -92,7 +92,7 @@ feature -- Access
 			correct: Result = point_array.count
 		end
 
-	id: INTEGER is
+	id: INTEGER
 			-- Unique id.
 		do
 			if internal_hash_id = 0  then
@@ -109,7 +109,7 @@ feature -- Access
 			-- Returns data to be transported by pick and drop mechanism.
 			-- When not `Void', `pebble' is ignored.
 
-	pointer_style: EV_POINTER_STYLE is
+	pointer_style: EV_POINTER_STYLE
 			-- Cursor displayed when pointer is over this figure.
 		do
 			if internal_pointer_style /= Void then
@@ -123,7 +123,7 @@ feature -- Access
 			-- The group `Current' is part of. Void if `Current' is
 			-- not part of a group.
 
-	world: EV_MODEL_WORLD is
+	world: EV_MODEL_WORLD
 			-- The world `Current' is part of. Void if `Current' is
 			-- not part of a world
 		do
@@ -137,7 +137,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_x (a_x: INTEGER) is
+	set_x (a_x: INTEGER)
 			-- Set `x' to `an_x'.
 		local
 			a_delta_x: INTEGER
@@ -169,7 +169,7 @@ feature -- Element change
 			center_valid: is_center_valid
 		end
 
-	set_y (a_y: INTEGER) is
+	set_y (a_y: INTEGER)
 			-- Set `y' to `an_y'.
 		local
 			a_delta_y: INTEGER
@@ -201,7 +201,7 @@ feature -- Element change
 			center_valid: is_center_valid
 		end
 
-	set_x_y (a_x, a_y: INTEGER) is
+	set_x_y (a_x, a_y: INTEGER)
 			-- Set `x' to `a_x' and `y' to `a_y'.
 		local
 			a_delta_y, a_delta_x: INTEGER
@@ -234,7 +234,7 @@ feature -- Element change
 			center_valid: is_center_valid
 		end
 
-	rotate (an_angle: DOUBLE) is
+	rotate (an_angle: DOUBLE)
 			-- Rotate around the center for `an_angle'.
 		require
 			is_rotatable: is_rotatable
@@ -249,7 +249,7 @@ feature -- Element change
 			center_valid: is_center_valid
 		end
 
-	rotate_around (an_angle: DOUBLE; ax, ay: INTEGER) is
+	rotate_around (an_angle: DOUBLE; ax, ay: INTEGER)
 			-- Rotate around (`ax', `ay') for `an_angle'.
 		require
 			is_rotatable: is_rotatable
@@ -264,7 +264,7 @@ feature -- Element change
 			center_valid: is_center_valid
 		end
 
-	scale_x (a_scale_x: DOUBLE) is
+	scale_x (a_scale_x: DOUBLE)
 			-- Scale to x direction for `a_scale_x'.
 		require
 			is_scalable: is_scalable
@@ -280,7 +280,7 @@ feature -- Element change
 			end
 		end
 
-	scale_y (a_scale_y: DOUBLE) is
+	scale_y (a_scale_y: DOUBLE)
 			-- Scale to y direction for `a_scale_y'.
 		require
 			is_scalable: is_scalable
@@ -296,7 +296,7 @@ feature -- Element change
 			end
 		end
 
-	scale (a_scale: DOUBLE) is
+	scale (a_scale: DOUBLE)
 			-- Scale to x and y direction for `a_scale'.
 		require
 			is_scalable: is_scalable
@@ -313,7 +313,7 @@ feature -- Element change
 			end
 		end
 
-	scale_x_abs (a_scale_x: DOUBLE) is
+	scale_x_abs (a_scale_x: DOUBLE)
 			-- Scale absolute to x direction for `a_scale_x'.
 			-- Do not rotate around `angle' first.
 		require
@@ -330,7 +330,7 @@ feature -- Element change
 			end
 		end
 
-	scale_y_abs (a_scale_y: DOUBLE) is
+	scale_y_abs (a_scale_y: DOUBLE)
 			-- Scale to y direction for `a_scale_y'.
 			-- Do not rotate around `angle' first.
 		require
@@ -347,7 +347,7 @@ feature -- Element change
 			end
 		end
 
-	scale_abs (a_scale: DOUBLE) is
+	scale_abs (a_scale: DOUBLE)
 			-- Scale to x and y direction for `a_scale'.
 			-- Do not rotate around `angle' first.
 		require
@@ -365,7 +365,7 @@ feature -- Element change
 			end
 		end
 
-	transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Transform all points in `point_array' using `a_transformation'.
 			-- You can do any transformation you want. You can
 			-- for example rotate `Current' around an other point
@@ -380,13 +380,13 @@ feature -- Element change
 			end
 		end
 
-	set_pebble (a_pebble: like pebble) is
+	set_pebble (a_pebble: like pebble)
 			-- Assign `a_pebble' to `pebble'.
 		do
 			pebble := a_pebble
 		end
 
-	remove_pebble is
+	remove_pebble
 			-- Make `pebble' `Void' and `pebble_function' `Void,
 			-- Removing transport.
 		do
@@ -394,13 +394,13 @@ feature -- Element change
 			pebble_function := Void
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY]) is
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY])
 			-- Set `a_function' to compute `pebble'.
 		do
 			pebble_function := a_function
 		end
 
-	set_pointer_style (a_cursor: like pointer_style) is
+	set_pointer_style (a_cursor: like pointer_style)
 			-- Assign `a_cursor' to `pointer_style'.
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -410,14 +410,14 @@ feature -- Element change
 			pointer_style_assigned: pointer_style = a_cursor
 		end
 
-	set_accept_cursor (a_cursor: EV_POINTER_STYLE) is
+	set_accept_cursor (a_cursor: EV_POINTER_STYLE)
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
 			accept_cursor := a_cursor
 		end
 
-	set_deny_cursor (a_cursor: EV_POINTER_STYLE) is
+	set_deny_cursor (a_cursor: EV_POINTER_STYLE)
 			-- Set `a_cursor' to be displayed when the screen pointer is not
 			-- over a valid target.
 		do
@@ -426,22 +426,22 @@ feature -- Element change
 
 feature -- Status Report
 
-	is_rotatable: BOOLEAN is
+	is_rotatable: BOOLEAN
 			-- Is this figure rotatable?
 		deferred
 		end
 
-	is_scalable: BOOLEAN is
+	is_scalable: BOOLEAN
 			-- Is this figure scalable?
 		deferred
 		end
 
-	is_transformable: BOOLEAN is
+	is_transformable: BOOLEAN
 			-- Is this figure transformable no matter what kind of transformation?
 		deferred
 		end
 
-	is_in_group: BOOLEAN is
+	is_in_group: BOOLEAN
 			-- Is `Current' part of a group?
 		do
 			Result := group /= Void
@@ -449,7 +449,7 @@ feature -- Status Report
 			group_defines_is_in_group: Result = (group /= Void)
 		end
 
-	is_in_world: BOOLEAN is
+	is_in_world: BOOLEAN
 			-- Is `Current' part of a world?
 		do
 			Result := world /= Void
@@ -466,7 +466,7 @@ feature -- Status Report
 		-- Deny cursor set by user.
 		-- To be displayed when the screen pointer is not over a valid target.
 
-	has_capture: BOOLEAN is
+	has_capture: BOOLEAN
 			-- Are all events sent to `Current'?
 		do
 			if world /= Void then
@@ -477,7 +477,7 @@ feature -- Status Report
 	is_show_requested: BOOLEAN
 			-- Will `Current' be displayed when its parent is?
 
-	is_sensitive: BOOLEAN is
+	is_sensitive: BOOLEAN
 			-- Is object sensitive to user input?
 		do
 			if group = Void or else group.is_sensitive then
@@ -496,7 +496,7 @@ feature -- Status Report
 
 feature -- Status settings
 
-	enable_capture is
+	enable_capture
 			-- Grab all mouse events for `world'.
 		require
 			in_world: world /= Void
@@ -506,7 +506,7 @@ feature -- Status settings
 			capture_set: has_capture
 		end
 
-	disable_capture is
+	disable_capture
 			-- Disable grab of all events on `world'.
 		require
 			in_world: world /= Void
@@ -517,7 +517,7 @@ feature -- Status settings
 			capture_released: not has_capture
 		end
 
-	show is
+	show
 			-- Request that `Current' be displayed when its `group' is.
 			-- `True' by default.
 		do
@@ -527,7 +527,7 @@ feature -- Status settings
 			is_show_requested: is_show_requested
 		end
 
-	hide is
+	hide
 			-- Request that `Current' not be displayed even when its `group' is.
 		do
 			is_show_requested := False
@@ -536,7 +536,7 @@ feature -- Status settings
 			not_is_show_requested: not is_show_requested
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make object sensitive to user input.
 		do
 			internal_is_sensitive := True
@@ -544,7 +544,7 @@ feature -- Status settings
 			sensitive_requested: internal_is_sensitive
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make object non-sensitive to user input.
 		do
 			internal_is_sensitive := False
@@ -552,7 +552,7 @@ feature -- Status settings
 			insensitive_requested: not internal_is_sensitive
 		end
 
-	disable_events_sended_to_group is
+	disable_events_sended_to_group
 			-- Set `are_events_sent_to_group' to False.
 		do
 			are_events_sent_to_group := False
@@ -560,7 +560,7 @@ feature -- Status settings
 			events_blocked: not are_events_sent_to_group
 		end
 
-	enable_events_sended_to_group is
+	enable_events_sended_to_group
 			-- Set `are_events_sent_to_group' to True.
 		do
 			are_events_sent_to_group := True
@@ -570,7 +570,7 @@ feature -- Status settings
 
 feature -- Action sequences
 
-	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer moves.
 		do
 			if internal_pointer_motion_actions = Void then
@@ -579,7 +579,7 @@ feature -- Action sequences
 			Result := internal_pointer_motion_actions
 		end
 
-	conforming_pick_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	conforming_pick_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when a pebble that fits this hole is
 			-- picked up from another source.
 			-- (when drop_actions.accepts_pebble (pebble))
@@ -590,7 +590,7 @@ feature -- Action sequences
 			Result := internal_conforming_pick_actions
 		end
 
-	pick_actions: EV_PND_START_ACTION_SEQUENCE is
+	pick_actions: EV_PND_START_ACTION_SEQUENCE
 			-- Actions to be performed when `pebble' is picked up.
 		do
 			if internal_pick_actions = Void then
@@ -599,7 +599,7 @@ feature -- Action sequences
 			Result := internal_pick_actions
 		end
 
-	drop_actions: EV_PND_ACTION_SEQUENCE is
+	drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Actions to take when pick and drop transport drops on `Current'.
 		do
 			if internal_drop_actions = Void then
@@ -609,7 +609,7 @@ feature -- Action sequences
 			Result := internal_drop_actions
 		end
 
-	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is pressed.
 		do
 			if internal_pointer_button_press_actions = Void then
@@ -618,7 +618,7 @@ feature -- Action sequences
 			Result := internal_pointer_button_press_actions
 		end
 
-	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer is double clicked.
 		do
 			if internal_pointer_double_press_actions = Void then
@@ -627,7 +627,7 @@ feature -- Action sequences
 			Result := internal_pointer_double_press_actions
 		end
 
-	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is released.
 		do
 			if internal_pointer_button_release_actions = Void then
@@ -636,7 +636,7 @@ feature -- Action sequences
 			Result := internal_pointer_button_release_actions
 		end
 
-	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer enters widget.
 		do
 			if internal_pointer_enter_actions = Void then
@@ -645,7 +645,7 @@ feature -- Action sequences
 			Result := internal_pointer_enter_actions
 		end
 
-	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer leaves widget.
 		do
 			if internal_pointer_leave_actions = Void then
@@ -656,13 +656,13 @@ feature -- Action sequences
 
 feature -- Events
 
-	position_on_figure (a_x, a_y: INTEGER): BOOLEAN is
+	position_on_figure (a_x, a_y: INTEGER): BOOLEAN
 			-- Is the point on (`a_x', `a_y') on this figure?
 			--| Used to generate events.
 		deferred
 		end
 
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
 			-- Every call returns a new instance.
 		local
@@ -715,7 +715,7 @@ feature -- Events
 
 feature --{EV_FIGURE} -- Status settings
 
-	center_invalidate is
+	center_invalidate
 			-- The position of the center may have changed.
 		do
 			if is_center_valid then
@@ -731,7 +731,7 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 	point_array: SPECIAL [EV_COORDINATE]
 			-- All points of the Figure.
 
-	invalidate is
+	invalidate
 			-- Some property of `Current' has changed.
 		do
 			valid := False
@@ -741,7 +741,7 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 			end
 		end
 
-	validate is
+	validate
 			-- `Current' has been updated by a projector.
 		do
 			if not valid then
@@ -750,7 +750,7 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 			end
 		end
 
-	invalid_rectangle: EV_RECTANGLE is
+	invalid_rectangle: EV_RECTANGLE
 			-- Area that needs erasing.
 		do
 			if not valid then
@@ -758,7 +758,7 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 			end
 		end
 
-	update_rectangle: EV_RECTANGLE is
+	update_rectangle: EV_RECTANGLE
 			-- Area that needs redrawing.
 		do
 			if not valid then
@@ -771,7 +771,7 @@ feature {EV_MODEL, EV_MODEL_DRAWER} -- Access
 			-- Area that needs updating.
 
 
-	real_pebble (a_x, a_y: INTEGER): ANY is
+	real_pebble (a_x, a_y: INTEGER): ANY
 			-- Calculated `pebble'.
 		do
 			if pebble_function /= Void then
@@ -797,7 +797,7 @@ feature {EV_MODEL, EV_MODEL_PROJECTION_ROUTINES}
 
 feature {EV_MODEL_GROUP} -- Figure group
 
-	set_group (a_group: EV_MODEL_GROUP) is
+	set_group (a_group: EV_MODEL_GROUP)
 			-- Set `group' to `a_group'
 		do
 			if group /= Void and group /= a_group then
@@ -809,7 +809,7 @@ feature {EV_MODEL_GROUP} -- Figure group
 			is_in_group_proper_defined: is_in_group = (a_group /= Void)
 		end
 
-	unreference_group is
+	unreference_group
 			-- Set group to Void after removal from it.
 			-- Remove `Current' from `group'.
 		require
@@ -820,7 +820,7 @@ feature {EV_MODEL_GROUP} -- Figure group
 			not_in_group: not is_in_group
 		end
 
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
@@ -846,13 +846,13 @@ feature {EV_MODEL_GROUP} -- Figure group
 
 feature {EV_MODEL_WIDGET_PROJECTOR} -- Implementation
 
-	default_accept_cursor: EV_POINTER_STYLE is
+	default_accept_cursor: EV_POINTER_STYLE
 			-- Used in lieu of a user defined `accept_cursor'.
 		once
 			Result := Default_pixmaps.Standard_cursor
 		end
 
-	default_deny_cursor: EV_POINTER_STYLE is
+	default_deny_cursor: EV_POINTER_STYLE
 			-- Used in lieu of a user defined `deny_cursor'.
 		once
 			Result := Default_pixmaps.No_cursor
@@ -860,7 +860,7 @@ feature {EV_MODEL_WIDGET_PROJECTOR} -- Implementation
 
 feature {NONE} -- Contract support
 
-	all_points_exist (list: like point_array): BOOLEAN is
+	all_points_exist (list: like point_array): BOOLEAN
 			-- Are all items in `list' non-`Void'?
 		require
 			list_exists: list /= Void
@@ -913,7 +913,7 @@ feature {NONE} -- Implementation
 	internal_hash_id: INTEGER
 			-- Unique id if not 0
 
-	counter: CELL [INTEGER] is
+	counter: CELL [INTEGER]
 			-- Id counter.
 		once
 			create Result.put (0)
@@ -921,7 +921,7 @@ feature {NONE} -- Implementation
 			counter_not_void: Result /= Void
 		end
 
-	projection_matrix: EV_MODEL_TRANSFORMATION is
+	projection_matrix: EV_MODEL_TRANSFORMATION
 			-- The transformation used to rotate and scale.
 		do
 			if internal_projection_matrix = Void then
@@ -939,13 +939,13 @@ feature {NONE} -- Implementation
 	internal_is_sensitive: BOOLEAN
 			-- `is_sensitive'.
 
-	default_colors: EV_STOCK_COLORS is
+	default_colors: EV_STOCK_COLORS
 			-- Eiffel Vision colors.
 		once
 			create Result
 		end
 
-	draw_id_counter: CELL [INTEGER] is
+	draw_id_counter: CELL [INTEGER]
 			-- Last assigned `draw_id'.
 		once
 			create Result.put (1)
@@ -953,14 +953,14 @@ feature {NONE} -- Implementation
 			draw_id_count_not_void: Result /= Void
 		end
 
-	known_draw_ids: HASH_TABLE [INTEGER, STRING] is
+	known_draw_ids: HASH_TABLE [INTEGER, STRING]
 			-- Table of assigned `draw_id's, hashed by the
 			-- generated types of EV_FIGURE descendants.
 		once
 			create Result.make (20)
 		end
 
-	assign_draw_id is
+	assign_draw_id
 		do
 			known_draw_ids.search (generator)
 			draw_id := known_draw_ids.found_item
@@ -974,7 +974,7 @@ feature {NONE} -- Implementation
 	center: EV_COORDINATE
 			-- Position of the center.
 
-	set_center is
+	set_center
 			-- Set the position of the center
 		deferred
 		ensure
@@ -994,7 +994,7 @@ invariant
 	projection_matrix_not_void: projection_matrix /= Void
 	is_transfomable_implies_rotatable_and_scalable: is_transformable implies (is_rotatable and is_scalable)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

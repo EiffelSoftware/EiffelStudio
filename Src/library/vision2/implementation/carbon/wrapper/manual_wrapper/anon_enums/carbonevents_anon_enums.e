@@ -1,4 +1,4 @@
-indexing
+note
 	description: "wrapper for anynymous enums from file CarbonEvents.h "
 
 class
@@ -6,4291 +6,4291 @@ class
 
 feature -- Carbon constants
 
-	frozen kEventParamDirectObject: INTEGER is
+	frozen kEventParamDirectObject: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamDirectObject"
 	end
 	
-	frozen kEventParamPostTarget: INTEGER is
+	frozen kEventParamPostTarget: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamPostTarget"
 	end
 
-	frozen kEventParamWindowRef: INTEGER is
+	frozen kEventParamWindowRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowRef"
 	end
 
-	frozen kEventParamGrafPort: INTEGER is
+	frozen kEventParamGrafPort: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamGrafPort"
 	end
 
-	frozen kEventParamMenuRef: INTEGER is
+	frozen kEventParamMenuRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuRef"
 	end
 
-	frozen kEventParamEventRef: INTEGER is
+	frozen kEventParamEventRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamEventRef"
 	end
 
-	frozen kEventParamControlRef: INTEGER is
+	frozen kEventParamControlRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlRef"
 	end
 
-	frozen kEventParamRgnHandle: INTEGER is
+	frozen kEventParamRgnHandle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamRgnHandle"
 	end
 
-	frozen kEventParamEnabled: INTEGER is
+	frozen kEventParamEnabled: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamEnabled"
 	end
 
-	frozen kEventParamDimensions: INTEGER is
+	frozen kEventParamDimensions: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamDimensions"
 	end
 
-	frozen kEventParamBounds: INTEGER is
+	frozen kEventParamBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamBounds"
 	end
 
-	frozen kEventParamAvailableBounds: INTEGER is
+	frozen kEventParamAvailableBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAvailableBounds"
 	end
 
-	frozen kEventParamAEEventID: INTEGER is
+	frozen kEventParamAEEventID: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAEEventID"
 	end
 
-	frozen kEventParamAEEventClass: INTEGER is
+	frozen kEventParamAEEventClass: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAEEventClass"
 	end
 
-	frozen kEventParamCGContextRef: INTEGER is
+	frozen kEventParamCGContextRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamCGContextRef"
 	end
 
-	frozen kEventParamDeviceDepth: INTEGER is
+	frozen kEventParamDeviceDepth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamDeviceDepth"
 	end
 
-	frozen kEventParamDeviceColor: INTEGER is
+	frozen kEventParamDeviceColor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamDeviceColor"
 	end
 
-	frozen kEventParamMutableArray: INTEGER is
+	frozen kEventParamMutableArray: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMutableArray"
 	end
 
-	frozen kEventParamResult: INTEGER is
+	frozen kEventParamResult: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamResult"
 	end
 
-	frozen kEventParamMinimumSize: INTEGER is
+	frozen kEventParamMinimumSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMinimumSize"
 	end
 
-	frozen kEventParamMaximumSize: INTEGER is
+	frozen kEventParamMaximumSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMaximumSize"
 	end
 
-	frozen kEventParamAttributes: INTEGER is
+	frozen kEventParamAttributes: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAttributes"
 	end
 
-	frozen kEventParamReason: INTEGER is
+	frozen kEventParamReason: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamReason"
 	end
 
-	frozen kEventParamTransactionID: INTEGER is
+	frozen kEventParamTransactionID: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTransactionID"
 	end
 
-	frozen kEventParamGDevice: INTEGER is
+	frozen kEventParamGDevice: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamGDevice"
 	end
 
-	frozen kEventParamIndex: INTEGER is
+	frozen kEventParamIndex: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamIndex"
 	end
 
-	frozen kEventParamUserData: INTEGER is
+	frozen kEventParamUserData: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamUserData"
 	end
 
-	frozen typeWindowRef: INTEGER is
+	frozen typeWindowRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeWindowRef"
 	end
 
-	frozen typeGrafPtr: INTEGER is
+	frozen typeGrafPtr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeGrafPtr"
 	end
 
-	frozen typeGWorldPtr: INTEGER is
+	frozen typeGWorldPtr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeGWorldPtr"
 	end
 
-	frozen typeMenuRef: INTEGER is
+	frozen typeMenuRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeMenuRef"
 	end
 
-	frozen typeControlRef: INTEGER is
+	frozen typeControlRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeControlRef"
 	end
 
-	frozen typeCollection: INTEGER is
+	frozen typeCollection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeCollection"
 	end
 
-	frozen typeQDRgnHandle: INTEGER is
+	frozen typeQDRgnHandle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeQDRgnHandle"
 	end
 	
-	frozen typeQDPoint: INTEGER is
+	frozen typeQDPoint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeQDPoint"
 	end
 	
-	frozen typeUInt32: INTEGER is
+	frozen typeUInt32: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeUInt32"
 	end
 
-	frozen typeOSStatus: INTEGER is
+	frozen typeOSStatus: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeOSStatus"
 	end
 
-	frozen typeCFIndex: INTEGER is
+	frozen typeCFIndex: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeCFIndex"
 	end
 
-	frozen typeCGContextRef: INTEGER is
+	frozen typeCGContextRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeCGContextRef"
 	end
 
-	frozen typeHIPoint: INTEGER is
+	frozen typeHIPoint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeHIPoint"
 	end
 
-	frozen typeHISize: INTEGER is
+	frozen typeHISize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeHISize"
 	end
 
-	frozen typeHIRect: INTEGER is
+	frozen typeHIRect: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeHIRect"
 	end
 
-	frozen typeVoidPtr: INTEGER is
+	frozen typeVoidPtr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeVoidPtr"
 	end
 
-	frozen typeGDHandle: INTEGER is
+	frozen typeGDHandle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeGDHandle"
 	end
 
-	frozen kEventParamMouseLocation: INTEGER is
+	frozen kEventParamMouseLocation: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMouseLocation"
 	end
 
-	frozen kEventParamWindowMouseLocation: INTEGER is
+	frozen kEventParamWindowMouseLocation: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowMouseLocation"
 	end
 
-	frozen kEventParamMouseButton: INTEGER is
+	frozen kEventParamMouseButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMouseButton"
 	end
 
-	frozen kEventParamClickCount: INTEGER is
+	frozen kEventParamClickCount: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamClickCount"
 	end
 
-	frozen kEventParamMouseWheelAxis: INTEGER is
+	frozen kEventParamMouseWheelAxis: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMouseWheelAxis"
 	end
 
-	frozen kEventParamMouseWheelDelta: INTEGER is
+	frozen kEventParamMouseWheelDelta: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMouseWheelDelta"
 	end
 
-	frozen kEventParamMouseDelta: INTEGER is
+	frozen kEventParamMouseDelta: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMouseDelta"
 	end
 
-	frozen kEventParamMouseChord: INTEGER is
+	frozen kEventParamMouseChord: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMouseChord"
 	end
 
-	frozen kEventParamTabletEventType: INTEGER is
+	frozen kEventParamTabletEventType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTabletEventType"
 	end
 
-	frozen kEventParamMouseTrackingRef: INTEGER is
+	frozen kEventParamMouseTrackingRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMouseTrackingRef"
 	end
 
-	frozen typeMouseButton: INTEGER is
+	frozen typeMouseButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeMouseButton"
 	end
 
-	frozen typeMouseWheelAxis: INTEGER is
+	frozen typeMouseWheelAxis: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeMouseWheelAxis"
 	end
 
-	frozen typeMouseTrackingRef: INTEGER is
+	frozen typeMouseTrackingRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeMouseTrackingRef"
 	end
 
-	frozen kEventParamKeyCode: INTEGER is
+	frozen kEventParamKeyCode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamKeyCode"
 	end
 
-	frozen kEventParamKeyMacCharCodes: INTEGER is
+	frozen kEventParamKeyMacCharCodes: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamKeyMacCharCodes"
 	end
 
-	frozen kEventParamKeyModifiers: INTEGER is
+	frozen kEventParamKeyModifiers: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamKeyModifiers"
 	end
 
-	frozen kEventParamKeyUnicodes: INTEGER is
+	frozen kEventParamKeyUnicodes: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamKeyUnicodes"
 	end
 
-	frozen kEventParamKeyboardType: INTEGER is
+	frozen kEventParamKeyboardType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamKeyboardType"
 	end
 
-	frozen typeEventHotKeyID: INTEGER is
+	frozen typeEventHotKeyID: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeEventHotKeyID"
 	end
 
-	frozen kEventParamTSMSendRefCon: INTEGER is
+	frozen kEventParamTSMSendRefCon: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMSendRefCon"
 	end
 
-	frozen kEventParamTSMSendComponentInstance: INTEGER is
+	frozen kEventParamTSMSendComponentInstance: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMSendComponentInstance"
 	end
 
-	frozen kEventParamTextInputSendRefCon: INTEGER is
+	frozen kEventParamTextInputSendRefCon: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendRefCon"
 	end
 
-	frozen kEventParamTextInputSendComponentInstance: INTEGER is
+	frozen kEventParamTextInputSendComponentInstance: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendComponentInstance"
 	end
 
-	frozen kEventParamTextInputSendSLRec: INTEGER is
+	frozen kEventParamTextInputSendSLRec: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendSLRec"
 	end
 
-	frozen kEventParamTextInputReplySLRec: INTEGER is
+	frozen kEventParamTextInputReplySLRec: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplySLRec"
 	end
 
-	frozen kEventParamTextInputSendText: INTEGER is
+	frozen kEventParamTextInputSendText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendText"
 	end
 
-	frozen kEventParamTextInputReplyText: INTEGER is
+	frozen kEventParamTextInputReplyText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyText"
 	end
 
-	frozen kEventParamTextInputSendUpdateRng: INTEGER is
+	frozen kEventParamTextInputSendUpdateRng: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendUpdateRng"
 	end
 
-	frozen kEventParamTextInputSendHiliteRng: INTEGER is
+	frozen kEventParamTextInputSendHiliteRng: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendHiliteRng"
 	end
 
-	frozen kEventParamTextInputSendClauseRng: INTEGER is
+	frozen kEventParamTextInputSendClauseRng: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendClauseRng"
 	end
 
-	frozen kEventParamTextInputSendPinRng: INTEGER is
+	frozen kEventParamTextInputSendPinRng: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendPinRng"
 	end
 
-	frozen kEventParamTextInputSendFixLen: INTEGER is
+	frozen kEventParamTextInputSendFixLen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendFixLen"
 	end
 
-	frozen kEventParamTextInputSendLeadingEdge: INTEGER is
+	frozen kEventParamTextInputSendLeadingEdge: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendLeadingEdge"
 	end
 
-	frozen kEventParamTextInputReplyLeadingEdge: INTEGER is
+	frozen kEventParamTextInputReplyLeadingEdge: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyLeadingEdge"
 	end
 
-	frozen kEventParamTextInputSendTextOffset: INTEGER is
+	frozen kEventParamTextInputSendTextOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendTextOffset"
 	end
 
-	frozen kEventParamTextInputReplyTextOffset: INTEGER is
+	frozen kEventParamTextInputReplyTextOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyTextOffset"
 	end
 
-	frozen kEventParamTextInputReplyRegionClass: INTEGER is
+	frozen kEventParamTextInputReplyRegionClass: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyRegionClass"
 	end
 
-	frozen kEventParamTextInputSendCurrentPoint: INTEGER is
+	frozen kEventParamTextInputSendCurrentPoint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendCurrentPoint"
 	end
 
-	frozen kEventParamTextInputSendDraggingMode: INTEGER is
+	frozen kEventParamTextInputSendDraggingMode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendDraggingMode"
 	end
 
-	frozen kEventParamTextInputReplyPoint: INTEGER is
+	frozen kEventParamTextInputReplyPoint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyPoint"
 	end
 
-	frozen kEventParamTextInputReplyFont: INTEGER is
+	frozen kEventParamTextInputReplyFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyFont"
 	end
 
-	frozen kEventParamTextInputReplyFMFont: INTEGER is
+	frozen kEventParamTextInputReplyFMFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyFMFont"
 	end
 
-	frozen kEventParamTextInputReplyPointSize: INTEGER is
+	frozen kEventParamTextInputReplyPointSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyPointSize"
 	end
 
-	frozen kEventParamTextInputReplyLineHeight: INTEGER is
+	frozen kEventParamTextInputReplyLineHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyLineHeight"
 	end
 
-	frozen kEventParamTextInputReplyLineAscent: INTEGER is
+	frozen kEventParamTextInputReplyLineAscent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyLineAscent"
 	end
 
-	frozen kEventParamTextInputReplyTextAngle: INTEGER is
+	frozen kEventParamTextInputReplyTextAngle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyTextAngle"
 	end
 
-	frozen kEventParamTextInputSendShowHide: INTEGER is
+	frozen kEventParamTextInputSendShowHide: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendShowHide"
 	end
 
-	frozen kEventParamTextInputReplyShowHide: INTEGER is
+	frozen kEventParamTextInputReplyShowHide: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyShowHide"
 	end
 
-	frozen kEventParamTextInputSendKeyboardEvent: INTEGER is
+	frozen kEventParamTextInputSendKeyboardEvent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendKeyboardEvent"
 	end
 
-	frozen kEventParamTextInputSendTextServiceEncoding: INTEGER is
+	frozen kEventParamTextInputSendTextServiceEncoding: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendTextServiceEncoding"
 	end
 
-	frozen kEventParamTextInputSendTextServiceMacEncoding: INTEGER is
+	frozen kEventParamTextInputSendTextServiceMacEncoding: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendTextServiceMacEncoding"
 	end
 
-	frozen kEventParamTextInputReplyMacEncoding: INTEGER is
+	frozen kEventParamTextInputReplyMacEncoding: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyMacEncoding"
 	end
 
-	frozen kEventParamTextInputGlyphInfoArray: INTEGER is
+	frozen kEventParamTextInputGlyphInfoArray: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputGlyphInfoArray"
 	end
 
-	frozen kEventParamTextInputSendGlyphInfoArray: INTEGER is
+	frozen kEventParamTextInputSendGlyphInfoArray: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendGlyphInfoArray"
 	end
 
-	frozen kEventParamTextInputReplyGlyphInfoArray: INTEGER is
+	frozen kEventParamTextInputReplyGlyphInfoArray: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputReplyGlyphInfoArray"
 	end
 
-	frozen kEventParamTextInputSendReplaceRange: INTEGER is
+	frozen kEventParamTextInputSendReplaceRange: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextInputSendReplaceRange"
 	end
 
-	frozen kEventParamTSMDocAccessSendRefCon: INTEGER is
+	frozen kEventParamTSMDocAccessSendRefCon: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessSendRefCon"
 	end
 
-	frozen kEventParamTSMDocAccessSendComponentInstance: INTEGER is
+	frozen kEventParamTSMDocAccessSendComponentInstance: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessSendComponentInstance"
 	end
 
-	frozen kEventParamTSMDocAccessCharacterCount: INTEGER is
+	frozen kEventParamTSMDocAccessCharacterCount: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessCharacterCount"
 	end
 
-	frozen kEventParamTSMDocAccessReplyCharacterRange: INTEGER is
+	frozen kEventParamTSMDocAccessReplyCharacterRange: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessReplyCharacterRange"
 	end
 
-	frozen kEventParamTSMDocAccessReplyCharactersPtr: INTEGER is
+	frozen kEventParamTSMDocAccessReplyCharactersPtr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessReplyCharactersPtr"
 	end
 
-	frozen kEventParamTSMDocAccessSendCharacterIndex: INTEGER is
+	frozen kEventParamTSMDocAccessSendCharacterIndex: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessSendCharacterIndex"
 	end
 
-	frozen kEventParamTSMDocAccessSendCharacterRange: INTEGER is
+	frozen kEventParamTSMDocAccessSendCharacterRange: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessSendCharacterRange"
 	end
 
-	frozen kEventParamTSMDocAccessSendCharactersPtr: INTEGER is
+	frozen kEventParamTSMDocAccessSendCharactersPtr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessSendCharactersPtr"
 	end
 
-	frozen kEventParamTSMDocAccessRequestedCharacterAttributes: INTEGER is
+	frozen kEventParamTSMDocAccessRequestedCharacterAttributes: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessRequestedCharacterAttributes"
 	end
 
-	frozen kEventParamTSMDocAccessReplyATSFont: INTEGER is
+	frozen kEventParamTSMDocAccessReplyATSFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessReplyATSFont"
 	end
 
-	frozen kEventParamTSMDocAccessReplyFontSize: INTEGER is
+	frozen kEventParamTSMDocAccessReplyFontSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessReplyFontSize"
 	end
 
-	frozen kEventParamTSMDocAccessEffectiveRange: INTEGER is
+	frozen kEventParamTSMDocAccessEffectiveRange: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessEffectiveRange"
 	end
 
-	frozen kEventParamTSMDocAccessReplyATSUGlyphSelector: INTEGER is
+	frozen kEventParamTSMDocAccessReplyATSUGlyphSelector: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessReplyATSUGlyphSelector"
 	end
 
-	frozen kEventParamTSMDocAccessLockCount: INTEGER is
+	frozen kEventParamTSMDocAccessLockCount: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTSMDocAccessLockCount"
 	end
 
-	frozen typeATSFontRef: INTEGER is
+	frozen typeATSFontRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeATSFontRef"
 	end
 
-	frozen typeGlyphSelector: INTEGER is
+	frozen typeGlyphSelector: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeGlyphSelector"
 	end
 
-	frozen kEventParamHICommand: INTEGER is
+	frozen kEventParamHICommand: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamHICommand"
 	end
 
-	frozen typeHICommand: INTEGER is
+	frozen typeHICommand: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeHICommand"
 	end
 
-	frozen kEventParamWindowFeatures: INTEGER is
+	frozen kEventParamWindowFeatures: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowFeatures"
 	end
 
-	frozen kEventParamWindowDefPart: INTEGER is
+	frozen kEventParamWindowDefPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowDefPart"
 	end
 
-	frozen kEventParamWindowPartCode: INTEGER is
+	frozen kEventParamWindowPartCode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowPartCode"
 	end
 
-	frozen kEventParamCurrentBounds: INTEGER is
+	frozen kEventParamCurrentBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamCurrentBounds"
 	end
 
-	frozen kEventParamOriginalBounds: INTEGER is
+	frozen kEventParamOriginalBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamOriginalBounds"
 	end
 
-	frozen kEventParamPreviousBounds: INTEGER is
+	frozen kEventParamPreviousBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamPreviousBounds"
 	end
 
-	frozen kEventParamClickActivation: INTEGER is
+	frozen kEventParamClickActivation: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamClickActivation"
 	end
 
-	frozen kEventParamWindowRegionCode: INTEGER is
+	frozen kEventParamWindowRegionCode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowRegionCode"
 	end
 
-	frozen kEventParamWindowDragHiliteFlag: INTEGER is
+	frozen kEventParamWindowDragHiliteFlag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowDragHiliteFlag"
 	end
 
-	frozen kEventParamWindowModifiedFlag: INTEGER is
+	frozen kEventParamWindowModifiedFlag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowModifiedFlag"
 	end
 
-	frozen kEventParamWindowProxyGWorldPtr: INTEGER is
+	frozen kEventParamWindowProxyGWorldPtr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowProxyGWorldPtr"
 	end
 
-	frozen kEventParamWindowProxyImageRgn: INTEGER is
+	frozen kEventParamWindowProxyImageRgn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowProxyImageRgn"
 	end
 
-	frozen kEventParamWindowProxyOutlineRgn: INTEGER is
+	frozen kEventParamWindowProxyOutlineRgn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowProxyOutlineRgn"
 	end
 
-	frozen kEventParamWindowStateChangedFlags: INTEGER is
+	frozen kEventParamWindowStateChangedFlags: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowStateChangedFlags"
 	end
 
-	frozen kEventParamWindowTitleFullWidth: INTEGER is
+	frozen kEventParamWindowTitleFullWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowTitleFullWidth"
 	end
 
-	frozen kEventParamWindowTitleTextWidth: INTEGER is
+	frozen kEventParamWindowTitleTextWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowTitleTextWidth"
 	end
 
-	frozen kEventParamWindowGrowRect: INTEGER is
+	frozen kEventParamWindowGrowRect: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowGrowRect"
 	end
 
-	frozen kEventParamPreviousDockRect: INTEGER is
+	frozen kEventParamPreviousDockRect: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamPreviousDockRect"
 	end
 
-	frozen kEventParamPreviousDockDevice: INTEGER is
+	frozen kEventParamPreviousDockDevice: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamPreviousDockDevice"
 	end
 
-	frozen kEventParamCurrentDockRect: INTEGER is
+	frozen kEventParamCurrentDockRect: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamCurrentDockRect"
 	end
 
-	frozen kEventParamCurrentDockDevice: INTEGER is
+	frozen kEventParamCurrentDockDevice: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamCurrentDockDevice"
 	end
 
-	frozen kEventParamWindowTransitionAction: INTEGER is
+	frozen kEventParamWindowTransitionAction: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowTransitionAction"
 	end
 
-	frozen kEventParamWindowTransitionEffect: INTEGER is
+	frozen kEventParamWindowTransitionEffect: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamWindowTransitionEffect"
 	end
 
-	frozen typeWindowRegionCode: INTEGER is
+	frozen typeWindowRegionCode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeWindowRegionCode"
 	end
 
-	frozen typeWindowDefPartCode: INTEGER is
+	frozen typeWindowDefPartCode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeWindowDefPartCode"
 	end
 
-	frozen typeWindowPartCode: INTEGER is
+	frozen typeWindowPartCode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeWindowPartCode"
 	end
 
-	frozen typeClickActivationResult: INTEGER is
+	frozen typeClickActivationResult: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeClickActivationResult"
 	end
 
-	frozen typeWindowTransitionAction: INTEGER is
+	frozen typeWindowTransitionAction: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeWindowTransitionAction"
 	end
 
-	frozen typeWindowTransitionEffect: INTEGER is
+	frozen typeWindowTransitionEffect: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeWindowTransitionEffect"
 	end
 
-	frozen kEventParamControlPart: INTEGER is
+	frozen kEventParamControlPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlPart"
 	end
 
-	frozen kEventParamInitCollection: INTEGER is
+	frozen kEventParamInitCollection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamInitCollection"
 	end
 
-	frozen kEventParamControlMessage: INTEGER is
+	frozen kEventParamControlMessage: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlMessage"
 	end
 
-	frozen kEventParamControlParam: INTEGER is
+	frozen kEventParamControlParam: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlParam"
 	end
 
-	frozen kEventParamControlResult: INTEGER is
+	frozen kEventParamControlResult: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlResult"
 	end
 
-	frozen kEventParamControlRegion: INTEGER is
+	frozen kEventParamControlRegion: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlRegion"
 	end
 
-	frozen kEventParamControlAction: INTEGER is
+	frozen kEventParamControlAction: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlAction"
 	end
 
-	frozen kEventParamControlIndicatorDragConstraint: INTEGER is
+	frozen kEventParamControlIndicatorDragConstraint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlIndicatorDragConstraint"
 	end
 
-	frozen kEventParamControlIndicatorRegion: INTEGER is
+	frozen kEventParamControlIndicatorRegion: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlIndicatorRegion"
 	end
 
-	frozen kEventParamControlIsGhosting: INTEGER is
+	frozen kEventParamControlIsGhosting: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlIsGhosting"
 	end
 
-	frozen kEventParamControlIndicatorOffset: INTEGER is
+	frozen kEventParamControlIndicatorOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlIndicatorOffset"
 	end
 
-	frozen kEventParamControlClickActivationResult: INTEGER is
+	frozen kEventParamControlClickActivationResult: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlClickActivationResult"
 	end
 
-	frozen kEventParamControlSubControl: INTEGER is
+	frozen kEventParamControlSubControl: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlSubControl"
 	end
 
-	frozen kEventParamControlOptimalBounds: INTEGER is
+	frozen kEventParamControlOptimalBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlOptimalBounds"
 	end
 
-	frozen kEventParamControlOptimalBaselineOffset: INTEGER is
+	frozen kEventParamControlOptimalBaselineOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlOptimalBaselineOffset"
 	end
 
-	frozen kEventParamControlDataTag: INTEGER is
+	frozen kEventParamControlDataTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlDataTag"
 	end
 
-	frozen kEventParamControlDataBuffer: INTEGER is
+	frozen kEventParamControlDataBuffer: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlDataBuffer"
 	end
 
-	frozen kEventParamControlDataBufferSize: INTEGER is
+	frozen kEventParamControlDataBufferSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlDataBufferSize"
 	end
 
-	frozen kEventParamControlDrawDepth: INTEGER is
+	frozen kEventParamControlDrawDepth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlDrawDepth"
 	end
 
-	frozen kEventParamControlDrawInColor: INTEGER is
+	frozen kEventParamControlDrawInColor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlDrawInColor"
 	end
 
-	frozen kEventParamControlFeatures: INTEGER is
+	frozen kEventParamControlFeatures: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlFeatures"
 	end
 
-	frozen kEventParamControlPartBounds: INTEGER is
+	frozen kEventParamControlPartBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlPartBounds"
 	end
 
-	frozen kEventParamControlOriginalOwningWindow: INTEGER is
+	frozen kEventParamControlOriginalOwningWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlOriginalOwningWindow"
 	end
 
-	frozen kEventParamControlCurrentOwningWindow: INTEGER is
+	frozen kEventParamControlCurrentOwningWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlCurrentOwningWindow"
 	end
 
-	frozen kEventParamControlFocusEverything: INTEGER is
+	frozen kEventParamControlFocusEverything: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlFocusEverything"
 	end
 
-	frozen kEventParamNextControl: INTEGER is
+	frozen kEventParamNextControl: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamNextControl"
 	end
 
-	frozen kEventParamStartControl: INTEGER is
+	frozen kEventParamStartControl: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamStartControl"
 	end
 
-	frozen kEventParamControlSubview: INTEGER is
+	frozen kEventParamControlSubview: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlSubview"
 	end
 
-	frozen kEventParamControlPreviousPart: INTEGER is
+	frozen kEventParamControlPreviousPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlPreviousPart"
 	end
 
-	frozen kEventParamControlCurrentPart: INTEGER is
+	frozen kEventParamControlCurrentPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlCurrentPart"
 	end
 
-	frozen kEventParamControlInvalRgn: INTEGER is
+	frozen kEventParamControlInvalRgn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlInvalRgn"
 	end
 
-	frozen kEventParamControlValue: INTEGER is
+	frozen kEventParamControlValue: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlValue"
 	end
 
-	frozen kEventParamControlHit: INTEGER is
+	frozen kEventParamControlHit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlHit"
 	end
 
-	frozen kEventParamControlPartAutoRepeats: INTEGER is
+	frozen kEventParamControlPartAutoRepeats: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlPartAutoRepeats"
 	end
 
-	frozen kEventParamControlFrameMetrics: INTEGER is
+	frozen kEventParamControlFrameMetrics: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlFrameMetrics"
 	end
 
-	frozen kEventParamControlWouldAcceptDrop: INTEGER is
+	frozen kEventParamControlWouldAcceptDrop: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamControlWouldAcceptDrop"
 	end
 
-	frozen typeControlActionUPP: INTEGER is
+	frozen typeControlActionUPP: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeControlActionUPP"
 	end
 
-	frozen typeIndicatorDragConstraint: INTEGER is
+	frozen typeIndicatorDragConstraint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeIndicatorDragConstraint"
 	end
 
-	frozen typeControlPartCode: INTEGER is
+	frozen typeControlPartCode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeControlPartCode"
 	end
 
-	frozen typeControlFrameMetrics: INTEGER is
+	frozen typeControlFrameMetrics: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeControlFrameMetrics"
 	end
 
-	frozen kEventParamCurrentMenuTrackingMode: INTEGER is
+	frozen kEventParamCurrentMenuTrackingMode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamCurrentMenuTrackingMode"
 	end
 
-	frozen kEventParamNewMenuTrackingMode: INTEGER is
+	frozen kEventParamNewMenuTrackingMode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamNewMenuTrackingMode"
 	end
 
-	frozen kEventParamMenuFirstOpen: INTEGER is
+	frozen kEventParamMenuFirstOpen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuFirstOpen"
 	end
 
-	frozen kEventParamMenuItemIndex: INTEGER is
+	frozen kEventParamMenuItemIndex: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuItemIndex"
 	end
 
-	frozen kEventParamMenuCommand: INTEGER is
+	frozen kEventParamMenuCommand: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuCommand"
 	end
 
-	frozen kEventParamEnableMenuForKeyEvent: INTEGER is
+	frozen kEventParamEnableMenuForKeyEvent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamEnableMenuForKeyEvent"
 	end
 
-	frozen kEventParamMenuEventOptions: INTEGER is
+	frozen kEventParamMenuEventOptions: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuEventOptions"
 	end
 
-	frozen kEventParamMenuContext: INTEGER is
+	frozen kEventParamMenuContext: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuContext"
 	end
 
-	frozen kEventParamMenuDismissed: INTEGER is
+	frozen kEventParamMenuDismissed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuDismissed"
 	end
 
-	frozen kEventParamMenuItemBounds: INTEGER is
+	frozen kEventParamMenuItemBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuItemBounds"
 	end
 
-	frozen kEventParamMenuMarkBounds: INTEGER is
+	frozen kEventParamMenuMarkBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuMarkBounds"
 	end
 
-	frozen kEventParamMenuIconBounds: INTEGER is
+	frozen kEventParamMenuIconBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuIconBounds"
 	end
 
-	frozen kEventParamMenuTextBounds: INTEGER is
+	frozen kEventParamMenuTextBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuTextBounds"
 	end
 
-	frozen kEventParamMenuTextBaseline: INTEGER is
+	frozen kEventParamMenuTextBaseline: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuTextBaseline"
 	end
 
-	frozen kEventParamMenuCommandKeyBounds: INTEGER is
+	frozen kEventParamMenuCommandKeyBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuCommandKeyBounds"
 	end
 
-	frozen kEventParamMenuVirtualTop: INTEGER is
+	frozen kEventParamMenuVirtualTop: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuVirtualTop"
 	end
 
-	frozen kEventParamMenuVirtualBottom: INTEGER is
+	frozen kEventParamMenuVirtualBottom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuVirtualBottom"
 	end
 
-	frozen kEventParamMenuDrawState: INTEGER is
+	frozen kEventParamMenuDrawState: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuDrawState"
 	end
 
-	frozen kEventParamMenuItemType: INTEGER is
+	frozen kEventParamMenuItemType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuItemType"
 	end
 
-	frozen kEventParamMenuItemWidth: INTEGER is
+	frozen kEventParamMenuItemWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuItemWidth"
 	end
 
-	frozen kEventParamMenuItemHeight: INTEGER is
+	frozen kEventParamMenuItemHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuItemHeight"
 	end
 
-	frozen kEventParamMenuFrameView: INTEGER is
+	frozen kEventParamMenuFrameView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuFrameView"
 	end
 
-	frozen kEventParamMenuType: INTEGER is
+	frozen kEventParamMenuType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuType"
 	end
 
-	frozen kEventParamMenuIsPopup: INTEGER is
+	frozen kEventParamMenuIsPopup: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuIsPopup"
 	end
 
-	frozen kEventParamMenuDirection: INTEGER is
+	frozen kEventParamMenuDirection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuDirection"
 	end
 
-	frozen kEventParamParentMenu: INTEGER is
+	frozen kEventParamParentMenu: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamParentMenu"
 	end
 
-	frozen kEventParamParentMenuItem: INTEGER is
+	frozen kEventParamParentMenuItem: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamParentMenuItem"
 	end
 
-	frozen kEventParamMenuPopupItem: INTEGER is
+	frozen kEventParamMenuPopupItem: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamMenuPopupItem"
 	end
 
-	frozen typeMenuItemIndex: INTEGER is
+	frozen typeMenuItemIndex: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeMenuItemIndex"
 	end
 
-	frozen typeMenuCommand: INTEGER is
+	frozen typeMenuCommand: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeMenuCommand"
 	end
 
-	frozen typeMenuTrackingMode: INTEGER is
+	frozen typeMenuTrackingMode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeMenuTrackingMode"
 	end
 
-	frozen typeMenuEventOptions: INTEGER is
+	frozen typeMenuEventOptions: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeMenuEventOptions"
 	end
 
-	frozen typeThemeMenuState: INTEGER is
+	frozen typeThemeMenuState: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeThemeMenuState"
 	end
 
-	frozen typeThemeMenuItemType: INTEGER is
+	frozen typeThemeMenuItemType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeThemeMenuItemType"
 	end
 
-	frozen typeMenuDirection: INTEGER is
+	frozen typeMenuDirection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeMenuDirection"
 	end
 
-	frozen typeThemeMenuType: INTEGER is
+	frozen typeThemeMenuType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeThemeMenuType"
 	end
 
-	frozen kEventParamProcessID: INTEGER is
+	frozen kEventParamProcessID: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamProcessID"
 	end
 
-	frozen kEventParamLaunchRefCon: INTEGER is
+	frozen kEventParamLaunchRefCon: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamLaunchRefCon"
 	end
 
-	frozen kEventParamLaunchErr: INTEGER is
+	frozen kEventParamLaunchErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamLaunchErr"
 	end
 
-	frozen kEventParamSystemUIMode: INTEGER is
+	frozen kEventParamSystemUIMode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamSystemUIMode"
 	end
 
-	frozen kEventParamIsInInstantMouser: INTEGER is
+	frozen kEventParamIsInInstantMouser: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamIsInInstantMouser"
 	end
 
-	frozen kEventParamPreviousWindow: INTEGER is
+	frozen kEventParamPreviousWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamPreviousWindow"
 	end
 
-	frozen kEventParamCurrentWindow: INTEGER is
+	frozen kEventParamCurrentWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamCurrentWindow"
 	end
 
-	frozen kEventParamTabletPointRec: INTEGER is
+	frozen kEventParamTabletPointRec: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTabletPointRec"
 	end
 
-	frozen kEventParamTabletProximityRec: INTEGER is
+	frozen kEventParamTabletProximityRec: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTabletProximityRec"
 	end
 
-	frozen typeTabletPointRec: INTEGER is
+	frozen typeTabletPointRec: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeTabletPointRec"
 	end
 
-	frozen typeTabletProximityRec: INTEGER is
+	frozen typeTabletProximityRec: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeTabletProximityRec"
 	end
 
-	frozen kEventParamTabletPointerRec: INTEGER is
+	frozen kEventParamTabletPointerRec: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTabletPointerRec"
 	end
 
-	frozen typeTabletPointerRec: INTEGER is
+	frozen typeTabletPointerRec: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeTabletPointerRec"
 	end
 
-	frozen kEventParamNewScrollBarVariant: INTEGER is
+	frozen kEventParamNewScrollBarVariant: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamNewScrollBarVariant"
 	end
 
-	frozen kEventParamPasteboardRef: INTEGER is
+	frozen kEventParamPasteboardRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamPasteboardRef"
 	end
 
-	frozen kEventParamScrapRef: INTEGER is
+	frozen kEventParamScrapRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamScrapRef"
 	end
 
-	frozen kEventParamServiceCopyTypes: INTEGER is
+	frozen kEventParamServiceCopyTypes: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamServiceCopyTypes"
 	end
 
-	frozen kEventParamServicePasteTypes: INTEGER is
+	frozen kEventParamServicePasteTypes: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamServicePasteTypes"
 	end
 
-	frozen kEventParamServiceMessageName: INTEGER is
+	frozen kEventParamServiceMessageName: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamServiceMessageName"
 	end
 
-	frozen kEventParamServiceUserData: INTEGER is
+	frozen kEventParamServiceUserData: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamServiceUserData"
 	end
 
-	frozen typePasteboardRef: INTEGER is
+	frozen typePasteboardRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typePasteboardRef"
 	end
 
-	frozen typeScrapRef: INTEGER is
+	frozen typeScrapRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeScrapRef"
 	end
 
-	frozen kEventParamAccessibleObject: INTEGER is
+	frozen kEventParamAccessibleObject: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAccessibleObject"
 	end
 
-	frozen kEventParamAccessibleChild: INTEGER is
+	frozen kEventParamAccessibleChild: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAccessibleChild"
 	end
 
-	frozen kEventParamAccessibleAttributeName: INTEGER is
+	frozen kEventParamAccessibleAttributeName: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAccessibleAttributeName"
 	end
 
-	frozen kEventParamAccessibleAttributeNames: INTEGER is
+	frozen kEventParamAccessibleAttributeNames: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAccessibleAttributeNames"
 	end
 
-	frozen kEventParamAccessibleAttributeValue: INTEGER is
+	frozen kEventParamAccessibleAttributeValue: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAccessibleAttributeValue"
 	end
 
-	frozen kEventParamAccessibleAttributeSettable: INTEGER is
+	frozen kEventParamAccessibleAttributeSettable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAccessibleAttributeSettable"
 	end
 
-	frozen kEventParamAccessibleAttributeParameter: INTEGER is
+	frozen kEventParamAccessibleAttributeParameter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAccessibleAttributeParameter"
 	end
 
-	frozen kEventParamAccessibleActionName: INTEGER is
+	frozen kEventParamAccessibleActionName: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAccessibleActionName"
 	end
 
-	frozen kEventParamAccessibleActionNames: INTEGER is
+	frozen kEventParamAccessibleActionNames: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAccessibleActionNames"
 	end
 
-	frozen kEventParamAccessibleActionDescription: INTEGER is
+	frozen kEventParamAccessibleActionDescription: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAccessibleActionDescription"
 	end
 
-	frozen kEventParamAccessibilityEventQueued: INTEGER is
+	frozen kEventParamAccessibilityEventQueued: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamAccessibilityEventQueued"
 	end
 
-	frozen kTrackMouseLocationOptionDontConsumeMouseUp: INTEGER is
+	frozen kTrackMouseLocationOptionDontConsumeMouseUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kTrackMouseLocationOptionDontConsumeMouseUp"
 	end
 
-	frozen kMouseTrackingMouseDown: INTEGER is
+	frozen kMouseTrackingMouseDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMouseTrackingMouseDown"
 	end
 
-	frozen kMouseTrackingMouseUp: INTEGER is
+	frozen kMouseTrackingMouseUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMouseTrackingMouseUp"
 	end
 
-	frozen kMouseTrackingMouseExited: INTEGER is
+	frozen kMouseTrackingMouseExited: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMouseTrackingMouseExited"
 	end
 
-	frozen kMouseTrackingMouseEntered: INTEGER is
+	frozen kMouseTrackingMouseEntered: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMouseTrackingMouseEntered"
 	end
 
-	frozen kMouseTrackingMouseDragged: INTEGER is
+	frozen kMouseTrackingMouseDragged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMouseTrackingMouseDragged"
 	end
 
-	frozen kMouseTrackingKeyModifiersChanged: INTEGER is
+	frozen kMouseTrackingKeyModifiersChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMouseTrackingKeyModifiersChanged"
 	end
 
-	frozen kMouseTrackingUserCancelled: INTEGER is
+	frozen kMouseTrackingUserCancelled: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMouseTrackingUserCancelled"
 	end
 
-	frozen kMouseTrackingTimedOut: INTEGER is
+	frozen kMouseTrackingTimedOut: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMouseTrackingTimedOut"
 	end
 
-	frozen kMouseTrackingMouseMoved: INTEGER is
+	frozen kMouseTrackingMouseMoved: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMouseTrackingMouseMoved"
 	end
 
-	frozen kMouseParamsSticky: INTEGER is
+	frozen kMouseParamsSticky: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMouseParamsSticky"
 	end
 
-	frozen kEventClassMouse: INTEGER is
+	frozen kEventClassMouse: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassMouse"
 	end
 
-	frozen kEventClassKeyboard: INTEGER is
+	frozen kEventClassKeyboard: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassKeyboard"
 	end
 
-	frozen kEventClassTextInput: INTEGER is
+	frozen kEventClassTextInput: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassTextInput"
 	end
 
-	frozen kEventClassApplication: INTEGER is
+	frozen kEventClassApplication: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassApplication"
 	end
 
-	frozen kEventClassAppleEvent: INTEGER is
+	frozen kEventClassAppleEvent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassAppleEvent"
 	end
 
-	frozen kEventClassMenu: INTEGER is
+	frozen kEventClassMenu: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassMenu"
 	end
 
-	frozen kEventClassWindow: INTEGER is
+	frozen kEventClassWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassWindow"
 	end
 
-	frozen kEventClassControl: INTEGER is
+	frozen kEventClassControl: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassControl"
 	end
 
-	frozen kEventClassCommand: INTEGER is
+	frozen kEventClassCommand: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassCommand"
 	end
 
-	frozen kEventClassTablet: INTEGER is
+	frozen kEventClassTablet: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassTablet"
 	end
 
-	frozen kEventClassVolume: INTEGER is
+	frozen kEventClassVolume: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassVolume"
 	end
 
-	frozen kEventClassAppearance: INTEGER is
+	frozen kEventClassAppearance: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassAppearance"
 	end
 
-	frozen kEventClassService: INTEGER is
+	frozen kEventClassService: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassService"
 	end
 
-	frozen kEventClassToolbar: INTEGER is
+	frozen kEventClassToolbar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassToolbar"
 	end
 
-	frozen kEventClassToolbarItem: INTEGER is
+	frozen kEventClassToolbarItem: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassToolbarItem"
 	end
 
-	frozen kEventClassToolbarItemView: INTEGER is
+	frozen kEventClassToolbarItemView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassToolbarItemView"
 	end
 
-	frozen kEventClassAccessibility: INTEGER is
+	frozen kEventClassAccessibility: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassAccessibility"
 	end
 
-	frozen kEventClassSystem: INTEGER is
+	frozen kEventClassSystem: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassSystem"
 	end
 
-	frozen kEventClassInk: INTEGER is
+	frozen kEventClassInk: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassInk"
 	end
 
-	frozen kEventClassTSMDocumentAccess: INTEGER is
+	frozen kEventClassTSMDocumentAccess: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassTSMDocumentAccess"
 	end
 
-	frozen kEventMouseButtonPrimary: INTEGER is
+	frozen kEventMouseButtonPrimary: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMouseButtonPrimary"
 	end
 
-	frozen kEventMouseButtonSecondary: INTEGER is
+	frozen kEventMouseButtonSecondary: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMouseButtonSecondary"
 	end
 
-	frozen kEventMouseButtonTertiary: INTEGER is
+	frozen kEventMouseButtonTertiary: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMouseButtonTertiary"
 	end
 
-	frozen kEventMouseWheelAxisX: INTEGER is
+	frozen kEventMouseWheelAxisX: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMouseWheelAxisX"
 	end
 
-	frozen kEventMouseWheelAxisY: INTEGER is
+	frozen kEventMouseWheelAxisY: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMouseWheelAxisY"
 	end
 
-	frozen kEventMouseDown: INTEGER is
+	frozen kEventMouseDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMouseDown"
 	end
 
-	frozen kEventMouseUp: INTEGER is
+	frozen kEventMouseUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMouseUp"
 	end
 
-	frozen kEventMouseMoved: INTEGER is
+	frozen kEventMouseMoved: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMouseMoved"
 	end
 
-	frozen kEventMouseDragged: INTEGER is
+	frozen kEventMouseDragged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMouseDragged"
 	end
 
-	frozen kEventMouseEntered: INTEGER is
+	frozen kEventMouseEntered: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMouseEntered"
 	end
 
-	frozen kEventMouseExited: INTEGER is
+	frozen kEventMouseExited: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMouseExited"
 	end
 
-	frozen kEventMouseWheelMoved: INTEGER is
+	frozen kEventMouseWheelMoved: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMouseWheelMoved"
 	end
 
-	frozen kEventTSMDocumentAccessGetLength: INTEGER is
+	frozen kEventTSMDocumentAccessGetLength: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTSMDocumentAccessGetLength"
 	end
 
-	frozen kEventTSMDocumentAccessGetSelectedRange: INTEGER is
+	frozen kEventTSMDocumentAccessGetSelectedRange: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTSMDocumentAccessGetSelectedRange"
 	end
 
-	frozen kEventTSMDocumentAccessGetCharactersPtr: INTEGER is
+	frozen kEventTSMDocumentAccessGetCharactersPtr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTSMDocumentAccessGetCharactersPtr"
 	end
 
-	frozen kEventTSMDocumentAccessGetCharactersPtrForLargestBuffer: INTEGER is
+	frozen kEventTSMDocumentAccessGetCharactersPtrForLargestBuffer: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTSMDocumentAccessGetCharactersPtrForLargestBuffer"
 	end
 
-	frozen kEventTSMDocumentAccessGetCharacters: INTEGER is
+	frozen kEventTSMDocumentAccessGetCharacters: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTSMDocumentAccessGetCharacters"
 	end
 
-	frozen kTSMDocAccessFontSizeAttributeBit: INTEGER is
+	frozen kTSMDocAccessFontSizeAttributeBit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kTSMDocAccessFontSizeAttributeBit"
 	end
 
-	frozen kTSMDocAccessEffectiveRangeAttributeBit: INTEGER is
+	frozen kTSMDocAccessEffectiveRangeAttributeBit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kTSMDocAccessEffectiveRangeAttributeBit"
 	end
 
-	frozen kTSMDocAccessFontSizeAttribute: INTEGER is
+	frozen kTSMDocAccessFontSizeAttribute: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kTSMDocAccessFontSizeAttribute"
 	end
 
-	frozen kTSMDocAccessEffectiveRangeAttribute: INTEGER is
+	frozen kTSMDocAccessEffectiveRangeAttribute: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kTSMDocAccessEffectiveRangeAttribute"
 	end
 
-	frozen kEventTSMDocumentAccessGetFont: INTEGER is
+	frozen kEventTSMDocumentAccessGetFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTSMDocumentAccessGetFont"
 	end
 
-	frozen kEventTSMDocumentAccessGetGlyphInfo: INTEGER is
+	frozen kEventTSMDocumentAccessGetGlyphInfo: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTSMDocumentAccessGetGlyphInfo"
 	end
 
-	frozen kEventTSMDocumentAccessLockDocument: INTEGER is
+	frozen kEventTSMDocumentAccessLockDocument: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTSMDocumentAccessLockDocument"
 	end
 
-	frozen kEventTSMDocumentAccessUnlockDocument: INTEGER is
+	frozen kEventTSMDocumentAccessUnlockDocument: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTSMDocumentAccessUnlockDocument"
 	end
 
-	frozen kEventTextInputUpdateActiveInputArea: INTEGER is
+	frozen kEventTextInputUpdateActiveInputArea: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTextInputUpdateActiveInputArea"
 	end
 
-	frozen kEventTextInputUnicodeForKeyEvent: INTEGER is
+	frozen kEventTextInputUnicodeForKeyEvent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTextInputUnicodeForKeyEvent"
 	end
 
-	frozen kEventTextInputOffsetToPos: INTEGER is
+	frozen kEventTextInputOffsetToPos: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTextInputOffsetToPos"
 	end
 
-	frozen kEventTextInputPosToOffset: INTEGER is
+	frozen kEventTextInputPosToOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTextInputPosToOffset"
 	end
 
-	frozen kEventTextInputShowHideBottomWindow: INTEGER is
+	frozen kEventTextInputShowHideBottomWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTextInputShowHideBottomWindow"
 	end
 
-	frozen kEventTextInputGetSelectedText: INTEGER is
+	frozen kEventTextInputGetSelectedText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTextInputGetSelectedText"
 	end
 
-	frozen kEventTextInputUnicodeText: INTEGER is
+	frozen kEventTextInputUnicodeText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTextInputUnicodeText"
 	end
 
-	frozen kEventRawKeyDown: INTEGER is
+	frozen kEventRawKeyDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventRawKeyDown"
 	end
 
-	frozen kEventRawKeyRepeat: INTEGER is
+	frozen kEventRawKeyRepeat: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventRawKeyRepeat"
 	end
 
-	frozen kEventRawKeyUp: INTEGER is
+	frozen kEventRawKeyUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventRawKeyUp"
 	end
 
-	frozen kEventRawKeyModifiersChanged: INTEGER is
+	frozen kEventRawKeyModifiersChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventRawKeyModifiersChanged"
 	end
 
-	frozen kEventHotKeyPressed: INTEGER is
+	frozen kEventHotKeyPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventHotKeyPressed"
 	end
 
-	frozen kEventHotKeyReleased: INTEGER is
+	frozen kEventHotKeyReleased: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventHotKeyReleased"
 	end
 
-	frozen kEventKeyModifierNumLockBit: INTEGER is
+	frozen kEventKeyModifierNumLockBit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventKeyModifierNumLockBit"
 	end
 
-	frozen kEventKeyModifierFnBit: INTEGER is
+	frozen kEventKeyModifierFnBit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventKeyModifierFnBit"
 	end
 
-	frozen kEventKeyModifierNumLockMask: INTEGER is
+	frozen kEventKeyModifierNumLockMask: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventKeyModifierNumLockMask"
 	end
 
-	frozen kEventKeyModifierFnMask: INTEGER is
+	frozen kEventKeyModifierFnMask: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventKeyModifierFnMask"
 	end
 
-	frozen kEventAppActivated: INTEGER is
+	frozen kEventAppActivated: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppActivated"
 	end
 
-	frozen kEventAppDeactivated: INTEGER is
+	frozen kEventAppDeactivated: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppDeactivated"
 	end
 
-	frozen kEventAppQuit: INTEGER is
+	frozen kEventAppQuit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppQuit"
 	end
 
-	frozen kEventAppLaunchNotification: INTEGER is
+	frozen kEventAppLaunchNotification: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppLaunchNotification"
 	end
 
-	frozen kEventAppLaunched: INTEGER is
+	frozen kEventAppLaunched: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppLaunched"
 	end
 
-	frozen kEventAppTerminated: INTEGER is
+	frozen kEventAppTerminated: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppTerminated"
 	end
 
-	frozen kEventAppFrontSwitched: INTEGER is
+	frozen kEventAppFrontSwitched: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppFrontSwitched"
 	end
 
-	frozen kEventAppHidden: INTEGER is
+	frozen kEventAppHidden: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppHidden"
 	end
 
-	frozen kEventAppShown: INTEGER is
+	frozen kEventAppShown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppShown"
 	end
 
-	frozen kEventAppSystemUIModeChanged: INTEGER is
+	frozen kEventAppSystemUIModeChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppSystemUIModeChanged"
 	end
 
-	frozen kAvailBoundsChangedForDock: INTEGER is
+	frozen kAvailBoundsChangedForDock: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAvailBoundsChangedForDock"
 	end
 
-	frozen kAvailBoundsChangedForDisplay: INTEGER is
+	frozen kAvailBoundsChangedForDisplay: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAvailBoundsChangedForDisplay"
 	end
 
-	frozen kEventAppAvailableWindowBoundsChanged: INTEGER is
+	frozen kEventAppAvailableWindowBoundsChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppAvailableWindowBoundsChanged"
 	end
 
-	frozen kEventAppActiveWindowChanged: INTEGER is
+	frozen kEventAppActiveWindowChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppActiveWindowChanged"
 	end
 
-	frozen kEventAppGetDockTileMenu: INTEGER is
+	frozen kEventAppGetDockTileMenu: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppGetDockTileMenu"
 	end
 
-	frozen kEventAppFocusMenuBar: INTEGER is
+	frozen kEventAppFocusMenuBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppFocusMenuBar"
 	end
 
-	frozen kEventAppFocusNextDocumentWindow: INTEGER is
+	frozen kEventAppFocusNextDocumentWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppFocusNextDocumentWindow"
 	end
 
-	frozen kEventAppFocusNextFloatingWindow: INTEGER is
+	frozen kEventAppFocusNextFloatingWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppFocusNextFloatingWindow"
 	end
 
-	frozen kEventAppFocusToolbar: INTEGER is
+	frozen kEventAppFocusToolbar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppFocusToolbar"
 	end
 
-	frozen kEventAppIsEventInInstantMouser: INTEGER is
+	frozen kEventAppIsEventInInstantMouser: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppIsEventInInstantMouser"
 	end
 
-	frozen kEventAppleEvent: INTEGER is
+	frozen kEventAppleEvent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppleEvent"
 	end
 
-	frozen kEventWindowUpdate: INTEGER is
+	frozen kEventWindowUpdate: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowUpdate"
 	end
 
-	frozen kEventWindowDrawContent: INTEGER is
+	frozen kEventWindowDrawContent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDrawContent"
 	end
 
-	frozen kEventWindowActivated: INTEGER is
+	frozen kEventWindowActivated: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowActivated"
 	end
 
-	frozen kEventWindowDeactivated: INTEGER is
+	frozen kEventWindowDeactivated: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDeactivated"
 	end
 
-	frozen kEventWindowGetClickActivation: INTEGER is
+	frozen kEventWindowGetClickActivation: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowGetClickActivation"
 	end
 
-	frozen kWindowBoundsChangeUserDrag: INTEGER is
+	frozen kWindowBoundsChangeUserDrag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kWindowBoundsChangeUserDrag"
 	end
 
-	frozen kWindowBoundsChangeUserResize: INTEGER is
+	frozen kWindowBoundsChangeUserResize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kWindowBoundsChangeUserResize"
 	end
 
-	frozen kWindowBoundsChangeSizeChanged: INTEGER is
+	frozen kWindowBoundsChangeSizeChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kWindowBoundsChangeSizeChanged"
 	end
 
-	frozen kWindowBoundsChangeOriginChanged: INTEGER is
+	frozen kWindowBoundsChangeOriginChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kWindowBoundsChangeOriginChanged"
 	end
 
-	frozen kWindowBoundsChangeZoom: INTEGER is
+	frozen kWindowBoundsChangeZoom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kWindowBoundsChangeZoom"
 	end
 
-	frozen kEventWindowShowing: INTEGER is
+	frozen kEventWindowShowing: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowShowing"
 	end
 
-	frozen kEventWindowHiding: INTEGER is
+	frozen kEventWindowHiding: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowHiding"
 	end
 
-	frozen kEventWindowShown: INTEGER is
+	frozen kEventWindowShown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowShown"
 	end
 
-	frozen kEventWindowHidden: INTEGER is
+	frozen kEventWindowHidden: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowHidden"
 	end
 
-	frozen kEventWindowCollapsing: INTEGER is
+	frozen kEventWindowCollapsing: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowCollapsing"
 	end
 
-	frozen kEventWindowCollapsed: INTEGER is
+	frozen kEventWindowCollapsed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowCollapsed"
 	end
 
-	frozen kEventWindowExpanding: INTEGER is
+	frozen kEventWindowExpanding: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowExpanding"
 	end
 
-	frozen kEventWindowExpanded: INTEGER is
+	frozen kEventWindowExpanded: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowExpanded"
 	end
 
-	frozen kEventWindowZoomed: INTEGER is
+	frozen kEventWindowZoomed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowZoomed"
 	end
 
-	frozen kEventWindowBoundsChanging: INTEGER is
+	frozen kEventWindowBoundsChanging: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowBoundsChanging"
 	end
 
-	frozen kEventWindowBoundsChanged: INTEGER is
+	frozen kEventWindowBoundsChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowBoundsChanged"
 	end
 
-	frozen kEventWindowResizeStarted: INTEGER is
+	frozen kEventWindowResizeStarted: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowResizeStarted"
 	end
 
-	frozen kEventWindowResizeCompleted: INTEGER is
+	frozen kEventWindowResizeCompleted: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowResizeCompleted"
 	end
 
-	frozen kEventWindowDragStarted: INTEGER is
+	frozen kEventWindowDragStarted: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDragStarted"
 	end
 
-	frozen kEventWindowDragCompleted: INTEGER is
+	frozen kEventWindowDragCompleted: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDragCompleted"
 	end
 
-	frozen kEventWindowClosed: INTEGER is
+	frozen kEventWindowClosed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowClosed"
 	end
 
-	frozen kEventWindowTransitionStarted: INTEGER is
+	frozen kEventWindowTransitionStarted: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowTransitionStarted"
 	end
 
-	frozen kEventWindowTransitionCompleted: INTEGER is
+	frozen kEventWindowTransitionCompleted: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowTransitionCompleted"
 	end
 
-	frozen kEventWindowClickDragRgn: INTEGER is
+	frozen kEventWindowClickDragRgn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowClickDragRgn"
 	end
 
-	frozen kEventWindowClickResizeRgn: INTEGER is
+	frozen kEventWindowClickResizeRgn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowClickResizeRgn"
 	end
 
-	frozen kEventWindowClickCollapseRgn: INTEGER is
+	frozen kEventWindowClickCollapseRgn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowClickCollapseRgn"
 	end
 
-	frozen kEventWindowClickCloseRgn: INTEGER is
+	frozen kEventWindowClickCloseRgn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowClickCloseRgn"
 	end
 
-	frozen kEventWindowClickZoomRgn: INTEGER is
+	frozen kEventWindowClickZoomRgn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowClickZoomRgn"
 	end
 
-	frozen kEventWindowClickContentRgn: INTEGER is
+	frozen kEventWindowClickContentRgn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowClickContentRgn"
 	end
 
-	frozen kEventWindowClickProxyIconRgn: INTEGER is
+	frozen kEventWindowClickProxyIconRgn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowClickProxyIconRgn"
 	end
 
-	frozen kEventWindowClickToolbarButtonRgn: INTEGER is
+	frozen kEventWindowClickToolbarButtonRgn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowClickToolbarButtonRgn"
 	end
 
-	frozen kEventWindowClickStructureRgn: INTEGER is
+	frozen kEventWindowClickStructureRgn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowClickStructureRgn"
 	end
 
-	frozen kEventWindowCursorChange: INTEGER is
+	frozen kEventWindowCursorChange: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowCursorChange"
 	end
 
-	frozen kEventWindowCollapse: INTEGER is
+	frozen kEventWindowCollapse: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowCollapse"
 	end
 
-	frozen kEventWindowCollapseAll: INTEGER is
+	frozen kEventWindowCollapseAll: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowCollapseAll"
 	end
 
-	frozen kEventWindowExpand: INTEGER is
+	frozen kEventWindowExpand: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowExpand"
 	end
 
-	frozen kEventWindowExpandAll: INTEGER is
+	frozen kEventWindowExpandAll: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowExpandAll"
 	end
 
-	frozen kEventWindowClose: INTEGER is
+	frozen kEventWindowClose: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowClose"
 	end
 
-	frozen kEventWindowCloseAll: INTEGER is
+	frozen kEventWindowCloseAll: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowCloseAll"
 	end
 
-	frozen kEventWindowZoom: INTEGER is
+	frozen kEventWindowZoom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowZoom"
 	end
 
-	frozen kEventWindowZoomAll: INTEGER is
+	frozen kEventWindowZoomAll: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowZoomAll"
 	end
 
-	frozen kEventWindowContextualMenuSelect: INTEGER is
+	frozen kEventWindowContextualMenuSelect: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowContextualMenuSelect"
 	end
 
-	frozen kEventWindowPathSelect: INTEGER is
+	frozen kEventWindowPathSelect: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowPathSelect"
 	end
 
-	frozen kEventWindowGetIdealSize: INTEGER is
+	frozen kEventWindowGetIdealSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowGetIdealSize"
 	end
 
-	frozen kEventWindowGetMinimumSize: INTEGER is
+	frozen kEventWindowGetMinimumSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowGetMinimumSize"
 	end
 
-	frozen kEventWindowGetMaximumSize: INTEGER is
+	frozen kEventWindowGetMaximumSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowGetMaximumSize"
 	end
 
-	frozen kEventWindowConstrain: INTEGER is
+	frozen kEventWindowConstrain: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowConstrain"
 	end
 
-	frozen kEventWindowProxyBeginDrag: INTEGER is
+	frozen kEventWindowProxyBeginDrag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowProxyBeginDrag"
 	end
 
-	frozen kEventWindowProxyEndDrag: INTEGER is
+	frozen kEventWindowProxyEndDrag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowProxyEndDrag"
 	end
 
-	frozen kEventWindowHandleContentClick: INTEGER is
+	frozen kEventWindowHandleContentClick: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowHandleContentClick"
 	end
 
-	frozen kEventWindowGetDockTileMenu: INTEGER is
+	frozen kEventWindowGetDockTileMenu: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowGetDockTileMenu"
 	end
 
-	frozen kEventWindowToolbarSwitchMode: INTEGER is
+	frozen kEventWindowToolbarSwitchMode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowToolbarSwitchMode"
 	end
 
-	frozen kEventWindowFocusAcquired: INTEGER is
+	frozen kEventWindowFocusAcquired: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowFocusAcquired"
 	end
 
-	frozen kEventWindowFocusRelinquish: INTEGER is
+	frozen kEventWindowFocusRelinquish: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowFocusRelinquish"
 	end
 
-	frozen kEventWindowFocusContent: INTEGER is
+	frozen kEventWindowFocusContent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowFocusContent"
 	end
 
-	frozen kEventWindowFocusToolbar: INTEGER is
+	frozen kEventWindowFocusToolbar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowFocusToolbar"
 	end
 
-	frozen kEventWindowDrawerOpening: INTEGER is
+	frozen kEventWindowDrawerOpening: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDrawerOpening"
 	end
 
-	frozen kEventWindowDrawerOpened: INTEGER is
+	frozen kEventWindowDrawerOpened: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDrawerOpened"
 	end
 
-	frozen kEventWindowDrawerClosing: INTEGER is
+	frozen kEventWindowDrawerClosing: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDrawerClosing"
 	end
 
-	frozen kEventWindowDrawerClosed: INTEGER is
+	frozen kEventWindowDrawerClosed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDrawerClosed"
 	end
 
-	frozen kEventWindowDrawFrame: INTEGER is
+	frozen kEventWindowDrawFrame: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDrawFrame"
 	end
 
-	frozen kEventWindowDrawPart: INTEGER is
+	frozen kEventWindowDrawPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDrawPart"
 	end
 
-	frozen kEventWindowGetRegion: INTEGER is
+	frozen kEventWindowGetRegion: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowGetRegion"
 	end
 
-	frozen kEventWindowHitTest: INTEGER is
+	frozen kEventWindowHitTest: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowHitTest"
 	end
 
-	frozen kEventWindowInit: INTEGER is
+	frozen kEventWindowInit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowInit"
 	end
 
-	frozen kEventWindowDispose: INTEGER is
+	frozen kEventWindowDispose: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDispose"
 	end
 
-	frozen kEventWindowDragHilite: INTEGER is
+	frozen kEventWindowDragHilite: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDragHilite"
 	end
 
-	frozen kEventWindowModified: INTEGER is
+	frozen kEventWindowModified: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowModified"
 	end
 
-	frozen kEventWindowSetupProxyDragImage: INTEGER is
+	frozen kEventWindowSetupProxyDragImage: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowSetupProxyDragImage"
 	end
 
-	frozen kEventWindowStateChanged: INTEGER is
+	frozen kEventWindowStateChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowStateChanged"
 	end
 
-	frozen kEventWindowMeasureTitle: INTEGER is
+	frozen kEventWindowMeasureTitle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowMeasureTitle"
 	end
 
-	frozen kEventWindowDrawGrowBox: INTEGER is
+	frozen kEventWindowDrawGrowBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDrawGrowBox"
 	end
 
-	frozen kEventWindowGetGrowImageRegion: INTEGER is
+	frozen kEventWindowGetGrowImageRegion: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowGetGrowImageRegion"
 	end
 
-	frozen kEventWindowPaint: INTEGER is
+	frozen kEventWindowPaint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowPaint"
 	end
 
-	frozen kMenuContextMenuBar: INTEGER is
+	frozen kMenuContextMenuBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuContextMenuBar"
 	end
 
-	frozen kMenuContextPullDown: INTEGER is
+	frozen kMenuContextPullDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuContextPullDown"
 	end
 
-	frozen kMenuContextPopUp: INTEGER is
+	frozen kMenuContextPopUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuContextPopUp"
 	end
 
-	frozen kMenuContextSubmenu: INTEGER is
+	frozen kMenuContextSubmenu: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuContextSubmenu"
 	end
 
-	frozen kMenuContextMenuBarTracking: INTEGER is
+	frozen kMenuContextMenuBarTracking: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuContextMenuBarTracking"
 	end
 
-	frozen kMenuContextPopUpTracking: INTEGER is
+	frozen kMenuContextPopUpTracking: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuContextPopUpTracking"
 	end
 
-	frozen kMenuContextKeyMatching: INTEGER is
+	frozen kMenuContextKeyMatching: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuContextKeyMatching"
 	end
 
-	frozen kMenuContextMenuEnabling: INTEGER is
+	frozen kMenuContextMenuEnabling: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuContextMenuEnabling"
 	end
 
-	frozen kMenuContextCommandIDSearch: INTEGER is
+	frozen kMenuContextCommandIDSearch: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMenuContextCommandIDSearch"
 	end
 
-	frozen kHIMenuRightDirection: INTEGER is
+	frozen kHIMenuRightDirection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuRightDirection"
 	end
 
-	frozen kHIMenuLeftDirection: INTEGER is
+	frozen kHIMenuLeftDirection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuLeftDirection"
 	end
 
-	frozen kHIMenuCenterDirection: INTEGER is
+	frozen kHIMenuCenterDirection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIMenuCenterDirection"
 	end
 
-	frozen kEventMenuBeginTracking: INTEGER is
+	frozen kEventMenuBeginTracking: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuBeginTracking"
 	end
 
-	frozen kEventMenuEndTracking: INTEGER is
+	frozen kEventMenuEndTracking: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuEndTracking"
 	end
 
-	frozen kEventMenuChangeTrackingMode: INTEGER is
+	frozen kEventMenuChangeTrackingMode: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuChangeTrackingMode"
 	end
 
-	frozen kEventMenuOpening: INTEGER is
+	frozen kEventMenuOpening: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuOpening"
 	end
 
-	frozen kEventMenuClosed: INTEGER is
+	frozen kEventMenuClosed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuClosed"
 	end
 
-	frozen kEventMenuTargetItem: INTEGER is
+	frozen kEventMenuTargetItem: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuTargetItem"
 	end
 
-	frozen kEventMenuMatchKey: INTEGER is
+	frozen kEventMenuMatchKey: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuMatchKey"
 	end
 
-	frozen kEventMenuEnableItems: INTEGER is
+	frozen kEventMenuEnableItems: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuEnableItems"
 	end
 
-	frozen kEventMenuPopulate: INTEGER is
+	frozen kEventMenuPopulate: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuPopulate"
 	end
 
-	frozen kEventMenuDispose: INTEGER is
+	frozen kEventMenuDispose: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuDispose"
 	end
 
-	frozen kEventMenuMeasureItemWidth: INTEGER is
+	frozen kEventMenuMeasureItemWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuMeasureItemWidth"
 	end
 
-	frozen kEventMenuMeasureItemHeight: INTEGER is
+	frozen kEventMenuMeasureItemHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuMeasureItemHeight"
 	end
 
-	frozen kEventMenuDrawItem: INTEGER is
+	frozen kEventMenuDrawItem: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuDrawItem"
 	end
 
-	frozen kEventMenuDrawItemContent: INTEGER is
+	frozen kEventMenuDrawItemContent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuDrawItemContent"
 	end
 
-	frozen kEventMenuCalculateSize: INTEGER is
+	frozen kEventMenuCalculateSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuCalculateSize"
 	end
 
-	frozen kEventMenuCreateFrameView: INTEGER is
+	frozen kEventMenuCreateFrameView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuCreateFrameView"
 	end
 
-	frozen kEventMenuGetFrameBounds: INTEGER is
+	frozen kEventMenuGetFrameBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuGetFrameBounds"
 	end
 
-	frozen kEventMenuBecomeScrollable: INTEGER is
+	frozen kEventMenuBecomeScrollable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuBecomeScrollable"
 	end
 
-	frozen kEventMenuCeaseToBeScrollable: INTEGER is
+	frozen kEventMenuCeaseToBeScrollable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuCeaseToBeScrollable"
 	end
 
-	frozen kEventMenuBarShown: INTEGER is
+	frozen kEventMenuBarShown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuBarShown"
 	end
 
-	frozen kEventMenuBarHidden: INTEGER is
+	frozen kEventMenuBarHidden: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventMenuBarHidden"
 	end
 
-	frozen kEventCommandProcess: INTEGER is
+	frozen kEventCommandProcess: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventCommandProcess"
 	end
 
-	frozen kEventCommandUpdateStatus: INTEGER is
+	frozen kEventCommandUpdateStatus: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventCommandUpdateStatus"
 	end
 
-	frozen kHICommandOK: INTEGER is
+	frozen kHICommandOK: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandOK"
 	end
 
-	frozen kHICommandCancel: INTEGER is
+	frozen kHICommandCancel: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandCancel"
 	end
 
-	frozen kHICommandQuit: INTEGER is
+	frozen kHICommandQuit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandQuit"
 	end
 
-	frozen kHICommandUndo: INTEGER is
+	frozen kHICommandUndo: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandUndo"
 	end
 
-	frozen kHICommandRedo: INTEGER is
+	frozen kHICommandRedo: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandRedo"
 	end
 
-	frozen kHICommandCut: INTEGER is
+	frozen kHICommandCut: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandCut"
 	end
 
-	frozen kHICommandCopy: INTEGER is
+	frozen kHICommandCopy: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandCopy"
 	end
 
-	frozen kHICommandPaste: INTEGER is
+	frozen kHICommandPaste: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandPaste"
 	end
 
-	frozen kHICommandClear: INTEGER is
+	frozen kHICommandClear: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandClear"
 	end
 
-	frozen kHICommandSelectAll: INTEGER is
+	frozen kHICommandSelectAll: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandSelectAll"
 	end
 
-	frozen kHICommandHide: INTEGER is
+	frozen kHICommandHide: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandHide"
 	end
 
-	frozen kHICommandHideOthers: INTEGER is
+	frozen kHICommandHideOthers: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandHideOthers"
 	end
 
-	frozen kHICommandShowAll: INTEGER is
+	frozen kHICommandShowAll: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandShowAll"
 	end
 
-	frozen kHICommandPreferences: INTEGER is
+	frozen kHICommandPreferences: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandPreferences"
 	end
 
-	frozen kHICommandZoomWindow: INTEGER is
+	frozen kHICommandZoomWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandZoomWindow"
 	end
 
-	frozen kHICommandMinimizeWindow: INTEGER is
+	frozen kHICommandMinimizeWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandMinimizeWindow"
 	end
 
-	frozen kHICommandMinimizeAll: INTEGER is
+	frozen kHICommandMinimizeAll: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandMinimizeAll"
 	end
 
-	frozen kHICommandMaximizeWindow: INTEGER is
+	frozen kHICommandMaximizeWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandMaximizeWindow"
 	end
 
-	frozen kHICommandMaximizeAll: INTEGER is
+	frozen kHICommandMaximizeAll: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandMaximizeAll"
 	end
 
-	frozen kHICommandArrangeInFront: INTEGER is
+	frozen kHICommandArrangeInFront: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandArrangeInFront"
 	end
 
-	frozen kHICommandBringAllToFront: INTEGER is
+	frozen kHICommandBringAllToFront: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandBringAllToFront"
 	end
 
-	frozen kHICommandWindowListSeparator: INTEGER is
+	frozen kHICommandWindowListSeparator: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandWindowListSeparator"
 	end
 
-	frozen kHICommandWindowListTerminator: INTEGER is
+	frozen kHICommandWindowListTerminator: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandWindowListTerminator"
 	end
 
-	frozen kHICommandSelectWindow: INTEGER is
+	frozen kHICommandSelectWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandSelectWindow"
 	end
 
-	frozen kHICommandRotateWindowsForward: INTEGER is
+	frozen kHICommandRotateWindowsForward: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandRotateWindowsForward"
 	end
 
-	frozen kHICommandRotateWindowsBackward: INTEGER is
+	frozen kHICommandRotateWindowsBackward: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandRotateWindowsBackward"
 	end
 
-	frozen kHICommandRotateFloatingWindowsForward: INTEGER is
+	frozen kHICommandRotateFloatingWindowsForward: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandRotateFloatingWindowsForward"
 	end
 
-	frozen kHICommandRotateFloatingWindowsBackward: INTEGER is
+	frozen kHICommandRotateFloatingWindowsBackward: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandRotateFloatingWindowsBackward"
 	end
 
-	frozen kHICommandAbout: INTEGER is
+	frozen kHICommandAbout: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandAbout"
 	end
 
-	frozen kHICommandNew: INTEGER is
+	frozen kHICommandNew: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandNew"
 	end
 
-	frozen kHICommandOpen: INTEGER is
+	frozen kHICommandOpen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandOpen"
 	end
 
-	frozen kHICommandClose: INTEGER is
+	frozen kHICommandClose: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandClose"
 	end
 
-	frozen kHICommandSave: INTEGER is
+	frozen kHICommandSave: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandSave"
 	end
 
-	frozen kHICommandSaveAs: INTEGER is
+	frozen kHICommandSaveAs: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandSaveAs"
 	end
 
-	frozen kHICommandRevert: INTEGER is
+	frozen kHICommandRevert: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandRevert"
 	end
 
-	frozen kHICommandPrint: INTEGER is
+	frozen kHICommandPrint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandPrint"
 	end
 
-	frozen kHICommandPageSetup: INTEGER is
+	frozen kHICommandPageSetup: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandPageSetup"
 	end
 
-	frozen kHICommandAppHelp: INTEGER is
+	frozen kHICommandAppHelp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandAppHelp"
 	end
 
-	frozen kHICommandShowCharacterPalette: INTEGER is
+	frozen kHICommandShowCharacterPalette: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandShowCharacterPalette"
 	end
 
-	frozen kHICommandFromMenu: INTEGER is
+	frozen kHICommandFromMenu: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandFromMenu"
 	end
 
-	frozen kHICommandFromControl: INTEGER is
+	frozen kHICommandFromControl: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandFromControl"
 	end
 
-	frozen kHICommandFromWindow: INTEGER is
+	frozen kHICommandFromWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHICommandFromWindow"
 	end
 
-	frozen kEventControlClick: INTEGER is
+	frozen kEventControlClick: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlClick"
 	end
 
-	frozen kEventControlHit: INTEGER is
+	frozen kEventControlHit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlHit"
 	end
 
-	frozen kEventControlInitialize: INTEGER is
+	frozen kEventControlInitialize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlInitialize"
 	end
 
-	frozen kEventControlDispose: INTEGER is
+	frozen kEventControlDispose: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlDispose"
 	end
 
-	frozen kEventControlGetOptimalBounds: INTEGER is
+	frozen kEventControlGetOptimalBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGetOptimalBounds"
 	end
 
-	frozen kEventControlSimulateHit: INTEGER is
+	frozen kEventControlSimulateHit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlSimulateHit"
 	end
 
-	frozen kEventControlHitTest: INTEGER is
+	frozen kEventControlHitTest: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlHitTest"
 	end
 
-	frozen kEventControlDraw: INTEGER is
+	frozen kEventControlDraw: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlDraw"
 	end
 
-	frozen kEventControlApplyBackground: INTEGER is
+	frozen kEventControlApplyBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlApplyBackground"
 	end
 
-	frozen kEventControlApplyTextColor: INTEGER is
+	frozen kEventControlApplyTextColor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlApplyTextColor"
 	end
 
-	frozen kEventControlGetNextFocusCandidate: INTEGER is
+	frozen kEventControlGetNextFocusCandidate: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGetNextFocusCandidate"
 	end
 
-	frozen kEventControlGetAutoToggleValue: INTEGER is
+	frozen kEventControlGetAutoToggleValue: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGetAutoToggleValue"
 	end
 
-	frozen kEventControlInterceptSubviewClick: INTEGER is
+	frozen kEventControlInterceptSubviewClick: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlInterceptSubviewClick"
 	end
 
-	frozen kEventControlGetClickActivation: INTEGER is
+	frozen kEventControlGetClickActivation: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGetClickActivation"
 	end
 
-	frozen kEventControlDragEnter: INTEGER is
+	frozen kEventControlDragEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlDragEnter"
 	end
 
-	frozen kEventControlDragWithin: INTEGER is
+	frozen kEventControlDragWithin: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlDragWithin"
 	end
 
-	frozen kEventControlDragLeave: INTEGER is
+	frozen kEventControlDragLeave: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlDragLeave"
 	end
 
-	frozen kEventControlDragReceive: INTEGER is
+	frozen kEventControlDragReceive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlDragReceive"
 	end
 
-	frozen kEventControlSetFocusPart: INTEGER is
+	frozen kEventControlSetFocusPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlSetFocusPart"
 	end
 
-	frozen kEventControlGetFocusPart: INTEGER is
+	frozen kEventControlGetFocusPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGetFocusPart"
 	end
 
-	frozen kEventControlActivate: INTEGER is
+	frozen kEventControlActivate: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlActivate"
 	end
 
-	frozen kEventControlDeactivate: INTEGER is
+	frozen kEventControlDeactivate: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlDeactivate"
 	end
 
-	frozen kEventControlSetCursor: INTEGER is
+	frozen kEventControlSetCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlSetCursor"
 	end
 
-	frozen kEventControlContextualMenuClick: INTEGER is
+	frozen kEventControlContextualMenuClick: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlContextualMenuClick"
 	end
 
-	frozen kEventControlTrack: INTEGER is
+	frozen kEventControlTrack: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlTrack"
 	end
 
-	frozen kEventControlGetScrollToHereStartPoint: INTEGER is
+	frozen kEventControlGetScrollToHereStartPoint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGetScrollToHereStartPoint"
 	end
 
-	frozen kEventControlGetIndicatorDragConstraint: INTEGER is
+	frozen kEventControlGetIndicatorDragConstraint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGetIndicatorDragConstraint"
 	end
 
-	frozen kEventControlIndicatorMoved: INTEGER is
+	frozen kEventControlIndicatorMoved: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlIndicatorMoved"
 	end
 
-	frozen kEventControlGhostingFinished: INTEGER is
+	frozen kEventControlGhostingFinished: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGhostingFinished"
 	end
 
-	frozen kEventControlGetActionProcPart: INTEGER is
+	frozen kEventControlGetActionProcPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGetActionProcPart"
 	end
 
-	frozen kEventControlGetPartRegion: INTEGER is
+	frozen kEventControlGetPartRegion: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGetPartRegion"
 	end
 
-	frozen kEventControlGetPartBounds: INTEGER is
+	frozen kEventControlGetPartBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGetPartBounds"
 	end
 
-	frozen kEventControlSetData: INTEGER is
+	frozen kEventControlSetData: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlSetData"
 	end
 
-	frozen kEventControlGetData: INTEGER is
+	frozen kEventControlGetData: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGetData"
 	end
 
-	frozen kEventControlGetSizeConstraints: INTEGER is
+	frozen kEventControlGetSizeConstraints: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGetSizeConstraints"
 	end
 
-	frozen kEventControlGetFrameMetrics: INTEGER is
+	frozen kEventControlGetFrameMetrics: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlGetFrameMetrics"
 	end
 
-	frozen kEventControlValueFieldChanged: INTEGER is
+	frozen kEventControlValueFieldChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlValueFieldChanged"
 	end
 
-	frozen kEventControlAddedSubControl: INTEGER is
+	frozen kEventControlAddedSubControl: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlAddedSubControl"
 	end
 
-	frozen kEventControlRemovingSubControl: INTEGER is
+	frozen kEventControlRemovingSubControl: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlRemovingSubControl"
 	end
 
-	frozen kEventControlBoundsChanged: INTEGER is
+	frozen kEventControlBoundsChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlBoundsChanged"
 	end
 
-	frozen kEventControlInvalidateForSizeChange: INTEGER is
+	frozen kEventControlInvalidateForSizeChange: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlInvalidateForSizeChange"
 	end
 
-	frozen kEventControlVisibilityChanged: INTEGER is
+	frozen kEventControlVisibilityChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlVisibilityChanged"
 	end
 
-	frozen kEventControlOwningWindowChanged: INTEGER is
+	frozen kEventControlOwningWindowChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlOwningWindowChanged"
 	end
 
-	frozen kEventControlTitleChanged: INTEGER is
+	frozen kEventControlTitleChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlTitleChanged"
 	end
 
-	frozen kEventControlHiliteChanged: INTEGER is
+	frozen kEventControlHiliteChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlHiliteChanged"
 	end
 
-	frozen kEventControlEnabledStateChanged: INTEGER is
+	frozen kEventControlEnabledStateChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlEnabledStateChanged"
 	end
 
-	frozen kEventControlLayoutInfoChanged: INTEGER is
+	frozen kEventControlLayoutInfoChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlLayoutInfoChanged"
 	end
 
-	frozen kEventControlArbitraryMessage: INTEGER is
+	frozen kEventControlArbitraryMessage: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlArbitraryMessage"
 	end
 
-	frozen kControlBoundsChangeSizeChanged: INTEGER is
+	frozen kControlBoundsChangeSizeChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBoundsChangeSizeChanged"
 	end
 
-	frozen kControlBoundsChangePositionChanged: INTEGER is
+	frozen kControlBoundsChangePositionChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlBoundsChangePositionChanged"
 	end
 
-	frozen kEventTabletPoint: INTEGER is
+	frozen kEventTabletPoint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTabletPoint"
 	end
 
-	frozen kEventTabletProximity: INTEGER is
+	frozen kEventTabletProximity: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTabletProximity"
 	end
 
-	frozen typeFSVolumeRefNum: INTEGER is
+	frozen typeFSVolumeRefNum: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeFSVolumeRefNum"
 	end
 
-	frozen kEventVolumeMounted: INTEGER is
+	frozen kEventVolumeMounted: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventVolumeMounted"
 	end
 
-	frozen kEventVolumeUnmounted: INTEGER is
+	frozen kEventVolumeUnmounted: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventVolumeUnmounted"
 	end
 
-	frozen kEventAppearanceScrollBarVariantChanged: INTEGER is
+	frozen kEventAppearanceScrollBarVariantChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAppearanceScrollBarVariantChanged"
 	end
 
-	frozen kEventServiceCopy: INTEGER is
+	frozen kEventServiceCopy: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventServiceCopy"
 	end
 
-	frozen kEventServicePaste: INTEGER is
+	frozen kEventServicePaste: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventServicePaste"
 	end
 
-	frozen kEventServiceGetTypes: INTEGER is
+	frozen kEventServiceGetTypes: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventServiceGetTypes"
 	end
 
-	frozen kEventServicePerform: INTEGER is
+	frozen kEventServicePerform: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventServicePerform"
 	end
 
-	frozen kEventAccessibleGetChildAtPoint: INTEGER is
+	frozen kEventAccessibleGetChildAtPoint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAccessibleGetChildAtPoint"
 	end
 
-	frozen kEventAccessibleGetFocusedChild: INTEGER is
+	frozen kEventAccessibleGetFocusedChild: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAccessibleGetFocusedChild"
 	end
 
-	frozen kEventAccessibleGetAllAttributeNames: INTEGER is
+	frozen kEventAccessibleGetAllAttributeNames: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAccessibleGetAllAttributeNames"
 	end
 
-	frozen kEventAccessibleGetAllParameterizedAttributeNames: INTEGER is
+	frozen kEventAccessibleGetAllParameterizedAttributeNames: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAccessibleGetAllParameterizedAttributeNames"
 	end
 
-	frozen kEventAccessibleGetNamedAttribute: INTEGER is
+	frozen kEventAccessibleGetNamedAttribute: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAccessibleGetNamedAttribute"
 	end
 
-	frozen kEventAccessibleSetNamedAttribute: INTEGER is
+	frozen kEventAccessibleSetNamedAttribute: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAccessibleSetNamedAttribute"
 	end
 
-	frozen kEventAccessibleIsNamedAttributeSettable: INTEGER is
+	frozen kEventAccessibleIsNamedAttributeSettable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAccessibleIsNamedAttributeSettable"
 	end
 
-	frozen kEventAccessibleGetAllActionNames: INTEGER is
+	frozen kEventAccessibleGetAllActionNames: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAccessibleGetAllActionNames"
 	end
 
-	frozen kEventAccessiblePerformNamedAction: INTEGER is
+	frozen kEventAccessiblePerformNamedAction: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAccessiblePerformNamedAction"
 	end
 
-	frozen kEventAccessibleGetNamedActionDescription: INTEGER is
+	frozen kEventAccessibleGetNamedActionDescription: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventAccessibleGetNamedActionDescription"
 	end
 
-	frozen kEventSystemTimeDateChanged: INTEGER is
+	frozen kEventSystemTimeDateChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventSystemTimeDateChanged"
 	end
 
-	frozen kEventSystemUserSessionActivated: INTEGER is
+	frozen kEventSystemUserSessionActivated: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventSystemUserSessionActivated"
 	end
 
-	frozen kEventSystemUserSessionDeactivated: INTEGER is
+	frozen kEventSystemUserSessionDeactivated: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventSystemUserSessionDeactivated"
 	end
 
-	frozen kMouseTrackingOptionsLocalClip: INTEGER is
+	frozen kMouseTrackingOptionsLocalClip: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMouseTrackingOptionsLocalClip"
 	end
 
-	frozen kMouseTrackingOptionsGlobalClip: INTEGER is
+	frozen kMouseTrackingOptionsGlobalClip: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMouseTrackingOptionsGlobalClip"
 	end
 
-	frozen kMouseTrackingOptionsStandard: INTEGER is
+	frozen kMouseTrackingOptionsStandard: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kMouseTrackingOptionsStandard"
 	end
 
-	frozen kEventParamInkTextRef: INTEGER is
+	frozen kEventParamInkTextRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamInkTextRef"
 	end
 
-	frozen kEventParamInkKeyboardShortcut: INTEGER is
+	frozen kEventParamInkKeyboardShortcut: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamInkKeyboardShortcut"
 	end
 
-	frozen kEventParamInkGestureKind: INTEGER is
+	frozen kEventParamInkGestureKind: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamInkGestureKind"
 	end
 
-	frozen kEventParamInkGestureBounds: INTEGER is
+	frozen kEventParamInkGestureBounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamInkGestureBounds"
 	end
 
-	frozen kEventParamInkGestureHotspot: INTEGER is
+	frozen kEventParamInkGestureHotspot: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamInkGestureHotspot"
 	end
 
-	frozen kEventInkPoint: INTEGER is
+	frozen kEventInkPoint: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventInkPoint"
 	end
 
-	frozen kEventInkGesture: INTEGER is
+	frozen kEventInkGesture: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventInkGesture"
 	end
 
-	frozen kEventInkText: INTEGER is
+	frozen kEventInkText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventInkText"
 	end
 
-	frozen kEventWindowDefDrawFrame: INTEGER is
+	frozen kEventWindowDefDrawFrame: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDefDrawFrame"
 	end
 
-	frozen kEventWindowDefDrawPart: INTEGER is
+	frozen kEventWindowDefDrawPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDefDrawPart"
 	end
 
-	frozen kEventWindowDefGetRegion: INTEGER is
+	frozen kEventWindowDefGetRegion: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDefGetRegion"
 	end
 
-	frozen kEventWindowDefHitTest: INTEGER is
+	frozen kEventWindowDefHitTest: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDefHitTest"
 	end
 
-	frozen kEventWindowDefInit: INTEGER is
+	frozen kEventWindowDefInit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDefInit"
 	end
 
-	frozen kEventWindowDefDispose: INTEGER is
+	frozen kEventWindowDefDispose: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDefDispose"
 	end
 
-	frozen kEventWindowDefDragHilite: INTEGER is
+	frozen kEventWindowDefDragHilite: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDefDragHilite"
 	end
 
-	frozen kEventWindowDefModified: INTEGER is
+	frozen kEventWindowDefModified: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDefModified"
 	end
 
-	frozen kEventWindowDefSetupProxyDragImage: INTEGER is
+	frozen kEventWindowDefSetupProxyDragImage: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDefSetupProxyDragImage"
 	end
 
-	frozen kEventWindowDefStateChanged: INTEGER is
+	frozen kEventWindowDefStateChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDefStateChanged"
 	end
 
-	frozen kEventWindowDefMeasureTitle: INTEGER is
+	frozen kEventWindowDefMeasureTitle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDefMeasureTitle"
 	end
 
-	frozen kEventWindowDefDrawGrowBox: INTEGER is
+	frozen kEventWindowDefDrawGrowBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDefDrawGrowBox"
 	end
 
-	frozen kEventWindowDefGetGrowImageRegion: INTEGER is
+	frozen kEventWindowDefGetGrowImageRegion: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventWindowDefGetGrowImageRegion"
 	end
 
-	frozen kEventClassEPPC: INTEGER is
+	frozen kEventClassEPPC: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassEPPC"
 	end
 
-	frozen kEventHighLevelEvent: INTEGER is
+	frozen kEventHighLevelEvent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventHighLevelEvent"
 	end
 
-	frozen kEventUpdateActiveInputArea: INTEGER is
+	frozen kEventUpdateActiveInputArea: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventUpdateActiveInputArea"
 	end
 
-	frozen kEventUnicodeForKeyEvent: INTEGER is
+	frozen kEventUnicodeForKeyEvent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventUnicodeForKeyEvent"
 	end
 
-	frozen kEventOffsetToPos: INTEGER is
+	frozen kEventOffsetToPos: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventOffsetToPos"
 	end
 
-	frozen kEventPosToOffset: INTEGER is
+	frozen kEventPosToOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventPosToOffset"
 	end
 
-	frozen kEventShowHideBottomWindow: INTEGER is
+	frozen kEventShowHideBottomWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventShowHideBottomWindow"
 	end
 
-	frozen kEventGetSelectedText: INTEGER is
+	frozen kEventGetSelectedText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventGetSelectedText"
 	end
 
-	frozen kEventProcessCommand: INTEGER is
+	frozen kEventProcessCommand: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventProcessCommand"
 	end
 
-	frozen kEventTabletPointer: INTEGER is
+	frozen kEventTabletPointer: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias

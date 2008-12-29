@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Fack focus popup window which will let other EV_FAKE_FOCUS_GROUPABLEs looks like have focus
 																												]"
@@ -19,7 +19,7 @@ inherit
 			copy
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

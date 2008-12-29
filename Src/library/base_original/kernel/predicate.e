@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing delayed calls to a boolean function,
 		with some arguments possibly still open.
@@ -15,7 +15,7 @@ inherit
 	FUNCTION [BASE_TYPE, OPEN_ARGS, BOOLEAN]
 
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

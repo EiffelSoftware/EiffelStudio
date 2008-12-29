@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_ITEM_IMP."
 	legal: "See notice at end of class."
@@ -16,25 +16,25 @@ inherit
 
 feature -- Event handling
 
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Create a pointer_motion action sequence.
 		do
 			create Result
 		end
 
-	create_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	create_pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Create a pointer_button_press action sequence.
 		do
 			create Result
 		end
 
-	create_pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	create_pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Create a pointer_double_press action sequence.
 		do
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

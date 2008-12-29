@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Choose font (CF) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,35 +10,35 @@ class
 
 feature -- Access
 
-	Cf_text: INTEGER is 1
+	Cf_text: INTEGER = 1
 
-	Cf_bitmap: INTEGER is 2
+	Cf_bitmap: INTEGER = 2
 
-	Cf_metafile_picture: INTEGER is 3
+	Cf_metafile_picture: INTEGER = 3
 
-	Cf_sylk: INTEGER is 4
+	Cf_sylk: INTEGER = 4
 
-	Cf_dif: INTEGER is 5
+	Cf_dif: INTEGER = 5
 
-	Cf_tiff: INTEGER is 6
+	Cf_tiff: INTEGER = 6
 	
-	Cf_oemtext: INTEGER is 7
+	Cf_oemtext: INTEGER = 7
 	
-	Cf_dib: INTEGER is 8
+	Cf_dib: INTEGER = 8
 	
-	Cf_palette: INTEGER is 9
+	Cf_palette: INTEGER = 9
 	
-	Cf_pendata: INTEGER is 10
+	Cf_pendata: INTEGER = 10
 	
-	Cf_riff: INTEGER is 11
+	Cf_riff: INTEGER = 11
 	
-	Cf_wave: INTEGER is 12
+	Cf_wave: INTEGER = 12
 	
-	Cf_unicodetext: INTEGER is 13
+	Cf_unicodetext: INTEGER = 13
 	
-	Cf_enhmetafile: INTEGER is 14;
+	Cf_enhmetafile: INTEGER = 14;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

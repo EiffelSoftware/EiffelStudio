@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Action sequence for EV_CHECKABLE_LIST check events."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,13 +21,13 @@ create {EV_TREE_ITEM_CHECK_ACTION_SEQUENCE}
 
 feature -- Access
 
-	force_extend (action: PROCEDURE [ANY, TUPLE]) is
+	force_extend (action: PROCEDURE [ANY, TUPLE])
 			-- Extend without type checking.
 		do
 			extend (agent wrapper (?, action))
 		end
 
-	wrapper (a_tree_item: EV_TREE_NODE; action: PROCEDURE [ANY, TUPLE]) is
+	wrapper (a_tree_item: EV_TREE_NODE; action: PROCEDURE [ANY, TUPLE])
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do
@@ -36,13 +36,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

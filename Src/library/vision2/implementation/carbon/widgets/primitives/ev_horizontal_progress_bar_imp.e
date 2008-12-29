@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelV ision horizontal progress bar. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Implementation
 
-	setup_binding ( user_pane, progress_bar : POINTER ) is
+	setup_binding ( user_pane, progress_bar : POINTER )
 			-- setup layout binding
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-	bounds_changed ( options : INTEGER; original_bounds, current_bounds : CGRECT_STRUCT ) is
+	bounds_changed ( options : INTEGER; original_bounds, current_bounds : CGRECT_STRUCT )
 			-- Handler for the bounds changed event
 		local
 			size : CGSIZE_STRUCT
@@ -64,13 +64,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum height that the widget may occupy.
 		do
 			Result := 15 -- Hardcode
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		do
 			Result := 150 -- Hardcode
@@ -80,7 +80,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_PROGRESS_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end -- class EV_HORIZONTAL_PROGRESS_BAR_IMP
 

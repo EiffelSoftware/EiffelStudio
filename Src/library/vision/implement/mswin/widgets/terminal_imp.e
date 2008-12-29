@@ -1,4 +1,4 @@
-indexing
+note
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -15,7 +15,7 @@ inherit
 
 feature {TERMINAL} -- Initialisation
 
-	build is
+	build
 			-- Build the terminal
 		do
 		end
@@ -33,14 +33,14 @@ feature -- Access
 
 feature -- Report
 
-	is_font_defined (a_font: FONT): BOOLEAN is
+	is_font_defined (a_font: FONT): BOOLEAN
 			-- Is `font_name' defined for current message?
 		require
 			font_not_void: a_font /= Void
  		do
 		end
 
-	set_label_font (a_font: FONT) is
+	set_label_font (a_font: FONT)
 			-- Set font of every labels
 		require
 			font_not_void: a_font /= Void
@@ -48,7 +48,7 @@ feature -- Report
 			label_font := a_font
 		end
 
-	set_button_font (a_font: FONT) is
+	set_button_font (a_font: FONT)
 			-- Set font of every buttons
 		require
 			font_not_void: a_font /= Void
@@ -56,7 +56,7 @@ feature -- Report
 			 button_font := a_font
 		end
 
-	set_text_font (a_font: FONT) is
+	set_text_font (a_font: FONT)
 			-- Set font of every texts
 		require
 			font_not_void: a_font /= Void
@@ -64,13 +64,13 @@ feature -- Report
 			text_font := a_font
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionTerminal"
 		end
 
-	resize_for_shell is
+	resize_for_shell
 			-- Resize current widget if the parent is a shell.			
 		local
 			tw: TOP_IMP
@@ -82,7 +82,7 @@ feature -- Report
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

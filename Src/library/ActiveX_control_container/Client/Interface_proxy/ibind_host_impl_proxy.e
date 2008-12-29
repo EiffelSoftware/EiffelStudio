@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IBindHost' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_ibind_host_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	create_moniker (sz_name: STRING; pbc: IBIND_CTX_INTERFACE; ppmk: CELL [IMONIKER_INTERFACE]; dw_reserved: INTEGER) is
+	create_moniker (sz_name: STRING; pbc: IBIND_CTX_INTERFACE; ppmk: CELL [IMONIKER_INTERFACE]; dw_reserved: INTEGER)
 			-- No description available.
 			-- `sz_name' [in].  
 			-- `pbc' [in].  
@@ -49,7 +49,7 @@ feature -- Basic Operations
 			ccom_create_moniker (initializer, sz_name, pbc_item, ppmk, dw_reserved)
 		end
 
-	moniker_bind_to_storage (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
+	moniker_bind_to_storage (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `pmk' [in].  
 			-- `pbc' [in].  
@@ -92,7 +92,7 @@ feature -- Basic Operations
 			ccom_moniker_bind_to_storage (initializer, pmk_item, pbc_item, p_bsc_item, riid.item, ppv_obj)
 		end
 
-	moniker_bind_to_object (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE]) is
+	moniker_bind_to_object (pmk: IMONIKER_INTERFACE; pbc: IBIND_CTX_INTERFACE; p_bsc: IBIND_STATUS_CALLBACK_INTERFACE; riid: ECOM_GUID; ppv_obj: CELL [ECOM_INTERFACE])
 			-- No description available.
 			-- `pmk' [in].  
 			-- `pbc' [in].  
@@ -137,7 +137,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_ibind_host_impl_proxy(initializer)
@@ -145,43 +145,43 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_create_moniker (cpp_obj: POINTER; sz_name: STRING; pbc: POINTER; ppmk: CELL [IMONIKER_INTERFACE]; dw_reserved: INTEGER) is
+	ccom_create_moniker (cpp_obj: POINTER; sz_name: STRING; pbc: POINTER; ppmk: CELL [IMONIKER_INTERFACE]; dw_reserved: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindHost_impl_proxy %"ecom_control_library_IBindHost_impl_proxy_s.h%"](EIF_OBJECT,::IBindCtx *,EIF_OBJECT,EIF_INTEGER)"
 		end
 
-	ccom_moniker_bind_to_storage (cpp_obj: POINTER; pmk: POINTER; pbc: POINTER; p_bsc: POINTER; riid: POINTER; ppv_obj: CELL [ECOM_INTERFACE]) is
+	ccom_moniker_bind_to_storage (cpp_obj: POINTER; pmk: POINTER; pbc: POINTER; p_bsc: POINTER; riid: POINTER; ppv_obj: CELL [ECOM_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindHost_impl_proxy %"ecom_control_library_IBindHost_impl_proxy_s.h%"](::IMoniker *,::IBindCtx *,::IBindStatusCallback *,GUID *,EIF_OBJECT)"
 		end
 
-	ccom_moniker_bind_to_object (cpp_obj: POINTER; pmk: POINTER; pbc: POINTER; p_bsc: POINTER; riid: POINTER; ppv_obj: CELL [ECOM_INTERFACE]) is
+	ccom_moniker_bind_to_object (cpp_obj: POINTER; pmk: POINTER; pbc: POINTER; p_bsc: POINTER; riid: POINTER; ppv_obj: CELL [ECOM_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IBindHost_impl_proxy %"ecom_control_library_IBindHost_impl_proxy_s.h%"](::IMoniker *,::IBindCtx *,::IBindStatusCallback *,GUID *,EIF_OBJECT)"
 		end
 
-	ccom_delete_ibind_host_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_ibind_host_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IBindHost_impl_proxy %"ecom_control_library_IBindHost_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_ibind_host_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_ibind_host_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IBindHost_impl_proxy %"ecom_control_library_IBindHost_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IBindHost_impl_proxy %"ecom_control_library_IBindHost_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

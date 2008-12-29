@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_DOCKING_ZONE when title is at top area."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature	{NONE} -- Initlization
 
-	make (a_content: SD_CONTENT) is
+	make (a_content: SD_CONTENT)
 			-- Creation method.
 		require
 			a_content_not_void: a_content /= Void
@@ -64,7 +64,7 @@ feature	{NONE} -- Initlization
 
 feature {SD_CONTENT}
 
-	on_focus_in (a_content: SD_CONTENT) is
+	on_focus_in (a_content: SD_CONTENT)
 			-- Redefine.
 		do
 			Precursor {SD_DOCKING_ZONE} (a_content)
@@ -74,31 +74,31 @@ feature {SD_CONTENT}
 
 feature -- Command
 
-	set_show_normal_max (a_show: BOOLEAN) is
+	set_show_normal_max (a_show: BOOLEAN)
 			-- Redefine.
 		do
 			window.set_show_normal_max (a_show)
 		end
 
-	set_show_stick (a_show: BOOLEAN) is
+	set_show_stick (a_show: BOOLEAN)
 			-- Redefine.
 		do
 			window.set_show_stick (a_show)
 		end
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Set title.
 		do
 			window.title_bar.set_title (a_title)
 		end
 
-	set_max (a_max: BOOLEAN) is
+	set_max (a_max: BOOLEAN)
 			-- Redefine.
 		do
 			window.title_bar.set_max (a_max)
 		end
 
-	set_focus_color (a_selection: BOOLEAN) is
+	set_focus_color (a_selection: BOOLEAN)
 			-- Redefine.
 		do
 			if a_selection then
@@ -108,13 +108,13 @@ feature -- Command
 			end
 		end
 
-	set_non_focus_selection_color is
+	set_non_focus_selection_color
 			-- Set title bar non-focuse color.
 		do
 			window.title_bar.enable_non_focus_active_color
 		end
 
-	stick is
+	stick
 			-- Stick window.
 		local
 			l_enum: SD_ENUMERATION
@@ -131,19 +131,19 @@ feature -- Command
 
 feature -- Query
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Redefine
 		do
 			Result := window.title_bar.title
 		end
 
-	title_area: EV_RECTANGLE is
+	title_area: EV_RECTANGLE
 			-- Refedine
 		do
 			create Result.make (window.title_bar.screen_x, window.title_bar.screen_y, window.title_bar.width, window.title_bar.height)
 		end
 
-	is_maximized: BOOLEAN is
+	is_maximized: BOOLEAN
 			-- Redefine
 		do
 			Result := window.title_bar.is_max
@@ -157,14 +157,14 @@ feature {NONE} -- Implementation
 	window: SD_PANEL
 			-- Window.
 
-	on_focus_out is
+	on_focus_out
 			-- Redefine.
 		do
 			Precursor {SD_DOCKING_ZONE}
 			window.set_focus_color (False)
 		end
 
-	on_normal_max_window is
+	on_normal_max_window
 			-- Redefine
 		do
 			if window.is_show_normal_max then
@@ -173,13 +173,13 @@ feature {NONE} -- Implementation
 
 		end
 
-	update_user_widget is
+	update_user_widget
 			-- Redefine
 		do
 			window.set_user_widget (content.user_widget)
 		end
 
-	update_mini_tool_bar_size is
+	update_mini_tool_bar_size
 			-- Redefine
 		do
 			window.title_bar.update_fixed_size
@@ -190,7 +190,7 @@ invariant
 	internal_shared_not_void: internal_shared /= Void
 	window_not_void: window /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

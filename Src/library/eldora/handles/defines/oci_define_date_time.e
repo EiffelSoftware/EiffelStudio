@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Define Variable of type DATE_TIME"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,16 +18,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			make_variable (Sqlt_dat, Date_bytes)
 		end
 
 feature -- Access
 
-	Date_bytes: INTEGER is 7
+	Date_bytes: INTEGER = 7
 
-	value: DATE_TIME is
+	value: DATE_TIME
 			-- Current value of define variable
 		local
 			c, y, mo, d, h, mi, s: INTEGER_8
@@ -57,13 +57,13 @@ feature -- Access
 			create Result.make (c.to_integer_32 * 100 + y, mo, d, h, mi, s)
 		end
 	
-	valid_data_type_and_size (type: INTEGER_16; size: INTEGER): BOOLEAN is
+	valid_data_type_and_size (type: INTEGER_16; size: INTEGER): BOOLEAN
 			-- Are `type' and `size' valid values for `data_type' and `data_size' ?
 		do
 			Result := type = Sqlt_dat and size = Date_bytes
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Execution recorder"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -1101,7 +1101,7 @@ feature -- Measurement
 			Result := {c: like replayed_call} a_call and then c.depth = d
 		end
 
-indexing
+note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

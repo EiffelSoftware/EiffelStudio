@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that allow positioning of Winforms control in a Vision2 system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ inherit
 
 feature -- Access
 
-	item: WINFORMS_CONTROL is
+	item: WINFORMS_CONTROL
 			-- `Result' is WINFORMS_CONTROL contained in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -39,7 +39,7 @@ feature -- Access
 			end
 		end
 	
-	has (v: like item): BOOLEAN is
+	has (v: like item): BOOLEAN
 			-- Is `v' contained in `Current'?
 		require
 			not_destroyed: not is_destroyed
@@ -47,7 +47,7 @@ feature -- Access
 			Result := (v /= Void and then item = v)
 		end
 		
-	linear_representation: LINEAR [like item] is
+	linear_representation: LINEAR [like item]
 			-- Representation as a linear structure
 		local
 			l_res: ARRAYED_LIST [like item]
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Status setting
 		
-	put, replace  (a_window: like item) is
+	put, replace  (a_window: like item)
 			-- Replace `child_item' with `a_window'.
 		require
 			not_destroyed: not is_destroyed
@@ -76,13 +76,13 @@ feature -- Status setting
 			wel_replace (l_wel_winform_container)
 		end
 		
-	extend (an_item: like item) is
+	extend (an_item: like item)
 			-- Ensure that structure includes `an_item'.
 		do	
 			replace (an_item)
 		end
 		
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove `v' if contained.
 		require
 			not_destroyed: not is_destroyed
@@ -94,7 +94,7 @@ feature -- Status setting
 			v_not_contained: not has (v)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

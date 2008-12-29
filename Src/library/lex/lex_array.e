@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"One-dimensional arrays for lexical analysis"
@@ -23,12 +23,12 @@ create
 
 feature -- Initialization
 
-	make (lower_index, upper_index: INTEGER) is
+	make (lower_index, upper_index: INTEGER)
 		do
 			array_make (lower_index, upper_index)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

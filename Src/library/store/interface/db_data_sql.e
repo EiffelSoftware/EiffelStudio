@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -15,37 +15,37 @@ inherit
 
 feature  -- Status report
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of columns in result
 		deferred
 		end
 
-	map_table: ARRAY [INTEGER] is
+	map_table: ARRAY [INTEGER]
 			-- Correspondance table between column
 			-- rank and attribute rank in mapped object
 		deferred
 		end
 
-	column_name (index: INTEGER): STRING is
+	column_name (index: INTEGER): STRING
 			-- Name of the `index-th' column
 		deferred
 		end
 
-	item (index: INTEGER): ANY is
+	item (index: INTEGER): ANY
 			-- Data at `index-th' column
 		deferred
 		end
 
 feature -- Status setting
 
-	update_map_table (object: ANY) is
+	update_map_table (object: ANY)
 			-- Update map table according to field names of `object'.
 		require else
 			object_not_void: object /= Void
 		deferred
 		end
 
-	fill_in (no_descriptor: INTEGER) is
+	fill_in (no_descriptor: INTEGER)
 			-- Fill in attributes of Current with results obtained
 			-- from server after execution of query statement.
 		deferred
@@ -53,27 +53,27 @@ feature -- Status setting
 
 feature {NONE} -- Status report
 
-	value: ARRAY [ANY] is
+	value: ARRAY [ANY]
 			-- Array of values corresponding to a tuple
 		deferred
 		end
 
-	value_size: ARRAY [INTEGER] is
+	value_size: ARRAY [INTEGER]
 			-- Array of result value size for each column
 		deferred
 		end
 
-	value_type: ARRAY [INTEGER] is
+	value_type: ARRAY [INTEGER]
 			-- Array of column result type coded according to Eiffel conventions
 		deferred
 		end
 
-	select_name: ARRAY [STRING] is
+	select_name: ARRAY [STRING]
 			-- Array of selected column names listed in select clause
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision file selection dialog."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	file_name: STRING_32 is
+	file_name: STRING_32
 			-- Full name of currently selected file including path.
 			-- `empty' if user did not click "OK".
 		require
@@ -30,7 +30,7 @@ feature -- Access
 				Result.is_equal (implementation.file_name)
 		end
 
-	filter: STRING_32 is
+	filter: STRING_32
 			-- Filter currently applied to file list.
 		obsolete "Use `filters' instead"
 		require
@@ -41,7 +41,7 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.filter)
 		end
 
-	filters: ARRAYED_LIST [TUPLE [filter: STRING_GENERAL; text: STRING_GENERAL]] is
+	filters: ARRAYED_LIST [TUPLE [filter: STRING_GENERAL; text: STRING_GENERAL]]
 			-- All filters currently applied to file list.
 			-- First STRING represents the filter e.g "*.txt".
 			-- Second STRING represents the displayed text
@@ -57,7 +57,7 @@ feature -- Access
 			bridge_ok: Result = implementation.filters
 		end
 
-	start_directory: STRING_32 is
+	start_directory: STRING_32
 			-- Base directory where browsing will start.
 		require
 			not_destroyed: not is_destroyed
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Status report
 
-	file_title: STRING_32 is
+	file_title: STRING_32
 			-- `file_name' without its path.
 			-- is_empty if user did not click "OK".
 		require
@@ -82,7 +82,7 @@ feature -- Status report
 				Result.is_equal (implementation.file_title)
 		end
 
-	file_path: STRING_32 is
+	file_path: STRING_32
 			-- Path of `file_name'.
 			-- is_empty if user did not click "OK".
 		require
@@ -95,7 +95,7 @@ feature -- Status report
 				Result.is_equal (implementation.file_path)
 		end
 
-	selected_filter_index: INTEGER is
+	selected_filter_index: INTEGER
 			-- One based index of selected filter within `filters', or
 			-- zero if no filters set.
 		require
@@ -109,7 +109,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_filter (a_filter: STRING_GENERAL) is
+	set_filter (a_filter: STRING_GENERAL)
 			-- Set `a_filter' as new filter.
 		obsolete "Use `filters.extend ([%"*.`a_filter'%", %"Files of type ('a_filter')%"])' instead."
 		require
@@ -121,7 +121,7 @@ feature -- Element change
 			assigned: filter.is_equal (a_filter)
 		end
 
-	set_file_name (a_name: STRING_GENERAL) is
+	set_file_name (a_name: STRING_GENERAL)
 			-- Make `a_name' the selected file.
 		require
 			not_destroyed: not is_destroyed
@@ -133,7 +133,7 @@ feature -- Element change
 			assigned: not file_name.is_empty implies file_name.is_equal (a_name)
 		end
 
-	set_start_directory (a_path: STRING_GENERAL) is
+	set_start_directory (a_path: STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		require
 			not_destroyed: not is_destroyed
@@ -146,7 +146,7 @@ feature -- Element change
 
 feature -- Contract Support
 
-	valid_file_name (a_name: STRING_GENERAL): BOOLEAN is
+	valid_file_name (a_name: STRING_GENERAL): BOOLEAN
 			-- Is `a_name' a valid file_name on the current platform?
 			-- Certain characters are not permissible and this is dependent
 			-- on the current platform. The following characters are not permitted,
@@ -159,7 +159,7 @@ feature -- Contract Support
 			Result := implementation.valid_file_name (a_name)
 		end
 
-	valid_file_title (a_title: STRING_GENERAL): BOOLEAN is
+	valid_file_title (a_title: STRING_GENERAL): BOOLEAN
 			-- Is `a_title' a valid file title on the current platform?
 			-- The following characters are not permitted,
 			-- and this list may not be exhaustive:
@@ -184,7 +184,7 @@ invariant
 	valid_file_name: file_name /= Void implies valid_file_name (file_name)
 	valid_file_title: file_title /= Void implies valid_file_title (file_title)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

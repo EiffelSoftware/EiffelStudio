@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Oracle specification"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -27,7 +27,7 @@ inherit
 
 feature
 
-	database_handle_name: STRING is "ORACLE"
+	database_handle_name: STRING = "ORACLE"
 
 feature -- For DATABASE_STATUS
 
@@ -39,7 +39,7 @@ feature -- For DATABASE_STATUS
 			-- Is there any record matching the last
 			-- selection condition used ?
 
-	clear_error is
+	clear_error
 			-- Reset database error status.
 		do
 				-- Release the last error message, if it wasn't empty
@@ -50,19 +50,19 @@ feature -- For DATABASE_STATUS
 			error_code := 0
 		end
 
-	insert_auto_identity_column: BOOLEAN is True
+	insert_auto_identity_column: BOOLEAN = True
 			-- For INSERTs and UPDATEs should table auto-increment identity columns be explicitly included in the statement?
 
 feature -- For DATABASE_CHANGE
 
-	descriptor_is_available: BOOLEAN is
+	descriptor_is_available: BOOLEAN
 		do
 			Result := True
 		end
 
 feature -- For DATABASE_FORMAT
 
-	date_to_str (object: DATE_TIME): STRING is
+	date_to_str (object: DATE_TIME): STRING
 			-- String representation in SQL of `object'
 		do
 			create Result.make (1)
@@ -71,7 +71,7 @@ feature -- For DATABASE_FORMAT
 			Result.append ("','MM/DD/YYYY HH24:MI:SS')")
 		end
 
-	string_format (object: STRING): STRING is
+	string_format (object: STRING): STRING
 			-- String representation in SQL of `object'.
 			-- WARNING: use "IS NULL" if object is empty instead of
 			-- "= NULL" which does not work.
@@ -89,13 +89,13 @@ feature -- For DATABASE_FORMAT
 			end
 		end
 
-	True_representation: STRING is "'T'"
+	True_representation: STRING = "'T'"
 
-	False_representation: STRING is "'F'"
+	False_representation: STRING = "'F'"
 
 feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
-	normal_parse: BOOLEAN is
+	normal_parse: BOOLEAN
 		do
 			if is_proc then
 				Result := False
@@ -105,7 +105,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			end
 		end
 
-	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
+	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN
 		do
 			if uhandle.execution_type.immediate_execution then
 				Result := True
@@ -116,7 +116,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			end
 		end
 
-	bind_parameter (value: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: STRING) is
+	bind_parameter (value: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: STRING)
 		local
 			i: INTEGER
 			stmt: OCI_STATEMENT
@@ -135,7 +135,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			is_error_updated := False
 		end
 
-	bind_args_value (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; sql: STRING) is
+	bind_args_value (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; sql: STRING)
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 			-- `uht' can be empty (for stored procedures).
@@ -162,19 +162,19 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 feature -- For DATABASE_STORE
 
-	update_map_table_error (uhandle: HANDLE; map_table: ARRAY [INTEGER]; ind: INTEGER) is
+	update_map_table_error (uhandle: HANDLE; map_table: ARRAY [INTEGER]; ind: INTEGER)
 		do
 			map_table.put (0, ind)
 		end
 
 feature -- DATABASE_STRING
 
-	sql_name_string: STRING is
+	sql_name_string: STRING
 		do
 			Result := "VARCHAR2"
 		end
 
-	map_var_name (par_name: STRING): STRING is
+	map_var_name (par_name: STRING): STRING
 			--
 		do
 			Result:= once ""
@@ -182,43 +182,43 @@ feature -- DATABASE_STRING
 
 feature -- DATABASE_REAL
 
-	sql_name_real: STRING is "FLOAT"
+	sql_name_real: STRING = "FLOAT"
 
 feature -- DATABASE_DATETIME
 
-	sql_name_datetime: STRING is "DATE"
+	sql_name_datetime: STRING = "DATE"
 
 feature -- DATABASE_DOUBLE
 
-	sql_name_double: STRING is "FLOAT"
+	sql_name_double: STRING = "FLOAT"
 
 feature -- DATABASE_CHARACTER
 
-	sql_name_character: STRING is "CHAR"
+	sql_name_character: STRING = "CHAR"
 
 feature -- DATABASE_INTEGER
 
-	sql_name_integer: STRING is "NUMBER"
+	sql_name_integer: STRING = "NUMBER"
 
 feature -- DATABASE_BOOLEAN
 
-	sql_name_boolean: STRING is "CHAR"
+	sql_name_boolean: STRING = "CHAR"
 
 feature -- LOGIN and DATABASE_APPL only for password_ok
 
-	password_ok (upasswd: STRING): BOOLEAN is
+	password_ok (upasswd: STRING): BOOLEAN
 		do
 			Result := upasswd /= Void
 		end
 
-	password_ensure (name, passwd, uname, upasswd: STRING): BOOLEAN is
+	password_ensure (name, passwd, uname, upasswd: STRING): BOOLEAN
 		do
 			Result := name.is_equal (uname) and passwd.is_equal (upasswd)
 		end
 
 feature -- For database types
 
-	convert_string_type (r_any: ANY; field_name, class_name: STRING): ANY is
+	convert_string_type (r_any: ANY; field_name, class_name: STRING): ANY
 			-- Convert `r_any' to the expected object.
 			-- By default returns `r_any', redefined in ORACLE to return
 			-- an INTEGER_REF when `field_name' is "data_type".
@@ -258,7 +258,7 @@ feature -- For database types
 
 feature {NONE} -- Database type conversion		
 
-	conv_type (indicator: INTEGER; index: INTEGER): INTEGER is
+	conv_type (indicator: INTEGER; index: INTEGER): INTEGER
 		do
 			inspect
 				index
@@ -277,37 +277,37 @@ feature {NONE} -- Database type conversion
 
 feature -- For DATABASE_PROC
 
-	support_sql_of_proc: BOOLEAN is True
+	support_sql_of_proc: BOOLEAN = True
 
-	support_stored_proc: BOOLEAN is
+	support_stored_proc: BOOLEAN
 		do
 			Result := True
 			is_proc := True
 		end
 
-	sql_as: STRING is " AS BEGIN "
+	sql_as: STRING = " AS BEGIN "
 
-	sql_end: STRING is "; END;"
+	sql_end: STRING = "; END;"
 
-	sql_execution: STRING is "BEGIN "
+	sql_execution: STRING = "BEGIN "
 
-	sql_creation: STRING is "create procedure "
+	sql_creation: STRING = "create procedure "
 
-	sql_after_exec: STRING is "; END;"
+	sql_after_exec: STRING = "; END;"
 
-	support_drop_proc: BOOLEAN is True
+	support_drop_proc: BOOLEAN = True
 
-	name_proc_lower: BOOLEAN is False
+	name_proc_lower: BOOLEAN = False
 
-	map_var_between: STRING is ""
+	map_var_between: STRING = ""
 
-	Select_text (proc_name: STRING): STRING is
+	Select_text (proc_name: STRING): STRING
 			--
 		do
 			Result := "select text from user_source where Name = :name and %Type = 'PROCEDURE'"
 		end
 
-	Select_exists (name: STRING): STRING is
+	Select_exists (name: STRING): STRING
 		do
 			Result := "select count (*) from user_objects %
 			%where (object_type = 'PROCEDURE') and %
@@ -316,7 +316,7 @@ feature -- For DATABASE_PROC
 
 feature -- For DATABASE_REPOSITORY
 
-	Selection_string (rep_qualifier, rep_owner, rep_name: STRING): STRING is
+	Selection_string (rep_qualifier, rep_owner, rep_name: STRING): STRING
 		do
 			repository_name := rep_name
 					-- This query request all the Tables of the database
@@ -326,9 +326,9 @@ feature -- For DATABASE_REPOSITORY
 			Result := "SELECT * FROM USER_TAB_COLUMNS WHERE Table_Name =:rep order by Column_ID"
 		end
 
-	sql_string: STRING is "VARCHAR2 ("
+	sql_string: STRING = "VARCHAR2 ("
 
-	sql_string2 (int: INTEGER): STRING is
+	sql_string2 (int: INTEGER): STRING
 		do
 			Result := "VARCHAR2 ("
 			Result.append (int.out)
@@ -337,7 +337,7 @@ feature -- For DATABASE_REPOSITORY
 
 feature -- External features
 
-	get_error_message: POINTER is
+	get_error_message: POINTER
 		local
 			msg: ANY
 			cnt: INTEGER
@@ -355,7 +355,7 @@ feature -- External features
 			is_error_updated := True
 		end
 
-	get_error_code: INTEGER is
+	get_error_code: INTEGER
 		do
 			if not is_error_updated then
 				error_handler.get_error_info (1)
@@ -368,13 +368,13 @@ feature -- External features
 			is_error_updated := True
 		end
 
-	get_warn_message: POINTER is
+	get_warn_message: POINTER
 		do
 			Result := empty_string_ptr
 			is_error_updated := True
 		end
 
-	empty_string_ptr: POINTER is
+	empty_string_ptr: POINTER
 			-- Pointer to a zero-length string
 		once
 			Result := default_pointer.memory_alloc (1)
@@ -382,7 +382,7 @@ feature -- External features
 		end
 
 
-	new_descriptor: INTEGER is
+	new_descriptor: INTEGER
 		require else
 			descriptor_available: is_descriptor_available
 		local
@@ -404,13 +404,13 @@ feature -- External features
 			is_error_updated := False
 		end
 
-	is_descriptor_available: BOOLEAN is
+	is_descriptor_available: BOOLEAN
 			-- Is a new descriptor available ?
 		do
 			Result := descriptor_count < descriptors.count
 		end
 
-	init_order (no_descriptor: INTEGER; command: STRING) is
+	init_order (no_descriptor: INTEGER; command: STRING)
 		local
 			stmt: OCI_STATEMENT
 		do
@@ -419,7 +419,7 @@ feature -- External features
 			is_error_updated := False
 		end
 
-	start_order (no_descriptor: INTEGER) is
+	start_order (no_descriptor: INTEGER)
 		local
 			stmt: OCI_STATEMENT
 		do
@@ -428,7 +428,7 @@ feature -- External features
 			is_error_updated := False
 		end
 
-	next_row (no_descriptor: INTEGER) is
+	next_row (no_descriptor: INTEGER)
 		local
 			stmt: OCI_STATEMENT
 		do
@@ -445,7 +445,7 @@ feature -- External features
 			is_error_updated := False
 		end
 
-	terminate_order (no_descriptor: INTEGER) is
+	terminate_order (no_descriptor: INTEGER)
 		local
 			stmt: OCI_STATEMENT
 		do
@@ -458,12 +458,12 @@ feature -- External features
 			is_error_updated := False
 		end
 
-	close_cursor (no_descriptor: INTEGER) is
+	close_cursor (no_descriptor: INTEGER)
 			-- Do nothing, for ODBC prepared statement
 		do
 		end
 
-	exec_immediate (no_descriptor: INTEGER; command: STRING) is
+	exec_immediate (no_descriptor: INTEGER; command: STRING)
 		local
 			stmt: OCI_STATEMENT
 		do
@@ -474,7 +474,7 @@ feature -- External features
 			is_error_updated := False
 		end
 
-	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
+	put_col_name (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER
 		local
 			stmt: OCI_STATEMENT
 			name: STRING
@@ -488,7 +488,7 @@ feature -- External features
 			Result := length
 		end
 
-	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER is
+	put_data (no_descriptor: INTEGER; index: INTEGER; ar: STRING; max_len:INTEGER): INTEGER
 		local
 			value: ANY
 			length: INTEGER
@@ -522,7 +522,7 @@ feature -- External features
 			Result := length
 		end
 
-	get_count (no_descriptor: INTEGER): INTEGER is
+	get_count (no_descriptor: INTEGER): INTEGER
 		local
 			stmt: OCI_STATEMENT
 		do
@@ -530,7 +530,7 @@ feature -- External features
 			Result := stmt.column_count
 		end
 
-	get_data_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_data_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		local
 			stmt: OCI_STATEMENT
 		do
@@ -538,7 +538,7 @@ feature -- External features
 			Result := stmt.column (ind).data_size
 		end
 
-	get_col_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_col_len (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		local
 			stmt: OCI_STATEMENT
 		do
@@ -546,7 +546,7 @@ feature -- External features
 			Result := stmt.column (ind).data_size
 		end
 
-	get_col_type (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_col_type (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		local
 			stmt: OCI_STATEMENT
 		do
@@ -554,7 +554,7 @@ feature -- External features
 			Result := conv_type (0, stmt.column (ind).data_type)
 		end
 
-	get_integer_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_integer_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		local
 			temp: DOUBLE_REF
 		do
@@ -562,7 +562,7 @@ feature -- External features
 			Result := temp.item.truncated_to_integer
 		end
 
-	get_float_data (no_descriptor: INTEGER; ind: INTEGER): DOUBLE is
+	get_float_data (no_descriptor: INTEGER; ind: INTEGER): DOUBLE
 		local
 			temp: DOUBLE_REF
 		do
@@ -570,7 +570,7 @@ feature -- External features
 			Result := temp.item
 		end
 
-	get_real_data (no_descriptor: INTEGER; ind: INTEGER): REAL is
+	get_real_data (no_descriptor: INTEGER; ind: INTEGER): REAL
 		local
 			temp: DOUBLE_REF
 		do
@@ -578,7 +578,7 @@ feature -- External features
 			Result := temp.truncated_to_real
 		end
 
-	get_boolean_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
+	get_boolean_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN
 		local
 			temp: STRING
 		do
@@ -586,13 +586,13 @@ feature -- External features
 			Result := temp.is_equal ("Y")
 		end
 
-	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
+	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN
 			-- is last retrieved data null?
 		do
 			Result := (results @ no_descriptor) @ ind = Void
 		end
 
-	get_date_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_date_data (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			date_data ?= (results @ no_descriptor) @ ind
 			if date_data = Void then
@@ -602,72 +602,72 @@ feature -- External features
 			end
 		end
 
-	get_hour (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_hour (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := date_data.time.hour
 		end
 
-	get_sec (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_sec (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := date_data.time.second
 		end
 
-	get_min (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_min (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := date_data.time.minute
 		end
 
-	get_year (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_year (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := date_data.date.year
 		end
 
-	get_day (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_day (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := date_data.date.day
 		end
 
-	get_month (no_descriptor: INTEGER; ind: INTEGER): INTEGER is
+	get_month (no_descriptor: INTEGER; ind: INTEGER): INTEGER
 		do
 			Result := date_data.date.month
 		end
 
-	c_string_type: INTEGER is 1
+	c_string_type: INTEGER = 1
 --		do
 --			Result := Sqlt_chr
 --		end
 
-	c_character_type: INTEGER is 2
+	c_character_type: INTEGER = 2
 --		do
 --			Result := Sqlt_afc
 --		end
 
-	c_integer_type: INTEGER is 3
+	c_integer_type: INTEGER = 3
 --		do
 --			Result := Sqlt_num
 --		end
 
-	c_float_type: INTEGER is 4
+	c_float_type: INTEGER = 4
 --		do
 --			Result := Sqlt_flt
 --		end
 
-   	c_real_type: INTEGER is 5
+   	c_real_type: INTEGER = 5
 --		do
 --			Result := Sqlt_flt
 --		end
 
-	c_boolean_type: INTEGER is 6
+	c_boolean_type: INTEGER = 6
 --		do
 --			Result := Sqlt_afc
 --		end
 
-	c_date_type: INTEGER is 7
+	c_date_type: INTEGER = 7
 --		do
 --			Result := Sqlt_dat
 --		end
 
-	database_make (i: INTEGER) is
+	database_make (i: INTEGER)
 		do
 			clear_error
 			create env.make
@@ -678,7 +678,7 @@ feature -- External features
 			no_descriptors: descriptor_count = 0
 		end
 
-	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING) is
+	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING)
 		local
 			l_hostname,
 			l_username: STRING
@@ -697,7 +697,7 @@ feature -- External features
 			is_error_updated := False
        	end
 
-	disconnect is
+	disconnect
 		do
 			context.logoff
 			context := Void
@@ -706,21 +706,21 @@ feature -- External features
 			found := False
 		end
 
-	commit is
+	commit
 		do
 			clear_error
 			perform_sql ("COMMIT")
 			is_error_updated := False
 		end
 
-	rollback is
+	rollback
 		do
 			clear_error
 			perform_sql ("ROLLBACK")
 			is_error_updated := False
 		end
 
-	trancount: INTEGER is
+	trancount: INTEGER
 		do
 			if context /= Void then
 				Result := 1
@@ -729,7 +729,7 @@ feature -- External features
 			end
 		end
 
- 	begin is
+ 	begin
 		do
 		end
 
@@ -745,7 +745,7 @@ feature {NONE} -- Implementation
 
 	date_data: DATE_TIME
 
-	break (s: STRING): STRING is
+	break (s: STRING): STRING
 			-- Broken long string using
 			-- Oracle's concatenation character.
 		require
@@ -767,7 +767,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Concat_string: STRING is "'||'"
+	Concat_string: STRING = "'||'"
 
 	descriptors: ARRAY [OCI_STATEMENT]
 
@@ -781,7 +781,7 @@ feature {NONE} -- Implementation
 
 	context: OCI_SERVICE_CONTEXT
 
-	perform_sql (sql: STRING) is
+	perform_sql (sql: STRING)
 			-- Perform ad-hoc SQL command
 		local
 			stmt: OCI_STATEMENT
@@ -793,7 +793,7 @@ feature {NONE} -- Implementation
 			is_error_updated := False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

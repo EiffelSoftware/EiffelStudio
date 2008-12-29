@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Non-deterministic finite state automata"
@@ -18,7 +18,7 @@ feature -- Access
 			-- DFA built by routine construct_dfa,
 			-- which recognizes the same language.
 
-	find_successors (source, input_doc: INTEGER): LINKED_LIST [INTEGER] is
+	find_successors (source, input_doc: INTEGER): LINKED_LIST [INTEGER]
 			-- Successors of `source' on `input_doc';
 			-- Void if no successor
 		require
@@ -27,7 +27,7 @@ feature -- Access
 		deferred
 		end;
 
-	find_e_successors (source: INTEGER): LINKED_LIST [INTEGER] is
+	find_e_successors (source: INTEGER): LINKED_LIST [INTEGER]
 			-- Epsilon successors of source.
 			-- Void if no successor.
 		require
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_transition (source, input_doc, target: INTEGER) is
+	set_transition (source, input_doc, target: INTEGER)
 			-- Set transition from `source' to `target' for `input_doc'.
 		require else
 			source_in_automaton: source >= 1 and source <= nb_states;
@@ -46,7 +46,7 @@ feature -- Element change
 		deferred
 		end;
 
-	set_e_transition (source, target: INTEGER) is
+	set_e_transition (source, target: INTEGER)
 			-- Set epsilon transition from `source' to `target'.
 		require
 			source_in_automaton: source >= 1 and source <= nb_states;
@@ -56,7 +56,7 @@ feature -- Element change
 
 feature -- Removal
 
-	delete_transition (source, input_doc, target: INTEGER) is
+	delete_transition (source, input_doc, target: INTEGER)
 			-- Delete transition from `source' to `target' on `input_doc'.
 		require
 			source_in_automaton: source >= 1 and source <= nb_states;
@@ -67,7 +67,7 @@ feature -- Removal
 
 feature -- Transformation
 
-	construct_dfa is
+	construct_dfa
 			-- Create an equivalent deterministic finite automaton.
 			--| This algorithm is extracted from
 			--| "Compilers: Principles, Techniques and Tools",
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 			-- Each element of this array represents the
 			-- epsilon closure of one NDFA state
 
-	epsilon_closure (initial_set: FIXED_INTEGER_SET): FIXED_INTEGER_SET is
+	epsilon_closure (initial_set: FIXED_INTEGER_SET): FIXED_INTEGER_SET
 			-- Epsilon-closure of initial_set:
 			-- set of NDFA states
 			-- reachable from some NDFA states in initial_set
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	build_closures is
+	build_closures
 			-- Build the array closures, which is used
 			-- in epsilon_closure.
 		local
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	search_in_tree (set: FIXED_INTEGER_SET) is
+	search_in_tree (set: FIXED_INTEGER_SET)
 			-- Search set in set_tree. If set is not found,
 			-- insert set in set_tree.
 			-- Change the value of "set_position" and set it
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	closure (i: INTEGER): FIXED_INTEGER_SET is
+	closure (i: INTEGER): FIXED_INTEGER_SET
 			-- Epsilon_closure of ith state which means
 			-- set of NDFA state reachable from ith
 			-- state on epsilon-transition alone
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			i_in_closure: Result.has (i)
 		end;
 
-	move (initial_set: FIXED_INTEGER_SET; i: INTEGER): FIXED_INTEGER_SET is
+	move (initial_set: FIXED_INTEGER_SET; i: INTEGER): FIXED_INTEGER_SET
 			-- Set of NDFA states to which there is a transition on
 			-- input i from some NDFA state s of initial_set;
 			-- Void if the set if empty
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 		deferred
 		end;
 
-	initial_final_designation is
+	initial_final_designation
 			-- Set the final and initial attributes of dfa,
 			-- consistent with those of the current automaton.
 		require
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

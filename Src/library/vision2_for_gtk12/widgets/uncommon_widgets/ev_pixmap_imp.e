@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision pixmap, GTK implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -55,7 +55,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a gtk pixmap of size (1 * 1) with no mask.
 		local
 			gdkpix, gdkmask: POINTER
@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 			clear
 		end
 
-	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
 			-- Return sub pixmap of `Current' defined by `area'
 		local
 			pix_imp: EV_PIXMAP_IMP
@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE)
 			-- Initialize from `a_pointer_style'
 		local
 			a_pointer_style_imp: EV_POINTER_STYLE_IMP
@@ -151,14 +151,14 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
+	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER)
 			-- Draw `a_pixmap' on to `Current' using given coordinates and dimensions.
 		do
 			Precursor {EV_DRAWABLE_IMP} (x, y, a_pixmap, x_src, y_src, src_width, src_height)
 			flush
 		end
 
-	draw_point (x, y: INTEGER) is
+	draw_point (x, y: INTEGER)
 			-- Draw point at (`x', `y').
 		local
 			mask_gc: POINTER
@@ -174,13 +174,13 @@ feature {NONE} -- Initialization
 
 feature -- Drawing operations
 
-	redraw is
+	redraw
 			-- Force `Current' to redraw itself.
 		do
 			flush
 		end
 
-	flush is
+	flush
 		do
 			if is_displayed then
 				{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (gtk_pixmap)
@@ -189,7 +189,7 @@ feature -- Drawing operations
 
 feature -- Measurement
 
-	width: INTEGER is
+	width: INTEGER
 			-- width of the pixmap.
 		local
 			wid, hgt: INTEGER
@@ -198,7 +198,7 @@ feature -- Measurement
 			Result := wid
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- height of the pixmap.
 		local
 			wid, hgt: INTEGER
@@ -209,13 +209,13 @@ feature -- Measurement
 
 feature -- Element change
 
-	set_pixmap_from_pixbuf (a_pixbuf: POINTER) is
+	set_pixmap_from_pixbuf (a_pixbuf: POINTER)
 			-- Construct `Current' from GdkPixbuf `a_pixbuf'
 		do
 			--| Needed for compatibility with gtk 2.x
 		end
 
-	set_mask (a_mask: EV_BITMAP) is
+	set_mask (a_mask: EV_BITMAP)
 			-- Set the GdkBitmap used for masking `Current'.
 		local
 			a_mask_imp: EV_BITMAP_IMP
@@ -224,7 +224,7 @@ feature -- Element change
 			copy_from_gdk_data (drawable, a_mask_imp.drawable, width, height)
 		end
 
-	reset_for_buffering (a_width, a_height: INTEGER) is
+	reset_for_buffering (a_width, a_height: INTEGER)
 			-- Resets the size of the pixmap without keeping original image or clearing background.
 		local
 			gdkpix: POINTER
@@ -235,7 +235,7 @@ feature -- Element change
 			end
 		end
 
-	read_from_named_file (file_name: STRING) is
+	read_from_named_file (file_name: STRING)
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 			-- May raise `Ev_unknown_image_format' or `Ev_corrupt_image_data'
 			-- exceptions.
@@ -247,7 +247,7 @@ feature -- Element change
 			c_ev_load_pixmap ($Current, a_cs.item, $update_fields)
 		end
 
-	set_with_default is
+	set_with_default
 			-- Initialize the pixmap with the default
 			-- pixmap (Vision2 logo)
 			--
@@ -256,7 +256,7 @@ feature -- Element change
 			c_ev_load_pixmap ($Current, NULL, $update_fields)
 		end
 
-	stretch (a_x, a_y: INTEGER) is
+	stretch (a_x, a_y: INTEGER)
 			-- Stretch the image to fit in size `a_x' by `a_y'.
 		local
 			source_gdkimage, source_mask_gdkimage, destination_mask_gdkimage, destination_gdkimage: POINTER
@@ -358,7 +358,7 @@ feature -- Element change
 			end
 		end
 
-	set_size (a_x, a_y: INTEGER) is
+	set_size (a_x, a_y: INTEGER)
 			-- Set the size of the pixmap to `a_x' by `a_y'.
 		local
 			gdkpix, gdkmask: POINTER
@@ -385,7 +385,7 @@ feature -- Element change
 
 feature -- Access
 
-	bitmap_array: ARRAY [NATURAL_8] is
+	bitmap_array: ARRAY [NATURAL_8]
 			-- Monochromatic representation of `Current' used for cursors.
 			-- Representation in bits stored in characters.
 		local
@@ -455,7 +455,7 @@ feature -- Access
 			{EV_GTK_EXTERNALS}.gdk_image_destroy (a_gdkimage)
 		end
 
-	raw_image_data: EV_RAW_IMAGE_DATA is
+	raw_image_data: EV_RAW_IMAGE_DATA
 		local
 			a_gdkimage, a_visual: POINTER
 			a_visual_type, a_pixel: INTEGER
@@ -502,7 +502,7 @@ feature -- Access
 
 feature -- Duplication
 
-	copy_pixmap (other: EV_PIXMAP) is
+	copy_pixmap (other: EV_PIXMAP)
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		local
@@ -514,7 +514,7 @@ feature -- Duplication
 
 feature {EV_ANY_I} -- Implementation
 
-	copy_from_gdk_data (a_src_pix, a_src_mask: POINTER; a_width, a_height: INTEGER) is
+	copy_from_gdk_data (a_src_pix, a_src_mask: POINTER; a_width, a_height: INTEGER)
 			-- Update `Current' to use passed gdk pixmap data.
 		local
 			gdkpix, gdkmask: POINTER
@@ -548,7 +548,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_NOTEBOOK_IMP, EV_PIXMAP_IMP, EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP} -- Implementation
 
-	set_pixmap (gdkpix, gdkmask: POINTER) is
+	set_pixmap (gdkpix, gdkmask: POINTER)
 			-- Set the GtkPixmap using Gdk pixmap data and mask.
 		do
 			{EV_GTK_EXTERNALS}.gtk_pixmap_set (gtk_pixmap, gdkpix, gdkmask)
@@ -560,7 +560,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_NOTEBOOK_IMP, EV_PIXMAP_IMP
 			end
 		end
 
-	set_from_xpm_data (a_xpm_data: POINTER) is
+	set_from_xpm_data (a_xpm_data: POINTER)
 			-- Pixmap symbolizing a piece of information.
 		require
 			xpm_data_not_null: a_xpm_data /= NULL
@@ -573,7 +573,7 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_NOTEBOOK_IMP, EV_PIXMAP_IMP
 			set_pixmap (gdkpix, gdkmask)
 		end
 
-	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
+	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME)
 			-- Save `Current' to `a_filename' in `a_format' format.
 		local
 			png_format: EV_PNG_FORMAT
@@ -606,7 +606,7 @@ feature {NONE} -- Implementation
 	parent_widget: POINTER
 			-- Parent widget for Current.
 
-	initialize_graphical_context is
+	initialize_graphical_context
 			-- Set the foreground color of the Graphical Context to black.
 		local
 			allocated: BOOLEAN
@@ -630,7 +630,7 @@ feature {NONE} -- Implementation
 		pixmap_height	: INTEGER; -- Width of the loaded pixmap
 		rgb_data		: POINTER; -- Pointer on a C memory zone
 		alpha_data		: POINTER; -- Pointer on a C memory zone
-		) is
+		)
 			-- Callback function called from the C code by c_ev_load_pixmap.
 			--
 			-- See `read_from_named_file'
@@ -652,7 +652,7 @@ feature {NONE} -- Implementation
 			set_pixmap (gdkpix, gdkmask)
 		end
 
-	destroy is
+	destroy
 			-- Destroy the pixmap and resources.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
@@ -662,7 +662,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dispose is
+	dispose
 			-- Clear up resources if needed in object disposal.
 		do
 			if gc /= NULL then
@@ -674,24 +674,24 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Default_color_depth: INTEGER is -1
+	Default_color_depth: INTEGER = -1
 			-- Default color depth, use the one from gdk_root_parent.
 
-	Monochrome_color_depth: INTEGER is 1
+	Monochrome_color_depth: INTEGER = 1
 			-- Black and White color depth (for mask).
 
-	Loadpixmap_error_noerror: INTEGER is 0
+	Loadpixmap_error_noerror: INTEGER = 0
 			-- `c_ev_load_pixmap' has reported no error.
 
-	Loadpixmap_rgb_data: INTEGER is 0
+	Loadpixmap_rgb_data: INTEGER = 0
 			-- `c_ev_load_pixmap' has loaded an RBG bitmap (no mask).
 
-	Loadpixmap_alpha_data: INTEGER is 1
+	Loadpixmap_alpha_data: INTEGER = 1
 			-- `c_ev_load_pixmap' has loaded an RBGA bitmap.
 
 feature -- Externals
 
-	c_ev_load_pixmap(curr_object: POINTER; file_name: POINTER; update_fields_routine: POINTER) is
+	c_ev_load_pixmap(curr_object: POINTER; file_name: POINTER; update_fields_routine: POINTER)
 		external
 			"C | %"load_pixmap.h%""
 		end
@@ -701,7 +701,7 @@ feature -- Externals
 			array_height,
 			a_scale_width,
 			a_scale_height,
-			a_colormode: INTEGER) is
+			a_colormode: INTEGER)
 		external
 			"C signature (char *, char *, int, int, int, int, int) use %"load_pixmap.h%""
 		end
@@ -710,7 +710,7 @@ feature {EV_PIXMAP_I, EV_PIXMAPABLE_IMP} -- Implementation
 
 	interface: EV_PIXMAP;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

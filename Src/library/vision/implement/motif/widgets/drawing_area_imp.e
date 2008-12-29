@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif drawing area."
@@ -65,7 +65,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_drawing_area: DRAWING_AREA; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_drawing_area: DRAWING_AREA; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif drawing area.
 		local
 			mc: MEL_COMPOSITE
@@ -83,7 +83,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_expose_action (a_command: COMMAND; argument: ANY) is
+	add_expose_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- current area is exposed.
 		local
@@ -97,7 +97,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_input_action (a_command: COMMAND; argument: ANY) is
+	add_input_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- a key is pressed or when a mouse button is pressed.
 		local
@@ -111,7 +111,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_resize_action (a_command: COMMAND; argument: ANY) is
+	add_resize_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- current area is resized.
 		local
@@ -127,21 +127,21 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_expose_action (a_command: COMMAND; argument: ANY) is
+	remove_expose_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current area is exposed.
 		do
 			remove_command (expose_command, a_command, argument)
 		end;
 
-	remove_input_action (a_command: COMMAND; argument: ANY) is
+	remove_input_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- a key is pressed or when a mouse button is pressed.
 		do
 			remove_command (input_command, a_command, argument)
 		end;
 
-	remove_resize_action (a_command: COMMAND; argument: ANY) is
+	remove_resize_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current area is resized.
 		do
@@ -150,13 +150,13 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	window_object: POINTER is
+	window_object: POINTER
 			-- X identifier of the drawable.
 		do
 			--Result := xt_window (screen_object)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

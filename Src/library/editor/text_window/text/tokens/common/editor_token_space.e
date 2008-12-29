@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that represent one or several spaces"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialisation
 
-	make (number: INTEGER) is
+	make (number: INTEGER)
 			-- Create a token composed of `number' spaces.
 		do
 			length := number
@@ -40,7 +40,7 @@ feature -- Width & Height
 
 	width: INTEGER
 
-	get_substring_width (n: INTEGER): INTEGER is
+	get_substring_width (n: INTEGER): INTEGER
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
 		do
@@ -49,14 +49,14 @@ feature -- Width & Height
 			Result := n * space_width
 		end
 
-	retrieve_position_by_width(a_width: INTEGER): INTEGER is
+	retrieve_position_by_width(a_width: INTEGER): INTEGER
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		do
 			Result := a_width // space_width + 1
 		end
 
-	update_width is
+	update_width
 			-- update value of `width'
 		do
 			-- FIXME: take into account if invisible symbols are displayed or not to compute the correct width
@@ -65,7 +65,7 @@ feature -- Width & Height
 
 feature -- Visitor
 
-	process (a_visitor: TOKEN_VISITOR) is
+	process (a_visitor: TOKEN_VISITOR)
 			-- Visitor
 		do
 			a_visitor.process_editor_token_space (Current)
@@ -73,7 +73,7 @@ feature -- Visitor
 
 feature {NONE} -- Implementation
 
-	display_blanks (d_x, d_y: INTEGER; device: EV_DRAWABLE; selected: BOOLEAN; char_start, char_end: INTEGER; panel: TEXT_PANEL): INTEGER is
+	display_blanks (d_x, d_y: INTEGER; device: EV_DRAWABLE; selected: BOOLEAN; char_start, char_end: INTEGER; panel: TEXT_PANEL): INTEGER
 		local
 			the_text_color		: EV_COLOR
 			the_background_color: EV_COLOR
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private Constants
 
-	space_width: INTEGER is
+	space_width: INTEGER
 		do
 			if is_fixed_width then
 				Result := font_width
@@ -129,7 +129,7 @@ feature {NONE} -- Private Constants
 			end
 		end
 
-	space_symbol: CHARACTER_32 is
+	space_symbol: CHARACTER_32
 		once
 			Result := '·'
 		end
@@ -139,7 +139,7 @@ feature {NONE} -- Private Constants
 			-- when the "invisible" symbols (spaces, end of lines
 			-- & tabulations) are set to be visible.
 
-	space_images: SPECIAL [STRING_32] is
+	space_images: SPECIAL [STRING_32]
 			-- Quick look up for `wide_image' when count is 10 or less
 		once
 			create Result.make (11)
@@ -155,7 +155,7 @@ feature {NONE} -- Private Constants
 			Result.put ("          ", 10)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

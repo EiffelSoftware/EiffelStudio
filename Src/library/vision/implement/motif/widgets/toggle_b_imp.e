@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision implementation of a Motif toggle button."
@@ -47,7 +47,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (a_toggle_b: TOGGLE_B; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_toggle_b: TOGGLE_B; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif toggle button.
 		local
 			mc: MEL_COMPOSITE
@@ -61,7 +61,7 @@ feature {NONE} -- Creation
 
 feature -- Element change
 
-	add_arm_action (a_command: COMMAND; argument: ANY) is
+	add_arm_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when current
 			-- toggle button is armed.
 		local
@@ -75,7 +75,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_release_action (a_command: COMMAND; argument: ANY) is
+	add_release_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when current
 			-- toggle button is released.
 		local
@@ -89,7 +89,7 @@ feature -- Element change
 			list.add_command (a_command, argument)
 		end;
 
-	add_activate_action, add_value_changed_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action, add_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when value
 			-- is changed.
 		local
@@ -105,34 +105,34 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_arm_action (a_command: COMMAND; argument: ANY) is
+	remove_arm_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current toggle button is armed.
 		do
 			remove_command (arm_command, a_command, argument)
 		end;
 
-	remove_release_action (a_command: COMMAND; argument: ANY) is
+	remove_release_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current toggle button is released.
 		do
 			remove_command (disarm_command, a_command, argument)
 		end;
 
-	remove_activate_action, remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action, remove_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- value is changed.
 		do
 			remove_command (value_changed_command, a_command, argument)
 		end;
 
-	remove_accelerator_action is
+	remove_accelerator_action
 			-- Remove the accelerator action.
 		do
 			set_accelerator (Void)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

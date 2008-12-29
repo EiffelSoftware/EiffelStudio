@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Process status listening timer implemented with thread."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (interval: INTEGER) is
+	make (interval: INTEGER)
 			-- Set time interval which this timer will be triggered with `interval'.
 			-- Unit of `interval' is milliseconds.
 		require
@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 
 feature -- Control
 
-	start is
+	start
 		local
 			l_thread_attribute: THREAD_ATTRIBUTES
 		do
@@ -49,14 +49,14 @@ feature -- Control
 			mutex.unlock
 		end
 
-	destroy is
+	destroy
 		do
 			mutex.lock
 			should_destroy := True
 			mutex.unlock
 		end
 
-	wait (a_timeout: INTEGER): BOOLEAN is
+	wait (a_timeout: INTEGER): BOOLEAN
 		local
 			l_sleep_time: INTEGER_64
 			prc_imp: PROCESS_IMP
@@ -91,7 +91,7 @@ feature -- Control
 			end
 		end
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 		do
 			mutex.lock
 			Result := (not has_started) or (has_started and then terminated)
@@ -100,7 +100,7 @@ feature -- Control
 
 feature {NONE} -- Implementation
 
-	execute is
+	execute
 		local
 			prc_imp: PROCESS_IMP
 			l_sleep_time: INTEGER_64
@@ -130,7 +130,7 @@ invariant
 
 	mutex_not_void: mutex /= Void
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

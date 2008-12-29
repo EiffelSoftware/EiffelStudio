@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XCirculateEvent."
@@ -19,13 +19,13 @@ create
 
 feature -- Access
 
-	event_widget: MEL_WIDGET is
+	event_widget: MEL_WIDGET
 			-- Window that received the event
 		do
 			Result := retrieve_widget_from_window (event)
 		end;
 
-	is_place_on_top: BOOLEAN is
+	is_place_on_top: BOOLEAN
 			-- Is the window place on top?
 		do
 			Result := c_event_place (handle) = PlaceOnTop
@@ -33,7 +33,7 @@ feature -- Access
 			valid_result: Result = not is_place_on_bottom
 		end;
 
-	is_place_on_bottom: BOOLEAN is
+	is_place_on_bottom: BOOLEAN
 			-- Is the window place on the bottom?
 		do
 			Result := c_event_place (handle) = PlaceOnBottom
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Pointer access
 
-	event: POINTER is
+	event: POINTER
 			-- Window pointer that received the event
 		do
 			Result := c_event_event (handle)
@@ -51,17 +51,17 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_event_event (event_ptr: POINTER): POINTER is
+	c_event_event (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XCirculateEvent *): EIF_POINTER"
 		end;
 
-	c_event_place (event_ptr: POINTER): INTEGER is
+	c_event_place (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XCirculateEvent *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

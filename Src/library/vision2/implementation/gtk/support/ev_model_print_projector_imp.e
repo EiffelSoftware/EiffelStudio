@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Projection to a Printer."
 	legal: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 		do
 			base_make (an_interface)
 			--| Hack to prevent invariant violation
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 				-- World needs resetting on project
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_is_initialized (True)
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature {EV_ANY_I} -- Access
 
-	project is
+	project
 			-- Make a standard projection of the world on the device.
 		local
 			i: INTEGER
@@ -76,7 +76,7 @@ feature {EV_ANY_I} -- Access
 
 feature {NONE} -- Implementation
 
-	tmp_print_job_name: STRING is
+	tmp_print_job_name: STRING
 			-- A unique print job file name.
 		do
 			create Result.make (0)
@@ -85,19 +85,19 @@ feature {NONE} -- Implementation
 			Result.append ("_vision2_print_job")
 		end
 
-	mkfifo (a_pathname: POINTER; mode: INTEGER): INTEGER is
+	mkfifo (a_pathname: POINTER; mode: INTEGER): INTEGER
 			-- See man mkfifo.
 		external
 			"C [macro <fcntl.h>]"
 		end
 
-	tmpnam (s: POINTER): POINTER is
+	tmpnam (s: POINTER): POINTER
 			-- See man tmpnam.
 		external
 			"C | <stdio.h>"
 		end
 
-	S_IRWXU: INTEGER is
+	S_IRWXU: INTEGER
 		external
 			"C [macro <fcntl.h>]"
 		alias
@@ -108,7 +108,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MODEL_PRINT_PROJECTOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

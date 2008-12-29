@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			A widget containing a tree/grid view of application preferences.  Provides a
 			list to view preference information and ability to edit the preferences using popup floating widgets.  Also allows
@@ -31,14 +31,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: like preferences) is
+	make (a_preferences: like preferences)
 			-- New view.
 		do
 			Precursor {PREFERENCE_VIEW} (a_preferences)
 			build_interface
 		end
 
-	build_interface is
+	build_interface
 			-- Called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
@@ -186,7 +186,7 @@ feature {NONE} -- Initialization
 			init_shortcuts
 		end
 
-	init_shortcuts is
+	init_shortcuts
 		do
 			filter_text_box.key_press_actions.extend (agent accelerator_on_key_pressed)
 			description_location.key_press_actions.extend (agent accelerator_on_key_pressed)
@@ -204,7 +204,7 @@ feature -- Access
 	parent_window: EV_WINDOW
 			-- Parent window.  Used to display this view relative to.
 
-	parent_window_of (w: EV_WIDGET): EV_WINDOW is
+	parent_window_of (w: EV_WIDGET): EV_WINDOW
 			-- Computed parent window of `w'.
 		do
 			Result ?= w
@@ -229,13 +229,13 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_parent_window (p: like parent_window) is
+	set_parent_window (p: like parent_window)
 			-- Set `parent_window'
 		do
 			parent_window := p
 		end
 
-	set_close_button_action (p: like close_button_action) is
+	set_close_button_action (p: like close_button_action)
 			-- Set close button action to `p'.
 		do
 			close_button_action := p
@@ -246,13 +246,13 @@ feature -- Status Setting
 			end
 		end
 
-	set_show_full_preference_name (a_flag: BOOLEAN) is
+	set_show_full_preference_name (a_flag: BOOLEAN)
 			-- Set 'show_full_preference_name'
 		do
 			show_full_preference_name := a_flag
 		end
 
-	set_root_icon (a_icon: EV_PIXMAP) is
+	set_root_icon (a_icon: EV_PIXMAP)
 			-- Set the root node icon
 		require
 			icon_not_void: a_icon /= Void
@@ -260,7 +260,7 @@ feature -- Status Setting
 			root_icon := a_icon
 		end
 
-	set_folder_icon (a_icon: EV_PIXMAP) is
+	set_folder_icon (a_icon: EV_PIXMAP)
 			-- Set the folder node icon
 		require
 			icon_not_void: a_icon /= Void
@@ -268,7 +268,7 @@ feature -- Status Setting
 			folder_icon := a_icon
 		end
 
-	set_filter_icon_up (a_icon: EV_PIXMAP) is
+	set_filter_icon_up (a_icon: EV_PIXMAP)
 			-- Set the grid's header arrow up icon
 		require
 			icon_not_void: a_icon /= Void
@@ -276,7 +276,7 @@ feature -- Status Setting
 			icon_up := a_icon
 		end
 
-	set_filter_icon_down (a_icon: EV_PIXMAP) is
+	set_filter_icon_down (a_icon: EV_PIXMAP)
 			-- Set the grid's header arrow down icon
 		require
 			icon_not_void: a_icon /= Void
@@ -286,7 +286,7 @@ feature -- Status Setting
 
 feature -- Events
 
-	on_show is
+	on_show
 		do
 			if grid.is_displayed then
 				on_resize
@@ -294,7 +294,7 @@ feature -- Events
 			end
 		end
 
-	on_apply_or_close is
+	on_apply_or_close
 			-- Close button has been pushed: apply the changes then close
 			-- the Preferences Window.
 		do
@@ -306,7 +306,7 @@ feature -- Events
 
 feature {NONE} -- Events		
 
-	on_preference_changed (a_pref: PREFERENCE; a_pref_widget: PREFERENCE_WIDGET) is
+	on_preference_changed (a_pref: PREFERENCE; a_pref_widget: PREFERENCE_WIDGET)
 			-- Set the preference value to the newly entered value in the edit item.
 		local
 			l_row: EV_GRID_ROW
@@ -326,7 +326,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	preference_changed_on_row (a_pref: PREFERENCE; a_row: EV_GRID_ROW; a_update_value: BOOLEAN) is
+	preference_changed_on_row (a_pref: PREFERENCE; a_row: EV_GRID_ROW; a_update_value: BOOLEAN)
 			-- Set the preference value to the newly entered value in the edit item.
 		require
 			a_pref_not_void: a_pref /= Void
@@ -362,7 +362,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_preference_changed_externally (a_pref: PREFERENCE) is
+	on_preference_changed_externally (a_pref: PREFERENCE)
 			-- Set the preference value to the newly entered value NOT changed in the edit item.
 		local
 			l_row: EV_GRID_ROW
@@ -373,7 +373,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	preference_row (a_pref: PREFERENCE): EV_GRID_ROW is
+	preference_row (a_pref: PREFERENCE): EV_GRID_ROW
 			-- Row containing `a_pref'.
 		require
 			a_pref_not_void: a_pref /= Void
@@ -399,7 +399,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	set_preference_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE) is
+	set_preference_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE)
 			-- Set the preference value to the original default.
 		local
 			l_gitem: EV_GRID_ITEM
@@ -421,7 +421,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_restore is
+	on_restore
 			-- Restore all preferences to their default values.
 		local
 			l_confirmation_dialog: EV_CONFIRMATION_DIALOG
@@ -434,7 +434,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_export is
+	on_export
 		local
 			dlg: EV_FILE_SAVE_DIALOG
 			s: STRING_32
@@ -454,7 +454,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_import is
+	on_import
 		local
 			dlg: EV_FILE_OPEN_DIALOG
 			s: STRING_32
@@ -475,7 +475,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_default_item_selected (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_default_item_selected (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- The default cloumn was clicked.
 		local
 			l_popup_menu: EV_MENU
@@ -507,7 +507,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_grid_item_double_pressed (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM) is
+	on_grid_item_double_pressed (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM)
 			-- An item was double pressed
 		local
 			l_col_index: INTEGER
@@ -529,7 +529,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	accelerator_on_key_pressed (k: EV_KEY) is
+	accelerator_on_key_pressed (k: EV_KEY)
 		do
 			inspect
 				k.code
@@ -553,7 +553,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_grid_key_pressed (k: EV_KEY) is
+	on_grid_key_pressed (k: EV_KEY)
 			-- An key was pressed
 		local
 			l_pref: PREFERENCE
@@ -600,7 +600,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_description_key_pressed (a_key: EV_KEY) is
+	on_description_key_pressed (a_key: EV_KEY)
 			-- Description text area was key pressed
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_tab then
@@ -612,7 +612,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_resize is
+	on_resize
 			-- Dialog was resized
 		local
 			l_width: INTEGER
@@ -633,7 +633,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_header_double_clicked is
+	on_header_double_clicked
 			-- Header was double-clicked.
 		local
 			div_index: INTEGER
@@ -646,7 +646,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_header_item_single_clicked (hi: EV_HEADER_ITEM; ax,ay, a_but: INTEGER) is
+	on_header_item_single_clicked (hi: EV_HEADER_ITEM; ax,ay, a_but: INTEGER)
 		local
 			ghi: EV_GRID_HEADER_ITEM
 			col_index: INTEGER
@@ -674,7 +674,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_header_item_resize is
+	on_header_item_resize
 			-- Header was double-clicked.
 		local
 			div_index: INTEGER
@@ -689,18 +689,18 @@ feature {NONE} -- Events
 
 feature {NONE} -- Implementation
 
-	build_preference_name_to_display (a_pref: PREFERENCE): STRING_32 is
+	build_preference_name_to_display (a_pref: PREFERENCE): STRING_32
 		do
 			Result := a_pref.name
 		end
 
-	build_full_name_to_display (a_pref_name: STRING): STRING_32 is
+	build_full_name_to_display (a_pref_name: STRING): STRING_32
 			-- Name to show on display for a preference name
 		do
 			Result := a_pref_name.as_string_32
 		end
 
-	build_structured is
+	build_structured
 			-- Fill with preferences structured hierarchically.
 		local
 			l_pref_hash: HASH_TABLE [EV_GRID_ROW, STRING]
@@ -759,7 +759,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_parent_structure_preference_row (a_pref_parent_full_name: STRING; a_grid_structure: HASH_TABLE [EV_GRID_ROW, STRING]) is
+	add_parent_structure_preference_row (a_pref_parent_full_name: STRING; a_grid_structure: HASH_TABLE [EV_GRID_ROW, STRING])
 		require
 			structured_mode: grid.is_tree_enabled
 			no_row_for_pref: not a_grid_structure.has (a_pref_parent_full_name)
@@ -799,7 +799,7 @@ feature {NONE} -- Implementation
 							and then a_grid_structure.item (a_pref_parent_full_name) /= Void
 		end
 
-	build_flat is
+	build_flat
 			-- Fill with preferences no structure, flat list.
 		local
 			l_sorted_preferences: LIST [PREFERENCE]
@@ -840,13 +840,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	index_tuple_less_than (a, b: TUPLE [pref_name: STRING_32; index: STRING_32]): BOOLEAN is
+	index_tuple_less_than (a, b: TUPLE [pref_name: STRING_32; index: STRING_32]): BOOLEAN
 			-- Compare two tuples on their string index
 		do
 			Result := a.index < b.index
 		end
 
-	sorted_known_preferences_by (a_sorting_info: INTEGER; a_show_hidden: BOOLEAN; a_prefs_to_sort: LIST [PREFERENCE]): LIST [PREFERENCE] is
+	sorted_known_preferences_by (a_sorting_info: INTEGER; a_show_hidden: BOOLEAN; a_prefs_to_sort: LIST [PREFERENCE]): LIST [PREFERENCE]
 			-- Sorted known preferences using criteria `a_sorting_info'.
 			-- Exclude hidden preferences when `a_show_hidden' is False.
 		local
@@ -929,7 +929,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	rebuild is
+	rebuild
 			-- Rebuild entire grid
 		do
 			grid.clear
@@ -943,7 +943,7 @@ feature {NONE} -- Implementation
 			update_status_bar
 		end
 
-	add_short_preference_row (a_row: EV_GRID_ROW; a_pref: PREFERENCE) is
+	add_short_preference_row (a_row: EV_GRID_ROW; a_pref: PREFERENCE)
 			-- Add a preference as a new row display in parent `a_row'.  If `a_row' is
 			-- Void then add to end of `grid'.
 		require
@@ -979,7 +979,7 @@ feature {NONE} -- Implementation
 			l_row.set_item (col_value_index, preference_value_column (a_pref))
 		end
 
-	node_expanded (a_row: EV_GRID_ROW) is
+	node_expanded (a_row: EV_GRID_ROW)
 			-- Row was expanded to show children
 		local
 			l_column: EV_GRID_COLUMN
@@ -991,7 +991,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	preference_name_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM is
+	preference_name_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM
 		do
 			create Result
 			if a_pref.name /= Void then
@@ -1007,7 +1007,7 @@ feature {NONE} -- Implementation
 			Result /= Void
 		end
 
-	preference_type_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM is
+	preference_type_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM
 		do
 			create Result
 			Result.set_text (a_pref.string_type)
@@ -1015,7 +1015,7 @@ feature {NONE} -- Implementation
 			Result /= Void
 		end
 
-	preference_status_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM is
+	preference_status_column (a_pref: PREFERENCE): EV_GRID_LABEL_ITEM
 			--
 		do
 			create Result
@@ -1034,7 +1034,7 @@ feature {NONE} -- Implementation
 			Result /= Void
 		end
 
-	preference_value_column (a_pref: PREFERENCE): EV_GRID_ITEM is
+	preference_value_column (a_pref: PREFERENCE): EV_GRID_ITEM
 			--
 		local
 			l_bool: BOOLEAN_PREFERENCE
@@ -1105,7 +1105,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_grid_columns is
+	update_grid_columns
 			-- Update the grid columns widths and borders depending on current display type
 		local
 			l_column: EV_GRID_COLUMN
@@ -1142,7 +1142,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	toggle_view is
+	toggle_view
 			-- Toggle voew
 		do
 			if grid.is_tree_enabled then
@@ -1152,14 +1152,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	toggle_hiddens is
+	toggle_hiddens
 			-- Show/hide hiddens preferences
 		do
 			set_show_hidden_preferences (not show_hidden_preferences)
 			rebuild
 		end
 
-	reset_grid_view is
+	reset_grid_view
 		do
 			grid.clear
 			grid.set_row_count_to (0)
@@ -1167,7 +1167,7 @@ feature {NONE} -- Implementation
 			description_location.remove_text
 		end
 
-	enable_flat_view is
+	enable_flat_view
 			-- Enable view to be flat
 		do
 			reset_grid_view
@@ -1183,7 +1183,7 @@ feature {NONE} -- Implementation
 			view_toggle_button.set_tooltip (f_switch_to_tree_view)
 		end
 
-	enable_tree_view is
+	enable_tree_view
 			-- Enable view to tree (structured)
 		do
 			reset_grid_view
@@ -1198,7 +1198,7 @@ feature {NONE} -- Implementation
 			view_toggle_button.set_tooltip (f_switch_to_flat_view)
 		end
 
-	update_status_bar is
+	update_status_bar
 			-- Update status bar
 		do
 			if not grid.is_tree_enabled and matches /= Void then
@@ -1209,7 +1209,7 @@ feature {NONE} -- Implementation
 			status_label.refresh_now
 		end
 
-	resize_columns is
+	resize_columns
 			-- Resize all columns to it's contents.
 		local
 			col: EV_GRID_COLUMN
@@ -1224,7 +1224,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	pixmap_file_contents (pn: STRING): EV_PIXMAP is
+	pixmap_file_contents (pn: STRING): EV_PIXMAP
 			-- Load a pixmap in file named `pn'.
 		require
 			valid_file_name: pn /= Void
@@ -1244,7 +1244,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	show_preference_description (a_preference: PREFERENCE) is
+	show_preference_description (a_preference: PREFERENCE)
 			-- Show selected list preference in edit widget.
 		require
 			preference_not_void: a_preference /= Void
@@ -1267,14 +1267,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	clear_edit_widget is
+	clear_edit_widget
 			-- Clear the edit widget
 		do
 			description_text.remove_text
 			description_text.remove_text
 		end
 
-	short_preference_name (a_name: STRING): STRING is
+	short_preference_name (a_name: STRING): STRING
 			-- The short, non-unique name of a preference
 		require
 			name_not_void: a_name /= Void
@@ -1284,7 +1284,7 @@ feature {NONE} -- Implementation
 			a_name /= Result
 		end
 
-	parent_preference_name (a_name: STRING): STRING is
+	parent_preference_name (a_name: STRING): STRING
 			-- The short, non-unique name of a preference
 		require
 			name_not_void: a_name /= Void
@@ -1295,7 +1295,7 @@ feature {NONE} -- Implementation
 			a_name /= Result
 		end
 
-	formatted_name (a_name: STRING): STRING is
+	formatted_name (a_name: STRING): STRING
 			-- Formatted name for display
 		do
 			create Result.make_from_string (a_name)
@@ -1305,7 +1305,7 @@ feature {NONE} -- Implementation
 			a_name /= Result
 		end
 
-	grid_remove_and_clear_all_rows (g: EV_GRID) is
+	grid_remove_and_clear_all_rows (g: EV_GRID)
 		require
 			g /= Void
 		local
@@ -1327,7 +1327,7 @@ feature {NONE} -- Implementation
 			g.selected_rows.count = 0
 		end
 
-	on_shortcut_overriden (a_shortcut_widget: SHORTCUT_PREFERENCE_WIDGET) is
+	on_shortcut_overriden (a_shortcut_widget: SHORTCUT_PREFERENCE_WIDGET)
 			-- Shortcut is overriden.
 		require
 			a_shortcut_widget_not_void: a_shortcut_widget /= Void
@@ -1340,7 +1340,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_shortcut_modification_denied (a_shortcut_pref: SHORTCUT_PREFERENCE) is
+	on_shortcut_modification_denied (a_shortcut_pref: SHORTCUT_PREFERENCE)
 			-- Shortcut modification denied.
 		require
 			a_shortcut_pref_not_void: a_shortcut_pref /= Void
@@ -1352,7 +1352,7 @@ feature {NONE} -- Implementation
 			show_dialog_modal (l_error_dialog)
 		end
 
-	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL is
+	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL
 			-- Try to translate `a_string'.
 		require
 			a_string_not_void: a_string /= Void
@@ -1364,7 +1364,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Widgets initialization
 
-	new_boolean_widget (a_pref: BOOLEAN_PREFERENCE): BOOLEAN_PREFERENCE_WIDGET is
+	new_boolean_widget (a_pref: BOOLEAN_PREFERENCE): BOOLEAN_PREFERENCE_WIDGET
 		require
 			a_pref_not_void: a_pref /= Void
 		do
@@ -1373,7 +1373,7 @@ feature {NONE} -- Widgets initialization
 			Result_not_void: Result /= Void
 		end
 
-	new_choice_widget (a_pref: ARRAY_PREFERENCE): CHOICE_PREFERENCE_WIDGET is
+	new_choice_widget (a_pref: ARRAY_PREFERENCE): CHOICE_PREFERENCE_WIDGET
 		require
 			a_pref_not_void: a_pref /= Void
 		do
@@ -1387,16 +1387,16 @@ feature {NONE} -- Sorting
 	flat_sorting_info: INTEGER
 			-- Sorting criteria when sorting known preferences
 
-	Name_sorting_mode: INTEGER is 1
-	Type_sorting_mode: INTEGER is 2
-	Status_sorting_mode: INTEGER is 3
-	Value_sorting_mode: INTEGER is 4
+	Name_sorting_mode: INTEGER = 1
+	Type_sorting_mode: INTEGER = 2
+	Status_sorting_mode: INTEGER = 3
+	Value_sorting_mode: INTEGER = 4
 
 feature {NONE} -- Filtering
 
 	update_matches_timeout: EV_TIMEOUT
 
-	request_update_matches is
+	request_update_matches
 		require
 			in_flat_mode: not grid.is_tree_enabled
 		do
@@ -1408,12 +1408,12 @@ feature {NONE} -- Filtering
 			update_matches_timeout.set_interval (700)
 		end
 
-	update_matches_requested: BOOLEAN is
+	update_matches_requested: BOOLEAN
 		do
 			Result := update_matches_timeout /= Void
 		end
 
-	cancel_delayed_update_matches is
+	cancel_delayed_update_matches
 		do
 			if update_matches_timeout /= Void then
 				update_matches_timeout.destroy
@@ -1421,13 +1421,13 @@ feature {NONE} -- Filtering
 			end
 		end
 
-	delayed_update_matches is
+	delayed_update_matches
 		do
 			cancel_delayed_update_matches
 			update_matches
 		end
 
-	update_matches is
+	update_matches
 			-- List of matches against `filter_text'
 		require
 			in_flat_mode: not grid.is_tree_enabled
@@ -1503,7 +1503,7 @@ feature {NONE} -- Filtering
 
 	matches: LIST [PREFERENCE]
 
-	initialize_row_for_preference (a_row: EV_GRID_ROW; a_preference: PREFERENCE) is
+	initialize_row_for_preference (a_row: EV_GRID_ROW; a_preference: PREFERENCE)
 			-- Initialize `a_row' with `a_preference'.
 		require
 			a_row_not_void: a_row /= Void
@@ -1519,7 +1519,7 @@ feature {NONE} -- Filtering
 			end
 		end
 
-	dynamic_content_function (c, r: INTEGER): EV_GRID_ITEM is
+	dynamic_content_function (c, r: INTEGER): EV_GRID_ITEM
 			-- Function to compute the necessary EV_GRID_ITEM for grid co-ordinates c,r.
 		require
 			flat_mode: not grid.is_tree_enabled
@@ -1567,20 +1567,20 @@ feature {NONE} -- Private attributes
 	folder_icon: EV_PIXMAP
 			-- Folder icon
 
-	default_font: EV_FONT is
+	default_font: EV_FONT
 			-- Font for row when value is a default value
 		once
 			create Result
 		end
 
-	non_default_font: EV_FONT is
+	non_default_font: EV_FONT
 			-- Font for row when value is not a default value
 		once
 			create Result
 			Result.set_weight ((create {EV_FONT_CONSTANTS}).weight_bold)
 		end
 
-	hidden_fg_color: EV_COLOR is
+	hidden_fg_color: EV_COLOR
 		once
 			create Result.make_with_8_bit_rgb (127, 127, 127)
 		end
@@ -1593,7 +1593,7 @@ feature {NONE} -- Private attributes
 
 	icon_down: EV_PIXMAP
 
-	build_filter_icons is
+	build_filter_icons
 		local
 			w,h: INTEGER
 			bc: EV_COLOR
@@ -1628,7 +1628,7 @@ feature {NONE} -- Private attributes
 			icon_down /= Void
 		end
 
-	column_border_space: INTEGER is 3
+	column_border_space: INTEGER = 3
 		-- Padding space for column content
 
 	default_row_height: INTEGER
@@ -1637,19 +1637,19 @@ feature {NONE} -- Private attributes
 	display_update_agent: PROCEDURE [ANY, TUPLE [PREFERENCE]]
 			-- Agent to be called when preference is changed outside	
 
-	col_name_index: INTEGER is 1
+	col_name_index: INTEGER = 1
 			-- column index for name.
 
-	col_type_index: INTEGER is 2
+	col_type_index: INTEGER = 2
 			-- column index for type.
 
-	col_status_index: INTEGER is 3
+	col_status_index: INTEGER = 3
 			-- column index for status.
 
-	col_value_index: INTEGER is 4
+	col_value_index: INTEGER = 4
 			-- column index for value.
 
-	resized_columns_list: ARRAY [BOOLEAN] is
+	resized_columns_list: ARRAY [BOOLEAN]
 			-- List of booleans for each column indicating if it has been user resizedat all.
 		once
 			Result := <<False, False, False, False>>
@@ -1658,7 +1658,7 @@ feature {NONE} -- Private attributes
 invariant
 	has_preferences: preferences /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

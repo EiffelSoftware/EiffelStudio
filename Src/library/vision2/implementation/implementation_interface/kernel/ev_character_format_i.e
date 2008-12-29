@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Implementation Interface of Character format containing color,
@@ -21,35 +21,35 @@ inherit
 
 feature -- Access
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Font of the current format.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	color: EV_COLOR is
+	color: EV_COLOR
 			-- Color of the current format.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Background color of the current format.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	effects: EV_CHARACTER_FORMAT_EFFECTS is
+	effects: EV_CHARACTER_FORMAT_EFFECTS
 			-- Character format effects applicable to `font'.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	out: STRING is
+	out: STRING
 			-- Terse printable representation of `Current'.
 		local
 			value: INTEGER
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Make `value' the new font.
 		require
 			font_not_void: a_font /= Void
@@ -90,7 +90,7 @@ feature -- Status setting
 			font_set: font.is_equal (a_font)
 		end
 
-	set_color (a_color: EV_COLOR) is
+	set_color (a_color: EV_COLOR)
 			-- Make `value' the new color.
 		require
 			color_not_void: a_color /= Void
@@ -99,7 +99,7 @@ feature -- Status setting
 			color_set: color.is_equal (a_color)
 		end
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Make `value' the new background color.
 		require
 			color_not_void: a_color /= Void
@@ -109,7 +109,7 @@ feature -- Status setting
 			bcolor_set: bcolor_set
 		end
 
-	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
+	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS)
 			-- Make `an_effect' the new `effects'.
 		require
 			effect_not_void: an_effect /= Void
@@ -120,69 +120,69 @@ feature -- Status setting
 
 feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
-	name: STRING_32 is
+	name: STRING_32
 			-- Face name used by `Current'.
 		deferred
 		end
 
-	family: INTEGER is
+	family: INTEGER
 			-- Family used by `Current'.
 		deferred
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			--  Height of `Current'.
 		deferred
 		end
 
-	height_in_points: INTEGER is
+	height_in_points: INTEGER
 			-- Height of `Current' in points.
 		deferred
 		end
 
-	weight: INTEGER is
+	weight: INTEGER
 			-- Weight of `Current'.
 		deferred
 		end
 
-	is_bold: BOOLEAN is
+	is_bold: BOOLEAN
 			-- Is `Current' bold?
 		deferred
 		end
 
-	shape: INTEGER is
+	shape: INTEGER
 			-- Shape of `Current'.
 		deferred
 		end
 
-	char_set: INTEGER is
+	char_set: INTEGER
 			-- Char set used by `Current'.
 		deferred
 		end
 
-	is_underlined: BOOLEAN is
+	is_underlined: BOOLEAN
 			-- Is `Current' underlined?
 		deferred
 		end
 
-	is_striked_out: BOOLEAN is
+	is_striked_out: BOOLEAN
 			-- Is `Current' striken out?
 		deferred
 		end
 
-	vertical_offset: INTEGER is
+	vertical_offset: INTEGER
 			-- Vertical offset of `Current'.
 		deferred
 		end
 
-	fcolor: INTEGER is
+	fcolor: INTEGER
 			-- foreground color RGB packed into 24 bit.
 			-- Blue is the high part of the 24bits, with each color taking 8 bytes.
 			-- Blue, Green, Red
 		deferred
 		end
 
-	bcolor: INTEGER is
+	bcolor: INTEGER
 			-- background color RGB packed into 24 bit.
 			-- Blue is the high part of the 24bits, with each color taking 8 bytes.
 			-- Blue, Green, Red
@@ -196,7 +196,7 @@ feature {EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
 	interface: EV_CHARACTER_FORMAT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

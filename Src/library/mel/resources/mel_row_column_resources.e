@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 	
 		"Row Column resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNadjustLast: POINTER is
+	XmNadjustLast: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNadjustLast"
 		end;
 
-	XmNadjustMargin: POINTER is
+	XmNadjustMargin: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNadjustMargin"
 		end;
 
-	XmNentryAlignment: POINTER is
+	XmNentryAlignment: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNentryAlignment"
 		end;
 
-	XmNentryBorder: POINTER is
+	XmNentryBorder: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNentryBorder"
 		end;
 
-	XmNentryClass: POINTER is
+	XmNentryClass: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNentryClass"
 		end;
 
-	XmNentryVerticalAlignment: POINTER is
+	XmNentryVerticalAlignment: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNentryVerticalAlignment"
 		end;
 
-	XmNisAligned: POINTER is
+	XmNisAligned: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNisAligned"
 		end;
 
-	XmNisHomogeneous: POINTER is
+	XmNisHomogeneous: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNisHomogeneous"
 		end;
 
-	XmNlabelString: POINTER is
+	XmNlabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNlabelString"
 		end;
 
-	XmNmarginHeight: POINTER is
+	XmNmarginHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNmarginHeight"
 		end;
 
-	XmNmarginWidth: POINTER is
+	XmNmarginWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNmarginWidth"
 		end;
 
-	XmNmenuAccelerator: POINTER is
+	XmNmenuAccelerator: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNmenuAccelerator"
 		end;
 
-	XmNmenuHelpWidget: POINTER is
+	XmNmenuHelpWidget: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmNmenuHelpWidget"
 		end;
 
-	XmNmenuHistory: POINTER is
+	XmNmenuHistory: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmNmenuHistory"
 		end;
 
-	XmNmenuPost: POINTER is
+	XmNmenuPost: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmNmenuPost"
 		end;
 
-	XmNmnemonic: POINTER is
+	XmNmnemonic: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmNmnemonic"
 		end;
 
-	XmNmnemonicCharSet: POINTER is
+	XmNmnemonicCharSet: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmNmnemonicCharSet"
 		end;
 
-	XmNnumColumns: POINTER is
+	XmNnumColumns: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmNnumColumns"
 		end;
 
-	XmNorientation: POINTER is
+	XmNorientation: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmNorientation"
 		end;
 
-	XmNpacking: POINTER is
+	XmNpacking: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmNpacking"
 		end;
 
-	XmNpopupEnabled: POINTER is
+	XmNpopupEnabled: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"XmNpopupEnabled"
 		end;
 
-	XmNradioAlwaysOne: POINTER is
+	XmNradioAlwaysOne: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -188,7 +188,7 @@ feature -- Implementation
 			"XmNradioAlwaysOne"
 		end;
 
-	XmNradioBehavior: POINTER is
+	XmNradioBehavior: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -196,7 +196,7 @@ feature -- Implementation
 			"XmNradioBehavior"
 		end;
 
-	XmNresizeHeight: POINTER is
+	XmNresizeHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -204,7 +204,7 @@ feature -- Implementation
 			"XmNresizeHeight"
 		end;
 
-	XmNresizeWidth: POINTER is
+	XmNresizeWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -212,7 +212,7 @@ feature -- Implementation
 			"XmNresizeWidth"
 		end;
 
-	XmNrowColumnType: POINTER is
+	XmNrowColumnType: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -220,7 +220,7 @@ feature -- Implementation
 			"XmNrowColumnType"
 		end;
 
-	XmNspacing: POINTER is
+	XmNspacing: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -228,7 +228,7 @@ feature -- Implementation
 			"XmNspacing"
 		end;
 
-	XmNsubMenuId: POINTER is
+	XmNsubMenuId: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -236,7 +236,7 @@ feature -- Implementation
 			"XmNsubMenuId"
 		end;
 
-	XmNtearOffModel: POINTER is
+	XmNtearOffModel: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -244,7 +244,7 @@ feature -- Implementation
 			"XmNtearOffModel"
 		end;
 
-	XmNentryCallback: POINTER is
+	XmNentryCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -252,7 +252,7 @@ feature -- Implementation
 			"XmNentryCallback"
 		end;
 
-	XmNmapCallback: POINTER is
+	XmNmapCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -260,7 +260,7 @@ feature -- Implementation
 			"XmNmapCallback"
 		end;
 
-	XmNtearOffMenuActivateCallback: POINTER is
+	XmNtearOffMenuActivateCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -268,7 +268,7 @@ feature -- Implementation
 			"XmNtearOffMenuActivateCallback"
 		end;
 
-	XmNtearOffMenuDeactivateCallback: POINTER is
+	XmNtearOffMenuDeactivateCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -276,7 +276,7 @@ feature -- Implementation
 			"XmNtearOffMenuDeactivateCallback"
 		end;
 
-	XmNunmapCallback: POINTER is
+	XmNunmapCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -284,7 +284,7 @@ feature -- Implementation
 			"XmNunmapCallback"
 		end;
 
-	XmALIGNMENT_BEGINNING: INTEGER is
+	XmALIGNMENT_BEGINNING: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -292,7 +292,7 @@ feature -- Implementation
 			"XmALIGNMENT_BEGINNING"
 		end;
 
-	XmALIGNMENT_CENTER: INTEGER is
+	XmALIGNMENT_CENTER: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -300,7 +300,7 @@ feature -- Implementation
 			"XmALIGNMENT_CENTER"
 		end;
 
-	XmALIGNMENT_END: INTEGER is
+	XmALIGNMENT_END: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -308,7 +308,7 @@ feature -- Implementation
 			"XmALIGNMENT_END"
 		end;
 
-	XmALIGNMENT_BASELINE_BOTTOM: INTEGER is
+	XmALIGNMENT_BASELINE_BOTTOM: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -316,7 +316,7 @@ feature -- Implementation
 			"XmALIGNMENT_BASELINE_BOTTOM"
 		end;
 
-	XmALIGNMENT_BASELINE_TOP: INTEGER is
+	XmALIGNMENT_BASELINE_TOP: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -324,7 +324,7 @@ feature -- Implementation
 			"XmALIGNMENT_BASELINE_TOP"
 		end;
 
-	XmALIGNMENT_CONTENTS_BOTTOM: INTEGER is
+	XmALIGNMENT_CONTENTS_BOTTOM: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -332,7 +332,7 @@ feature -- Implementation
 			"XmALIGNMENT_CONTENTS_BOTTOM"
 		end;
 
-	XmALIGNMENT_CONTENTS_TOP: INTEGER is
+	XmALIGNMENT_CONTENTS_TOP: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -340,7 +340,7 @@ feature -- Implementation
 			"XmALIGNMENT_CONTENTS_TOP"
 		end;
 
-	XmHORIZONTAL: INTEGER is
+	XmHORIZONTAL: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -348,7 +348,7 @@ feature -- Implementation
 			"XmHORIZONTAL"
 		end;
 
-	XmVERTICAL: INTEGER is
+	XmVERTICAL: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -356,7 +356,7 @@ feature -- Implementation
 			"XmVERTICAL"
 		end;
 
-	XmPACK_TIGHT: INTEGER is
+	XmPACK_TIGHT: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -364,7 +364,7 @@ feature -- Implementation
 			"XmPACK_TIGHT"
 		end;
 
-	XmPACK_COLUMN: INTEGER is
+	XmPACK_COLUMN: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -372,7 +372,7 @@ feature -- Implementation
 			"XmPACK_COLUMN"
 		end;
 
-	XmPACK_NONE: INTEGER is
+	XmPACK_NONE: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -380,7 +380,7 @@ feature -- Implementation
 			"XmPACK_NONE"
 		end;
 
-	XmWORK_AREA: INTEGER is
+	XmWORK_AREA: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -388,7 +388,7 @@ feature -- Implementation
 			"XmWORK_AREA"
 		end;
 
-	XmMENU_BAR: INTEGER is
+	XmMENU_BAR: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -396,7 +396,7 @@ feature -- Implementation
 			"XmMENU_BAR"
 		end;
 
-	XmMENU_POPUP: INTEGER is
+	XmMENU_POPUP: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -404,7 +404,7 @@ feature -- Implementation
 			"XmMENU_POPUP"
 		end;
 
-	XmMENU_PULLDOWN: INTEGER is
+	XmMENU_PULLDOWN: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -412,7 +412,7 @@ feature -- Implementation
 			"XmMENU_PULLDOWN"
 		end;
 
-	XmMENU_OPTION: INTEGER is
+	XmMENU_OPTION: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -420,7 +420,7 @@ feature -- Implementation
 			"XmMENU_OPTION"
 		end;
 
-	XmTEAR_OFF_DISABLED: INTEGER is
+	XmTEAR_OFF_DISABLED: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -428,7 +428,7 @@ feature -- Implementation
 			"XmTEAR_OFF_DISABLED"
 		end;
 
-	XmTEAR_OFF_ENABLED: INTEGER is
+	XmTEAR_OFF_ENABLED: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -436,7 +436,7 @@ feature -- Implementation
 			"XmTEAR_OFF_ENABLED"
 		end;
 
-	XmNpositionIndex: POINTER is
+	XmNpositionIndex: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_POINTER"
@@ -444,7 +444,7 @@ feature -- Implementation
 			"XmNpositionIndex"
 		end;
 
-	XmLAST_POSITION: INTEGER is
+	XmLAST_POSITION: INTEGER
 			-- Motif constant value.
 		external
 			"C [macro <Xm/RowColumn.h>]: EIF_INTEGER"
@@ -452,7 +452,7 @@ feature -- Implementation
 			"XmLAST_POSITION"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

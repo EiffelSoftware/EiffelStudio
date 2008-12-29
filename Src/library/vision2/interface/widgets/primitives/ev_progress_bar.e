@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Base class for bar graph gauges that display progress of a process.
@@ -23,7 +23,7 @@ inherit
 
 feature -- Status report
 
-	is_segmented: BOOLEAN is
+	is_segmented: BOOLEAN
 			-- Is display segmented?
 		require
 			not_destroyed: not is_destroyed
@@ -35,7 +35,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_segmentation is
+	enable_segmentation
 			-- Divide display of bar into segments.
 		require
 			not_destroyed: not is_destroyed
@@ -45,7 +45,7 @@ feature -- Status setting
 			is_segmented: is_segmented
 		end
 
-	disable_segmentation is
+	disable_segmentation
 			-- Display continuous bar.
 		require
 			not_destroyed: not is_destroyed
@@ -57,13 +57,13 @@ feature -- Status setting
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_GAUGE} and is_segmented
 		end
 
-	is_in_default_state_for_tabs: BOOLEAN is
+	is_in_default_state_for_tabs: BOOLEAN
 		do
 			Result := not is_tabable_from and not is_tabable_to
 		end
@@ -73,7 +73,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_PROGRESS_BAR_I;
 			-- Responsible for interaction with native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

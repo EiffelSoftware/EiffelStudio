@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Calculate spring force for a particle.
 			force := - center_attraction * (particle_position - center) / distance (particle_position, center)
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 	px, py: INTEGER
 			-- Position of a particle.
 
-	external_force (a_node: like particle_type): EG_VECTOR2D [DOUBLE] is
+	external_force (a_node: like particle_type): EG_VECTOR2D [DOUBLE]
 			-- External force for `a_node'. (attraction to center of universe).
 		local
 			l_distance: DOUBLE
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	nearest_neighbor_force (a_node: like particle_type): EG_VECTOR2D [DOUBLE] is
+	nearest_neighbor_force (a_node: like particle_type): EG_VECTOR2D [DOUBLE]
 			-- Get the spring force between all of `a_node's adjacent nodes.
 		local
 			i, nb: INTEGER
@@ -90,7 +90,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	n_body_force (a_node, an_other: EG_PARTICLE): EG_VECTOR2D [DOUBLE] is
+	n_body_force (a_node, an_other: EG_PARTICLE): EG_VECTOR2D [DOUBLE]
 			-- Get the electrical repulsion between all nodes, including those that are not adjacent.
 		local
 			l_distance, l_force: DOUBLE
@@ -110,12 +110,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	particle_type: EG_LINKABLE_FIGURE is
+	particle_type: EG_LINKABLE_FIGURE
 			-- Type of particle
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

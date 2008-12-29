@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "ComboBox Style (CBS) messages."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,40 +13,40 @@ obsolete
 
 feature -- Access
 
-	Cbs_simple: INTEGER is 1
+	Cbs_simple: INTEGER = 1
 			-- Declared in Windows as CBS_SIMPLE
 
-	Cbs_dropdown: INTEGER is 2
+	Cbs_dropdown: INTEGER = 2
 			-- Declared in Windows as CBS_DROPDOWN
 
-	Cbs_dropdownlist: INTEGER is 3
+	Cbs_dropdownlist: INTEGER = 3
 			-- Declared in Windows as CBS_DROPDOWNLIST
 
-	Cbs_ownerdrawfixed: INTEGER is 16
+	Cbs_ownerdrawfixed: INTEGER = 16
 			-- Declared in Windows as CBS_OWNERDRAWFIXED
 
-	Cbs_ownerdrawvariable: INTEGER is 32
+	Cbs_ownerdrawvariable: INTEGER = 32
 			-- Declared in Windows as CBS_OWNERDRAWVARIABLE
 
-	Cbs_autohscroll: INTEGER is 64
+	Cbs_autohscroll: INTEGER = 64
 			-- Declared in Windows as CBS_AUTOHSCROLL
 
-	Cbs_oemconvert: INTEGER is 128
+	Cbs_oemconvert: INTEGER = 128
 			-- Declared in Windows as CBS_OEMCONVERT
 
-	Cbs_sort: INTEGER is 256
+	Cbs_sort: INTEGER = 256
 			-- Declared in Windows as CBS_SORT
 
-	Cbs_hasstrings: INTEGER is 512
+	Cbs_hasstrings: INTEGER = 512
 			-- Declared in Windows as CBS_HASSTRINGS
 
-	Cbs_nointegralheight: INTEGER is 1024
+	Cbs_nointegralheight: INTEGER = 1024
 			-- Declared in Windows as CBS_NOINTEGRALHEIGHT
 
-	Cbs_disablenoscroll: INTEGER is 2048;
+	Cbs_disablenoscroll: INTEGER = 2048;
 			-- Declared in Windows as CBS_DISABLENOSCROLL
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

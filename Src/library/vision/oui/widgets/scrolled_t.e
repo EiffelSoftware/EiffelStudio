@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Text in Scrolled Window"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,21 +23,21 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING a_parent: COMPOSITE) is
+	make (a_name: STRING a_parent: COMPOSITE)
 			-- Create a scrolled text with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			create_ev_widget (a_name, a_parent, True)
 		end
 
-	make_unmanaged (a_name: STRING a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING a_parent: COMPOSITE)
 			-- Create an unmanaged scrolled text with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			create_ev_widget (a_name, a_parent, False)
 		end
 
-	create_ev_widget (a_name: STRING a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a scrolled text with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			set_default
 		end
 
-	make_word_wrapped (a_name: STRING a_parent: COMPOSITE) is
+	make_word_wrapped (a_name: STRING a_parent: COMPOSITE)
 			-- Create a scrolled text with `a_name' as identifier,
 			-- `a_parent' as parent, enable word wrap and then
 			-- call `set_default'.
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			create_ev_widget_ww (a_name, a_parent, True)
 		end
 
-	make_word_wrapped_unmanaged (a_name: STRING a_parent: COMPOSITE) is
+	make_word_wrapped_unmanaged (a_name: STRING a_parent: COMPOSITE)
 			-- Create an unmanaged scrolled text with `a_name' as identifier,
 			-- `a_parent' as parent, enable word wrap and then
 			-- call `set_default'.
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			create_ev_widget_ww (a_name, a_parent, False)
 		end
 
-	create_ev_widget_ww (a_name: STRING a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget_ww (a_name: STRING a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a scrolled text with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_vertical_scrollbar: BOOLEAN is
+	is_vertical_scrollbar: BOOLEAN
 			-- Is vertical scrollbar visible?
 		require
 			exists: not destroyed
@@ -94,7 +94,7 @@ feature -- Status report
 			Result := implementation.is_vertical_scrollbar
 		end
 
-	is_horizontal_scrollbar: BOOLEAN is
+	is_horizontal_scrollbar: BOOLEAN
 			-- Is horizontal scrollbar visible?
 		require
 			exists: not destroyed
@@ -102,7 +102,7 @@ feature -- Status report
 			Result := implementation.is_horizontal_scrollbar
 		end
 
-	tab_length: INTEGER is
+	tab_length: INTEGER
 			-- Size of a tabulation.
 		do
 			Result := implementation.tab_length
@@ -110,7 +110,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	show_vertical_scrollbar is
+	show_vertical_scrollbar
 			-- Make vertical scrollbar visible.
 		require
 			exists: not destroyed
@@ -118,7 +118,7 @@ feature -- Status setting
 			implementation.show_vertical_scrollbar
 		end
 
-	hide_vertical_scrollbar is
+	hide_vertical_scrollbar
 			-- Make vertical scrollbar invisible.
 		require
 			exists: not destroyed
@@ -126,7 +126,7 @@ feature -- Status setting
 			implementation.hide_vertical_scrollbar
 		end
 
-	show_horizontal_scrollbar is
+	show_horizontal_scrollbar
 			-- Make horizontal scrollbar visible.
 		require
 			exists: not destroyed
@@ -134,7 +134,7 @@ feature -- Status setting
 			implementation.show_horizontal_scrollbar
 		end
 
-	hide_horizontal_scrollbar is
+	hide_horizontal_scrollbar
 			-- Make horizontal scrollbar invisible.
 		require
 			exists: not destroyed
@@ -142,7 +142,7 @@ feature -- Status setting
 			implementation.hide_horizontal_scrollbar
 		end
 
-	set_tab_length (new_length: INTEGER) is
+	set_tab_length (new_length: INTEGER)
 			-- Set `tab_length' to `new_length'.
 		require
 			valid_new_length: new_length > 1
@@ -157,7 +157,7 @@ feature -- Implementation
 	implementation: SCROLLED_T_I;
 			-- Implementation of current text
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

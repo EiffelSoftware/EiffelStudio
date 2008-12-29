@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision dialog. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,13 +24,13 @@ create
 
 feature -- Status report
 
-	is_relative: BOOLEAN is
+	is_relative: BOOLEAN
 			-- Is `Current' shown relative to another window?
 		do
 			Result := is_show_requested
 		end
 
-	is_show_requested: BOOLEAN is
+	is_show_requested: BOOLEAN
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
 		do
@@ -45,14 +45,14 @@ feature -- Status report
 
 feature -- Basic operations
 
-	show_modal_to_window (a_parent_window: EV_WINDOW) is
+	show_modal_to_window (a_parent_window: EV_WINDOW)
 			-- Show `Current' and wait until window is closed.
 		do
 			promote_to_dialog_window
 			interface.implementation.show_modal_to_window (a_parent_window)
 		end
 
-	show_relative_to_window (a_parent_window: EV_WINDOW) is
+	show_relative_to_window (a_parent_window: EV_WINDOW)
 			-- Show `Current' and wait until window is closed.
 		local
 			parent_window_imp: WEL_WINDOW
@@ -88,7 +88,7 @@ feature -- Basic operations
 			end
 		end
 
-	show is
+	show
 			-- Show window represented by `interface'
 			-- no longer modeless to a window. We need
 			-- to promote this implementation, to effect
@@ -102,7 +102,7 @@ feature -- Basic operations
 			interface.implementation.show
 		end
 
-	terminate (a_result: INTEGER) is
+	terminate (a_result: INTEGER)
 			-- Terminate the dialog with `a_result'.
 			-- `result_id' will contain `a_result'.
 		do
@@ -112,7 +112,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	hide is
+	hide
 			-- Hide `Current'.
 		do
 				--| FIXME, this is a hack to avoid unwanted behaviour when closing a focused
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			interface.implementation.hide
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 				--| FIXME, this is the same hack as in `hide' which has a full explanation.
@@ -149,14 +149,14 @@ feature {NONE} -- Implementation
 			Precursor {EV_DIALOG_IMP_COMMON}
 		end
 
-	setup_dialog is
+	setup_dialog
    			-- Setup the dialog and its children.
 		do
 			Precursor {EV_DIALOG_IMP_COMMON}
 			result_id := Idcancel
 		end
 
-	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER; a_name: STRING_GENERAL) is
+	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER; a_name: STRING_GENERAL)
 			-- Create the dialog
 		local
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External
 
-	cwin_create_dialog_indirect (hinst, lptemplate, hparent, dlgprc: POINTER): POINTER is
+	cwin_create_dialog_indirect (hinst, lptemplate, hparent, dlgprc: POINTER): POINTER
 			-- SDK DialogBoxIndirect
 		external
 			"C [macro <wel.h>] (HINSTANCE, LPCDLGTEMPLATE, HWND, DLGPROC): HWND"
@@ -200,7 +200,7 @@ feature {NONE} -- External
         end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"HTML generation. This class may be used as ancestor by classes %
 		%needing its facilities"
@@ -17,7 +17,7 @@ inherit
 
 feature -- Miscellaneous
 
-	put_bold (text: STRING) is
+	put_bold (text: STRING)
 			-- Put `text' in bold face.
 		require
 			text_not_Void: text /= Void
@@ -27,19 +27,19 @@ feature -- Miscellaneous
 			put_basic (Bold_end)
 		end
 
-	put_glossary_start is
+	put_glossary_start
 			-- Start glossary list.
 		do
 			put_basic (Glossary_start)
 		end
 
-	put_glossary_end is
+	put_glossary_end
 			-- End glossary list.
 		do
 			put_basic (Glossary_end)
 		end
 
-	put_glossary_term (text: STRING) is
+	put_glossary_term (text: STRING)
 			-- Put `text' as glossary term.
 		require
 			text_not_Void: text /= Void
@@ -48,13 +48,13 @@ feature -- Miscellaneous
 			put_basic (text)
 		end
 
-	put_glossary_definition is
+	put_glossary_definition
 			-- Put glossary definition tag.
 		do
 			put_basic (Glossary_definition)
 		end
 
-	put_header1 (title: STRING) is
+	put_header1 (title: STRING)
 			-- Put `title' as level 1 header.
 		require
 			title_not_Void: title /= Void
@@ -65,7 +65,7 @@ feature -- Miscellaneous
 			put_basic ("%N")
 		end
 
-	put_header2 (title: STRING) is
+	put_header2 (title: STRING)
 			-- Put `title' as level 2 header.
 		require
 			title_not_Void: title /= Void
@@ -76,7 +76,7 @@ feature -- Miscellaneous
 			put_basic ("%N")
 		end
 
-	put_header3 (title: STRING) is
+	put_header3 (title: STRING)
 			-- Put `title' as level 3 header.
 		require
 			title_not_Void: title /= Void
@@ -87,7 +87,7 @@ feature -- Miscellaneous
 			put_basic ("%N")
 		end
 
-	put_header4 (title: STRING) is
+	put_header4 (title: STRING)
 			-- Put `title' as level 4 header.
 		require
 			title_not_Void: title /= Void
@@ -98,7 +98,7 @@ feature -- Miscellaneous
 			put_basic ("%N")
 		end
 
-	put_header5 (title: STRING) is
+	put_header5 (title: STRING)
 			-- Put `title' as level 5 header.
 		require
 			title_not_Void: title /= Void
@@ -109,7 +109,7 @@ feature -- Miscellaneous
 			put_basic ("%N")
 		end
 
-	put_header6 (title: STRING) is
+	put_header6 (title: STRING)
 			-- Put `title' as level 6 header.
 		require
 			title_not_Void: title /= Void
@@ -120,14 +120,14 @@ feature -- Miscellaneous
 			put_basic ("%N")
 		end
 
-	put_horizontal_rule is
+	put_horizontal_rule
 			-- Put a horizontal rule.
 		do
 			put_basic (Horizontal_rule)
 			put_basic ("%N")
 		end
 
-	put_italic (text: STRING) is
+	put_italic (text: STRING)
 			-- Put `text' in italic.
 		require
 			text_not_Void: text /= Void
@@ -137,13 +137,13 @@ feature -- Miscellaneous
 			put_basic (Italic_end)
 		end
 
-	put_line_break is
+	put_line_break
 			-- Put line break.
 		do
 			put_basic (Line_break)
 		end
 
-	put_link (url, anchor: STRING) is
+	put_link (url, anchor: STRING)
 			-- Attach text `anchor' to `url'
 		require
 			anchor_not_Void: anchor /= Void;
@@ -156,43 +156,43 @@ feature -- Miscellaneous
 			put_basic ("</A>")
 		end
 
-	put_list_item_start is
+	put_list_item_start
 			-- Put list item start tag.
 		do
 			put_basic (List_item_start)
 		end
 
-	put_list_item_end is
+	put_list_item_end
 			-- Put list item end tag.
 		do
 			put_basic (List_item_end)
 		end
 
-	put_ordered_list_start is
+	put_ordered_list_start
 			-- Start ordered list.
 		do
 			put_basic (Ordered_list_start)
 		end
 
-	put_ordered_list_end is
+	put_ordered_list_end
 			-- End ordered list.
 		do
 			put_basic (Ordered_list_end)
 		end
 
-	put_paragraph_start is
+	put_paragraph_start
 			-- Start paragraph.
 		do
 			put_basic (Paragraph_start)
 		end
 
-	put_paragraph_end is
+	put_paragraph_end
 			-- End paragraph
 		do
 			put_basic (Paragraph_end)
 		end
 
-	put_preformatted (text: STRING) is
+	put_preformatted (text: STRING)
 			-- Put preformatted text `text'.
 		require
 			text_not_Void: text /= Void
@@ -203,13 +203,13 @@ feature -- Miscellaneous
 			put_basic ("%N")
 		end
 
-	put_unordered_list_start is
+	put_unordered_list_start
 			-- Start unordered list.
 		do
 			put_basic (Unordered_list_start)
 		end
 
-	put_unordered_list_end is
+	put_unordered_list_end
 			-- End unordered list.
 		do
 			put_basic (Unordered_list_end)
@@ -217,7 +217,7 @@ feature -- Miscellaneous
 
 feature -- Transformation
 
-	put_basic (s: STRING) is
+	put_basic (s: STRING)
 			-- Write `s' to medium.
 		require
 			string_not_Void: s /= Void
@@ -225,7 +225,7 @@ feature -- Transformation
 			stdout.putstring (s)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

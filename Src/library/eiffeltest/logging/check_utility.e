@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Utility class for checking features"
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ class
 
 feature -- Status report
 
-	has_passed (t: TESTABLE; run: INTEGER): BOOLEAN is
+	has_passed (t: TESTABLE; run: INTEGER): BOOLEAN
 			-- Has `run' of `t' passed?
 		require
 			test_exists: t /= Void
@@ -28,7 +28,7 @@ feature -- Status report
 			res.select_run (old_run)
 		end
 		
-	has_execution_time (t: SINGLE_TEST; run: INTEGER): BOOLEAN is
+	has_execution_time (t: SINGLE_TEST; run: INTEGER): BOOLEAN
 			-- Has `run' of `t' a recorded execution time?
 		require
 			test_exists: t /= Void
@@ -44,7 +44,7 @@ feature -- Status report
 			res.select_run (old_run)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

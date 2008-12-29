@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ancestor to all Windows objects and structures."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_by_pointer (a_pointer: POINTER) is
+	make_by_pointer (a_pointer: POINTER)
 			-- Set `item' with `a_pointer'.
 			-- Since `item' is shared, it does not need
 			-- to be freed.
@@ -41,7 +41,7 @@ feature -- Status report
 			-- be destroyed by `destroy_item'.
 			-- If True, `item' will not be destroyed.
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does the `item' exist?
 		do
 			Result := item /= default_pointer
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_item (an_item: POINTER) is
+	set_item (an_item: POINTER)
 			-- Set `item' with `an_item'
 		do
 			item := an_item
@@ -61,7 +61,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	set_shared is
+	set_shared
 			-- Set `shared' to True.
 		do
 			shared := True
@@ -69,7 +69,7 @@ feature -- Status setting
 			shared: shared
 		end
 
-	set_unshared is
+	set_unshared
 			-- Set `shared' to False.
 		do
 			shared := False
@@ -79,7 +79,7 @@ feature -- Status setting
 
 feature -- Conversion
 
-	to_integer: INTEGER is
+	to_integer: INTEGER
 			-- Converts `item' to an integer.
 		obsolete
 			"Use `item' instead to ensure portability between 32 and 64 bits version of Windows."
@@ -91,7 +91,7 @@ feature -- Conversion
 
 feature -- Removal
 
-	dispose is
+	dispose
 			-- Destroy the inner structure of `Current'.
 			--
 			-- This function should be called by the GC when the
@@ -105,7 +105,7 @@ feature -- Removal
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- Called by the `dispose' routine to
 			-- destroy `item' by calling the
 			-- corresponding Windows function and
@@ -117,13 +117,13 @@ feature {NONE} -- Removal
 
 feature {WEL_ANY} -- Externals
 
-	frozen cwel_integer_to_pointer (i: INTEGER): POINTER is
+	frozen cwel_integer_to_pointer (i: INTEGER): POINTER
 			-- Converts an integer `i' to a pointer
 		external
 			"C [macro <wel.h>] (EIF_INTEGER): EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

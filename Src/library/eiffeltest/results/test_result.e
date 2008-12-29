@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Test results"
 	legal: "See notice at end of class."
@@ -18,17 +18,17 @@ deferred class TEST_RESULT inherit
 
 feature -- Access
 
-	run: INTEGER is
+	run: INTEGER
 			-- Number of selected run
 		deferred
 		end
 	 
-	exceptions: INTEGER is
+	exceptions: INTEGER
 			-- Number of thrown exceptions
 		deferred
 		end
 	 
-	run_count: INTEGER is
+	run_count: INTEGER
 			-- Number of runs 
 		do
 			Result := passed_tests + failed_tests
@@ -36,19 +36,19 @@ feature -- Access
 
 feature -- Status report
 
-	all_tests_passed: BOOLEAN is
+	all_tests_passed: BOOLEAN
 			-- Have all test runs passed?
 		deferred
 		end
 	 
-	has_passed: BOOLEAN is
+	has_passed: BOOLEAN
 			-- Has selected run passed?
 		require
 			results_available: has_results
 		deferred
 		end
 
-	is_exception: BOOLEAN is
+	is_exception: BOOLEAN
 			-- Has selected run thrown an exception?
 		require
 			results_available: has_results
@@ -57,12 +57,12 @@ feature -- Status report
 			exception_means_failed: Result implies not has_passed
 		end
 
-	has_results: BOOLEAN is
+	has_results: BOOLEAN
 			-- Are there test results available?
 		deferred
 		end
 
-	valid_run_index (i: INTEGER): BOOLEAN is
+	valid_run_index (i: INTEGER): BOOLEAN
 			-- Is run index `i' valid?
 		deferred
 		ensure
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	select_run (i: INTEGER) is
+	select_run (i: INTEGER)
 			-- Select run `i'.
 		require
 			valid_run_index: valid_run_index (i)
@@ -82,7 +82,7 @@ feature -- Cursor movement
 
 feature -- Removal
 	
-	clear_results is
+	clear_results
 			-- Clear test results.
 		deferred
 		ensure
@@ -95,7 +95,7 @@ invariant
 	run_count_definition: run_count = passed_tests + failed_tests
 	exception_constraint: exceptions <= failed_tests
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

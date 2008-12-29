@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"A common class for Mswindows containers with one child without%N%
 		%commitment to a WEL control."
@@ -26,7 +26,7 @@ feature -- Access
 	item: EV_WIDGET
 			-- The child of `Current'.
 
-	item_imp: EV_WIDGET_IMP is
+	item_imp: EV_WIDGET_IMP
 			-- `item'.`implementation'.
 		do
 			if item /= Void then
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Set `item' sensitive to user actions.
 		do
 			if item_imp /= Void and not item_imp.internal_non_sensitive then
@@ -45,7 +45,7 @@ feature -- Status setting
 			Precursor {EV_CONTAINER_IMP}
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Set `item' insensitive to user actions.
 		do
 			if item_imp /= Void then
@@ -56,7 +56,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	remove is
+	remove
 			-- Remove `item' from `Current' if present.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -74,7 +74,7 @@ feature -- Element change
 			end
 		end
 
-	insert (v: like item) is
+	insert (v: like item)
 			-- Assign `v' to `item'.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -95,7 +95,7 @@ feature -- Element change
 			end
 		end
 
-	put, replace (v: like item) is
+	put, replace (v: like item)
 			-- Replace `item' with `v'.
 		do
 			remove
@@ -106,7 +106,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	propagate_background_color is
+	propagate_background_color
 			-- Propagate the current background color of `Current'
 			-- to the children.
 		local
@@ -121,7 +121,7 @@ feature -- Basic operations
 			end
 		end
 
-	propagate_foreground_color is
+	propagate_foreground_color
 			-- Propagate the current foreground color of `Current'
 			-- to the children.
 		local
@@ -138,13 +138,13 @@ feature -- Basic operations
 
 feature {EV_ANY_I} -- WEL Implementation
 
-	index_of_child (child: EV_WIDGET_IMP): INTEGER is
+	index_of_child (child: EV_WIDGET_IMP): INTEGER
 			-- `Result' is 1 based index of `child' within `Current'.
 		do
 			Result := 1
 		end
 
-	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP
 			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
 			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
 			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
@@ -175,7 +175,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 		end
 
-	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
+	is_control_in_window (hwnd_control: POINTER): BOOLEAN
 			-- Is the control of handle `hwnd_control'
 			-- located inside the current window?
 		local
@@ -193,7 +193,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- Called when `Current' is resized.
 		do
 			if size_type /= ({WEL_WINDOW_CONSTANTS}.Size_minimized) then
@@ -204,7 +204,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 		end
 
-	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN)
 		do
 			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
 			if item /= Void then
@@ -214,13 +214,13 @@ feature {EV_ANY_I} -- WEL Implementation
 
 feature {NONE} -- Implementation
 
-	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN
 			-- Is `a_child' a child of the container?
 		do
 			Result := a_child = item.implementation
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

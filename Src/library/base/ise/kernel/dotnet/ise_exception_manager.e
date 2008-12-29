@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Exception manager
 		]"
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Raise
 
-	raise (a_exception: EXCEPTION) is
+	raise (a_exception: EXCEPTION)
 			-- Raise `a_exception'.
 			-- Raising `a_exception' by this routine makes `a_exception' accessable by `last_exception'
 			-- in rescue clause. Hence causes removal of original `last_exception'.
@@ -52,7 +52,7 @@ feature -- Raise
 
 feature -- Status setting
 
-	ignore (a_exception: TYPE [EXCEPTION]) is
+	ignore (a_exception: TYPE [EXCEPTION])
 			-- Make sure that any exception of code `code' will be
 			-- ignored. This is not the default.
 		local
@@ -62,7 +62,7 @@ feature -- Status setting
 			ignored_exceptions.force (l_type, l_type)
 		end
 
-	catch (a_exception: TYPE [EXCEPTION]) is
+	catch (a_exception: TYPE [EXCEPTION])
 			-- Set type of `a_exception' `is_ignored'.
 		local
 			l_type: INTEGER
@@ -71,7 +71,7 @@ feature -- Status setting
 			ignored_exceptions.remove (l_type)
 		end
 
-	set_is_ignored (a_exception: TYPE [EXCEPTION]; a_ignored: BOOLEAN) is
+	set_is_ignored (a_exception: TYPE [EXCEPTION]; a_ignored: BOOLEAN)
 			-- Set type of `a_exception' to be `a_ignored'.
 		do
 			if a_ignored then
@@ -83,25 +83,25 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_ignorable (a_exception: TYPE [EXCEPTION]): BOOLEAN is
+	is_ignorable (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is ignorable.
 		do
 			Result := not unignorable_exceptions.has (internal_object.dynamic_type (a_exception))
 		end
 
-	is_raisable (a_exception: TYPE [EXCEPTION]): BOOLEAN is
+	is_raisable (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is raisable.
 		do
 			Result := not unraisable_exceptions.has (internal_object.dynamic_type (a_exception))
 		end
 
-	is_ignored (a_exception: TYPE [EXCEPTION]): BOOLEAN is
+	is_ignored (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is not raised.
 		do
 			Result := ignored_exceptions.has (internal_object.dynamic_type (a_exception))
 		end
 
-	is_caught (a_exception: TYPE [EXCEPTION]): BOOLEAN is
+	is_caught (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is raised.
 		do
 			Result := not ignored_exceptions.has (internal_object.dynamic_type (a_exception))
@@ -184,7 +184,7 @@ feature {EXCEPTIONS} -- Backward compatibility support
 			end
 		end
 
-	exception_from_code (a_code: INTEGER): EXCEPTION is
+	exception_from_code (a_code: INTEGER): EXCEPTION
 			-- Create exception object from `a_code'
 		do
 			inspect a_code
@@ -261,7 +261,7 @@ feature {EXCEPTIONS} -- Backward compatibility support
 
 feature {NONE} -- Element change
 
-	compute_last_exception (a_last_exception: NATIVE_EXCEPTION): EXCEPTION is
+	compute_last_exception (a_last_exception: NATIVE_EXCEPTION): EXCEPTION
 			-- Set `last_exception' with `a_last_exception'.
 		do
 			if a_last_exception /= Void then
@@ -271,13 +271,13 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Implementation, ignoring
 
-	ignored_exceptions: HASH_TABLE [INTEGER, INTEGER] is
+	ignored_exceptions: HASH_TABLE [INTEGER, INTEGER]
 			-- Ignored exceptions
 		once
 			create Result.make (0)
 		end
 
-	unignorable_exceptions: HASH_TABLE [INTEGER, INTEGER] is
+	unignorable_exceptions: HASH_TABLE [INTEGER, INTEGER]
 			-- Unignorable exceptions
 		local
 			l_type: INTEGER
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation, ignoring
 			Result.force (l_type, l_type)
 		end
 
-	unraisable_exceptions: HASH_TABLE [INTEGER, INTEGER] is
+	unraisable_exceptions: HASH_TABLE [INTEGER, INTEGER]
 			-- Unraisable exceptions
 		once
 			create Result.make (0)
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation, ignoring
 
 feature {NONE} -- Implementation, exception chain
 
-	constructed_exception_chain (a_last_exception: NATIVE_EXCEPTION): EXCEPTION is
+	constructed_exception_chain (a_last_exception: NATIVE_EXCEPTION): EXCEPTION
 			-- Construct exception chain
 		require
 			a_last_exception_not_viod: a_last_exception /= Void
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation, exception chain
 			constructed_exception_chain_not_void: Result /= Void
 		end
 
-	wrapped_exception (a_exception: NATIVE_EXCEPTION): EXCEPTION is
+	wrapped_exception (a_exception: NATIVE_EXCEPTION): EXCEPTION
 			-- Wrapped .NET exception
 		require
 			a_exception_not_void: a_exception /= Void
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation, exception chain
 			wrapped_exception_not_void: Result /= Void
 		end
 
-	recipient_and_type_name (a_st: STACK_TRACE; a_skip: INTEGER): TUPLE [recipient, type: STRING; line_number: INTEGER] is
+	recipient_and_type_name (a_st: STACK_TRACE; a_skip: INTEGER): TUPLE [recipient, type: STRING; line_number: INTEGER]
 			-- Compute recipient name, type name and possible line number via `a_st'.
 			-- `a_skip' is number of first caught frames to though away.
 		require
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation, exception chain
 			result_not_void: Result /= Void
 		end
 
-	is_filtered_routine (a_method: METHOD_BASE): BOOLEAN is
+	is_filtered_routine (a_method: METHOD_BASE): BOOLEAN
 			-- Is `a_name' filtered?
 			-- Implementations, routines out of Eiffel classes and some routines in the manager are filtered.
 		require
@@ -441,7 +441,7 @@ feature {NONE} -- Implementation, exception chain
 			end
 		end
 
-	filtered_class: HASH_TABLE [INTEGER, STRING] is
+	filtered_class: HASH_TABLE [INTEGER, STRING]
 			-- Filterred routines
 		once
 			create Result.make (2)
@@ -449,7 +449,7 @@ feature {NONE} -- Implementation, exception chain
 			Result.put (0, "ISE_EXCEPTION_MANAGER")
 		end
 
-	filtered_routines: HASH_TABLE [INTEGER, STRING] is
+	filtered_routines: HASH_TABLE [INTEGER, STRING]
 			-- Filterred routines
 		once
 			create Result.make (15)
@@ -478,7 +478,7 @@ feature {NONE} -- Implementation, exception chain
 
 feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 
-	internal_raise (e_code: INTEGER; msg: SYSTEM_STRING) is
+	internal_raise (e_code: INTEGER; msg: SYSTEM_STRING)
 			-- Internal raise exception of code `e_code'
 		local
 			l_exception: EXCEPTION
@@ -515,7 +515,7 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 			end
 		end
 
-	internal_raise_old (a_exception: NATIVE_EXCEPTION) is
+	internal_raise_old (a_exception: NATIVE_EXCEPTION)
 			-- Raise OLD_VIOLATION with original of `a_exception'
 		local
 			l_exception: OLD_VIOLATION
@@ -527,7 +527,7 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 			end
 		end
 
-	throw_last_exception (a_exception: NATIVE_EXCEPTION; a_for_once: BOOLEAN) is
+	throw_last_exception (a_exception: NATIVE_EXCEPTION; a_for_once: BOOLEAN)
 			-- Rethrow the exception at the end of rescue clause.
 		local
 			l_failure: ROUTINE_FAILURE
@@ -555,7 +555,7 @@ feature {NONE} -- Internal raise, Implementation of RT_EXCEPTION_MANAGER
 			end
 		end
 
-	is_assertion_violation (a_code: INTEGER): BOOLEAN is
+	is_assertion_violation (a_code: INTEGER): BOOLEAN
 			-- Is `a_code' exception of assertion violation?
 		do
 			Result := 	a_code = {EXCEP_CONST}.precondition or else
@@ -593,7 +593,7 @@ feature {NONE} -- Exception codes, Implementation of RT_EXCEPTION_MANAGER
 	old_exception:INTEGER do Result := {EXCEP_CONST}.old_exception end
 	serialization_exception:INTEGER do Result := {EXCEP_CONST}.serialization_exception end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

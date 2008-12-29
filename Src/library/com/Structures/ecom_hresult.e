@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ECOM_HRESULT"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,13 +17,13 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Set 'severity_bit' to 1.
 		do
 			item := 0
 		end
 
-	make_from_integer (a_integer: INTEGER) is
+	make_from_integer (a_integer: INTEGER)
 			-- Initialize hresult according to 'an_integer'.
 		do
 			set_item (a_integer)
@@ -34,25 +34,25 @@ feature -- Access
 	item: INTEGER
 			-- HRESULT
 
-	facility_code: INTEGER is
+	facility_code: INTEGER
 			-- Facility code
 		do
 			Result := cwin_hresult_facility_code (item)
 		end
 
-	error_code: INTEGER is
+	error_code: INTEGER
 			-- Error code
 		do
 			Result := cwin_hresult_error_code (item)
 		end
 
-	severity_bit: INTEGER is
+	severity_bit: INTEGER
 			-- Severity bit
 		do
 			Result := cwin_hresult_severity_bit (item)
 		end
 
-	message: STRING is
+	message: STRING
 			-- Human-readable string.
 		local
 			error_messages: WEL_WINDOWS_ERROR_MESSAGES
@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_item (an_item: like item) is
+	set_item (an_item: like item)
 			-- Set value of item to 'an_item'
 		do
 			item := an_item;
@@ -85,19 +85,19 @@ feature -- Element change
 			item_set: item = an_item
 		end
 
-	set_succeeded is
+	set_succeeded
 			-- Set severity bit to indicate succeeded
 		do
 			item := (cwin_hresult_make_hresult (0, facility_code, error_code))
 		end
 
-	set_failed is
+	set_failed
 			-- Set severity bit to indicate failure
 		do
 			item := cwin_hresult_make_hresult (1, facility_code, error_code)
 		end
 
-	set_facility_code (a_code: like facility_code) is
+	set_facility_code (a_code: like facility_code)
 			-- Set facility code
 		require
 			valid_facility_code: a_code >= 0
@@ -107,7 +107,7 @@ feature -- Element change
 			facility_code_set: facility_code = a_code
 		end
 
-	set_error_code (a_code: like error_code) is
+	set_error_code (a_code: like error_code)
 			-- Set error code
 		require
 			valid_error_code: a_code >= 0
@@ -120,7 +120,7 @@ feature -- Element change
 
 feature -- Status report
 
-	succeeded: BOOLEAN is
+	succeeded: BOOLEAN
 			-- Does hresult correspond to success?
 		do
 			Result := (severity_bit = 0)
@@ -128,35 +128,35 @@ feature -- Status report
 
 feature {NONE} -- Externals
 
-	cwin_hresult_make_hresult (tmp_sev, a_facility_code, an_error_code: INTEGER): INTEGER is
+	cwin_hresult_make_hresult (tmp_sev, a_facility_code, an_error_code: INTEGER): INTEGER
 		external
 			"C [macro <winerror.h>](EIF_INTEGER, EIF_INTEGER, EIF_INTEGER):EIF_INTEGER"
 		alias
 			"MAKE_HRESULT"
 		end
 
-	cwin_hresult_severity_bit (an_item: INTEGER): INTEGER is
+	cwin_hresult_severity_bit (an_item: INTEGER): INTEGER
 		external
 			"C [macro <winerror.h>](EIF_INTEGER):EIF_INTEGER"
 		alias
 			"HRESULT_SEVERITY"
 		end
 
-	cwin_hresult_error_code (an_item: INTEGER): INTEGER is
+	cwin_hresult_error_code (an_item: INTEGER): INTEGER
 		external
 			"C [macro <winerror.h>](EIF_INTEGER):EIF_INTEGER"
 		alias
 			"HRESULT_CODE"
 		end
 
-	cwin_hresult_facility_code (an_item: INTEGER) : INTEGER is
+	cwin_hresult_facility_code (an_item: INTEGER) : INTEGER
 		external
 			"C [macro <winerror.h>](EIF_INTEGER):EIF_INTEGER"
 		alias
 			"HRESULT_FACILITY"
 		end
 
-	cwin_hresult_succeeded (an_item : POINTER):BOOLEAN is
+	cwin_hresult_succeeded (an_item : POINTER):BOOLEAN
 		external
 			"C [macro <winerror.h>](EIF_POINTER):EIF_BOOLEAN"
 		alias
@@ -166,7 +166,7 @@ feature {NONE} -- Externals
 invariant
 	valid_severity_value: severity_bit = 0 or severity_bit = 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

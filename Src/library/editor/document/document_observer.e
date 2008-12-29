@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Observer for DOCUMENTS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,22 +10,22 @@ deferred class
 
 feature -- Updates
 
-	on_item_added (a_item: DOCUMENT_ITEM) is
+	on_item_added (a_item: DOCUMENT_ITEM)
 			-- `a_item' has been added
 		do
 		end
 
-	on_item_removed (a_item: DOCUMENT_ITEM) is
+	on_item_removed (a_item: DOCUMENT_ITEM)
 			-- `a_item' has been removed.
 		do
 		end
 
-	on_update is
+	on_update
 			-- Completely recompute the observer state.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "[
 		Default widget for viewing and editing preferences represented in string
 		format (i.e. STRING, INTEGER and ARRAY preferences).
@@ -29,7 +29,7 @@ feature -- Access
 	change_item_widget: EV_GRID_EDITABLE_ITEM
 			-- Widget to change the value of this preference.
 
-	graphical_type: STRING is
+	graphical_type: STRING
 			-- Graphical type identfier
 		do
 			Result := "TEXT"
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_preference (new_preference: like preference) is
+	set_preference (new_preference: like preference)
 			-- Set the preference.
 		do
 			Precursor (new_preference)
@@ -46,7 +46,7 @@ feature -- Status Setting
 			end
 		end
 
-	show is
+	show
 			-- Show the widget in its editable state
 		do
 			activate
@@ -54,14 +54,14 @@ feature -- Status Setting
 
 feature {NONE} -- Command
 
-	update_changes is
+	update_changes
 			-- Update the changes made in `change_item_widget' to `preference'.
 		do
 			preference.set_value_from_string (change_item_widget.text)
 			Precursor {PREFERENCE_WIDGET}
 		end
 
-	update_preference is
+	update_preference
 			-- Updates preference.
 		local
 			int: INTEGER_PREFERENCE
@@ -84,7 +84,7 @@ feature {NONE} -- Command
 			end
 		end
 
-	refresh is
+	refresh
 			-- Refresh
 		do
 			change_item_widget.set_text (preference.string_value)
@@ -92,7 +92,7 @@ feature {NONE} -- Command
 
 feature {NONE} -- Implementation
 
-	build_change_item_widget is
+	build_change_item_widget
 			-- Create and setup `change_item_widget'.
 		do
 			create change_item_widget
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			change_item_widget.pointer_button_press_actions.force_extend (agent activate)
 		end
 
-	activate is
+	activate
 			-- Activate the text
 		do
 			change_item_widget.activate
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-    validate_preference_text (a_text: STRING_32): BOOLEAN is
+    validate_preference_text (a_text: STRING_32): BOOLEAN
             -- Validate `a_text'.  Disallow input if text is not an integer and the preference
             -- is an INTEGER_PREFERENCE.
         local
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
             end
         end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Describes a color consisting of relative intensities of %
 		%red, green, and blue."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			structure_make
 			set_red (0)
@@ -37,29 +37,29 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	red: INTEGER is
+	red: INTEGER
 		do
 			Result := cwel_rgb_quad_get_rgb_red (item)
 		end
 
-	green: INTEGER is
+	green: INTEGER
 		do
 			Result := cwel_rgb_quad_get_rgb_green (item)
 		end
 
-	blue: INTEGER is
+	blue: INTEGER
 		do
 			Result := cwel_rgb_quad_get_rgb_blue (item)
 		end
 
-	reserved: INTEGER is
+	reserved: INTEGER
 		do
 			Result := cwel_rgb_quad_get_rgb_reserved (item)
 		end
 
 feature -- Element change
 
-	set_red (a_red: INTEGER) is
+	set_red (a_red: INTEGER)
 			-- Set `red' with `a_red'
 		do
 			cwel_rgb_quad_set_rgb_red (item, a_red)
@@ -67,7 +67,7 @@ feature -- Element change
 			red_set: red = a_red
 		end
 
-	set_green (a_green: INTEGER) is
+	set_green (a_green: INTEGER)
 			-- Set `green' with `a_green'
 		do
 			cwel_rgb_quad_set_rgb_green (item, a_green)
@@ -75,7 +75,7 @@ feature -- Element change
 			green_set: green = a_green
 		end
 
-	set_blue (a_blue: INTEGER) is
+	set_blue (a_blue: INTEGER)
 			-- Set `blue' with `a_blue'
 		do
 			cwel_rgb_quad_set_rgb_blue (item, a_blue)
@@ -83,7 +83,7 @@ feature -- Element change
 			blue_set: blue = a_blue
 		end
 
-	set_reserved (a_reserved: INTEGER) is
+	set_reserved (a_reserved: INTEGER)
 			-- Set `reserved' with `a_reserved'
 		do
 			cwel_rgb_quad_set_rgb_reserved (item, a_reserved)
@@ -93,7 +93,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_rgb_quad
@@ -101,54 +101,54 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_rgb_quad: INTEGER is
+	c_size_of_rgb_quad: INTEGER
 		external
 			"C [macro <rgbquad.h>]"
 		alias
 			"sizeof (RGBQUAD)"
 		end
 
-	cwel_rgb_quad_set_rgb_red (ptr: POINTER; value: INTEGER) is
+	cwel_rgb_quad_set_rgb_red (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <rgbquad.h>]"
 		end
 
-	cwel_rgb_quad_set_rgb_green (ptr: POINTER; value: INTEGER) is
+	cwel_rgb_quad_set_rgb_green (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <rgbquad.h>]"
 		end
 
-	cwel_rgb_quad_set_rgb_blue (ptr: POINTER; value: INTEGER) is
+	cwel_rgb_quad_set_rgb_blue (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <rgbquad.h>]"
 		end
 
-	cwel_rgb_quad_set_rgb_reserved (ptr: POINTER; value: INTEGER) is
+	cwel_rgb_quad_set_rgb_reserved (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <rgbquad.h>]"
 		end
 
-	cwel_rgb_quad_get_rgb_red (ptr: POINTER): INTEGER is
+	cwel_rgb_quad_get_rgb_red (ptr: POINTER): INTEGER
 		external
 			"C [macro <rgbquad.h>]"
 		end
 
-	cwel_rgb_quad_get_rgb_green (ptr: POINTER): INTEGER is
+	cwel_rgb_quad_get_rgb_green (ptr: POINTER): INTEGER
 		external
 			"C [macro <rgbquad.h>]"
 		end
 
-	cwel_rgb_quad_get_rgb_blue (ptr: POINTER): INTEGER is
+	cwel_rgb_quad_get_rgb_blue (ptr: POINTER): INTEGER
 		external
 			"C [macro <rgbquad.h>]"
 		end
 
-	cwel_rgb_quad_get_rgb_reserved (ptr: POINTER): INTEGER is
+	cwel_rgb_quad_get_rgb_reserved (ptr: POINTER): INTEGER
 		external
 			"C [macro <rgbquad.h>]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

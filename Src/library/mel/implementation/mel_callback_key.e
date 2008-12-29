@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Key used to hash callbacks on"
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_motif (a_resource: POINTER) is
+	make_motif (a_resource: POINTER)
 			-- Create a motif callback key with
 			-- hash code from `a_resource'
 		require
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			hash_code := a_resource.hash_code
 		end;
 
-	make_xt_event (a_mask: like hash_code) is
+	make_xt_event (a_mask: like hash_code)
 			-- Create an xt event callback key with
 			-- hash code `a_mask'
 		do
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			hash_code := a_mask
 		end;
 
-	make_wm_protocol (an_atom: POINTER) is
+	make_wm_protocol (an_atom: POINTER)
 			-- Create a wm protocol callback key with
 			-- hash code from `an_atom'
 		do
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' key equal to Current.
 		do
 			Result := type = other.type and then
@@ -68,7 +68,7 @@ feature {MEL_CALLBACK_KEY} -- Implementation
 	type: INTEGER
 			-- Type of key
 
-	valid_type: BOOLEAN is
+	valid_type: BOOLEAN
 			-- Is the type valid?
 		do
 			Result := type >= motif_type and then type <= wm_protocol_type
@@ -76,16 +76,16 @@ feature {MEL_CALLBACK_KEY} -- Implementation
 
 feature {NONE} -- Implementation
 
-	motif_type: INTEGER is unique;
-	xt_event_type: INTEGER is unique;
-	wm_protocol_type: INTEGER is unique;
-	translation_type: INTEGER is unique;
+	motif_type: INTEGER = unique;
+	xt_event_type: INTEGER = unique;
+	wm_protocol_type: INTEGER = unique;
+	translation_type: INTEGER = unique;
 
 invariant
 
 	valid_type: type >= motif_type and then type <= translation_type
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

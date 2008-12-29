@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Intermediary routines between gtk and eiffel."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Timeout intermediary agent routine
 
-	on_timeout_intermediary (a_object_id: INTEGER) is
+	on_timeout_intermediary (a_object_id: INTEGER)
 			-- Timeout has occurred.
 		local
 			a_timeout_imp: EV_TIMEOUT_IMP
@@ -30,7 +30,7 @@ feature -- Timeout intermediary agent routine
 
 feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 
-	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_page: NATURAL_32) is
+	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_page: NATURAL_32)
 			-- Notebook page is switched
 		local
 			a_notebook_imp: EV_NOTEBOOK_IMP
@@ -41,7 +41,7 @@ feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 
 feature -- Expose actions intermediary agent routines
 
-	create_expose_actions_intermediary (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER) is
+	create_expose_actions_intermediary (a_c_object: POINTER; a_x, a_y, a_width, a_height: INTEGER)
 			-- Area needs to be redrawn
 		local
 			l_drawing_area_imp: EV_DRAWING_AREA_IMP
@@ -60,7 +60,7 @@ feature -- Expose actions intermediary agent routines
 
 feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 
-	on_gauge_value_changed_intermediary (a_c_object: POINTER) is
+	on_gauge_value_changed_intermediary (a_c_object: POINTER)
 			-- Gauge value changed
 		local
 			a_gauge_imp: EV_GAUGE_IMP
@@ -71,7 +71,7 @@ feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 
 feature -- Widget intermediary agent routines
 
-	on_size_allocate_intermediate (a_object_id, a_x, a_y, a_width, a_height: INTEGER) is
+	on_size_allocate_intermediate (a_object_id, a_x, a_y, a_width, a_height: INTEGER)
 			-- Size allocate happened on widget.
 		local
 			a_widget: EV_WIDGET_IMP
@@ -82,7 +82,7 @@ feature -- Widget intermediary agent routines
 			end
 		end
 
-	on_set_focus_event_intermediary (a_object_id: INTEGER; a_widget_ptr: POINTER) is
+	on_set_focus_event_intermediary (a_object_id: INTEGER; a_widget_ptr: POINTER)
 			-- Set Focus handling intermediary.
 		local
 			a_window: EV_WINDOW_IMP
@@ -95,7 +95,7 @@ feature -- Widget intermediary agent routines
 
 feature {EV_ANY_IMP} -- Text component intermediary agent routines
 
-	text_component_change_intermediary (a_c_object: POINTER) is
+	text_component_change_intermediary (a_c_object: POINTER)
 			-- Changed
 		local
 			a_text_component_imp: EV_TEXT_COMPONENT_IMP
@@ -104,7 +104,7 @@ feature {EV_ANY_IMP} -- Text component intermediary agent routines
 			a_text_component_imp.on_change_actions
 		end
 
-	text_field_return_intermediary (a_c_object: POINTER) is
+	text_field_return_intermediary (a_c_object: POINTER)
 			-- Return
 		local
 			a_text_field_imp: EV_TEXT_FIELD_IMP
@@ -115,7 +115,7 @@ feature {EV_ANY_IMP} -- Text component intermediary agent routines
 
 feature -- Button intermediary agent routines	
 
-	button_select_intermediary (a_c_object: POINTER) is
+	button_select_intermediary (a_c_object: POINTER)
 			-- Selected
 		local
 			a_button_imp: EV_BUTTON_IMP
@@ -132,7 +132,7 @@ feature -- Button intermediary agent routines
 
 feature {EV_ANY_IMP} -- Menu intermediary agent routines
 
-	menu_item_activate_intermediary (a_c_object: POINTER) is
+	menu_item_activate_intermediary (a_c_object: POINTER)
 			-- Item activated
 		local
 			a_menu_item_imp: EV_MENU_ITEM_IMP
@@ -145,7 +145,7 @@ feature {EV_ANY_IMP} -- Menu intermediary agent routines
 
 feature {EV_ANY_IMP} -- Dialog intermediary agent routines			
 
-	color_dialog_on_ok_intermediary (a_c_object: POINTER) is
+	color_dialog_on_ok_intermediary (a_c_object: POINTER)
 			-- Color dialog ok
 		local
 			a_color_dialog_imp: EV_COLOR_DIALOG_IMP
@@ -154,7 +154,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_color_dialog_imp.on_ok
 		end
 
-	color_dialog_on_cancel_intermediary (a_c_object: POINTER) is
+	color_dialog_on_cancel_intermediary (a_c_object: POINTER)
 			-- Color dialog cancel
 		local
 			a_color_dialog_imp: EV_COLOR_DIALOG_IMP
@@ -163,7 +163,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_color_dialog_imp.on_cancel
 		end
 
-	directory_dialog_on_ok_intermediary (a_c_object: POINTER) is
+	directory_dialog_on_ok_intermediary (a_c_object: POINTER)
 			-- Directory dialog ok
 		local
 			a_directory_dialog_imp: EV_DIRECTORY_DIALOG_IMP
@@ -172,7 +172,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_directory_dialog_imp.on_ok
 		end
 
-	directory_dialog_on_cancel_intermediary (a_c_object: POINTER) is
+	directory_dialog_on_cancel_intermediary (a_c_object: POINTER)
 			-- Directory dialog cancel
 		local
 			a_directory_dialog_imp: EV_DIRECTORY_DIALOG_IMP
@@ -181,7 +181,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_directory_dialog_imp.on_cancel
 		end
 
-	file_dialog_on_ok_intermediary (a_c_object: POINTER) is
+	file_dialog_on_ok_intermediary (a_c_object: POINTER)
 			-- File dialog ok
 		local
 			a_file_dialog_imp: EV_FILE_DIALOG_IMP
@@ -190,7 +190,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_file_dialog_imp.on_ok
 		end
 
-	file_dialog_on_cancel_intermediary (a_c_object: POINTER) is
+	file_dialog_on_cancel_intermediary (a_c_object: POINTER)
 			-- File dialog cancel
 		local
 			a_file_dialog_imp: EV_FILE_DIALOG_IMP
@@ -199,7 +199,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_file_dialog_imp.on_cancel
 		end
 
-	font_dialog_on_ok_intermediary (a_c_object: POINTER) is
+	font_dialog_on_ok_intermediary (a_c_object: POINTER)
 			-- Font dialog ok
 		local
 			a_font_dialog_imp: EV_FONT_DIALOG_IMP
@@ -208,7 +208,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_font_dialog_imp.on_ok
 		end
 
-	font_dialog_on_cancel_intermediary (a_c_object: POINTER) is
+	font_dialog_on_cancel_intermediary (a_c_object: POINTER)
 			-- Font dialog cancel
 		local
 			a_font_dialog_imp: EV_FONT_DIALOG_IMP
@@ -217,7 +217,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_font_dialog_imp.on_cancel
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

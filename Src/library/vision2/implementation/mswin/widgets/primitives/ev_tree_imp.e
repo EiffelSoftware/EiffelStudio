@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision tree. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -109,7 +109,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 			create ev_children.make (1)
 		end
 
-	initialize is
+	initialize
 			-- Do post creation initialization.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
@@ -136,7 +136,7 @@ feature -- Access
 	ev_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
 			-- List of the direct children of `Current'.
 
-	selected_item: EV_TREE_NODE is
+	selected_item: EV_TREE_NODE
 			-- Currently selected item.
 		local
 			handle: POINTER
@@ -150,7 +150,7 @@ feature -- Access
 			end
 		end
 
-	selected_item_imp: EV_TREE_NODE_IMP is
+	selected_item_imp: EV_TREE_NODE_IMP
 			-- Currently selected_item_imp.
 			-- Added for speed, if we did not have this,
 			-- then we would have to do another reverse assigment
@@ -170,7 +170,7 @@ feature -- Access
 feature -- Basic operations
 
 	general_insert_item (item_imp: EV_TREE_NODE_IMP; par, after: POINTER;
-		an_index: INTEGER) is
+		an_index: INTEGER)
 			-- Add `item_imp' to the tree with `par' as parent.
 			-- if `par' is the default_pointer, the parent is the tree.
 		local
@@ -210,14 +210,14 @@ feature -- Basic operations
 			invalidate
 		end
 
-	general_remove_item (item_imp: EV_TREE_NODE_IMP) is
+	general_remove_item (item_imp: EV_TREE_NODE_IMP)
 			-- Remove `item_imp' from `Current'.
 		do
 			internal_general_remove_item (item_imp, 0)
 		end
 
 
-	internal_general_remove_item (item_imp: EV_TREE_NODE_IMP; depth: INTEGER;) is
+	internal_general_remove_item (item_imp: EV_TREE_NODE_IMP; depth: INTEGER;)
 			-- Remove `item_imp' from `Current'.
 			-- This should only be called by `internal_remove_item'.
 			-- We need to track `depth' so that we only assign `False'
@@ -258,7 +258,7 @@ feature -- Basic operations
 		end
 
 	get_children (item_imp: EV_TREE_NODE_IMP):
-		ARRAYED_LIST [EV_TREE_NODE_IMP] is
+		ARRAYED_LIST [EV_TREE_NODE_IMP]
 			-- List of the direct children of `item_imp'.
 			-- If the `item_imp' is Void, it returns the children of the tree.
 		local
@@ -283,7 +283,7 @@ feature -- Basic operations
 			end
 		end
 
-	ensure_item_visible (tree_node: EV_TREE_NODE) is
+	ensure_item_visible (tree_node: EV_TREE_NODE)
 			-- Ensure `tree_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		local
@@ -298,7 +298,7 @@ feature -- Basic operations
 
 feature {EV_TREE_NODE_I} -- Implementation
 
-	insert_item (item_imp: EV_TREE_NODE_IMP; an_index: INTEGER) is
+	insert_item (item_imp: EV_TREE_NODE_IMP; an_index: INTEGER)
 			-- Insert `item_imp' at the `an_index' position.
 		do
 			if an_index = 1 then
@@ -310,7 +310,7 @@ feature {EV_TREE_NODE_I} -- Implementation
 			end
 		end
 
-	remove_item (item_imp: EV_TREE_NODE_IMP) is
+	remove_item (item_imp: EV_TREE_NODE_IMP)
 			-- Remove `item_imp' from `Current'.
 		do
 			general_remove_item (item_imp)
@@ -318,7 +318,7 @@ feature {EV_TREE_NODE_I} -- Implementation
 			invalidate
 		end
 
-	notify_item_info (item_imp: EV_TREE_NODE_IMP) is
+	notify_item_info (item_imp: EV_TREE_NODE_IMP)
 			-- Notify the system of the changes of the item.
 			-- The item must have all the necessary flags and
 			-- informations to notify.
@@ -328,7 +328,7 @@ feature {EV_TREE_NODE_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		do
@@ -337,7 +337,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	general_reset_pixmap is
+	general_reset_pixmap
 			-- Reset the pixmap (if the size of displayed has
 			-- changes for example)
 		local
@@ -357,7 +357,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_NODE_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_NODE_IMP
 			-- Find the item at `x_pos', `y_pos' pixel coordinates
 			-- within `Current' (Origin of coordinates is top left).
 		local
@@ -388,7 +388,7 @@ feature {EV_ANY_I} -- WEL Implementation
 	image_list: EV_IMAGE_LIST_IMP
 			-- WEL image list to store all images required by items.
 
-	setup_image_list is
+	setup_image_list
 			-- Create the image list and associate it
 			-- to `Current' if it's not already done.
 		do
@@ -404,7 +404,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			image_list_not_void: image_list /= Void
 		end
 
-	remove_image_list is
+	remove_image_list
 			-- Destroy the image list and remove it
 			-- from `Current' if it's not already done.
 		require
@@ -420,7 +420,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			image_list_is_void: image_list = Void
 		end
 
-	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER)
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item
 			-- event. Called on a pointer button press.
 		local
@@ -500,7 +500,7 @@ feature {EV_ANY_I} -- WEL Implementation
 		end
 
 	internal_propagate_pointer_double_press
-		(keys, x_pos, y_pos, button: INTEGER) is
+		(keys, x_pos, y_pos, button: INTEGER)
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item
 			-- event. Called on a pointer button double press.
 		local
@@ -520,7 +520,7 @@ feature {EV_ANY_I} -- WEL Implementation
 		end
 
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create `Current'
 		do
 				-- Note that we use TVS_DISABLEDRAGDROP because otherwise
@@ -533,7 +533,7 @@ feature {EV_ANY_I} -- WEL Implementation
 				| Ws_clipchildren | Ws_clipsiblings
 		end
 
-	on_tvn_selchanging (info: WEL_NM_TREE_VIEW) is
+	on_tvn_selchanging (info: WEL_NM_TREE_VIEW)
 		do
 				-- If we are removing the selected item then we set the return
 				-- value to 1 (True) which stops windows from selecting the next
@@ -543,7 +543,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 		end
 
-	on_tvn_selchanged (info: WEL_NM_TREE_VIEW) is
+	on_tvn_selchanged (info: WEL_NM_TREE_VIEW)
 			-- Selection has changed from one item to another.
 		local
 			clist: HASH_TABLE [EV_TREE_NODE_IMP, POINTER]
@@ -590,7 +590,7 @@ feature {EV_ANY_I} -- WEL Implementation
 		--| redefinition of `expand_item' or `collapse_item'.
 		--|See Tvm_expand in MSDN for better explanation. Julian.
 
-	expand_item (an_item: WEL_TREE_VIEW_ITEM) is
+	expand_item (an_item: WEL_TREE_VIEW_ITEM)
 			-- Expand the given item.
 			--| Set `expand_called_manually' to true for duration of this
 			--| feature. See comment for `expand_called_manually'.
@@ -606,7 +606,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			expand_called_manually := False
 		end
 
-	collapse_item (an_item: WEL_TREE_VIEW_ITEM) is
+	collapse_item (an_item: WEL_TREE_VIEW_ITEM)
 			-- Collapse the given item.
 			--| Set `expand_called_manually' to true for duration of this
 			--| feature. See comment for `expand_called_manually'.
@@ -623,7 +623,7 @@ feature {EV_ANY_I} -- WEL Implementation
 		end
 
 
-	on_tvn_itemexpanded (info: WEL_NM_TREE_VIEW) is
+	on_tvn_itemexpanded (info: WEL_NM_TREE_VIEW)
 			-- a parent item's list of child items has expanded
 			-- or collapsed.
 		do
@@ -638,14 +638,14 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- A key has been pressed.
 		do
 			process_navigation_key (virtual_key)
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse move.
 		local
 			it: EV_TREE_NODE_IMP
@@ -667,7 +667,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -677,7 +677,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			disable_default_processing
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Color used for the background of `Current'.
 			-- This has been redefined as the background color of
 			-- text components is white, or `Color_read_write' by default.
@@ -689,7 +689,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 		end
 
-	set_background_color (color: EV_COLOR) is
+	set_background_color (color: EV_COLOR)
 			--
 		do
 			background_color_imp ?= color.implementation
@@ -700,7 +700,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 		end
 
-	set_foreground_color (color: EV_COLOR) is
+	set_foreground_color (color: EV_COLOR)
 			-- Make `color' the new `foreground_color'
 		do
 			foreground_color_imp ?= color.implementation
@@ -711,7 +711,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			wipe_out
@@ -722,7 +722,7 @@ feature {EV_ANY_I}
 
 	interface: EV_TREE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

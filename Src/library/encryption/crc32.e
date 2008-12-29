@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Perform CRC32 checksum using zlib."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_on_file (f: FILE) is
+	make_on_file (f: FILE)
 			-- Initialize computation of checksum on file 'f'.
 		require
 			f_not_void: f /= Void
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			not_checksum_on_buffer_set: not checksum_on_buffer
 		end
 			
-	make_on_buffer (b: POINTER; n: INTEGER) is
+	make_on_buffer (b: POINTER; n: INTEGER)
 			-- Initialize computation of checksum on buffer 'b' of
 			-- length `n'.
 		require
@@ -62,7 +62,7 @@ feature -- Access
 	file: FILE
 			-- File on which checksum is performed.
 	
-	checksum: INTEGER is
+	checksum: INTEGER
 			-- Compute checksum
 		local
 			a: ANY
@@ -80,7 +80,7 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	crc32 (crc: INTEGER; buf: POINTER; len: INTEGER): INTEGER is
+	crc32 (crc: INTEGER; buf: POINTER; len: INTEGER): INTEGER
 			-- Update a running crc with the bytes buf[0..len-1]
 			-- and return the updated crc. If buf is NULL, this
 			-- function returns the required initial value for
@@ -95,7 +95,7 @@ invariant
 	checksum_on_file: checksum_on_file implies (file /= Void and buffer = Void)
 	checksum_on_buffer: checksum_on_buffer implies (file = Void and buffer /= Void)
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

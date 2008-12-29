@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			A tree which displays a check box to left
@@ -24,7 +24,7 @@ inherit
 	
 feature -- Access
 
-	checked_items: ARRAYED_LIST [EV_TREE_NODE] is
+	checked_items: ARRAYED_LIST [EV_TREE_NODE]
 			-- All items checked in `Current'.
 		do
 			create Result.make (4)
@@ -33,7 +33,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	is_item_checked (tree_item: EV_TREE_NODE): BOOLEAN is
+	is_item_checked (tree_item: EV_TREE_NODE): BOOLEAN
 			-- Is `tree_item' currently checked?
 		require
 		--	has_an_item: has_recursively (tree_item)
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Status setting
 
-	check_item (tree_item: EV_TREE_NODE) is
+	check_item (tree_item: EV_TREE_NODE)
 			-- Ensure check associated with `tree_item' is
 			-- checked.
 		require
@@ -53,7 +53,7 @@ feature -- Status setting
 		end
 
 
-	uncheck_item (tree_item: EV_TREE_NODE) is
+	uncheck_item (tree_item: EV_TREE_NODE)
 			-- Ensure check associated with `tree_item' is
 			-- unchecked.
 		require
@@ -65,7 +65,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	get_state (node: EV_TREE_NODE; list: ARRAYED_LIST [EV_TREE_NODE]) is
+	get_state (node: EV_TREE_NODE; list: ARRAYED_LIST [EV_TREE_NODE])
 			-- Add `node' to `list' if `node' is currently checked.
 		require
 			node_not_void: node /= Void
@@ -82,7 +82,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_TREE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

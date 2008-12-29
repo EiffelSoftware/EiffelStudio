@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Provides an I18N_NLS_LCID_TOOLS object"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Shared object
 
-	lcid_tools: I18N_NLS_LCID_TOOLS is
+	lcid_tools: I18N_NLS_LCID_TOOLS
 			--
 		once
 			create Result.initialize_locales
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

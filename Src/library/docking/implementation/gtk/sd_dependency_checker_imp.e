@@ -1,4 +1,4 @@
-indexing
+note
 	description: "GTK implementation for SD_DEPENDENCY_CHECKER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,12 +15,12 @@ inherit
 
 feature -- Command
 
-	check_dependency (a_parent_window: EV_WINDOW) is
+	check_dependency (a_parent_window: EV_WINDOW)
 			-- Redefine
 		do
 		end
 
-	is_solaris_cde: BOOLEAN is
+	is_solaris_cde: BOOLEAN
 			-- Redefine
 		local
 			l_evn: EV_ENVIRONMENT
@@ -36,7 +36,7 @@ feature -- Command
 			Result := l_imp.window_manager_name.is_equal ("unknown")
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

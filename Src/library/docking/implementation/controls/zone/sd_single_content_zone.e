@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_ZONE that contains only one SD_CONTENT."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,19 +14,19 @@ inherit
 
 feature -- Content issues.
 
-	content: SD_CONTENT is
+	content: SD_CONTENT
 			-- Redefine.
 		do
 			Result := internal_content
 		end
 
-	extend (a_content: SD_CONTENT) is
+	extend (a_content: SD_CONTENT)
 			-- Redefine.
 		do
 			internal_content := a_content
 		end
 
-	has (a_content: SD_CONTENT): BOOLEAN is
+	has (a_content: SD_CONTENT): BOOLEAN
 			-- Redefine.
 		do
 			Result := internal_content = a_content
@@ -34,7 +34,7 @@ feature -- Content issues.
 
 feature {SD_OPEN_CONFIG_MEDIATOR} -- Save config.
 
-	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
+	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA)
 			-- Redefine.
 		do
 			a_config_data.add_title (internal_content.unique_title)
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 
 	internal_content: SD_CONTENT;
 			-- Content which current holded.
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

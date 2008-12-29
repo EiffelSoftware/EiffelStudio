@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Constants for traversal direction"
 	legal: "See notice at end of class.";
@@ -11,77 +11,77 @@ class
 
 feature -- Event types
 
-	XmTRAVERSE_CURRENT: INTEGER is
+	XmTRAVERSE_CURRENT: INTEGER
 		external
 			"C [macro <Xm/Xm.h>]: EIF_INTEGER"
 		alias
 			"XmTRAVERSE_CURRENT"
 		end;
 
-	XmTRAVERSE_NEXT: INTEGER is
+	XmTRAVERSE_NEXT: INTEGER
 		external
 			"C [macro <Xm/Xm.h>]: EIF_INTEGER"
 		alias
 			"XmTRAVERSE_NEXT"
 		end;
 
-	XmTRAVERSE_PREV: INTEGER is
+	XmTRAVERSE_PREV: INTEGER
 		external
 			"C [macro <Xm/Xm.h>]: EIF_INTEGER"
 		alias
 			"XmTRAVERSE_PREV"
 		end;
 
-	XmTRAVERSE_HOME: INTEGER is
+	XmTRAVERSE_HOME: INTEGER
 		external
 			"C [macro <Xm/Xm.h>]: EIF_INTEGER"
 		alias
 			"XmTRAVERSE_HOME"
 		end;
 
-	XmTRAVERSE_NEXT_TAB_GROUP: INTEGER is
+	XmTRAVERSE_NEXT_TAB_GROUP: INTEGER
 		external
 			"C [macro <Xm/Xm.h>]: EIF_INTEGER"
 		alias
 			"XmTRAVERSE_NEXT_TAB_GROUP"
 		end;
 
-	XmTRAVERSE_PREV_TAB_GROUP: INTEGER is
+	XmTRAVERSE_PREV_TAB_GROUP: INTEGER
 		external
 			"C [macro <Xm/Xm.h>]: EIF_INTEGER"
 		alias
 			"XmTRAVERSE_PREV_TAB_GROUP"
 		end;
 
-	XmTRAVERSE_UP: INTEGER is
+	XmTRAVERSE_UP: INTEGER
 		external
 			"C [macro <Xm/Xm.h>]: EIF_INTEGER"
 		alias
 			"XmTRAVERSE_UP"
 		end;
 
-	XmTRAVERSE_DOWN: INTEGER is
+	XmTRAVERSE_DOWN: INTEGER
 		external
 			"C [macro <Xm/Xm.h>]: EIF_INTEGER"
 		alias
 			"XmTRAVERSE_DOWN"
 		end;
 
-	XmTRAVERSE_LEFT: INTEGER is
+	XmTRAVERSE_LEFT: INTEGER
 		external
 			"C [macro <Xm/Xm.h>]: EIF_INTEGER"
 		alias
 			"XmTRAVERSE_LEFT"
 		end;
 
-	XmTRAVERSE_RIGHT: INTEGER is
+	XmTRAVERSE_RIGHT: INTEGER
 		external
 			"C [macro <Xm/Xm.h>]: EIF_INTEGER"
 		alias
 			"XmTRAVERSE_RIGHT"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

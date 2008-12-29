@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPbutton"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Text of the button
 		do
 			if exists then
@@ -32,13 +32,13 @@ feature -- Access
 
 feature -- Status report
 
-	realized: BOOLEAN is
+	realized: BOOLEAN
 			-- Is the button realized?
 		do
 			Result := exists
 		end
 
-	in_menu: BOOLEAN is
+	in_menu: BOOLEAN
 			-- Is current button in a menu?
 		do
 			Result := is_parent_option_pull or
@@ -47,7 +47,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_center_alignment is
+	set_center_alignment
 			-- Set text alignment to center
 		do
 			if alignment_type /= center_alignment_type then
@@ -55,7 +55,7 @@ feature -- Status setting
 			end
 		end
 
-	set_left_alignment is
+	set_left_alignment
 			-- Set text alignment to left
 		do
 			if alignment_type /= left_alignment_type then
@@ -63,7 +63,7 @@ feature -- Status setting
 			end
 		end
 
-	set_right_alignment is
+	set_right_alignment
 			-- Set text alignment to right
 		do
 			if alignment_type /= right_alignment_type then
@@ -74,16 +74,16 @@ feature -- Status setting
 	alignment_type: INTEGER
 			-- Type of alignment
 
-	Center_alignment_type: INTEGER is 0
+	Center_alignment_type: INTEGER = 0
 			-- Centered alignment type
 
-	Left_alignment_type: INTEGER is 1
+	Left_alignment_type: INTEGER = 1
 			-- Left alignment type
 
-	Right_alignment_type: INTEGER is 2
+	Right_alignment_type: INTEGER = 2
 			-- Right alignment type
 
-	set_default_size is
+	set_default_size
 			-- Resize to a default size.
 		local
 			fw: FONT_IMP
@@ -101,7 +101,7 @@ feature -- Status setting
 			end
 		end
 
-	set_text (t: STRING) is
+	set_text (t: STRING)
 			-- Set window text to t.
 		do
 			if t /= Void then
@@ -122,21 +122,21 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 			-- Add a_command to the list of action to execute when
 			-- current push button is activated.
 		do
 			activate_actions.add (Current, a_command, argument)
 		end
 
-	add_arm_action (a_command: COMMAND; arg: ANY) is
+	add_arm_action (a_command: COMMAND; arg: ANY)
 			-- Add a_command to the list of action to execute when
 			-- current push button is armed.
 		do
 			arm_actions.add (Current, a_command, arg)
 		end
 
-	add_release_action (a_command: COMMAND; arg: ANY) is
+	add_release_action (a_command: COMMAND; arg: ANY)
 			-- Add a_command to the list of action to execute when
 			-- current push button is released.
 		do
@@ -145,21 +145,21 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 			-- Remove a_command from the list of action to execute when
 			-- current push button is activated.
 		do
 			activate_actions.remove (Current, a_command, argument)
 		end
 
-	remove_arm_action (a_command: COMMAND; arg: ANY) is
+	remove_arm_action (a_command: COMMAND; arg: ANY)
 			-- Remove a_command from the list of action to execute when
 			-- current push button is armed.
 		do
 			arm_actions.remove (Current, a_command, arg)
 		end
 
-	remove_release_action (a_command: COMMAND; arg: ANY) is
+	remove_release_action (a_command: COMMAND; arg: ANY)
 			-- Remove a_command from the list of action to execute when
 			-- current push button is released.
 		do
@@ -171,13 +171,13 @@ feature -- Implementation
 	private_text: STRING
 			-- Private text
 
-	extra_width: INTEGER is
+	extra_width: INTEGER
 			-- Extra width
 		once
 			Result := 10
 		end
 
-	is_parent_menu_pull: BOOLEAN is
+	is_parent_menu_pull: BOOLEAN
 			-- Is my parent a menu pull?
 		local
 			mp: MENU_PULL_IMP
@@ -186,7 +186,7 @@ feature -- Implementation
 			Result := mp /= Void
 		end
 
-	is_parent_option_pull: BOOLEAN is
+	is_parent_option_pull: BOOLEAN
 			-- Is my parent a option pull?
 		local
 			op: OPT_PULL_I
@@ -195,7 +195,7 @@ feature -- Implementation
 			Result := op /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

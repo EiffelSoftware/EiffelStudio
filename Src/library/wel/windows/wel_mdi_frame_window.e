@@ -1,4 +1,4 @@
-indexing
+note
 	description: "MDI frame window containing a MDI client window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_top (a_name: STRING_GENERAL; a_menu: WEL_MENU; first_child: INTEGER) is
+	make_top (a_name: STRING_GENERAL; a_menu: WEL_MENU; first_child: INTEGER)
 			-- Make a MDI frame window named `a_name' using
 			-- `a_menu' as the application's Window menu.
 			-- `first_child' specifies the child window identifier
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_active_window: BOOLEAN is
+	has_active_window: BOOLEAN
 			-- Is a window currently active?
 		require
 			exists: exists
@@ -66,7 +66,7 @@ feature -- Status report
 			Result := client_window.has_active_window
 		end
 
-	active_window: WEL_MDI_CHILD_WINDOW is
+	active_window: WEL_MDI_CHILD_WINDOW
 			-- Window currently active
 		require
 			exists: exists
@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	tile_children_horizontal is
+	tile_children_horizontal
 			-- Horizontally tile the child windows.
 		require
 			exists: exists
@@ -87,7 +87,7 @@ feature -- Basic operations
 			client_window.tile_children_horizontal
 		end
 
-	tile_children_vertical is
+	tile_children_vertical
 			-- Vertically tile the child windows.
 		require
 			exists: exists
@@ -95,7 +95,7 @@ feature -- Basic operations
 			client_window.tile_children_vertical
 		end
 
-	arrange_icons is
+	arrange_icons
 			-- Arrange iconized child windows.
 		require
 			exists: exists
@@ -103,7 +103,7 @@ feature -- Basic operations
 			client_window.arrange_icons
 		end
 
-	cascade_children is
+	cascade_children
 			-- Cascade the child windows.
 		require
 			exists: exists
@@ -113,7 +113,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	call_default_window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	call_default_window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 		do
 			if client_window /= Void and then client_window.exists then
 				Result := cwin_def_frame_proc (hwnd,
@@ -124,13 +124,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := "WELMDIFrameWindowClass"
 		end
 
-	class_background: WEL_BRUSH is
+	class_background: WEL_BRUSH
 			-- Standard application workspace color 
 		once
 			create Result.make_by_sys_color (Color_appworkspace + 1)
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Externals
 
 	cwin_def_frame_proc (hwnd, hwnd_mdi_client: POINTER; msg: INTEGER; wparam,
-			lparam: POINTER): POINTER is
+			lparam: POINTER): POINTER
 			-- SDK DefFrameProc
 		external
 			"C [macro <wel.h>] (HWND, HWND, UINT, WPARAM, LPARAM): LRESULT"
@@ -147,7 +147,7 @@ feature {NONE} -- Externals
 			"DefFrameProc"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

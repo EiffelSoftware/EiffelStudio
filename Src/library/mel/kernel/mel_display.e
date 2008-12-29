@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of the X Display."
@@ -24,7 +24,7 @@ create
 feature {NONE} -- Initialization
 
 	make (application_context: MEL_APPLICATION_CONTEXT; a_display_name: STRING;
-				app_name: STRING; app_class_name: STRING) is
+				app_name: STRING; app_class_name: STRING)
 			-- Open the display with `a_display_name', application name `app_name'
 			-- and application class name `app_class_name'.
 		require
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 					name.is_equal (a_display_name)
 		end;
 
-	make_from_existing (a_display: POINTER) is
+	make_from_existing (a_display: POINTER)
 			-- Create display from `a_display'.
 		require
 			a_display_not_null: a_display /= default_pointer
@@ -94,7 +94,7 @@ feature -- Access
 	screens: ARRAY [MEL_SCREEN]
 			-- Screens attached to this display.
 
-	default_screen: MEL_SCREEN is
+	default_screen: MEL_SCREEN
 			-- The default screen of the display.
 		require
 			is_valid: is_valid
@@ -104,7 +104,7 @@ feature -- Access
 			default_screen_not_void: Result /= Void
 		end;
 
-	default_root_window: POINTER is
+	default_root_window: POINTER
 			-- Default root window
 		require
 			is_valid: is_valid
@@ -112,7 +112,7 @@ feature -- Access
 			Result := default_screen.root_window
 		end;
 
-	max_request_size: INTEGER is
+	max_request_size: INTEGER
 			-- Maximum number of request support by Current display
 		require
 			is_valid: is_valid
@@ -120,7 +120,7 @@ feature -- Access
 			Result := x_max_request_size (handle)
 		end;
 
-	name: STRING is
+	name: STRING
 			-- Display name used to open the Current display
 		require
 			is_valid: is_valid
@@ -131,7 +131,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is display equal to `other'?
 		do
 			Result := handle = other.handle
@@ -139,7 +139,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Has the display been opened ?
 		do
 			Result := handle /= default_pointer
@@ -147,7 +147,7 @@ feature -- Status report
 
 feature -- Miscellaneous
 
-	flush is
+	flush
 			-- Flush all the events of the display.
 		require
 			display_not_void: handle /= default_pointer 
@@ -157,7 +157,7 @@ feature -- Miscellaneous
 
 feature -- Removal
 
-	close is
+	close
 			-- Close the display.
 			-- ie. close the connection with
 			-- an X server.
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 	xt_open_display (app_context, disp_name, 
 			app_name, app_class, 
 			options: POINTER; num_options: INTEGER; 
-			a_argc, a_argv: POINTER): POINTER is
+			a_argc, a_argv: POINTER): POINTER
 		external
 			"C (XtAppContext, String, String, String, XrmOptionDescRec *, %
 				% Cardinal, int *, String *): EIF_POINTER |<X11/Intrinsic.h>"
@@ -183,28 +183,28 @@ feature {NONE} -- Implementation
 			"XtOpenDisplay"
 		end;
 
-	xt_close_display (display_ptr: POINTER) is
+	xt_close_display (display_ptr: POINTER)
 		external
 			"C (Display *) | <X11/Intrinsic.h>"
 		alias
 			"XtCloseDisplay"
 		end;
 
-	x_max_request_size (display_ptr: POINTER): INTEGER is
+	x_max_request_size (display_ptr: POINTER): INTEGER
 		external
 			"C (Display *): EIF_INTEGER | <X11/Xlib.h>"
 		alias
 			"XMaxRequestSize"
 		end;
 
-	x_flush (dsp_ptr: POINTER) is
+	x_flush (dsp_ptr: POINTER)
 		external
 			"C (Display *) | <X11/Xlib.h> "
 		alias
 			"XFlush"
 		end;
 
-	display_string (display_ptr: POINTER): POINTER is
+	display_string (display_ptr: POINTER): POINTER
 			-- X macro
 		external
 			"C [macro <X11/Xlib.h>] (Display *): EIF_POINTER"
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			"DisplayString"
 		end
 
-	default_scr (display_ptr: POINTER): INTEGER is
+	default_scr (display_ptr: POINTER): INTEGER
 			-- X macro
 		external
 			"C [macro <X11/Xlib.h>] (Display *): EIF_INTEGER"
@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 			"DefaultScreen"
 		end
 
-	argc: POINTER is
+	argc: POINTER
 			-- Here we need to give the address of the argc value to XtOpenDisplay.
 		external
 			"C [macro %"eif_argv.h%"]: EIF_POINTER"
@@ -228,28 +228,28 @@ feature {NONE} -- Implementation
 			"&eif_argc"
 		end;
 
-	argv: POINTER is
+	argv: POINTER
 		external
 			"C [macro %"eif_argv.h%"] : EIF_POINTER"
 		alias
 			"eif_argv"
 		end;
 
-	screen_count (display_ptr: POINTER): INTEGER is
+	screen_count (display_ptr: POINTER): INTEGER
 		external
 			"C [macro <X11/Xlib.h>] (Display *): EIF_INTEGER"
 		alias
 			"ScreenCount"
 		end;
 
-	screen_of_display (display_ptr: POINTER; i: INTEGER): POINTER is
+	screen_of_display (display_ptr: POINTER; i: INTEGER): POINTER
 		external
 			 "C [macro <X11/Xlib.h>] (Display *, int): EIF_POINTER"
 		alias
 			"ScreenOfDisplay"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

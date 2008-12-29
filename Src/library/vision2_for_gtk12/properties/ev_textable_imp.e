@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision textable. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	textable_imp_initialize is
+	textable_imp_initialize
 			-- Create a GtkLabel to display the text.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text of the label
 		local
 			p: POINTER
@@ -50,7 +50,7 @@ feature -- Access
 			create Result.make_from_c (p)
 		end
 
-	text_alignment: INTEGER is
+	text_alignment: INTEGER
 			-- Alignment of the text in the label.
 		local
 			an_alignment_code: INTEGER
@@ -69,21 +69,21 @@ feature -- Access
 
 feature -- Status setting
 
-	align_text_center is
+	align_text_center
 			-- Display `text' centered.
 		do
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.5, 0.5)
 			{EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, {EV_GTK_EXTERNALS}.gtk_justify_center_enum)
 		end
 
-	align_text_left is
+	align_text_left
 			-- Display `text' left aligned.
 		do
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0, 0.5)
 			{EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, {EV_GTK_EXTERNALS}.gtk_justify_left_enum)
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display `text' right aligned.
 		do
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 1, 0.5)
@@ -92,7 +92,7 @@ feature -- Status setting
 
 feature -- Element change	
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -114,7 +114,7 @@ feature {EV_ANY_I} -- Implementation
 invariant
 	text_label_not_void: is_usable implies text_label /= NULL
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

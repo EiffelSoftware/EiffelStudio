@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that redirect file output into a buffer. If the output exceeds the size of the buffer,
 		only the first and the last part of the output are kept in the buffer.
@@ -125,7 +125,7 @@ feature -- Status setting
 
 feature -- Output
 
-	put_string, putstring (a_string: STRING) is
+	put_string, putstring (a_string: STRING)
 			-- Append string to `buffer'.
 			--
 			-- `a_string': String to be appended to `buffer'.

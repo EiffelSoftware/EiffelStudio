@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Exception manager. 
 		The manager handles all common operations of exception mechanism and interaction with the ISE runtime.
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Raise
 
-	raise (a_exception: EXCEPTION) is
+	raise (a_exception: EXCEPTION)
 			-- Raise `a_exception'.
 			-- Raising `a_exception' by this routine makes `a_exception' accessable by `last_exception'
 			-- in rescue clause. Hence causes removal of original `last_exception'.
@@ -62,7 +62,7 @@ feature -- Raise
 
 feature -- Status setting
 
-	ignore (a_exception: TYPE [EXCEPTION]) is
+	ignore (a_exception: TYPE [EXCEPTION])
 			-- Make sure that any exception of type `a_exception' will be
 			-- ignored. This is not the default.
 		local
@@ -72,7 +72,7 @@ feature -- Status setting
 			ignored_exceptions.force (l_type, l_type)
 		end
 
-	catch (a_exception: TYPE [EXCEPTION]) is
+	catch (a_exception: TYPE [EXCEPTION])
 			-- Set type of `a_exception' `is_ignored'.
 		local
 			l_type: INTEGER
@@ -81,7 +81,7 @@ feature -- Status setting
 			ignored_exceptions.remove (l_type)
 		end
 
-	set_is_ignored (a_exception: TYPE [EXCEPTION]; a_ignored: BOOLEAN) is
+	set_is_ignored (a_exception: TYPE [EXCEPTION]; a_ignored: BOOLEAN)
 			-- Set type of `a_exception' to be `a_ignored'.
 		do
 			if a_ignored then
@@ -93,25 +93,25 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_ignorable (a_exception: TYPE [EXCEPTION]): BOOLEAN is
+	is_ignorable (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is ignorable.
 		do
 			Result := not unignorable_exceptions.has (internal_object.dynamic_type (a_exception))
 		end
 
-	is_raisable (a_exception: TYPE [EXCEPTION]): BOOLEAN is
+	is_raisable (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is raisable.
 		do
 			Result := not unraisable_exceptions.has (internal_object.dynamic_type (a_exception))
 		end
 
-	is_ignored (a_exception: TYPE [EXCEPTION]): BOOLEAN is
+	is_ignored (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is not raised.
 		do
 			Result := ignored_exceptions.has (internal_object.dynamic_type (a_exception))
 		end
 
-	is_caught (a_exception: TYPE [EXCEPTION]): BOOLEAN is
+	is_caught (a_exception: TYPE [EXCEPTION]): BOOLEAN
 			-- If set, type of `a_exception' is raised.
 		do
 			Result := not ignored_exceptions.has (internal_object.dynamic_type (a_exception))
@@ -194,7 +194,7 @@ feature {EXCEPTIONS} -- Compatibility support
 			end
 		end
 
-	exception_from_code (a_code: INTEGER): ?EXCEPTION is
+	exception_from_code (a_code: INTEGER): ?EXCEPTION
 			-- Create exception object from `a_code'
 		do
 			inspect a_code
@@ -271,7 +271,7 @@ feature {EXCEPTIONS} -- Compatibility support
 
 feature {NONE} -- Access
 
-	exception_data: ?TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN] is
+	exception_data: ?TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN]
 			-- Exception data
 			-- Used to store temporary exception information,
 			-- which is used to create exception object later.
@@ -281,7 +281,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Element change
 
-	set_last_exception (a_last_exception: EXCEPTION) is
+	set_last_exception (a_last_exception: EXCEPTION)
 			-- Set `last_exception' with `a_last_exception'.
 		do
 			last_exception_cell.put (a_last_exception)
@@ -290,7 +290,7 @@ feature {NONE} -- Element change
 		end
 
 	set_exception_data (code: INTEGER; new_obj: BOOLEAN; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING;
-						rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN) is
+						rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN)
 			-- Set exception data.
 		local
 			l_exception: ?EXCEPTION
@@ -315,13 +315,13 @@ feature {NONE} -- Element change
 
 feature {NONE} -- Implementation, ignoring
 
-	ignored_exceptions: HASH_TABLE [INTEGER, INTEGER] is
+	ignored_exceptions: HASH_TABLE [INTEGER, INTEGER]
 			-- Ignored exceptions
 		once
 			create Result.make (0)
 		end
 
-	unignorable_exceptions: HASH_TABLE [INTEGER, INTEGER] is
+	unignorable_exceptions: HASH_TABLE [INTEGER, INTEGER]
 			-- Unignorable exceptions
 		local
 			l_type: INTEGER
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation, ignoring
 			Result.force (l_type, l_type)
 		end
 
-	unraisable_exceptions: HASH_TABLE [INTEGER, INTEGER] is
+	unraisable_exceptions: HASH_TABLE [INTEGER, INTEGER]
 			-- Unraisable exceptions
 		once
 			create Result.make (0)
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation, ignoring
 
 feature {NONE} -- Implementation
 
-	is_code_ignored (a_code: INTEGER): BOOLEAN is
+	is_code_ignored (a_code: INTEGER): BOOLEAN
 			-- Is exception of `a_code' ignored?
 		do
 			if {l_type: TYPE [EXCEPTION]} type_of_code (a_code) then
@@ -351,19 +351,19 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Cells
 
-	exception_data_cell: CELL [?TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN]] is
+	exception_data_cell: CELL [?TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN]]
 			-- Cell to hold current exception data
 		once
 			create Result.put (Void)
 		end
 
-	last_exception_cell: CELL [?EXCEPTION] is
+	last_exception_cell: CELL [?EXCEPTION]
 			-- Cell to hold last exception
 		once
 			create Result.put (Void)
 		end
 
-	no_memory_exception_object_cell: CELL [?EXCEPTION] is
+	no_memory_exception_object_cell: CELL [?EXCEPTION]
 			-- No more memory exception object.
 		once
 			create Result.put (Void)
@@ -371,7 +371,7 @@ feature {NONE} -- Cells
 
 feature {NONE} -- Implementation
 
-	exception_from_data: ?EXCEPTION is
+	exception_from_data: ?EXCEPTION
 			-- Create an exception object `exception_data'
 		local
 			t: ?EXCEPTION
@@ -415,7 +415,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	once_raise (a_exception: EXCEPTION) is
+	once_raise (a_exception: EXCEPTION)
 			-- Called by runtime to raise saved exception for once routines.
 		local
 			p_meaning, p_message: POINTER
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	frozen init_exception_manager is
+	frozen init_exception_manager
 			-- Call once routines to create objects beforehand,
 			-- in case it goes into critical session (Stack overflow, no memory etc.)
 			-- The creations doesn't fail.
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	frozen free_preallocated_trace is
+	frozen free_preallocated_trace
 		local
 			e: ?EXCEPTION
 		do
@@ -472,13 +472,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	developer_raise (a_code: INTEGER; a_meaning, a_message: POINTER) is
+	developer_raise (a_code: INTEGER; a_meaning, a_message: POINTER)
 			-- Raise an exception
 		external
 			"built_in"
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

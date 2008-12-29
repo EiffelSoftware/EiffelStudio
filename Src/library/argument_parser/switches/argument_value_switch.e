@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A command line switch that accepts a value."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: !like id; a_desc: !like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: !like arg_name; a_arg_desc: !like arg_description; a_val_optional: like is_value_optional) is
+	make (a_id: !like id; a_desc: !like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: !like arg_name; a_arg_desc: !like arg_description; a_val_optional: like is_value_optional)
 			-- Initialize a new value option.
 			--
 			-- Note: To use long and short names set name `a_id' := "s|long"
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			not_is_hidden: not is_hidden
 		end
 
-	make_hidden (a_id: !like id; a_desc: !like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: !like arg_name; a_arg_desc: !like arg_description; a_val_optional: like is_value_optional) is
+	make_hidden (a_id: !like id; a_desc: !like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: !like arg_name; a_arg_desc: !like arg_description; a_val_optional: like is_value_optional)
 			-- Initialize a new value option.
 			--
 			-- Note: To use long and short names set name `a_id' := "s|long"
@@ -112,7 +112,7 @@ invariant
 	not_arg_name_is_empty: not arg_name.is_empty
 	not_arg_description_is_empty: not arg_description.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

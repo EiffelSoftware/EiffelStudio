@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General primitive implementation"
 	legal: "See notice at end of class.";
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	foreground_color: COLOR is
+	foreground_color: COLOR
 			-- Foreground color of primitive widget
 		deferred
 		ensure
@@ -27,13 +27,13 @@ feature -- Access
 
 feature -- Status setting
 
-	update_foreground_color is
+	update_foreground_color
 		deferred
 		end;
 
 feature -- Element change
 
-	set_foreground_color (new_color: COLOR) is
+	set_foreground_color (new_color: COLOR)
 			-- Set foreground color to `new_color'.
 		require
 			valid_color: new_color /= Void
@@ -42,7 +42,7 @@ feature -- Element change
 			foreground_set: foreground_color = new_color
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

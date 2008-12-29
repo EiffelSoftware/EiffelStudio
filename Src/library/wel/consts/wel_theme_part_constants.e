@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows XP theme constants for part identifiers."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,51 +10,51 @@ class
 
 feature -- Access
 
-	bp_pushbutton: INTEGER is 1
+	bp_pushbutton: INTEGER = 1
 			-- BP_PUSHBUTTON
 
-	bp_groupbox: INTEGER is 4
+	bp_groupbox: INTEGER = 4
 			-- BP_GROUPBOX
 
-	tabp_body: INTEGER is 10
+	tabp_body: INTEGER = 10
 			-- TABP_BODY
 
-	tabp_item: INTEGER is 1
+	tabp_item: INTEGER = 1
 			-- TABP_ITEM
 
-	tp_button: INTEGER is 1
+	tp_button: INTEGER = 1
 			-- TP_BUTTON
 
-	tp_dropdownbutton: INTEGER is 2
+	tp_dropdownbutton: INTEGER = 2
 			-- TP_DROPDOWNBUTTON
 
-	tp_splitbutton: INTEGER is 3
+	tp_splitbutton: INTEGER = 3
 			-- TP_SPLITBUTTON
 
-	tp_splitbuttondropdown: INTEGER is 4
+	tp_splitbuttondropdown: INTEGER = 4
 			-- TP_SPLITBUTTONDROPDOWN
 
-	tp_separator: INTEGER is 5
+	tp_separator: INTEGER = 5
 			-- TP_SEPARATOR
 
-	tp_separatorvert: INTEGER is 6
+	tp_separatorvert: INTEGER = 6
 			-- TP_SEPARATORVERT
 
 feature -- Top notebook tabs
 
-	tabp_tabitem: INTEGER is 1
+	tabp_tabitem: INTEGER = 1
 			-- TABP_TABITEM
 
-	tabp_tabitemleftedge: INTEGER is 2
+	tabp_tabitemleftedge: INTEGER = 2
 			-- TABP_TABITEMLEFTEDGE
 
-	tabp_tabitemrightedge: INTEGER is 3
+	tabp_tabitemrightedge: INTEGER = 3
 			-- TABP_TABITEMRIGHTEDGE
 
-	tabp_tabitembothedge: INTEGER is 4;
+	tabp_tabitembothedge: INTEGER = 4;
 			-- TABP_TABITEMBOTHEDGE
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

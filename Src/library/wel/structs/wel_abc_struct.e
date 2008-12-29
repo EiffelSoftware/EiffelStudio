@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a Windows ABC struct."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_abc
@@ -25,19 +25,19 @@ feature -- Measurement
 
 feature -- Status report
 
-	a: INTEGER is
+	a: INTEGER
 			-- A spacing of character.
 		do
 			Result := cwel_abc_get_abca (item)
 		end
 		
-	b: INTEGER is
+	b: INTEGER
 			-- B spacing of character.
 		do
 			Result := cwel_abc_get_abcb (item)
 		end
 		
-	c: INTEGER is
+	c: INTEGER
 			-- C spacing of character.
 		do
 			Result := cwel_abc_get_abcc (item)
@@ -45,35 +45,35 @@ feature -- Status report
 
 feature {NONE} -- Externals
 
-	c_size_of_abc: INTEGER is
+	c_size_of_abc: INTEGER
 		external
 			"C [macro <wingdi.h>]"
 		alias
 			"sizeof (ABC)"
 		end
 		
-	cwel_abc_get_abca (ptr: POINTER): INTEGER is
+	cwel_abc_get_abca (ptr: POINTER): INTEGER
 		external
 			"C [struct %"wingdi.h%"] (ABC): EIF_INTEGER"
 		alias
 			"abcA"
 		end
 		
-	cwel_abc_get_abcb (ptr: POINTER): INTEGER is
+	cwel_abc_get_abcb (ptr: POINTER): INTEGER
 		external
 			"C [struct %"wingdi.h%"] (ABC): EIF_INTEGER"
 		alias
 			"abcB"
 		end
 		
-	cwel_abc_get_abcc (ptr: POINTER): INTEGER is
+	cwel_abc_get_abcc (ptr: POINTER): INTEGER
 		external
 			"C [struct %"wingdi.h%"] (ABC): EIF_INTEGER"
 		alias
 			"abcC"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

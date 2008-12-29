@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[	
 								..corner.
 							...     |     ...
@@ -53,7 +53,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create with 6 lines.
 		local
 			i, nb: INTEGER
@@ -77,31 +77,31 @@ feature -- Access
 	line_count: INTEGER
 			-- Number of lines.
 		
-	corner_point_x: INTEGER is
+	corner_point_x: INTEGER
 			-- x position of `center_point'.
 		do
 			Result := point_array.item (1).x
 		end
 		
-	corner_point_y: INTEGER is
+	corner_point_y: INTEGER
 			-- y position of `center_point'.
 		do
 			Result := point_array.item (1).y
 		end
 		
-	center_point_x: INTEGER is
+	center_point_x: INTEGER
 			-- x position of `center_point'.
 		do
 			Result := point_array.item (0).x
 		end
 		
-	center_point_y: INTEGER is
+	center_point_y: INTEGER
 			-- y position of `center_point'.
 		do
 			Result := point_array.item (0).y
 		end
 		
-	angle: DOUBLE is
+	angle: DOUBLE
 			-- Upright position.
 		local
 			ce, co: EV_COORDINATE
@@ -113,18 +113,18 @@ feature -- Access
 
 feature -- Status
 
-	is_scalable: BOOLEAN is True
+	is_scalable: BOOLEAN = True
 			-- Is scalable? (Yes)
 			
-	is_rotatable: BOOLEAN is True
+	is_rotatable: BOOLEAN = True
 			-- Is rotatable? (Yes)
 			
-	is_transformable: BOOLEAN is True
+	is_transformable: BOOLEAN = True
 			-- Is transformable? (Yes)
 			
 feature -- Element change
 
-	set_line_count (n: INTEGER) is
+	set_line_count (n: INTEGER)
 			-- Set `line_count' to `n'.
 		require
 			n_bigger_than_two: n > 2
@@ -163,13 +163,13 @@ feature -- Element change
 			end
 		end
 		
-	set_point_a_position (ax, ay: INTEGER) is
+	set_point_a_position (ax, ay: INTEGER)
 			-- Set position of `center_point' to position of `a_point_a'
 		do
 			set_x_y (ax, ay)
 		end
 		
-	set_point_b_position (ax, ay: INTEGER) is
+	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `corner_point' to postion of `a_point_b'
 		do
 			point_array.item (1).set_precise (ax, ay)
@@ -179,13 +179,13 @@ feature -- Element change
 
 feature -- Events
 
-	position_on_figure (ax, ay: INTEGER): BOOLEAN is
+	position_on_figure (ax, ay: INTEGER): BOOLEAN
 			-- Is (`ax', `ay') on this figure?	
 		do
 			Result := point_on_polygon (ax, ay, corner_points)
 		end
 
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
 			min_x, min_y, max_x, max_y, lw2, val: DOUBLE
@@ -230,7 +230,7 @@ feature -- Events
 
 feature {NONE} -- Implementation
 
-	set_center is
+	set_center
 			-- Set the center.
 		local
 			ce: EV_COORDINATE
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			is_center_valid := True
 		end
 		
-	set_corner_points is
+	set_corner_points
 			-- Set position of corner points
 		local
 			n: INTEGER
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	corner_points: like point_array is
+	corner_points: like point_array
 			-- Corner points.
 		local
 			i, nb: INTEGER
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 		end
 		
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

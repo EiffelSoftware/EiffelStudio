@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$";
@@ -9,20 +9,20 @@ class EC_TYPES
 
 feature
 
-	Identifier_ttype:	INTEGER is  1;
-	String_ttype: 		INTEGER is  2;
-	Real_ttype: 		INTEGER is  3;
-	Integer_ttype: 		INTEGER is  4;
-	Space_ttype: 		INTEGER is  5;
-	Field_sep_ttype: 	INTEGER is  6;	
-	Separator_ttype: 	INTEGER is  7;
-	Left_del_ttype: 	INTEGER is  8;
-	Right_del_ttype: 	INTEGER is  9;
-	Boolean_ttype: 		INTEGER is 10;
-	Basic_ttype : 		INTEGER is 11;
-	Label_sep_ttype:	INTEGER is 12;
+	Identifier_ttype:	INTEGER =  1;
+	String_ttype: 		INTEGER =  2;
+	Real_ttype: 		INTEGER =  3;
+	Integer_ttype: 		INTEGER =  4;
+	Space_ttype: 		INTEGER =  5;
+	Field_sep_ttype: 	INTEGER =  6;	
+	Separator_ttype: 	INTEGER =  7;
+	Left_del_ttype: 	INTEGER =  8;
+	Right_del_ttype: 	INTEGER =  9;
+	Boolean_ttype: 		INTEGER = 10;
+	Basic_ttype : 		INTEGER = 11;
+	Label_sep_ttype:	INTEGER = 12;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

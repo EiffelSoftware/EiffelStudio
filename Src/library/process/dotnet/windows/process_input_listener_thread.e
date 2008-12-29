@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object defining a listener for sending data into launched process.
 					It is used when you redirect input to stream or file.
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (prc_launcher: PROCESS_IMP) is
+	make (prc_launcher: PROCESS_IMP)
 		require
 			thread_capable: {PLATFORM}.is_thread_capable			
 			process_launcher_not_null: prc_launcher /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Run
 
-	execute is
+	execute
 		local
 			done: BOOLEAN
 			l_sleep_time: INTEGER_64
@@ -58,7 +58,7 @@ feature -- Run
 			end
 		end
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

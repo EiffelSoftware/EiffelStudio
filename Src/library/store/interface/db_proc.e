@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$"
@@ -22,7 +22,7 @@ create -- Creation procedure
 
 feature -- Initialization
 
-	make (a_name: STRING) is
+	make (a_name: STRING)
 			-- Create an interface object to create 
 			-- and execute stored procedure.
 		require
@@ -40,7 +40,7 @@ feature -- Status report
 	name: STRING
 			-- Procedure name
 
-	text: STRING is
+	text: STRING
 			-- SQL text of current procedure
 		require
 			exists: exists
@@ -50,13 +50,13 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	arguments_name: ARRAY [STRING] is
+	arguments_name: ARRAY [STRING]
 			-- Argument names
 		do
 			Result := implementation.arguments_name
 		end
 
-	arguments_type: ARRAY [ANY] is
+	arguments_type: ARRAY [ANY]
 			-- Argument types
 		do
 			Result := implementation.arguments_type
@@ -65,7 +65,7 @@ feature -- Status report
 	loaded: BOOLEAN
 			-- Is current procedure loaded?
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does current procedure exist in server?
 		require
 			loaded: loaded
@@ -73,7 +73,7 @@ feature -- Status report
 			Result := implementation.exists
 		end
 
-	arguments_set: BOOLEAN is
+	arguments_set: BOOLEAN
 			-- Have arguments been set?
 		do
 			Result := (arguments_name /= Void and
@@ -85,7 +85,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	load is
+	load
 			-- Load stored procedure `name'
 		require
 			is_connected: is_connected
@@ -100,7 +100,7 @@ feature -- Basic operations
 			loaded: loaded
 		end
 
-	store (sql: STRING) is
+	store (sql: STRING)
 			-- Store current procedure with `sql' expression.
 		require
 			sql_not_void: sql /= Void
@@ -113,7 +113,7 @@ feature -- Basic operations
 			end
 		end
 		
-	execute (destination: DB_EXPRESSION) is
+	execute (destination: DB_EXPRESSION)
 			-- Execute current procedure with `destination'
 			-- be a DB_SELECTION or DB_CHANGE object mapping
 			-- entity values with procedure parameter names
@@ -129,7 +129,7 @@ feature -- Basic operations
 			end
 		end
 
-	execute_string (destination: DB_EXPRESSION; sql: STRING) is
+	execute_string (destination: DB_EXPRESSION; sql: STRING)
 			-- Execute using `sql' statement current procedure with `destination'
 			-- be a DB_SELECTION or DB_CHANGE object mapping
 			-- entity values with procedure parameter names
@@ -145,7 +145,7 @@ feature -- Basic operations
 			end
 		end
 
-	drop is
+	drop
 			-- Drop current procedure from server.
 		require
 			exists: exists
@@ -162,7 +162,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	change_name (new_name: STRING) is
+	change_name (new_name: STRING)
 			-- Change procedure name with `new_name'.
 		require
 			new_name_not_void: new_name /= Void
@@ -176,7 +176,7 @@ feature -- Status setting
 		end
 			
 	set_arguments (args_name: like arguments_name;
-			args_type: like arguments_type) is
+			args_type: like arguments_type)
 			-- Set `arguments_name' of current
 			-- as a variable list of argument names.
 		require
@@ -191,7 +191,7 @@ feature -- Status setting
 			arguments_set
 		end
 
-	set_no_arguments is
+	set_no_arguments
 			-- No arguments for the current procedure
 		do
 			implementation.set_no_arguments
@@ -211,7 +211,7 @@ invariant
 	implementation_not_void: implementation /= Void
 	load_and_exists: loaded implies (exists or not exists)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

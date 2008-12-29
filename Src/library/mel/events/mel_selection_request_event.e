@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XSelectionRequestEvent."
@@ -19,25 +19,25 @@ create
 
 feature -- Access
 
-    time: INTEGER is
+    time: INTEGER
             -- Time when selection was requested
         do
             Result := c_event_time (handle)
         end;
 
-    requestor_widget: MEL_WIDGET is
+    requestor_widget: MEL_WIDGET
 			-- Widget that received data
         do
             Result := retrieve_widget_from_window (requestor)
         end
 
-    owner_widget: MEL_WIDGET is
+    owner_widget: MEL_WIDGET
 			-- Widget that owns the selection
         do
             Result := retrieve_widget_from_window (owner)
         end
 
-    selection: MEL_ATOM is
+    selection: MEL_ATOM
 			-- Name of selection
         do
             create Result.make_from_existing (c_event_selection (handle))
@@ -45,7 +45,7 @@ feature -- Access
 			result_non_void: Result /= Void
         end;
 
-    target: MEL_ATOM is
+    target: MEL_ATOM
 			-- Data should be converted to this type by the owner
         do
             create Result.make_from_existing (c_event_target (handle))
@@ -53,7 +53,7 @@ feature -- Access
 			result_non_void: Result /= Void
         end;
 
-    property: MEL_ATOM is
+    property: MEL_ATOM
 			-- Selection's owner should copy data to this property
         do
 			create Result.make_from_existing (c_event_property (handle))
@@ -63,13 +63,13 @@ feature -- Access
 
 feature -- Pointer access
 
-	owner: POINTER is
+	owner: POINTER
 			-- Window that owns the selection
         do
             Result := c_event_owner (handle)
         end;
 
-    requestor: POINTER is
+    requestor: POINTER
 			-- Window that received data
         do
             Result := c_event_requestor (handle)
@@ -77,37 +77,37 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_event_owner (event_ptr: POINTER): POINTER is
+	c_event_owner (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XSelectionRequestEvent *): EIF_POINTER"
 		end;
 
-	c_event_requestor (event_ptr: POINTER): POINTER is
+	c_event_requestor (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XSelectionRequestEvent *): EIF_POINTER"
 		end;
 
-	c_event_time (event_ptr: POINTER): INTEGER is
+	c_event_time (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XSelectionRequestEvent *): EIF_INTEGER"
 		end;
 
-	c_event_selection (event_ptr: POINTER): POINTER is
+	c_event_selection (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XSelectionRequestEvent *): EIF_POINTER"
 		end;
 
-	c_event_target (event_ptr: POINTER): POINTER is
+	c_event_target (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XSelectionRequestEvent *): EIF_POINTER"
 		end;
 
-	c_event_property (event_ptr: POINTER): POINTER is
+	c_event_property (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XSelectionRequestEvent *): EIF_POINTER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

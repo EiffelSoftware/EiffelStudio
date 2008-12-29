@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common control Progress Bar Message (PBM) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,63 +10,63 @@ class
 
 feature -- Access
 
-	Pbm_getpos: INTEGER is
+	Pbm_getpos: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"PBM_GETPOS"
 		end
 
-	Pbm_getrange: INTEGER is
+	Pbm_getrange: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"PBM_GETRANGE"
 		end
 
-	Pbm_setrange: INTEGER is
+	Pbm_setrange: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"PBM_SETRANGE"
 		end
 		
-	Pbm_setrange32: INTEGER is
+	Pbm_setrange32: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"PBM_SETRANGE32"
 		end
 
-	Pbm_setpos: INTEGER is
+	Pbm_setpos: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"PBM_SETPOS"
 		end
 
-	Pbm_deltapos: INTEGER is
+	Pbm_deltapos: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"PBM_DELTAPOS"
 		end
 
-	Pbm_setstep: INTEGER is
+	Pbm_setstep: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"PBM_SETSTEP"
 		end
 
-	Pbm_stepit: INTEGER is
+	Pbm_stepit: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"PBM_STEPIT"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

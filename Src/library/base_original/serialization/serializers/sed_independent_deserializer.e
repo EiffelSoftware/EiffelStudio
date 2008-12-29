@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Decoding of arbitrary objects graphs between sessions of programs %
 		%containing the same types. It basically takes care of potential reordering %
 		%of attributes from one system to the other."
@@ -27,7 +27,7 @@ feature {NONE} -- Implementation: access
 			-- Mapping for each dynamic type id between old attribute location
 			-- and new attribute location.
 
-	new_attribute_offset (a_new_type_id, a_old_offset: INTEGER): INTEGER is
+	new_attribute_offset (a_new_type_id, a_old_offset: INTEGER): INTEGER
 			-- Given attribute offset `a_old_offset' in the stored object whose dynamic type id 
 			-- is now `a_new_type_id', retrieve new offset in `a_new_type_id'.
 		do
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation: access
 
 feature {NONE} -- Implementation
 
-	read_header (a_count: NATURAL_32) is
+	read_header (a_count: NATURAL_32)
 			-- Read header which contains mapping between dynamic type and their
 			-- string representation.
 		local
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	read_attributes (a_dtype: INTEGER) is
+	read_attributes (a_dtype: INTEGER)
 			-- Read attribute description for `a_dtype' where `a_dtype' is a dynamic type
 			-- from the current system.
 		require
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	attributes_map (a_dtype, a_field_count: INTEGER): HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING] is
+	attributes_map (a_dtype, a_field_count: INTEGER): HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING]
 			-- Attribute map for dynamic type `a_dtype' which records
 			-- position and dynamic type for a given attribute name.
 		require
@@ -241,14 +241,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Cleaning
 
-	clear_internal_data is
+	clear_internal_data
 			-- Clear all allocated data
 		do
 			Precursor {SED_BASIC_DESERIALIZER}
 			attributes_mapping := Void
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

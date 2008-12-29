@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Properties of a bitmap."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_width, a_height, a_width_bytes, a_planes,
-		a_bits_pixel: INTEGER; a_bits: POINTER) is
+		a_bits_pixel: INTEGER; a_bits: POINTER)
 		require
 			positive_width: a_width >= 0
 			positive_height: a_height >= 0
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			bits_set: bits = a_bits
 		end
 
-	make_by_bitmap (bitmap: WEL_BITMAP) is
+	make_by_bitmap (bitmap: WEL_BITMAP)
 			-- Make a log bitmap using the information of `bitmap'.
 		require
 			bitmap_not_void: bitmap /= Void
@@ -60,13 +60,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type: INTEGER is
+	type: INTEGER
 			-- Bitmap type
 		do
 			Result := cwel_logbitmap_get_type (item)
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Bitmap width
 		do
 			Result := cwel_logbitmap_get_width (item)
@@ -74,7 +74,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Bitmap height
 		do
 			Result := cwel_logbitmap_get_height (item)
@@ -82,7 +82,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	width_bytes: INTEGER is
+	width_bytes: INTEGER
 			-- Bitmap width_bytes
 		do
 			Result := cwel_logbitmap_get_width_bytes (item)
@@ -90,7 +90,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	planes: INTEGER is
+	planes: INTEGER
 			-- Bitmap planes
 		do
 			Result := cwel_logbitmap_get_planes (item)
@@ -98,7 +98,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	bits_pixel: INTEGER is
+	bits_pixel: INTEGER
 			-- Bitmap bits_pixel
 		do
 			Result := cwel_logbitmap_get_bits_pixel (item)
@@ -106,7 +106,7 @@ feature -- Access
 			positive_result: Result >= 0
 		end
 
-	bits: POINTER is
+	bits: POINTER
 			-- Bitmap bits
 		do
 			result := cwel_logbitmap_get_bits (item)
@@ -114,7 +114,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_type (a_type: INTEGER) is
+	set_type (a_type: INTEGER)
 			-- Set `type' with `a_type'
 		do
 			cwel_logbitmap_set_type (item, a_type)
@@ -122,7 +122,7 @@ feature -- Element change
 			set_type: type = a_type
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' with `a_width'
 		require
 			positive_width: a_width >= 0
@@ -132,7 +132,7 @@ feature -- Element change
 			set_width: width = a_width
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' with `a_height'
 		require
 			positive_height: a_height >= 0
@@ -142,7 +142,7 @@ feature -- Element change
 			set_height: height = a_height
 		end
 
-	set_width_bytes (a_width_bytes: INTEGER) is
+	set_width_bytes (a_width_bytes: INTEGER)
 			-- Set `width_bytes' with `a_width_bytes'
 		require
 			positive_width_bytes: a_width_bytes >= 0
@@ -152,7 +152,7 @@ feature -- Element change
 			set_width_bytes: width_bytes = a_width_bytes
 		end
 
-	set_planes (a_planes: INTEGER) is
+	set_planes (a_planes: INTEGER)
 			-- Set `planes' with `a_planes'
 		require
 			positive_planes: a_planes >= 0
@@ -162,7 +162,7 @@ feature -- Element change
 			set_planes: planes = a_planes
 		end
 
-	set_bits_pixel (a_bits_pixel: INTEGER) is
+	set_bits_pixel (a_bits_pixel: INTEGER)
 			-- Set `bits_pixel' with `a_bits_pixel'
 		require
 			positive_bits_pixel: a_bits_pixel >= 0
@@ -172,7 +172,7 @@ feature -- Element change
 			set_bits_pixel: bits_pixel = a_bits_pixel
 		end
 
-	set_bits (a_bits: POINTER) is
+	set_bits (a_bits: POINTER)
 			-- Set `bits' with `a_bits'
 		do
 			cwel_logbitmap_set_bits (item, a_bits)
@@ -182,7 +182,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_logbitmap
@@ -190,92 +190,92 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_logbitmap: INTEGER is
+	c_size_of_logbitmap: INTEGER
 		external
 			"C [macro <logbmp.h>]"
 		alias
 			"sizeof (BITMAP)"
 		end
 
-	cwel_logbitmap_get_type (ptr: POINTER): INTEGER is
+	cwel_logbitmap_get_type (ptr: POINTER): INTEGER
 		external
 			"C [macro <logbmp.h>]"
 		end
 
-	cwel_logbitmap_get_width (ptr: POINTER): INTEGER is
+	cwel_logbitmap_get_width (ptr: POINTER): INTEGER
 		external
 			"C [macro <logbmp.h>]"
 		end
 
-	cwel_logbitmap_get_height (ptr: POINTER): INTEGER is
+	cwel_logbitmap_get_height (ptr: POINTER): INTEGER
 		external
 			"C [macro <logbmp.h>]"
 		end
 
-	cwel_logbitmap_get_width_bytes (ptr: POINTER): INTEGER is
+	cwel_logbitmap_get_width_bytes (ptr: POINTER): INTEGER
 		external
 			"C [macro <logbmp.h>]"
 		end
 
-	cwel_logbitmap_get_planes (ptr: POINTER): INTEGER is
+	cwel_logbitmap_get_planes (ptr: POINTER): INTEGER
 		external
 			"C [macro <logbmp.h>]"
 		end
 
-	cwel_logbitmap_get_bits_pixel (ptr: POINTER): INTEGER is
+	cwel_logbitmap_get_bits_pixel (ptr: POINTER): INTEGER
 		external
 			"C [macro <logbmp.h>]"
 		end
 
-	cwel_logbitmap_get_bits (ptr: POINTER): POINTER is
+	cwel_logbitmap_get_bits (ptr: POINTER): POINTER
 		external
 			"C [macro <logbmp.h>] : EIF_POINTER"
 		end
 
-	cwel_logbitmap_set_type (ptr: POINTER; value: INTEGER) is
+	cwel_logbitmap_set_type (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <logbmp.h>]"
 		end
 
-	cwel_logbitmap_set_width (ptr: POINTER; value: INTEGER) is
+	cwel_logbitmap_set_width (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <logbmp.h>]"
 		end
 
-	cwel_logbitmap_set_height (ptr: POINTER; value: INTEGER) is
+	cwel_logbitmap_set_height (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <logbmp.h>]"
 		end
 
-	cwel_logbitmap_set_width_bytes (ptr: POINTER; value: INTEGER) is
+	cwel_logbitmap_set_width_bytes (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <logbmp.h>]"
 		end
 
-	cwel_logbitmap_set_planes (ptr: POINTER; value: INTEGER) is
+	cwel_logbitmap_set_planes (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <logbmp.h>]"
 		end
 
-	cwel_logbitmap_set_bits_pixel (ptr: POINTER; value: INTEGER) is
+	cwel_logbitmap_set_bits_pixel (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <logbmp.h>]"
 		end
 
-	cwel_logbitmap_set_bits (ptr: POINTER; value: POINTER) is
+	cwel_logbitmap_set_bits (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <logbmp.h>]"
 		end
 
 	cwin_get_object (hgdi_object: POINTER; buffer_size: INTEGER;
-			object: POINTER) is
+			object: POINTER)
 		external
 			"C [macro <wel.h>] (HGDIOBJ, int, LPVOID)"
 		alias
 			"GetObject"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

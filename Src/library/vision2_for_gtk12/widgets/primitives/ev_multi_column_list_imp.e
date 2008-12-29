@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision multi-column-list, implementation interface."
 	legal: "See notice at end of class."
@@ -58,7 +58,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a list widget with `par' as
 			-- parent and `col_nb' columns.
 			-- By default, a list allow only one selection.
@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			clear_selection
 		end
 
-	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Create a pointer_motion action sequence.
 		do
 			create Result
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 		local
 			t : TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE,
 				INTEGER, INTEGER]
@@ -128,7 +128,7 @@ feature {NONE} -- Initialization
 			end
         	end
 
-	create_list (a_columns: INTEGER) is
+	create_list (a_columns: INTEGER)
 			-- Create the clist with `a_columns' columns.
 		require
 			a_columns_positive: a_columns > 0
@@ -254,7 +254,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	initialize is
+	initialize
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
@@ -263,7 +263,7 @@ feature {NONE} -- Initialization
 			disable_multiple_selection
 		end
 
-	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER) is
+	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER)
 		local
 			t: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
 			a_row_number: INTEGER
@@ -284,7 +284,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			--
 		do
 			--| FIXME IEK Add pixmap scaling code with gtk+ 2
@@ -295,7 +295,7 @@ feature {NONE} -- Initialization
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	select_callback (a_position: INTEGER) is
+	select_callback (a_position: INTEGER)
 		local
 			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
@@ -316,7 +316,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	previously_selected_node: EV_MULTI_COLUMN_LIST_ROW_IMP
 
-	deselect_callback (a_position: INTEGER) is
+	deselect_callback (a_position: INTEGER)
 		local
 			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
@@ -329,14 +329,14 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	column_click_callback (a_column: INTEGER) is
+	column_click_callback (a_column: INTEGER)
 		do
 			if column_title_click_actions_internal /= Void then
 				column_title_click_actions_internal.call ([a_column + 1])
 			end
 		end
 
-	column_resize_callback (a_column: INTEGER) is
+	column_resize_callback (a_column: INTEGER)
 		local
 			temp_col, temp_wid: INTEGER_REF
 		do
@@ -354,7 +354,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature -- Access
 
-	column_count: INTEGER is
+	column_count: INTEGER
 			-- Number of columns in the list.
 		do
 			if list_widget /= NULL then
@@ -362,18 +362,18 @@ feature -- Access
 			end
 		end
 
-	rows, count: INTEGER is
+	rows, count: INTEGER
 			-- Number of rows in the list.
 		do
 			Result := ev_children.count
 		end
 
-	i_th (i: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
+	i_th (i: INTEGER): EV_MULTI_COLUMN_LIST_ROW
 		do
 			Result := (ev_children @ i).interface
 		end
 
-	selected_item: EV_MULTI_COLUMN_LIST_ROW is
+	selected_item: EV_MULTI_COLUMN_LIST_ROW
 			-- Item which is currently selected, for a multiple
 			-- selection.
 		local
@@ -399,7 +399,7 @@ feature -- Access
 			end
 		end
 
-	selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
+	selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			-- List of all the selected items. For a single
 			-- selection list, it gives a list with only one
 			-- element which is `selected_item'. Therefore, one
@@ -436,7 +436,7 @@ feature -- Access
 
 feature -- Status report
 
-	selected: BOOLEAN is
+	selected: BOOLEAN
 			-- Is at least one item selected ?
 		do
 			if list_widget /= NULL then
@@ -450,7 +450,7 @@ feature -- Status report
 			-- True if the user can choose several items
 			-- False otherwise.
 
-	title_shown: BOOLEAN is
+	title_shown: BOOLEAN
 			-- True if the title row is shown.
 			-- False if the title row is not shown.
 		do
@@ -463,26 +463,26 @@ feature -- Status report
 
 feature -- Status setting
 
-	destroy is
+	destroy
 			-- Destroy screen widget implementation and EV_LIST_ITEM objects.
 		do
 			clear_items
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
-	show_title_row is
+	show_title_row
 			-- Show the row of the titles.
 		do
 			{EV_GTK_EXTERNALS}.gtk_clist_column_titles_show (list_widget)
 		end
 
-	hide_title_row is
+	hide_title_row
 			-- Hide the row of the titles.
 		do
 			{EV_GTK_EXTERNALS}.gtk_clist_column_titles_hide (list_widget)
 		end
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
 			-- For constants, see EV_GTK_CONSTANTS.
@@ -503,7 +503,7 @@ feature -- Status setting
 			ignore_select_callback := False
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list.
 			-- For constants, see EV_GTK_CONSTANTS.
@@ -530,21 +530,21 @@ feature -- Status setting
 
 		end
 
-	select_item (an_index: INTEGER) is
+	select_item (an_index: INTEGER)
 			-- Select an item at the one-based `index' of the list.
 		do
 			switch_to_browse_mode_if_necessary;
 			(ev_children @ an_index).enable_select
 		end
 
-	deselect_item (an_index: INTEGER) is
+	deselect_item (an_index: INTEGER)
 			-- Unselect the item at the one-based `index'.
 		do
 			switch_to_single_mode_if_necessary;
 			(ev_children @ an_index).disable_select
 		end
 
-	clear_selection is
+	clear_selection
 			-- Clear the selection of the list.
 		do
 			if list_widget /= NULL then
@@ -555,7 +555,7 @@ feature -- Status setting
 			end
 		end
 
-	resize_column_to_content (a_column: INTEGER) is
+	resize_column_to_content (a_column: INTEGER)
 			-- Resize column `a_column' to width of its widest text.
 		do
 			if list_widget /= NULL then
@@ -568,7 +568,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	append (s: SEQUENCE [EV_MULTI_COLUMN_LIST_ROW]) is
+	append (s: SEQUENCE [EV_MULTI_COLUMN_LIST_ROW])
 			-- Copy `s' to end of `Current'.  Do not move cursor.
 		do
 			{EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
@@ -576,7 +576,7 @@ feature -- Element change
 			{EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 
-	column_title_changed (a_txt: STRING; a_column: INTEGER) is
+	column_title_changed (a_txt: STRING; a_column: INTEGER)
 			-- Make `a_txt' the title of the column number.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -591,7 +591,7 @@ feature -- Element change
 			end
 		end
 
-	column_width_changed (value: INTEGER; column: INTEGER) is
+	column_width_changed (value: INTEGER; column: INTEGER)
 			-- Make `value' the new width of the column number
 			-- `column'.
 		do
@@ -600,7 +600,7 @@ feature -- Element change
 			end
 		end
 
-	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
+	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER)
 			-- Set alignment of `a_column' to corresponding `alignment_code'.
 		local
 			an_alignment_code: INTEGER
@@ -620,7 +620,7 @@ feature -- Element change
 			)
 		end
 
-	set_row_height (value: INTEGER) is
+	set_row_height (value: INTEGER)
 			-- Make `value' the new height of all the rows.
 		do
 			if list_widget /= NULL then
@@ -632,7 +632,7 @@ feature -- Element change
 	user_set_row_height: INTEGER
 		-- Row height set by user, 0 is not set.
 
-	clear_items is
+	clear_items
 			-- Clear all the items of the list.
 			-- (Remove them from the list and destroy them).
 		do
@@ -642,7 +642,7 @@ feature -- Element change
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -670,7 +670,7 @@ feature -- Element change
 
 feature -- Implementation
 
-	set_to_drag_and_drop: BOOLEAN is
+	set_to_drag_and_drop: BOOLEAN
 			-- Set transport mode to drag and drop.
 		do
 			if pnd_row_imp /= Void then
@@ -680,7 +680,7 @@ feature -- Implementation
 			end
 		end
 
-	able_to_transport (a_button: INTEGER): BOOLEAN is
+	able_to_transport (a_button: INTEGER): BOOLEAN
 			-- Is list or row able to transport PND data using `a_button'.
 		do
 			if pnd_row_imp /= Void then
@@ -692,7 +692,7 @@ feature -- Implementation
 			end
 		end
 
-	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN is
+	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN
 			-- Is list or row able to display PND menu using `a_button'
 		do
 			if pnd_row_imp /= Void then
@@ -702,13 +702,13 @@ feature -- Implementation
 			end
 		end
 
-	disable_transport is
+	disable_transport
 		do
 			Precursor
 			update_pnd_status
 		end
 
-	update_pnd_status is
+	update_pnd_status
 			-- Update PND status of list and its children.
 		local
 			a_enable_flag: BOOLEAN
@@ -724,7 +724,7 @@ feature -- Implementation
 			update_pnd_connection (a_enable_flag)
 		end
 
-	update_pnd_connection (a_enable: BOOLEAN) is
+	update_pnd_connection (a_enable: BOOLEAN)
 			-- Update the PND connection of `Current' if needed.
 		do
 			if not is_transport_enabled then
@@ -741,7 +741,7 @@ feature -- Implementation
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 			-- Initialize a pick and drop transport.
 		local
 			a_row_index: INTEGER
@@ -773,7 +773,7 @@ feature -- Implementation
 
 	temp_accept_cursor, temp_deny_cursor: EV_POINTER_STYLE
 
-	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Set `pebble' using `pebble_function' if present.
 		do
 			temp_pebble := pebble
@@ -789,7 +789,7 @@ feature -- Implementation
 			end
 		end
 
-	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Steps to perform before transport initiated.
 		do
 			temp_accept_cursor := accept_cursor
@@ -843,7 +843,7 @@ feature -- Implementation
 			end
 		end
 
-	post_drop_steps (a_button: INTEGER) is
+	post_drop_steps (a_button: INTEGER)
 			-- Steps to perform once an attempted drop has happened.
 		do
 			App_implementation.set_x_y_origin (0, 0)
@@ -872,7 +872,7 @@ feature -- Implementation
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
-	row_index_from_y_coord (a_y: INTEGER): INTEGER is
+	row_index_from_y_coord (a_y: INTEGER): INTEGER
 			-- Returns the row index at relative coordinate `a_y'.
 		local
 			ver_adj: POINTER
@@ -887,7 +887,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 			end
 		end
 
-	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM is
+	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM
 			-- Returns the row at relative coordinate `a_y'
 		local
 			a_row_index: INTEGER
@@ -900,7 +900,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	gtk_clist_struct_columns (a_clist: POINTER): INTEGER is
+	gtk_clist_struct_columns (a_clist: POINTER): INTEGER
 		external
 			"C [struct <gtk/gtk.h>] (GtkCList): EIF_POINTER"
 		alias
@@ -909,7 +909,7 @@ feature {NONE} -- Implementation
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
-	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
+	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING)
 			-- Set cell text at (a_column, a_row) to `a_text'.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -938,7 +938,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			end
 		end
 
-	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
+	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		do
 			--| Do nothing, implementation not needed for GTK as it is done when the
@@ -946,7 +946,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
 feature {NONE} -- Implementation
 
-	update_children is
+	update_children
 			-- Update all children with `update_needed' True.
 			--| We are on an idle action now. At least one item has marked
 			--| itself `update_needed'.
@@ -983,7 +983,7 @@ feature {NONE} -- Implementation
 			ev_children.go_to (cur)
 		end
 
-	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER) is
+	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER)
 			-- Update `child'.
 		require
 			child_exists: child /= Void
@@ -1030,7 +1030,7 @@ feature {NONE} -- Implementation
 	selection_mode_is_single: BOOLEAN
 			-- Is selection mode set to SINGLE?
 
-	switch_to_single_mode_if_necessary is
+	switch_to_single_mode_if_necessary
 			-- Change selection mode if the last selected
 			-- item is deselected.
 		local
@@ -1062,7 +1062,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	switch_to_browse_mode_if_necessary is
+	switch_to_browse_mode_if_necessary
 			-- Change selection mode to browse mode
 			-- if necessary.
 		do
@@ -1087,18 +1087,18 @@ feature {NONE} -- Implementation
 	ignore_select_callback: BOOLEAN
 		-- Ignore the select callback should selection mode change
 
-	ensure_item_visible (a_item: EV_MULTI_COLUMN_LIST_ROW) is
+	ensure_item_visible (a_item: EV_MULTI_COLUMN_LIST_ROW)
 			-- Ensure `a_item' is visible on the screen.
 		do
 			--| FIXME To be implemented
 		end
 
-	expand_column_count_to (a_columns: INTEGER) is
+	expand_column_count_to (a_columns: INTEGER)
 		do
 			create_list (a_columns)
 		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -1140,7 +1140,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_i_th (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER)
 			-- Remove item from list at `a_position'.
 			-- Set the items parent to void.
 		local
@@ -1158,7 +1158,7 @@ feature {NONE} -- Implementation
 			update_pnd_status
 		end
 
-	row_height: INTEGER is
+	row_height: INTEGER
 		do
 			if list_widget /= NULL then
 				Result := {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget) + 1
@@ -1167,7 +1167,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	pointer_to_integer (pointer: POINTER): INTEGER is
+	pointer_to_integer (pointer: POINTER): INTEGER
 			-- int pointer_to_integer (void* pointer) {
 			--     return (int) pointer;
 			-- }
@@ -1178,20 +1178,20 @@ feature {NONE} -- Externals
 			" "
 		end
 
-	frozen gtk_clist_show_titles_enum: INTEGER is
+	frozen gtk_clist_show_titles_enum: INTEGER
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"GTK_CLIST_SHOW_TITLES"
 		end
 
-	calloc (nmemb, size: INTEGER): POINTER is
+	calloc (nmemb, size: INTEGER): POINTER
 			-- void *calloc(size_t nmemb, size_t size);
 		external
 			"C (size_t, size_t): void* | <stdlib.h>"
 		end
 
-	sizeof_pointer: INTEGER is
+	sizeof_pointer: INTEGER
 		external
 			"C [macro <stdio.h>]"
 		alias
@@ -1209,14 +1209,14 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- External
 
-    frozen gtk_clist_column_width (a_clist: POINTER; a_column: INTEGER): INTEGER is
+    frozen gtk_clist_column_width (a_clist: POINTER; a_column: INTEGER): INTEGER
         external
             "C inline use <gtk/gtk.h>"
         alias
             "GTK_CLIST ($a_clist)->column[$a_column].width"
         end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

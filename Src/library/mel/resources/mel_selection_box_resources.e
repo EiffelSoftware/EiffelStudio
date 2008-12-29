@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Selection Box resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNapplyLabelString: POINTER is
+	XmNapplyLabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNapplyLabelString"
 		end;
 
-	XmNcancelLabelString: POINTER is
+	XmNcancelLabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNcancelLabelString"
 		end;
 
-	XmNchildPlacement: POINTER is
+	XmNchildPlacement: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNchildPlacement"
 		end;
 
-	XmNdialogType: POINTER is
+	XmNdialogType: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNdialogType"
 		end;
 
-	XmNhelpLabelString: POINTER is
+	XmNhelpLabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNhelpLabelString"
 		end;
 
-	XmNlistItemCount: POINTER is
+	XmNlistItemCount: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNlistItemCount"
 		end;
 
-	XmNlistItems: POINTER is
+	XmNlistItems: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNlistItems"
 		end;
 
-	XmNlistLabelString: POINTER is
+	XmNlistLabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNlistLabelString"
 		end;
 
-	XmNlistVisibleItemCount: POINTER is
+	XmNlistVisibleItemCount: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNlistVisibleItemCount"
 		end;
 
-	XmNminimizeButtons: POINTER is
+	XmNminimizeButtons: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNminimizeButtons"
 		end;
 
-	XmNmustMatch: POINTER is
+	XmNmustMatch: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNmustMatch"
 		end;
 
-	XmNokLabelString: POINTER is
+	XmNokLabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNokLabelString"
 		end;
 
-	XmNselectionLabelString: POINTER is
+	XmNselectionLabelString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmNselectionLabelString"
 		end;
 
-	XmNtextAccelerators: POINTER is
+	XmNtextAccelerators: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmNtextAccelerators"
 		end;
 
-	XmNtextColumns: POINTER is
+	XmNtextColumns: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmNtextColumns"
 		end;
 
-	XmNtextString: POINTER is
+	XmNtextString: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmNtextString"
 		end;
 
-	XmNapplyCallback: POINTER is
+	XmNapplyCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmNapplyCallback"
 		end;
 
-	XmNcancelCallback: POINTER is
+	XmNcancelCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmNcancelCallback"
 		end;
 
-	XmNnoMatchCallback: POINTER is
+	XmNnoMatchCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmNnoMatchCallback"
 		end;
 
-	XmNokCallback: POINTER is
+	XmNokCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_POINTER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmNokCallback"
 		end;
 
-	XmPLACE_ABOVE_SELECTION: INTEGER is
+	XmPLACE_ABOVE_SELECTION: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"XmPLACE_ABOVE_SELECTION"
 		end;
 
-	XmPLACE_BELOW_SELECTION: INTEGER is
+	XmPLACE_BELOW_SELECTION: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -188,7 +188,7 @@ feature -- Implementation
 			"XmPLACE_BELOW_SELECTION"
 		end;
 
-	XmPLACE_TOP: INTEGER is
+	XmPLACE_TOP: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -196,7 +196,7 @@ feature -- Implementation
 			"XmPLACE_TOP"
 		end;
 
-	XmDIALOG_PROMPT: INTEGER is
+	XmDIALOG_PROMPT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -204,7 +204,7 @@ feature -- Implementation
 			"XmDIALOG_PROMPT"
 		end;
 
-	XmDIALOG_SELECTION: INTEGER is
+	XmDIALOG_SELECTION: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -212,7 +212,7 @@ feature -- Implementation
 			"XmDIALOG_SELECTION"
 		end;
 
-	XmDIALOG_COMMAND: INTEGER is
+	XmDIALOG_COMMAND: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -220,7 +220,7 @@ feature -- Implementation
 			"XmDIALOG_COMMAND"
 		end;
 
-	XmDIALOG_FILE_SELECTION: INTEGER is
+	XmDIALOG_FILE_SELECTION: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -228,7 +228,7 @@ feature -- Implementation
 			"XmDIALOG_FILE_SELECTION"
 		end;
 
-	XmDIALOG_APPLY_BUTTON: INTEGER is
+	XmDIALOG_APPLY_BUTTON: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -236,7 +236,7 @@ feature -- Implementation
 			"XmDIALOG_APPLY_BUTTON"
 		end;
 
-	XmDIALOG_CANCEL_BUTTON: INTEGER is
+	XmDIALOG_CANCEL_BUTTON: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -244,7 +244,7 @@ feature -- Implementation
 			"XmDIALOG_CANCEL_BUTTON"
 		end;
 
-	XmDIALOG_DEFAULT_BUTTON: INTEGER is
+	XmDIALOG_DEFAULT_BUTTON: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -252,7 +252,7 @@ feature -- Implementation
 			"XmDIALOG_DEFAULT_BUTTON"
 		end;
 
-	XmDIALOG_HELP_BUTTON: INTEGER is
+	XmDIALOG_HELP_BUTTON: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -260,7 +260,7 @@ feature -- Implementation
 			"XmDIALOG_HELP_BUTTON"
 		end;
 
-	XmDIALOG_LIST: INTEGER is
+	XmDIALOG_LIST: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -268,7 +268,7 @@ feature -- Implementation
 			"XmDIALOG_LIST"
 		end;
 
-	XmDIALOG_LIST_LABEL: INTEGER is
+	XmDIALOG_LIST_LABEL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -276,7 +276,7 @@ feature -- Implementation
 			"XmDIALOG_LIST_LABEL"
 		end;
 
-	XmDIALOG_OK_BUTTON: INTEGER is
+	XmDIALOG_OK_BUTTON: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -284,7 +284,7 @@ feature -- Implementation
 			"XmDIALOG_OK_BUTTON"
 		end;
 
-	XmDIALOG_SELECTION_LABEL: INTEGER is
+	XmDIALOG_SELECTION_LABEL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -292,7 +292,7 @@ feature -- Implementation
 			"XmDIALOG_SELECTION_LABEL"
 		end;
 
-	XmDIALOG_SEPARATOR: INTEGER is
+	XmDIALOG_SEPARATOR: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -300,7 +300,7 @@ feature -- Implementation
 			"XmDIALOG_SEPARATOR"
 		end;
 
-	XmDIALOG_TEXT: INTEGER is
+	XmDIALOG_TEXT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/SelectioB.h>]: EIF_INTEGER"
@@ -308,7 +308,7 @@ feature -- Implementation
 			"XmDIALOG_TEXT"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

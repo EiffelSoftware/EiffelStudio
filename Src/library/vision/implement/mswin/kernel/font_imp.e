@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a wel_log_font.set_WINDOWS font"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -26,20 +26,20 @@ create
 
 feature  -- Initialization
 
-	make (a_font: FONT) is
+	make (a_font: FONT)
 			-- Create a font
 		do
 			create {WEL_SYSTEM_FONT} wel_font.make
 			create wel_log_font.make_by_font (wel_font)
 		end
 
-	make_for_screen (a_font: FONT; a_screen: SCREEN) is
+	make_for_screen (a_font: FONT; a_screen: SCREEN)
 			-- Create a font
 		do
 			make (a_font)
 		end
 
-	make_by_wel (a_wel_font: WEL_FONT) is
+	make_by_wel (a_wel_font: WEL_FONT)
 			-- Create a font given `a_wel_font'
 		require
 			a_wel_font_exists: a_wel_font /= Void
@@ -61,37 +61,37 @@ feature -- Status report
 	allocated: BOOLEAN
 			-- Has a new font been allocated?
 
-	ascent: INTEGER is
+	ascent: INTEGER
 			-- Ascent value in pixel of the font loaded for `a_widget'.
 		do
 			Result := text_metrics.ascent
 		end
 
-	average_width: INTEGER is
+	average_width: INTEGER
 			-- Width of all characters in the font in tenth of pixel
 		do
 			Result := text_metrics.average_character_width
 		end
 
-	character_set: STRING is
+	character_set: STRING
 			-- (iso8859-1, ...)
 		do
 			Result := "*-*"
 		end
 
-	descent: INTEGER is
+	descent: INTEGER
 			-- Descent value in pixel of the font loaded for `a_widget'.
 		do
 			Result := text_metrics.descent
 		end
 
-	family: STRING is
+	family: STRING
 			-- Family name (courier, Helvetica...)
 		do
 			Result := "*"
 		end
 
-	foundry: STRING is
+	foundry: STRING
 			-- Foundry name (Adobe...)
 		do
 			Result := "*"
@@ -103,19 +103,19 @@ feature -- Status report
 	is_proportional: BOOLEAN
 			-- Is the font proportional ?
 
-	is_specified: BOOLEAN is True
+	is_specified: BOOLEAN = True
 			-- Is the font specified ?
 
-	is_standard: BOOLEAN is True
+	is_standard: BOOLEAN = True
 			-- Is the font standard and information available?
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the font valid in `a_widget''s display?
 		do
 			Result := wel_font /= Void and wel_font.exists
 		end
 
-	maximum_line_width (dc: WEL_DC; a_text: STRING; number_of_lines: INTEGER): INTEGER is
+	maximum_line_width (dc: WEL_DC; a_text: STRING; number_of_lines: INTEGER): INTEGER
 			-- Calculate the width of the longest %N delimited string in
 			-- `a_text' on `dc' given there are `number_of_lines' lines
 		require
@@ -145,7 +145,7 @@ feature -- Status report
 			end
 		end
 
-	name: STRING is
+	name: STRING
 			-- String form of font details
 		do
 			create Result.make (60)
@@ -245,7 +245,7 @@ feature -- Status report
 	pixel_size: INTEGER
 			-- Size of font in pixels
 
-	point: INTEGER is
+	point: INTEGER
 			-- Size of font in tenth of points (1 point = 1/72 of an inch)
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -259,23 +259,23 @@ feature -- Status report
 			Result := Result * 10
 		end
 
-	slant: CHARACTER is
+	slant: CHARACTER
 			-- Slant of font (o, r, i...)
 		do
 			Result := '*'
 		end
 
-	screen_string_height (a_screen: SCREEN_I; a_text: STRING): INTEGER is
+	screen_string_height (a_screen: SCREEN_I; a_text: STRING): INTEGER
 			-- Height in pixels of `a_text' in the current font on `a_screen'
 		do
 		end
 
-	screen_string_width (a_screen: SCREEN_I; a_text: STRING): INTEGER is
+	screen_string_width (a_screen: SCREEN_I; a_text: STRING): INTEGER
 			-- Width in pixels of `a_text' in the current font on `a_screen'
 		do
 		end
 
-	string_height (a_widget: WIDGET_I; a_text: STRING): INTEGER is
+	string_height (a_widget: WIDGET_I; a_text: STRING): INTEGER
 			-- Height in pixel of `a_text' in the current font loaded for `a_widget'.
 		local
 			dc: WEL_DC
@@ -312,7 +312,7 @@ feature -- Status report
 			end
 		end
 
-	string_width (a_widget: WIDGET_I; a_text: STRING): INTEGER is
+	string_width (a_widget: WIDGET_I; a_text: STRING): INTEGER
 			-- Width in pixel of `a_text' in the current font loaded for `a_widget'.
 		require
 			a_text_not_void: a_text /= Void
@@ -350,7 +350,7 @@ feature -- Status report
 			end
 		end
 
-	width_of_string (a_text: STRING): INTEGER is
+	width_of_string (a_text: STRING): INTEGER
 		local
 			screen_dc: WEL_SCREEN_DC
 			number_of_lines: INTEGER
@@ -373,13 +373,13 @@ feature -- Status report
 	vertical_resolution: INTEGER
 			-- Vertical resolution of screen for which the font is designed
 
-	weight: STRING is
+	weight: STRING
 			-- Weight of font (Bold, Medium...)
 		do
 			Result := "*"
 		end
 
-	width: STRING is
+	width: STRING
 			-- Width of font (Normal, Condensed...)
 		do
 			Result := "*"
@@ -387,14 +387,14 @@ feature -- Status report
 
 feature -- Status setting
 
-	allocate is
+	allocate
 			-- Allocate the WEL_FONT
 		do
 			create wel_font.make_indirect (wel_log_font)
 			allocated := true
 		end
 
-	set_charset (a_charset: STRING) is
+	set_charset (a_charset: STRING)
 			-- Set the charset to a vlaue based on `a_charset'
 		do
 			if a_charset.is_equal ("ansi") then
@@ -410,7 +410,7 @@ feature -- Status setting
 			end
 		end
 
-	set_clip_precision (a_clip_precision: STRING) is
+	set_clip_precision (a_clip_precision: STRING)
 			-- Set the clip precision based on `a_clip_precision'
 		do
 			if a_clip_precision.is_equal ("character") then
@@ -422,7 +422,7 @@ feature -- Status setting
 			end
 		end
 
-	set_escapement (an_escapement: STRING) is
+	set_escapement (an_escapement: STRING)
 			-- Set escapement based on value of `an_escapement'
 		do
 			if an_escapement /= Void and an_escapement.is_integer then
@@ -432,7 +432,7 @@ feature -- Status setting
 			end
 		end
 
-	set_family (a_family: STRING) is
+	set_family (a_family: STRING)
 			-- Set family based on a value in `a_family'
 		do
 			if a_family.is_equal ("decorative") then
@@ -450,7 +450,7 @@ feature -- Status setting
 			end
 		end
 
-	set_height (a_height: STRING) is
+	set_height (a_height: STRING)
 			-- Set the height in points to `a_height'
 		local
 			screen_dc: WEL_SCREEN_DC
@@ -481,7 +481,7 @@ feature -- Status setting
 			end
 		end
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- parses the `a_name' and calls the other set routines
 		require else
 			a_name_exists: a_name /= Void
@@ -538,7 +538,7 @@ feature -- Status setting
 			allocate
 		end
 
-	set_orientation (an_orientation: STRING) is
+	set_orientation (an_orientation: STRING)
 			-- Set the orientation based om the value of `an_orientation'
 		do
 			if an_orientation /= Void and then an_orientation.is_integer then
@@ -548,7 +548,7 @@ feature -- Status setting
 			end
 		end
 
-	set_out_precision (a_precision: STRING) is
+	set_out_precision (a_precision: STRING)
 			-- Set the precision based on the value of `a_precision'
 		do
 			if a_precision.is_equal ("character") then
@@ -562,7 +562,7 @@ feature -- Status setting
 			end
 		end
 
-	set_pitch (a_pitch: STRING) is
+	set_pitch (a_pitch: STRING)
 			-- Set pitch based on value in `a_pitch'
 		do
 			if a_pitch.is_equal ("fixed") then
@@ -574,7 +574,7 @@ feature -- Status setting
 			end
 		end
 
-	set_quality (a_quality: STRING) is
+	set_quality (a_quality: STRING)
 			-- Set quality based on value in `a_quality'
 		do
 			if a_quality.is_equal ("draft") then
@@ -586,7 +586,7 @@ feature -- Status setting
 			end
 		end
 
-	set_styles (styles: STRING) is
+	set_styles (styles: STRING)
 			-- Set the style based on values in `styles'
 		do
 			wel_log_font.set_not_italic
@@ -605,7 +605,7 @@ feature -- Status setting
 			end
 		end
 
-	set_weight (a_weight: STRING) is
+	set_weight (a_weight: STRING)
 			-- Set `weight' to `a_weight'
 		do
 			if a_weight /= Void and then a_weight.is_integer then
@@ -615,7 +615,7 @@ feature -- Status setting
 			end
 		end
 
-	set_width (a_width: STRING) is
+	set_width (a_width: STRING)
 			-- Set `width' to `a_width'
 		do
 			if a_width /= Void and then a_width.is_integer then
@@ -627,7 +627,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	text_metrics: WEL_TEXT_METRIC is
+	text_metrics: WEL_TEXT_METRIC
 		local
 			sdc: WEL_SCREEN_DC
 		do
@@ -641,7 +641,7 @@ feature {NONE} -- Implementation
 			result_exists: Result /= Void
 		end
 
-	mul_div (i,j,k: INTEGER): INTEGER is
+	mul_div (i,j,k: INTEGER): INTEGER
 			-- Does `i * j / k' but in a safe manner where the 64 bits integer
 			-- obtained by `i * j' is not truncated.
 		external
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 			"MulDiv"
 		end
 
-	get_device_caps (p: POINTER; i: INTEGER): INTEGER is
+	get_device_caps (p: POINTER; i: INTEGER): INTEGER
 			-- Retrieves device-specific information about a specified device.
 		external
 			"C [macro <windows.h>] (HDC, int): EIF_INTEGER"
@@ -662,7 +662,7 @@ invariant
 	wel_log_font_exists: wel_log_font /= Void
 	wel_font_exists: wel_font /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

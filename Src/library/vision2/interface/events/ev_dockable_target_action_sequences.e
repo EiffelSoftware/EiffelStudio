@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Action sequences for EV_DOCKABLE_TARGET."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ feature {NONE} -- Implementation
 
 feature -- Event handling
 
-	docked_actions: EV_DOCKABLE_SOURCE_ACTION_SEQUENCE is
+	docked_actions: EV_DOCKABLE_SOURCE_ACTION_SEQUENCE
 			-- Actions to be performed when a dockable source completes a transport
 			-- Fired only if source has been moved, after parenting.
 		do
@@ -32,7 +32,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

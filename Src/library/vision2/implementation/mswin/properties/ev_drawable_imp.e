@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision drawable. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Set some default values.
 		do
 			set_default_font
@@ -73,14 +73,14 @@ feature {NONE} -- Initialization
 
 feature --{EV_ANY_I} -- Implementation
 
-	dc: WEL_DC is
+	dc: WEL_DC
 			-- Device context applied to the primitives.
 		deferred
 		ensure
 			not_void: dc /= Void
 		end
 
-	get_dc is
+	get_dc
 			-- Get `dc'.
 			-- By default does nothing, but is
 			-- redefined by primitives that do not keep a consistent
@@ -88,7 +88,7 @@ feature --{EV_ANY_I} -- Implementation
 		do
 		end
 
-	release_dc is
+	release_dc
 			-- Release `dc'.
 			-- By default does nothing, but is
 			-- redefined by primitives that do not keep a consistent
@@ -98,7 +98,7 @@ feature --{EV_ANY_I} -- Implementation
 
 feature -- Access
 
-	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
 			-- Return the subpixmap of `Current' described by rectangle `area'.
 		local
 			a_pixmap_imp: EV_PIXMAP_IMP
@@ -131,7 +131,7 @@ feature -- Access
 	line_width: INTEGER
 			-- Line thickness.
 
-	drawing_mode: INTEGER is
+	drawing_mode: INTEGER
 			-- Logical operation on pixels when drawing.
 		do
 			if wel_drawing_mode = R2_copypen then
@@ -160,13 +160,13 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of the widget.
 			--| Used in `draw_straight_line'.
 		deferred
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of the widget
 			--| Used in `draw_straight_line'.
 		deferred
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 
 feature -- Element change
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `background_color'.
 		local
 			a_color_imp: EV_COLOR_IMP
@@ -189,7 +189,7 @@ feature -- Element change
 			end
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'
 		local
 			a_color_imp: EV_COLOR_IMP
@@ -206,14 +206,14 @@ feature -- Element change
 			end
 		end
 
-	set_line_width (a_width: INTEGER) is
+	set_line_width (a_width: INTEGER)
 			-- Assign `a_width' to `line_width'.
 		do
 			line_width := a_width
 			internal_initialized_pen := False
 		end
 
-	set_drawing_mode (a_mode: INTEGER) is
+	set_drawing_mode (a_mode: INTEGER)
 			-- Set drawing mode to `a_mode'.
 		do
 			inspect a_mode
@@ -237,7 +237,7 @@ feature -- Element change
 			release_dc
 		end
 
-	set_clip_area (an_area: EV_RECTANGLE) is
+	set_clip_area (an_area: EV_RECTANGLE)
 			-- Set an area to clip to.
 			-- Set to Void when no clipping should be applied.
 		local
@@ -253,7 +253,7 @@ feature -- Element change
 			region.delete
 		end
 
-	set_clip_region (a_region: EV_REGION) is
+	set_clip_region (a_region: EV_REGION)
 			-- Set an area to clip to.
 			-- Set to Void when no clipping should be applied.
 		local
@@ -269,7 +269,7 @@ feature -- Element change
 			release_dc
 		end
 
-	remove_clipping is
+	remove_clipping
 			-- Do not apply any clipping.
 		do
 			clip_area := Void
@@ -278,7 +278,7 @@ feature -- Element change
 			release_dc
 		end
 
-	set_tile (a_pixmap: EV_PIXMAP) is
+	set_tile (a_pixmap: EV_PIXMAP)
 			-- Set tile used to fill figures.
 			-- Set to Void to use `background_color' to fill.
 		do
@@ -286,28 +286,28 @@ feature -- Element change
 			internal_initialized_brush := False
 		end
 
-	remove_tile is
+	remove_tile
 			-- Do not apply a tile when filling.
 		do
 			tile := Void
 			internal_initialized_brush := False
 		end
 
-	enable_dashed_line_style is
+	enable_dashed_line_style
 			-- Draw lines dashed.
 		do
 			dashed_line_style := True
 			internal_initialized_pen := False
 		end
 
-	disable_dashed_line_style is
+	disable_dashed_line_style
 			-- Draw lines solid.
 		do
 			dashed_line_style := False
 			internal_initialized_pen := False
 		end
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Set `font' to `a_font'.
 		local
 			font_imp: EV_FONT_IMP
@@ -320,13 +320,13 @@ feature -- Element change
 
 feature -- Clearing and drawing operations
 
-	clear is
+	clear
 			-- Erase `Current' with `background_color'.
 		do
 			clear_rectangle (0, 0, width + 1, height + 1)
 		end
 
-	clear_rectangle (x1, y1, a_width, a_height: INTEGER) is
+	clear_rectangle (x1, y1, a_width, a_height: INTEGER)
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height' in `background_color'.
 		do
@@ -338,7 +338,7 @@ feature -- Clearing and drawing operations
 
 feature -- Drawing operations
 
-	draw_point (x, y: INTEGER) is
+	draw_point (x, y: INTEGER)
 			-- Draw point at (`x', `y').
 		do
 			if not internal_initialized_pen then
@@ -349,26 +349,26 @@ feature -- Drawing operations
 			release_dc
 		end
 
-	draw_rotated_text (x, y: INTEGER; a_angle: REAL; a_text: STRING_GENERAL) is
+	draw_rotated_text (x, y: INTEGER; a_angle: REAL; a_text: STRING_GENERAL)
 			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Rotation is number of radians counter-clockwise from horizontal plane.
 		do
 			internal_draw_text (x, y, a_angle, 0, True, a_text)
 		end
 
-	draw_text (x, y: INTEGER; a_text: STRING_GENERAL) is
+	draw_text (x, y: INTEGER; a_text: STRING_GENERAL)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		do
 			internal_draw_text (x, y, 0, 0, True, a_text)
 		end
 
-	draw_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL) is
+	draw_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
 			internal_draw_text (x, y, 0, 0, False, a_text)
 		end
 
-	draw_ellipsed_text (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER) is
+	draw_ellipsed_text (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -376,7 +376,7 @@ feature -- Drawing operations
 			internal_draw_text (x, y, 0, clipping_width, True, a_text)
 		end
 
-	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER) is
+	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -384,7 +384,7 @@ feature -- Drawing operations
 			internal_draw_text (x, y, 0, clipping_width, False, a_text)
 		end
 
-	internal_draw_text (x, y: INTEGER; angle: REAL; clipping_width: INTEGER; from_baseline: BOOLEAN; a_text: STRING_GENERAL) is
+	internal_draw_text (x, y: INTEGER; angle: REAL; clipping_width: INTEGER; from_baseline: BOOLEAN; a_text: STRING_GENERAL)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -450,7 +450,7 @@ feature -- Drawing operations
 		end
 
 
-	draw_segment (x1, y1, x2, y2: INTEGER) is
+	draw_segment (x1, y1, x2, y2: INTEGER)
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
 			if not internal_initialized_pen then
@@ -470,7 +470,7 @@ feature -- Drawing operations
 	draw_arc (
 		x,y : INTEGER;
 		a_bounding_width, a_bounding_height: INTEGER;
-		a_start_angle, an_aperture: REAL) is
+		a_start_angle, an_aperture: REAL)
 			-- Draw part of an ellipse defined by a rectangular area with an
 			-- upper left corner at `x',`y', width `a_bounding_width' and height
 			-- `a_bounding_height'.
@@ -549,7 +549,7 @@ feature -- Drawing operations
 			release_dc
 		end
 
-	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
+	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		local
 			pixmap_imp : EV_PIXMAP_IMP_STATE
@@ -561,7 +561,7 @@ feature -- Drawing operations
 			draw_sub_pixmap (x, y, a_pixmap, l_bounding_area)
 		end
 
-	bounding_area: EV_RECTANGLE is
+	bounding_area: EV_RECTANGLE
 			-- Temporary rectangle used internally.
 		once
 			create Result
@@ -581,7 +581,7 @@ feature -- Drawing operations
 			l_dest_rect.dispose
 		end
 
-	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
+	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE)
 			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
 		local
 			pixmap_height		: INTEGER
@@ -703,7 +703,7 @@ feature -- Drawing operations
 			release_dc
 		end
 
-	draw_rectangle (x, y, a_width, a_height: INTEGER) is
+	draw_rectangle (x, y, a_width, a_height: INTEGER)
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'.
 		do
@@ -716,7 +716,7 @@ feature -- Drawing operations
 			release_dc
 		end
 
-	draw_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
+	draw_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER)
 			-- Draw an ellipse defined by a rectangular area with an
 			-- upper left corner at `x',`y', width `a_bounding_width' and height
 			-- `a_bounding_height'.
@@ -730,7 +730,7 @@ feature -- Drawing operations
 			release_dc
 		end
 
-	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN) is
+	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN)
 			-- Draw line segments between subsequent points in
 			-- `points'. If `is_closed' draw line segment between first
 			-- and last point in `points'.
@@ -778,7 +778,7 @@ feature -- Drawing operations
 		x, y: INTEGER;
 		a_bounding_width, a_bounding_height: INTEGER;
 		a_start_angle, an_aperture: REAL
-	) is
+	)
 			-- Draw part of an ellipse defined by a rectangular area with an
 			-- upper left corner at `x',`y', width `a_bounding_width' and height
 			-- `a_bounding_height'.
@@ -864,7 +864,7 @@ feature -- Drawing operations
 
 feature -- Filling operations
 
-	fill_rectangle (x, y, a_width, a_height: INTEGER) is
+	fill_rectangle (x, y, a_width, a_height: INTEGER)
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'. Fill with `foreground_color'.
 		do
@@ -877,7 +877,7 @@ feature -- Filling operations
 			release_dc
 		end
 
-	fill_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
+	fill_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER)
 			-- Fill an ellipse defined by a rectangular area with an
 			-- upper left corner at `x',`y', width `a_bounding_width' and height
 			-- `a_bounding_height'.
@@ -891,7 +891,7 @@ feature -- Filling operations
 			release_dc
 		end
 
-	fill_polygon (points: ARRAY [EV_COORDINATE]) is
+	fill_polygon (points: ARRAY [EV_COORDINATE])
 			-- Draw line segments between subsequent points in `points'.
 			-- Fill all enclosed area's with `foreground_color'.
 		local
@@ -926,7 +926,7 @@ feature -- Filling operations
 		x, y :INTEGER;
 		a_bounding_width, a_bounding_height: INTEGER;
 		a_start_angle, an_aperture: REAL
-	) is
+	)
 			-- Fill part of an ellipse defined by a rectangular area with an
 			-- upper left corner at `x',`y', width `a_bounding_width' and height
 			-- `a_bounding_height'.
@@ -1019,7 +1019,7 @@ feature {NONE} -- Implementation
 	wel_drawing_mode: INTEGER
 			-- The WEL equivalent for the drawing_mode_* selected.
 
-	wel_font: WEL_FONT is
+	wel_font: WEL_FONT
 		local
 			font_imp: EV_FONT_IMP
 		do
@@ -1031,21 +1031,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	wel_bg_color: WEL_COLOR_REF is
+	wel_bg_color: WEL_COLOR_REF
 		do
 			Result ?= background_color.implementation
 		ensure
 			not_void: Result /= Void
 		end
 
-	wel_fg_color: WEL_COLOR_REF is
+	wel_fg_color: WEL_COLOR_REF
 		do
 			Result ?= foreground_color.implementation
 		ensure
 			not_void: Result /= Void
 		end
 
-	our_background_brush: WEL_BRUSH is
+	our_background_brush: WEL_BRUSH
 			-- Current window background color used to refresh the window when
 			-- requested by the WM_ERASEBKGND windows message.
 		do
@@ -1061,13 +1061,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_background_brush is
+	set_background_brush
 			-- Set background-brush. For clear-operations.
 		do
 			dc.select_brush (our_background_brush)
 		end
 
-	reset_brush is
+	reset_brush
 			-- Restore brush to tile or color.
 		local
 			pix_imp: EV_PIXMAP_IMP_STATE
@@ -1104,7 +1104,7 @@ feature {NONE} -- Implementation
 			release_dc
 		end
 
-	reset_pen is
+	reset_pen
 			-- Restore pen to correct line width and color
 		local
 			dmode: INTEGER
@@ -1141,7 +1141,7 @@ feature {NONE} -- Implementation
 			release_dc
 		end
 
-	remove_pen is
+	remove_pen
 			-- Draw without outline.
 		do
 			get_dc
@@ -1158,7 +1158,7 @@ feature {NONE} -- Implementation
 			release_dc
 		end
 
-	remove_brush is
+	remove_brush
 			-- Draw without filling.
 		do
 			get_dc
@@ -1175,7 +1175,7 @@ feature {NONE} -- Implementation
 			release_dc
 		end
 
-	src_drawing_mode: INTEGER is
+	src_drawing_mode: INTEGER
 			-- Src drawing mode from current `wel_drawing_mode'
 			-- Used for bit blits.
 		do
@@ -1199,7 +1199,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY, EV_ANY_I} -- Command
 
-	destroy is
+	destroy
 			-- Destroy actual object.
 		do
 			if internal_brush /= Void then
@@ -1254,7 +1254,7 @@ feature {EV_DRAWABLE_IMP} -- Internal datas.
 	internal_initialized_brush: BOOLEAN
 			-- Is `internal_brush' valid?
 
-	empty_brush: WEL_BRUSH is
+	empty_brush: WEL_BRUSH
 			-- Null brush (used when one want to draw
 			-- a figure without filling it)
 		local
@@ -1264,7 +1264,7 @@ feature {EV_DRAWABLE_IMP} -- Internal datas.
 			create Result.make_indirect(log_brush)
 		end
 
-	empty_pen: WEL_PEN is
+	empty_pen: WEL_PEN
 			-- Null brush (used when one want to draw
 			-- a figure without outlining it)
 		once
@@ -1273,14 +1273,14 @@ feature {EV_DRAWABLE_IMP} -- Internal datas.
 
 feature {NONE} -- Non-applicable
 
-	wel_set_font (a_font: WEL_FONT) is
+	wel_set_font (a_font: WEL_FONT)
 			-- Make `a_font' new font of widget.
 		do
 		end
 
 feature {NONE} -- Constants
 
-	Drawing_constants: WEL_DRAWING_CONSTANTS is
+	Drawing_constants: WEL_DRAWING_CONSTANTS
 			-- WEL Drawing constants.
 		once
 			create Result
@@ -1296,7 +1296,7 @@ invariant
 	reference_tracked_on_pen:
 		internal_pen /= Void implies internal_pen.reference_tracked
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

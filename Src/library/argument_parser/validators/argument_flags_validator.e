@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A command line switch flag validator that checks if all flags are know flags."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -86,7 +86,7 @@ invariant
 	flags_contain_printable_character: flags.for_all (
 		agent (ia_char: CHARACTER): BOOLEAN do Result := ia_char.is_printable end)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

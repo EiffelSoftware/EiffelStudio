@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General menu bar implementation"
 	legal: "See notice at end of class.";
@@ -18,7 +18,7 @@ inherit
 	
 feature -- Access
 
-	help_button: MENU_B is
+	help_button: MENU_B
 			-- Menu Button which appears at the lower right corner of the
 			-- menu bar
 		deferred
@@ -27,17 +27,17 @@ feature -- Access
 feature -- Status setting
 
 
-	allow_recompute_size is
+	allow_recompute_size
 		deferred
 		end;
 
-	forbid_recompute_size is
+	forbid_recompute_size
 		deferred
 		end
 
 feature -- Element change
 
-	set_help_button (button: MENU_B) is
+	set_help_button (button: MENU_B)
 			-- Set the Menu Button which appears at the lower right corner
 			-- of the menu bar.
 		deferred
@@ -45,7 +45,7 @@ feature -- Element change
 			same_button: help_button.same (button)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

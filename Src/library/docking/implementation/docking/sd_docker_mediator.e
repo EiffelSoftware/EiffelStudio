@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manager that control SD_DOCKER_SOURCE(s) and SD_HOT_ZONE(s)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_caller: like caller; a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_caller: like caller; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method
 		require
 			a_caller_not_void: a_caller /= Void
@@ -62,7 +62,7 @@ feature {NONE} -- Initlization
 
 feature -- Query
 
-	content: SD_CONTENT is
+	content: SD_CONTENT
 			-- Content which is dragged by user.
 		do
 			Result := caller.content
@@ -70,7 +70,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	capture_enabled: like is_tracing is
+	capture_enabled: like is_tracing
 			-- If is_tracing pointer motion?
 		do
 			Result := is_tracing
@@ -79,7 +79,7 @@ feature -- Query
 	caller: SD_ZONE
 			-- Zone which call this mediator.
 
-	caller_top_window: EV_WINDOW is
+	caller_top_window: EV_WINDOW
 			-- Caller's top window
 		require
 			not_void: caller /= Void
@@ -119,7 +119,7 @@ feature -- Query
 
 feature -- Hanlde pointer events
 
-	start_tracing_pointer (a_offset_x, a_offset_y: INTEGER) is
+	start_tracing_pointer (a_offset_x, a_offset_y: INTEGER)
 			-- Begin to trace mouss positions.
 		local
 			l_env: EV_ENVIRONMENT
@@ -152,7 +152,7 @@ feature -- Hanlde pointer events
 			set: offset_x = a_offset_x and offset_y = a_offset_y
 		end
 
-	cancel_tracing_pointer is
+	cancel_tracing_pointer
 			-- Cancel tracing pointer.
 		do
 			cancel_actions.call (Void)
@@ -161,7 +161,7 @@ feature -- Hanlde pointer events
 			not_tracing: is_tracing = False
 		end
 
-	end_tracing_pointer (a_screen_x, a_screen_y: INTEGER) is
+	end_tracing_pointer (a_screen_x, a_screen_y: INTEGER)
 			-- Stop is_tracing mouse positions.
 		local
 			changed: BOOLEAN
@@ -193,13 +193,13 @@ feature -- Hanlde pointer events
 			not_tracing: is_tracing = False
 		end
 
-	is_tracing_pointer: BOOLEAN is
+	is_tracing_pointer: BOOLEAN
 			-- If `Current' is_tracing pointer motion?
 		do
 			Result := is_tracing
 		end
 
-	on_pointer_motion (a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_motion (a_screen_x, a_screen_y: INTEGER)
 			-- When user dragging something for docking, show hot zone which allow to dock.
 		require
 			is_tracing: is_tracing
@@ -258,7 +258,7 @@ feature -- Query
 
 feature {SD_HOT_ZONE} -- Hot zone infos.
 
-	drag_window_width: INTEGER is
+	drag_window_width: INTEGER
 			-- Width of dragged window.
 		local
 			l_widget: EV_WIDGET
@@ -268,7 +268,7 @@ feature {SD_HOT_ZONE} -- Hot zone infos.
 			Result := l_widget.width
 		end
 
-	drag_window_height: INTEGER is
+	drag_window_height: INTEGER
 			-- Height of dragged window.
 		local
 			l_widget: EV_WIDGET
@@ -286,7 +286,7 @@ feature {SD_HOT_ZONE} -- Hot zone infos.
 
 feature {NONE} -- Implementation functions
 
-	clear_up is
+	clear_up
 			-- Clear up all resources.
 		local
 			l_env: EV_ENVIRONMENT
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation functions
 			docking_manager.property.set_docker_mediator (Void)
 		end
 
-	on_key_press (a_widget: EV_WIDGET; a_key: EV_KEY) is
+	on_key_press (a_widget: EV_WIDGET; a_key: EV_KEY)
 			-- Handle user press key to canel event or not allow to dock.
 		do
 			inspect
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_key_release (a_widget: EV_WIDGET; a_key: EV_KEY) is
+	on_key_release (a_widget: EV_WIDGET; a_key: EV_KEY)
 			-- Handle user release key to allow dock.
 		do
 			inspect
@@ -342,7 +342,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_focus_out (a_widget: EV_WIDGET) is
+	on_focus_out (a_widget: EV_WIDGET)
 			-- Handle focus out actions.
 		local
 			l_platform: PLATFORM
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	clear_all_indicator is
+	clear_all_indicator
 			-- Clear all indicators.
 		do
 			from
@@ -378,7 +378,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	build_all_indicator is
+	build_all_indicator
 			-- Build all indicators.
 		do
 			from
@@ -391,7 +391,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	generate_hot_zones is
+	generate_hot_zones
 			-- Generate all hot zones which allow user to dock.
 		local
 			l_zone_list: ARRAYED_LIST [SD_ZONE]
@@ -409,7 +409,7 @@ feature {NONE} -- Implementation functions
 			hot_zones_created: hot_zones /= Void
 		end
 
-	generate_hot_zones_imp (a_list: ARRAYED_LIST [SD_ZONE]) is
+	generate_hot_zones_imp (a_list: ARRAYED_LIST [SD_ZONE])
 			-- Filte zone in same SD_MULTI_DOCK_AREA.
 		require
 			a_list_not_void: a_list /= Void
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation functions
 			generate_hot_zone_in_area (l_zones_filted)
 		end
 
-	generate_hot_zone_in_area (a_list: ARRAYED_LIST [SD_ZONE]) is
+	generate_hot_zone_in_area (a_list: ARRAYED_LIST [SD_ZONE])
 			-- Generate all hot zones for a SD_MULIT_DOCK_AREA.
 		require
 			a_list_not_void: a_list /= Void
@@ -465,7 +465,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	add_hot_zone_on_type (a_zone: SD_ZONE; a_source: SD_DOCKER_SOURCE) is
+	add_hot_zone_on_type (a_zone: SD_ZONE; a_source: SD_DOCKER_SOURCE)
 			-- Add a_zone's hot zone base on zone type.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -481,7 +481,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_pointer_motion_for_indicator (a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_motion_for_indicator (a_screen_x, a_screen_y: INTEGER)
 			-- Handle pointer motion event for draw docking indicator.
 		local
 			l_drawed: BOOLEAN
@@ -502,7 +502,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y: INTEGER)
 			-- Handle pointer motion for clear docking indicator.
 		do
 			from
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	widget_top_level_window (a_widget: EV_WIDGET; a_main: BOOLEAN): EV_WINDOW is
+	widget_top_level_window (a_widget: EV_WIDGET; a_main: BOOLEAN): EV_WINDOW
 			-- Locates parent window of `a_widget', if the widget has been parented.
 			--
 			-- `a_widget': A widget to locate a top level window for.
@@ -551,7 +551,7 @@ feature {NONE} -- Implementation functions
 
 feature {NONE} -- Implementation attributes
 
-	setter: SD_SYSTEM_SETTER is
+	setter: SD_SYSTEM_SETTER
 			--
 		once
 			create {SD_SYSTEM_SETTER_IMP} Result
@@ -583,7 +583,7 @@ invariant
 	hot_zones_not_void: hot_zones /= Void
 	cancel_actions_not_void: cancel_actions /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_WINDOWS pixmap"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -21,11 +21,11 @@ create
 
 feature -- Initialization
 
-	make (a_pixmap: PIXMAP) is
+	make (a_pixmap: PIXMAP)
 		do
 		end
 
-	make_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN) is
+	make_for_screen (a_pixmap: PIXMAP; a_screen: SCREEN)
 		do
 		end
 
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Element change
 
-	copy_from (a_widget: WIDGET_I; x, y, p_width, p_height: INTEGER) is
+	copy_from (a_widget: WIDGET_I; x, y, p_width, p_height: INTEGER)
 			-- Copy the area specified by `x', `y', `p_width', `p_height' of
 			-- `a_widget' into the pixmap.
 		do
@@ -62,7 +62,7 @@ feature -- Element change
 
 feature -- Input
 
-	read_from_file (a_file_name: STRING) is 
+	read_from_file (a_file_name: STRING) 
 			-- Read a bitmap (X11 bitmap or Windows) from `a_file_name'
 		local
 			file: RAW_FILE
@@ -134,7 +134,7 @@ feature -- Input
 			last_operation_correct := is_valid
 		end
 
-	retrieve (a_file_name: STRING) is
+	retrieve (a_file_name: STRING)
 			-- Read a bitmap (X11 pixmap or Windows bitmap) from `a_file_name'
 		do
 			read_from_file (a_file_name)
@@ -142,7 +142,7 @@ feature -- Input
 
 feature -- Output
 
-	store (a_file_name: STRING) is
+	store (a_file_name: STRING)
 			-- Store the pixmap into a file named `a_file_name'.
 			-- Create the file if it doesn't exist and override else.
 			-- Set `last_operation_correct'.
@@ -177,7 +177,7 @@ feature -- Implementation
 	icon: WEL_ICON;
 			-- WEL_ICON for icons
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

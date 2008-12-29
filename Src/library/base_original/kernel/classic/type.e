@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an Eiffel type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create {NONE}
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		local
@@ -31,7 +31,7 @@ feature -- Comparison
 
 feature -- Conversion
 
-	adapt alias "[]" (g: G): G is
+	adapt alias "[]" (g: G): G
 			-- Adapts `g' or calls necessary conversion routine to adapt `g'
 		do
 			Result := g
@@ -39,7 +39,7 @@ feature -- Conversion
 			adapted: equal (Result, g)
 		end
 
-	attempt alias "#?" (obj: ANY): G is
+	attempt alias "#?" (obj: ANY): G
 			-- Result of assignment attempt of `obj' to entity of type G
 		do
 			Result ?= obj
@@ -47,11 +47,11 @@ feature -- Conversion
 			assigned_or_void: Result = obj or Result = default_value
 		end
 
-	default_value: G is
+	default_value: G
 		do
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

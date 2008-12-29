@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision check menu. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a menu.
 		do
 			base_make (an_interface)
@@ -33,19 +33,19 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is this menu item checked?
 		do
 		end
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Select this menu item.
 		do
 		end
 
-	disable_select is
+	disable_select
 			-- Deselect this menu item.
 		do
 		end
@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_CHECK_MENU_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_CHECK_MENU_ITEM_IMP
 

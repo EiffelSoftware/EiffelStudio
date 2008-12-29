@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about a tree view control item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make a tree item structure.
 		do
 			structure_make
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	mask: INTEGER is
+	mask: INTEGER
 			-- Array of flags that indicate which of the other
 			-- structure members contain valid data or which are
 			-- to be filled in. This member can be a combination
@@ -54,13 +54,13 @@ feature -- Access
 			Result := cwel_tv_item_get_mask (item)
 		end
 		
-	state_mask: INTEGER is
+	state_mask: INTEGER
 			-- State mask flag.
 		do
 			Result := cwel_tv_item_get_statemask (item)
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Item text
 		require
 			valid_member: text_is_valid
@@ -74,13 +74,13 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	h_item: POINTER is
+	h_item: POINTER
 			-- Item to which this structure refers.
 		do
 			Result := cwel_tv_item_get_hitem (item)
 		end
 
-	state: INTEGER is
+	state: INTEGER
 			-- Current state of the item.
 		require
 			valid_member: state_is_valid
@@ -88,7 +88,7 @@ feature -- Access
 			Result := cwel_tv_item_get_state (item)
 		end
 
-	children: INTEGER is
+	children: INTEGER
 			-- Information about the children of the item
 		require
 			valid_member: children_is_valid
@@ -96,7 +96,7 @@ feature -- Access
 			Result := cwel_tv_item_get_cchildren (item)
 		end
 
-	lparam: INTEGER is
+	lparam: INTEGER
 			-- Information about the lparam of the item
 		require
 			valid_member: lparam_is_valid
@@ -106,25 +106,25 @@ feature -- Access
 
 feature -- Status report
 
-	text_is_valid: BOOLEAN is
+	text_is_valid: BOOLEAN
 			-- Is the structure member `text' valid?
 		do
 			Result := flag_set (mask, Tvif_text)
 		end
 
-	state_is_valid: BOOLEAN is
+	state_is_valid: BOOLEAN
 			-- Is the structure member `state' valid?
 		do
 			Result := flag_set (mask, Tvif_state)
 		end
 
-	lparam_is_valid: BOOLEAN is
+	lparam_is_valid: BOOLEAN
 			-- Is the structure member `lParam' valid?
 		do
 			Result := flag_set (mask, Tvif_param)
 		end
 
-	children_is_valid: BOOLEAN is
+	children_is_valid: BOOLEAN
 			-- Is the structure member `children' valid?
 		do
 			Result := flag_set (mask, Tvif_children)
@@ -132,19 +132,19 @@ feature -- Status report
 
 feature -- Element change
 
-	set_mask (a_mask_value: INTEGER) is
+	set_mask (a_mask_value: INTEGER)
 			-- Set `mask' with `a_mask_value'.
 		do
 			cwel_tv_item_set_mask (item, a_mask_value)
 		end
 
-	add_mask (a_mask_value: INTEGER) is
+	add_mask (a_mask_value: INTEGER)
 			-- add `a_mask_value' to the current mask.
 		do
 			cwel_tv_item_add_mask (item, mask, a_mask_value)
 		end
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -156,7 +156,7 @@ feature -- Element change
 			text_set: text.is_equal (a_text)
 		end
 
-	set_h_item (a_h_item: POINTER) is
+	set_h_item (a_h_item: POINTER)
 			-- Set `h_item' with `a_h_item'.
 		do
 			cwel_tv_item_set_hitem (item, a_h_item)
@@ -164,7 +164,7 @@ feature -- Element change
 			h_item_set: h_item = a_h_item
 		end
 
-	set_state (a_state: INTEGER) is
+	set_state (a_state: INTEGER)
 			-- Set `a_state' as current `state'.
 		do
 			cwel_tv_item_set_state (item, a_state)
@@ -172,7 +172,7 @@ feature -- Element change
 			state_set: state = a_state
 		end
 
-	set_lparam (a_lparam: INTEGER) is
+	set_lparam (a_lparam: INTEGER)
 			-- Set `a_lparam' as current `lparam'.
 		do
 			cwel_tv_item_set_lparam (item, a_lparam)
@@ -180,7 +180,7 @@ feature -- Element change
 			lparam_set: lparam = a_lparam
 		end
 
-	set_image (image_normal: INTEGER; image_selected: INTEGER) is
+	set_image (image_normal: INTEGER; image_selected: INTEGER)
 			-- Set the image for the tree item to `image_normal'.
 			-- and `image_selected' for the image displayed when this
 			-- item is selected.
@@ -194,7 +194,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_tv_item
@@ -207,13 +207,13 @@ feature {NONE} -- Implementation
 
 feature {WEL_TREE_VIEW} -- Implementation
 
-	set_cchtextmax (value: INTEGER) is
+	set_cchtextmax (value: INTEGER)
 			-- Set the maximum size of the text getting by get item)
 		do
 			cwel_tv_item_set_cchtextmax (item, value)
 		end
 
-	set_statemask (value: INTEGER) is
+	set_statemask (value: INTEGER)
 			-- Set the valid bits of the state attribute.
 		do
 			cwel_tv_item_set_statemask (item, value)
@@ -221,119 +221,119 @@ feature {WEL_TREE_VIEW} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_size_of_tv_item: INTEGER is
+	c_size_of_tv_item: INTEGER
 		external
 			"C [macro <cctrl.h>]"
 		alias
 			"sizeof (TV_ITEM)"
 		end
 
-	cwel_tv_item_set_mask (ptr: POINTER; value: INTEGER) is
+	cwel_tv_item_set_mask (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_add_mask (ptr: POINTER; mask_to_modify: INTEGER; value_to_add: INTEGER) is
+	cwel_tv_item_add_mask (ptr: POINTER; mask_to_modify: INTEGER; value_to_add: INTEGER)
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_set_hitem (ptr: POINTER; value: POINTER) is
+	cwel_tv_item_set_hitem (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_set_state (ptr: POINTER; value: INTEGER) is
+	cwel_tv_item_set_state (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_set_statemask (ptr: POINTER; value: INTEGER) is
+	cwel_tv_item_set_statemask (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_set_psztext (ptr: POINTER; value: POINTER) is
+	cwel_tv_item_set_psztext (ptr: POINTER; value: POINTER)
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_set_cchtextmax (ptr: POINTER; value: INTEGER) is
+	cwel_tv_item_set_cchtextmax (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_set_iimage (ptr: POINTER; value: INTEGER) is
+	cwel_tv_item_set_iimage (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_set_iselectedimage (ptr: POINTER; value: INTEGER) is
+	cwel_tv_item_set_iselectedimage (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_set_cchildren (ptr: POINTER; value: INTEGER) is
+	cwel_tv_item_set_cchildren (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_set_lparam (ptr: POINTER; value: INTEGER) is
+	cwel_tv_item_set_lparam (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_get_mask (ptr: POINTER): INTEGER is
+	cwel_tv_item_get_mask (ptr: POINTER): INTEGER
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_get_hitem (ptr: POINTER): POINTER is
+	cwel_tv_item_get_hitem (ptr: POINTER): POINTER
 		external
 			"C [macro <tvitem.h>] (TV_ITEM*): EIF_POINTER"
 		end
 
-	cwel_tv_item_get_state (ptr: POINTER): INTEGER is
+	cwel_tv_item_get_state (ptr: POINTER): INTEGER
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_get_statemask (ptr: POINTER): INTEGER is
+	cwel_tv_item_get_statemask (ptr: POINTER): INTEGER
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_get_psztext (ptr: POINTER): POINTER is
+	cwel_tv_item_get_psztext (ptr: POINTER): POINTER
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_get_cchtextmax (ptr: POINTER): INTEGER is
+	cwel_tv_item_get_cchtextmax (ptr: POINTER): INTEGER
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_get_iimage (ptr: POINTER): INTEGER is
+	cwel_tv_item_get_iimage (ptr: POINTER): INTEGER
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_get_iselectedimage (ptr: POINTER): INTEGER is
+	cwel_tv_item_get_iselectedimage (ptr: POINTER): INTEGER
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_get_cchildren (ptr: POINTER): INTEGER is
+	cwel_tv_item_get_cchildren (ptr: POINTER): INTEGER
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-	cwel_tv_item_get_lparam (ptr: POINTER): INTEGER is
+	cwel_tv_item_get_lparam (ptr: POINTER): INTEGER
 		external
 			"C [macro <tvitem.h>]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

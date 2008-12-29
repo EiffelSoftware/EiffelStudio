@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wizard help engine, displays help context"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create implemetation object.
 		do
 			create {WIZARD_HELP_ENGINE_IMP} implementation.make
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 feature -- Status Report
 
-	last_show_successful: BOOLEAN is
+	last_show_successful: BOOLEAN
 			-- Was last call to `show' successful?
 		do
 			Result := implementation.last_show_successful
@@ -31,7 +31,7 @@ feature -- Status Report
 			bridge_ok: Result = implementation.last_show_successful
 		end
 	
-	last_error_message: STRING is
+	last_error_message: STRING
 			-- Last error message, if any
 		do
 			Result := implementation.last_error_message
@@ -41,7 +41,7 @@ feature -- Status Report
 			
 feature -- Basic Operations
 
-	show (a_help_context: WIZARD_HELP_CONTEXT) is
+	show (a_help_context: WIZARD_HELP_CONTEXT)
 			-- Show help with context `a_help_context'.
 		do
 			implementation.show (a_help_context)
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 	implementation: WIZARD_HELP_ENGINE_I;
 			-- Platform specific implementation
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

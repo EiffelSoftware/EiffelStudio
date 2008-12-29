@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Implement an help context as a string."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 create {EV_SIMPLE_HELP_CONTEXT}
 	make
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

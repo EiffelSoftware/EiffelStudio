@@ -1,4 +1,4 @@
-indexing
+note
 	description: "General notion of a device context."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -100,55 +100,55 @@ feature -- Access
 
 feature -- Basic operations
 
-	get is
+	get
 			-- Get the device context.
 		deferred
 		end
 
-	release is
+	release
 			-- Release the device context.
 		deferred
 		end
 
 feature -- Status report
 
-	pen_selected: BOOLEAN is
+	pen_selected: BOOLEAN
 			-- Is a pen selected?
 		do
 			Result := pen /= Void
 		end
 
-	brush_selected: BOOLEAN is
+	brush_selected: BOOLEAN
 			-- Is a brush selected?
 		do
 			Result := brush /= Void
 		end
 
-	palette_selected: BOOLEAN is
+	palette_selected: BOOLEAN
 			-- Is a palette selected?
 		do
 			Result := palette /= Void
 		end
 
-	region_selected: BOOLEAN is
+	region_selected: BOOLEAN
 			-- Is a region selected?
 		do
 			Result := region /= Void
 		end
 
-	font_selected: BOOLEAN is
+	font_selected: BOOLEAN
 			-- Is a font selected?
 		do
 			Result := font /= Void
 		end
 
-	bitmap_selected: BOOLEAN is
+	bitmap_selected: BOOLEAN
 			-- Is a bitmap selected?
 		do
 			Result := bitmap /= Void
 		end
 
-	is_transparent: BOOLEAN is
+	is_transparent: BOOLEAN
 			-- Is the background mode transparent?
 		require
 			exists: exists
@@ -156,7 +156,7 @@ feature -- Status report
 			Result := cwin_get_bk_mode (item) = Transparent
 		end
 
-	is_opaque: BOOLEAN is
+	is_opaque: BOOLEAN
 			-- Is the background mode opaque?
 		require
 			exists: exists
@@ -164,7 +164,7 @@ feature -- Status report
 			Result := cwin_get_bk_mode (item) = Opaque
 		end
 
-	background_color: WEL_COLOR_REF is
+	background_color: WEL_COLOR_REF
 			-- Current color of the background.
 		require
 			exists: exists
@@ -174,7 +174,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	text_color: WEL_COLOR_REF is
+	text_color: WEL_COLOR_REF
 			-- Current color of the text.
 		require
 			exists: exists
@@ -184,7 +184,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	rop2: INTEGER is
+	rop2: INTEGER
 			-- Current drawing mode.
 		require
 			exists: exists
@@ -194,7 +194,7 @@ feature -- Status report
 			valid_result: valid_rop2_constant (Result)
 		end
 
-	text_alignment: INTEGER is
+	text_alignment: INTEGER
 			-- Current text alignment flags.
 		require
 			exists: exists
@@ -202,7 +202,7 @@ feature -- Status report
 			Result := cwin_get_text_align (item)
 		end
 
-	pixel_color (x, y: INTEGER): WEL_COLOR_REF is
+	pixel_color (x, y: INTEGER): WEL_COLOR_REF
 			-- Color located at `x', `y' position.
 		require
 			exists: exists
@@ -212,7 +212,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	viewport_origin: WEL_POINT is
+	viewport_origin: WEL_POINT
 			-- Viewport origin for the dc.
 		require
 			exists: exists
@@ -223,7 +223,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	viewport_extent: WEL_SIZE is
+	viewport_extent: WEL_SIZE
 			-- Retrieve the size of the current viewport for the dc.
 		require
 			exists: exists
@@ -234,7 +234,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	window_origin: WEL_POINT is
+	window_origin: WEL_POINT
 			-- Window origin for the dc.
 		require
 			exists: exists
@@ -245,7 +245,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	window_extent: WEL_SIZE is
+	window_extent: WEL_SIZE
 			-- Window extent for the dc
 		require
 			exists: exists
@@ -256,7 +256,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	position: WEL_POINT is
+	position: WEL_POINT
 			-- Current position in logical coordinates.
 		require
 			exists: exists
@@ -267,7 +267,7 @@ feature -- Status report
 			result_exists: Result /= Void
 		end
 
-	string_size (s: STRING_GENERAL): WEL_SIZE is
+	string_size (s: STRING_GENERAL): WEL_SIZE
 			-- Size of the string `s' using the selected font.
 		require
 			exists: exists
@@ -285,7 +285,7 @@ feature -- Status report
 			positive_height: Result.height >= 0
 		end
 
-	character_size (c: CHARACTER): WEL_SIZE is
+	character_size (c: CHARACTER): WEL_SIZE
 			-- Size of the string `s' using the selected font.
 		require
 			exists: exists
@@ -298,7 +298,7 @@ feature -- Status report
 			positive_height: Result.height >= 0
 		end
 
-	string_width (s: STRING_GENERAL): INTEGER is
+	string_width (s: STRING_GENERAL): INTEGER
 			-- Width of the string `s' using the selected font.
 		require
 			exists: exists
@@ -309,7 +309,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	string_height (s: STRING_GENERAL): INTEGER is
+	string_height (s: STRING_GENERAL): INTEGER
 			-- Height of the string `s' using the selected font.
 		require
 			exists: exists
@@ -320,7 +320,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	tabbed_text_size (text: STRING_GENERAL): WEL_SIZE is
+	tabbed_text_size (text: STRING_GENERAL): WEL_SIZE
 			-- Size of a tabbed `text'.
 		require
 			exists: exists
@@ -340,7 +340,7 @@ feature -- Status report
 			positive_height: Result.height >= 0
 		end
 
-	tabbed_text_width (text: STRING_GENERAL): INTEGER is
+	tabbed_text_width (text: STRING_GENERAL): INTEGER
 			-- Width of a tabbed `text'.
 		require
 			exists: exists
@@ -351,7 +351,7 @@ feature -- Status report
 			positive_width: Result >= 0
 		end
 
-	tabbed_text_height (text: STRING_GENERAL): INTEGER is
+	tabbed_text_height (text: STRING_GENERAL): INTEGER
 			-- Height of a tabbed `text'.
 		require
 			exists: exists
@@ -363,7 +363,7 @@ feature -- Status report
 		end
 
 	tabbed_text_size_with_tabulation (text: STRING_GENERAL;
-			tabulations: ARRAY [INTEGER]): WEL_SIZE is
+			tabulations: ARRAY [INTEGER]): WEL_SIZE
 			-- Size of a tabbed `text', with `tabulations' as
 			-- tabulation positions.
 		require
@@ -386,7 +386,7 @@ feature -- Status report
 			positive_height: Result.height >= 0
 		end
 
-	char_abc_widths (first_char_index, last_char_index: NATURAL_32): ARRAYED_LIST [WEL_ABC_STRUCT] is
+	char_abc_widths (first_char_index, last_char_index: NATURAL_32): ARRAYED_LIST [WEL_ABC_STRUCT]
 			-- `Result' is a list of Windows ABC structures corresponding to the currently
 			-- selected truetype font, with an entry for each character contained within the
 			-- indices `first_char_index', `last_char_index'.
@@ -422,7 +422,7 @@ feature -- Status report
 			Result_not_void: Result /= Void
 		end
 
-	device_caps (capability: INTEGER): INTEGER is
+	device_caps (capability: INTEGER): INTEGER
 			-- Give device-specific information about
 			-- the current display device.
 			-- See class WEL_CAPABILITIES_CONSTANTS for
@@ -433,7 +433,7 @@ feature -- Status report
 			Result := cwin_device_caps (item, capability)
 		end
 
-	map_mode: INTEGER is
+	map_mode: INTEGER
 			-- Current mapping mode
 			-- See class WEL_MM_CONSTANTS for values.
 		require
@@ -444,7 +444,7 @@ feature -- Status report
 			valid_map_mode: valid_map_mode_constant (Result)
 		end
 
-	polygon_fill_mode: INTEGER is
+	polygon_fill_mode: INTEGER
 			-- Current polygon fill mode
 			-- See class WEL_POLYGON_FILL_MODE_CONSTANTS for values.
 		require
@@ -456,7 +456,7 @@ feature -- Status report
 				valid_polygon_fill_mode_constant (Result)
 		end
 
-	valid_extent_map_mode (mode: INTEGER): BOOLEAN is
+	valid_extent_map_mode (mode: INTEGER): BOOLEAN
 			-- Is `mode' a valid window or viewport extent map mode?
 		require
 			valid_map_mode: valid_map_mode_constant (mode)
@@ -465,7 +465,7 @@ feature -- Status report
 				mode = Mm_isotropic
 		end
 
-	stretch_blt_mode: INTEGER is
+	stretch_blt_mode: INTEGER
 			-- Current stretching mode. The stretching mode
 			-- defines how color data is added to or removed from
 			-- bitmaps that are stretched or compressed when
@@ -478,7 +478,7 @@ feature -- Status report
 			valid_stretch_mode: valid_stretch_mode_constant (Result)
 		end
 
-	text_face: STRING_GENERAL is
+	text_face: STRING_GENERAL
 			-- Typeface name of the font that is currently selected.
 		require
 			exists: exists
@@ -494,7 +494,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of the screen (in pixels).
 		require
 			exists: exists
@@ -502,7 +502,7 @@ feature -- Status report
 			Result := device_caps (Horizontal_resolution)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of screen (in raster lines).
 		require
 			exists: exists
@@ -510,12 +510,12 @@ feature -- Status report
 			Result := device_caps (Vertical_resolution)
 		end
 
-	mask_blt_supported: BOOLEAN is True
+	mask_blt_supported: BOOLEAN = True
 			-- It is since we only support Windows NT or greater.
 
 feature -- Status setting
 
-	set_text_alignment (an_alignment: INTEGER) is
+	set_text_alignment (an_alignment: INTEGER)
 			-- Set the text alignment with `an_alignment'.
 			-- See class WEL_TA_CONSTANTS for `an_alignment'.
 		require
@@ -527,7 +527,7 @@ feature -- Status setting
 			text_alignment_set: flag_set (text_alignment, an_alignment)
 		end
 
-	 set_hv_text_alignment (h, v: INTEGER) is
+	 set_hv_text_alignment (h, v: INTEGER)
                -- Set the text alignment using the horizontal and
                -- vertical components in `h' and `v'.
               -- See class WEL_TA_CONSTANTS for valid alignments.
@@ -546,7 +546,7 @@ feature -- Status setting
           			flag_set (text_alignment, v)
           end
 
-	set_map_mode (mode: INTEGER) is
+	set_map_mode (mode: INTEGER)
 			-- Set the mapping mode `mode' of the device context.
 			-- See class WEL_MM_CONSTANTS for `mode' values.
 		require
@@ -558,7 +558,7 @@ feature -- Status setting
 			map_mode_set: map_mode = mode
 		end
 
-	set_polygon_fill_mode (mode: INTEGER) is
+	set_polygon_fill_mode (mode: INTEGER)
 			-- Set the polygon fill mode `polygon_fill_mode' with
 			-- `mode'.
 			-- See class WEL_POLYGON_FILL_MODE_CONSTANTS for
@@ -573,7 +573,7 @@ feature -- Status setting
 			polygon_fill_mode_set: polygon_fill_mode = mode
 		end
 
-	set_window_extent (x_extent, y_extent: INTEGER) is
+	set_window_extent (x_extent, y_extent: INTEGER)
 			-- Set the `x_extent' and `y_extent' of the window
 			-- associated with the device context.
 		require
@@ -589,7 +589,7 @@ feature -- Status setting
 			y_window_extent_set: map_mode /= Mm_isotropic implies window_extent.height = y_extent
 		end
 
-	set_window_origin (x_origin, y_origin: INTEGER) is
+	set_window_origin (x_origin, y_origin: INTEGER)
 			-- Set the `x_origin' and `y_origin' of the window
 			-- associated with the device context
 		require
@@ -603,7 +603,7 @@ feature -- Status setting
 			y_window_origin_set: window_origin.y = y_origin
 		end
 
-	set_viewport_extent (x_extent, y_extent: INTEGER) is
+	set_viewport_extent (x_extent, y_extent: INTEGER)
 			-- Set the `x_extent' and `y_extent' of the viewport
 			-- associated with the device context.
 		require
@@ -618,7 +618,7 @@ feature -- Status setting
 			y_viewport_extent_set: map_mode /= Mm_isotropic implies viewport_extent.height = y_extent
 		end
 
-	set_viewport_origin (x_origin, y_origin: INTEGER) is
+	set_viewport_origin (x_origin, y_origin: INTEGER)
 			-- Set the `x_origin' and `y_origin' of the viewport
 			-- associated with the device context.
 		require
@@ -632,7 +632,7 @@ feature -- Status setting
 			y_viewport_origin_set: viewport_origin.y = y_origin
 		end
 
-	set_background_color (color: WEL_COLOR_REF) is
+	set_background_color (color: WEL_COLOR_REF)
 			-- Set the `background_color' to `color'.
 		require
 			exists: exists
@@ -643,7 +643,7 @@ feature -- Status setting
 			color_set: background_color.item = color.item
 		end
 
-	set_text_color (color: WEL_COLOR_REF) is
+	set_text_color (color: WEL_COLOR_REF)
 			-- Set the `text_color' to `color'.
 		require
 			exists: exists
@@ -654,7 +654,7 @@ feature -- Status setting
 			color_set: text_color.item = color.item
 		end
 
-	set_background_opaque is
+	set_background_opaque
 			-- Set the background mode to opaque.
 		require
 			exists: exists
@@ -664,7 +664,7 @@ feature -- Status setting
 			is_opaque: is_opaque
 		end
 
-	set_background_transparent is
+	set_background_transparent
 			-- Set the background mode to transparent.
 		require
 			exists: exists
@@ -674,7 +674,7 @@ feature -- Status setting
 			is_transparent: is_transparent
 		end
 
-	set_rop2 (a_rop2: INTEGER) is
+	set_rop2 (a_rop2: INTEGER)
 			-- Set the current foreground mix mode. GDI uses the
 			-- foreground mix mode to combine pens and interiors of
 			-- filled objects with the colors already on the screen.
@@ -691,7 +691,7 @@ feature -- Status setting
 			rop2_set: rop2 = a_rop2
 		end
 
-	set_stretch_blt_mode (a_mode: INTEGER) is
+	set_stretch_blt_mode (a_mode: INTEGER)
 			-- Set the bitmap stretching mode with `a_mode'.
 			-- See class WEL_STRETCH_MODE_CONSTANTS for `a_mode'
 			-- values.
@@ -706,7 +706,7 @@ feature -- Status setting
 
 	set_di_bits (a_bitmap: WEL_BITMAP; start_scan, scan_lines: INTEGER;
 			bits: ARRAY [CHARACTER]; bitmap_info: WEL_BITMAP_INFO;
-			usage: INTEGER): INTEGER is
+			usage: INTEGER): INTEGER
 			-- Set device-independent bits of `a_bitmap'.
 		require
 			exists: exists
@@ -724,7 +724,7 @@ feature -- Status setting
 				scan_lines, l_char_array.item, bitmap_info.item, usage)
 		end
 
-	select_palette (a_palette: WEL_PALETTE) is
+	select_palette (a_palette: WEL_PALETTE)
 			-- Select the `a_palette' as the current palette.
 		require
 			exists: exists
@@ -745,7 +745,7 @@ feature -- Status setting
 			palette := a_palette
 		end
 
-	select_pen (a_pen: WEL_PEN) is
+	select_pen (a_pen: WEL_PEN)
 			-- Select the `a_pen' as the current pen.
 		require
 			exists: exists
@@ -767,7 +767,7 @@ feature -- Status setting
 			pen_selected: pen_selected
 		end
 
-	select_brush (a_brush: WEL_BRUSH) is
+	select_brush (a_brush: WEL_BRUSH)
 			-- Select the `a_brush' as the current brush.
 		require
 			exists: exists
@@ -789,7 +789,7 @@ feature -- Status setting
 			brush_selected: brush_selected
 		end
 
-	select_region (a_region: WEL_REGION) is
+	select_region (a_region: WEL_REGION)
 			-- Select the `a_region' as the current region.
 		require
 			exists: exists
@@ -812,7 +812,7 @@ feature -- Status setting
 			region_selected: region_selected
 		end
 
-	select_font (a_font: WEL_FONT) is
+	select_font (a_font: WEL_FONT)
 			-- Select the `a_font' as the current font.
 		require
 			exists: exists
@@ -835,7 +835,7 @@ feature -- Status setting
 			font_selected: font_selected
 		end
 
-	select_bitmap (a_bitmap: WEL_BITMAP) is
+	select_bitmap (a_bitmap: WEL_BITMAP)
 			-- Select the `a_bitmap' as the current bitmap.
 		require
 			exists: exists
@@ -854,7 +854,7 @@ feature -- Status setting
 			bitmap_selected: bitmap_selected
 		end
 
-	unselect_pen is
+	unselect_pen
 			-- Deselect the pen and restore the old one.
 		require
 			exists: exists
@@ -870,7 +870,7 @@ feature -- Status setting
 			pen_not_selected: not pen_selected
 		end
 
-	unselect_brush is
+	unselect_brush
 			-- Deselect the brush and restore the old one.
 		require
 			exists: exists
@@ -886,7 +886,7 @@ feature -- Status setting
 			brush_not_selected: not brush_selected
 		end
 
-	unselect_region is
+	unselect_region
 			-- Deselect the region and restore the old one.
 		require
 			exists: exists
@@ -902,7 +902,7 @@ feature -- Status setting
 			region_not_selected: not region_selected
 		end
 
-	unselect_palette is
+	unselect_palette
 			-- Deselect the palette and restore the old one.
 		require
 			exists: exists
@@ -918,7 +918,7 @@ feature -- Status setting
 			palette_not_selected: not palette_selected
 		end
 
-	unselect_font is
+	unselect_font
 			-- Deselect the font and restore the old one.
 		require
 			exists: exists
@@ -934,7 +934,7 @@ feature -- Status setting
 			font_not_selected: not font_selected
 		end
 
-	unselect_bitmap is
+	unselect_bitmap
 			-- Deselect the bitmap and restore the old one.
 		require
 			exists: exists
@@ -950,7 +950,7 @@ feature -- Status setting
 			bitmap_not_selected: not bitmap_selected
 		end
 
-	unselect_all is
+	unselect_all
 			-- Deselect all objects and restore the old ones.
 		require
 			exists: exists
@@ -984,7 +984,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	realize_palette is
+	realize_palette
 			-- Map palette entries from the current logical
 			-- palette on the system palette.
 		require
@@ -994,7 +994,7 @@ feature -- Basic operations
 			cwin_realize_palette (item)
 		end
 
-	select_clip_region (a_region: WEL_REGION) is
+	select_clip_region (a_region: WEL_REGION)
 			-- Select `a_region' as the current clipping region.
 		require
 			exists: exists
@@ -1004,7 +1004,7 @@ feature -- Basic operations
 			cwin_select_clip_rgn (item, a_region.item)
 		end
 
-	remove_clip_region is
+	remove_clip_region
 			-- Remove the current clipping region.
 		require
 			exists: exists
@@ -1014,7 +1014,7 @@ feature -- Basic operations
 			cwin_select_clip_rgn (item, a_default_pointer)
 		end
 
-	text_out (x, y: INTEGER; string: STRING_GENERAL) is
+	text_out (x, y: INTEGER; string: STRING_GENERAL)
 			-- Write `string' on `x' and `y' position.
 		require
 			exists: exists
@@ -1028,7 +1028,7 @@ feature -- Basic operations
 
 	tabbed_text_out (x, y: INTEGER; string: STRING_GENERAL;
 			tabulations: ARRAY [INTEGER];
-			tabulations_origin: INTEGER) is
+			tabulations_origin: INTEGER)
 			-- Write `string' on `x' and `y' position expanding
 			-- tabs to the values specified in `tabulations'.
 			-- `tabulations_origin' specifies the x-coordinate of
@@ -1047,7 +1047,7 @@ feature -- Basic operations
 				tabulations.count, a.item, tabulations_origin)
 		end
 
-	draw_text (string: STRING_GENERAL; rect: WEL_RECT; format: INTEGER) is
+	draw_text (string: STRING_GENERAL; rect: WEL_RECT; format: INTEGER)
 			-- Draw the text `string' inside
 			-- the `rect' using `format'
 			-- See class WEL_DT_CONSTANTS for `format' value.
@@ -1061,7 +1061,7 @@ feature -- Basic operations
 			drawn_height := draw_text_with_result (string, rect, format)
 		end
 
-	draw_text_with_result (string: STRING_GENERAL; rect: WEL_RECT; format: INTEGER): INTEGER is
+	draw_text_with_result (string: STRING_GENERAL; rect: WEL_RECT; format: INTEGER): INTEGER
 			-- Draw the text `string' inside the `rect' using `format'.
 			-- Return the height of the text drawn.
 			-- See class WEL_DT_CONSTANTS for `format' value.
@@ -1077,7 +1077,7 @@ feature -- Basic operations
 				string.count, rect.item, format)
 		end
 
-	draw_disabled_text (string: STRING_GENERAL; rect: WEL_RECT; format: INTEGER) is
+	draw_disabled_text (string: STRING_GENERAL; rect: WEL_RECT; format: INTEGER)
 			-- Draw the text `string' in disabled mode inside
 			-- the `rect' using `format'
 			-- See class WEL_DT_CONSTANTS for `format' value.
@@ -1092,7 +1092,7 @@ feature -- Basic operations
 			cwin_draw_disabled_text (item, a_wel_string.item, string.count, rect.item, format)
 		end
 
-	draw_state_text (a_brush: WEL_BRUSH; string: STRING_GENERAL; x, y: INTEGER; format: INTEGER) is
+	draw_state_text (a_brush: WEL_BRUSH; string: STRING_GENERAL; x, y: INTEGER; format: INTEGER)
 			-- Draw the text `string' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
@@ -1114,7 +1114,7 @@ feature -- Basic operations
 			success := cwin_draw_state (item, a_brush_ptr, null, a_wel_string.item, string.count, x, y, 0, 0, format)
 		end
 
-	draw_centered_text (string: STRING_GENERAL; rect: WEL_RECT) is
+	draw_centered_text (string: STRING_GENERAL; rect: WEL_RECT)
 			-- Draw the text `string' centered in `rect'.
 		require
 			exists: exists
@@ -1124,7 +1124,7 @@ feature -- Basic operations
 			draw_text (string, rect, Dt_singleline + Dt_center + Dt_vcenter)
 		end
 
-	draw_state_bitmap (a_brush: WEL_BRUSH; a_bitmap: WEL_BITMAP; x, y: INTEGER; format: INTEGER) is
+	draw_state_bitmap (a_brush: WEL_BRUSH; a_bitmap: WEL_BITMAP; x, y: INTEGER; format: INTEGER)
 			-- Draw the bitmap `a_bitmap' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
@@ -1144,7 +1144,7 @@ feature -- Basic operations
 			success := cwin_draw_state (item, a_brush_ptr, null, a_bitmap.item, 0, x, y, 0, 0, format | Dst_bitmap)
 		end
 
-	draw_state_icon (a_brush: WEL_BRUSH; an_icon: WEL_GRAPHICAL_RESOURCE; x, y: INTEGER; format: INTEGER) is
+	draw_state_icon (a_brush: WEL_BRUSH; an_icon: WEL_GRAPHICAL_RESOURCE; x, y: INTEGER; format: INTEGER)
 			-- Draw the icon/cursor `an_icon' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
@@ -1164,7 +1164,7 @@ feature -- Basic operations
 			success := cwin_draw_state (item, a_brush_ptr, null, an_icon.item, 0, x, y, 0, 0, format | Dst_icon)
 		end
 
-	draw_bitmap (a_bitmap: WEL_BITMAP; x, y, a_width, a_height: INTEGER) is
+	draw_bitmap (a_bitmap: WEL_BITMAP; x, y, a_width, a_height: INTEGER)
 			-- Draw `bitmap' at the `x', `y' position
 			-- using `a_width' and `a_height'.
 		require
@@ -1188,7 +1188,7 @@ feature -- Basic operations
 			bitmap_dc.delete
 		end
 
-	draw_bitmap_with_raster_operation (a_bitmap: WEL_BITMAP; x, y, a_width, a_height, raster_operation: INTEGER) is
+	draw_bitmap_with_raster_operation (a_bitmap: WEL_BITMAP; x, y, a_width, a_height, raster_operation: INTEGER)
 			-- Draw `bitmap' using `raster_operation' at position `x', `y'
 			-- using `a_width' and `a_height'.
 			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for `raster_operation' values.
@@ -1213,7 +1213,7 @@ feature -- Basic operations
 			bitmap_dc.delete
 		end
 
-	draw_icon (icon: WEL_ICON; x, y: INTEGER) is
+	draw_icon (icon: WEL_ICON; x, y: INTEGER)
 			-- Draw `icon' at the `x', `y' position.
 		require
 			exists: exists
@@ -1223,7 +1223,7 @@ feature -- Basic operations
 			cwin_draw_icon (item, x, y, icon.item)
 		end
 
-	draw_icon_ex (icon: WEL_ICON; x, y, icon_width, icon_height, frame_index: INTEGER; flicker_free_background: WEL_BRUSH; di_flags: INTEGER) is
+	draw_icon_ex (icon: WEL_ICON; x, y, icon_width, icon_height, frame_index: INTEGER; flicker_free_background: WEL_BRUSH; di_flags: INTEGER)
 			-- Draw `icon' at the `x', `y' position.
 		require
 			exists: exists
@@ -1239,7 +1239,7 @@ feature -- Basic operations
 			cwin_draw_icon_ex (item, x, y, icon.item, icon_width, icon_height, frame_index, ffdraw, di_flags)
 		end
 
-	draw_cursor (cursor: WEL_CURSOR; x, y: INTEGER) is
+	draw_cursor (cursor: WEL_CURSOR; x, y: INTEGER)
 			-- Draw `cursor' at the `x', `y' position.
 		require
 			exists: exists
@@ -1249,7 +1249,7 @@ feature -- Basic operations
 			cwin_draw_icon (item, x, y, cursor.item)
 		end
 
-	draw_edge (a_rect: WEL_RECT; edge_type: INTEGER; edge_border: INTEGER) is
+	draw_edge (a_rect: WEL_RECT; edge_type: INTEGER; edge_border: INTEGER)
 			-- Draw one or more edges depending on `edge_type' using the borders
 			-- type `edge_border' in the bounding rectangle `a_rect'.
 			--
@@ -1265,7 +1265,7 @@ feature -- Basic operations
 			cwin_draw_edge (item, a_rect.item, edge_type, edge_border)
 		end
 
-	draw_frame_control (a_rect: WEL_RECT; control_type: INTEGER; control_state: INTEGER) is
+	draw_frame_control (a_rect: WEL_RECT; control_type: INTEGER; control_state: INTEGER)
 			-- Draws a frame control of the type `control_type' with the style
 			-- `control_state'.
 			--
@@ -1281,7 +1281,7 @@ feature -- Basic operations
 			cwin_draw_frame_control (item, a_rect.item, control_type, control_state)
 		end
 
-	set_pixel (x, y: INTEGER; color: WEL_COLOR_REF) is
+	set_pixel (x, y: INTEGER; color: WEL_COLOR_REF)
 			-- Set the pixel at `x', `y' position.
 			-- with the `color' color.
 		require
@@ -1291,7 +1291,7 @@ feature -- Basic operations
 			cwin_set_pixel (item, x, y, color.item)
 		end
 
-	line (x1, y1, x2, y2: INTEGER) is
+	line (x1, y1, x2, y2: INTEGER)
 			-- Draw a line from `x1', `y1' to `x2', `y2'.
 		require
 			exists: exists
@@ -1300,7 +1300,7 @@ feature -- Basic operations
 			line_to (x2, y2)
 		end
 
-	polyline (points: ARRAY [INTEGER]) is
+	polyline (points: ARRAY [INTEGER])
 			-- Draws a series of line segments by connecting the
 			-- points specified in `points'.
 		require
@@ -1314,7 +1314,7 @@ feature -- Basic operations
 			cwin_polyline (item, a.item, points.count // 2)
 		end
 
-	line_to (x, y: INTEGER) is
+	line_to (x, y: INTEGER)
 			-- Draw a line from the current position
 			-- to `x', `y' position.
 		require
@@ -1323,7 +1323,7 @@ feature -- Basic operations
 			cwin_line_to (item, x, y)
 		end
 
-	move_to (x, y: INTEGER) is
+	move_to (x, y: INTEGER)
 			-- Set the current position to `x', `y' position.
 		require
 			exists: exists
@@ -1333,7 +1333,7 @@ feature -- Basic operations
 			cwin_move_to_ex (item, x, y, a_default_pointer)
 		end
 
-	rectangle (left, top, right, bottom: INTEGER) is
+	rectangle (left, top, right, bottom: INTEGER)
 			-- Draw a rectangle from `left', `top'
 			-- to `right', `bottom'.
 		require
@@ -1342,7 +1342,7 @@ feature -- Basic operations
 			cwin_rectangle (item, left, top, right, bottom)
 		end
 
-	fill_rect (a_rect: WEL_RECT; a_brush: WEL_BRUSH) is
+	fill_rect (a_rect: WEL_RECT; a_brush: WEL_BRUSH)
 			-- Fill a `a_rect' using `a_brush'.
 		require
 			exists: exists
@@ -1353,7 +1353,7 @@ feature -- Basic operations
 			cwin_fill_rect (item, a_rect.item, a_brush.item)
 		end
 
-	fill_region (a_region: WEL_REGION; a_brush: WEL_BRUSH) is
+	fill_region (a_region: WEL_REGION; a_brush: WEL_BRUSH)
 			-- Fill `a_region' using `a_brush'.
 		require
 			exists: exists
@@ -1364,7 +1364,7 @@ feature -- Basic operations
 			cwin_fill_region (item, a_region.item, a_brush.item)
 		end
 
-	invert_rect (a_rect: WEL_RECT) is
+	invert_rect (a_rect: WEL_RECT)
 			-- Invert `a_rect' in a window by performing a logical
 			-- NOT operation on the color values for each pixel.
 		require
@@ -1374,7 +1374,7 @@ feature -- Basic operations
 			cwin_invert_rect (item, a_rect.item)
 		end
 
-	invert_region (a_region: WEL_REGION) is
+	invert_region (a_region: WEL_REGION)
 			-- Invert the colors in `a_region'.
 		require
 			exists: exists
@@ -1384,7 +1384,7 @@ feature -- Basic operations
 			cwin_invert_rgn (item, a_region.item)
 		end
 
-	flood_fill_border (x, y: INTEGER; color: WEL_COLOR_REF) is
+	flood_fill_border (x, y: INTEGER; color: WEL_COLOR_REF)
 			-- Fill an area which is bounded by `color' starting
 			-- at `x', `y'.
 		require
@@ -1395,7 +1395,7 @@ feature -- Basic operations
 				Floodfillborder)
 		end
 
-	flood_fill_surface (x, y: INTEGER; color: WEL_COLOR_REF) is
+	flood_fill_surface (x, y: INTEGER; color: WEL_COLOR_REF)
 			-- Fill an area which is defined by `color' starting
 			-- at `x', `y'. Filling continues outward in all
 			-- directions as long as the color is encountered.
@@ -1407,7 +1407,7 @@ feature -- Basic operations
 				Floodfillsurface)
 		end
 
-	polygon (points: ARRAY [INTEGER]) is
+	polygon (points: ARRAY [INTEGER])
 			-- Draw a polygon consisting of two or more `points'
 			-- connected by lines.
 		require
@@ -1421,7 +1421,7 @@ feature -- Basic operations
 			cwin_polygon (item, a.item, points.count // 2)
 		end
 
-	ellipse (left, top, right, bottom: INTEGER) is
+	ellipse (left, top, right, bottom: INTEGER)
 			-- Draw an ellipse into a rectangle specified by
 			-- `left', `top' and `right', `bottom'.
 		require
@@ -1431,7 +1431,7 @@ feature -- Basic operations
 		end
 
 	arc (left, top, right, bottom, x_start_arc, y_start_arc,
-			x_end_arc, y_end_arc: INTEGER) is
+			x_end_arc, y_end_arc: INTEGER)
 			-- Draw an elliptical arc into a rectangle specified
 			-- by `left', `top' and `right', `bottom', starting
 			-- at `x_start_arc', `y_start_arc' and ending at
@@ -1444,7 +1444,7 @@ feature -- Basic operations
 		end
 
 	chord (left, top, right, bottom, x_start_line, y_start_line,
-			x_end_line, y_end_line: INTEGER) is
+			x_end_line, y_end_line: INTEGER)
 			-- Draw a chord into a rectangle specified
 			-- by `left', `top' and `right', `bottom', starting
 			-- at `x_start_line', `y_start_line' and ending at
@@ -1457,7 +1457,7 @@ feature -- Basic operations
 		end
 
 	pie (left, top, right, bottom, x_start_point, y_start_point,
-			x_end_point, y_end_point: INTEGER) is
+			x_end_point, y_end_point: INTEGER)
 			-- Draw a pie-shaped wedge by drawing an elliptical
 			-- arc whose center and two endpoints are joined
 			-- by lines. The pie is drawn into a rectangle
@@ -1472,7 +1472,7 @@ feature -- Basic operations
 		end
 
 	round_rect (left, top, right, bottom, ellipse_width,
-			ellipse_height: INTEGER) is
+			ellipse_height: INTEGER)
 			-- Draw a rectangle from `left', `top' to
 			-- `right', `bottom' with rounded corners.
 			-- The rounded corners are specified by the
@@ -1484,7 +1484,7 @@ feature -- Basic operations
 				ellipse_width, ellipse_height)
 		end
 
-	copy_dc (dc_source: WEL_DC; rect: WEL_RECT) is
+	copy_dc (dc_source: WEL_DC; rect: WEL_RECT)
 			-- Copy the content of `rect' in `dc_source'
 			-- to the current dc.
 		require
@@ -1500,7 +1500,7 @@ feature -- Basic operations
 
 	bit_blt (x_destination, y_destination, a_width, a_height: INTEGER;
 			dc_source: WEL_DC; x_source, y_source,
-			raster_operation: INTEGER) is
+			raster_operation: INTEGER)
 			-- Copy a bitmap from the `dc_source' to
 			-- the current device context, from `x_source',
 			-- `y_source' to `x_destination', `y_destination',
@@ -1521,7 +1521,7 @@ feature -- Basic operations
 
 	alpha_blend (a_x_dest, a_y_dest, a_width, a_height: INTEGER;
 			a_dc_src: WEL_DC; a_x_src, a_y_src, a_width_src, a_height_src: INTEGER
-			a_blend_function: WEL_BLEND_FUNCTION): BOOLEAN is
+			a_blend_function: WEL_BLEND_FUNCTION): BOOLEAN
 				-- Per pixel alpha blend.
 		require
 			exists: exists
@@ -1544,7 +1544,7 @@ feature -- Basic operations
 	mask_blt (x_destination, y_destination, a_width, a_height: INTEGER;
 			dc_source: WEL_DC; x_source, y_source: INTEGER;
 			mask_bitmap: WEL_BITMAP; x_mask, y_mask,
-			raster_operation: INTEGER) is
+			raster_operation: INTEGER)
 			-- Combines the color data for the source and destination bitmaps using the specified mask and raster operation.
 			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for
 			-- `raster_operation' values.
@@ -1565,7 +1565,7 @@ feature -- Basic operations
 				mask_bitmap.item, x_mask, y_mask, raster_operation)
 		end
 
-	make_rop4 (fore, back: INTEGER): INTEGER is
+	make_rop4 (fore, back: INTEGER): INTEGER
 			-- `Result' is raster operation code corresponding to
 			-- `fore' and `back' for argument `raster_operation' code
 			-- of `mask_blt'. This corresponds to Windows macro Makerop4
@@ -1576,7 +1576,7 @@ feature -- Basic operations
 	stretch_blt (x_destination, y_destination, width_destination,
 				height_destination: INTEGER; dc_source: WEL_DC;
 				x_source, y_source, width_source, height_source,
-				raster_operation: INTEGER) is
+				raster_operation: INTEGER)
 			-- Copy a bitmap from the `dc_source' to
 			-- the current device context, from `x_source',
 			-- `y_source' to `x_destination', `y_destination',
@@ -1602,7 +1602,7 @@ feature -- Basic operations
 				x_source, y_source, dib_width,
 				dib_height: INTEGER;
 				dib: WEL_DIB; bitmap_info: WEL_BITMAP_INFO;
-				rgb_mode, raster_operation: INTEGER) is
+				rgb_mode, raster_operation: INTEGER)
 			-- Copy a dib to the current device context, from
 			-- `x_source', `y_source' to `x_destination',
 			-- `y_destination', using `a_width' and `a_height'
@@ -1627,7 +1627,7 @@ feature -- Basic operations
 		end
 
 	pat_blt (x_destination, y_destination, a_width, a_height: INTEGER;
-			raster_operation: INTEGER) is
+			raster_operation: INTEGER)
 			-- Paint the rectangle specified by `x_destination',
 			-- `y_destination', `a_width', `a_height' using the brush
 			-- that is currently selected into this device context.
@@ -1644,7 +1644,7 @@ feature -- Basic operations
 				a_width, a_height, raster_operation)
 		end
 
-	save_bitmap (a_bitmap: WEL_BITMAP; file: FILE_NAME) is
+	save_bitmap (a_bitmap: WEL_BITMAP; file: FILE_NAME)
 			-- Save `a_bitmap' in `file'.
 		require
 			exists: exists
@@ -1707,7 +1707,7 @@ feature -- Basic operations
 
 	di_bits (a_bitmap: WEL_BITMAP; start_scan, scan_lines: INTEGER;
 			bitmap_info: WEL_BITMAP_INFO;
-			usage: INTEGER): ARRAY [CHARACTER] is
+			usage: INTEGER): ARRAY [CHARACTER]
 			-- Device-independent bits of `a_bitmap'.
 			-- `start_scan' specifies the first scan line to
 			-- retrieve and `scan_lines' specifies the number of
@@ -1735,7 +1735,7 @@ feature -- Basic operations
 			consistent_count: Result.count = bitmap_info.header.size_image
 		end
 
-	poly_bezier (points: ARRAY [INTEGER]) is
+	poly_bezier (points: ARRAY [INTEGER])
 			-- Draw one or more Bezier curves by using the
 			-- endpoints and control points specified by `points'.
 			-- The first curve is drawn from the first point to the
@@ -1757,7 +1757,7 @@ feature -- Basic operations
 			cwin_poly_bezier (item, a.item, points.count // 2)
 		end
 
-	poly_bezier_to (points: ARRAY [INTEGER]) is
+	poly_bezier_to (points: ARRAY [INTEGER])
 			-- Draw one or more Bezier curves by using the control
 			-- points specified by `points'. The first curve is
 			-- drawn from the current position to the third point
@@ -1780,7 +1780,7 @@ feature -- Basic operations
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	destroy_item
 			-- Delete the current device context.
 		local
 			a_default_pointer: POINTER	-- Default_pointer
@@ -1814,26 +1814,26 @@ feature {NONE} -- Implementation
 	old_hbitmap: POINTER
 		-- Old hbitmap selected.
 
-	Max_text_face: INTEGER is 255
+	Max_text_face: INTEGER = 255
 		-- Maximum text face name for `text_face'.
 
 feature -- Obsolete
 
-	set_bk_color (color: WEL_COLOR_REF) is
+	set_bk_color (color: WEL_COLOR_REF)
 		obsolete
 			"Use ``set_background_color''"
 		do
 			set_background_color (color)
 		end
 
-	poly_line (points: ARRAY [INTEGER]) is
+	poly_line (points: ARRAY [INTEGER])
 		obsolete
 			"Use ``polyline''"
 		do
 			polyline (points)
 		end
 
-	save (a_bitmap: WEL_BITMAP; file: FILE_NAME) is
+	save (a_bitmap: WEL_BITMAP; file: FILE_NAME)
 		obsolete
 			"Use ``save_bitmap''"
 		do
@@ -1843,7 +1843,7 @@ feature -- Obsolete
 feature {NONE} -- Externals
 
 	cwin_text_out (hdc: POINTER; x, y: INTEGER; string: POINTER;
-			length: INTEGER) is
+			length: INTEGER)
 			-- SDK TextOut
 		external
 			"C [macro <windows.h>] (HDC, int, int, LPCTSTR, int)"
@@ -1853,7 +1853,7 @@ feature {NONE} -- Externals
 
 	cwin_tabbed_text_out (hdc: POINTER; x, y: INTEGER; string: POINTER;
 			lenght, tab_count: INTEGER; tabs: POINTER;
-			tab_origin: INTEGER) is
+			tab_origin: INTEGER)
 			-- SDK TabbedTextOut
 		external
 			"C [macro <windows.h>] (HDC, int, int, LPCTSTR, int, int, %
@@ -1862,7 +1862,7 @@ feature {NONE} -- Externals
 			"TabbedTextOut"
 		end
 
-	cwin_draw_state (hdc, hbr, lpoutputfunc, ldata: POINTER; wdata, x, y, cx, cy, fuflags: INTEGER): INTEGER is
+	cwin_draw_state (hdc, hbr, lpoutputfunc, ldata: POINTER; wdata, x, y, cx, cy, fuflags: INTEGER): INTEGER
 			-- SDK DrawState
 		external
 			"C [macro <windows.h>] (HDC, HBRUSH, DRAWSTATEPROC, LPARAM, WPARAM, int, int, int, int, UINT): BOOL"
@@ -1870,7 +1870,7 @@ feature {NONE} -- Externals
 			"DrawState"
 		end
 
-	cwin_draw_icon (hdc: POINTER; x, y: INTEGER; hicon: POINTER) is
+	cwin_draw_icon (hdc: POINTER; x, y: INTEGER; hicon: POINTER)
 			-- SDK DrawIcon
 		external
 			"C [macro <windows.h>] (HDC, int, int, HICON)"
@@ -1878,7 +1878,7 @@ feature {NONE} -- Externals
 			"DrawIcon"
 		end
 
-	cwin_draw_icon_ex (hdc: POINTER; x, y: INTEGER; hicon: POINTER; icon_width, icon_height, frame_index: INTEGER; ffdraw: POINTER; di_flags: INTEGER) is
+	cwin_draw_icon_ex (hdc: POINTER; x, y: INTEGER; hicon: POINTER; icon_width, icon_height, frame_index: INTEGER; ffdraw: POINTER; di_flags: INTEGER)
 			-- SDK DrawIcon
 		external
 			"C [macro <windows.h>] (HDC, int, int, HICON, int, int, UINT, HBRUSH, UINT)"
@@ -1886,7 +1886,7 @@ feature {NONE} -- Externals
 			"DrawIconEx"
 		end
 
-	cwin_draw_edge (hdc: POINTER; lprect: POINTER; edge_type: INTEGER; edge_border: INTEGER) is
+	cwin_draw_edge (hdc: POINTER; lprect: POINTER; edge_type: INTEGER; edge_border: INTEGER)
 			-- SDK DrawEdge
 		external
 			"C [macro <windows.h>] (HDC, LPRECT, UINT, UINT)"
@@ -1894,7 +1894,7 @@ feature {NONE} -- Externals
 			"DrawEdge"
 		end
 
-	cwin_draw_frame_control (hdc: POINTER; lprect: POINTER; utype: INTEGER; ustate: INTEGER) is
+	cwin_draw_frame_control (hdc: POINTER; lprect: POINTER; utype: INTEGER; ustate: INTEGER)
 			-- SDK DrawEdge
 		external
 			"C [macro <windows.h>] (HDC, LPRECT, UINT, UINT)"
@@ -1902,7 +1902,7 @@ feature {NONE} -- Externals
 			"DrawFrameControl"
 		end
 
-	cwin_set_pixel (hdc: POINTER; x, y: INTEGER; color: INTEGER) is
+	cwin_set_pixel (hdc: POINTER; x, y: INTEGER; color: INTEGER)
 			-- SDK SetPixel
 		external
 			"C [macro <windows.h>] (HDC, int, int, COLORREF)"
@@ -1910,7 +1910,7 @@ feature {NONE} -- Externals
 			"SetPixel"
 		end
 
-	cwin_get_pixel (hdc: POINTER; x, y: INTEGER): INTEGER is
+	cwin_get_pixel (hdc: POINTER; x, y: INTEGER): INTEGER
 			-- SDK GetPixel
 		external
 			"C [macro <windows.h>] (HDC, int, int): COLORREF"
@@ -1918,7 +1918,7 @@ feature {NONE} -- Externals
 			"GetPixel"
 		end
 
-	cwin_move_to_ex (hdc: POINTER; x, y: INTEGER; point: POINTER) is
+	cwin_move_to_ex (hdc: POINTER; x, y: INTEGER; point: POINTER)
 			-- SDK MoveToEx
 		external
 			"C [macro <windows.h>] (HDC, int, int, LPPOINT)"
@@ -1926,7 +1926,7 @@ feature {NONE} -- Externals
 			"MoveToEx"
 		end
 
-	cwin_line_to (hdc: POINTER; x, y: INTEGER) is
+	cwin_line_to (hdc: POINTER; x, y: INTEGER)
 			-- SDK LineTo
 		external
 			"C [macro <windows.h>] (HDC, int, int)"
@@ -1934,7 +1934,7 @@ feature {NONE} -- Externals
 			"LineTo"
 		end
 
-	cwin_polyline (hdc, pts: POINTER; num: INTEGER) is
+	cwin_polyline (hdc, pts: POINTER; num: INTEGER)
 			-- SDK Polyline
 		external
 			"C [macro <windows.h>] (HDC, POINT *, int)"
@@ -1942,7 +1942,7 @@ feature {NONE} -- Externals
 			"Polyline"
 		end
 
-	cwin_rectangle (hdc: POINTER; x1, y1, x2, y2: INTEGER) is
+	cwin_rectangle (hdc: POINTER; x1, y1, x2, y2: INTEGER)
 			-- SDK Rectangle
 		external
 			"C [macro <windows.h>] (HDC, int, int, int, int)"
@@ -1950,7 +1950,7 @@ feature {NONE} -- Externals
 			"Rectangle"
 		end
 
-	cwin_invert_rect (hdc: POINTER; rect: POINTER) is
+	cwin_invert_rect (hdc: POINTER; rect: POINTER)
 			-- SDK InvertRect
 		external
 			"C [macro <windows.h>] (HDC, RECT *)"
@@ -1958,7 +1958,7 @@ feature {NONE} -- Externals
 			"InvertRect"
 		end
 
-	cwin_invert_rgn (hdc: POINTER; rgn: POINTER) is
+	cwin_invert_rgn (hdc: POINTER; rgn: POINTER)
 			-- SDK InvertRgn
 		external
 			"C [macro <windows.h>] (HDC, HRGN)"
@@ -1966,7 +1966,7 @@ feature {NONE} -- Externals
 			"InvertRgn"
 		end
 
-	cwin_fill_rect (hdc, rect, hbrush: POINTER) is
+	cwin_fill_rect (hdc, rect, hbrush: POINTER)
 			-- SDK FillRect
 		external
 			"C [macro <windows.h>] (HDC, RECT *, HBRUSH)"
@@ -1976,7 +1976,7 @@ feature {NONE} -- Externals
 
 	-- Fill region to implement in order to avoid the flashing of the windows
 
-	cwin_fill_region (hdc, hrgn, hbrush: POINTER) is
+	cwin_fill_region (hdc, hrgn, hbrush: POINTER)
 			-- SDK fillRgn
 		external
 			"C [macro <windows.h>] (HDC, HRGN, HBRUSH)"
@@ -1984,7 +1984,7 @@ feature {NONE} -- Externals
 			"FillRgn"
 		end
 
-	cwin_ext_flood_fill (hdc: POINTER; x, y: INTEGER; color: INTEGER; type: INTEGER) is
+	cwin_ext_flood_fill (hdc: POINTER; x, y: INTEGER; color: INTEGER; type: INTEGER)
 			-- SDK ExtFloodFill
 		external
 			"C [macro <windows.h>] (HDC, int, int, COLORREF, UINT)"
@@ -1992,7 +1992,7 @@ feature {NONE} -- Externals
 			"ExtFloodFill"
 		end
 
-	cwin_polygon (hdc, pts: POINTER; num: INTEGER) is
+	cwin_polygon (hdc, pts: POINTER; num: INTEGER)
 			-- SDK Polygon
 		external
 			"C [macro <windows.h>] (HDC, POINT *, int)"
@@ -2000,7 +2000,7 @@ feature {NONE} -- Externals
 			"Polygon"
 		end
 
-	cwin_poly_bezier (hdc, pts: POINTER; num: INTEGER) is
+	cwin_poly_bezier (hdc, pts: POINTER; num: INTEGER)
 			-- SDK PolyBezier
 		external
 			"C [macro <windows.h>] (HDC, POINT *, DWORD)"
@@ -2008,7 +2008,7 @@ feature {NONE} -- Externals
 			"PolyBezier"
 		end
 
-	cwin_poly_bezier_to (hdc, pts: POINTER; num: INTEGER) is
+	cwin_poly_bezier_to (hdc, pts: POINTER; num: INTEGER)
 			-- SDK PolyBezierTo
 		external
 			"C [macro <windows.h>] (HDC, POINT *, DWORD)"
@@ -2016,7 +2016,7 @@ feature {NONE} -- Externals
 			"PolyBezierTo"
 		end
 
-	cwin_ellipse (hdc: POINTER; x1, y1, x2, y2: INTEGER) is
+	cwin_ellipse (hdc: POINTER; x1, y1, x2, y2: INTEGER)
 			-- SDK Ellipse
 		external
 			"C [macro <windows.h>] (HDC, int, int, int, int)"
@@ -2025,7 +2025,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_arc (hdc: POINTER; x1, y1, x2, y2, x_start, y_start,
-			x_end, y_end: INTEGER) is
+			x_end, y_end: INTEGER)
 			-- SDK Arc
 		external
 			"C [macro <windows.h>] (HDC, int, int, int, %
@@ -2035,7 +2035,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_chord (hdc: POINTER; x1, y1, x2, y2, x_start, y_start,
-			x_end, y_end: INTEGER) is
+			x_end, y_end: INTEGER)
 			-- SDK Chord
 		external
 			"C [macro <windows.h>] (HDC, int, int, int, %
@@ -2045,7 +2045,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_pie (hdc: POINTER; x1, y1, x2, y2, x_start, y_start,
-			x_end, y_end: INTEGER) is
+			x_end, y_end: INTEGER)
 			-- SDK Pie
 		external
 			"C [macro <windows.h>] (HDC, int, int, int, %
@@ -2055,7 +2055,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_round_rect (hdc: POINTER; x1, y1, x2, y2, a_width,
-			a_height: INTEGER) is
+			a_height: INTEGER)
 			-- SDK RoundRect
 		external
 			"C [macro <windows.h>] (HDC, int, int, int, int, int, int)"
@@ -2065,7 +2065,7 @@ feature {NONE} -- Externals
 
 	cwin_bit_blt (hdc_dest: POINTER; x_dest, y_dest, a_width,
 			a_height: INTEGER; hdc_src: POINTER; x_src,
-			y_src, rop: INTEGER) is
+			y_src, rop: INTEGER)
 			-- SDK BitBlt
 		external
 			"C [macro <windows.h>] (HDC, int, int, int, int, HDC, %
@@ -2075,7 +2075,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_alpha_blend (a_dc_dest: POINTER; a_x_dest, a_y_dest, a_width_dest, a_height_dest: INTEGER;
-						a_dc_src: POINTER; a_x_src, a_y_src, a_width_src, a_height_src: INTEGER; a_blend_function: POINTER; a_result: TYPED_POINTER [INTEGER]) is
+						a_dc_src: POINTER; a_x_src, a_y_src, a_width_src, a_height_src: INTEGER; a_blend_function: POINTER; a_result: TYPED_POINTER [INTEGER])
 			-- Alpha blend function.
 		external
 			"C inline use <Windows.h>"
@@ -2112,7 +2112,7 @@ feature {NONE} -- Externals
 
 	cwin_stretch_di_bits (hdc: POINTER; xdest, ydest, cxdest, cydest, xsrc,
 			ysrc, cxsrc, cysrc: INTEGER; lpvBits,
-			lpbmi: POINTER; color_use, rop: INTEGER) is
+			lpbmi: POINTER; color_use, rop: INTEGER)
 			-- SDK StretchDIBits
 		external
 			"C [macro <windows.h>] (HDC,int, int, int, int, int, int, %
@@ -2123,7 +2123,7 @@ feature {NONE} -- Externals
 
 	cwin_stretch_blt (hdc_dest: POINTER; x_dest, y_dest, width_dest,
 			height_dest: INTEGER; hdc_src: POINTER; x_src, y_src,
-			width_src, height_src, rop: INTEGER) is
+			width_src, height_src, rop: INTEGER)
 			-- SDK StretchBlt
 		external
 			"C [macro <windows.h>] (HDC, int, int, int, int, HDC, %
@@ -2132,7 +2132,7 @@ feature {NONE} -- Externals
 			"StretchBlt"
 		end
 
-	cwin_set_stretch_blt_mode (hdc: POINTER; a_mode: INTEGER) is
+	cwin_set_stretch_blt_mode (hdc: POINTER; a_mode: INTEGER)
 			-- SDK SetStretchBltMode
 		external
 			"C [macro <windows.h>] (HDC, int)"
@@ -2141,7 +2141,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_pat_blt (hdc_dest: POINTER; x_dest, y_dest, a_width,
-			a_height: INTEGER; rop: INTEGER) is
+			a_height: INTEGER; rop: INTEGER)
 			-- SDK PatBlt
 		external
 			"C [macro <windows.h>] (HDC, int, int, int, int, DWORD)"
@@ -2149,7 +2149,7 @@ feature {NONE} -- Externals
 			"PatBlt"
 		end
 
-	cwin_realize_palette (hdc: POINTER) is
+	cwin_realize_palette (hdc: POINTER)
 			-- SDK RealizePalette
 		external
 			"C [macro <windows.h>] (HDC)"
@@ -2157,7 +2157,7 @@ feature {NONE} -- Externals
 			"RealizePalette"
 		end
 
-	cwin_select_palette (hdc, hgpal: POINTER; palback: BOOLEAN) is
+	cwin_select_palette (hdc, hgpal: POINTER; palback: BOOLEAN)
 			-- SDK SelectPalette
 		external
 			"C [macro <windows.h>] (HDC, HPALETTE, BOOL)"
@@ -2166,7 +2166,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_select_palette_result (hdc, hgpal: POINTER;
-			palback: BOOLEAN): POINTER is
+			palback: BOOLEAN): POINTER
 			-- SDK SelectPalette
 		external
 			"C [macro <windows.h>] (HDC, HPALETTE, BOOL): EIF_POINTER"
@@ -2174,7 +2174,7 @@ feature {NONE} -- Externals
 			"SelectPalette"
 		end
 
-	cwin_select_object_result (hdc, hgdi_obj: POINTER): POINTER is
+	cwin_select_object_result (hdc, hgdi_obj: POINTER): POINTER
 			-- SDK SelectObject
 		external
 			"C [macro <windows.h>] (HDC, HGDIOBJ): HGDIOBJ"
@@ -2182,7 +2182,7 @@ feature {NONE} -- Externals
 			"SelectObject"
 		end
 
-	cwin_select_object (hdc, hgdi_obj: POINTER) is
+	cwin_select_object (hdc, hgdi_obj: POINTER)
 			-- SDK SelectObject
 		external
 			"C [macro <windows.h>] (HDC, HGDIOBJ)"
@@ -2190,7 +2190,7 @@ feature {NONE} -- Externals
 			"SelectObject"
 		end
 
-	cwin_select_clip_rgn (hdc, hrgn: POINTER) is
+	cwin_select_clip_rgn (hdc, hrgn: POINTER)
 			-- SDK SelectClipRgn
 		external
 			"C [macro <windows.h>] (HDC, HRGN)"
@@ -2199,7 +2199,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_create_dc (a_driver, a_device, a_output,
-			init_data: POINTER): POINTER is
+			init_data: POINTER): POINTER
 			-- SDK CreateDC
 		external
 			"C [macro <windows.h>] (LPCTSTR, LPCTSTR, LPCTSTR, CONST DEVMODE* ): EIF_POINTER"
@@ -2207,7 +2207,7 @@ feature {NONE} -- Externals
 			"CreateDC"
 		end
 
-	cwin_delete_dc (hdc: POINTER) is
+	cwin_delete_dc (hdc: POINTER)
 			-- SDK DeleteDC
 		external
 			"C [macro <windows.h>] (HDC)"
@@ -2215,7 +2215,7 @@ feature {NONE} -- Externals
 			"DeleteDC"
 		end
 
-	cwin_set_text_align (hdc: POINTER; an_alignment: INTEGER) is
+	cwin_set_text_align (hdc: POINTER; an_alignment: INTEGER)
 			-- SDK SetTextAlign
 		external
 			"C [macro <windows.h>] (HDC, UINT)"
@@ -2223,7 +2223,7 @@ feature {NONE} -- Externals
 			"SetTextAlign"
 		end
 
-	cwin_set_map_mode (hdc: POINTER; mode: INTEGER) is
+	cwin_set_map_mode (hdc: POINTER; mode: INTEGER)
 			-- SDK SetMapMode
 		external
 			"C [macro <windows.h>] (HDC, int)"
@@ -2231,7 +2231,7 @@ feature {NONE} -- Externals
 			"SetMapMode"
 		end
 
-	cwin_set_poly_fill_mode (hdc: POINTER; mode: INTEGER) is
+	cwin_set_poly_fill_mode (hdc: POINTER; mode: INTEGER)
 			-- SDK SetPolyFillMode
 		external
 			"C [macro <windows.h>] (HDC, int)"
@@ -2239,7 +2239,7 @@ feature {NONE} -- Externals
 			"SetPolyFillMode"
 		end
 
-	cwin_get_map_mode (hdc: POINTER): INTEGER is
+	cwin_get_map_mode (hdc: POINTER): INTEGER
 			-- SDK GetMapMode
 		external
 			"C [macro <windows.h>] (HDC): EIF_INTEGER"
@@ -2247,7 +2247,7 @@ feature {NONE} -- Externals
 			"GetMapMode"
 		end
 
-	cwin_get_poly_fill_mode (hdc: POINTER): INTEGER is
+	cwin_get_poly_fill_mode (hdc: POINTER): INTEGER
 			-- SDK GetPolyFillMode
 		external
 			"C [macro <windows.h>] (HDC): EIF_INTEGER"
@@ -2255,7 +2255,7 @@ feature {NONE} -- Externals
 			"GetPolyFillMode"
 		end
 
-	cwin_get_text_align (hdc: POINTER): INTEGER is
+	cwin_get_text_align (hdc: POINTER): INTEGER
 			-- SDK GetTextAlign
 		external
 			"C [macro <windows.h>] (HDC): EIF_INTEGER"
@@ -2263,7 +2263,7 @@ feature {NONE} -- Externals
 			"GetTextAlign"
 		end
 
-	cwin_get_stretch_blt_mode (hdc: POINTER): INTEGER is
+	cwin_get_stretch_blt_mode (hdc: POINTER): INTEGER
 			-- SDK GetStretchBltMode
 		external
 			"C [macro <windows.h>] (HDC): EIF_INTEGER"
@@ -2272,7 +2272,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_set_window_ext_ex (hdc: POINTER; x_extent, y_extent: INTEGER;
-			size: POINTER) is
+			size: POINTER)
 			-- SDK SetWindowExtEx
 		external
 			"C [macro <windows.h>] (HDC, int, int, LPSIZE)"
@@ -2281,7 +2281,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_set_window_org_ex (hdc: POINTER; x_origin, y_origin: INTEGER;
-			size: POINTER) is
+			size: POINTER)
 			-- SDK SetWindowOrgEx
 		external
 			"C [macro <windows.h>] (HDC, int, int, LPPOINT)"
@@ -2290,7 +2290,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_set_viewport_ext_ex (hdc: POINTER; x_extent, y_extent: INTEGER;
-			size: POINTER) is
+			size: POINTER)
 			-- SDK SetViewportExt
 		external
 			"C [macro <windows.h>] (HDC, int, int, LPSIZE)"
@@ -2299,7 +2299,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_set_viewport_org_ex (hdc: POINTER; x_origin, y_origin: INTEGER;
-			size: POINTER) is
+			size: POINTER)
 			-- SDK SetViewportOrgEx
 		external
 			"C [macro <windows.h>] (HDC, int, int, LPPOINT)"
@@ -2307,7 +2307,7 @@ feature {NONE} -- Externals
 			"SetViewportOrgEx"
 		end
 
-	cwin_set_bk_mode (hdc: POINTER; mode: INTEGER) is
+	cwin_set_bk_mode (hdc: POINTER; mode: INTEGER)
 			-- SDK SetBkMode
 		external
 			"C [macro <windows.h>] (HDC, int)"
@@ -2315,7 +2315,7 @@ feature {NONE} -- Externals
 			"SetBkMode"
 		end
 
-	cwin_get_bk_mode (hdc: POINTER): INTEGER is
+	cwin_get_bk_mode (hdc: POINTER): INTEGER
 			-- SDK GetBkMode
 		external
 			"C [macro <windows.h>] (HDC): EIF_INTEGER"
@@ -2323,7 +2323,7 @@ feature {NONE} -- Externals
 			"GetBkMode"
 		end
 
-	cwin_set_bk_color (hdc: POINTER; color: INTEGER) is
+	cwin_set_bk_color (hdc: POINTER; color: INTEGER)
 			-- SDK SetBkColor
 		external
 			"C [macro <windows.h>] (HDC, COLORREF)"
@@ -2331,7 +2331,7 @@ feature {NONE} -- Externals
 			"SetBkColor"
 		end
 
-	cwin_get_bk_color (hdc: POINTER): INTEGER  is
+	cwin_get_bk_color (hdc: POINTER): INTEGER
 			-- SDK GetBkColor
 		external
 			"C [macro <windows.h>] (HDC): COLORREF"
@@ -2339,7 +2339,7 @@ feature {NONE} -- Externals
 			"GetBkColor"
 		end
 
-	cwin_set_text_color (hdc: POINTER; color: INTEGER) is
+	cwin_set_text_color (hdc: POINTER; color: INTEGER)
 			-- SDK SetBkColor
 		external
 			"C [macro <windows.h>] (HDC, COLORREF)"
@@ -2347,7 +2347,7 @@ feature {NONE} -- Externals
 			"SetTextColor"
 		end
 
-	cwin_get_text_color (hdc: POINTER): INTEGER is
+	cwin_get_text_color (hdc: POINTER): INTEGER
 			-- SDK GetBkColor
 		external
 			"C [macro <windows.h>] (HDC): COLORREF"
@@ -2355,7 +2355,7 @@ feature {NONE} -- Externals
 			"GetTextColor"
 		end
 
-	cwin_set_rop2 (hdc: POINTER; mode: INTEGER) is
+	cwin_set_rop2 (hdc: POINTER; mode: INTEGER)
 			-- SDK SetROP2
 		external
 			"C [macro <windows.h>] (HDC, int)"
@@ -2363,7 +2363,7 @@ feature {NONE} -- Externals
 			"SetROP2"
 		end
 
-	cwin_make_rop4 (fore, back: INTEGER): INTEGER is
+	cwin_make_rop4 (fore, back: INTEGER): INTEGER
 			-- SDK MakeROP4
 		external
 			"C [macro <windows.h>] (int, int): EIF_INTEGER"
@@ -2372,7 +2372,7 @@ feature {NONE} -- Externals
 		end
 
 
-	cwin_get_rop2 (hdc: POINTER): INTEGER is
+	cwin_get_rop2 (hdc: POINTER): INTEGER
 			-- SDK GetROP2
 		external
 			"C [macro <windows.h>] (HDC): EIF_INTEGER"
@@ -2381,7 +2381,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_get_tabbed_text_extent (hdc: POINTER; s: POINTER;
-			len, tab_count: INTEGER; tabs: POINTER): INTEGER is
+			len, tab_count: INTEGER; tabs: POINTER): INTEGER
 			-- SDK GetTabbedTextExtent
 		external
 			"C [macro <windows.h>] (HDC, LPCTSTR, int, int, %
@@ -2391,7 +2391,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_get_text_extend_point (hdc: POINTER; s: POINTER; len: INTEGER;
-			si: POINTER) is
+			si: POINTER)
 			-- SDK GetTextExtentPoint
 		external
 			"C [macro <windows.h>] (HDC, LPCTSTR, int, LPSIZE)"
@@ -2399,7 +2399,7 @@ feature {NONE} -- Externals
 			"GetTextExtentPoint32"
 		end
 
-	cwin_device_caps (hdc: POINTER; capability: INTEGER): INTEGER is
+	cwin_device_caps (hdc: POINTER; capability: INTEGER): INTEGER
 			-- SDK GetDeviceCaps
 		external
 			"C [macro <windows.h>] (HDC, int): EIF_INTEGER"
@@ -2407,7 +2407,7 @@ feature {NONE} -- Externals
 			"GetDeviceCaps"
 		end
 
-	cwin_get_window_org_ex (hdc, point: POINTER) is
+	cwin_get_window_org_ex (hdc, point: POINTER)
 			-- SDK GetWindowOrgEx
 		external
 			"C [macro <windows.h>] (HDC, LPPOINT)"
@@ -2415,7 +2415,7 @@ feature {NONE} -- Externals
 			"GetWindowOrgEx"
 		end
 
-	cwin_get_window_ext_ex (hdc, point: POINTER) is
+	cwin_get_window_ext_ex (hdc, point: POINTER)
 			-- SDK GetWindowExtEx
 		external
 			"C [macro <windows.h>] (HDC, LPSIZE)"
@@ -2423,7 +2423,7 @@ feature {NONE} -- Externals
 			"GetWindowExtEx"
 		end
 
-	cwin_get_viewport_org_ex (hdc, point: POINTER) is
+	cwin_get_viewport_org_ex (hdc, point: POINTER)
 			-- SDK GetViewportOrgEx
 		external
 			"C [macro <windows.h>] (HDC, LPPOINT)"
@@ -2431,7 +2431,7 @@ feature {NONE} -- Externals
 			"GetViewportOrgEx"
 		end
 
-	cwin_get_viewport_ext_ex (hdc, point: POINTER) is
+	cwin_get_viewport_ext_ex (hdc, point: POINTER)
 			-- SDK GetViewportExtEx
 		external
 			"C [macro <windows.h>] (HDC, LPSIZE)"
@@ -2439,7 +2439,7 @@ feature {NONE} -- Externals
 			"GetViewportExtEx"
 		end
 
-	cwin_get_current_position_ex (hdc, point: POINTER) is
+	cwin_get_current_position_ex (hdc, point: POINTER)
 			-- SDK GetCurrentPositionEx
 		external
 			"C [macro <windows.h>] (HDC, POINT *)"
@@ -2448,7 +2448,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_get_text_face (hdc: POINTER; count: INTEGER;
-				buffer: POINTER): INTEGER is
+				buffer: POINTER): INTEGER
 			-- SDK GetTextFace
 		external
 			"C [macro <windows.h>] (HDC, int, LPTSTR): EIF_INTEGER"
@@ -2457,7 +2457,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_get_di_bits (hdc, hbmp: POINTER; start_scan, scan_lines: INTEGER;
-			bits, bi: POINTER; usage: INTEGER) is
+			bits, bi: POINTER; usage: INTEGER)
 			-- SDK GetDIBits
 		external
 			"C [macro <windows.h>] (HDC, HBITMAP, UINT, UINT, %
@@ -2467,7 +2467,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_set_di_bits (hdc, hbmp: POINTER; start_scan, scan_lines: INTEGER;
-			bits, bi: POINTER; useage: INTEGER) is
+			bits, bi: POINTER; useage: INTEGER)
 			-- SDK SetDIBits
 		external
 			"C [macro <windows.h>] (HDC, HBITMAP, UINT, UINT, %
@@ -2476,26 +2476,26 @@ feature {NONE} -- Externals
 			"SetDIBits"
 		end
 
-	Opaque: INTEGER is
+	Opaque: INTEGER
 		external
 			"C [macro <windows.h>]"
 		alias
 			"OPAQUE"
 		end
 
-	Transparent: INTEGER is
+	Transparent: INTEGER
 		external
 			"C [macro <windows.h>]"
 		alias
 			"TRANSPARENT"
 		end
 
-	cwin_get_function_address (module_name: POINTER; function_name: POINTER): POINTER is
+	cwin_get_function_address (module_name: POINTER; function_name: POINTER): POINTER
 		external
 			"C(LPCTSTR, LPCSTR): FARPROC | %"wel_dynload.h%""
 		end
 
-	cwin_draw_disabled_text (hdc: POINTER; string: POINTER; length: INTEGER; rect: POINTER; format: INTEGER) is
+	cwin_draw_disabled_text (hdc: POINTER; string: POINTER; length: INTEGER; rect: POINTER; format: INTEGER)
 			-- Draw disabled text
 		external
 			"C (HDC, LPCTSTR, int, LPRECT, UINT) | %"wel_drawstate.h%""
@@ -2503,7 +2503,7 @@ feature {NONE} -- Externals
 
 	cwin_mask_blt (hdc_dest: POINTER; x_dest, y_dest, a_width,
 			a_height: INTEGER; hdc_src: POINTER; x_src,
-			y_src: INTEGER; hbm_mask: POINTER; x_mask, y_mask, rop: INTEGER) is
+			y_src: INTEGER; hbm_mask: POINTER; x_mask, y_mask, rop: INTEGER)
 			-- SDK MaskBlt
 		external
 			"C macro signature (HDC, int, int, int, int, HDC, int, int, HBITMAP, int, int, DWORD) use <windows.h>"
@@ -2514,7 +2514,7 @@ feature {NONE} -- Externals
 feature {WEL_FONT} -- Externals
 
 	cwin_draw_text (hdc: POINTER; string: POINTER; length: INTEGER;
-			rect: POINTER; format: INTEGER): INTEGER is
+			rect: POINTER; format: INTEGER): INTEGER
 			-- SDK DrawText
 		external
 			"C [macro <windows.h>] (HDC, LPCTSTR, int, LPRECT, UINT): int"
@@ -2522,7 +2522,7 @@ feature {WEL_FONT} -- Externals
 			"DrawText"
 		end
 
-	cwel_get_char_abc_widths (hdc: POINTER; first, last: NATURAL_32; array: POINTER) is
+	cwel_get_char_abc_widths (hdc: POINTER; first, last: NATURAL_32; array: POINTER)
 		external
 			"C [macro <wingdi.h>] (HDC, UINT, UINT, LPABC)"
 		alias
@@ -2532,7 +2532,7 @@ feature {WEL_FONT} -- Externals
 invariant
 	valid_background_mode: exists implies is_opaque /= is_transparent
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

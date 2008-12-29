@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Dialog with a text field"
 	legal: "See notice at end of class.";
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a prompt dialog with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	selection_text: STRING is
+	selection_text: STRING
 			-- Current text in selection box
 		do
 			Result := implementation.selection_text
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Status setting
 
-	show_apply_button is
+	show_apply_button
 			-- Make apply button visible.
 		require
 			exists: not destroyed
@@ -67,7 +67,7 @@ feature -- Status setting
 			implementation.show_apply_button
 		end;
 
-	show_cancel_button is
+	show_cancel_button
 			-- Make cancel button visible.
 		require
 			exists: not destroyed
@@ -75,7 +75,7 @@ feature -- Status setting
 			implementation.show_cancel_button
 		end;
 
-	show_help_button is
+	show_help_button
 			-- Make help button visible.
 		require
 			exists: not destroyed
@@ -83,7 +83,7 @@ feature -- Status setting
 			implementation.show_help_button
 		end;
 
-	show_ok_button is
+	show_ok_button
 			-- Make ok button visible.
 		require
 			exists: not destroyed
@@ -91,25 +91,25 @@ feature -- Status setting
 			implementation.show_ok_button
 		end
 
-	hide_apply_button is
+	hide_apply_button
 			-- Make apply button invisible.
 		do
 			implementation.hide_apply_button
 		end;
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Make cancel button invisible.
 		do
 			implementation.hide_cancel_button
 		end;
 
-	hide_help_button is
+	hide_help_button
 			-- Make help button invisible.
 		do
 			implementation.hide_help_button
 		end;
 
-	hide_ok_button is
+	hide_ok_button
 			-- Make ok button invisible.
 		do
 			implementation.hide_ok_button
@@ -117,7 +117,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_apply_label (a_label: STRING) is
+	set_apply_label (a_label: STRING)
 			-- Set `a_label' as label for apply button,
 			-- by default this label is `apply'.
 		require
@@ -127,7 +127,7 @@ feature -- Element change
 			implementation.set_apply_label (a_label)
 		end;
 
-	set_cancel_label (a_label: STRING) is
+	set_cancel_label (a_label: STRING)
 			-- Set `a_label' as label for cancel button,
 			-- by default this label is `cancel'.
 		require
@@ -137,7 +137,7 @@ feature -- Element change
 			implementation.set_cancel_label (a_label)
 		end;
 
-	set_help_label (a_label: STRING) is
+	set_help_label (a_label: STRING)
 			-- Set `a_label' as label for help button,
 			-- by default this label is `help'.
 		require
@@ -147,7 +147,7 @@ feature -- Element change
 			implementation.set_help_label (a_label)
 		end;
 
-	set_ok_label (a_label: STRING) is
+	set_ok_label (a_label: STRING)
 			-- Set `a_label' as label for ok button,
 			-- by default this label is `ok'.
 		require
@@ -157,7 +157,7 @@ feature -- Element change
 			implementation.set_ok_label (a_label)
 		end;
 
-	set_selection_label (a_label: STRING) is
+	set_selection_label (a_label: STRING)
 			-- Set `a_label' as selection label,
 			-- by default this label is `selection'.
 		require
@@ -167,7 +167,7 @@ feature -- Element change
 			implementation.set_selection_label (a_label)
 		end;
 
-	set_selection_text (a_text: STRING) is
+	set_selection_text (a_text: STRING)
 			-- Set selection text to `a_text'.
 		require
 			exists: not destroyed;
@@ -176,7 +176,7 @@ feature -- Element change
 			implementation.set_selection_text (a_text)
 		end;
 
-	add_cancel_action (a_command: COMMAND; argument: ANY) is
+	add_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		require
@@ -186,7 +186,7 @@ feature -- Element change
 			implementation.add_cancel_action (a_command, argument)
 		end;
 
-	add_apply_action (a_command: COMMAND; argument: ANY) is
+	add_apply_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- apply button is activated.
 		require
@@ -196,7 +196,7 @@ feature -- Element change
 			implementation.add_apply_action (a_command, argument)
 		end;
 
-	add_help_action (a_command: COMMAND; argument: ANY) is
+	add_help_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- help button is activated.
 		require
@@ -206,7 +206,7 @@ feature -- Element change
 			implementation.add_help_action (a_command, argument)
 		end;
 
-	add_ok_action (a_command: COMMAND; argument: ANY) is
+	add_ok_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		require
@@ -218,7 +218,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_cancel_action (a_command: COMMAND; argument: ANY) is
+	remove_cancel_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		require
@@ -228,7 +228,7 @@ feature -- Removal
 			implementation.remove_cancel_action (a_command, argument)
 		end;
 
-	remove_apply_action (a_command: COMMAND; argument: ANY) is
+	remove_apply_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
 		require
@@ -238,7 +238,7 @@ feature -- Removal
 			implementation.remove_apply_action (a_command, argument)
 		end;
 
-	remove_help_action (a_command: COMMAND; argument: ANY) is
+	remove_help_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- help button is activated.
 		require
@@ -248,7 +248,7 @@ feature -- Removal
 			implementation.remove_help_action (a_command, argument)
 		end;
 
-	remove_ok_action (a_command: COMMAND; argument: ANY) is
+	remove_ok_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		require
@@ -263,7 +263,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementatino
 	implementation: PROMPT_D_I;
 			-- Implementation of current prompt dialog
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

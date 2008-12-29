@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision spin button. Carbon Implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -70,7 +70,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the spin button.
 			-- There is no control like this in carbon. It's probably best to take
 			-- a text-field and a little-arrow control to do the same
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 			event_id := app_implementation.get_id (current)
 		end
 
-	initialize is
+	initialize
 		local
 			target, h_ret: POINTER
 		do
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	value: INTEGER is
+	value: INTEGER
 			-- Current value of the gauge.
 		do
 			--if text /= void and then text.is_integer_32 then
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 
 feature {NONE}--binding
 
-		text_binding (a_control : POINTER) is
+		text_binding (a_control : POINTER)
 			-- What does this do?
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -166,7 +166,7 @@ feature {NONE}--binding
 			]"
 		end
 
-			gauge_binding (a_control : POINTER) is
+			gauge_binding (a_control : POINTER)
 		external
 			"C inline use <Carbon/Carbon.h>"
 		alias
@@ -190,7 +190,7 @@ feature {NONE}--binding
 			]"
 		end
 
-		setup_binding ( left_control, right_control : POINTER ) is
+		setup_binding ( left_control, right_control : POINTER )
 		external
 			"C inline use <Carbon/Carbon.h>"
 		alias
@@ -224,7 +224,7 @@ feature {NONE}--binding
 
 feature -- Element change
 
-	set_value (a_value: INTEGER) is
+	set_value (a_value: INTEGER)
 			-- Set `value' to `a_value'.
 		do
 			internal_value := a_value
@@ -235,7 +235,7 @@ feature -- Element change
 			range_same: value_range.is_equal (old value_range)
 		end
 
-	set_range is
+	set_range
 			-- Update widget range from `value_range'
 		local
 			temp_value: INTEGER
@@ -253,14 +253,14 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	on_change_actions is
+	on_change_actions
 			do
 				gauge_change_actions
 			 	precursor {EV_TEXT_FIELD_IMP}
 			end
 
 
-	gauge_change_actions is
+	gauge_change_actions
 			-- A change action has occurred.
 		local
 			a_data: TUPLE [INTEGER_32]
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 				end
 		end
 
-	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER is
+	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER
 			-- Feature that is called if an event occurs
 		local
 			event_class, event_kind : INTEGER
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 				end
 		end
 
-	frozen kEventParamControlPart: INTEGER is
+	frozen kEventParamControlPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -304,14 +304,14 @@ feature {NONE} -- Implementation
 		"kEventParamControlPart"
 	end
 
-		frozen kControlDownButtonPart: INTEGER is
+		frozen kControlDownButtonPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 
 		"kControlDownButtonPart"
 	end
-		frozen kControlUpButtonPart: INTEGER is
+		frozen kControlUpButtonPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
@@ -319,13 +319,13 @@ feature {NONE} -- Implementation
 		"kControlUpButtonPart"
 	end
 
-	minimum_height: INTEGER_32 is
+	minimum_height: INTEGER_32
 			do
 				Result := 26
 				--Result := Precursor {EV_GAUGE_IMP} + Precursor {EV_TEXT_FIELD_IMP}
 			end
 
-	minimum_width: INTEGER_32 is
+	minimum_width: INTEGER_32
 			do
 				--Ueli: Hardcoded for Widgets Example
 				Result := 50
@@ -334,14 +334,14 @@ feature {NONE} -- Implementation
 
 
 
-	dispose is
+	dispose
 			do
 				precursor {EV_TEXT_FIELD_IMP}
 				precursor {EV_GAUGE_IMP}
 			end
 
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
 			precursor {EV_TEXT_FIELD_IMP} (a_text)
@@ -354,7 +354,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_SPIN_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_SPIN_BUTTON_IMP
 

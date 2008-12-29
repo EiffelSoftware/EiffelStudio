@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows SD_TOOL_BAR_DRAWER implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature{NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			init_theme
@@ -45,7 +45,7 @@ feature{NONE} -- Initlization
 			create internal_shared
 		end
 
-	init_theme is
+	init_theme
 			-- Initialize theme drawer.
 		local
 			l_app_imp: EV_APPLICATION_IMP
@@ -66,7 +66,7 @@ feature{NONE} -- Initlization
 			theme_data := theme_drawer.open_theme_data (l_wel_tool_bar.item, "Toolbar")
 		end
 
-	base_make_called: BOOLEAN is True
+	base_make_called: BOOLEAN = True
 			-- Not breaking the invariant.
 
 feature -- Redefine
@@ -83,13 +83,13 @@ feature -- Redefine
 	is_start_draw_called: BOOLEAN
 			-- Redefine
 
-	set_tool_bar (a_tool_bar: SD_TOOL_BAR) is
+	set_tool_bar (a_tool_bar: SD_TOOL_BAR)
 			-- Redefine
 		do
 			tool_bar := a_tool_bar
 		end
 
-	start_draw (a_rectangle: EV_RECTANGLE) is
+	start_draw (a_rectangle: EV_RECTANGLE)
 			-- Redefine
 		local
 			l_imp: WEL_WINDOW
@@ -134,7 +134,7 @@ feature -- Redefine
 			set: internal_rectangle = a_rectangle
 		end
 
-	end_draw is
+	end_draw
 			-- Redefine
 		local
 		do
@@ -160,7 +160,7 @@ feature -- Redefine
 			is_start_draw_called := False
 		end
 
-	draw_item (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS) is
+	draw_item (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
 			-- Redefine
 		local
 			l_rect, l_rect_2: WEL_RECT
@@ -203,7 +203,7 @@ feature -- Redefine
 		 	end
 		end
 
-	draw_button_background (a_dc: WEL_DC; a_rect: WEL_RECT; a_state: INTEGER; a_part_constant: INTEGER) is
+	draw_button_background (a_dc: WEL_DC; a_rect: WEL_RECT; a_state: INTEGER; a_part_constant: INTEGER)
 			-- Draw button background on `a_dc'
 		require
 			not_void: a_dc /= Void and then a_dc.exists
@@ -237,7 +237,7 @@ feature -- Redefine
 			l_brush.delete
 		end
 
-	on_wm_theme_changed is
+	on_wm_theme_changed
 			-- Redefine
 		local
 			l_app_imp: EV_APPLICATION_IMP
@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 	theme_drawer: EV_THEME_DRAWER_IMP
 			-- Theme drawer.
 
-	to_mswin_state (a_state: INTEGER): INTEGER is
+	to_mswin_state (a_state: INTEGER): INTEGER
 			-- Convert from SD_TOOL_BAR_ITEM_STATE to WEL_THEME_TS_CONSTANTS.
 		do
 			inspect
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_pixmap (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS) is
+	draw_pixmap (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
 			-- Draw pixmap
 		require
 			not_void: a_dc_to_draw /= Void
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_use_gdip (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS): BOOLEAN is
+	is_use_gdip (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS): BOOLEAN
 			-- If using gdi+ to draw icons?
 		local
 			l_button: SD_TOOL_BAR_BUTTON
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_pixel_buffer (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS) is
+	draw_pixel_buffer (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
 			-- Draw icons when using gdi+.
 		require
 			use_gdip: is_use_gdip (a_arguments)
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_pixmap_real (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS) is
+	draw_pixmap_real (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
 			-- Draw icons when using gdi.
 		local
 			l_pixmap_state: EV_PIXMAP_IMP_STATE
@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 	pixmap_coordinate: EV_COORDINATE
 			-- Temp arguments during draw desartuated tool bar icons.
 
-	draw_text (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS) is
+	draw_text (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS)
 			-- Draw text
 		require
 			not_void: a_dc_to_draw /= Void
@@ -484,7 +484,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	part_constants_by_type (a_item: SD_TOOL_BAR_ITEM): INTEGER is
+	part_constants_by_type (a_item: SD_TOOL_BAR_ITEM): INTEGER
 			-- Part constants base on `a_item''s type.
 		require
 			not_void: a_item /= Void
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation
 				or Result = {WEL_THEME_PART_CONSTANTS}.tp_separator
 		end
 
-	desaturation (a_pixmap: EV_PIXMAP; a_k: REAL; a_dc_to_draw: WEL_DC) is
+	desaturation (a_pixmap: EV_PIXMAP; a_k: REAL; a_dc_to_draw: WEL_DC)
 			-- Desatuation `a_pixmap' with `a_k' when Gdi+ is not available.
 		require
 			valid: 0 <= a_k  and a_k <= 1
@@ -557,7 +557,7 @@ feature {NONE} -- Implementation
 			a_dc_to_draw.draw_bitmap (l_bitmap_imp.get_bitmap, pixmap_coordinate.x, pixmap_coordinate.y, a_pixmap.width, a_pixmap.height)
 		end
 
-	desaturation_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_dc_to_draw: WEL_DC) is
+	desaturation_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_dc_to_draw: WEL_DC)
 			-- Disaturation `a_pixel_buffer' when Gdi+ is available.
 		require
 			not_void: a_pixel_buffer /= Void
@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	draw_classic_separator (a_dc: WEL_DC; a_rect: WEL_RECT; a_part_constant: INTEGER) is
+	draw_classic_separator (a_dc: WEL_DC; a_rect: WEL_RECT; a_part_constant: INTEGER)
 			-- Draw separator for classic theme
 		require
 			not_void: a_dc /= Void
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_flat_button_edge_hot (a_dc: WEL_DC; a_rect: WEL_RECT) is
+	draw_flat_button_edge_hot (a_dc: WEL_DC; a_rect: WEL_RECT)
 			-- Draw flat style button edge when is hot.
 		require
 			not_void: a_dc /= Void
@@ -638,7 +638,7 @@ feature {NONE} -- Implementation
 			l_drawer.draw_line (a_dc, a_rect.left, a_rect.bottom - 1, a_rect.right, a_rect.bottom - 1, l_color)
 		end
 
-	draw_flat_button_edge_hot_pressed (a_dc: WEL_DC; a_rect: WEL_RECT) is
+	draw_flat_button_edge_hot_pressed (a_dc: WEL_DC; a_rect: WEL_RECT)
 			-- Draw flat style button edge when is hot and checked.
 		require
 			not_void: a_dc /= Void
@@ -658,7 +658,7 @@ feature {NONE} -- Implementation
 			l_drawer.draw_line (a_dc, a_rect.left + 1, a_rect.top + 1, a_rect.left + 1, a_rect.bottom - 1, l_color)
 		end
 
-	draw_flat_button_edge_pressed (a_dc: WEL_DC; a_rect: WEL_RECT) is
+	draw_flat_button_edge_pressed (a_dc: WEL_DC; a_rect: WEL_RECT)
 			-- Draw flat style button edge when is pressed.
 		require
 			not_void: a_dc /= Void
@@ -686,7 +686,7 @@ invariant
 	not_void: theme_drawer /= Void
 	not_void: internal_shared /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

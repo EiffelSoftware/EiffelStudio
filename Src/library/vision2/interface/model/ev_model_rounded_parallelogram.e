@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Rectangular figures with rounded corners that can be rotated. Hint: scaling will not change the radius."
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create with `radius' 10.
 		local
 			i: INTEGER
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	make_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+	make_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Create a EV_FIGURE_PARALELLOGRAM with top left position at (`a_x', `a_y')
 			-- and `width' `a_width' and `height' `a_height'
 		do
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_radius (a_radius: INTEGER) is
+	set_radius (a_radius: INTEGER)
 			-- Assign `a_radius' to `radius'.
 		require
 			a_radius_non_negative: a_radius >= 0
@@ -81,28 +81,28 @@ feature -- Element change
 			radius_assigned: radius = a_radius
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' to `a_width'.
 		do
 			Precursor {EV_MODEL_PARALLELOGRAM} (a_width)
 			set_rounded_points
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set the lenght of the line p1 <-> p2 to a_height
 		do
 			Precursor {EV_MODEL_PARALLELOGRAM} (a_height)
 			set_rounded_points
 		end
 
-	set_point_a_position (ax, ay: INTEGER) is
+	set_point_a_position (ax, ay: INTEGER)
 			-- Set position of `point_a' to position (`ax', `ay').
 		do
 			Precursor {EV_MODEL_PARALLELOGRAM} (ax, ay)
 			set_rounded_points
 		end
 
-	set_point_b_position (ax, ay: INTEGER) is
+	set_point_b_position (ax, ay: INTEGER)
 			-- Set position of `point_b' to position (`ax', `ay').
 		do
 			Precursor {EV_MODEL_PARALLELOGRAM} (ax, ay)
@@ -111,7 +111,7 @@ feature -- Element change
 
 feature -- Status report
 
-	position_on_figure (ax, ay: INTEGER): BOOLEAN is
+	position_on_figure (ax, ay: INTEGER): BOOLEAN
 			-- Is (`ax', `ay') on this figure?
 		local
 			poly: like point_array
@@ -134,7 +134,7 @@ feature -- Status report
 
 feature {EV_MODEL_DRAWER} -- Implementation
 
-	polygon_array: ARRAY [EV_COORDINATE] is
+	polygon_array: ARRAY [EV_COORDINATE]
 			-- Absolute coordinates of `Current' converted to polygon.
 		local
 			i: INTEGER
@@ -152,7 +152,7 @@ feature {EV_MODEL_DRAWER} -- Implementation
 
 feature {EV_MODEL_GROUP} -- Transformation
 
-	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
+	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION)
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
 			-- groups center
@@ -163,7 +163,7 @@ feature {EV_MODEL_GROUP} -- Transformation
 
 feature {NONE} -- Implementation
 
-	set_rounded_points is
+	set_rounded_points
 			-- Create the points needed to discribe the rounded edges.
 			-- Thats not easy, since it should work when rotated, scaled and shared.
 			-- First we rearange the points such they are always in the
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 					 						     pb.y_precise / 2 + p1.y_precise / 4 + p2.y_precise / 4)
 		end
 
-	set_rounded_point_on_line (pa, pb, p: EV_COORDINATE) is
+	set_rounded_point_on_line (pa, pb, p: EV_COORDINATE)
 			-- Set rounded point `p' lieing on the line from `pa' to `pb'.
 			-- (See set_rounded_points for more informations).
 		local
@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 invariant
 	radius_non_negative: radius >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

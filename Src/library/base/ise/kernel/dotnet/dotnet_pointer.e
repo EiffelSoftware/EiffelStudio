@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Set of static routines belonging to System.IntPtr"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,28 +15,28 @@ create {NONE}
 
 feature -- Statics
 
-	frozen get_size: INTEGER is
+	frozen get_size: INTEGER
 		external
 			"IL static signature (): System.Int32 use System.IntPtr"
 		alias
 			"get_Size"
 		end
 
-	frozen from_integer (value: INTEGER): POINTER is
+	frozen from_integer (value: INTEGER): POINTER
 		external
 			"IL static signature (System.Int32): System.IntPtr use System.IntPtr"
 		alias
 			"op_Explicit"
 		end
 
-	frozen from_integer_64 (value: INTEGER_64): POINTER is
+	frozen from_integer_64 (value: INTEGER_64): POINTER
 		external
 			"IL static signature (System.Int64): System.IntPtr use System.IntPtr"
 		alias
 			"op_Explicit"
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

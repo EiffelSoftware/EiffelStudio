@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an Eiffel type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,14 +21,14 @@ convert
 
 feature -- Conversion
 
-	to_cil: SYSTEM_TYPE is
+	to_cil: SYSTEM_TYPE
 			-- Extract associated .NET type from Current
 		do
 			Result := {ISE_RUNTIME}.interface_type (
 				{ISE_RUNTIME}.type_of_generic (Current, 1).dotnet_type)
 		end
 
-	adapt alias "[]" (g: G): G is
+	adapt alias "[]" (g: G): G
 			-- Adapts `g' or calls necessary conversion routine to adapt `g'
 		do
 			Result := g
@@ -36,7 +36,7 @@ feature -- Conversion
 			adapted: equal (Result, g)
 		end
 
-	attempt alias "#?" (obj: ANY): G is
+	attempt alias "#?" (obj: ANY): G
 			-- Result of assignment attempt of `obj' to an entity of type G
 		local
 			l_obj: SYSTEM_OBJECT
@@ -50,20 +50,20 @@ feature -- Conversion
 			assigned_or_void: Result = obj or Result = default_value
 		end
 
-	default_value: G is
+	default_value: G
 		do
 		end
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
 			Result := {ISE_RUNTIME}.type_of_generic (Current, 1).equals ({ISE_RUNTIME}.type_of_generic (other, 1))
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

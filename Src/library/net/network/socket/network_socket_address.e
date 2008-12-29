@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A network socket address."
@@ -40,14 +40,14 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create a network address.
 		do
 			socket_address_make;
 			set_family (af_inet)
 		end;
 
-	make_local_from_port (a_port: INTEGER) is
+	make_local_from_port (a_port: INTEGER)
 			-- Create a local address with port `a_port'.
 		local
 			an_host_address: HOST_ADDRESS
@@ -58,7 +58,7 @@ feature -- Initialization
 			set_port (a_port)
 		end;
 
-	make_from_name_and_port (a_hostname: STRING; a_port: INTEGER) is
+	make_from_name_and_port (a_hostname: STRING; a_port: INTEGER)
 			-- Create an address from host name `a_hostname' and
 			-- port `a_port'.
 		local
@@ -70,7 +70,7 @@ feature -- Initialization
 			set_port (a_port)
 		end;
 
-	make_from_ip_and_port (an_ip_number: STRING; a_port: INTEGER) is
+	make_from_ip_and_port (an_ip_number: STRING; a_port: INTEGER)
 			-- Create an address from ip number `an_ip_number'
 			-- (in dotted format) and port `a_port'.
 		local
@@ -85,13 +85,13 @@ feature -- Initialization
 			
 feature -- Status report
 
-	port: INTEGER is
+	port: INTEGER
 			-- Port number
 		do
 			Result := get_sock_port (socket_address.item)
 		end;
 
-	host_address: HOST_ADDRESS is
+	host_address: HOST_ADDRESS
 			-- Host address of address
 		do
 			create Result.make;
@@ -100,7 +100,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_port_from_name (a_name, protocol: STRING) is
+	set_port_from_name (a_name, protocol: STRING)
 			-- Set port number using `a_name' and `protocol'
 			-- to refer into the (local) services file.
 		local
@@ -113,19 +113,19 @@ feature -- Status setting
 			set_port (return)
 		end;
 
-	set_port (p: INTEGER) is
+	set_port (p: INTEGER)
 			-- Set port to `p'.
 		do
 			set_sock_port (socket_address.item, p)
 		end;
 
-	set_host_address (a_host_address: HOST_ADDRESS) is
+	set_host_address (a_host_address: HOST_ADDRESS)
 			-- Set host address to `a_host_address'
 		do
 			set_sock_addr_in (socket_address.item, a_host_address.address_host.item)
 		end;
 
-	clear_zero is
+	clear_zero
 			-- Set zero attribute in address structure.
 		local
 			null_pointer: POINTER
@@ -135,7 +135,7 @@ feature -- Status setting
 
 feature {NONE} -- External
 
-	address_size: INTEGER is
+	address_size: INTEGER
 			-- Size of address in bytes.
 		external
 			"C"
@@ -143,7 +143,7 @@ feature {NONE} -- External
 			"inet_address_size"
 		end;
 
-	set_sock_family (address: POINTER; a_family: INTEGER) is
+	set_sock_family (address: POINTER; a_family: INTEGER)
 			-- Set the family in the address structure.
 		external
 			"C"
@@ -151,7 +151,7 @@ feature {NONE} -- External
 			"set_inet_sock_family"
 		end;
 
-	get_sock_family (address: POINTER): INTEGER is
+	get_sock_family (address: POINTER): INTEGER
 			-- Get the family from the address structure.
 		external
 			"C"
@@ -159,49 +159,49 @@ feature {NONE} -- External
 			"get_inet_sock_family"
 		end;
 
-	set_sock_port (address: POINTER; a_port: INTEGER) is
+	set_sock_port (address: POINTER; a_port: INTEGER)
 			-- Set the port in the address structure.
 		external
 			"C"
 		end;
 
-	get_sock_port (address: POINTER): INTEGER is
+	get_sock_port (address: POINTER): INTEGER
 			-- Get the port from the address structure.
 		external
 			"C"
 		end;
 
-	set_sock_addr_in (address: POINTER; a_addr_in: POINTER) is
+	set_sock_addr_in (address: POINTER; a_addr_in: POINTER)
 			-- Set the host address in the address structure.
 		external
 			"C"
 		end;
 
-	get_sock_addr_in (address: POINTER): POINTER is
+	get_sock_addr_in (address: POINTER): POINTER
 			-- Get the host address from the address structure.
 		external
 			"C"
 		end;
 
-	set_sock_zero (address: POINTER; a_zero: POINTER) is
+	set_sock_zero (address: POINTER; a_zero: POINTER)
 			-- Set zero attribute in address structure.
 		external
 			"C"
 		end;
 
-	get_sock_zero (address: POINTER): POINTER is
+	get_sock_zero (address: POINTER): POINTER
 			-- Get zero attribute from address structure.
 		external
 			"C"
 		end;
 
-	get_servent_port (name, proto: POINTER): INTEGER is
+	get_servent_port (name, proto: POINTER): INTEGER
 			-- Get the services entry using `name' and `proto'
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

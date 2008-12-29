@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_alias (an_alias: X_USER_CLIPFORMAT_RECORD) is
+	make_from_alias (an_alias: X_USER_CLIPFORMAT_RECORD)
 			-- Create from alias
 		require
 			non_void_alias: an_alias /= Void
@@ -26,7 +26,7 @@ feature {NONE}  -- Initialization
 			an_alias.set_shared
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

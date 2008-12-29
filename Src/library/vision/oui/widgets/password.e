@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A text editor for one line of text without echo. %
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a password field with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			set_default
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

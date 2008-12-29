@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$";
@@ -15,7 +15,7 @@ create -- Creation procedure
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			create lex.make;
 			create parse;
@@ -43,7 +43,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_descriptor (e: EC_DESCRIPTOR) is
+	set_descriptor (e: EC_DESCRIPTOR)
 			-- Set `descriptor' with `e'.
 		require
 			descriptor_exits: e /= Void
@@ -53,7 +53,7 @@ feature -- Status setting
 			descriptor = e
 		end;
 
-	set_file (f: PLAIN_TEXT_FILE) is
+	set_file (f: PLAIN_TEXT_FILE)
 			-- Set file to be parsed with `f'.
 		require
 			file_exists: f /= Void
@@ -70,7 +70,7 @@ feature -- Status setting
 			current_file = f
 		end;
 
-	set_file_name (fn: STRING) is
+	set_file_name (fn: STRING)
 			-- Open specified file and set `current_file' with it.
 		require
 			file_name_exists: fn /= Void
@@ -83,7 +83,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	parse_file is
+	parse_file
 			-- Analyze the content of the file.
 		require
 			descriptor_is_set: descriptor /= Void
@@ -112,7 +112,7 @@ feature -- Basic operations
 
 feature {NONE} -- Status setting
 
-	set_error (s: STRING) is
+	set_error (s: STRING)
 			-- Set the error flag to `True' and the
 			-- error message to `s'.
 		require
@@ -144,7 +144,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Basic operations
 
-	parse_line is
+	parse_line
 			-- Parse current file line and put object in the array.
 		require
 			current_line_exists: current_line /= Void;
@@ -164,14 +164,14 @@ feature {NONE} -- Basic operations
 			end
 		end;
 
-	store_object is
+	store_object
 			-- Store parsed object in the container.
 		do
 			container.force (parse.ecp_reference.twin, container_size+1);
 			container_size := container_size + 1
 		end;
 
-	raise_error (s: STRING)  is
+	raise_error (s: STRING)
 			-- Display the appropriate error message, prepended
 			-- with the file line.
 		require
@@ -183,7 +183,7 @@ feature {NONE} -- Basic operations
 			set_error (s)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

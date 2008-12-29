@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Information given by EiffelVision when a mouse's button click. %
@@ -29,7 +29,7 @@ create
 
 feature -- Initialization
 
-	make (a_widget: WIDGET; a_relative_x, a_relative_y, an_absolute_x, an_absolute_y, a_button: INTEGER; a_buttons_state: BUTTONS) is
+	make (a_widget: WIDGET; a_relative_x, a_relative_y, an_absolute_x, an_absolute_y, a_button: INTEGER; a_buttons_state: BUTTONS)
 			-- Create a context_data for `ButtonClick' event.
 		do
 			widget := a_widget;
@@ -41,7 +41,7 @@ feature -- Initialization
 			buttons_state := a_buttons_state
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

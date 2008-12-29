@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IAdviseSink' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iadvise_sink_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: STGMEDIUM_RECORD) is
+	on_data_change (p_formatetc: TAG_FORMATETC_RECORD; p_stgmed: STGMEDIUM_RECORD)
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `p_stgmed' [in].  
@@ -35,7 +35,7 @@ feature -- Basic Operations
 			ccom_on_data_change (initializer, p_formatetc.item, p_stgmed.item)
 		end
 
-	on_view_change (dw_aspect: INTEGER; lindex: INTEGER) is
+	on_view_change (dw_aspect: INTEGER; lindex: INTEGER)
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `lindex' [in].  
@@ -43,7 +43,7 @@ feature -- Basic Operations
 			ccom_on_view_change (initializer, dw_aspect, lindex)
 		end
 
-	on_rename (pmk: IMONIKER_INTERFACE) is
+	on_rename (pmk: IMONIKER_INTERFACE)
 			-- No description available.
 			-- `pmk' [in].  
 		local
@@ -62,13 +62,13 @@ feature -- Basic Operations
 			ccom_on_rename (initializer, pmk_item)
 		end
 
-	on_save is
+	on_save
 			-- No description available.
 		do
 			ccom_on_save (initializer)
 		end
 
-	on_close is
+	on_close
 			-- No description available.
 		do
 			ccom_on_close (initializer)
@@ -76,7 +76,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iadvise_sink_impl_proxy(initializer)
@@ -84,55 +84,55 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_on_data_change (cpp_obj: POINTER; p_formatetc: POINTER; p_stgmed: POINTER) is
+	ccom_on_data_change (cpp_obj: POINTER; p_formatetc: POINTER; p_stgmed: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IAdviseSink_impl_proxy %"ecom_control_library_IAdviseSink_impl_proxy_s.h%"](ecom_control_library::tagFORMATETC *,STGMEDIUM *)"
 		end
 
-	ccom_on_view_change (cpp_obj: POINTER; dw_aspect: INTEGER; lindex: INTEGER) is
+	ccom_on_view_change (cpp_obj: POINTER; dw_aspect: INTEGER; lindex: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IAdviseSink_impl_proxy %"ecom_control_library_IAdviseSink_impl_proxy_s.h%"](EIF_INTEGER,EIF_INTEGER)"
 		end
 
-	ccom_on_rename (cpp_obj: POINTER; pmk: POINTER) is
+	ccom_on_rename (cpp_obj: POINTER; pmk: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IAdviseSink_impl_proxy %"ecom_control_library_IAdviseSink_impl_proxy_s.h%"](::IMoniker *)"
 		end
 
-	ccom_on_save (cpp_obj: POINTER) is
+	ccom_on_save (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IAdviseSink_impl_proxy %"ecom_control_library_IAdviseSink_impl_proxy_s.h%"]()"
 		end
 
-	ccom_on_close (cpp_obj: POINTER) is
+	ccom_on_close (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IAdviseSink_impl_proxy %"ecom_control_library_IAdviseSink_impl_proxy_s.h%"]()"
 		end
 
-	ccom_delete_iadvise_sink_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iadvise_sink_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IAdviseSink_impl_proxy %"ecom_control_library_IAdviseSink_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iadvise_sink_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iadvise_sink_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IAdviseSink_impl_proxy %"ecom_control_library_IAdviseSink_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IAdviseSink_impl_proxy %"ecom_control_library_IAdviseSink_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

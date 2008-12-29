@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A server for a socket."
@@ -23,7 +23,7 @@ feature -- Access
 	received: ANY;
 			-- Last message from socket
 
-	execute is
+	execute
 			-- Execute transfer loop.
 		do
 			from
@@ -39,13 +39,13 @@ feature -- Access
 
 	queued: INTEGER;
 
-	resend (msg: ANY) is
+	resend (msg: ANY)
 			-- Resend `msg'.
 		do
 			outflow.independent_store (msg)
 		end;
 
-	set_queued (n: INTEGER) is
+	set_queued (n: INTEGER)
 			-- Set `queued' to `n'.
 		require
 			valid_queue_number: n > 0 and n < 6
@@ -55,32 +55,32 @@ feature -- Access
 			assigned_queued: queued = n
 		end;
 
-	cleanup is
+	cleanup
 			-- Cleanup server.
 		deferred
 		end;
 
-	close is
+	close
 			-- Close sockets.
 		deferred
 		end;
 
-	process_message is 
+	process_message 
 			-- Process the received message.
 		deferred
 		end;
 
-	respond is
+	respond
 			-- Respond to client.
 		do
 		end;
 
-	receive is
+	receive
 			-- Receive message.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

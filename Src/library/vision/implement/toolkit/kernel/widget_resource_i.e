@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Implementation toolkit"
 	legal: "See notice at end of class.";
@@ -12,29 +12,29 @@ deferred class
 
 feature -- Initalization
 
-	make is
+	make
 			-- Create object
 		deferred
 		end;
 
 feature -- Status report
 
-	resource_name: STRING is
+	resource_name: STRING
 			-- name of resource for widget 'widget_name'
 		deferred
 		end;
 
-	resource_value: STRING is
+	resource_value: STRING
 			-- Value of the resource 'resource_name' for widget 'widget_name'
 		deferred
 		end;
 
-	widget_name: STRING is
+	widget_name: STRING
 			-- widget name to which 'resource_name' refers to
 		deferred
 		end;
 
-	resource_string: STRING is
+	resource_string: STRING
 			-- The joining of widget name, resource name and resource value
 			-- to form the resource string;
 		require
@@ -45,7 +45,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_resource_name (a_name: STRING) is
+	set_resource_name (a_name: STRING)
 			-- Set the resource name 
 		require
 			valid_name: a_name /= Void and then not a_name.is_empty;
@@ -54,7 +54,7 @@ feature -- Status setting
 			resource_name_set: resource_name.is_equal (a_name);
 		end;
 
-	set_resource_value (a_value: STRING) is
+	set_resource_value (a_value: STRING)
 			-- set the resource value
 		require
 			valid_name: a_value /= Void and then not a_value.is_empty;
@@ -63,7 +63,7 @@ feature -- Status setting
 			resource_name_set: resource_value.is_equal (a_value);
 		end;
 
-	set_widget_name (a_name: STRING) is
+	set_widget_name (a_name: STRING)
 			-- Set the widget name
 		require
 			valid_name: a_name /= Void and then not a_name.is_empty;
@@ -72,7 +72,7 @@ feature -- Status setting
 			resource_name_set: widget_name.is_equal (a_name);
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of a font"
 	legal: "See notice at end of class.";
@@ -39,7 +39,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_font: FONT) is
+	make (a_font: FONT)
 			-- Create a font.
 		require
 			last_open_display_not_null: last_open_display /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			display := last_open_display
 		end;
 
-	make_for_screen (a_font: FONT; a_screen: SCREEN) is
+	make_for_screen (a_font: FONT; a_screen: SCREEN)
 			-- Create a font.
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
@@ -72,35 +72,35 @@ feature -- Access
     display: MEL_DISPLAY;
             -- Display where resource is allocated
 
-	is_standard: BOOLEAN is
+	is_standard: BOOLEAN
 			-- Is the font standard and informations available ?
 		do
 			parse_if_not_yet;
 			Result := private_is_standard
 		end;
 
-	ascent: INTEGER is
+	ascent: INTEGER
 			-- Ascent value in pixel of the font loaded for `a_widget'
 		do
 			allocate_font;
 			Result := mel_ascent
 		end;
 
-	descent: INTEGER is
+	descent: INTEGER
 			-- Descent value in pixel of the font loaded for `a_widget'
 		do
 			allocate_font;
 			Result := mel_descent
 		end;
 
-	average_width: INTEGER is
+	average_width: INTEGER
 			-- Width of all characters in the font in tenth of pixel
 		do
 			parse_if_not_yet;
 			Result := private_average_width
 		end;
 	
-	character_set: STRING is
+	character_set: STRING
 			-- (iso8859-1...)
 		do
 			parse_if_not_yet;
@@ -111,7 +111,7 @@ feature -- Access
 			end
 		end;
 
-	family: STRING is
+	family: STRING
 			-- Family name (Courier, Helvetica...)
 		do
 			parse_if_not_yet;
@@ -122,7 +122,7 @@ feature -- Access
 			end
 		end;
 	
-	foundry: STRING is
+	foundry: STRING
 			-- Foundry name (Adobe...)
 		do
 			parse_if_not_yet;
@@ -133,63 +133,63 @@ feature -- Access
 			end
 		end;
 
-	horizontal_resolution: INTEGER is
+	horizontal_resolution: INTEGER
 			-- Horizontal resolution of screen for which the font is designed
 		do
 			parse_if_not_yet;
 			Result := private_horizontal_resolution
 		end;
 
-	is_proportional: BOOLEAN is
+	is_proportional: BOOLEAN
 			-- Is the font proportional ?
 		do
 			parse_if_not_yet;
 			Result := private_is_proportional
 		end;
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is the font valid in `a_widget''s display ?
 		do
 			allocate_font;
 			Result := is_allocated
 		end;
 
-	pixel_size: INTEGER is
+	pixel_size: INTEGER
 			-- Size of font in pixel
 		do
 			parse_if_not_yet;
 			Result := private_pixel_size
 		end;
 
-	point: INTEGER is
+	point: INTEGER
 			-- Size of font in tenth of points (1 point = 1/72 of an inch)
 		do
 			parse_if_not_yet;
 			Result := private_point
 		end;
 
-	slant: CHARACTER is
+	slant: CHARACTER
 			-- Slant of font (o, r, i...)
 		do
 			parse_if_not_yet;
 			Result := private_slant
 		end;
 
-	vertical_resolution: INTEGER is
+	vertical_resolution: INTEGER
 			-- Vertical resolution of screen for which the font is designed
 		do
 			parse_if_not_yet;
 			Result := private_vertical_resolution
 		end;
 
-	weight: STRING is
+	weight: STRING
 			-- Weight of font (Bold, Medium...)
 		do
 			parse_if_not_yet;
 			Result := private_weight
 		end;
 
-	width: STRING is
+	width: STRING
 			-- Width of font (Normal, Condensed...)
 		do
 			parse_if_not_yet;
@@ -200,7 +200,7 @@ feature -- Access
 			end
 		end;
 
-	width_of_string (a_text: STRING): INTEGER is
+	width_of_string (a_text: STRING): INTEGER
 			-- Width in pixel of `a_text' for current font loaded 
 		do
 			allocate_font;
@@ -209,7 +209,7 @@ feature -- Access
 
 feature -- Element change
 	
-	allocate_font is
+	allocate_font
 			-- Allocate font resource for `a_screen'.
 		require
 			is_specified: is_specified
@@ -222,7 +222,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING)
 			-- Set `name' to `a_name'.
 		do
 			dispose;
@@ -234,7 +234,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	dispose is
+	dispose
 			-- Free font resource.
 		do
 			if is_allocated then
@@ -248,7 +248,7 @@ feature -- Removal
 
 feature {FONTABLE_IMP} -- Implementation
 
-	set_default_font (a_font_list: MEL_FONT_LIST) is
+	set_default_font (a_font_list: MEL_FONT_LIST)
 			-- Set the default font from `a_font_list'.
 		require
 			valid_font_list: a_font_list /= Void and then a_font_list.is_valid
@@ -275,7 +275,7 @@ feature {FONTABLE_IMP} -- Implementation
 
 feature {FONT_LIST_IMP} -- Status setting
 
-	only_set_name (a_name: STRING) is
+	only_set_name (a_name: STRING)
 			-- Set `name' to `a_name'.
 		do
 			name := a_name.twin;
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 	is_parsed: BOOLEAN;
 			-- Is `name' parsed and values available?
 
-	parse_if_not_yet is
+	parse_if_not_yet
 			-- Parse `name' if it isn't yet parsed.
 		do
 			if not is_parsed then
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation
 			is_parsed: is_parsed
 		end;
 
-	parse_name is
+	parse_name
 			-- Parse `name' and set values.
 		require
 			is_specified: is_specified;
@@ -382,7 +382,7 @@ feature {NONE} -- Implementation
 			is_parsed: is_parsed
 		end;
 
-	update_widget_resource (widget_m: WIDGET_IMP) is
+	update_widget_resource (widget_m: WIDGET_IMP)
 			-- Update resource for `widget_m'.
 			-- Set `updated' to True if the resource was set.
 		local
@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	next_minus (a_string: STRING; pos: INTEGER): INTEGER is
+	next_minus (a_string: STRING; pos: INTEGER): INTEGER
 			-- Next minus's position after `pos' in `a_string'
 		require
 			a_string_exists: not (a_string = Void);
@@ -447,7 +447,7 @@ feature {NONE} -- Implementation
 			Result <= a_string.count+1
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

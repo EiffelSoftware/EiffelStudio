@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a row of an EV_GRID"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,13 +33,13 @@ create
 
 feature {EV_ANY} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			create subrows
@@ -59,7 +59,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 	index_of_first_item_dirty: BOOLEAN
 		-- Should `index_of_first_item' be recalculated.
 
-	flag_index_of_first_item_dirty_if_needed (a_column_index: INTEGER) is
+	flag_index_of_first_item_dirty_if_needed (a_column_index: INTEGER)
 			-- Flag `index_of_first_item' to be recalculated on next call if needed based on `a_column_index'.
 		require
 			a_column_index_valid: a_column_index > 0 and then a_column_index <= count + 1
@@ -73,7 +73,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 	index_of_first_item_internal: INTEGER
 		-- Previous result of call to `index_of_first_item'.
 
-	set_index (a_index: INTEGER) is
+	set_index (a_index: INTEGER)
 			-- Set the index of row in grid.
 		require
 			a_index_greater_than_zero: a_index > 0
@@ -85,7 +85,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 			index_less_than_row_count: index <= parent.row_count
 		end
 
-	set_subrow_index (a_subrow_index: INTEGER) is
+	set_subrow_index (a_subrow_index: INTEGER)
 			-- Set the index of row in parent row.
 		require
 			subrow_index_not_negative: a_subrow_index >= 0
@@ -97,7 +97,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 			index_less_than_row_count: subrow_index <= parent_row_i.subrow_count
 		end
 
-	set_parent_i (a_grid_i: EV_GRID_I; a_row_id: INTEGER) is
+	set_parent_i (a_grid_i: EV_GRID_I; a_row_id: INTEGER)
 			-- Make `Current' associated with `a_grid_i'.
 		require
 			a_grid_i_not_void: a_grid_i /= Void
@@ -113,7 +113,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 
 feature -- Access
 
-	subrow (i: INTEGER): EV_GRID_ROW is
+	subrow (i: INTEGER): EV_GRID_ROW
 			-- `i'-th child of Current.
 		require
 			is_parented: parent /= Void
@@ -126,7 +126,7 @@ feature -- Access
 			subrow_valid: (Result.parent /= Void) and then has_subrow (Result) and then Result.parent_row = interface
 		end
 
-	has_subrow (a_row: EV_GRID_ROW): BOOLEAN is
+	has_subrow (a_row: EV_GRID_ROW): BOOLEAN
 			-- Is `a_row' a child of Current?
 		require
 			a_row_not_void: a_row /= Void
@@ -138,7 +138,7 @@ feature -- Access
 				((a_row.parent /= Void and parent /= Void) and then a_row.parent = parent)
 		end
 
-	parent_row: EV_GRID_ROW is
+	parent_row: EV_GRID_ROW
 			-- Parent row of Current if any, Void otherwise.
 		require
 			is_parented: parent /= Void
@@ -152,7 +152,7 @@ feature -- Access
 			has_parent: Result /= Void implies Result.has_subrow (interface)
 		end
 
-	parent: EV_GRID is
+	parent: EV_GRID
 			-- Grid to which current row belongs.
 		do
 			if parent_i /= Void then
@@ -160,7 +160,7 @@ feature -- Access
 			end
 		end
 
-	parent_row_root: EV_GRID_ROW is
+	parent_row_root: EV_GRID_ROW
 			-- Parent row which is the root of the tree structure
 			-- in which `Current' is contained. May be `Current' if
 			-- `Current' is the root node of a tree structure.
@@ -190,7 +190,7 @@ feature -- Access
 			result_consistent_with_parent_tree_properties: (parent = Void or else not parent.is_tree_enabled) = (Result = Void)
 		end
 
-	item (i: INTEGER): EV_GRID_ITEM is
+	item (i: INTEGER): EV_GRID_ITEM
 			-- Item at `i'-th column, Void if none.
 		require
 			i_within_bounds: i > 0 and i <= count
@@ -199,7 +199,7 @@ feature -- Access
 			Result := parent_i.item (i, index)
 		end
 
-	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
+	selected_items: ARRAYED_LIST [EV_GRID_ITEM]
 			-- All items selected in `Current'.
 		require
 			is_parented: parent /= Void
@@ -231,7 +231,7 @@ feature -- Access
 	is_expanded: BOOLEAN
 			-- Are subrows of `Current' displayed?
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of `Current' when displayed in a `parent'
 			-- that has `is_row_height_fixed' set to `False'.
 			-- Note that `height' is ignored if the parent has
@@ -247,7 +247,7 @@ feature -- Access
 
 	internal_height: INTEGER
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is objects state set to selected.
 		do
 			if parent_i /= Void then
@@ -259,7 +259,7 @@ feature -- Access
 			end
 		end
 
-	is_selectable: BOOLEAN is
+	is_selectable: BOOLEAN
 			-- May the object be selected?
 		do
 			Result := parent_i /= Void
@@ -268,7 +268,7 @@ feature -- Access
 	internal_is_selected: BOOLEAN
 		-- Is `Current' selected in either row selection mode?
 
-	internal_update_selection (a_selection_state: BOOLEAN) is
+	internal_update_selection (a_selection_state: BOOLEAN)
 			-- Set the selection state of all non void items in `Current' to `a_selection_state'.
 		local
 			a_item: EV_GRID_ITEM_I
@@ -297,7 +297,7 @@ feature -- Access
 			end
 		end
 
-	internal_are_all_non_void_items_selected: BOOLEAN is
+	internal_are_all_non_void_items_selected: BOOLEAN
 			-- Are all the non void items in `Current' selected?
 			-- False if no non void items are present.
 		local
@@ -330,7 +330,7 @@ feature -- Access
 			end
 		end
 
-	virtual_y_position: INTEGER is
+	virtual_y_position: INTEGER
 			-- Vertical offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
 			-- `Result' is 0 if `parent' is `Void'.
@@ -344,7 +344,7 @@ feature -- Access
 			parent_void_implies_result_zero: parent = Void implies Result = 0
 		end
 
-	virtual_y_position_unlocked: INTEGER is
+	virtual_y_position_unlocked: INTEGER
 			-- Vertical offset of unlocked position of `Current', in relation to the
 			-- virtual area of `parent' grid in pixels.
 			-- If not `is_locked', then `virtual_y_position' = `unlocked_virtual_y_position'.
@@ -369,7 +369,7 @@ feature -- Access
 			parent_void_implies_result_zero: parent = Void implies Result = 0
 		end
 
-	is_expandable: BOOLEAN is
+	is_expandable: BOOLEAN
 			-- May `Current' be expanded?
 		require
 			is_parented: parent /= Void
@@ -387,7 +387,7 @@ feature -- Status report
 		-- Locked row information for `Current'.
 		-- `Void' if not locked.
 
-	subrow_count: INTEGER is
+	subrow_count: INTEGER
 			-- Number of children.
 		require
 			is_parented: parent /= Void
@@ -407,7 +407,7 @@ feature -- Status report
 	subrow_index: INTEGER
 			-- Position of `Current' in `parent_row' if any.
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in current.
 		do
 			if parent_i /= Void then
@@ -417,7 +417,7 @@ feature -- Status report
 			count_not_negative: count >= 0
 		end
 
-	index_of_first_item: INTEGER is
+	index_of_first_item: INTEGER
 			-- Return the index of the first non `Void' item within `Current'
 			-- or 0 if none.
 		do
@@ -431,7 +431,7 @@ feature -- Status report
 			value_valid: index_of_first_item_internal = index_of_first_item_value
 		end
 
-	index_of_first_item_value: INTEGER is
+	index_of_first_item_value: INTEGER
 			-- Return the index of the first non `Void' item within `Current'
 			-- or 0 if none.
 		local
@@ -479,7 +479,7 @@ feature -- Status report
 			-- "Result := parent_i.locked_rows.item (index) /= Void" but this has not been done
 			-- so for performance reasons.
 
-	locked_position: INTEGER is
+	locked_position: INTEGER
 			-- Locked position of `Current' from top edge of viewable area of `parent'.
 			-- `Result' is 0 if not `is_locked'.
 		do
@@ -492,7 +492,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	lock_at_position (a_position: INTEGER) is
+	lock_at_position (a_position: INTEGER)
 			-- Ensure `is_locked' is `True' with the vertical offset from
 			-- the top edge of the viewable area of `parent' set to `a_position'.
 		do
@@ -517,7 +517,7 @@ feature -- Status setting
 			locked_position_set: locked_position = a_position
 		end
 
-	unlock is
+	unlock
 			-- Ensure `is_locked' is `False'.
 		do
 			if is_locked then
@@ -529,7 +529,7 @@ feature -- Status setting
 			not_is_locked: not is_locked
 		end
 
-	expand is
+	expand
 			-- Display all subrows of `Current'.
 		require
 			is_parented: parent /= Void
@@ -575,7 +575,7 @@ feature -- Status setting
 			node_counts_correct: node_counts_correct
 		end
 
-	collapse is
+	collapse
 			-- Hide all subrows of `Current'.
 		require
 			is_parented: parent /= Void
@@ -610,7 +610,7 @@ feature -- Status setting
 			node_counts_correct: node_counts_correct
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Assign `a_height' to `height'.
 		require
 			is_parented: parent /= Void
@@ -627,7 +627,7 @@ feature -- Status setting
 			height_set: height = a_height
 		end
 
-	ensure_visible is
+	ensure_visible
 			-- Ensure `Current' is visible in viewable area of `parent'.
 		require
 			parented: parent /= Void
@@ -689,7 +689,7 @@ feature -- Status setting
 			row_visible_when_heights_not_fixed_in_parent: not parent.is_row_height_fixed implies virtual_y_position >= parent.virtual_y_position and virtual_y_position + height <= parent.virtual_y_position + (parent.viewable_height).max (height)
 		end
 
-	set_background_color (a_color: EV_COLOR) is
+	set_background_color (a_color: EV_COLOR)
 			-- Set `background_color' with `a_color'.
 		require
 			is_parented: parent /= Void
@@ -700,7 +700,7 @@ feature -- Status setting
 			background_color_set: background_color = a_color
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Set `foreground_color' with `a_color'.
 		require
 			is_parented: parent /= Void
@@ -711,7 +711,7 @@ feature -- Status setting
 			foreground_color_set: foreground_color = a_color
 		end
 
-	ensure_expandable is
+	ensure_expandable
 			-- Ensure `Current' displays an expand pixmap to simulate a `row_count' greater than 0.
 			-- May be used for dynamic behavior by filling subrows upon firing of `grid.row_expand_actions'.
 			-- If no items are added to `Current' during the firing of `grid.row_expand_actions' then
@@ -729,7 +729,7 @@ feature -- Status setting
 			is_expandable: is_expandable
 		end
 
-	ensure_non_expandable is
+	ensure_non_expandable
 			-- Restore expanded state of `Current' after a call to `ensure_expandable'. Note that if a row
 			-- has one or more subrows, it is always drawn as expanded, hence the "no_subrows_contained" precondition.
 		require
@@ -745,7 +745,7 @@ feature -- Status setting
 	is_ensured_expandable: BOOLEAN
 			-- May current be expanded even through it is empty?
 
-	redraw is
+	redraw
 			-- Force all items within `Current' to be re-drawn when next idle.
 		require
 			parented: parent /= Void
@@ -753,7 +753,7 @@ feature -- Status setting
 			parent_i.redraw_row (Current)
 		end
 
-	hide is
+	hide
 			-- Prevent `Current' from being shown in `parent'.
 		require
 			parented: parent /= Void
@@ -775,7 +775,7 @@ feature -- Status setting
 			end
 		end
 
-	show is
+	show
 			-- Ensure `Current' is shown in `parent'.
 		require
 			parented: parent /= Void
@@ -810,7 +810,7 @@ feature -- Status setting
 
 feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 
-	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
+	set_item (i: INTEGER; a_item: EV_GRID_ITEM)
 			-- Set item at `i'-th column to be `a_item'.
 			-- If `a_item' is `Void', the current item (if any) is removed.
 		require
@@ -826,7 +826,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			item_set: item (i) = a_item
 		end
 
-	add_subrow (a_row: EV_GRID_ROW) is
+	add_subrow (a_row: EV_GRID_ROW)
 			-- Make `a_row' a child of Current.
 		require
 			is_parented: parent /= Void
@@ -849,7 +849,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			node_counts_correct: node_counts_correct
 		end
 
-	insert_subrows (rows_to_insert, a_subrow_index: INTEGER) is
+	insert_subrows (rows_to_insert, a_subrow_index: INTEGER)
 			-- Add `rows_to_insert' rows to `parent' as a subrow of `Current'
 			-- with index in subrows of `Current' given by `a_subrow_index'.
 		require
@@ -877,7 +877,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			parent_row_count_increased: parent.row_count = old parent.row_count + rows_to_insert
 		end
 
-	remove_subrow (a_row: EV_GRID_ROW) is
+	remove_subrow (a_row: EV_GRID_ROW)
 			-- Ensure that `a_row' is no longer a child row of `Current'.
 			-- Does not remove `a_row' from `parent_i'.
 		require
@@ -932,7 +932,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			subrow_count_decreased: subrow_count = old subrow_count - 1
 		end
 
-	add_subrows_internal (rows_to_insert, row_index: INTEGER; a_subrow_index: INTEGER; inserting_within_tree_structure: BOOLEAN) is
+	add_subrows_internal (rows_to_insert, row_index: INTEGER; a_subrow_index: INTEGER; inserting_within_tree_structure: BOOLEAN)
 			-- Make `a_row' a child of Current. `inserting_within_tree_structure' determines
 			-- if `a_row' is to be added within an existing tree structure and is used to
 			-- relax the preconditions that determine if a row may be added.
@@ -999,7 +999,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			node_counts_correct: node_counts_correct
 		end
 
-	enable_select is
+	enable_select
 			-- Select the object.
 		local
 			l_parent_i: like parent_i
@@ -1027,7 +1027,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			end
 		end
 
-	disable_select is
+	disable_select
 			-- Deselect the object.
 		do
 			if parent_i.is_row_selection_enabled or else index_of_first_item = 0 then
@@ -1049,7 +1049,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			end
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			if parent_i /= Void then
@@ -1058,7 +1058,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			set_is_destroyed (True)
 		end
 
-	clear is
+	clear
 			-- Remove all items from `Current'.
 		require
 			is_parented: parent /= Void
@@ -1083,7 +1083,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 
 feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 
-	update_for_item_removal (item_index: INTEGER) is
+	update_for_item_removal (item_index: INTEGER)
 			-- Update `Current' to reflect the fact that item at position
 			-- `item_index' has been removed.
 		require
@@ -1095,7 +1095,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			end
 		end
 
-	update_for_removal is
+	update_for_removal
 			-- Update settings in `Current' to reflect the fact that
 			-- it is being removed from `parent_i'.
 		require
@@ -1120,7 +1120,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			index_set_to_zero: index = 0
 		end
 
-	update_for_subrow_removal (a_subrow: EV_GRID_ROW_I) is
+	update_for_subrow_removal (a_subrow: EV_GRID_ROW_I)
 			-- Update `Current' to reflect the fact that `a_subrow'
 			-- is being removed from `Current'.
 		require
@@ -1146,7 +1146,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			not_expanded_when_no_subrows: subrow_count = 0 implies not is_expanded
 		end
 
-	update_subrow_indices (a_index: INTEGER) is
+	update_subrow_indices (a_index: INTEGER)
 			-- Recalculate subsequent subrow indexes starting from `a_index'.
 		require
 			valid_index: a_index > 0 and then a_index <= subrow_count + 1
@@ -1173,14 +1173,14 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 
 feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
 
-	internal_set_parent_row (a_parent_row: EV_GRID_ROW_I) is
+	internal_set_parent_row (a_parent_row: EV_GRID_ROW_I)
 			-- Set the `parent_row' of `Current'
 		do
 			parent_row_i := a_parent_row
 			update_depths_in_tree
 		end
 
-	update_depths_in_tree is
+	update_depths_in_tree
 			-- Update `depth_in_tree' and `indent_depth_in_tree' based
 			-- on `Current' `Parent_row_i'.
 		do
@@ -1216,7 +1216,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 
 	indent_depth_in_tree: INTEGER
 
-	set_subrow_count_recursive (a_count: INTEGER) is
+	set_subrow_count_recursive (a_count: INTEGER)
 			-- Assign `a_count' to `subrow_count_recursive'.
 		require
 			a_count_non_negative: a_count >= 0
@@ -1226,7 +1226,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 			subnode_count_set: subrow_count_recursive = a_count
 		end
 
-	set_expanded_subrow_count_recursive (a_count: INTEGER) is
+	set_expanded_subrow_count_recursive (a_count: INTEGER)
 			-- Assign `a_count' to `expanded_subrow_count_recursive'.
 		require
 			a_count_non_negative: a_count >= 0
@@ -1239,7 +1239,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 	expanded_subrow_count_recursive: INTEGER
 		-- Number of expanded subrows contained within `Current' recursively.
 
-	update_parent_node_counts_recursively (adjustment_value: INTEGER) is
+	update_parent_node_counts_recursively (adjustment_value: INTEGER)
 			-- For `Current' and all parent nodes of `Current' recursively, update their
 			-- `subnode_count_recursive' by `adjustment_value'.
 		require
@@ -1257,7 +1257,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 			end
 		end
 
-	update_parent_expanded_node_counts_recursively (adjustment_value: INTEGER) is
+	update_parent_expanded_node_counts_recursively (adjustment_value: INTEGER)
 			-- For `Current' and all parent nodes of `Current' recursively, update their
 			-- `subnode_count_recursive' by `adjustment_value'.
 		require
@@ -1277,7 +1277,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 
 feature {EV_GRID_I} -- Implementation
 
-	reset_tree_structure is
+	reset_tree_structure
 			-- Restore all properties of `Current' associated with tree structures
 			-- for disabling of the tree. This is far quicker than simply calling
 			-- `remove_subrow' as parent depths do not need to be taken into
@@ -1294,7 +1294,7 @@ feature {EV_GRID_I} -- Implementation
 
 feature {EV_ANY_I} -- Contract support
 
-	node_counts_correct: BOOLEAN is
+	node_counts_correct: BOOLEAN
 			-- Are the node counts for `Current' in a valid state?
 			-- This was originally written as class invariants, but as the node setting
 			-- is performed recursively, we would need a global variable to turn this checking
@@ -1326,7 +1326,7 @@ feature {EV_ANY_I} -- Contract support
 
 feature {EV_GRID_I} -- Implementation
 
-	unparent is
+	unparent
 			-- Sets` parent_i' to `Void'.
 		do
 			parent_i := Void
@@ -1338,7 +1338,7 @@ feature {EV_GRID_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	contained_expanded_items_recursive: INTEGER is
+	contained_expanded_items_recursive: INTEGER
 			-- `Result' is sum of of expanded nodes for each of the child rows
 			-- of `Current', and each child row themselves. This is used when expanding
 			-- or collapsing items to determine how many nodes are now visible or hidden.
@@ -1363,7 +1363,7 @@ feature {NONE} -- Implementation
 			result_non_negative: result >= 0
 		end
 
-	displayed_in_grid_tree: BOOLEAN is
+	displayed_in_grid_tree: BOOLEAN
 			-- Is `Current' displayed in the tree of `grid'?
 			-- If not parented at any level or one of these
 			-- parents is not expanded then `Result' is `False'.
@@ -1383,7 +1383,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_row_height: INTEGER is
+	default_row_height: INTEGER
 			-- Default height of a row, based on the height of the default font.
 		once
 			Result := (create {EV_LABEL}).minimum_height + 3
@@ -1404,7 +1404,7 @@ invariant
 	subrows_not_void: is_initialized implies subrows /= Void
 	hash_code_valid: is_initialized implies ((parent = Void and then hash_code = 0) or else (parent /= Void and then hash_code > 0))
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

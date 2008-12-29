@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Dialog shell."
@@ -23,7 +23,7 @@ create
 
 feature -- Initilization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE)
 			-- Create a motif dialog shell.
 		local
 			widget_name: ANY
@@ -41,7 +41,7 @@ feature -- Initilization
 
 feature {MEL_COMPOSITE} -- Implementation
 
-	remove_from_popup_list is
+	remove_from_popup_list
 			-- Remove current shell from popup list in parent
 		do
 			parent.remove_popup_child (Current)
@@ -49,14 +49,14 @@ feature {MEL_COMPOSITE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	xm_create_dialog_shell (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_dialog_shell (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/DialogS.h>"
 		alias
 			"XmCreateDialogShell"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

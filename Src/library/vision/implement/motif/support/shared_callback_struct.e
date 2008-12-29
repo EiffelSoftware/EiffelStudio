@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Shared instance of the last callback structure processed."
@@ -11,24 +11,24 @@ class SHARED_CALLBACK_STRUCT
 
 feature -- Access
 
-	last_callback_struct: MEL_CALLBACK_STRUCT is
+	last_callback_struct: MEL_CALLBACK_STRUCT
 		do	
 			Result := last_callback_struct_cell.item;
 		end;
 
 feature {NONE} -- Implementation
 
-	last_callback_struct_cell: CELL [MEL_CALLBACK_STRUCT] is
+	last_callback_struct_cell: CELL [MEL_CALLBACK_STRUCT]
 		once
 		 	create Result.put (Void)
 		end;
 
-	set_last_callback_struct (an_struct: like last_callback_struct) is
+	set_last_callback_struct (an_struct: like last_callback_struct)
 		do
 			last_callback_struct_cell.put (an_struct)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

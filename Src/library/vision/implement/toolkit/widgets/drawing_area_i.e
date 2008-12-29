@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General drawing area implementation"
 	legal: "See notice at end of class.";
@@ -18,7 +18,7 @@ inherit
 	
 feature -- Element change
 
-	add_input_action (a_command: COMMAND; argument: ANY) is
+	add_input_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- a key is pressed or when a mouse button is pressed.
 		require
@@ -26,7 +26,7 @@ feature -- Element change
 		deferred
 		end;
 
-	add_resize_action (a_command: COMMAND; argument: ANY) is
+	add_resize_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- current area is resized.
 		require
@@ -36,7 +36,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_input_action (a_command: COMMAND; argument: ANY) is
+	remove_input_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- a key is pressed or when a mouse button is pressed.
 		require
@@ -44,7 +44,7 @@ feature -- Removal
 		deferred
 		end;
 
-	remove_resize_action (a_command: COMMAND; argument: ANY) is
+	remove_resize_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- current area is resized.
 		require
@@ -52,7 +52,7 @@ feature -- Removal
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

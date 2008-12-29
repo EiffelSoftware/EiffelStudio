@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class creates a message information object %
 		%corresponding to a given message."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make (window: WEL_WINDOW; message: INTEGER; wparam, lparam: POINTER) is
+	make (window: WEL_WINDOW; message: INTEGER; wparam, lparam: POINTER)
 			-- Make `message_information' corresponding to
 			-- `message' by using `wparam' and `lparam'.
 		require
@@ -90,7 +90,7 @@ feature -- Access
 	message_information: WEL_MESSAGE_INFORMATION;
 			-- Information about `message'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

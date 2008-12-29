@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision titled window. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -36,14 +36,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the titled window.
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.gtk_window_toplevel_enum))
 		end
 
-	initialize is
+	initialize
 			-- Setup accelerators for window
 		local
 			app_imp: like app_implementation
@@ -84,7 +84,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 --			end
 --		end
 
-	call_accelerators (a_v2_key_value, accel_mods: INTEGER) is
+	call_accelerators (a_v2_key_value, accel_mods: INTEGER)
 			-- Call the accelerator matching v2 key `a_v2_key_value' with a control mask of `accel_mods'
 		local
 			acc: EV_ACCELERATOR
@@ -111,7 +111,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature -- Access
 
-	icon_name: STRING_32 is
+	icon_name: STRING_32
 			-- Alternative name, displayed when window is minimised.
 		do
 			if icon_name_holder /= Void then
@@ -129,7 +129,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_minimized: BOOLEAN is
+	is_minimized: BOOLEAN
 			-- Is displayed iconified/minimised?
 		do
 			Result := {EV_GTK_EXTERNALS}.c_gdk_window_is_iconified (
@@ -137,13 +137,13 @@ feature -- Status report
 			)
 		end
 
-	is_maximized: BOOLEAN is
+	is_maximized: BOOLEAN
 			-- Is displayed at maximum size?
 		do
 			Result := old_geometry /= Void
 		end
 
-	is_displayed: BOOLEAN is
+	is_displayed: BOOLEAN
 			-- Is 'Current' displayed on screen?
 		do
 			Result := Precursor {EV_WINDOW_IMP} and not is_minimized
@@ -151,26 +151,26 @@ feature -- Status report
 
 feature -- Status setting
 
-	raise is
+	raise
 			-- Request that window be displayed above all other windows.
 		do
 			{EV_GTK_EXTERNALS}.gdk_window_raise ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 
-	lower is
+	lower
 			-- Request that window be displayed below all other windows.
 		do
 			{EV_GTK_EXTERNALS}.gdk_window_lower ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 
-	minimize is
+	minimize
 			-- Display iconified/minimised.
 		do
 			{EV_GTK_EXTERNALS}.c_gdk_window_iconify ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 			App_implementation.process_events
 		end
 
-	maximize is
+	maximize
 			-- Display at maximum size.
 		local
 			r: EV_RECTANGLE
@@ -180,7 +180,7 @@ feature -- Status setting
 			set_geometry (r)
 		end
 
-	restore is
+	restore
 			-- Restore to original position when minimized or maximized.
 		do
 			if is_minimized then
@@ -196,7 +196,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (an_icon_name: STRING) is
+	set_icon_name (an_icon_name: STRING)
 			-- Assign `an_icon_name' to `icon_name'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -207,7 +207,7 @@ feature -- Element change
 			icon_name_holder := an_icon_name.twin
 		end
 
-	set_icon_pixmap (an_icon: EV_PIXMAP) is
+	set_icon_pixmap (an_icon: EV_PIXMAP)
 			-- Assign `an_icon' to `icon'.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -224,7 +224,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	default_wm_decorations: INTEGER is
+	default_wm_decorations: INTEGER
 			-- Default WM decorations of `Current'.?
 		do
 			Result := {EV_GTK_EXTERNALS}.gdk_decor_all_enum
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	geometry: EV_RECTANGLE is
+	geometry: EV_RECTANGLE
 			-- Extent of window.
 		local
 			x, y, w, h: INTEGER
@@ -247,7 +247,7 @@ feature {EV_ANY_I} -- Implementation
 			create Result.make (x, y, w, h)
 		end
 
-	set_geometry (a_rect: EV_RECTANGLE) is
+	set_geometry (a_rect: EV_RECTANGLE)
 			-- Set `geometry' to `a_rect'.
 		do
 			{EV_GTK_EXTERNALS}.gdk_window_move_resize (
@@ -265,7 +265,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TITLED_WINDOW;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

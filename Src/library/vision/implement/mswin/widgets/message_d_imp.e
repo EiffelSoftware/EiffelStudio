@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPmessage dialog box"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_message: MESSAGE_D; oui_parent: COMPOSITE) is
+	make (a_message: MESSAGE_D; oui_parent: COMPOSITE)
 			-- Initialize a message box.
 		do
 			create private_attributes
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_message (s: STRING) is
+	set_message (s: STRING)
 			-- Set the message in the dialog.
 		require else
 			message_not_void: s /= Void
@@ -78,7 +78,7 @@ feature -- Element change
 		end
 feature -- Update display
 
-	update_display is
+	update_display
 			-- No implementation on windows, because
 			-- display is updated automatically
 		do
@@ -92,7 +92,7 @@ feature {NONE} -- implementation
 	message_static: WEL_STATIC
 			-- The message
 
-	create_controls is
+	create_controls
 			-- Create the controls for the dialog.
 		local
 			a_dc: WEL_CLIENT_DC
@@ -110,7 +110,7 @@ feature {NONE} -- implementation
 			set_message (message)
 		end
 
-	set_fonts is
+	set_fonts
 			-- Set the fonts on the controls.
 		require else
 			button_font_not_void: button_font /= Void
@@ -120,7 +120,7 @@ feature {NONE} -- implementation
 			set_text_font (text_font)
 		end
 
-	set_font_on_text is
+	set_font_on_text
 			-- Set the font on the message.
 		local
 			windows_font: FONT_IMP
@@ -130,7 +130,7 @@ feature {NONE} -- implementation
 			message_static.invalidate
 		end
 
-	total_buttons_width: INTEGER is
+	total_buttons_width: INTEGER
 			-- The width of the visible buttons plus
 			-- the offset to the sides of the dialog
 			-- plus the possible offset between the buttons.
@@ -156,14 +156,14 @@ feature {NONE} -- implementation
 			end
 		end
 
-	message_width: INTEGER is
+	message_width: INTEGER
 			-- The width of the message plus the offset
 			-- to the side of the dialog and the icon.
 		do
 			Result := text_width (message, text_font) + 4 * Dialog_unit
 		end
 
-	message_icon_width: INTEGER is
+	message_icon_width: INTEGER
 			-- The width of the icon and the message.
 		do
 			if icon /= Void then
@@ -172,7 +172,7 @@ feature {NONE} -- implementation
 			Result := Result + message_width
 		end
 
-	reposition_message is
+	reposition_message
 			-- Reposition the message if necessary.
 		local
 			xx: INTEGER
@@ -190,14 +190,14 @@ feature {NONE} -- implementation
 				message_height, True)
 		end
 
-	resize_children is
+	resize_children
 			-- Resize the children if necessary.
 		do
 			resize_buttons
 			resize_message
 		end
 
-	resize_message is
+	resize_message
 			-- Resize the message if necessary.
 		require
 			resize_allowed: not fixed_size_flag
@@ -206,7 +206,7 @@ feature {NONE} -- implementation
 				message_height.min (Maximum_window_height))
 		end
 
-	on_control_id_command (an_id: INTEGER) is
+	on_control_id_command (an_id: INTEGER)
 			-- Perform corresponding command
 		do
 			inspect
@@ -221,7 +221,7 @@ feature {NONE} -- implementation
 			end
 		end
 
-	message_height: INTEGER is
+	message_height: INTEGER
 			-- The height of the message plus the offset
 			-- to the top of the dialog and the buttons.
 		do
@@ -229,7 +229,7 @@ feature {NONE} -- implementation
 				2 * Dialog_unit
 		end
 
-	dialog_width: INTEGER is
+	dialog_width: INTEGER
 			-- Width of the dialog
 		do
 			if icon /= Void then
@@ -239,7 +239,7 @@ feature {NONE} -- implementation
 			end
 		end
 
-	dialog_height: INTEGER is
+	dialog_height: INTEGER
 			-- Height of the dialog
 		do
 			if icon /= Void then
@@ -251,7 +251,7 @@ feature {NONE} -- implementation
 			end
 		end
 
-	reposition_children is
+	reposition_children
 			-- Move the children if necessary.
 		do
 			reposition_message
@@ -260,7 +260,7 @@ feature {NONE} -- implementation
 			set_text_on_control (message, message_static)
 		end
 
-	determine_focus is
+	determine_focus
 			-- Focus on the default button.
 		local
 			focus_set: BOOLEAN
@@ -284,7 +284,7 @@ feature {NONE} -- implementation
 			end
 		end
 
-	set_default_button is
+	set_default_button
 			-- Set the default button for the dialog.
 		local
 			default_button_set: BOOLEAN
@@ -308,7 +308,7 @@ feature {NONE} -- implementation
 			end
 		end
 
-	reposition_buttons is
+	reposition_buttons
 			-- Move the buttons if necessary.
 		require else
 			ok_button_exists: ok_button.exists
@@ -333,7 +333,7 @@ feature {NONE} -- implementation
 			end
 		end
 
-	resize_buttons is
+	resize_buttons
 			-- Resize the buttons according to the button
 			-- which is visible and has the largest label.
 		require else
@@ -366,7 +366,7 @@ feature {NONE} -- implementation
 				b_height.min (Maximum_window_height))
 		end
 
-	set_default_attributes is
+	set_default_attributes
 			-- Set the attributes before creation
 		local
 			default_font: FONT
@@ -391,7 +391,7 @@ feature {NONE} -- implementation
 			default_position := true
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionMessageDialog"
@@ -399,17 +399,17 @@ feature {NONE} -- implementation
 
 feature {NONE} -- Inapplicable
 
-	label_font: FONT is
+	label_font: FONT
 			-- Font specified for labels
 		do
 		end
 
-	set_label_font (a_font: FONT) is
+	set_label_font (a_font: FONT)
 			-- Set font of every labels to `a_font_name'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

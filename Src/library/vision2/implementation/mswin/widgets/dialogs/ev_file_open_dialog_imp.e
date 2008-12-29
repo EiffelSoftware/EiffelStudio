@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision file open dialog. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -43,7 +43,7 @@ create
 
 feature -- Status report
 
-	file_name: STRING_32 is
+	file_name: STRING_32
 			-- Full name of currently selected file including path.
 		do
 			if multiple_selection_enabled and then not file_names.is_empty then
@@ -56,13 +56,13 @@ feature -- Status report
 			end
 		end
 
-	multiple_selection_enabled: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN
 			-- Can more than one item be selected?
 		do
 			Result := has_flag ({WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
 		end
 
-	file_names: ARRAYED_LIST [STRING_32] is
+	file_names: ARRAYED_LIST [STRING_32]
 			-- Full names of currently selected files including path.
 		do
 			if multiple_selection_enabled then
@@ -80,13 +80,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Allow multiple items to be selected.
 		do
 			set_flags (flags | {WEL_OFN_CONSTANTS}.Ofn_allowmultiselect | {WEL_OFN_CONSTANTS}.ofn_explorer)
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Allow only one item to be selected.
 		do
 			remove_flag ({WEL_OFN_CONSTANTS}.Ofn_allowmultiselect)
@@ -97,98 +97,98 @@ feature {EV_ANY_I}
 	--| FIXME These features are all required by EV_POSITIONED and
 	--| EV_POSITIONABLE. Is there a way to implement these?
 
-	set_x_position (a: INTEGER) is
+	set_x_position (a: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_y_position (a: INTEGER) is
+	set_y_position (a: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_height (a: INTEGER) is
+	set_height (a: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_width (a: INTEGER) is
+	set_width (a: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_size (a, b: INTEGER) is
+	set_size (a, b: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	x_position: INTEGER is
+	x_position: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	width: INTEGER is
+	width: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	set_position (a, b: INTEGER) is
+	set_position (a, b: INTEGER)
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
 			end
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 		do
 			check
 				to_be_implemented: FALSE
@@ -199,7 +199,7 @@ feature {EV_ANY_I}
 
 	interface: EV_FILE_OPEN_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

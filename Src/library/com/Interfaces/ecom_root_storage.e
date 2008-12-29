@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of IRootStorage interface"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_c_iroot_storage(cpp_obj)
@@ -26,7 +26,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	swith_to_file (a_name: STRING) is
+	swith_to_file (a_name: STRING)
 			-- Copy current file associated with storage object 
 			-- to new file `a_name'. New file is then used for storage 
 			-- object and any uncommitted changes.
@@ -42,7 +42,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- delete structure
 		do
 			ccom_delete_c_iroot_storage (initializer);
@@ -50,27 +50,27 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	ccom_create_c_iroot_storage(a_pointer: POINTER): POINTER is
+	ccom_create_c_iroot_storage(a_pointer: POINTER): POINTER
 		external
 			"C++ [new E_IRootStorage %"E_IRootStorage.h%"](IUnknown *)"
 		end
 
-	ccom_delete_c_iroot_storage (cpp_obj: POINTER) is
+	ccom_delete_c_iroot_storage (cpp_obj: POINTER)
 		external
 			"C++ [delete E_IRootStorage %"E_IRootStorage.h%"]()"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 		external
 			"C++ [E_IRootStorage %"E_IRootStorage.h%"](): EIF_POINTER"
 		end
 
-	ccom_switch_to_file (cpp_obj: POINTER; name: POINTER) is
+	ccom_switch_to_file (cpp_obj: POINTER; name: POINTER)
 		external
 			"C++ [E_IRootStorage %"E_IRootStorage.h%"](EIF_POINTER)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

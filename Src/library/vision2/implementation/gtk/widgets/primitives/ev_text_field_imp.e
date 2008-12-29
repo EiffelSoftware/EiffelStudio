@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision text field. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,13 +45,13 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is
+	needs_event_box: BOOLEAN
 			-- Does `a_widget' need an event box?
 		do
 			Result := True
 		end
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a gtk entry.
 		local
 			a_vbox: POINTER
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text displayed in field.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -85,13 +85,13 @@ feature -- Access
 
 feature -- Status setting
 
-	set_minimum_width_in_characters (nb: INTEGER) is
+	set_minimum_width_in_characters (nb: INTEGER)
 			-- Make `nb' characters visible on one line.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (entry_widget, (nb + 1) * maximum_character_width, -1)
 		end
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -101,7 +101,7 @@ feature -- Status setting
 			on_change_actions
 		end
 
-	append_text (a_text: STRING_GENERAL) is
+	append_text (a_text: STRING_GENERAL)
 			-- Append `a_text' to the end of the text.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -111,7 +111,7 @@ feature -- Status setting
 			on_change_actions
 		end
 
-	prepend_text (a_text: STRING_GENERAL) is
+	prepend_text (a_text: STRING_GENERAL)
 			-- Prepend `a_text' to the end of the text.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -121,7 +121,7 @@ feature -- Status setting
 			on_change_actions
 		end
 
-	set_capacity (len: INTEGER) is
+	set_capacity (len: INTEGER)
 			-- Set the maximum number of characters that `Current' can hold to `len'.
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
@@ -153,13 +153,13 @@ feature -- Status Report
 	text_alignment: INTEGER
 		-- Text alignment of `Current'.
 
-	caret_position: INTEGER is
+	caret_position: INTEGER
 			-- Current position of the caret.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
 		end
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Return the maximum number of characters that the
 			-- user may enter.
 		do
@@ -176,7 +176,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create an initialize return actions for `Current'.
 		do
 			create Result
@@ -185,13 +185,13 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature -- Status report
 
-	is_editable: BOOLEAN is
+	is_editable: BOOLEAN
 			-- Is the text editable.
 		do
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_editable_get_editable (entry_widget)
 		end
 
-	has_selection: BOOLEAN is
+	has_selection: BOOLEAN
 			-- Is something selected?
 		local
 			a_start, a_end: INTEGER
@@ -199,7 +199,7 @@ feature -- Status report
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_editable_get_selection_bounds (entry_widget, $a_start, $a_end)
 		end
 
-	selection_start: INTEGER is
+	selection_start: INTEGER
 			-- Index of the first character selected.
 		local
 			a_start, a_end: INTEGER
@@ -209,7 +209,7 @@ feature -- Status report
 			Result := a_start + 1
 		end
 
-	selection_end: INTEGER is
+	selection_end: INTEGER
 			-- Index of the last character selected.
 		local
 			a_start, a_end: INTEGER
@@ -219,7 +219,7 @@ feature -- Status report
 			Result := a_end
 		end
 
-	clipboard_content: STRING_32 is
+	clipboard_content: STRING_32
 			-- `Result' is current clipboard content.
 		do
 			Result := App_implementation.clipboard.text
@@ -227,19 +227,19 @@ feature -- Status report
 
 feature -- status settings
 
-	hide_border is
+	hide_border
 			-- Hide the border of `Current'.
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_has_frame (entry_widget, False)
 		end
 
-	set_editable (a_editable: BOOLEAN) is
+	set_editable (a_editable: BOOLEAN)
 			-- Set editable state to `a_editable'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_set_editable (entry_widget, a_editable)
 		end
 
-	set_caret_position (pos: INTEGER) is
+	set_caret_position (pos: INTEGER)
 			-- Set the position of the caret to `pos'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
@@ -247,14 +247,14 @@ feature -- status settings
 
 feature -- Basic operation
 
-	insert_text (txt: STRING_GENERAL) is
+	insert_text (txt: STRING_GENERAL)
 			-- Insert `txt' at the current position.
 		do
 			insert_text_at_position (txt, caret_position)
 			on_change_actions
 		end
 
-	insert_text_at_position (txt: STRING_GENERAL; a_pos: INTEGER) is
+	insert_text_at_position (txt: STRING_GENERAL; a_pos: INTEGER)
 			-- Insert `txt' at the current position at position `a_pos'
 		local
 			a_cs: EV_GTK_C_STRING
@@ -270,27 +270,27 @@ feature -- Basic operation
 			)
 		end
 
-	select_region (start_pos, end_pos: INTEGER) is
+	select_region (start_pos, end_pos: INTEGER)
 			-- Select (highlight) the text between
 			-- 'start_pos' and 'end_pos'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
 		end
 
-	deselect_all is
+	deselect_all
 			-- Unselect the current selection.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, 0, 0)
 		end
 
-	delete_selection is
+	delete_selection
 			-- Delete the current selection.
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_delete_selection (entry_widget)
 			on_change_actions
 		end
 
-	cut_selection is
+	cut_selection
 			-- Cut the `selected_region' by erasing it from
 			-- the text and putting it in the Clipboard
 			-- to paste it later.
@@ -301,7 +301,7 @@ feature -- Basic operation
 			on_change_actions
 		end
 
-	copy_selection is
+	copy_selection
 			-- Copy the `selected_region' in the Clipboard
 			-- to paste it later.
 			-- If the `selected_region' is empty, it does
@@ -310,7 +310,7 @@ feature -- Basic operation
 			{EV_GTK_EXTERNALS}.gtk_editable_copy_clipboard (entry_widget)
 		end
 
-	paste (index: INTEGER) is
+	paste (index: INTEGER)
 			-- Insert the string which is in the
 			-- Clipboard at the `index' position in the
 			-- text.
@@ -322,7 +322,7 @@ feature -- Basic operation
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
 			create Result
 		end
@@ -331,7 +331,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Value of 'text' prior to a change action, used to compare
 			-- between old and new text.
 
-	on_change_actions is
+	on_change_actions
 			-- A change action has occurred.
 		local
 			new_text: STRING_32
@@ -358,7 +358,7 @@ feature {NONE} -- Implementation
 	entry_widget: POINTER
 		-- A pointer on the text field
 
-	visual_widget: POINTER is
+	visual_widget: POINTER
 			-- Pointer to the widget shown on screen.
 		do
 			Result := entry_widget
@@ -370,7 +370,7 @@ feature {EV_TEXT_FIELD_I} -- Implementation
 			--Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

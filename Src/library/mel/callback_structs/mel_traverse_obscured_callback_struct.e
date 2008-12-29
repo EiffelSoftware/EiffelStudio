@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Callback structure created when the focus is moved %
@@ -24,7 +24,7 @@ create
 
 feature -- Access
 
-	reasons_list: ARRAY [INTEGER] is 
+	reasons_list: ARRAY [INTEGER] 
 			-- List of reasons that is valid for this
 			-- callback structure
 			-- (Reason - XmCR_OBSCURED_TRAVERSAL)
@@ -32,14 +32,14 @@ feature -- Access
 			Result := <<XmCR_OBSCURED_TRAVERSAL>>;
 		end;
 
-	direction: INTEGER is
+	direction: INTEGER
 			-- Direction of traversal
 			-- (Constants specified in MEL_TRAVERSAL_CONSTANTS)
 		do
 			Result := c_direction (handle)
 		end;
 
-	traversal_destination_widget: MEL_WIDGET is
+	traversal_destination_widget: MEL_WIDGET
 			-- Widget or gadget of traversal
 		do
 			if traversal_destination /= default_pointer then
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Pointer access
 
-	traversal_destination: POINTER is
+	traversal_destination: POINTER
 			-- Widget or gadget pointer of traversal
 		do
 			Result := c_traversal_destination (handle)
@@ -57,17 +57,17 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_traversal_destination (a_callback_struct_ptr: POINTER): POINTER is
+	c_traversal_destination (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmTraverseObscuredCallbackStruct *): EIF_POINTER"
 		end;
 
-	c_direction (a_callback_struct_ptr: POINTER): INTEGER is
+	c_direction (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmTraverseObscuredCallbackStruct *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

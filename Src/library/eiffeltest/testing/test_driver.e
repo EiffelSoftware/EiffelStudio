@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"General test drivers"
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ deferred class TEST_DRIVER inherit
 
 feature -- Measurement
 
-	run_count: INTEGER is
+	run_count: INTEGER
 			-- Number of runs for selected test
 		do
 			Result := selected_test.run_count
@@ -29,16 +29,16 @@ feature -- Measurement
 	 
 feature -- Status report
 
-	Is_enabled: BOOLEAN is True
+	Is_enabled: BOOLEAN = True
 			-- Is test enabled? (Answer: yes)
 
-	is_ready: BOOLEAN is
+	is_ready: BOOLEAN
 			-- Is test ready for execution?
 		do
 			Result := not is_empty
 		end
 		
-	is_log_set: BOOLEAN is
+	is_log_set: BOOLEAN
 			-- Is log set up?
 		do
 			Result := log /= Void and then not log.is_format_set
@@ -47,7 +47,7 @@ feature -- Status report
 	has_results: BOOLEAN
 			-- Are results available?
 			
-	all_tests_passed: BOOLEAN is
+	all_tests_passed: BOOLEAN
 			-- Did any tests fail?
 		local
 			i: INTEGER
@@ -65,7 +65,7 @@ feature -- Status report
 			end
 		end
 
-	insertable (v: TESTABLE): BOOLEAN is
+	insertable (v: TESTABLE): BOOLEAN
 			-- Can `v' be inserted?
 		do
 			Result := v.top_level_allowed
@@ -74,7 +74,7 @@ feature -- Status report
 	timing_display_enabled: BOOLEAN
 			-- Is display of timing information enabled?
 			
-	valid_run_index (n: INTEGER): BOOLEAN is
+	valid_run_index (n: INTEGER): BOOLEAN
 			-- Is run `n' valid?
 		do
 			Result := 1 <= n and n <= total_run_count
@@ -82,7 +82,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_log (l: LOG_FACILITY) is
+	set_log (l: LOG_FACILITY)
 			-- Set log to `l'.
 		require
 			log_exists: l /= Void
@@ -93,7 +93,7 @@ feature -- Status setting
 			log_set: log = l
 		end
 		
-	enable_timing_display is
+	enable_timing_display
 			-- Enable display of timing information.
 		do
 			timing_display_enabled := True
@@ -101,7 +101,7 @@ feature -- Status setting
 			enabled: timing_display_enabled
 		end
 
-	disable_timing_display is
+	disable_timing_display
 			-- Disable display of timing information.
 		do
 			timing_display_enabled := False
@@ -111,7 +111,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Execute test.
 		local
 			old_idx: INTEGER
@@ -132,7 +132,7 @@ feature -- Basic operations
 			not_cached: not cached
 		end
 	
-	clear_results is
+	clear_results
 			-- Clear test results.
 		require
 			not_empty: not is_empty
@@ -153,7 +153,7 @@ feature -- Basic operations
 			index_unchanged: index = old index
 		end
 
-	evaluate is
+	evaluate
 			-- Output test evaluation.
 		require
 			ready: is_ready
@@ -172,7 +172,7 @@ invariant
 	ready_definition: is_ready = not is_empty
 	log_set_up: log /= Void and then log.is_format_set
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

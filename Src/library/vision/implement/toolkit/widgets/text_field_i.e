@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Value of current text field
 		deferred
 		ensure
@@ -25,14 +25,14 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of character in current text field
 		deferred
 		ensure
 			positive_result: Result >= 0
 		end;
 
-	maximum_size: INTEGER is
+	maximum_size: INTEGER
 			-- Maximum number of characters in current
 			-- text field
 		deferred
@@ -40,14 +40,14 @@ feature -- Measurement
 
 feature -- Status setting
 
-	clear is
+	clear
 			-- Clear current text field.
 		deferred
 		end;
 
 feature -- Element change
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed
 			-- when an acitvate event occurs
 		require
@@ -55,14 +55,14 @@ feature -- Element change
 		deferred
 		end;
 
-	append (a_text: STRING) is
+	append (a_text: STRING)
 			-- Append `a_text' at the end of current text.
 		require
 			not_a_text_void: a_text /= Void
 		deferred
 		end;
 
-	insert (a_text: STRING; a_position: INTEGER) is
+	insert (a_text: STRING; a_position: INTEGER)
 			-- Insert `a_text' in current text field at `a_position'.
 			-- Same as `replace (a_position, a_position, a_text)'.
 		require
@@ -74,7 +74,7 @@ feature -- Element change
 			valid: a_text.count > 0 implies a_text.is_equal (text.substring (a_position						+ 1, a_position + a_text.count))
 		end;
 
-	replace (from_position, to_position: INTEGER; a_text: STRING) is
+	replace (from_position, to_position: INTEGER; a_text: STRING)
 			-- Replace text from `from_position' to `to_position' by `a_text'.
 		require
 			not_text_void: a_text /= Void
@@ -86,14 +86,14 @@ feature -- Element change
 			valid: a_text.count > 0 implies a_text.is_equal (text.substring (from_position+1, from_position+a_text.count))
 		end;
 
-	set_maximum_size (a_max: INTEGER) is
+	set_maximum_size (a_max: INTEGER)
 			-- Set maximum_size to `a_max'.
 		require
 			not_negative_maximum: a_max >= 0
 		deferred
 		end;
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set `text' to `a_text'.
 		require
 			not_a_text_void: a_text /= Void
@@ -102,7 +102,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to be executed
 			-- when an acitvate event occurs
 		require
@@ -110,7 +110,7 @@ feature -- Removal
 		deferred
 		end; 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

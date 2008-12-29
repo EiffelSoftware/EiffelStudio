@@ -1,4 +1,4 @@
-indexing
+note
 	description: "wrapper for anynymous enums from file Appearance.h"
 
 class
@@ -6,5005 +6,5005 @@ class
 
 feature -- Carbon constants
 
-	frozen kAppearanceEventClass: INTEGER is
+	frozen kAppearanceEventClass: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearanceEventClass"
 	end
 
-	frozen kAEAppearanceChanged: INTEGER is
+	frozen kAEAppearanceChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAEAppearanceChanged"
 	end
 
-	frozen kAESystemFontChanged: INTEGER is
+	frozen kAESystemFontChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAESystemFontChanged"
 	end
 
-	frozen kAESmallSystemFontChanged: INTEGER is
+	frozen kAESmallSystemFontChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAESmallSystemFontChanged"
 	end
 
-	frozen kAEViewsFontChanged: INTEGER is
+	frozen kAEViewsFontChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAEViewsFontChanged"
 	end
 
-	frozen kThemeDataFileType: INTEGER is
+	frozen kThemeDataFileType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDataFileType"
 	end
 
-	frozen kThemePlatinumFileType: INTEGER is
+	frozen kThemePlatinumFileType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePlatinumFileType"
 	end
 
-	frozen kThemeCustomThemesFileType: INTEGER is
+	frozen kThemeCustomThemesFileType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeCustomThemesFileType"
 	end
 
-	frozen kThemeSoundTrackFileType: INTEGER is
+	frozen kThemeSoundTrackFileType: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundTrackFileType"
 	end
 
-	frozen kAppearancePartMetaNone: INTEGER is
+	frozen kAppearancePartMetaNone: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearancePartMetaNone"
 	end
 
-	frozen kAppearancePartMetaDisabled: INTEGER is
+	frozen kAppearancePartMetaDisabled: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearancePartMetaDisabled"
 	end
 
-	frozen kAppearancePartMetaInactive: INTEGER is
+	frozen kAppearancePartMetaInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearancePartMetaInactive"
 	end
 
-	frozen kAppearancePartIndicator: INTEGER is
+	frozen kAppearancePartIndicator: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearancePartIndicator"
 	end
 
-	frozen kAppearancePartUpButton: INTEGER is
+	frozen kAppearancePartUpButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearancePartUpButton"
 	end
 
-	frozen kAppearancePartDownButton: INTEGER is
+	frozen kAppearancePartDownButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearancePartDownButton"
 	end
 
-	frozen kAppearancePartLeftButton: INTEGER is
+	frozen kAppearancePartLeftButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearancePartLeftButton"
 	end
 
-	frozen kAppearancePartRightButton: INTEGER is
+	frozen kAppearancePartRightButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearancePartRightButton"
 	end
 
-	frozen kAppearancePartPageUpArea: INTEGER is
+	frozen kAppearancePartPageUpArea: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearancePartPageUpArea"
 	end
 
-	frozen kAppearancePartPageDownArea: INTEGER is
+	frozen kAppearancePartPageDownArea: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearancePartPageDownArea"
 	end
 
-	frozen kAppearancePartPageLeftArea: INTEGER is
+	frozen kAppearancePartPageLeftArea: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearancePartPageLeftArea"
 	end
 
-	frozen kAppearancePartPageRightArea: INTEGER is
+	frozen kAppearancePartPageRightArea: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearancePartPageRightArea"
 	end
 
-	frozen kAppearanceRegionTitleBar: INTEGER is
+	frozen kAppearanceRegionTitleBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearanceRegionTitleBar"
 	end
 
-	frozen kAppearanceRegionTitleText: INTEGER is
+	frozen kAppearanceRegionTitleText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearanceRegionTitleText"
 	end
 
-	frozen kAppearanceRegionCloseBox: INTEGER is
+	frozen kAppearanceRegionCloseBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearanceRegionCloseBox"
 	end
 
-	frozen kAppearanceRegionZoomBox: INTEGER is
+	frozen kAppearanceRegionZoomBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearanceRegionZoomBox"
 	end
 
-	frozen kAppearanceRegionDrag: INTEGER is
+	frozen kAppearanceRegionDrag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearanceRegionDrag"
 	end
 
-	frozen kAppearanceRegionGrow: INTEGER is
+	frozen kAppearanceRegionGrow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearanceRegionGrow"
 	end
 
-	frozen kAppearanceRegionCollapseBox: INTEGER is
+	frozen kAppearanceRegionCollapseBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearanceRegionCollapseBox"
 	end
 
-	frozen kAppearanceRegionTitleProxyIcon: INTEGER is
+	frozen kAppearanceRegionTitleProxyIcon: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearanceRegionTitleProxyIcon"
 	end
 
-	frozen kAppearanceRegionStructure: INTEGER is
+	frozen kAppearanceRegionStructure: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearanceRegionStructure"
 	end
 
-	frozen kAppearanceRegionContent: INTEGER is
+	frozen kAppearanceRegionContent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kAppearanceRegionContent"
 	end
 
-	frozen kThemeBrushDialogBackgroundActive: INTEGER is
+	frozen kThemeBrushDialogBackgroundActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushDialogBackgroundActive"
 	end
 
-	frozen kThemeBrushDialogBackgroundInactive: INTEGER is
+	frozen kThemeBrushDialogBackgroundInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushDialogBackgroundInactive"
 	end
 
-	frozen kThemeBrushAlertBackgroundActive: INTEGER is
+	frozen kThemeBrushAlertBackgroundActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushAlertBackgroundActive"
 	end
 
-	frozen kThemeBrushAlertBackgroundInactive: INTEGER is
+	frozen kThemeBrushAlertBackgroundInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushAlertBackgroundInactive"
 	end
 
-	frozen kThemeBrushModelessDialogBackgroundActive: INTEGER is
+	frozen kThemeBrushModelessDialogBackgroundActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushModelessDialogBackgroundActive"
 	end
 
-	frozen kThemeBrushModelessDialogBackgroundInactive: INTEGER is
+	frozen kThemeBrushModelessDialogBackgroundInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushModelessDialogBackgroundInactive"
 	end
 
-	frozen kThemeBrushUtilityWindowBackgroundActive: INTEGER is
+	frozen kThemeBrushUtilityWindowBackgroundActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushUtilityWindowBackgroundActive"
 	end
 
-	frozen kThemeBrushUtilityWindowBackgroundInactive: INTEGER is
+	frozen kThemeBrushUtilityWindowBackgroundInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushUtilityWindowBackgroundInactive"
 	end
 
-	frozen kThemeBrushListViewSortColumnBackground: INTEGER is
+	frozen kThemeBrushListViewSortColumnBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushListViewSortColumnBackground"
 	end
 
-	frozen kThemeBrushListViewBackground: INTEGER is
+	frozen kThemeBrushListViewBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushListViewBackground"
 	end
 
-	frozen kThemeBrushIconLabelBackground: INTEGER is
+	frozen kThemeBrushIconLabelBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushIconLabelBackground"
 	end
 
-	frozen kThemeBrushListViewSeparator: INTEGER is
+	frozen kThemeBrushListViewSeparator: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushListViewSeparator"
 	end
 
-	frozen kThemeBrushChasingArrows: INTEGER is
+	frozen kThemeBrushChasingArrows: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushChasingArrows"
 	end
 
-	frozen kThemeBrushDragHilite: INTEGER is
+	frozen kThemeBrushDragHilite: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushDragHilite"
 	end
 
-	frozen kThemeBrushDocumentWindowBackground: INTEGER is
+	frozen kThemeBrushDocumentWindowBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushDocumentWindowBackground"
 	end
 
-	frozen kThemeBrushFinderWindowBackground: INTEGER is
+	frozen kThemeBrushFinderWindowBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushFinderWindowBackground"
 	end
 
-	frozen kThemeBrushScrollBarDelimiterActive: INTEGER is
+	frozen kThemeBrushScrollBarDelimiterActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushScrollBarDelimiterActive"
 	end
 
-	frozen kThemeBrushScrollBarDelimiterInactive: INTEGER is
+	frozen kThemeBrushScrollBarDelimiterInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushScrollBarDelimiterInactive"
 	end
 
-	frozen kThemeBrushFocusHighlight: INTEGER is
+	frozen kThemeBrushFocusHighlight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushFocusHighlight"
 	end
 
-	frozen kThemeBrushPopupArrowActive: INTEGER is
+	frozen kThemeBrushPopupArrowActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushPopupArrowActive"
 	end
 
-	frozen kThemeBrushPopupArrowPressed: INTEGER is
+	frozen kThemeBrushPopupArrowPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushPopupArrowPressed"
 	end
 
-	frozen kThemeBrushPopupArrowInactive: INTEGER is
+	frozen kThemeBrushPopupArrowInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushPopupArrowInactive"
 	end
 
-	frozen kThemeBrushAppleGuideCoachmark: INTEGER is
+	frozen kThemeBrushAppleGuideCoachmark: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushAppleGuideCoachmark"
 	end
 
-	frozen kThemeBrushIconLabelBackgroundSelected: INTEGER is
+	frozen kThemeBrushIconLabelBackgroundSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushIconLabelBackgroundSelected"
 	end
 
-	frozen kThemeBrushStaticAreaFill: INTEGER is
+	frozen kThemeBrushStaticAreaFill: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushStaticAreaFill"
 	end
 
-	frozen kThemeBrushActiveAreaFill: INTEGER is
+	frozen kThemeBrushActiveAreaFill: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushActiveAreaFill"
 	end
 
-	frozen kThemeBrushButtonFrameActive: INTEGER is
+	frozen kThemeBrushButtonFrameActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonFrameActive"
 	end
 
-	frozen kThemeBrushButtonFrameInactive: INTEGER is
+	frozen kThemeBrushButtonFrameInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonFrameInactive"
 	end
 
-	frozen kThemeBrushButtonFaceActive: INTEGER is
+	frozen kThemeBrushButtonFaceActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonFaceActive"
 	end
 
-	frozen kThemeBrushButtonFaceInactive: INTEGER is
+	frozen kThemeBrushButtonFaceInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonFaceInactive"
 	end
 
-	frozen kThemeBrushButtonFacePressed: INTEGER is
+	frozen kThemeBrushButtonFacePressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonFacePressed"
 	end
 
-	frozen kThemeBrushButtonActiveDarkShadow: INTEGER is
+	frozen kThemeBrushButtonActiveDarkShadow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonActiveDarkShadow"
 	end
 
-	frozen kThemeBrushButtonActiveDarkHighlight: INTEGER is
+	frozen kThemeBrushButtonActiveDarkHighlight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonActiveDarkHighlight"
 	end
 
-	frozen kThemeBrushButtonActiveLightShadow: INTEGER is
+	frozen kThemeBrushButtonActiveLightShadow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonActiveLightShadow"
 	end
 
-	frozen kThemeBrushButtonActiveLightHighlight: INTEGER is
+	frozen kThemeBrushButtonActiveLightHighlight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonActiveLightHighlight"
 	end
 
-	frozen kThemeBrushButtonInactiveDarkShadow: INTEGER is
+	frozen kThemeBrushButtonInactiveDarkShadow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonInactiveDarkShadow"
 	end
 
-	frozen kThemeBrushButtonInactiveDarkHighlight: INTEGER is
+	frozen kThemeBrushButtonInactiveDarkHighlight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonInactiveDarkHighlight"
 	end
 
-	frozen kThemeBrushButtonInactiveLightShadow: INTEGER is
+	frozen kThemeBrushButtonInactiveLightShadow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonInactiveLightShadow"
 	end
 
-	frozen kThemeBrushButtonInactiveLightHighlight: INTEGER is
+	frozen kThemeBrushButtonInactiveLightHighlight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonInactiveLightHighlight"
 	end
 
-	frozen kThemeBrushButtonPressedDarkShadow: INTEGER is
+	frozen kThemeBrushButtonPressedDarkShadow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonPressedDarkShadow"
 	end
 
-	frozen kThemeBrushButtonPressedDarkHighlight: INTEGER is
+	frozen kThemeBrushButtonPressedDarkHighlight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonPressedDarkHighlight"
 	end
 
-	frozen kThemeBrushButtonPressedLightShadow: INTEGER is
+	frozen kThemeBrushButtonPressedLightShadow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonPressedLightShadow"
 	end
 
-	frozen kThemeBrushButtonPressedLightHighlight: INTEGER is
+	frozen kThemeBrushButtonPressedLightHighlight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushButtonPressedLightHighlight"
 	end
 
-	frozen kThemeBrushBevelActiveLight: INTEGER is
+	frozen kThemeBrushBevelActiveLight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushBevelActiveLight"
 	end
 
-	frozen kThemeBrushBevelActiveDark: INTEGER is
+	frozen kThemeBrushBevelActiveDark: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushBevelActiveDark"
 	end
 
-	frozen kThemeBrushBevelInactiveLight: INTEGER is
+	frozen kThemeBrushBevelInactiveLight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushBevelInactiveLight"
 	end
 
-	frozen kThemeBrushBevelInactiveDark: INTEGER is
+	frozen kThemeBrushBevelInactiveDark: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushBevelInactiveDark"
 	end
 
-	frozen kThemeBrushNotificationWindowBackground: INTEGER is
+	frozen kThemeBrushNotificationWindowBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushNotificationWindowBackground"
 	end
 
-	frozen kThemeBrushMovableModalBackground: INTEGER is
+	frozen kThemeBrushMovableModalBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushMovableModalBackground"
 	end
 
-	frozen kThemeBrushSheetBackgroundOpaque: INTEGER is
+	frozen kThemeBrushSheetBackgroundOpaque: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushSheetBackgroundOpaque"
 	end
 
-	frozen kThemeBrushDrawerBackground: INTEGER is
+	frozen kThemeBrushDrawerBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushDrawerBackground"
 	end
 
-	frozen kThemeBrushToolbarBackground: INTEGER is
+	frozen kThemeBrushToolbarBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushToolbarBackground"
 	end
 
-	frozen kThemeBrushSheetBackgroundTransparent: INTEGER is
+	frozen kThemeBrushSheetBackgroundTransparent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushSheetBackgroundTransparent"
 	end
 
-	frozen kThemeBrushMenuBackground: INTEGER is
+	frozen kThemeBrushMenuBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushMenuBackground"
 	end
 
-	frozen kThemeBrushMenuBackgroundSelected: INTEGER is
+	frozen kThemeBrushMenuBackgroundSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushMenuBackgroundSelected"
 	end
 
-	frozen kThemeBrushListViewOddRowBackground: INTEGER is
+	frozen kThemeBrushListViewOddRowBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushListViewOddRowBackground"
 	end
 
-	frozen kThemeBrushListViewEvenRowBackground: INTEGER is
+	frozen kThemeBrushListViewEvenRowBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushListViewEvenRowBackground"
 	end
 
-	frozen kThemeBrushListViewColumnDivider: INTEGER is
+	frozen kThemeBrushListViewColumnDivider: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushListViewColumnDivider"
 	end
 
-	frozen kThemeBrushSheetBackground: INTEGER is
+	frozen kThemeBrushSheetBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushSheetBackground"
 	end
 
-	frozen kThemeBrushBlack: INTEGER is
+	frozen kThemeBrushBlack: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushBlack"
 	end
 
-	frozen kThemeBrushWhite: INTEGER is
+	frozen kThemeBrushWhite: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushWhite"
 	end
 
-	frozen kThemeBrushPrimaryHighlightColor: INTEGER is
+	frozen kThemeBrushPrimaryHighlightColor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushPrimaryHighlightColor"
 	end
 
-	frozen kThemeBrushSecondaryHighlightColor: INTEGER is
+	frozen kThemeBrushSecondaryHighlightColor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushSecondaryHighlightColor"
 	end
 
-	frozen kThemeBrushAlternatePrimaryHighlightColor: INTEGER is
+	frozen kThemeBrushAlternatePrimaryHighlightColor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBrushAlternatePrimaryHighlightColor"
 	end
 
-	frozen kThemeTextColorDialogActive: INTEGER is
+	frozen kThemeTextColorDialogActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorDialogActive"
 	end
 
-	frozen kThemeTextColorDialogInactive: INTEGER is
+	frozen kThemeTextColorDialogInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorDialogInactive"
 	end
 
-	frozen kThemeTextColorAlertActive: INTEGER is
+	frozen kThemeTextColorAlertActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorAlertActive"
 	end
 
-	frozen kThemeTextColorAlertInactive: INTEGER is
+	frozen kThemeTextColorAlertInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorAlertInactive"
 	end
 
-	frozen kThemeTextColorModelessDialogActive: INTEGER is
+	frozen kThemeTextColorModelessDialogActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorModelessDialogActive"
 	end
 
-	frozen kThemeTextColorModelessDialogInactive: INTEGER is
+	frozen kThemeTextColorModelessDialogInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorModelessDialogInactive"
 	end
 
-	frozen kThemeTextColorWindowHeaderActive: INTEGER is
+	frozen kThemeTextColorWindowHeaderActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorWindowHeaderActive"
 	end
 
-	frozen kThemeTextColorWindowHeaderInactive: INTEGER is
+	frozen kThemeTextColorWindowHeaderInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorWindowHeaderInactive"
 	end
 
-	frozen kThemeTextColorPlacardActive: INTEGER is
+	frozen kThemeTextColorPlacardActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorPlacardActive"
 	end
 
-	frozen kThemeTextColorPlacardInactive: INTEGER is
+	frozen kThemeTextColorPlacardInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorPlacardInactive"
 	end
 
-	frozen kThemeTextColorPlacardPressed: INTEGER is
+	frozen kThemeTextColorPlacardPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorPlacardPressed"
 	end
 
-	frozen kThemeTextColorPushButtonActive: INTEGER is
+	frozen kThemeTextColorPushButtonActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorPushButtonActive"
 	end
 
-	frozen kThemeTextColorPushButtonInactive: INTEGER is
+	frozen kThemeTextColorPushButtonInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorPushButtonInactive"
 	end
 
-	frozen kThemeTextColorPushButtonPressed: INTEGER is
+	frozen kThemeTextColorPushButtonPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorPushButtonPressed"
 	end
 
-	frozen kThemeTextColorBevelButtonActive: INTEGER is
+	frozen kThemeTextColorBevelButtonActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorBevelButtonActive"
 	end
 
-	frozen kThemeTextColorBevelButtonInactive: INTEGER is
+	frozen kThemeTextColorBevelButtonInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorBevelButtonInactive"
 	end
 
-	frozen kThemeTextColorBevelButtonPressed: INTEGER is
+	frozen kThemeTextColorBevelButtonPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorBevelButtonPressed"
 	end
 
-	frozen kThemeTextColorPopupButtonActive: INTEGER is
+	frozen kThemeTextColorPopupButtonActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorPopupButtonActive"
 	end
 
-	frozen kThemeTextColorPopupButtonInactive: INTEGER is
+	frozen kThemeTextColorPopupButtonInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorPopupButtonInactive"
 	end
 
-	frozen kThemeTextColorPopupButtonPressed: INTEGER is
+	frozen kThemeTextColorPopupButtonPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorPopupButtonPressed"
 	end
 
-	frozen kThemeTextColorIconLabel: INTEGER is
+	frozen kThemeTextColorIconLabel: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorIconLabel"
 	end
 
-	frozen kThemeTextColorListView: INTEGER is
+	frozen kThemeTextColorListView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorListView"
 	end
 
-	frozen kThemeTextColorDocumentWindowTitleActive: INTEGER is
+	frozen kThemeTextColorDocumentWindowTitleActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorDocumentWindowTitleActive"
 	end
 
-	frozen kThemeTextColorDocumentWindowTitleInactive: INTEGER is
+	frozen kThemeTextColorDocumentWindowTitleInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorDocumentWindowTitleInactive"
 	end
 
-	frozen kThemeTextColorMovableModalWindowTitleActive: INTEGER is
+	frozen kThemeTextColorMovableModalWindowTitleActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorMovableModalWindowTitleActive"
 	end
 
-	frozen kThemeTextColorMovableModalWindowTitleInactive: INTEGER is
+	frozen kThemeTextColorMovableModalWindowTitleInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorMovableModalWindowTitleInactive"
 	end
 
-	frozen kThemeTextColorUtilityWindowTitleActive: INTEGER is
+	frozen kThemeTextColorUtilityWindowTitleActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorUtilityWindowTitleActive"
 	end
 
-	frozen kThemeTextColorUtilityWindowTitleInactive: INTEGER is
+	frozen kThemeTextColorUtilityWindowTitleInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorUtilityWindowTitleInactive"
 	end
 
-	frozen kThemeTextColorPopupWindowTitleActive: INTEGER is
+	frozen kThemeTextColorPopupWindowTitleActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorPopupWindowTitleActive"
 	end
 
-	frozen kThemeTextColorPopupWindowTitleInactive: INTEGER is
+	frozen kThemeTextColorPopupWindowTitleInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorPopupWindowTitleInactive"
 	end
 
-	frozen kThemeTextColorRootMenuActive: INTEGER is
+	frozen kThemeTextColorRootMenuActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorRootMenuActive"
 	end
 
-	frozen kThemeTextColorRootMenuSelected: INTEGER is
+	frozen kThemeTextColorRootMenuSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorRootMenuSelected"
 	end
 
-	frozen kThemeTextColorRootMenuDisabled: INTEGER is
+	frozen kThemeTextColorRootMenuDisabled: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorRootMenuDisabled"
 	end
 
-	frozen kThemeTextColorMenuItemActive: INTEGER is
+	frozen kThemeTextColorMenuItemActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorMenuItemActive"
 	end
 
-	frozen kThemeTextColorMenuItemSelected: INTEGER is
+	frozen kThemeTextColorMenuItemSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorMenuItemSelected"
 	end
 
-	frozen kThemeTextColorMenuItemDisabled: INTEGER is
+	frozen kThemeTextColorMenuItemDisabled: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorMenuItemDisabled"
 	end
 
-	frozen kThemeTextColorPopupLabelActive: INTEGER is
+	frozen kThemeTextColorPopupLabelActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorPopupLabelActive"
 	end
 
-	frozen kThemeTextColorPopupLabelInactive: INTEGER is
+	frozen kThemeTextColorPopupLabelInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorPopupLabelInactive"
 	end
 
-	frozen kThemeTextColorTabFrontActive: INTEGER is
+	frozen kThemeTextColorTabFrontActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorTabFrontActive"
 	end
 
-	frozen kThemeTextColorTabNonFrontActive: INTEGER is
+	frozen kThemeTextColorTabNonFrontActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorTabNonFrontActive"
 	end
 
-	frozen kThemeTextColorTabNonFrontPressed: INTEGER is
+	frozen kThemeTextColorTabNonFrontPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorTabNonFrontPressed"
 	end
 
-	frozen kThemeTextColorTabFrontInactive: INTEGER is
+	frozen kThemeTextColorTabFrontInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorTabFrontInactive"
 	end
 
-	frozen kThemeTextColorTabNonFrontInactive: INTEGER is
+	frozen kThemeTextColorTabNonFrontInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorTabNonFrontInactive"
 	end
 
-	frozen kThemeTextColorIconLabelSelected: INTEGER is
+	frozen kThemeTextColorIconLabelSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorIconLabelSelected"
 	end
 
-	frozen kThemeTextColorBevelButtonStickyActive: INTEGER is
+	frozen kThemeTextColorBevelButtonStickyActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorBevelButtonStickyActive"
 	end
 
-	frozen kThemeTextColorBevelButtonStickyInactive: INTEGER is
+	frozen kThemeTextColorBevelButtonStickyInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorBevelButtonStickyInactive"
 	end
 
-	frozen kThemeTextColorNotification: INTEGER is
+	frozen kThemeTextColorNotification: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorNotification"
 	end
 
-	frozen kThemeTextColorSystemDetail: INTEGER is
+	frozen kThemeTextColorSystemDetail: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorSystemDetail"
 	end
 
-	frozen kThemeTextColorBlack: INTEGER is
+	frozen kThemeTextColorBlack: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorBlack"
 	end
 
-	frozen kThemeTextColorWhite: INTEGER is
+	frozen kThemeTextColorWhite: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTextColorWhite"
 	end
 
-	frozen kThemeStateInactive: INTEGER is
+	frozen kThemeStateInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeStateInactive"
 	end
 
-	frozen kThemeStateActive: INTEGER is
+	frozen kThemeStateActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeStateActive"
 	end
 
-	frozen kThemeStatePressed: INTEGER is
+	frozen kThemeStatePressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeStatePressed"
 	end
 
-	frozen kThemeStateRollover: INTEGER is
+	frozen kThemeStateRollover: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeStateRollover"
 	end
 
-	frozen kThemeStateUnavailable: INTEGER is
+	frozen kThemeStateUnavailable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeStateUnavailable"
 	end
 
-	frozen kThemeStateUnavailableInactive: INTEGER is
+	frozen kThemeStateUnavailableInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeStateUnavailableInactive"
 	end
 
-	frozen kThemeStateDisabled: INTEGER is
+	frozen kThemeStateDisabled: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeStateDisabled"
 	end
 
-	frozen kThemeStatePressedUp: INTEGER is
+	frozen kThemeStatePressedUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeStatePressedUp"
 	end
 
-	frozen kThemeStatePressedDown: INTEGER is
+	frozen kThemeStatePressedDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeStatePressedDown"
 	end
 
-	frozen kThemeArrowCursor: INTEGER is
+	frozen kThemeArrowCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeArrowCursor"
 	end
 
-	frozen kThemeCopyArrowCursor: INTEGER is
+	frozen kThemeCopyArrowCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeCopyArrowCursor"
 	end
 
-	frozen kThemeAliasArrowCursor: INTEGER is
+	frozen kThemeAliasArrowCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAliasArrowCursor"
 	end
 
-	frozen kThemeContextualMenuArrowCursor: INTEGER is
+	frozen kThemeContextualMenuArrowCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeContextualMenuArrowCursor"
 	end
 
-	frozen kThemeIBeamCursor: INTEGER is
+	frozen kThemeIBeamCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeIBeamCursor"
 	end
 
-	frozen kThemeCrossCursor: INTEGER is
+	frozen kThemeCrossCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeCrossCursor"
 	end
 
-	frozen kThemePlusCursor: INTEGER is
+	frozen kThemePlusCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePlusCursor"
 	end
 
-	frozen kThemeWatchCursor: INTEGER is
+	frozen kThemeWatchCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWatchCursor"
 	end
 
-	frozen kThemeClosedHandCursor: INTEGER is
+	frozen kThemeClosedHandCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeClosedHandCursor"
 	end
 
-	frozen kThemeOpenHandCursor: INTEGER is
+	frozen kThemeOpenHandCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeOpenHandCursor"
 	end
 
-	frozen kThemePointingHandCursor: INTEGER is
+	frozen kThemePointingHandCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePointingHandCursor"
 	end
 
-	frozen kThemeCountingUpHandCursor: INTEGER is
+	frozen kThemeCountingUpHandCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeCountingUpHandCursor"
 	end
 
-	frozen kThemeCountingDownHandCursor: INTEGER is
+	frozen kThemeCountingDownHandCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeCountingDownHandCursor"
 	end
 
-	frozen kThemeCountingUpAndDownHandCursor: INTEGER is
+	frozen kThemeCountingUpAndDownHandCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeCountingUpAndDownHandCursor"
 	end
 
-	frozen kThemeSpinningCursor: INTEGER is
+	frozen kThemeSpinningCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSpinningCursor"
 	end
 
-	frozen kThemeResizeLeftCursor: INTEGER is
+	frozen kThemeResizeLeftCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeResizeLeftCursor"
 	end
 
-	frozen kThemeResizeRightCursor: INTEGER is
+	frozen kThemeResizeRightCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeResizeRightCursor"
 	end
 
-	frozen kThemeResizeLeftRightCursor: INTEGER is
+	frozen kThemeResizeLeftRightCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeResizeLeftRightCursor"
 	end
 
-	frozen kThemeNotAllowedCursor: INTEGER is
+	frozen kThemeNotAllowedCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeNotAllowedCursor"
 	end
 
-	frozen kThemeResizeUpCursor: INTEGER is
+	frozen kThemeResizeUpCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeResizeUpCursor"
 	end
 
-	frozen kThemeResizeDownCursor: INTEGER is
+	frozen kThemeResizeDownCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeResizeDownCursor"
 	end
 
-	frozen kThemeResizeUpDownCursor: INTEGER is
+	frozen kThemeResizeUpDownCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeResizeUpDownCursor"
 	end
 
-	frozen kThemePoofCursor: INTEGER is
+	frozen kThemePoofCursor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePoofCursor"
 	end
 
-	frozen kThemeMenuBarNormal: INTEGER is
+	frozen kThemeMenuBarNormal: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuBarNormal"
 	end
 
-	frozen kThemeMenuBarSelected: INTEGER is
+	frozen kThemeMenuBarSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuBarSelected"
 	end
 
-	frozen kThemeMenuSquareMenuBar: INTEGER is
+	frozen kThemeMenuSquareMenuBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuSquareMenuBar"
 	end
 
-	frozen kThemeMenuActive: INTEGER is
+	frozen kThemeMenuActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuActive"
 	end
 
-	frozen kThemeMenuSelected: INTEGER is
+	frozen kThemeMenuSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuSelected"
 	end
 
-	frozen kThemeMenuDisabled: INTEGER is
+	frozen kThemeMenuDisabled: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuDisabled"
 	end
 
-	frozen kThemeMenuTypePullDown: INTEGER is
+	frozen kThemeMenuTypePullDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuTypePullDown"
 	end
 
-	frozen kThemeMenuTypePopUp: INTEGER is
+	frozen kThemeMenuTypePopUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuTypePopUp"
 	end
 
-	frozen kThemeMenuTypeHierarchical: INTEGER is
+	frozen kThemeMenuTypeHierarchical: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuTypeHierarchical"
 	end
 
-	frozen kThemeMenuTypeInactive: INTEGER is
+	frozen kThemeMenuTypeInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuTypeInactive"
 	end
 
-	frozen kThemeMenuItemPlain: INTEGER is
+	frozen kThemeMenuItemPlain: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuItemPlain"
 	end
 
-	frozen kThemeMenuItemHierarchical: INTEGER is
+	frozen kThemeMenuItemHierarchical: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuItemHierarchical"
 	end
 
-	frozen kThemeMenuItemScrollUpArrow: INTEGER is
+	frozen kThemeMenuItemScrollUpArrow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuItemScrollUpArrow"
 	end
 
-	frozen kThemeMenuItemScrollDownArrow: INTEGER is
+	frozen kThemeMenuItemScrollDownArrow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuItemScrollDownArrow"
 	end
 
-	frozen kThemeMenuItemAtTop: INTEGER is
+	frozen kThemeMenuItemAtTop: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuItemAtTop"
 	end
 
-	frozen kThemeMenuItemAtBottom: INTEGER is
+	frozen kThemeMenuItemAtBottom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuItemAtBottom"
 	end
 
-	frozen kThemeMenuItemHierBackground: INTEGER is
+	frozen kThemeMenuItemHierBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuItemHierBackground"
 	end
 
-	frozen kThemeMenuItemPopUpBackground: INTEGER is
+	frozen kThemeMenuItemPopUpBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuItemPopUpBackground"
 	end
 
-	frozen kThemeMenuItemHasIcon: INTEGER is
+	frozen kThemeMenuItemHasIcon: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuItemHasIcon"
 	end
 
-	frozen kThemeMenuItemNoBackground: INTEGER is
+	frozen kThemeMenuItemNoBackground: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuItemNoBackground"
 	end
 
-	frozen kThemeBackgroundTabPane: INTEGER is
+	frozen kThemeBackgroundTabPane: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBackgroundTabPane"
 	end
 
-	frozen kThemeBackgroundPlacard: INTEGER is
+	frozen kThemeBackgroundPlacard: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBackgroundPlacard"
 	end
 
-	frozen kThemeBackgroundWindowHeader: INTEGER is
+	frozen kThemeBackgroundWindowHeader: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBackgroundWindowHeader"
 	end
 
-	frozen kThemeBackgroundListViewWindowHeader: INTEGER is
+	frozen kThemeBackgroundListViewWindowHeader: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBackgroundListViewWindowHeader"
 	end
 
-	frozen kThemeBackgroundSecondaryGroupBox: INTEGER is
+	frozen kThemeBackgroundSecondaryGroupBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBackgroundSecondaryGroupBox"
 	end
 
-	frozen kThemeBackgroundMetal: INTEGER is
+	frozen kThemeBackgroundMetal: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBackgroundMetal"
 	end
 
-	frozen kThemeNameTag: INTEGER is
+	frozen kThemeNameTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeNameTag"
 	end
 
-	frozen kThemeVariantNameTag: INTEGER is
+	frozen kThemeVariantNameTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeVariantNameTag"
 	end
 
-	frozen kThemeVariantBaseTintTag: INTEGER is
+	frozen kThemeVariantBaseTintTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeVariantBaseTintTag"
 	end
 
-	frozen kThemeHighlightColorTag: INTEGER is
+	frozen kThemeHighlightColorTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeHighlightColorTag"
 	end
 
-	frozen kThemeScrollBarArrowStyleTag: INTEGER is
+	frozen kThemeScrollBarArrowStyleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeScrollBarArrowStyleTag"
 	end
 
-	frozen kThemeScrollBarThumbStyleTag: INTEGER is
+	frozen kThemeScrollBarThumbStyleTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeScrollBarThumbStyleTag"
 	end
 
-	frozen kThemeSoundsEnabledTag: INTEGER is
+	frozen kThemeSoundsEnabledTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundsEnabledTag"
 	end
 
-	frozen kThemeDblClickCollapseTag: INTEGER is
+	frozen kThemeDblClickCollapseTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDblClickCollapseTag"
 	end
 
-	frozen kThemeAppearanceFileNameTag: INTEGER is
+	frozen kThemeAppearanceFileNameTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAppearanceFileNameTag"
 	end
 
-	frozen kThemeSystemFontTag: INTEGER is
+	frozen kThemeSystemFontTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSystemFontTag"
 	end
 
-	frozen kThemeSmallSystemFontTag: INTEGER is
+	frozen kThemeSmallSystemFontTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSmallSystemFontTag"
 	end
 
-	frozen kThemeViewsFontTag: INTEGER is
+	frozen kThemeViewsFontTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeViewsFontTag"
 	end
 
-	frozen kThemeViewsFontSizeTag: INTEGER is
+	frozen kThemeViewsFontSizeTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeViewsFontSizeTag"
 	end
 
-	frozen kThemeDesktopPatternNameTag: INTEGER is
+	frozen kThemeDesktopPatternNameTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDesktopPatternNameTag"
 	end
 
-	frozen kThemeDesktopPatternTag: INTEGER is
+	frozen kThemeDesktopPatternTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDesktopPatternTag"
 	end
 
-	frozen kThemeDesktopPictureNameTag: INTEGER is
+	frozen kThemeDesktopPictureNameTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDesktopPictureNameTag"
 	end
 
-	frozen kThemeDesktopPictureAliasTag: INTEGER is
+	frozen kThemeDesktopPictureAliasTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDesktopPictureAliasTag"
 	end
 
-	frozen kThemeDesktopPictureAlignmentTag: INTEGER is
+	frozen kThemeDesktopPictureAlignmentTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDesktopPictureAlignmentTag"
 	end
 
-	frozen kThemeHighlightColorNameTag: INTEGER is
+	frozen kThemeHighlightColorNameTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeHighlightColorNameTag"
 	end
 
-	frozen kThemeExamplePictureIDTag: INTEGER is
+	frozen kThemeExamplePictureIDTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeExamplePictureIDTag"
 	end
 
-	frozen kThemeSoundTrackNameTag: INTEGER is
+	frozen kThemeSoundTrackNameTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundTrackNameTag"
 	end
 
-	frozen kThemeSoundMaskTag: INTEGER is
+	frozen kThemeSoundMaskTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundMaskTag"
 	end
 
-	frozen kThemeUserDefinedTag: INTEGER is
+	frozen kThemeUserDefinedTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeUserDefinedTag"
 	end
 
-	frozen kThemeSmoothFontEnabledTag: INTEGER is
+	frozen kThemeSmoothFontEnabledTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSmoothFontEnabledTag"
 	end
 
-	frozen kThemeSmoothFontMinSizeTag: INTEGER is
+	frozen kThemeSmoothFontMinSizeTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSmoothFontMinSizeTag"
 	end
 
-	frozen kTiledOnScreen: INTEGER is
+	frozen kTiledOnScreen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kTiledOnScreen"
 	end
 
-	frozen kCenterOnScreen: INTEGER is
+	frozen kCenterOnScreen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kCenterOnScreen"
 	end
 
-	frozen kFitToScreen: INTEGER is
+	frozen kFitToScreen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kFitToScreen"
 	end
 
-	frozen kFillScreen: INTEGER is
+	frozen kFillScreen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kFillScreen"
 	end
 
-	frozen kUseBestGuess: INTEGER is
+	frozen kUseBestGuess: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kUseBestGuess"
 	end
 
-	frozen kThemeCheckBoxClassicX: INTEGER is
+	frozen kThemeCheckBoxClassicX: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeCheckBoxClassicX"
 	end
 
-	frozen kThemeCheckBoxCheckMark: INTEGER is
+	frozen kThemeCheckBoxCheckMark: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeCheckBoxCheckMark"
 	end
 
-	frozen kThemeScrollBarArrowsSingle: INTEGER is
+	frozen kThemeScrollBarArrowsSingle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeScrollBarArrowsSingle"
 	end
 
-	frozen kThemeScrollBarArrowsLowerRight: INTEGER is
+	frozen kThemeScrollBarArrowsLowerRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeScrollBarArrowsLowerRight"
 	end
 
-	frozen kThemeScrollBarThumbNormal: INTEGER is
+	frozen kThemeScrollBarThumbNormal: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeScrollBarThumbNormal"
 	end
 
-	frozen kThemeScrollBarThumbProportional: INTEGER is
+	frozen kThemeScrollBarThumbProportional: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeScrollBarThumbProportional"
 	end
 
-	frozen kThemeSystemFont: INTEGER is
+	frozen kThemeSystemFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSystemFont"
 	end
 
-	frozen kThemeSmallSystemFont: INTEGER is
+	frozen kThemeSmallSystemFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSmallSystemFont"
 	end
 
-	frozen kThemeSmallEmphasizedSystemFont: INTEGER is
+	frozen kThemeSmallEmphasizedSystemFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSmallEmphasizedSystemFont"
 	end
 
-	frozen kThemeViewsFont: INTEGER is
+	frozen kThemeViewsFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeViewsFont"
 	end
 
-	frozen kThemeEmphasizedSystemFont: INTEGER is
+	frozen kThemeEmphasizedSystemFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeEmphasizedSystemFont"
 	end
 
-	frozen kThemeApplicationFont: INTEGER is
+	frozen kThemeApplicationFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeApplicationFont"
 	end
 
-	frozen kThemeLabelFont: INTEGER is
+	frozen kThemeLabelFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeLabelFont"
 	end
 
-	frozen kThemeMenuTitleFont: INTEGER is
+	frozen kThemeMenuTitleFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuTitleFont"
 	end
 
-	frozen kThemeMenuItemFont: INTEGER is
+	frozen kThemeMenuItemFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuItemFont"
 	end
 
-	frozen kThemeMenuItemMarkFont: INTEGER is
+	frozen kThemeMenuItemMarkFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuItemMarkFont"
 	end
 
-	frozen kThemeMenuItemCmdKeyFont: INTEGER is
+	frozen kThemeMenuItemCmdKeyFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuItemCmdKeyFont"
 	end
 
-	frozen kThemeWindowTitleFont: INTEGER is
+	frozen kThemeWindowTitleFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWindowTitleFont"
 	end
 
-	frozen kThemePushButtonFont: INTEGER is
+	frozen kThemePushButtonFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePushButtonFont"
 	end
 
-	frozen kThemeUtilityWindowTitleFont: INTEGER is
+	frozen kThemeUtilityWindowTitleFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeUtilityWindowTitleFont"
 	end
 
-	frozen kThemeAlertHeaderFont: INTEGER is
+	frozen kThemeAlertHeaderFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAlertHeaderFont"
 	end
 
-	frozen kThemeSystemFontDetail: INTEGER is
+	frozen kThemeSystemFontDetail: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSystemFontDetail"
 	end
 
-	frozen kThemeSystemFontDetailEmphasized: INTEGER is
+	frozen kThemeSystemFontDetailEmphasized: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSystemFontDetailEmphasized"
 	end
 
-	frozen kThemeCurrentPortFont: INTEGER is
+	frozen kThemeCurrentPortFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeCurrentPortFont"
 	end
 
-	frozen kThemeToolbarFont: INTEGER is
+	frozen kThemeToolbarFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeToolbarFont"
 	end
 
-	frozen kThemeMiniSystemFont: INTEGER is
+	frozen kThemeMiniSystemFont: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMiniSystemFont"
 	end
 
-	frozen kPublicThemeFontCount: INTEGER is
+	frozen kPublicThemeFontCount: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kPublicThemeFontCount"
 	end
 
-	frozen kThemeTabNonFront: INTEGER is
+	frozen kThemeTabNonFront: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTabNonFront"
 	end
 
-	frozen kThemeTabNonFrontPressed: INTEGER is
+	frozen kThemeTabNonFrontPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTabNonFrontPressed"
 	end
 
-	frozen kThemeTabNonFrontInactive: INTEGER is
+	frozen kThemeTabNonFrontInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTabNonFrontInactive"
 	end
 
-	frozen kThemeTabFront: INTEGER is
+	frozen kThemeTabFront: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTabFront"
 	end
 
-	frozen kThemeTabFrontInactive: INTEGER is
+	frozen kThemeTabFrontInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTabFrontInactive"
 	end
 
-	frozen kThemeTabNonFrontUnavailable: INTEGER is
+	frozen kThemeTabNonFrontUnavailable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTabNonFrontUnavailable"
 	end
 
-	frozen kThemeTabFrontUnavailable: INTEGER is
+	frozen kThemeTabFrontUnavailable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTabFrontUnavailable"
 	end
 
-	frozen kThemeTabNorth: INTEGER is
+	frozen kThemeTabNorth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTabNorth"
 	end
 
-	frozen kThemeTabSouth: INTEGER is
+	frozen kThemeTabSouth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTabSouth"
 	end
 
-	frozen kThemeTabEast: INTEGER is
+	frozen kThemeTabEast: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTabEast"
 	end
 
-	frozen kThemeTabWest: INTEGER is
+	frozen kThemeTabWest: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTabWest"
 	end
 
-	frozen kThemeSmallTabHeight: INTEGER is
+	frozen kThemeSmallTabHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSmallTabHeight"
 	end
 
-	frozen kThemeLargeTabHeight: INTEGER is
+	frozen kThemeLargeTabHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeLargeTabHeight"
 	end
 
-	frozen kThemeTabPaneOverlap: INTEGER is
+	frozen kThemeTabPaneOverlap: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTabPaneOverlap"
 	end
 
-	frozen kThemeSmallTabHeightMax: INTEGER is
+	frozen kThemeSmallTabHeightMax: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSmallTabHeightMax"
 	end
 
-	frozen kThemeLargeTabHeightMax: INTEGER is
+	frozen kThemeLargeTabHeightMax: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeLargeTabHeightMax"
 	end
 
-	frozen kThemeScrollBarMedium: INTEGER is
+	frozen kThemeScrollBarMedium: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeScrollBarMedium"
 	end
 
-	frozen kThemeScrollBarSmall: INTEGER is
+	frozen kThemeScrollBarSmall: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeScrollBarSmall"
 	end
 
-	frozen kThemeSliderMedium: INTEGER is
+	frozen kThemeSliderMedium: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSliderMedium"
 	end
 
-	frozen kThemeProgressBarMedium: INTEGER is
+	frozen kThemeProgressBarMedium: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeProgressBarMedium"
 	end
 
-	frozen kThemeIndeterminateBarMedium: INTEGER is
+	frozen kThemeIndeterminateBarMedium: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeIndeterminateBarMedium"
 	end
 
-	frozen kThemeRelevanceBar: INTEGER is
+	frozen kThemeRelevanceBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeRelevanceBar"
 	end
 
-	frozen kThemeSliderSmall: INTEGER is
+	frozen kThemeSliderSmall: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSliderSmall"
 	end
 
-	frozen kThemeProgressBarLarge: INTEGER is
+	frozen kThemeProgressBarLarge: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeProgressBarLarge"
 	end
 
-	frozen kThemeIndeterminateBarLarge: INTEGER is
+	frozen kThemeIndeterminateBarLarge: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeIndeterminateBarLarge"
 	end
 
-	frozen kThemeScrollBarMini: INTEGER is
+	frozen kThemeScrollBarMini: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeScrollBarMini"
 	end
 
-	frozen kThemeSliderMini: INTEGER is
+	frozen kThemeSliderMini: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSliderMini"
 	end
 
-	frozen kThemeProgressBarMini: INTEGER is
+	frozen kThemeProgressBarMini: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeProgressBarMini"
 	end
 
-	frozen kThemeIndeterminateBarMini: INTEGER is
+	frozen kThemeIndeterminateBarMini: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeIndeterminateBarMini"
 	end
 
-	frozen kThemeMediumScrollBar: INTEGER is
+	frozen kThemeMediumScrollBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMediumScrollBar"
 	end
 
-	frozen kThemeSmallScrollBar: INTEGER is
+	frozen kThemeSmallScrollBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSmallScrollBar"
 	end
 
-	frozen kThemeMediumSlider: INTEGER is
+	frozen kThemeMediumSlider: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMediumSlider"
 	end
 
-	frozen kThemeMediumProgressBar: INTEGER is
+	frozen kThemeMediumProgressBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMediumProgressBar"
 	end
 
-	frozen kThemeMediumIndeterminateBar: INTEGER is
+	frozen kThemeMediumIndeterminateBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMediumIndeterminateBar"
 	end
 
-	frozen kThemeSmallSlider: INTEGER is
+	frozen kThemeSmallSlider: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSmallSlider"
 	end
 
-	frozen kThemeLargeProgressBar: INTEGER is
+	frozen kThemeLargeProgressBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeLargeProgressBar"
 	end
 
-	frozen kThemeLargeIndeterminateBar: INTEGER is
+	frozen kThemeLargeIndeterminateBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeLargeIndeterminateBar"
 	end
 
-	frozen kThemeMiniScrollBar: INTEGER is
+	frozen kThemeMiniScrollBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMiniScrollBar"
 	end
 
-	frozen kThemeMiniSlider: INTEGER is
+	frozen kThemeMiniSlider: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMiniSlider"
 	end
 
-	frozen kThemeMiniProgressBar: INTEGER is
+	frozen kThemeMiniProgressBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMiniProgressBar"
 	end
 
-	frozen kThemeMiniIndeterminateBar: INTEGER is
+	frozen kThemeMiniIndeterminateBar: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMiniIndeterminateBar"
 	end
 
-	frozen kThemeTrackActive: INTEGER is
+	frozen kThemeTrackActive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTrackActive"
 	end
 
-	frozen kThemeTrackDisabled: INTEGER is
+	frozen kThemeTrackDisabled: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTrackDisabled"
 	end
 
-	frozen kThemeTrackNothingToScroll: INTEGER is
+	frozen kThemeTrackNothingToScroll: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTrackNothingToScroll"
 	end
 
-	frozen kThemeTrackInactive: INTEGER is
+	frozen kThemeTrackInactive: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTrackInactive"
 	end
 
-	frozen kThemeLeftOutsideArrowPressed: INTEGER is
+	frozen kThemeLeftOutsideArrowPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeLeftOutsideArrowPressed"
 	end
 
-	frozen kThemeLeftInsideArrowPressed: INTEGER is
+	frozen kThemeLeftInsideArrowPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeLeftInsideArrowPressed"
 	end
 
-	frozen kThemeLeftTrackPressed: INTEGER is
+	frozen kThemeLeftTrackPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeLeftTrackPressed"
 	end
 
-	frozen kThemeThumbPressed: INTEGER is
+	frozen kThemeThumbPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeThumbPressed"
 	end
 
-	frozen kThemeRightTrackPressed: INTEGER is
+	frozen kThemeRightTrackPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeRightTrackPressed"
 	end
 
-	frozen kThemeRightInsideArrowPressed: INTEGER is
+	frozen kThemeRightInsideArrowPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeRightInsideArrowPressed"
 	end
 
-	frozen kThemeRightOutsideArrowPressed: INTEGER is
+	frozen kThemeRightOutsideArrowPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeRightOutsideArrowPressed"
 	end
 
-	frozen kThemeTopOutsideArrowPressed: INTEGER is
+	frozen kThemeTopOutsideArrowPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTopOutsideArrowPressed"
 	end
 
-	frozen kThemeTopInsideArrowPressed: INTEGER is
+	frozen kThemeTopInsideArrowPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTopInsideArrowPressed"
 	end
 
-	frozen kThemeTopTrackPressed: INTEGER is
+	frozen kThemeTopTrackPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTopTrackPressed"
 	end
 
-	frozen kThemeBottomTrackPressed: INTEGER is
+	frozen kThemeBottomTrackPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBottomTrackPressed"
 	end
 
-	frozen kThemeBottomInsideArrowPressed: INTEGER is
+	frozen kThemeBottomInsideArrowPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBottomInsideArrowPressed"
 	end
 
-	frozen kThemeBottomOutsideArrowPressed: INTEGER is
+	frozen kThemeBottomOutsideArrowPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBottomOutsideArrowPressed"
 	end
 
-	frozen kThemeThumbPlain: INTEGER is
+	frozen kThemeThumbPlain: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeThumbPlain"
 	end
 
-	frozen kThemeThumbUpward: INTEGER is
+	frozen kThemeThumbUpward: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeThumbUpward"
 	end
 
-	frozen kThemeThumbDownward: INTEGER is
+	frozen kThemeThumbDownward: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeThumbDownward"
 	end
 
-	frozen kThemeTrackHorizontal: INTEGER is
+	frozen kThemeTrackHorizontal: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTrackHorizontal"
 	end
 
-	frozen kThemeTrackRightToLeft: INTEGER is
+	frozen kThemeTrackRightToLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTrackRightToLeft"
 	end
 
-	frozen kThemeTrackShowThumb: INTEGER is
+	frozen kThemeTrackShowThumb: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTrackShowThumb"
 	end
 
-	frozen kThemeTrackThumbRgnIsNotGhost: INTEGER is
+	frozen kThemeTrackThumbRgnIsNotGhost: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTrackThumbRgnIsNotGhost"
 	end
 
-	frozen kThemeTrackNoScrollBarArrows: INTEGER is
+	frozen kThemeTrackNoScrollBarArrows: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTrackNoScrollBarArrows"
 	end
 
-	frozen kThemeTrackHasFocus: INTEGER is
+	frozen kThemeTrackHasFocus: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeTrackHasFocus"
 	end
 
-	frozen kThemeWindowHasGrow: INTEGER is
+	frozen kThemeWindowHasGrow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWindowHasGrow"
 	end
 
-	frozen kThemeWindowHasHorizontalZoom: INTEGER is
+	frozen kThemeWindowHasHorizontalZoom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWindowHasHorizontalZoom"
 	end
 
-	frozen kThemeWindowHasVerticalZoom: INTEGER is
+	frozen kThemeWindowHasVerticalZoom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWindowHasVerticalZoom"
 	end
 
-	frozen kThemeWindowHasFullZoom: INTEGER is
+	frozen kThemeWindowHasFullZoom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWindowHasFullZoom"
 	end
 
-	frozen kThemeWindowHasCloseBox: INTEGER is
+	frozen kThemeWindowHasCloseBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWindowHasCloseBox"
 	end
 
-	frozen kThemeWindowHasCollapseBox: INTEGER is
+	frozen kThemeWindowHasCollapseBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWindowHasCollapseBox"
 	end
 
-	frozen kThemeWindowHasTitleText: INTEGER is
+	frozen kThemeWindowHasTitleText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWindowHasTitleText"
 	end
 
-	frozen kThemeWindowIsCollapsed: INTEGER is
+	frozen kThemeWindowIsCollapsed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWindowIsCollapsed"
 	end
 
-	frozen kThemeWindowHasDirty: INTEGER is
+	frozen kThemeWindowHasDirty: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWindowHasDirty"
 	end
 
-	frozen kThemeWindowHasToolbarButton: INTEGER is
+	frozen kThemeWindowHasToolbarButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWindowHasToolbarButton"
 	end
 
-	frozen kThemeDocumentWindow: INTEGER is
+	frozen kThemeDocumentWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDocumentWindow"
 	end
 
-	frozen kThemeDialogWindow: INTEGER is
+	frozen kThemeDialogWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDialogWindow"
 	end
 
-	frozen kThemeMovableDialogWindow: INTEGER is
+	frozen kThemeMovableDialogWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMovableDialogWindow"
 	end
 
-	frozen kThemeAlertWindow: INTEGER is
+	frozen kThemeAlertWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAlertWindow"
 	end
 
-	frozen kThemeMovableAlertWindow: INTEGER is
+	frozen kThemeMovableAlertWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMovableAlertWindow"
 	end
 
-	frozen kThemePlainDialogWindow: INTEGER is
+	frozen kThemePlainDialogWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePlainDialogWindow"
 	end
 
-	frozen kThemeShadowDialogWindow: INTEGER is
+	frozen kThemeShadowDialogWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeShadowDialogWindow"
 	end
 
-	frozen kThemePopupWindow: INTEGER is
+	frozen kThemePopupWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePopupWindow"
 	end
 
-	frozen kThemeUtilityWindow: INTEGER is
+	frozen kThemeUtilityWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeUtilityWindow"
 	end
 
-	frozen kThemeUtilitySideWindow: INTEGER is
+	frozen kThemeUtilitySideWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeUtilitySideWindow"
 	end
 
-	frozen kThemeSheetWindow: INTEGER is
+	frozen kThemeSheetWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSheetWindow"
 	end
 
-	frozen kThemeDrawerWindow: INTEGER is
+	frozen kThemeDrawerWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDrawerWindow"
 	end
 
-	frozen kThemeWidgetCloseBox: INTEGER is
+	frozen kThemeWidgetCloseBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWidgetCloseBox"
 	end
 
-	frozen kThemeWidgetZoomBox: INTEGER is
+	frozen kThemeWidgetZoomBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWidgetZoomBox"
 	end
 
-	frozen kThemeWidgetCollapseBox: INTEGER is
+	frozen kThemeWidgetCollapseBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWidgetCollapseBox"
 	end
 
-	frozen kThemeWidgetDirtyCloseBox: INTEGER is
+	frozen kThemeWidgetDirtyCloseBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWidgetDirtyCloseBox"
 	end
 
-	frozen kThemeWidgetABox: INTEGER is
+	frozen kThemeWidgetABox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWidgetABox"
 	end
 
-	frozen kThemeWidgetBBox: INTEGER is
+	frozen kThemeWidgetBBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWidgetBBox"
 	end
 
-	frozen kThemeWidgetBOffBox: INTEGER is
+	frozen kThemeWidgetBOffBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWidgetBOffBox"
 	end
 
-	frozen kThemeArrowLeft: INTEGER is
+	frozen kThemeArrowLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeArrowLeft"
 	end
 
-	frozen kThemeArrowDown: INTEGER is
+	frozen kThemeArrowDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeArrowDown"
 	end
 
-	frozen kThemeArrowRight: INTEGER is
+	frozen kThemeArrowRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeArrowRight"
 	end
 
-	frozen kThemeArrowUp: INTEGER is
+	frozen kThemeArrowUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeArrowUp"
 	end
 
-	frozen kThemeArrow3pt: INTEGER is
+	frozen kThemeArrow3pt: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeArrow3pt"
 	end
 
-	frozen kThemeArrow5pt: INTEGER is
+	frozen kThemeArrow5pt: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeArrow5pt"
 	end
 
-	frozen kThemeArrow7pt: INTEGER is
+	frozen kThemeArrow7pt: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeArrow7pt"
 	end
 
-	frozen kThemeArrow9pt: INTEGER is
+	frozen kThemeArrow9pt: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeArrow9pt"
 	end
 
-	frozen kThemeGrowLeft: INTEGER is
+	frozen kThemeGrowLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeGrowLeft"
 	end
 
-	frozen kThemeGrowRight: INTEGER is
+	frozen kThemeGrowRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeGrowRight"
 	end
 
-	frozen kThemeGrowUp: INTEGER is
+	frozen kThemeGrowUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeGrowUp"
 	end
 
-	frozen kThemeGrowDown: INTEGER is
+	frozen kThemeGrowDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeGrowDown"
 	end
 
-	frozen kThemePushButton: INTEGER is
+	frozen kThemePushButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePushButton"
 	end
 
-	frozen kThemeCheckBox: INTEGER is
+	frozen kThemeCheckBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeCheckBox"
 	end
 
-	frozen kThemeRadioButton: INTEGER is
+	frozen kThemeRadioButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeRadioButton"
 	end
 
-	frozen kThemeBevelButton: INTEGER is
+	frozen kThemeBevelButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBevelButton"
 	end
 
-	frozen kThemeArrowButton: INTEGER is
+	frozen kThemeArrowButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeArrowButton"
 	end
 
-	frozen kThemePopupButton: INTEGER is
+	frozen kThemePopupButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePopupButton"
 	end
 
-	frozen kThemeDisclosureTriangle: INTEGER is
+	frozen kThemeDisclosureTriangle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDisclosureTriangle"
 	end
 
-	frozen kThemeIncDecButton: INTEGER is
+	frozen kThemeIncDecButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeIncDecButton"
 	end
 
-	frozen kThemeBevelButtonSmall: INTEGER is
+	frozen kThemeBevelButtonSmall: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBevelButtonSmall"
 	end
 
-	frozen kThemeBevelButtonMedium: INTEGER is
+	frozen kThemeBevelButtonMedium: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBevelButtonMedium"
 	end
 
-	frozen kThemeBevelButtonLarge: INTEGER is
+	frozen kThemeBevelButtonLarge: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBevelButtonLarge"
 	end
 
-	frozen kThemeListHeaderButton: INTEGER is
+	frozen kThemeListHeaderButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeListHeaderButton"
 	end
 
-	frozen kThemeRoundButton: INTEGER is
+	frozen kThemeRoundButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeRoundButton"
 	end
 
-	frozen kThemeRoundButtonLarge: INTEGER is
+	frozen kThemeRoundButtonLarge: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeRoundButtonLarge"
 	end
 
-	frozen kThemeCheckBoxSmall: INTEGER is
+	frozen kThemeCheckBoxSmall: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeCheckBoxSmall"
 	end
 
-	frozen kThemeRadioButtonSmall: INTEGER is
+	frozen kThemeRadioButtonSmall: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeRadioButtonSmall"
 	end
 
-	frozen kThemeRoundedBevelButton: INTEGER is
+	frozen kThemeRoundedBevelButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeRoundedBevelButton"
 	end
 
-	frozen kThemeComboBox: INTEGER is
+	frozen kThemeComboBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeComboBox"
 	end
 
-	frozen kThemeComboBoxSmall: INTEGER is
+	frozen kThemeComboBoxSmall: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeComboBoxSmall"
 	end
 
-	frozen kThemeComboBoxMini: INTEGER is
+	frozen kThemeComboBoxMini: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeComboBoxMini"
 	end
 
-	frozen kThemeCheckBoxMini: INTEGER is
+	frozen kThemeCheckBoxMini: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeCheckBoxMini"
 	end
 
-	frozen kThemeRadioButtonMini: INTEGER is
+	frozen kThemeRadioButtonMini: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeRadioButtonMini"
 	end
 
-	frozen kThemeIncDecButtonSmall: INTEGER is
+	frozen kThemeIncDecButtonSmall: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeIncDecButtonSmall"
 	end
 
-	frozen kThemeIncDecButtonMini: INTEGER is
+	frozen kThemeIncDecButtonMini: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeIncDecButtonMini"
 	end
 
-	frozen kThemeArrowButtonSmall: INTEGER is
+	frozen kThemeArrowButtonSmall: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeArrowButtonSmall"
 	end
 
-	frozen kThemeArrowButtonMini: INTEGER is
+	frozen kThemeArrowButtonMini: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeArrowButtonMini"
 	end
 
-	frozen kThemePushButtonNormal: INTEGER is
+	frozen kThemePushButtonNormal: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePushButtonNormal"
 	end
 
-	frozen kThemePushButtonSmall: INTEGER is
+	frozen kThemePushButtonSmall: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePushButtonSmall"
 	end
 
-	frozen kThemePushButtonMini: INTEGER is
+	frozen kThemePushButtonMini: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePushButtonMini"
 	end
 
-	frozen kThemePopupButtonNormal: INTEGER is
+	frozen kThemePopupButtonNormal: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePopupButtonNormal"
 	end
 
-	frozen kThemePopupButtonSmall: INTEGER is
+	frozen kThemePopupButtonSmall: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePopupButtonSmall"
 	end
 
-	frozen kThemePopupButtonMini: INTEGER is
+	frozen kThemePopupButtonMini: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePopupButtonMini"
 	end
 
-	frozen kThemeBevelButtonInset: INTEGER is
+	frozen kThemeBevelButtonInset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeBevelButtonInset"
 	end
 
-	frozen kThemePushButtonInset: INTEGER is
+	frozen kThemePushButtonInset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePushButtonInset"
 	end
 
-	frozen kThemePushButtonInsetSmall: INTEGER is
+	frozen kThemePushButtonInsetSmall: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePushButtonInsetSmall"
 	end
 
-	frozen kThemeRoundButtonHelp: INTEGER is
+	frozen kThemeRoundButtonHelp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeRoundButtonHelp"
 	end
 
-	frozen kThemeNormalCheckBox: INTEGER is
+	frozen kThemeNormalCheckBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeNormalCheckBox"
 	end
 
-	frozen kThemeNormalRadioButton: INTEGER is
+	frozen kThemeNormalRadioButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeNormalRadioButton"
 	end
 
-	frozen kThemeLargeBevelButton: INTEGER is
+	frozen kThemeLargeBevelButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeLargeBevelButton"
 	end
 
-	frozen kThemeMediumBevelButton: INTEGER is
+	frozen kThemeMediumBevelButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMediumBevelButton"
 	end
 
-	frozen kThemeMiniCheckBox: INTEGER is
+	frozen kThemeMiniCheckBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMiniCheckBox"
 	end
 
-	frozen kThemeMiniRadioButton: INTEGER is
+	frozen kThemeMiniRadioButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMiniRadioButton"
 	end
 
-	frozen kThemeSmallBevelButton: INTEGER is
+	frozen kThemeSmallBevelButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSmallBevelButton"
 	end
 
-	frozen kThemeSmallCheckBox: INTEGER is
+	frozen kThemeSmallCheckBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSmallCheckBox"
 	end
 
-	frozen kThemeSmallRadioButton: INTEGER is
+	frozen kThemeSmallRadioButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSmallRadioButton"
 	end
 
-	frozen kThemeLargeRoundButton: INTEGER is
+	frozen kThemeLargeRoundButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeLargeRoundButton"
 	end
 
-	frozen kThemeDisclosureButton: INTEGER is
+	frozen kThemeDisclosureButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDisclosureButton"
 	end
 
-	frozen kThemeButtonOff: INTEGER is
+	frozen kThemeButtonOff: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeButtonOff"
 	end
 
-	frozen kThemeButtonOn: INTEGER is
+	frozen kThemeButtonOn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeButtonOn"
 	end
 
-	frozen kThemeButtonMixed: INTEGER is
+	frozen kThemeButtonMixed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeButtonMixed"
 	end
 
-	frozen kThemeDisclosureRight: INTEGER is
+	frozen kThemeDisclosureRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDisclosureRight"
 	end
 
-	frozen kThemeDisclosureDown: INTEGER is
+	frozen kThemeDisclosureDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDisclosureDown"
 	end
 
-	frozen kThemeDisclosureLeft: INTEGER is
+	frozen kThemeDisclosureLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDisclosureLeft"
 	end
 
-	frozen kThemeAdornmentNone: INTEGER is
+	frozen kThemeAdornmentNone: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentNone"
 	end
 
-	frozen kThemeAdornmentDefault: INTEGER is
+	frozen kThemeAdornmentDefault: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentDefault"
 	end
 
-	frozen kThemeAdornmentFocus: INTEGER is
+	frozen kThemeAdornmentFocus: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentFocus"
 	end
 
-	frozen kThemeAdornmentRightToLeft: INTEGER is
+	frozen kThemeAdornmentRightToLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentRightToLeft"
 	end
 
-	frozen kThemeAdornmentDrawIndicatorOnly: INTEGER is
+	frozen kThemeAdornmentDrawIndicatorOnly: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentDrawIndicatorOnly"
 	end
 
-	frozen kThemeAdornmentHeaderButtonLeftNeighborSelected: INTEGER is
+	frozen kThemeAdornmentHeaderButtonLeftNeighborSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentHeaderButtonLeftNeighborSelected"
 	end
 
-	frozen kThemeAdornmentHeaderButtonRightNeighborSelected: INTEGER is
+	frozen kThemeAdornmentHeaderButtonRightNeighborSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentHeaderButtonRightNeighborSelected"
 	end
 
-	frozen kThemeAdornmentHeaderButtonSortUp: INTEGER is
+	frozen kThemeAdornmentHeaderButtonSortUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentHeaderButtonSortUp"
 	end
 
-	frozen kThemeAdornmentHeaderMenuButton: INTEGER is
+	frozen kThemeAdornmentHeaderMenuButton: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentHeaderMenuButton"
 	end
 
-	frozen kThemeAdornmentHeaderButtonNoShadow: INTEGER is
+	frozen kThemeAdornmentHeaderButtonNoShadow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentHeaderButtonNoShadow"
 	end
 
-	frozen kThemeAdornmentHeaderButtonShadowOnly: INTEGER is
+	frozen kThemeAdornmentHeaderButtonShadowOnly: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentHeaderButtonShadowOnly"
 	end
 
-	frozen kThemeAdornmentHeaderButtonNoSortArrow: INTEGER is
+	frozen kThemeAdornmentHeaderButtonNoSortArrow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentHeaderButtonNoSortArrow"
 	end
 
-	frozen kThemeAdornmentArrowLeftArrow: INTEGER is
+	frozen kThemeAdornmentArrowLeftArrow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentArrowLeftArrow"
 	end
 
-	frozen kThemeAdornmentArrowDownArrow: INTEGER is
+	frozen kThemeAdornmentArrowDownArrow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentArrowDownArrow"
 	end
 
-	frozen kThemeAdornmentArrowDoubleArrow: INTEGER is
+	frozen kThemeAdornmentArrowDoubleArrow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentArrowDoubleArrow"
 	end
 
-	frozen kThemeAdornmentArrowUpArrow: INTEGER is
+	frozen kThemeAdornmentArrowUpArrow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentArrowUpArrow"
 	end
 
-	frozen kThemeAdornmentNoShadow: INTEGER is
+	frozen kThemeAdornmentNoShadow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentNoShadow"
 	end
 
-	frozen kThemeAdornmentShadowOnly: INTEGER is
+	frozen kThemeAdornmentShadowOnly: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeAdornmentShadowOnly"
 	end
 
-	frozen kThemeNoSounds: INTEGER is
+	frozen kThemeNoSounds: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeNoSounds"
 	end
 
-	frozen kThemeWindowSoundsMask: INTEGER is
+	frozen kThemeWindowSoundsMask: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeWindowSoundsMask"
 	end
 
-	frozen kThemeMenuSoundsMask: INTEGER is
+	frozen kThemeMenuSoundsMask: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMenuSoundsMask"
 	end
 
-	frozen kThemeControlSoundsMask: INTEGER is
+	frozen kThemeControlSoundsMask: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeControlSoundsMask"
 	end
 
-	frozen kThemeFinderSoundsMask: INTEGER is
+	frozen kThemeFinderSoundsMask: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeFinderSoundsMask"
 	end
 
-	frozen kThemeDragSoundNone: INTEGER is
+	frozen kThemeDragSoundNone: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundNone"
 	end
 
-	frozen kThemeDragSoundMoveWindow: INTEGER is
+	frozen kThemeDragSoundMoveWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundMoveWindow"
 	end
 
-	frozen kThemeDragSoundGrowWindow: INTEGER is
+	frozen kThemeDragSoundGrowWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundGrowWindow"
 	end
 
-	frozen kThemeDragSoundMoveUtilWindow: INTEGER is
+	frozen kThemeDragSoundMoveUtilWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundMoveUtilWindow"
 	end
 
-	frozen kThemeDragSoundGrowUtilWindow: INTEGER is
+	frozen kThemeDragSoundGrowUtilWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundGrowUtilWindow"
 	end
 
-	frozen kThemeDragSoundMoveDialog: INTEGER is
+	frozen kThemeDragSoundMoveDialog: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundMoveDialog"
 	end
 
-	frozen kThemeDragSoundMoveAlert: INTEGER is
+	frozen kThemeDragSoundMoveAlert: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundMoveAlert"
 	end
 
-	frozen kThemeDragSoundMoveIcon: INTEGER is
+	frozen kThemeDragSoundMoveIcon: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundMoveIcon"
 	end
 
-	frozen kThemeDragSoundSliderThumb: INTEGER is
+	frozen kThemeDragSoundSliderThumb: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundSliderThumb"
 	end
 
-	frozen kThemeDragSoundSliderGhost: INTEGER is
+	frozen kThemeDragSoundSliderGhost: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundSliderGhost"
 	end
 
-	frozen kThemeDragSoundScrollBarThumb: INTEGER is
+	frozen kThemeDragSoundScrollBarThumb: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundScrollBarThumb"
 	end
 
-	frozen kThemeDragSoundScrollBarGhost: INTEGER is
+	frozen kThemeDragSoundScrollBarGhost: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundScrollBarGhost"
 	end
 
-	frozen kThemeDragSoundScrollBarArrowDecreasing: INTEGER is
+	frozen kThemeDragSoundScrollBarArrowDecreasing: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundScrollBarArrowDecreasing"
 	end
 
-	frozen kThemeDragSoundScrollBarArrowIncreasing: INTEGER is
+	frozen kThemeDragSoundScrollBarArrowIncreasing: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundScrollBarArrowIncreasing"
 	end
 
-	frozen kThemeDragSoundDragging: INTEGER is
+	frozen kThemeDragSoundDragging: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeDragSoundDragging"
 	end
 
-	frozen kThemeSoundNone: INTEGER is
+	frozen kThemeSoundNone: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundNone"
 	end
 
-	frozen kThemeSoundMenuOpen: INTEGER is
+	frozen kThemeSoundMenuOpen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundMenuOpen"
 	end
 
-	frozen kThemeSoundMenuClose: INTEGER is
+	frozen kThemeSoundMenuClose: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundMenuClose"
 	end
 
-	frozen kThemeSoundMenuItemHilite: INTEGER is
+	frozen kThemeSoundMenuItemHilite: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundMenuItemHilite"
 	end
 
-	frozen kThemeSoundMenuItemRelease: INTEGER is
+	frozen kThemeSoundMenuItemRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundMenuItemRelease"
 	end
 
-	frozen kThemeSoundWindowClosePress: INTEGER is
+	frozen kThemeSoundWindowClosePress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowClosePress"
 	end
 
-	frozen kThemeSoundWindowCloseEnter: INTEGER is
+	frozen kThemeSoundWindowCloseEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowCloseEnter"
 	end
 
-	frozen kThemeSoundWindowCloseExit: INTEGER is
+	frozen kThemeSoundWindowCloseExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowCloseExit"
 	end
 
-	frozen kThemeSoundWindowCloseRelease: INTEGER is
+	frozen kThemeSoundWindowCloseRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowCloseRelease"
 	end
 
-	frozen kThemeSoundWindowZoomPress: INTEGER is
+	frozen kThemeSoundWindowZoomPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowZoomPress"
 	end
 
-	frozen kThemeSoundWindowZoomEnter: INTEGER is
+	frozen kThemeSoundWindowZoomEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowZoomEnter"
 	end
 
-	frozen kThemeSoundWindowZoomExit: INTEGER is
+	frozen kThemeSoundWindowZoomExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowZoomExit"
 	end
 
-	frozen kThemeSoundWindowZoomRelease: INTEGER is
+	frozen kThemeSoundWindowZoomRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowZoomRelease"
 	end
 
-	frozen kThemeSoundWindowCollapsePress: INTEGER is
+	frozen kThemeSoundWindowCollapsePress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowCollapsePress"
 	end
 
-	frozen kThemeSoundWindowCollapseEnter: INTEGER is
+	frozen kThemeSoundWindowCollapseEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowCollapseEnter"
 	end
 
-	frozen kThemeSoundWindowCollapseExit: INTEGER is
+	frozen kThemeSoundWindowCollapseExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowCollapseExit"
 	end
 
-	frozen kThemeSoundWindowCollapseRelease: INTEGER is
+	frozen kThemeSoundWindowCollapseRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowCollapseRelease"
 	end
 
-	frozen kThemeSoundWindowDragBoundary: INTEGER is
+	frozen kThemeSoundWindowDragBoundary: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowDragBoundary"
 	end
 
-	frozen kThemeSoundUtilWinClosePress: INTEGER is
+	frozen kThemeSoundUtilWinClosePress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWinClosePress"
 	end
 
-	frozen kThemeSoundUtilWinCloseEnter: INTEGER is
+	frozen kThemeSoundUtilWinCloseEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWinCloseEnter"
 	end
 
-	frozen kThemeSoundUtilWinCloseExit: INTEGER is
+	frozen kThemeSoundUtilWinCloseExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWinCloseExit"
 	end
 
-	frozen kThemeSoundUtilWinCloseRelease: INTEGER is
+	frozen kThemeSoundUtilWinCloseRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWinCloseRelease"
 	end
 
-	frozen kThemeSoundUtilWinZoomPress: INTEGER is
+	frozen kThemeSoundUtilWinZoomPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWinZoomPress"
 	end
 
-	frozen kThemeSoundUtilWinZoomEnter: INTEGER is
+	frozen kThemeSoundUtilWinZoomEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWinZoomEnter"
 	end
 
-	frozen kThemeSoundUtilWinZoomExit: INTEGER is
+	frozen kThemeSoundUtilWinZoomExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWinZoomExit"
 	end
 
-	frozen kThemeSoundUtilWinZoomRelease: INTEGER is
+	frozen kThemeSoundUtilWinZoomRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWinZoomRelease"
 	end
 
-	frozen kThemeSoundUtilWinCollapsePress: INTEGER is
+	frozen kThemeSoundUtilWinCollapsePress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWinCollapsePress"
 	end
 
-	frozen kThemeSoundUtilWinCollapseEnter: INTEGER is
+	frozen kThemeSoundUtilWinCollapseEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWinCollapseEnter"
 	end
 
-	frozen kThemeSoundUtilWinCollapseExit: INTEGER is
+	frozen kThemeSoundUtilWinCollapseExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWinCollapseExit"
 	end
 
-	frozen kThemeSoundUtilWinCollapseRelease: INTEGER is
+	frozen kThemeSoundUtilWinCollapseRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWinCollapseRelease"
 	end
 
-	frozen kThemeSoundUtilWinDragBoundary: INTEGER is
+	frozen kThemeSoundUtilWinDragBoundary: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWinDragBoundary"
 	end
 
-	frozen kThemeSoundWindowOpen: INTEGER is
+	frozen kThemeSoundWindowOpen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowOpen"
 	end
 
-	frozen kThemeSoundWindowClose: INTEGER is
+	frozen kThemeSoundWindowClose: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowClose"
 	end
 
-	frozen kThemeSoundWindowZoomIn: INTEGER is
+	frozen kThemeSoundWindowZoomIn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowZoomIn"
 	end
 
-	frozen kThemeSoundWindowZoomOut: INTEGER is
+	frozen kThemeSoundWindowZoomOut: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowZoomOut"
 	end
 
-	frozen kThemeSoundWindowCollapseUp: INTEGER is
+	frozen kThemeSoundWindowCollapseUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowCollapseUp"
 	end
 
-	frozen kThemeSoundWindowCollapseDown: INTEGER is
+	frozen kThemeSoundWindowCollapseDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowCollapseDown"
 	end
 
-	frozen kThemeSoundWindowActivate: INTEGER is
+	frozen kThemeSoundWindowActivate: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundWindowActivate"
 	end
 
-	frozen kThemeSoundUtilWindowOpen: INTEGER is
+	frozen kThemeSoundUtilWindowOpen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWindowOpen"
 	end
 
-	frozen kThemeSoundUtilWindowClose: INTEGER is
+	frozen kThemeSoundUtilWindowClose: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWindowClose"
 	end
 
-	frozen kThemeSoundUtilWindowZoomIn: INTEGER is
+	frozen kThemeSoundUtilWindowZoomIn: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWindowZoomIn"
 	end
 
-	frozen kThemeSoundUtilWindowZoomOut: INTEGER is
+	frozen kThemeSoundUtilWindowZoomOut: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWindowZoomOut"
 	end
 
-	frozen kThemeSoundUtilWindowCollapseUp: INTEGER is
+	frozen kThemeSoundUtilWindowCollapseUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWindowCollapseUp"
 	end
 
-	frozen kThemeSoundUtilWindowCollapseDown: INTEGER is
+	frozen kThemeSoundUtilWindowCollapseDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWindowCollapseDown"
 	end
 
-	frozen kThemeSoundUtilWindowActivate: INTEGER is
+	frozen kThemeSoundUtilWindowActivate: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundUtilWindowActivate"
 	end
 
-	frozen kThemeSoundDialogOpen: INTEGER is
+	frozen kThemeSoundDialogOpen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDialogOpen"
 	end
 
-	frozen kThemeSoundDialogClose: INTEGER is
+	frozen kThemeSoundDialogClose: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDialogClose"
 	end
 
-	frozen kThemeSoundAlertOpen: INTEGER is
+	frozen kThemeSoundAlertOpen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundAlertOpen"
 	end
 
-	frozen kThemeSoundAlertClose: INTEGER is
+	frozen kThemeSoundAlertClose: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundAlertClose"
 	end
 
-	frozen kThemeSoundPopupWindowOpen: INTEGER is
+	frozen kThemeSoundPopupWindowOpen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundPopupWindowOpen"
 	end
 
-	frozen kThemeSoundPopupWindowClose: INTEGER is
+	frozen kThemeSoundPopupWindowClose: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundPopupWindowClose"
 	end
 
-	frozen kThemeSoundButtonPress: INTEGER is
+	frozen kThemeSoundButtonPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundButtonPress"
 	end
 
-	frozen kThemeSoundButtonEnter: INTEGER is
+	frozen kThemeSoundButtonEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundButtonEnter"
 	end
 
-	frozen kThemeSoundButtonExit: INTEGER is
+	frozen kThemeSoundButtonExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundButtonExit"
 	end
 
-	frozen kThemeSoundButtonRelease: INTEGER is
+	frozen kThemeSoundButtonRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundButtonRelease"
 	end
 
-	frozen kThemeSoundDefaultButtonPress: INTEGER is
+	frozen kThemeSoundDefaultButtonPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDefaultButtonPress"
 	end
 
-	frozen kThemeSoundDefaultButtonEnter: INTEGER is
+	frozen kThemeSoundDefaultButtonEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDefaultButtonEnter"
 	end
 
-	frozen kThemeSoundDefaultButtonExit: INTEGER is
+	frozen kThemeSoundDefaultButtonExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDefaultButtonExit"
 	end
 
-	frozen kThemeSoundDefaultButtonRelease: INTEGER is
+	frozen kThemeSoundDefaultButtonRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDefaultButtonRelease"
 	end
 
-	frozen kThemeSoundCancelButtonPress: INTEGER is
+	frozen kThemeSoundCancelButtonPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundCancelButtonPress"
 	end
 
-	frozen kThemeSoundCancelButtonEnter: INTEGER is
+	frozen kThemeSoundCancelButtonEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundCancelButtonEnter"
 	end
 
-	frozen kThemeSoundCancelButtonExit: INTEGER is
+	frozen kThemeSoundCancelButtonExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundCancelButtonExit"
 	end
 
-	frozen kThemeSoundCancelButtonRelease: INTEGER is
+	frozen kThemeSoundCancelButtonRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundCancelButtonRelease"
 	end
 
-	frozen kThemeSoundCheckboxPress: INTEGER is
+	frozen kThemeSoundCheckboxPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundCheckboxPress"
 	end
 
-	frozen kThemeSoundCheckboxEnter: INTEGER is
+	frozen kThemeSoundCheckboxEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundCheckboxEnter"
 	end
 
-	frozen kThemeSoundCheckboxExit: INTEGER is
+	frozen kThemeSoundCheckboxExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundCheckboxExit"
 	end
 
-	frozen kThemeSoundCheckboxRelease: INTEGER is
+	frozen kThemeSoundCheckboxRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundCheckboxRelease"
 	end
 
-	frozen kThemeSoundRadioPress: INTEGER is
+	frozen kThemeSoundRadioPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundRadioPress"
 	end
 
-	frozen kThemeSoundRadioEnter: INTEGER is
+	frozen kThemeSoundRadioEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundRadioEnter"
 	end
 
-	frozen kThemeSoundRadioExit: INTEGER is
+	frozen kThemeSoundRadioExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundRadioExit"
 	end
 
-	frozen kThemeSoundRadioRelease: INTEGER is
+	frozen kThemeSoundRadioRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundRadioRelease"
 	end
 
-	frozen kThemeSoundScrollArrowPress: INTEGER is
+	frozen kThemeSoundScrollArrowPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundScrollArrowPress"
 	end
 
-	frozen kThemeSoundScrollArrowEnter: INTEGER is
+	frozen kThemeSoundScrollArrowEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundScrollArrowEnter"
 	end
 
-	frozen kThemeSoundScrollArrowExit: INTEGER is
+	frozen kThemeSoundScrollArrowExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundScrollArrowExit"
 	end
 
-	frozen kThemeSoundScrollArrowRelease: INTEGER is
+	frozen kThemeSoundScrollArrowRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundScrollArrowRelease"
 	end
 
-	frozen kThemeSoundScrollEndOfTrack: INTEGER is
+	frozen kThemeSoundScrollEndOfTrack: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundScrollEndOfTrack"
 	end
 
-	frozen kThemeSoundScrollTrackPress: INTEGER is
+	frozen kThemeSoundScrollTrackPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundScrollTrackPress"
 	end
 
-	frozen kThemeSoundSliderEndOfTrack: INTEGER is
+	frozen kThemeSoundSliderEndOfTrack: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundSliderEndOfTrack"
 	end
 
-	frozen kThemeSoundSliderTrackPress: INTEGER is
+	frozen kThemeSoundSliderTrackPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundSliderTrackPress"
 	end
 
-	frozen kThemeSoundBalloonOpen: INTEGER is
+	frozen kThemeSoundBalloonOpen: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundBalloonOpen"
 	end
 
-	frozen kThemeSoundBalloonClose: INTEGER is
+	frozen kThemeSoundBalloonClose: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundBalloonClose"
 	end
 
-	frozen kThemeSoundBevelPress: INTEGER is
+	frozen kThemeSoundBevelPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundBevelPress"
 	end
 
-	frozen kThemeSoundBevelEnter: INTEGER is
+	frozen kThemeSoundBevelEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundBevelEnter"
 	end
 
-	frozen kThemeSoundBevelExit: INTEGER is
+	frozen kThemeSoundBevelExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundBevelExit"
 	end
 
-	frozen kThemeSoundBevelRelease: INTEGER is
+	frozen kThemeSoundBevelRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundBevelRelease"
 	end
 
-	frozen kThemeSoundLittleArrowUpPress: INTEGER is
+	frozen kThemeSoundLittleArrowUpPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundLittleArrowUpPress"
 	end
 
-	frozen kThemeSoundLittleArrowDnPress: INTEGER is
+	frozen kThemeSoundLittleArrowDnPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundLittleArrowDnPress"
 	end
 
-	frozen kThemeSoundLittleArrowEnter: INTEGER is
+	frozen kThemeSoundLittleArrowEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundLittleArrowEnter"
 	end
 
-	frozen kThemeSoundLittleArrowExit: INTEGER is
+	frozen kThemeSoundLittleArrowExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundLittleArrowExit"
 	end
 
-	frozen kThemeSoundLittleArrowUpRelease: INTEGER is
+	frozen kThemeSoundLittleArrowUpRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundLittleArrowUpRelease"
 	end
 
-	frozen kThemeSoundLittleArrowDnRelease: INTEGER is
+	frozen kThemeSoundLittleArrowDnRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundLittleArrowDnRelease"
 	end
 
-	frozen kThemeSoundPopupPress: INTEGER is
+	frozen kThemeSoundPopupPress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundPopupPress"
 	end
 
-	frozen kThemeSoundPopupEnter: INTEGER is
+	frozen kThemeSoundPopupEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundPopupEnter"
 	end
 
-	frozen kThemeSoundPopupExit: INTEGER is
+	frozen kThemeSoundPopupExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundPopupExit"
 	end
 
-	frozen kThemeSoundPopupRelease: INTEGER is
+	frozen kThemeSoundPopupRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundPopupRelease"
 	end
 
-	frozen kThemeSoundDisclosurePress: INTEGER is
+	frozen kThemeSoundDisclosurePress: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDisclosurePress"
 	end
 
-	frozen kThemeSoundDisclosureEnter: INTEGER is
+	frozen kThemeSoundDisclosureEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDisclosureEnter"
 	end
 
-	frozen kThemeSoundDisclosureExit: INTEGER is
+	frozen kThemeSoundDisclosureExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDisclosureExit"
 	end
 
-	frozen kThemeSoundDisclosureRelease: INTEGER is
+	frozen kThemeSoundDisclosureRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDisclosureRelease"
 	end
 
-	frozen kThemeSoundTabPressed: INTEGER is
+	frozen kThemeSoundTabPressed: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundTabPressed"
 	end
 
-	frozen kThemeSoundTabEnter: INTEGER is
+	frozen kThemeSoundTabEnter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundTabEnter"
 	end
 
-	frozen kThemeSoundTabExit: INTEGER is
+	frozen kThemeSoundTabExit: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundTabExit"
 	end
 
-	frozen kThemeSoundTabRelease: INTEGER is
+	frozen kThemeSoundTabRelease: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundTabRelease"
 	end
 
-	frozen kThemeSoundDragTargetHilite: INTEGER is
+	frozen kThemeSoundDragTargetHilite: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDragTargetHilite"
 	end
 
-	frozen kThemeSoundDragTargetUnhilite: INTEGER is
+	frozen kThemeSoundDragTargetUnhilite: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDragTargetUnhilite"
 	end
 
-	frozen kThemeSoundDragTargetDrop: INTEGER is
+	frozen kThemeSoundDragTargetDrop: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDragTargetDrop"
 	end
 
-	frozen kThemeSoundEmptyTrash: INTEGER is
+	frozen kThemeSoundEmptyTrash: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundEmptyTrash"
 	end
 
-	frozen kThemeSoundSelectItem: INTEGER is
+	frozen kThemeSoundSelectItem: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundSelectItem"
 	end
 
-	frozen kThemeSoundNewItem: INTEGER is
+	frozen kThemeSoundNewItem: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundNewItem"
 	end
 
-	frozen kThemeSoundReceiveDrop: INTEGER is
+	frozen kThemeSoundReceiveDrop: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundReceiveDrop"
 	end
 
-	frozen kThemeSoundCopyDone: INTEGER is
+	frozen kThemeSoundCopyDone: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundCopyDone"
 	end
 
-	frozen kThemeSoundResolveAlias: INTEGER is
+	frozen kThemeSoundResolveAlias: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundResolveAlias"
 	end
 
-	frozen kThemeSoundLaunchApp: INTEGER is
+	frozen kThemeSoundLaunchApp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundLaunchApp"
 	end
 
-	frozen kThemeSoundDiskInsert: INTEGER is
+	frozen kThemeSoundDiskInsert: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDiskInsert"
 	end
 
-	frozen kThemeSoundDiskEject: INTEGER is
+	frozen kThemeSoundDiskEject: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundDiskEject"
 	end
 
-	frozen kThemeSoundFinderDragOnIcon: INTEGER is
+	frozen kThemeSoundFinderDragOnIcon: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundFinderDragOnIcon"
 	end
 
-	frozen kThemeSoundFinderDragOffIcon: INTEGER is
+	frozen kThemeSoundFinderDragOffIcon: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeSoundFinderDragOffIcon"
 	end
 
-	frozen kThemePopupTabNormalPosition: INTEGER is
+	frozen kThemePopupTabNormalPosition: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePopupTabNormalPosition"
 	end
 
-	frozen kThemePopupTabCenterOnWindow: INTEGER is
+	frozen kThemePopupTabCenterOnWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePopupTabCenterOnWindow"
 	end
 
-	frozen kThemePopupTabCenterOnOffset: INTEGER is
+	frozen kThemePopupTabCenterOnOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemePopupTabCenterOnOffset"
 	end
 
-	frozen kThemeMetricScrollBarWidth: INTEGER is
+	frozen kThemeMetricScrollBarWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricScrollBarWidth"
 	end
 
-	frozen kThemeMetricSmallScrollBarWidth: INTEGER is
+	frozen kThemeMetricSmallScrollBarWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallScrollBarWidth"
 	end
 
-	frozen kThemeMetricCheckBoxHeight: INTEGER is
+	frozen kThemeMetricCheckBoxHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricCheckBoxHeight"
 	end
 
-	frozen kThemeMetricRadioButtonHeight: INTEGER is
+	frozen kThemeMetricRadioButtonHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRadioButtonHeight"
 	end
 
-	frozen kThemeMetricEditTextWhitespace: INTEGER is
+	frozen kThemeMetricEditTextWhitespace: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricEditTextWhitespace"
 	end
 
-	frozen kThemeMetricEditTextFrameOutset: INTEGER is
+	frozen kThemeMetricEditTextFrameOutset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricEditTextFrameOutset"
 	end
 
-	frozen kThemeMetricListBoxFrameOutset: INTEGER is
+	frozen kThemeMetricListBoxFrameOutset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricListBoxFrameOutset"
 	end
 
-	frozen kThemeMetricFocusRectOutset: INTEGER is
+	frozen kThemeMetricFocusRectOutset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricFocusRectOutset"
 	end
 
-	frozen kThemeMetricImageWellThickness: INTEGER is
+	frozen kThemeMetricImageWellThickness: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricImageWellThickness"
 	end
 
-	frozen kThemeMetricScrollBarOverlap: INTEGER is
+	frozen kThemeMetricScrollBarOverlap: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricScrollBarOverlap"
 	end
 
-	frozen kThemeMetricLargeTabHeight: INTEGER is
+	frozen kThemeMetricLargeTabHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricLargeTabHeight"
 	end
 
-	frozen kThemeMetricLargeTabCapsWidth: INTEGER is
+	frozen kThemeMetricLargeTabCapsWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricLargeTabCapsWidth"
 	end
 
-	frozen kThemeMetricTabFrameOverlap: INTEGER is
+	frozen kThemeMetricTabFrameOverlap: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricTabFrameOverlap"
 	end
 
-	frozen kThemeMetricTabIndentOrStyle: INTEGER is
+	frozen kThemeMetricTabIndentOrStyle: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricTabIndentOrStyle"
 	end
 
-	frozen kThemeMetricTabOverlap: INTEGER is
+	frozen kThemeMetricTabOverlap: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricTabOverlap"
 	end
 
-	frozen kThemeMetricSmallTabHeight: INTEGER is
+	frozen kThemeMetricSmallTabHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallTabHeight"
 	end
 
-	frozen kThemeMetricSmallTabCapsWidth: INTEGER is
+	frozen kThemeMetricSmallTabCapsWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallTabCapsWidth"
 	end
 
-	frozen kThemeMetricPushButtonHeight: INTEGER is
+	frozen kThemeMetricPushButtonHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricPushButtonHeight"
 	end
 
-	frozen kThemeMetricListHeaderHeight: INTEGER is
+	frozen kThemeMetricListHeaderHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricListHeaderHeight"
 	end
 
-	frozen kThemeMetricDisclosureTriangleHeight: INTEGER is
+	frozen kThemeMetricDisclosureTriangleHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricDisclosureTriangleHeight"
 	end
 
-	frozen kThemeMetricDisclosureTriangleWidth: INTEGER is
+	frozen kThemeMetricDisclosureTriangleWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricDisclosureTriangleWidth"
 	end
 
-	frozen kThemeMetricLittleArrowsHeight: INTEGER is
+	frozen kThemeMetricLittleArrowsHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricLittleArrowsHeight"
 	end
 
-	frozen kThemeMetricLittleArrowsWidth: INTEGER is
+	frozen kThemeMetricLittleArrowsWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricLittleArrowsWidth"
 	end
 
-	frozen kThemeMetricPopupButtonHeight: INTEGER is
+	frozen kThemeMetricPopupButtonHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricPopupButtonHeight"
 	end
 
-	frozen kThemeMetricSmallPopupButtonHeight: INTEGER is
+	frozen kThemeMetricSmallPopupButtonHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallPopupButtonHeight"
 	end
 
-	frozen kThemeMetricLargeProgressBarThickness: INTEGER is
+	frozen kThemeMetricLargeProgressBarThickness: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricLargeProgressBarThickness"
 	end
 
-	frozen kThemeMetricPullDownHeight: INTEGER is
+	frozen kThemeMetricPullDownHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricPullDownHeight"
 	end
 
-	frozen kThemeMetricSmallPullDownHeight: INTEGER is
+	frozen kThemeMetricSmallPullDownHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallPullDownHeight"
 	end
 
-	frozen kThemeMetricResizeControlHeight: INTEGER is
+	frozen kThemeMetricResizeControlHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricResizeControlHeight"
 	end
 
-	frozen kThemeMetricSmallResizeControlHeight: INTEGER is
+	frozen kThemeMetricSmallResizeControlHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallResizeControlHeight"
 	end
 
-	frozen kThemeMetricHSliderHeight: INTEGER is
+	frozen kThemeMetricHSliderHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricHSliderHeight"
 	end
 
-	frozen kThemeMetricHSliderTickHeight: INTEGER is
+	frozen kThemeMetricHSliderTickHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricHSliderTickHeight"
 	end
 
-	frozen kThemeMetricVSliderWidth: INTEGER is
+	frozen kThemeMetricVSliderWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricVSliderWidth"
 	end
 
-	frozen kThemeMetricVSliderTickWidth: INTEGER is
+	frozen kThemeMetricVSliderTickWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricVSliderTickWidth"
 	end
 
-	frozen kThemeMetricTitleBarControlsHeight: INTEGER is
+	frozen kThemeMetricTitleBarControlsHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricTitleBarControlsHeight"
 	end
 
-	frozen kThemeMetricCheckBoxWidth: INTEGER is
+	frozen kThemeMetricCheckBoxWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricCheckBoxWidth"
 	end
 
-	frozen kThemeMetricRadioButtonWidth: INTEGER is
+	frozen kThemeMetricRadioButtonWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRadioButtonWidth"
 	end
 
-	frozen kThemeMetricNormalProgressBarThickness: INTEGER is
+	frozen kThemeMetricNormalProgressBarThickness: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricNormalProgressBarThickness"
 	end
 
-	frozen kThemeMetricProgressBarShadowOutset: INTEGER is
+	frozen kThemeMetricProgressBarShadowOutset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricProgressBarShadowOutset"
 	end
 
-	frozen kThemeMetricSmallProgressBarShadowOutset: INTEGER is
+	frozen kThemeMetricSmallProgressBarShadowOutset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallProgressBarShadowOutset"
 	end
 
-	frozen kThemeMetricPrimaryGroupBoxContentInset: INTEGER is
+	frozen kThemeMetricPrimaryGroupBoxContentInset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricPrimaryGroupBoxContentInset"
 	end
 
-	frozen kThemeMetricSecondaryGroupBoxContentInset: INTEGER is
+	frozen kThemeMetricSecondaryGroupBoxContentInset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSecondaryGroupBoxContentInset"
 	end
 
-	frozen kThemeMetricMenuMarkColumnWidth: INTEGER is
+	frozen kThemeMetricMenuMarkColumnWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMenuMarkColumnWidth"
 	end
 
-	frozen kThemeMetricMenuExcludedMarkColumnWidth: INTEGER is
+	frozen kThemeMetricMenuExcludedMarkColumnWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMenuExcludedMarkColumnWidth"
 	end
 
-	frozen kThemeMetricMenuMarkIndent: INTEGER is
+	frozen kThemeMetricMenuMarkIndent: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMenuMarkIndent"
 	end
 
-	frozen kThemeMetricMenuTextLeadingEdgeMargin: INTEGER is
+	frozen kThemeMetricMenuTextLeadingEdgeMargin: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMenuTextLeadingEdgeMargin"
 	end
 
-	frozen kThemeMetricMenuTextTrailingEdgeMargin: INTEGER is
+	frozen kThemeMetricMenuTextTrailingEdgeMargin: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMenuTextTrailingEdgeMargin"
 	end
 
-	frozen kThemeMetricMenuIndentWidth: INTEGER is
+	frozen kThemeMetricMenuIndentWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMenuIndentWidth"
 	end
 
-	frozen kThemeMetricMenuIconTrailingEdgeMargin: INTEGER is
+	frozen kThemeMetricMenuIconTrailingEdgeMargin: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMenuIconTrailingEdgeMargin"
 	end
 
-	frozen kThemeMetricDisclosureButtonHeight: INTEGER is
+	frozen kThemeMetricDisclosureButtonHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricDisclosureButtonHeight"
 	end
 
-	frozen kThemeMetricRoundButtonSize: INTEGER is
+	frozen kThemeMetricRoundButtonSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundButtonSize"
 	end
 
-	frozen kThemeMetricSmallCheckBoxHeight: INTEGER is
+	frozen kThemeMetricSmallCheckBoxHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallCheckBoxHeight"
 	end
 
-	frozen kThemeMetricDisclosureButtonWidth: INTEGER is
+	frozen kThemeMetricDisclosureButtonWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricDisclosureButtonWidth"
 	end
 
-	frozen kThemeMetricSmallDisclosureButtonHeight: INTEGER is
+	frozen kThemeMetricSmallDisclosureButtonHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallDisclosureButtonHeight"
 	end
 
-	frozen kThemeMetricSmallDisclosureButtonWidth: INTEGER is
+	frozen kThemeMetricSmallDisclosureButtonWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallDisclosureButtonWidth"
 	end
 
-	frozen kThemeMetricPaneSplitterHeight: INTEGER is
+	frozen kThemeMetricPaneSplitterHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricPaneSplitterHeight"
 	end
 
-	frozen kThemeMetricSmallPushButtonHeight: INTEGER is
+	frozen kThemeMetricSmallPushButtonHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallPushButtonHeight"
 	end
 
-	frozen kThemeMetricSmallRadioButtonHeight: INTEGER is
+	frozen kThemeMetricSmallRadioButtonHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallRadioButtonHeight"
 	end
 
-	frozen kThemeMetricRelevanceIndicatorHeight: INTEGER is
+	frozen kThemeMetricRelevanceIndicatorHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRelevanceIndicatorHeight"
 	end
 
-	frozen kThemeMetricLargeRoundButtonSize: INTEGER is
+	frozen kThemeMetricLargeRoundButtonSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricLargeRoundButtonSize"
 	end
 
-	frozen kThemeMetricSmallHSliderHeight: INTEGER is
+	frozen kThemeMetricSmallHSliderHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallHSliderHeight"
 	end
 
-	frozen kThemeMetricSmallHSliderTickHeight: INTEGER is
+	frozen kThemeMetricSmallHSliderTickHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallHSliderTickHeight"
 	end
 
-	frozen kThemeMetricSmallVSliderWidth: INTEGER is
+	frozen kThemeMetricSmallVSliderWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallVSliderWidth"
 	end
 
-	frozen kThemeMetricSmallVSliderTickWidth: INTEGER is
+	frozen kThemeMetricSmallVSliderTickWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallVSliderTickWidth"
 	end
 
-	frozen kThemeMetricSmallCheckBoxWidth: INTEGER is
+	frozen kThemeMetricSmallCheckBoxWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallCheckBoxWidth"
 	end
 
-	frozen kThemeMetricSmallRadioButtonWidth: INTEGER is
+	frozen kThemeMetricSmallRadioButtonWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallRadioButtonWidth"
 	end
 
-	frozen kThemeMetricSmallHSliderMinThumbWidth: INTEGER is
+	frozen kThemeMetricSmallHSliderMinThumbWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallHSliderMinThumbWidth"
 	end
 
-	frozen kThemeMetricSmallVSliderMinThumbHeight: INTEGER is
+	frozen kThemeMetricSmallVSliderMinThumbHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallVSliderMinThumbHeight"
 	end
 
-	frozen kThemeMetricSmallHSliderTickOffset: INTEGER is
+	frozen kThemeMetricSmallHSliderTickOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallHSliderTickOffset"
 	end
 
-	frozen kThemeMetricSmallVSliderTickOffset: INTEGER is
+	frozen kThemeMetricSmallVSliderTickOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallVSliderTickOffset"
 	end
 
-	frozen kThemeMetricComboBoxLargeBottomShadowOffset: INTEGER is
+	frozen kThemeMetricComboBoxLargeBottomShadowOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricComboBoxLargeBottomShadowOffset"
 	end
 
-	frozen kThemeMetricComboBoxLargeRightShadowOffset: INTEGER is
+	frozen kThemeMetricComboBoxLargeRightShadowOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricComboBoxLargeRightShadowOffset"
 	end
 
-	frozen kThemeMetricComboBoxSmallBottomShadowOffset: INTEGER is
+	frozen kThemeMetricComboBoxSmallBottomShadowOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricComboBoxSmallBottomShadowOffset"
 	end
 
-	frozen kThemeMetricComboBoxSmallRightShadowOffset: INTEGER is
+	frozen kThemeMetricComboBoxSmallRightShadowOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricComboBoxSmallRightShadowOffset"
 	end
 
-	frozen kThemeMetricComboBoxLargeDisclosureWidth: INTEGER is
+	frozen kThemeMetricComboBoxLargeDisclosureWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricComboBoxLargeDisclosureWidth"
 	end
 
-	frozen kThemeMetricComboBoxSmallDisclosureWidth: INTEGER is
+	frozen kThemeMetricComboBoxSmallDisclosureWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricComboBoxSmallDisclosureWidth"
 	end
 
-	frozen kThemeMetricRoundTextFieldContentInsetLeft: INTEGER is
+	frozen kThemeMetricRoundTextFieldContentInsetLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldContentInsetLeft"
 	end
 
-	frozen kThemeMetricRoundTextFieldContentInsetRight: INTEGER is
+	frozen kThemeMetricRoundTextFieldContentInsetRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldContentInsetRight"
 	end
 
-	frozen kThemeMetricRoundTextFieldContentInsetBottom: INTEGER is
+	frozen kThemeMetricRoundTextFieldContentInsetBottom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldContentInsetBottom"
 	end
 
-	frozen kThemeMetricRoundTextFieldContentInsetTop: INTEGER is
+	frozen kThemeMetricRoundTextFieldContentInsetTop: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldContentInsetTop"
 	end
 
-	frozen kThemeMetricRoundTextFieldContentHeight: INTEGER is
+	frozen kThemeMetricRoundTextFieldContentHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldContentHeight"
 	end
 
-	frozen kThemeMetricComboBoxMiniBottomShadowOffset: INTEGER is
+	frozen kThemeMetricComboBoxMiniBottomShadowOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricComboBoxMiniBottomShadowOffset"
 	end
 
-	frozen kThemeMetricComboBoxMiniDisclosureWidth: INTEGER is
+	frozen kThemeMetricComboBoxMiniDisclosureWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricComboBoxMiniDisclosureWidth"
 	end
 
-	frozen kThemeMetricComboBoxMiniRightShadowOffset: INTEGER is
+	frozen kThemeMetricComboBoxMiniRightShadowOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricComboBoxMiniRightShadowOffset"
 	end
 
-	frozen kThemeMetricLittleArrowsMiniHeight: INTEGER is
+	frozen kThemeMetricLittleArrowsMiniHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricLittleArrowsMiniHeight"
 	end
 
-	frozen kThemeMetricLittleArrowsMiniWidth: INTEGER is
+	frozen kThemeMetricLittleArrowsMiniWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricLittleArrowsMiniWidth"
 	end
 
-	frozen kThemeMetricLittleArrowsSmallHeight: INTEGER is
+	frozen kThemeMetricLittleArrowsSmallHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricLittleArrowsSmallHeight"
 	end
 
-	frozen kThemeMetricLittleArrowsSmallWidth: INTEGER is
+	frozen kThemeMetricLittleArrowsSmallWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricLittleArrowsSmallWidth"
 	end
 
-	frozen kThemeMetricMiniCheckBoxHeight: INTEGER is
+	frozen kThemeMetricMiniCheckBoxHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniCheckBoxHeight"
 	end
 
-	frozen kThemeMetricMiniCheckBoxWidth: INTEGER is
+	frozen kThemeMetricMiniCheckBoxWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniCheckBoxWidth"
 	end
 
-	frozen kThemeMetricMiniDisclosureButtonHeight: INTEGER is
+	frozen kThemeMetricMiniDisclosureButtonHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniDisclosureButtonHeight"
 	end
 
-	frozen kThemeMetricMiniDisclosureButtonWidth: INTEGER is
+	frozen kThemeMetricMiniDisclosureButtonWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniDisclosureButtonWidth"
 	end
 
-	frozen kThemeMetricMiniHSliderHeight: INTEGER is
+	frozen kThemeMetricMiniHSliderHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniHSliderHeight"
 	end
 
-	frozen kThemeMetricMiniHSliderMinThumbWidth: INTEGER is
+	frozen kThemeMetricMiniHSliderMinThumbWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniHSliderMinThumbWidth"
 	end
 
-	frozen kThemeMetricMiniHSliderTickHeight: INTEGER is
+	frozen kThemeMetricMiniHSliderTickHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniHSliderTickHeight"
 	end
 
-	frozen kThemeMetricMiniHSliderTickOffset: INTEGER is
+	frozen kThemeMetricMiniHSliderTickOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniHSliderTickOffset"
 	end
 
-	frozen kThemeMetricMiniPopupButtonHeight: INTEGER is
+	frozen kThemeMetricMiniPopupButtonHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniPopupButtonHeight"
 	end
 
-	frozen kThemeMetricMiniPullDownHeight: INTEGER is
+	frozen kThemeMetricMiniPullDownHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniPullDownHeight"
 	end
 
-	frozen kThemeMetricMiniPushButtonHeight: INTEGER is
+	frozen kThemeMetricMiniPushButtonHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniPushButtonHeight"
 	end
 
-	frozen kThemeMetricMiniRadioButtonHeight: INTEGER is
+	frozen kThemeMetricMiniRadioButtonHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniRadioButtonHeight"
 	end
 
-	frozen kThemeMetricMiniRadioButtonWidth: INTEGER is
+	frozen kThemeMetricMiniRadioButtonWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniRadioButtonWidth"
 	end
 
-	frozen kThemeMetricMiniTabCapsWidth: INTEGER is
+	frozen kThemeMetricMiniTabCapsWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniTabCapsWidth"
 	end
 
-	frozen kThemeMetricMiniTabFrameOverlap: INTEGER is
+	frozen kThemeMetricMiniTabFrameOverlap: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniTabFrameOverlap"
 	end
 
-	frozen kThemeMetricMiniTabHeight: INTEGER is
+	frozen kThemeMetricMiniTabHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniTabHeight"
 	end
 
-	frozen kThemeMetricMiniTabOverlap: INTEGER is
+	frozen kThemeMetricMiniTabOverlap: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniTabOverlap"
 	end
 
-	frozen kThemeMetricMiniVSliderMinThumbHeight: INTEGER is
+	frozen kThemeMetricMiniVSliderMinThumbHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniVSliderMinThumbHeight"
 	end
 
-	frozen kThemeMetricMiniVSliderTickOffset: INTEGER is
+	frozen kThemeMetricMiniVSliderTickOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniVSliderTickOffset"
 	end
 
-	frozen kThemeMetricMiniVSliderTickWidth: INTEGER is
+	frozen kThemeMetricMiniVSliderTickWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniVSliderTickWidth"
 	end
 
-	frozen kThemeMetricMiniVSliderWidth: INTEGER is
+	frozen kThemeMetricMiniVSliderWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricMiniVSliderWidth"
 	end
 
-	frozen kThemeMetricRoundTextFieldContentInsetWithIconLeft: INTEGER is
+	frozen kThemeMetricRoundTextFieldContentInsetWithIconLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldContentInsetWithIconLeft"
 	end
 
-	frozen kThemeMetricRoundTextFieldContentInsetWithIconRight: INTEGER is
+	frozen kThemeMetricRoundTextFieldContentInsetWithIconRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldContentInsetWithIconRight"
 	end
 
-	frozen kThemeMetricRoundTextFieldMiniContentHeight: INTEGER is
+	frozen kThemeMetricRoundTextFieldMiniContentHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldMiniContentHeight"
 	end
 
-	frozen kThemeMetricRoundTextFieldMiniContentInsetBottom: INTEGER is
+	frozen kThemeMetricRoundTextFieldMiniContentInsetBottom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldMiniContentInsetBottom"
 	end
 
-	frozen kThemeMetricRoundTextFieldMiniContentInsetLeft: INTEGER is
+	frozen kThemeMetricRoundTextFieldMiniContentInsetLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldMiniContentInsetLeft"
 	end
 
-	frozen kThemeMetricRoundTextFieldMiniContentInsetRight: INTEGER is
+	frozen kThemeMetricRoundTextFieldMiniContentInsetRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldMiniContentInsetRight"
 	end
 
-	frozen kThemeMetricRoundTextFieldMiniContentInsetTop: INTEGER is
+	frozen kThemeMetricRoundTextFieldMiniContentInsetTop: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldMiniContentInsetTop"
 	end
 
-	frozen kThemeMetricRoundTextFieldMiniContentInsetWithIconLeft: INTEGER is
+	frozen kThemeMetricRoundTextFieldMiniContentInsetWithIconLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldMiniContentInsetWithIconLeft"
 	end
 
-	frozen kThemeMetricRoundTextFieldMiniContentInsetWithIconRight: INTEGER is
+	frozen kThemeMetricRoundTextFieldMiniContentInsetWithIconRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldMiniContentInsetWithIconRight"
 	end
 
-	frozen kThemeMetricRoundTextFieldSmallContentHeight: INTEGER is
+	frozen kThemeMetricRoundTextFieldSmallContentHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldSmallContentHeight"
 	end
 
-	frozen kThemeMetricRoundTextFieldSmallContentInsetBottom: INTEGER is
+	frozen kThemeMetricRoundTextFieldSmallContentInsetBottom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldSmallContentInsetBottom"
 	end
 
-	frozen kThemeMetricRoundTextFieldSmallContentInsetLeft: INTEGER is
+	frozen kThemeMetricRoundTextFieldSmallContentInsetLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldSmallContentInsetLeft"
 	end
 
-	frozen kThemeMetricRoundTextFieldSmallContentInsetRight: INTEGER is
+	frozen kThemeMetricRoundTextFieldSmallContentInsetRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldSmallContentInsetRight"
 	end
 
-	frozen kThemeMetricRoundTextFieldSmallContentInsetTop: INTEGER is
+	frozen kThemeMetricRoundTextFieldSmallContentInsetTop: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldSmallContentInsetTop"
 	end
 
-	frozen kThemeMetricRoundTextFieldSmallContentInsetWithIconLeft: INTEGER is
+	frozen kThemeMetricRoundTextFieldSmallContentInsetWithIconLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldSmallContentInsetWithIconLeft"
 	end
 
-	frozen kThemeMetricRoundTextFieldSmallContentInsetWithIconRight: INTEGER is
+	frozen kThemeMetricRoundTextFieldSmallContentInsetWithIconRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricRoundTextFieldSmallContentInsetWithIconRight"
 	end
 
-	frozen kThemeMetricSmallTabFrameOverlap: INTEGER is
+	frozen kThemeMetricSmallTabFrameOverlap: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallTabFrameOverlap"
 	end
 
-	frozen kThemeMetricSmallTabOverlap: INTEGER is
+	frozen kThemeMetricSmallTabOverlap: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallTabOverlap"
 	end
 
-	frozen kThemeMetricSmallPaneSplitterHeight: INTEGER is
+	frozen kThemeMetricSmallPaneSplitterHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallPaneSplitterHeight"
 	end
 
-	frozen kThemeMetricHSliderTickOffset: INTEGER is
+	frozen kThemeMetricHSliderTickOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricHSliderTickOffset"
 	end
 
-	frozen kThemeMetricVSliderTickOffset: INTEGER is
+	frozen kThemeMetricVSliderTickOffset: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricVSliderTickOffset"
 	end
 
-	frozen kThemeMetricSliderMinThumbHeight: INTEGER is
+	frozen kThemeMetricSliderMinThumbHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSliderMinThumbHeight"
 	end
 
-	frozen kThemeMetricSliderMinThumbWidth: INTEGER is
+	frozen kThemeMetricSliderMinThumbWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSliderMinThumbWidth"
 	end
 
-	frozen kThemeMetricScrollBarMinThumbHeight: INTEGER is
+	frozen kThemeMetricScrollBarMinThumbHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricScrollBarMinThumbHeight"
 	end
 
-	frozen kThemeMetricScrollBarMinThumbWidth: INTEGER is
+	frozen kThemeMetricScrollBarMinThumbWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricScrollBarMinThumbWidth"
 	end
 
-	frozen kThemeMetricSmallScrollBarMinThumbHeight: INTEGER is
+	frozen kThemeMetricSmallScrollBarMinThumbHeight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kThemeMetricSmallScrollBarMinThumbHeight"
 	end
 
-	frozen kThemeMetricSmallScrollBarMinThumbWidth: INTEGER is
+	frozen kThemeMetricSmallScrollBarMinThumbWidth: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias

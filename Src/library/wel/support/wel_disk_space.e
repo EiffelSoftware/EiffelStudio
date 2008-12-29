@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Object used to retrieve total and free disk space on any%
 	 			  %local hard drive. Remote drive are not yet supported"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Access
 
-	last_free_space: INTEGER is
+	last_free_space: INTEGER
 			-- Free space available on the last requested drive via the
 			-- query `query_disk_space'. This value is updated by
 			-- the feature `query_disk_space'.
@@ -31,7 +31,7 @@ feature -- Access
 			Result := internal_last_free_space
 		end
 
-	last_total_space: INTEGER is
+	last_total_space: INTEGER
 			-- Total space available on the last requested drive via the
 			-- query `query_disk_space'. This value is updated by
 			-- the feature `query_disk_space'.
@@ -45,7 +45,7 @@ feature -- Access
 			Result := internal_last_total_space
 		end
 
-	last_free_space_in_bytes: INTEGER is
+	last_free_space_in_bytes: INTEGER
 			-- Free space available on the last requested drive via the
 			-- query `query_disk_space'. This value is updated by
 			-- the feature `query_disk_space'.
@@ -60,7 +60,7 @@ feature -- Access
 			Result := internal_last_free_space_in_bytes
 		end
 
-	last_total_space_in_bytes: INTEGER is
+	last_total_space_in_bytes: INTEGER
 			-- Total space available on the last requested drive via the
 			-- query `query_disk_space'. This value is updated by
 			-- the feature `query_disk_space'.
@@ -75,7 +75,7 @@ feature -- Access
 			Result := internal_last_total_space_in_bytes
 		end
 
-	last_free_space_in_string: STRING is
+	last_free_space_in_string: STRING
 			-- Compute the string representing the value of the free space
 			-- as computed on the last call to `query_disk_space'.
 			-- Example of possible returned strings: "600 Mb", "30.1 Mb", "1.33 Mb",
@@ -89,7 +89,7 @@ feature -- Access
 							)
 		end
 
-	last_total_space_in_string: STRING is
+	last_total_space_in_string: STRING
 			-- Compute the string representing the value of the total space
 			-- as computed on the last call to `query_disk_space'.
 			-- Example of possible returned strings: "600 Mb", "30.1 Mb", "1.33 Mb",
@@ -105,7 +105,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	convert_space_into_string (mbyte_value, byte_value: INTEGER): STRING is
+	convert_space_into_string (mbyte_value, byte_value: INTEGER): STRING
 			-- Convert the value corresponding to `mbyte_value' and
 			-- `byte_value' into a string. `mbyte_value' is the value
 			-- represented in megabytes, and `byte_value' is the sane
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 		end
 
 	format_space_string(value: INTEGER; divisor: INTEGER; 
-						extension: STRING): STRING is
+						extension: STRING): STRING
 			-- Format the string corresponding to `value'.
 		require
 			valid_divisor: (divisor = 1) or 
@@ -211,7 +211,7 @@ feature {NONE} -- Externals
 			total_space: INTEGER;
 			free_space_in_bytes: INTEGER;
 			total_space_in_bytes: INTEGER
-			) is
+			)
 		do
 			internal_last_free_space := free_space
 			internal_last_total_space := total_space
@@ -219,7 +219,7 @@ feature {NONE} -- Externals
 			internal_last_total_space_in_bytes := total_space_in_bytes
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

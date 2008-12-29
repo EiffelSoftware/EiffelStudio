@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Scrolled Text resources."
@@ -12,35 +12,35 @@ class
 
 feature -- Implementation
 
-	XmNscrollHorizontal: POINTER is
+	XmNscrollHorizontal: POINTER
 		external
 			"C [macro <Xm/Text.h>]: EIF_POINTER"
 		alias
 			"XmNscrollHorizontal"
 		end;
 
-	XmNscrollVertical: POINTER is
+	XmNscrollVertical: POINTER
 		external
 			"C [macro <Xm/Text.h>]: EIF_POINTER"
 		alias
 			"XmNscrollVertical"
 		end;
 
-	XmNscrollLeftSide: POINTER is
+	XmNscrollLeftSide: POINTER
 		external
 			"C [macro <Xm/Text.h>]: EIF_POINTER"
 		alias
 			"XmNscrollLeftSide"
 		end;
 
-	XmNscrollTopSide: POINTER is
+	XmNscrollTopSide: POINTER
 		external
 			"C [macro <Xm/Text.h>]: EIF_POINTER"
 		alias
 			"XmNscrollTopSide"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

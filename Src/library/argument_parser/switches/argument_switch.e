@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A command line switch."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -203,7 +203,7 @@ invariant
 	not_long_name_is_empty: not long_name.is_empty
 	not_description_is_empty: not description.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

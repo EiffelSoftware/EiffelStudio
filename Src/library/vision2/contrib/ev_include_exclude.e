@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Components consisting of two lists, one typically%N%
 		%for inclusion and one for exclusion of items.%N%
@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Set defaults.
 		local
 			vb: EV_VERTICAL_BOX
@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 			set_padding (5)
 		end
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default sate.
 		do
 			Result := Precursor or padding = 5
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 	exclude_button: EV_BUTTON
 			-- When clicked, all selected items in `include_list' are moved to `exclude_list'.
 
-	on_include is
+	on_include
 			-- "->" button has been pressed.
 		local
 			si: DYNAMIC_LIST [EV_LIST_ITEM]
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_exclude is
+	on_exclude
 			-- "<-" button has been pressed.
 		local
 			si: DYNAMIC_LIST [EV_LIST_ITEM]
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

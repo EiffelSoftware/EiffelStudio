@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Objects that represents a general text token."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ feature -- Access
 	wide_image: STRING_32
 			-- String representation of the token
 
-	image: STRING is
+	image: STRING
 			-- String representation of the token
 		obsolete
 			"Use `wide_image' instead."
@@ -49,26 +49,26 @@ feature -- Access
 
 feature -- Token type status Report
 
-	is_blank: BOOLEAN is
+	is_blank: BOOLEAN
 			-- Is this a blank token?
 		do
 		end
 
-	is_feature_start: BOOLEAN is
+	is_feature_start: BOOLEAN
 		do
 		end
 
-	is_new_line: BOOLEAN is
+	is_new_line: BOOLEAN
 			-- Is current a new line token?
 		do
 		end
 
-	is_tabulation: BOOLEAN is
+	is_tabulation: BOOLEAN
 			-- Is current a tabulation token?
 		do
 		end
 
-	is_margin_token: BOOLEAN is
+	is_margin_token: BOOLEAN
 			-- Is the current token a margin token?
 			-- A margin token is a behavior token and does not
 			-- contain any editable text. An example of a beginning token is
@@ -89,13 +89,13 @@ feature -- Status report
 
 feature -- Status Setting
 
-	set_pebble (a_pebble: like pebble) is
+	set_pebble (a_pebble: like pebble)
 			-- Set `pebble' to `a_pebble'
 		do
 			pebble := a_pebble
 		end
 
-	set_is_selectable (b: BOOLEAN) is
+	set_is_selectable (b: BOOLEAN)
 			-- Set `is_selectable' to `b'
 		do
 			is_selectable := b
@@ -103,7 +103,7 @@ feature -- Status Setting
 			value_set: is_selectable = b
 		end
 
-	set_highlighted (b: BOOLEAN) is
+	set_highlighted (b: BOOLEAN)
 			-- Highlight
 		do
 			is_highlighted := b
@@ -111,7 +111,7 @@ feature -- Status Setting
 			value_set: is_highlighted = b
 		end
 
-	set_is_fake (b: BOOLEAN) is
+	set_is_fake (b: BOOLEAN)
 			-- Set `is_fake' to `b'.
 		do
 			is_fake := b
@@ -121,7 +121,7 @@ feature -- Status Setting
 
 feature -- Visitor
 
-	process (a_visitor: TOKEN_VISITOR) is
+	process (a_visitor: TOKEN_VISITOR)
 			-- Visitor
 		require
 			visitor_not_void: a_visitor /= Void
@@ -136,21 +136,21 @@ feature -- Linkable functions
 	next: EDITOR_TOKEN
 			-- Next token in the line. Void if none.
 
-	set_next_token (next_token: EDITOR_TOKEN) is
+	set_next_token (next_token: EDITOR_TOKEN)
 			-- set `next' to `next_token'. `next' can
 			-- be Void if there are no next token.
 		do
 			next := next_token
 		end
 
-	set_previous_token (previous_token: EDITOR_TOKEN) is
+	set_previous_token (previous_token: EDITOR_TOKEN)
 			-- set `next' to `next_token'. `next' can
 			-- be Void if there are no next token.
 		do
 			previous := previous_token
 		end
 
-	update_position is
+	update_position
 			-- Update the value of `position'.
 		do
 				-- Update current position
@@ -167,18 +167,18 @@ feature -- Linkable functions
 
 feature -- Display
 
-	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		deferred
 		end
 
-	display_with_offset (x, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_with_offset (x, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc' at the coordinates (`x',`d_y')
 		deferred
 		end
 
-	display_selected(d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_selected(d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state.
@@ -191,7 +191,7 @@ feature -- Display
 			display(d_y, device, panel)
 		end
 
-	display_half_selected (d_y: INTEGER; start_selection, end_selection: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_half_selected (d_y: INTEGER; start_selection, end_selection: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state from beginning to `pivot'
@@ -206,12 +206,12 @@ feature -- Display
 
 feature -- Width & height
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixel of the entire token.
 		deferred
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Line height
 		local
 			l_userset_data: like userset_data
@@ -224,7 +224,7 @@ feature -- Width & height
 			end
 		end
 
-	get_substring_width(n: INTEGER): INTEGER is
+	get_substring_width(n: INTEGER): INTEGER
 			-- Compute the width in pixels of the first
 			-- `n' characters of the current string.
 		require
@@ -232,7 +232,7 @@ feature -- Width & height
 		deferred
 		end
 
-	retrieve_position_by_width(a_width: INTEGER): INTEGER is
+	retrieve_position_by_width(a_width: INTEGER): INTEGER
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		require
@@ -243,46 +243,46 @@ feature -- Width & height
 			Result_small_enough: Result <= length
 		end
 
-	update_width is
+	update_width
 			-- update value of `width'
 		do
 		end
 
 feature -- Color
 
-	text_color: EV_COLOR is
+	text_color: EV_COLOR
 		do
 			Result := editor_preferences.color_of_id (text_color_id)
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 		do
 			Result := editor_preferences.color_of_id (background_color_id)
 		end
 
-	selected_text_color: EV_COLOR is
+	selected_text_color: EV_COLOR
 		do
 			Result := editor_preferences.color_of_id (selected_text_color_id)
 		end
 
-	selected_background_color: EV_COLOR is
+	selected_background_color: EV_COLOR
 		do
 			Result := editor_preferences.color_of_id (selected_background_color_id)
 		end
 
-	focus_out_selected_background_color: EV_COLOR is
+	focus_out_selected_background_color: EV_COLOR
 		do
 			Result := editor_preferences.color_of_id (focus_out_selected_background_color_id)
 		end
 
 feature -- Color ids
 
-	text_color_id: INTEGER is
+	text_color_id: INTEGER
 		do
 			Result := normal_text_color_id
 		end
 
-	background_color_id: INTEGER is
+	background_color_id: INTEGER
 		do
 			if is_highlighted then
 				Result := highlight_color_id
@@ -291,24 +291,24 @@ feature -- Color ids
 			end
 		end
 
-	selected_text_color_id: INTEGER is
+	selected_text_color_id: INTEGER
 		do
 			Result := selection_text_color_id
 		end
 
-	selected_background_color_id: INTEGER is
+	selected_background_color_id: INTEGER
 		do
 			Result := selection_background_color_id
 		end
 
-	focus_out_selected_background_color_id: INTEGER is
+	focus_out_selected_background_color_id: INTEGER
 		do
 			Result := focus_out_selection_background_color_id
 		end
 
 feature -- Font
 
-	font: EV_FONT is
+	font: EV_FONT
 			-- Font of current.
 		local
 			l_userset_fonts: like userset_fonts
@@ -321,7 +321,7 @@ feature -- Font
 			end
 		end
 
-	font_offset: INTEGER is
+	font_offset: INTEGER
 			-- Number of pixels from top of line to beginning of drawing operation
 		do
 			if userset_font_offset > 0 then
@@ -331,13 +331,13 @@ feature -- Font
 			end
 		end
 
-	font_id: INTEGER is
+	font_id: INTEGER
 			-- Font id.
 		do
 			Result := editor_font_id
 		end
 
-	font_width: INTEGER is
+	font_width: INTEGER
 			-- Width of character in the editor.
 		require
 			is_fixed_width: is_fixed_width
@@ -352,7 +352,7 @@ feature -- Font
 			end
 		end
 
-	is_fixed_width: BOOLEAN is
+	is_fixed_width: BOOLEAN
 			-- Is `font' a fixed-width font?
 		local
 			l_data: like userset_data
@@ -367,7 +367,7 @@ feature -- Font
 
 feature -- Implementation of clickable and editable text
 
-	is_text: BOOLEAN is
+	is_text: BOOLEAN
 			-- is this a text token ?
 		do
 		end
@@ -375,7 +375,7 @@ feature -- Implementation of clickable and editable text
 	pos_in_text: INTEGER
 			-- Position of the token in the text in characters
 
-	set_pos_in_text (pit: INTEGER) is
+	set_pos_in_text (pit: INTEGER)
 			-- Does nothing : redefined in editor_token_text
 		require
 			pit_non_negative: pit >= 0
@@ -387,7 +387,7 @@ feature -- Implementation of clickable and editable text
 
 	is_clickable: BOOLEAN
 
-	set_is_clickable (a_clickable: BOOLEAN) is
+	set_is_clickable (a_clickable: BOOLEAN)
 			-- Set `is_clickable' with `a_clickable'.
 		do
 			is_clickable := a_clickable
@@ -395,13 +395,13 @@ feature -- Implementation of clickable and editable text
 			is_clickable_set: is_clickable = a_clickable
 		end
 
-	platform_is_windows: BOOLEAN is
+	platform_is_windows: BOOLEAN
 			-- Is the current platform Windows?
 		once
 			Result := (create {PLATFORM}).is_windows
 		end
 
-	draw_text_top_left (pos, d_y: INTEGER; text_to_be_drawn: STRING_32; device: EV_DRAWABLE) is
+	draw_text_top_left (pos, d_y: INTEGER; text_to_be_drawn: STRING_32; device: EV_DRAWABLE)
 		do
 			device.draw_text (pos, d_y + font_offset, text_to_be_drawn)
 		end
@@ -459,7 +459,7 @@ invariant
 	width_positive_or_null: width >= 0
 	previous = Void implies position = 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

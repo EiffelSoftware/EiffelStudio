@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract notions of window which can accept children."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -48,7 +48,7 @@ inherit
 
 feature -- Access
 
-	children: LIST [WEL_WINDOW] is
+	children: LIST [WEL_WINDOW]
 			-- Construct a linear representation of children.
 		require
 			exists: exists
@@ -61,7 +61,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	menu: WEL_MENU is
+	menu: WEL_MENU
 			-- Associated menu
 		require
 			exists: exists
@@ -72,7 +72,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	system_menu: WEL_MENU is
+	system_menu: WEL_MENU
 			-- Associated system menu
 		require
 			exists: exists
@@ -88,14 +88,14 @@ feature -- Access
 
 feature -- Status report
 
-	closeable: BOOLEAN is
+	closeable: BOOLEAN
 			-- Can the user close the window?
 			-- Yes by default.
 		do
 			Result := True
 		end
 
-	has_menu: BOOLEAN is
+	has_menu: BOOLEAN
 			-- Does the window have a menu?
 		require
 			exists: exists
@@ -103,7 +103,7 @@ feature -- Status report
 			Result := cwin_get_menu (item) /= default_pointer
 		end
 
-	has_system_menu: BOOLEAN is
+	has_system_menu: BOOLEAN
 			-- Does the window have a system menu?
 		require
 			exists: exists
@@ -112,19 +112,19 @@ feature -- Status report
 				default_pointer
 		end
 
-	minimal_width: INTEGER is
+	minimal_width: INTEGER
 			-- Minimal width allowed for the window
 		do
 			Result := window_minimum_width
 		end
 
-	minimal_height: INTEGER is
+	minimal_height: INTEGER
 			-- Minimal height allowed for the window
 		do
 			Result := window_minimum_height
 		end
 
-	horizontal_position: INTEGER is
+	horizontal_position: INTEGER
 			-- Current position of the horizontal scroll box
 		require
 			exists: exists
@@ -136,7 +136,7 @@ feature -- Status report
 			result_large_enough: Result >= minimal_horizontal_position
 		end
 
-	vertical_position: INTEGER is
+	vertical_position: INTEGER
 			-- Current position of the vertical scroll box
 		require
 			exists: exists
@@ -148,7 +148,7 @@ feature -- Status report
 			result_large_enough: Result >= minimal_vertical_position
 		end
 
-	maximal_horizontal_position: INTEGER is
+	maximal_horizontal_position: INTEGER
 			-- Maxium position of the horizontal scroll box
 		require
 			exists: exists
@@ -159,7 +159,7 @@ feature -- Status report
 			result_large_enough: Result >= minimal_horizontal_position
 		end
 
-	maximal_vertical_position: INTEGER is
+	maximal_vertical_position: INTEGER
 			-- Maxium position of the vertical scroll box
 		require
 			exists: exists
@@ -170,7 +170,7 @@ feature -- Status report
 			result_large_enough: Result >= minimal_vertical_position
 		end
 
-	minimal_horizontal_position: INTEGER is
+	minimal_horizontal_position: INTEGER
 			-- Minimum position of the horizontal scroll box
 		require
 			exists: exists
@@ -181,7 +181,7 @@ feature -- Status report
 			result_small_enough: Result <= maximal_horizontal_position
 		end
 
-	minimal_vertical_position: INTEGER is
+	minimal_vertical_position: INTEGER
 			-- Minimum position of the vertical scroll box
 		require
 			exists: exists
@@ -192,7 +192,7 @@ feature -- Status report
 			result_small_enough: Result <= maximal_vertical_position
 		end
 
-	child_window_from_point (point: WEL_POINT): POINTER is
+	child_window_from_point (point: WEL_POINT): POINTER
 			-- `Result' is pointer to child window as position `point'.
 			-- Only checks children and their children and returns a child even
 			-- if over a HTTRANSPARENT area of the child. Corresponds to
@@ -205,7 +205,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_menu (a_menu: WEL_MENU) is
+	set_menu (a_menu: WEL_MENU)
 			-- Set `menu' with `a_menu'.
 		require
 			exists: exists
@@ -221,7 +221,7 @@ feature -- Status setting
 			menu_set: menu.item = a_menu.item
 		end
 
-	unset_menu is
+	unset_menu
 			-- Unset the current menu associated to the window.
 		require
 			exists: exists
@@ -234,7 +234,7 @@ feature -- Status setting
 			menu_unset: not has_menu
 		end
 
-	set_icon (a_small_icon: WEL_ICON; a_big_icon: WEL_ICON) is
+	set_icon (a_small_icon: WEL_ICON; a_big_icon: WEL_ICON)
 			-- Set the small (16x16) and the normal (32x32) icon for this window.
 			--
 			-- Note: Set `a_small_icon' to Void to remove the small icon and
@@ -253,7 +253,7 @@ feature -- Status setting
 			end
 		end
 
-	set_horizontal_position (position: INTEGER) is
+	set_horizontal_position (position: INTEGER)
 			-- Set `horizontal_position' with `position'.
 		require
 			exists: exists
@@ -266,7 +266,7 @@ feature -- Status setting
 			horizontal_position_set: horizontal_position = position
 		end
 
-	set_vertical_position (position: INTEGER) is
+	set_vertical_position (position: INTEGER)
 			-- Set `vertical_position' with `position'.
 		require
 			exists: exists
@@ -279,7 +279,7 @@ feature -- Status setting
 			vertical_position_set: vertical_position = position
 		end
 
-	set_horizontal_range (minimum, maximum: INTEGER) is
+	set_horizontal_range (minimum, maximum: INTEGER)
 			-- Set `minimal_horizontal_position' and
 			-- `maximal_horizontal_position' with `minimum' and
 			-- `maximum'.
@@ -296,7 +296,7 @@ feature -- Status setting
 				maximum
 		end
 
-	set_vertical_range (minimum, maximum: INTEGER) is
+	set_vertical_range (minimum, maximum: INTEGER)
 			-- Set `minimal_vertical_position' and
 			-- `maximal_vertical_position' with `minimum' and
 			-- `maximum'.
@@ -313,7 +313,7 @@ feature -- Status setting
 				maximum
 		end
 
-	horizontal_update (inc, position: INTEGER) is
+	horizontal_update (inc, position: INTEGER)
 			-- Update the window and the horizontal scroll box with
 			-- `inc' and `position'.
 		require
@@ -329,7 +329,7 @@ feature -- Status setting
 			horizontal_position_set: horizontal_position = position
 		end
 
-	vertical_update (inc, position: INTEGER) is
+	vertical_update (inc, position: INTEGER)
 			-- Update the window and the vertical scroll box with
 			-- `inc' and `position'.
 		require
@@ -347,7 +347,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	destroy is
+	destroy
 			-- Destroy the window and quit the application
 			-- if `Current' is the application's main window.
 		do
@@ -357,7 +357,7 @@ feature -- Basic operations
 			end
 		end
 
-	draw_menu is
+	draw_menu
 			-- Draw the menu bar associated with the window.
 		require
 			exists: exists
@@ -366,7 +366,7 @@ feature -- Basic operations
 			cwin_draw_menu_bar (item)
 		end
 
-	move_absolute (a_x, a_y: INTEGER) is
+	move_absolute (a_x, a_y: INTEGER)
 			-- Move the window to `a_x', `a_y' absolute position.
 		require
 			exists: exists
@@ -382,7 +382,7 @@ feature -- Basic operations
 			end
 		end
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN)
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		local
@@ -403,7 +403,7 @@ feature -- Basic operations
 
 feature {NONE}-- Messages
 
-	notify (control: WEL_CONTROL; notify_code: INTEGER) is
+	notify (control: WEL_CONTROL; notify_code: INTEGER)
 			-- A `notify_code' is received for `control'.
 		require
 			exists: exists
@@ -412,7 +412,7 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_control_command (control: WEL_CONTROL) is
+	on_control_command (control: WEL_CONTROL)
 			-- A command has been received from `control'.
 		require
 			exists: exists
@@ -421,21 +421,21 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_control_id_command (control_id: INTEGER) is
+	on_control_id_command (control_id: INTEGER)
 			-- A command has been received from `control_id'.
 		require
 			exists: exists
 		do
 		end
 
-	on_menu_command (menu_id: INTEGER) is
+	on_menu_command (menu_id: INTEGER)
 			-- The `menu_id' has been choosen from the menu.
 		require
 			exists: exists
 		do
 		end
 
-	on_sys_command (a_command, x_pos, y_pos: INTEGER) is
+	on_sys_command (a_command, x_pos, y_pos: INTEGER)
 			-- Wm_syscommand message.
 			-- This message is sent when the user selects a command
 			-- from the system menu or when the user selects the
@@ -448,14 +448,14 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_accelerator_command (accelerator_id: INTEGER) is
+	on_accelerator_command (accelerator_id: INTEGER)
 			-- The `acelerator_id' has been activated.
 		require
 			exists: exists
 		do
 		end
 
-	on_menu_select (menu_item, flags: INTEGER; a_menu: WEL_MENU) is
+	on_menu_select (menu_item, flags: INTEGER; a_menu: WEL_MENU)
 			-- The `menu_item' from `a_menu' is currently
 			-- highlighted by the selection bar. `flags'
 			-- indicates the state of `a_menu'.
@@ -466,7 +466,7 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_paint message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -480,7 +480,7 @@ feature {NONE}-- Messages
 		end
 
 	on_vertical_scroll_control (scroll_code, position: INTEGER;
-			bar: WEL_BAR) is
+			bar: WEL_BAR)
 			-- Vertical scroll is received with a
 			-- `scroll_code' type. See class WEL_SB_CONSTANTS
 			-- for `scroll_code' values. `position' is the new
@@ -494,7 +494,7 @@ feature {NONE}-- Messages
 		end
 
 	on_horizontal_scroll_control (scroll_code, position: INTEGER;
-			bar: WEL_BAR) is
+			bar: WEL_BAR)
 			-- Horizontal scroll is received with a
 			-- `scroll_code' type. See class WEL_SB_CONSTANTS
 			-- for `scroll_code' values. `position' is the new
@@ -507,7 +507,7 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_vertical_scroll (scroll_code, position: INTEGER) is
+	on_vertical_scroll (scroll_code, position: INTEGER)
 			-- Vertical scroll is received with a
 			-- `scroll_code' type. See class WEL_SB_CONSTANTS for
 			-- `scroll_code' values. `position' is the new
@@ -521,7 +521,7 @@ feature {NONE}-- Messages
 			end
 		end
 
-	on_horizontal_scroll (scroll_code, position: INTEGER) is
+	on_horizontal_scroll (scroll_code, position: INTEGER)
 			-- Horizontal scroll is received with a
 			-- `scroll_code' type. See class WEL_SB_CONSTANTS for
 			-- `scroll_code' values. `position' is the new
@@ -535,7 +535,7 @@ feature {NONE}-- Messages
 			end
 		end
 
-	on_draw_item (control_id: POINTER; draw_item: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_item (control_id: POINTER; draw_item: WEL_DRAW_ITEM_STRUCT)
 			-- Wm_drawitem message.
 			-- A owner-draw control identified by `control_id' has
 			-- been changed and must be drawn. `draw_item' contains
@@ -547,7 +547,7 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC) is
+	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC)
 			-- Wm_ctlcolorstatic, Wm_ctlcoloredit, Wm_ctlcolorlistbox
 			-- and Wm_ctlcolorscrollbar messages.
 			-- To change its default colors, the color-control `control'
@@ -570,7 +570,7 @@ feature {NONE}-- Messages
 				-- disable_default_processing
 		end
 
-	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
+	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO)
 			-- Wm_getminmaxinfo message.
 			-- The size or position of the window is about to
 			-- change. An application can change `min_max_info' to
@@ -583,7 +583,7 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_palette_is_changing (window: WEL_WINDOW) is
+	on_palette_is_changing (window: WEL_WINDOW)
 			-- Wm_paletteischanging.
 			-- Inform that an application is going to realize its
 			-- logical palette. `window' identifies the window
@@ -593,7 +593,7 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_palette_changed (window: WEL_WINDOW) is
+	on_palette_changed (window: WEL_WINDOW)
 			-- Wm_palettechanged message.
 			-- This message is sent after the window with the
 			-- keyboard focus has realized its logical palette.
@@ -604,7 +604,7 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_query_new_palette is
+	on_query_new_palette
 			-- Wm_querrynewpalette message.
 			-- Inform an application that is about to receive the
 			-- keyboard focus, giving the application an opportunity
@@ -617,7 +617,7 @@ feature {NONE}-- Messages
 		do
 		end
 
-	on_getdlgcode is
+	on_getdlgcode
 			-- Called when window receives WM_GETDLGCODE message.
 		do
 			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
@@ -625,7 +625,7 @@ feature {NONE}-- Messages
 
 feature {NONE} -- Implementation
 
-	on_wm_notify (wparam, lparam: POINTER) is
+	on_wm_notify (wparam, lparam: POINTER)
 			-- Wm_notify message
 		local
 			info: WEL_NMHDR
@@ -645,7 +645,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_wm_command (wparam, lparam: POINTER) is
+	on_wm_command (wparam, lparam: POINTER)
 			-- Wm_command message.
 			-- Dispatch a Wm_command message to
 			-- `on_wm_control_id_command', `on_control_command'
@@ -687,7 +687,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_wm_control_id_command (control_id: INTEGER) is
+	on_wm_control_id_command (control_id: INTEGER)
 			-- Wm_command from a `control_id'.
 		require
 			exists: exists
@@ -695,7 +695,7 @@ feature {NONE} -- Implementation
 			on_control_id_command (control_id)
 		end
 
-	on_wm_menu_command (menu_id: INTEGER) is
+	on_wm_menu_command (menu_id: INTEGER)
 			-- Wm_command from a `menu_id'.
 		require
 			exists: exists
@@ -703,7 +703,7 @@ feature {NONE} -- Implementation
 			on_menu_command (menu_id)
 		end
 
-	on_wm_menu_select (wparam, lparam: POINTER) is
+	on_wm_menu_select (wparam, lparam: POINTER)
 			-- Wm_menuselect message.
 		require
 			exists: exists
@@ -722,7 +722,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_wm_paint (wparam: POINTER) is
+	on_wm_paint (wparam: POINTER)
 			-- Wm_paint message.
 			-- A WEL_DC and WEL_PAINT_STRUCT are created and
 			-- passed to the `on_paint' routine.
@@ -745,7 +745,7 @@ feature {NONE} -- Implementation
 			paint_dc.release
 		end
 
-	on_wm_vscroll (wparam, lparam: POINTER) is
+	on_wm_vscroll (wparam, lparam: POINTER)
 			-- Wm_vscroll message.
 		require
 			exists: exists
@@ -771,7 +771,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_wm_hscroll (wparam, lparam: POINTER) is
+	on_wm_hscroll (wparam, lparam: POINTER)
 			-- Wm_hscroll message.
 		require
 			exists: exists
@@ -797,7 +797,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_wm_draw_item (wparam, lparam: POINTER) is
+	on_wm_draw_item (wparam, lparam: POINTER)
 			-- Wm_drawitem message
 		require
 			exists: exists
@@ -808,7 +808,7 @@ feature {NONE} -- Implementation
 			on_draw_item (wparam, di)
 		end
 
-	on_wm_get_min_max_info (lparam: POINTER) is
+	on_wm_get_min_max_info (lparam: POINTER)
 			-- Wm_getminmaxinfo message
 		require
 			exists: exists
@@ -819,7 +819,7 @@ feature {NONE} -- Implementation
 			on_get_min_max_info (mmi)
 		end
 
-	on_wm_ctlcolor (wparam, lparam: POINTER) is
+	on_wm_ctlcolor (wparam, lparam: POINTER)
 			-- Common routine for Wm_ctlcolor messages.
 		require
 			exists: exists
@@ -838,7 +838,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_wm_close is
+	on_wm_close
 			-- Wm_close message.
 			-- If `closeable' is False further processing is halted.
 		require
@@ -847,7 +847,7 @@ feature {NONE} -- Implementation
 			set_default_processing (closeable)
 		end
 
-	on_wm_destroy is
+	on_wm_destroy
 			-- Wm_destroy message.
 			-- Quit the application if `Current' is the
 			-- application's main window.
@@ -858,7 +858,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_wm_setting_change is
+	on_wm_setting_change
 			-- Wm_settingchange message
 			-- Update the system fonts.
 		do
@@ -870,7 +870,7 @@ feature {NONE} -- Implementation
 			small_caption_font_cell.put (Void)
 		end
 
-	on_wm_syscolor_change is
+	on_wm_syscolor_change
 			-- Wm_syscolorchange message
 			-- Update the system colors.
 		local
@@ -915,7 +915,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	application_main_window: WEL_APPLICATION_MAIN_WINDOW is
+	application_main_window: WEL_APPLICATION_MAIN_WINDOW
 			-- Once object used by `on_wm_destroy' to test if `Current'
 			-- is the application's main window.
 		once
@@ -927,7 +927,7 @@ feature {NONE} -- Implementation
 feature {WEL_DISPATCHER}
 
 	frozen composite_process_message, process_message (hwnd: POINTER;
-			msg: INTEGER; wparam, lparam: POINTER): POINTER is
+			msg: INTEGER; wparam, lparam: POINTER): POINTER
 		local
 			called: BOOLEAN
 		do
@@ -988,7 +988,7 @@ feature {WEL_DISPATCHER}
 
 feature {NONE} -- Externals
 
-	cwin_draw_menu_bar (hwnd: POINTER) is
+	cwin_draw_menu_bar (hwnd: POINTER)
 			-- SDK DrawMenuBar
 		external
 			"C [macro <wel.h>] (HWND)"
@@ -996,7 +996,7 @@ feature {NONE} -- Externals
 			"DrawMenuBar"
 		end
 
-	cwin_get_menu (hwnd: POINTER): POINTER is
+	cwin_get_menu (hwnd: POINTER): POINTER
 			-- SDK GetMenu
 		external
 			"C [macro <wel.h>] (HWND): EIF_POINTER"
@@ -1004,7 +1004,7 @@ feature {NONE} -- Externals
 			"GetMenu"
 		end
 
-	cwin_get_system_menu (hwnd: POINTER; revert: BOOLEAN): POINTER is
+	cwin_get_system_menu (hwnd: POINTER; revert: BOOLEAN): POINTER
 			-- SDK GetSystemMenu
 		external
 			"C [macro <wel.h>] (HWND, BOOL): EIF_POINTER"
@@ -1012,7 +1012,7 @@ feature {NONE} -- Externals
 			"GetSystemMenu"
 		end
 
-	cwin_post_quit_message (exit_code: INTEGER) is
+	cwin_post_quit_message (exit_code: INTEGER)
 			-- SDK PostQuitMessage
 		external
 			"C [macro <wel.h>] (int)"
@@ -1020,94 +1020,94 @@ feature {NONE} -- Externals
 			"PostQuitMessage"
 		end
 
-	cwin_get_wm_command_id (wparam, lparam: POINTER): INTEGER is
+	cwin_get_wm_command_id (wparam, lparam: POINTER): INTEGER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_COMMAND_ID"
 		end
 
-	cwin_get_wm_command_hwnd (wparam, lparam: POINTER): POINTER is
+	cwin_get_wm_command_hwnd (wparam, lparam: POINTER): POINTER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_POINTER"
 		alias
 			"GET_WM_COMMAND_HWND"
 		end
 
-	cwin_get_wm_command_cmd (wparam, lparam: POINTER): INTEGER is
+	cwin_get_wm_command_cmd (wparam, lparam: POINTER): INTEGER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_COMMAND_CMD"
 		end
 
-	cwin_get_wm_menuselect_cmd (wparam, lparam: POINTER): INTEGER is
+	cwin_get_wm_menuselect_cmd (wparam, lparam: POINTER): INTEGER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_MENUSELECT_CMD"
 		end
 
-	cwin_get_wm_menuselect_flags (wparam, lparam: POINTER): INTEGER is
+	cwin_get_wm_menuselect_flags (wparam, lparam: POINTER): INTEGER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_MENUSELECT_FLAGS"
 		end
 
-	cwin_get_wm_menuselect_hmenu (wparam, lparam: POINTER): POINTER is
+	cwin_get_wm_menuselect_hmenu (wparam, lparam: POINTER): POINTER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_POINTER"
 		alias
 			"GET_WM_MENUSELECT_HMENU"
 		end
 
-	cwin_get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER is
+	cwin_get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_VSCROLL_CODE"
 		end
 
-	cwin_get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER is
+	cwin_get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		end
 
-	cwin_get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER is
+	cwin_get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_POINTER"
 		alias
 			"GET_WM_VSCROLL_HWND"
 		end
 
-	cwin_get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER is
+	cwin_get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_HSCROLL_CODE"
 		end
 
-	cwin_get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER is
+	cwin_get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		end
 
-	cwin_get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER is
+	cwin_get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_POINTER"
 		alias
 			"GET_WM_HSCROLL_HWND"
 		end
 
-	cwin_child_window_from_point (hwnd: POINTER; point: POINTER): POINTER is
+	cwin_child_window_from_point (hwnd: POINTER; point: POINTER): POINTER
 		external
 			"C inline use <windows.h>"
 		alias
 			"ChildWindowFromPoint ((HWND) $hwnd, *(POINT *) $point)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

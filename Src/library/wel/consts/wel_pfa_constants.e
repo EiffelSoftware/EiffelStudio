@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Paragraph format alignment (PFA) constants for the rich %
 		%edit control."
 	legal: "See notice at end of class."
@@ -11,22 +11,22 @@ class
 
 feature -- Access
 
-	Pfa_left: INTEGER is 1
+	Pfa_left: INTEGER = 1
 			-- Paragraphs are aligned with the left margin.
 
-	Pfa_right: INTEGER is 2
+	Pfa_right: INTEGER = 2
 			-- Paragraphs are aligned with the right margin.
 			
-	Pfa_center: INTEGER is 3
+	Pfa_center: INTEGER = 3
 			-- Paragraphs are centered.
 		
-	Pfa_justify: INTEGER is 4
+	Pfa_justify: INTEGER = 4
 			-- Paragraphs are justified.
 		
-	Pfa_full_interword: INTEGER is 5;
+	Pfa_full_interword: INTEGER = 5;
 			-- Paragraphs are justified by expanding blanks alone.
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

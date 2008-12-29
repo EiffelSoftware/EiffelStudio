@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Fundamental widget that can have children."
@@ -51,22 +51,22 @@ feature -- Access
 			--| and MEL needs all the children for proper cleanup in the 
 			--| widget manager and callback structures.
 
-	is_form: BOOLEAN is
+	is_form: BOOLEAN
 			-- Is Current a form?
 		do
 		end;
 
-	is_frame: BOOLEAN is
+	is_frame: BOOLEAN
 			-- Is Current a fame?
 		do
 		end;
 
-	is_paned_window: BOOLEAN is
+	is_paned_window: BOOLEAN
 			-- Is Current a paned window?
 		do
 		end;
 
-	children: FIXED_LIST [POINTER] is
+	children: FIXED_LIST [POINTER]
 			-- List of the children widgets `screen_object'
 			-- (Does not include popup children)
 		require
@@ -91,7 +91,7 @@ feature -- Access
 			valid_result: Result /= Void and then Result.count = children.count
 		end;
 
-	mel_children: ARRAYED_LIST [MEL_OBJECT] is
+	mel_children: ARRAYED_LIST [MEL_OBJECT]
 			-- List of children widgets recorded in MEL
 			-- (This list may vary from `children' since a widget
 			-- may have been created in C without being recorded in MEL.)
@@ -125,7 +125,7 @@ feature -- Access
 			children_list_not_void: Result /= Void
 		end;
 
-	descendants: ARRAYED_LIST [POINTER] is
+	descendants: ARRAYED_LIST [POINTER]
 			-- List of all descendants of current composite
 			-- (Does not include popup children)
 		do
@@ -133,7 +133,7 @@ feature -- Access
 			descendants_of (Current, Result)
 		end;
 
-	mel_descendants: ARRAYED_LIST [MEL_OBJECT] is
+	mel_descendants: ARRAYED_LIST [MEL_OBJECT]
 			-- List of descendants of current composite recorded in MEL
 			-- (This list may vary from `children' since a widget
 			-- may have been created in C without being recorded in MEL.
@@ -169,7 +169,7 @@ feature -- Access
 
 feature -- Measurement
 
-	mel_children_count: INTEGER is
+	mel_children_count: INTEGER
 			-- Count of the composite's MEL children
 			-- (This count may vary from `children_count' since a widget
 			-- may have been created in C without being recorded in MEL.)
@@ -181,7 +181,7 @@ feature -- Measurement
 			mel_children_count_large_enough: Result >= 0
 		end;
 
-	children_count: INTEGER is
+	children_count: INTEGER
 			-- Count of the widget's children
 		require
 			exists: not is_destroyed
@@ -193,7 +193,7 @@ feature -- Measurement
 
 feature -- Removal
 
-    destroy is
+    destroy
             -- Destroy the associated screen object and all its
 			-- children including popups.
 		local
@@ -208,12 +208,12 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	created_dialog_automatically: BOOLEAN is
+	created_dialog_automatically: BOOLEAN
 			-- Was the dialog shell created automatically?
 		do
 		end;
 
-	make_for_descendants (a_screen_object: POINTER) is
+	make_for_descendants (a_screen_object: POINTER)
 			-- Make a composite for calculating descendants
 		require
 			not_null: a_screen_object /= default_pointer;
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			screen_object := a_screen_object
 		end;
 
-	all_children_destroyed (list: ARRAYED_LIST [POINTER]): BOOLEAN is
+	all_children_destroyed (list: ARRAYED_LIST [POINTER]): BOOLEAN
 			-- Are all the children destroyed?
 		local
 			mel_object: MEL_OBJECT
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	descendants_of (a_comp: MEL_COMPOSITE; list: ARRAYED_LIST [POINTER]) is
+	descendants_of (a_comp: MEL_COMPOSITE; list: ARRAYED_LIST [POINTER])
 			-- List of all descendants of current composite
 		require
 			valid_comp: a_comp /= Void;
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 
 feature {MEL_OBJECT}
 
-	frozen clean_up is
+	frozen clean_up
 			-- Clean up the is_destroyed widget's data structure
 			-- and its children.
 		local
@@ -316,7 +316,7 @@ feature {MEL_OBJECT}
 			end;
 		end;
 
-	object_clean_up is
+	object_clean_up
 			-- Clean up object widget data structures.
 		do	
 			old_object_clean_up;
@@ -335,7 +335,7 @@ feature {MEL_OBJECT}
 
 feature {MEL_WIDGET_MANAGER, MEL_SHELL}
 
-	add_popup_child (a_popup: MEL_SHELL) is
+	add_popup_child (a_popup: MEL_SHELL)
 			-- Add `a_popup' shell to `mel_popup_children'
 		require
 			not_has_popup: mel_popup_children = Void or else 
@@ -349,7 +349,7 @@ feature {MEL_WIDGET_MANAGER, MEL_SHELL}
 			has_popup: mel_popup_children.has (a_popup)
 		end;
 
-	remove_popup_child (a_popup: MEL_SHELL) is
+	remove_popup_child (a_popup: MEL_SHELL)
 			-- Remove `a_popup' shell from `mel_popup_children'
 		require
 			has_popup: mel_popup_children /= Void and then
@@ -367,38 +367,38 @@ feature {MEL_WIDGET_MANAGER, MEL_SHELL}
 
 feature {NONE} -- External features
 
-	c_get_i_th_widget_child (a_scr_obj: POINTER; index: INTEGER): POINTER is
+	c_get_i_th_widget_child (a_scr_obj: POINTER; index: INTEGER): POINTER
 		external
 			"C"
 		end;
 
-	c_get_children (a_scr_obj: POINTER; resource: POINTER): POINTER is
+	c_get_children (a_scr_obj: POINTER; resource: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	x_circulate_up (display_ptr: POINTER; a_window: POINTER) is
+	x_circulate_up (display_ptr: POINTER; a_window: POINTER)
 		external
 			"C (Display *, Window) | <X11/Xlib.h>"
 		alias
 			"XCirculateSubwindowsUp"
 		end;
 
-	x_circulate_down (display_ptr: POINTER; a_window: POINTER) is
+	x_circulate_down (display_ptr: POINTER; a_window: POINTER)
 		external
 			"C (Display *, Window) | <X11/Xlib.h>"
 		alias
 			"XCirculateSubwindowsDown"
 		end;
 
-	x_restack_windows (display_ptr: POINTER; w_list: POINTER; n: INTEGER) is
+	x_restack_windows (display_ptr: POINTER; w_list: POINTER; n: INTEGER)
 		external
 			"C (Display *, Window *, int) | <X11/Xlib.h>"
 		alias
 			"XRestackWindows"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

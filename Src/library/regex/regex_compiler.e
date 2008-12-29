@@ -1,5 +1,5 @@
 
-indexing
+note
 
    library: "Eif rx"
    type: "regular expressions"
@@ -17,7 +17,7 @@ class
 feature
    -- compiling regular expressions
 
-   compile( pat: STRING) is
+   compile( pat: STRING)
 	 -- attempt to compile `pat' into a regular expression
       require
 	 pat /= Void
@@ -56,7 +56,7 @@ feature
    extended: BOOLEAN
 	 -- make extended regular expressions
 
-   set_extended is
+   set_extended
 	 -- make extended regular expressions in future
       do
 	 extended := true
@@ -64,7 +64,7 @@ feature
 	 extended
       end
 
-   unset_extended is
+   unset_extended
 	 -- don't make extended regular expressions in future
       do
 	 extended := false
@@ -75,7 +75,7 @@ feature
    ignore_case: BOOLEAN
 	 -- make regular expressions ignore case
    
-   set_ignore_case is
+   set_ignore_case
 	 -- make regular expressions which ignore case
       do
 	 ignore_case := true
@@ -83,7 +83,7 @@ feature
 	 ignore_case 
       end
 
-   unset_ignore_case is
+   unset_ignore_case
 	 -- regular expressions don't ignore case from now on
       do
 	 ignore_case := false
@@ -94,7 +94,7 @@ feature
    handle_newlines: BOOLEAN 
 	 -- let newline in matching string be matched by ^/$
 
-   set_handle_newlines is
+   set_handle_newlines
 	 -- set `handle_newlines' to `True'
       do
 	 handle_newlines := True
@@ -102,7 +102,7 @@ feature
 	 handle_newlines
       end
 
-   unset_handle_newlines is
+   unset_handle_newlines
 	 -- set `handle_newlines' to false
       do
 	 handle_newlines := false
@@ -113,13 +113,13 @@ feature
 feature {NONE}
    -- compilation switches, implimentation
 
-   reg_ext: INTEGER is 1
+   reg_ext: INTEGER = 1
 
-   reg_ing: INTEGER is 2
+   reg_ing: INTEGER = 2
 
-   reg_nl: INTEGER is 4
+   reg_nl: INTEGER = 4
 
-   reg_extended: INTEGER is
+   reg_extended: INTEGER
 	 -- value of REG_EXTENDED flag
       do
 	 if extended then
@@ -131,7 +131,7 @@ feature {NONE}
 	 Result = reg_ext or Result = 0
       end
 
-   reg_icase: INTEGER is
+   reg_icase: INTEGER
 	 -- value of REG_ICASE flag
       do 
 	 if ignore_case then
@@ -143,7 +143,7 @@ feature {NONE}
 	 Result = reg_ing or Result = 0
       end
 
-   reg_newline: INTEGER is
+   reg_newline: INTEGER
 	 -- value of REG_NEWLING flag
       do
 	 if handle_newlines then
@@ -160,13 +160,13 @@ feature {NONE}
 feature {NONE}
    -- c code features
 
-  bw_alloc_reg: POINTER is
+  bw_alloc_reg: POINTER
 	 -- allocates sizeof(regex_t) space
       external "C (): regex_t* | %"regex_glue.h%""
       end
 
    bw_make_reg(reg: POINTER; pat: POINTER; fl_e: INTEGER;
-	       fl_i: INTEGER; fl_n: INTEGER; fl_nl: INTEGER): INTEGER is
+	       fl_i: INTEGER; fl_n: INTEGER; fl_nl: INTEGER): INTEGER
 	 -- attempt to compile `pat' in `reg' with flags
       require
 	 reg /= Default_pointer
@@ -174,14 +174,14 @@ feature {NONE}
       external "C: (regex_t*, char*, int, int, int ,int) | %"regex_glue.h%""
       end
 
-   bw_free_reg_space( reg: POINTER) is
+   bw_free_reg_space( reg: POINTER)
 	 -- frees space allocated for `reg'
       require
 	 reg /= Default_pointer
       external "C (regex_t*) | %"regex_glue.h%""
       end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

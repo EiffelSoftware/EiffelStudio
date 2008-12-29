@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Declare an interface through which %
 				  %flyweights can receive and act %
 				  %on extrinsic state."
@@ -13,7 +13,7 @@ class
 
 feature {FLYWEIGHT_FACTORY} -- Initialization
 
-	initialize(unsh: like unshared;sh: like shared) is
+	initialize(unsh: like unshared;sh: like shared)
 			-- Initialize Current
 		require
 			not_void: unsh /= Void and sh /= Void
@@ -37,7 +37,7 @@ feature {FLYWEIGHT_FACTORY} -- Implementation
 invariant
 	FLYWEIGHT_consistent: initialized implies shared /= Void and unshared /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision radio menu item. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a menu item.
 		do
 			base_make (an_interface)
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is this menu item checked?
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_check_menu_item_struct_active (menu_item).to_boolean
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Select this menu item.
 		do
 			if not is_selected then
@@ -63,7 +63,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	disable_select is
+	disable_select
 			-- Used to deselect is without firing actions.
 		do
 			if is_selected then
@@ -76,27 +76,27 @@ feature {EV_ANY_I} -- Implementation
 	ignore_select_actions: BOOLEAN
 		-- Should select_actions be called.
 
-	on_activate is
+	on_activate
 		do
 			if is_selected and not ignore_select_actions then
 				Precursor
 			end
 		end
 
-	set_radio_group (a_gslist: POINTER) is
+	set_radio_group (a_gslist: POINTER)
 			-- Make current a member of `a_gslist' radio group.
 		do
 			{EV_GTK_EXTERNALS}.gtk_radio_menu_item_set_group (menu_item, a_gslist)
 		end
 
-	radio_group: POINTER is
+	radio_group: POINTER
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_radio_menu_item_group (menu_item)
 		end
 
 	interface: EV_RADIO_MENU_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

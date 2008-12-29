@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision titled window. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the titled window.
 		do
 			base_make (an_interface)
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 
-	call_window_state_event (a_changed_mask, a_new_state: INTEGER) is
+	call_window_state_event (a_changed_mask, a_new_state: INTEGER)
 			-- Handle either minimize, maximize or restore event for `Current'.
 		local
 			l_call_restore: BOOLEAN
@@ -83,7 +83,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implemen
 
 feature -- Access
 
-	icon_name: STRING_32 is
+	icon_name: STRING_32
 			-- Alternative name, displayed when window is minimised.
 		do
 			if icon_name_holder /= Void then
@@ -107,7 +107,7 @@ feature -- Status report
 	is_maximized: BOOLEAN
 			-- Is displayed at maximum size?
 
-	is_displayed: BOOLEAN is
+	is_displayed: BOOLEAN
 			-- Is 'Current' displayed on screen?
 		do
 			Result := Precursor {EV_WINDOW_IMP} and not is_minimized
@@ -115,7 +115,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	raise is
+	raise
 			-- Request that window be displayed above all other windows.
 		do
 			if not is_show_requested then
@@ -126,13 +126,13 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gdk_window_raise ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 
-	lower is
+	lower
 			-- Request that window be displayed below all other windows.
 		do
 			{EV_GTK_EXTERNALS}.gdk_window_lower ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 
-	minimize is
+	minimize
 			-- Display iconified/minimised.
 		do
 			is_minimized := True
@@ -140,7 +140,7 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_iconify (c_object)
 		end
 
-	maximize is
+	maximize
 			-- Display at maximum size.
 		do
 			is_maximized := True
@@ -148,7 +148,7 @@ feature -- Status setting
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_maximize (c_object)
 		end
 
-	restore is
+	restore
 			-- Restore to original position when minimized or maximized.
 		do
 			if is_maximized then
@@ -162,7 +162,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_icon_name (an_icon_name: STRING_GENERAL) is
+	set_icon_name (an_icon_name: STRING_GENERAL)
 			-- Assign `an_icon_name' to `icon_name'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -173,7 +173,7 @@ feature -- Element change
 			icon_name_holder := an_icon_name.twin
 		end
 
-	set_icon_pixmap (an_icon: EV_PIXMAP) is
+	set_icon_pixmap (an_icon: EV_PIXMAP)
 			-- Assign `an_icon' to `icon'.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
@@ -188,7 +188,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	default_wm_decorations: INTEGER is
+	default_wm_decorations: INTEGER
 			-- Default WM decorations of `Current'.?
 		do
 			Result := {EV_GTK_EXTERNALS}.gdk_decor_all_enum
@@ -201,7 +201,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TITLED_WINDOW;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

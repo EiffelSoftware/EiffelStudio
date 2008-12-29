@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision accelerator. Carbon implementation."
 
 class
@@ -17,13 +17,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Connect interface.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Setup `Current'
 		do
 			set_is_initialized (True)
@@ -31,21 +31,21 @@ feature {NONE} -- Initialization
 
 feature {EV_TITLED_WINDOW_IMP} -- Implementation
 
-	modifier_mask: INTEGER is
+	modifier_mask: INTEGER
 			-- The mask consisting of alt, shift and control keys.
 		do
 		end
 
 feature {EV_TITLED_WINDOW_IMP} -- Implementation
 
-	add_accel (a_window_imp: EV_TITLED_WINDOW_IMP) is
+	add_accel (a_window_imp: EV_TITLED_WINDOW_IMP)
 			-- Add the current key combination
 		require
 			a_window_imp_not_void: a_window_imp /= Void
 		do
 		end
 
-	remove_accel (a_window_imp: EV_TITLED_WINDOW_IMP) is
+	remove_accel (a_window_imp: EV_TITLED_WINDOW_IMP)
 			-- Remove the current key combination
 		require
 			a_window_imp_not_void: a_window_imp /= Void
@@ -69,43 +69,43 @@ feature -- Access
 
 feature -- Element change
 
-	set_key (a_key: EV_KEY) is
+	set_key (a_key: EV_KEY)
 			-- Set `a_key' as new key that has to be pressed.
 		do
 			key := a_key.twin
 		end
 
-	enable_shift_required is
+	enable_shift_required
 			-- "Shift" must be pressed for the key combination.
 		do
 			shift_required := True
 		end
 
-	disable_shift_required is
+	disable_shift_required
 			-- "Shift" is not part of the key combination.
 		do
 			shift_required := False
 		end
 
-	enable_alt_required is
+	enable_alt_required
 			-- "Alt" must be pressed for the key combination.
 		do
 			alt_required := True
 		end
 
-	disable_alt_required is
+	disable_alt_required
 			-- "Alt" is not part of the key combination.
 		do
 			alt_required := False
 		end
 
-	enable_control_required is
+	enable_control_required
 			-- "Control" must be pressed for the key combination.
 		do
 			control_required := True
 		end
 
-	disable_control_required is
+	disable_control_required
 			-- "Control" is not part of the key combination.
 		do
 			control_required := False
@@ -118,12 +118,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	destroy is
+	destroy
 			-- Free resources of `Current'
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, The Eiffel.Mac Team"
 end -- class EV_ACCELERATOR_IMP
 

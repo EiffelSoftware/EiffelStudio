@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"EiffelVision implentation for retrieving a WEL_PEN"
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 feature -- Initialization
 
 	make_with_values (a_dashed_mode: INTEGER; a_width: INTEGER;
-		a_color: WEL_COLOR_REF) is
+		a_color: WEL_COLOR_REF)
 			-- Set the style of the pen to `a_dashed_mode',
 			-- the line width to `a_width' and the color
 			-- to `a_color'.
@@ -31,7 +31,7 @@ feature -- Initialization
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value.
 		local
 			color_hash_value: REAL
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal(other: like Current): BOOLEAN is
+	is_equal(other: like Current): BOOLEAN
 			-- Does `Current' look the same as `other'?
 		do
 			Result := 
@@ -84,7 +84,7 @@ feature -- Comparison
 feature -- Element change
 
 	set_values (a_dashed_mode: INTEGER; a_width: INTEGER;
-		a_color: WEL_COLOR_REF) is
+		a_color: WEL_COLOR_REF)
 			-- Set the style of the pen to `a_dashed_mode',
 			-- the line width to `a_width' and the color
 			-- to `a_color'.
@@ -96,7 +96,7 @@ feature -- Element change
 			color_green := a_color.green
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

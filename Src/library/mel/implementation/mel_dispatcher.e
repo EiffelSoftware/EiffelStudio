@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Dispatches the callbacks to the MEL widgets."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize the C variables
 		do
 			create xt_input_callbacks.make (1);
@@ -63,7 +63,7 @@ feature {MEL_SELECTION} -- Implementation
 				time: INTEGER;
 				a_string: STRING;
 				lose_cmd: like lose_command;
-				done_cmd: like done_command) is
+				done_cmd: like done_command)
 			-- Initialize Current to initiate the sending of data
 			-- though the selection mechanism.
 			-- `time' specifies the the selection should commence (should
@@ -92,7 +92,7 @@ feature {MEL_SELECTION} -- Implementation
 	make_get_selection_value (a_widget: MEL_WIDGET;
 				target_atom: MEL_ATOM;
 				time: INTEGER; 
-				requestor_cmd: like requestor_command) is
+				requestor_cmd: like requestor_command)
 			-- Initialize Current to obtain data though the
 			-- selection mechanism.
 			-- `time' specifies the the selection should commence (should
@@ -116,7 +116,7 @@ feature {MEL_APPLICATION_CONTEXT} -- Implementation
 	set_input_callback (app_context: MEL_APPLICATION_CONTEXT;
 				file: IO_MEDIUM;	
 				a_mask: POINTER;
-				a_command_exec: MEL_COMMAND_EXEC) is
+				a_command_exec: MEL_COMMAND_EXEC)
 			-- Add input callback for `a_screen_object' with `mask'
 		require
 			valid_app_cont: app_context /= Void and app_context.is_valid;
@@ -133,7 +133,7 @@ feature {MEL_APPLICATION_CONTEXT} -- Implementation
 
 	set_time_out_callback (app_context: MEL_APPLICATION_CONTEXT;
 				time: INTEGER;	
-				a_command_exec: MEL_COMMAND_EXEC) is
+				a_command_exec: MEL_COMMAND_EXEC)
 			-- Add timer callback for `app_context' with `time'.
 		require
 			valid_app_cont: app_context /= Void and app_context.is_valid;
@@ -148,7 +148,7 @@ feature {MEL_APPLICATION_CONTEXT} -- Implementation
 		end;
 
 	set_work_proc_callback (app_context: MEL_APPLICATION_CONTEXT;
-				a_command_exec: MEL_COMMAND_EXEC) is
+				a_command_exec: MEL_COMMAND_EXEC)
 			-- Add work procedure callback for `app_context'.
 		require
 			valid_app_cont: app_context /= Void and app_context.is_valid;
@@ -163,7 +163,7 @@ feature {MEL_APPLICATION_CONTEXT} -- Implementation
 
 feature {MEL_IDENTIFIER} -- Implementation
 				
-	remove_input_callback (id: MEL_IDENTIFIER) is
+	remove_input_callback (id: MEL_IDENTIFIER)
 			-- Remove input callback with `id'.
 		require
 			valid_id: id /= Void and then id.is_valid;
@@ -175,7 +175,7 @@ feature {MEL_IDENTIFIER} -- Implementation
 			removed: not xt_input_callbacks.has (id.identifier)
 		end;
 
-	remove_timer_callback (id: MEL_IDENTIFIER) is
+	remove_timer_callback (id: MEL_IDENTIFIER)
 			-- Remove timer callback with `id'.
 		require
 			valid_id: id /= Void and then id.is_valid;
@@ -187,7 +187,7 @@ feature {MEL_IDENTIFIER} -- Implementation
 			removed: not xt_timer_callbacks.has (id.identifier)
 		end;
 
-	remove_work_proc_callback (id: MEL_IDENTIFIER) is
+	remove_work_proc_callback (id: MEL_IDENTIFIER)
 			-- Remove work proc callback with `id'.
 		require
 			valid_id: id /= Void and then id.is_valid;
@@ -219,7 +219,7 @@ feature {NONE} -- External features passed out to C
 
 	frozen handle_wm_protocol (a_screen_object: POINTER; 
 				atom: POINTER; 
-				a_callback_struct_ptr: POINTER) is
+				a_callback_struct_ptr: POINTER)
 			-- Handle the Xm event that was specified in `set_wm_callback'.
 			-- Call the callbacks of the MEL widget that has `a_screen_object'
 			-- and create the MEL_CALLBACK_STRUCT object associated to the event.
@@ -241,7 +241,7 @@ feature {NONE} -- External features passed out to C
 
 	frozen handle_callback (a_screen_object: POINTER; 
 				resource_name: POINTER; 
-				a_callback_struct_ptr: POINTER) is
+				a_callback_struct_ptr: POINTER)
 			-- Handle the Xm event that was specified in `set_callback'.
 			-- Call the callbacks of the MEL widget that has `a_screen_object'
 			-- and create the MEL_CALLBACK_STRUCT object associated to the event.
@@ -262,7 +262,7 @@ feature {NONE} -- External features passed out to C
 
 	frozen handle_event (a_screen_object: POINTER; 
 				mask: INTEGER; 
-				event_ptr: POINTER) is
+				event_ptr: POINTER)
 			-- Handle the Xt event that was specified in `set_event_handler'.
 			-- Call the callbacks of the MEL widget that has `a_screen_object'
 			-- and create the MEL_CALLBACK_STRUCT object associated to the event.
@@ -283,7 +283,7 @@ feature {NONE} -- External features passed out to C
 
 	frozen handle_translation (a_screen_object: POINTER; 
 				a_translation: STRING; 
-				event_ptr: POINTER) is
+				event_ptr: POINTER)
 			-- Handle the Xt event that was specified in `set_translation'.
 			-- Call the callbacks of the MEL widget that has `a_screen_object'
 			-- and create the MEL_CALLBACK_STRUCT object associated to the event.
@@ -303,7 +303,7 @@ feature {NONE} -- External features passed out to C
 			a_widget.execute_callback (a_key, a_callback_struct)
 		end;
 
-	frozen handle_input (id: POINTER) is
+	frozen handle_input (id: POINTER)
 			-- Handle the input event with `id'.
 		require
 			non_null_id: id /= default_pointer;
@@ -319,7 +319,7 @@ feature {NONE} -- External features passed out to C
 			mel_exec.execute (mel_struct)
 		end;
 
-	frozen handle_timer (id: POINTER) is
+	frozen handle_timer (id: POINTER)
 			-- Handle the timer event with `id'.
 			-- Remove the entry with `id' after the callback
 			-- is invoked
@@ -340,7 +340,7 @@ feature {NONE} -- External features passed out to C
 			removed: not xt_timer_callbacks.has (id)
 		end;
 
-	frozen handle_work_proc (id: POINTER) is
+	frozen handle_work_proc (id: POINTER)
 			-- Handle the work proc event with `id'.
 		require
 			non_null_id: id /= default_pointer;
@@ -357,7 +357,7 @@ feature {NONE} -- External features passed out to C
 			end
 		end;
 
-	frozen handle_requestor_callback (c_string: POINTER; len: INTEGER) is
+	frozen handle_requestor_callback (c_string: POINTER; len: INTEGER)
 			-- Handle the requestor callback. Create an eiffel string
 			-- from `c_string;.
 		require
@@ -372,7 +372,7 @@ feature {NONE} -- External features passed out to C
 			end
 		end;
 
-	frozen handle_lose_callback is
+	frozen handle_lose_callback
 			-- Handle the lose callback. 
 		do
 			if lose_command /= Void then
@@ -380,7 +380,7 @@ feature {NONE} -- External features passed out to C
 			end
 		end;
 
-	frozen handle_done_callback is
+	frozen handle_done_callback
 			-- Handle the done callback. 
 		do
 			if done_command /= Void then
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 
 	create_callback_struct (a_widget: MEL_OBJECT; 
 				a_callback_struct_ptr: POINTER;
-				resource_name: POINTER): MEL_CALLBACK_STRUCT is
+				resource_name: POINTER): MEL_CALLBACK_STRUCT
 			-- Create a callback structure according to `a_callback_struct_ptr'.
 		require
 			valid_a_widget: a_widget /= Void
@@ -428,17 +428,17 @@ feature {NONE} -- External features
 					e_handler_work_proc,
 					e_handler_lose_callback,
 					e_handler_done_callback,
-					e_handler_requestor_callback: POINTER) is
+					e_handler_requestor_callback: POINTER)
 		external
 			"C"
 		end;
 
-	set_dispatcher_object (dispatcher: POINTER) is
+	set_dispatcher_object (dispatcher: POINTER)
 		external
 			"C"
 		end;
 
-	eif_adopt (object: ANY): POINTER is
+	eif_adopt (object: ANY): POINTER
 			-- Eiffel macro to adopt an object
 		external
 			"C [macro %"eif_macros.h%"] (EIF_OBJ): EIF_POINTER"
@@ -446,61 +446,61 @@ feature {NONE} -- External features
 			"eif_adopt"
 		end;
 
-	c_reason (a_callback_struct_ptr: POINTER): INTEGER is
+	c_reason (a_callback_struct_ptr: POINTER): INTEGER
 		external
 			"C [macro %"callback_struct.h%"] (XmAnyCallbackStruct *): EIF_INTEGER"
 		end;
 
-	c_add_input (app_context: POINTER; file: INTEGER; mask: POINTER): POINTER is
+	c_add_input (app_context: POINTER; file: INTEGER; mask: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	c_add_timer (app_context: POINTER; time: INTEGER): POINTER is
+	c_add_timer (app_context: POINTER; time: INTEGER): POINTER
 		external
 			"C"
 		end;
 
-	c_add_work_proc (app_context: POINTER): POINTER is
+	c_add_work_proc (app_context: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	xt_remove_input (id: POINTER) is
+	xt_remove_input (id: POINTER)
 		external
 			"C (XtInputId) | <X11/Intrinsic.h>"
 		alias
 			"XtRemoveInput"
 		end;
 
-	xt_remove_time_out (id: POINTER) is
+	xt_remove_time_out (id: POINTER)
 		external
 			"C (XtIntervalId) | <X11/Intrinsic.h>"
 		alias
 			"XtRemoveTimeOut"
 		end;
 
-	xt_remove_work_proc (id: POINTER) is
+	xt_remove_work_proc (id: POINTER)
 		external
 			"C"
 		end;
 
-	c_event (a_callback_struct_ptr: POINTER): POINTER is
+	c_event (a_callback_struct_ptr: POINTER): POINTER
 		external
 			"C [macro %"callback_struct.h%"] (XmAnyCallbackStruct *): EIF_POINTER"
 		end;
 
-	xt_own_selection (w, target: POINTER; time: INTEGER; a_string: POINTER) is
+	xt_own_selection (w, target: POINTER; time: INTEGER; a_string: POINTER)
 		external
 			"C"
 		end
 
-	xt_get_selection_value (w, target: POINTER; time: INTEGER) is
+	xt_get_selection_value (w, target: POINTER; time: INTEGER)
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

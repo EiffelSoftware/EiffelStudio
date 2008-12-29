@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that can receive Carbon events"
 	author: "Vision Mac Team"
 	date: "$Date$"
@@ -20,7 +20,7 @@ inherit
 
 feature {EV_APPLICATION_IMP} -- Implementation
 
-	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER is
+	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER
 			-- Feature that is called if an event occurs
 		do
 			-- By default do nothing, but return eventNotHandledErr, redefine if necessary

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gtk implementation of SD_WINDOW."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_interface: like interface) is
+	make (a_interface: like interface)
 			-- Redefine
 		do
 			Precursor {EV_WINDOW_IMP} (a_interface)
@@ -28,7 +28,7 @@ feature {NONE} -- Initlization
 			{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

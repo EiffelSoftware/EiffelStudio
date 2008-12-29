@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Test status information"
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Status report
 
-	has_passed (n: INTEGER): BOOLEAN is
+	has_passed (n: INTEGER): BOOLEAN
 			-- Has run `n' of test passed?
 		require
 			results_available: has_results
@@ -20,17 +20,17 @@ feature -- Status report
 		deferred
 		end
 	 
-	valid_run_index (n: INTEGER): BOOLEAN is
+	valid_run_index (n: INTEGER): BOOLEAN
 	 		-- Is run index `n' valid?
 		deferred
 		end
 
-	has_results: BOOLEAN is
+	has_results: BOOLEAN
 			-- Results for logging available?
 		deferred
 		end
 
-	has_execution_time (n: INTEGER): BOOLEAN is
+	has_execution_time (n: INTEGER): BOOLEAN
 			-- Does run `n' of test has a recorded execution time?
 		require
 			results_available: has_results
@@ -38,7 +38,7 @@ feature -- Status report
 		deferred
 		end
 	 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

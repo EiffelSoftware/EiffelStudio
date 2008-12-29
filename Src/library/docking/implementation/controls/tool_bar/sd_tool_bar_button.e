@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Toolbar button for SD_TOOL_BAR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			state := {SD_TOOL_BAR_ITEM_STATE}.normal
@@ -31,7 +31,7 @@ feature {NONE} -- Initlization
 
 feature -- Properties
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Set `text', can set Void text.
 		do
 			if a_text /= Void then
@@ -49,7 +49,7 @@ feature -- Properties
 	text: STRING_32
 			-- Text shown on item.
 
-	set_tooltip (a_tip: STRING_GENERAL) is
+	set_tooltip (a_tip: STRING_GENERAL)
 			-- Set `a_tooltip' with `a_tip'
 		do
 			if a_tip /= Void then
@@ -66,7 +66,7 @@ feature -- Properties
 
 feature -- Command
 
-	enable_sensitive is
+	enable_sensitive
 			-- Enable sensitive.
 		do
 			is_sensitive := True
@@ -75,7 +75,7 @@ feature -- Command
 			set: is_sensitive = True
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Disable sensitive.
 		do
 			is_sensitive := False
@@ -86,7 +86,7 @@ feature -- Command
 
 feature -- Query
 
-	width: INTEGER is
+	width: INTEGER
 			-- Redefine
 		do
 			Result := {SD_TOOL_BAR}.padding_width
@@ -98,7 +98,7 @@ feature -- Query
 			Result := Result + icon_width + {SD_TOOL_BAR}.padding_width
 		end
 
-	text_width: INTEGER is
+	text_width: INTEGER
 			-- Width of text
 		do
 			if text /= Void then
@@ -114,7 +114,7 @@ feature -- Query
 
 feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal issues
 
-	set_state (a_state: INTEGER) is
+	set_state (a_state: INTEGER)
 			-- Set `state'
 		require
 			valid: (create {SD_TOOL_BAR_ITEM_STATE}).is_valid (a_state)
@@ -124,7 +124,7 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 			set: state = a_state
 		end
 
-	has_position (a_relative_x, a_relative_y: INTEGER): BOOLEAN is
+	has_position (a_relative_x, a_relative_y: INTEGER): BOOLEAN
 			-- If `a_relative_x' and `a_relative_y' in Current?
 		require
 			setted: tool_bar /= Void
@@ -137,13 +137,13 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 			Result := l_rect.has_x_y (a_relative_x, a_relative_y)
 		end
 
-	has_rectangle (a_rect: EV_RECTANGLE): BOOLEAN is
+	has_rectangle (a_rect: EV_RECTANGLE): BOOLEAN
 			-- Redefine
 		do
 			Result := a_rect.intersects (rectangle)
 		end
 
-	pixmap_position: EV_COORDINATE is
+	pixmap_position: EV_COORDINATE
 			-- Pixmap position.
 		require
 			has_parent: tool_bar /= Void
@@ -161,7 +161,7 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 			not_void: Result /= Void
 		end
 
-	pixmap_y_position: INTEGER is
+	pixmap_y_position: INTEGER
 			-- Pixmap positon relative to Current.
 			-- This feature not be used on Windows temporary.
 		local
@@ -184,7 +184,7 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 			end
 		end
 
-	text_rectangle: EV_RECTANGLE is
+	text_rectangle: EV_RECTANGLE
 			-- Text rectangle.
 		require
 			has_parent: tool_bar /= Void
@@ -224,7 +224,7 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 
 feature {SD_TOOL_BAR} -- Agents
 
-	on_pointer_motion (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_motion (a_relative_x, a_relative_y: INTEGER)
 			-- Redefine
 		do
 			-- Tool bar maybe void when CPU is busy on GTK.
@@ -248,7 +248,7 @@ feature {SD_TOOL_BAR} -- Agents
 			end
 		end
 
-	on_pointer_motion_for_tooltip (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_motion_for_tooltip (a_relative_x, a_relative_y: INTEGER)
 			-- Redefine
 		do
 			-- Tool bar maybe void when CPU is busy on GTK.
@@ -264,7 +264,7 @@ feature {SD_TOOL_BAR} -- Agents
 			end
 		end
 
-	on_pointer_press (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_press (a_relative_x, a_relative_y: INTEGER)
 			-- Redefine
 		do
 			if is_sensitive then
@@ -288,7 +288,7 @@ feature {SD_TOOL_BAR} -- Agents
 			end
 		end
 
-	on_pointer_release (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_release (a_relative_x, a_relative_y: INTEGER)
 			-- Redefine
 		do
 			if tool_bar /= Void and has_position (a_relative_x, a_relative_y) then
@@ -302,7 +302,7 @@ feature {SD_TOOL_BAR} -- Agents
 			end
 		end
 
-	on_pointer_leave is
+	on_pointer_leave
 			-- Redefine
 		do
 			if state = {SD_TOOL_BAR_ITEM_STATE}.hot then
@@ -313,7 +313,7 @@ feature {SD_TOOL_BAR} -- Agents
 			end
 		end
 
-	on_pointer_press_forwarding (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_press_forwarding (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Redefine
 		do
 			if is_sensitive and then has_position (a_x, a_y) then
@@ -323,7 +323,7 @@ feature {SD_TOOL_BAR} -- Agents
 
 feature{SD_TOOL_BAR} -- Implementation
 
-	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY) is
+	update_for_pick_and_drop (a_starting: BOOLEAN; a_pebble: ANY)
 			-- Update for pick and drop
 		do
 			if a_starting then
@@ -342,7 +342,7 @@ feature{SD_TOOL_BAR} -- Implementation
 			end
 		end
 
-	icon_width: INTEGER is
+	icon_width: INTEGER
 			-- Width of icons which is `pixel_buffer' or `pixmap'.
 		do
 			if pixel_buffer /= Void then
@@ -352,14 +352,14 @@ feature{SD_TOOL_BAR} -- Implementation
 			end
 		end
 
-	text_left: INTEGER is
+	text_left: INTEGER
 			-- Text left start position
 		do
 			Result := tool_bar.item_x (Current)
 			Result := Result + width_before_text
 		end
 
-	width_before_text: INTEGER is
+	width_before_text: INTEGER
 			-- Width before text left side
 		do
 			if pixel_buffer /= Void or pixmap /= Void then
@@ -377,7 +377,7 @@ feature{SD_TOOL_BAR} -- Implementation
 
 feature -- Obsolete
 
-	remove_tooltip is
+	remove_tooltip
 			-- Remove `tooltip'
 		obsolete
 			"Use set_tooltip (Void) instead"
@@ -391,7 +391,7 @@ invariant
 	select_actions_not_void: select_actions /= Void
 	internal_shared_not_void: internal_shared /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

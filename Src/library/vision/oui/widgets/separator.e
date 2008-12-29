@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Simple vertical or horizontal line to be used as separator"
 	legal: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a separator with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged separator with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a separator with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_horizontal: BOOLEAN is
+	is_horizontal: BOOLEAN
 			-- Is separator oriented horizontal?
 		require
 			exists: not destroyed
@@ -79,7 +79,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_horizontal (flag: BOOLEAN) is
+	set_horizontal (flag: BOOLEAN)
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
 		require
@@ -90,7 +90,7 @@ feature -- Status setting
 			value_correctly_set: is_horizontal = flag
 		end;
 
-	set_single_line is
+	set_single_line
 			-- Set separator display to be single line.
 		require
 			exists: not destroyed
@@ -98,7 +98,7 @@ feature -- Status setting
 			implementation.set_single_line
 		end;
 
-	set_double_line is
+	set_double_line
 			-- Set separator display to be double line.
 		require
 			exists: not destroyed
@@ -106,7 +106,7 @@ feature -- Status setting
 			implementation.set_double_line
 		end;
 
-	set_single_dashed_line is
+	set_single_dashed_line
 			-- Set separator display to be single dashed line.
 		require
 			exists: not destroyed
@@ -114,7 +114,7 @@ feature -- Status setting
 			implementation.set_single_dashed_line
 		end;
 
-	set_double_dashed_line is
+	set_double_dashed_line
 			-- Set separator display to be double dashed line.
 		require
 			exists: not destroyed
@@ -122,7 +122,7 @@ feature -- Status setting
 			implementation.set_double_dashed_line
 		end;
 
-	set_no_line is
+	set_no_line
 			-- Make separator invisible.
 		require
 			exists: not destroyed
@@ -137,12 +137,12 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current separator.
 		do
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

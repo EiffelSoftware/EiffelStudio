@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Primitive resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNbottomShadowColor: POINTER is
+	XmNbottomShadowColor: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNbottomShadowColor"
 		end;	
 
-	XmNbottomShadowPixmap: POINTER is
+	XmNbottomShadowPixmap: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNbottomShadowPixmap"
 		end;	
 
-	XmNforeground: POINTER is
+	XmNforeground: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNforeground"
 		end;	
 
-	XmNhighlightColor: POINTER is
+	XmNhighlightColor: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNhighlightColor"
 		end;	
 
-	XmNhighlightOnEnter: POINTER is
+	XmNhighlightOnEnter: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNhighlightOnEnter"
 		end;	
 
-	XmNhighlightPixmap: POINTER is
+	XmNhighlightPixmap: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNhighlightPixmap"
 		end;	
 
-	XmNhighlightThickness: POINTER is
+	XmNhighlightThickness: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNhighlightThickness"
 		end;	
 
-	XmNnavigationType: POINTER is
+	XmNnavigationType: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNnavigationType"
 		end;	
 
-	XmNshadowThickness: POINTER is
+	XmNshadowThickness: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNshadowThickness"
 		end;	
 
-	XmNtopShadowColor: POINTER is
+	XmNtopShadowColor: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNtopShadowColor"
 		end;	
 
-	XmNtopShadowPixmap: POINTER is
+	XmNtopShadowPixmap: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNtopShadowPixmap"
 		end;	
 
-	XmNtraversalOn: POINTER is
+	XmNtraversalOn: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNtraversalOn"
 		end;	
 
-	XmNunitType: POINTER is
+	XmNunitType: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmNunitType"
 		end;	
 
-	XmNuserData: POINTER is
+	XmNuserData: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmNuserData"
 		end;	
 
-	XmNhelpCallback: POINTER is
+	XmNhelpCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>] : EIF_POINTER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmNhelpCallback"
 		end;	
 
-	XmNONE: INTEGER is
+	XmNONE: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Xm.h>] : EIF_INTEGER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmNONE"
 		end;	
 
-	XmTAB_GROUP: INTEGER is
+	XmTAB_GROUP: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Xm.h>] : EIF_INTEGER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmTAB_GROUP"
 		end;	
 
-	XmSTICKY_TAB_GROUP: INTEGER is
+	XmSTICKY_TAB_GROUP: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Xm.h>] : EIF_INTEGER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmSTICKY_TAB_GROUP"
 		end;	
 
-	XmEXCLUSIVE_TAB_GROUP: INTEGER is
+	XmEXCLUSIVE_TAB_GROUP: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Xm.h>] : EIF_INTEGER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmEXCLUSIVE_TAB_GROUP"
 		end;	
 
-	XmPIXELS: INTEGER is
+	XmPIXELS: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Xm.h>] : EIF_INTEGER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmPIXELS"
 		end;	
 
-	Xm100TH_MILLIMETERS: INTEGER is
+	Xm100TH_MILLIMETERS: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Xm.h>] : EIF_INTEGER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"Xm100TH_MILLIMETERS"
 		end;	
 
-	Xm1000TH_INCHES: INTEGER is
+	Xm1000TH_INCHES: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Xm.h>] : EIF_INTEGER"
@@ -188,7 +188,7 @@ feature -- Implementation
 			"Xm1000TH_INCHES"
 		end;	
 
-	Xm100TH_POINTS: INTEGER is
+	Xm100TH_POINTS: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Xm.h>] : EIF_INTEGER"
@@ -196,7 +196,7 @@ feature -- Implementation
 			"Xm100TH_POINTS"
 		end;	
 
-	Xm100TH_FONT_UNITS: INTEGER is
+	Xm100TH_FONT_UNITS: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Xm.h>] : EIF_INTEGER"
@@ -204,7 +204,7 @@ feature -- Implementation
 			"Xm100TH_FONT_UNITS"
 		end;	
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

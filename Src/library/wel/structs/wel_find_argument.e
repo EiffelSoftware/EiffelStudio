@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information associated to 'EM_FINDTEXTEX' messages."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_range: WEL_CHARACTER_RANGE; to_find: STRING_GENERAL) is
+	make (a_range: WEL_CHARACTER_RANGE; to_find: STRING_GENERAL)
 		require
 			string_to_find_valid: to_find /= Void
 		local
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	range: WEL_CHARACTER_RANGE is
+	range: WEL_CHARACTER_RANGE
 			-- Range of search
 		do
 			create Result.make_by_pointer (cwel_findargument_get_range (item))
@@ -43,7 +43,7 @@ feature -- Access
 	string_to_find: WEL_STRING
 			-- String to find
 
-	range_out: WEL_CHARACTER_RANGE is
+	range_out: WEL_CHARACTER_RANGE
 			-- Range in which text is found
 			-- Return (0,0) if no text was found
 		do
@@ -52,12 +52,12 @@ feature -- Access
 		
 feature -- Element change
 
-	set_range (a_range: WEL_CHARACTER_RANGE) is
+	set_range (a_range: WEL_CHARACTER_RANGE)
 		do
 			cwel_findargument_set_range (item, a_range.item)
 		end
 
-	set_string_to_find (a_string_to_find: WEL_STRING) is
+	set_string_to_find (a_string_to_find: WEL_STRING)
 		do
 			string_to_find := a_string_to_find
 			cwel_findargument_set_string_to_find (item, a_string_to_find.item)
@@ -65,7 +65,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_findargument
@@ -73,49 +73,49 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_findargument: INTEGER is
+	c_size_of_findargument: INTEGER
 		external
 			"C [macro %"wel_find_argument.h%"]"
 		alias
 			"sizeof (FINDTEXTEX)"
 		end
 
-	cwel_findargument_initialize_range_out_min (ptr: POINTER) is
+	cwel_findargument_initialize_range_out_min (ptr: POINTER)
 		external
 			"C [macro %"wel_find_argument.h%"]"
 		end
 
-	cwel_findargument_initialize_range_out_max (ptr: POINTER) is
+	cwel_findargument_initialize_range_out_max (ptr: POINTER)
 		external
 			"C [macro %"wel_find_argument.h%"]"
 		end
 		
-	cwel_findargument_set_range (ptr, value: POINTER) is
+	cwel_findargument_set_range (ptr, value: POINTER)
 		external
 			"C [macro %"wel_find_argument.h%"]"
 		end
 
-	cwel_findargument_set_string_to_find (ptr, value: POINTER) is
+	cwel_findargument_set_string_to_find (ptr, value: POINTER)
 		external
 			"C [macro %"wel_find_argument.h%"]"
 		end
 
-	cwel_findargument_get_range (ptr: POINTER): POINTER is
+	cwel_findargument_get_range (ptr: POINTER): POINTER
 		external
 			"C [macro %"wel_find_argument.h%"] (FINDTEXTEX*): EIF_POINTER"
 		end
 
-	cwel_findargument_get_string_to_find (ptr: POINTER): POINTER is
+	cwel_findargument_get_string_to_find (ptr: POINTER): POINTER
 		external
 			"C [macro %"wel_find_argument.h%"] (FINDTEXTEX*): EIF_POINTER"
 		end
 
-	cwel_findargument_get_range_out (ptr: POINTER): POINTER is
+	cwel_findargument_get_range_out (ptr: POINTER): POINTER
 		external
 			"C [macro %"wel_find_argument.h%"] (FINDTEXTEX*): EIF_POINTER"
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory for creating SYSTEM_STRING instances."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,7 +8,7 @@ class
 
 feature -- Conversion
 
-	from_string_to_system_string (a_str: STRING_GENERAL): SYSTEM_STRING is
+	from_string_to_system_string (a_str: STRING_GENERAL): SYSTEM_STRING
 			-- Convert `a_str' to an instance of SYSTEM_STRING.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -18,7 +18,7 @@ feature -- Conversion
 			from_string_to_system_string_not_void: Result /= Void
 		end
 
-	read_system_string_into (a_str: SYSTEM_STRING; a_result: STRING_GENERAL) is
+	read_system_string_into (a_str: SYSTEM_STRING; a_result: STRING_GENERAL)
 			-- Fill `a_result' with `a_str' content.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
@@ -28,7 +28,7 @@ feature -- Conversion
 		do
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

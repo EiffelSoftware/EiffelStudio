@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_HOT_ZONE for SD_MULTI_DOCKING_AREA."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_docker_mediator: SD_DOCKER_MEDIATOR; a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_docker_mediator: SD_DOCKER_MEDIATOR; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method.
 		require
 			not_void: a_docker_mediator /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Initlization
 
 feature  -- Redefine
 
-	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Redefine
 		local
 			l_floating_zone: SD_FLOATING_ZONE
@@ -81,7 +81,7 @@ feature  -- Redefine
 			internal_shared.feedback.reset_feedback_clearing
 		end
 
-	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
+	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
 			-- Redefine
 		local
 			l_rect: EV_RECTANGLE
@@ -136,7 +136,7 @@ feature  -- Redefine
 			Result := True
 		end
 
-	set_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+	set_pointer_style (a_pointer_style: EV_POINTER_STYLE)
 			-- Set GLOBAL mouse cursor
 			-- On Windows, we can just set pointer style to main window
 			-- On GTK, we must set current focused widget top window's pointer style
@@ -160,31 +160,31 @@ feature  -- Redefine
 			end
 		end
 
-	clear_indicator is
+	clear_indicator
 			-- Redefine
 		do
 			set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 		end
 
-	build_indicator is
+	build_indicator
 			-- Redefine
 		do
 
 		end
 
-	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Redefine
 		do
 		end
 
-	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
+	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER)
 			-- Redefine
 		do
 		end
 
 feature -- Enumeration
 
-	hot_zone_size_proportion: REAL is 0.1
+	hot_zone_size_proportion: REAL = 0.1
 			-- Hot zone size proportion of current which size is base on main window size.	
 
 feature {NONE} -- Implementation
@@ -199,7 +199,7 @@ invariant
 
 	internal_docking_manager_not_void: internal_docking_manager /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

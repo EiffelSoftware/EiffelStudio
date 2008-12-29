@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstract notion of a checkable/uncheckable menu item."
 	legal: "See notice at end of class."
@@ -34,33 +34,33 @@ inherit
 
 feature -- Access
 
-	pixmap_imp: EV_PIXMAP_IMP_STATE is
+	pixmap_imp: EV_PIXMAP_IMP_STATE
 			-- Implementation of pixmap in `Current'.
 		deferred
 		end
 
 feature -- Status report
 
-	is_selected: BOOLEAN is
+	is_selected: BOOLEAN
 			-- Is this menu item checked?
 		deferred
 		end
 
 feature -- Status setting
 
-	enable_select is
+	enable_select
 			-- Select this menu item.
 		deferred
 		end
 
-	disable_select is
+	disable_select
 			-- Unselect this menu item.
 		deferred
 		end
 
 feature {EV_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 
-	on_draw_menu_item_left_part (draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_menu_item_left_part (draw_item_struct: WEL_DRAW_ITEM_STRUCT)
 			-- Process `Wm_drawitem' message, for the left part.
 			-- In the left part, one draw the pixmap, check state..
 			-- or nothing.
@@ -117,12 +117,12 @@ feature {EV_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 
 feature {NONE} -- WEL Implementation
 
-	plain_text_position: INTEGER is
+	plain_text_position: INTEGER
 			-- Position in pixels where the plain text starts being written.
 		deferred
 		end
 
-	draw_check_mark (draw_dc: WEL_DC; rect: WEL_RECT; selected, disabled: BOOLEAN) is
+	draw_check_mark (draw_dc: WEL_DC; rect: WEL_RECT; selected, disabled: BOOLEAN)
 			-- Draw the check mark
 		local
 			check_dc: WEL_MEMORY_DC
@@ -180,7 +180,7 @@ feature {NONE} -- WEL Implementation
 			check_bitmap.delete
 		end
 
-	draw_pixmap (draw_dc: WEL_DC; rect: WEL_RECT; checked, selected, disabled: BOOLEAN) is
+	draw_pixmap (draw_dc: WEL_DC; rect: WEL_RECT; checked, selected, disabled: BOOLEAN)
 			-- Draw the pixmap.
 		local
 			wel_icon: WEL_ICON
@@ -233,7 +233,7 @@ feature {NONE} -- WEL Implementation
 					rect.bottom = old rect.bottom
 		end
 
-	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER is
+	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER
 			-- Grayscale image drawer.
 			-- Void if Gdi+ not installed.
 		local
@@ -245,7 +245,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	contrast_color (a_color: WEL_COLOR_REF): WEL_COLOR_REF is
+	contrast_color (a_color: WEL_COLOR_REF): WEL_COLOR_REF
 			-- New color which is either slightly lighter or darker than
 			-- `a_color'.
 		require
@@ -271,14 +271,14 @@ feature {NONE} -- WEL Implementation
 			contrast_color_not_void: Result /= Void
 		end
 
-	erase_background (a_dc: WEL_DC; a_rect: WEL_RECT; a_background_color: WEL_COLOR_REF) is
+	erase_background (a_dc: WEL_DC; a_rect: WEL_RECT; a_background_color: WEL_COLOR_REF)
 			-- Erase the background for the rectangle `a_rect' using the
 			-- Device context `a_dc'. If `hilited_state' is set, use the
 			-- background color corresponding to the hilited state.
 		deferred
 		end
 
-	check_mark_bitmap_constant: INTEGER is
+	check_mark_bitmap_constant: INTEGER
 			-- Constant coding for the check mark used in Current.
 		deferred
 		ensure
@@ -288,22 +288,22 @@ feature {NONE} -- WEL Implementation
 
 feature {NONE} -- Implementation
 
-	real_text: STRING_32 is
+	real_text: STRING_32
 			-- (from EV_MENU_ITEM_IMP)
 		deferred
 		end
 
-	parent_imp: EV_MENU_ITEM_LIST_IMP is
+	parent_imp: EV_MENU_ITEM_LIST_IMP
 			-- The menu or menu-bar this item is in.
 		deferred
 		end
 
-	extract_icon (a_pixmap_imp_state: EV_PIXMAP_IMP_STATE): WEL_ICON is
+	extract_icon (a_pixmap_imp_state: EV_PIXMAP_IMP_STATE): WEL_ICON
 			-- Extract the icon from `pixmap_imp'.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

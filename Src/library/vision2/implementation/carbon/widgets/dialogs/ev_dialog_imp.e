@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision dialog. Carbon implementation."
 
 class
@@ -90,13 +90,13 @@ feature {NONE} -- Initialization
 --			set_is_initialized (True)
 --		end
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 --			-- Create empty dialog box.
 		do
 			Precursor {EV_TITLED_WINDOW_IMP}(an_interface)
 		end
 
-	initialize is
+	initialize
 --			-- Initialize 'Current'
 		do
 			Precursor {EV_TITLED_WINDOW_IMP}
@@ -104,45 +104,45 @@ feature {NONE} -- Initialization
 
 feature -- Status Report
 
-	is_closeable: BOOLEAN is
+	is_closeable: BOOLEAN
 			-- Is the window closeable by the user?
 		do
 		end
 
-	is_relative: BOOLEAN is
+	is_relative: BOOLEAN
 			-- Is `Current' shown relative to another window?
 		do
 		end
 
 feature -- Status Setting
 
-	enable_closeable is
+	enable_closeable
 			-- Set the window to be closeable by the user
 		do
 		end
 
-	disable_closeable is
+	disable_closeable
 			-- Set the window not to be closeable by the user
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	client_area: POINTER is
+	client_area: POINTER
 			-- Pointer to the widget that is treated as the main holder of the client area within the window.
 		do
 		end
 
-	dialog_key_press_action (a_key: EV_KEY) is
+	dialog_key_press_action (a_key: EV_KEY)
 		do
 		end
 
-	set_closeable (new_status: BOOLEAN) is
+	set_closeable (new_status: BOOLEAN)
 			-- Set `is_closeable' to `new_status'
 		do
 		end
 
-	call_close_request_actions is
+	call_close_request_actions
 			-- Call the cancel actions if dialog is closeable.
 		do
 			Precursor
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			-- to be executed without raising zillions of assertion violations.
 			--| FIXME implement cited function, then remove me.
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_DIALOG_IMP
 

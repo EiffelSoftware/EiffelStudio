@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Motif Form resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNfractionBase: POINTER is
+	XmNfractionBase: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNfractionBase"
 		end;
 
-	XmNhorizontalSpacing: POINTER is
+	XmNhorizontalSpacing: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNhorizontalSpacing"
 		end;
 
-	XmNrubberPositioning: POINTER is
+	XmNrubberPositioning: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNrubberPositioning"
 		end;
 
-	XmNverticalSpacing: POINTER is
+	XmNverticalSpacing: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNverticalSpacing"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

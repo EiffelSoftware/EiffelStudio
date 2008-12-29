@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of I18N_HOST_LOCALE for posix platforms"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,14 +28,14 @@ inherit
 
 feature -- Initialization
 
-	create_locale_info_from_user_locale: I18N_LOCALE_INFO is
+	create_locale_info_from_user_locale: I18N_LOCALE_INFO
 			-- Creation procedure.
 			-- create locale form the user locale
 		do
 			Result := create_locale_info (default_locale_id)
 		end
 
-	create_locale_info (a_locale_id : I18N_LOCALE_ID): I18N_LOCALE_INFO is
+	create_locale_info (a_locale_id : I18N_LOCALE_ID): I18N_LOCALE_INFO
 			-- Creation procedure
 			-- Create locale with a_locale_id
 		do
@@ -55,7 +55,7 @@ feature -- Initialization
 
 feature -- Informations
 
-	is_available (a_locale_id : I18N_LOCALE_ID) : BOOLEAN is
+	is_available (a_locale_id : I18N_LOCALE_ID) : BOOLEAN
 			-- is 'a_locale' available?
 		do
 			if c_is_solaris then
@@ -65,7 +65,7 @@ feature -- Informations
 			end
 		end
 
-	available_locales : LINKED_LIST[I18N_LOCALE_ID] is
+	available_locales : LINKED_LIST[I18N_LOCALE_ID]
 			-- get list of available locales
 		local
 			l_locale_id: I18N_LOCALE_ID
@@ -99,24 +99,24 @@ feature -- Informations
 			end
 		end
 
-	default_locale_id: I18N_LOCALE_ID is
+	default_locale_id: I18N_LOCALE_ID
 		do
 			unix_set_locale ("")
 			Result := current_locale_id
 		end
 
-	system_locale_id: I18N_LOCALE_ID is
+	system_locale_id: I18N_LOCALE_ID
 		do
 			Result := default_locale_id
 		end
 
-	current_locale_id : I18N_LOCALE_ID is
+	current_locale_id : I18N_LOCALE_ID
 			-- current locale id
 		do
 			create Result.make_from_string (locale_name)
 		end
 
-	locale_name : STRING_32 is
+	locale_name : STRING_32
 			-- name of current locale
 		do
 			Result := unix_locale_name
@@ -124,7 +124,7 @@ feature -- Informations
 
  feature {NONE} -- fill
 
- 		fill (a_locale_info: I18N_LOCALE_INFO) is
+ 		fill (a_locale_info: I18N_LOCALE_INFO)
  				-- fill `a_locale_info' with all available informations
  			require
  				a_locale_info_exists: a_locale_info /= Void
@@ -135,7 +135,7 @@ feature -- Informations
 				fill_code_page_info (a_locale_info)
  			end
 
- 		fill_date_time_info (a_date_time_info: I18N_DATE_TIME_INFO) is
+ 		fill_date_time_info (a_date_time_info: I18N_DATE_TIME_INFO)
  				-- fill `a_date_time_info' with the available informations
  			require
  				a_date_time_info_exists: a_date_time_info /= Void
@@ -153,7 +153,7 @@ feature -- Informations
  				a_date_time_info.set_abbreviated_month_names (get_abbreviated_month_names)
  			end
 
- 		fill_numeric_info (a_numeric_info: I18N_NUMERIC_INFO) is
+ 		fill_numeric_info (a_numeric_info: I18N_NUMERIC_INFO)
  				-- fill `a_numeric_info' with the available informations
  			require
  				a_numeric_info_exists: a_numeric_info /= Void
@@ -164,7 +164,7 @@ feature -- Informations
 				a_numeric_info.set_value_grouping (get_value_grouping)
 			end
 
-		fill_currency_info (a_currency_info: I18N_CURRENCY_INFO) is
+		fill_currency_info (a_currency_info: I18N_CURRENCY_INFO)
  				-- fill `a_currency_info' with the available informations
  			require
  				a_currency_info_exists: a_currency_info /= Void
@@ -183,7 +183,7 @@ feature -- Informations
 				a_currency_info.set_international_currency_numbers_after_decimal_separator (get_int_currency_numbers_after_decimal_separator)
  			end
 
- 		fill_code_page_info (a_code_page_info: I18N_CODE_PAGE_INFO) is
+ 		fill_code_page_info (a_code_page_info: I18N_CODE_PAGE_INFO)
  				-- fill `a_code_page_info' with the availiable informations
  			require
  				a_code_page_info_exists: a_code_page_info /= Void
@@ -199,7 +199,7 @@ feature -- Informations
 feature {NONE} -- Date and time formatting
 
 
-	get_long_date_format: STRING_32 is
+	get_long_date_format: STRING_32
 			-- get the long date format string
 			-- according the current locale setting
 		do
@@ -209,7 +209,7 @@ feature {NONE} -- Date and time formatting
 			result_exists: Result /= Void
 		end
 
-	get_long_time_format: STRING_32 is
+	get_long_time_format: STRING_32
 			-- get the long time format string
 			-- according the current locale setting
 		do
@@ -220,7 +220,7 @@ feature {NONE} -- Date and time formatting
 			result_exists: Result /= Void
 		end
 
-	get_am_suffix : STRING_32 is
+	get_am_suffix : STRING_32
 			-- get the am suffix
 			-- if the not available: empty_string
 		do
@@ -229,7 +229,7 @@ feature {NONE} -- Date and time formatting
 			result_exists: Result /= Void
 		end
 
-	get_pm_suffix : STRING_32 is
+	get_pm_suffix : STRING_32
 			-- get the pm suffix
 			-- if the not available: empty_string
 		do
@@ -238,7 +238,7 @@ feature {NONE} -- Date and time formatting
 			result_exists: Result /= Void
 		end
 
-	get_date_time_format: STRING_32 is
+	get_date_time_format: STRING_32
 			-- time and date in a locale-specific way.
 		do
 			Result := utf8_pointer_to_string (unix_get_locale_info (D_t_fmt))
@@ -249,7 +249,7 @@ feature {NONE} -- Date and time formatting
 
 feature {NONE} -- day/months names
 
-	get_day_names: ARRAY[STRING_32] is
+	get_day_names: ARRAY[STRING_32]
 			-- array with the full weekday names
 			-- according the current locale settings
 		local
@@ -274,7 +274,7 @@ feature {NONE} -- day/months names
 			correct_size: Result.count = {DATE_CONSTANTS}.Days_in_week
 		end
 
-	get_month_names: ARRAY[STRING_32] is
+	get_month_names: ARRAY[STRING_32]
 			-- array with the full month names
 			-- according the current locale settings
 		local
@@ -298,7 +298,7 @@ feature {NONE} -- day/months names
 			correct_size: Result.count = {DATE_CONSTANTS}.Months_in_year
 		end
 
-	get_abbreviated_day_names: ARRAY[STRING_32] is
+	get_abbreviated_day_names: ARRAY[STRING_32]
 			-- array with the abbreviated weekday names
 			-- according the current locale settings
 		local
@@ -324,7 +324,7 @@ feature {NONE} -- day/months names
 			correct_size: Result.count = {DATE_CONSTANTS}.Days_in_week
 		end
 
-	get_abbreviated_month_names: ARRAY[STRING_32] is
+	get_abbreviated_month_names: ARRAY[STRING_32]
 			-- array with the abbreviated month names
 			-- according the current locale settings
 		local
@@ -350,7 +350,7 @@ feature {NONE} -- day/months names
 
 feature	{NONE} -- number formatting
 
-	get_value_decimal_separator: STRING_32 is
+	get_value_decimal_separator: STRING_32
 			-- get the decimal separator of numbers
 			-- according the current locales setting
 		do
@@ -359,7 +359,7 @@ feature	{NONE} -- number formatting
 			result_exists: Result /= Void
 		end
 
-	get_value_group_separator: STRING_32 is
+	get_value_group_separator: STRING_32
 			-- get the group separator (the separator thousend sep.)
 			-- according the current locales setting
 		do
@@ -368,7 +368,7 @@ feature	{NONE} -- number formatting
 			result_exists: Result /= Void
 		end
 
-	get_value_grouping: ARRAY[INTEGER] is
+	get_value_grouping: ARRAY[INTEGER]
 			--
 		do
 			Result := pointer_to_array (grouping (localeconv))
@@ -378,7 +378,7 @@ feature	{NONE} -- number formatting
 
 feature	{NONE} -- currency formatting
 
-	get_currency_symbol: STRING_32 is
+	get_currency_symbol: STRING_32
 			-- get the currency symbol
 			-- according the current locales setting
 		do
@@ -391,7 +391,7 @@ feature	{NONE} -- currency formatting
 			result_exists: Result /= Void
 		end
 
-	get_currency_symbol_location : INTEGER is
+	get_currency_symbol_location : INTEGER
 			-- get the integer that represents
 			-- the currency symbol localtion
 		local
@@ -414,7 +414,7 @@ feature	{NONE} -- currency formatting
 							Result = {I18N_LOCALE_INFO}.currency_symbol_radix
 		end
 
-	get_currency_decimal_separator: STRING_32 is
+	get_currency_decimal_separator: STRING_32
 			-- get the decimal separator of currency numbers
 			-- according the current locales setting
 		do
@@ -423,7 +423,7 @@ feature	{NONE} -- currency formatting
 			result_exists: Result /= Void
 		end
 
-	get_currency_numbers_after_decimal_separator: INTEGER is
+	get_currency_numbers_after_decimal_separator: INTEGER
 			-- numbers after the decimal separator for currencynumbers
 			-- according the current locales setting
 		do
@@ -435,7 +435,7 @@ feature	{NONE} -- currency formatting
 			non_negative: Result >= 0
 		end
 
-	get_currency_group_separator: STRING_32 is
+	get_currency_group_separator: STRING_32
 			-- get the decimal separator of numbers
 			-- according the current locales setting
 		do
@@ -444,7 +444,7 @@ feature	{NONE} -- currency formatting
 			result_exists: Result /= Void
 		end
 
-	get_currency_positive_sign: STRING_32 is
+	get_currency_positive_sign: STRING_32
 			-- positive sign according the current locales setting
 		do
 			create Result.make_from_c (positive_sign (localeconv))
@@ -452,7 +452,7 @@ feature	{NONE} -- currency formatting
 			result_exists: Result /= Void
 		end
 
-	get_currency_negative_sign: STRING_32 is
+	get_currency_negative_sign: STRING_32
 			-- positive sign according the current locales setting
 		do
 			create Result.make_from_c (negative_sign (localeconv))
@@ -460,7 +460,7 @@ feature	{NONE} -- currency formatting
 			result_exists: Result /= Void
 		end
 
-	get_currency_grouping: ARRAY[INTEGER] is
+	get_currency_grouping: ARRAY[INTEGER]
 			-- get grouping rules for currency values
 		do
 			Result := pointer_to_array (mon_grouping (localeconv))
@@ -470,7 +470,7 @@ feature	{NONE} -- currency formatting
 
 feature {NONE} -- Code Page
 
-	get_code_page: STRING_32 is
+	get_code_page: STRING_32
 			-- Codeset name
 		do
 			Result := utf8_pointer_to_string (c_current_codeset)
@@ -478,13 +478,13 @@ feature {NONE} -- Code Page
 
 feature {NONE} -- International currency formatting
 
-	get_int_currency_symbol: STRING_32 is
+	get_int_currency_symbol: STRING_32
 			-- ISO 4217 currency code
 		do
 			create Result.make_from_c (int_curr_symbol (localeconv))
 		end
 
-	get_int_currency_numbers_after_decimal_separator: INTEGER is
+	get_int_currency_numbers_after_decimal_separator: INTEGER
 			-- numbers after the decimal separator for currencynumbers
 			-- according the current locales setting
 		do
@@ -498,7 +498,7 @@ feature {NONE} -- International currency formatting
 
 feature {NONE} --Implementation
 
-	pointer_to_array (a_pointer: POINTER): ARRAY[INTEGER] is
+	pointer_to_array (a_pointer: POINTER): ARRAY[INTEGER]
 		local
 			l_string: STRING_32
 			i, t: INTEGER
@@ -525,7 +525,7 @@ feature {NONE} --Implementation
 		end
 
 
-	c_strlen (ptr: POINTER): INTEGER is
+	c_strlen (ptr: POINTER): INTEGER
 				-- length of a c string
 		external
 			"C (void *): EIF_INTEGER| %"string.h%""
@@ -533,7 +533,7 @@ feature {NONE} --Implementation
 			"strlen"
 		end
 
-	c_is_solaris: BOOLEAN is
+	c_is_solaris: BOOLEAN
 			-- Is current OS Solaris?
 		external
 			"C inline use <eif_eiffel.h>"
@@ -547,7 +547,7 @@ feature {NONE} --Implementation
 			]"
 		end
 
-	utf8_pointer_to_string (ptr:POINTER): STRING_32 is
+	utf8_pointer_to_string (ptr:POINTER): STRING_32
 			-- convert a C UTF-8 string
 		local
 			managed: MANAGED_POINTER
@@ -561,7 +561,7 @@ feature {NONE} --Implementation
 			end
 		end
 
-	guess_proper_locale (a_name: STRING): STRING is
+	guess_proper_locale (a_name: STRING): STRING
 			-- We try to guess a locale from `a_name', when `a_name', for example in LL_RR style, can 
 			-- not be recognized by `setlocale' on Solaris, but LL_RR.ENC does exist as system locale mostly.
 			-- First take the system locale, then try to find a most matching one.
@@ -612,7 +612,7 @@ feature {NONE} --Implementation
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Eiffel Vision container. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,26 +28,26 @@ inherit
 
 feature -- Access
 
-	item: EV_WIDGET is
+	item: EV_WIDGET
 			-- Current item.
 		deferred
 		end
 
-	client_width: INTEGER is
+	client_width: INTEGER
 			-- Width of the client area of container.
 		deferred
 		ensure
 			positive: Result >= 0
 		end
 
-	client_height: INTEGER is
+	client_height: INTEGER
 			-- Height of the client area of container.
 		deferred
 		ensure
 			positive: Result >= 0
 		end
 
-	merged_radio_button_groups: ARRAYED_LIST [EV_CONTAINER] is
+	merged_radio_button_groups: ARRAYED_LIST [EV_CONTAINER]
 			-- `Result' is all other radio button groups
 			-- merged with `Current'.
 		do
@@ -61,21 +61,21 @@ feature -- Access
 
 feature -- Element change
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Ensure that structure includes `v'.
 		require
 			v_not_void: v /= Void
 		deferred
 		end
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace `item' with `v'.
 		deferred
 		end
 
 feature -- Status setting
 
-	merge_radio_button_groups (other: EV_CONTAINER) is
+	merge_radio_button_groups (other: EV_CONTAINER)
 			-- Merge `Current' radio button group with that of `other'.
 		local
 			counter, original_count: INTEGER
@@ -136,7 +136,7 @@ feature -- Status setting
 			end
 		end
 
-	unmerge_radio_button_groups (other: EV_CONTAINER) is
+	unmerge_radio_button_groups (other: EV_CONTAINER)
 			-- Remove `other' from radio button group of `Current'.
 		local
 			container_i: EV_CONTAINER_I
@@ -163,7 +163,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	propagate_foreground_color is
+	propagate_foreground_color
 			-- Propagate the current foreground color of the
 			-- container to the children.
 		local
@@ -198,7 +198,7 @@ feature -- Basic operations
 			foreground_color_propagated: interface.foreground_color_propagated
 		end
 
-	propagate_background_color is
+	propagate_background_color
 			-- Propagate the current background color of the
 			-- container to the children.
 		local
@@ -246,13 +246,13 @@ feature {EV_CONTAINER_I} -- Implementation
 			-- of `merged_radio_button_groups'. We need to include `interface', as
 			-- this object is shared between all linked containers.
 
-	set_internal_merged_radio_button_group (new_group: ARRAYED_LIST [EV_CONTAINER]) is
+	set_internal_merged_radio_button_group (new_group: ARRAYED_LIST [EV_CONTAINER])
 			-- Assign `new_group' to `internal_merged_radio_button_group'.
 		do
 			internal_merged_radio_button_groups := new_group
 		end
 
-	select_first_radio_button is
+	select_first_radio_button
 			-- Ensure that first radio button in `Current',
 			-- `Is_selected'.
 		local
@@ -277,7 +277,7 @@ feature {EV_CONTAINER_I} -- Implementation
 
 feature {EV_CONTAINER, EV_CONTAINER_I} -- Implementation
 
-	first_radio_button_selected: BOOLEAN is
+	first_radio_button_selected: BOOLEAN
 			-- Is first radio button contained in `Current',
 			-- selected?
 		local
@@ -298,7 +298,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Implementation
 			end
 		end
 
-	has_selected_radio_button: BOOLEAN is
+	has_selected_radio_button: BOOLEAN
 			-- Does `Current' contain a selected radio button?
 		local
 			children: linear [EV_WIDGET]
@@ -318,7 +318,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Implementation
 			end
 		end
 
-	has_radio_button: BOOLEAN is
+	has_radio_button: BOOLEAN
 			-- 	Does `Current' contain one or more radio buttons?
 		local
 			children: linear [EV_WIDGET]
@@ -340,7 +340,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Implementation
 
 feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 
-	all_radio_buttons_connected: BOOLEAN is
+	all_radio_buttons_connected: BOOLEAN
 			-- Are all radio buttons in this container connected?
 		require
 			not_destroyed: not is_destroyed
@@ -375,7 +375,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			end
 		end
 
-	parent_of_items_is_current: BOOLEAN is
+	parent_of_items_is_current: BOOLEAN
 			-- Do all items have parent `Current'?
 		require
 			not_destroyed: not is_destroyed
@@ -405,7 +405,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			end
 		end
 
-	items_unique: BOOLEAN is
+	items_unique: BOOLEAN
 			-- Are all items unique?
 			-- (ie Are there no duplicates?)
 		require
@@ -439,7 +439,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			end
 		end
 
-	foreground_color_propagated: BOOLEAN is
+	foreground_color_propagated: BOOLEAN
 			-- Do all children have same foreground color as `Current'?
 		require
 			not_destroyed: not is_destroyed
@@ -473,7 +473,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			end
 		end
 
-	background_color_propagated: BOOLEAN is
+	background_color_propagated: BOOLEAN
 			-- Do all children have same background color as `Current'?
 		require
 			not_destroyed: not is_destroyed
@@ -509,21 +509,21 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 
 feature {NONE} -- Implementation
 
-	connect_radio_grouping (a_container: EV_CONTAINER) is
+	connect_radio_grouping (a_container: EV_CONTAINER)
 			-- Join radio grouping of `a_container' to Current.
 		require
 			a_container_not_void: a_container /= Void
 		deferred
 		end
 
-	unconnect_radio_grouping (a_container: EV_CONTAINER) is
+	unconnect_radio_grouping (a_container: EV_CONTAINER)
 			-- Unconnect radio grouping of `a_container' from `Current'.
 		require
 			a_container /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

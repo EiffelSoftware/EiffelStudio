@@ -1,4 +1,4 @@
-indexing
+note
 	description: "HWND constants used in SetWindowPos."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,35 +10,35 @@ class
 
 feature -- Access
 
-	frozen Hwnd_top: POINTER is
+	frozen Hwnd_top: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"HWND_TOP"
 		end
 
-	frozen Hwnd_bottom: POINTER is
+	frozen Hwnd_bottom: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"HWND_BOTTOM"
 		end
 
-	frozen Hwnd_topmost: POINTER is
+	frozen Hwnd_topmost: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"HWND_TOPMOST"
 		end
 
-	frozen Hwnd_notopmost: POINTER is
+	frozen Hwnd_notopmost: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"HWND_NOTOPMOST"
 		end
 
-	frozen Hwnd_broadcast: POINTER is
+	frozen Hwnd_broadcast: POINTER
 		external
 			"C [macro <windows.h>] : EIF_POINTER"
 		alias
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_hwnd_constant (c: POINTER): BOOLEAN is
+	valid_hwnd_constant (c: POINTER): BOOLEAN
 			-- Is `c' a valid hwnd constant?
 		do
 			Result := c = Hwnd_top or else
@@ -56,7 +56,7 @@ feature -- Status report
 				c = Hwnd_notopmost
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that hold shared information required for transports."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	widget_imp_at_pointer_position: EV_WIDGET_IMP is
+	widget_imp_at_pointer_position: EV_WIDGET_IMP
 			-- `Result' is implementation of widget at current
 			-- pointer position or Void if none.
 		local
@@ -49,7 +49,7 @@ feature -- Access
 		-- Are we currently awaiting the movement threshold to
 		-- be reached for as drag and drop or dockable move?
 
-	drag_and_drop_starting_movement: INTEGER is 3
+	drag_and_drop_starting_movement: INTEGER = 3
 		-- Pointer movement in pixels required to start a drag and drop.
 
 	original_x, original_y: INTEGER
@@ -60,7 +60,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	internal_set_pointer_style (a_new_cursor: EV_POINTER_STYLE) is
+	internal_set_pointer_style (a_new_cursor: EV_POINTER_STYLE)
 			-- Set pointer style implementation.
 		local
 			l_wel_cursor: WEL_CURSOR
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 	current_wel_cursor: WEL_CURSOR
 			-- Current cursor set, Void if none.
 
-	Default_pixmaps: EV_STOCK_PIXMAPS is
+	Default_pixmaps: EV_STOCK_PIXMAPS
 			-- Default pixmaps
 		deferred
 		end
@@ -120,7 +120,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Im
 	cursor_pixmap: EV_POINTER_STYLE;
 			-- Cursor used on the widget.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

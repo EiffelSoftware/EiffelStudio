@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Find texts that contain certain string, Regular expression based."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make (a_texts: like texts) is
+	make (a_texts: like texts)
 			-- Set `texts' with `a_texts'.
 		require
 			a_texts_attached: a_texts /= Void
@@ -25,7 +25,7 @@ feature -- Initialization
 			pcre_re_not_void: pcre_re /= Void
 		end
 
-	init_pcre_re is
+	init_pcre_re
 			-- Initialize `pcre_re'
 		do
 			create pcre_re.make
@@ -39,7 +39,7 @@ feature -- Access
 	texts: ARRAYED_LIST [G]
 			-- Texts search in.
 
-	texts_found: like texts is
+	texts_found: like texts
 			-- Texts found in `texts'
 		require
 			is_search_launched: is_search_launched
@@ -49,7 +49,7 @@ feature -- Access
 			texts_found_not_void: Result /= Void
 		end
 
-	found_indexs_in_texts : ARRAYED_LIST [INTEGER] is
+	found_indexs_in_texts : ARRAYED_LIST [INTEGER]
 			-- Indexs of found texts in `texts'
 		require
 			is_search_launched: is_search_launched
@@ -69,7 +69,7 @@ feature -- Status report
 
 feature -- Behavior
 
-	search (a_str: like last_searched) is
+	search (a_str: like last_searched)
 			-- Launch searching.
 		require
 			a_str_attached: a_str /= Void
@@ -86,7 +86,7 @@ feature -- Behavior
 
 feature {NONE} -- Implementation
 
-	search_perform (a_str: STRING_GENERAL) is
+	search_perform (a_str: STRING_GENERAL)
 			-- Perform searching.
 		do
 			create texts_found_internal.make (10)
@@ -119,7 +119,7 @@ invariant
 	texts_not_void: texts /= Void
 	pcre_re_not_void: pcre_re /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision cell, Carbon implementation."
 	legal: "See notice at end of class."
@@ -43,7 +43,7 @@ create
 
 feature -- initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		local
 			ret: INTEGER
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Element change
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace `item' with `v'.
 			local
 			w: EV_WIDGET_IMP
@@ -128,7 +128,7 @@ feature -- Measurement
 		Result := 0
 	end
 
-	calculate_minimum_sizes is
+	calculate_minimum_sizes
 			-- Calculate the CGRECTS rect_a, rect_b and splitter_rect
 		do
 			if temp_item /= void then
@@ -173,7 +173,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_CELL_IMP
 

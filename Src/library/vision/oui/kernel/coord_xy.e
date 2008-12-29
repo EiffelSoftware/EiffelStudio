@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Definition of a structure (x, y)"
 	legal: "See notice at end of class.";
@@ -20,7 +20,7 @@ feature -- Access
 
 feature -- Element change
 
-	set (new_x, new_y: INTEGER) is
+	set (new_x, new_y: INTEGER)
 			-- Set position
 		do
 			x := new_x;
@@ -30,7 +30,7 @@ feature -- Element change
 			y_set: y = new_y
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

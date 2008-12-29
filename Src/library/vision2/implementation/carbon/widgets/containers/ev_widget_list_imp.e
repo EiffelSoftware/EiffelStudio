@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision widget list. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		do
 			Precursor {EV_CONTAINER_IMP}
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			v_imp : EV_WIDGET_IMP
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	remove_i_th (i: INTEGER) is
+	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			on_removed_item ( v_imp )
 		end
 
-		setup_layout is
+		setup_layout
 			local
 				w: EV_WIDGET_IMP
 				c: EV_CONTAINER_IMP
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 
 			end
 
-	layout is
+	layout
 			do
 
 			end
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_WIDGET_LIST_IMP
 

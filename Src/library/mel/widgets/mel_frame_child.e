@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Child of a MEL_FRAME widget."
@@ -21,7 +21,7 @@ inherit
 
 feature -- Access
 
-	is_child_title: BOOLEAN is
+	is_child_title: BOOLEAN
 			-- Is Current widget child type a title?
 		require
 			exists: not is_destroyed;
@@ -31,7 +31,7 @@ feature -- Access
 				(screen_object, XmNchildType) = XmFRAME_TITLE_CHILD
 		end;
 
-	is_child_workarea: BOOLEAN is
+	is_child_workarea: BOOLEAN
 			-- Is Current widget child type a work area?
 		require
 			exists: not is_destroyed;
@@ -41,7 +41,7 @@ feature -- Access
 				(screen_object, XmNchildType) = XmFRAME_WORKAREA_CHILD
 		end;
 
-	is_child_generic: BOOLEAN is
+	is_child_generic: BOOLEAN
 			-- Is Current widget child type ignored?
 		require
 			exists: not is_destroyed;
@@ -51,7 +51,7 @@ feature -- Access
 				(screen_object, XmNchildType) = XmFRAME_GENERIC_CHILD
 		end;
 
-	is_child_horizontal_alignment_beginning: BOOLEAN is
+	is_child_horizontal_alignment_beginning: BOOLEAN
 			-- Is widget horizontally aligned with the beginning?
 		require
 			exists: not is_destroyed;
@@ -61,7 +61,7 @@ feature -- Access
 				(screen_object, XmNchildHorizontalAlignment) = XmCHILD_ALIGNMENT_BEGINNING
 		end;
 
-	is_child_horizontal_alignment_center: BOOLEAN is
+	is_child_horizontal_alignment_center: BOOLEAN
 			-- Is widget horizontally aligned with the center?
 		require
 			exists: not is_destroyed;
@@ -71,7 +71,7 @@ feature -- Access
 				(screen_object, XmNchildHorizontalAlignment) = XmCHILD_ALIGNMENT_CENTER
 		end;
 
-	is_child_horizontal_alignment_end: BOOLEAN is
+	is_child_horizontal_alignment_end: BOOLEAN
 			-- Is widget horizontally aligned with the end?
 		require
 			exists: not is_destroyed;
@@ -81,7 +81,7 @@ feature -- Access
 				(screen_object, XmNchildHorizontalAlignment) = XmCHILD_ALIGNMENT_END
 		end;
 
-	child_horizontal_spacing: INTEGER is
+	child_horizontal_spacing: INTEGER
 			-- Minimun distance between the title text and Current's shadow
 		require
 			exists: not is_destroyed;
@@ -93,7 +93,7 @@ feature -- Access
 			horizontal_spacing_large_enough: Result >= 0
 		end;
 
-	is_child_vertical_alignment_baseline_bottom: BOOLEAN is
+	is_child_vertical_alignment_baseline_bottom: BOOLEAN
 			-- Is baseline aligned to the bottom of `parent'?
 		require
 			exists: not is_destroyed;
@@ -104,7 +104,7 @@ feature -- Access
 				(screen_object, XmNchildVerticalAlignment) = XmCHILD_ALIGNMENT_BASELINE_BOTTOM
 		end;
 
-	is_child_vertical_alignment_baseline_top: BOOLEAN is
+	is_child_vertical_alignment_baseline_top: BOOLEAN
 			-- Is baseline of aligned to the top of Current?
 		require
 			exists: not is_destroyed;
@@ -115,7 +115,7 @@ feature -- Access
 				(screen_object, XmNchildVerticalAlignment) = XmCHILD_ALIGNMENT_BASELINE_TOP
 		end;
 
-	is_child_vertical_alignment_widget_top: BOOLEAN is
+	is_child_vertical_alignment_widget_top: BOOLEAN
 			-- Is widget aligned to the top of Current?
 		require
 			exists: not is_destroyed;
@@ -126,7 +126,7 @@ feature -- Access
 				(screen_object, XmNchildVerticalAlignment) = XmCHILD_ALIGNMENT_WIDGET_TOP
 		end;
 
-	is_child_vertical_alignment_center: BOOLEAN is
+	is_child_vertical_alignment_center: BOOLEAN
 			-- Is center line of widget aligned to the top line of Current?
 		require
 			exists: not is_destroyed;
@@ -137,7 +137,7 @@ feature -- Access
 				(screen_object, XmNchildVerticalAlignment) = XmCHILD_ALIGNMENT_CENTER
 		end;
 
-	is_child_vertical_alignment_widget_bottom: BOOLEAN is
+	is_child_vertical_alignment_widget_bottom: BOOLEAN
 			-- Is widget aligned to the bottom of Current?
 		require
 			exists: not is_destroyed;
@@ -150,7 +150,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_child_as_title is
+	set_child_as_title
 			-- Set widget as the title.
 		require
 			exists: not is_destroyed;
@@ -162,7 +162,7 @@ feature -- Status setting
 			child_is_now_the_title: is_child_title 
 		end;
 
-	set_child_as_workarea is
+	set_child_as_workarea
 			-- Use widget as the work area.
 		require
 			exists: not is_destroyed;
@@ -174,7 +174,7 @@ feature -- Status setting
 			child_is_now_the_work_area: is_child_workarea 
 		end;
 
-	set_child_generic is
+	set_child_generic
 			-- Ignore widget as child type.
 		require
 			exists: not is_destroyed;
@@ -186,7 +186,7 @@ feature -- Status setting
 			child_is_now_ignored: is_child_generic 
 		end;
 
-	set_child_horizontal_alignment_beginning is
+	set_child_horizontal_alignment_beginning
 			-- Align widget with the beginning.
 		require
 			exists: not is_destroyed;
@@ -198,7 +198,7 @@ feature -- Status setting
 			alignment_set: is_child_horizontal_alignment_beginning 
 		end;
 
-	set_child_horizontal_alignment_center is
+	set_child_horizontal_alignment_center
 			-- Align widget with the center.
 		require
 			exists: not is_destroyed;
@@ -210,7 +210,7 @@ feature -- Status setting
 			alignment_set: is_child_horizontal_alignment_center 
 		end;
 
-	set_child_horizontal_alignment_end is
+	set_child_horizontal_alignment_end
 			-- Align widget with the end.
 		require
 			exists: not is_destroyed;
@@ -222,7 +222,7 @@ feature -- Status setting
 			alignment_set: is_child_horizontal_alignment_end 
 		end;
 
-	set_child_horizontal_spacing (a_spacing: INTEGER) is
+	set_child_horizontal_spacing (a_spacing: INTEGER)
 			-- Set `child_horizontal_spacing' to `a_spacing'.
 		require
 			exists: not is_destroyed;
@@ -235,7 +235,7 @@ feature -- Status setting
 			horizontal_spacing_set: child_horizontal_spacing = a_spacing
 		end;
 
-	set_child_vertical_alignment_baseline_bottom is
+	set_child_vertical_alignment_baseline_bottom
 			-- Align baseline of widget to the bottom of Current.
 		require
 			exists: not is_destroyed;
@@ -248,7 +248,7 @@ feature -- Status setting
 			placement_set: is_child_vertical_alignment_baseline_bottom 
 		end;
 
-	set_child_vertical_alignment_baseline_top is
+	set_child_vertical_alignment_baseline_top
 			-- Align baseline of widget to the top of Current.
 		require
 			exists: not is_destroyed;
@@ -261,7 +261,7 @@ feature -- Status setting
 			placement_set: is_child_vertical_alignment_baseline_top 
 		end;
 
-	set_child_vertical_alignment_widget_top is
+	set_child_vertical_alignment_widget_top
 			-- Align widget to the top of Current?
 		require
 			exists: not is_destroyed;
@@ -274,7 +274,7 @@ feature -- Status setting
 			placement_set: is_child_vertical_alignment_widget_top 
 		end;
 
-	set_child_vertical_alignment_center is
+	set_child_vertical_alignment_center
 			-- Align center line of widget to the top line of Current.
 		require
 			exists: not is_destroyed;
@@ -287,7 +287,7 @@ feature -- Status setting
 			placement_set: is_child_vertical_alignment_center 
 		end;
 
-	set_child_vertical_alignment_widget_bottom is
+	set_child_vertical_alignment_widget_bottom
 			-- Align widget to the bottom of Current.
 		require
 			exists: not is_destroyed;
@@ -300,7 +300,7 @@ feature -- Status setting
 			placement_set: is_child_vertical_alignment_widget_bottom 
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

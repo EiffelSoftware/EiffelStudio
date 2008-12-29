@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Grid items that do not redraw themselves.
 		The `expose_actions' are fired as `Current' must be redrawn, and provide the
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_expose_action_agent (an_agent: PROCEDURE [ANY, TUPLE [EV_DRAWABLE]]) is
+	make_with_expose_action_agent (an_agent: PROCEDURE [ANY, TUPLE [EV_DRAWABLE]])
 			-- Create `Current' and add `an_agent' to `expose_actions'.
 		require
 			an_agent_not_void: an_agent /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_required_width (a_required_width: INTEGER) is
+	set_required_width (a_required_width: INTEGER)
 			-- Assign `a_required_width' to `required_width'.
 		require
 			not_destroyed: not is_destroyed
@@ -55,7 +55,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	expose_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] is
+	expose_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]]
 			-- Actions to be performed when an area needs to be redrawn.
 			-- See description at top of class to determine how to draw into the drawable.
 		do
@@ -71,13 +71,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_GRID_DRAWABLE_ITEM_I} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

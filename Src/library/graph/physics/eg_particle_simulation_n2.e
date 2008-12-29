@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a straight forward implementation for an `n_body_force_solver' O(n^2)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 	
 feature {NONE} -- Implementation
 
-	n_body_force_solver (a_particle: EG_PARTICLE): G is
+	n_body_force_solver (a_particle: EG_PARTICLE): G
 			-- Solve n_nody_force O(n).
 		local
 			l_item: EG_PARTICLE
@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

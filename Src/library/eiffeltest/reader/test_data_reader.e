@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Reader for injecting test input data from a file into a test case"
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (f: PLAIN_TEXT_FILE; c: INTEGER) is
+	make (f: PLAIN_TEXT_FILE; c: INTEGER)
 			-- Create reader with input file `f' and `c' columns.
 		require
 			file_readable: f /= Void and then f.exists and then f.is_readable
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			no_result_column: not has_result_column
 		end
 
-	make_with_result_column (f: PLAIN_TEXT_FILE; c: INTEGER) is
+	make_with_result_column (f: PLAIN_TEXT_FILE; c: INTEGER)
 			-- Create reader with input file `f, `c' columns, and a result
 			-- column.
 		require
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	last_string: STRING is
+	last_string: STRING
 			-- Last string read from file
 		do
 			Result := file.last_string
@@ -68,7 +68,7 @@ feature -- Access
 			
 feature -- Measurement
 
-	columns: INTEGER is
+	columns: INTEGER
 			-- Number of columns in table
 		do
 			Result := table.count
@@ -76,19 +76,19 @@ feature -- Measurement
 
 feature -- Status report
 
-	end_of_file: BOOLEAN is
+	end_of_file: BOOLEAN
 			-- Is file at end?
 		do
 			Result := file.end_of_file
 		end
 
-	is_open: BOOLEAN is
+	is_open: BOOLEAN
 			-- Is file open?
 		do
 			Result := file.is_open_read
 		end
 
-	is_line_valid: BOOLEAN is
+	is_line_valid: BOOLEAN
 			-- Does `last_string' hold a valid test data record?
 		do
 			if has_last_string then
@@ -98,31 +98,31 @@ feature -- Status report
 			end
 		end
 
-	has_last_string: BOOLEAN is
+	has_last_string: BOOLEAN
 			-- Is `last_string' accessible?
 		do
 			Result := last_string /= Void
 		end
 
-	has_data_values: BOOLEAN is
+	has_data_values: BOOLEAN
 			-- Is `data_values' accesible?
 		do
 			Result := data_values /= Void
 		end
 			
-	is_suite_generated: BOOLEAN is
+	is_suite_generated: BOOLEAN
 			-- Has test suite been generated?
 		do
 			Result := suite /= Void
 		end
 
-	is_complete: BOOLEAN is
+	is_complete: BOOLEAN
 			-- Is test input table set up completely?
 		do
 			Result := (table.occurrences (Void) = 0)
 		end
 		
-	all_values_valid: BOOLEAN is
+	all_values_valid: BOOLEAN
 			-- Are all entries in `data_values' valid?
 		require
 			data_values_available: has_data_values
@@ -148,7 +148,7 @@ feature -- Status report
 	has_result_column: BOOLEAN
 			-- Does table have a result column?
 
-	valid_column_index (i: INTEGER): BOOLEAN is
+	valid_column_index (i: INTEGER): BOOLEAN
 			-- Is column index `i' valid?
 		local
 			maxcol: INTEGER
@@ -161,13 +161,13 @@ feature -- Status report
 			Result := 1 <= i and i <= maxcol
 		end
 		
-	is_log_set: BOOLEAN is
+	is_log_set: BOOLEAN
 			-- Is a log facility set up?
 		do
 			Result := log /= Void and then log.is_format_set
 		end
 
-	is_comment: BOOLEAN is
+	is_comment: BOOLEAN
 			-- Is record in `last_line' commented out?
 		require
 			last_string_available: has_last_string
@@ -177,7 +177,7 @@ feature -- Status report
 		
 feature -- Status setting
 
-	set_log (l: LOG_FACILITY) is
+	set_log (l: LOG_FACILITY)
 			-- Set log facility to `l'.
 		require
 			log_exists: l /= Void
@@ -190,7 +190,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_column (c: TEST_DATA_COLUMN; pos: INTEGER) is
+	set_column (c: TEST_DATA_COLUMN; pos: INTEGER)
 			-- Set column handler `c' at column `pos'.
 		require
 			handler_exists: c /= Void
@@ -203,7 +203,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	build_suite is
+	build_suite
 			-- Build test suite.
 		require
 			complete: is_complete
@@ -236,9 +236,9 @@ feature -- Basic operations
 				 
 feature {NONE} -- Constants
 
-	Comment_character: CHARACTER is '#'
+	Comment_character: CHARACTER = '#'
 			-- Character for commenting out data records
-	Void_entity: STRING is "[]"
+	Void_entity: STRING = "[]"
 			-- String that is used for denoting a void string object
  
 feature {NONE} -- Implementation
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 	log: LOG_FACILITY
 			-- Log for error output
 			
-	parse_line is
+	parse_line
 			-- Parse data values in `last_string'
 		require
 			line_available: has_last_string
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 			
 		end
 
-	inject_record (c: INTEGER) is
+	inject_record (c: INTEGER)
 			-- Inject current record into new test case instance and add it to
 			-- `suite'.
 		require
@@ -320,7 +320,7 @@ invariant
 	valid_line_constraint: is_line_valid implies has_last_string
 	data_values_consistent: has_data_values implies data_values.count = columns
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

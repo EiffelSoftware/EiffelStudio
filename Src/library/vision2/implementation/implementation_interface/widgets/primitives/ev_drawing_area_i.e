@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision drawing area. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,27 +28,27 @@ inherit
 
 feature -- Drawing operations
 
-	redraw is
+	redraw
 			-- Redraw the window without clearing it.
 		deferred
 		end
 
-	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Redraw the rectangle described.
 		deferred
 		end
 
-	clear_and_redraw is
+	clear_and_redraw
 			-- Redraw the window after clearing it.
 		deferred
 		end
 
-	clear_and_redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+	clear_and_redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER)
 			-- Clear and Redraw the rectangle described.
 		deferred
 		end
 
-	flush is
+	flush
 			-- Update immediately the screen if needed
 		deferred
 		end
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 			-- Responsible for interaction with the underlying native graphics
 			-- toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

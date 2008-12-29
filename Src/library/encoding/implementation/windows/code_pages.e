@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Code page identifiers that Windows supports"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Code-Page Identifiers
 
-	code_pages: HASH_TABLE [STRING, STRING] is
+	code_pages: HASH_TABLE [STRING, STRING]
 			-- Code page identifiers
 		once
 			create Result.make (160)
@@ -182,7 +182,7 @@ feature -- Code-Page Identifiers
 			Result.put ("12001", utf32_be.as_lower) -- Unicode UCS-4 Big-Endian
 		end
 
-	two_byte_code_pages: HASH_TABLE [STRING, STRING] is
+	two_byte_code_pages: HASH_TABLE [STRING, STRING]
 		once
 			create Result.make (5)
 			Result.put ("1200", "1200")  -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
@@ -192,7 +192,7 @@ feature -- Code-Page Identifiers
 			Result.put ("1201", utf16_be.as_lower) -- Unicode UCS-2 Big-Endian
 		end
 
-	four_byte_code_pages: HASH_TABLE [STRING, STRING] is
+	four_byte_code_pages: HASH_TABLE [STRING, STRING]
 		once
 			create Result.make (5)
 			Result.put ("12000", "12000") -- Unicode UCS-2 Little-Endian (BMP of ISO 10646)
@@ -202,7 +202,7 @@ feature -- Code-Page Identifiers
 			Result.put ("12001", utf32_be.as_lower) -- Unicode UCS-4 Big-Endian
 		end
 
-	big_endian_code_pages: HASH_TABLE [STRING, STRING] is
+	big_endian_code_pages: HASH_TABLE [STRING, STRING]
 		once
 			create Result.make (4)
 			Result.put ("1201", "1201") -- Unicode UCS-2 Big-Endian
@@ -211,7 +211,7 @@ feature -- Code-Page Identifiers
 			Result.put ("12001", utf32_be.as_lower) -- Unicode UCS-4 Big-Endian
 		end
 
-indexing
+note
 	library:   "Encoding: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

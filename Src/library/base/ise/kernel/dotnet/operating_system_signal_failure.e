@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Operating system failure
 		]"
@@ -38,7 +38,7 @@ create
 
 feature -- Access
 
-	frozen code: INTEGER is
+	frozen code: INTEGER
 			-- Exception code
 		do
 			Result := {EXCEP_CONST}.signal_exception
@@ -49,7 +49,7 @@ feature -- Access
 
 feature {EXCEPTION_MANAGER} -- Status setting
 
-	set_signal_code (a_code: like signal_code) is
+	set_signal_code (a_code: like signal_code)
 			-- Set `signal_code' with `a_code'
 		do
 			signal_code := a_code
@@ -57,9 +57,9 @@ feature {EXCEPTION_MANAGER} -- Status setting
 
 feature {NONE} -- Accesss
 
-	frozen internal_meaning: STRING is "Operating system signal.";
+	frozen internal_meaning: STRING = "Operating system signal.";
 
-indexing
+note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_DRAWING_AREA_I."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Event handling
 
-	expose_actions: EV_GEOMETRY_ACTION_SEQUENCE is
+	expose_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Actions to be performed when an area needs to be redrawn.
 		do
 			if expose_actions_internal = Void then
@@ -27,7 +27,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_expose_actions: EV_GEOMETRY_ACTION_SEQUENCE is
+	create_expose_actions: EV_GEOMETRY_ACTION_SEQUENCE
 			-- Create a expose action sequence.
 		deferred
 		end
@@ -35,7 +35,7 @@ feature {EV_ANY_I} -- Implementation
 	expose_actions_internal: EV_GEOMETRY_ACTION_SEQUENCE;
 			-- Implementation of once per object `expose_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

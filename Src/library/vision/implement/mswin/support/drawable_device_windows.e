@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "An abstraction for anything which can be drawn on"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class."; 
@@ -79,41 +79,41 @@ feature -- Access
 
 feature -- Status report
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of the screen (in raster lines - would you believe it?)
 		deferred
 		end
 
-	is_drawable: BOOLEAN is
+	is_drawable: BOOLEAN
 			-- Is the device drawable?
 		do
 			Result := drawing_dc /= Void and then drawing_dc.exists
 		end
 
-	max_count_for_draw_polyline : INTEGER is
+	max_count_for_draw_polyline : INTEGER
 			-- Maximum value for `points.count' for `draw_polyline'
 		do
 			Result := 1000
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of the screen (in pixels)
 		deferred
 		end
 
-	x: INTEGER is
+	x: INTEGER
 			-- Current absolute horizontal coordinate of the mouse
 		deferred
 		end
     
-	y: INTEGER is
+	y: INTEGER
 			-- Current absolute vertical coordinate of the mouse
 		deferred
 		end
 
 feature -- Status setting
 
-	set_background_gc_color (background_color: COLOR) is
+	set_background_gc_color (background_color: COLOR)
 			-- Set background value of GC.
 		require
 			color_not_void: background_color /= Void
@@ -125,7 +125,7 @@ feature -- Status setting
 			end
 		end 
 
-	set_cap_style (cap_style: INTEGER)is
+	set_cap_style (cap_style: INTEGER)
 			-- Specifies the appearance of ends of line.
 		require
 			cap_style >= 0;
@@ -134,7 +134,7 @@ feature -- Status setting
 			-- Can't change cap style in Windows
 		end
 
-	set_clip (a_clip: CLIP) is
+	set_clip (a_clip: CLIP)
 			-- Set a clip area.
 		require
 			a_clip_exists: a_clip /= Void
@@ -150,7 +150,7 @@ feature -- Status setting
 			y2 := a_clip.height - a_clip.upper_left.y
 		end
 
-	set_dash_pattern (a_dash: DASH) is
+	set_dash_pattern (a_dash: DASH)
 			-- Set pattern of dash lengths.
 			-- Not implemented in Windows
 		require
@@ -159,7 +159,7 @@ feature -- Status setting
 		do
 		end
 
-	set_drawing_font (a_font: FONT) is
+	set_drawing_font (a_font: FONT)
 			-- Set a font.
 		require
 			font_exists: a_font /= Void
@@ -170,7 +170,7 @@ feature -- Status setting
 			end
 		end
 
-	set_fill_style (a_fill_style: INTEGER) is
+	set_fill_style (a_fill_style: INTEGER)
 			-- Set the style of fill.
 		do
 			fill_style := a_fill_style
@@ -179,7 +179,7 @@ feature -- Status setting
 			end
 		end
 
-	set_foreground_gc_color (foreground_color: COLOR) is
+	set_foreground_gc_color (foreground_color: COLOR)
 			-- Set foreground value of GC.
 		require
 			color_not_void: foreground_color /= Void
@@ -191,7 +191,7 @@ feature -- Status setting
 			end
 		end
 
-	set_join_style (join_style: INTEGER) is
+	set_join_style (join_style: INTEGER)
 			-- Specifies type appearance of joints between consecutive lines.
 			-- Not implemented in Windows
 		require
@@ -200,7 +200,7 @@ feature -- Status setting
 		do
 		end
 
-	set_line_style (a_line_style: INTEGER) is
+	set_line_style (a_line_style: INTEGER)
 			-- Set line style.
 			-- Only 0 and 2 (1 = 2)
 		require
@@ -222,7 +222,7 @@ feature -- Status setting
 			end
 		end
 
-	set_line_width (new_width: INTEGER) is
+	set_line_width (new_width: INTEGER)
 			-- Set line to be displayed with width of `new_width'.
 		require
 			width_large_enough: new_width >= 0
@@ -236,7 +236,7 @@ feature -- Status setting
 	line_width: INTEGER 
 			-- Width of line for device.
 
-	set_logical_mode (a_mode: INTEGER) is
+	set_logical_mode (a_mode: INTEGER)
 			-- Set drawing logical function to `a_mode'.
 		require
 			a_mode >= 0
@@ -251,7 +251,7 @@ feature -- Status setting
 	logical_mode: INTEGER
 			-- Drawing mode
 
-	set_no_clip is
+	set_no_clip
 			-- Remove all clip area.
 		local
 			c: CURSOR
@@ -271,7 +271,7 @@ feature -- Status setting
 			end
 		end
 
-	set_stipple (a_stipple: PIXMAP) is
+	set_stipple (a_stipple: PIXMAP)
 			-- Set stipple used to fill figures
 		require
 			a_stipple_exists: a_stipple /= Void
@@ -295,13 +295,13 @@ feature -- Status setting
 			end
 		end
 
-	set_subwindow_mode (mode: INTEGER) is
+	set_subwindow_mode (mode: INTEGER)
 			-- Set the subwindow mode.
 		do
 			-- Not implemented
 		end
 
-	set_tile (a_tile: PIXMAP) is
+	set_tile (a_tile: PIXMAP)
 			-- Set tile used to fill figures
 		require
 			a_tile_exists: a_tile /= Void
@@ -312,7 +312,7 @@ feature -- Status setting
 
 feature -- Input
 
-	copy_bitmap (a_point: COORD_XY; a_bitmap : PIXMAP) is
+	copy_bitmap (a_point: COORD_XY; a_bitmap : PIXMAP)
 			-- Copy `a_bitmap' to the drawing at `a_point'.
 			-- If there is not enough space to create auxiliery bitmap (DDB) 
 			-- exception will be raised
@@ -349,7 +349,7 @@ feature -- Input
 			end
 		end
 
-	copy_pixmap (a_point: COORD_XY; a_pixmap : PIXMAP) is
+	copy_pixmap (a_point: COORD_XY; a_pixmap : PIXMAP)
 			-- Copy `a_pixmap' to the drawing at `a_point'.
 		require
 			a_point_exists: a_point /= Void
@@ -363,13 +363,13 @@ feature -- Input
 
 feature -- Output
 
-	clear is
+	clear
 			-- Clear the entire area.
 		do
 			clear_rect (0, 0, width, height)
 		end
 
-	clear_rect (a_left, a_top, a_right, a_bottom: INTEGER) is
+	clear_rect (a_left, a_top, a_right, a_bottom: INTEGER)
 			-- Clear the rectangular area defined by
 			-- `a_left', `a_top', `a_right', `a_bottom'.
 		local
@@ -405,7 +405,7 @@ feature -- Output
 			end
 		end
 
-	draw_arc (center: COORD_XY; radius1, radius2: INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER) is
+	draw_arc (center: COORD_XY; radius1, radius2: INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER)
 			-- Draw an arc centered in (`x', `y') with a great radius of
 			-- `radius1' and a small radius of `radius2'
 			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
@@ -425,7 +425,7 @@ feature -- Output
 			draw_any_arc (center, radius1, radius2, angle1, angle2, orientation, arc_style, false)
 		end
 
-	draw_image_text (base: COORD_XY; text: STRING) is
+	draw_image_text (base: COORD_XY; text: STRING)
 			-- Draw text
 		require
 			text_exists: text /= Void
@@ -439,7 +439,7 @@ feature -- Output
 			drawing_dc.text_out (base.x, base.y, text)
 		end
 
-	set_text_alignment is
+	set_text_alignment
 			-- Set the default text alignment.
 		require
 			drawing_dc_not_void: drawing_dc /= Void
@@ -447,7 +447,7 @@ feature -- Output
 			drawing_dc.set_text_alignment (ta_baseline)
 		end
 
-	draw_inf_line (point1, point2: COORD_XY) is
+	draw_inf_line (point1, point2: COORD_XY)
 			-- Draw an infinite line traversing `point1' and `point2'.
 		require
 			point1_exists: point1 /= Void
@@ -474,7 +474,7 @@ feature -- Output
 			drawing_dc.line (x1, y1, x2, y2)
 		end
 
-	draw_point (a_point: COORD_XY) is
+	draw_point (a_point: COORD_XY)
 			-- Draw `a_point'.
 		require
 			point_exists: a_point /= Void
@@ -483,7 +483,7 @@ feature -- Output
 			drawing_dc.set_pixel (a_point.x, a_point.y, gc_fg_color)
 		end
 
-	draw_polyline (points: LIST [COORD_XY]; is_closed: BOOLEAN) is
+	draw_polyline (points: LIST [COORD_XY]; is_closed: BOOLEAN)
 			-- Draw a polyline, close it automatically if `is_closed'.
 		require
 			points_exists: points /= Void
@@ -524,7 +524,7 @@ feature -- Output
 			drawing_dc.polyline (p_array)
 		end
 
-	draw_rectangle (center: COORD_XY; rwidth, rheight: INTEGER; an_orientation: REAL) is
+	draw_rectangle (center: COORD_XY; rwidth, rheight: INTEGER; an_orientation: REAL)
 			-- Draw a rectangle whose center is `center' and
 			-- whose size is `rwidth' and `rheight'.
 		require
@@ -538,7 +538,7 @@ feature -- Output
 			draw_any_rectangle (center, rwidth, rheight, an_orientation, false)
 		end
 
-	draw_segment (point1, point2: COORD_XY) is
+	draw_segment (point1, point2: COORD_XY)
 			-- Draw a segment between `point1' and `point2'.
 		require
 			point1_exists: point1 /= Void
@@ -549,7 +549,7 @@ feature -- Output
 			drawing_dc.line_to (point2.x, point2.y)
 		end
 
-	draw_text (base: COORD_XY; text: STRING) is
+	draw_text (base: COORD_XY; text: STRING)
 			-- Draw text
 		require
 			text_exists: text /= Void
@@ -562,7 +562,7 @@ feature -- Output
 			drawing_dc.text_out (base.x, base.y, text)
 		end
 
-	fill_arc (center: COORD_XY; radius1, radius2 : INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER) is
+	fill_arc (center: COORD_XY; radius1, radius2 : INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER)
 			-- Fill an arc centered in (`x', `y') with a great radius of
 			-- `radius1' and a small radius of `radius2'
 			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
@@ -581,7 +581,7 @@ feature -- Output
 			draw_any_arc (center, radius1, radius2, angle1, angle2, orientation, arc_style, true)
 		end
 
-	fill_polygon (points: LIST [COORD_XY]) is
+	fill_polygon (points: LIST [COORD_XY])
 			 -- Fill a polygon.
 		require
 			points_exists: points /= Void
@@ -615,7 +615,7 @@ feature -- Output
 			end
 		end
 
-	fill_rectangle (center: COORD_XY; rwidth, rheight : INTEGER; an_orientation: REAL) is
+	fill_rectangle (center: COORD_XY; rwidth, rheight : INTEGER; an_orientation: REAL)
 			-- Fill a rectangle whose center is `center' and
 			-- whose size is `rwidth' and `rheight'.
 		require
@@ -631,7 +631,7 @@ feature -- Output
 
 feature -- Implementation
 
-	draw_any_arc (center: COORD_XY; radius1, radius2: INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER; filled: BOOLEAN) is
+	draw_any_arc (center: COORD_XY; radius1, radius2: INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER; filled: BOOLEAN)
 			-- Draw an arc centered in (`x', `y') with a great radius of
 			-- `radius1' and a small radius of `radius2'
 			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
@@ -686,7 +686,7 @@ feature -- Implementation
 			end
 		end
 
-	draw_any_rectangle (center: COORD_XY; rwidth, rheight: INTEGER; an_orientation: REAL; filled: BOOLEAN) is
+	draw_any_rectangle (center: COORD_XY; rwidth, rheight: INTEGER; an_orientation: REAL; filled: BOOLEAN)
 			-- Draw a rectangle whose center is `center' and
 			-- whose size is `rwidth' and `rheight', it may be `filled'.
 		require
@@ -742,7 +742,7 @@ feature -- Implementation
 	drawing_dc: WEL_DC
 			-- DC for drawing
 
-	set_drawing_dc (dc: WEL_DC) is
+	set_drawing_dc (dc: WEL_DC)
 			-- Set `drawing_dc' as necessary
 		require
 			no_drawing_dc: drawing_dc = Void or not drawing_dc.exists
@@ -756,7 +756,7 @@ feature -- Implementation
 			update_pen
 		end
 
-	update_brush is
+	update_brush
 			-- Update the `drawing_dc' due to brush details changing
 		require
 			drawing_dc: drawing_dc /= Void and drawing_dc.exists
@@ -774,7 +774,7 @@ feature -- Implementation
 			drawing_dc.select_brush (draw_brush)
 		end
 
-	update_dc is
+	update_dc
 			-- Update the `drawing_dc' due to dc details changing
 		require
 			drawing_dc: drawing_dc /= Void and drawing_dc.exists
@@ -821,7 +821,7 @@ feature -- Implementation
 			end
 		end
 
-	update_font is
+	update_font
 			-- Update the `drawing_dc' due to font details changing
 		require
 			drawing_dc: drawing_dc /= Void and drawing_dc.exists
@@ -833,7 +833,7 @@ feature -- Implementation
 			drawing_dc.select_font (fw.wel_font)
 		end
 
-	update_pen is
+	update_pen
 			-- Update the `drawing_dc' due to pen details changing
 		require
 			drawing_dc: drawing_dc /= Void and drawing_dc.exists
@@ -847,7 +847,7 @@ feature -- Implementation
 			drawing_dc.select_pen (pen)
 		end
 
-	unset_drawing_dc is
+	unset_drawing_dc
 			-- Return `drawing_dc' to original state
 		require
 			drawing_dc_exists: drawing_dc /= Void and drawing_dc.exists
@@ -877,7 +877,7 @@ feature {NONE} -- Implementation
 			-- List of clipping areas
 
 	arc_points (center: COORD_XY; radius1, radius2: INTEGER; 
-				angle1, angle2, orientation: REAL): ARRAY [INTEGER] is
+				angle1, angle2, orientation: REAL): ARRAY [INTEGER]
 			-- Returns the list of an arbitrary number of ordonated points composing the arc
 		local
 			nb_fracs, loop_angle, angle_inc, sino, coso, ell_x, ell_y, rot_x, rot_y: DOUBLE
@@ -911,13 +911,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	deg_rad_rate: DOUBLE is
+	deg_rad_rate: DOUBLE
 			-- degrees into radians conversion constant
 		once
 			Result := Pi / 180
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

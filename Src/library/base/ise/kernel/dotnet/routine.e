@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing delayed calls to a routine,
 		with some operands possibly still open
@@ -19,7 +19,7 @@ inherit
 
 feature -- Initialization
 
-	adapt (other: like Current) is
+	adapt (other: like Current)
 			-- Initialize from `other'.
 			-- Useful in descendants.
 		require
@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature -- Access
 
-	operands: ?OPEN_ARGS is
+	operands: ?OPEN_ARGS
 			-- Open operands.
 		local
 			i, nb: INTEGER
@@ -72,19 +72,19 @@ feature -- Access
 			end
 		end
 
-	target: ?ANY is
+	target: ?ANY
 			-- Target of call.
 		do
 			Result ?= target_object
 		end
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value.
 		do
 			Result := rout_disp.get_hash_code.hash_code
 		end
 
-	precondition (args: like operands): BOOLEAN is
+	precondition (args: like operands): BOOLEAN
 			-- Do `args' satisfy routine's precondition
 			-- in current state?
 		do
@@ -92,7 +92,7 @@ feature -- Access
 			--| FIXME compiler support needed!
 		end
 
-	postcondition (args: like operands): BOOLEAN is
+	postcondition (args: like operands): BOOLEAN
 			-- Does current state satisfy routine's
 			-- postcondition for `args'?
 		do
@@ -100,7 +100,7 @@ feature -- Access
 			--| FIXME compiler support needed!
 		end
 
-	empty_operands: OPEN_ARGS is
+	empty_operands: OPEN_ARGS
 			-- Empty tuple matching open operands
 		do
 			create Result
@@ -110,13 +110,13 @@ feature -- Access
 
 feature -- Status report
 
-	callable: BOOLEAN is
+	callable: BOOLEAN
 			-- Can routine be called on current object?
 		do
 			Result := (rout_disp /= Void)
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is associated routine the same as the one
 			-- associated with `other'.
 		local
@@ -155,7 +155,7 @@ feature -- Status report
 			end
 		end
 
-	valid_operands (args: ?TUPLE): BOOLEAN is
+	valid_operands (args: ?TUPLE): BOOLEAN
 			-- Are `args' valid operands for this routine?
 		local
 			i, arg_type_code: INTEGER
@@ -189,7 +189,7 @@ feature -- Status report
 			end
 		end
 
-	is_target_closed: BOOLEAN is
+	is_target_closed: BOOLEAN
 			-- Is target for current agent closed, i.e. specified at creation time?
 		do
 			Result := open_map = void or else not (open_map.count > 0 and then open_map.item (0) = 1)
@@ -197,7 +197,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	open_count: INTEGER is
+	open_count: INTEGER
 			-- Number of open operands.
 		do
 			if open_map /= Void then
@@ -207,7 +207,7 @@ feature -- Measurement
 
 feature -- Element change
 
-	frozen set_operands (args: ?OPEN_ARGS) is
+	frozen set_operands (args: ?OPEN_ARGS)
 			-- Use `args' as operands for next call.
 		require
 			valid_operands: valid_operands (args)
@@ -244,7 +244,7 @@ feature -- Element change
 				(operands = Void implies (args = Void or else args.is_empty))
 		end
 
-	set_target (a_target: like target) is
+	set_target (a_target: like target)
 		require
 			a_target_not_void: a_target /= Void
 			is_target_closed: is_target_closed
@@ -258,7 +258,7 @@ feature -- Element change
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Use same routine as `other'.
 		do
 			internal_operands := other.internal_operands
@@ -272,7 +272,7 @@ feature -- Duplication
 
 feature -- Basic operations
 
-	call (args: ?OPEN_ARGS) is
+	call (args: ?OPEN_ARGS)
 			-- Call routine with operands `args'.
 		require
 			valid_operands: valid_operands (args)
@@ -285,7 +285,7 @@ feature -- Basic operations
 			end
 		end
 
-	apply is
+	apply
 			-- Call routine with `operands' as last set.
 		require
 			valid_operands: valid_operands (operands)
@@ -295,7 +295,7 @@ feature -- Basic operations
 
 feature -- Obsolete
 
-	adapt_from (other: like Current) is
+	adapt_from (other: like Current)
 			-- Adapt from `other'. Useful in descendants.
 		obsolete
 			"Please use `adapt' instead (it's also a creation procedure)"
@@ -331,7 +331,7 @@ feature {ROUTINE} -- Implementation
 			-- Is the target feature an inline agent
 
 	frozen set_rout_disp (handle: RUNTIME_METHOD_HANDLE; closed_args: TUPLE;
-						  omap: ARRAY [INTEGER]; a_is_inline_agent: BOOLEAN) is
+						  omap: ARRAY [INTEGER]; a_is_inline_agent: BOOLEAN)
 			-- Initialize object.
 		require
 			closed_args_not_void: closed_args /= Void
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 	frozen open_types: ?ARRAY [INTEGER]
 			-- Types of open operands
 
-	frozen remove_gc_reference is
+	frozen remove_gc_reference
 			-- Remove all references from `internal_operands' so that GC
 			-- can collect them if necessary.
 		require
@@ -441,7 +441,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	frozen compute_is_cleanup_needed (args: OPEN_ARGS) is
+	frozen compute_is_cleanup_needed (args: OPEN_ARGS)
 			-- Set `is_cleanup_needed' to True if some open arguments are references.
 		local
 			l_open_map: like open_map
@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_operand_type (i: INTEGER): INTEGER is
+	open_operand_type (i: INTEGER): INTEGER
 			-- Type of `i'th open operand.
 		require
 			positive: i >= 1
@@ -492,28 +492,28 @@ feature {NONE} -- Implementation
 
 feature -- Obsolete
 
-	arguments: ?OPEN_ARGS is
+	arguments: ?OPEN_ARGS
 		obsolete
 			"use operands"
 		do
 			Result := operands
 		end
 
-	set_arguments (args: ?OPEN_ARGS) is
+	set_arguments (args: ?OPEN_ARGS)
 		obsolete
 			"use set_operands"
 		do
 			set_operands (args)
 		end
 
-	valid_arguments (args: ?OPEN_ARGS): BOOLEAN is
+	valid_arguments (args: ?OPEN_ARGS): BOOLEAN
 		obsolete
 			"use valid_operands"
 		do
 			Result := valid_operands (args)
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

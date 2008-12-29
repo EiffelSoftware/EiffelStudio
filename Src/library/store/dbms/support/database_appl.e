@@ -1,4 +1,4 @@
-indexing
+note
 	description: "General application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -25,7 +25,7 @@ create
 
 feature -- Initialization
 
-	login (user_name, password: STRING) is
+	login (user_name, password: STRING)
 			-- Login to database server under `user_name' with `password'.
 		require
 			user_name_ok: db_spec.user_name_ok (user_name)
@@ -39,7 +39,7 @@ feature -- Initialization
 			is_logged_to_base: is_logged_to_base
 		end
 
-	login_and_connect (user_name, password: STRING) is
+	login_and_connect (user_name, password: STRING)
 			-- Login under `user_name' with `password'
 			-- and immediately connect to Ingres database server, 
 			-- using a temporary local DB_CONTROL object.
@@ -57,7 +57,7 @@ feature -- Initialization
 
 feature -- Status setting
 
-	set_role(roleId, rolePassWd : STRING) is
+	set_role(roleId, rolePassWd : STRING)
 			-- Set database role with `roleId' and password(if it has one) with `rolePassWd'.
 		require
 			argument_exist: roleId /= Void 
@@ -70,7 +70,7 @@ feature -- Status setting
 			is_logged_to_base: is_logged_to_base
 		end
 
-	set_data_source (dsn : STRING) is
+	set_data_source (dsn : STRING)
 			-- Set database source name with `dsn'.
 		require
 			argument_exist: dsn /= Void 
@@ -84,7 +84,7 @@ feature -- Status setting
 		end
 
 			
-	set_group(groupId: STRING) is
+	set_group(groupId: STRING)
 			-- Set database group  with `groupId'.
 		require
 			argument_exist: groupId /= Void
@@ -97,7 +97,7 @@ feature -- Status setting
 			is_logged_to_base: is_logged_to_base
 		end
 
-	set_base is
+	set_base
 			-- Initialize or re-activate database server
 			-- after a handle change.
 		require
@@ -126,7 +126,7 @@ feature -- Status setting
 			handle.login = session_login
 		end
 
-	set_application (application_name: STRING) is
+	set_application (application_name: STRING)
 			-- Set database application name with `application_name'.
 		require
 			argument_exist: application_name /= Void
@@ -139,7 +139,7 @@ feature -- Status setting
 			is_logged_to_base: is_logged_to_base
 		end
 
-	set_hostname (host_name: STRING) is
+	set_hostname (host_name: STRING)
 			-- Set database host name with `host_name'.
 		require
 			argument_exist: host_name /= Void
@@ -154,7 +154,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	is_logged_to_base: BOOLEAN is
+	is_logged_to_base: BOOLEAN
 			-- Is current handle logged to Ingres server?
 		do
 			Result := session_login /= Void
@@ -172,12 +172,12 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	database_make (i: INTEGER) is
+	database_make (i: INTEGER)
 		do
 			db_spec.database_make (i)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

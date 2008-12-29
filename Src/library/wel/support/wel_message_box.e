@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Interface on the MessageBox function."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ obsolete
 
 feature -- Basic operations
 
-	message_box (a_text, a_title: STRING_GENERAL; a_style: INTEGER) is
+	message_box (a_text, a_title: STRING_GENERAL; a_style: INTEGER)
 			-- Show a message box with `a_text' inside and
 			-- `a_title' using `a_style'.
 			-- See class WEL_MB_CONSTANTS for `a_style' value.
@@ -28,7 +28,7 @@ feature -- Basic operations
 				a_wel_string1.item, a_wel_string2.item, a_style)
 		end
 
-	error_message_box (a_text: STRING_GENERAL; a_style: INTEGER) is
+	error_message_box (a_text: STRING_GENERAL; a_style: INTEGER)
 			-- Show a error message box with `a_text'
 			-- inside using `a_style'.
 			-- See class WEL_MB_CONSTANTS for `a_style' value.
@@ -52,7 +52,7 @@ feature -- Status report
 feature {NONE} -- Externals
 
 	cwin_message_box (hwnd, a_text, a_title: POINTER;
-			a_style: INTEGER): INTEGER is
+			a_style: INTEGER): INTEGER
 			-- SDK MessageBox
 		external
 			"C [macro <wel.h>] (HWND, LPCTSTR, LPCTSTR, %
@@ -61,7 +61,7 @@ feature {NONE} -- Externals
 			"MessageBox"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

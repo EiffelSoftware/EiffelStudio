@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that enable user to perform a database selection%
 			%determined at run-time."
 	legal: "See notice at end of class."
@@ -20,14 +20,14 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Initialize.
 		do
 		end
 
 feature -- Status report
 
-	can_be_activated: BOOLEAN is
+	can_be_activated: BOOLEAN
 			-- Can component be activated?
 		do
 			Result := Precursor and then
@@ -41,7 +41,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	set_control (a_ctrl: DV_SENSITIVE_CONTROL) is
+	set_control (a_ctrl: DV_SENSITIVE_CONTROL)
 			-- Set `a_ctrl' to trigger a search.
 		require
 			not_void: a_ctrl /= Void
@@ -50,7 +50,7 @@ feature -- Basic operations
 			control.set_action (agent read)
 		end
 
-	set_column_selector (a_col_selector: DV_SENSITIVE_INTEGER) is
+	set_column_selector (a_col_selector: DV_SENSITIVE_INTEGER)
 			-- Set column selector to `a_col_selector'.
 		require
 			not_void: a_col_selector /= Void
@@ -58,7 +58,7 @@ feature -- Basic operations
 			column_selector := a_col_selector
 		end
 	
-	set_value_selector (a_val_selector: DV_SENSITIVE_STRING) is
+	set_value_selector (a_val_selector: DV_SENSITIVE_STRING)
 			-- Set value selector to `a_val_selector'.
 		require
 			not_void: a_val_selector /= Void
@@ -66,7 +66,7 @@ feature -- Basic operations
 			value_selector := a_val_selector
 		end
 	
-	set_qualification_selector (a_qual_selector: DV_SENSITIVE_INTEGER) is
+	set_qualification_selector (a_qual_selector: DV_SENSITIVE_INTEGER)
 			-- Set qualification selector to `a_qual_selector'.
 		require
 			not_void: a_qual_selector /= Void
@@ -74,7 +74,7 @@ feature -- Basic operations
 			qualification_selector := a_qual_selector
 		end
 
-	set_case_selector (a_case_selector: DV_SENSITIVE_CHECK) is
+	set_case_selector (a_case_selector: DV_SENSITIVE_CHECK)
 			-- Set case selector to `a_case_selector'.
 		require
 			not_void: a_case_selector /= Void
@@ -82,7 +82,7 @@ feature -- Basic operations
 			case_selector := a_case_selector
 		end
 
-	read is
+	read
 			-- Read the database according to qualifying clause.
 		require
 			is_activated: is_activated
@@ -93,13 +93,13 @@ feature -- Basic operations
 
 feature {DV_COMPONENT} -- Basic operations
 
-	activate is
+	activate
 			-- Activate component.
 		do
 			is_activated := True
 		end
 
-	refresh: ARRAYED_LIST [DB_TABLE] is
+	refresh: ARRAYED_LIST [DB_TABLE]
 			-- Return tablerows corresponding to last database reading, i.e.
 			-- table rows may have changed but query is the same.
 		local
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 	last_case: BOOLEAN
 			-- Was last search case sensitive?
 
-	set_new_search_parameters is
+	set_new_search_parameters
 			-- Set new search parameters from parameters
 			-- providers.
 		do
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

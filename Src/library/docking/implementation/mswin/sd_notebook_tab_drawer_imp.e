@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows implementation of SD_NOTEBOOK_TAB_DRAWER_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -48,7 +48,7 @@ create
 
 feature{NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}
@@ -56,7 +56,7 @@ feature{NONE} -- Initlization
 			ev_application.theme_changed_actions.extend (agent init_theme)
 		end
 
-	init_theme is
+	init_theme
 			-- Initialize theme drawer.
 		local
 			l_app_imp: EV_APPLICATION_IMP
@@ -77,19 +77,19 @@ feature{NONE} -- Initlization
 			theme_data := theme_drawer.open_theme_data (l_wel_tool_bar.item, "Tab")
 		end
 
-	base_make_called: BOOLEAN is True
+	base_make_called: BOOLEAN = True
 			-- Not breaking the invariant.
 
 feature -- Commands
 
-	expose_unselected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
+	expose_unselected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
 			-- Redefine
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}(a_width, a_tab_info)
 			expose_unselected_or_hot (a_width, a_tab_info, False)
 		end
 
-	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
+	expose_selected (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
 			-- Redefine
 		local
 			l_wel_rect: WEL_RECT
@@ -128,14 +128,14 @@ feature -- Commands
 			end
 		end
 
-	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO) is
+	expose_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO)
 			-- Redefine
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}(a_width, a_tab_info)
 			expose_unselected_or_hot (a_width, a_tab_info, True)
 		end
 
-	draw_focus_rect (a_rect: EV_RECTANGLE) is
+	draw_focus_rect (a_rect: EV_RECTANGLE)
 			-- Redefine
 		local
 			l_rect: WEL_RECT
@@ -155,7 +155,7 @@ feature -- Commands
 
 feature{NONE} -- Implementation
 
-	draw_xp_selected_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_wel_rect: WEL_RECT; a_brush: WEL_BRUSH) is
+	draw_xp_selected_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_wel_rect: WEL_RECT; a_brush: WEL_BRUSH)
 			-- Use theme manager to draw selected tab.
 		local
 			l_helper: WEL_BITMAP_HELPER
@@ -187,7 +187,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	draw_xp_unselected_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_rect: WEL_RECT; a_brush: WEL_BRUSH) is
+	draw_xp_unselected_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_rect: WEL_RECT; a_brush: WEL_BRUSH)
 			-- Use theme manager to draw unselected tab.
 		local
 			l_temp_rect: WEL_RECT
@@ -230,7 +230,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	draw_xp_hot_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_rect: WEL_RECT; a_brush: WEL_BRUSH) is
+	draw_xp_hot_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_rect: WEL_RECT; a_brush: WEL_BRUSH)
 			-- Use theme manager to draw unselected tab.
 		local
 			l_temp_rect: WEL_RECT
@@ -273,7 +273,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	draw_classic_selected_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_rect: WEL_RECT; a_brush: WEL_BRUSH) is
+	draw_classic_selected_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_rect: WEL_RECT; a_brush: WEL_BRUSH)
 			-- Use GDI to draw classic tab.
 		do
 			theme_drawer.draw_theme_background (theme_data, a_bitmap_dc, 0, 0, a_rect, Void, a_brush)
@@ -297,7 +297,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	draw_classic_unselected_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_rect: WEL_RECT; a_brush: WEL_BRUSH) is
+	draw_classic_unselected_tab (a_bitmap_dc: WEL_DC; a_bitmap: WEL_BITMAP; a_info: SD_NOTEBOOK_TAB_INFO; a_rect: WEL_RECT; a_brush: WEL_BRUSH)
 			-- Use GDI to draw classic tab.
 		local
 			l_temp_rect: WEL_RECT
@@ -340,7 +340,7 @@ feature{NONE} -- Implementation
 			draw_classic_tab (a_bitmap_dc, l_temp_rect, is_top_side_tab)
 		end
 
-	expose_unselected_or_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO; a_hot: BOOLEAN) is
+	expose_unselected_or_hot (a_width: INTEGER; a_tab_info: SD_NOTEBOOK_TAB_INFO; a_hot: BOOLEAN)
 			-- If is `a_hot' then draw hot tab, otherwise draw normal unselect tab.
 		local
 			l_pixmap_imp: EV_PIXMAP_IMP_DRAWABLE
@@ -390,7 +390,7 @@ feature{NONE} -- Implementation
 			end_draw
 		end
 
-	draw_classic_tab (a_dc: WEL_DC; a_rect: WEL_RECT; a_is_top: BOOLEAN) is
+	draw_classic_tab (a_dc: WEL_DC; a_rect: WEL_RECT; a_is_top: BOOLEAN)
 			-- Draw classic tab.
 		do
 			if a_is_top then
@@ -400,7 +400,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	draw_classic_tab_top (a_dc: WEL_DC; a_rect: WEL_RECT) is
+	draw_classic_tab_top (a_dc: WEL_DC; a_rect: WEL_RECT)
 			-- Draw classic tab at top side.
 		local
 			l_color: WEL_COLOR_REF
@@ -429,7 +429,7 @@ feature{NONE} -- Implementation
 
 		end
 
-	draw_classic_tab_down (a_dc: WEL_DC; a_rect: WEL_RECT) is
+	draw_classic_tab_down (a_dc: WEL_DC; a_rect: WEL_RECT)
 			-- Draw classic tabs which at bottom side.
 		local
 			l_color: WEL_COLOR_REF
@@ -497,7 +497,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER) is
+	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
 			-- Redefine
 		local
 			l_font: EV_FONT
@@ -518,7 +518,7 @@ feature{NONE} -- Implementation
 			draw_close_button (a_pixmap, internal_shared.icons.close)
 		end
 
-	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER) is
+	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER)
 			-- Redefine
 		local
 			l_font: EV_FONT
@@ -552,10 +552,10 @@ feature{NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	gap_height: INTEGER is 2
+	gap_height: INTEGER = 2
 	 		-- Redefine
 
-	start_y_position: INTEGER is
+	start_y_position: INTEGER
 	 		-- Redefine
 	 	do
 			if pixmap /= Void then
@@ -565,13 +565,13 @@ feature {NONE} -- Attributes
 			end
 	 	end
 
-	start_y_position_bottom: INTEGER is
+	start_y_position_bottom: INTEGER
 			-- Start y drawing bottom text position.
 		once
 			Result := internal_shared.tool_bar_font.height // 8 + 2
 		end
 
-	start_y_position_text: INTEGER is
+	start_y_position_text: INTEGER
 			-- Start y drawing top text positioion.
 		once
 			Result := internal_shared.tool_bar_font.height // 8 + 3
@@ -580,7 +580,7 @@ feature {NONE} -- Attributes
 	theme_drawer: EV_THEME_DRAWER_IMP
 			-- Theme drawer
 
-	tool_bar_drawer: SD_TOOL_BAR_DRAWER_IMP is
+	tool_bar_drawer: SD_TOOL_BAR_DRAWER_IMP
 			-- Tool bar drawer
 		do
 			Result ?= internal_shared.tool_bar_drawer.implementation
@@ -589,7 +589,7 @@ feature {NONE} -- Attributes
 	theme_data: POINTER;
 			-- Theme data
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu item. Carbon implementation."
 
 class
@@ -55,9 +55,9 @@ create
 
 feature {NONE} -- Initialization
 
-	is_dockable: BOOLEAN is False
+	is_dockable: BOOLEAN = False
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a menu.
 		local
 			ptr: POINTER
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			create text.make_empty
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		do
 			Precursor {EV_ITEM_IMP}
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
 			-- Make the menu item avtive
 		local
 			pos: INTEGER
@@ -98,7 +98,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Make the menu item grayed out and ignore commands
 		local
 			pos: INTEGER
@@ -114,7 +114,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			ptr: POINTER
@@ -149,20 +149,20 @@ feature -- Element change
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER) is
+	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER)
 			--
 		do
 			-- SetMenuItemIconHandle
 		end
 
-	internal_remove_pixmap is
+	internal_remove_pixmap
 			-- Remove pixmap from Current
 		do
 		end
 
-	accelerators_enabled: BOOLEAN is True
+	accelerators_enabled: BOOLEAN = True
 
-	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER is
+	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER
 			-- Feature that is called if an event occurs
 		local
 			event_class, event_kind: INTEGER
@@ -190,7 +190,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	interface: EV_MENU_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, Eiffel.Mac Team"
 end -- class EV_MENU_ITEM_IMP
 

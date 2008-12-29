@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision file open dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			Precursor
 			set_title ("Open")
@@ -36,14 +36,14 @@ feature {NONE} -- Initialization
 	multiple_selection_enabled: BOOLEAN
 		-- Is dialog enabled to select multiple files.
 
-	file_names: ARRAYED_LIST [STRING_32] is
+	file_names: ARRAYED_LIST [STRING_32]
 			-- List of filenames selected by user
 		do
 			create Result.make (1)
 			Result.extend (file_name)
 		end
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Enable multiple file selection
 		do
 			check
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			multiple_selection_enabled := True
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Disable multiple file selection
 		do
 			check
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_FILE_OPEN_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

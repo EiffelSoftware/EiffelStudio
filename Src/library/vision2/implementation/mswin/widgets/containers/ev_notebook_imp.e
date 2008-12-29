@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision notebook, Mswindows implementation."
 	legal: "See notice at end of class."
@@ -139,7 +139,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
@@ -151,7 +151,7 @@ feature {NONE} -- Initialization
 			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Tab")
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_WIDGET_LIST_IMP}
@@ -169,13 +169,13 @@ feature {EV_ANY_I} --  Access
 
 feature {EV_ANY_I} -- Status report
 
-	current_page: INTEGER is
+	current_page: INTEGER
 			-- One-based index of the currently opened page.
 		do
 			Result := current_selection + 1
 		end
 
-	tab_position: INTEGER is
+	tab_position: INTEGER
 			-- Position of the tabs.
 		do
 			if tab_pos = interface.Tab_top then
@@ -189,7 +189,7 @@ feature {EV_ANY_I} -- Status report
 			end
 		end
 
-	pointed_tab_index: INTEGER is
+	pointed_tab_index: INTEGER
 			-- index of tab currently under mouse pointer, or 0 if none.
 		local
 			hit_test_info: WEL_TC_HITTESTINFO
@@ -202,7 +202,7 @@ feature {EV_ANY_I} -- Status report
 			Result := {WEL_API}.send_message_result_integer (wel_item, tcm_hittest, to_wparam (0), hit_test_info.item) + 1
 		end
 
-	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
+	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB
 			-- Tab associated with `an_item'.
 		do
 			create Result.make_with_widgets (interface, an_item)
@@ -210,7 +210,7 @@ feature {EV_ANY_I} -- Status report
 
 feature {EV_ANY_I} -- Status setting
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Set the current minimum size.
 		do
 			internal_set_font
@@ -222,7 +222,7 @@ feature {EV_ANY_I} -- Status setting
 			end
 		end
 
-	set_tab_position (pos: INTEGER) is
+	set_tab_position (pos: INTEGER)
 			-- set position of tabs (left, right, top or bottom) according
 			-- to value of `pos'.
 		local
@@ -235,13 +235,13 @@ feature {EV_ANY_I} -- Status setting
 			notify_change (Nc_minsize, ww)
 		end
 
-	set_current_page (an_index: INTEGER) is
+	set_current_page (an_index: INTEGER)
 			-- Make the `an_index'-th page the currently opened page.
 		do
 			set_current_selection (an_index - 1)
 		end
 
-	set_insensitive (flag: BOOLEAN) is
+	set_insensitive (flag: BOOLEAN)
 			-- Set current widget in insensitive mode if
    			-- `flag', otherwise make sensitive.
 		local
@@ -268,14 +268,14 @@ feature {EV_ANY_I} -- Status setting
 			end
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Enable notebook.
 		do
 			set_insensitive (False)
 			Precursor {EV_WIDGET_LIST_IMP}
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Disable notebook.
 		do
 			set_insensitive (True)
@@ -284,7 +284,7 @@ feature {EV_ANY_I} -- Status setting
 
 feature {EV_ANY_I} -- Element change
 
-	set_font (f: EV_FONT) is
+	set_font (f: EV_FONT)
 			-- Set `font' to `f'.
 			-- When the tabs are vertical, we set back the default font
 			-- by using `{WEL_API}.send_message' (feature not implemented in WEL)
@@ -294,7 +294,7 @@ feature {EV_ANY_I} -- Element change
 			internal_set_font
 		end
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		local
@@ -318,7 +318,7 @@ feature {EV_ANY_I} -- Element change
 
 feature {EV_ANY_I} -- Basic operation
 
-	get_child_index (a_child: EV_WIDGET_IMP): INTEGER is
+	get_child_index (a_child: EV_WIDGET_IMP): INTEGER
 			-- `Result' is 1 based index of `a_child' in `Current' or 0 if not
 			-- contained.
 		require
@@ -349,7 +349,7 @@ feature {EV_ANY_I} -- Basic operation
 
 feature -- Assertion features
 
-	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN
 			-- Is `a_child' a child of `Current'?
 			-- We cannot use the usual context.
 			-- A child is a child if the notebook is
@@ -372,7 +372,7 @@ feature -- Assertion features
 			end
 		end
 
-	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN
 			-- Has `a_child' been added properly?
 		do
 			Result := not a_child.is_show_requested
@@ -380,7 +380,7 @@ feature -- Assertion features
 
 feature {NONE} -- Implementation
 
-	compute_minimum_width is
+	compute_minimum_width
 			-- Recompute the minimum_width of `Current'.
 		local
 			child_imp: EV_WIDGET_IMP
@@ -410,7 +410,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_minimum_height is
+	compute_minimum_height
 			-- Recompute the minimum_height of `Current'.
 		local
 			counter: INTEGER
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	compute_minimum_size is
+	compute_minimum_size
 			-- Recompute both the minimum_width and then
 			-- minimum_height of `Current'.
 		local
@@ -480,7 +480,7 @@ feature {NONE} -- Implementation
 		end
 
 	ev_apply_new_size (a_x_position, a_y_position,
-				a_width, a_height: INTEGER; repaint: BOOLEAN) is
+				a_width, a_height: INTEGER; repaint: BOOLEAN)
 				-- Apply new size when minimum size changed but not size.
 		do
 				-- Resize ourself first.
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 			resize_children (False)
 		end
 
-	resize_children (from_on_size: BOOLEAN) is
+	resize_children (from_on_size: BOOLEAN)
 			-- Resize children to match `sheet_rect'.
 		local
 			i: INTEGER
@@ -520,7 +520,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
- 	default_style: INTEGER is
+ 	default_style: INTEGER
  			-- Default windows style used to create `Current'.
 		do
 			Result := Ws_child + Ws_group + Ws_tabstop
@@ -528,13 +528,13 @@ feature {NONE} -- WEL Implementation
 				+ Tcs_singleline
 		end
 
- 	default_ex_style: INTEGER is
+ 	default_ex_style: INTEGER
  			-- Default windows style used to create `Current'.
 		do
 			Result := Ws_ex_controlparent
 		end
 
- 	basic_style: INTEGER is
+ 	basic_style: INTEGER
  			-- Default style used to create the control
  		do
  			Result := Ws_child + Ws_group + Ws_tabstop
@@ -553,7 +553,7 @@ feature {NONE} -- WEL Implementation
  			end
  		end
 
-	tab_height: INTEGER is
+	tab_height: INTEGER
 			-- The height of the tabs in `Tab_top' or `Tab_bottom' status,
 			-- the width of the tabs otherwise.
 		do
@@ -571,7 +571,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	hide_current_selection is
+	hide_current_selection
 			-- Hide the currently selected page.
 		local
 			ww: EV_WIDGET_IMP
@@ -582,14 +582,14 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- `Current' has been resized.
 		do
 			Precursor {EV_WIDGET_LIST_IMP} (size_type, a_width, a_height)
 			resize_children (True)
 		end
 
-	on_tcn_selchange is
+	on_tcn_selchange
 			-- Selection has changed.
 			-- Shows the current selected page by default.
 		local
@@ -605,37 +605,37 @@ feature {NONE} -- WEL Implementation
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
-	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER is
+	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_hscroll_code.
 		do
 			Result := cwin_get_wm_hscroll_code (wparam, lparam)
 		end
 
-	get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER is
+	get_wm_hscroll_hwnd (wparam, lparam: POINTER): POINTER
 			-- Encapsulation of the external cwin_get_wm_hscroll_hwnd
 		do
 			Result := cwin_get_wm_hscroll_hwnd (wparam, lparam)
 		end
 
-	get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER is
+	get_wm_hscroll_pos (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_hscroll_pos
 		do
 			Result := cwin_get_wm_hscroll_pos (wparam, lparam)
 		end
 
-	get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER is
+	get_wm_vscroll_code (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_vscroll_code.
 		do
 			Result := cwin_get_wm_vscroll_code (wparam, lparam)
 		end
 
-	get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER is
+	get_wm_vscroll_hwnd (wparam, lparam: POINTER): POINTER
 			-- Encapsulation of the external cwin_get_wm_vscroll_hwnd
 		do
 			Result := cwin_get_wm_vscroll_hwnd (wparam, lparam)
 		end
 
-	get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER is
+	get_wm_vscroll_pos (wparam, lparam: POINTER): INTEGER
 			-- Encapsulation of the external cwin_get_wm_vscroll_pos
 		do
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
@@ -644,19 +644,19 @@ feature {NONE} -- Feature that should be directly implemented by externals
 	check_notebook_assertions: BOOLEAN
 		-- Are assertions for `Current' from Ev_NOTEBOOK_I going to be checked?
 
-	disable_notebook_assertions is
+	disable_notebook_assertions
 			-- Effectively turn of assertions from EV_NOTEBOOK_I
 		do
 			check_notebook_assertions := False
 		end
 
-	enable_notebook_assertions is
+	enable_notebook_assertions
 			-- Effectively turn on assertions from EV_NOTEBOOK_I
 		do
 			check_notebook_assertions := True
 		end
 
-	is_usable: BOOLEAN is
+	is_usable: BOOLEAN
 			-- Is `Current' usable?
 		do
 			if check_notebook_assertions then
@@ -669,7 +669,7 @@ feature {NONE} -- Implementation
 	ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
 			-- Internal list of children.
 
-	i_th (i: INTEGER): EV_WIDGET is
+	i_th (i: INTEGER): EV_WIDGET
 			-- `Result' is item at `i'-th position.
 		local
 			wel_win: WEL_WINDOW
@@ -683,7 +683,7 @@ feature {NONE} -- Implementation
 			Result := v_imp.interface
 		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			wel_tci: WEL_TAB_CONTROL_ITEM
@@ -722,7 +722,7 @@ feature {NONE} -- Implementation
 			new_item_actions.call ([v])
 		end
 
-	remove_i_th (i: INTEGER) is
+	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
 			v_imp: EV_WIDGET_IMP
@@ -763,13 +763,13 @@ feature {NONE} -- Implementation
 
 feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 
-	selected_item_index: INTEGER is
+	selected_item_index: INTEGER
 			-- One based index of topmost page.	
 		do
 			Result := current_page
 		end
 
-	select_item (v: like item) is
+	select_item (v: like item)
 			-- Select page containing `v'.
 		local
 			an_index: INTEGER
@@ -786,7 +786,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			end
 		end
 
-	set_item_text (v: like item; a_text: STRING_GENERAL) is
+	set_item_text (v: like item; a_text: STRING_GENERAL)
 			-- Assign `a_text' to the label for `an_item'.
 		local
 			a_wel_item: WEL_TAB_CONTROL_ITEM
@@ -805,7 +805,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 		-- Image list associated with `Current'.
 		-- `Void' if none.
 
-	set_item_pixmap (v: like item; a_pixmap: EV_PIXMAP) is
+	set_item_pixmap (v: like item; a_pixmap: EV_PIXMAP)
 			-- Assign `a_text' to the label for `an_item'.
 		require else
 			has_an_item: has (v)
@@ -841,7 +841,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			update_item (child_index - 1, a_wel_item)
 		end
 
-	item_pixmap (v: like item): EV_PIXMAP is
+	item_pixmap (v: like item): EV_PIXMAP
 			-- `Result' is pixmap associated with `Current' or `Void' if none.
 		require
 			has_an_item: has (v)
@@ -878,7 +878,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			end
 		end
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- Size of pixmaps displayed in tabs of `Current' has changed
 			-- so update to reflect this new size.
 		do
@@ -886,7 +886,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			set_default_minimum_size
 		end
 
-	item_text (v: like item): STRING_32 is
+	item_text (v: like item): STRING_32
 			-- Label of `v'.
 		local
 			a_wel_item: WEL_TAB_CONTROL_ITEM
@@ -899,7 +899,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			Result := a_wel_item.text
 		end
 
-	selected_item: like item is
+	selected_item: like item
 			-- Page displayed topmost.
 		local
 			child_imp: EV_WIDGET_IMP
@@ -910,7 +910,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			end
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -928,7 +928,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			end
 		end
 
-	on_wm_theme_changed is
+	on_wm_theme_changed
 			-- `Wm_themechanged' message received by Windows so update current theming.
 		do
 			application_imp.theme_drawer.close_theme_data (open_theme)
@@ -936,7 +936,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Tab")
 		end
 
-	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP
 			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
 			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
 			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
@@ -986,7 +986,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			end
 		end
 
-	return_current_if_next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+	return_current_if_next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP
 			-- If `Current' is not equal to `start_widget' then return `Current' but only if `search_pos' is 1 and `forwards' or
 			-- `search_pos' is 0 and not `forwards. This ensures that we return a container in the correct order (before or after)
 			-- its children dependent on the state of `forwards'.
@@ -1014,7 +1014,7 @@ feature {EV_XP_THEME_DRAWER_IMP} -- Implementation
 
 feature {NONE} -- Font implementation
 
-	internal_set_font is
+	internal_set_font
 			-- Set actual font.
 		local
 			local_font_windows: EV_FONT_IMP
@@ -1045,7 +1045,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_NOTEBOOK;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Events posted by worker thread to GUI thread."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (a_id, a_severity: INTEGER; a_data: like data) is
+	make (a_id, a_severity: INTEGER; a_data: like data)
 			-- Initialize instance.
 		require
 			valid_severity: is_valid_severity (a_severity)
@@ -45,7 +45,7 @@ feature -- Access
 invariant
 	valid_severity: is_valid_severity (severity)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

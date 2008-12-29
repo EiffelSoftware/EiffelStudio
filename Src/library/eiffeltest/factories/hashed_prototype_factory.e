@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Factories that store product prototypes in hash tables"
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create factory.
 		do
 			hash_make (0)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	product: G is
+	product: G
 			-- Selected product
 		do
 			search (selected_product_key)
@@ -53,13 +53,13 @@ feature -- Access
 
 feature -- Status setting
 
-	select_product (k: STRING) is
+	select_product (k: STRING)
 			-- Select product with key `k'.
 		do
 			selected_product_key := k
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

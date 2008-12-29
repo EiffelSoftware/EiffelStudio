@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Button drawn on screen with an arrow"
@@ -17,49 +17,49 @@ inherit
 	
 feature -- Status report
 
-	down: BOOLEAN is
+	down: BOOLEAN
 			-- Is the arrow direction down ?
 		deferred
 		end;
 
-	left: BOOLEAN is
+	left: BOOLEAN
 			-- Is the arrow direction left ?
 		deferred
 		end;
 
-	right: BOOLEAN is
+	right: BOOLEAN
 			-- Is the arrow direction right ?
 		deferred
 		end;
 
-	up: BOOLEAN is
+	up: BOOLEAN
 			-- Is the arrow direction up ?
 		deferred
 		end
 
 feature -- Status setting
 
-	set_down is
+	set_down
 			-- Set the arrow direction to down.
 		deferred
 		end;
 
-	set_left is
+	set_left
 			-- Set the arrow direction to left.
 		deferred
 		end;
 
-	set_right is
+	set_right
 			-- Set the arrow direction to right.
 		deferred
 		end;
 
-	set_up is
+	set_up
 			-- Set the arrow direction to up.
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

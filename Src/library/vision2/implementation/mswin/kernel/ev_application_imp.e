@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision application. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -62,7 +62,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the application with `an_interface' interface.
 		local
 			l_result: INTEGER
@@ -105,44 +105,44 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	key_pressed (virtual_key: INTEGER): BOOLEAN is
+	key_pressed (virtual_key: INTEGER): BOOLEAN
 			-- Is `virtual_key' currently pressed?
 		do
 			Result := (cwin_get_keyboard_state (virtual_key) & 0xF000) = 0xF000
 		end
 
-	key_toggled (virtual_key: INTEGER): BOOLEAN is
+	key_toggled (virtual_key: INTEGER): BOOLEAN
 			-- Is `virtual_key' currently toggled?
 		do
 			Result := (cwin_get_keyboard_state (virtual_key) & 0x0001) = 0x0001
 		end
 
-	ctrl_pressed: BOOLEAN is
+	ctrl_pressed: BOOLEAN
 			-- Is ctrl key currently pressed?
 		do
 			Result := key_pressed (vk_control)
 		end
 
-	alt_pressed: BOOLEAN is
+	alt_pressed: BOOLEAN
 			-- Is alt key currently pressed?
 		do
 			Result := key_pressed (vk_lmenu) or
 				key_pressed (vk_rmenu)
 		end
 
-	shift_pressed: BOOLEAN is
+	shift_pressed: BOOLEAN
 			-- Is shift key currently pressed?
 		do
 			Result := key_pressed (vk_shift)
 		end
 
-	caps_lock_on: BOOLEAN is
+	caps_lock_on: BOOLEAN
 			-- Is the caps lock key currently on?
 		do
 			Result := key_toggled (vk_capital)
 		end
 
-	is_display_remote: BOOLEAN is
+	is_display_remote: BOOLEAN
 			-- Is display for application remote?
 		do
 			Result := metrics.is_remote_session
@@ -150,7 +150,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	process_graphical_events is
+	process_graphical_events
 			-- Process any pending paint messages.
 			--| Pass control to the GUI toolkit so that it can
 			--| handle any paint events that may be in its queue.
@@ -168,13 +168,13 @@ feature -- Basic operation
 			end
 		end
 
-	sleep (msec: INTEGER) is
+	sleep (msec: INTEGER)
 			-- Wait for `msec' milliseconds and return.
 		do
 			c_sleep (msec)
 		end
 
-	lock is
+	lock
 			-- Lock the Mutex.
 		do
 			if idle_action_mutex /= Void then
@@ -182,7 +182,7 @@ feature -- Basic operation
 			end
 		end
 
-	try_lock: BOOLEAN is
+	try_lock: BOOLEAN
 			-- Try to see if we can lock, False means no lock could be attained
 		do
 			if idle_action_mutex /= Void then
@@ -193,7 +193,7 @@ feature -- Basic operation
 			end
 		end
 
-	unlock is
+	unlock
 			-- Unlock the Mutex.
 		do
 			if idle_action_mutex /= Void then
@@ -208,7 +208,7 @@ feature {NONE} -- Thread implementation
 
 feature -- Root window
 
-	Silly_main_window: EV_INTERNAL_SILLY_WINDOW_IMP is
+	Silly_main_window: EV_INTERNAL_SILLY_WINDOW_IMP
 			-- Current main window of the application.
 		once
 			--| Previously this would return the first window created
@@ -225,7 +225,7 @@ feature -- Root window
 
 feature -- Element change
 
-	add_root_window (w: WEL_FRAME_WINDOW) is
+	add_root_window (w: WEL_FRAME_WINDOW)
 			-- Add `w' to the list of root windows.
 		do
 				-- Initialize the theme drawer to the correct version for
@@ -235,7 +235,7 @@ feature -- Element change
 			Application_windows_id.extend (w.item)
 		end
 
-	remove_root_window (w: WEL_FRAME_WINDOW) is
+	remove_root_window (w: WEL_FRAME_WINDOW)
 			-- Remove `w' from the root windows list.
 		do
 			Application_windows_id.prune_all (w.item)
@@ -244,7 +244,7 @@ feature -- Element change
 	window_with_focus: EV_WINDOW_IMP
 			-- `Result' is EV_WINDOW with current focus.
 
-	set_window_with_focus (a_window: EV_WINDOW) is
+	set_window_with_focus (a_window: EV_WINDOW)
 			-- Assign implementation of `a_window' to `window_with_focus'.
 		local
 			win_imp: EV_WINDOW_IMP
@@ -257,10 +257,10 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	Application_windows_id: ARRAYED_LIST [POINTER] is
+	Application_windows_id: ARRAYED_LIST [POINTER]
 			-- All user created windows in the application.
 			--| For internal use only.
-		indexing
+		note
 			once_status: global
 		once
 			create Result.make (5)
@@ -273,10 +273,10 @@ feature {EV_ANY_I}-- Status report
 	tooltip_delay: INTEGER
 			-- Time in milliseconds before tooltips pop up.
 
-	no_tooltip_delay_assigned: INTEGER is -1
+	no_tooltip_delay_assigned: INTEGER = -1
 		-- Constant for use with tooltip_delay.
 
-	windows: LINEAR [EV_WINDOW] is
+	windows: LINEAR [EV_WINDOW]
 			-- List of current EV_WINDOWs.
 			--| This was introduced to allow the previous internal
 			--| implementation to be kept although changing the interface.
@@ -315,7 +315,7 @@ feature {EV_ANY_HANDLER, EV_WEL_CONTROL_CONTAINER_IMP, EV_WIDGET_IMP, WEL_ANY} -
 			-- `Result' is object suitable for drawing using the
 			-- currently selected themes.
 
-	update_theme_drawer is
+	update_theme_drawer
 			-- Updated `theme_drawer' to use current Windows settings.
 		do
 			if themes_active then
@@ -325,7 +325,7 @@ feature {EV_ANY_HANDLER, EV_WEL_CONTROL_CONTAINER_IMP, EV_WIDGET_IMP, WEL_ANY} -
 			end
 		end
 
-	set_theme_drawer (drawer: EV_THEME_DRAWER_IMP) is
+	set_theme_drawer (drawer: EV_THEME_DRAWER_IMP)
 			-- Assign `drawer' to `theme_drawer'.
 		require
 			drawer_not_void: drawer /= Void
@@ -335,13 +335,13 @@ feature {EV_ANY_HANDLER, EV_WEL_CONTROL_CONTAINER_IMP, EV_WIDGET_IMP, WEL_ANY} -
 			drawer_set: theme_drawer = drawer
 		end
 
-	themes_active: BOOLEAN is
+	themes_active: BOOLEAN
 			-- Are themes currently active?
 		do
 			Result := uxtheme_dll_available and then cwin_is_theme_active and then cwin_is_app_themed and then comctl32_version >= version_600
 		end
 
-	uxtheme_dll_available: BOOLEAN is
+	uxtheme_dll_available: BOOLEAN
 			-- Is the "uxtheme.dll" required for theme support available on the current platform?
 		local
 			dll: WEL_DLL
@@ -366,7 +366,7 @@ feature {EV_ANY_I, EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Sta
 
 feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 
-	enable_drop_actions_executing is
+	enable_drop_actions_executing
 			-- Assign `True' to `drop_actions_executing'.
 		do
 			drop_actions_executing := True
@@ -374,7 +374,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 			drop_actions_executing: drop_actions_executing
 		end
 
-	disable_drop_actions_executing is
+	disable_drop_actions_executing
 			-- Assign `False' to `drop_actions_executing'.
 		do
 			drop_actions_executing := False
@@ -382,7 +382,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 			drop_actions_not_executing: not drop_actions_executing
 		end
 
-	dock_started (source: EV_DOCKABLE_SOURCE_IMP) is
+	dock_started (source: EV_DOCKABLE_SOURCE_IMP)
 			-- Assign `source' to `dockable_source'.
 		require
 			source_not_void: source /= Void
@@ -392,7 +392,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 			source_set: dockable_source = source
 		end
 
-	dock_ended is
+	dock_ended
 			-- Ensure `dockable_source' is Void.
 		do
 			dockable_source := Void
@@ -400,7 +400,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 			dockable_source = Void
 		end
 
-	transport_started (widget: EV_PICK_AND_DROPABLE_IMP) is
+	transport_started (widget: EV_PICK_AND_DROPABLE_IMP)
 			-- Assign `widget' to `pick_and_drop_source'.
 		require
 			widget_not_void: widget /= Void
@@ -410,7 +410,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 			source_set: pick_and_drop_source = widget
 		end
 
-	transport_ended is
+	transport_ended
 			-- Assign `Void' to `pick_and_drop_source'.
 		do
 			pick_and_drop_source := Void
@@ -424,13 +424,13 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 		--| This allows us to check globally.
 
 
-	start_awaiting_movement is
+	start_awaiting_movement
 			-- Assign `True' to `awaiting_movement'.
 		do
 			awaiting_movement := True
 		end
 
-	end_awaiting_movement is
+	end_awaiting_movement
 			-- Assign `False' to `awaiting_movement'.
 		do
 			awaiting_movement := False
@@ -445,13 +445,13 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 		--| the default processing for the Wm_ncativate message in the window.
 		--| This flag has been added only for this case.
 
-	set_transport_just_ended is
+	set_transport_just_ended
 			-- Assign `True' to `transport_just_ended'.
 		do
 			transport_just_ended := True
 		end
 
-	clear_transport_just_ended is
+	clear_transport_just_ended
 			-- Assign `False' to `transport_just_ended'.
 		do
 			transport_just_ended := False
@@ -464,13 +464,13 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 		-- and to true when we know we must override the windows movement
 		-- within `on_wm_mouse_activate'.
 
-	set_override_from_mouse_activate is
+	set_override_from_mouse_activate
 			-- Assign `True' to override_from_mouse_activate.
 		do
 			override_from_mouse_activate := True
 		end
 
-	clear_override_from_mouse_activate is
+	clear_override_from_mouse_activate
 			-- Assign `False' to override_from_mouse_activate.
 		do
 			override_from_mouse_activate := False
@@ -478,7 +478,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 
 feature -- Status reports
 
-	capture_type: INTEGER is
+	capture_type: INTEGER
 			-- Type of capture to use when capturing the mouse.
 			-- See constants Capture_xxxx at the end of the class.
 		do
@@ -490,14 +490,14 @@ feature -- Status reports
 
 feature -- Status setting
 
-	set_tooltip_delay (a_delay: INTEGER) is
+	set_tooltip_delay (a_delay: INTEGER)
 			-- Assign `a_delay' to `tooltip_delay'.
 		do
 			tooltip_delay := a_delay
 			internal_tooltip.set_initial_delay_time (a_delay)
 		end
 
-	set_capture_type (a_capture_type: INTEGER) is
+	set_capture_type (a_capture_type: INTEGER)
 			-- Set the type of capture to use when capturing the
 			-- mouse to `a_capture_type'.
 			-- See constants Capture_xxxx at the end of the class
@@ -513,7 +513,7 @@ feature -- Status setting
 
 feature -- Basic operation
 
-	destroy is
+	destroy
 			-- Destroy `Current' (End the application).
 		local
 			l_result: INTEGER
@@ -530,7 +530,7 @@ feature -- Basic operation
 
 feature -- Tooltips
 
-	internal_tooltip: WEL_TOOLTIP is
+	internal_tooltip: WEL_TOOLTIP
 			-- WEL_TOOLTIP used internally by current.
 		once
 			create Result.make (silly_main_window, -1)
@@ -550,7 +550,7 @@ feature {NONE} -- WEL Implemenation
 	rich_edit_dll: WEL_RICH_EDIT_DLL
 			-- Needed if the user want to open a rich edit control.
 
-	init_application is
+	init_application
 			-- Load the dll needed sometimes.
 		do
 			create controls_dll.make_with_flags (Icc_win95_classes |
@@ -568,7 +568,7 @@ feature {NONE} -- Implementation
 			-- window represent the window that is the
 			-- real current blocking window.
 
-	message_loop is
+	message_loop
 			-- Windows message loop.
 		do
 			-- Not applicable with Vision2
@@ -577,7 +577,7 @@ feature {NONE} -- Implementation
 	reusable_message: WEL_MSG
 			-- Reusable message object.
 
-	process_underlying_toolkit_event_queue is
+	process_underlying_toolkit_event_queue
 			-- Process event queue from underlying toolkit.
 		local
 			msg: WEL_MSG
@@ -597,7 +597,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_message (msg: WEL_MSG) is
+	process_message (msg: WEL_MSG)
 			-- Dispatch `msg'.
 			--| Different from WEL because of accelerators.
 		require
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_capture_type: CELL [INTEGER] is
+	internal_capture_type: CELL [INTEGER]
 			-- System wide once, in order to always get the
 			-- same value.
 		once
@@ -636,7 +636,7 @@ feature {NONE} -- Implementation
 	process_handle: POINTER
 			-- HANDLE for current process.
 
-	wait_for_input (msec: INTEGER) is
+	wait_for_input (msec: INTEGER)
 			-- Wait for at most `msec' milliseconds for an input.
 		local
 			l_result: INTEGER
@@ -652,11 +652,11 @@ feature {NONE} -- Implementation
 
 feature -- Public constants
 
-	Capture_heavy: INTEGER is 1
+	Capture_heavy: INTEGER = 1
 			-- The mouse [has been/should be] captured through
 			-- a call to `set_heavy_capture'
 
-	Capture_normal: INTEGER is 0
+	Capture_normal: INTEGER = 0
 			-- The mouse [has been/should be] captured through
 			-- a call to `set_capture'
 			--
@@ -664,7 +664,7 @@ feature -- Public constants
 
 feature {NONE} -- Externals
 
-	cwin_disable_xp_ghosting is
+	cwin_disable_xp_ghosting
 			-- Disable XP ghosting.
 		external
 			"C inline use <windows.h>"
@@ -683,7 +683,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	cwin_register_window_message (message_name: POINTER): INTEGER is
+	cwin_register_window_message (message_name: POINTER): INTEGER
 			-- Register a custom window message named `message_name'.
 			-- `Result' is id of new message.
 		external
@@ -692,7 +692,7 @@ feature {NONE} -- Externals
 			"RegisterWindowMessage"
 		end
 
-	c_sleep (v: INTEGER) is
+	c_sleep (v: INTEGER)
 			-- Sleep for `v' milliseconds.
 		external
 			"C [macro <windows.h>] (DWORD)"
@@ -700,7 +700,7 @@ feature {NONE} -- Externals
 			"Sleep"
 		end
 
-	cwin_post_quit_message (exit_code: INTEGER) is
+	cwin_post_quit_message (exit_code: INTEGER)
 			-- SDK PostQuitMessage.
 		external
 			"C [macro <wel.h>] (int)"
@@ -708,7 +708,7 @@ feature {NONE} -- Externals
 			"PostQuitMessage"
 		end
 
-	cwin_get_keyboard_state (virtual_key: INTEGER): INTEGER_16 is
+	cwin_get_keyboard_state (virtual_key: INTEGER): INTEGER_16
 			-- `Result' is state of `virtual_key'.
 		external
 			"C [macro <windows.h>] (int): EIF_INTEGER_16"
@@ -716,13 +716,13 @@ feature {NONE} -- Externals
 			"GetKeyState"
 		end
 
-	frozen cwel_integer_to_pointer (i: INTEGER): POINTER is
+	frozen cwel_integer_to_pointer (i: INTEGER): POINTER
 			-- Converts an integer `i' to a pointer
 		external
 			"C [macro <wel.h>] (EIF_INTEGER): EIF_POINTER"
 		end
 
-	cwin_is_theme_active: BOOLEAN is
+	cwin_is_theme_active: BOOLEAN
 			-- SDK's Open
 		external
 			"dllwin %"uxtheme.dll%" signature (): EIF_BOOLEAN use <windows.h>"
@@ -730,7 +730,7 @@ feature {NONE} -- Externals
 			"IsThemeActive"
 		end
 
-	cwin_is_app_themed: BOOLEAN is
+	cwin_is_app_themed: BOOLEAN
 			-- SDK's Open
 		external
 			"dllwin %"uxtheme.dll%" signature (): EIF_BOOLEAN use <windows.h>"
@@ -742,7 +742,7 @@ invariant
 	idle_action_mutex_valid: {PLATFORM}.is_thread_capable implies idle_action_mutex /= Void
 	process_handle_valid: not is_destroyed implies process_handle /= default_pointer
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that permit comparison of EV_MULTI_COLUMN_LIST_ROW based on
 		`text' of a paticular item.
@@ -17,7 +17,7 @@ inherit
 	
 feature -- Status Setting
 	
-	set_sort_column (a_column: INTEGER) is
+	set_sort_column (a_column: INTEGER)
 			-- Use column `a_column' for search comparison.
 		do
 			sort_column := a_column
@@ -25,7 +25,7 @@ feature -- Status Setting
 
 feature -- Measurement
 
-	less_than (u, v: EV_MULTI_COLUMN_LIST_ROW): BOOLEAN is
+	less_than (u, v: EV_MULTI_COLUMN_LIST_ROW): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := u.i_th (sort_column) < v.i_th (sort_column)
@@ -36,7 +36,7 @@ feature -- Access
 	sort_column: INTEGER;
 		-- Column on which sorting is performed.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

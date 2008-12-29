@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,21 +12,21 @@ inherit
 
 feature -- Status Report
 
-	quick_activate_user_precondition (p_qa_container: TAG_QACONTAINER_RECORD; p_qa_control: TAG_QACONTROL_RECORD): BOOLEAN is
+	quick_activate_user_precondition (p_qa_container: TAG_QACONTAINER_RECORD; p_qa_control: TAG_QACONTROL_RECORD): BOOLEAN
 			-- User-defined preconditions for `quick_activate'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_content_extent_user_precondition (psizel: TAG_SIZEL_RECORD): BOOLEAN is
+	set_content_extent_user_precondition (psizel: TAG_SIZEL_RECORD): BOOLEAN
 			-- User-defined preconditions for `set_content_extent'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_content_extent_user_precondition (psizel: TAG_SIZEL_RECORD): BOOLEAN is
+	get_content_extent_user_precondition (psizel: TAG_SIZEL_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_content_extent'.
 			-- Redefine in descendants if needed.
 		do
@@ -35,7 +35,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	quick_activate (p_qa_container: TAG_QACONTAINER_RECORD; p_qa_control: TAG_QACONTROL_RECORD) is
+	quick_activate (p_qa_container: TAG_QACONTAINER_RECORD; p_qa_control: TAG_QACONTROL_RECORD)
 			-- No description available.
 			-- `p_qa_container' [in].  
 			-- `p_qa_control' [out].  
@@ -49,7 +49,7 @@ feature -- Basic Operations
 
 		end
 
-	set_content_extent (psizel: TAG_SIZEL_RECORD) is
+	set_content_extent (psizel: TAG_SIZEL_RECORD)
 			-- No description available.
 			-- `psizel' [in].  
 		require
@@ -60,7 +60,7 @@ feature -- Basic Operations
 
 		end
 
-	get_content_extent (psizel: TAG_SIZEL_RECORD) is
+	get_content_extent (psizel: TAG_SIZEL_RECORD)
 			-- No description available.
 			-- `psizel' [out].  
 		require
@@ -71,7 +71,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

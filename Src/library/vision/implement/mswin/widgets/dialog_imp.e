@@ -1,4 +1,4 @@
-indexing
+note
     status: "See notice at end of class.";
     date: "$Date$";
     revision: "$Revision$"
@@ -28,13 +28,13 @@ feature -- Status report
 	default_position: BOOLEAN
 			-- Use default position?
 
-	is_popped_up: BOOLEAN is
+	is_popped_up: BOOLEAN
 			-- Is the popup widget popped up on screen ?
 		do
 			Result := realized and then shown
 		end
 
-	x: INTEGER is
+	x: INTEGER
 			-- X axis position.
 			-- If `default_position' is set, we just need to
 			-- set `x' to `cw_usedefault'.
@@ -48,7 +48,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	show is
+	show
 			-- Show composite.
 		do
 			if exists then
@@ -58,12 +58,12 @@ feature -- Status setting
 			shown := True
 		end
 
-	set_default_position (flag: BOOLEAN) is
+	set_default_position (flag: BOOLEAN)
 		do
 			default_position := flag
 		end
 
-	destroy (wid_list: LINKED_LIST [WIDGET]) is
+	destroy (wid_list: LINKED_LIST [WIDGET])
 		do
 			if is_popped_up then
 				if insensitive_list /= Void then
@@ -73,7 +73,7 @@ feature -- Status setting
 			Precursor {WM_SHELL_IMP} (wid_list)
 		end
 
-	popdown is
+	popdown
 			-- Popdown popup shell.
 		do
 			if is_popped_up then
@@ -84,7 +84,7 @@ feature -- Status setting
 			end
 		end
 
-	popup is
+	popup
 			-- Popup a popup shell.
 		do
 			if not is_popped_up then
@@ -100,7 +100,7 @@ feature -- Status setting
 			end
 		end
 
-	realize is
+	realize
 		do
 			Precursor
 				-- set initial focus
@@ -109,7 +109,7 @@ feature -- Status setting
 			end
 		end
 
-	unrealize is
+	unrealize
 		do
 			if insensitive_list /= Void then
 				set_windows_sensitive
@@ -117,17 +117,17 @@ feature -- Status setting
 			wel_destroy
 		end
 
-	dialog_command_target is
+	dialog_command_target
 			-- set the command target to the dialog_shell
 		do
 		end
 
-	widget_command_target is
+	widget_command_target
 			-- set the command target to the widget
 		do
 		end
 
-	set_font (a_font: FONT) is
+	set_font (a_font: FONT)
 			-- Set the font to `a_font'
 		do
 			font := a_font
@@ -135,12 +135,12 @@ feature -- Status setting
 			font_is_set: font = a_font
 		end
 
-	action_target: POINTER is
+	action_target: POINTER
 			-- Target for actions
 		do
 		end
 
-	set_parent_action (action: STRING; cmd: COMMAND; arg: ANY) is
+	set_parent_action (action: STRING; cmd: COMMAND; arg: ANY)
 			-- Set the dialog shell action to
 			-- `cmd', with argument `arg'.
 		do
@@ -148,7 +148,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	remove_parent_action (action: STRING) is
+	remove_parent_action (action: STRING)
 			-- Remove the dialog shell action of
 			-- `cmd', with argument `arg'.
 		do
@@ -156,13 +156,13 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "Evisiondialog"
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Deafult style for a dialog
 		do
 			Result := Ws_overlapped + Ws_dlgframe + Ws_thickframe
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 	font: FONT;
 			-- Font of the dialog
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

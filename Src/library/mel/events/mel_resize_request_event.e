@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XResizeRequestEvent."
@@ -19,13 +19,13 @@ create
 
 feature -- Access
 
-	width: INTEGER is
+	width: INTEGER
 			-- New width of `window'
 		do
 			Result := c_event_width (handle)
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- New height of `window'
 		do
 			Result := c_event_height (handle)
@@ -33,17 +33,17 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_event_width (event_ptr: POINTER): INTEGER is
+	c_event_width (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XResizeRequestEvent *): EIF_INTEGER"
 		end;
 
-	c_event_height (event_ptr: POINTER): INTEGER is
+	c_event_height (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XResizeRequestEvent *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

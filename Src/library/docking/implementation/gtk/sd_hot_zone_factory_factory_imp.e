@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gtk implementation for SD_HOT_ZONE_ABSTRACT_FACTORY"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +11,7 @@ inherit
 
 feature -- Hot zone factory
 
-	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY is
+	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY
 			-- Hot zone factory which current os should use.
 		do
 			create {SD_HOT_ZONE_OLD_FACTORY} Result

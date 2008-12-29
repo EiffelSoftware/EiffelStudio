@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"EiffelVision horizontal box. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 	
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a GTK horizontal box.
 		do	
 			base_make (an_interface)
@@ -41,7 +41,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_HORIZONTAL_BOX;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

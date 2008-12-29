@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Partially deterministic finite state automata"
@@ -35,7 +35,7 @@ create
 
 feature -- Initialization
 
-	make (n, i: INTEGER) is
+	make (n, i: INTEGER)
 			-- Make a PDFA with `n' states, and `i' + 1 inputs.
 		do
 			nb_states := n;
@@ -64,19 +64,19 @@ feature -- Access
 
 feature -- Status setting
 
-	set_letters is
+	set_letters
 			-- Direct the active transitions to include letters.
 		do
 			has_letters := True
 		end; 
 
-	set_final (s, r: INTEGER) is
+	set_final (s, r: INTEGER)
 			-- Make `s' the final state of regular expression `r'.
 		do
 			final_array.put (r, s)
 		end; 
 
-	set_transition (source, input_doc, target: INTEGER) is
+	set_transition (source, input_doc, target: INTEGER)
 			-- Set transition from `source' to `target' on `input_doc'.
 		require else
 			source_in_automaton: source >= 1 and source <= nb_states;
@@ -93,7 +93,7 @@ feature -- Status setting
 			input_array.item (input_doc).put (source)
 		end; 
 
-	set_e_transition (source, target: INTEGER) is
+	set_e_transition (source, target: INTEGER)
 			-- Set epsilon transition from `source' to `target'.
 		local
 			list: LINKED_LIST [INTEGER]
@@ -108,14 +108,14 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_keyword (word: STRING) is
+	add_keyword (word: STRING)
 			-- Insert `word' in the keyword list.
 		do
 			keywords_list.finish;
 			keywords_list.put_right (word)
 		end; 
 
-	include (fa: PDFA; shift: INTEGER) is
+	include (fa: PDFA; shift: INTEGER)
 			-- Copy `fa' with state numbers shifted
 			-- by `shift' positions in the transitions.
 			-- Do not preserve the `final' values.
@@ -152,7 +152,7 @@ feature -- Element change
 			end
 		end; 
 
-	remove_case_sensitiveness is
+	remove_case_sensitiveness
 			-- Remove case sensitiveness.
 		require
 			z_possible: greatest_input >= Lower_z
@@ -186,7 +186,7 @@ feature -- Element change
 
 feature -- Removal
 
-	delete_transition (source, input_doc, target: INTEGER) is
+	delete_transition (source, input_doc, target: INTEGER)
 			-- Delete transition from `source' to `target' on `input_doc'.
 		require else
 			source_in_automaton: source >= 1 and source <= nb_states;
@@ -201,7 +201,7 @@ feature -- Removal
 
 feature -- Output
 
-	trace is
+	trace
 			-- Output an internal representation
 			-- of the current automaton.
 		local
@@ -255,7 +255,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	closure (state: INTEGER): FIXED_INTEGER_SET is
+	closure (state: INTEGER): FIXED_INTEGER_SET
 			-- Epsilon_closure of ith state which means
 			-- set of NDFA state reachable from ith
 			-- state on epsilon-transition alone.
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			state_in_closure: Result.has (state)
 		end; 
 
-	move (initial_set: FIXED_INTEGER_SET; i: INTEGER): FIXED_INTEGER_SET is
+	move (initial_set: FIXED_INTEGER_SET; i: INTEGER): FIXED_INTEGER_SET
 			-- Set of NDFA states to which there is a transition on
 			-- input i from some NDFA state s of initial_set.
 			-- Void if the set if empty.
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	initial_final_designation is
+	initial_final_designation
 			-- Set the final and initial attributes of the dfa,
 			-- consistent with those of the current automaton.
 		require else
@@ -344,13 +344,13 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	dfa_set_final (s, f: INTEGER) is
+	dfa_set_final (s, f: INTEGER)
 			-- Make `f' the `final' state for `s'.
 		do
 			dfa.item (s).set_final (final_array.item (f))
 		end; 
 
-	e_include (fa: PDFA; shift: INTEGER) is
+	e_include (fa: PDFA; shift: INTEGER)
 			-- Copy the fa epsilon transition in Current
 			-- with state numbers shifted in the transitions.
 			-- The attributes are not preserved.
@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	find_successors (source, input_doc: INTEGER): LINKED_LIST [INTEGER] is
+	find_successors (source, input_doc: INTEGER): LINKED_LIST [INTEGER]
 			-- Successors of `source' on `input_doc';
 			-- void if no successor
 		require else
@@ -393,7 +393,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	find_e_successors (source: INTEGER): LINKED_LIST [INTEGER] is
+	find_e_successors (source: INTEGER): LINKED_LIST [INTEGER]
 			-- Epsilon successors of source;
 			-- Void if no successor
 		require else
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 			Result := item (source)
 		end; 
 
-	set_state is
+	set_state
 			-- This routine is deferred in NDFA,
 			-- but is useless in PDFA.
 		do
@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 -- For the use in a regular expression context, keywords
 -- can be associated with Current.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

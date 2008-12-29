@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,43 +33,43 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	h_wnd: POINTER is
+	h_wnd: POINTER
 			-- No description available.
 		do
 			Result := ccom_tag_msg_h_wnd (item)
 		end
 
-	h_wnd_integer: INTEGER is
+	h_wnd_integer: INTEGER
 			-- Handle as INTEGER.
 		do
 			Result := cwel_pointer_to_integer (h_wnd)
 		end
 		
-	message: INTEGER is
+	message: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_msg_message (item)
 		end
 
-	w_param: INTEGER is
+	w_param: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_msg_w_param (item)
 		end
 
-	l_param: INTEGER is
+	l_param: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_msg_l_param (item)
 		end
 
-	time: INTEGER is
+	time: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_msg_time (item)
 		end
 
-	pt: TAG_POINT_RECORD is
+	pt: TAG_POINT_RECORD
 			-- No description available.
 		do
 			Result := ccom_tag_msg_pt (item)
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_tag_msg
@@ -87,37 +87,37 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_h_wnd (a_h_wnd: POINTER) is
+	set_h_wnd (a_h_wnd: POINTER)
 			-- Set `h_wnd' with `a_h_wnd'.
 		do
 			ccom_tag_msg_set_h_wnd (item, a_h_wnd)
 		end
 
-	set_message (a_message: INTEGER) is
+	set_message (a_message: INTEGER)
 			-- Set `message' with `a_message'.
 		do
 			ccom_tag_msg_set_message (item, a_message)
 		end
 
-	set_w_param (a_w_param: INTEGER) is
+	set_w_param (a_w_param: INTEGER)
 			-- Set `w_param' with `a_w_param'.
 		do
 			ccom_tag_msg_set_w_param (item, a_w_param)
 		end
 
-	set_l_param (a_l_param: INTEGER) is
+	set_l_param (a_l_param: INTEGER)
 			-- Set `l_param' with `a_l_param'.
 		do
 			ccom_tag_msg_set_l_param (item, a_l_param)
 		end
 
-	set_time (a_time: INTEGER) is
+	set_time (a_time: INTEGER)
 			-- Set `time' with `a_time'.
 		do
 			ccom_tag_msg_set_time (item, a_time)
 		end
 
-	set_pt (a_pt: TAG_POINT_RECORD) is
+	set_pt (a_pt: TAG_POINT_RECORD)
 			-- Set `pt' with `a_pt'.
 		require
 			non_void_a_pt: a_pt /= Void
@@ -128,7 +128,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_tag_msg: INTEGER is
+	c_size_of_tag_msg: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library_tagMSG_s.h%"]"
@@ -136,79 +136,79 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::tagMSG)"
 		end
 
-	ccom_tag_msg_h_wnd (a_pointer: POINTER): POINTER is
+	ccom_tag_msg_h_wnd (a_pointer: POINTER): POINTER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagMSG_s_impl.h%"](ecom_control_library::tagMSG *):EIF_POINTER"
 		end
 
-	ccom_tag_msg_set_h_wnd (a_pointer: POINTER; arg2: POINTER) is
+	ccom_tag_msg_set_h_wnd (a_pointer: POINTER; arg2: POINTER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagMSG_s_impl.h%"](ecom_control_library::tagMSG *, ecom_control_library::wireHWND)"
 		end
 
-	ccom_tag_msg_message (a_pointer: POINTER): INTEGER is
+	ccom_tag_msg_message (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagMSG_s_impl.h%"](ecom_control_library::tagMSG *):EIF_INTEGER"
 		end
 
-	ccom_tag_msg_set_message (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_msg_set_message (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagMSG_s_impl.h%"](ecom_control_library::tagMSG *, UINT)"
 		end
 
-	ccom_tag_msg_w_param (a_pointer: POINTER): INTEGER is
+	ccom_tag_msg_w_param (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagMSG_s_impl.h%"](ecom_control_library::tagMSG *):EIF_INTEGER"
 		end
 
-	ccom_tag_msg_set_w_param (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_msg_set_w_param (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagMSG_s_impl.h%"](ecom_control_library::tagMSG *, UINT)"
 		end
 
-	ccom_tag_msg_l_param (a_pointer: POINTER): INTEGER is
+	ccom_tag_msg_l_param (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagMSG_s_impl.h%"](ecom_control_library::tagMSG *):EIF_INTEGER"
 		end
 
-	ccom_tag_msg_set_l_param (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_msg_set_l_param (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagMSG_s_impl.h%"](ecom_control_library::tagMSG *, LONG)"
 		end
 
-	ccom_tag_msg_time (a_pointer: POINTER): INTEGER is
+	ccom_tag_msg_time (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagMSG_s_impl.h%"](ecom_control_library::tagMSG *):EIF_INTEGER"
 		end
 
-	ccom_tag_msg_set_time (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_msg_set_time (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagMSG_s_impl.h%"](ecom_control_library::tagMSG *, ULONG)"
 		end
 
-	ccom_tag_msg_pt (a_pointer: POINTER): TAG_POINT_RECORD is
+	ccom_tag_msg_pt (a_pointer: POINTER): TAG_POINT_RECORD
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagMSG_s_impl.h%"](ecom_control_library::tagMSG *):EIF_REFERENCE"
 		end
 
-	ccom_tag_msg_set_pt (a_pointer: POINTER; arg2: POINTER) is
+	ccom_tag_msg_set_pt (a_pointer: POINTER; arg2: POINTER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagMSG_s_impl.h%"](ecom_control_library::tagMSG *, ecom_control_library::tagPOINT *)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

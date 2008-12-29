@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		This class allows to save in a file the contents of a
 		rich edit control.
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file: RAW_FILE) is
+	make (a_file: RAW_FILE)
 			-- Save the contents of the rich edit control
 			-- in `a_file'.
 		require
@@ -46,13 +46,13 @@ feature {NONE} -- Implementation
 	file: RAW_FILE
 			-- File to save
 
-	write_buffer is
+	write_buffer
 			-- Write `a_buffer' in `file'.
 		do
 			file.put_managed_pointer (buffer, 0, buffer.count)
 		end
 
-	finish_action is
+	finish_action
 			-- Close `file'.
 		do
 			file.close
@@ -64,7 +64,7 @@ invariant
 	file_not_void: file /= Void
 	not_is_unicode_data: not is_unicode_data
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

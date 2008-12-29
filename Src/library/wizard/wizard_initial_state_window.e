@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Template for the first state of a wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,13 +17,13 @@ inherit
 
 feature -- Basic Operations
 
-	display is
+	display
 			-- Display Current State
 		do
 			build
 		end
 
-	build is
+	build
 			-- Special display box for the first and the last state
 		local
 			vertical_separator: EV_VERTICAL_SEPARATOR
@@ -75,7 +75,7 @@ feature -- Basic Operations
 			choice_box.set_help_context (agent create_help_context (tuple))
 		end
 
-	current_help_context: WIZARD_HELP_CONTEXT is
+	current_help_context: WIZARD_HELP_CONTEXT
 			-- Help context for this window
 		local
 			hc: FUNCTION [ANY, TUPLE, EV_HELP_CONTEXT]
@@ -90,7 +90,7 @@ feature {NONE} -- Widgets
 
 feature {NONE} -- Implementation
 
-	fill_message_and_title_box (message_and_title_box: EV_VERTICAL_BOX) is
+	fill_message_and_title_box (message_and_title_box: EV_VERTICAL_BOX)
 			-- Fill `message_and_title_box' with needed widgets.
 		local
 			white_cell: EV_CELL
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			message_and_title_box.extend (white_cell)
 		end
 
-	display_pixmap is
+	display_pixmap
 			-- Draw pixmap
 		local
 			fi: FILE_NAME
@@ -139,14 +139,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	pixmap_location: FILE_NAME is
+	pixmap_location: FILE_NAME
 			-- Pixmap location
 		once
 			create Result.make_from_string ("eiffel_wizard")
 			Result.add_extension (pixmap_extension)
 		end
 
-	pixmap_icon_location: FILE_NAME is
+	pixmap_icon_location: FILE_NAME
 			-- Path in which can be found the pixmap icon associated with
 			-- the current state.
 		deferred
@@ -154,7 +154,7 @@ feature {NONE} -- Constants
 			exists: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

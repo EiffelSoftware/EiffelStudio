@@ -1,6 +1,6 @@
 --| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
-indexing
+note
 	description:
 		" A class that handle the menu items inside a%
 		% container. Ancestor of EV_CONTAINER_IMP."
@@ -14,7 +14,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	initialize_handler is
+	initialize_handler
 			-- Create the hash-table.
 		do
 			create menu_items.make (1)
@@ -27,7 +27,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	update_menu is
+	update_menu
 			-- Graphical update of the menu
 		local
 			window: EV_WINDOW_IMP
@@ -38,7 +38,7 @@ feature -- Basic operations
 			end
 		end
 
-	register_item (item_imp: EV_MENU_ITEM_IMP) is
+	register_item (item_imp: EV_MENU_ITEM_IMP)
 			-- Register the given item and sub-items in the
 			-- general list
 		local
@@ -70,7 +70,7 @@ feature -- Basic operations
 			end
 		end
 
-	unregister_item (item_imp: EV_MENU_ITEM_IMP) is
+	unregister_item (item_imp: EV_MENU_ITEM_IMP)
 			-- Register the given item and sub-items in the
 			-- general list
 		local
@@ -106,12 +106,12 @@ feature -- Basic operations
 
 feature {NONE} -- Deferred features
 
-	top_level_window_imp: EV_WINDOW_IMP is
+	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains the current widget.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

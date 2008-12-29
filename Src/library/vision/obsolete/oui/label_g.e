@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Simple label Gadget"
 	legal: "See notice at end of class.";
@@ -29,21 +29,21 @@ create
 	
 feature {NONE} -- Creation 
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a label gadget with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			create_ev_widget (a_name, a_parent, True)
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged label gadget with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			create_ev_widget (a_name, a_parent, False)
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a label gadget with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		local
@@ -63,7 +63,7 @@ feature {NONE} -- Creation
 
 feature -- Callback (adding and removing) 
 
-	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
+	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY)
 			-- Set `a_command' to be executed when `a_translation' occurs.
 			-- `a_translation' is specified with Xtoolkit convention.
 		require else
@@ -71,7 +71,7 @@ feature -- Callback (adding and removing)
 		do
 		end;
 
-	remove_action (a_translation: STRING) is
+	remove_action (a_translation: STRING)
 			-- Remove the command executed when `a_translation' occurs.
 			-- Do nothing if no command has been specified.
 		require else
@@ -81,24 +81,24 @@ feature -- Callback (adding and removing)
 
 feature -- Color 
 
-	background_color: COLOR is
+	background_color: COLOR
 			-- Background color of widget
 		do
 		end; 
 
-	foreground_color: COLOR is
+	foreground_color: COLOR
 			-- Foreground color of primitive widget
 		do
 		end;
 
-	set_background_color (new_color: COLOR) is
+	set_background_color (new_color: COLOR)
 			-- Set background color to `new_color'.
 		require else
 			Valid_new_color: new_color /= Void
 		do
 		end;
 
-	set_foreground_color (new_color: COLOR) is
+	set_foreground_color (new_color: COLOR)
 			-- Set foreground color to `new_color'.
 		require else
 			Valid_new_color: new_color = Void
@@ -107,12 +107,12 @@ feature -- Color
 
 feature -- Background pixmap 
 
-	background_pixmap: PIXMAP is
+	background_pixmap: PIXMAP
 			-- Background pixmap of widget
 		do
 		end; 
 
-	set_background_pixmap (new_pixmap: PIXMAP) is
+	set_background_pixmap (new_pixmap: PIXMAP)
 			-- Set background pixmap to `new_pixmap'.
 		require else
 			valid_new_pixmap: new_pixmap /= Void
@@ -124,7 +124,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 	implementation: LABEL_G_I;;
 			-- Implementation of current label gadget
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision drawable. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,50 +31,50 @@ inherit
 
 feature -- Access
 
-	width: INTEGER is
+	width: INTEGER
 		-- Horizontal size in pixels.
 		deferred
         ensure
             positive: Result > 0
         end
 
-	height: INTEGER is
+	height: INTEGER
 		-- Vertical size in pixels.
 		deferred
 		ensure
 			positive: Result > 0
 		end
 
-	line_width: INTEGER is
+	line_width: INTEGER
 			-- Line thickness.
 		deferred
 		end
 
-	drawing_mode: INTEGER is
+	drawing_mode: INTEGER
 			-- Logical operation on pixels when drawing.
 		deferred
 		end
 
-	clip_area: EV_RECTANGLE is
+	clip_area: EV_RECTANGLE
 			-- Clip area used to clip drawing.
 			-- If set to Void, no clipping is applied.
 		deferred
 		end
 
-	tile: EV_PIXMAP is
+	tile: EV_PIXMAP
 			-- Pixmap that is used to instead of background_color.
 			-- If set to Void, `background_color' is used to fill.
 		deferred
 		end
 
-	dashed_line_style: BOOLEAN is
+	dashed_line_style: BOOLEAN
 			-- Are lines drawn dashed?
 		deferred
 		end
 
 feature -- Duplication
 
-	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
 			-- Pixmap region of `Current' represented by rectangle `area'
 		require
 			area_not_void: area /= Void
@@ -85,7 +85,7 @@ feature -- Duplication
 
 feature -- Element change
 
-	set_line_width (a_width: INTEGER) is
+	set_line_width (a_width: INTEGER)
 			-- Assign `a_width' to `line_width'.
 		require
 			a_width_positive_or_zero: a_width >= 0
@@ -95,7 +95,7 @@ feature -- Element change
 				interface.line_width = a_width
 		end
 
-	set_drawing_mode (a_mode: INTEGER) is
+	set_drawing_mode (a_mode: INTEGER)
 			-- Set drawing mode to `a_logical_mode'.
 		require
 			a_mode_valid: valid_drawing_mode (a_mode)
@@ -105,7 +105,7 @@ feature -- Element change
 				interface.drawing_mode = a_mode
 		end
 
-	set_clip_area (an_area: EV_RECTANGLE) is
+	set_clip_area (an_area: EV_RECTANGLE)
 			-- Set area which will be refreshed.
 		require
 			an_area_not_void: an_area /= Void
@@ -115,21 +115,21 @@ feature -- Element change
 				interface.clip_area.is_equal (an_area)
 		end
 
-	set_clip_region (a_region: EV_REGION) is
+	set_clip_region (a_region: EV_REGION)
 			-- Set region which will be refreshed.
 		require
 			a_region_not_void: a_region /= Void
 		deferred
 		end
 
-	remove_clipping is
+	remove_clipping
 			-- Do not apply any clipping.
 		deferred
 		ensure
 			clip_area_void: is_usable implies interface.clip_area = Void
 		end
 
-	set_tile (a_pixmap: EV_PIXMAP) is
+	set_tile (a_pixmap: EV_PIXMAP)
 			-- Set tile used to fill figures.
 			-- Set to Void to use `background_color' to fill.
 		require
@@ -139,14 +139,14 @@ feature -- Element change
 			tile_assigned: is_usable implies interface.tile /= Void
 		end
 
-	remove_tile is
+	remove_tile
 			-- Do not apply a tile when filling.
 		deferred
 		ensure
 			tile_void: is_usable implies interface.tile = Void
 		end
 
-	enable_dashed_line_style is
+	enable_dashed_line_style
 			-- Draw lines dashed.
 		deferred
 		ensure
@@ -154,7 +154,7 @@ feature -- Element change
 				interface.dashed_line_style
 		end
 
-	disable_dashed_line_style is
+	disable_dashed_line_style
 			-- Draw lines solid.
 		deferred
 		ensure
@@ -164,17 +164,17 @@ feature -- Element change
 
 feature -- Clearing and drawing operations
 
-	redraw is
+	redraw
 			-- Force `Current' to redraw itself.
 		deferred
 		end
 
-	clear is
+	clear
 			-- Erase `Current' with `background_color'.
 		deferred
 		end
 
-	clear_rectangle (x1, y1, a_width, a_height: INTEGER) is
+	clear_rectangle (x1, y1, a_width, a_height: INTEGER)
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height' in `background_color'.
 		deferred
@@ -182,19 +182,19 @@ feature -- Clearing and drawing operations
 
 feature -- Drawing operations
 
-	draw_point (x, y: INTEGER) is
+	draw_point (x, y: INTEGER)
 			-- Draw point at (`x', 'y').
 		deferred
 		end
 
-	draw_text (x, y: INTEGER; a_text: STRING_GENERAL) is
+	draw_text (x, y: INTEGER; a_text: STRING_GENERAL)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		require
 			a_text_not_void: a_text /= Void
 		deferred
 		end
 
-	draw_rotated_text (x, y: INTEGER; angle: REAL a_text: STRING_GENERAL) is
+	draw_rotated_text (x, y: INTEGER; angle: REAL a_text: STRING_GENERAL)
 			-- Draw rotated text `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Rotation is number of radians counter-clockwise from horizontal plane.
 		require
@@ -202,14 +202,14 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL) is
+	draw_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		require
 			a_text_not_void: a_text /= Void
 		deferred
 		end
 
-	draw_ellipsed_text (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER) is
+	draw_ellipsed_text (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -219,7 +219,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER) is
+	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING_GENERAL; clipping_width: INTEGER)
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
 			-- to show truncated characters if any.
@@ -229,12 +229,12 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_segment (x1, y1, x2, y2: INTEGER) is
+	draw_segment (x1, y1, x2, y2: INTEGER)
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		deferred
 		end
 
-	draw_straight_line (x1, y1, x2, y2: INTEGER) is
+	draw_straight_line (x1, y1, x2, y2: INTEGER)
 			-- Draw infinite straight line through (`x1','y1') and (`x2','y2').
 		local
 			ax1, ax2, ay1, ay2, dx, dy: INTEGER
@@ -258,14 +258,14 @@ feature -- Drawing operations
 			draw_segment (ax1, ay1, ax2, ay2)
 		end
 
-	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
+	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Draw `a_pixmap' with upper-left corner on (`x', 'y').
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 		deferred
 		end
 
-	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
+	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE)
 			-- Draw `area' of `a_pixmap' with upper-left corner on (`x', `y').
 		require
 			a_pixmap_not_void: a_pixmap /= Void
@@ -274,7 +274,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE) is
+	draw_sub_pixel_buffer (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER; area: EV_RECTANGLE)
 			-- Draw `area' of `a_pixel_buffer' with upper-left corner on (`a_x', `a_y').
 		require
 			a_pixel_buffer_not_void: a_pixel_buffer /= Void
@@ -284,7 +284,7 @@ feature -- Drawing operations
 		end
 
 	draw_arc (x, y, a_bounding_width, a_bounding_height: INTEGER;
-		a_start_angle, an_aperture: REAL) is
+		a_start_angle, an_aperture: REAL)
 			-- Draw a part of an ellipse defined by a rectangular area with an
 			-- upper left corner at `x',`y', width `a_bounding_width' and height
 			-- `a_bounding_height'.
@@ -296,7 +296,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_rectangle (x, y, a_width, a_height: INTEGER) is
+	draw_rectangle (x, y, a_width, a_height: INTEGER)
 			-- Draw rectangle with upper-left corner on (`x', 'y')
 			-- with size `a_width' and `a_height'.
 		require
@@ -305,7 +305,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
+	draw_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER)
 			-- Draw an ellipse defined by a rectangular area with an
 			-- upper left corner at `x',`y', width `a_bounding_width' and height
 			-- `a_bounding_height'.
@@ -315,7 +315,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN) is
+	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN)
 			-- Draw line segments between subsequent points in
 			-- `points'. If `is_closed' draw line segment between first
 			-- and last point in `points'.
@@ -325,7 +325,7 @@ feature -- Drawing operations
 		end
 
 	draw_pie_slice (x, y, a_bounding_width, a_bounding_height: INTEGER;
-	a_start_angle, an_aperture: REAL) is
+	a_start_angle, an_aperture: REAL)
 			-- Draw part of an ellipse defined by a rectangular area with an
 			-- upper left corner at `x',`y', width `a_bounding_width' and height
 			-- `a_bounding_height'.
@@ -340,7 +340,7 @@ feature -- Drawing operations
 
 feature -- Drawing operations (filled)
 
-	fill_rectangle (x, y, a_width, a_height: INTEGER) is
+	fill_rectangle (x, y, a_width, a_height: INTEGER)
 			-- Draw rectangle with upper-left corner on (`x', 'y')
 			-- with size `a_width' and `a_height'. Fill with `background_color'.
 		require
@@ -349,7 +349,7 @@ feature -- Drawing operations (filled)
 		deferred
 		end
 
-	fill_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
+	fill_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER)
 			-- Fill an ellipse defined by a rectangular area with an
 			-- upper left corner at `x',`y', width `a_bounding_width' and height
 			-- `a_bounding_height'.
@@ -359,7 +359,7 @@ feature -- Drawing operations (filled)
 		deferred
 		end
 
-	fill_polygon (points: ARRAY [EV_COORDINATE]) is
+	fill_polygon (points: ARRAY [EV_COORDINATE])
 			-- Draw line segments between subsequent points in `points'.
 			-- Fill with `background_color'.
 		require
@@ -368,7 +368,7 @@ feature -- Drawing operations (filled)
 		end
 
 	fill_pie_slice (x, y, a_bounding_width, a_bounding_height: INTEGER;
-	a_start_angle, an_aperture: REAL) is
+	a_start_angle, an_aperture: REAL)
 			-- Fill part of an ellipse defined by a rectangular area with an
 			-- upper left corner at `x',`y', width `a_bounding_width' and height
 			-- `a_bounding_height'.
@@ -385,7 +385,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_DRAWABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

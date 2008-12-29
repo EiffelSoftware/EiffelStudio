@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Lists of error messages for screen display"
@@ -23,7 +23,7 @@ create {ERROR_LIST}
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create list.
 		do
 			linked_list_make;
@@ -34,7 +34,7 @@ feature -- Initialization
 
 feature -- Status setting
 
-	display_message is
+	display_message
 			-- From now, display new messages on standard output.
 		do
 			display := True
@@ -42,7 +42,7 @@ feature -- Status setting
 			display_enabled: display
 		end; 
 
-	do_not_display_message is
+	do_not_display_message
 			-- From now, do not display new messages on standard output.
 		do
 			display := False
@@ -52,7 +52,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_message (message: STRING) is
+	add_message (message: STRING)
 			-- Add message in list and display it or not.
 		do
 			finish;
@@ -71,14 +71,14 @@ feature {NONE} -- Implementation
 			-- Are the messages to be displayed?
 			-- (default is True)
 
-	output: STD_FILES is
+	output: STD_FILES
 			-- Standard error output if the messages are to be displayed.
 		once
 			create Result;
 			Result.set_error_default
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

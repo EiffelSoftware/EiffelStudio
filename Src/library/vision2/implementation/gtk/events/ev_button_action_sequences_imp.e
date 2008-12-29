@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_BUTTON_IMP."
 	legal: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Event handling
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a select action sequence.
 			-- Attach to GTK "clicked" signal.
 		local
@@ -40,7 +40,7 @@ feature {NONE}
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

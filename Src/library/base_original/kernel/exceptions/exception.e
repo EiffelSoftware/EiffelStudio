@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Exception object for EiffelVision, will be replaced when exception objects are available"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_tag_and_trace (a_tag, a_trace_string: STRING) is
+	make_with_tag_and_trace (a_tag, a_trace_string: STRING)
 			-- Make `Current' with `tag' set to `a_tag' and `trace_as_string' set to `a_trace_string'
 		require
 			tag_not_void: a_tag /= Void
@@ -36,7 +36,7 @@ feature -- Access
 	trace_as_string: STRING;
 		-- Exception trace represented as a string
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

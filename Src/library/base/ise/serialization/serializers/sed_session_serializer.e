@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encoding of arbitrary objects graphs within a session of a same program."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_serializer: SED_READER_WRITER) is
+	make (a_serializer: SED_READER_WRITER)
 			-- Initialize current instance
 		require
 			a_serializer_not_void: a_serializer /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	root_object: ?ANY is
+	root_object: ?ANY
 			-- Root object of object graph
 		do
 			Result := traversable.root_object
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_traversing_mode_set: BOOLEAN is
+	is_traversing_mode_set: BOOLEAN
 			-- Is traversing mode set?
 		do
 			Result := (traversable /= Void)
@@ -58,7 +58,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_breadth_first_traversing_mode is
+	set_breadth_first_traversing_mode
 			-- Change graph traversing to breadth first.
 		do
 			traversable := breadth_first_traversable
@@ -67,7 +67,7 @@ feature -- Element change
 			breadth_first_mode: internal.class_name (traversable) ~ "OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE"
 		end
 
-	set_depth_first_traversing_mode is
+	set_depth_first_traversing_mode
 			-- Change graph traversing to depth first.
 		do
 			traversable := depth_first_traversable
@@ -76,7 +76,7 @@ feature -- Element change
 			depth_first_mode: internal.class_name (traversable) ~ "OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE"
 		end
 
-	set_root_object (an_object: like root_object) is
+	set_root_object (an_object: like root_object)
 			-- Make 'an_object' the root_object.
 		require
 			an_object_not_void: an_object /= Void
@@ -89,7 +89,7 @@ feature -- Element change
 			root_object_identity: root_object = traversable.root_object
 		end
 
-	set_is_for_fast_retrieval (v: like is_for_fast_retrieval) is
+	set_is_for_fast_retrieval (v: like is_for_fast_retrieval)
 			-- Set `is_for_fast_retrieval' with `v'.
 		do
 			is_for_fast_retrieval := v
@@ -97,7 +97,7 @@ feature -- Element change
 			is_for_fast_retrieval_set: is_for_fast_retrieval = v
 		end
 
-	set_serializer (a_serializer: like serializer) is
+	set_serializer (a_serializer: like serializer)
 			-- Set `serializer' with `a_serializer'.
 		require
 			a_serializer_not_void: a_serializer /= Void
@@ -110,7 +110,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	encode is
+	encode
 			-- Encode object graph starting with the root object.
 		require
 			traversing_mode_set: is_traversing_mode_set
@@ -165,13 +165,13 @@ feature {NONE} -- Implementation: Access
 	object_indexes: SED_OBJECTS_TABLE
 			-- Mapping between object and their associated index.
 
-	breadth_first_traversable: OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE is
+	breadth_first_traversable: OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE
 			-- Return an instance of OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE.
 		once
 			Result := create {OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE}
 		end
 
-	depth_first_traversable: OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE is
+	depth_first_traversable: OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE
 			-- Return an instance of OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE.
 		once
 			Result := create {OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE}
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation: Access
 
 feature {NONE} -- Implementation
 
-	write_header (a_list: ARRAYED_LIST [ANY]) is
+	write_header (a_list: ARRAYED_LIST [ANY])
 			-- Operation performed before `encoding_objects'.
 		require
 			a_list_not_void: a_list /= Void
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			write_object_table (a_list)
 		end
 
-	write_object_table (a_list: ARRAYED_LIST [ANY]) is
+	write_object_table (a_list: ARRAYED_LIST [ANY])
 			-- Write mapping between object's reference ID in `a_list' with
 			-- all the necessary information necessary to recreate it at a
 			-- later time.
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_objects (a_list: ARRAYED_LIST [ANY]) is
+	encode_objects (a_list: ARRAYED_LIST [ANY])
 			-- Encode all objects referenced in `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_reference (an_object: ?ANY) is
+	encode_reference (an_object: ?ANY)
 			-- Encode reference to `an_object'.
 		do
 			if an_object /= Void then
@@ -372,7 +372,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_normal_object (an_object: ANY; a_dtype: INTEGER) is
+	encode_normal_object (an_object: ANY; a_dtype: INTEGER)
 			-- Encode normal object.
 		require
 			an_object_not_void: an_object /= Void
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_tuple_object (a_tuple: TUPLE) is
+	encode_tuple_object (a_tuple: TUPLE)
 			-- Encode a TUPLE object.
 		require
 			a_tuple_not_void: a_tuple /= Void
@@ -486,7 +486,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special (an_object: ANY; a_dtype, a_item_type: INTEGER) is
+	encode_special (an_object: ANY; a_dtype, a_item_type: INTEGER)
 			-- Encode an object which is a special object.
 		require
 			an_object_not_void: an_object /= Void
@@ -605,7 +605,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_boolean (a_spec: SPECIAL [BOOLEAN]) is
+	encode_special_boolean (a_spec: SPECIAL [BOOLEAN])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_character_8 (a_spec: SPECIAL [CHARACTER_8]) is
+	encode_special_character_8 (a_spec: SPECIAL [CHARACTER_8])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -643,7 +643,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_character_32 (a_spec: SPECIAL [CHARACTER_32]) is
+	encode_special_character_32 (a_spec: SPECIAL [CHARACTER_32])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -662,7 +662,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_natural_8 (a_spec: SPECIAL [NATURAL_8]) is
+	encode_special_natural_8 (a_spec: SPECIAL [NATURAL_8])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -681,7 +681,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_natural_16 (a_spec: SPECIAL [NATURAL_16]) is
+	encode_special_natural_16 (a_spec: SPECIAL [NATURAL_16])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -700,7 +700,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_natural_32 (a_spec: SPECIAL [NATURAL_32]) is
+	encode_special_natural_32 (a_spec: SPECIAL [NATURAL_32])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -719,7 +719,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_natural_64 (a_spec: SPECIAL [NATURAL_64]) is
+	encode_special_natural_64 (a_spec: SPECIAL [NATURAL_64])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -738,7 +738,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_integer_8 (a_spec: SPECIAL [INTEGER_8]) is
+	encode_special_integer_8 (a_spec: SPECIAL [INTEGER_8])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -757,7 +757,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_integer_16 (a_spec: SPECIAL [INTEGER_16]) is
+	encode_special_integer_16 (a_spec: SPECIAL [INTEGER_16])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -776,7 +776,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_integer_32 (a_spec: SPECIAL [INTEGER]) is
+	encode_special_integer_32 (a_spec: SPECIAL [INTEGER])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -795,7 +795,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_integer_64 (a_spec: SPECIAL [INTEGER_64]) is
+	encode_special_integer_64 (a_spec: SPECIAL [INTEGER_64])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -814,7 +814,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_real_32 (a_spec: SPECIAL [REAL]) is
+	encode_special_real_32 (a_spec: SPECIAL [REAL])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -833,7 +833,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_real_64 (a_spec: SPECIAL [DOUBLE]) is
+	encode_special_real_64 (a_spec: SPECIAL [DOUBLE])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -852,7 +852,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_pointer (a_spec: SPECIAL [POINTER]) is
+	encode_special_pointer (a_spec: SPECIAL [POINTER])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -871,7 +871,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	encode_special_reference (a_spec: SPECIAL [ANY]) is
+	encode_special_reference (a_spec: SPECIAL [ANY])
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -894,7 +894,7 @@ invariant
 	serializer_not_void: serializer /= Void
 	object_indexes_not_void: object_indexes /= Void
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

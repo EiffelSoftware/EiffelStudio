@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about a list view keydown%
 				% notification message."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_by_nmhdr (a_nmhdr: WEL_NMHDR) is
+	make_by_nmhdr (a_nmhdr: WEL_NMHDR)
 			-- Make the structure with `a_nmhdr'.
 		require
 			a_nmhdr_not_void: a_nmhdr /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	hdr: WEL_NMHDR is
+	hdr: WEL_NMHDR
 			-- Information about the Wm_notify message.
 		do
 			create Result.make_by_pointer (cwel_lv_keydown_get_hdr (item))
@@ -37,7 +37,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	virtual_key: INTEGER is
+	virtual_key: INTEGER
 			-- Virtual key number.
 		do
 			Result := cwel_lv_keydown_get_wvkey (item)
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_lv_keydown
@@ -53,24 +53,24 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_lv_keydown: INTEGER is
+	c_size_of_lv_keydown: INTEGER
 		external
 			"C [macro %"lvkeydown.h%"]"
 		alias
 			"sizeof (LV_KEYDOWN)"
 		end
 
-	cwel_lv_keydown_get_hdr (ptr: POINTER): POINTER is
+	cwel_lv_keydown_get_hdr (ptr: POINTER): POINTER
 		external
 			"C [macro %"lvkeydown.h%"] (LV_KEYDOWN*): EIF_POINTER"
 		end
 
-	cwel_lv_keydown_get_wvkey (ptr: POINTER): INTEGER is
+	cwel_lv_keydown_get_wvkey (ptr: POINTER): INTEGER
 		external
 			"C [macro %"lvkeydown.h%"] (LV_KEYDOWN *): EIF_INTEGER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

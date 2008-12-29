@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The objects whichs the whole Memory Analyzer System all use"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- System functions
 
-	collect is
+	collect
 			-- Perform a GC cycle.
 		do
 			memory.full_collect
@@ -22,7 +22,7 @@ feature -- System functions
 			memory.full_collect
 		end
 
-	toggle_gc (a_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
+	toggle_gc (a_button: EV_TOOL_BAR_TOGGLE_BUTTON)
 			-- Disable or enable GC
 		require
 			a_button_not_void: a_button /= Void
@@ -41,7 +41,7 @@ feature -- System functions
 			button_pixmap_changed: a_button.pixmap /= old a_button.pixmap
 			button_tooltip_changed: a_button.tooltip /= old a_button.tooltip
 		end
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

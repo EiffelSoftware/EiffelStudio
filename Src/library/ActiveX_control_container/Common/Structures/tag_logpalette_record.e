@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,19 +33,19 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	pal_version: INTEGER is
+	pal_version: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_logpalette_pal_version (item)
 		end
 
-	pal_num_entries: INTEGER is
+	pal_num_entries: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_logpalette_pal_num_entries (item)
 		end
 
-	pal_pal_entry: TAG_PALETTEENTRY_RECORD is
+	pal_pal_entry: TAG_PALETTEENTRY_RECORD
 			-- No description available.
 		do
 			Result := ccom_tag_logpalette_pal_pal_entry (item)
@@ -53,7 +53,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_tag_logpalette
@@ -61,19 +61,19 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_pal_version (a_pal_version: INTEGER) is
+	set_pal_version (a_pal_version: INTEGER)
 			-- Set `pal_version' with `a_pal_version'.
 		do
 			ccom_tag_logpalette_set_pal_version (item, a_pal_version)
 		end
 
-	set_pal_num_entries (a_pal_num_entries: INTEGER) is
+	set_pal_num_entries (a_pal_num_entries: INTEGER)
 			-- Set `pal_num_entries' with `a_pal_num_entries'.
 		do
 			ccom_tag_logpalette_set_pal_num_entries (item, a_pal_num_entries)
 		end
 
-	set_pal_pal_entry (a_pal_pal_entry: TAG_PALETTEENTRY_RECORD) is
+	set_pal_pal_entry (a_pal_pal_entry: TAG_PALETTEENTRY_RECORD)
 			-- Set `pal_pal_entry' with `a_pal_pal_entry'.
 		require
 			non_void_a_pal_pal_entry: a_pal_pal_entry /= Void
@@ -84,7 +84,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_tag_logpalette: INTEGER is
+	c_size_of_tag_logpalette: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library_tagLOGPALETTE_s.h%"]"
@@ -92,43 +92,43 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::tagLOGPALETTE)"
 		end
 
-	ccom_tag_logpalette_pal_version (a_pointer: POINTER): INTEGER is
+	ccom_tag_logpalette_pal_version (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagLOGPALETTE_s_impl.h%"](ecom_control_library::tagLOGPALETTE *):EIF_INTEGER"
 		end
 
-	ccom_tag_logpalette_set_pal_version (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_logpalette_set_pal_version (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagLOGPALETTE_s_impl.h%"](ecom_control_library::tagLOGPALETTE *, USHORT)"
 		end
 
-	ccom_tag_logpalette_pal_num_entries (a_pointer: POINTER): INTEGER is
+	ccom_tag_logpalette_pal_num_entries (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagLOGPALETTE_s_impl.h%"](ecom_control_library::tagLOGPALETTE *):EIF_INTEGER"
 		end
 
-	ccom_tag_logpalette_set_pal_num_entries (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_logpalette_set_pal_num_entries (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagLOGPALETTE_s_impl.h%"](ecom_control_library::tagLOGPALETTE *, USHORT)"
 		end
 
-	ccom_tag_logpalette_pal_pal_entry (a_pointer: POINTER): TAG_PALETTEENTRY_RECORD is
+	ccom_tag_logpalette_pal_pal_entry (a_pointer: POINTER): TAG_PALETTEENTRY_RECORD
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagLOGPALETTE_s_impl.h%"](ecom_control_library::tagLOGPALETTE *):EIF_REFERENCE"
 		end
 
-	ccom_tag_logpalette_set_pal_pal_entry (a_pointer: POINTER; arg2: POINTER) is
+	ccom_tag_logpalette_set_pal_pal_entry (a_pointer: POINTER; arg2: POINTER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagLOGPALETTE_s_impl.h%"](ecom_control_library::tagLOGPALETTE *, ecom_control_library::tagPALETTEENTRY *)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants applicable to EN_SELCHANGE notification message."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,23 +10,23 @@ class
 
 feature -- Access
 
-	Sel_empty: INTEGER is 0
+	Sel_empty: INTEGER = 0
 		-- corresponds to SEL_EMPTY.
 		
-	Sel_text: INTEGER is 1
+	Sel_text: INTEGER = 1
 		-- corresponds to SEL_TEXT.
 		
-	Sel_object: INTEGER is 2
+	Sel_object: INTEGER = 2
 		-- Corresponds to SEL_OBJECT.
 		
-	Sel_multi_char: INTEGER is 4
+	Sel_multi_char: INTEGER = 4
 		-- Corresponds to SEL_MULTICHAR.
 		
-	Sel_multi_object: INTEGER is 8;
+	Sel_multi_object: INTEGER = 8;
 		-- Corresponds to SEL_MULTIOBJECT
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

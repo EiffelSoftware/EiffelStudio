@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of DB_FORMAT"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -14,7 +14,7 @@ inherit
 
 feature -- Conversion
 
-	boolean_format (object: BOOLEAN): STRING is
+	boolean_format (object: BOOLEAN): STRING
 			-- String representation in SQL of `object'
 		do
 			if object.item then
@@ -24,7 +24,7 @@ feature -- Conversion
 			end		
 		end
 
-	date_format (object: DATE_TIME): STRING is
+	date_format (object: DATE_TIME): STRING
 			-- String representation in SQL of `object'
 		local
 			d_str: STRING
@@ -38,7 +38,7 @@ feature -- Conversion
 			Result = date_buffer
 		end
 	
-	string_format (object: STRING): STRING is
+	string_format (object: STRING): STRING
 			-- String representation in SQL of `object'
 		do
 			Result := db_spec.string_format (object)
@@ -46,13 +46,13 @@ feature -- Conversion
 
 feature {NONE} -- Status report
 
-	date_buffer: STRING is
+	date_buffer: STRING
 			-- String constant
 		once
 			create Result.make (20)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

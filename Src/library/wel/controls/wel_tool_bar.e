@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Control window that contains one or more buttons. Each
 		buttons sends a command message to the parent window when the
@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_WINDOW; an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; an_id: INTEGER)
 			-- Create a toolbar with `a_parent' as parent and
 			-- `an_id' as id.
 		require
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 
-	reposition is
+	reposition
 			-- Reposition the bar according to the parent.
 			-- This function needs to be called in the
 			-- `on_size' function of the parent.
@@ -78,7 +78,7 @@ feature -- Basic operations
 			{WEL_API}.send_message (item, Wm_size, to_wparam (0), to_lparam (0))
 		end
 
-	auto_size is
+	auto_size
 			-- Resize tooolbar after changes.
 			-- An application sends the TB_AUTOSIZE message after
 			-- causing the size of a toolbar to change either by
@@ -92,7 +92,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	check_button (command_id: INTEGER) is
+	check_button (command_id: INTEGER)
 			-- Checks a button identified by `command_id'.
 		require
 			exists: exists
@@ -103,7 +103,7 @@ feature -- Status setting
 			button_is_checked: button_checked (command_id)
 		end
 
-	uncheck_button (command_id: INTEGER) is
+	uncheck_button (command_id: INTEGER)
 			-- Unchecks a button identified by `command_id'
 		require
 			exists: exists
@@ -113,7 +113,7 @@ feature -- Status setting
 			button_unchecked: not button_checked (command_id)
 		end
 
-	enable_button (command_id: INTEGER) is
+	enable_button (command_id: INTEGER)
 			-- Enable the button identified by `command_id'.
 		require
 			exists: exists
@@ -124,7 +124,7 @@ feature -- Status setting
 			button_enabled: button_enabled (command_id)
 		end
 
-	disable_button (command_id: INTEGER) is
+	disable_button (command_id: INTEGER)
 			-- Disable the button identified by `command_id'.
 		require
 			exists: exists
@@ -134,7 +134,7 @@ feature -- Status setting
 			button_disabled: not button_enabled (command_id)
 		end
 
-	show_button (command_id: INTEGER) is
+	show_button (command_id: INTEGER)
 			-- Show the button identified by `command_id'.
 		require
 			exists: exists
@@ -144,7 +144,7 @@ feature -- Status setting
 			button_shown: not button_hidden (command_id)
 		end
 
-	hide_button (command_id: INTEGER) is
+	hide_button (command_id: INTEGER)
 			-- Hide the button identified by `command_id'.
 		require
 			exists: exists
@@ -155,7 +155,7 @@ feature -- Status setting
 			button_hidden: button_hidden (command_id)
 		end
 
-	set_indeterminate_state (command_id: INTEGER) is
+	set_indeterminate_state (command_id: INTEGER)
 			-- Set the indeterminate state of the button
 			-- identified by `command_id'.
 		require
@@ -167,7 +167,7 @@ feature -- Status setting
 			button_indeterminate: button_indeterminate (command_id)
 		end
 
-	clear_indeterminate_state (command_id: INTEGER) is
+	clear_indeterminate_state (command_id: INTEGER)
 			-- Clear the indeterminate state of the button
 			-- identified by `command_id'.
 		require
@@ -179,7 +179,7 @@ feature -- Status setting
 				not button_indeterminate (command_id)
 		end
 
-	press_button (command_id: INTEGER) is
+	press_button (command_id: INTEGER)
 			-- Press the button identified by `command_id'.
 		require
 			exists: exists
@@ -190,7 +190,7 @@ feature -- Status setting
 			button_pressed: button_pressed (command_id)
 		end
 
-	release_button (command_id: INTEGER) is
+	release_button (command_id: INTEGER)
 			-- Release the button identified by `command_id'.
 		require
 			exists: exists
@@ -200,7 +200,7 @@ feature -- Status setting
 			button_not_pressed: not button_pressed (command_id)
 		end
 
-	set_bitmap_size (a_width, a_height: INTEGER) is
+	set_bitmap_size (a_width, a_height: INTEGER)
 			-- Sets the size of the bitmapped images to be added to
 			-- the toolbar.
 			-- The size can be set only before adding any
@@ -216,7 +216,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Tb_setbitmapsize, to_wparam (0), cwin_make_long (a_width, a_height))
 		end
 
-	set_button_size (a_width, a_height: INTEGER) is
+	set_button_size (a_width, a_height: INTEGER)
 			-- Set the size of the buttons to be added to the
 			-- toolbar.
 			-- The size can be set only before adding any buttons
@@ -233,7 +233,7 @@ feature -- Status setting
 				cwin_make_long (a_width, a_height))
 		end
 
-	set_identifier (index, an_id: INTEGER) is
+	set_identifier (index, an_id: INTEGER)
 			-- Set the identifier for the button at zero-based
 			-- `index' to `an_id'.
 		require
@@ -244,7 +244,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Tb_setcmdid, to_wparam (index), to_lparam (an_id))
 		end
 
-	set_tooltip (a_tooltip: WEL_TOOLTIP) is
+	set_tooltip (a_tooltip: WEL_TOOLTIP)
 			-- Associate a tooltip control with the toolbar.
 		require
 			exists: exists
@@ -257,7 +257,7 @@ feature -- Status setting
 			tooltip_set: tooltip = a_tooltip
 		end
 
-	set_rows (a_row_count: INTEGER) is
+	set_rows (a_row_count: INTEGER)
 			-- Try to set items in toolbar to show in `a_row_count'
 			-- rows. The actual result maybe different base on buttons'
 			-- pixmaps' widths and buttons texts' widths.
@@ -271,7 +271,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, {WEL_TB_CONSTANTS}.tb_setrows, makew_param (a_row_count, 1), l_result_rect.item)
 		end
 
-	enable_hot_item (command_id: INTEGER) is
+	enable_hot_item (command_id: INTEGER)
 			-- Set hot item for button identified by `command_id'.
 		require
 			exists: exists
@@ -279,7 +279,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Tb_sethotitem, to_wparam (command_id), to_lparam (0))
 		end
 
-	disable_hot_item is
+	disable_hot_item
 			-- Unset the hot item.
 		require
 			exists: exists
@@ -292,7 +292,7 @@ feature -- Status report
 	has_bitmap: BOOLEAN
 			-- Does the toolbar contains one bitmap or more?
 
-	tooltip_exists: BOOLEAN is
+	tooltip_exists: BOOLEAN
 			-- Is there a tooltip associated to the toolbar?
 		require
 			exists: exists
@@ -301,7 +301,7 @@ feature -- Status report
 				Tb_gettooltips, to_wparam (0), to_lparam (0)) /= default_pointer
 		end
 
-	tooltip: WEL_TOOLTIP is
+	tooltip: WEL_TOOLTIP
 			-- The tooltip associated with the toolbar
 		require
 			tooltip_exists: tooltip_exists
@@ -310,7 +310,7 @@ feature -- Status report
 				to_wparam (0), to_lparam (0)))
 		end
 
-	button_hidden (command_id: INTEGER): BOOLEAN is
+	button_hidden (command_id: INTEGER): BOOLEAN
 			-- Is the button identified by `command_id' hidden?
 		require
 			exists: exists
@@ -319,7 +319,7 @@ feature -- Status report
 				Tb_isbuttonhidden, to_wparam (command_id), to_lparam (0)) /= default_pointer
 		end
 
-	button_indeterminate (command_id: INTEGER): BOOLEAN is
+	button_indeterminate (command_id: INTEGER): BOOLEAN
 			-- Is the button identified by `command_id'
 			-- indeterminate?
 		require
@@ -330,7 +330,7 @@ feature -- Status report
 		ensure
 		end
 
-	button_pressed (command_id: INTEGER): BOOLEAN is
+	button_pressed (command_id: INTEGER): BOOLEAN
 			-- Is the button identified by `command_id' pressed?
 		require
 			exists: exists
@@ -339,7 +339,7 @@ feature -- Status report
 				Tb_isbuttonpressed, to_wparam (command_id), to_lparam (0)) /= default_pointer
 		end
 
-	button_checked (command_id: INTEGER): BOOLEAN is
+	button_checked (command_id: INTEGER): BOOLEAN
 			-- Is the button identified by `command_id' checked?
 		require
 			exists: exists
@@ -348,7 +348,7 @@ feature -- Status report
 				Tb_isbuttonchecked, to_wparam (command_id), to_lparam (0)) /= default_pointer
 		end
 
-	button_enabled (command_id: INTEGER): BOOLEAN is
+	button_enabled (command_id: INTEGER): BOOLEAN
 			-- Is the button identified by `command_id' enabled?
 		require
 			exists: exists
@@ -357,7 +357,7 @@ feature -- Status report
 				Tb_isbuttonenabled, to_wparam (command_id), to_lparam (0)) /= default_pointer
 		end
 
-	button_rect (index: INTEGER): WEL_RECT is
+	button_rect (index: INTEGER): WEL_RECT
 			-- Rectangle of button at the zero-based `index'.
 		require
 			exists: exists
@@ -370,7 +370,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	i_th_button (index: INTEGER): WEL_TOOL_BAR_BUTTON is
+	i_th_button (index: INTEGER): WEL_TOOL_BAR_BUTTON
 			-- Button at the zero-based `index'.
 		require
 			exists: exists
@@ -383,7 +383,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	button_count: INTEGER is
+	button_count: INTEGER
 			-- Number of buttons in toolbar
 		require
 			exists: exists
@@ -401,7 +401,7 @@ feature -- Status report
 
 feature -- Element change
 
-	insert_button (index: INTEGER; button: WEL_TOOL_BAR_BUTTON) is
+	insert_button (index: INTEGER; button: WEL_TOOL_BAR_BUTTON)
 			-- Insert `button' to the left of the button
 			-- at the zero-based `index'.
 		require
@@ -415,7 +415,7 @@ feature -- Element change
 			buttons_increased: button_count = old button_count + 1
 		end
 
-	add_buttons (buttons: ARRAY [WEL_TOOL_BAR_BUTTON]) is
+	add_buttons (buttons: ARRAY [WEL_TOOL_BAR_BUTTON])
 			-- Add buttons.
 		require
 			exists: exists
@@ -437,7 +437,7 @@ feature -- Element change
 			count_increased: button_count = old button_count + buttons.count
 		end
 
-	add_bitmaps (tb_bitmap: WEL_TOOL_BAR_BITMAP; bitmap_count: INTEGER) is
+	add_bitmaps (tb_bitmap: WEL_TOOL_BAR_BITMAP; bitmap_count: INTEGER)
 			-- Add bitmaps.
 		require
 			exists: exists
@@ -449,7 +449,7 @@ feature -- Element change
 			has_bitmap := True
 		end
 
-	add_strings (strings: ARRAY [STRING_GENERAL]) is
+	add_strings (strings: ARRAY [STRING_GENERAL])
 			-- Add strings to the toolbar.
 		require
 			exists: exists
@@ -478,7 +478,7 @@ feature -- Element change
 
 feature -- Removal
 
-	delete_button (index: INTEGER) is
+	delete_button (index: INTEGER)
 			-- Delete the button at the zero-based `index'.
 		require
 			exists: exists
@@ -492,42 +492,42 @@ feature -- Removal
 
 feature -- Notifications
 
-	on_tbn_getbuttoninfo (info: WEL_NM_TOOL_BAR) is
+	on_tbn_getbuttoninfo (info: WEL_NM_TOOL_BAR)
 			-- Retrieves toolbar customization.
 		require
 			exists: exists
 		do
 		end
 
-	on_tbn_begindrag (info: WEL_NM_TOOL_BAR) is
+	on_tbn_begindrag (info: WEL_NM_TOOL_BAR)
 			-- The user has begun dragging a button in the toolbar.
 		require
 			exists: exists
 		do
 		end
 
-	on_tbn_enddrag (info: WEL_NM_TOOL_BAR) is
+	on_tbn_enddrag (info: WEL_NM_TOOL_BAR)
 			-- The user has stopped dragging a button in the toolbar.
 		require
 			exists: exists
 		do
 		end
 
-	on_tbn_beginadjust is
+	on_tbn_beginadjust
 			-- The user has begun customizing the toolbar.
 		require
 			exists: exists
 		do
 		end
 
-	on_tbn_endadjust is
+	on_tbn_endadjust
 			-- The user has stopped customizing the toolbar.
 		require
 			exists: exists
 		do
 		end
 
-	on_tbn_reset is
+	on_tbn_reset
 			-- The user has reset the content of the customise
 			-- toolbar dialog box.
 		require
@@ -535,7 +535,7 @@ feature -- Notifications
 		do
 		end
 
-	on_tbn_queryinsert (info: WEL_NM_TOOL_BAR) is
+	on_tbn_queryinsert (info: WEL_NM_TOOL_BAR)
 			-- A button may be inserted to the left of the
 			-- specified button while the user is customizing
 			-- the toolbar.
@@ -544,7 +544,7 @@ feature -- Notifications
 		do
 		end
 
-	on_tbn_querydelete (info: WEL_NM_TOOL_BAR) is
+	on_tbn_querydelete (info: WEL_NM_TOOL_BAR)
 			-- A button may be deleted from the toolbar while
 			-- the user is customizing the toolbar.
 		require
@@ -552,14 +552,14 @@ feature -- Notifications
 		do
 		end
 
-	on_tbn_toolbarchange is
+	on_tbn_toolbarchange
 			-- The user has customized the toolbar.
 		require
 			exists: exists
 		do
 		end
 
-	on_tbn_custhelp is
+	on_tbn_custhelp
 			-- The user has chosen the Help button in the
 			-- customize toolbar dialog box.
 		require
@@ -567,7 +567,7 @@ feature -- Notifications
 		do
 		end
 
-	on_tbn_dropdown (info: WEL_NM_TOOL_BAR) is
+	on_tbn_dropdown (info: WEL_NM_TOOL_BAR)
 			-- The user clicks a button that use the
 			-- Tbstyle_dropdown style.
 		require
@@ -577,7 +577,7 @@ feature -- Notifications
 
 feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
-	process_notification_info (notification_info: WEL_NMHDR) is
+	process_notification_info (notification_info: WEL_NMHDR)
 			-- Process a `notification_code' sent by Windows
 			-- through the Wm_notify message
 		local
@@ -618,19 +618,19 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := (create {WEL_STRING}.share_from_pointer (cwin_toolbar_class)).string
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible | Ws_child | Tbstyle_tooltips
 		end
 
-	set_button_struct_size is
+	set_button_struct_size
 			-- Set the size of the TBBUTTON structure in order to
 			-- determine which version of the common control
 			-- dynamic-link library (DLL) is being used.
@@ -642,21 +642,21 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_toolbar_class: POINTER is
+	cwin_toolbar_class: POINTER
 		external
 			"C [macro <cctrl.h>] : EIF_POINTER"
 		alias
 			"TOOLBARCLASSNAME"
 		end
 
-	c_size_of_tbbutton: INTEGER is
+	c_size_of_tbbutton: INTEGER
 		external
 			"C [macro <cctrl.h>]"
 		alias
 			"sizeof (TBBUTTON)"
 		end
 
-	makew_param (a_low_int, a_high_int: INTEGER): POINTER is
+	makew_param (a_low_int, a_high_int: INTEGER): POINTER
 			-- Make a `a_low_int' and `a_high_int' combined wparam.
 		external
 			"C [macro <winuser.h>]"
@@ -666,20 +666,20 @@ feature {NONE} -- Externals
 
 feature {NONE} -- Inapplicable
 
-	text: STRING_32 is
+	text: STRING_32
 		do
 			create Result.make_empty
 		end
 
-	text_length: INTEGER is
+	text_length: INTEGER
 		do
 		end
 
-	set_text (s: STRING_GENERAL) is
+	set_text (s: STRING_GENERAL)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -48,7 +48,7 @@ create
 
 feature -- Access
 
-	search_after (c: CHARACTER) is
+	search_after (c: CHARACTER)
 			-- Move cursor to first position
 			-- (at or after current cursor position)
 			-- where `current_item' and `c' are identical.
@@ -61,7 +61,7 @@ feature -- Access
 			end
 		end
 
-	search_before (c: CHARACTER) is
+	search_before (c: CHARACTER)
 			-- Move cursor to greatest position at or before cursor
 			-- where `current_item' and `c' are identical;
 			-- go before if unsuccessful.
@@ -77,7 +77,7 @@ feature -- Access
 			end
 		end
 
-	search_string_after (s: STRING; fuzzy: INTEGER) is
+	search_string_after (s: STRING; fuzzy: INTEGER)
 			-- Move cursor to first position
 			-- (at or after cursor position) where `substring
 			-- (index, index + s.count)' and `s' are identical.
@@ -93,7 +93,7 @@ feature -- Access
 			end
 		end
 
-	search_string_before (s: STRING; fuzzy: INTEGER) is
+	search_string_before (s: STRING; fuzzy: INTEGER)
 			-- Move cursor to first position
 			-- (at or before cursor position) where `substring
 			-- (index, index + s.count)' and `s' are identical.
@@ -116,7 +116,7 @@ feature -- Access
 			end
 		end
 
-	current_item: CHARACTER is
+	current_item: CHARACTER
 			-- Current item
 		do
 			Result := item (index)
@@ -126,7 +126,7 @@ feature -- Access
 			-- Index of `current_item', if valid
 			-- Valid values are between 1 and `count' (if `count' > 0).
 
-	index_of_occurrence (c: CHARACTER; i: INTEGER): INTEGER is
+	index_of_occurrence (c: CHARACTER; i: INTEGER): INTEGER
 			-- Index of `i'-th occurrence of `c'.
 			-- 0 if none.
 		local
@@ -157,7 +157,7 @@ feature -- Access
 
 
 
-	has (c: CHARACTER): BOOLEAN is
+	has (c: CHARACTER): BOOLEAN
 			-- Does string include `c'?
 		do
 			if not is_empty then
@@ -167,13 +167,13 @@ feature -- Access
 
 feature -- Status report
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid cursor position to the left of cursor?
 		do
 			Result := index < 1
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid cursor position to the right of cursor?
 		do
 			Result := index > count
@@ -181,25 +181,25 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move to first position.
 		do
 			index := 1
 		end
 
-	finish is
+	finish
 			-- Move to last position.
 		do
 			index := count
 		end
 
-	back is
+	back
 			-- Move to previous position.
 		do
 			index := index - 1
 		end
 
-	forth is
+	forth
 			-- Move to next position.
 		do
 			index := index + 1
@@ -207,13 +207,13 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	replace (c: CHARACTER) is
+	replace (c: CHARACTER)
 			-- Replace current item by `c'.
 		do
 			put (c, index)
 		end
 
-	share (other: like Current) is
+	share (other: like Current)
 			-- Make string share the text of `other'.
 		require
 			argument_not_void: other /= Void
@@ -224,7 +224,7 @@ feature -- Element change
 			shared_index: other.index = index
 		end
 
-	precede (c: CHARACTER) is
+	precede (c: CHARACTER)
 			-- Add `c' at front.
 		do
 			string_precede (c)
@@ -233,7 +233,7 @@ feature -- Element change
 			new_index: index = old index + 1
 		end
 
-	prepend (s: STRING) is
+	prepend (s: STRING)
 			-- Prepend a copy of `s' at front.
 		require
 			argument_not_void: s /= Void
@@ -246,7 +246,7 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (c: CHARACTER) is
+	prune (c: CHARACTER)
 			-- Remove first occurrence of `c'.
 		local
 			i: INTEGER
@@ -259,13 +259,13 @@ feature -- Removal
 			end
 		end
 
-	remove_current_item is
+	remove_current_item
 			-- Remove current item.
 		do
 			remove (index)
 		end
 
-	wipe_out is
+	wipe_out
 			-- Clear out all characters.
 		do
 			string_wipe_out
@@ -274,7 +274,7 @@ feature -- Removal
 
 feature -- Duplication
 
-	mirrored: like Current is
+	mirrored: like Current
 			-- Current string read from right to left.
 			-- The result string has the same `capacity' and the
 			-- same current position (i.e. the cursor is pointing
@@ -297,7 +297,7 @@ feature -- Duplication
 		--	for all `i: 1..count, Result.item (i) = item (count + 1 - i)'
 		end
 
-	mirror is
+	mirror
 			-- Reverse the characters order.
 			-- "Hello world" -> "dlrow olleH".
 			-- The current position will be on the same item
@@ -314,12 +314,12 @@ feature -- Duplication
 
 feature {NONE} -- Inapplicable
 
-	go_to (r: CURSOR) is
+	go_to (r: CURSOR)
 			-- Go to position marked `r'.
 		do
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

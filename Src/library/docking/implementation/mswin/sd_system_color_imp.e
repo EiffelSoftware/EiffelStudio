@@ -1,4 +1,4 @@
-indexing
+note
 	description: "System color on Windows."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make is
+	make
 			-- Creation metod
 		local
 			l_err: WEL_ERROR
@@ -49,12 +49,12 @@ feature {NONE} -- Implementation
 			create wel_color
 		end
 
-	base_make_called: BOOLEAN is True
+	base_make_called: BOOLEAN = True
 			-- Not breaking the invariant in EV_ANY_I.
 
 feature -- Querys
 
-	default_background_color: EV_COLOR is
+	default_background_color: EV_COLOR
 			-- Redefine
 		local
 			l_colors: EV_STOCK_COLORS
@@ -63,7 +63,7 @@ feature -- Querys
 			Result := l_colors.default_background_color
 		end
 
-	active_border_color: EV_COLOR is
+	active_border_color: EV_COLOR
 			-- Redefine
 		local
 			l_pointer: POINTER
@@ -71,7 +71,7 @@ feature -- Querys
 			Result := theme_drawer.theme_color (l_pointer, {WEL_COLOR_CONSTANTS}.color_btnshadow)
 		end
 
-	focused_selection_color: EV_COLOR is
+	focused_selection_color: EV_COLOR
 			-- Redefine
 		local
 			l_pointer: POINTER
@@ -79,7 +79,7 @@ feature -- Querys
 			Result := theme_drawer.theme_color (l_pointer, {WEL_COLOR_CONSTANTS}.color_highlight)
 		end
 
-	focused_title_text_color: EV_COLOR is
+	focused_title_text_color: EV_COLOR
 			-- Redefine
 		local
 			l_pointer: POINTER
@@ -87,7 +87,7 @@ feature -- Querys
 			Result := theme_drawer.theme_color (l_pointer, {WEL_COLOR_CONSTANTS}.color_captiontext)
 		end
 
-	non_focused_selection_color: EV_COLOR is
+	non_focused_selection_color: EV_COLOR
 			-- Redefine
 		local
 			l_pointer: POINTER
@@ -95,7 +95,7 @@ feature -- Querys
 			Result := theme_drawer.theme_color (l_pointer, {WEL_COLOR_CONSTANTS}.color_btnface)
 		end
 
-	non_focused_selection_title_color: EV_COLOR is
+	non_focused_selection_title_color: EV_COLOR
 			-- Redefine
 		local
 			l_pointer: POINTER
@@ -103,7 +103,7 @@ feature -- Querys
 			Result := theme_drawer.theme_color (l_pointer, {WEL_COLOR_CONSTANTS}.color_inactivecaption)
 		end
 
-	non_focused_title_text_color: EV_COLOR is
+	non_focused_title_text_color: EV_COLOR
 			-- Redefine
 		local
 			l_pointer: POINTER
@@ -111,7 +111,7 @@ feature -- Querys
 			Result := theme_drawer.theme_color (l_pointer, {WEL_COLOR_CONSTANTS}.color_inactivecaptiontext)
 		end
 
-	button_text_color: EV_COLOR is
+	button_text_color: EV_COLOR
 			-- Redefine
 		local
 			l_pointer: POINTER
@@ -121,7 +121,7 @@ feature -- Querys
 
 feature -- Font
 
-	tool_bar_font: EV_FONT is
+	tool_bar_font: EV_FONT
 			-- Redefine
 		local
 			l_imp: EV_FONT_IMP
@@ -144,7 +144,7 @@ feature {NONE}  -- Implementation
 invariant
 	not_void: wel_color /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

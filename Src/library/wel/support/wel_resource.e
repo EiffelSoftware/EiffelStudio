@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		General notions of a loadable resource.
 
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_by_id (id: INTEGER) is
+	make_by_id (id: INTEGER)
 			-- Load the resource by an `id'
 		require
 			valid_id: id > 0
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			not_shared: not shared
 		end
 
-	make_by_name (name: STRING_GENERAL) is
+	make_by_name (name: STRING_GENERAL)
 			-- Load the resource by a `name'
 		require
 			name_not_void: name /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			not_shared: not shared
 		end
 
-	make_by_predefined_id (id: POINTER) is
+	make_by_predefined_id (id: POINTER)
 			-- Load the resource by an `id', predefined by Windows
 		local
 			a_default_pointer: POINTER
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	load_item (hinstance, id: POINTER) is
+	load_item (hinstance, id: POINTER)
 			-- Load `id' from `hinstance' by calling
 			-- the corresponding Windows function
 		require
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	main_args: WEL_MAIN_ARGUMENTS is
+	main_args: WEL_MAIN_ARGUMENTS
 		once
 			create Result
 		ensure
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_make_int_resource (id: INTEGER): POINTER is
+	cwin_make_int_resource (id: INTEGER): POINTER
 			-- Convert `id' to a pointer
 			-- SDK MAKEINTRESOURCE
 		external
@@ -84,7 +84,7 @@ feature {NONE} -- Externals
 			"MAKEINTRESOURCE"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

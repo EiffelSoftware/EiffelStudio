@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IPersistStreamInit' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_ipersist_stream_init_impl_proxy_from_pointer(cpp_obj)
@@ -27,20 +27,20 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	get_class_id (p_class_id: ECOM_GUID) is
+	get_class_id (p_class_id: ECOM_GUID)
 			-- No description available.
 			-- `p_class_id' [out].  
 		do
 			ccom_get_class_id (initializer, p_class_id.item)
 		end
 
-	is_dirty is
+	is_dirty
 			-- No description available.
 		do
 			ccom_is_dirty (initializer)
 		end
 
-	load (pstm: ECOM_STREAM) is
+	load (pstm: ECOM_STREAM)
 			-- No description available.
 			-- `pstm' [in].  
 		local
@@ -59,7 +59,7 @@ feature -- Basic Operations
 			ccom_load (initializer, pstm_item)
 		end
 
-	save (pstm: ECOM_STREAM; f_clear_dirty: INTEGER) is
+	save (pstm: ECOM_STREAM; f_clear_dirty: INTEGER)
 			-- No description available.
 			-- `pstm' [in].  
 			-- `f_clear_dirty' [in].  
@@ -79,14 +79,14 @@ feature -- Basic Operations
 			ccom_save (initializer, pstm_item, f_clear_dirty)
 		end
 
-	get_size_max (pcb_size: ECOM_ULARGE_INTEGER) is
+	get_size_max (pcb_size: ECOM_ULARGE_INTEGER)
 			-- No description available.
 			-- `pcb_size' [out].  
 		do
 			ccom_get_size_max (initializer, pcb_size.item)
 		end
 
-	init_new is
+	init_new
 			-- No description available.
 		do
 			ccom_init_new (initializer)
@@ -94,7 +94,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_ipersist_stream_init_impl_proxy(initializer)
@@ -102,61 +102,61 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_get_class_id (cpp_obj: POINTER; p_class_id: POINTER) is
+	ccom_get_class_id (cpp_obj: POINTER; p_class_id: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistStreamInit_impl_proxy %"ecom_control_library_IPersistStreamInit_impl_proxy_s.h%"](GUID *)"
 		end
 
-	ccom_is_dirty (cpp_obj: POINTER) is
+	ccom_is_dirty (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistStreamInit_impl_proxy %"ecom_control_library_IPersistStreamInit_impl_proxy_s.h%"]()"
 		end
 
-	ccom_load (cpp_obj: POINTER; pstm: POINTER) is
+	ccom_load (cpp_obj: POINTER; pstm: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistStreamInit_impl_proxy %"ecom_control_library_IPersistStreamInit_impl_proxy_s.h%"](IStream *)"
 		end
 
-	ccom_save (cpp_obj: POINTER; pstm: POINTER; f_clear_dirty: INTEGER) is
+	ccom_save (cpp_obj: POINTER; pstm: POINTER; f_clear_dirty: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistStreamInit_impl_proxy %"ecom_control_library_IPersistStreamInit_impl_proxy_s.h%"](IStream *,EIF_INTEGER)"
 		end
 
-	ccom_get_size_max (cpp_obj: POINTER; pcb_size: POINTER) is
+	ccom_get_size_max (cpp_obj: POINTER; pcb_size: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistStreamInit_impl_proxy %"ecom_control_library_IPersistStreamInit_impl_proxy_s.h%"](ULARGE_INTEGER *)"
 		end
 
-	ccom_init_new (cpp_obj: POINTER) is
+	ccom_init_new (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IPersistStreamInit_impl_proxy %"ecom_control_library_IPersistStreamInit_impl_proxy_s.h%"]()"
 		end
 
-	ccom_delete_ipersist_stream_init_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_ipersist_stream_init_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IPersistStreamInit_impl_proxy %"ecom_control_library_IPersistStreamInit_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_ipersist_stream_init_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_ipersist_stream_init_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IPersistStreamInit_impl_proxy %"ecom_control_library_IPersistStreamInit_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IPersistStreamInit_impl_proxy %"ecom_control_library_IPersistStreamInit_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

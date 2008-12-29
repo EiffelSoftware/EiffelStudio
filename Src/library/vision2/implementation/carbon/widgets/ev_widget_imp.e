@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision widget. Carbon implementation.%N%
 		%See ev_widget.e"
@@ -69,7 +69,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Show non window widgets.
 			-- Initialize default options, colors and sizes.
 		do
@@ -81,13 +81,13 @@ feature {NONE} -- Initialization
 			expandable := True -- default
 		end
 
-	initialize_file_drop (a_widget: POINTER) is
+	initialize_file_drop (a_widget: POINTER)
 		do
 		end
 
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
 			-- Used for key event actions sequences.
 		local
 			temp_key_string: STRING_32
@@ -144,13 +144,13 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 			end
 		end
 
-	on_focus_changed (a_has_focus: BOOLEAN) is
+	on_focus_changed (a_has_focus: BOOLEAN)
 			-- Called from focus intermediary agents when focus for `Current' has changed.
 			-- if `a_has_focus' then `Current' has just received focus.
 		do
 		end
 
-	on_pointer_enter_leave (a_pointer_enter: BOOLEAN) is
+	on_pointer_enter_leave (a_pointer_enter: BOOLEAN)
 			-- Called from pointer enter leave intermediary agents when the mouse pointer either enters or leaves `Current'.
 		do
 		end
@@ -162,7 +162,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 			-- Call pointer_button_press_actions or pointer_double_press_actions
 			-- depending on event type in first position of `event_data'.
 		do
@@ -170,7 +170,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_APPLICATION_IMP} -- Implementation
 
-	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]) is
+	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER])
 			-- Handle motion event for `Current'.
 		do
 		end
@@ -179,7 +179,7 @@ feature -- Access
 
 
 
-	parent: EV_CONTAINER is
+	parent: EV_CONTAINER
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 		local
@@ -191,7 +191,7 @@ feature -- Access
 			end
 		end
 
-	pointer_position: EV_COORDINATE is
+	pointer_position: EV_COORDINATE
 			-- Position of the screen pointer relative to `Current'.
 		do
 			create Result.set (1, 1)
@@ -199,14 +199,14 @@ feature -- Access
 
 feature -- Status setting
 
-	hide is
+	hide
 			-- Request that `Current' not be displayed even when its parent is.
 		do
 			hide_control_external (c_object)
 --			is_show_requested := false
 		end
 
-	show is
+	show
 		do
 			show_control_external (c_object)
 --			is_show_requested := true
@@ -223,19 +223,19 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_minimum_width (a_minimum_width: INTEGER) is
+	set_minimum_width (a_minimum_width: INTEGER)
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do
 			set_minimum_size (a_minimum_width, internal_minimum_height)
 		end
 
-	set_minimum_height (a_minimum_height: INTEGER) is
+	set_minimum_height (a_minimum_height: INTEGER)
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
 			set_minimum_size ( internal_minimum_width, a_minimum_height)
 		end
 
-	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
+	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER)
 			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
 		local
@@ -257,7 +257,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 	do
 		if internal_minimum_width > 0 then
@@ -267,7 +267,7 @@ feature -- Measurement
 		end
 	end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum width that the widget may occupy.
 	do
 		if internal_minimum_height > 0 then
@@ -279,20 +279,20 @@ feature -- Measurement
 
 feature {EV_ANY_I} -- Implementation
 
-	reset_minimum_size is
+	reset_minimum_size
 			-- Reset all values to defaults.
 			-- Called by EV_FIXED and EV_VIEWPORT implementations.
 		do
 		end
 
-	refresh_now is
+	refresh_now
 			-- Flush any pending redraws due for `Current'.
 		do
 		end
 
 feature {EV_FIXED_IMP, EV_VIEWPORT_IMP} -- Implementation
 
-	store_minimum_size is
+	store_minimum_size
 			-- Called when size is explicitly set, ie: from fixed or viewport
 		do
 		end
@@ -305,14 +305,14 @@ feature {EV_FIXED_IMP, EV_VIEWPORT_IMP} -- Implementation
 
 feature {EV_WINDOW_IMP} -- Implementation
 
-	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
+	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN
 			-- Used for drawing area to keep focus on all keys.
 		do
 		end
 
 feature {EV_CONTAINER_IMP} -- Implementation
 
-	set_parent_imp (a_container_imp: EV_CONTAINER_IMP) is
+	set_parent_imp (a_container_imp: EV_CONTAINER_IMP)
 			-- Set `parent_imp' to `a_container_imp'.
 		do
 			parent_imp := a_container_imp
@@ -320,7 +320,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 
 feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	destroy is
+	destroy
 			do
 				app_implementation.dispose_id (event_id)
 			end
@@ -331,26 +331,26 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
-	top_level_window_imp: EV_WINDOW_IMP is
+	top_level_window_imp: EV_WINDOW_IMP
 			-- Window implementation that `Current' is contained within (if any)
 		do
 		end
 
-	top_level_window: EV_WINDOW is
+	top_level_window: EV_WINDOW
 			-- Window the current is contained within (if any)
 		do
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_widget_mapped is
+	on_widget_mapped
 			-- `Current' has been mapped on to the screen.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
+	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER)
 			-- Abstracted implementation for minimum size setting.
 		do
 			if a_minimum_width /= -1 then
@@ -361,12 +361,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is
+	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER)
 			-- Propagate `a_color' to the foreground color of `a_c_object's children.
 		do
 		end
 
-	propagate_background_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is
+	propagate_background_color_internal (a_color: EV_COLOR; a_c_object: POINTER)
 			-- Propagate `a_color' to the background color of `a_c_object's children.
 		do
 		end
@@ -381,7 +381,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	interface: EV_WIDGET;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_WIDGET_IMP
 

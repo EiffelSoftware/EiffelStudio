@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_GRID_ITEM_I."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ deferred class
 
 feature -- Event handling
 
-	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer moves.
 		do
 			if pointer_motion_actions_internal = Void then
@@ -32,7 +32,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is pressed.
 		do
 			if pointer_button_press_actions_internal = Void then
@@ -51,7 +51,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer is double clicked.
 		do
 			if pointer_double_press_actions_internal = Void then
@@ -70,7 +70,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is released.
 		do
 			if pointer_button_release_actions_internal = Void then
@@ -89,7 +89,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer enters widget.
 		do
 			if pointer_enter_actions_internal = Void then
@@ -107,7 +107,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer leaves widget.
 		do
 			if pointer_leave_actions_internal = Void then
@@ -125,7 +125,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when an item is selected.
 		do
 			if select_actions_internal = Void then
@@ -136,7 +136,7 @@ feature -- Event handling
 			result_not_void: Result /= Void
 		end
 		
-	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when an item is deselected.
 		do
 			if deselect_actions_internal = Void then
@@ -157,7 +157,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	drop_actions: EV_PND_ACTION_SEQUENCE is
+	drop_actions: EV_PND_ACTION_SEQUENCE
 			-- Actions to be performed when a pebble is dropped here.
 		do
 			if drop_actions_internal = Void then
@@ -175,7 +175,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	activate_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]] is
+	activate_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]]
 			-- Actions to be performed to setup `Current' for activation.
 			-- Overrides default setup of activatable items.
 			-- Arguments of TUPLE (with names for clarity):
@@ -195,7 +195,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	deactivate_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	deactivate_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when `Current' is deactivated.
 		do
 			if deactivate_actions_internal = Void then
@@ -211,7 +211,7 @@ feature {EV_ANY_I} -- Implementation
 	deactivate_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Implementation of once per object `deactivate_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

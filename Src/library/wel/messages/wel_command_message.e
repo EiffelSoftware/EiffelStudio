@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about message Wm_command which is sent when %
 		%the user selects a command item from a menu, when a control %
 		%sends a notification message to its parent window, or when an %
@@ -24,13 +24,13 @@ create
 
 feature -- Access
 
-	id: INTEGER is
+	id: INTEGER
 			-- Identifier of the menu item, control, or accelerator.
 		do
 			Result := cwin_get_wm_command_id (w_param, l_param)
 		end
 
-	control: WEL_CONTROL is
+	control: WEL_CONTROL
 			-- Control sending the message if the message is from a
 			-- control.
 		require
@@ -39,13 +39,13 @@ feature -- Access
 			Result ?= window_of_item (h_window)
 		end
 
-	notify_code: INTEGER is
+	notify_code: INTEGER
 			-- Notification message
 		do
 			Result := cwin_get_wm_command_cmd (w_param, l_param)
 		end
 
-	h_window: POINTER is
+	h_window: POINTER
 			-- Handle of control
 		do
 			Result := cwin_get_wm_command_hwnd (w_param, l_param)
@@ -53,19 +53,19 @@ feature -- Access
 
 feature -- Status report
 
-	from_control: BOOLEAN is
+	from_control: BOOLEAN
 			-- Does the message come from a control?
 		do
 			Result := h_window /= default_pointer
 		end
 
-	from_menu: BOOLEAN is
+	from_menu: BOOLEAN
 			-- Does the message come from a menu?
 		do
 			Result := notify_code = 0
 		end
 
-	from_accelerator: BOOLEAN is
+	from_accelerator: BOOLEAN
 			-- Does the message come from an accelerator?
 		do
 			Result := notify_code = 1
@@ -73,28 +73,28 @@ feature -- Status report
 
 feature {NONE} -- Externals
 
-	cwin_get_wm_command_cmd (wparam, lparam: POINTER): INTEGER is
+	cwin_get_wm_command_cmd (wparam, lparam: POINTER): INTEGER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_COMMAND_CMD"
 		end
 
-	cwin_get_wm_command_id (wparam, lparam: POINTER): INTEGER is
+	cwin_get_wm_command_id (wparam, lparam: POINTER): INTEGER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"GET_WM_COMMAND_ID"
 		end
 
-	cwin_get_wm_command_hwnd (wparam, lparam: POINTER): POINTER is
+	cwin_get_wm_command_hwnd (wparam, lparam: POINTER): POINTER
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_POINTER"
 		alias
 			"GET_WM_COMMAND_HWND"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

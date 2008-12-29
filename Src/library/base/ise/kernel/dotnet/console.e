@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "[
 		Commonly used console input and output mechanisms. 
@@ -53,7 +53,7 @@ create {STD_FILES}
 
 feature -- Initialization
 
-	make_open_stdin (fn: STRING) is
+	make_open_stdin (fn: STRING)
 			-- Create an unix standard input file.
 		do
 			make (fn)
@@ -61,7 +61,7 @@ feature -- Initialization
 			set_read_mode
 		end
 
-	make_open_stdout (fn: STRING) is
+	make_open_stdout (fn: STRING)
 			-- Create an unix standard output file.
 		do
 			make (fn)
@@ -69,7 +69,7 @@ feature -- Initialization
 			set_write_mode
 		end
 
-	make_open_stderr (fn: STRING) is
+	make_open_stderr (fn: STRING)
 			-- Create an unix standard error file.
 		do
 			make (fn)
@@ -79,7 +79,7 @@ feature -- Initialization
 
 feature -- Cursor movement
 
-	next_line is
+	next_line
 			-- Move to next input line.
 		do
 			if peek /= -1 then
@@ -89,42 +89,42 @@ feature -- Cursor movement
 
 feature -- Status report
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does file exist?
 		do
 			Result := True
 		end
 
-	end_of_file: BOOLEAN is False
+	end_of_file: BOOLEAN = False
 			-- Has an EOF been detected?
 			-- Always false for a console.
 
-	count: INTEGER is 1
+	count: INTEGER = 1
 			-- Useless for CONSOLE class.
 			--| `count' is non null not to invalidate invariant clauses.
 
 feature -- Cursor movement
 
-	back is
+	back
 			-- Not supported on console
 		do
 		end
 
 feature -- Removal
 
-	close is
+	close
 			-- Do not close the streams.
 		do
 		end
 
-	dispose is
+	dispose
 			-- This is closed by the operating system at completion.
 		do
 		end
 
 feature -- Input
 
-	read_character, readchar is
+	read_character, readchar
 			-- Read a new character.
 			-- Make result available in `last_character'.
 		local
@@ -148,7 +148,7 @@ feature -- Input
 			end
 		end
 
-	read_double, readdouble is
+	read_double, readdouble
 			-- Read the ASCII representation of a new double
 			-- from file. Make result available in `last_double'.
 		do
@@ -158,7 +158,7 @@ feature -- Input
 			consume_characters
 		end
 
-	read_line, readline is
+	read_line, readline
 			-- Read a string until new line or end of file.
 			-- Make result available in `last_string'.
 			-- New line will be consumed but not part of `last_string'.
@@ -218,7 +218,7 @@ feature -- Input
 
 feature {NONE} -- Implementation	
 
-	read_integer_with_no_type is
+	read_integer_with_no_type
 			-- Read a ASCII representation of number of `type'
 			-- at current position.
 		do
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			consume_characters
 		end
 
-	consume_characters is
+	consume_characters
 			-- Consume all characters from current position
 			-- until we meet a new-line character.
 		do
@@ -243,11 +243,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Inapplicable
 
-	is_empty: BOOLEAN is False;
+	is_empty: BOOLEAN = False;
 			-- Useless for CONSOLE class.
 			--| `empty' is false not to invalidate invariant clauses.
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

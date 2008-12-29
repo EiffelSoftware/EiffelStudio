@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Serialize and deserialize objects to and from SED_READER_WRITER instances."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Serialization routines
 
-	session_store (an_object: ANY; a_writer: SED_READER_WRITER; a_optimized_for_retrieval: BOOLEAN) is
+	session_store (an_object: ANY; a_writer: SED_READER_WRITER; a_optimized_for_retrieval: BOOLEAN)
 			-- Serialization of `an_object' using `a_writer' optimized for retrieval
 			-- if `a_optimized_for_retrieval'.
 			-- Object stored can only be retrieved during current program execution.
@@ -30,7 +30,7 @@ feature -- Serialization routines
 			a_writer.write_footer
 		end
 
-	basic_store (an_object: ANY; a_writer: SED_READER_WRITER; a_optimized_for_retrieval: BOOLEAN) is
+	basic_store (an_object: ANY; a_writer: SED_READER_WRITER; a_optimized_for_retrieval: BOOLEAN)
 			-- Serialization of `an_object' using `a_writer' optimized for retrieval
 			-- if `a_optimized_for_retrieval'.
 			-- Object stored can only be retrieved by execution of same program executable.
@@ -50,7 +50,7 @@ feature -- Serialization routines
 			a_writer.write_footer
 		end
 
-	independent_store (an_object: ANY; a_writer: SED_READER_WRITER; a_optimized_for_retrieval: BOOLEAN) is
+	independent_store (an_object: ANY; a_writer: SED_READER_WRITER; a_optimized_for_retrieval: BOOLEAN)
 			-- Serialization of `an_object' using `a_writer' optimized for retrieval
 			-- if `a_optimized_for_retrieval'.
 			-- Object stored can only be retrieved by programs having the same set of types.
@@ -70,7 +70,7 @@ feature -- Serialization routines
 			a_writer.write_footer
 		end
 
-	retrieved (a_reader: SED_READER_WRITER; a_is_gc_enabled: BOOLEAN): ?ANY is
+	retrieved (a_reader: SED_READER_WRITER; a_is_gc_enabled: BOOLEAN): ?ANY
 			-- Deserialization of object from `a_reader'.
 			-- Garbage collection will be enabled if `a_is_gc_enabled'.
 		require
@@ -100,14 +100,14 @@ feature -- Serialization routines
 
 feature -- Storable type
 
-	eiffel_session_store: NATURAL_32 is 0x00000001
-	eiffel_basic_store: NATURAL_32 is 0x00000002
-	eiffel_independent_store: NATURAL_32 is 0x00000003
+	eiffel_session_store: NATURAL_32 = 0x00000001
+	eiffel_basic_store: NATURAL_32 = 0x00000002
+	eiffel_independent_store: NATURAL_32 = 0x00000003
 			-- Various type of storable mechanism.
 
 feature {NONE} -- Access
 
-	session_deserializer (a_reader: SED_READER_WRITER): SED_SESSION_DESERIALIZER is
+	session_deserializer (a_reader: SED_READER_WRITER): SED_SESSION_DESERIALIZER
 			-- New instance of `session' based on `a_reader'.
 		require
 			a_reader_not_void: a_reader /= Void
@@ -119,7 +119,7 @@ feature {NONE} -- Access
 			session_deserializer_not_void: Result /= Void
 		end
 
-	basic_deserializer (a_reader: SED_READER_WRITER): SED_BASIC_DESERIALIZER is
+	basic_deserializer (a_reader: SED_READER_WRITER): SED_BASIC_DESERIALIZER
 			-- New instance of `session' based on `a_reader'.
 		require
 			a_reader_not_void: a_reader /= Void
@@ -131,7 +131,7 @@ feature {NONE} -- Access
 			basic_deserializer_not_void: Result /= Void
 		end
 
-	independent_deserializer (a_reader: SED_READER_WRITER): SED_INDEPENDENT_DESERIALIZER is
+	independent_deserializer (a_reader: SED_READER_WRITER): SED_INDEPENDENT_DESERIALIZER
 			-- New instance of `session' based on `a_reader'.
 		require
 			a_reader_not_void: a_reader /= Void
@@ -143,7 +143,7 @@ feature {NONE} -- Access
 			independent_deserializer_not_void: Result /= Void
 		end
 
-	session_serializer (a_writer: SED_READER_WRITER): SED_SESSION_SERIALIZER is
+	session_serializer (a_writer: SED_READER_WRITER): SED_SESSION_SERIALIZER
 			-- New instance of `session' based on `a_writer'.
 		require
 			a_writer_not_void: a_writer /= Void
@@ -155,7 +155,7 @@ feature {NONE} -- Access
 			session_serializer_not_void: Result /= Void
 		end
 
-	basic_serializer (a_writer: SED_READER_WRITER): SED_BASIC_SERIALIZER is
+	basic_serializer (a_writer: SED_READER_WRITER): SED_BASIC_SERIALIZER
 			-- New instance of `session' based on `a_writer'.
 		require
 			a_writer_not_void: a_writer /= Void
@@ -167,7 +167,7 @@ feature {NONE} -- Access
 			basic_serializer_not_void: Result /= Void
 		end
 
-	independent_serializer (a_writer: SED_READER_WRITER): SED_INDEPENDENT_SERIALIZER is
+	independent_serializer (a_writer: SED_READER_WRITER): SED_INDEPENDENT_SERIALIZER
 			-- New instance of `session' based on `a_writer'.
 		require
 			a_writer_not_void: a_writer /= Void
@@ -181,7 +181,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Data
 
-	internal_session_deserializer (a_reader: SED_READER_WRITER): SED_SESSION_DESERIALIZER is
+	internal_session_deserializer (a_reader: SED_READER_WRITER): SED_SESSION_DESERIALIZER
 			-- New instance of `session' based on `a_reader'.
 		require
 			a_reader_not_void: a_reader /= Void
@@ -192,7 +192,7 @@ feature {NONE} -- Data
 			session_deserializer_not_void: Result /= Void
 		end
 
-	internal_basic_deserializer (a_reader: SED_READER_WRITER): SED_BASIC_DESERIALIZER is
+	internal_basic_deserializer (a_reader: SED_READER_WRITER): SED_BASIC_DESERIALIZER
 			-- New instance of `session' based on `a_reader'.
 		require
 			a_reader_not_void: a_reader /= Void
@@ -203,7 +203,7 @@ feature {NONE} -- Data
 			basic_deserializer_not_void: Result /= Void
 		end
 
-	internal_independent_deserializer (a_reader: SED_READER_WRITER): SED_INDEPENDENT_DESERIALIZER is
+	internal_independent_deserializer (a_reader: SED_READER_WRITER): SED_INDEPENDENT_DESERIALIZER
 			-- New instance of `session' based on `a_reader'.
 		require
 			a_reader_not_void: a_reader /= Void
@@ -214,7 +214,7 @@ feature {NONE} -- Data
 			independent_deserializer_not_void: Result /= Void
 		end
 
-	internal_session_serializer (a_writer: SED_READER_WRITER): SED_SESSION_SERIALIZER is
+	internal_session_serializer (a_writer: SED_READER_WRITER): SED_SESSION_SERIALIZER
 			-- New instance of `session' based on `a_writer'.
 		require
 			a_writer_not_void: a_writer /= Void
@@ -225,7 +225,7 @@ feature {NONE} -- Data
 			session_serializer_not_void: Result /= Void
 		end
 
-	internal_basic_serializer (a_writer: SED_READER_WRITER): SED_BASIC_SERIALIZER is
+	internal_basic_serializer (a_writer: SED_READER_WRITER): SED_BASIC_SERIALIZER
 			-- New instance of `session' based on `a_writer'.
 		require
 			a_writer_not_void: a_writer /= Void
@@ -236,7 +236,7 @@ feature {NONE} -- Data
 			basic_serializer_not_void: Result /= Void
 		end
 
-	internal_independent_serializer (a_writer: SED_READER_WRITER): SED_INDEPENDENT_SERIALIZER is
+	internal_independent_serializer (a_writer: SED_READER_WRITER): SED_INDEPENDENT_SERIALIZER
 			-- New instance of `session' based on `a_writer'.
 		require
 			a_writer_not_void: a_writer /= Void
@@ -247,7 +247,7 @@ feature {NONE} -- Data
 			independent_serializer_not_void: Result /= Void
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

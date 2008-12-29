@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstraction of a list in which you can add/modify/remove paths."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_parent (win: like parent_window) is
+	make_with_parent (win: like parent_window)
 			-- Create an Add/Remove list.
 		require
 			win_not_void: win /= Void
@@ -40,14 +40,14 @@ feature -- Access
 
 feature -- Settings
 
-	set_browse_for_file (filter: STRING_GENERAL) is
+	set_browse_for_file (filter: STRING_GENERAL)
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
 		do
 			path_field.set_browse_for_open_file (filter)
 		end
 
-	set_browse_for_directory is
+	set_browse_for_directory
 			-- Force directory browsing dialog to appear when user
 			-- click on `browse_button'.
 		do
@@ -56,7 +56,7 @@ feature -- Settings
 			
 feature {NONE} -- Implementation
 
-	build_text_field (t: STRING_GENERAL) is
+	build_text_field (t: STRING_GENERAL)
 			-- Create a text field which has a browse button attached to it.
 		do
 			create path_field.make_with_text_and_parent (t, parent_window)
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			disable_item_expand (path_field)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

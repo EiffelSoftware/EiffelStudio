@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control Site."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -64,7 +64,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING) is
+	make (a_parent: WEL_COMPOSITE_WINDOW; a_name: STRING)
 			-- Make the window as a child of `a_parent' and
 			-- `a_name' as a title.
 		do
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	create_item is
+	create_item
 			-- Initialize `item'
 		do
 			item := ccom_create_item (Current)
@@ -84,13 +84,13 @@ feature -- Basic Operations
 		
 feature {NONE} -- Externals
 
-	ccom_create_item (eif_object: like Current): POINTER is
+	ccom_create_item (eif_object: like Current): POINTER
 			-- Initialize `item'
 		external
 			"C++ [new ecom_control_library::control_site %"ecom_control_library_control_site_s.h%"](EIF_OBJECT)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

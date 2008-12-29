@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Exception for operating system error
 			which does not set the `errno' variable (Unix-specific)
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	frozen code: INTEGER is
+	frozen code: INTEGER
 			-- Exception code
 		do
 			Result := {EXCEP_CONST}.external_exception
@@ -25,6 +25,6 @@ feature -- Access
 
 feature {NONE} -- Accesss
 
-	frozen internal_meaning: STRING is "External event."
+	frozen internal_meaning: STRING = "External event."
 
 end

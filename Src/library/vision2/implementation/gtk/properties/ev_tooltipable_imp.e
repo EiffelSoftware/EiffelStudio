@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision tooltipable. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Initialization
 
-	tooltip: STRING_32 is
+	tooltip: STRING_32
 			-- Tooltip that has been set.
 		local
 			tip_ptr, l_null: POINTER
@@ -36,7 +36,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	set_tooltip (a_text: STRING_GENERAL) is
+	set_tooltip (a_text: STRING_GENERAL)
 			-- Set `tooltip' to `a_text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	tooltips_pointer: POINTER is
+	tooltips_pointer: POINTER
 			-- Pointer to the tooltips pointer
 		do
 			Result := app_implementation.tooltips
@@ -78,7 +78,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOLTIPABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision Environment. Carbon implementation."
 	legal: "See notice at end of class."
@@ -23,13 +23,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Pass `an_interface' to base make.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- No initialization needed.
 		do
 			set_is_initialized (True)
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	supported_image_formats: LINEAR [STRING_32] is
+	supported_image_formats: LINEAR [STRING_32]
 			-- `Result' contains all supported image formats
 			-- on current platform, in the form of their three letter extension.
 			-- e.g. PNG, BMP, ICO
@@ -46,24 +46,24 @@ feature -- Access
 			Result.compare_objects
 		end
 
-	mouse_wheel_scroll_lines: INTEGER is
+	mouse_wheel_scroll_lines: INTEGER
 			-- Default number of lines to scroll in response to
 			-- a mouse wheel scroll event.
 		do
 			Result := 3
 		end
 
-	default_pointer_style_width: INTEGER is
+	default_pointer_style_width: INTEGER
 			-- Default pointer style width.
 		do
 		end
 
-	default_pointer_style_height: INTEGER is
+	default_pointer_style_height: INTEGER
 			-- Default pointer style height.
 		do
 		end
 		
-	has_printer: BOOLEAN is
+	has_printer: BOOLEAN
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.
 		do
@@ -71,7 +71,7 @@ feature -- Access
 			Result := return_code = 0
 		end
 
-	font_families: LINEAR [STRING_32] is
+	font_families: LINEAR [STRING_32]
 			-- List of fonts available on the system
 		local
 			app_imp: EV_APPLICATION_IMP
@@ -81,7 +81,7 @@ feature -- Access
 			Result.compare_objects
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end -- class EV_ENVIRONMENT_IMP
 

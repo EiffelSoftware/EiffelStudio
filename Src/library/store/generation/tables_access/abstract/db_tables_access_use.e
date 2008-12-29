@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access to the class DB_TABLES_ACCESS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ deferred class
 
 feature -- Status report
 
-	is_valid_code (code: INTEGER): BOOLEAN is
+	is_valid_code (code: INTEGER): BOOLEAN
 			-- Does `code' represents a database table?
 		do
 			Result := tables.is_valid (code)
 		end
 
-	tables_set: BOOLEAN is
+	tables_set: BOOLEAN
 			-- Is abstract description of database tables
 			-- set?
 		do
@@ -25,7 +25,7 @@ feature -- Status report
 
 feature {NONE} -- Access
 
-	tables: DB_TABLES_ACCESS is
+	tables: DB_TABLES_ACCESS
 			-- Abstract description of database tables.
 		require
 			tables_set: tables_set
@@ -37,7 +37,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Basic operations
 
-	set_tables (t: DB_TABLES_ACCESS) is
+	set_tables (t: DB_TABLES_ACCESS)
 			-- Set `t' to `tables'.
 		require
 			not_void: t /= Void
@@ -49,13 +49,13 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	tables_cell: CELL [DB_TABLES_ACCESS] is
+	tables_cell: CELL [DB_TABLES_ACCESS]
 			-- `tables' cell.
 		once
 			create Result.put (Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

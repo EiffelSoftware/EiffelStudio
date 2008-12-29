@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Implementation of comparator builder"
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create builder.
 		do
 			create character_array.make (0, 255)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Constants
 
-	Single_character, Range: INTEGER is unique
+	Single_character, Range: INTEGER = unique
 			-- IDs for `token_type'
 			
 feature -- Access
@@ -42,13 +42,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_set_defined: BOOLEAN is
+	is_set_defined: BOOLEAN
 			-- Has a character set been defined?
 		do
 			Result := not character_array.all_default
 		end
 
-	comparators_available: BOOLEAN is
+	comparators_available: BOOLEAN
 			-- Is there a set of comparators available?
 		do
 			Result := not comparators.is_empty
@@ -56,7 +56,7 @@ feature -- Status report
 		
 feature -- Status setting
 
-	define_set (s: STRING) is
+	define_set (s: STRING)
 			-- Define character set.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -66,7 +66,7 @@ feature -- Status setting
 			add (s)
 		end
 
-	add (s: STRING) is
+	add (s: STRING)
 			-- Add to character set.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -79,7 +79,7 @@ feature -- Status setting
 			end
 		end
 		
-	remove (s: STRING) is
+	remove (s: STRING)
 			-- Remove from character set.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -94,7 +94,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	build is
+	build
 			-- Build comparators.
 		require
 			set_defined: is_set_defined
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 	character_array: ARRAY[BOOLEAN]
 			-- Array storing the state of each character
 
-	update_character_array (remove_mode: BOOLEAN) is
+	update_character_array (remove_mode: BOOLEAN)
 			-- Update character array with `last_token'.
 			-- (Reset state, if `remove_mode' is on.)
 		require
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	create_comparator (low, high: CHARACTER) is
+	create_comparator (low, high: CHARACTER)
 			-- Create a comparator.
 		require
 			bounds_ok: low <= high
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			comparator_added: comparators.count = old comparators.count + 1
 		end
 		
-	token_type: INTEGER is
+	token_type: INTEGER
 			-- Type of token stored in `last_token'.
 		do
 			if 1 <= last_token.count and last_token.count <= 4 then
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fetch_token (tok: STRING) is
+	fetch_token (tok: STRING)
 			-- Fetch next token from `tok'.
 		require
 			non_empty_token: tok /= Void and then not tok.is_empty
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 				end
 		end
 
-	get_character (s: STRING) is
+	get_character (s: STRING)
 			-- Get next character from `s'.
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -286,7 +286,7 @@ invariant
 	token_valid: (last_token /= Void and then not last_token.is_empty) implies
 			token_type /= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,25 +33,25 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	left: INTEGER is
+	left: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_rectl_left (item)
 		end
 
-	top: INTEGER is
+	top: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_rectl_top (item)
 		end
 
-	right: INTEGER is
+	right: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_rectl_right (item)
 		end
 
-	bottom: INTEGER is
+	bottom: INTEGER
 			-- No description available.
 		do
 			Result := ccom_x_rectl_bottom (item)
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_x_rectl
@@ -67,25 +67,25 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_left (a_left: INTEGER) is
+	set_left (a_left: INTEGER)
 			-- Set `left' with `a_left'.
 		do
 			ccom_x_rectl_set_left (item, a_left)
 		end
 
-	set_top (a_top: INTEGER) is
+	set_top (a_top: INTEGER)
 			-- Set `top' with `a_top'.
 		do
 			ccom_x_rectl_set_top (item, a_top)
 		end
 
-	set_right (a_right: INTEGER) is
+	set_right (a_right: INTEGER)
 			-- Set `right' with `a_right'.
 		do
 			ccom_x_rectl_set_right (item, a_right)
 		end
 
-	set_bottom (a_bottom: INTEGER) is
+	set_bottom (a_bottom: INTEGER)
 			-- Set `bottom' with `a_bottom'.
 		do
 			ccom_x_rectl_set_bottom (item, a_bottom)
@@ -93,7 +93,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_x_rectl: INTEGER is
+	c_size_of_x_rectl: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library__RECTL_s.h%"]"
@@ -101,55 +101,55 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::_RECTL)"
 		end
 
-	ccom_x_rectl_left (a_pointer: POINTER): INTEGER is
+	ccom_x_rectl_left (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__RECTL_s_impl.h%"](ecom_control_library::_RECTL *):EIF_INTEGER"
 		end
 
-	ccom_x_rectl_set_left (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_rectl_set_left (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__RECTL_s_impl.h%"](ecom_control_library::_RECTL *, LONG)"
 		end
 
-	ccom_x_rectl_top (a_pointer: POINTER): INTEGER is
+	ccom_x_rectl_top (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__RECTL_s_impl.h%"](ecom_control_library::_RECTL *):EIF_INTEGER"
 		end
 
-	ccom_x_rectl_set_top (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_rectl_set_top (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__RECTL_s_impl.h%"](ecom_control_library::_RECTL *, LONG)"
 		end
 
-	ccom_x_rectl_right (a_pointer: POINTER): INTEGER is
+	ccom_x_rectl_right (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__RECTL_s_impl.h%"](ecom_control_library::_RECTL *):EIF_INTEGER"
 		end
 
-	ccom_x_rectl_set_right (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_rectl_set_right (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__RECTL_s_impl.h%"](ecom_control_library::_RECTL *, LONG)"
 		end
 
-	ccom_x_rectl_bottom (a_pointer: POINTER): INTEGER is
+	ccom_x_rectl_bottom (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__RECTL_s_impl.h%"](ecom_control_library::_RECTL *):EIF_INTEGER"
 		end
 
-	ccom_x_rectl_set_bottom (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_x_rectl_set_bottom (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library__RECTL_s_impl.h%"](ecom_control_library::_RECTL *, LONG)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

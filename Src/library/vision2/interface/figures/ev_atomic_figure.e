@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Figures that cannot contain other figures."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create with default attributes.
 		do
 			Precursor {EV_FIGURE}
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `foreground_color'.
 		require
 			a_color_not_void: a_color /= Void
@@ -50,7 +50,7 @@ feature -- Status setting
 			foreground_color_assigned: foreground_color = a_color
 		end
 
-	set_line_width (a_width: INTEGER) is
+	set_line_width (a_width: INTEGER)
 			-- Assign `a_width' to `line_width'.
 		require
 			a_width_non_negative: a_width >= 0
@@ -61,7 +61,7 @@ feature -- Status setting
 			line_width_assigned: line_width = a_width
 		end
 
-	enable_dashed_line_style is
+	enable_dashed_line_style
 			-- Draw lines dashed.
 		do
 			dashed_line_style := True
@@ -69,7 +69,7 @@ feature -- Status setting
 			dashed_line_style_enabled: dashed_line_style
 		end
 
-	disable_dashed_line_style is
+	disable_dashed_line_style
 			-- Draw lines solid.
 		do
 			dashed_line_style := False
@@ -81,7 +81,7 @@ invariant
 	foreground_color_exists: foreground_color /= Void
 	line_width_non_negative: line_width >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

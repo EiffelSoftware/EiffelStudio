@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that provide access to constants loaded from files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature {NONE} -- Initialization
 
-	initialize_constants is
+	initialize_constants
 			-- Load all constants from file.
 		local
 			file: PLAIN_TEXT_FILE
@@ -31,402 +31,402 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	lb_cpu_time_average: STRING is
+	lb_cpu_time_average: STRING
 			-- `Result' is STRING constant named `lb_cpu_time_average'.
 		once
 			Result := "Cpu Time Average"
 		end
 
-	b_filter: STRING is
+	b_filter: STRING
 			-- `Result' is STRING constant named `b_filter'.
 		once
 			Result := "Filter"
 		end
 
-	lb_system_time: STRING is
+	lb_system_time: STRING
 			-- `Result' is STRING constant named `lb_system_time'.
 		once
 			Result := "System Time"
 		end
 
-	padding_width: INTEGER is
+	padding_width: INTEGER
 			-- `Result' is INTEGER constant named padding_width.
 		once
 			Result := 2
 		end
 
-	lb_coalesce_period: STRING is
+	lb_coalesce_period: STRING
 			-- `Result' is STRING constant named `lb_coalesce_period'.
 		once
 			Result := "Coalesce Period"
 		end
 
-	tb_disable_garbage_collector: STRING is
+	tb_disable_garbage_collector: STRING
 			-- `Result' is STRING constant named `tb_disable_garbage_collector'.
 		once
 			Result := "Disable garbage collector"
 		end
 
-	b_clear_graph_except_selected: STRING is
+	b_clear_graph_except_selected: STRING
 			-- `Result' is STRING constant named `b_clear_graph_except_selected'.
 		once
 			Result := "Clear Except Selected"
 		end
 
-	seperator_width: INTEGER is
+	seperator_width: INTEGER
 			-- `Result' is INTEGER constant named seperator_width.
 		once
 			Result := 10
 		end
 
-	lb_cpu_interval_time_average: STRING is
+	lb_cpu_interval_time_average: STRING
 			-- `Result' is STRING constant named `lb_cpu_interval_time_average'.
 		once
 			Result := "Cpu Interval Time Average"
 		end
 
-	b_arrange_circle: STRING is
+	b_arrange_circle: STRING
 			-- `Result' is STRING constant named `b_arrange_circle'.
 		once
 			Result := "Arrange Nodes in Grid"
 		end
 
-	b_find_tip_by_type: STRING is
+	b_find_tip_by_type: STRING
 			-- `Result' is STRING constant named `b_find_tip_by_type'.
 		once
 			Result := "Find the object by type name"
 		end
 
-	b_clear_graph: STRING is
+	b_clear_graph: STRING
 			-- `Result' is STRING constant named `b_clear_graph'.
 		once
 			Result := "Clear Graph"
 		end
 
-	lb_real_interval_time: STRING is
+	lb_real_interval_time: STRING
 			-- `Result' is STRING constant named `lb_real_interval_time'.
 		once
 			Result := "Real Interval Time"
 		end
 
-	lb_scavenge_zone_size: STRING is
+	lb_scavenge_zone_size: STRING
 			-- `Result' is STRING constant named `lb_scavenge_zone_size'.
 		once
 			Result := "Scavenge Zone Size"
 		end
 
-	lb_system_time_average: STRING is
+	lb_system_time_average: STRING
 			-- `Result' is STRING constant named `lb_system_time_average'.
 		once
 			Result := "System Time Average"
 		end
 
-	tb_open_system_states: STRING is
+	tb_open_system_states: STRING
 			-- `Result' is STRING constant named `tb_open_system_states'.
 		once
 			Result := "Open system states"
 		end
 
-	tb_filter_save: STRING is
+	tb_filter_save: STRING
 			-- `Result' is STRING constant named `tb_filter_save'.
 		once
 			Result := "Save a filter file"
 		end
 
-	lb_generation_object_limit: STRING is
+	lb_generation_object_limit: STRING
 			-- `Result' is STRING constant named `lb_generation_object_limit'.
 		once
 			Result := "Generation Object Limit"
 		end
 
-	lb_largest_coalesced_block: STRING is
+	lb_largest_coalesced_block: STRING
 			-- `Result' is STRING constant named `lb_largest_coalesced_block'.
 		once
 			Result := "Largest Coalesced Block"
 		end
 
-	tb_save_current_datas: STRING is
+	tb_save_current_datas: STRING
 			-- `Result' is STRING constant named `tb_save_current_datas'.
 		once
 			Result := "Save current datas"
 		end
 
-	lb_zoom: STRING is
+	lb_zoom: STRING
 			-- `Result' is STRING constant named `lb_zoom'.
 		once
 			Result := "Zoom"
 		end
 
-	lb_real_time_average: STRING is
+	lb_real_time_average: STRING
 			-- `Result' is STRING constant named `lb_real_time_average'.
 		once
 			Result := "Real Time Average"
 		end
 
-	main_notebook_tab_width_minimum: INTEGER is
+	main_notebook_tab_width_minimum: INTEGER
 			-- `Result' is INTEGER constant named main_notebook_tab_width_minimum.
 		once
 			Result := 690
 		end
 
-	dlg_max_width_speed: INTEGER is
+	dlg_max_width_speed: INTEGER
 			-- `Result' is INTEGER constant named dlg_max_width_speed.
 		once
 			Result := 38
 		end
 
-	nb_memory_statistics: STRING is
+	nb_memory_statistics: STRING
 			-- `Result' is STRING constant named `nb_memory_statistics'.
 		once
 			Result := "Memory Statistics"
 		end
 
-	lb_memory_used: STRING is
+	lb_memory_used: STRING
 			-- `Result' is STRING constant named `lb_memory_used'.
 		once
 			Result := "Memory Used"
 		end
 
-	nb_object_graph: STRING is
+	nb_object_graph: STRING
 			-- `Result' is STRING constant named `nb_object_graph'.
 		once
 			Result := "Object Graph"
 		end
 
-	b_find_referers: STRING is
+	b_find_referers: STRING
 			-- `Result' is STRING constant named `b_find_referers'.
 		once
 			Result := "Find Referers"
 		end
 
-	b_show_object_changed: STRING is
+	b_show_object_changed: STRING
 			-- `Result' is STRING constant named `b_show_object_changed'.
 		once
 			Result := "Show object changed"
 		end
 
-	lb_max_memory: STRING is
+	lb_max_memory: STRING
 			-- `Result' is STRING constant named `lb_max_memory'.
 		once
 			Result := "Max Memory"
 		end
 
-	lb_collected: STRING is
+	lb_collected: STRING
 			-- `Result' is STRING constant named `lb_collected'.
 		once
 			Result := "Collected"
 		end
 
-	lb_collection_period: STRING is
+	lb_collection_period: STRING
 			-- `Result' is STRING constant named `lb_collection_period'.
 		once
 			Result := "Collection Period"
 		end
 
-	lb_chunk_size: STRING is
+	lb_chunk_size: STRING
 			-- `Result' is STRING constant named `lb_chunk_size'.
 		once
 			Result := "Chunk Size"
 		end
 
-	tb_set_analyze_filter: STRING is
+	tb_set_analyze_filter: STRING
 			-- `Result' is STRING constant named `tb_set_analyze_filter'.
 		once
 			Result := "Set analyze filter"
 		end
 
-	main_notebook_tab_height_minimum: INTEGER is
+	main_notebook_tab_height_minimum: INTEGER
 			-- `Result' is INTEGER constant named main_notebook_tab_height_minimum.
 		once
 			Result := 450
 		end
 
-	lb_objects_count: STRING is
+	lb_objects_count: STRING
 			-- `Result' is STRING constant named `lb_objects_count'.
 		once
 			Result := "Objects Count"
 		end
 
-	tb_refresh_infomation: STRING is
+	tb_refresh_infomation: STRING
 			-- `Result' is STRING constant named `tb_refresh_infomation'.
 		once
 			Result := "Refresh infomation"
 		end
 
-	lb_memory_threshold: STRING is
+	lb_memory_threshold: STRING
 			-- `Result' is STRING constant named `lb_memory_threshold'.
 		once
 			Result := "Memory Threshold"
 		end
 
-	lb_cycle_count: STRING is
+	lb_cycle_count: STRING
 			-- `Result' is STRING constant named `lb_cycle_count'.
 		once
 			Result := "Cycle Count"
 		end
 
-	lb_object_name: STRING is
+	lb_object_name: STRING
 			-- `Result' is STRING constant named `lb_object_name'.
 		once
 			Result := "Object Name:"
 		end
 
-	lb_typ_name: STRING is
+	lb_typ_name: STRING
 			-- `Result' is STRING constant named `lb_typ_name'.
 		once
 			Result := "Type Name:"
 		end
 
-	nb_memory_changed: STRING is
+	nb_memory_changed: STRING
 			-- `Result' is STRING constant named `nb_memory_changed'.
 		once
 			Result := "Memory Changed"
 		end
 
-	lb_system_interval_time: STRING is
+	lb_system_interval_time: STRING
 			-- `Result' is STRING constant named `lb_system_interval_time'.
 		once
 			Result := "System Iinterval Time"
 		end
 
-	dlg_max_height_speed: INTEGER is
+	dlg_max_height_speed: INTEGER
 			-- `Result' is INTEGER constant named dlg_max_height_speed.
 		once
 			Result := 100
 		end
 
-	tb_garbage_clean_now: STRING is
+	tb_garbage_clean_now: STRING
 			-- `Result' is STRING constant named `tb_garbage_clean_now'.
 		once
 			Result := "Garbage clean now"
 		end
 
-	tb_add_new_class_name: STRING is
+	tb_add_new_class_name: STRING
 			-- `Result' is STRING constant named `tb_add_new_class_name'.
 		once
 			Result := "Add new class name"
 		end
 
-	lb_system_interval_time_average: STRING is
+	lb_system_interval_time_average: STRING
 			-- `Result' is STRING constant named `lb_system_interval_time_average'.
 		once
 			Result := "System Interval Time Average"
 		end
 
-	b_add_current_state: STRING is
+	b_add_current_state: STRING
 			-- `Result' is STRING constant named `b_add_current_state'.
 		once
 			Result := "Add current state"
 		end
 
-	lb_speed: STRING is
+	lb_speed: STRING
 			-- `Result' is STRING constant named `lb_speed'.
 		once
 			Result := "Speed"
 		end
 
-	lb_collected_average: STRING is
+	lb_collected_average: STRING
 			-- `Result' is STRING constant named `lb_collected_average'.
 		once
 			Result := "Collected Average"
 		end
 
-	border_width: INTEGER is
+	border_width: INTEGER
 			-- `Result' is INTEGER constant named border_width.
 		once
 			Result := 2
 		end
 
-	lb_auto_refresh: STRING is
+	lb_auto_refresh: STRING
 			-- `Result' is STRING constant named `lb_auto_refresh'.
 		once
 			Result := "Auto Refresh"
 		end
 
-	tb_refresh_speed_is_normal: STRING is
+	tb_refresh_speed_is_normal: STRING
 			-- `Result' is STRING constant named `tb_refresh_speed_is_normal'.
 		once
 			Result := "Refresh speed is normal"
 		end
 
-	b_find: STRING is
+	b_find: STRING
 			-- `Result' is STRING constant named `b_find'.
 		once
 			Result := "Find"
 		end
 
-	nb_object_grid: STRING is
+	nb_object_grid: STRING
 			-- `Result' is STRING constant named `nb_object_grid'.
 		once
 			Result := "Object Grid"
 		end
 
-	nb_search_route: STRING is
+	nb_search_route: STRING
 		once
 			Result := "Search Route"
 		end
 
-	lb_real_interval_time_average: STRING is
+	lb_real_interval_time_average: STRING
 			-- `Result' is STRING constant named `lb_real_interval_time_average'.
 		once
 			Result := "Real Interval Time Average"
 		end
 
-	lb_real_time: STRING is
+	lb_real_time: STRING
 			-- `Result' is STRING constant named `lb_real_time'.
 		once
 			Result := "Real Time"
 		end
 
-	lb_cpu_time: STRING is
+	lb_cpu_time: STRING
 			-- `Result' is STRING constant named `lb_cpu_time'.
 		once
 			Result := "Cpu Time"
 		end
 
-	wnd_filter_name: STRING is
+	wnd_filter_name: STRING
 			-- `Result' is STRING constant named `wnd_filter_name'.
 		once
 			Result := "Filter setting"
 		end
 
-	lb_tenure: STRING is
+	lb_tenure: STRING
 			-- `Result' is STRING constant named `lb_tenure'.
 		once
 			Result := "Tenure"
 		end
 
-	b_find_tip_by_instance_name: STRING is
+	b_find_tip_by_instance_name: STRING
 			-- `Result' is STRING constant named `b_find_tip_by_instance_name'.
 		once
 			Result := "Find the object by instance name"
 		end
 
-	lb_cpu_interval_time: STRING is
+	lb_cpu_interval_time: STRING
 			-- `Result' is STRING constant named `lb_cpu_interval_time'.
 		once
 			Result := "Cpu Interval Time"
 		end
 
-	wnd_memory_analyzer: STRING is
+	wnd_memory_analyzer: STRING
 			-- `Result' is STRING constant named `wnd_memory_analyzer'.
 		once
 			Result := "Memory Analyzer"
 		end
 
-	tb_filter_open: STRING is
+	tb_filter_open: STRING
 			-- `Result' is STRING constant named `tb_filter_open'.
 		once
 			Result := "Open a filter file"
 		end
 
-	tb_auto_refresh_enabled: STRING is
+	tb_auto_refresh_enabled: STRING
 			-- `Result' is STRING constant named `tb_auto_refresh_enabled'.
 		once
 			Result := "Auto refresh enabled"
 		end
 
-	tb_collect_statics_enabled: STRING is
+	tb_collect_statics_enabled: STRING
 			-- `Result' is STRING constant named `tb_auto_refresh_enabled'.
 		once
 			Result := "Statics Collection disabled"
@@ -437,13 +437,13 @@ feature -- Access
 --| FIXME `constant_by_name' and `has_constant' `constants_initialized' are only required until the complete change to
 --| constants is complete. They are required for the pixmaps at the moment.
 
-	constants_initialized: BOOLEAN is
+	constants_initialized: BOOLEAN
 			-- Have constants been initialized from file?
 		do
 			Result := initialized_cell.item
 		end
 
-	string_constant_by_name (a_name: STRING): STRING is
+	string_constant_by_name (a_name: STRING): STRING
 			-- `Result' is STRING
 		require
 			initialized: constants_initialized
@@ -455,7 +455,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	integer_constant_by_name (a_name: STRING): INTEGER is
+	integer_constant_by_name (a_name: STRING): INTEGER
 			-- `Result' is STRING
 		require
 			initialized: constants_initialized
@@ -472,7 +472,7 @@ feature -- Access
 			Result := l_string.to_integer
 		end
 
-	has_constant (a_name: STRING): BOOLEAN is
+	has_constant (a_name: STRING): BOOLEAN
 			-- Does constant `a_name' exist?
 		require
 			initialized: constants_initialized
@@ -483,26 +483,26 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	initialized_cell: CELL [BOOLEAN] is
+	initialized_cell: CELL [BOOLEAN]
 			-- A cell to hold whether the constants have been loaded.
 		once
 			create Result.put (False)
 		end
 
-	all_constants: HASH_TABLE [STRING, STRING] is
+	all_constants: HASH_TABLE [STRING, STRING]
 			-- All constants loaded from constants file.
 		once
 			create Result.make (4)
 		end
 
-	file_name: STRING is "constants.txt"
+	file_name: STRING = "constants.txt"
 		-- File name from which constants must be loaded.
 
-	String_constant: STRING is "STRING"
+	String_constant: STRING = "STRING"
 
-	Integer_constant: STRING is "INTEGER"
+	Integer_constant: STRING = "INTEGER"
 
-	parse_file_contents (content: STRING) is
+	parse_file_contents (content: STRING)
 			-- Parse contents of `content' into `all_constants'.
 		local
 			line_contents: STRING
@@ -532,7 +532,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	first_line (content: STRING): STRING is
+	first_line (content: STRING): STRING
 			-- `Result' is first line of `Content',
 			-- which will be stripped from `content'.
 		require
@@ -554,7 +554,7 @@ feature {NONE} -- Implementation
 			no_characters_lost: old content.count = Result.count + content.count
 		end
 
-	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING) is
+	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING)
 			-- Set image of `a_pixmap' from file, `a_file_name'.
 			-- If `a_file_name' does not exist, do nothing.
 		require
@@ -572,7 +572,7 @@ feature {NONE} -- Implementation
 invariant
 	all_constants_not_void: all_constants /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

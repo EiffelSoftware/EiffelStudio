@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision pixmapable. Carbon implementation."
 
@@ -20,13 +20,13 @@ inherit
 
 feature -- Initialization
 
-	pixmapable_imp_initialize is
+	pixmapable_imp_initialize
 		do
 		end
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Pixmap shown in `Current'
 		do
 			if internal_pixmap /= Void then
@@ -36,14 +36,14 @@ feature -- Access
 
 feature -- Element change
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to `pixmap'.
 		do
 			internal_pixmap ?= a_pixmap.implementation
 			internal_set_pixmap (internal_pixmap, internal_pixmap.width, internal_pixmap.height)
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Assign Void to `pixmap'.
 		do
 			internal_pixmap := void
@@ -52,12 +52,12 @@ feature -- Element change
 
 feature {EV_ITEM_PIXMAP_SCALER_I} -- Implementation
 
-	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER) is
+	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER)
 			--
 		do
 		end
 
-	internal_remove_pixmap is
+	internal_remove_pixmap
 			-- Remove pixmap from Current
 		do
 		end
@@ -69,7 +69,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PIXMAPABLE;
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end -- EV_PIXMAPABLE_IMP
 

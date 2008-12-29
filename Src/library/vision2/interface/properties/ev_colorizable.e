@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstraction for objects that can change color."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	foreground_color: EV_COLOR is
+	foreground_color: EV_COLOR
 			-- Color of foreground features like text.
 		require
 			not_destroyed: not is_destroyed
@@ -28,7 +28,7 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.foreground_color)
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Color displayed behind foreground features.
 		require
 			not_destroyed: not is_destroyed
@@ -40,7 +40,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_foreground_color (a_color: like foreground_color) is
+	set_foreground_color (a_color: like foreground_color)
 			-- Assign `a_color' to `foreground_color'.
 		require
 			not_destroyed: not is_destroyed
@@ -51,7 +51,7 @@ feature -- Element change
 			foreground_color_assigned: foreground_color.is_equal (a_color)
 		end
 
-	set_background_color (a_color: like background_color) is
+	set_background_color (a_color: like background_color)
 			-- Assign `a_color' to `background_color'.
 		require
 			not_destroyed: not is_destroyed
@@ -64,7 +64,7 @@ feature -- Element change
 
 feature -- Status setting
 
-	set_default_colors is
+	set_default_colors
 			-- Set foreground and background color to their default values.
 		require
 			not_destroyed: not is_destroyed
@@ -79,13 +79,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature -- Contract support
 
-	is_background_color_void: BOOLEAN is
+	is_background_color_void: BOOLEAN
 			-- If `background_color' void?
 		do
 			Result := background_color = Void
 		end
 
-	is_foreground_color_void: BOOLEAN is
+	is_foreground_color_void: BOOLEAN
 			-- If `foreground_color' void?
 		do
 			Result := foreground_color = Void
@@ -96,7 +96,7 @@ invariant
 	background_color_not_void: is_usable implies not is_background_color_void
 	foreground_color_not_void: is_usable implies not is_foreground_color_void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

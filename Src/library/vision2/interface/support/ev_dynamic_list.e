@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Multiple Eiffel Vision object containers accessible as list."
 	legal: "See notice at end of class."
@@ -69,7 +69,7 @@ inherit
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Item at current position.
 		do
 			Result := implementation.item
@@ -78,7 +78,7 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.item)
 		end
 
-	index: INTEGER is
+	index: INTEGER
 			-- Current position.
 		do
 			Result := implementation.index
@@ -86,7 +86,7 @@ feature -- Access
 			bridge_ok: Result = implementation.index
 		end
 
-	cursor: EV_DYNAMIC_LIST_CURSOR [G] is
+	cursor: EV_DYNAMIC_LIST_CURSOR [G]
 			-- Current cursor position.
 		do
 			Result := implementation.cursor
@@ -94,7 +94,7 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.cursor)
 		end
 
-	i_th alias "[]" (i: INTEGER): like item is
+	i_th alias "[]" (i: INTEGER): like item
 			-- Item at `i'-th position.
 			--| Redefined for performance reasons.
 		do
@@ -103,7 +103,7 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.i_th (i))
 		end
 
-	index_of (v: like item; i: INTEGER): INTEGER is
+	index_of (v: like item; i: INTEGER): INTEGER
 			-- Index of `i'th occurrence of `v'.
 		do
 			Result := implementation.index_of (v, i)
@@ -111,7 +111,7 @@ feature -- Access
 			bridge_ok: Result = implementation.index_of (v, i)
 		end
 
-	retrieve_item_by_data (some_data: ANY; should_compare_objects: BOOLEAN): G is
+	retrieve_item_by_data (some_data: ANY; should_compare_objects: BOOLEAN): G
 			-- `Result' is first item in `Current' with data
 			-- matching `some_data'. Compare objects if
 			-- `should_compare_objects' otherwise compare references.
@@ -122,7 +122,7 @@ feature -- Access
 			index_not_changed: old index = index
 		end
 
-	retrieve_items_by_data (some_data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [G] is
+	retrieve_items_by_data (some_data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [G]
 			-- `Result' is all items in `Current' with data
 			-- matching `some_data'. Compare objects if
 			-- `should_compare_objects' otherwise compare references.
@@ -136,7 +136,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items.
 		do
 			Result := implementation.count
@@ -146,7 +146,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	valid_cursor (p: CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 			-- This is True if `p' conforms to EV_DYNAMIC_LIST_CURSOR and
 			-- if it points to an item, `Current' must have it.
@@ -156,12 +156,12 @@ feature -- Status report
 			bridge_ok: Result = implementation.valid_cursor (p)
 		end
 
-	Full: BOOLEAN is False
+	Full: BOOLEAN = False
 		-- Is structured filled to capacity? (Answer: no.)
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to first position.
 		do
 			implementation.start
@@ -169,31 +169,31 @@ feature -- Cursor movement
 			empty_implies_after: is_empty implies after
 		end
 
-	back is
+	back
 			-- Move to previous position.
 		do
 			implementation.back
 		end
 
-	forth is
+	forth
 			-- Move cursor to next position.
 		do
 			implementation.forth
 		end
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th position.
 		do
 			implementation.go_i_th (i)
 		end
 
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		do
 			implementation.go_to (p)
 		end
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions.
 		do
 			implementation.move (i)
@@ -201,7 +201,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	append (s: SEQUENCE [like item]) is
+	append (s: SEQUENCE [like item])
 			-- Append a copy of `s'. Do not move cursor.
 		require
 			not_destroyed: not is_destroyed
@@ -216,7 +216,7 @@ feature -- Element change
 			cursor_not_moved: (index = old index) or (after and old after)
 		end
 
-	force, extend (v: like item) is
+	force, extend (v: like item)
 			-- Add `v' to end. Do not move cursor.
 		require
 			not_destroyed: not is_destroyed
@@ -234,7 +234,7 @@ feature -- Element change
 			cursor_not_moved: (index = old index) or (after and old after)
 		end
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace current item by `v'.
 		require
 			not_destroyed: not is_destroyed
@@ -254,7 +254,7 @@ feature -- Element change
 			cursor_not_moved: index = old index
 		end
 
-	put_front (v: like item) is
+	put_front (v: like item)
 			-- Add `v' at beginning. Do not move cursor.
 		require
 			not_destroyed: not is_destroyed
@@ -273,7 +273,7 @@ feature -- Element change
 				(before and old before)
 		end
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add `v' to right of cursor position. Do not move cursor.
 		require
 			not_destroyed: not is_destroyed
@@ -292,7 +292,7 @@ feature -- Element change
 	 		cursor_not_moved: index = old index
 		end
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add `v' to the left of cursor position. Do not move cursor.
 		require
 			not_destroyed: not is_destroyed
@@ -311,7 +311,7 @@ feature -- Element change
 	 		cursor_not_moved: index = old index + 1
 		end
 
-	put_i_th (v: like item; i: INTEGER) is
+	put_i_th (v: like item; i: INTEGER)
 			-- Replace item at `i'-th position by `v'.
 		require
 			not_destroyed: not is_destroyed
@@ -331,21 +331,21 @@ feature -- Element change
 			cursor_not_moved: index = old index
 		end
 
-	merge_left (other: like Current) is
+	merge_left (other: like Current)
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		do
 			implementation.merge_left (other)
 		end
 
-	merge_right (other: like Current) is
+	merge_right (other: like Current)
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		do
 			implementation.merge_right (other)
 		end
 
-	swap (i: INTEGER) is
+	swap (i: INTEGER)
 			-- Exchange_item at `i'-th position with item
 			-- at cursor position.
 		local
@@ -373,7 +373,7 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove `v' if present. Do not move cursor, except if
 			-- cursor was on `v', move to right neighbor.
 		do
@@ -388,7 +388,7 @@ feature -- Removal
 				(old after and old has (v)) implies index = old index - 1
 		end
 
-	remove is
+	remove
 			-- Remove current item. Move cursor to right neighbor.
 			-- (or `after' if no right neighbor).
 		do
@@ -400,7 +400,7 @@ feature -- Removal
 			index_same: index = old index
 		end
 
-	remove_left is
+	remove_left
 			-- Remove item to left of cursor position.
 			-- Do not move cursor.
 		do
@@ -411,7 +411,7 @@ feature -- Removal
 			index_decreased: index = old index - 1
 		end
 
-	remove_right is
+	remove_right
 			-- Remove item to right of cursor position.
 			-- Do not move cursor.
 		do
@@ -422,7 +422,7 @@ feature -- Removal
 			index_same: index = old index
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			implementation.wipe_out
@@ -430,7 +430,7 @@ feature -- Removal
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_CONTAINABLE} and is_empty and before
@@ -438,7 +438,7 @@ feature {NONE} -- Contract support
 
 feature -- Contract support
 
-	is_parent_recursive (a_list: like item): BOOLEAN is
+	is_parent_recursive (a_list: like item): BOOLEAN
 			-- Is `a_list' a parent of `Current'?
 		require
 			a_list_not_void: a_list /= Void
@@ -446,7 +446,7 @@ feature -- Contract support
 		deferred
 		end
 
-	same (other: EV_ANY): BOOLEAN is
+	same (other: EV_ANY): BOOLEAN
 			-- Is `other' `Current'?
 		do
 			Result := Current = other
@@ -454,42 +454,42 @@ feature -- Contract support
 
 feature {NONE} -- Inapplicable
 
-	dl_append (s: SEQUENCE [G]) is
+	dl_append (s: SEQUENCE [G])
 		do
 			append (s)
 		end
 
-	dl_extend (v: like item) is
+	dl_extend (v: like item)
 		do
 			extend (v)
 		end
 
-	dl_replace (v: like item) is
+	dl_replace (v: like item)
 		do
 			replace (v)
 		end
 
-	dl_put_front (v: like item) is
+	dl_put_front (v: like item)
 		do
 			put_front (v)
 		end
 
-	dl_put_right (v: like item) is
+	dl_put_right (v: like item)
 		do
 			put_right (v)
 		end
 
-	dl_put_i_th (v: like item; i: INTEGER) is
+	dl_put_i_th (v: like item; i: INTEGER)
 		do
 			put_i_th (v, i)
 		end
 
-	dl_put_left (v: like item) is
+	dl_put_left (v: like item)
 		do
 			put_left (v)
 		end
 
-	new_chain: like Current is
+	new_chain: like Current
 		do
 			check
 				inapplicable: False
@@ -498,7 +498,7 @@ feature {NONE} -- Inapplicable
 
 feature {EV_DYNAMIC_LIST} -- Inapplicable
 
-	set_extend (v: like item) is
+	set_extend (v: like item)
 		do
 			extend (v)
 		end
@@ -509,7 +509,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Responsible for interaction with native graphics
 			-- toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

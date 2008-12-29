@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision textable. GTK+ implementation."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	textable_imp_initialize is
+	textable_imp_initialize
 			-- Create a GtkLabel to display the text.
 		do
 			text_label := {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text of the label.
 		local
 			a_str: POINTER
@@ -45,7 +45,7 @@ feature -- Access
 			end
 		end
 
-	text_alignment: INTEGER is
+	text_alignment: INTEGER
 			-- Alignment of the text in the label.
 		local
 			an_alignment_code: INTEGER
@@ -64,21 +64,21 @@ feature -- Access
 
 feature -- Status setting
 
-	align_text_center is
+	align_text_center
 			-- Display `text' centered.
 		do
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.5, 0.5)
 			{EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, {EV_GTK_EXTERNALS}.gtk_justify_center_enum)
 		end
 
-	align_text_left is
+	align_text_left
 			-- Display `text' left aligned.
 		do
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0, 0.5)
 			{EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, {EV_GTK_EXTERNALS}.gtk_justify_left_enum)
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display `text' right aligned.
 		do
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 1, 0.5)
@@ -87,7 +87,7 @@ feature -- Status setting
 
 feature -- Element change	
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		local
 			a_cs: EV_GTK_C_STRING
@@ -112,7 +112,7 @@ feature {EV_ANY_IMP} -- Implementation
 	text_label: POINTER
 			-- GtkLabel containing `text'.
 
-	accelerators_enabled: BOOLEAN is
+	accelerators_enabled: BOOLEAN
 			-- Does `Current' have keyboard accelerators enabled?
 		do
 			Result := False
@@ -121,7 +121,7 @@ feature {EV_ANY_IMP} -- Implementation
 	real_text: EV_GTK_C_STRING
 			-- Internal `text'. (with ampersands)
 
-	filter_ampersand (s: STRING_32; char: CHARACTER) is
+	filter_ampersand (s: STRING_32; char: CHARACTER)
 			-- Replace occurrences of '&' from `s'  by `char' and
 			-- replace occurrences of "&&" with '&'.
 		require
@@ -147,7 +147,7 @@ feature {EV_ANY_IMP} -- Implementation
 			s.replace_substring_all (once "&&", once "&")
 		end
 
-	u_lined_filter (s: STRING_GENERAL): STRING_32 is
+	u_lined_filter (s: STRING_GENERAL): STRING_32
 			-- Copy of `s' with underscores instead of ampersands.
 			-- (If `s' does not contain ampersands, return `s'.)
 		require
@@ -167,7 +167,7 @@ feature {EV_ANY_I} -- Implementation
 invariant
 	text_label_not_void: is_usable implies text_label /= default_pointer
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

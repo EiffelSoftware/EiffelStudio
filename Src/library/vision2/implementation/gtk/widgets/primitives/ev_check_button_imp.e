@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision check button, gtk implementation."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -30,14 +30,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a gtk check button.
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_check_button_new)
 		end
 		
-	initialize is
+	initialize
 			-- Initialize 'Current'
 		do
 			Precursor {EV_TOGGLE_BUTTON_IMP}
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	set_text (txt: STRING_GENERAL) is
+	set_text (txt: STRING_GENERAL)
 			-- Set current button text to `txt'.
 			-- Redefined because we want the text to be left-aligned.
 		do
@@ -64,7 +64,7 @@ feature {EV_ANY_I}
 
 	interface: EV_CHECK_BUTTON;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

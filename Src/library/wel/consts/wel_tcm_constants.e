@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tab control message (TCM) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,73 +10,73 @@ class
 
 feature -- Access
 
-	Tcm_adjustrect: INTEGER is 4904
+	Tcm_adjustrect: INTEGER = 4904
 			-- Declared in Windows as TCM_ADJUSTRECT
 
-	Tcm_deleteallitems: INTEGER is 4873
+	Tcm_deleteallitems: INTEGER = 4873
 			-- Declared in Windows as TCM_DELETEALLITEMS
 
-	Tcm_deleteitem: INTEGER is 4872
+	Tcm_deleteitem: INTEGER = 4872
 			-- Declared in Windows as TCM_DELETEITEM
 
-	Tcm_getcurfocus: INTEGER is 4911
+	Tcm_getcurfocus: INTEGER = 4911
 			-- Declared in Windows as TCM_GETCURFOCUS
 
-	Tcm_getcursel: INTEGER is 4875
+	Tcm_getcursel: INTEGER = 4875
 			-- Declared in Windows as TCM_GETCURSEL
 
-	Tcm_getimagelist: INTEGER is 4866
+	Tcm_getimagelist: INTEGER = 4866
 			-- Declared in Windows as TCM_GETIMAGELIST
 
-	Tcm_getitem: INTEGER is 4924
+	Tcm_getitem: INTEGER = 4924
 			-- Declared in Windows as TCM_GETITEM
 
-	Tcm_getitemcount: INTEGER is 4868
+	Tcm_getitemcount: INTEGER = 4868
 			-- Declared in Windows as TCM_GETITEMCOUNT
 
-	Tcm_getitemrect: INTEGER is 4874
+	Tcm_getitemrect: INTEGER = 4874
 			-- Declared in Windows as TCM_GETITEMRECT
 
-	Tcm_getrowcount: INTEGER is 4908
+	Tcm_getrowcount: INTEGER = 4908
 			-- Declared in Windows as TCM_GETROWCOUNT
 
-	Tcm_gettooltips: INTEGER is 4909
+	Tcm_gettooltips: INTEGER = 4909
 			-- Declared in Windows as TCM_GETTOOLTIPS
 
-	Tcm_hittest: INTEGER is 4877
+	Tcm_hittest: INTEGER = 4877
 			-- Declared in Windows as TCM_HITTEST
 
-	Tcm_insertitem: INTEGER is 4926
+	Tcm_insertitem: INTEGER = 4926
 			-- Declared in Windows as TCM_INSERTITEM
 
-	Tcm_removeimage: INTEGER is 4906
+	Tcm_removeimage: INTEGER = 4906
 			-- Declared in Windows as TCM_REMOVEIMAGE
 
-	Tcm_setcursel: INTEGER is 4876
+	Tcm_setcursel: INTEGER = 4876
 			-- Declared in Windows as TCM_SETCURSEL
 
-	Tcm_setimagelist: INTEGER is 4867
+	Tcm_setimagelist: INTEGER = 4867
 			-- Declared in Windows as TCM_SETIMAGELIST
 
-	Tcm_setitem: INTEGER is 4925
+	Tcm_setitem: INTEGER = 4925
 			-- Declared in Windows as TCM_SETITEM
 
-	Tcm_setitemextra: INTEGER is 4878
+	Tcm_setitemextra: INTEGER = 4878
 			-- Declared in Windows as TCM_SETITEMEXTRA
 
-	Tcm_setitemsize: INTEGER is 4905
+	Tcm_setitemsize: INTEGER = 4905
 			-- Declared in Windows as TCM_SETITEMSIZE
 
-	Tcm_setpadding: INTEGER is 4907
+	Tcm_setpadding: INTEGER = 4907
 			-- Declared in Windows as TCM_SETPADDING
 
-	Tcm_settooltips: INTEGER is 4910
+	Tcm_settooltips: INTEGER = 4910
 			-- Declared in Windows as TCM_SETTOOLTIPS
 
-	Tcm_highlightitem: INTEGER is 4915;
+	Tcm_highlightitem: INTEGER = 4915;
 			-- Declared in Windows as TCM_HIGHLIGHTITEM
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

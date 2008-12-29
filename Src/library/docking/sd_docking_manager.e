@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manager which communicate between client programmer and whole docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_container: EV_CONTAINER; a_window: EV_WINDOW) is
+	make (a_container: EV_CONTAINER; a_window: EV_WINDOW)
 			-- Creation method.
 		require
 			a_container_not_void: a_container /= Void
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			a_container_filled: a_container.has (internal_viewport)
 		end
 
-	init_widget_structure is
+	init_widget_structure
 			-- Build window struture.
 		do
 			create internal_viewport
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			main_container.center_area.extend (fixed_area)
 		end
 
-	init_managers is
+	init_managers
 			-- Init managers.
 		do
 			create agents.make (Current)
@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			create zones.make (Current)
 		end
 
-	init_auto_hide_panel is
+	init_auto_hide_panel
 			-- Insert auto hide panels.
 		do
 			create internal_auto_hide_panel_left.make ({SD_ENUMERATION}.left, Current)
@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 			main_container.bottom_bar.extend (internal_auto_hide_panel_bottom)
 		end
 
-	init_inner_container is
+	init_inner_container
 			-- Insert inner contianer
 		local
 			l_inner_container: SD_MULTI_DOCK_AREA
@@ -142,7 +142,7 @@ feature -- Query
 			-- Be careful when adding/pruning item in this list even after twined the list.
 			-- There are add/prune actions registered in the list.
 
-	has_content (a_content: SD_CONTENT): BOOLEAN is
+	has_content (a_content: SD_CONTENT): BOOLEAN
 			-- If contents has a_content?
 		require
 			not_destroyed: not is_destroyed
@@ -159,7 +159,7 @@ feature -- Query
 	open_actions: ACTION_SEQUENCE [TUPLE [ANY]]
 			-- Open actions when open a config.
 
-	restore_editor_area_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	restore_editor_area_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- When whole editor area restored automatically for maximized area, actions will be invoked.
 		require
 			not_destroyed: not is_destroyed
@@ -169,7 +169,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	restore_editor_area_for_minimized_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	restore_editor_area_for_minimized_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- When whole editor area restored automatically for minimized area, actions will be invoked.
 		require
 			not_destroyed: not is_destroyed
@@ -179,7 +179,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	main_area_drop_action: EV_PND_ACTION_SEQUENCE is
+	main_area_drop_action: EV_PND_ACTION_SEQUENCE
 			-- Main area (editor area) drop acitons.
 			-- This actions will be called if there is no editor zone and end user drop
 			-- a stone to the void editor area.
@@ -191,7 +191,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	focused_content: SD_CONTENT is
+	focused_content: SD_CONTENT
 			-- Current focused content. Maybe void.
 		require
 			not_destroyed: not is_destroyed
@@ -199,7 +199,7 @@ feature -- Query
 			Result := property.last_focus_content
 		end
 
-	is_title_unique (a_title: STRING_GENERAL): BOOLEAN is
+	is_title_unique (a_title: STRING_GENERAL): BOOLEAN
 			-- If `a_title' unique in all contents `unique_title's ?
 		require
 			a_title: a_title /= Void
@@ -214,7 +214,7 @@ feature -- Query
 	is_editor_locked: BOOLEAN
 			-- If editor type zone can be docked?
 
-	is_editor_area_maximized: BOOLEAN is
+	is_editor_area_maximized: BOOLEAN
 			-- If editor area maximized?
 		require
 			not_destroyed: not is_destroyed
@@ -223,7 +223,7 @@ feature -- Query
 			check two_item_exist_at_same_time: Result implies command.orignal_whole_item /= Void end
 		end
 
-	is_editor_area_minimized: BOOLEAN is
+	is_editor_area_minimized: BOOLEAN
 			-- If editor area minimized?
 		require
 			not_destroyed: not is_destroyed
@@ -231,7 +231,7 @@ feature -- Query
 			Result := command.orignal_whole_item_for_minimized /= Void
 		end
 
-	docker_mediator: SD_DOCKER_MEDIATOR is
+	docker_mediator: SD_DOCKER_MEDIATOR
 			-- Manager for user dragging events.
 			-- Maybe Void if user is not dragging.
 		require
@@ -240,7 +240,7 @@ feature -- Query
 			Result := property.docker_mediator
 		end
 
-	is_config_data_valid (a_file_name: STRING): BOOLEAN is
+	is_config_data_valid (a_file_name: STRING): BOOLEAN
 			 -- Is config data located at `a_file_name' valid?
 		local
 			l_data: SD_CONFIG_DATA
@@ -262,7 +262,7 @@ feature -- Query
 
 feature -- Command
 
-	save_data (a_file: STRING_GENERAL): BOOLEAN is
+	save_data (a_file: STRING_GENERAL): BOOLEAN
 			-- Save current docking config data.
 		require
 			a_file_not_void: a_file /= Void
@@ -274,7 +274,7 @@ feature -- Command
 			Result := l_config.save_config (a_file)
 		end
 
-	save_editors_data (a_file: STRING_GENERAL): BOOLEAN is
+	save_editors_data (a_file: STRING_GENERAL): BOOLEAN
 			-- Save main window editor config.
 		require
 			not_void: a_file /= Void
@@ -286,7 +286,7 @@ feature -- Command
 			Result := l_config.save_editors_config (a_file)
 		end
 
-	save_tools_data (a_file: STRING_GENERAL): BOOLEAN is
+	save_tools_data (a_file: STRING_GENERAL): BOOLEAN
 			-- Save tools config
 		require
 			not_void: a_file /= Void
@@ -298,7 +298,7 @@ feature -- Command
 			Result := l_config.save_tools_config (a_file)
 		end
 
-	save_tools_data_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL): BOOLEAN is
+	save_tools_data_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL): BOOLEAN
 			-- Save tools config
 		require
 			not_void: a_file /= Void
@@ -310,7 +310,7 @@ feature -- Command
 			Result := l_config.save_tools_config_with_name (a_file, a_name)
 		end
 
-	open_config (a_file: STRING_GENERAL): BOOLEAN is
+	open_config (a_file: STRING_GENERAL): BOOLEAN
 			-- Open a docking config from a_named_file.
 		require
 			a_file_not_void: a_file /= Void
@@ -323,7 +323,7 @@ feature -- Command
 			Result := l_config.open_config (a_file)
 		end
 
-	open_editors_config (a_file: STRING_GENERAL) is
+	open_editors_config (a_file: STRING_GENERAL)
 			-- Open main window editor config.
 		require
 			not_destroyed: not is_destroyed
@@ -334,7 +334,7 @@ feature -- Command
 			l_config.open_editors_config (a_file)
 		end
 
-	open_tools_config (a_file: STRING_GENERAL): BOOLEAN is
+	open_tools_config (a_file: STRING_GENERAL): BOOLEAN
 			-- Save tools contents config
 			-- Note: If window is minimized, EV_SPLIT_AREA split bar position can't be restored correctly
 			-- See bug#14309
@@ -347,7 +347,7 @@ feature -- Command
 			Result := l_config.open_tools_config (a_file)
 		end
 
-	open_maximized_tool_config (a_file: STRING_GENERAL) is
+	open_maximized_tool_config (a_file: STRING_GENERAL)
 			-- Open maximized tool config data.
 		require
 			not_destroyed: not is_destroyed
@@ -358,7 +358,7 @@ feature -- Command
 			l_config.open_maximized_tool_data (a_file)
 		end
 
-	open_tool_bar_item_config (a_file: STRING_GENERAL) is
+	open_tool_bar_item_config (a_file: STRING_GENERAL)
 			-- Open maximized tool config data.
 		require
 			not_destroyed: not is_destroyed
@@ -369,7 +369,7 @@ feature -- Command
 			l_config.open_tool_bar_item_data (a_file)
 		end
 
-	set_main_area_background_color (a_color: EV_COLOR) is
+	set_main_area_background_color (a_color: EV_COLOR)
 			-- Set main area (editors' area) background color.
 		require
 			a_color_not_void: a_color /= Void
@@ -381,7 +381,7 @@ feature -- Command
 			set: query.inner_container_main.background_color.is_equal (a_color)
 		end
 
-	update_mini_tool_bar_size (a_content: SD_CONTENT) is
+	update_mini_tool_bar_size (a_content: SD_CONTENT)
 			-- After mini tool bar widget size changes, update mini tool bar size to best
 			-- fit new size of mini tool bar widget.
 			-- `a_content' can be void if not known.
@@ -391,7 +391,7 @@ feature -- Command
 			command.update_mini_tool_bar_size (a_content)
 		end
 
-	propagate_accelerators is
+	propagate_accelerators
 			-- Proprogate `main_window' accelerators to all floating zones.
 		require
 			not_destroyed: not is_destroyed
@@ -399,7 +399,7 @@ feature -- Command
 			command.propagate_accelerators
 		end
 
-	close_editor_place_holder is
+	close_editor_place_holder
 			-- Close editors place holder zone.
 		require
 			not_destroyed: not is_destroyed
@@ -407,7 +407,7 @@ feature -- Command
 			zones.place_holder_content.close
 		end
 
-	lock is
+	lock
 			-- Set `is_locked' to `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -417,7 +417,7 @@ feature -- Command
 			locked: is_locked = True
 		end
 
-	unlock is
+	unlock
 			-- Set `is_locked' to `False'.
 		require
 			not_destroyed: not is_destroyed
@@ -427,7 +427,7 @@ feature -- Command
 			unlocked: is_locked = False
 		end
 
-	lock_editor is
+	lock_editor
 			-- Set `is_editor_locked' to `True'.
 		require
 			not_destroyed: not is_destroyed
@@ -437,7 +437,7 @@ feature -- Command
 			locked: is_editor_locked = True
 		end
 
-	unlock_editor is
+	unlock_editor
 			-- Set `is_editor_locked' to `False'
 		require
 			not_destroyed: not is_destroyed
@@ -447,7 +447,7 @@ feature -- Command
 			unlocked: is_editor_locked = False
 		end
 
-	maximize_editor_area is
+	maximize_editor_area
 			-- Maximize whole editor area
 		require
 			not_destroyed: not is_destroyed
@@ -455,7 +455,7 @@ feature -- Command
 			command.maximize_editor_area
 		end
 
-	restore_editor_area is
+	restore_editor_area
 			-- Restore whole editor area if the editor area maximized
 		require
 			not_destroyed: not is_destroyed
@@ -463,7 +463,7 @@ feature -- Command
 			command.restore_editor_area
 		end
 
-	minimize_editor_area is
+	minimize_editor_area
 			-- Minimize whole editor area
 		require
 			not_destroyed: not is_destroyed
@@ -471,7 +471,7 @@ feature -- Command
 			command.minimize_editor_area
 		end
 
-	restore_editor_area_for_minimized is
+	restore_editor_area_for_minimized
 			-- Restore whole editor area if the editor area minimized
 		require
 			not_destroyed: not is_destroyed
@@ -479,7 +479,7 @@ feature -- Command
 			command.restore_editor_area_for_minimized
 		end
 
-	minimize_editors is
+	minimize_editors
 			-- Minimize all editors.
 		require
 			not_destroyed: not is_destroyed
@@ -487,7 +487,7 @@ feature -- Command
 			command.minimize_editors
 		end
 
-	restore_minimized_editors is
+	restore_minimized_editors
 			-- Restore all minimized editors to normal state.
 		require
 			not_destroyed: not is_destroyed
@@ -495,7 +495,7 @@ feature -- Command
 			command.restore_minimized_editors
 		end
 
-	show_displayed_floating_windows_in_idle is
+	show_displayed_floating_windows_in_idle
 			-- Show all displayed floating windows again for Solaris CDE.
 			-- This feature fix bug#13645
 		require
@@ -504,7 +504,7 @@ feature -- Command
 			command.show_displayed_floating_windows_in_idle
 		end
 
-	close_all is
+	close_all
 			-- Close all contents.
 			-- All actions in {SD_CONTENT} will NOT be called.
 		require
@@ -527,7 +527,7 @@ feature -- Command
 			cleared: not is_closing_all
 		end
 
-	destroy is
+	destroy
 			-- Destroy all underline objects.
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -598,7 +598,7 @@ feature -- Command
 
 feature -- Contract support
 
-	is_file_readable (a_file_name: STRING_GENERAL): BOOLEAN is
+	is_file_readable (a_file_name: STRING_GENERAL): BOOLEAN
 			-- Does `a_file_name' exist?
 		local
 			l_file: RAW_FILE
@@ -607,7 +607,7 @@ feature -- Contract support
 			Result := l_file.exists and then l_file.is_readable
 		end
 
-	window_valid (a_window: EV_WINDOW): BOOLEAN is
+	window_valid (a_window: EV_WINDOW): BOOLEAN
 			-- Is `a_window' already managed?
 		local
 			l_list: ARRAYED_LIST [SD_DOCKING_MANAGER]
@@ -628,7 +628,7 @@ feature -- Contract support
 
 		end
 
-	container_valid (a_container: EV_CONTAINER; a_window: EV_WINDOW): BOOLEAN is
+	container_valid (a_container: EV_CONTAINER; a_window: EV_WINDOW): BOOLEAN
 			-- Is `a_container' in `a_window' or `a_container' in `a_window'?
 		do
 			Result := a_window.has_recursive (a_container) or a_container = a_window
@@ -690,7 +690,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_DOCKING_MANAGER_QUERY, SD_DOCKING_MANAGER
 
 feature -- Obsolete
 
-	save_config (a_file: STRING_GENERAL) is
+	save_config (a_file: STRING_GENERAL)
 			-- Save current docking config.
 		obsolete
 			"Use save_data instead"
@@ -703,7 +703,7 @@ feature -- Obsolete
 			l_result := save_data (a_file)
 		end
 
-	save_editors_config (a_file: STRING_GENERAL) is
+	save_editors_config (a_file: STRING_GENERAL)
 			-- Save main window editor config.
 		obsolete
 			"Use save_editors_data instead"
@@ -716,7 +716,7 @@ feature -- Obsolete
 			l_result := save_editors_data (a_file)
 		end
 
-	save_tools_config (a_file: STRING_GENERAL) is
+	save_tools_config (a_file: STRING_GENERAL)
 			-- Save tools config
 		obsolete
 			"Use save_tools_data instead"
@@ -729,7 +729,7 @@ feature -- Obsolete
 			l_result := save_tools_data (a_file)
 		end
 
-	save_tools_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL) is
+	save_tools_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL)
 			-- Save tools config
 		obsolete
 			"Use save_tools_data_with_name instead"
@@ -751,7 +751,7 @@ invariant
 	internal_contents_not_void: contents /= Void
 	tool_bar_manager_not_void: tool_bar_manager /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

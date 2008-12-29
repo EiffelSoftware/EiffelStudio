@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory for creating initial state of wizard and information."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,7 +8,7 @@ deferred class
 
 feature -- Factory
 
-	new_wizard_initial_state: WIZARD_STATE_WINDOW is
+	new_wizard_initial_state: WIZARD_STATE_WINDOW
 			-- New initial state for wizard.
 		deferred
 		ensure

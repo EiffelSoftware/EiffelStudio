@@ -1,4 +1,4 @@
-indexing
+note
 	description: "GpPoint struct used by Gdi+."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,13 +14,13 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			create  internal_item.make (structure_size)
 		end
 
-	make_with_position (a_x, a_y: INTEGER) is
+	make_with_position (a_x, a_y: INTEGER)
 			-- Initlialize Current with `a_x', `a_y', `a_width' and `a_height'.
 		do
 			make
@@ -33,7 +33,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_x (a_x: INTEGER) is
+	set_x (a_x: INTEGER)
 			-- Set `x' with `a_x'.
 		do
 			c_set_x (item, a_x)
@@ -41,7 +41,7 @@ feature -- Command
 			set: x = a_x
 		end
 
-	set_y (a_y: INTEGER) is
+	set_y (a_y: INTEGER)
 			-- Set `y' with `a_y'.
 		do
 			c_set_y (item, a_y)
@@ -51,25 +51,25 @@ feature -- Command
 
 feature -- Query
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of Current structure.
 		do
 			Result := c_size_of_gp_point
 		end
 
-	x: INTEGER is
+	x: INTEGER
 			-- X position
 		do
 			Result := c_x (item)
 		end
 
-	y: INTEGER is
+	y: INTEGER
 			-- Y position
 		do
 			Result := c_y (item)
 		end
 
-	item: POINTER is
+	item: POINTER
 			-- Pointer to C struct
 		do
 			Result := internal_item.item
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- C externals
 
-	c_size_of_gp_point: INTEGER is
+	c_size_of_gp_point: INTEGER
 			-- GpPoint struct size.
 		external
 			"C [macro %"wel_gdi_plus.h%"]"
@@ -92,7 +92,7 @@ feature {NONE} -- C externals
 			"sizeof (GpPoint)"
 		end
 
-	c_set_x (a_item: POINTER; a_x: INTEGER) is
+	c_set_x (a_item: POINTER; a_x: INTEGER)
 			-- Set `a_item''s x with `a_x'
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -104,7 +104,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_set_y (a_item: POINTER; a_y: INTEGER) is
+	c_set_y (a_item: POINTER; a_y: INTEGER)
 			-- Set `a_item''s y with `a_y'
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -116,7 +116,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_x (a_item: POINTER): INTEGER is
+	c_x (a_item: POINTER): INTEGER
 			-- `a_item''s x
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -126,7 +126,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_y (a_item: POINTER): INTEGER is
+	c_y (a_item: POINTER): INTEGER
 			-- `a_item''s y
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -136,7 +136,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

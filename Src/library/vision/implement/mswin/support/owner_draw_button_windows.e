@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_WINDOWS Ownerdraw button"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	realize is
+	realize
 			-- Realize current widget.
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -127,7 +127,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	draw_all_selected (a_dc: WEL_DC) is
+	draw_all_selected (a_dc: WEL_DC)
 			-- Draw current button when selected.
 			-- With the borders.
 		require
@@ -138,7 +138,7 @@ feature -- Basic operations
 			draw_selected_border (a_dc)
 		end
 
-	draw_all_unselected (a_dc: WEL_DC) is
+	draw_all_unselected (a_dc: WEL_DC)
 			-- Draw current button when unselected.
 			-- With the borders.
 		require
@@ -149,7 +149,7 @@ feature -- Basic operations
 			draw_border (a_dc)
 		end
 
-	draw_unselected (a_dc: WEL_DC) is
+	draw_unselected (a_dc: WEL_DC)
 			-- Draw current button when unselected.
 		require
 			a_dc_not_void: a_dc /= Void
@@ -157,7 +157,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	draw_selected (a_dc: WEL_DC) is
+	draw_selected (a_dc: WEL_DC)
 			-- Draw current button when selected.
 		require
 			a_dc_not_void: a_dc /= Void
@@ -165,7 +165,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	draw_selected_border (a_dc: WEL_DC) is
+	draw_selected_border (a_dc: WEL_DC)
 			-- Draw selected borders on `a_dc'.
 		require
 			a_dc_not_void: a_dc /= Void
@@ -191,7 +191,7 @@ feature -- Basic operations
 			a_dc.line (1, 1, width - 2, 1)
 		end
 
-	draw_border (a_dc: WEL_DC) is
+	draw_border (a_dc: WEL_DC)
 			-- Draw borders on `a_dc'.
 		require
 			a_dc_not_void: a_dc /= Void
@@ -217,7 +217,7 @@ feature -- Basic operations
 			a_dc.line (0, height - 1, width, height - 1)
 		end
 
-	on_draw (a_draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
+	on_draw (a_draw_item_struct: WEL_DRAW_ITEM_STRUCT)
 			-- Respond to a draw_item message.
 		require
 			a_draw_item_struct_not_void: a_draw_item_struct /= Void
@@ -240,7 +240,7 @@ feature -- Basic operations
 
 feature -- Removal
 
-	unrealize is
+	unrealize
 			-- Destroy current primitive.
 		do
 			if exists then
@@ -251,7 +251,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	wel_foreground_color: WEL_COLOR_REF is
+	wel_foreground_color: WEL_COLOR_REF
 			-- Foreground color
 		do
 			if private_foreground_color /= Void then
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	wel_background_color: WEL_COLOR_REF is
+	wel_background_color: WEL_COLOR_REF
 			-- Background color
 		do
 			if private_background_color /= Void then
@@ -277,13 +277,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_bn_clicked is
+	on_bn_clicked
 			-- Button is clicked, execute activate action.
 		do
 			activate_actions.execute (Current, Void)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

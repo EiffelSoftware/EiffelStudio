@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Ancestor to all Windows controls (button, list box, etc.)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_by_id (a_parent: WEL_DIALOG; an_id: INTEGER) is
+	make_by_id (a_parent: WEL_DIALOG; an_id: INTEGER)
 			-- Make a control identified by `an_id' with `a_parent'
 			-- as parent.
 		require
@@ -42,7 +42,7 @@ feature -- Access
 	id: INTEGER
 			-- Control id
 
-	font: WEL_FONT is
+	font: WEL_FONT
 			-- Font with which the control is drawing its text.
 		require
 			exists: exists
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_font (a_font: WEL_FONT) is
+	set_font (a_font: WEL_FONT)
 			-- Set `font' with `a_font'.
 		require
 			exists: exists
@@ -75,7 +75,7 @@ feature -- Element change
 
 feature -- Status report
 
-	has_system_font: BOOLEAN is
+	has_system_font: BOOLEAN
 			-- Does the control use the system font?
 		require
 			exists: exists
@@ -86,7 +86,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	default_process_notification (notification_code: INTEGER) is
+	default_process_notification (notification_code: INTEGER)
 			-- Process a `notification_code' which has not been
 			-- processed by `process_notification'.
 		require
@@ -94,7 +94,7 @@ feature -- Basic operations
 		do
 		end
 
-	go_to_next_tab_item (a_parent: WEL_COMPOSITE_WINDOW; after: BOOLEAN) is
+	go_to_next_tab_item (a_parent: WEL_COMPOSITE_WINDOW; after: BOOLEAN)
 			-- Find the previous or following control with the
 			-- Wm_tabstop style in `a_parent depending on the
 			-- value of `after'.
@@ -109,7 +109,7 @@ feature -- Basic operations
 			window.set_focus
 		end
 
-	go_to_next_group_item (a_parent: WEL_COMPOSITE_WINDOW; after: BOOLEAN) is
+	go_to_next_group_item (a_parent: WEL_COMPOSITE_WINDOW; after: BOOLEAN)
 			-- Find the previous or following control with the
 			-- Wm_tabstop style in the current group in `a_parent'
 			-- depending on the value of `after'.
@@ -126,7 +126,7 @@ feature -- Basic operations
 
 feature {WEL_COMPOSITE_WINDOW}
 
-	process_notification (notification_code: INTEGER) is
+	process_notification (notification_code: INTEGER)
 			-- Process a `notification_code' sent by Windows
 		require
 			exists: exists
@@ -134,7 +134,7 @@ feature {WEL_COMPOSITE_WINDOW}
 			default_process_notification (notification_code)
 		end
 
-	process_notification_info (notification_info:WEL_NMHDR) is
+	process_notification_info (notification_info:WEL_NMHDR)
 			-- Process a `notification_info' sent by Windows
 		require
 			exists: exists
@@ -143,7 +143,7 @@ feature {WEL_COMPOSITE_WINDOW}
 
 feature {WEL_DIALOG} -- Implementation
 
-	set_default_window_procedure is
+	set_default_window_procedure
 			-- Set `default_window_procedure' with the
 			-- previous window procedure and set the
 			-- new one with `cwel_window_procedure_address'
@@ -155,7 +155,7 @@ feature {WEL_DIALOG} -- Implementation
 			cwin_set_window_long (item, Gwlp_wndproc, cwel_window_procedure_address)
 		end
 
-	call_default_window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	call_default_window_procedure (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 		do
 			Result := cwin_call_window_proc (default_window_procedure,
 				hwnd, msg, wparam, lparam)
@@ -163,7 +163,7 @@ feature {WEL_DIALOG} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_call_window_proc (proc, hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+	cwin_call_window_proc (proc, hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER
 			-- SDK CallWindowProc
 		external
 			"C [macro <wel.h>] (WNDPROC, HWND, UINT, WPARAM, LPARAM): LRESULT"
@@ -171,7 +171,7 @@ feature {NONE} -- Externals
 			"CallWindowProc"
 		end
 
-	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
 			-- SDK GetNextDlgGroupItem
 		external
 			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
@@ -179,7 +179,7 @@ feature {NONE} -- Externals
 			"GetNextDlgGroupItem"
 		end
 
-	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
 			-- SDK GetNextDlgGroupItem
 		external
 			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
@@ -187,7 +187,7 @@ feature {NONE} -- Externals
 			"GetNextDlgTabItem"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

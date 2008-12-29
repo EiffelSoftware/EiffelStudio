@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Rectangle which displays an option menu when armed"
 	legal: "See notice at end of class.";
@@ -16,22 +16,22 @@ inherit
 
 feature -- Access
 
-	selected_button: BUTTON is
+	selected_button: BUTTON
 			-- Current Push Button selected in the option menu
 		deferred
 		end;
 
-	title: STRING is
+	title: STRING
 		deferred
 		end;
 
-	title_width: INTEGER is
+	title_width: INTEGER
 		deferred
 		end;
 
 feature -- Element change
 
-	set_selected_button (button: BUTTON) is
+	set_selected_button (button: BUTTON)
 			-- Set `selected_button' to `button'
 		require
 			button_exists: button /= Void
@@ -40,7 +40,7 @@ feature -- Element change
 			button = selected_button
 		end;
 
-	attach_menu (a_menu: OPT_PULL) is
+	attach_menu (a_menu: OPT_PULL)
 			-- Attach menu `a_menu' to the menu button, it will
 			-- be the menu which will appear when the button
 			-- is armed.
@@ -49,41 +49,41 @@ feature -- Element change
 		deferred
 		end;
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 		deferred
 		end;
 
-	remove_title is
+	remove_title
 		deferred
 		end;
 	
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 		deferred
 		end;
 
-	add_arm_action (a_command: COMMAND; argument: ANY) is
+	add_arm_action (a_command: COMMAND; argument: ANY)
 		deferred
 		end;
 
-	add_release_action (a_command: COMMAND; argument: ANY) is
+	add_release_action (a_command: COMMAND; argument: ANY)
 		deferred
 		end;
 
 feature -- Removal
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 		deferred
 		end;
 
-	remove_arm_action (a_command: COMMAND; argument: ANY) is
+	remove_arm_action (a_command: COMMAND; argument: ANY)
 		deferred
 		end;
 
-	remove_release_action (a_command: COMMAND; argument: ANY) is
+	remove_release_action (a_command: COMMAND; argument: ANY)
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,13 +19,13 @@ create
 
 feature {NONE}  -- Initialization
 
-	make is
+	make
 			-- Make.
 		do
 			Precursor {ECOM_STRUCTURE}
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Make from pointer.
 		do
 			make_by_pointer (a_pointer)
@@ -33,37 +33,37 @@ feature {NONE}  -- Initialization
 
 feature -- Access
 
-	tymed: INTEGER is
+	tymed: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rem_stgmedium_tymed (item)
 		end
 
-	dw_handle_type: INTEGER is
+	dw_handle_type: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rem_stgmedium_dw_handle_type (item)
 		end
 
-	p_data: INTEGER is
+	p_data: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rem_stgmedium_p_data (item)
 		end
 
-	p_unk_for_release: INTEGER is
+	p_unk_for_release: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rem_stgmedium_p_unk_for_release (item)
 		end
 
-	cb_data: INTEGER is
+	cb_data: INTEGER
 			-- No description available.
 		do
 			Result := ccom_tag_rem_stgmedium_cb_data (item)
 		end
 
-	data: CHARACTER_REF is
+	data: CHARACTER_REF
 			-- No description available.
 		do
 			Result := ccom_tag_rem_stgmedium_data (item)
@@ -71,7 +71,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of structure
 		do
 			Result := c_size_of_tag_rem_stgmedium
@@ -79,37 +79,37 @@ feature -- Measurement
 
 feature -- Basic Operations
 
-	set_tymed (a_tymed: INTEGER) is
+	set_tymed (a_tymed: INTEGER)
 			-- Set `tymed' with `a_tymed'.
 		do
 			ccom_tag_rem_stgmedium_set_tymed (item, a_tymed)
 		end
 
-	set_dw_handle_type (a_dw_handle_type: INTEGER) is
+	set_dw_handle_type (a_dw_handle_type: INTEGER)
 			-- Set `dw_handle_type' with `a_dw_handle_type'.
 		do
 			ccom_tag_rem_stgmedium_set_dw_handle_type (item, a_dw_handle_type)
 		end
 
-	set_p_data (a_p_data: INTEGER) is
+	set_p_data (a_p_data: INTEGER)
 			-- Set `p_data' with `a_p_data'.
 		do
 			ccom_tag_rem_stgmedium_set_p_data (item, a_p_data)
 		end
 
-	set_p_unk_for_release (a_p_unk_for_release: INTEGER) is
+	set_p_unk_for_release (a_p_unk_for_release: INTEGER)
 			-- Set `p_unk_for_release' with `a_p_unk_for_release'.
 		do
 			ccom_tag_rem_stgmedium_set_p_unk_for_release (item, a_p_unk_for_release)
 		end
 
-	set_cb_data (a_cb_data: INTEGER) is
+	set_cb_data (a_cb_data: INTEGER)
 			-- Set `cb_data' with `a_cb_data'.
 		do
 			ccom_tag_rem_stgmedium_set_cb_data (item, a_cb_data)
 		end
 
-	set_data (a_data: CHARACTER_REF) is
+	set_data (a_data: CHARACTER_REF)
 			-- Set `data' with `a_data'.
 		require
 			non_void_a_data: a_data /= Void
@@ -119,7 +119,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Externals
 
-	c_size_of_tag_rem_stgmedium: INTEGER is
+	c_size_of_tag_rem_stgmedium: INTEGER
 			-- Size of structure
 		external
 			"C [macro %"ecom_control_library_tagRemSTGMEDIUM_s.h%"]"
@@ -127,79 +127,79 @@ feature {NONE}  -- Externals
 			"sizeof(ecom_control_library::tagRemSTGMEDIUM)"
 		end
 
-	ccom_tag_rem_stgmedium_tymed (a_pointer: POINTER): INTEGER is
+	ccom_tag_rem_stgmedium_tymed (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemSTGMEDIUM_s_impl.h%"](ecom_control_library::tagRemSTGMEDIUM *):EIF_INTEGER"
 		end
 
-	ccom_tag_rem_stgmedium_set_tymed (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rem_stgmedium_set_tymed (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemSTGMEDIUM_s_impl.h%"](ecom_control_library::tagRemSTGMEDIUM *, ULONG)"
 		end
 
-	ccom_tag_rem_stgmedium_dw_handle_type (a_pointer: POINTER): INTEGER is
+	ccom_tag_rem_stgmedium_dw_handle_type (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemSTGMEDIUM_s_impl.h%"](ecom_control_library::tagRemSTGMEDIUM *):EIF_INTEGER"
 		end
 
-	ccom_tag_rem_stgmedium_set_dw_handle_type (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rem_stgmedium_set_dw_handle_type (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemSTGMEDIUM_s_impl.h%"](ecom_control_library::tagRemSTGMEDIUM *, ULONG)"
 		end
 
-	ccom_tag_rem_stgmedium_p_data (a_pointer: POINTER): INTEGER is
+	ccom_tag_rem_stgmedium_p_data (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemSTGMEDIUM_s_impl.h%"](ecom_control_library::tagRemSTGMEDIUM *):EIF_INTEGER"
 		end
 
-	ccom_tag_rem_stgmedium_set_p_data (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rem_stgmedium_set_p_data (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemSTGMEDIUM_s_impl.h%"](ecom_control_library::tagRemSTGMEDIUM *, ULONG)"
 		end
 
-	ccom_tag_rem_stgmedium_p_unk_for_release (a_pointer: POINTER): INTEGER is
+	ccom_tag_rem_stgmedium_p_unk_for_release (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemSTGMEDIUM_s_impl.h%"](ecom_control_library::tagRemSTGMEDIUM *):EIF_INTEGER"
 		end
 
-	ccom_tag_rem_stgmedium_set_p_unk_for_release (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rem_stgmedium_set_p_unk_for_release (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemSTGMEDIUM_s_impl.h%"](ecom_control_library::tagRemSTGMEDIUM *, ULONG)"
 		end
 
-	ccom_tag_rem_stgmedium_cb_data (a_pointer: POINTER): INTEGER is
+	ccom_tag_rem_stgmedium_cb_data (a_pointer: POINTER): INTEGER
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemSTGMEDIUM_s_impl.h%"](ecom_control_library::tagRemSTGMEDIUM *):EIF_INTEGER"
 		end
 
-	ccom_tag_rem_stgmedium_set_cb_data (a_pointer: POINTER; arg2: INTEGER) is
+	ccom_tag_rem_stgmedium_set_cb_data (a_pointer: POINTER; arg2: INTEGER)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemSTGMEDIUM_s_impl.h%"](ecom_control_library::tagRemSTGMEDIUM *, ULONG)"
 		end
 
-	ccom_tag_rem_stgmedium_data (a_pointer: POINTER): CHARACTER_REF is
+	ccom_tag_rem_stgmedium_data (a_pointer: POINTER): CHARACTER_REF
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemSTGMEDIUM_s_impl.h%"](ecom_control_library::tagRemSTGMEDIUM *):EIF_REFERENCE"
 		end
 
-	ccom_tag_rem_stgmedium_set_data (a_pointer: POINTER; arg2: CHARACTER_REF) is
+	ccom_tag_rem_stgmedium_set_data (a_pointer: POINTER; arg2: CHARACTER_REF)
 			-- No description available.
 		external
 			"C++ [macro %"ecom_control_library_tagRemSTGMEDIUM_s_impl.h%"](ecom_control_library::tagRemSTGMEDIUM *, EIF_OBJECT)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

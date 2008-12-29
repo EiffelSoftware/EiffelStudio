@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequence for PND drop events."
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create {EV_PND_ACTION_SEQUENCE}
 
 feature -- Basic operations
 
-	call (a_pebble_tuple: TUPLE [ANY]) is
+	call (a_pebble_tuple: TUPLE [ANY])
 			-- Call each procedure in order unless `is_blocked'.
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
@@ -71,7 +71,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	set_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]) is
+	set_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [ANY], BOOLEAN])
 			-- Assign `a_function' to `veto_pebble_function'.
 		do
 			veto_pebble_function := a_function
@@ -79,7 +79,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	accepts_pebble (a_pebble: ANY): BOOLEAN is
+	accepts_pebble (a_pebble: ANY): BOOLEAN
 			-- Do any actions accept `a_pebble'.
 		require
 			a_pebble_not_void: a_pebble /= Void
@@ -107,7 +107,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_item_name (an_item: PROCEDURE [ANY, TUPLE [ANY]]; a_name: STRING_GENERAL) is
+	set_item_name (an_item: PROCEDURE [ANY, TUPLE [ANY]]; a_name: STRING_GENERAL)
 			-- Acociate `a_name' with `an_item'.
 		obsolete
 			"Removed because did nothing useful."
@@ -116,7 +116,7 @@ feature -- Element change
 
 feature {NONE} -- Convenience
 
-	veto_pebble_function_result (a_pebble: ANY): BOOLEAN is
+	veto_pebble_function_result (a_pebble: ANY): BOOLEAN
 			-- Find out the computation of `veto_pebble_function' with `a_pebble'.
 		local
 			l_tuple: TUPLE [ANY]
@@ -135,7 +135,7 @@ feature {NONE} -- Convenience
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

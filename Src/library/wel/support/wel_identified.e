@@ -1,4 +1,4 @@
-indexing
+note
 	description: "WEL way to identify objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- For weak references
 
-	frozen eif_id_object (an_id: INTEGER): WEL_WINDOW is
+	frozen eif_id_object (an_id: INTEGER): WEL_WINDOW
 			-- Object associated with `an_id'
 		require
 			an_id_non_negative: an_id >= 0
@@ -28,7 +28,7 @@ feature {NONE} -- For weak references
 			Result ?= eif_id_any_object (an_id)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

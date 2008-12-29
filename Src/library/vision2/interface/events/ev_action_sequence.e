@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Base Eiffel Vision action sequence."
 	legal: "See notice at end of class."
@@ -18,12 +18,12 @@ inherit
 
 feature -- Element change
 
-	force_extend (an_item: PROCEDURE [ANY, TUPLE]) is
+	force_extend (an_item: PROCEDURE [ANY, TUPLE])
 			-- Extend without checking type of `an_item'.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

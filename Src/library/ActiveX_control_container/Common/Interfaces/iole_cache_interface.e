@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,35 +12,35 @@ inherit
 
 feature -- Status Report
 
-	cache_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; advf: INTEGER; pdw_connection: INTEGER_REF): BOOLEAN is
+	cache_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; advf: INTEGER; pdw_connection: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `cache'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	uncache_user_precondition (dw_connection: INTEGER): BOOLEAN is
+	uncache_user_precondition (dw_connection: INTEGER): BOOLEAN
 			-- User-defined preconditions for `uncache'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enum_cache_user_precondition (ppenum_statdata: CELL [IENUM_STATDATA_INTERFACE]): BOOLEAN is
+	enum_cache_user_precondition (ppenum_statdata: CELL [IENUM_STATDATA_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `enum_cache'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	init_cache_user_precondition (p_data_object: IDATA_OBJECT_INTERFACE): BOOLEAN is
+	init_cache_user_precondition (p_data_object: IDATA_OBJECT_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `init_cache'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_data_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER): BOOLEAN is
+	set_data_user_precondition (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER): BOOLEAN
 			-- User-defined preconditions for `set_data'.
 			-- Redefine in descendants if needed.
 		do
@@ -49,7 +49,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	cache (p_formatetc: TAG_FORMATETC_RECORD; advf: INTEGER; pdw_connection: INTEGER_REF) is
+	cache (p_formatetc: TAG_FORMATETC_RECORD; advf: INTEGER; pdw_connection: INTEGER_REF)
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `advf' [in].  
@@ -63,7 +63,7 @@ feature -- Basic Operations
 
 		end
 
-	uncache (dw_connection: INTEGER) is
+	uncache (dw_connection: INTEGER)
 			-- No description available.
 			-- `dw_connection' [in].  
 		require
@@ -72,7 +72,7 @@ feature -- Basic Operations
 
 		end
 
-	enum_cache (ppenum_statdata: CELL [IENUM_STATDATA_INTERFACE]) is
+	enum_cache (ppenum_statdata: CELL [IENUM_STATDATA_INTERFACE])
 			-- No description available.
 			-- `ppenum_statdata' [out].  
 		require
@@ -84,7 +84,7 @@ feature -- Basic Operations
 			valid_ppenum_statdata: ppenum_statdata.item /= Void
 		end
 
-	init_cache (p_data_object: IDATA_OBJECT_INTERFACE) is
+	init_cache (p_data_object: IDATA_OBJECT_INTERFACE)
 			-- No description available.
 			-- `p_data_object' [in].  
 		require
@@ -93,7 +93,7 @@ feature -- Basic Operations
 
 		end
 
-	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER) is
+	set_data (p_formatetc: TAG_FORMATETC_RECORD; pmedium: STGMEDIUM_RECORD; f_release: INTEGER)
 			-- No description available.
 			-- `p_formatetc' [in].  
 			-- `pmedium' [in].  
@@ -108,7 +108,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

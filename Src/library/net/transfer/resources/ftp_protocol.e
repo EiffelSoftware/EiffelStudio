@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"FTP protocol"
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize protocol.
 		do
 			set_read_buffer_size (Default_buffer_size)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Constants
 
-	Read_mode_id, Write_mode_id: INTEGER is unique
+	Read_mode_id, Write_mode_id: INTEGER = unique
 
 feature -- Access
 
@@ -37,18 +37,18 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Size of data resource
 		do
 			if is_count_valid then Result := resource_size end
 		end
 
-	Default_buffer_size: INTEGER is 16384
+	Default_buffer_size: INTEGER = 16384
 			-- Default size of read buffer
 
 feature -- Status report
 
-	is_open: BOOLEAN is
+	is_open: BOOLEAN
 			-- Is resource open?
 		do
 			if is_proxy_used then
@@ -62,19 +62,19 @@ feature -- Status report
 	is_logged_in: BOOLEAN
 			-- Logged in to a server?
 
-	read_mode: BOOLEAN is
+	read_mode: BOOLEAN
 			-- Is read mode set?
 		do
 			Result := (mode = Read_mode_id)
 		end
 
-	write_mode: BOOLEAN is
+	write_mode: BOOLEAN
 			-- Is write mode set?
 		do
 			Result := (mode = Write_mode_id)
 		end
 
-	valid_mode (n: INTEGER): BOOLEAN is
+	valid_mode (n: INTEGER): BOOLEAN
 			-- Is mode `n' valid?
 		do
 			Result := (Read_mode_id <= n) and (n <= Write_mode_id)
@@ -86,13 +86,13 @@ feature -- Status report
 	passive_mode: BOOLEAN
 			-- Is passive mode used?
 
-	Supports_multiple_transactions: BOOLEAN is True
+	Supports_multiple_transactions: BOOLEAN = True
 			-- Does resource support multiple transactions per connection?
 			-- (Answer: yes)
 
 feature -- Status setting
 
-	open is
+	open
 			-- Open resource.
 		do
 			if not is_open then
@@ -108,7 +108,7 @@ feature -- Status setting
 			error_code := Connection_refused
 		end
 
-	close is
+	close
 			-- Close.
 		do
 			if is_proxy_used then
@@ -135,7 +135,7 @@ feature -- Status setting
 			error_code := Transmission_error
 		end
 
-	initiate_transfer is
+	initiate_transfer
 			-- Initiate transfer.
 		do
 			if is_proxy_used then
@@ -170,19 +170,19 @@ feature -- Status setting
 			error_code := Connection_refused
 		end
 
-	set_read_mode is
+	set_read_mode
 			-- Set read mode.
 		do
 			mode := Read_mode_id
 		end
 
-	set_write_mode is
+	set_write_mode
 	 		-- Set write mode.
 		do
 			mode := Write_mode_id
 		end
 
-	set_text_mode is
+	set_text_mode
 			-- Set ASCII text transfer mode.
 		do
 			is_binary_mode := False
@@ -190,7 +190,7 @@ feature -- Status setting
 			text_mode_set: not is_binary_mode
 		end
 
-	set_binary_mode is
+	set_binary_mode
 			-- Set binary transfer mode.
 		do
 			is_binary_mode := True
@@ -198,7 +198,7 @@ feature -- Status setting
 			binary_mode_set: is_binary_mode
 		end
 
-	set_active_mode is
+	set_active_mode
 			-- Switch FTP client to active mode.
 		do
 			passive_mode := False
@@ -206,7 +206,7 @@ feature -- Status setting
 			active_mode_set: not passive_mode
 		end
 
-	set_passive_mode is
+	set_passive_mode
 			-- Switch FTP client to passive mode.
 		do
 			passive_mode := True
@@ -214,7 +214,7 @@ feature -- Status setting
 			passive_mode_set: passive_mode
 		end
 
-	reuse_connection (other: DATA_RESOURCE) is
+	reuse_connection (other: DATA_RESOURCE)
 			-- Reuse connection of `other'.
 		local
 			o: like Current
@@ -232,7 +232,7 @@ feature -- Status setting
 
 feature {NONE} -- Status setting
 
-	open_connection is
+	open_connection
 			-- Open the connection.
 		do
 			if is_proxy_used then
@@ -250,7 +250,7 @@ feature {NONE} -- Status setting
 
 feature -- Output
 
-	put (other: DATA_RESOURCE) is
+	put (other: DATA_RESOURCE)
 			-- Write out resource `other'.
 		do
 			if is_proxy_used then
@@ -278,7 +278,7 @@ feature -- Output
 
 feature -- Input
 
-	read is
+	read
 			-- Read packet.
 		do
 			if is_proxy_used then
@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 	last_reply: STRING
 			-- Last received server reply
 
-	send (s: NETWORK_SOCKET; str: STRING) is
+	send (s: NETWORK_SOCKET; str: STRING)
 			-- Send string `str' to socket `s'.
 		require
 			socket_exists: s /= Void
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 			receive (s)
 		end
 
-	receive (s: NETWORK_SOCKET) is
+	receive (s: NETWORK_SOCKET)
 			-- Receive line.
 		require
 			socket_exists: s /= Void
@@ -374,7 +374,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	port_command (p: INTEGER): STRING is
+	port_command (p: INTEGER): STRING
 			-- PORT command
 		require
 			port_positive: p > 0
@@ -393,7 +393,7 @@ feature {NONE} -- Implementation
 			Result.append (str)
 		end
 
-	byte_list (n, num: INTEGER; low_first: BOOLEAN): STRING is
+	byte_list (n, num: INTEGER; low_first: BOOLEAN): STRING
 			-- A comma-separated representation of the `num' lowest bytes of
 			-- `n'
 		require
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_num (str: STRING): BOOLEAN is
+	has_num (str: STRING): BOOLEAN
 			-- Check for response code.
 		require
 			string_exists: str /= Void
@@ -455,7 +455,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dash_check (str: STRING): BOOLEAN is
+	dash_check (str: STRING): BOOLEAN
 			-- Check for dash
 		require
 			string_exists: str /= Void
@@ -469,7 +469,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	reply_code_ok (codes: ARRAY[INTEGER]): BOOLEAN is
+	reply_code_ok (codes: ARRAY[INTEGER]): BOOLEAN
 			-- Is reply code in `codes`?
 		require
 			non_empty_reply: last_reply /= Void and then not last_reply.is_empty
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	get_size (s: STRING) is
+	get_size (s: STRING)
 			-- Extract file size from `s'.
 		require
 			no_error_occurred: not error
@@ -515,7 +515,7 @@ feature {NONE} -- Implementation
 			if resource_size > 0 then is_count_valid := True end
 		end
 
-	setup_passive_mode_socket (data: STRING): NETWORK_STREAM_SOCKET is
+	setup_passive_mode_socket (data: STRING): NETWORK_STREAM_SOCKET
 			-- Create a data socket specified by `data' for the use with
 			-- passive mode.
 		require
@@ -554,7 +554,7 @@ feature {NONE} -- Implementation
 			error_code := Connection_refused
 		end
 
-	login is
+	login
 			-- Log in to server.
 		require
 			opened: is_open
@@ -572,7 +572,7 @@ feature {NONE} -- Implementation
 			logged_in: is_logged_in
 		end
 
-	send_username: BOOLEAN is
+	send_username: BOOLEAN
 			-- Send username. Did it work?
 		local
 			cmd: STRING
@@ -587,7 +587,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	send_password: BOOLEAN is
+	send_password: BOOLEAN
 			-- Send password. Did it work?
 		local
 			cmd: STRING
@@ -602,7 +602,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	send_passive_mode_command: BOOLEAN is
+	send_passive_mode_command: BOOLEAN
 			-- Send passive mode command. Did it work?
 		do
 			send (main_socket, Ftp_passive_mode_command)
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	send_text_mode_command: BOOLEAN is
+	send_text_mode_command: BOOLEAN
 			-- Send ASCII text transfer mode command. Did it work?
 		do
 			send (main_socket, Ftp_text_mode_command)
@@ -625,7 +625,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	send_binary_mode_command: BOOLEAN is
+	send_binary_mode_command: BOOLEAN
 			-- Send binary transfer mode command. Did it work?
 		do
 			send (main_socket, Ftp_binary_mode_command)
@@ -635,7 +635,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	send_transfer_mode_command: BOOLEAN is
+	send_transfer_mode_command: BOOLEAN
 			-- Send transfer mode command. Did it work?
 		do
 			if is_binary_mode then
@@ -645,7 +645,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	send_port_command: BOOLEAN is
+	send_port_command: BOOLEAN
 			-- Send PORT command. Did it work?
 		require
 			data_socket_exists: data_socket /= Void
@@ -660,7 +660,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	send_transfer_command: BOOLEAN is
+	send_transfer_command: BOOLEAN
 			-- Send transfer command. Did it work?
 		local
 			cmd: STRING
@@ -693,7 +693,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

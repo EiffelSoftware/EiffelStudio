@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		""
 	legal: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_width, a_height: INTEGER) is
+	make (a_width, a_height: INTEGER)
 			-- Create an array which has `a_width'
 			-- * `a_height' * 4 items.
 		require
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			new_count: count = height * width * 4
 		end
 
-	make_with_alpha_zero (a_width, a_height: INTEGER) is
+	make_with_alpha_zero (a_width, a_height: INTEGER)
 			-- Create an array which has `a_width'
 			-- * `a_height' * 4 items.
 		require
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			new_count: count = height * width * 4
 		end
 
-	initialize_alpha is
+	initialize_alpha
 			-- Make each alpha entry have value `255'.
 		local
 			i, j: INTEGER
@@ -93,7 +93,7 @@ feature -- Access
 	originating_pixmap: EV_PIXMAP
 		-- Pixmap `Current' was based on, if any.
 
-	rgb_hex_representation: STRING_8 is
+	rgb_hex_representation: STRING_8
 			-- Returns a string of hex codes representing the RGB values
 			-- of all the pixels in pixmap.
 		local
@@ -115,7 +115,7 @@ feature -- Access
 			end
 		end
 
-	pixel (a_x, a_y: INTEGER): EV_COLOR is
+	pixel (a_x, a_y: INTEGER): EV_COLOR
 		require
 			valid_coordinates: valid_coordinates (a_x, a_y)
 		local
@@ -127,28 +127,28 @@ feature -- Access
 			create Result.make_with_8_bit_rgb (a_red, a_green, a_blue)
 		end
 
-	pixel_red_component (a_x, a_y: INTEGER): NATURAL_8 is
+	pixel_red_component (a_x, a_y: INTEGER): NATURAL_8
 		require
 			valid_coordinates: valid_coordinates (a_x, a_y)
 		do
 			Result := get_value_from_position (a_x, a_y, 1)
 		end
 
-	pixel_green_component (a_x, a_y: INTEGER): NATURAL_8 is
+	pixel_green_component (a_x, a_y: INTEGER): NATURAL_8
 		require
 			valid_coordinates: valid_coordinates (a_x, a_y)
 		do
 			Result := get_value_from_position (a_x, a_y, 2)
 		end
 
-	pixel_blue_component (a_x, a_y: INTEGER): NATURAL_8 is
+	pixel_blue_component (a_x, a_y: INTEGER): NATURAL_8
 		require
 			valid_coordinates: valid_coordinates (a_x, a_y)
 		do
 			Result := get_value_from_position (a_x, a_y, 3)
 		end
 
-	pixel_alpha_component (a_x, a_y: INTEGER): NATURAL_8 is
+	pixel_alpha_component (a_x, a_y: INTEGER): NATURAL_8
 		require
 			valid_coordinates: valid_coordinates (a_x, a_y)
 		do
@@ -157,7 +157,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_pixel (a_x, a_y: INTEGER; a_color: EV_COLOR) is
+	set_pixel (a_x, a_y: INTEGER; a_color: EV_COLOR)
 		require
 			valid_coordinates: valid_coordinates (a_x, a_y)
 			a_color_not_void: a_color /= Void
@@ -172,28 +172,28 @@ feature -- Element Change
 			--	a_color.alpha_8_bit.to_character_8)
 		end
 
-	set_pixel_red_component (a_x, a_y: INTEGER; a_intensity: NATURAL_8) is
+	set_pixel_red_component (a_x, a_y: INTEGER; a_intensity: NATURAL_8)
 		require
 			valid_coordinates: valid_coordinates (a_x, a_y)
 		do
 			set_value_from_integer (a_x, a_y, 1, a_intensity)
 		end
 
-	set_pixel_green_component (a_x, a_y: INTEGER; a_intensity: NATURAL_8) is
+	set_pixel_green_component (a_x, a_y: INTEGER; a_intensity: NATURAL_8)
 		require
 			valid_coordinates: valid_coordinates (a_x, a_y)
 		do
 			set_value_from_integer (a_x, a_y, 2, a_intensity)
 		end
 
-	set_pixel_blue_component (a_x, a_y: INTEGER; a_intensity: NATURAL_8) is
+	set_pixel_blue_component (a_x, a_y: INTEGER; a_intensity: NATURAL_8)
 		require
 			valid_coordinates: valid_coordinates (a_x, a_y)
 		do
 			set_value_from_integer (a_x, a_y, 3, a_intensity)
 		end
 
-	set_pixel_alpha_component (a_x, a_y: INTEGER; a_intensity: NATURAL_8) is
+	set_pixel_alpha_component (a_x, a_y: INTEGER; a_intensity: NATURAL_8)
 		require
 			valid_coordinates: valid_coordinates (a_x, a_y)
 		do
@@ -202,7 +202,7 @@ feature -- Element Change
 
 feature -- Contract support
 
-	valid_coordinates (a_x, a_y: INTEGER): BOOLEAN is
+	valid_coordinates (a_x, a_y: INTEGER): BOOLEAN
 		do
 			Result := (a_x >= 1 and then a_x <= width and then
 				a_y >= 1 and then a_y <= height)
@@ -210,7 +210,7 @@ feature -- Contract support
 
 feature {EV_PIXMAP_ACTION_SEQUENCES_IMP} -- Implementation
 
-	Set_originating_pixmap (a_pixmap: EV_PIXMAP) is
+	Set_originating_pixmap (a_pixmap: EV_PIXMAP)
 			-- Sets `originating_pixmap' to `a_pixmap'.
 		do
 			originating_pixmap := a_pixmap
@@ -218,7 +218,7 @@ feature {EV_PIXMAP_ACTION_SEQUENCES_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_value_from_integer (a_x, a_y, a_pos: INTEGER; a_value: NATURAL_8) is
+	set_value_from_integer (a_x, a_y, a_pos: INTEGER; a_value: NATURAL_8)
 		require
 			a_x_positive: a_x > 0;
 			a_y_positive: a_y > 0;
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			array_put (a_value, array_pos)
 		end
 
-	get_value_from_position (a_x, a_y, a_pos: INTEGER): NATURAL_8 is
+	get_value_from_position (a_x, a_y, a_pos: INTEGER): NATURAL_8
 		require
 
 		local
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			Result := array_item (array_pos)
 		end
 
-	hex_code (a_code: NATURAL_8): CHARACTER is
+	hex_code (a_code: NATURAL_8): CHARACTER
 		require
 			valid_code: a_code >= 0 and a_code <= 15
 		do
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 invariant
 	items_number: count = width * height * 4
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

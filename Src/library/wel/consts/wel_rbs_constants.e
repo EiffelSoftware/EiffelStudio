@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common control ReBar Style (TBS) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,35 +10,35 @@ class
 
 feature -- Access
 
-	Rbs_tooltips: INTEGER is
+	Rbs_tooltips: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RBS_TOOLTIPS"
 		end
 
-	Rbs_varheight: INTEGER is
+	Rbs_varheight: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RBS_VARHEIGHT"
 		end
 
-	Rbs_bandborders: INTEGER is
+	Rbs_bandborders: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RBS_BANDBORDERS"
 		end
 
-	Rbs_fixedorder: INTEGER is
+	Rbs_fixedorder: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"RBS_FIXEDORDER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

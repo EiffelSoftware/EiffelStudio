@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encoding of arbitrary objects graphs between sessions of a same program."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Implementation
 
-	write_header (a_list: ARRAYED_LIST [ANY]) is
+	write_header (a_list: ARRAYED_LIST [ANY])
 			-- Write header of storable.
 		local
 			l_dtype_table: like type_table
@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 			write_object_table (a_list)
 		end
 
-	type_table (a_list: ARRAYED_LIST [ANY]): HASH_TABLE [INTEGER, INTEGER] is
+	type_table (a_list: ARRAYED_LIST [ANY]): HASH_TABLE [INTEGER, INTEGER]
 			-- Given a list of objects `a_list', builds a compact table of the
 			-- dynamic type IDs present in `a_list'.
 		require
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			type_table_not_void: Result /= Void
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Displays a textual label.
@@ -44,7 +44,7 @@ create
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and
@@ -52,7 +52,7 @@ feature {NONE} -- Contract support
 				Precursor {EV_FONTABLE} and is_center_aligned
 		end
 
-	is_in_default_state_for_tabs: BOOLEAN is
+	is_in_default_state_for_tabs: BOOLEAN
 		do
 			Result := not is_tabable_from and not is_tabable_to
 		end
@@ -85,13 +85,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_LABEL_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

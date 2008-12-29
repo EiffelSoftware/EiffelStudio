@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Help constants.  See MSDN for more details discussion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,47 +10,47 @@ class
 
 feature -- Access
 
-	Help_context: INTEGER is 1
+	Help_context: INTEGER = 1
 			-- Display topic identified by specified context identifier
 			-- defined in [MAP] section of .hpj file
 
-	Help_quit: INTEGER is 2
+	Help_quit: INTEGER = 2
 
-	Help_index: INTEGER is 3
+	Help_index: INTEGER = 3
 
-	Help_contents: INTEGER is 3
+	Help_contents: INTEGER = 3
 
-	Help_helponhelp: INTEGER is 4
+	Help_helponhelp: INTEGER = 4
 
-	Help_setindex: INTEGER is 5
+	Help_setindex: INTEGER = 5
 
-	Help_setcontents: INTEGER is 5
+	Help_setcontents: INTEGER = 5
 
-	Help_contextpopup: INTEGER is 8
+	Help_contextpopup: INTEGER = 8
 
-	Help_forcefile: INTEGER is 9
+	Help_forcefile: INTEGER = 9
 
-	Help_key: INTEGER is 257
+	Help_key: INTEGER = 257
 
-	Help_command: INTEGER is 258
+	Help_command: INTEGER = 258
 
-	Help_contextmenu: INTEGER is 10
+	Help_contextmenu: INTEGER = 10
 
-	Help_partialkey: INTEGER is 261
+	Help_partialkey: INTEGER = 261
 
-	Help_multikey: INTEGER is 513
+	Help_multikey: INTEGER = 513
 
-	Help_setwinpos: INTEGER is 515
+	Help_setwinpos: INTEGER = 515
 
-	Help_finder: INTEGER is 11
+	Help_finder: INTEGER = 11
 
-	Help_setpopup_pos: INTEGER is 13
+	Help_setpopup_pos: INTEGER = 13
 
-	Help_tcard: INTEGER is 32768
+	Help_tcard: INTEGER = 32768
 
-	Help_wm_help: INTEGER is 12;
+	Help_wm_help: INTEGER = 12;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Motif implementation of a focus label."
 	legal: "See notice at end of class.";
@@ -17,11 +17,11 @@ create
 	
 feature -- Constants
 
-	Label_color: STRING is "LightYellow"
+	Label_color: STRING = "LightYellow"
 
 feature -- Initialization
 
-	initialize (a_parent: COMPOSITE) is
+	initialize (a_parent: COMPOSITE)
 			-- Initialize Current.
 		do
 			make ("Focus_Label", a_parent);
@@ -29,7 +29,7 @@ feature -- Initialization
 			allow_resize
 		end;
 
-	initialize_widget (a_focusable: FOCUSABLE) is
+	initialize_widget (a_focusable: FOCUSABLE)
 			-- Platform specific initialization of the focusable widget.
 		local
 			widget: WIDGET;
@@ -55,7 +55,7 @@ feature -- Initialization
 			end;
 		end;
 
-	initialize_focusables (a_parent: TOOLTIP_INITIALIZER) is
+	initialize_focusables (a_parent: TOOLTIP_INITIALIZER)
 			-- Initialize focusables.
 		local 
 			color: COLOR
@@ -65,7 +65,7 @@ feature -- Initialization
 			label.set_background_color (color)
 		end;
 
-	focus_command: FOCUS_COMMAND is
+	focus_command: FOCUS_COMMAND
 			-- Command called when entering and leaving a focusable widget
 		once
 			create Result.make (Current)
@@ -73,7 +73,7 @@ feature -- Initialization
 
 feature -- Properties
 
-	text: STRING is
+	text: STRING
 			-- Text displayed in Current.
 		do
 			Result := label.text
@@ -81,7 +81,7 @@ feature -- Properties
 
 feature -- Setting
 
-	set_text (new_text: STRING) is
+	set_text (new_text: STRING)
 			-- Set `text' to `new_text'.
 		require
 			non_void_text: new_text /= Void;
@@ -94,7 +94,7 @@ feature -- Setting
 			popup
 		end;
 
-	reset is
+	reset
 			-- Reset `text'.
 		do
 			popdown;
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 	label: LABEL;
 			-- widget label
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

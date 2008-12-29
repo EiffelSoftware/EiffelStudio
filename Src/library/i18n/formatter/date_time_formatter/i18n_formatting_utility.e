@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class that provides some common padding features for formatting"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 			correct_length: Result.count = length
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

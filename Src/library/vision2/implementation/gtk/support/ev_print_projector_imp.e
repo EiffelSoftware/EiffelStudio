@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Projection to a Printer."
 	legal: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 		do
 			base_make (an_interface)
 			--| Hack to prevent invariant violation
@@ -56,14 +56,14 @@ feature {NONE} -- Initialization
 			point_height := interface.context.vertical_resolution
 		end
 
-	initialize is
+	initialize
 		do
 			set_is_initialized (True)
 		end
 
 feature {EV_ANY_I} -- Access
 
-	project is
+	project
 		local
 			i: INTEGER
 			a_cs: C_STRING
@@ -80,7 +80,7 @@ feature {EV_ANY_I} -- Access
 			file.close
 		end
 
-	add_ps_line (ps_code: STRING_GENERAL) is
+	add_ps_line (ps_code: STRING_GENERAL)
 			-- Append `ps_code' postscript to output.
 		do
 			file.put_string (ps_code.to_string_8)
@@ -89,7 +89,7 @@ feature {EV_ANY_I} -- Access
 
 feature {NONE} -- Implementation
 
-	add_footer is
+	add_footer
 			-- Add showpage if printing to printer.
 		do
 			if not interface.context.output_to_file then
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_POSTSCRIPT_PROJECTOR}
 		end
 
-	tmp_print_job_name: STRING is
+	tmp_print_job_name: STRING
 			-- A unique print job file name.
 		do
 			create Result.make (0)
@@ -107,19 +107,19 @@ feature {NONE} -- Implementation
 			Result.append ("_vision2_print_job")
 		end
 
-	mkfifo (a_pathname: POINTER; mode: INTEGER): INTEGER is
+	mkfifo (a_pathname: POINTER; mode: INTEGER): INTEGER
 			-- See man mkfifo.
 		external
 			"C [macro <fcntl.h>]"
 		end
 
-	tmpnam (s: POINTER): POINTER is
+	tmpnam (s: POINTER): POINTER
 			-- See man tmpnam.
 		external
 			"C | <stdio.h>"
 		end
 
-	S_IRWXU: INTEGER is
+	S_IRWXU: INTEGER
 		external
 			"C [macro <fcntl.h>]"
 		alias
@@ -130,7 +130,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PRINT_PROJECTOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

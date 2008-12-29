@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Information given by EiffelVision when a window's configuration %
@@ -30,7 +30,7 @@ feature
 	border_width: INTEGER;
 			-- Width of the window's border
 
-	make (a_widget: WIDGET; a_x, a_y, a_width, a_height, a_border_width: INTEGER) is
+	make (a_widget: WIDGET; a_x, a_y, a_width, a_height, a_border_width: INTEGER)
 			-- Create a context_data for `ConfigureNotify' event.
 		do
 			widget := a_widget;
@@ -53,7 +53,7 @@ feature
 	y: INTEGER;
 			-- Vertical position of the window relative to its parent
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

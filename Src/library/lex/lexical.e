@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Lexical analyzers"
@@ -18,13 +18,13 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Set up lexical analyzer for retrieval.
 		do
 			create last_token
 		end;
 
-	make_new is
+	make_new
 			-- Set up a new lexical analyzer
 		do
 			create last_token;
@@ -36,7 +36,7 @@ feature -- Access
 	last_token: TOKEN;
 			-- Last token read
 
-	token_line_number: INTEGER is
+	token_line_number: INTEGER
 			-- Line number of last token read
 		do
 			Result := line_nb_array.item (token_start)
@@ -44,7 +44,7 @@ feature -- Access
 			Result >= 1
 		end;
 
-	token_column_number: INTEGER is
+	token_column_number: INTEGER
 			-- Column number of last token read
 		do
 			Result := column_nb_array.item (token_start)
@@ -52,14 +52,14 @@ feature -- Access
 			Result >= 1
 		end;
 
-	last_string_read: STRING is
+	last_string_read: STRING
 			-- String value of last token read
 		do
 				-- Create a new string at each call
 			Result := buffer.substring (token_start, token_end)
 		end;
 
-	keyword_code (word: STRING): INTEGER is
+	keyword_code (word: STRING): INTEGER
 			-- Keyword code for `word'.
 			-- -1 if not a keyword.
 		do
@@ -79,7 +79,7 @@ feature -- Access
 			end
 		end;
 
-	last_is_keyword: BOOLEAN is
+	last_is_keyword: BOOLEAN
 			-- Is the last read token a keyword?
 		do
 			Result := is_keyword (last_string_read)
@@ -87,7 +87,7 @@ feature -- Access
 			Result = is_keyword (last_string_read)
 		end;
 
-	last_keyword_code: INTEGER is
+	last_keyword_code: INTEGER
 			-- Keyword code for last token.
 			-- -1 if not a keyword.
 		do
@@ -96,7 +96,7 @@ feature -- Access
 			-- Result = -1 or last_string_read is in keyword_h_table.
 		end;
 
-	last_keyword_text: STRING is
+	last_keyword_text: STRING
 			-- Last read string if recognized as a keyword;
 			-- void otherwise.
 		do
@@ -105,7 +105,7 @@ feature -- Access
 			end
 		end;
 
-	keyword_string (n: INTEGER): STRING is
+	keyword_string (n: INTEGER): STRING
 			-- Keyword corresponding to keyword code `n'
 		local
 			finished: BOOLEAN
@@ -128,7 +128,7 @@ feature -- Access
 	token_type: INTEGER;
 			-- Type of last token read
 
-	No_token: INTEGER is 0;
+	No_token: INTEGER = 0;
 			-- Token type for no token recognized.
 
 	other_possible_tokens: ARRAY [INTEGER];
@@ -139,7 +139,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_separator_type (type : INTEGER) is
+	set_separator_type (type : INTEGER)
 			-- Set `type' to be the type of tokens
 			-- used as separators.
 		do
@@ -150,7 +150,7 @@ feature -- Status setting
 
 feature -- Input
 
-	get_token is
+	get_token
 			-- Read new token matching one of the regular
 			-- expressions of the lexical grammar.
 			-- Recognize longest possible string;
@@ -171,7 +171,7 @@ feature -- Input
 			and token_type /= 0)
 		end;
 
-	buffer_item_code (c: INTEGER): INTEGER is
+	buffer_item_code (c: INTEGER): INTEGER
 		do
 			Result := buffer.item_code (c);
 			if Result = 255 then
@@ -179,7 +179,7 @@ feature -- Input
 			end;
 		end;
 
-	get_any_token is
+	get_any_token
 			-- Try to read a new token.
 			-- Recognize longest possible string.
 			--| Thus, when a token is recognized, this routine keeps
@@ -274,7 +274,7 @@ feature -- Input
 			end
 		end;
 
-	get_short_token is
+	get_short_token
 			-- Read shortest token that matches one of the
 			-- lexical grammar's regular expressions.
 		require
@@ -359,7 +359,7 @@ feature -- Input
 			end
 		end;
 
-	get_fixed_token (l: INTEGER) is
+	get_fixed_token (l: INTEGER)
 			-- Read new token that matches one of the
 			-- lexical grammar's regular expressions.
 			-- Recognize longest possible string with
@@ -447,7 +447,7 @@ feature -- Input
 
 feature -- Output
 
-	trace is
+	trace
 			-- Output information about the analyzer's
 			-- current status.
 		local
@@ -484,7 +484,7 @@ feature -- Output
 
 feature -- Obsolete
 
-	go_on is
+	go_on
 			obsolete "Use ``get_token'' directly"
 		do
 			from
@@ -498,7 +498,7 @@ feature -- Obsolete
 
 feature {LEXICAL} -- Implementation
 
-	initialize is
+	initialize
 			-- Create data structures for the lexical analyzer.
 		do
 			create_buffers (Standard_buffer_size, Standard_line_length);
@@ -511,7 +511,7 @@ feature {LEXICAL} -- Implementation
 feature {LEXICAL, LEX_BUILDER} -- Implementation
 
 	initialize_attributes (d: FIXED_DFA; c: ARRAY [INTEGER];
-					k: HASH_TABLE [INTEGER, STRING]; b: BOOLEAN) is
+					k: HASH_TABLE [INTEGER, STRING]; b: BOOLEAN)
 			-- Set the first four attributes of Current.
 		do
 			dfa := d;
@@ -527,24 +527,24 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	Standard_buffer_size: INTEGER is 10240;
+	Standard_buffer_size: INTEGER = 10240;
 			-- Standard buffer size
 
-	Extra_buffer_size: INTEGER is 4096;
+	Extra_buffer_size: INTEGER = 4096;
 			-- size added to the initial `buffer_size' when the current token
 			-- is too big.
 			-- `Extra_buffer_size' should be less than `Standard_buffer_size'.
 
-	Standard_line_length: INTEGER is 1024;
+	Standard_line_length: INTEGER = 1024;
 			-- Standard line length
 
-	Max_token_length: INTEGER is 256;
+	Max_token_length: INTEGER = 256;
 			-- Maximum length for a token
 
-	Almost_end_of_buffer: INTEGER is 9984;
+	Almost_end_of_buffer: INTEGER = 9984;
 			-- Buffer_size minus Max_token_length
 
-	Close_of_file: INTEGER is 255;
+	Close_of_file: INTEGER = 255;
 			-- End-of-file indicator on some platforms
 
 	categories_table: ARRAY [INTEGER];
@@ -573,13 +573,13 @@ feature {NONE} -- Implementation
 	read_index: INTEGER;
 			-- Current position in buffer
 
-	reset_data is
+	reset_data
 		do
 			read_index := 1;
 			token_end := buffer_size
 		end;
 
-	is_keyword (word: STRING): BOOLEAN is
+	is_keyword (word: STRING): BOOLEAN
 			-- Is `word' a keyword included in the
 			-- last token type read?
 		do
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

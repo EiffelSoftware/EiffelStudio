@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_ITEM."
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ feature {NONE} -- Implementation
 feature -- Event handling
 
 
-	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer moves.
 		do
 			Result := implementation.pointer_motion_actions
@@ -34,7 +34,7 @@ feature -- Event handling
 		end
 
 
-	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is pressed.
 		do
 			Result := implementation.pointer_button_press_actions
@@ -43,7 +43,7 @@ feature -- Event handling
 		end
 
 
-	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer is double clicked.
 		do
 			Result := implementation.pointer_double_press_actions
@@ -51,7 +51,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

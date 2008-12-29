@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XMappingEvent."
@@ -19,19 +19,19 @@ create
 
 feature -- Access
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of keycode changed
 		do
 			Result := c_event_count (handle)
 		end;
 
-	request: INTEGER is
+	request: INTEGER
 			-- Request value
 		do
 			Result := c_event_request (handle)
 		end;
 
-	first_keycode: INTEGER is
+	first_keycode: INTEGER
 			-- First keycode that was changed
 		do
 			Result := c_event_first_keycode (handle)
@@ -39,22 +39,22 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_event_count (event_ptr: POINTER): INTEGER is
+	c_event_count (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XMappingEvent *): EIF_INTEGER"
 		end;
 
-	c_event_request (event_ptr: POINTER): INTEGER is
+	c_event_request (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XMappingEvent *): EIF_INTEGER"
 		end;
 
-	c_event_first_keycode (event_ptr: POINTER): INTEGER is
+	c_event_first_keycode (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XMappingEvent *): EIF_INTEGER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

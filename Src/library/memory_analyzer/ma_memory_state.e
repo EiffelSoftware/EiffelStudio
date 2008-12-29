@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represent a memory state, it contain the informations of all type names and the count of them."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_memory_map (a_memory_map: HASH_TABLE [INTEGER, INTEGER]) is
+	make_with_memory_map (a_memory_map: HASH_TABLE [INTEGER, INTEGER])
 			-- Initialize `Current'.
 			--| a_memory_map:  type_id -> number of instances of type_id present in system
 		require
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Measurrment
 
-	item_found_count: INTEGER is
+	item_found_count: INTEGER
 			-- after routine found_type, return the count of founded item
 		require
 			founded_type_not_void: founded_type /= Void
@@ -53,13 +53,13 @@ feature -- Measurrment
 			Result := item_founded.count_in_system
 		end
 
-	memory_used_eiffel: INTEGER is
+	memory_used_eiffel: INTEGER
 			-- used eiffel memory of this state
 		do
 			Result := memory_eiffel_used
 		end
 
-	memory_used_c: INTEGER is
+	memory_used_c: INTEGER
 			-- used c memory of this state
 		do
 			Result := memory_c_used
@@ -68,7 +68,7 @@ feature -- Measurrment
 
 feature -- Status report
 
-	found_type (a_type_name: STRING): BOOLEAN is
+	found_type (a_type_name: STRING): BOOLEAN
 			-- if the state have the type of type_name
 		do
 			from
@@ -84,7 +84,7 @@ feature -- Status report
 			end
 		end
 
-	founded_type: like item_founded is
+	founded_type: like item_founded
 			-- the founded type by routine found_type
 		do
 			Result := item_founded
@@ -92,7 +92,7 @@ feature -- Status report
 			Result = item_founded
 		end
 
-	objects_total_count: INTEGER is
+	objects_total_count: INTEGER
 			-- the total number of objects
 		do
 			Result := objects_count_number
@@ -100,7 +100,7 @@ feature -- Status report
 
 feature -- Compare
 
-	compare (a_state: like Current): DS_ARRAYED_LIST [like state] is
+	compare (a_state: like Current): DS_ARRAYED_LIST [like state]
 			-- compare Current with a_state
 			-- result indicate type name and changed amount
 		require
@@ -130,7 +130,7 @@ feature -- Compare
 
 feature {NONE} -- Implementation
 
-	objects_count (a_table: HASH_TABLE [INTEGER, INTEGER]): INTEGER is
+	objects_count (a_table: HASH_TABLE [INTEGER, INTEGER]): INTEGER
 			-- count the total objects
 		require
 			a_table_not_void: a_table /= Void
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 	objects_states: ARRAYED_LIST [like state];
 			-- the count the objects, first argument is type name, second argument is the object instances count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

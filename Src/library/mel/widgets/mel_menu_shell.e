@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Shell widget meant to contain popup and popdown menu panes. %
@@ -30,7 +30,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE)
 			-- Create a motif menu shell widget.
 		local
 			widget_name: ANY
@@ -47,7 +47,7 @@ feature -- Initialization
 			set_default
 		end;
 
-	make_from_existing (a_screen_object: POINTER; a_parent: MEL_COMPOSITE) is
+	make_from_existing (a_screen_object: POINTER; a_parent: MEL_COMPOSITE)
 			-- Create a mel widget from existing widget `a_screen_object'.
 		do
 			screen_object := a_screen_object;
@@ -58,7 +58,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	button_font_list: MEL_FONT_LIST is
+	button_font_list: MEL_FONT_LIST
 			-- Font list used for the button children
 		require
 			exists: not is_destroyed
@@ -69,7 +69,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	default_font_list: MEL_FONT_LIST is
+	default_font_list: MEL_FONT_LIST
 			-- Font list used for the children
 		require
 			exists: not is_destroyed
@@ -80,7 +80,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	label_font_list: MEL_FONT_LIST is
+	label_font_list: MEL_FONT_LIST
 			-- Font list used for the label children
 		require
 			exists: not is_destroyed
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_button_font_list (a_font_list: MEL_FONT_LIST) is
+	set_button_font_list (a_font_list: MEL_FONT_LIST)
 			-- Set `button_font_list' to `a_font_list'.
 		require
 			exists: not is_destroyed;
@@ -102,7 +102,7 @@ feature -- Status setting
 			set_xm_font_list (screen_object, XmNbuttonFontList, a_font_list)
 		end;
 
-	set_label_font_list (a_font_list: MEL_FONT_LIST) is
+	set_label_font_list (a_font_list: MEL_FONT_LIST)
 			-- Set `label_font_list' to `a_font_list'.
 		require
 			exists: not is_destroyed
@@ -114,14 +114,14 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	xm_create_menu_shell (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_menu_shell (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/MenuShell.h>"
 		alias
 			"XmCreateMenuShell"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

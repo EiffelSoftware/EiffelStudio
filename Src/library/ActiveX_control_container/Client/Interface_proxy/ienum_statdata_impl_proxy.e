@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IEnumSTATDATA' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_ienum_statdata_impl_proxy_from_pointer(cpp_obj)
@@ -27,7 +27,7 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	next (celt: INTEGER; rgelt: ARRAY [TAG_STATDATA_RECORD]; pcelt_fetched: INTEGER_REF) is
+	next (celt: INTEGER; rgelt: ARRAY [TAG_STATDATA_RECORD]; pcelt_fetched: INTEGER_REF)
 			-- No description available.
 			-- `celt' [in].  
 			-- `rgelt' [out].  
@@ -36,20 +36,20 @@ feature -- Basic Operations
 			ccom_next (initializer, celt, rgelt, pcelt_fetched)
 		end
 
-	skip (celt: INTEGER) is
+	skip (celt: INTEGER)
 			-- No description available.
 			-- `celt' [in].  
 		do
 			ccom_skip (initializer, celt)
 		end
 
-	reset is
+	reset
 			-- No description available.
 		do
 			ccom_reset (initializer)
 		end
 
-	clone1 (ppenum: CELL [IENUM_STATDATA_INTERFACE]) is
+	clone1 (ppenum: CELL [IENUM_STATDATA_INTERFACE])
 			-- No description available.
 			-- `ppenum' [out].  
 		do
@@ -58,7 +58,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_ienum_statdata_impl_proxy(initializer)
@@ -66,49 +66,49 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_next (cpp_obj: POINTER; celt: INTEGER; rgelt: ARRAY [TAG_STATDATA_RECORD]; pcelt_fetched: INTEGER_REF) is
+	ccom_next (cpp_obj: POINTER; celt: INTEGER; rgelt: ARRAY [TAG_STATDATA_RECORD]; pcelt_fetched: INTEGER_REF)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IEnumSTATDATA_impl_proxy %"ecom_control_library_IEnumSTATDATA_impl_proxy_s.h%"](EIF_INTEGER,ecom_control_library::tagSTATDATA *,EIF_OBJECT)"
 		end
 
-	ccom_skip (cpp_obj: POINTER; celt: INTEGER) is
+	ccom_skip (cpp_obj: POINTER; celt: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IEnumSTATDATA_impl_proxy %"ecom_control_library_IEnumSTATDATA_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_reset (cpp_obj: POINTER) is
+	ccom_reset (cpp_obj: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IEnumSTATDATA_impl_proxy %"ecom_control_library_IEnumSTATDATA_impl_proxy_s.h%"]()"
 		end
 
-	ccom_clone1 (cpp_obj: POINTER; ppenum: CELL [IENUM_STATDATA_INTERFACE]) is
+	ccom_clone1 (cpp_obj: POINTER; ppenum: CELL [IENUM_STATDATA_INTERFACE])
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IEnumSTATDATA_impl_proxy %"ecom_control_library_IEnumSTATDATA_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
-	ccom_delete_ienum_statdata_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_ienum_statdata_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IEnumSTATDATA_impl_proxy %"ecom_control_library_IEnumSTATDATA_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_ienum_statdata_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_ienum_statdata_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IEnumSTATDATA_impl_proxy %"ecom_control_library_IEnumSTATDATA_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IEnumSTATDATA_impl_proxy %"ecom_control_library_IEnumSTATDATA_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

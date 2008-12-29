@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Containers storing testable components"
 	legal: "See notice at end of class."
@@ -32,14 +32,14 @@ deferred class TEST_CONTAINER inherit
 
 feature -- Measurement
 
-	run_count: INTEGER is
+	run_count: INTEGER
 			-- Number of runs for selected test
 		require
 			valid_index: valid_test_index (index)
 		deferred
 		end
 	 
-	total_run_count: INTEGER is
+	total_run_count: INTEGER
 			-- Number of total runs
 		require
 			not_empty: not is_empty
@@ -60,14 +60,14 @@ feature -- Measurement
 			index_unchanged: index = old index
 		end
 
-	 contained_passed_tests: INTEGER is
+	 contained_passed_tests: INTEGER
 	 		-- Number of contained passed tests
 		do
 			calculate_results
 			Result := passed_count
 		end
 
-	 contained_failed_tests: INTEGER is
+	 contained_failed_tests: INTEGER
 	 		-- Number of contained failed tests
 		do
 			calculate_results
@@ -76,7 +76,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	has (t: TESTABLE): BOOLEAN is
+	has (t: TESTABLE): BOOLEAN
 			-- is `t' in container?
 		require
 			test_exists: t /= Void
@@ -86,13 +86,13 @@ feature -- Status report
 	stop_on_failure: BOOLEAN
 			-- Does a failure stop execution?
 
-	failure_stop: BOOLEAN is
+	failure_stop: BOOLEAN
 			-- Shall execution be stopped for selected test?
 		do
 			Result := not selected_test.has_passed (run_count)
 		end
 
-	has_execution_time (n: INTEGER): BOOLEAN is
+	has_execution_time (n: INTEGER): BOOLEAN
 			-- Has run `n' of any test a recorded execution time?
 		local
 			old_idx: INTEGER
@@ -116,7 +116,7 @@ feature -- Status report
 			index_unchanged: index = old index
 		end
 	 
-	has_any_execution_time: BOOLEAN is
+	has_any_execution_time: BOOLEAN
 			-- Has any run of any test a recorded execution time?
 		local
 			old_idx: INTEGER
@@ -137,7 +137,7 @@ feature -- Status report
 			index_unchanged: index = old index
 		end
 	 
-	has_passed (n: INTEGER): BOOLEAN is
+	has_passed (n: INTEGER): BOOLEAN
 			-- Has run `n' of all tests passed?
 		local
 			old_idx: INTEGER
@@ -162,7 +162,7 @@ feature -- Status report
 			index_unchanged: index = old index
 		end
 	
-	is_exception (n: INTEGER): BOOLEAN is
+	is_exception (n: INTEGER): BOOLEAN
 			-- Did run `n' throw an exception in any test?
 		local
 			old_idx: INTEGER
@@ -190,7 +190,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_stop is
+	enable_stop
 			-- Enable stop on failure.
 		do
 			stop_on_failure := True
@@ -198,7 +198,7 @@ feature -- Status setting
 			enabled: stop_on_failure
 		end
 
-	disable_stop is
+	disable_stop
 			-- Disable stop on failure.
 		do
 			stop_on_failure := False
@@ -206,7 +206,7 @@ feature -- Status setting
 			disabled: not stop_on_failure
 		end
 
-	set_standard_output (o: IO_MEDIUM) is
+	set_standard_output (o: IO_MEDIUM)
 			-- Set standard output to `o'.
 		local
 			old_idx: INTEGER
@@ -223,7 +223,7 @@ feature -- Status setting
 
 feature -- Output
 
-	put_summary (f: LOG_FACILITY) is
+	put_summary (f: LOG_FACILITY)
 			-- Output test summary to `f'.
 		local
 			old_test: INTEGER
@@ -240,7 +240,7 @@ feature -- Output
 			select_test (old_test)
 		end
 	 
-	 put_failure_information (f: LOG_FACILITY; n: INTEGER) is
+	 put_failure_information (f: LOG_FACILITY; n: INTEGER)
 	 		-- Output failure information for run `n' to `f'.
 		local
 			old_test: INTEGER
@@ -259,7 +259,7 @@ feature -- Output
 			select_test (old_test)
 		end
 	 
-	 put_timing_information (f: LOG_FACILITY; n: INTEGER) is
+	 put_timing_information (f: LOG_FACILITY; n: INTEGER)
 	 		-- Output timing information for run `n' to `f'.
 		local
 			old_test: INTEGER
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 	failed_count: INTEGER
 			-- Cached number of failed tests
 
-	calculate_results is
+	calculate_results
 			-- Calculate number of passed and failed tests.
 		local
 			old_idx: INTEGER
@@ -319,7 +319,7 @@ invariant
 	count_constraint: cached implies
 			test_count = contained_passed_tests + contained_failed_tests
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Semaphore synchronization object, allows threads to access global %
 		%data through critical sections."

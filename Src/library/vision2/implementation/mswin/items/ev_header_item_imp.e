@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent EiffelVision2 header items. Mswin Implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -55,7 +55,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Make `Current' with `interface' `an_interface'.
 		do
 			wel_make
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			align_text_left
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_width (80)
@@ -89,7 +89,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_parent_imp (par_imp: like parent_imp) is
+	set_parent_imp (par_imp: like parent_imp)
 			-- Assign 'par_imp' to `parent_imp'.
 		do
 			if par_imp /= Void then
@@ -99,14 +99,14 @@ feature -- Status setting
 			end
 		end
 
-	wel_set_text (a_string: STRING_GENERAL) is
+	wel_set_text (a_string: STRING_GENERAL)
 			-- Set the text of the item to `a_string'
 		do
 			Precursor {WEL_HD_ITEM} (a_string)
 			refresh
 		end
 
-	set_width (value: INTEGER) is
+	set_width (value: INTEGER)
 			-- Sets width of item with `value'
 			-- Also updates `mask'
 		do
@@ -114,7 +114,7 @@ feature -- Status setting
 			refresh
 		end
 
-	set_minimum_width (a_minimum_width: INTEGER) is
+	set_minimum_width (a_minimum_width: INTEGER)
 			-- Assign `a_minimum_width' in pixels to `minimum_width'.
 			-- If `width' is less than `a_minimum_width', resize.
 		do
@@ -124,7 +124,7 @@ feature -- Status setting
 			end
 		end
 
-	set_maximum_width (a_maximum_width: INTEGER) is
+	set_maximum_width (a_maximum_width: INTEGER)
 			-- Assign `a_maximum_width' in pixels to `maximum_width'.
 			-- If `width' is greater than `a_maximum_width', resize.
 		do
@@ -134,7 +134,7 @@ feature -- Status setting
 			end
 		end
 
-	resize_to_content is
+	resize_to_content
 			-- Resize `Current' to fully display both `pixmap' and `text'.
 			-- As size of `text' is dependent on `font' of `parent', `Current'
 			-- must be parented.
@@ -142,7 +142,7 @@ feature -- Status setting
 			parent_imp.resize_item_to_content (Current)
 		end
 
-	set_pixmap (p: EV_PIXMAP) is
+	set_pixmap (p: EV_PIXMAP)
 			-- Assign `p' to the displayed pixmap.
 		do
 			if private_pixmap /= Void then
@@ -155,7 +155,7 @@ feature -- Status setting
 			end
 		end
 
-	set_pixmap_in_parent is
+	set_pixmap_in_parent
 			-- Make `pix' the new pixmap of `Current'.
 		local
 			image_list: EV_IMAGE_LIST_IMP
@@ -177,7 +177,7 @@ feature -- Status setting
 			parent_imp.refresh_item (Current)
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove the pixmap from `Current'.
 		do
 			Precursor {EV_ITEM_IMP}
@@ -186,7 +186,7 @@ feature -- Status setting
 			end
 		end
 
-	align_text_center is
+	align_text_center
 			-- Display `text' centered.
 		local
 			l_format: INTEGER
@@ -203,7 +203,7 @@ feature -- Status setting
 			refresh
 		end
 
-	align_text_right is
+	align_text_right
 			-- Display `text' right aligned.
 		local
 			l_format: INTEGER
@@ -220,7 +220,7 @@ feature -- Status setting
 			refresh
 		end
 
-	align_text_left is
+	align_text_left
 			-- Display `text' left aligned.
 		local
 			l_format: INTEGER
@@ -237,13 +237,13 @@ feature -- Status setting
 			refresh
 		end
 
-	enable_user_resize is
+	enable_user_resize
 			-- Permit `Current' from being resized by users.
 		do
 			user_can_resize := True
 		end
 
-	disable_user_resize is
+	disable_user_resize
 			-- Prevent `Current' from being resized by users.
 		do
 			user_can_resize := False
@@ -251,34 +251,34 @@ feature -- Status setting
 
 feature -- Measurement
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		do
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		do
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
 		do
 		end
 
 feature {NONE} -- implementation
 
-	refresh is
+	refresh
 			-- Refresh attributes of `Current' in `parent'.
 		do
 			if parent_imp /= Void then
@@ -290,7 +290,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_HEADER_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

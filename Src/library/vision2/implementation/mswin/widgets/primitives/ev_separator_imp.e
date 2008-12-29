@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision horizontal separator. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,14 +38,14 @@ inherit
 
 feature {NONE} -- Initialization
 
- 	make (an_interface: like interface) is
+ 	make (an_interface: like interface)
  			-- Make `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
 			wel_make (default_parent, "EV_SEPARATOR")
  		end
 
-	initialize is
+	initialize
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			disable_tabable_from
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- WEL Implementation
 
-	background_brush: WEL_BRUSH is
+	background_brush: WEL_BRUSH
 			-- Current window background color used to refresh the window when
 			-- requested by the WM_ERASEBKGND windows message.
 			-- By default there is no background.
@@ -64,14 +64,14 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style of `Current'.
 		do
 			Result := Ws_child + Ws_visible + Ws_clipchildren
 				+ Ws_clipsiblings
 		end
 
-	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
 			-- the `paint_dc'. `invalid_rect' defines
@@ -97,7 +97,7 @@ feature {EV_ANY_I}
 
 	interface: EV_SEPARATOR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

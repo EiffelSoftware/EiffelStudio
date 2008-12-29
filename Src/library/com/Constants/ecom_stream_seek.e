@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "IStorage and IStream Seek flags"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	Stream_seek_set: INTEGER is
+	Stream_seek_set: INTEGER
 			-- Sets seek position relative to
 			-- beginning of stream
 		external
@@ -20,7 +20,7 @@ feature -- Access
 			"STREAM_SEEK_SET"
 		end
 		
-	Stream_seek_cur: INTEGER is
+	Stream_seek_cur: INTEGER
 			-- Sets seek position relative to
 			-- current position of stream
 		external
@@ -29,7 +29,7 @@ feature -- Access
 			"STREAM_SEEK_CUR"
 		end
 		
-	Stream_seek_end: INTEGER is
+	Stream_seek_end: INTEGER
 			-- Sets seek position relative to
 			-- current end of stream
 		external
@@ -38,7 +38,7 @@ feature -- Access
 			"STREAM_SEEK_END"
 		end
 
-	is_valid_seek (seek: INTEGER): BOOLEAN is
+	is_valid_seek (seek: INTEGER): BOOLEAN
 			-- Is `seek' a valid IStorage and IStream seek flag?
 		do
 			Result := seek = Stream_seek_set or
@@ -46,7 +46,7 @@ feature -- Access
 						seek = Stream_seek_end
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

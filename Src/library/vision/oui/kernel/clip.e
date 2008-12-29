@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of a clip"
 	legal: "See notice at end of class.";
@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Element change
 
-	set (a_coin: COORD_XY; a_width, a_height: INTEGER) is
+	set (a_coin: COORD_XY; a_width, a_height: INTEGER)
 			-- Set the clip
 		require
 			a_coin_exists: a_coin /= Void;
@@ -35,7 +35,7 @@ feature -- Element change
 			height := a_height
 		end; 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

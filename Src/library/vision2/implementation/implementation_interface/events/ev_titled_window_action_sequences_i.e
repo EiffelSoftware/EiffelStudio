@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_WINDOW_I."
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Event handling
 
-	maximize_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	maximize_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when window is maximized.
 		do
 			if maximize_actions_internal = Void then
@@ -26,7 +26,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_maximize_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_maximize_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a maximized action sequence.
 		deferred
 		end
@@ -36,7 +36,7 @@ feature {EV_ANY_I} -- Implementation
 		
 feature -- Event handling
 
-	minimize_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	minimize_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when window is minimized.
 		do
 			if minimize_actions_internal = Void then
@@ -50,7 +50,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_minimize_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_minimize_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a minimized action sequence.
 		deferred
 		end
@@ -60,7 +60,7 @@ feature {EV_ANY_I} -- Implementation
 			
 feature -- Event handling
 
-	restore_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	restore_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when window is leaves `minimized'
 			-- or `maximized' state.
 		do
@@ -75,7 +75,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_restore_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_restore_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a minimized action sequence.
 		deferred
 		end
@@ -83,7 +83,7 @@ feature {EV_ANY_I} -- Implementation
 	restore_actions_internal: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Implementation of once per object `minimize_actions'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

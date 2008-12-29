@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Object to share image lists among all vision2 controls"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,38 +18,38 @@ inherit
 
 feature -- Access
 
-	get_imagelist_with_size (a_width: INTEGER; a_height: INTEGER): EV_IMAGE_LIST_IMP is
+	get_imagelist_with_size (a_width: INTEGER; a_height: INTEGER): EV_IMAGE_LIST_IMP
 			-- Retrieve an imagelist for trees and lists with size equal to `a_width'x`a_height'.
 			-- Call `destroy_imagelist' when the result of this function is no more needed.
 		do
 			Result := get_specific_imagelist_with_size (classic_imagelists, a_width, a_height)
 		end
 
-	destroy_imagelist (an_imagelist: EV_IMAGE_LIST_IMP) is
+	destroy_imagelist (an_imagelist: EV_IMAGE_LIST_IMP)
 			-- Destroy `an_imagelist' if it not referened in another control.
 		do
 			destroy_specific_imagelist (classic_imagelists, an_imagelist)
 		end
 
-	get_toolbar_default_imagelist_with_size (a_width: INTEGER; a_height: INTEGER): EV_IMAGE_LIST_IMP is
+	get_toolbar_default_imagelist_with_size (a_width: INTEGER; a_height: INTEGER): EV_IMAGE_LIST_IMP
 			-- Retrieve a "default" imagelist for toolbar with size equal to `a_width'x`a_height'.
 		do
 			Result := get_specific_imagelist_with_size (toolbar_default_imagelists, a_width, a_height)
 		end
 
-	destroy_toolbar_default_imagelist (an_imagelist: EV_IMAGE_LIST_IMP) is
+	destroy_toolbar_default_imagelist (an_imagelist: EV_IMAGE_LIST_IMP)
 			-- Destroy `an_imagelist' if it not referened in another control.
 		do
 			destroy_specific_imagelist (toolbar_default_imagelists, an_imagelist)
 		end
 
-	get_toolbar_hot_imagelist_with_size (a_width: INTEGER; a_height: INTEGER): EV_IMAGE_LIST_IMP is
+	get_toolbar_hot_imagelist_with_size (a_width: INTEGER; a_height: INTEGER): EV_IMAGE_LIST_IMP
 			-- Retrieve a "hot" imagelist for toolbar with size equal to `a_width'x`a_height'.
 		do
 			Result := get_specific_imagelist_with_size (toolbar_hot_imagelists, a_width, a_height)
 		end
 
-	destroy_toolbar_hot_imagelist (an_imagelist: EV_IMAGE_LIST_IMP) is
+	destroy_toolbar_hot_imagelist (an_imagelist: EV_IMAGE_LIST_IMP)
 			-- Destroy `an_imagelist' if it not referened in another control.
 		do
 			destroy_specific_imagelist (toolbar_hot_imagelists, an_imagelist)
@@ -57,7 +57,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	get_specific_imagelist_with_size (imagelists: like toolbar_default_imagelists; a_width: INTEGER; a_height: INTEGER): EV_IMAGE_LIST_IMP is
+	get_specific_imagelist_with_size (imagelists: like toolbar_default_imagelists; a_width: INTEGER; a_height: INTEGER): EV_IMAGE_LIST_IMP
 			-- Retrieve a imagelist with size equal to `a_width'x`a_height' from `imagelists'.
 		local
 			imagelists_item: EV_IMAGE_LIST_IMP
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	destroy_specific_imagelist (imagelists: like toolbar_default_imagelists; an_imagelist: EV_IMAGE_LIST_IMP) is
+	destroy_specific_imagelist (imagelists: like toolbar_default_imagelists; an_imagelist: EV_IMAGE_LIST_IMP)
 			-- Destroy `an_imagelist' if it not referened in another control.
 		do
 				-- Check that this imageList belongs to us!
@@ -110,25 +110,25 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	classic_imagelists: ARRAYED_LIST [EV_IMAGE_LIST_IMP] is
+	classic_imagelists: ARRAYED_LIST [EV_IMAGE_LIST_IMP]
 			-- List of all image lists for lists and trees used in this program.
 		once
 			create Result.make(2)
 		end
 
-	toolbar_default_imagelists: ARRAYED_LIST [EV_IMAGE_LIST_IMP] is
+	toolbar_default_imagelists: ARRAYED_LIST [EV_IMAGE_LIST_IMP]
 			-- List of all "default" image lists for toolbars used in this program.
 		once
 			create Result.make(2)
 		end
 
-	toolbar_hot_imagelists: ARRAYED_LIST [EV_IMAGE_LIST_IMP] is
+	toolbar_hot_imagelists: ARRAYED_LIST [EV_IMAGE_LIST_IMP]
 			-- List of all "hot" image lists for toolbars used in this program.
 		once
 			create Result.make(2)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

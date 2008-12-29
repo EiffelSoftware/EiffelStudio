@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision dynamic list. Implementation interface."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Current item
 		require
 			readable: index > 0 and then index <= count
@@ -30,7 +30,7 @@ feature -- Access
 	index: INTEGER
 			-- Index of current position
 
-	cursor: EV_DYNAMIC_LIST_CURSOR [G] is
+	cursor: EV_DYNAMIC_LIST_CURSOR [G]
 			-- Current cursor position.
 		local
 			an_item: like item
@@ -43,7 +43,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	i_th (i: INTEGER): G is
+	i_th (i: INTEGER): G
 			-- Item at `i'-th position.
 		require
 			i_within_bounds: i > 0 and then i <= count
@@ -52,13 +52,13 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		do
 			Result := (index = 0) or (index = count + 1)
 		end
 
-	index_of (v: like item; i: INTEGER): INTEGER is
+	index_of (v: like item; i: INTEGER): INTEGER
 			-- Index of i_th item `v', if present.
 			-- As dynamic list descendants are all sets,
 			-- Result will be zero for all values of `i'
@@ -82,7 +82,7 @@ feature -- Access
 			end
 		end
 
-	retrieve_item_by_data (data: ANY; should_compare_objects: BOOLEAN): G is
+	retrieve_item_by_data (data: ANY; should_compare_objects: BOOLEAN): G
 			-- `Result' is first item in `Current' with data
 			-- matching `some_data'. Compare objects if
 			-- `should_compare_objects' otherwise compare references.
@@ -107,7 +107,7 @@ feature -- Access
 			go_to (c)
 		end
 
-	retrieve_items_by_data (data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [G] is
+	retrieve_items_by_data (data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [G]
 			-- `Result' is all items in `Current' with data
 			-- matching `some_data'. Compare objects if
 			-- `should_compare_objects' otherwise compare references.
@@ -133,14 +133,14 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items.
 		deferred
 		end
 
 feature -- Status report
 
-	valid_cursor (p: CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 			-- This is True if `p' conforms to EV_DYNAMIC_LIST_CURSOR and
 			-- if it points to an item, `Current' must have it.
@@ -152,7 +152,7 @@ feature -- Status report
 				(dlc.item = Void or else has (dlc.item))
 		end
 
-	has (v: like item): BOOLEAN is
+	has (v: like item): BOOLEAN
 			-- Does structure contain `v'?
 		require
 			v_not_void: v /= Void
@@ -171,7 +171,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	start is
+	start
 			-- Move cursor to first position.
 		do
 			index := 1
@@ -179,7 +179,7 @@ feature -- Cursor movement
 			index_on_first: index = 1
 		end
 
-	back is
+	back
 			-- Move to previous item.
 		require
 			not_before: index > 0
@@ -187,7 +187,7 @@ feature -- Cursor movement
 			index := index - 1
 		end
 
-	forth is
+	forth
 			-- Move cursor to next position.
 		require
 			not_after: index <= count
@@ -195,7 +195,7 @@ feature -- Cursor movement
 			index := index + 1
 		end
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to `i'-th position.
 		do
 			index := i
@@ -206,7 +206,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		local
 			dlc: EV_DYNAMIC_LIST_CURSOR [G]
@@ -224,7 +224,7 @@ feature -- Cursor movement
 			end
 		end
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor `i' positions.
 		do
 			index := index + i
@@ -237,7 +237,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	append (s: SEQUENCE [G]) is
+	append (s: SEQUENCE [G])
 			-- Append a copy of `s'. Do not move cursor.
 		require
 			sequence_not_void: s /= Void
@@ -254,7 +254,7 @@ feature -- Element change
 			count_increased: old count + s.count = count
 		end
 
-	extend (v: like item) is
+	extend (v: like item)
 			-- Add `v' to end. Do not move cursor.
 		require
 			v_not_void: v /= Void
@@ -267,7 +267,7 @@ feature -- Element change
 			has_v: has (v)
 		end
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace current item by `v'.
 		require
 			writable: index > 0 and then index <= count
@@ -279,7 +279,7 @@ feature -- Element change
 			has_v: has (v)
 		end
 
-	put_front (v: like item) is
+	put_front (v: like item)
 			-- Add `v' at beginning. Do not move cursor.
 		require
 			v_not_void: v /= Void
@@ -292,7 +292,7 @@ feature -- Element change
 			has_v: has (v)
 		end
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add `v' to the right of cursor position. Do not move cursor.
 		require
 			v_not_void: v /= Void
@@ -302,7 +302,7 @@ feature -- Element change
 			has_v: has (v)
 		end
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add `v' to the left of cursor position. Do not move cursor.
 		require
 			v_not_void: v /= Void
@@ -313,7 +313,7 @@ feature -- Element change
 			has_v: has (v)
 		end
 
-	put_i_th (v: like item; i: INTEGER) is
+	put_i_th (v: like item; i: INTEGER)
 			-- Replace item at `i'-th position by `v'.
 		require
 			valid_index: i > 0 and i <= count
@@ -325,7 +325,7 @@ feature -- Element change
 			has_v: has (v)
 		end
 
-	merge_left (other: like interface) is
+	merge_left (other: like interface)
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		local
@@ -343,7 +343,7 @@ feature -- Element change
 			end
 		end
 
-	merge_right (other: like interface) is
+	merge_right (other: like interface)
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		local
@@ -362,7 +362,7 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove `v' if present. Do not move cursor, except if
 			-- cursor was on `v', move to right neighbor.
 		local
@@ -391,7 +391,7 @@ feature -- Removal
 			not_has_v: not has (v)
 		end
 
-	remove is
+	remove
 			-- Remove current item. Move cursor to right neighbor
 			-- (or `after' if no right neighbor).
 		require
@@ -405,7 +405,7 @@ feature -- Removal
 			not_has_v: not has (old item)
 		end
 
-	remove_left is
+	remove_left
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		require
@@ -418,7 +418,7 @@ feature -- Removal
 			left_neighbor_removed: not has (old i_th (index - 1))
 		end
 
-	remove_right is
+	remove_right
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		require
@@ -429,7 +429,7 @@ feature -- Removal
 			right_neighbor_removed: not has (old i_th (index + 1))
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		local
 			l_index: INTEGER
@@ -450,7 +450,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		require
 			i_within_bounds: i > 0 and i <= count + 1
@@ -459,7 +459,7 @@ feature {NONE} -- Implementation
 			count_increased: count = old count + 1
 		end
 
-	remove_i_th (i: INTEGER) is
+	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		require
 			i_within_bounds: i > 0 and i <= count
@@ -476,7 +476,7 @@ invariant
 	index_within_bounds: is_usable implies (index >= 0 and then
 		index <= count + 1)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

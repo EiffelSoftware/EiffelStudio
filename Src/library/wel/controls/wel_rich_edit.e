@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A control in which the user can enter and edit rich text.
 
@@ -85,7 +85,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_parent: WEL_WINDOW; a_name: STRING_GENERAL;
-			a_x, a_y, a_width, a_height, an_id: INTEGER) is
+			a_x, a_y, a_width, a_height, an_id: INTEGER)
 			-- Make a rich edit control.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -104,19 +104,19 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	selection_start: INTEGER is
+	selection_start: INTEGER
 			-- Index of the first character selected
 		do
 			Result := selection.minimum
 		end
 
-	selection_end: INTEGER is
+	selection_end: INTEGER
 			-- Index of the last character selected
 		do
 			Result := selection.maximum
 		end
 
-	selection: WEL_CHARACTER_RANGE is
+	selection: WEL_CHARACTER_RANGE
 			-- Structure which contains the starting and ending
 			-- character positions of the selection.
 		require
@@ -126,7 +126,7 @@ feature -- Status report
 			{WEL_API}.send_message (item, Em_exgetsel, to_wparam (0), Result.item)
 		end
 
-	caret_position: INTEGER is
+	caret_position: INTEGER
 		local
 			range: WEL_CHARACTER_RANGE
 		do
@@ -135,7 +135,7 @@ feature -- Status report
 			Result := range.maximum
 		end
 
-	has_selection: BOOLEAN is
+	has_selection: BOOLEAN
 			-- Has a current selection?
 		local
 			a_selection: WEL_CHARACTER_RANGE
@@ -144,7 +144,7 @@ feature -- Status report
 			Result := a_selection.minimum /= a_selection.maximum
 		end
 
-	default_character_format: WEL_CHARACTER_FORMAT is
+	default_character_format: WEL_CHARACTER_FORMAT
 			-- Default character format information
 		require
 			exists: exists
@@ -156,7 +156,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	current_selection_character_format: WEL_CHARACTER_FORMAT is
+	current_selection_character_format: WEL_CHARACTER_FORMAT
 			-- Current selection character format information
 		require
 			exists: exists
@@ -168,7 +168,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	text_at (i: INTEGER; n: INTEGER): STRING_32 is
+	text_at (i: INTEGER; n: INTEGER): STRING_32
 			-- Text of length `n' at position `i'.
 		require
 			exists: exists
@@ -193,7 +193,7 @@ feature -- Status report
 			show_selection
 		end
 
-	selected_text: STRING_32 is
+	selected_text: STRING_32
 			-- Currently selected text
 		require
 			exists: exists
@@ -211,7 +211,7 @@ feature -- Status report
 --				selection_end - selection_start
 		end
 
-	position_from_character_index (character_index: INTEGER): WEL_POINT is
+	position_from_character_index (character_index: INTEGER): WEL_POINT
 			-- Coordinates of a character at `character_index' in
 			-- the client area.
 			-- A returned coordinate can be negative if the
@@ -236,7 +236,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	character_index_from_position (a_x, a_y: INTEGER): INTEGER is
+	character_index_from_position (a_x, a_y: INTEGER): INTEGER
 			-- Zero-based character index of the character which is
 			-- the nearest to `a_x' and `a_y' position in the client
 			-- area.
@@ -262,7 +262,7 @@ feature -- Status report
 			Result := {WEL_API}.send_message_result_integer (item, Em_charfrompos, to_wparam (0), p.item)
 		end
 
-	line_number_from_position (a_pos: INTEGER): INTEGER is
+	line_number_from_position (a_pos: INTEGER): INTEGER
 			-- Retrieves the line number from a character position.
 			-- Line numbers start at 0.
 		require
@@ -272,7 +272,7 @@ feature -- Status report
 			Result := {WEL_API}.send_message_result_integer (item, Em_exlinefromchar, to_wparam (0), to_lparam (a_pos))
 		end
 
-	event_mask: INTEGER is
+	event_mask: INTEGER
 			-- Event mask which specifies notification message the
 			-- control sends to its parent window.
 			-- See class WEL_ENM_CONSTANTS for values.
@@ -283,7 +283,7 @@ feature -- Status report
 				Em_geteventmask, to_wparam (0), to_lparam (0))
 		end
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Contents of the rich edit control
 		local
 			stream: WEL_RICH_EDIT_BUFFER_SAVER
@@ -295,13 +295,13 @@ feature -- Status report
 			stream.release_stream
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Length of text.
 		do
 			Result := {WEL_API}.send_message_result_integer (item, Wm_gettextlength, to_wparam (0), to_lparam (0))
 		end
 
-	options: INTEGER is
+	options: INTEGER
 			-- Give the current set of options.
 		do
 			Result := {WEL_API}.send_message_result_integer (item, Em_getoptions, to_wparam (0), to_lparam (0))
@@ -309,7 +309,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_selection (start_position, end_position: INTEGER) is
+	set_selection (start_position, end_position: INTEGER)
 			-- Set the selection between `start_position'
 			-- and `end_position'.
 		require else
@@ -321,7 +321,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_exsetsel, to_wparam (0), range.item)
 		end
 
-	set_caret_position (position: INTEGER) is
+	set_caret_position (position: INTEGER)
    			-- Set the caret position with `position'.
    			-- If `scroll_caret_at_selection' is True, the
    			-- caret will be scrolled to `position'.
@@ -332,20 +332,20 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_exsetsel, to_wparam (0), range.item)
   		end
 
-	move_to_selection is
+	move_to_selection
 			-- Move the selected text to be visible
 		do
 			{WEL_API}.send_message (item, Em_scrollcaret, to_wparam (0), to_lparam (0))
 		end
 
-	set_text_limit (limit: INTEGER) is
+	set_text_limit (limit: INTEGER)
 			-- Set the length of the text the user can enter into
 			-- the edit control.
 		do
 			{WEL_API}.send_message (item, Em_exlimittext, to_wparam (0), to_lparam (limit))
 		end
 
-	set_tab_stops_array (tab: ARRAY [INTEGER]) is
+	set_tab_stops_array (tab: ARRAY [INTEGER])
 			-- Set tab stops using the values of `tab'.
 		local
 			para: WEL_PARAGRAPH_FORMAT
@@ -355,7 +355,7 @@ feature -- Status setting
 			set_paragraph_format (para)
 		end
 
-	set_tab_stops (tab: INTEGER) is
+	set_tab_stops (tab: INTEGER)
 			-- Set tab stops at every `tab' dialog box units.
 		local
 			para: WEL_PARAGRAPH_FORMAT
@@ -365,7 +365,7 @@ feature -- Status setting
 			set_paragraph_format (para)
 		end
 
-	set_default_tab_stops is
+	set_default_tab_stops
 			-- Set default tab stops.
 		local
 			para: WEL_PARAGRAPH_FORMAT
@@ -375,7 +375,7 @@ feature -- Status setting
 			set_paragraph_format (para)
 		end
 
-	set_event_mask (an_event_mask: INTEGER) is
+	set_event_mask (an_event_mask: INTEGER)
 			-- Set `event_mask' with `an_event_mask'.
 			-- See class WEL_ENM_CONSTANTS for values.
 		require
@@ -386,7 +386,7 @@ feature -- Status setting
 			event_mask_set: event_mask = an_event_mask
 		end
 
-	set_options (operation, an_options: INTEGER) is
+	set_options (operation, an_options: INTEGER)
 			-- Set the opetions for the control.
 			-- See class WEL_ECO_CONSTANTS for values.
 		require
@@ -395,7 +395,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_setoptions, to_wparam (operation), to_lparam (an_options))
 		end
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Set `text' with `a_text'.
 		local
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
@@ -406,7 +406,7 @@ feature -- Status setting
 			stream.release_stream
 		end
 
-	insert_text (a_text: STRING_GENERAL) is
+	insert_text (a_text: STRING_GENERAL)
 			-- Insert `a_text' at the position of the cursor.
 			-- Replace the current selection if there is one
 		local
@@ -418,7 +418,7 @@ feature -- Status setting
 			stream.release_stream
 		end
 
-	set_background_color (color: WEL_COLOR_REF) is
+	set_background_color (color: WEL_COLOR_REF)
 			-- Set the background color with `color'.
 		require
 			exists: exists
@@ -427,7 +427,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_setbkgndcolor, to_wparam (0), to_lparam (color.item))
 		end
 
-	set_background_system_color is
+	set_background_system_color
 			-- Set the background color with the window
 			-- background system color.
 		require
@@ -436,7 +436,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_setbkgndcolor, to_wparam (1), to_lparam (0))
 		end
 
-	enable_standard_notifications is
+	enable_standard_notifications
 			-- Enable the standard notifications.
 			-- (Enm_change, Enm_update and Enm_scroll).
 		require
@@ -445,7 +445,7 @@ feature -- Status setting
 			set_event_mask (Enm_change + Enm_update + Enm_scroll)
 		end
 
-	enable_all_notifications is
+	enable_all_notifications
 			-- Enable all notifications.
 		require
 			exists: exists
@@ -457,7 +457,7 @@ feature -- Status setting
 				Enm_correcttext | Enm_imechange)
 		end
 
-	disable_notifications is
+	disable_notifications
 			-- Disable all notifications.
 		require
 			exists: exists
@@ -469,7 +469,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	load_text_file (file: RAW_FILE) is
+	load_text_file (file: RAW_FILE)
 			-- Load a text `file' in the rich edit control.
 		require
 			exists: exists
@@ -486,7 +486,7 @@ feature -- Basic operations
 			file_closed: file.is_closed
 		end
 
-	load_rtf_file (file: RAW_FILE) is
+	load_rtf_file (file: RAW_FILE)
 			-- Load a RTF `file' in the rich edit control.
 		require
 			exists: exists
@@ -503,7 +503,7 @@ feature -- Basic operations
 			file_closed: file.is_closed
 		end
 
-	save_text_file (file: RAW_FILE) is
+	save_text_file (file: RAW_FILE)
 			-- Save the contents of the rich edit control in text
 			-- format in `file'.
 		require
@@ -521,7 +521,7 @@ feature -- Basic operations
 			file_closed: file.is_closed
 		end
 
-	save_rtf_file (file: RAW_FILE) is
+	save_rtf_file (file: RAW_FILE)
 			-- Save the contents of the rich edit control in RTF
 			-- format in `file'.
 		require
@@ -539,7 +539,7 @@ feature -- Basic operations
 			file_closed: file.is_closed
 		end
 
-	text_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+	text_stream_in (stream: WEL_RICH_EDIT_STREAM_IN)
 			-- Start a text stream in operation with `stream'.
 		require
 			exists: exists
@@ -548,7 +548,7 @@ feature -- Basic operations
 			send_stream_in_message (Sf_text | Sf_unicode, stream)
 		end
 
-	text_stream_out (stream: WEL_RICH_EDIT_STREAM_OUT) is
+	text_stream_out (stream: WEL_RICH_EDIT_STREAM_OUT)
 			-- Start a text stream out operation with `stream'.
 		require
 			exists: exists
@@ -557,7 +557,7 @@ feature -- Basic operations
 			send_stream_out_message (Sf_text | Sf_unicode, stream)
 		end
 
-	rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+	rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN)
 			-- Start a rtf stream in operation with `stream'.
 		require
 			exists: exists
@@ -566,7 +566,7 @@ feature -- Basic operations
 			send_stream_in_message (Sf_rtf, stream)
 		end
 
-	rtf_stream_out (stream: WEL_RICH_EDIT_STREAM_OUT) is
+	rtf_stream_out (stream: WEL_RICH_EDIT_STREAM_OUT)
 			-- Start a rtf stream out operation with `stream'.
 		require
 			exists: exists
@@ -575,7 +575,7 @@ feature -- Basic operations
 			send_stream_out_message (Sf_rtf, stream)
 		end
 
-	insert_text_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+	insert_text_stream_in (stream: WEL_RICH_EDIT_STREAM_IN)
 			-- Start a text stream in operation with `stream'.
 		require
 			exists: exists
@@ -584,7 +584,7 @@ feature -- Basic operations
 			send_stream_in_message (Sf_text | Sf_unicode | Sff_selection, stream)
 		end
 
-	insert_rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN) is
+	insert_rtf_stream_in (stream: WEL_RICH_EDIT_STREAM_IN)
 			-- Start a rtf stream in operation with `stream'.
 		require
 			exists: exists
@@ -594,7 +594,7 @@ feature -- Basic operations
 		end
 
 	send_stream_in_message (format: INTEGER;
-			stream: WEL_RICH_EDIT_STREAM_IN) is
+			stream: WEL_RICH_EDIT_STREAM_IN)
 			-- Start stream in operation with `stream'.
 			-- See class WEL_SF_CONSTANTS for `format' values.
 			-- Lowest level stream in procedures.
@@ -608,7 +608,7 @@ feature -- Basic operations
 		end
 
 	send_stream_out_message (format: INTEGER;
-			stream: WEL_RICH_EDIT_STREAM_OUT) is
+			stream: WEL_RICH_EDIT_STREAM_OUT)
 			-- Start stream out operation with `stream'.
 			-- See class WEL_SF_CONSTANTS for `format' values.
 			-- Lowest level stream out procedures.
@@ -621,7 +621,7 @@ feature -- Basic operations
 			stream.finish_action
 		end
 
-	hide_selection is
+	hide_selection
 			-- Hide the selection.
 		require
 			exists: exists
@@ -629,7 +629,7 @@ feature -- Basic operations
 			{WEL_API}.send_message (item, Em_hideselection, to_wparam (1), to_lparam (0))
 		end
 
-	show_selection is
+	show_selection
 			-- Show selection.
 		require
 			exists: exists
@@ -637,7 +637,7 @@ feature -- Basic operations
 			{WEL_API}.send_message (item, Em_hideselection, to_wparam (0), to_lparam (0))
 		end
 
-	find (text_to_find: STRING_GENERAL; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
+	find (text_to_find: STRING_GENERAL; match_case: BOOLEAN; start_from: INTEGER): INTEGER
 			-- Find `text_to_find' in WEL_RICH_EDIT
 		local
 			find_text: WEL_FIND_ARGUMENT
@@ -657,7 +657,7 @@ feature -- Basic operations
 
 feature -- Element change
 
-	set_character_format_all (a_char_format: WEL_CHARACTER_FORMAT) is
+	set_character_format_all (a_char_format: WEL_CHARACTER_FORMAT)
 			-- Apply `a_char_format' to all text.
 		require
 			exists: exists
@@ -667,7 +667,7 @@ feature -- Element change
 				to_wparam (Scf_all), a_char_format.item)
 		end
 
-	set_character_format_selection (a_char_format: WEL_CHARACTER_FORMAT) is
+	set_character_format_selection (a_char_format: WEL_CHARACTER_FORMAT)
 			-- Apply `a_char_format' to current selection.
 		require
 			exists: exists
@@ -677,7 +677,7 @@ feature -- Element change
 				to_wparam (Scf_selection), a_char_format.item)
 		end
 
-	set_character_format_word (a_char_format: WEL_CHARACTER_FORMAT) is
+	set_character_format_word (a_char_format: WEL_CHARACTER_FORMAT)
 			-- Set the current word with `a_char_format'.
 		require
 			exists: exists
@@ -687,7 +687,7 @@ feature -- Element change
 				to_wparam (Scf_word + Scf_selection), a_char_format.item)
 		end
 
-	set_paragraph_format (a_para_format: WEL_PARAGRAPH_FORMAT) is
+	set_paragraph_format (a_para_format: WEL_PARAGRAPH_FORMAT)
 			-- Set the current paragraph with `a_para_format'.
 		require
 			exists: exists
@@ -696,7 +696,7 @@ feature -- Element change
 			{WEL_API}.send_message (item, Em_setparaformat, to_wparam (0), a_para_format.item)
 		end
 
-	print_all (dc: WEL_PRINTER_DC; title: STRING_GENERAL) is
+	print_all (dc: WEL_PRINTER_DC; title: STRING_GENERAL)
 			-- Print the contents of the rich edit control on
 			-- the printer `dc'. `title' is the printer job name.
 		require
@@ -756,7 +756,7 @@ feature -- Element change
 			dc.end_document
 		end
 
-		ignore_filtered_message is
+		ignore_filtered_message
 				-- Call this message from within `on_en_msgfilter'
 				-- to prevent the filtered message to be handled
 				-- by the Rich Edit Control.
@@ -766,7 +766,7 @@ feature -- Element change
 			end
 feature -- Notifications
 
-	on_en_msgfilter (a_msg_filter: WEL_MSG_FILTER) is
+	on_en_msgfilter (a_msg_filter: WEL_MSG_FILTER)
 			-- Notfication of a keyboard or mouse event in the control.
 			-- Only notfications are sent that are enabled
 			-- in the `event_mask'.
@@ -781,7 +781,7 @@ feature -- Notifications
 
 feature -- Obsolete
 
-	default_char_format: WEL_CHARACTER_FORMAT is obsolete
+	default_char_format: WEL_CHARACTER_FORMAT obsolete
 			"Use ``default_character_format''"
 		require
 			exists: exists
@@ -791,7 +791,7 @@ feature -- Obsolete
 			result_not_void: Result /= Void
 		end
 
-	current_selection_char_format: WEL_CHARACTER_FORMAT is obsolete
+	current_selection_char_format: WEL_CHARACTER_FORMAT obsolete
 			"Use ``current_selection_character_format''"
 		require
 			exists: exists
@@ -803,13 +803,13 @@ feature -- Obsolete
 
 feature {NONE} -- Implementation
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Window class name to create
 		once
 			Result := (create {WEL_STRING}.share_from_pointer (Class_name_pointer)).string
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_border +
@@ -817,7 +817,7 @@ feature {NONE} -- Implementation
 				Es_disablenoscroll + Es_multiline
 		end
 
-	process_notification_info (notification_info: WEL_NMHDR) is
+	process_notification_info (notification_info: WEL_NMHDR)
 		local
 			a_msg_filter: WEL_MSG_FILTER
 		do
@@ -831,14 +831,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	Class_name_pointer: POINTER is
+	Class_name_pointer: POINTER
 		external
 			"C [macro %"redit.h%"]"
 		alias
 			"RICHEDIT_CLASS"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

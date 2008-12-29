@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of Motif override shell."
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_override_shell: OVERRIDE_S; oui_parent: COMPOSITE) is
+	make (an_override_shell: OVERRIDE_S; oui_parent: COMPOSITE)
 			-- Create an override shell.
 		local
 			mc: MEL_COMPOSITE
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			initialize (Current)
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

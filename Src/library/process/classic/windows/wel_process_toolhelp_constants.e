@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for process rights"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Process access rights
 
-	cwin_process_all_access: INTEGER is
+	cwin_process_all_access: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -19,7 +19,7 @@ feature -- Process access rights
 			"PROCESS_ALL_ACCESS"
 		end
 
-	cwin_process_terminate: INTEGER is
+	cwin_process_terminate: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -27,7 +27,7 @@ feature -- Process access rights
 			"PROCESS_TERMINATE"
 		end
 
-	cwin_process_create_process: INTEGER is
+	cwin_process_create_process: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -35,7 +35,7 @@ feature -- Process access rights
 			"PROCESS_CREATE_PROCESS"
 		end
 
-	cwin_process_dup_handle: INTEGER is
+	cwin_process_dup_handle: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -43,7 +43,7 @@ feature -- Process access rights
 			"PROCESS_DUP_HANDLE"
 		end
 
-	cwin_process_query_information: INTEGER is
+	cwin_process_query_information: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -51,7 +51,7 @@ feature -- Process access rights
 			"PROCESS_QUERY_INFORMATION"
 		end
 
-	cwin_process_set_quota: INTEGER is
+	cwin_process_set_quota: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -59,7 +59,7 @@ feature -- Process access rights
 			"PROCESS_SET_QUOTA"
 		end
 
-	cwin_process_set_information: INTEGER is
+	cwin_process_set_information: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -67,7 +67,7 @@ feature -- Process access rights
 			"PROCESS_SET_INFORMATION"
 		end
 
-	cwin_process_vm_operation: INTEGER is
+	cwin_process_vm_operation: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -75,7 +75,7 @@ feature -- Process access rights
 			"PROCESS_VM_OPERATION"
 		end
 
-	cwin_process_vm_read: INTEGER is
+	cwin_process_vm_read: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -83,7 +83,7 @@ feature -- Process access rights
 			"PROCESS_VM_READ"
 		end
 
-	cwin_process_vm_write: INTEGER is
+	cwin_process_vm_write: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -91,7 +91,7 @@ feature -- Process access rights
 			"PROCESS_VM_WRITE"
 		end
 
-	cwin_process_synchronize: INTEGER is
+	cwin_process_synchronize: INTEGER
 			--
 		external
 			"C inline use <Tlhelp32.h>"
@@ -99,7 +99,7 @@ feature -- Process access rights
 			"SYNCHRONIZE"
 		end
 
-indexing
+note
 	library:   "EiffelProcess: Manipulation of processes with IO redirection."
 	copyright: "Copyright (c) 1984-2008, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

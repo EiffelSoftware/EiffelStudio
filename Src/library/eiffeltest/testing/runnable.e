@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Executable components"
 	legal: "See notice at end of class."
@@ -12,19 +12,19 @@ deferred class
 
 feature -- Status report
 
-	is_enabled: BOOLEAN is
+	is_enabled: BOOLEAN
 			-- Is component enabled?
 	 	deferred
 		end
 		
-	is_ready: BOOLEAN is
+	is_ready: BOOLEAN
 	 		-- Is component ready to be executed?
 		deferred
 		end
 	
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Execute component.
 		require
 			enabled: is_enabled
@@ -32,7 +32,7 @@ feature -- Basic operations
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

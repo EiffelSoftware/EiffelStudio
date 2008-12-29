@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Margin control for use with TEXT_PANEL."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Initialization
 
-	make (a_text_panel: TEXT_PANEL) is
+	make (a_text_panel: TEXT_PANEL)
 			-- Create a new margin
 		require
 			text_panel_not_void: a_text_panel /= Void
@@ -36,7 +36,7 @@ feature -- Initialization
 			a_text_panel.text_displayed.add_edition_observer (Current)
 		end
 
-	build_margin_area is
+	build_margin_area
 			-- Initialize variables and objects related to display.	
 		do
 			create margin_area
@@ -59,7 +59,7 @@ feature -- Initialization
 
 feature -- Access
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width in pixels calculated based on which tokens should be displayed
 		local
 			l_no_lines: INTEGER
@@ -80,7 +80,7 @@ feature -- Access
 	hidden_breakpoints: BOOLEAN
 			-- Are breakpoints hidden? (Default: True)
 
-	line_numbers_visible: BOOLEAN is
+	line_numbers_visible: BOOLEAN
 			-- Are line numbers hidden?
 		do
 		    Result := text_panel.line_numbers_visible
@@ -88,19 +88,19 @@ feature -- Access
 
 feature -- Status setting
 
-	hide_breakpoints is
+	hide_breakpoints
 			-- Do not show breakpoints even if there are some.
 		do
 			hidden_breakpoints := True
 		end
 
-	show_breakpoints is
+	show_breakpoints
 			-- Show breakpoints if there are some.
 		do
 			hidden_breakpoints := False
 		end
 
-	set_margin_width (a_width: INTEGER) is
+	set_margin_width (a_width: INTEGER)
 			-- If `a_width' is greater than `width', assign `a_width' to `width'
 			-- update display if necessary.
 		do
@@ -112,7 +112,7 @@ feature -- Status setting
 			end
 		end
 
-	set_first_line_displayed (fld: INTEGER) is
+	set_first_line_displayed (fld: INTEGER)
 			-- Assign `fld' to `first_line_displayed'.
 		require
 			fld_large_enough: fld > 0
@@ -158,14 +158,14 @@ feature -- Graphical Interface
 
 feature {NONE} -- Text Loading
 
-	on_text_loaded is
+	on_text_loaded
 			-- Finish the margin setup as the entire text has been loaded in the editor.
 		do
 			--set_first_line_displayed
 			refresh_now
 		end
 
-	on_text_block_loaded (was_first_block: BOOLEAN) is
+	on_text_block_loaded (was_first_block: BOOLEAN)
 			-- Update scroll bar as a new block of text as been loaded.
 		do
 			refresh_now
@@ -173,7 +173,7 @@ feature {NONE} -- Text Loading
 
 feature -- Basic operations
 
-	destroy is
+	destroy
 			-- Destroy
 		do
 			if widget /= Void then
@@ -186,21 +186,21 @@ feature -- Basic operations
 			end
 		end
 
-	refresh is
+	refresh
 			-- Refresh
 		do
 			set_margin_width (width)
 			margin_area.redraw
 		end
 
-	refresh_now is
+	refresh_now
 			-- Update display without waiting for next idle
 		do
 			refresh
 			margin_area.flush
 		end
 
-	setup_margin is
+	setup_margin
 			-- Update `Current' as the first page of the new content has been loaded.
 		do
 			refresh_now
@@ -214,10 +214,10 @@ feature {NONE} -- Implementation
 	first_line_displayed: INTEGER
 			-- First line currently displayed
 
-	default_width: INTEGER is 5
+	default_width: INTEGER = 5
 			-- Default character width of margin for when number of lines is less than 100,000
 
-	default_line_number_area_width_cell: CELL [INTEGER] is
+	default_line_number_area_width_cell: CELL [INTEGER]
 			-- Value of line number area width for files with less than 100,000 lines).
 		local
 			l_no_lines: INTEGER
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			Result.put (l_max_token.width)
 		end
 
-	internal_line_number_area_width: INTEGER is
+	internal_line_number_area_width: INTEGER
 			-- Width of line number display area of Current
 		local
 			l_max_token: EDITOR_TOKEN_LINE_NUMBER
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 
 feature {TEXT_PANEL} -- Display functions
 
-	on_repaint (x, y, a_width, a_height: INTEGER) is
+	on_repaint (x, y, a_width, a_height: INTEGER)
 			-- Repaint the part of the panel between in the rectangle between
 			-- (`x', `y') and (`x' + `a_width', `y' + `a_height').
 			--| Actually, rectangle defined by (0, y) -> (margin_area.width, y + height) is redrawn.
@@ -261,7 +261,7 @@ feature {TEXT_PANEL} -- Display functions
 			end
 		end
 
-	update_buffered_screen (top: INTEGER; bottom: INTEGER) is
+	update_buffered_screen (top: INTEGER; bottom: INTEGER)
  			-- Update buffered pixmap between lines number `top' and `bottom'.
  		local
  			curr_line			: INTEGER
@@ -300,13 +300,13 @@ feature {TEXT_PANEL} -- Display functions
  			end
  		end
 
-	update_display is
+	update_display
 			-- Update display by drawing the buffered pixmap on `margin_area'.
 		do
 			margin_area.draw_sub_pixmap (0,	0, buffered_screen, create {EV_RECTANGLE}.make (0, 0, width, buffered_screen.height))
 		end
 
-	on_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER) is
+	on_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER)
 			-- Refresh the panel after it has been resized (and moved) to new coordinates (`a_x', `a_y') and
 			-- new size (`a_width', `a_height').
 			--| Note: This feature is called during the creation of the window
@@ -347,7 +347,7 @@ feature {TEXT_PANEL} -- Display functions
 			end
 		end
 
-	display_line (xline: INTEGER; a_line: EDITOR_LINE) is
+	display_line (xline: INTEGER; a_line: EDITOR_LINE)
  			-- Display `a_line' on the buffered screen.
  		local
 -- 			bp_token			: EDITOR_TOKEN_BREAKPOINT
@@ -398,7 +398,7 @@ feature {TEXT_PANEL} -- Display functions
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

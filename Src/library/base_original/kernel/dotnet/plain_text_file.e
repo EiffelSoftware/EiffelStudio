@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Files viewed as persistent sequences of ASCII characters"
@@ -28,18 +28,18 @@ create
 
 feature -- Status report
 
-	is_plain_text: BOOLEAN is
+	is_plain_text: BOOLEAN
 			-- Is file reserved for text (character sequences)? (Yes)
 		do
 			Result := True
 		end
 
-	support_storable: BOOLEAN is False
+	support_storable: BOOLEAN = False
 			-- Can medium be used to store an Eiffel structure?
 
 feature -- Output
 
-	put_new_line, new_line is
+	put_new_line, new_line
 		local
 			i: INTEGER
 			l_cnt: INTEGER
@@ -55,7 +55,7 @@ feature -- Output
 			end
 		end
 
-	put_string (s: STRING) is
+	put_string (s: STRING)
 			-- Write `s' at current position.
 		local
 			l_str: STRING
@@ -67,61 +67,61 @@ feature -- Output
 			end
 		end
 		
-	putstring (s: STRING) is
+	putstring (s: STRING)
 			-- Write `s' at current position.
 		do
 			put_string (s)
 		end		
 
-	put_integer, putint, put_integer_32 (i: INTEGER) is
+	put_integer, putint, put_integer_32 (i: INTEGER)
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
 		
-	put_integer_8 (i: INTEGER_8) is
+	put_integer_8 (i: INTEGER_8)
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
 		
-	put_integer_16 (i: INTEGER_16) is
+	put_integer_16 (i: INTEGER_16)
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
 		
-	put_integeR_64 (i: INTEGER_64) is
+	put_integeR_64 (i: INTEGER_64)
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
 		
-	put_natural_8 (i: NATURAL_8) is
+	put_natural_8 (i: NATURAL_8)
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
 		
-	put_natural_16 (i: NATURAL_16) is
+	put_natural_16 (i: NATURAL_16)
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
 		
-	put_natural, put_natural_32 (i: NATURAL_32) is
+	put_natural, put_natural_32 (i: NATURAL_32)
 			-- Write ASCII value of `i' at current position.
 		do
 			put_string (i.out)
 		end
 		
-	put_natural_64 (i: NATURAL_64) is
+	put_natural_64 (i: NATURAL_64)
 			-- Write ASCII value of `i' at current position. 
 		do
 			put_string (i.out)
 		end
 
-	put_boolean, putbool (b: BOOLEAN) is
+	put_boolean, putbool (b: BOOLEAN)
 			-- Write ASCII value of `b' at current position.
 		do
 			if b then
@@ -131,13 +131,13 @@ feature -- Output
 			end
 		end
 
-	put_real, putreal (r: REAL) is
+	put_real, putreal (r: REAL)
 			-- Write ASCII value of `r' at current position.
 		do
 			put_string (r.out)
 		end
 
-	put_double, putdouble (d: DOUBLE) is
+	put_double, putdouble (d: DOUBLE)
 			-- Write ASCII value `d' at current position.
 		do
 			put_string (d.out)
@@ -145,7 +145,7 @@ feature -- Output
 
 feature -- Input
 
-	read_stream (nb_char: INTEGER) is
+	read_stream (nb_char: INTEGER)
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of file.
 			-- Make result available in `last_string'.
@@ -154,7 +154,7 @@ feature -- Input
 			last_string.replace_substring_all (dotnet_newline, eiffel_newline)
 		end
 		
-	readstream (nb_char: INTEGER) is
+	readstream (nb_char: INTEGER)
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of file.
 			-- Make result available in `last_string'.
@@ -162,14 +162,14 @@ feature -- Input
 			read_stream (nb_char)
 		end
 
-	read_integer_64 is
+	read_integer_64
 			-- 
 		do
 			read_integer_with_no_type
 			last_integer_64 := ctoi_convertor.parsed_integer_64
 		end
 		
-	read_integer, readint, read_integer_32 is
+	read_integer, readint, read_integer_32
 			-- Read the ASCII representation of a new 32-bit integer
 			-- from file. Make result available in `last_integer'.
 		do
@@ -177,7 +177,7 @@ feature -- Input
 			last_integer := ctoi_convertor.parsed_integer_32		
 		end
 		
-	read_integer_16 is
+	read_integer_16
 			-- Read the ASCII representation of a new 16-bit integer
 			-- from file. Make result available in `last_integer_16'.
 		do
@@ -185,7 +185,7 @@ feature -- Input
 			last_integer_16 := ctoi_convertor.parsed_integer_16
 		end
 		
-	read_integer_8 is
+	read_integer_8
 			-- Read the ASCII representation of a new 8-bit integer
 			-- from file. Make result available in `last_integer_8'. 
 		do
@@ -193,7 +193,7 @@ feature -- Input
 			last_integer_8 := ctoi_convertor.parsed_integer_8
 		end
 		
-	read_natural_64 is
+	read_natural_64
 			-- Read the ASCII representation of a new 64-bit natural
 			-- from file. Make result available in `last_natural_64'.
 		do
@@ -202,7 +202,7 @@ feature -- Input
 
 		end
 		
-	read_natural, read_natural_32 is
+	read_natural, read_natural_32
 			-- Read the ASCII representation of a new 32-bit natural
 			-- from file. Make result available in `last_natural'.
 		do
@@ -210,7 +210,7 @@ feature -- Input
 			last_natural := ctoi_convertor.parsed_natural_32
 		end
 		
-	read_natural_16 is
+	read_natural_16
 			-- Read the ASCII representation of a new 16-bit natural
 			-- from file. Make result available in `last_natural_16'.
 		do
@@ -218,7 +218,7 @@ feature -- Input
 			last_natural_16 := ctoi_convertor.parsed_natural_16
 		end
 		
-	read_natural_8 is
+	read_natural_8
 			-- Read the ASCII representation of a new 8-bit natural
 			-- from file. Make result available in `last_natural_8'.
 		do
@@ -226,7 +226,7 @@ feature -- Input
 			last_natural_8 := ctoi_convertor.parsed_natural_8
 		end					
 
-	read_real, readreal is
+	read_real, readreal
 			-- Read the ASCII representation of a new real
 			-- from file. Make result available in `last_real'.
 		do
@@ -234,7 +234,7 @@ feature -- Input
 			last_real := last_double.truncated_to_real
 		end
 
-	read_double, readdouble is
+	read_double, readdouble
 			-- Read the ASCII representation of a new double
 			-- from file. Make result available in `last_double'.
 		do
@@ -245,7 +245,7 @@ feature -- Input
 			end	
 		end
 
-	read_character, readchar is
+	read_character, readchar
 			-- Read a new character.
 			-- Make result available in `last_character'.
 		local
@@ -267,7 +267,7 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
-	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR is
+	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR
 			-- Convertor used to parse string to integer or natural
 		once
 			create Result.make
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 			Result.set_trailing_separators_acceptable (False)
 		end
 		
-	ctor_convertor: STRING_TO_REAL_CONVERTOR is
+	ctor_convertor: STRING_TO_REAL_CONVERTOR
 			-- Convertor used to parse string to double or real
 		once
 			create Result.make
@@ -285,13 +285,13 @@ feature {NONE} -- Implementation
 			Result.set_trailing_separators_acceptable (False)					
 		end		
 					
-	internal_leading_separators: STRING is " %N%R%T"
+	internal_leading_separators: STRING = " %N%R%T"
 			-- Characters that are considered as leading separators
 			
 	is_sequence_an_expected_numeric: BOOLEAN
 			-- Is last number sequence read by `read_number_sequence' an expected numeric?
 
-	read_number_sequence (convertor: STRING_TO_NUMERIC_CONVERTOR; conversion_type: INTEGER) is
+	read_number_sequence (convertor: STRING_TO_NUMERIC_CONVERTOR; conversion_type: INTEGER)
 			-- Read a number sequence from current position and parse this
 			-- sequence using `convertor' to see if it is a valid numeric.
 			-- Set `is_sequence_an_expected_numeric' with True if it is valid.
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 			end			
 		end
 			
-	read_integer_with_no_type is
+	read_integer_with_no_type
 			-- Read a ASCII representation of number of `type'
 			-- at current position.
 		do
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	return_characters is
+	return_characters
 			-- Return character(s)
 		do				
 			if last_character = '%N' and platform_indicator.is_windows then
@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 			internal_end_of_file := peek = -1			
 		end		
 
-	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
+	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.
 			-- Return the number of characters actually read.
@@ -353,14 +353,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	c_open_modifier: INTEGER is 16384
+	c_open_modifier: INTEGER = 16384
 			-- File should be opened in plain text mode.
 
 invariant
 
 	plain_text: is_plain_text
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

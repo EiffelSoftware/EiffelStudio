@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about a tab control hittestinfo notification%
 			% message."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_point (pt: WEL_POINT) is
+	make_with_point (pt: WEL_POINT)
 			-- Create a structure with `pt'.
 		do
 			make
@@ -28,13 +28,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	point: WEL_POINT is
+	point: WEL_POINT
 			-- Client coordinates of the point to test.
 		do
 			create Result.make_by_pointer (cwel_tv_hittestinfo_get_pt (item))
 		end
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Variable that receives information about the result of
 			-- a hit test. See WEL_TVHT_CONSTANTS for values.
 		do
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_point (pt: WEL_POINT) is
+	set_point (pt: WEL_POINT)
 			-- Set `point' with `pt'.
 		do
 			cwel_tv_hittestinfo_set_pt (item, pt.item)
@@ -53,7 +53,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_tv_hittestinfo
@@ -61,42 +61,42 @@ feature -- Measurement
 
 feature {NONE} -- externals
 
-	c_size_of_tv_hittestinfo: INTEGER is
+	c_size_of_tv_hittestinfo: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"sizeof (TCHITTESTINFO)"
 		end
 		
-	cwel_tc_hittestinfo_get_flags (ptr: POINTER): INTEGER is
+	cwel_tc_hittestinfo_get_flags (ptr: POINTER): INTEGER
 		external
 			"C [struct %"commctrl.h%"] (TCHITTESTINFO): EIF_INTEGER"
 		alias
 			"flags"
 		end
 		
-	cwel_tc_hittestinfo_set_flags (ptr: POINTER; value: INTEGER) is
+	cwel_tc_hittestinfo_set_flags (ptr: POINTER; value: INTEGER)
 		external
 			"C [struct %"commctrl.h%"] (TCHITTESTINFO, EIF_INTEGER)"
 		alias
 			"flags"
 		end
 
-	cwel_tv_hittestinfo_set_pt (ptr, pt: POINTER) is
+	cwel_tv_hittestinfo_set_pt (ptr, pt: POINTER)
 		external
 			"C inline use <commctrl.h>"
 		alias
 			"((TCHITTESTINFO*) $ptr)->pt = *(POINT *) $pt"
 		end
 
-	cwel_tv_hittestinfo_get_pt (ptr: POINTER): POINTER is
+	cwel_tv_hittestinfo_get_pt (ptr: POINTER): POINTER
 		external
 			"C [struct %"commctrl.h%"] (TCHITTESTINFO): EIF_POINTER"
 		alias
 			"&pt"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

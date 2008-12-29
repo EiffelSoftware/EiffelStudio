@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that provide information for a range of lines in an EV_RICH_TEXT.
 		Depending on the query applied to `Current', the values of all attributes are used in different
@@ -33,7 +33,7 @@ create
 	
 feature -- Creation
 
-	make_with_flags (flags: INTEGER) is
+	make_with_flags (flags: INTEGER)
 			-- Create `Current' and apply `flags' to set attributes.
 			-- Valid flags are the corresponding flags from EV_PARAGRAPH_CONSTANTS.
 			-- Combine these in `flags' to set multiple attrbutes, e.g. to set the
@@ -72,7 +72,7 @@ feature -- Access
 	bottom_spacing: BOOLEAN;
 		-- Is bottom spacing of paragraph applicable?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

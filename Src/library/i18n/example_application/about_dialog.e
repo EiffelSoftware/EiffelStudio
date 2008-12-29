@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "About dialog box"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Populate the dialog box.
 		local
 			main_horizontal_box: EV_HORIZONTAL_BOX
@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	message: STRING is
+	message: STRING
 			-- Message displayed in the dialog box.
 		do
 			Result := message_label.text
@@ -104,12 +104,12 @@ feature -- Access
 
 feature -- Element change
 
-	set_message (a_message: STRING_GENERAL) is
+	set_message (a_message: STRING_GENERAL)
 		do
 			message_label.set_text (a_message)
 		end
 
-	set_team (a_team : STRING_GENERAL) is
+	set_team (a_team : STRING_GENERAL)
 			--
 		do
 			team_label.set_text (a_team)
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 	ok_button: EV_BUTTON;
 			-- "OK" button.
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

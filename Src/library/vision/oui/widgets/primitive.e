@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"General notion of primitive widget, %
@@ -26,13 +26,13 @@ inherit
 	
 feature -- Access
 
-	parent: COMPOSITE is
+	parent: COMPOSITE
 			-- Parent of Current widget
 		do
 			Result ?= widget_manager.parent (Current)
 		end;
 
-	foreground_color: COLOR is
+	foreground_color: COLOR
 			-- Foreground color of Current widget
 		require
 			exists: not destroyed
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_foreground_color (new_color: COLOR) is
+	set_foreground_color (new_color: COLOR)
 			-- Set foreground color to `new_color'.
 		require
 			exists: not destroyed;
@@ -65,7 +65,7 @@ invariant
 	Positive_depth: depth > 0;
 	Has_parent: not destroyed implies parent /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

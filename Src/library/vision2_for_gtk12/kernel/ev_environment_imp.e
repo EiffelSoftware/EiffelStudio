@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision Environment. GTK implementation."
 	legal: "See notice at end of class."
@@ -23,13 +23,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Pass `an_interface' to base make.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- No initialization needed.
 		do
 			set_is_initialized (True)
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	supported_image_formats: LINEAR [STRING_32] is
+	supported_image_formats: LINEAR [STRING_32]
 			-- `Result' contains all supported image formats
 			-- on current platform, in the form of their three letter extension.
 			-- e.g. PNG, BMP, ICO
@@ -46,20 +46,20 @@ feature -- Access
 			Result.compare_objects
 		end
 
-	mouse_wheel_scroll_lines: INTEGER is
+	mouse_wheel_scroll_lines: INTEGER
 			-- Default number of lines to scroll in response to
 			-- a mouse wheel scroll event.
 		do
 			Result := 3
 		end
 
-	default_pointer_style_width: INTEGER is 16
+	default_pointer_style_width: INTEGER = 16
 			-- Default pointer style width.
 
-	default_pointer_style_height: INTEGER is 16
+	default_pointer_style_height: INTEGER = 16
 			-- Default pointer style height.
 
-	has_printer: BOOLEAN is
+	has_printer: BOOLEAN
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.
 		do
@@ -67,7 +67,7 @@ feature -- Access
 			Result := return_code = 0
 		end
 
-	font_families: LINEAR [STRING_32] is
+	font_families: LINEAR [STRING_32]
 			-- List of fonts available on the system
 		local
 			font_list: ARRAYED_LIST [STRING_32]
@@ -77,7 +77,7 @@ feature -- Access
 			Result := font_list
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

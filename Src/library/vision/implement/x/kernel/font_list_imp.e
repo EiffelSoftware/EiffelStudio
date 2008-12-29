@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision implementation of all font names."
@@ -37,7 +37,7 @@ create
 
 feature  {NONE} -- Initialization
 
-	make (a_font_list: FONT_LIST) is
+	make (a_font_list: FONT_LIST)
 			-- Create a font list
 		local
 			list: MEL_FONT_LIST_NAMES;
@@ -77,7 +77,7 @@ feature  {NONE} -- Initialization
 
 feature -- Update
 
-	search_equal (v: like first) is
+	search_equal (v: like first)
 			-- Move cursor to first position
 			-- (at or after current cursor position)
 			-- where item is equal to `v' (shallow equality);
@@ -94,7 +94,7 @@ feature -- Update
 
 feature -- Removal
 
-	destroy is
+	destroy
 			-- Reset all entries in the list to Void.
 		do
 			from
@@ -108,7 +108,7 @@ feature -- Removal
 			end
 		end; 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

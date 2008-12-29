@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A command line switch that accepts a value in the form of a file path."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ feature {ARGUMENT_BASE_PARSER} -- Access
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

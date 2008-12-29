@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Base class for widgets that display `value' within a `value_range'.
@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_value_range (a_value_range: INTEGER_INTERVAL) is
+	make_with_value_range (a_value_range: INTEGER_INTERVAL)
 			-- Create and assign `a_value_range' to `value_range'.
 		require
 			a_value_range_not_void: a_value_range /= Void
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: INTEGER is
+	value: INTEGER
 			-- Current position within `value_range'.
 		require
 			not_destroyed: not is_destroyed
@@ -49,7 +49,7 @@ feature -- Access
 			bridge_ok: Result = implementation.value
 		end
 
-	step: INTEGER is
+	step: INTEGER
 			-- Size of change made by `step_forward' or `step_backward'.
 			-- Default: 1
 		require
@@ -60,7 +60,7 @@ feature -- Access
 			bridge_ok: Result = implementation.step
 		end
 
-	leap: INTEGER is
+	leap: INTEGER
 			-- Size of change made by `leap_forward' or `leap_backward'.
 			-- Default: 10
 		require
@@ -71,7 +71,7 @@ feature -- Access
 			bridge_ok: Result = implementation.leap
 		end
 
-	value_range: INTEGER_INTERVAL is
+	value_range: INTEGER_INTERVAL
 			-- Range of `value'.
 			-- Default: 0 |..| 100
 		require
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Status report
 
-	proportion: REAL is
+	proportion: REAL
 			-- Relative position of `value' in `value_range'.
 			-- Range: [0, 1]. Default: 0.0
 		require
@@ -98,7 +98,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	step_forward is
+	step_forward
 			-- Increment `value' by `step' if within `value_range'.
 		require
 			not_destroyed: not is_destroyed
@@ -108,7 +108,7 @@ feature -- Status setting
 			incremented: value = value_range.upper.min (old value + step)
 		end
 
-	step_backward is
+	step_backward
 			-- Decrement `value' by `step' if within `value_range'.
 		require
 			not_destroyed: not is_destroyed
@@ -118,7 +118,7 @@ feature -- Status setting
 			decremented: value = value_range.lower.max (old value - step)
 		end
 
-	leap_forward is
+	leap_forward
 			-- Increment `value' by `leap' if within `value_range'.
 		require
 			not_destroyed: not is_destroyed
@@ -128,7 +128,7 @@ feature -- Status setting
 			incremented: value = value_range.upper.min (old value + leap)
 		end
 
-	leap_backward is
+	leap_backward
 			-- Decrement `value' by `leap' if within `value_range'.
 		require
 			not_destroyed: not is_destroyed
@@ -138,7 +138,7 @@ feature -- Status setting
 			decremented: value = value_range.lower.max (old value - leap)
 		end
 
-	set_proportion (a_proportion: REAL) is
+	set_proportion (a_proportion: REAL)
 			-- Move `value' to `a_proportion' within `value_range'.
 		require
 			not_destroyed: not is_destroyed
@@ -149,7 +149,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_value (a_value: INTEGER) is
+	set_value (a_value: INTEGER)
 			-- Assign `a_value' to `value'.
 		require
 			not_destroyed: not is_destroyed
@@ -160,7 +160,7 @@ feature -- Element change
 			a_value_assigned: value = a_value
 		end
 
-	set_step (a_step: INTEGER) is
+	set_step (a_step: INTEGER)
 			-- Assign `a_step' to `step'.
 		require
 			not_destroyed: not is_destroyed
@@ -171,7 +171,7 @@ feature -- Element change
 			a_step_assigned: step = a_step
 		end
 
-	set_leap (a_leap: INTEGER) is
+	set_leap (a_leap: INTEGER)
 			-- Assign `a_leap' to `leap'.
 		require
 			not_destroyed: not is_destroyed
@@ -184,7 +184,7 @@ feature -- Element change
 
 feature {EV_ANY} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_PRIMITIVE} and then
@@ -195,7 +195,7 @@ feature {EV_ANY} -- Contract support
 				proportion = 0
 		end
 
-	delta: REAL is
+	delta: REAL
 			-- Amount by which `proportion' can differ from expected value
 			-- and still be considered correct.
 		do
@@ -223,7 +223,7 @@ invariant
 		((value - value_range.lower) / (value_range.upper - value_range.lower)).abs
 		- proportion < delta
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		" EiffelVision Toolbar button, implementation interface."
 	legal: "See notice at end of class."
@@ -44,28 +44,28 @@ inherit
 
 feature -- Access
 
-	gray_pixmap: EV_PIXMAP is
+	gray_pixmap: EV_PIXMAP
 			-- Image displayed on `Current'.
 		deferred
 		end
 
 feature -- Element change
 
-	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP) is
+	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP)
 			-- Assign `a_gray_pixmap' to `gray_pixmap'.
 		require
 			gray_pixmap_not_void: a_gray_pixmap /= Void
 		deferred
 		end
 
-	remove_gray_pixmap is
+	remove_gray_pixmap
 			-- Make `pixmap' `Void'.
 		deferred
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
+	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
 		do
@@ -82,7 +82,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			end
 		end
 
-	is_sensitive: BOOLEAN is
+	is_sensitive: BOOLEAN
 			-- Is `Current' sensitive?
 		deferred
 		end
@@ -93,17 +93,17 @@ feature {NONE} -- Implementation
 		-- Was `Current' enabled before `update_for_pick_and_drop' modified
 		-- the current state.
 
-	enable_sensitive is
+	enable_sensitive
 			 -- Enable `Current'.
 		deferred
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			 -- Disable `Current'.
 		deferred
 		end
 
-	enable_sensitive_internal is
+	enable_sensitive_internal
 			 -- Enable `Current'.
 			 -- This is a special version used internally by the code that updates
 			 -- the pick and drop so that `enabled_before' is not updated. In
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	disable_sensitive_internal is
+	disable_sensitive_internal
 			 -- Disable `Current'.
 			 -- This is a special version used internally by the code that updates
 			 -- the pick and drop so that `enabled_before' is not updated. In
@@ -123,19 +123,19 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	parent_is_sensitive: BOOLEAN is
+	parent_is_sensitive: BOOLEAN
 			-- Is `parent' sensitive?
 		deferred
 		end
 
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 			-- Is `Current' parented?
 		deferred
 		end
 
 	interface: EV_TOOL_BAR_BUTTON;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

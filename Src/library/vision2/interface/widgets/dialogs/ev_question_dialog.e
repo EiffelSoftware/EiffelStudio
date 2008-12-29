@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision question dialog."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_MESSAGE_DIALOG}
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			set_default_cancel_button(button (ev_cancel))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

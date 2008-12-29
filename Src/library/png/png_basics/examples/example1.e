@@ -1,4 +1,4 @@
-indexing
+note
 	description: "First example of utilisation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- drawing
 
-	build is
+	build
 			-- Build figures on the images.
 		local
 			pt1,pt2,pt3,pt4: EV_COORDINATES
@@ -52,9 +52,9 @@ feature -- drawing
 
 feature -- Access
 	
-	suffix: STRING is "_1";
+	suffix: STRING = "_1";
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"General class which manipulates X Graphic Context"
@@ -36,7 +36,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	create_gc (a_drawable: MEL_DRAWABLE) is
+	create_gc (a_drawable: MEL_DRAWABLE)
 			-- Create a graphic context for `a_drawable'.
 		require
 			valid_drawable: a_drawable /= Void and then a_drawable.is_valid
@@ -47,20 +47,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_drawable: BOOLEAN is
+	is_drawable: BOOLEAN
 			-- Is the Current drawable valid?
 		do
 			Result := (window /= default_pointer)
 		end;
 	
-	window: POINTER is
+	window: POINTER
 			-- Associated window	
 		deferred
 		end
 
 feature -- Status setting
 
-	set_clip (a_clip: CLIP) is
+	set_clip (a_clip: CLIP)
 			-- Set a clip area.
 		do
 			if is_drawable then
@@ -69,7 +69,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_dash_pattern (a_dash: DASH) is
+	set_dash_pattern (a_dash: DASH)
 			-- Set pattern of dash lengths.
 		require
 			a_dash_exists: not (a_dash = Void);
@@ -78,7 +78,7 @@ feature -- Status setting
 			set_dashes (a_dash, a_dash.offset)
 		end;
 
-	set_arc_style (arc_style: INTEGER) is
+	set_arc_style (arc_style: INTEGER)
 			-- Set style of filled arc.
 		do
 			if arc_style /= gc_arc_style then
@@ -87,7 +87,7 @@ feature -- Status setting
 			end;
 		end;
 
-	set_cap_style (cap_style: INTEGER) is
+	set_cap_style (cap_style: INTEGER)
 			-- Specifies the appearance of ends of line.
 		do
 			if cap_style /= gc_cap_style then
@@ -96,7 +96,7 @@ feature -- Status setting
 			end;
 		end;
 
-	set_fill_style (a_fill_style: INTEGER) is
+	set_fill_style (a_fill_style: INTEGER)
 			-- Set the style of fill.
 		do
 			if a_fill_style /= gc_fill_style then
@@ -105,7 +105,7 @@ feature -- Status setting
 			end;
 		end;
 
-	set_background_gc_color (a_color: COLOR) is
+	set_background_gc_color (a_color: COLOR)
 			-- Set background color of current GC to `pixel_value'.
 		require
 			valid_color: a_color /= Void 
@@ -122,7 +122,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_foreground_gc_color (a_color: COLOR) is
+	set_foreground_gc_color (a_color: COLOR)
 			-- Set foreground color of current GC to `a_color'.
 		require
 			valid_color: a_color /= Void 
@@ -139,7 +139,7 @@ feature -- Status setting
 			end
 		end; 
 
-	set_drawing_font (font: FONT) is
+	set_drawing_font (font: FONT)
 			-- Set a font.
 		require
 			font_exists: not (font = Void)
@@ -156,7 +156,7 @@ feature -- Status setting
 			end
 		end;
 	
-	set_join_style (join_style: INTEGER) is
+	set_join_style (join_style: INTEGER)
 			-- Specifies type appearance of joints between consecutive lines.
 		do
 			if join_style /= gc_join_style then
@@ -165,7 +165,7 @@ feature -- Status setting
 			end;
 		end;
 
-	set_line_style (line_style: INTEGER) is
+	set_line_style (line_style: INTEGER)
 			-- Set line style.
 		do
 			if line_style /= gc_line_style then
@@ -174,7 +174,7 @@ feature -- Status setting
 			end;
 		end;
 	
-	set_line_width (new_width: INTEGER) is
+	set_line_width (new_width: INTEGER)
 			-- Set line to be displayed with width of `new_width'.
 		do
 			if new_width /= gc_line_width then
@@ -183,7 +183,7 @@ feature -- Status setting
 			end;
 		end;
 	
-	set_logical_mode (a_mode: INTEGER) is
+	set_logical_mode (a_mode: INTEGER)
 			-- Set drawing logical function to `a_mode'.
 		do
 			if a_mode /= gc_logical_mode then
@@ -192,7 +192,7 @@ feature -- Status setting
 			end;
 		end; 
 
-	set_no_clip is
+	set_no_clip
 			-- Remove all clip area.
 		do
 			if is_drawable then
@@ -200,7 +200,7 @@ feature -- Status setting
 			end
 		end;
 
-	set_stipple (a_stipple: PIXMAP) is
+	set_stipple (a_stipple: PIXMAP)
 			-- Set stipple used to fill figures
 		require
 			a_stipple_exists: not (a_stipple = Void);
@@ -218,7 +218,7 @@ feature -- Status setting
 			end
 		end; 
 	
-	set_subwindow_mode (mode: INTEGER) is
+	set_subwindow_mode (mode: INTEGER)
 			-- Set the subwindow mode.
 		do
 			if gc_subwindow_mode /= mode then
@@ -227,7 +227,7 @@ feature -- Status setting
 			end;
 		end;
 	
-	set_tile (a_tile: PIXMAP) is
+	set_tile (a_tile: PIXMAP)
 			-- Set tile used to fill figures
 		require
 			a_tile_exists: not (a_tile = Void);
@@ -246,7 +246,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	set_gc_values is
+	set_gc_values
 		local
 			def_screen: MEL_SCREEN
 		do
@@ -283,7 +283,7 @@ feature {NONE} -- Implementation
 	gc_tile: POINTER;
 	gc_font: POINTER;;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

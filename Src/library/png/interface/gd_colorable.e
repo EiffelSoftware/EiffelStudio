@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object which is colorable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ feature {NONE} -- Implementation
 	
 	color_index: INTEGER
 
-	image: GD_IMAGE is deferred end
+	image: GD_IMAGE deferred end
 		
 invariant
 	color_index_large_enough: color_index >=0 
@@ -21,7 +21,7 @@ invariant
 	image_exists: image /= Void
 	index_possible: color_index <= image.color_index_bound
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,14 +12,14 @@ inherit
 
 feature -- Status Report
 
-	get_window_user_precondition (phwnd: CELL [POINTER]): BOOLEAN is
+	get_window_user_precondition (phwnd: CELL [POINTER]): BOOLEAN
 			-- User-defined preconditions for `get_window'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	context_sensitive_help_user_precondition (f_enter_mode: INTEGER): BOOLEAN is
+	context_sensitive_help_user_precondition (f_enter_mode: INTEGER): BOOLEAN
 			-- User-defined preconditions for `context_sensitive_help'.
 			-- Redefine in descendants if needed.
 		do
@@ -28,7 +28,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	get_window (phwnd: CELL [POINTER]) is
+	get_window (phwnd: CELL [POINTER])
 			-- No description available.
 			-- `phwnd' [out].  
 		require
@@ -40,7 +40,7 @@ feature -- Basic Operations
 			valid_phwnd: phwnd.item /= Void
 		end
 
-	context_sensitive_help (f_enter_mode: INTEGER) is
+	context_sensitive_help (f_enter_mode: INTEGER)
 			-- No description available.
 			-- `f_enter_mode' [in].  
 		require
@@ -49,7 +49,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

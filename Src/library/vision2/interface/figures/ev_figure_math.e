@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Facilities class for EV_FIGURE."
 	legal: "See notice at end of class."
@@ -15,13 +15,13 @@ inherit
 
 feature -- Implementation
 
-	distance (x1, y1, x2, y2: INTEGER): INTEGER is
+	distance (x1, y1, x2, y2: INTEGER): INTEGER
 			-- Calculate distance between (`x1', `y1') and (`x2', `y2').
 		do
 			Result := sqrt ((x1 - x2) ^ 2 + (y1 - y2) ^ 2).truncated_to_integer
 		end
 
-	distance_from_line (x, y, x1, y1, x2, y2: INTEGER): INTEGER is
+	distance_from_line (x, y, x1, y1, x2, y2: INTEGER): INTEGER
 			-- Calculate distance between (`x', `y') and (`x1', `y1')-(`x2', `y2').
 			-- The line is considered to be infinite.
 		local
@@ -40,7 +40,7 @@ feature -- Implementation
 			Result := sqrt (x_dist ^ 2 + y_dist ^ 2).truncated_to_integer
 		end
 
-	line_angle (x1, y1, x2, y2: INTEGER): DOUBLE is
+	line_angle (x1, y1, x2, y2: INTEGER): DOUBLE
 			-- Return angle of line from (`x1', `y1') to (`x2', `y2') relative to world.
 		do
 			if x2 = x1 then
@@ -58,19 +58,19 @@ feature -- Implementation
 			end
 		end
 
-	delta_x (angle: DOUBLE; length: INTEGER): INTEGER is
+	delta_x (angle: DOUBLE; length: INTEGER): INTEGER
 			-- Get dx component of line segment with `length' and `angle'.
 		do
 			Result := (cosine (angle) * length).rounded
 		end
 
-	delta_y (angle: DOUBLE; length: INTEGER): INTEGER is
+	delta_y (angle: DOUBLE; length: INTEGER): INTEGER
 			-- Get dy component of line segment with `length' and `angle'.
 		do
 			Result := (sine (angle) * length).rounded
 		end
 
-	point_on_line (x, y, x1, y1, x2, y2, width: INTEGER): BOOLEAN is
+	point_on_line (x, y, x1, y1, x2, y2, width: INTEGER): BOOLEAN
 			-- Is (`x', `y') on line from (`x2', `y2') to (`x1', `y1') with `width'?
 		local
 			t, rsq, dx, dy, dpx, dpy: DOUBLE
@@ -94,7 +94,7 @@ feature -- Implementation
 			end
 		end
 
-	point_on_segment (x, y, x1, y1, x2, y2, width: INTEGER): BOOLEAN is
+	point_on_segment (x, y, x1, y1, x2, y2, width: INTEGER): BOOLEAN
 			-- Is (`x', `y') on segment [(`x2', `y2'), (`x1', `y1')] with `width'?
 		local
 			half_dx, half_dy, dpx, dpy: INTEGER
@@ -116,14 +116,14 @@ feature -- Implementation
 			end
 		end
 
-	point_on_ellipse (x, y, xc, yc, r1, r2: INTEGER): BOOLEAN  is
+	point_on_ellipse (x, y, xc, yc, r1, r2: INTEGER): BOOLEAN
 			-- Is (`x', `y') inside specified ellipse?
 			--| With orientation 0.0.
 		do
 			Result := ((x - xc) / r1) ^ 2 + ((y - yc) / r2) ^ 2 <= 1
 		end
 
-	point_on_ellipse_boundary (x, y, xc, yc, r1, r2, width: INTEGER): BOOLEAN  is
+	point_on_ellipse_boundary (x, y, xc, yc, r1, r2, width: INTEGER): BOOLEAN
 			-- Is (`x', `y') on specified ellipse border?
 			--| With orientation 0.0.
 		local
@@ -134,14 +134,14 @@ feature -- Implementation
 			Result := tmp <= (1 + semi_width_ratio) and tmp >= (1 - semi_width_ratio)
 		end
 
-	point_on_rectangle (x, y, x1, y1, x2, y2: INTEGER): BOOLEAN is
+	point_on_rectangle (x, y, x1, y1, x2, y2: INTEGER): BOOLEAN
 			-- Is (`x', `y') inside specified box?
 			--| With orientation 0.0.
 		do
 			Result := between (x, x1, x2) and then between (y, y1, y2)
 		end
 
-	point_on_polygon (x, y: INTEGER; points: ARRAY [EV_COORDINATE]): BOOLEAN is
+	point_on_polygon (x, y: INTEGER; points: ARRAY [EV_COORDINATE]): BOOLEAN
 			-- Is (`x', `y') contained in polygon with `points'?
 			-- Based on code by Hanpeter van Vliet.
 		local
@@ -201,7 +201,7 @@ feature -- Implementation
 			Result := (hits \\ 2) /= 0
 		end
 
-	modulo (a, b: DOUBLE): DOUBLE is
+	modulo (a, b: DOUBLE): DOUBLE
 			-- `a' modulo `b'.
 			--| Should be in DOUBLE_REF.
 		require
@@ -218,23 +218,23 @@ feature -- Implementation
 			in_interval: Result >= 0.0 and Result < b
 		end
 
-	between (n, a, b: INTEGER): BOOLEAN is
+	between (n, a, b: INTEGER): BOOLEAN
 			-- Is `n' a value between `a' and `b'?
 		do
 			Result := n >= a.min (b) and then n <= a.max (b)
 		end
 
-	pi_half: DOUBLE is 1.57079633
+	pi_half: DOUBLE = 1.57079633
 
-	pi_quater: DOUBLE is 0.785398163
+	pi_quater: DOUBLE = 0.785398163
 
-	pi_times_two: DOUBLE is 6.28318531
+	pi_times_two: DOUBLE = 6.28318531
 
-	pi_times_three: DOUBLE is 9.42477796
+	pi_times_three: DOUBLE = 9.42477796
 
-	pi_half_times_three: DOUBLE is 4.71238898;
+	pi_half_times_three: DOUBLE = 4.71238898;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

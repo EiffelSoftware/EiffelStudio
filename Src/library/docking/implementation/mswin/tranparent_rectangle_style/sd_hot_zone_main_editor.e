@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_HOT_ZONE for editor type zone."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_docker_mediator: SD_DOCKER_MEDIATOR) is
+	make (a_docker_mediator: SD_DOCKER_MEDIATOR)
 			-- Creation method
 		require
 			not_void: a_docker_mediator /= Void
@@ -29,13 +29,13 @@ feature {NONE}  -- Initlization
 
 feature {NONE} -- Implementation
 
-	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	apply_change (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Redefine
 		do
 
 		end
 
-	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN is
+	update_for_feedback (a_screen_x, a_screen_y: INTEGER; a_dockable: BOOLEAN): BOOLEAN
 			-- Redefine
 		do
 			-- There is no operation available in this case,
@@ -43,31 +43,31 @@ feature {NONE} -- Implementation
 			internal_shared.feedback.clear
 		end
 
-	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- Redefine
 		do
 
 		end
 
-	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
+	update_for_indicator_clear (a_screen_x, a_screen_y: INTEGER)
 			-- Redefine
 		do
 
 		end
 
-	clear_indicator is
+	clear_indicator
 			-- Redefine
 		do
 
 		end
 
-	build_indicator is
+	build_indicator
 			-- Redefine
 		do
 
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

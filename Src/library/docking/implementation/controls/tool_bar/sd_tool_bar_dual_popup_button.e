@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Toolbar button for SD_TOOL_BAR behave in the same way as SD_TOOL_BAR_BUTTON, but popup a widget if end user pressed at the end dropdown area."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			Precursor
@@ -37,7 +37,7 @@ feature -- Query
 
 feature {NONE} -- Agents
 
-	on_pointer_motion (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_motion (a_relative_x, a_relative_y: INTEGER)
 			-- Redefine
 		do
 			-- Tool bar maybe void when CPU is busy on GTK.
@@ -74,7 +74,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_pointer_release (a_relative_x, a_relative_y: INTEGER) is
+	on_pointer_release (a_relative_x, a_relative_y: INTEGER)
 			-- Redefine
 		do
 			if tool_bar /= Void and has_position (a_relative_x, a_relative_y) then
@@ -92,7 +92,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

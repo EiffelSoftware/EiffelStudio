@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a Screen"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class."; 
@@ -85,7 +85,7 @@ create
 
 feature -- Initialization
 
-	make (a_screen: SCREEN) is
+	make (a_screen: SCREEN)
 			-- Create this screen
 		do
 			create drawing_dc
@@ -100,7 +100,7 @@ feature -- Access
 	drawing_dc: WEL_SCREEN_DC
 			-- Device context of current screen
 
-	x: INTEGER is
+	x: INTEGER
 			-- Current absolute horizontal coordinate of the mouse
 		local
 			point: WEL_POINT
@@ -110,7 +110,7 @@ feature -- Access
 			Result := point.x
 		end
 
-	y: INTEGER is
+	y: INTEGER
 			-- Current absolute vertical coordinate of the mouse
 		local
 			point: WEL_POINT
@@ -120,23 +120,23 @@ feature -- Access
 			Result := point.y
 		end
 
-	visible_width: INTEGER is
+	visible_width: INTEGER
 		once
 			Result := system_metrics.maximized_window_width
 		end
 
-	visible_height: INTEGER is
+	visible_height: INTEGER
 		once
 			Result := system_metrics.maximized_window_height
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal resolution of the screen
 		once
 			Result := system_metrics.screen_width
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical resolution of the screen
 		once
 			Result := system_metrics.screen_height
@@ -144,7 +144,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is screen created?
 		do
 			Result := true
@@ -152,22 +152,22 @@ feature -- Status report
 
 feature -- Element change
 
-	add_expose_action (action: COMMAND; arg: ANY) is
+	add_expose_action (action: COMMAND; arg: ANY)
 		do
 		end
 
-	remove_expose_action (action: COMMAND; arg: ANY) is
+	remove_expose_action (action: COMMAND; arg: ANY)
 		do
 		end
 
 feature -- Output
 
-	clear is
+	clear
 			-- Clear the entire area.
 		do
 		end
 
-	draw_arc (center: COORD_XY; radius1, radius2: INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER) is
+	draw_arc (center: COORD_XY; radius1, radius2: INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER)
 			-- Draw an arc centered in (`x', `y') with a great radius of
 			-- `radius1' and a small radius of `radius2'
 			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
@@ -178,7 +178,7 @@ feature -- Output
 			drawing_dc.release
 		end
 
-	draw_image_text (base: COORD_XY; text: STRING) is
+	draw_image_text (base: COORD_XY; text: STRING)
 			-- Draw text
 		do
 			set_drawing_dc (drawing_dc)
@@ -186,7 +186,7 @@ feature -- Output
 			unset_drawing_dc
 		end
 
-	draw_inf_line (point1, point2: COORD_XY) is
+	draw_inf_line (point1, point2: COORD_XY)
 			-- Draw an infinite line traversing `point1' and `point2'.
 		do
 			set_drawing_dc (drawing_dc)
@@ -194,7 +194,7 @@ feature -- Output
 			unset_drawing_dc
 		end
 
-	draw_point (a_point: COORD_XY) is
+	draw_point (a_point: COORD_XY)
 			-- Draw `a_point'.
 		do
 			set_drawing_dc (drawing_dc)
@@ -202,7 +202,7 @@ feature -- Output
 			unset_drawing_dc
 		end
 
-	draw_polyline (points: LIST [COORD_XY]; is_closed: BOOLEAN) is
+	draw_polyline (points: LIST [COORD_XY]; is_closed: BOOLEAN)
 			-- Draw a polyline, close it automatically if `is_closed'.
 		do
 			set_drawing_dc (drawing_dc)
@@ -210,7 +210,7 @@ feature -- Output
 			unset_drawing_dc
 		end
 
-	draw_rectangle (center: COORD_XY; rwidth, rheight: INTEGER; an_orientation: REAL) is
+	draw_rectangle (center: COORD_XY; rwidth, rheight: INTEGER; an_orientation: REAL)
 			-- Draw a rectangle whose center is `center' and
 			-- whose size is `rwidth' and `rheight'.
 		do
@@ -219,7 +219,7 @@ feature -- Output
 			unset_drawing_dc
 		end
 
-	draw_segment (point1, point2: COORD_XY) is
+	draw_segment (point1, point2: COORD_XY)
 			-- Draw a segment between `point1' and `point2'.
 		do
 			set_drawing_dc (drawing_dc)
@@ -227,7 +227,7 @@ feature -- Output
 			unset_drawing_dc
 		end
 
-	draw_text (base: COORD_XY; text: STRING) is
+	draw_text (base: COORD_XY; text: STRING)
 			-- Draw text
 		do
 			set_drawing_dc (drawing_dc)
@@ -235,7 +235,7 @@ feature -- Output
 			unset_drawing_dc
 		end
 
-	fill_arc (center: COORD_XY; radius1, radius2 : INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER) is
+	fill_arc (center: COORD_XY; radius1, radius2 : INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER)
 			-- Fill an arc centered in (`x', `y') with a great radius of
 			-- `radius1' and a small radius of `radius2'
 			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
@@ -246,7 +246,7 @@ feature -- Output
 			unset_drawing_dc
 		end
 
-	fill_polygon (points: LIST [COORD_XY]) is
+	fill_polygon (points: LIST [COORD_XY])
 			 -- Fill a polygon.
 		do
 			set_drawing_dc (drawing_dc)
@@ -254,7 +254,7 @@ feature -- Output
 			unset_drawing_dc
 		end
 
-	fill_rectangle (center: COORD_XY; rwidth, rheight : INTEGER; an_orientation: REAL) is
+	fill_rectangle (center: COORD_XY; rwidth, rheight : INTEGER; an_orientation: REAL)
 			-- Fill a rectangle whose center is `center' and
 			-- whose size is `rwidth' and `rheight'.
 		do
@@ -265,7 +265,7 @@ feature -- Output
 
 feature {NONE} -- Inapplicable
 
-	screen_object: POINTER is
+	screen_object: POINTER
 			-- No value for a screen
 		do
 			--| This is correct for Windows a
@@ -275,7 +275,7 @@ feature {NONE} -- Inapplicable
 
 feature -- Implementation
 
-	set_drawing_dc (dc: WEL_DC) is
+	set_drawing_dc (dc: WEL_DC)
 			-- Set `drawing_dc' as necessary
 		do
 			drawing_dc.get
@@ -287,14 +287,14 @@ feature -- Implementation
 			update_pen
 		end
 
-	unset_drawing_dc is
+	unset_drawing_dc
 			-- Reset the dc to the original contents
 		do
 			drawing_dc.unselect_all
 			drawing_dc.release
 		end
 
-	update_dc is
+	update_dc
 			-- Update the `drawing_dc' due to dc details changing
 		require else
 			drawing_dc: drawing_dc /= Void
@@ -304,7 +304,7 @@ feature -- Implementation
 			end
 		end
 
-	update_font is
+	update_font
 			-- Update the `drawing_dc' due to font details changing
 		require else
 			drawing_dc: drawing_dc /= Void
@@ -314,7 +314,7 @@ feature -- Implementation
 			end
 		end
 
-	update_pen is
+	update_pen
 			-- Update the `drawing_dc' due to pen details changing
 		require else
 			drawing_dc: drawing_dc /= Void
@@ -324,7 +324,7 @@ feature -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

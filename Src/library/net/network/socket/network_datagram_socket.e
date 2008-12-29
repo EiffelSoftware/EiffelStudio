@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Network datagram sockets"
@@ -40,7 +40,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Make a network datagram socket.
 		do
 			c_reset_error
@@ -54,7 +54,7 @@ feature -- Initialization
 			timeout_set_to_default: timeout = default_timeout
 		end;
 
-	make_bound (a_port: INTEGER) is
+	make_bound (a_port: INTEGER)
 			-- Make a network datagram socket bound to its well
 			-- known local address with port `a_port'.
 		local
@@ -68,7 +68,7 @@ feature -- Initialization
 			timeout_set_to_default: timeout = default_timeout
 		end;
 
-	make_targeted_to_hostname (a_hostname: STRING; a_peer_port: INTEGER) is
+	make_targeted_to_hostname (a_hostname: STRING; a_peer_port: INTEGER)
 			-- Make a network datagram socket connected to
 			-- hostname `a_hostname' and port `a_port'.
 		local
@@ -83,7 +83,7 @@ feature -- Initialization
 			timeout_set_to_default: timeout = default_timeout
 		end;
 
-	make_targeted_to_ip (an_ip_number: STRING; a_peer_port: INTEGER) is
+	make_targeted_to_ip (an_ip_number: STRING; a_peer_port: INTEGER)
 			-- Make a network datagram socket connected to
 			-- hostname `a_hostname' and port `a_port'.
 		local
@@ -98,7 +98,7 @@ feature -- Initialization
 			timeout_set_to_default: timeout = default_timeout
 		end;
 
-	make_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING) is
+	make_client_by_port (a_peer_port: INTEGER; a_peer_host: STRING)
 		obsolete "Use `make_targeted_to' and `target_to' features."
 			-- Make a network datagram client socket.
 		require
@@ -135,7 +135,7 @@ feature -- Initialization
 		end;
 
 	make_bound_client_by_port (a_local_port, a_peer_port: INTEGER; 
-					a_peer_host: STRING) is
+					a_peer_host: STRING)
 		obsolete "Use features `make_bound' and `target_to'."
 			-- Make a bound network datagram client socket.
 		require
@@ -169,7 +169,7 @@ feature -- Initialization
 			end
 		end;
 
-	make_server_by_port (a_port: INTEGER) is
+	make_server_by_port (a_port: INTEGER)
 		obsolete "Use feature `make_bound'."
 			-- Make a network datagram server socket.
 		require
@@ -190,7 +190,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	broadcast_enabled: BOOLEAN is
+	broadcast_enabled: BOOLEAN
 			-- Is broadcasting enabled?
 		require
 			valid_descriptor: exists
@@ -203,7 +203,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_broadcast is
+	enable_broadcast
 			-- Enable broadcasting.
 		require
 			valid_descriptor: exists
@@ -211,7 +211,7 @@ feature -- Status setting
 			c_set_sock_opt_int (descriptor, level_sol_socket, sobroadcast, 1)
 		end;
 
-	disable_broadcast is
+	disable_broadcast
 			-- Disable broadcasting.
 		require
 			valid_descriptor: exists
@@ -221,7 +221,7 @@ feature -- Status setting
 
 feature -- Miscellaneous
 
-	target_to_hostname (a_hostname: STRING; a_peer_port: INTEGER) is
+	target_to_hostname (a_hostname: STRING; a_peer_port: INTEGER)
 			-- Connect socket to address provided by
 			-- hostname `a_hostname' and port `a_port'.
 		require
@@ -233,7 +233,7 @@ feature -- Miscellaneous
 			connect_to_peer (a_peer_address);
 		end;
 
-	target_to_ip (an_ip_number: STRING; a_peer_port: INTEGER) is
+	target_to_ip (an_ip_number: STRING; a_peer_port: INTEGER)
 			-- Connect socket to address provided by
 			-- hostname `a_hostname' and port `a_port'.
 		require
@@ -245,13 +245,13 @@ feature -- Miscellaneous
 			connect_to_peer (a_peer_address);
 		end;
 
-	make_peer_address is
+	make_peer_address
 			-- Create peer address.
 		do
 			create peer_address.make
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

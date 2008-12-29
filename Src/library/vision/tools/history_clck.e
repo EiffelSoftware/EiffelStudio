@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -17,12 +17,12 @@ inherit
 
 feature -- Status report
 
-	context_data_useful: BOOLEAN is true;
+	context_data_useful: BOOLEAN = true;
 			-- This command need a context_data structure
 
 feature -- Basic operations
 
-	execute (argument: ANY) is
+	execute (argument: ANY)
 			-- Undo the current command.
 		local
 			history: HISTORY_L_W;
@@ -35,7 +35,7 @@ feature -- Basic operations
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

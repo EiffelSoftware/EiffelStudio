@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a date at C level"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,14 +20,14 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create an instance of C_DATA using current local time.
 		do
 			is_utc := False
 			update
 		end
 		
-	make_utc is
+	make_utc
 			-- Create an instance of C_DATE holding UTC values.
 		do
 			is_utc := True
@@ -43,7 +43,7 @@ feature -- Access
 
 feature -- Update
 
-	update is
+	update
 			-- Pointer to `struct tm' area.
 		local
 			l_timeb, l_tm, l_time: POINTER
@@ -73,7 +73,7 @@ feature -- Update
 
 feature -- Status
 
-	year_now: INTEGER is
+	year_now: INTEGER
 			-- Current year at creation time or after last call to `update'.
 		do
 			Result := 1900 + get_tm_year (internal_item.item)
@@ -81,7 +81,7 @@ feature -- Status
 			year_valid: Result >= 1900
 		end
 
-	month_now: INTEGER is
+	month_now: INTEGER
 			-- Current month at creation time or after last call to `update'.
 		do
 			Result := get_tm_mon (internal_item.item) + 1
@@ -89,7 +89,7 @@ feature -- Status
 			month_valid: Result >= 1 and Result <= 12
 		end
 		
-	day_now: INTEGER is
+	day_now: INTEGER
 			-- Current day at creation time or after last call to `update'.
 		do
 			Result := get_tm_mday (internal_item.item)
@@ -97,7 +97,7 @@ feature -- Status
 			day_valid: Result >= 1 and Result <= 31
 		end
 		
-	hour_now: INTEGER is
+	hour_now: INTEGER
 			-- Current hour at creation time or after last call to `update'.
 		do
 			Result := get_tm_hour (internal_item.item)
@@ -105,7 +105,7 @@ feature -- Status
 			hour_valid: Result >= 0 and Result <= 23
 		end
 		
-	minute_now: INTEGER is
+	minute_now: INTEGER
 			-- Current minute at creation time or after last call to `update'.
 		do
 			Result := get_tm_min (internal_item.item)
@@ -113,7 +113,7 @@ feature -- Status
 			minute_valid: Result >= 0 and Result <= 59
 		end
 		
-	second_now: INTEGER is
+	second_now: INTEGER
 			-- Current second at creation time or after last call to `update'.
 		do
 			Result := get_tm_sec (internal_item.item)
@@ -130,7 +130,7 @@ feature -- Status
 
 feature {NONE} -- Externals
 
-	ftime (p: POINTER) is
+	ftime (p: POINTER)
 			-- Set current date and time in `p', pointer to a `struct timeb' area.
 		external
 			"C macro signature (struct timeb*) use <sys/timeb.h>"
@@ -138,7 +138,7 @@ feature {NONE} -- Externals
 
 feature {NONE} -- `struct timeb' encapsulation
 		
-	timeb_structure_size: INTEGER is
+	timeb_structure_size: INTEGER
 			-- Size of `struct timeb'.
 		external
 			"C macro use <sys/timeb.h>"
@@ -146,7 +146,7 @@ feature {NONE} -- `struct timeb' encapsulation
 			"sizeof(struct timeb)"
 		end	
 
-	time_t_structure_size: INTEGER is
+	time_t_structure_size: INTEGER
 			-- Size of `struct timeb'.
 		external
 			"C macro use <time.h>"
@@ -154,7 +154,7 @@ feature {NONE} -- `struct timeb' encapsulation
 			"sizeof(time_t)"
 		end
 
-	tm_structure_size: INTEGER is
+	tm_structure_size: INTEGER
 			-- Size of `struct tm'.
 		external
 			"C macro use <time.h>"
@@ -162,13 +162,13 @@ feature {NONE} -- `struct timeb' encapsulation
 			"sizeof(struct tm)"
 		end
 		
-	get_millitm (p: POINTER): INTEGER is
+	get_millitm (p: POINTER): INTEGER
 			-- Get `p->millitm'.
 		external
 			"C struct struct timeb access millitm use <sys/timeb.h>"
 		end
 
-	get_time (p, t: POINTER) is
+	get_time (p, t: POINTER)
 			-- Get `p->time'.
 		external
 			"C inline use <sys/timeb.h>, <time.h>"
@@ -181,7 +181,7 @@ feature {NONE} -- `struct tm' encapsulation
 	internal_item: MANAGED_POINTER
 			-- Pointer to `struct tm' area.
 	
-	localtime (t: POINTER): POINTER is
+	localtime (t: POINTER): POINTER
 			-- Pointer to `struct tm' area.
 		external
 			"C inline use <time.h>"
@@ -189,7 +189,7 @@ feature {NONE} -- `struct tm' encapsulation
 			"localtime ((time_t *) $t)"
 		end
 		
-	gmtime (t: POINTER): POINTER is
+	gmtime (t: POINTER): POINTER
 			-- Pointer to `struct tm' area in UTC.
 		external
 			"C inline use <time.h>"
@@ -197,43 +197,43 @@ feature {NONE} -- `struct tm' encapsulation
 			"gmtime ((time_t *) $t)"
 		end
 		
-	get_tm_year (p: POINTER): INTEGER is
+	get_tm_year (p: POINTER): INTEGER
 			-- Get `p->tm_year', number of years since 1900.
 		external
 			"C struct struct tm access tm_year use <time.h>"
 		end
 
-	get_tm_mon (p: POINTER): INTEGER is
+	get_tm_mon (p: POINTER): INTEGER
 			-- Get `p->tm_mon'.
 		external
 			"C struct struct tm access tm_mon use <time.h>"
 		end
 		
-	get_tm_mday (p: POINTER): INTEGER is
+	get_tm_mday (p: POINTER): INTEGER
 			-- Get `p->tm_mday'.
 		external
 			"C struct struct tm access tm_mday use <time.h>"
 		end
 
-	get_tm_hour (p: POINTER): INTEGER is
+	get_tm_hour (p: POINTER): INTEGER
 			-- Get `p->tm_hour'.
 		external
 			"C struct struct tm access tm_hour use <time.h>"
 		end
 	
-	get_tm_min (p: POINTER): INTEGER is
+	get_tm_min (p: POINTER): INTEGER
 			-- Get `p->tm_min'.
 		external
 			"C struct struct tm access tm_min use <time.h>"
 		end
 	
-	get_tm_sec (p: POINTER): INTEGER is
+	get_tm_sec (p: POINTER): INTEGER
 			-- Get `p->tm_sec'.
 		external
 			"C struct struct tm access tm_sec use <time.h>"
 		end	
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

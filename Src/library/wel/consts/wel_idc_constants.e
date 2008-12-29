@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Images for default cursors (IDC) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,98 +10,98 @@ class
 
 feature -- Access
 
-	Idc_appstarting: POINTER is
+	Idc_appstarting: POINTER
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"IDC_APPSTARTING"
 		end
 
-	Idc_arrow: POINTER is
+	Idc_arrow: POINTER
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_ARROW"
 		end
 
-	Idc_help: POINTER is
+	Idc_help: POINTER
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_HELP"
 		end
 
-	Idc_hand: POINTER is
+	Idc_hand: POINTER
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"MAKEINTRESOURCE(32649)"
 		end
 
-	Idc_ibeam: POINTER is
+	Idc_ibeam: POINTER
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_IBEAM"
 		end
 
-	Idc_no: POINTER is
+	Idc_no: POINTER
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_NO"
 		end
 
-	Idc_wait: POINTER is
+	Idc_wait: POINTER
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_WAIT"
 		end
 
-	Idc_cross: POINTER is
+	Idc_cross: POINTER
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_CROSS"
 		end
 
-	Idc_uparrow: POINTER is
+	Idc_uparrow: POINTER
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_UPARROW"
 		end
 
-	Idc_sizeall: POINTER is
+	Idc_sizeall: POINTER
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_SIZEALL"
 		end
 
-	Idc_sizenwse: POINTER is
+	Idc_sizenwse: POINTER
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_SIZENWSE"
 		end
 
-	Idc_sizenesw: POINTER is
+	Idc_sizenesw: POINTER
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_SIZENESW"
 		end
 
-	Idc_sizewe: POINTER is
+	Idc_sizewe: POINTER
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"IDC_SIZEWE"
 		end
 
-	Idc_sizens: POINTER is
+	Idc_sizens: POINTER
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
@@ -110,17 +110,17 @@ feature -- Access
 
 feature -- Obsolete
 
-	Idc_size: POINTER is obsolete "Use ``Idc_sizeall''"
+	Idc_size: POINTER obsolete "Use ``Idc_sizeall''"
 		do
 			Result := Idc_sizeall
 		end
 
-	Idc_icon: POINTER is obsolete "Use ``Idc_arrow''"
+	Idc_icon: POINTER obsolete "Use ``Idc_arrow''"
 		do
 			Result := Idc_arrow
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

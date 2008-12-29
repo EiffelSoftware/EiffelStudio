@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision menu container. Abstract notion of a container for menu."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	process_menu_message (msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is
+	process_menu_message (msg: INTEGER; wparam, lparam: POINTER): BOOLEAN
 			-- Process `msg' which has not been processed by
 			-- `process_message' concerning menus.
 			--
@@ -50,12 +50,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU) is
+	on_menu_char (char_code: CHARACTER; corresponding_menu: WEL_MENU)
 			-- The menu char `char_code' has been typed within `corresponding_menu'.
 		deferred
 		end
 
-	on_measure_item (control_id: POINTER; measure_item: WEL_MEASURE_ITEM_STRUCT) is
+	on_measure_item (control_id: POINTER; measure_item: WEL_MEASURE_ITEM_STRUCT)
 			-- Handle Wm_measureitem messages.
 			-- A owner-draw control identified by `control_id' has
 			-- been changed and must be drawn. `measure_item' contains
@@ -75,7 +75,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_draw_item (control_id: POINTER; draw_item: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_item (control_id: POINTER; draw_item: WEL_DRAW_ITEM_STRUCT)
 			-- Handle Wm_drawitem messages.
 			-- A owner-draw control identified by `control_id' has
 			-- been changed and must be drawn. `draw_item' contains
@@ -98,7 +98,7 @@ feature {NONE} -- WEL Implementation
 
 feature {NONE} -- Externals
 
-	integer_to_pointer (i: INTEGER): POINTER is
+	integer_to_pointer (i: INTEGER): POINTER
 			-- Converts an integer `i' to a pointer
 		external
 			"C [macro <wel.h>] (EIF_INTEGER): EIF_POINTER"
@@ -106,7 +106,7 @@ feature {NONE} -- Externals
 			"cwel_integer_to_pointer"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

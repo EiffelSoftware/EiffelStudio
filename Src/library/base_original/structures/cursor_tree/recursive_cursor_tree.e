@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Cursor trees with a recursive structure"
@@ -21,13 +21,13 @@ deferred class RECURSIVE_CURSOR_TREE [G] inherit
 
 feature -- Access
 
-	item: G is
+	item: G
 			-- Item at cursor position
 		do
 			Result := active.item
 		end
 
-	cursor: RECURSIVE_TREE_CURSOR [G] is
+	cursor: RECURSIVE_TREE_CURSOR [G]
 			-- Current cursor position
 		do
 			create Result.make (active, active_parent, after, before, below)
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Measurement
 
-	arity: INTEGER is
+	arity: INTEGER
 			-- Number of children of active node.
 			-- If cursor is `above', 0 if tree is empty, 1 otherwise.
 		require else
@@ -44,7 +44,7 @@ feature -- Measurement
 			Result := active.arity
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in the tree
 		local
 			pos: like cursor
@@ -70,7 +70,7 @@ feature -- Status report
 	before: BOOLEAN
 			-- Is there no valid cursor position to the left of cursor?
 
-	above: BOOLEAN is
+	above: BOOLEAN
 			-- Is there no valid cursor position above cursor?
 		do
 			if not below then
@@ -78,19 +78,19 @@ feature -- Status report
 			end
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is the tree empty?
 		do
 			Result := (above_node.arity = 0)
 		end
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May new items be added on current level?
 		do
 			Result := (not above) and (not is_root)
 		end
 
-	isfirst: BOOLEAN is
+	isfirst: BOOLEAN
 			-- Is cursor on first sibling?
 		do
 			if not off then
@@ -98,7 +98,7 @@ feature -- Status report
 			end
 		end
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Is cursor on last sibling?
 		do
 			if not off then
@@ -106,7 +106,7 @@ feature -- Status report
 			end
 		end
 
-	is_root: BOOLEAN is
+	is_root: BOOLEAN
 			-- Is cursor on tree root?
 		do
 			if not off then
@@ -114,7 +114,7 @@ feature -- Status report
 			end
 		end
 
-	valid_cursor (p: CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position `p'?
 		local
 			pos, temp: like cursor
@@ -142,7 +142,7 @@ feature -- Status report
 
 feature -- Cursor movement
 
-	back is
+	back
 			-- Move cursor one position backward.
 		do
 			if below then
@@ -158,7 +158,7 @@ feature -- Cursor movement
 			end
 		end
 
-	forth is
+	forth
 			-- Move cursor one position forward.
 		do
 			if below then
@@ -174,7 +174,7 @@ feature -- Cursor movement
 			end
 		end
 
-	up is
+	up
 			-- Move cursor one level upward to parent,
 			-- or `above' if `is_root' holds.
 		do
@@ -191,7 +191,7 @@ feature -- Cursor movement
 			before := False
 		end
 
-	down (i: INTEGER) is
+	down (i: INTEGER)
 			-- Move cursor one level downward:
 			-- to `i'-th child if there is one,
 			-- or `after' if `i' = `arity' + 1,
@@ -222,7 +222,7 @@ feature -- Cursor movement
 			end
 		end
 
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to position `p'.
 		local
 			temp: like cursor
@@ -236,7 +236,7 @@ feature -- Cursor movement
 
 feature -- Insert element
 
-	extend (v: G) is
+	extend (v: G)
 			-- Add `v' after last child.
 			-- Make `v' the `first_child' if `below' and place
 			-- cursor `before'.
@@ -257,7 +257,7 @@ feature -- Insert element
 
 feature -- Element change
 
-	replace (v: G) is
+	replace (v: G)
 			-- Replace current item by `v'.
 		do
 			active.replace (v)
@@ -265,7 +265,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove is
+	remove
 			-- Remove node at cursor position
 			-- (and consequently the corresponding
 			-- subtree). Cursor moved up one level.
@@ -279,7 +279,7 @@ feature -- Removal
 			not_off_unless_empty: is_empty or else not off
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		do
 			if not is_empty then
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 	above_node: like active
 			-- Node above root; physical root of tree
 
-	corresponding_child is
+	corresponding_child
 			-- Make `active' the current child of `active_parent'.
 		require
 			active_exists: active /= Void
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	unchecked_go (p: like cursor) is
+	unchecked_go (p: like cursor)
 			-- Make an attempt to move cursor
 			-- to position `p', without checking
 			-- whether `p' is a valid cursor position
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 invariant
 	coherency: not above implies active_parent.child = active
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

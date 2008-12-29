@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Read/Write synchronization object, allows multiple reader threads to have %
 		%access to a resource, and only one writer thread."
 	legal: "See notice at end of class."

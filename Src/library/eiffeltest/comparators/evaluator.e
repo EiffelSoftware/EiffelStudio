@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Evaluators for test steps"
 	legal: "See notice at end of class."
@@ -21,13 +21,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_setup_ok: BOOLEAN is
+	is_setup_ok: BOOLEAN
 			-- Is evaluator set up?
 		do
 			Result := name /= Void and then not name.is_empty
 		end
 
-	is_true: BOOLEAN is
+	is_true: BOOLEAN
 			-- Does evaluator yield true?
 		require
 			setup_ok: is_setup_ok
@@ -36,7 +36,7 @@ feature -- Status report
 	 
 feature -- Status setting
 
-	set_name (s: STRING) is
+	set_name (s: STRING)
 			-- Set name to `s'.
 		require
 			non_empty_name: s /= Void and then not s.is_empty
@@ -46,7 +46,7 @@ feature -- Status setting
 			name_set: name = s
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

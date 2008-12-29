@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Simple frame which can only contain one child"
 	legal: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a frame with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged frame with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a frame with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current frame.
 		do
 		end;
@@ -79,7 +79,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: FRAME_I;
 			-- Implementation of frame
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_INNER_STATE which is docking in SD_MULTI_DOCK_AREA."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ create
 
 feature {NONE}-- Initlization
 
-	make (a_content: SD_CONTENT; a_direction: INTEGER; a_width_height: INTEGER) is
+	make (a_content: SD_CONTENT; a_direction: INTEGER; a_width_height: INTEGER)
 			-- Creation method.
 		require
 			a_content_not_void: a_content /= Void
@@ -55,7 +55,7 @@ feature {NONE}-- Initlization
 			set: width_height = a_width_height
 		end
 
-	make_for_tab_zone (a_content: SD_CONTENT; a_container: EV_CONTAINER; a_direction: INTEGER) is
+	make_for_tab_zone (a_content: SD_CONTENT; a_container: EV_CONTAINER; a_direction: INTEGER)
 			-- Creation method for SD_TAB_STATE.
 		require
 			a_content_not_void: a_content /= Void
@@ -71,7 +71,7 @@ feature {NONE}-- Initlization
 
 feature {SD_TAB_STATE_ASSISTANT} -- Initlization
 
-	set_widget_main_area (a_widget: EV_WIDGET; a_main_area: SD_MULTI_DOCK_AREA; a_parent: EV_CONTAINER; a_split_position: INTEGER) is
+	set_widget_main_area (a_widget: EV_WIDGET; a_main_area: SD_MULTI_DOCK_AREA; a_parent: EV_CONTAINER; a_split_position: INTEGER)
 			-- Set widget and main area which used by normal window.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -84,7 +84,7 @@ feature {SD_TAB_STATE_ASSISTANT} -- Initlization
 
 feature -- Redefine.
 
-	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
+	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)
 			-- Redefine.
 		local
 			l_content: SD_CONTENT
@@ -116,7 +116,7 @@ feature -- Redefine.
 			initialized := True
 		end
 
-	record_state is
+	record_state
 			-- Redefine
 		do
 			if floating_zone /= Void then
@@ -127,7 +127,7 @@ feature -- Redefine.
 			end
 		end
 
-	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT) is
+	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT)
 			-- Redefine.
 		do
 			zone.set_title (a_title)
@@ -135,13 +135,13 @@ feature -- Redefine.
 			set: a_title /= Void implies zone.title.is_equal (a_title.as_string_32)
 		end
 
-	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT) is
+	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT)
 			-- Refine
 		do
 			zone.set_pixmap (a_pixmap)
 		end
 
-	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
+	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
 			-- Redefine.
 		local
 			l_old_stuff: EV_WIDGET
@@ -223,7 +223,7 @@ feature -- Redefine.
 			end
 		end
 
-	stick (a_direction: INTEGER) is
+	stick (a_direction: INTEGER)
 				-- Redefine.
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
@@ -250,7 +250,7 @@ feature -- Redefine.
 			state_changed: content.state /= Current
 		end
 
-	float (a_x, a_y: INTEGER) is
+	float (a_x, a_y: INTEGER)
 			-- Redefine.
 		local
 			l_floating_state: SD_FLOATING_STATE
@@ -277,7 +277,7 @@ feature -- Redefine.
 			internal_docking_manager.command.resize (True)
 		end
 
-	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
+	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER)
 			-- Redefine.
 		local
 			l_called: BOOLEAN
@@ -311,7 +311,7 @@ feature -- Redefine.
 			end
 		end
 
-	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN) is
+	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN)
 			-- Redefine.
 		do
 			move_to_zone_internal (a_target_zone, a_first)
@@ -319,7 +319,7 @@ feature -- Redefine.
 			state_changed: content.state /= Current
 		end
 
-	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER) is
+	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER)
 			-- Redefine.
 		do
 			if a_index = 1 then
@@ -335,7 +335,7 @@ feature -- Redefine.
 			state_changed: content.state /= Current
 		end
 
-	auto_hide_tab_with (a_target_content: SD_CONTENT) is
+	auto_hide_tab_with (a_target_content: SD_CONTENT)
 			-- Redefine
 		do
 			if zone /= Void then
@@ -350,7 +350,7 @@ feature -- Redefine.
 			Precursor {SD_STATE} (a_target_content)
 		end
 
-	show is
+	show
 			-- Redefine.
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
@@ -401,7 +401,7 @@ feature -- Redefine.
 			end
 		end
 
-	hide is
+	hide
 			-- Redefine.
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
@@ -431,13 +431,13 @@ feature -- Redefine.
 			docking_manager.command.resize (False)
 		end
 
-	set_user_widget (a_widget: EV_WIDGET) is
+	set_user_widget (a_widget: EV_WIDGET)
 			-- Redefine
 		do
 			zone.update_user_widget
 		end
 
-	change_tab_tooltip (a_text: STRING_GENERAL) is
+	change_tab_tooltip (a_text: STRING_GENERAL)
 			-- Redefine
 		local
 			l_upper: SD_DOCKING_ZONE_UPPER
@@ -457,7 +457,7 @@ feature -- Redefine.
 
 feature {NONE} -- Implementation
 
-	move_to_zone_internal (a_target_zone: SD_ZONE; a_first: BOOLEAN) is
+	move_to_zone_internal (a_target_zone: SD_ZONE; a_first: BOOLEAN)
 			-- Move to a zone.
 		local
 			l_tab_state: SD_TAB_STATE
@@ -489,7 +489,7 @@ feature {NONE} -- Implementation
 			internal_docking_manager.command.update_title_bar
 		end
 
-	change_zone_split_area_to_zone (a_target_zone: SD_ZONE; a_direction: INTEGER) is
+	change_zone_split_area_to_zone (a_target_zone: SD_ZONE; a_direction: INTEGER)
 			-- Change zone parent split area to docking zone.
 		require
 			a_target_zone_not_void: a_target_zone /= Void
@@ -541,7 +541,7 @@ feature {NONE} -- Implementation
 			changed:
 		end
 
-	show_all_split_parent (a_zone: SD_ZONE) is
+	show_all_split_parent (a_zone: SD_ZONE)
 			-- Show all spliter parent of `a_zone' to make sure `a_zone' will displayed.
 		require
 			not_void: a_zone /= Void
@@ -567,7 +567,7 @@ invariant
 
 	internal_zone_not_void: initialized implies zone /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

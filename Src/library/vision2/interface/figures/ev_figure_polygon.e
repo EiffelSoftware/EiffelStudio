@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Filled area's defined by any number of `points'."
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_coordinates (coords: ARRAY [EV_COORDINATE]) is
+	make_with_coordinates (coords: ARRAY [EV_COORDINATE])
 			-- Initialize with points in `coords'.
 		require
 			coords_exist: coords /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	side_count: INTEGER is
+	side_count: INTEGER
 			-- Returns number of sides this polyline has.
 		do
 			if points.count <= 1 then
@@ -64,13 +64,13 @@ feature -- Status report
 
 feature -- Events
 
-	position_on_figure (x, y: INTEGER): BOOLEAN is
+	position_on_figure (x, y: INTEGER): BOOLEAN
 			-- Is (`x', `y') contained in this figure?
 		do
 			Result := point_on_polygon (x, y, point_array)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	
 	description: "Cursor displayable on the screen"
 	legal: "See notice at end of class.";
@@ -26,13 +26,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a cursor.
 		do
 			create {SCREEN_CURSOR_IMP} implementation.make (current)
 		end;
 
-	make_for_screen (a_screen: SCREEN) is
+	make_for_screen (a_screen: SCREEN)
 			-- Create a cursor for `a_screen'.
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type: INTEGER is
+	type: INTEGER
 			-- Predefined type of current cursor
 		do
 			Result := implementation.type
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_pixmap (pixmap: PIXMAP; mask: PIXMAP) is
+	set_pixmap (pixmap: PIXMAP; mask: PIXMAP)
 			-- Set `pixmap' as the new shape of the cursor.
 			-- `mask' is the pixel of pixmap that are to be displayed.
 			-- If `mask' is void, a suitable mask is drawn from `pixmap'.
@@ -67,7 +67,7 @@ feature -- Element change
 			user_pixmap_type: type = User_defined_pixmap
 		end;
 
-	set_type (new_type: INTEGER) is
+	set_type (new_type: INTEGER)
 			-- Set type of current cursor to `new_type'.
 		require
 			--type_ok: (X_cursor <= new_type) and (new_type < Cursor_undefined)
@@ -86,7 +86,7 @@ invariant
 
 	valid_type: ((type >= X_cursor) and (type < Cursor_undefined)) or (type = User_defined_pixmap)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

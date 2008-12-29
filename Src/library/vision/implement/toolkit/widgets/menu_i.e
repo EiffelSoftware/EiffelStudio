@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General menu implementation"
 	legal: "See notice at end of class.";
@@ -16,14 +16,14 @@ inherit
 	
 feature -- Access
 
-	title: STRING is
+	title: STRING
 			-- Title of menu
 		deferred
 		end;
 
 feature -- Element change
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Set menu title to `a_title'.
 		require
 			not_title_void: a_title /= Void
@@ -32,12 +32,12 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_title is
+	remove_title
 			-- Remove current menu title if any.
 		deferred
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

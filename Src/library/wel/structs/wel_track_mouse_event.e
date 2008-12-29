@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information for tracking mouse events."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,14 +21,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create TRACKMOUSEEVENT struct.
 		do
 			structure_make
 			cwel_trackmouseevent_set_cbsize (item, structure_size)
 		end
 
-	make_by_pointer (a_pointer: POINTER) is
+	make_by_pointer (a_pointer: POINTER)
 			-- Create TRACKMOUSEEVENT from `a_pointer'.
 		do
 			structure_make_by_pointer (a_pointer)
@@ -37,13 +37,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	dwflags: INTEGER is
+	dwflags: INTEGER
 				-- Requested tracking service.
 		do
 			Result := cwel_trackmouseevent_get_dwflags (item)
 		end
 
-	hwndtrack: POINTER is
+	hwndtrack: POINTER
 			-- Window to track.
 		do
 			Result := cwel_trackmouseevent_get_hwndtrack (item)
@@ -51,13 +51,13 @@ feature -- Access
 			Result_not_null: Result /= default_pointer
 		end
 
-	dwhovertime: INTEGER is
+	dwhovertime: INTEGER
 			-- Hover time-out.
 		do
 			Result := cwel_trackmouseevent_get_dwhovertime (item)
 		end
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_trackmouseevent
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_dwflags (flags: INTEGER) is
+	set_dwflags (flags: INTEGER)
 			-- Assign `flags' to `dwflags'.
 		do
 			cwel_trackmouseevent_set_dwflags (item, flags)
@@ -73,7 +73,7 @@ feature -- Status setting
 			dwflags_set: dwflags = flags
 		end
 
-	set_hwndtrack (window: POINTER) is
+	set_hwndtrack (window: POINTER)
 			-- Assign `window' to `hwndtrack'.
 		do
 			cwel_trackmouseevent_set_hwndtrack (item, window)
@@ -81,7 +81,7 @@ feature -- Status setting
 			hwndtrack_set: hwndtrack = window
 		end
 
-	set_dwhovertime (time: INTEGER) is
+	set_dwhovertime (time: INTEGER)
 			-- Assign `time' to `dwhovertime'.
 		do
 			cwel_trackmouseevent_set_dwhovertime (item, time)
@@ -91,54 +91,54 @@ feature -- Status setting
 
 feature {NONE} -- Externals
 
-	c_size_of_trackmouseevent: INTEGER is
+	c_size_of_trackmouseevent: INTEGER
 		external
 			"C [macro %"trackmouseevent.h%"]"
 		alias
 			"sizeof (TRACKMOUSEEVENT)"
 		end
 
-	cwel_trackmouseevent_get_cbsize (ptr: POINTER): INTEGER is
+	cwel_trackmouseevent_get_cbsize (ptr: POINTER): INTEGER
 		external
 			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*): EIF_INTEGER"
 		end
 
-	cwel_trackmouseevent_get_hwndtrack (ptr: POINTER): POINTER is
+	cwel_trackmouseevent_get_hwndtrack (ptr: POINTER): POINTER
 		external
 			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*): EIF_POINTER"
 		end
 
-	cwel_trackmouseevent_get_dwflags (ptr: POINTER): INTEGER is
+	cwel_trackmouseevent_get_dwflags (ptr: POINTER): INTEGER
 		external
 			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*): EIF_INTEGER"
 		end
 
-	cwel_trackmouseevent_get_dwhovertime (ptr: POINTER): INTEGER is
+	cwel_trackmouseevent_get_dwhovertime (ptr: POINTER): INTEGER
 		external
 			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*): EIF_INTEGER"
 		end
 
-	cwel_trackmouseevent_set_cbsize (ptr: POINTER; value: INTEGER) is
+	cwel_trackmouseevent_set_cbsize (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*, DWORD)"
 		end
 
-	cwel_trackmouseevent_set_hwndtrack (ptr, window: POINTER) is
+	cwel_trackmouseevent_set_hwndtrack (ptr, window: POINTER)
 		external
 			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*, HWND)"
 		end
 
-	cwel_trackmouseevent_set_dwflags (ptr: POINTER; value: INTEGER) is
+	cwel_trackmouseevent_set_dwflags (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*, DWORD)" 
 		end
 
-	cwel_trackmouseevent_set_dwhovertime (ptr: POINTER; value: INTEGER) is
+	cwel_trackmouseevent_set_dwhovertime (ptr: POINTER; value: INTEGER)
 		external
 			"C [macro %"trackmouseevent.h%"] (TRACKMOUSEEVENT*, DWORD)" 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

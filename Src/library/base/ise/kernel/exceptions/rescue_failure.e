@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Exception raised in rescue clause
 		]"
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	frozen code: INTEGER is
+	frozen code: INTEGER
 			-- Exception code
 		do
 			Result := {EXCEP_CONST}.rescue_exception
@@ -24,6 +24,6 @@ feature -- Access
 
 feature {NONE} -- Accesss
 
-	frozen internal_meaning: STRING is "Exception in rescue clause."
+	frozen internal_meaning: STRING = "Exception in rescue clause."
 
 end

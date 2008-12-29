@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common controls initialization constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,91 +10,91 @@ class
 
 feature -- Access
 
-	Icc_animate_class: INTEGER is
+	Icc_animate_class: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"ICC_ANIMATE_CLASS"
 		end
 
-	Icc_bar_classes: INTEGER is
+	Icc_bar_classes: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"ICC_BAR_CLASSES"
 		end
 
-	Icc_cool_classes: INTEGER is
+	Icc_cool_classes: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"ICC_COOL_CLASSES"
 		end
 
-	Icc_date_classes: INTEGER is
+	Icc_date_classes: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"ICC_DATE_CLASSES"
 		end
 
-	Icc_hotkey_class: INTEGER is
+	Icc_hotkey_class: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"ICC_HOTKEY_CLASS"
 		end
 
-	Icc_listview_classes: INTEGER is
+	Icc_listview_classes: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"ICC_LISTVIEW_CLASSES"
 		end
 
-	Icc_progress_class: INTEGER is
+	Icc_progress_class: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"ICC_PROGRESS_CLASS"
 		end
 
-	Icc_tab_classes: INTEGER is
+	Icc_tab_classes: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"ICC_TAB_CLASSES"
 		end
 
-	Icc_treeview_classes: INTEGER is
+	Icc_treeview_classes: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"ICC_TREEVIEW_CLASSES"
 		end
 
-	Icc_updown_class: INTEGER is
+	Icc_updown_class: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"ICC_UPDOWN_CLASS"
 		end
 
-	Icc_userex_classes: INTEGER is
+	Icc_userex_classes: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"ICC_USEREX_CLASSES"
 		end
 
-	Icc_win95_classes: INTEGER is
+	Icc_win95_classes: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"ICC_WIN95_CLASSES"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ListBox Style constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,36 +10,36 @@ class
 
 feature -- Access
 
-	Lbs_notify: INTEGER is 1
+	Lbs_notify: INTEGER = 1
 
-	Lbs_sort: INTEGER is 2
+	Lbs_sort: INTEGER = 2
 
-	Lbs_noredraw: INTEGER is 4
+	Lbs_noredraw: INTEGER = 4
 
-	Lbs_multiplesel: INTEGER is 8
+	Lbs_multiplesel: INTEGER = 8
 
-	Lbs_ownerdrawfixed: INTEGER is 16
+	Lbs_ownerdrawfixed: INTEGER = 16
 
-	Lbs_ownerdrawvariable: INTEGER is 32
+	Lbs_ownerdrawvariable: INTEGER = 32
 
-	Lbs_hasstrings: INTEGER is 64
+	Lbs_hasstrings: INTEGER = 64
 
-	Lbs_usetabstops: INTEGER is 128
+	Lbs_usetabstops: INTEGER = 128
 
-	Lbs_nointegralheight: INTEGER is 256
+	Lbs_nointegralheight: INTEGER = 256
 
-	Lbs_multicolumn: INTEGER is 512
+	Lbs_multicolumn: INTEGER = 512
 
-	Lbs_wantkeyboardinput: INTEGER is 1024
+	Lbs_wantkeyboardinput: INTEGER = 1024
 
-	Lbs_extendedsel: INTEGER is 2048
+	Lbs_extendedsel: INTEGER = 2048
 
-	Lbs_disablenoscroll: INTEGER is 4096
+	Lbs_disablenoscroll: INTEGER = 4096
 
-	Lbs_standard: INTEGER is 10485763;
+	Lbs_standard: INTEGER = 10485763;
 			-- `Lbs_notify' | `Lbs_sort' | `Ws_vscroll' | `Ws_border'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

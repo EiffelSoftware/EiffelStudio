@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision primitive, mswin implementation.%N%
 			%This class would be the equivalent of a wel_control in%N%
 			% the wel hierarchy."
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_parent (par: EV_CONTAINER) is
+	set_parent (par: EV_CONTAINER)
 			-- Make `par' the new parent of the widget.
 			-- `par' can be Void then the parent is the
 			-- default_parent.
@@ -65,7 +65,7 @@ feature -- Element change
 			end
 		end
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		do
@@ -74,13 +74,13 @@ feature -- Element change
 
 feature -- Basic operations
 
-	on_getdlgcode is
+	on_getdlgcode
 			-- Called when window receives WM_GETDLGCODE message.
 		do
 			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
 		end
 
-	tooltip_window: WEL_WINDOW is
+	tooltip_window: WEL_WINDOW
 			-- `Result' is WEL_WINDOW of `Current' used
 			-- to trigger tooltip events. May be redefined in
 			-- descendents that are composed of more than one window
@@ -91,25 +91,25 @@ feature -- Basic operations
 
 feature -- Navigation
 
-	is_tabable_to: BOOLEAN is
+	is_tabable_to: BOOLEAN
 			-- May `Current' be tabbed to?
 		do
 			Result := flag_set (style, {WEL_WS_CONSTANTS}.ws_tabstop)
 		end
 
-	is_tabable_from: BOOLEAN is
+	is_tabable_from: BOOLEAN
 			-- May `Current' be tabbed from?
 		do
 			Result := not not_is_tabable_from
 		end
 
- 	enable_tabable_to is
+ 	enable_tabable_to
  			-- Ensure `is_tabable_to' is `True'.
  		do
 		 	set_style (style | {WEL_WS_CONSTANTS}.ws_tabstop | {WEL_WS_CONSTANTS}.ws_group)
 		end
 
-	disable_tabable_to is
+	disable_tabable_to
 			-- Ensure `is_tabable_to' is `False'.
 		local
 			l_style: INTEGER
@@ -120,13 +120,13 @@ feature -- Navigation
 			set_style (l_style)
 		end
 
-	enable_tabable_from is
+	enable_tabable_from
  			-- Ensure `is_tabable_from' is `True'.
  		do
  			not_is_tabable_from := False
 		end
 
-	disable_tabable_from is
+	disable_tabable_from
 			-- Ensure `is_tabable_from' is `False'.
 		do
 			not_is_tabable_from := True
@@ -139,13 +139,13 @@ feature {EV_ANY_I} -- Implementation
 			-- default for `is_tabable_from' is True and we do not want to
 			-- set this to all descendants of EV_PRIMITIVE_IMP.
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			Precursor {EV_WIDGET_IMP}
 		end
 
-	update_for_pick_and_drop (starting: BOOLEAN) is
+	update_for_pick_and_drop (starting: BOOLEAN)
 			-- Pick and drop status has changed so update appearence of
 			-- `Current'.
 		do
@@ -154,14 +154,14 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PRIMITIVE
 
-	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
+	is_control_in_window (hwnd_control: POINTER): BOOLEAN
 			-- Is the control of handle `hwnd_control'
 			-- located inside the current window?
 		do
 			Result := (hwnd_control = wel_item)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

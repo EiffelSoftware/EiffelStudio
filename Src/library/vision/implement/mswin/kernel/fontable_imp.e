@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Implementation of widget with a font"
 	legal: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class FONTABLE_IMP
 
 feature -- Access
 
-	font: FONT is
+	font: FONT
 			-- font of current primitive
 		local
 			font_windows: FONT_IMP
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_font (f: FONT) is
+	set_font (f: FONT)
 			-- Set `font' to `f'.
 		local
 			local_font_windows: FONT_IMP
@@ -56,19 +56,19 @@ feature -- Status setting
 	private_font: FONT
 			-- font used for the implementation
 
-	wel_font: WEL_FONT is
+	wel_font: WEL_FONT
 		deferred
 		end
 
-	wel_set_font (f:WEL_FONT) is
+	wel_set_font (f:WEL_FONT)
 		deferred
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

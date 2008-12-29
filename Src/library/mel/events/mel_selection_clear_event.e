@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XSelectionClearEvent."
@@ -19,13 +19,13 @@ create
 
 feature -- Access
 
-	time: INTEGER is
+	time: INTEGER
 			-- Time when ownership was lost
 		do
 			Result := c_event_time (handle)
 		end;
 
-	selection: MEL_ATOM is
+	selection: MEL_ATOM
 			-- Name of selection
 		do
 			create Result.make_from_existing (c_event_selection (handle))
@@ -35,17 +35,17 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_event_time (event_ptr: POINTER): INTEGER is
+	c_event_time (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XSelectionClearEvent *): EIF_INTEGER"
 		end;
 
-	c_event_selection (event_ptr: POINTER): POINTER is
+	c_event_selection (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XSelectionClearEvent *): EIF_POINTER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

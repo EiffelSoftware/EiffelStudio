@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstraction of accelerable widget."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ inherit
 
 feature {MENU_IMP} -- Status setting
 
-	new_accelerator_id (new_id: INTEGER) is
+	new_accelerator_id (new_id: INTEGER)
 			-- Set a new id for the accelerator.
 		do
 			accelerator.set_command_id (new_id)
@@ -37,7 +37,7 @@ feature {MENU_IMP} -- Status setting
 
 feature -- Status setting
 
-	set_accelerator_action (translation: STRING) is
+	set_accelerator_action (translation: STRING)
 			-- Set the accelerator action (modifiers and key to use
 			-- as a shortcut in selecting a button) to `a_translation'.
 			-- `a_translation' must be specified with the X toolkit
@@ -105,7 +105,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	remove_accelerator_action is
+	remove_accelerator_action
 			-- Remove the accelerator action.
 		do
 			if accelerator /= Void then
@@ -118,7 +118,7 @@ feature -- Removal
 
 feature -- Status Report
 
-	has_accelerator: BOOLEAN is
+	has_accelerator: BOOLEAN
 			-- Is there an accelerator key associated with
 			-- this widget?
 		do
@@ -129,7 +129,7 @@ feature -- Status Report
 			-- Accelerator associated with menu entry
 			-- if the widget is in a menu.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

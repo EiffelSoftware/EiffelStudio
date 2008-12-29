@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					A place holder zone.
 					Normally used for place holder for editors zones.											
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_content: SD_CONTENT) is
+	make (a_content: SD_CONTENT)
 			-- Creation method
 		require
 			not_void: a_content /= Void
@@ -60,22 +60,22 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_show_stick (a_show: BOOLEAN) is
+	set_show_stick (a_show: BOOLEAN)
 			-- Do nothing.
 		do
 		end
 
-	set_show_normal_max (a_show: BOOLEAN) is
+	set_show_normal_max (a_show: BOOLEAN)
 			-- Do nothing.
 		do
 		end
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Do nothing.
 		do
 		end
 
-	extend (a_content: SD_CONTENT) is
+	extend (a_content: SD_CONTENT)
 			-- <Precursor>
 		local
 			l_widget: EV_WIDGET
@@ -91,7 +91,7 @@ feature -- Command
 
 feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
 
-	prepare_for_minimized_editor_area (a_manager: SD_DOCKING_MANAGER) is
+	prepare_for_minimized_editor_area (a_manager: SD_DOCKING_MANAGER)
 			-- Prepare for minimized editor area, construct widgets for minimized editor area
 			-- Such as adding an editor area button to current
 		local
@@ -139,7 +139,7 @@ feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
 			set: internal_docking_manager = a_manager
 		end
 
-	clear_for_minimized_area is
+	clear_for_minimized_area
 			-- Cleanup
 		do
 			internal_docking_manager := Void
@@ -149,13 +149,13 @@ feature {SD_DOCKING_MANAGER_COMMAND} -- Internal command
 
 feature -- Query
 
-	has (a_content: SD_CONTENT): BOOLEAN is
+	has (a_content: SD_CONTENT): BOOLEAN
 			-- If `a_content' is place holder content?
 		do
 			 Result := a_content = internal_docking_manager.zones.place_holder_content
 		end
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Title
 		local
 			l_shared: SD_SHARED
@@ -164,7 +164,7 @@ feature -- Query
 			Result := l_shared.editor_place_holder_content_name
 		end
 
-	title_area: EV_RECTANGLE is
+	title_area: EV_RECTANGLE
 			-- Place holder content has zero sized title area.
 		do
 			create Result
@@ -172,19 +172,19 @@ feature -- Query
 
 feature -- Agents
 
-	on_focus_in (a_content: SD_CONTENT) is
+	on_focus_in (a_content: SD_CONTENT)
 			-- Do nothing.
 		do
 		end
 
-	on_focus_out is
+	on_focus_out
 			-- Do nothing.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	notebook: SD_NOTEBOOK_UPPER is
+	notebook: SD_NOTEBOOK_UPPER
 			-- <Precursor>
 		do
 			if internal_notebook = Void then
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 	internal_notebook: SD_NOTEBOOK_UPPER
 			-- Fake notebook for {SD_UPPER_ZONE}
 			
-;indexing
+;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

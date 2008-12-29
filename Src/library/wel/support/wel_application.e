@@ -1,4 +1,4 @@
-indexing
+note
 	description: "General notions of a Windows application. All WEL %
 		%applications must define its own descendant of WEL_APPLICATION."
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create the application's dispatcher,
 			-- set the application's main window and run
 			-- the application.
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	main_window: WEL_COMPOSITE_WINDOW is
+	main_window: WEL_COMPOSITE_WINDOW
 			-- Must be defined as a once funtion to create the
 			-- application's main_window.
 		deferred
@@ -50,13 +50,13 @@ feature -- Access
 			parent_main_window_is_void: Result.parent = Void
 		end
 
-	accelerators: WEL_ACCELERATORS is
+	accelerators: WEL_ACCELERATORS
 			-- Application's accelerators
 			-- May be redefined (in once) to associate accelerators.
 		once
 		end
 
-	default_show_command: INTEGER is
+	default_show_command: INTEGER
 			-- Default command used to show `main_window'.
 			-- May be redefined to have a maximized window for
 			-- instance.
@@ -74,7 +74,7 @@ feature -- Status report
 			-- Is the idle action enabled?
 			-- (False by default)
 
-	runable: BOOLEAN is
+	runable: BOOLEAN
 			-- Can the application be run?
 			-- (True by default)
 			-- The user may want to return False if the application
@@ -83,7 +83,7 @@ feature -- Status report
 			Result := True
 		end
 
-	is_dialog (hwnd: POINTER): BOOLEAN is
+	is_dialog (hwnd: POINTER): BOOLEAN
 			-- Is the window corresponding to `hwnd' a dialog box?
 			-- We call the function with a dialog box option,
 			-- if it is indeed a dialog, the result will always
@@ -94,7 +94,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_idle_action is
+	enable_idle_action
 			-- Enable the call to `idle_action' when the message
 			-- queue is empty.
 		do
@@ -103,7 +103,7 @@ feature -- Status setting
 			idle_action_enabled: idle_action_enabled
 		end
 
-	disable_idle_action is
+	disable_idle_action
 			-- Disable the call to `idle_action' when the message
 			-- queue is empty.
 		do
@@ -114,7 +114,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	run is
+	run
 			-- Create `main_window' and start the message loop.
 		require
 			runable: runable
@@ -131,7 +131,7 @@ feature -- Basic operations
 			message_loop
 		end
 
-	idle_action is
+	idle_action
 			-- Called when the message queue is empty.
 			-- Useful to perform background operations.
 		require
@@ -141,20 +141,20 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	init_instance is
+	init_instance
 			-- Called for the first instance
 			-- of the application.
 			-- Not yet implemented, for future release.
 		do
 		end
 
-	init_application is
+	init_application
 			-- Called for each instance of the application.
 			-- May be defined to load DLLs.
 		do
 		end
 
-	message_loop is
+	message_loop
 			-- Windows message loop
 		local
 			msg: WEL_MSG
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_dispatcher is
+	create_dispatcher
 			-- Create the `dispatcher'.
 		require
 			dispatcher_void: dispatcher = Void
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_get_last_active_popup (hwnd: POINTER): POINTER is
+	cwin_get_last_active_popup (hwnd: POINTER): POINTER
 			-- SDK GetLastActivePopup
 		external
 			"C [macro <wel.h>] (HWND): EIF_POINTER"
@@ -264,7 +264,7 @@ feature {NONE} -- Externals
 			"GetLastActivePopup"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

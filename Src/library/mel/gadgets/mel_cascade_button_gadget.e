@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Motif Cascade Button Gadget."
@@ -32,7 +32,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_ROW_COLUMN; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_ROW_COLUMN; do_manage: BOOLEAN)
 			-- Create a motif cascade button gadget.
 		require
 			name_exists: a_name /= Void
@@ -62,13 +62,13 @@ feature -- Access
 			-- Parent of cascade button (must be either a
 			-- MEL_MENU_BAR or MEL_MENU_POPUP or MEL_MENU_PULLDOWN)
 
-	activate_command: MEL_COMMAND_EXEC is
+	activate_command: MEL_COMMAND_EXEC
 			-- Command set for the activate callback
 		do
 			Result := motif_command (XmNactivateCallback)
 		end;
 
-	cascading_command: MEL_COMMAND_EXEC is
+	cascading_command: MEL_COMMAND_EXEC
 			-- Command set for the activate callback
 		do
 			Result := motif_command (XmNcascadingCallback)
@@ -76,7 +76,7 @@ feature -- Access
 
 feature -- Satus report
 
-	cascade_pixmap: MEL_PIXMAP is
+	cascade_pixmap: MEL_PIXMAP
 			-- Pixmap of the cascade button
 		require
 			exists: not is_destroyed
@@ -88,7 +88,7 @@ feature -- Satus report
 			Result_is_shared: Result.is_shared
 		end;
 
-	mapping_delay: INTEGER is
+	mapping_delay: INTEGER
 			-- Number of milliseconds it will take to the
 			-- application to display the submenu
 		require
@@ -99,7 +99,7 @@ feature -- Satus report
 			mapping_delay_large_enough: mapping_delay >= 0
 		end;
 
-	sub_menu: MEL_ROW_COLUMN is
+	sub_menu: MEL_ROW_COLUMN
 			-- Widget of the pulldown menu pane associated
 			-- with the cascade button
 		require
@@ -110,7 +110,7 @@ feature -- Satus report
 
 feature -- Status setting
 
-	set_cascade_pixmap (a_pixmap: MEL_PIXMAP) is
+	set_cascade_pixmap (a_pixmap: MEL_PIXMAP)
 			-- Set `cascade_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
@@ -123,7 +123,7 @@ feature -- Status setting
 			pixmap_set: cascade_pixmap.is_equal (a_pixmap)
 		end;
 
-	set_mapping_delay (a_time: INTEGER) is
+	set_mapping_delay (a_time: INTEGER)
 			-- Set `mapping_delay' to `a_time'.
 		require
 			exists: not is_destroyed;
@@ -134,7 +134,7 @@ feature -- Status setting
 			time_set: mapping_delay = a_time
 		end;
 
-	set_sub_menu (a_menu: like sub_menu) is
+	set_sub_menu (a_menu: like sub_menu)
 			-- Set `sub_menu' to `a_menu'.
 		require
 			exists: not is_destroyed;
@@ -148,7 +148,7 @@ feature -- Status setting
 
 feature  -- Element Change
 
-	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed when the button is pressed
 			-- and released.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -161,7 +161,7 @@ feature  -- Element Change
 			command_set: command_set (activate_command, a_command, an_argument)
 		end;
 
-	set_cascading_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_cascading_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Set `a_command' to be executed before the submenu associated
 			-- with the cascade button is mapped.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -176,7 +176,7 @@ feature  -- Element Change
 
 feature  -- Removal
 
-	remove_activate_callback is
+	remove_activate_callback
 			-- Remove the command for the activate callback.
 		do
 			remove_callback (XmNactivateCallback)
@@ -184,7 +184,7 @@ feature  -- Removal
 			removed: activate_command = Void
 		end;
 
-	remove_cascading_callback is
+	remove_cascading_callback
 			-- Remove the command for the cascading callback.
 		do
 			remove_callback (XmNcascadingCallback)
@@ -194,14 +194,14 @@ feature  -- Removal
 
 feature {NONE} -- Implementation
 
-	xm_create_cascade_button_gadget (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_cascade_button_gadget (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/CascadeBG.h>"
 		alias
 			"XmCreateCascadeButtonGadget"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract OCI Parameter descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_parameter (parent: OCI_HANDLE; errh: OCI_ERROR_HANDLER; position: INTEGER) is
+	make_parameter (parent: OCI_HANDLE; errh: OCI_ERROR_HANDLER; position: INTEGER)
 			-- Create a descriptor of a parameter specified by `position' in the describe or
 			-- statement `handle'
 		require
@@ -50,7 +50,7 @@ feature -- Access
 --	
 --	timestamp: DATE_TIME -- the timestamp of the object this description is based on 
 		
-	get_attributes (errh: OCI_ERROR_HANDLER) is
+	get_attributes (errh: OCI_ERROR_HANDLER)
 		require
 			allocated: is_allocated
 			valid_error_handler: valid_error_handle (errh)
@@ -65,7 +65,7 @@ feature -- Access
 	
 feature {NONE} -- Implementation
 		
-	descriptor_type: INTEGER is
+	descriptor_type: INTEGER
 			-- Descriptor type
 		do
 			Result := Oci_dtype_param
@@ -74,14 +74,14 @@ feature {NONE} -- Implementation
 feature {NONE} -- Externals
 
 	oci_param_get (hndlp: POINTER; htype: INTEGER; errhp: POINTER; parmdpp: POINTER; pos: INTEGER):
-			INTEGER_16 is
+			INTEGER_16
 		external
 			"C (void *, int, void *, void **, int): short | %"oci.h%""
 		alias
 			"OCIParamGet"
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of infinited lines (implementation for X)"
 	legal: "See notice at end of class.";
@@ -26,7 +26,7 @@ create
 
 feature -- Initialization 
 
-	make  is
+	make
 			-- Create current line.
 		do
 			init_fig (Void);
@@ -39,7 +39,7 @@ feature -- Initialization
 
 feature -- Element change	
 
-	set (o1, o2: like p1) is
+	set (o1, o2: like p1)
 			-- Set the two end points of the line.
 		require else
 			not o1.is_superimposable (o2)
@@ -49,7 +49,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	set_p2 (p: like p2) is
+	set_p2 (p: like p2)
 			-- Set the second point.
 		require else
 			not p1.is_superimposable (p)
@@ -58,7 +58,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	set_p1 (p: like p1) is
+	set_p1 (p: like p1)
 			-- Set the first point.
 		require else
 			not p2.is_superimposable (p)
@@ -69,7 +69,7 @@ feature -- Element change
 
 feature -- Output
 
-	draw is
+	draw
 			-- Draw the line.
 		do
 			if drawing.is_drawable then
@@ -82,13 +82,13 @@ feature -- Output
 
 feature -- Status report
 
-	is_null: BOOLEAN is
+	is_null: BOOLEAN
 			-- Is the line null ?
 		do
 			Result := false
 		end;
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the line superimposable to `other' ?
 		do
 			Result := 0 = ((p2.y-p1.y)*(other.p2.x-other.p1.x)-(p2.x-p1.x)*(other.p2.y-other.p1.y))
@@ -97,12 +97,12 @@ feature -- Status report
 
 feature {NONE} -- Access
 
-	CapProjecting: INTEGER is 3;
+	CapProjecting: INTEGER = 3;
 		-- Code to define projecting cap
 
 feature {CONFIGURE_NOTIFY} -- Updating
 
-	conf_recompute is
+	conf_recompute
 		do
 			surround_box.set_infinite;
 			unset_conf_modified
@@ -112,7 +112,7 @@ invariant
 
 	not p1.is_superimposable (p2)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

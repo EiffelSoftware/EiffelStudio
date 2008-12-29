@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents the result from executing one of the stages in an eiffel test.
 	]"
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_normal (an_output: like output) is
+	make_normal (an_output: like output)
 			-- Create new normal response.
 		do
 			output := an_output
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			not_exceptional: not is_exceptional
 		end
 
-	make_exceptional (an_output: like output; an_exception: like exception) is
+	make_exceptional (an_output: like output; an_exception: like exception)
 			-- Create new exceptional response.
 		do
 			output := an_output

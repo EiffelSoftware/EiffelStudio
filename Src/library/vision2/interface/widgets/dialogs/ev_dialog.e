@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Window intended for transient user interaction.%N%
 		%Optionally modal. A modal dialog blocks the rest of the application%
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 			-- Note that `dialog_key_press_action' is inserted into the
 			-- `key_press_actions'. This handles the default and cancel
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_push_button: EV_BUTTON is
+	default_push_button: EV_BUTTON
 			-- Default pushed button. This is the button that
 			-- is pushed if the user press the enter key unless
 			-- a push button is currently focused.
@@ -53,7 +53,7 @@ feature -- Access
 			Result := implementation.default_push_button
 		end
 
-	default_cancel_button: EV_BUTTON is
+	default_cancel_button: EV_BUTTON
 			-- Default cancel button. This is the button that
 			-- is pushed if the user press the escape key or
 			-- close the window using the close icon.
@@ -67,7 +67,7 @@ feature -- Access
 
 feature -- Access
 
-	is_modal: BOOLEAN is
+	is_modal: BOOLEAN
 			-- Is `Current' shown modally to another window?
 			-- If `True' then `Current' must be closed before
 			-- application can receive user events again?
@@ -77,7 +77,7 @@ feature -- Access
 			Result := implementation.is_modal
 		end
 
-	is_relative: BOOLEAN is
+	is_relative: BOOLEAN
 			-- Is `Current' shown relative to another window?
 		require
 			not_destroyed: not is_destroyed
@@ -85,7 +85,7 @@ feature -- Access
 			Result := implementation.is_relative
 		end
 
-	blocking_window: EV_WINDOW is
+	blocking_window: EV_WINDOW
 			-- `Result' is window `Current' is shown to if
 			-- `is_modal' or `is_relative'.
 		require
@@ -98,7 +98,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_default_push_button (a_button: EV_BUTTON) is
+	set_default_push_button (a_button: EV_BUTTON)
 			-- Assign `a_button' to `default push button'.
 		require
 			not_destroyed: not is_destroyed
@@ -110,7 +110,7 @@ feature -- Status Setting
 			default_push_button_set: default_push_button = a_button
 		end
 
-	remove_default_push_button is
+	remove_default_push_button
 			-- Remove `default_push_button'.
 		require
 			not_destroyed: not is_destroyed
@@ -121,7 +121,7 @@ feature -- Status Setting
 			not_has_default_push_button: default_push_button = Void
 		end
 
-	set_default_cancel_button (a_button: EV_BUTTON) is
+	set_default_cancel_button (a_button: EV_BUTTON)
 			-- Assign `a_button' to `default_cancel_button'.
 		require
 			not_destroyed: not is_destroyed
@@ -135,7 +135,7 @@ feature -- Status Setting
 		end
 
 
-	remove_default_cancel_button is
+	remove_default_cancel_button
 			-- Remove `default_cancel_button'.
 		require
 			not_destroyed: not is_destroyed
@@ -148,7 +148,7 @@ feature -- Status Setting
 
 feature -- Basic operations
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show and wait until `Current' is closed.
 			-- `Current' is shown modal with respect to `a_window'.
 		require
@@ -167,7 +167,7 @@ feature -- Basic operations
 				not is_destroyed implies blocking_window = Void
 		end
 
-	show_relative_to_window (a_window: EV_WINDOW) is
+	show_relative_to_window (a_window: EV_WINDOW)
 			-- Show `Current' with respect to `a_window'.
 		do
 			implementation.show_relative_to_window (a_window)
@@ -176,7 +176,7 @@ feature -- Basic operations
 			blocking_window_set: blocking_window = a_window
 		end
 
-	dialog_key_press_action (a_key: EV_KEY) is
+	dialog_key_press_action (a_key: EV_KEY)
 			-- The action performed to process default push and cancel
 			-- buttons. This is inserted in `key_press_actions' and
 			-- behaves as follows:
@@ -203,7 +203,7 @@ feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_DIALOG_IMP} implementation.make (Current)
@@ -217,7 +217,7 @@ invariant
 	no_blocking_window_when_hidden: is_usable implies (not is_show_requested implies blocking_window = Void)
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

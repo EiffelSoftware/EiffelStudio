@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "EiffelVision file save dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			Precursor {EV_FILE_DIALOG_IMP}
 			set_title ("Save As")
@@ -37,13 +37,13 @@ feature {NONE} -- Implementation
 
 	interface: EV_FILE_SAVE_DIALOG
 
-	file_chooser_action: INTEGER is
+	file_chooser_action: INTEGER
 			-- Action constant of the file chooser, ie: to open or save files, etc.
 		do
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_save_enum
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

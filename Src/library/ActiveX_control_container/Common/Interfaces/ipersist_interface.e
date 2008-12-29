@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 
 feature -- Status Report
 
-	get_class_id_user_precondition (p_class_id: ECOM_GUID): BOOLEAN is
+	get_class_id_user_precondition (p_class_id: ECOM_GUID): BOOLEAN
 			-- User-defined preconditions for `get_class_id'.
 			-- Redefine in descendants if needed.
 		do
@@ -21,7 +21,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	get_class_id (p_class_id: ECOM_GUID) is
+	get_class_id (p_class_id: ECOM_GUID)
 			-- No description available.
 			-- `p_class_id' [out].  
 		require
@@ -32,7 +32,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

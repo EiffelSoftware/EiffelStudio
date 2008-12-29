@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that enables to set default values%
 			%for DB_TABLE_COMPONENT without creating an instance%
 			%of the class."
@@ -15,14 +15,14 @@ create
 
 feature -- Initialization
 
-	make_for_settings is
+	make_for_settings
 			-- Give access.
 		do
 		end
 
 feature -- Status report
 
-	database_handler_set: BOOLEAN is
+	database_handler_set: BOOLEAN
 			-- Is a database handler set?
 		do
 			Result := database_handler_cell.item /= Void
@@ -30,19 +30,19 @@ feature -- Status report
 
 feature -- Access
 
-	database_handler: ABSTRACT_DB_TABLE_MANAGER is
+	database_handler: ABSTRACT_DB_TABLE_MANAGER
 			-- Interface with the database.
 		do
 			Result := database_handler_cell.item
 		end
 
-	basic_message_handler (message: STRING) is
+	basic_message_handler (message: STRING)
 			-- Display `message' on standard output.
 		do
 			io.putstring (message)
 		end
 
-	basic_confirmation_handler (message: STRING; action_to_confirm: PROCEDURE [ANY, TUPLE]) is
+	basic_confirmation_handler (message: STRING; action_to_confirm: PROCEDURE [ANY, TUPLE])
 			-- Execute `action_to_confirm' without confirmation.
 		do
 			action_to_confirm.call ([])
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	set_database_handler (db_handler: ABSTRACT_DB_TABLE_MANAGER) is
+	set_database_handler (db_handler: ABSTRACT_DB_TABLE_MANAGER)
 			-- Set `db_handler' to
 			-- `database_handler'.
 		do
@@ -59,7 +59,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	database_handler_cell: CELL [ABSTRACT_DB_TABLE_MANAGER] is
+	database_handler_cell: CELL [ABSTRACT_DB_TABLE_MANAGER]
 			-- Default Interface with the database.
 		once
 			create Result.put (Void)
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

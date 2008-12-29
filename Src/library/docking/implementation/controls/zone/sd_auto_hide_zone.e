@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is the zone when docking at a SD_AUTO_HIDE_PANEL"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -59,7 +59,7 @@ create
 
 feature	{NONE} -- Initlization
 
-	make (a_content: SD_CONTENT; a_direction: INTEGER) is
+	make (a_content: SD_CONTENT; a_direction: INTEGER)
 			-- Creation method.
 		require
 			a_content_not_void: a_content /= Void
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 	internal_direction: INTEGER
 			-- Direction.
 
-	stick is
+	stick
 			-- Stick zone.
 		do
 			internal_content.state.stick (content.state.direction)
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 	resize_bar: SD_RESIZE_BAR
 			-- Resize bar at side.
 
-	start_resize_operation (a_bar: SD_RESIZE_BAR; a_screen_boundary: EV_RECTANGLE) is
+	start_resize_operation (a_bar: SD_RESIZE_BAR; a_screen_boundary: EV_RECTANGLE)
 			-- Redefine.
 		do
 			-- Set the area which allow user to resize the window.
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	end_resize_operation (a_bar: SD_RESIZE_BAR; a_delta: INTEGER) is
+	end_resize_operation (a_bar: SD_RESIZE_BAR; a_delta: INTEGER)
 			-- Redefine.
 		do
 			disable_item_expand (resize_bar)
@@ -165,14 +165,14 @@ feature {NONE} -- Implementation
 
 feature {SD_AUTO_HIDE_STATE} -- For user docking
 
-	on_focus_in (a_content: SD_CONTENT)is
+	on_focus_in (a_content: SD_CONTENT)
 			-- Redefine.
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE} (a_content)
 			window.set_focus_color (True)
 		end
 
-	on_focus_out is
+	on_focus_out
 			-- Redefine.
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE}
@@ -184,7 +184,7 @@ feature -- Query
 	window: SD_PANEL
 			-- Window.
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- If `Current' has focus?
 		do
 			Result := window.title_bar.is_focus_color_enable
@@ -192,7 +192,7 @@ feature -- Query
 
 feature -- Command
 
-	set_focus_color (a_selection: BOOLEAN) is
+	set_focus_color (a_selection: BOOLEAN)
 			-- Redefine.
 		do
 			if a_selection then
@@ -202,7 +202,7 @@ feature -- Command
 			end
 		end
 
-	destroy is
+	destroy
 			-- Redefine.
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE}
@@ -220,7 +220,7 @@ invariant
 
 	internal_shared_not_void: internal_shared /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

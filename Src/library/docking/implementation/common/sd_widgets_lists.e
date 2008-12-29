@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Smart Docking library widget lists."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Query
 
-	all_tool_bars: ARRAYED_LIST [SD_TOOL_BAR] is
+	all_tool_bars: ARRAYED_LIST [SD_TOOL_BAR]
 			-- All SD_TOOL_BAR instances.
 		local
 			l_list: ARRAYED_LIST [INTEGER]
@@ -41,7 +41,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	all_tool_bar_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE] is
+	all_tool_bar_zones: ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			-- All SD_TOOL_BAR_ZONE instances.
 		local
 			l_list: ARRAYED_LIST [INTEGER]
@@ -69,7 +69,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	all_title_bars: ARRAYED_LIST [SD_TITLE_BAR] is
+	all_title_bars: ARRAYED_LIST [SD_TITLE_BAR]
 			-- All SD_TITLE_BAR instances.
 		local
 			l_list: ARRAYED_LIST [INTEGER]
@@ -97,7 +97,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	all_notebooks: ARRAYED_LIST [SD_NOTEBOOK] is
+	all_notebooks: ARRAYED_LIST [SD_NOTEBOOK]
 			-- All SD_NOTEBOOK instances.
 		local
 			l_list: ARRAYED_LIST [INTEGER]
@@ -125,7 +125,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	all_auto_hide_panels: ARRAYED_LIST [SD_AUTO_HIDE_PANEL] is
+	all_auto_hide_panels: ARRAYED_LIST [SD_AUTO_HIDE_PANEL]
 			-- All SD_AUTO_HIDE_PANEL instances.
 		local
 			l_list: ARRAYED_LIST [INTEGER]
@@ -155,7 +155,7 @@ feature -- Query
 
 feature -- Command is
 
-	add_tool_bar (a_tool_bar: SD_TOOL_BAR) is
+	add_tool_bar (a_tool_bar: SD_TOOL_BAR)
 			-- Add `a_tool_bar''s object id.
 		require
 			not_void: a_tool_bar /= Void
@@ -165,7 +165,7 @@ feature -- Command is
 			has: all_tool_bars.has (a_tool_bar)
 		end
 
-	prune_tool_bar (a_tool_bar: SD_TOOL_BAR) is
+	prune_tool_bar (a_tool_bar: SD_TOOL_BAR)
 			-- Prune `a_tool_bar''s object id.
 		require
 			not_void: a_tool_bar /= Void
@@ -175,7 +175,7 @@ feature -- Command is
 			not_has: not all_tool_bars.has (a_tool_bar)
 		end
 
-	add_tool_bar_zone (a_tool_bar_zone: SD_TOOL_BAR_ZONE) is
+	add_tool_bar_zone (a_tool_bar_zone: SD_TOOL_BAR_ZONE)
 			-- Add `a_tool_bar_zone''s object id.
 		require
 			not_void: a_tool_bar_zone /= Void
@@ -185,7 +185,7 @@ feature -- Command is
 			has: all_tool_bar_zones.has (a_tool_bar_zone)
 		end
 
-	prune_tool_bar_zone (a_tool_bar_zone: SD_TOOL_BAR_ZONE) is
+	prune_tool_bar_zone (a_tool_bar_zone: SD_TOOL_BAR_ZONE)
 			-- Prune `a_tool_bar_zone''s id.
 		require
 			not_void: a_tool_bar_zone /= Void
@@ -195,7 +195,7 @@ feature -- Command is
 			not_has: not all_tool_bar_zones.has (a_tool_bar_zone)
 		end
 
-	add_title_bar (a_title_bar: SD_TITLE_BAR) is
+	add_title_bar (a_title_bar: SD_TITLE_BAR)
 			-- Add `a_title_bar''s object id.
 		require
 			not_void: a_title_bar /= Void
@@ -205,7 +205,7 @@ feature -- Command is
 			has: all_title_bars.has (a_title_bar)
 		end
 
-	prune_title_bar (a_title_bar: SD_TITLE_BAR) is
+	prune_title_bar (a_title_bar: SD_TITLE_BAR)
 			-- Prune `a_title_bar''s id.
 		require
 			not_void: a_title_bar /= Void
@@ -215,7 +215,7 @@ feature -- Command is
 			not_has: not all_title_bars.has (a_title_bar)
 		end
 
-	add_notebook (a_notebook: SD_NOTEBOOK) is
+	add_notebook (a_notebook: SD_NOTEBOOK)
 			-- Add `a_notebook'' object id.
 		require
 			not_void: a_notebook /= Void
@@ -225,7 +225,7 @@ feature -- Command is
 			has: all_notebooks.has (a_notebook)
 		end
 
-	prune_notebook (a_notebook: SD_NOTEBOOK) is
+	prune_notebook (a_notebook: SD_NOTEBOOK)
 			-- Prune `a_notebook''s object id.
 		require
 			not_void: a_notebook /= Void
@@ -235,7 +235,7 @@ feature -- Command is
 			not_has: not all_notebooks.has (a_notebook)
 		end
 
-	add_auto_hide_panel (a_auto_hide_panel: SD_AUTO_HIDE_PANEL) is
+	add_auto_hide_panel (a_auto_hide_panel: SD_AUTO_HIDE_PANEL)
 			-- Add `a_auto_hide_panel''s object id.
 		require
 			not_void: a_auto_hide_panel /= Void
@@ -245,7 +245,7 @@ feature -- Command is
 			has: all_auto_hide_panels.has (a_auto_hide_panel)
 		end
 
-	prune_auto_hide_panel (a_auto_hide_panel: SD_AUTO_HIDE_PANEL) is
+	prune_auto_hide_panel (a_auto_hide_panel: SD_AUTO_HIDE_PANEL)
 			-- Prune `a_auto_hide_panel''s object id.
 		require
 			not_void: a_auto_hide_panel /= Void
@@ -257,37 +257,37 @@ feature -- Command is
 
 feature {NONE} -- Implementation
 
-	all_tool_bar_ids:	ARRAYED_LIST [INTEGER] is
+	all_tool_bar_ids:	ARRAYED_LIST [INTEGER]
 			-- Singleton for `all_tool_bars''s object id.
 		once
 			create Result.make (10)
 		end
 
-	all_tool_bar_zone_ids: ARRAYED_LIST [INTEGER] is
+	all_tool_bar_zone_ids: ARRAYED_LIST [INTEGER]
 			-- Singleton for `all_tool_bar_zones''s object id.
 		once
 			create Result.make (10)
 		end
 
-	all_title_bar_ids: ARRAYED_LIST [INTEGER] is
+	all_title_bar_ids: ARRAYED_LIST [INTEGER]
 			-- Signleton for `all_title_bars'' object id.
 		once
 			create Result.make (10)
 		end
 
-	all_notebook_ids: ARRAYED_LIST [INTEGER] is
+	all_notebook_ids: ARRAYED_LIST [INTEGER]
 			-- Singleton for `all_notebooks''s object id.
 		once
 			create Result.make (10)
 		end
 
-	all_auto_hide_panel_ids: ARRAYED_LIST [INTEGER] is
+	all_auto_hide_panel_ids: ARRAYED_LIST [INTEGER]
 			-- Singleton for `all_auto_hide_panels'' object id.
 		once
 			create Result.make (4)
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

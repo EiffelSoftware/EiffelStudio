@@ -1,4 +1,4 @@
-indexing 
+note 
 	description:
 		"[
 			Interactive range widget. A sliding thumb displays the current `value'
@@ -25,7 +25,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_RANGE_I;
 			-- Responsible for interaction with native graphics toolkit.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

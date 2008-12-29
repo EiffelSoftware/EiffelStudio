@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class.";
 	Date: "$Date$"
@@ -50,7 +50,7 @@ create {SQL_SCAN}
 
 feature -- Initialization
 
-	make (i: INTEGER) is
+	make (i: INTEGER)
 			-- Create format and allocate string.
 		do
 			string_make (i)
@@ -59,7 +59,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	parse (s: STRING): STRING is
+	parse (s: STRING): STRING
 			-- Parse string `s' by replacing each pattern ":<name>"
 			-- with the Eiffel object description whose name
 			-- also matches "<name>".
@@ -74,7 +74,7 @@ feature -- Basic operations
 			Result := Current
 		end
 
-	get_value (obj: ANY; str: STRING) is
+	get_value (obj: ANY; str: STRING)
 			-- Retrieve string value of `obj' and put in `str'.
 		require
 			str_exists: str /= Void
@@ -132,7 +132,7 @@ feature -- Basic operations
 			end
 		end
 
-	get_complex_value (obj: ANY; str: STRING) is
+	get_complex_value (obj: ANY; str: STRING)
 			-- Retrieve string value of reference object `obj' and put in `str'.
 		require
 			object_exists: obj /= Void
@@ -196,7 +196,7 @@ feature -- Basic operations
 			end
 		end
 
-	replace is
+	replace
 			-- Replace all occurrences of :key by `ht.item (":key")'
 		local
 			l_new_string: like Current
@@ -254,10 +254,10 @@ feature {NONE} -- Status report
 	index: INTEGER
 			-- Internal counter
 
-	Null_string: STRING is "NULL"
+	Null_string: STRING = "NULL"
 			-- SQL null value constant
 
-	buffer: STRING is
+	buffer: STRING
 			-- Constant temporary string
 		once
 			create Result.make (200)
@@ -265,7 +265,7 @@ feature {NONE} -- Status report
 			Result /= Void
 		end
 
-	next_index (k: INTEGER): INTEGER is
+	next_index (k: INTEGER): INTEGER
 			-- Get next index position in formalized way through index `k'.
 			-- (May be redefined in descendant class).
 		do
@@ -274,7 +274,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Status setting
 
-	start (obj: ANY) is
+	start (obj: ANY)
 			-- Set `max_index' with number of field of Current.
 			-- (May be redefined in descendant class).
 		do
@@ -287,7 +287,7 @@ feature {NONE} -- Status setting
 --			
 		end
 
-	search_special is
+	search_special
 			-- Move cursor to next occurrence of ':', '%'', or '"'
 		local
 			c: CHARACTER
@@ -317,7 +317,7 @@ feature {NONE} -- Status setting
 			else item (index) = '"'
 		end
 
-	go_after_identifier is
+	go_after_identifier
 			-- Move cursor to next character not allowed in identifier
 		local
 			found: BOOLEAN
@@ -348,7 +348,7 @@ feature {NONE} -- Status setting
 			index := i
 		end
 
-	replacement_string (key, destination: STRING) is
+	replacement_string (key, destination: STRING)
 			-- Replace object associated with `key' in `destination'.
 		require
 			key_exists: key /= Void
@@ -364,7 +364,7 @@ feature {NONE} -- Status setting
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

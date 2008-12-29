@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Representation of a typeface.
@@ -46,7 +46,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_values (a_family, a_weight, a_shape, a_height: INTEGER) is
+	make_with_values (a_family, a_weight, a_shape, a_height: INTEGER)
 			-- Create with `a_family', `a_weight', `a_shape' and `a_height'.
 		require
 			a_family_valid: valid_family (a_family)
@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	family: INTEGER is
+	family: INTEGER
 			-- Font category. Can be any of the Family_* constants
 			-- defined in EV_FONT_CONSTANTS.
 			-- Default: Family_sans
@@ -83,7 +83,7 @@ feature -- Access
 			bridge_ok: Result = implementation.family
 		end
 
-	char_set: INTEGER is
+	char_set: INTEGER
 			-- Charset of the font.
 			-- Only meaningful on windows.
 		require
@@ -94,7 +94,7 @@ feature -- Access
 			bridge_ok: Result = implementation.char_set
 		end
 
-	weight: INTEGER is
+	weight: INTEGER
 			-- Preferred font thickness. Can be any of the Weight_*
 			-- constants defined in EV_FONT_CONSTANTS.
 			-- Default: Weight_regular
@@ -106,7 +106,7 @@ feature -- Access
 			bridge_ok: Result = implementation.weight
 		end
 
-	shape: INTEGER is
+	shape: INTEGER
 			-- Preferred font slant. Can be any of the Shape_*
 			-- constants defined in EV_FONT_CONSTANTS.
 			-- Default: Shape_regular
@@ -118,7 +118,7 @@ feature -- Access
 			bridge_ok: Result = implementation.shape
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Preferred font height in pixels.
 			-- Default: 8
 		require
@@ -129,7 +129,7 @@ feature -- Access
 			bridge_ok: Result = implementation.height
 		end
 
-	height_in_points: INTEGER is
+	height_in_points: INTEGER
 			-- Preferred font height in points.
 		require
 			not_destroyed: not is_destroyed
@@ -139,7 +139,7 @@ feature -- Access
 			bridge_ok: Result = implementation.height_in_points
 		end
 
-	line_height: INTEGER is
+	line_height: INTEGER
 			-- Preferred text editor line height in pixels for `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -149,7 +149,7 @@ feature -- Access
 			bridge_ok: Result = implementation.line_height
 		end
 
-	preferred_families: EV_ACTIVE_LIST [STRING_32] is
+	preferred_families: EV_ACTIVE_LIST [STRING_32]
 			-- Preferred familys. The first one in the list
 			-- will be tried first. If it does not exists on
 			-- the system, the second will be tried, etc.
@@ -166,7 +166,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_family (a_family: INTEGER) is
+	set_family (a_family: INTEGER)
 			-- Assign  `a_family' to `family'.
 		require
 			not_destroyed: not is_destroyed
@@ -177,7 +177,7 @@ feature -- Element change
 			family_assigned: family = a_family
 		end
 
-	set_weight (a_weight: INTEGER) is
+	set_weight (a_weight: INTEGER)
 			-- Set `a_weight' to `weight'.
 		require
 			not_destroyed: not is_destroyed
@@ -188,7 +188,7 @@ feature -- Element change
 			weight_assigned: weight = a_weight
 		end
 
-	set_shape (a_shape: INTEGER) is
+	set_shape (a_shape: INTEGER)
 			-- Set `a_shape' to `shape'.
 		require
 			not_destroyed: not is_destroyed
@@ -199,7 +199,7 @@ feature -- Element change
 			shape_assigned: shape = a_shape
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `a_height' to `height'.
 			-- `height_in_points' changes accordingly based on screen resolution.
 		require
@@ -211,7 +211,7 @@ feature -- Element change
 			height_assigned: height = a_height
 		end
 
-	set_height_in_points (a_height: INTEGER) is
+	set_height_in_points (a_height: INTEGER)
 			-- Set `height_in_points' to `a_height'.
 			-- `height' changes accordingly based on screen resolution.
 		require
@@ -225,7 +225,7 @@ feature -- Element change
 
 feature -- Status report
 
-	name: STRING_32 is
+	name: STRING_32
 			-- Face name chosen by toolkit.
 		require
 			not_destroyed: not is_destroyed
@@ -235,7 +235,7 @@ feature -- Status report
 			bridge_ok: Result.is_equal (implementation.name)
 		end
 
-	ascent: INTEGER is
+	ascent: INTEGER
 			-- Vertical distance from the origin of the drawing
 			-- operation to the top of the drawn character.
 		require
@@ -246,7 +246,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.ascent
 		end
 
-	descent: INTEGER is
+	descent: INTEGER
 			-- Vertical distance from the origin of the drawing
 			-- operation to the bottom of the drawn character.
 		require
@@ -257,7 +257,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.descent
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Character width of current fixed-width font.
 			-- If font is proportional, returns the average width.
 		require
@@ -268,7 +268,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.width
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Width of the smallest character in the font.
 		require
 			not_destroyed: not is_destroyed
@@ -278,7 +278,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.minimum_width
 		end
 
-	maximum_width: INTEGER is
+	maximum_width: INTEGER
 			-- Width of the biggest character in the font.
 		require
 			not_destroyed: not is_destroyed
@@ -288,7 +288,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.maximum_width
 		end
 
-	string_width (a_string: STRING_GENERAL): INTEGER is
+	string_width (a_string: STRING_GENERAL): INTEGER
 			-- Width in pixels of `a_string' in the current font.
 		require
 			not_destroyed: not is_destroyed
@@ -300,7 +300,7 @@ feature -- Status report
 			positive: Result >= 0
 		end
 
-	horizontal_resolution: INTEGER is
+	horizontal_resolution: INTEGER
 			-- Horizontal resolution of screen for which the font is designed.
 			-- Measured in dots per inch. If return value is zero, the
 			-- resolution is not known.
@@ -312,7 +312,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.horizontal_resolution
 		end
 
-	vertical_resolution: INTEGER is
+	vertical_resolution: INTEGER
 			-- Vertical resolution of screen for which the font is designed.
 			-- Measured in dots per inch. If return value is zero, the
 			-- resolution is not known.
@@ -324,7 +324,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.vertical_resolution
 		end
 
-	is_proportional: BOOLEAN is
+	is_proportional: BOOLEAN
 			-- Can characters in the font have different widths?
 		require
 			not_destroyed: not is_destroyed
@@ -334,7 +334,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_proportional
 		end
 
-	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER] is
+	string_size (a_string: STRING_GENERAL): TUPLE [width: INTEGER; height: INTEGER; left_offset: INTEGER; right_offset: INTEGER]
 			-- [width, height, left_offset, right_offset] in pixels of `a_string' in the current font,
 			-- taking into account line breaks ('%N').
 			-- `width' and `height' correspond to the rectange used to bound `a_string', and
@@ -358,7 +358,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Does `other' have same appearance?
 		do
 			Result := family = other.family and then
@@ -367,7 +367,7 @@ feature -- Basic operations
 				height_in_points = other.height_in_points
 		end
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Update `Current' with all attributes of `other'.
 		do
 			if implementation = Void then
@@ -378,7 +378,7 @@ feature -- Basic operations
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state.
 
 		do
@@ -394,7 +394,7 @@ feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- Create implementation of drawing area.
 		do
 			create {EV_FONT_IMP} implementation.make (Current)
@@ -412,7 +412,7 @@ invariant
 	horizontal_resolution_non_negative: is_initialized implies horizontal_resolution >= 0
 	vertical_resolution_non_negative: is_initialized implies vertical_resolution >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

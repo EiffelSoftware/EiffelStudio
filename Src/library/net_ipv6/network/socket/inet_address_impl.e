@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -10,15 +10,15 @@ deferred class
 
 feature -- Access
 
-	local_host_name: STRING is
+	local_host_name: STRING
 		deferred
 		end
 
-	any_local_address: INET_ADDRESS is
+	any_local_address: INET_ADDRESS
 		deferred
 		end
 
-	loopback_address: INET_ADDRESS is
+	loopback_address: INET_ADDRESS
 		deferred
 		end
 

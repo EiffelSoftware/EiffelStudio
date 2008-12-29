@@ -1,4 +1,4 @@
-indexing
+note
 	description: "DATE_TIME format of the database"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,19 +15,19 @@ inherit
 
 feature -- Status report
 
-	sql_name: STRING is
+	sql_name: STRING
 			-- SQL type name for date
 		do
 			Result := db_spec.sql_name_datetime
 		end
 
-	eiffel_ref: ANY is
+	eiffel_ref: ANY
 			-- Shared absolute date reference
 		once
 			create {DATE_TIME} Result.make_now
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

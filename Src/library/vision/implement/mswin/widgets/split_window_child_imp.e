@@ -1,4 +1,4 @@
-indexing
+note
 
 	descriotion:
 		"Child for a SPLIT_WINDOW.";
@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: SPLIT_WINDOW) is
+	make (a_name: STRING; a_parent: SPLIT_WINDOW)
 			-- Initialize Current.
 		do
 			parent:= a_parent
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does Current exist?
 		do
 			Result := implementation.exists
@@ -37,24 +37,24 @@ feature -- Access
 
 feature -- Widget Management
 
-	set_child_managed is
+	set_child_managed
 		do
 			implementation.set_managed (True)
 		end
 
-	set_child_unmanaged is
+	set_child_unmanaged
 		do
 			implementation.set_managed (False)
 		end
 
-	manage is
+	manage
 			-- Manage Current.
 			--| Ie. Make it visible on the screen.
 		do
 			--redefine it in the descendant
 		end;
 
-	unmanage is
+	unmanage
 			-- Unmanage Current.
 			--| Ie. Make ir invisible on the screen.
 		do
@@ -68,7 +68,7 @@ feature -- Implementation
 
 	parent: SPLIT_WINDOW;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

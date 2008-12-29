@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Flood fill constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,11 +10,11 @@ class
 
 feature -- Access
 
-	Floodfillborder: INTEGER is 0
+	Floodfillborder: INTEGER = 0
 
-	Floodfillsurface: INTEGER is 1;
+	Floodfillsurface: INTEGER = 1;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

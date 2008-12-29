@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			A verb is an action that an OLE object takes in response 
 			to a message from its container. An object's container, 
@@ -26,7 +26,7 @@ class
 	
 feature -- Access
 
-	Oleiverb_primary           : INTEGER is  0
+	Oleiverb_primary           : INTEGER =  0
 			-- Specifies the action that occurs when an end 
 			-- user double-clicks the object in its container. 
 			-- The object, not the container, determines 
@@ -34,14 +34,14 @@ feature -- Access
 			-- activation, the primary verb usually activates 
 			-- the object in place.
 	
-	Oleiverb_show              : INTEGER is  -1
+	Oleiverb_show              : INTEGER =  -1
 			-- Instructs an object to show itself for editing 
 			-- or viewing. Called to display newly inserted 
 			-- objects for initial editing and to show link 
 			-- sources. Usually an alias for some other 
 			-- object-defined verb.
 	
-	Oleiverb_open              : INTEGER is  -2
+	Oleiverb_open              : INTEGER =  -2
 			-- Instructs an object, including one that otherwise 
 			-- supports in-place activation, to open itself for 
 			-- editing in a window separate from that of its 
@@ -49,12 +49,12 @@ feature -- Access
 			-- in-place activation, this verb has the same 
 			-- semantics as OLEIVERB_SHOW.
 	
-	Oleiverb_hide              : INTEGER is  -3
+	Oleiverb_hide              : INTEGER =  -3
 			-- Causes an object to remove its user interface 
 			-- from the view. Applies only to objects that 
 			-- are activated in-place.
 	
-	Oleiverb_uiactivate        : INTEGER is  -4
+	Oleiverb_uiactivate        : INTEGER =  -4
 			-- Activates an object in place, along with 
 			-- its full set of user-interface tools, 
 			-- including menus, toolbars, and its name 
@@ -62,7 +62,7 @@ feature -- Access
 			-- If the object does not support in-place 
 			-- activation, it should return E_NOTIMPL.
 	
-	Oleiverb_inplaceactivate   : INTEGER is  -5
+	Oleiverb_inplaceactivate   : INTEGER =  -5
 			-- Activates an object in place without displaying 
 			-- tools, such as menus and toolbars, that end 
 			-- users need to change the behavior or appearance 
@@ -72,12 +72,12 @@ feature -- Access
 			-- If the container refuses, the object remains 
 			-- active but without its tools displayed.
 	
-	Oleiverb_discardundostate  : INTEGER is  -6;
+	Oleiverb_discardundostate  : INTEGER =  -6;
 			-- Used to tell objects to discard any undo 
 			-- state that they may be maintaining without 
 			-- deactivating the object. 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

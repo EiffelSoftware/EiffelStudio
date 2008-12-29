@@ -1,4 +1,4 @@
-indexing
+note
 
 	status: "See notice at end of class."
 	Date: "$Date$"
@@ -22,7 +22,7 @@ inherit
 
 feature
 
-	set_map_name (n: ANY; key: STRING) is
+	set_map_name (n: ANY; key: STRING)
 			-- Store item `n' whith key `key'.
 		do
 			check
@@ -35,7 +35,7 @@ feature
 			ht_order.extend (key)
 		end
 
-	unset_map_name (key: STRING) is
+	unset_map_name (key: STRING)
 			-- Remove item associated with key `key'.
 		do
 			check
@@ -47,7 +47,7 @@ feature
 			ht_order.prune (key)
 		end
 
-	clear_all is
+	clear_all
 		do
 			Precursor
 			parameters_value.clear_all
@@ -55,20 +55,20 @@ feature
 
 feature -- Status report
 
-	is_mapped (key: STRING): BOOLEAN is
+	is_mapped (key: STRING): BOOLEAN
 			-- Is `key' mapped to an Eiffel entity ?
 		do
 			Result := ht.has (key) -- and then mapped_value (key) /= Void
 		end
 
-	mapped_value (key: STRING): ANY is
+	mapped_value (key: STRING): ANY
 			-- Value mapped with `key'
 		do
 --			Result := parameters_value.item (parameter_name_to_position.item (key))
 			Result := ht.item (key)
 		end
 
-	parameter_name_exist (key : STRING) : BOOLEAN is
+	parameter_name_exist (key : STRING) : BOOLEAN
 		require
 			not_void: key /= Void
 		do
@@ -81,7 +81,7 @@ feature -- Status report
 	is_executed: BOOLEAN
 			-- Is the statement has been executed ?
 		
-	parameter_count : INTEGER is
+	parameter_count : INTEGER
 			-- number of parameters, set by 'prepare'
 		do
 			Result := last
@@ -91,7 +91,7 @@ feature -- Status report
 
 feature -- setting
 
-	set_parameter (value: ANY; key: STRING) is
+	set_parameter (value: ANY; key: STRING)
 		require
 			key_not_void: key /= Void
 			has_parameters: parameter_count > 0
@@ -112,24 +112,24 @@ feature -- setting
 			end			
 		end
 	
-	set_parameters_value (p : ARRAY[ANY]) is
+	set_parameters_value (p : ARRAY[ANY])
 		require
 			has_parameters: parameter_count > 0
 		do
 			parameters_value := p
 		end
 
-	set_prepared (b: BOOLEAN) is
+	set_prepared (b: BOOLEAN)
 		do
 			is_prepared := b
 		end
 
-	set_executed (b: BOOLEAN) is
+	set_executed (b: BOOLEAN)
 		do
 			is_executed := b
 		end
 
-	setup_parameters is
+	setup_parameters
 			-- setup parameters_value with actual parameters value
 		local
 			i : INTEGER
@@ -152,7 +152,7 @@ feature {PARAMETER_HDL}
 
 	parameters : ARRAY[STRING]
 	
-	init is
+	init
 		do
 			create parameters_value.make(1,1)
 			create parameters.make (1,1)
@@ -160,7 +160,7 @@ feature {PARAMETER_HDL}
 --			create parameter_name_to_position.make (1)
 		end	
 
-	init_implementation (pv : like parameters_value; pp : like parameters) is
+	init_implementation (pv : like parameters_value; pp : like parameters)
 		require
 			parameters_value_exists: pp /= Void
 			parameter_name_to_positions_exists: pv /= Void
@@ -176,7 +176,7 @@ feature {PARAMETER_HDL}
 
 --	parameter_name_to_position : HASH_TABLE [INTEGER, STRING]
 
-	replacement_string (key, destination: STRING) is
+	replacement_string (key, destination: STRING)
 			-- Replace object associated with `key' by a '?' in `destination'.
 			-- and, fill chronologically, the parameters_value array.
 		local
@@ -193,7 +193,7 @@ feature {PARAMETER_HDL}
 
 	last : INTEGER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

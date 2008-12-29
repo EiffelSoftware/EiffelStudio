@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Basic manager for TEXT_PANEL"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	panels: ARRAYED_LIST [TEXT_PANEL] is
+	panels: ARRAYED_LIST [TEXT_PANEL]
 			-- 
 		once
 			create Result.make (2)
@@ -18,7 +18,7 @@ feature -- Access
 		
 feature -- Command
 	
-	refresh_all is
+	refresh_all
 			-- Refresh all panels
 		do
 			from
@@ -35,7 +35,7 @@ feature -- Command
 		
 feature -- Status Setting
 
-	add_panel (a_panel: TEXT_PANEL) is
+	add_panel (a_panel: TEXT_PANEL)
 			-- Add new panel
 		require
 			panel_not_void: a_panel /= Void
@@ -45,7 +45,7 @@ feature -- Status Setting
 			panel_added: panels.has (a_panel)
 		end
 
-	remove_panel (a_panel: TEXT_PANEL) is
+	remove_panel (a_panel: TEXT_PANEL)
 			-- Remove new panel
 		require
 			a_panel_not_void: a_panel /= Void
@@ -56,7 +56,7 @@ feature -- Status Setting
 			panel_removed: not panels.has (a_panel)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

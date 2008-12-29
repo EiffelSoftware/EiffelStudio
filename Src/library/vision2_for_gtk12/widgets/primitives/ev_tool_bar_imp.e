@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision2 toolbar, implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the tool-bar.
 		do
 			base_make (an_interface)
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
 		end
 
-	initialize is
+	initialize
 			--
 		do
 			Precursor {EV_ITEM_LIST_IMP}
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			enable_vertical_button_style
 		end
 
-	visual_widget: POINTER is
+	visual_widget: POINTER
 			--
 		do
 			Result := list_widget
@@ -70,26 +70,26 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_vertical is
+	enable_vertical
 			-- Enable vertical items layout.
 		do
 			is_vertical := True
 		end
 
-	disable_vertical is
+	disable_vertical
 			-- Disable vertical items layout.
 		do
 			is_vertical := False
 		end
 
-	enable_vertical_button_style is
+	enable_vertical_button_style
 			-- Ensure `has_vertical_button_style' is `True'.
 		do
 			has_vertical_button_style := True
 			--| FIXME IEK Implement me
 		end
 
-	disable_vertical_button_style is
+	disable_vertical_button_style
 			-- Ensure `has_vertical_button_style' is `False'.
 		do
 			has_vertical_button_style := False
@@ -98,7 +98,7 @@ feature -- Status setting
 
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
-	block_selection_for_docking is
+	block_selection_for_docking
 			--
 		do
 			-- For now, do nothing.
@@ -106,7 +106,7 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
 feature -- Implementation
 
-	insertion_position: INTEGER is
+	insertion_position: INTEGER
 			-- `Result' is index - 1 of item beneath the
 			-- current mouse pointer or count + 1 if over the toolbar
 			-- and not over a button.
@@ -124,7 +124,7 @@ feature -- Implementation
 			end
 		end
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			v_imp: EV_ITEM_IMP
@@ -146,7 +146,7 @@ feature -- Implementation
 			child_array.put_left (v)
 		end
 
-	remove_i_th (i: INTEGER) is
+	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		local
 			imp: EV_ITEM_IMP
@@ -161,7 +161,7 @@ feature -- Implementation
 			imp.set_item_parent_imp (Void)
 		end
 
-	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
+	add_to_container (v: like item; v_imp: EV_ITEM_IMP)
 			-- Add `v' to tool bar, set to non-expandable.
 		local
 			old_expand, fill, pad, pack_type: INTEGER
@@ -186,13 +186,13 @@ feature -- Implementation
 			add_radio_button (v)
 		end
 
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
+	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER)
 			-- Move `a_child' to `a_position' in `a_container'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_container, a_child, a_position)
 		end
 
-	add_radio_button (w: like item) is
+	add_radio_button (w: like item)
 			-- Connect radio button to tool bar group.
 		require
 			w_not_void: w /= Void
@@ -208,7 +208,7 @@ feature -- Implementation
 			end
 		end
 
-	remove_radio_button (w: EV_TOOL_BAR_ITEM) is
+	remove_radio_button (w: EV_TOOL_BAR_ITEM)
 			-- Called every time a widget is removed from the container.
 		require
 			w_not_void: w /= Void
@@ -242,7 +242,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

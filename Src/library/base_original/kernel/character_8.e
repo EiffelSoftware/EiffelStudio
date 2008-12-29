@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Characters, with comparison operations and an ASCII code"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ convert
 	make_from_reference ({CHARACTER_REF}),
 	to_character_32: {WIDE_CHARACTER}
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

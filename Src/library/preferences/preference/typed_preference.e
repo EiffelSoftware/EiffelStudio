@@ -1,4 +1,4 @@
-	indexing
+	note
 	description: "Generic PREFERENCE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} --Initialization
 
-	make (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_value: G) is
+	make (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_value: G)
 			-- New preference with `a_name' and `a_value'.
 		require
 			manager_not_void: a_manager /= Void
@@ -31,7 +31,7 @@ feature {NONE} --Initialization
 			has_change_action: change_actions /= Void
 		end
 
-	make_from_string_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_value: STRING) is
+	make_from_string_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_value: STRING)
 			-- Create preference and set value based on string value `a_value'.
 		require
 			manager_not_void: a_manager /= Void
@@ -52,7 +52,7 @@ feature {NONE} --Initialization
 
 feature -- Setting
 
-	set_value (a_value: G) is
+	set_value (a_value: G)
 			-- Set the value.
 		require
 			value_not_void: a_value /= Void
@@ -69,7 +69,7 @@ feature -- Setting
 			value_set: internal_value = a_value
 		end
 
-	set_value_to_auto is
+	set_value_to_auto
 			-- Set the value to match that of `auto_preference'.
 		require
 			has_auto_preference: auto_preference /= Void
@@ -81,7 +81,7 @@ feature -- Setting
 
 feature -- Status Setting
 	
-	set_auto_preference (a_pref: like Current) is
+	set_auto_preference (a_pref: like Current)
 			-- Use value of `a_pref' for "auto" value for Current.
 		require
 			a_pref_not_void: a_pref /= Void
@@ -95,7 +95,7 @@ feature -- Status Setting
 
 feature -- Access
 
-	value: G is
+	value: G
 			-- Actual value.
 		do
 			if is_auto then
@@ -105,13 +105,13 @@ feature -- Access
 			end
 		end
 			
-	has_value: BOOLEAN is
+	has_value: BOOLEAN
 			-- Does Current have a value to use?
 		do
 			Result := value /= Void	
 		end
 		
-	typed_change_actions: ACTION_SEQUENCE [TUPLE [G]] is
+	typed_change_actions: ACTION_SEQUENCE [TUPLE [G]]
 			-- Actions to be performed when `value' changes after actions of `change_actions'.
 		do
 			Result := internal_typed_change_actions
@@ -123,12 +123,12 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	auto_default_value: G is
+	auto_default_value: G
 			-- Value to use when Current is using auto by default (until real auto is set)
 		deferred
 		end
 		
-	try_to_set_value_to_auto is
+	try_to_set_value_to_auto
 			-- Set the value to match that of `auto_preference' (only if `value' was not changed manually).		
 		do			
 			if auto_preference /= Void then
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 			end
 		end	
 		
-	update_is_auto is
+	update_is_auto
 			-- Update based on value if now the value is auto
 		do
 			is_auto := auto_preference /= Void and then internal_value.is_equal (auto_preference.value)
@@ -160,7 +160,7 @@ feature {TYPED_PREFERENCE} -- Implementation
 invariant
 	typed_change_actions_not_void: typed_change_actions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

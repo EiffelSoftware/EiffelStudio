@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision implementation of a Screen cursor."
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_cursor: SCREEN_CURSOR) is
+	make (a_cursor: SCREEN_CURSOR)
 			-- Create a cursor implementation and set current type
 			-- to `X_cursor' by default.
 		require
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			display := last_open_display
 		end;
 
-	make_for_screen (a_cursor: SCREEN_CURSOR; a_screen: SCREEN) is
+	make_for_screen (a_cursor: SCREEN_CURSOR; a_screen: SCREEN)
 			-- Create a font.
 		require
 			valid_screen: a_screen /= Void and then a_screen.is_valid
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_type (new_type: INTEGER) is
+	set_type (new_type: INTEGER)
 			-- Set type of current cursor to `new_type'.
 			-- Thie new type must be a predefined one.
 		do
@@ -89,7 +89,7 @@ feature -- Status setting
 			update_widgets
 		end;
 
-	set_pixmap (pixmap: PIXMAP; mask: PIXMAP) is
+	set_pixmap (pixmap: PIXMAP; mask: PIXMAP)
 			-- Set `pixmap' as the new shape of the cursor.
 			-- `mask' is the pixel of pixmap that are to be displayed.
 			-- If `mask' is void, a suitable mask is drawn from `pixmap'.
@@ -112,7 +112,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	allocate_cursor is
+	allocate_cursor
 			-- Allocate the screen cursor.
 		require
 			set_up: (type = User_defined_pixmap and then
@@ -135,7 +135,7 @@ feature -- Element change
 			end
 		end;
 
-	dispose is
+	dispose
 			-- Called when garbaged collected.
 		do
 			if not is_destroyed then
@@ -146,7 +146,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	update_widget_resource (widget_m: WIDGET_IMP) is
+	update_widget_resource (widget_m: WIDGET_IMP)
 			-- Update resource for `widget_m'.
 		local
 			c: SCREEN_CURSOR
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

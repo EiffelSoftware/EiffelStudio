@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"EiffelVision table, gtk implementation"
@@ -34,9 +34,9 @@ create
 
 feature {NONE} -- Implementation
 
-	needs_event_box: BOOLEAN is True
+	needs_event_box: BOOLEAN = True
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
                         -- Create a table widget with `par' as
                         -- parent.
 		do
@@ -55,17 +55,17 @@ feature -- Status report
 	is_homogeneous: BOOLEAN
 			-- Does Table have homogeneous spacing, no by default.
 
-	row_spacing: INTEGER is
+	row_spacing: INTEGER
 		do
 			Result := c_gtk_table_row_spacing (container_widget)
 		end
 
-	column_spacing: INTEGER is
+	column_spacing: INTEGER
 		do
 			Result := c_gtk_table_column_spacing (container_widget)
 		end
 
-	border_width: INTEGER is
+	border_width: INTEGER
 			-- Width of border around container in pixels.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (
@@ -75,7 +75,7 @@ feature -- Status report
 
 feature -- Status settings
 
-	enable_homogeneous is
+	enable_homogeneous
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
@@ -83,7 +83,7 @@ feature -- Status settings
 			is_homogeneous := True
 		end
 
-	disable_homogeneous is
+	disable_homogeneous
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
@@ -91,25 +91,25 @@ feature -- Status settings
 			is_homogeneous := False
 		end
 
-	set_border_width (a_value: INTEGER) is
+	set_border_width (a_value: INTEGER)
 			-- Set the tables border width to `a_value' pixels.
 		do
 			{EV_GTK_EXTERNALS}.gtk_container_set_border_width (container_widget, a_value)
 		end
 
-	set_row_spacing (a_value: INTEGER) is
+	set_row_spacing (a_value: INTEGER)
 			-- Spacing between two rows of the table.
 		do
 			{EV_GTK_EXTERNALS}.gtk_table_set_row_spacings (container_widget, a_value)
 		end
 
-	set_column_spacing (a_value: INTEGER) is
+	set_column_spacing (a_value: INTEGER)
 			-- Spacing between two columns of the table.
 		do
 			{EV_GTK_EXTERNALS}.gtk_table_set_col_spacings (container_widget, a_value)
 		end
 
-	put (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
+	put (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER)
 			-- Set the position of the `v' in the table.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -127,7 +127,7 @@ feature -- Status settings
 			)
 		end
 
-	remove (v: EV_WIDGET) is
+	remove (v: EV_WIDGET)
 			-- Remove `v' from the table if present.
 		local
 			item_imp: EV_WIDGET_IMP
@@ -138,7 +138,7 @@ feature -- Status settings
 			{EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, item_imp.c_object)
 		end
 
-	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
+	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER)
 			-- Move `v' to position `a_column', `a_row'.
 		local
 			column_span, row_span: INTEGER
@@ -150,7 +150,7 @@ feature -- Status settings
 			put (v, a_column, a_row, column_span, row_span)
 		end
 
-	item_column_span (widget: EV_WIDGET): INTEGER is
+	item_column_span (widget: EV_WIDGET): INTEGER
 			-- `Result' is number of columns taken by `widget'.
 		local
 			row_index, column_index: INTEGER
@@ -171,7 +171,7 @@ feature -- Status settings
 			end
 		end
 
-	item_row_span (widget: EV_WIDGET): INTEGER is
+	item_row_span (widget: EV_WIDGET): INTEGER
 			--  `Result' is number of rows taken by `widget'.
 		local
 			row_index, column_index: INTEGER
@@ -192,7 +192,7 @@ feature -- Status settings
 			end
 		end
 
-	item_row_position (widget: EV_WIDGET): INTEGER is
+	item_row_position (widget: EV_WIDGET): INTEGER
 			-- Result is row coordinate of 'widget'
 		local
 			row_cnt, column_cnt: INTEGER
@@ -218,7 +218,7 @@ feature -- Status settings
 			end
 		end
 
-	item_column_position (widget: EV_WIDGET): INTEGER is
+	item_column_position (widget: EV_WIDGET): INTEGER
 			-- Result is column coordinate of 'widget'
 		local
 			row_cnt, column_cnt: INTEGER
@@ -246,13 +246,13 @@ feature -- Status settings
 
 feature {EV_ANY_I, EV_ANY} -- Status Settings
 
-	resize (a_column, a_row: INTEGER) is
+	resize (a_column, a_row: INTEGER)
 		do
 			Precursor {EV_TABLE_I} (a_column, a_row)
 			{EV_GTK_EXTERNALS}.gtk_table_resize (container_widget, a_row, a_column)
 		end
 
-	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
+	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER)
 			-- Resize 'v' to occupy column span and row span
 		local
 			a_column, a_row: INTEGER
@@ -266,7 +266,7 @@ feature {EV_ANY_I, EV_ANY} -- Status Settings
 
 feature {NONE} -- Externals
 
-	c_gtk_table_row_spacing (a_table_struct: POINTER): INTEGER is
+	c_gtk_table_row_spacing (a_table_struct: POINTER): INTEGER
 			-- Spacing between two rows.
 		external
 			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
@@ -274,7 +274,7 @@ feature {NONE} -- Externals
 			"row_spacing"
 		end
 
-	c_gtk_table_column_spacing (a_table_struct: POINTER): INTEGER is
+	c_gtk_table_column_spacing (a_table_struct: POINTER): INTEGER
 			-- Spacing between two columns.
 		external
 			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
@@ -287,7 +287,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_TABLE;
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

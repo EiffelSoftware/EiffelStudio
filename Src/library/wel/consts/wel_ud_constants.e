@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Up-down control (UD) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,17 +10,17 @@ class
 
 feature -- Access
 
-	Ud_maxval: INTEGER is 32767
+	Ud_maxval: INTEGER = 32767
 			-- Maximum value allowed in an up-down control.
 			--
 			-- Declared in Windows as UD_MAXVAL
 
-	Ud_minval: INTEGER is -32767;
+	Ud_minval: INTEGER = -32767;
 			-- Minimum value allowed in an up-down control.
 			--
 			-- Declared in Windows as UD_MINVAL
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

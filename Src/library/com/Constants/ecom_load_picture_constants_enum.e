@@ -1,4 +1,4 @@
-indexing
+note
 	description: "OLE Automation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,19 +9,19 @@ class
 
 feature -- Access
 
-	default1: INTEGER is 0
+	default1: INTEGER = 0
 			-- No description available.
 
-	monochrome: INTEGER is 1
+	monochrome: INTEGER = 1
 			-- No description available.
 
-	vga_color: INTEGER is 2
+	vga_color: INTEGER = 2
 			-- No description available.
 
-	color: INTEGER is 4;
+	color: INTEGER = 4;
 			-- No description available.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

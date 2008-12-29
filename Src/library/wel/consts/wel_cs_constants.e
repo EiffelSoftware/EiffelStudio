@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class Style (CS) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,44 +10,44 @@ class
 
 feature -- Access
 
-	Cs_vredraw: INTEGER is 1
+	Cs_vredraw: INTEGER = 1
 
-	Cs_hredraw: INTEGER is 2
+	Cs_hredraw: INTEGER = 2
 
-	Cs_keycvtwindow: INTEGER is 4
+	Cs_keycvtwindow: INTEGER = 4
 			-- Not defined any more for some
 			-- C compilers, returns old defined value
 
-	Cs_dblclks: INTEGER is 8
+	Cs_dblclks: INTEGER = 8
 
-	Cs_owndc: INTEGER is 32
+	Cs_owndc: INTEGER = 32
 
-	Cs_classdc: INTEGER is 64
+	Cs_classdc: INTEGER = 64
 
-	Cs_parentdc: INTEGER is 128
+	Cs_parentdc: INTEGER = 128
 
-	Cs_noclose: INTEGER is 512
+	Cs_noclose: INTEGER = 512
 
-	Cs_savebits: INTEGER is 2048
+	Cs_savebits: INTEGER = 2048
 
-	Cs_bytealignclient: INTEGER is 4096
+	Cs_bytealignclient: INTEGER = 4096
 
-	Cs_bytealignwindow: INTEGER is 8192
+	Cs_bytealignwindow: INTEGER = 8192
 
-	Cs_globalclass: INTEGER is 16384
+	Cs_globalclass: INTEGER = 16384
 
-	Cs_nokeycvt: INTEGER is 256
+	Cs_nokeycvt: INTEGER = 256
 			-- Not defined any more for some
 			-- C compilers, returns old defined value
 
-	Cs_ime: INTEGER is 65536
+	Cs_ime: INTEGER = 65536
 			-- Input Method Editor
 
-	Cs_dropshadow: INTEGER is 0x00020000;
+	Cs_dropshadow: INTEGER = 0x00020000;
 			-- Drop shadow effect
 			-- This value is not supported until Windows XP.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

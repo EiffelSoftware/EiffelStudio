@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"MEL Implementation of a font box."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif bulletin board.
 		local
 			widget_name: ANY
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	ok_b: MEL_PUSH_BUTTON_GADGET is
+	ok_b: MEL_PUSH_BUTTON_GADGET
 			-- Ok button
 		local
 			w: POINTER
@@ -57,7 +57,7 @@ feature -- Access
 			end
 		end; 
 
-	apply_b: MEL_PUSH_BUTTON_GADGET is
+	apply_b: MEL_PUSH_BUTTON_GADGET
 			-- Apply button
 		local
 			w: POINTER
@@ -69,7 +69,7 @@ feature -- Access
 			end
 		end;
 
-	cancel_b: MEL_PUSH_BUTTON_GADGET is
+	cancel_b: MEL_PUSH_BUTTON_GADGET
 			-- Cancel button
 		local
 			w: POINTER
@@ -84,19 +84,19 @@ feature -- Access
 	handle: POINTER;
 			-- Pointer to the font_box_data structure
 
-	apply_command: MEL_COMMAND_EXEC is
+	apply_command: MEL_COMMAND_EXEC
 			-- Command set for the apply callback
 		do
 			Result := cancel_b.activate_command
 		end
 
-	ok_command: MEL_COMMAND_EXEC is
+	ok_command: MEL_COMMAND_EXEC
 			-- Command set for the ok callback
 		do
 			Result := ok_b.activate_command
 		end
 
-	cancel_command: MEL_COMMAND_EXEC is
+	cancel_command: MEL_COMMAND_EXEC
 			-- Command set for the cancel callback
 		do
 			Result := cancel_b.activate_command
@@ -104,7 +104,7 @@ feature -- Access
 
 feature -- Status report
 
-	current_font_name: STRING is
+	current_font_name: STRING
 			-- Font name currently selected by the user
 		do
 			create Result.make (0);
@@ -115,7 +115,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_font_name (a_font: STRING) is
+	set_font_name (a_font: STRING)
 			-- Edit `a_font'.
 		require
 			valid_font: a_font /= Void 
@@ -126,7 +126,7 @@ feature -- Status setting
 			font_box_set_font ($ext_name, handle)
 		end;
 
-	set_button_font (a_font: MEL_FONT_LIST) is
+	set_button_font (a_font: MEL_FONT_LIST)
 			-- Set the font of the buttons to `a_font'.
 		require
 			valid_font: a_font /= Void and then a_font.is_valid
@@ -134,7 +134,7 @@ feature -- Status setting
 			fb_set_button_font (handle, a_font.handle)
 		end;
 
-	set_scroll_list_font (a_font: MEL_FONT_LIST) is
+	set_scroll_list_font (a_font: MEL_FONT_LIST)
 			-- Set the font of the scroll list to `a_font'.
 		require
 			valid_font: a_font /= Void and then a_font.is_valid
@@ -142,7 +142,7 @@ feature -- Status setting
 			fb_set_text_font (handle, a_font.handle)
 		end;
 
-	set_foreground, set_foreground_color (a_color: MEL_PIXEL) is
+	set_foreground, set_foreground_color (a_color: MEL_PIXEL)
 			-- Set `foreground' and `foreground_color' to `a_color'.
 		local
 			list: like descendants;
@@ -160,7 +160,7 @@ feature -- Status setting
 			fb_set_button_fg_color (handle, a_color.identifier)	
 		end;
 
-	set_background, set_background_color (a_color: MEL_PIXEL) is
+	set_background, set_background_color (a_color: MEL_PIXEL)
 			-- Set `background' and `background_color' to `a_color'.
 		local
 			list: like descendants;
@@ -182,7 +182,7 @@ feature -- Status setting
 
 feature  -- Element change
 
-	set_apply_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_apply_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- apply button is activated.
 		do
@@ -191,7 +191,7 @@ feature  -- Element change
 			command_set: command_set (apply_command, a_command, an_argument)
 		end;
 
-	set_cancel_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_cancel_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- cancel button is activated.
 		do
@@ -200,7 +200,7 @@ feature  -- Element change
 			command_set: command_set (cancel_command, a_command, an_argument)
 		end;
 
-	set_ok_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	set_ok_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Add `a_command' to the list of action to execute when
 			-- ok button is activated.
 		do
@@ -211,37 +211,37 @@ feature  -- Element change
 
 feature -- Display
 
-	show_apply_button is
+	show_apply_button
 			-- Make apply button visible.
 		do
 			font_box_show_apply (handle)
 		end;
 
-	show_cancel_button is
+	show_cancel_button
 			-- Make cancel button visible.
 		do
 			font_box_show_cancel (handle)
 		end;
 
-	show_ok_button is
+	show_ok_button
 			-- Make ok button visible.
 		do
 			font_box_show_ok (handle)
 		end
 
-	hide_apply_button is
+	hide_apply_button
 			-- Make apply button invisible.
 		do
 			font_box_hide_apply (handle)
 		end;
 
-	hide_cancel_button is
+	hide_cancel_button
 			-- Make cancel button invisible.
 		do
 			font_box_hide_cancel (handle)
 		end;
 
-	hide_ok_button is
+	hide_ok_button
 			-- Make ok button invisible.
 		do
 			font_box_hide_ok (handle)
@@ -249,28 +249,28 @@ feature -- Display
 
 feature -- Removal
 
-	remove_apply_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	remove_apply_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- apply button is activated.
 		do
 			apply_b.remove_activate_callback
 		end;
 
-	remove_cancel_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	remove_cancel_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- cancel button is activated.
 		do
 			cancel_b.remove_activate_callback
 		end;
 
-	remove_ok_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+	remove_ok_callback (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Remove `a_command' from the list of action to execute when
 			-- ok button is activated.
 		do
 			ok_b.remove_activate_callback 
 		end;
 
-	dispose is
+	dispose
 			-- Dispose the associated C structure.
 		do
 			free_data (handle);
@@ -284,92 +284,92 @@ feature -- Removal
 	
 feature {NONE} -- External features
 
-	fb_set_button_fg_color (value: POINTER; pix: POINTER) is
+	fb_set_button_fg_color (value: POINTER; pix: POINTER)
 		external
 			"C"
 		end;
 
-	fb_set_button_bg_color (value: POINTER; pix: POINTER) is
+	fb_set_button_bg_color (value: POINTER; pix: POINTER)
 		external
 			"C"
 		end;
 
-	fb_set_button_font (value: POINTER; pix: POINTER) is
+	fb_set_button_font (value: POINTER; pix: POINTER)
 		external
 			"C"
 		end;
 
-	fb_set_text_font (value: POINTER; pix: POINTER) is
+	fb_set_text_font (value: POINTER; pix: POINTER)
 		external
 			"C"
 		end;
 
-	font_box_set_font (resource: POINTER; value: POINTER) is
+	font_box_set_font (resource: POINTER; value: POINTER)
 		external
 			"C"
 		end;
 
-	font_box_apply_button (value: POINTER): POINTER is
+	font_box_apply_button (value: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	font_box_show_ok (value: POINTER) is
+	font_box_show_ok (value: POINTER)
 		external
 			"C"
 		end;
 
-	font_box_show_cancel (value: POINTER) is
+	font_box_show_cancel (value: POINTER)
 		external
 			"C"
 		end;
 
-	font_box_show_apply (value: POINTER) is
+	font_box_show_apply (value: POINTER)
 		external
 			"C"
 		end;
 
-	font_box_hide_ok (value: POINTER) is
+	font_box_hide_ok (value: POINTER)
 		external
 			"C"
 		end;
 
-	font_box_hide_cancel (value: POINTER) is
+	font_box_hide_cancel (value: POINTER)
 		external
 			"C"
 		end;
 
-	font_box_hide_apply (value: POINTER) is
+	font_box_hide_apply (value: POINTER)
 		external
 			"C"
 		end;
 
-	font_box_current_font (value: POINTER): POINTER is
+	font_box_current_font (value: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	font_box_ok_button (value: POINTER): POINTER is
+	font_box_ok_button (value: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	font_box_cancel_button (value: POINTER): POINTER is
+	font_box_cancel_button (value: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	font_box_create (b_name, scr_obj: POINTER; is_dial: BOOLEAN): POINTER is
+	font_box_create (b_name, scr_obj: POINTER; is_dial: BOOLEAN): POINTER
 		external
 			"C"
 		end;
 
-	font_box_form (value: POINTER): POINTER is
+	font_box_form (value: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	free_data (p: POINTER) is
+	free_data (p: POINTER)
 		external
 			"C (EIF_REFERENCE) | %"eif_malloc.h%""
 		alias
@@ -380,7 +380,7 @@ invariant
 
 	buttons_not_void: cancel_b /= Void and then ok_b /= Void and then apply_b /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

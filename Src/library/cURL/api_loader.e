@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 						Dynamic load a external API which exists in a dll or so.
 						Benefit is we can still use our executables even without the dll/so files.
@@ -13,7 +13,7 @@ class
 
 feature -- Query
 
-	safe_load_api (a_module_name: STRING; a_api_name: STRING): POINTER is
+	safe_load_api (a_module_name: STRING; a_api_name: STRING): POINTER
 			-- Safe loading `a_api_name' in `a_module_name' if possible.
 			-- `a_module_name' is case sensitive.
 		require
@@ -28,7 +28,7 @@ feature -- Query
 			end
 		end
 
-	module_pointer (a_name: STRING): POINTER is
+	module_pointer (a_name: STRING): POINTER
 			-- Find module hanle with `a_name'
 			-- Result is void if not exists
 		require
@@ -44,7 +44,7 @@ feature -- Query
 			end
 		end
 
-	api_pointer (a_module: POINTER; a_name: STRING): POINTER is
+	api_pointer (a_module: POINTER; a_name: STRING): POINTER
 			-- Find API pointer which name is `a_name' in `a_module'
 			-- Result is void if not exists.
 		require
@@ -63,24 +63,24 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	loaded_modules: HASH_TABLE [POINTER, STRING] is
+	loaded_modules: HASH_TABLE [POINTER, STRING]
 			-- Loaded modules
 		once
 			create Result.make (1)
 		end
 
-	loaded_apis: HASH_TABLE [POINTER, STRING] is
+	loaded_apis: HASH_TABLE [POINTER, STRING]
 			-- Loaded apis.
 		once
 			create Result.make (10)
 		end
 
-	implementation: API_LOADER_IMP is
+	implementation: API_LOADER_IMP
 			-- Native loader
 		once
 			create Result
 		end
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

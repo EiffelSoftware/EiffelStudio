@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error Handling"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Basic Operations
 
-	handle_exception is
+	handle_exception
 			-- General exception hanlding.
 		local
 			msg: STRING
@@ -31,7 +31,7 @@ feature -- Basic Operations
 			response_header.send_trace (msg + exception_trace)
 		end
 
-	raise_error(msg: STRING) is
+	raise_error(msg: STRING)
 			-- Raise an error.
 		require
 			message_exists: msg /= Void
@@ -47,7 +47,7 @@ feature {CGI_ERROR_HANDLING} -- Access
 	raised_error: STRING;
 			-- Error explicitely raised by developer code.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

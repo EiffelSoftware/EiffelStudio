@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Cascade Button Gadget resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNcascadePixmap: POINTER is
+	XmNcascadePixmap: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/CascadeBG.h>] : EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNcascadePixmap"
 		end;
 
-	XmNmappingDelay: POINTER is
+	XmNmappingDelay: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/CascadeBG.h>] : EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNmappingDelay"
 		end;
 
-	XmNsubMenuId: POINTER is
+	XmNsubMenuId: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/CascadeBG.h>] : EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNsubMenuId"
 		end;
 
-	XmNactivateCallback: POINTER is
+	XmNactivateCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/CascadeBG.h>] : EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNactivateCallback"
 		end;
 
-	XmNcascadingCallback: POINTER is
+	XmNcascadingCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/CascadeBG.h>] : EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNcascadingCallback"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

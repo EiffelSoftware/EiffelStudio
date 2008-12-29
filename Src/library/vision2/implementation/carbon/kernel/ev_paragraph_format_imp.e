@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent paragraph formatting information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,13 +16,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create paragraph format
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Do nothing
 		do
 			set_is_initialized (True)
@@ -34,25 +34,25 @@ feature -- Status report
 		-- Current alignment. See EV_PARAGRAPH_CONSTANTS
 		-- for possible values.
 
-	is_left_aligned: BOOLEAN is
+	is_left_aligned: BOOLEAN
 			-- Is `Current' left aligned?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_left
 		end
 
-	is_center_aligned: BOOLEAN is
+	is_center_aligned: BOOLEAN
 			-- Is `Current' center aligned?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_center
 		end
 
-	is_right_aligned: BOOLEAN is
+	is_right_aligned: BOOLEAN
 			-- Is `Current' right aligned?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_right
 		end
 
-	is_justified: BOOLEAN is
+	is_justified: BOOLEAN
 			-- Is `Current' justified?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_justified
@@ -72,55 +72,55 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_left_alignment is
+	enable_left_alignment
 			-- Ensure `is_left_aligned' is `True'.
 		do
 			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_left)
 		end
 
-	enable_center_alignment is
+	enable_center_alignment
 			-- Ensure `is_center_aligned' is `True'.
 		do
 			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_center)
 		end
 
-	enable_right_alignment is
+	enable_right_alignment
 			-- Ensure `is_right_aligned' is `True'.
 		do
 			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_right)
 		end
 
-	enable_justification is
+	enable_justification
 			-- Ensure `is_justified' is `True'.
 		do
 			set_alignment ({EV_PARAGRAPH_CONSTANTS}.alignment_justified)
 		end
 
-	set_alignment (a_alignment: INTEGER) is
+	set_alignment (a_alignment: INTEGER)
 			-- Set `alignment' to `a_alignment'
 		do
 			alignment := a_alignment
 		end
 
-	set_left_margin (a_margin: INTEGER) is
+	set_left_margin (a_margin: INTEGER)
 			-- Set `left_margin' to `a_margin'.
 		do
 			left_margin := a_margin
 		end
 
-	set_right_margin (a_margin: INTEGER) is
+	set_right_margin (a_margin: INTEGER)
 			-- Set `right_margin' to `a_margin'.
 		do
 			right_margin := a_margin
 		end
 
-	set_top_spacing (a_margin: INTEGER) is
+	set_top_spacing (a_margin: INTEGER)
 			-- Set `top_spacing' to `a_margin'.
 		do
 			top_spacing := a_margin
 		end
 
-	set_bottom_spacing (a_margin: INTEGER) is
+	set_bottom_spacing (a_margin: INTEGER)
 			-- Set `bottom_spacing' to `a_margin'.
 		do
 			bottom_spacing := a_margin
@@ -128,13 +128,13 @@ feature -- Status setting
 
 feature {EV_RICH_TEXT_IMP} -- Implementation
 
-	new_paragraph_tag_from_applicable_attributes (applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION): POINTER is
+	new_paragraph_tag_from_applicable_attributes (applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION): POINTER
 			--
 		do
 
 		end
 
-	dummy_paragraph_format_range_information: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+	dummy_paragraph_format_range_information: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
 			--
 		do
 			create Result.make_with_flags (
@@ -148,13 +148,13 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	destroy is
+	destroy
 			-- Clean up `Current'
 		do
 			set_is_destroyed (True)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Facilities used by and for ues with EV_FONT."
 	legal: "See notice at end of class."
@@ -12,23 +12,23 @@ class
 
 feature -- Constants
 
-	Family_screen: INTEGER is 1
-	Family_roman: INTEGER is 2
-	Family_sans: INTEGER is 3
-	Family_typewriter: INTEGER is 4
-	Family_modern: INTEGER is 5
+	Family_screen: INTEGER = 1
+	Family_roman: INTEGER = 2
+	Family_sans: INTEGER = 3
+	Family_typewriter: INTEGER = 4
+	Family_modern: INTEGER = 5
 
-	Weight_thin: INTEGER is 6
-	Weight_regular: INTEGER is 7
-	Weight_bold: INTEGER is 8
-	Weight_black: INTEGER is 9
+	Weight_thin: INTEGER = 6
+	Weight_regular: INTEGER = 7
+	Weight_bold: INTEGER = 8
+	Weight_black: INTEGER = 9
 
-	Shape_regular: INTEGER is 10
-	Shape_italic: INTEGER is 11
+	Shape_regular: INTEGER = 10
+	Shape_italic: INTEGER = 11
 
 feature -- Contract support
 
-	valid_family (a_family: INTEGER): BOOLEAN is
+	valid_family (a_family: INTEGER): BOOLEAN
 			-- Is `a_family' a valid family value.
 		do
 			Result := a_family = family_screen or else
@@ -38,7 +38,7 @@ feature -- Contract support
 				a_family = family_modern
 		end
 
-	valid_weight (a_weight: INTEGER): BOOLEAN is
+	valid_weight (a_weight: INTEGER): BOOLEAN
 			-- Is `a_weight' a valid weight value.
 		do
 			Result := a_weight = weight_thin or else
@@ -47,14 +47,14 @@ feature -- Contract support
 				a_weight = weight_black
 		end
 
-	valid_shape (a_shape: INTEGER): BOOLEAN is
+	valid_shape (a_shape: INTEGER): BOOLEAN
 			-- Is `a_shape' a valid shape value.
 		do
 			Result := a_shape = shape_regular or else
 				a_shape = shape_italic
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

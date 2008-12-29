@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Worker thread that execute work and calls GUI processing when%
 					%events are posted."
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize instance.
 		do
 			create events_queue.make (20)
@@ -36,7 +36,7 @@ feature -- Status Report
 	done: BOOLEAN
 			-- Is worker thread done?
 
-	thread_safe_done: BOOLEAN is
+	thread_safe_done: BOOLEAN
 			-- Thread safe access to `done'
 		do
 			mutex.lock
@@ -46,7 +46,7 @@ feature -- Status Report
 
 feature -- Basic Operation
 
-	do_work (a_job: like job; a_event_handler: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]) is
+	do_work (a_job: like job; a_event_handler: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]])
 			-- Start `a_job' in a new thread, synchronize with GUI thread when thread
 			-- post events and call `a_event_handler' to handle these events.
 			-- Note: this feature is blocking although the GUI will still be responsive.
@@ -83,7 +83,7 @@ feature -- Basic Operation
 			end
 		end
 
-	post_event (a_event: EV_THREAD_EVENT) is
+	post_event (a_event: EV_THREAD_EVENT)
 			-- Send `a_event' to GUI thread.
 			-- Used by worker thread to post events.
 		require
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 	environment: EV_ENVIRONMENT
 			-- EiffelVision2 environment, used to access application object
 
-	do_job is
+	do_job
 			-- Execute job
 			-- Pass `process_event' agent as argument so that job can call back GUI thread
 			-- for event processing.
@@ -122,7 +122,7 @@ invariant
 	non_void_mutex: mutex /= Void
 	non_void_environment: environment /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif error dialog."
@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_error_dialog: ERROR_D; oui_parent: COMPOSITE) is
+	make (an_error_dialog: ERROR_D; oui_parent: COMPOSITE)
 			-- Create a motif error dialog.
 		local
 			mc: MEL_COMPOSITE
@@ -66,7 +66,7 @@ feature -- Access
 	parent: MEL_DIALOG_SHELL;
 			-- Dialog shell of the working dialog
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

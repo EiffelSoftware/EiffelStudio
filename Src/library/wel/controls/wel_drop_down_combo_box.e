@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A combo box with a list box and an edit control."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height including the list box
 		do
 			Result := dropped_rect.height
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_limit_text (limit: INTEGER) is
+	set_limit_text (limit: INTEGER)
 			-- Set the length of the text the user may type.
 		require
 			exists: exists
@@ -37,7 +37,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Cb_limittext, to_wparam (limit), to_lparam (0))
 		end
 
-	show_list is
+	show_list
 			-- Show the drop down list.
 		require
 			exists: exists
@@ -47,7 +47,7 @@ feature -- Status setting
 			list_shown: list_shown
 		end
 
-	hide_list is
+	hide_list
 			-- Hide the drop down list.
 		require
 			exists: exists
@@ -59,7 +59,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	list_shown: BOOLEAN is
+	list_shown: BOOLEAN
 			-- Is the drop down list shown?
 		require
 			exists: exists
@@ -70,7 +70,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 				Cbs_autohscroll
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

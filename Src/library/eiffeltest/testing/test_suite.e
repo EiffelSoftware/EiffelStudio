@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Test suites"
 	legal: "See notice at end of class."
@@ -47,7 +47,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create suite.
 		do
 			create test_results.make
@@ -65,13 +65,13 @@ feature -- Access
 	test_results: TEST_SUITE_RESULT
 			-- Results of tests
 
-	available_strategies: ARRAY [STRING] is
+	available_strategies: ARRAY [STRING]
 			-- Array containing the names of the available strategies
 		do
 			Result := strategy_factory.available_products
 		end
 
-	selected_strategy: STRING is
+	selected_strategy: STRING
 			-- Name of selected strategy
 		require
 			strategy_set: is_strategy_set
@@ -84,7 +84,7 @@ feature -- Access
 	name: STRING
 			-- Name of test suite
 			
-	seed: INTEGER is
+	seed: INTEGER
 			-- Random seed
 		do
 			Result := execution_strategy.seed
@@ -92,7 +92,7 @@ feature -- Access
 	 
 feature -- Measurement
 
-	run_count: INTEGER is
+	run_count: INTEGER
 			-- Number of runs
 		do
 			Result := test_results.run_count
@@ -100,20 +100,20 @@ feature -- Measurement
 
 feature -- Status report
 
-	Top_level_allowed: BOOLEAN is True
+	Top_level_allowed: BOOLEAN = True
 			-- Can test be inserted in the top level of test hierarchy?
 			-- (Answer: Yes)
 
-	Produces_result: BOOLEAN is True
+	Produces_result: BOOLEAN = True
 			-- Does test produce result? (Answer: yes)
 	 
-	Is_complete_test: BOOLEAN is True
+	Is_complete_test: BOOLEAN = True
 	 		-- Is test a complete test case? (Answer: yes)
 	
-	Is_test_container: BOOLEAN is True
+	Is_test_container: BOOLEAN = True
 			-- is test a container? (Answer: yes)
 	 
-	has_strategy (s: STRING): BOOLEAN is
+	has_strategy (s: STRING): BOOLEAN
 			-- Is there a strategy named `s'
 		require
 			non_empty_name: s /= Void and then not s.is_empty
@@ -121,13 +121,13 @@ feature -- Status report
 			Result := strategy_factory.has_product (s)
 		end
 
-	is_strategy_set: BOOLEAN is
+	is_strategy_set: BOOLEAN
 			-- Is execution strategy set?
 		do
 			Result := execution_strategy /= Void
 		end
 
-	is_context_needed: BOOLEAN is
+	is_context_needed: BOOLEAN
 			-- Does selected execution strategy need a context?
 		require
 			strategy_set: is_strategy_set
@@ -136,7 +136,7 @@ feature -- Status report
 				is_context_set
 		end
 
-	is_context_set: BOOLEAN is
+	is_context_set: BOOLEAN
 			-- Is a context set for selected strategy?
 		require
 			strategy_set: is_strategy_set
@@ -144,20 +144,20 @@ feature -- Status report
 			Result := execution_strategy.is_context_set
 		end
 
-	Has_random_generator: BOOLEAN is
+	Has_random_generator: BOOLEAN
 			-- Does current object have access to a random number generator?
 		do
 			Result := execution_strategy.has_random_generator
 		end
 
-	is_ready: BOOLEAN is
+	is_ready: BOOLEAN
 			-- Can tests in suite be run?
 		do
 			Result := not is_empty and is_strategy_set and is_name_set and
 				is_number_set and (is_context_needed implies is_context_set)
 		end
 
-	contains_complete_tests: BOOLEAN is
+	contains_complete_tests: BOOLEAN
 			-- Does test suite contain complete tests?
 			-- (`False' means that suite contains test steps.)
 		require
@@ -166,7 +166,7 @@ feature -- Status report
 			Result := test (1).is_complete_test
 		end
 
-	insertable (v: TESTABLE): BOOLEAN is
+	insertable (v: TESTABLE): BOOLEAN
 			-- Can `v' be inserted into test suite?
 		do
 			Result := is_empty or else 
@@ -178,7 +178,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	select_strategy (s: STRING) is
+	select_strategy (s: STRING)
 			-- Set execution strategy to strategy named `s'.
 		require
 			non_empty_name: s /= Void and then not s.is_empty
@@ -195,7 +195,7 @@ feature -- Status setting
 			is_suite_set: execution_strategy.is_suite_set
 		end
 
-	set_name (n: STRING) is
+	set_name (n: STRING)
 			-- Set name to `n'.
 		require
 			non_empty_name: n /= Void and then not n.is_empty
@@ -205,7 +205,7 @@ feature -- Status setting
 			name_set: name = n
 		end
 		
-	set_context (c: ANY) is
+	set_context (c: ANY)
 			-- Set context to `c'.
 		require
 			strategy_set: is_strategy_set
@@ -217,13 +217,13 @@ feature -- Status setting
 			end
 		end
 	
-	set_seed (s: INTEGER) is
+	set_seed (s: INTEGER)
 			-- Set seed to `s'.
 		do
 			execution_strategy.set_seed (s)
 		end
 
-	clear_results is
+	clear_results
 			-- Clear results.
 		local
 			old_idx: INTEGER
@@ -243,7 +243,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	extend (v: TESTABLE) is
+	extend (v: TESTABLE)
 			-- At `v' to end.
 		do
 			Precursor (v)
@@ -252,7 +252,7 @@ feature -- Element change
 			container_set: v.container = Current
 		end
 
-	replace (v: TESTABLE; i: INTEGER) is
+	replace (v: TESTABLE; i: INTEGER)
 			-- Replace `i'-th item with `v'.
 		do
 			Precursor (v, i)
@@ -263,7 +263,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove `i'-th item.
 		local
 			old_idx: INTEGER
@@ -277,7 +277,7 @@ feature -- Removal
 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Execute test suite.
 		local
 			old_idx: INTEGER
@@ -313,7 +313,7 @@ feature -- Basic operations
 
 feature -- Output
 
-	put_summary (f: LOG_FACILITY) is
+	put_summary (f: LOG_FACILITY)
 			-- Output test summary to `f'.
 		do
 			f.put_summary (Current)
@@ -332,7 +332,7 @@ invariant
 	non_empty_name: name /= Void and then not name.is_empty
 	test_result_exists: test_results /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

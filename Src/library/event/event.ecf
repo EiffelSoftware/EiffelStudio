@@ -3,7 +3,7 @@
 	<target name="event">
 		<description>Event library</description>
 		<root all_classes="true"/>
-		<option namespace="EiffelSoftware.Library">
+		<option namespace="EiffelSoftware.Library" syntax_level="1">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>

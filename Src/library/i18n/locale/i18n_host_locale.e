@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Deferred class that specifies the interface for formatting information access. 
 					Effective descendants are normally platform-specific.
@@ -13,12 +13,12 @@ deferred class
 
 feature -- Initialization
 
-	create_locale_info_from_user_locale: I18N_LOCALE_INFO is
+	create_locale_info_from_user_locale: I18N_LOCALE_INFO
 			-- create locale form the user locale
 		deferred
 		end
 
-	create_locale_info (a_locale_id : I18N_LOCALE_ID): I18N_LOCALE_INFO is
+	create_locale_info (a_locale_id : I18N_LOCALE_ID): I18N_LOCALE_INFO
 			-- Create locale with a_locale_id
 		require
 			a_locale_not_void: a_locale_id /= Void
@@ -28,31 +28,31 @@ feature -- Initialization
 
 feature -- Informations
 
-	is_available (a_locale_id : I18N_LOCALE_ID) : BOOLEAN is
+	is_available (a_locale_id : I18N_LOCALE_ID) : BOOLEAN
 			-- is 'a_locale' avaiable?
 		require
 			a_locale_id_exists: a_locale_id /= Void
 		deferred
 		end
 
-	available_locales : LINEAR[I18N_LOCALE_ID] is
+	available_locales : LINEAR[I18N_LOCALE_ID]
 			-- list af all available locales
 		deferred
 		ensure
 			result_exists: Result /= Void
 		end
 
-	default_locale_id: I18N_LOCALE_ID is
+	default_locale_id: I18N_LOCALE_ID
 			-- default locale id
 		deferred
 		end
 
-	system_locale_id: I18N_LOCALE_ID is
+	system_locale_id: I18N_LOCALE_ID
 			-- system locale id
 		deferred
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

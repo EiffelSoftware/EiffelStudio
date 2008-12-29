@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif button."
@@ -34,7 +34,7 @@ inherit
 
 feature -- Access
 
-	is_label: BOOLEAN is
+	is_label: BOOLEAN
 			-- Is current button a label?
 			-- (False by default)
 		do
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Status report
 
-	text: STRING is
+	text: STRING
 			-- Text of button
 		local
 			keysym: CHARACTER;
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set button text to `a_text'.
 		require
 			not_text_void: a_text /= Void
@@ -85,13 +85,13 @@ feature -- Status setting
 			text_set: equal (without_ampersands (text), without_ampersands (a_text))
 		end;
 
-	set_left_alignment is
+	set_left_alignment
 			-- Set text alignment to left.
 		do
 			set_beginning_alignment
 		end;
 
-	set_right_alignment is
+	set_right_alignment
 			-- Set text alignment to left.
 		do
 			set_end_alignment
@@ -99,7 +99,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	without_ampersands (a_text: STRING): STRING is
+	without_ampersands (a_text: STRING): STRING
 			-- Returns a string which is a_text without ampersands
 		do
 			Result := a_text.twin
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 		end
 	
 			
-	is_able_have_accerlators: BOOLEAN is
+	is_able_have_accerlators: BOOLEAN
 			-- Can the button able to have accelerators?
 			-- True if it is not a label and not in an
 			-- option pull
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_mnemonic_from_text (a_text: STRING; set_text_explicity: BOOLEAN) is
+	set_mnemonic_from_text (a_text: STRING; set_text_explicity: BOOLEAN)
 			-- Extract the mnemonic from `a_text' and set it and then
 			-- set the button text to `a_text' if `set_text_explicity' is True.
 		require
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

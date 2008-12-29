@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base OCI Error Handler"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (env: OCI_ENVIRONMENT) is
+	make (env: OCI_ENVIRONMENT)
 		require
 			valid_environment: env /= Void and then env.is_allocated
 		do
@@ -48,7 +48,7 @@ feature -- Access
 	message: STRING
 		-- Error message for last error
 	
-	row_offset: INTEGER is
+	row_offset: INTEGER
 			-- The offset (into the DML array) at which the error occurred
 		local
 			size: INTEGER
@@ -67,7 +67,7 @@ feature -- Status Report
 	handled: BOOLEAN
 		-- Has last error been handled ?
 	
-	valid_return_code (return_code: INTEGER): BOOLEAN is
+	valid_return_code (return_code: INTEGER): BOOLEAN
 			-- Is `return_code' valid ?
 		do
 			Result :=
@@ -83,7 +83,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 	
-	get_error_info (recordno: INTEGER) is
+	get_error_info (recordno: INTEGER)
 			-- Retrieve error_code and message of the last error
 		require
 			allocated: is_allocated
@@ -103,7 +103,7 @@ feature -- Basic Operations
 			message_exists: message /= Void
 		end
 
-	check_error (return_code: INTEGER) is
+	check_error (return_code: INTEGER)
 			-- Handle errors (after an OCI operation)
 		require
 			valid_return_code: valid_return_code (return_code)
@@ -116,13 +116,13 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	handle_type: INTEGER is
+	handle_type: INTEGER
 			-- Handle type
 		do
 			Result := Oci_htype_error
 		end
 
-	frozen default_handle_error (return_code: INTEGER) is
+	frozen default_handle_error (return_code: INTEGER)
 			-- Perform default error handling
 		do
 			inspect
@@ -140,21 +140,21 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	Default_error_buffer_size: INTEGER is 512
+	Default_error_buffer_size: INTEGER = 512
 	
-	Msg_invalid_handle: STRING is "Invalid handle"
+	Msg_invalid_handle: STRING = "Invalid handle"
 	
 feature {NONE} -- Externals
 
 	oci_attr_get (trgthndlp: POINTER; trghndltyp: INTEGER; attributep: POINTER; sizep: POINTER; 
-			attrtype: INTEGER; errhp: POINTER): INTEGER_16 is
+			attrtype: INTEGER; errhp: POINTER): INTEGER_16
 		external
 			"C (void *, int, void *, int *, int, void *): sword | %"oci.h%""
 		alias
 			"OCIAttrGet"
 		end
 				
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

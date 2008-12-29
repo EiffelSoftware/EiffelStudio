@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			EV_GRID Text label that may be interactively edited by the user via a combo box.
@@ -38,7 +38,7 @@ create
 
 feature -- Element change
 
-	set_item_strings (a_string_array: INDEXABLE [STRING_GENERAL, INTEGER]) is
+	set_item_strings (a_string_array: INDEXABLE [STRING_GENERAL, INTEGER])
 			-- Set each item in `Current' to the strings referenced in `a_string_array'.
 		require
 			a_string_array_not_void: a_string_array /= Void
@@ -62,7 +62,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	update_popup_dimensions (a_popup: EV_POPUP_WINDOW) is
+	update_popup_dimensions (a_popup: EV_POPUP_WINDOW)
 			-- Update dimensions and positioning for `a_popup'.
 		require
 			a_popup_not_void: a_popup /= Void
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			a_popup.set_height (a_widget.minimum_height)
 		end
 
-	handle_key (a_key: EV_KEY) is
+	handle_key (a_key: EV_KEY)
 			-- Handle the Escape key for cancelling activation.
 		require
 			a_key_not_void: a_key /= Void
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 	user_cancelled_activation: BOOLEAN
 		-- Did the user cancel the activation using the Esc key?
 
-	activate_action (popup_window: EV_POPUP_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- `Current' has been requested to be updated via `popup_window'.
 		do
 			create combo_box
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			popup_window.show_actions.extend (agent initialize_actions)
 		end
 
-	initialize_actions is
+	initialize_actions
 			-- Setup the action sequences when the item is shown.
 		do
 			combo_box.set_focus
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			combo_box.key_press_actions.extend (agent handle_key)
 		end
 
-	deactivate is
+	deactivate
 			-- Cleanup from previous call to activate.
 		do
 			if combo_box /= Void then
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 invariant
 	combo_box_parented_during_activation: combo_box /= Void implies combo_box.parent /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "wrapper for anynymous enums from file hiview.h "
 
 class
@@ -6,994 +6,994 @@ class
 
 feature -- Carbon constants
 
-	frozen kHIViewZOrderAbove: INTEGER is
+	frozen kHIViewZOrderAbove: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewZOrderAbove"
 	end
 
-	frozen kHIViewZOrderBelow: INTEGER is
+	frozen kHIViewZOrderBelow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewZOrderBelow"
 	end
 
-	frozen kHIViewAttributeSendCommandToUserFocus: INTEGER is
+	frozen kHIViewAttributeSendCommandToUserFocus: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewAttributeSendCommandToUserFocus"
 	end
 
-	frozen kHIViewAttributeIsFieldEditor: INTEGER is
+	frozen kHIViewAttributeIsFieldEditor: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewAttributeIsFieldEditor"
 	end
 
-	frozen kHIViewSendCommandToUserFocus: INTEGER is
+	frozen kHIViewSendCommandToUserFocus: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewSendCommandToUserFocus"
 	end
 
-	frozen kHIViewFeatureSupportsGhosting: INTEGER is
+	frozen kHIViewFeatureSupportsGhosting: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFeatureSupportsGhosting"
 	end
 
-	frozen kHIViewFeatureAllowsSubviews: INTEGER is
+	frozen kHIViewFeatureAllowsSubviews: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFeatureAllowsSubviews"
 	end
 
-	frozen kHIViewFeatureGetsFocusOnClick: INTEGER is
+	frozen kHIViewFeatureGetsFocusOnClick: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFeatureGetsFocusOnClick"
 	end
 
-	frozen kHIViewFeatureSupportsLiveFeedback: INTEGER is
+	frozen kHIViewFeatureSupportsLiveFeedback: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFeatureSupportsLiveFeedback"
 	end
 
-	frozen kHIViewFeatureSupportsRadioBehavior: INTEGER is
+	frozen kHIViewFeatureSupportsRadioBehavior: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFeatureSupportsRadioBehavior"
 	end
 
-	frozen kHIViewFeatureAutoToggles: INTEGER is
+	frozen kHIViewFeatureAutoToggles: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFeatureAutoToggles"
 	end
 
-	frozen kHIViewFeatureIdlesWithTimer: INTEGER is
+	frozen kHIViewFeatureIdlesWithTimer: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFeatureIdlesWithTimer"
 	end
 
-	frozen kHIViewFeatureInvertsUpDownValueMeaning: INTEGER is
+	frozen kHIViewFeatureInvertsUpDownValueMeaning: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFeatureInvertsUpDownValueMeaning"
 	end
 
-	frozen kHIViewFeatureIsOpaque: INTEGER is
+	frozen kHIViewFeatureIsOpaque: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFeatureIsOpaque"
 	end
 
-	frozen kHIViewFeatureDoesNotDraw: INTEGER is
+	frozen kHIViewFeatureDoesNotDraw: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFeatureDoesNotDraw"
 	end
 
-	frozen kHIViewFeatureDoesNotUseSpecialParts: INTEGER is
+	frozen kHIViewFeatureDoesNotUseSpecialParts: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFeatureDoesNotUseSpecialParts"
 	end
 
-	frozen kHIViewFeatureIgnoresClicks: INTEGER is
+	frozen kHIViewFeatureIgnoresClicks: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFeatureIgnoresClicks"
 	end
 
-	frozen kHIViewValidFeaturesForPanther: INTEGER is
+	frozen kHIViewValidFeaturesForPanther: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewValidFeaturesForPanther"
 	end
 
-	frozen kHIViewSupportsGhosting: INTEGER is
+	frozen kHIViewSupportsGhosting: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewSupportsGhosting"
 	end
 
-	frozen kHIViewAllowsSubviews: INTEGER is
+	frozen kHIViewAllowsSubviews: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewAllowsSubviews"
 	end
 
-	frozen kHIViewGetsFocusOnClick: INTEGER is
+	frozen kHIViewGetsFocusOnClick: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewGetsFocusOnClick"
 	end
 
-	frozen kHIViewSupportsLiveFeedback: INTEGER is
+	frozen kHIViewSupportsLiveFeedback: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewSupportsLiveFeedback"
 	end
 
-	frozen kHIViewSupportsRadioBehavior: INTEGER is
+	frozen kHIViewSupportsRadioBehavior: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewSupportsRadioBehavior"
 	end
 
-	frozen kHIViewAutoToggles: INTEGER is
+	frozen kHIViewAutoToggles: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewAutoToggles"
 	end
 
-	frozen kHIViewIdlesWithTimer: INTEGER is
+	frozen kHIViewIdlesWithTimer: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewIdlesWithTimer"
 	end
 
-	frozen kHIViewInvertsUpDownValueMeaning: INTEGER is
+	frozen kHIViewInvertsUpDownValueMeaning: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewInvertsUpDownValueMeaning"
 	end
 
-	frozen kHIViewIsOpaque: INTEGER is
+	frozen kHIViewIsOpaque: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewIsOpaque"
 	end
 
-	frozen kHIViewDoesNotDraw: INTEGER is
+	frozen kHIViewDoesNotDraw: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewDoesNotDraw"
 	end
 
-	frozen kHIViewDoesNotUseSpecialParts: INTEGER is
+	frozen kHIViewDoesNotUseSpecialParts: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewDoesNotUseSpecialParts"
 	end
 
-	frozen kHIViewIgnoresClicks: INTEGER is
+	frozen kHIViewIgnoresClicks: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewIgnoresClicks"
 	end
 
-	frozen kHIViewNoPart: INTEGER is
+	frozen kHIViewNoPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewNoPart"
 	end
 
-	frozen kHIViewIndicatorPart: INTEGER is
+	frozen kHIViewIndicatorPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewIndicatorPart"
 	end
 
-	frozen kHIViewDisabledPart: INTEGER is
+	frozen kHIViewDisabledPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewDisabledPart"
 	end
 
-	frozen kHIViewInactivePart: INTEGER is
+	frozen kHIViewInactivePart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewInactivePart"
 	end
 
-	frozen kHIViewEntireView: INTEGER is
+	frozen kHIViewEntireView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewEntireView"
 	end
 
-	frozen kHIViewStructureMetaPart: INTEGER is
+	frozen kHIViewStructureMetaPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewStructureMetaPart"
 	end
 
-	frozen kHIViewContentMetaPart: INTEGER is
+	frozen kHIViewContentMetaPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewContentMetaPart"
 	end
 
-	frozen kHIViewOpaqueMetaPart: INTEGER is
+	frozen kHIViewOpaqueMetaPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewOpaqueMetaPart"
 	end
 
-	frozen kHIViewClickableMetaPart: INTEGER is
+	frozen kHIViewClickableMetaPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewClickableMetaPart"
 	end
 
-	frozen kHIViewFocusNoPart: INTEGER is
+	frozen kHIViewFocusNoPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFocusNoPart"
 	end
 
-	frozen kHIViewFocusNextPart: INTEGER is
+	frozen kHIViewFocusNextPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFocusNextPart"
 	end
 
-	frozen kHIViewFocusPrevPart: INTEGER is
+	frozen kHIViewFocusPrevPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewFocusPrevPart"
 	end
 
-	frozen kHIViewContentTextOnly: INTEGER is
+	frozen kHIViewContentTextOnly: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewContentTextOnly"
 	end
 
-	frozen kHIViewContentNone: INTEGER is
+	frozen kHIViewContentNone: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewContentNone"
 	end
 
-	frozen kHIViewContentIconSuiteRef: INTEGER is
+	frozen kHIViewContentIconSuiteRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewContentIconSuiteRef"
 	end
 
-	frozen kHIViewContentIconRef: INTEGER is
+	frozen kHIViewContentIconRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewContentIconRef"
 	end
 
-	frozen kHIViewContentCGImageRef: INTEGER is
+	frozen kHIViewContentCGImageRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewContentCGImageRef"
 	end
 
-	frozen errNeedsCompositedWindow: INTEGER is
+	frozen errNeedsCompositedWindow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"errNeedsCompositedWindow"
 	end
 
-	frozen kHIViewKindSignatureApple: INTEGER is
+	frozen kHIViewKindSignatureApple: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIViewKindSignatureApple"
 	end
 
-	frozen kEventParamHIViewTrackingArea: INTEGER is
+	frozen kEventParamHIViewTrackingArea: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamHIViewTrackingArea"
 	end
 
-	frozen typeHIViewTrackingAreaRef: INTEGER is
+	frozen typeHIViewTrackingAreaRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"typeHIViewTrackingAreaRef"
 	end
 
-	frozen kEventControlTrackingAreaEntered: INTEGER is
+	frozen kEventControlTrackingAreaEntered: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlTrackingAreaEntered"
 	end
 
-	frozen kEventControlTrackingAreaExited: INTEGER is
+	frozen kEventControlTrackingAreaExited: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventControlTrackingAreaExited"
 	end
 
-	frozen kHILayoutBindNone: INTEGER is
+	frozen kHILayoutBindNone: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutBindNone"
 	end
 
-	frozen kHILayoutBindMin: INTEGER is
+	frozen kHILayoutBindMin: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutBindMin"
 	end
 
-	frozen kHILayoutBindMax: INTEGER is
+	frozen kHILayoutBindMax: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutBindMax"
 	end
 
-	frozen kHILayoutBindLeft: INTEGER is
+	frozen kHILayoutBindLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutBindLeft"
 	end
 
-	frozen kHILayoutBindRight: INTEGER is
+	frozen kHILayoutBindRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutBindRight"
 	end
 
-	frozen kHILayoutBindTop: INTEGER is
+	frozen kHILayoutBindTop: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutBindTop"
 	end
 
-	frozen kHILayoutBindBottom: INTEGER is
+	frozen kHILayoutBindBottom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutBindBottom"
 	end
 
-	frozen kHILayoutScaleAbsolute: INTEGER is
+	frozen kHILayoutScaleAbsolute: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutScaleAbsolute"
 	end
 
-	frozen kHILayoutPositionNone: INTEGER is
+	frozen kHILayoutPositionNone: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutPositionNone"
 	end
 
-	frozen kHILayoutPositionCenter: INTEGER is
+	frozen kHILayoutPositionCenter: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutPositionCenter"
 	end
 
-	frozen kHILayoutPositionMin: INTEGER is
+	frozen kHILayoutPositionMin: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutPositionMin"
 	end
 
-	frozen kHILayoutPositionMax: INTEGER is
+	frozen kHILayoutPositionMax: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutPositionMax"
 	end
 
-	frozen kHILayoutPositionLeft: INTEGER is
+	frozen kHILayoutPositionLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutPositionLeft"
 	end
 
-	frozen kHILayoutPositionRight: INTEGER is
+	frozen kHILayoutPositionRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutPositionRight"
 	end
 
-	frozen kHILayoutPositionTop: INTEGER is
+	frozen kHILayoutPositionTop: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutPositionTop"
 	end
 
-	frozen kHILayoutPositionBottom: INTEGER is
+	frozen kHILayoutPositionBottom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutPositionBottom"
 	end
 
-	frozen kHILayoutInfoVersionZero: INTEGER is
+	frozen kHILayoutInfoVersionZero: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHILayoutInfoVersionZero"
 	end
 
-	frozen kHITransformNone: INTEGER is
+	frozen kHITransformNone: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHITransformNone"
 	end
 
-	frozen kHITransformDisabled: INTEGER is
+	frozen kHITransformDisabled: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHITransformDisabled"
 	end
 
-	frozen kHITransformSelected: INTEGER is
+	frozen kHITransformSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHITransformSelected"
 	end
 
-	frozen kControlKindHIGrowBoxView: INTEGER is
+	frozen kControlKindHIGrowBoxView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindHIGrowBoxView"
 	end
 
-	frozen kControlKindHIScrollView: INTEGER is
+	frozen kControlKindHIScrollView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindHIScrollView"
 	end
 
-	frozen kEventClassScrollable: INTEGER is
+	frozen kEventClassScrollable: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassScrollable"
 	end
 
-	frozen kEventParamImageSize: INTEGER is
+	frozen kEventParamImageSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamImageSize"
 	end
 
-	frozen kEventParamViewSize: INTEGER is
+	frozen kEventParamViewSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamViewSize"
 	end
 
-	frozen kEventParamLineSize: INTEGER is
+	frozen kEventParamLineSize: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamLineSize"
 	end
 
-	frozen kEventParamOrigin: INTEGER is
+	frozen kEventParamOrigin: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamOrigin"
 	end
 
-	frozen kEventScrollableGetInfo: INTEGER is
+	frozen kEventScrollableGetInfo: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventScrollableGetInfo"
 	end
 
-	frozen kEventScrollableInfoChanged: INTEGER is
+	frozen kEventScrollableInfoChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventScrollableInfoChanged"
 	end
 
-	frozen kEventScrollableScrollTo: INTEGER is
+	frozen kEventScrollableScrollTo: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventScrollableScrollTo"
 	end
 
-	frozen kHIScrollViewOptionsVertScroll: INTEGER is
+	frozen kHIScrollViewOptionsVertScroll: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIScrollViewOptionsVertScroll"
 	end
 
-	frozen kHIScrollViewOptionsHorizScroll: INTEGER is
+	frozen kHIScrollViewOptionsHorizScroll: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIScrollViewOptionsHorizScroll"
 	end
 
-	frozen kHIScrollViewOptionsAllowGrow: INTEGER is
+	frozen kHIScrollViewOptionsAllowGrow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIScrollViewOptionsAllowGrow"
 	end
 
-	frozen kHIScrollViewValidOptions: INTEGER is
+	frozen kHIScrollViewValidOptions: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIScrollViewValidOptions"
 	end
 
-	frozen kHIScrollViewScrollToTop: INTEGER is
+	frozen kHIScrollViewScrollToTop: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIScrollViewScrollToTop"
 	end
 
-	frozen kHIScrollViewScrollToBottom: INTEGER is
+	frozen kHIScrollViewScrollToBottom: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIScrollViewScrollToBottom"
 	end
 
-	frozen kHIScrollViewScrollToLeft: INTEGER is
+	frozen kHIScrollViewScrollToLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIScrollViewScrollToLeft"
 	end
 
-	frozen kHIScrollViewScrollToRight: INTEGER is
+	frozen kHIScrollViewScrollToRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIScrollViewScrollToRight"
 	end
 
-	frozen kHIScrollViewPageUp: INTEGER is
+	frozen kHIScrollViewPageUp: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIScrollViewPageUp"
 	end
 
-	frozen kHIScrollViewPageDown: INTEGER is
+	frozen kHIScrollViewPageDown: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIScrollViewPageDown"
 	end
 
-	frozen kHIScrollViewPageLeft: INTEGER is
+	frozen kHIScrollViewPageLeft: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIScrollViewPageLeft"
 	end
 
-	frozen kHIScrollViewPageRight: INTEGER is
+	frozen kHIScrollViewPageRight: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIScrollViewPageRight"
 	end
 
-	frozen kControlKindHIImageView: INTEGER is
+	frozen kControlKindHIImageView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindHIImageView"
 	end
 
-	frozen kHIImageViewImageTag: INTEGER is
+	frozen kHIImageViewImageTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIImageViewImageTag"
 	end
 
-	frozen kEventClassHIComboBox: INTEGER is
+	frozen kEventClassHIComboBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassHIComboBox"
 	end
 
-	frozen kEventParamComboBoxListSelectedItemIndex: INTEGER is
+	frozen kEventParamComboBoxListSelectedItemIndex: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamComboBoxListSelectedItemIndex"
 	end
 
-	frozen kEventComboBoxListItemSelected: INTEGER is
+	frozen kEventComboBoxListItemSelected: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventComboBoxListItemSelected"
 	end
 
-	frozen kHIComboBoxNoAttributes: INTEGER is
+	frozen kHIComboBoxNoAttributes: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIComboBoxNoAttributes"
 	end
 
-	frozen kHIComboBoxAutoCompletionAttribute: INTEGER is
+	frozen kHIComboBoxAutoCompletionAttribute: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIComboBoxAutoCompletionAttribute"
 	end
 
-	frozen kHIComboBoxAutoDisclosureAttribute: INTEGER is
+	frozen kHIComboBoxAutoDisclosureAttribute: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIComboBoxAutoDisclosureAttribute"
 	end
 
-	frozen kHIComboBoxAutoSortAttribute: INTEGER is
+	frozen kHIComboBoxAutoSortAttribute: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIComboBoxAutoSortAttribute"
 	end
 
-	frozen kHIComboBoxAutoSizeListAttribute: INTEGER is
+	frozen kHIComboBoxAutoSizeListAttribute: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIComboBoxAutoSizeListAttribute"
 	end
 
-	frozen kHIComboBoxStandardAttributes: INTEGER is
+	frozen kHIComboBoxStandardAttributes: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIComboBoxStandardAttributes"
 	end
 
-	frozen kControlKindHIComboBox: INTEGER is
+	frozen kControlKindHIComboBox: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindHIComboBox"
 	end
 
-	frozen kHIComboBoxEditTextPart: INTEGER is
+	frozen kHIComboBoxEditTextPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIComboBoxEditTextPart"
 	end
 
-	frozen kHIComboBoxDisclosurePart: INTEGER is
+	frozen kHIComboBoxDisclosurePart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIComboBoxDisclosurePart"
 	end
 
-	frozen kHIComboBoxListTag: INTEGER is
+	frozen kHIComboBoxListTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIComboBoxListTag"
 	end
 
-	frozen kHIComboBoxListPixelWidthTag: INTEGER is
+	frozen kHIComboBoxListPixelWidthTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIComboBoxListPixelWidthTag"
 	end
 
-	frozen kHIComboBoxListPixelHeightTag: INTEGER is
+	frozen kHIComboBoxListPixelHeightTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIComboBoxListPixelHeightTag"
 	end
 
-	frozen kHIComboBoxNumVisibleItemsTag: INTEGER is
+	frozen kHIComboBoxNumVisibleItemsTag: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHIComboBoxNumVisibleItemsTag"
 	end
 
-	frozen kControlKindHISearchField: INTEGER is
+	frozen kControlKindHISearchField: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindHISearchField"
 	end
 
-	frozen kControlSearchFieldCancelPart: INTEGER is
+	frozen kControlSearchFieldCancelPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlSearchFieldCancelPart"
 	end
 
-	frozen kControlSearchFieldMenuPart: INTEGER is
+	frozen kControlSearchFieldMenuPart: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlSearchFieldMenuPart"
 	end
 
-	frozen kHISearchFieldNoAttributes: INTEGER is
+	frozen kHISearchFieldNoAttributes: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHISearchFieldNoAttributes"
 	end
 
-	frozen kHISearchFieldAttributesCancel: INTEGER is
+	frozen kHISearchFieldAttributesCancel: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHISearchFieldAttributesCancel"
 	end
 
-	frozen kHISearchFieldAttributesSearchIcon: INTEGER is
+	frozen kHISearchFieldAttributesSearchIcon: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHISearchFieldAttributesSearchIcon"
 	end
 
-	frozen kEventClassSearchField: INTEGER is
+	frozen kEventClassSearchField: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassSearchField"
 	end
 
-	frozen kEventSearchFieldCancelClicked: INTEGER is
+	frozen kEventSearchFieldCancelClicked: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventSearchFieldCancelClicked"
 	end
 
-	frozen kEventSearchFieldSearchClicked: INTEGER is
+	frozen kEventSearchFieldSearchClicked: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventSearchFieldSearchClicked"
 	end
 
-	frozen kEventClassTextField: INTEGER is
+	frozen kEventClassTextField: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassTextField"
 	end
 
-	frozen kEventParamTextSelection: INTEGER is
+	frozen kEventParamTextSelection: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamTextSelection"
 	end
 
-	frozen kEventParamCandidateText: INTEGER is
+	frozen kEventParamCandidateText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamCandidateText"
 	end
 
-	frozen kEventParamReplacementText: INTEGER is
+	frozen kEventParamReplacementText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamReplacementText"
 	end
 
-	frozen kEventParamUnconfirmedRange: INTEGER is
+	frozen kEventParamUnconfirmedRange: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamUnconfirmedRange"
 	end
 
-	frozen kEventParamUnconfirmedText: INTEGER is
+	frozen kEventParamUnconfirmedText: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamUnconfirmedText"
 	end
 
-	frozen kEventTextAccepted: INTEGER is
+	frozen kEventTextAccepted: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTextAccepted"
 	end
 
-	frozen kEventTextShouldChangeInRange: INTEGER is
+	frozen kEventTextShouldChangeInRange: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTextShouldChangeInRange"
 	end
 
-	frozen kEventTextDidChange: INTEGER is
+	frozen kEventTextDidChange: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTextDidChange"
 	end
 
-	frozen kControlKindHIMenuView: INTEGER is
+	frozen kControlKindHIMenuView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindHIMenuView"
 	end
 
-	frozen kControlKindHIStandardMenuView: INTEGER is
+	frozen kControlKindHIStandardMenuView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kControlKindHIStandardMenuView"
 	end
 
-	frozen kHISegmentedViewKind: INTEGER is
+	frozen kHISegmentedViewKind: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHISegmentedViewKind"
 	end
 
-	frozen kHISegmentBehaviorMomentary: INTEGER is
+	frozen kHISegmentBehaviorMomentary: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHISegmentBehaviorMomentary"
 	end
 
-	frozen kHISegmentBehaviorRadio: INTEGER is
+	frozen kHISegmentBehaviorRadio: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHISegmentBehaviorRadio"
 	end
 
-	frozen kHISegmentBehaviorToggles: INTEGER is
+	frozen kHISegmentBehaviorToggles: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHISegmentBehaviorToggles"
 	end
 
-	frozen kHISegmentBehaviorSticky: INTEGER is
+	frozen kHISegmentBehaviorSticky: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHISegmentBehaviorSticky"
 	end
 
-	frozen kHISegmentNoAttributes: INTEGER is
+	frozen kHISegmentNoAttributes: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHISegmentNoAttributes"
 	end
 
-	frozen kHISegmentSendCmdToUserFocus: INTEGER is
+	frozen kHISegmentSendCmdToUserFocus: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kHISegmentSendCmdToUserFocus"
 	end
 
-	frozen kEventClassClockView: INTEGER is
+	frozen kEventClassClockView: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventClassClockView"
 	end
 
-	frozen kEventClockDateOrTimeChanged: INTEGER is
+	frozen kEventClockDateOrTimeChanged: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias

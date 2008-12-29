@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Element representing a database table"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,13 +13,13 @@ inherit
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create all the attributes.
 		do
 			set_default
 		end
 
-	set_default is
+	set_default
 			-- Sets object default values.
 			-- WARNING: Default primary and foreign key values
 			-- MUST NOT be valid database values!
@@ -28,10 +28,10 @@ feature -- Initialization
 
 feature -- Access
 
-	table_description: DB_TABLE_DESCRIPTION is deferred end
+	table_description: DB_TABLE_DESCRIPTION deferred end
 			-- Description associated to the table.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

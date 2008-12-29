@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Fundamental class with geometry."
@@ -25,13 +25,13 @@ inherit
 
 feature -- Access
 
-	real_x: INTEGER is
+	real_x: INTEGER
 			-- Horizontal position relative to root window
 		do
 			Result := xt_real_x (screen_object)
 		end;
 
-	real_y: INTEGER is
+	real_y: INTEGER
 			-- Vertical position relative to root window
 		do
 			Result := xt_real_y (screen_object)
@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_ancestor_sensitive: BOOLEAN is
+	is_ancestor_sensitive: BOOLEAN
 			-- Is a gadget's immediate parent sensitive?
 		require
 			exists: not is_destroyed
@@ -47,7 +47,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNancestorSensitive)
 		end;
 
-	is_input_sensitive: BOOLEAN is
+	is_input_sensitive: BOOLEAN
 			-- Is Current input sensitive?
 		require
 			exists: not is_destroyed
@@ -55,7 +55,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNsensitive)
 		end;
 
-	border_width: INTEGER is
+	border_width: INTEGER
 			-- Width of Current's border
 		require
 			exists: not is_destroyed
@@ -65,7 +65,7 @@ feature -- Status report
 			border_width_large_enough: Result >= 0
 		end;
 
-	height: INTEGER is
+	height: INTEGER
 			-- Window height, excluding the border
 		require
 			exists: not is_destroyed
@@ -75,7 +75,7 @@ feature -- Status report
 			height_large_enough: Result >= 0
 		end;
 
-	width: INTEGER is
+	width: INTEGER
 			-- Window width, excluding the border
 		require
 			exists: not is_destroyed
@@ -85,7 +85,7 @@ feature -- Status report
 			width_large_enough: Result >= 0
 		end;
 
-	x: INTEGER is
+	x: INTEGER
 			-- The x-coordinate relative to the parent
 		require
 			exists: not is_destroyed
@@ -93,7 +93,7 @@ feature -- Status report
 			Result := get_xt_position (screen_object, XmNx)
 		end;
 
-	y: INTEGER is
+	y: INTEGER
 			-- The y-coordinate relative to the parent
 		require
 			exists: not is_destroyed
@@ -103,7 +103,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_input_sensitive is
+	set_input_sensitive
 			-- Set `is_input_sensitive' to True.
 		require
 			exists: not is_destroyed
@@ -113,7 +113,7 @@ feature -- Status setting
 			is_sensitive: is_sensitive
 		end;
 
-	set_input_insensitive is
+	set_input_insensitive
 			-- Set `is_sensitive' to False.
 		require
 			exists: not is_destroyed
@@ -123,7 +123,7 @@ feature -- Status setting
 			is_not_sensitive: not is_sensitive
 		end;
 
-	set_border_width (a_width: INTEGER) is
+	set_border_width (a_width: INTEGER)
 			-- Set `border_width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -134,7 +134,7 @@ feature -- Status setting
 			border_width_set: border_width = a_width
 		end;
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set `height' to `a_height'.
 		require
 			exists: not is_destroyed;
@@ -143,7 +143,7 @@ feature -- Status setting
 			set_xt_dimension (screen_object, XmNheight, a_height)
 		end;
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set `width' to `a_width'.
 		require
 			exists: not is_destroyed;
@@ -152,7 +152,7 @@ feature -- Status setting
 			set_xt_dimension (screen_object, XmNwidth, a_width)
 		end;
 
-    set_size (new_width:INTEGER; new_height: INTEGER) is
+    set_size (new_width:INTEGER; new_height: INTEGER)
             -- Set `width' to `new_width', and `height' to `new_height'.
         require
 			exists: not is_destroyed;
@@ -163,7 +163,7 @@ feature -- Status setting
             set_xt_dimension (screen_object, XmNheight, new_height)
         end;
 
-	set_x (a_value: INTEGER) is
+	set_x (a_value: INTEGER)
 			-- Set `x' to `a_value'.
 		require
 			exists: not is_destroyed
@@ -171,7 +171,7 @@ feature -- Status setting
 			set_xt_position (screen_object, XmNx, a_value)
 		end;
 
-	set_y (a_value: INTEGER) is
+	set_y (a_value: INTEGER)
 			-- Set `y' to `a_value'.
 		require
 			exists: not is_destroyed
@@ -179,7 +179,7 @@ feature -- Status setting
 			set_xt_position (screen_object, XmNy, a_value)
 		end;
 
-	set_x_y (x_value, y_value: INTEGER) is
+	set_x_y (x_value, y_value: INTEGER)
 			-- Set `x' to `x_value', and `y' to `y_value'.
 		require
 			exists: not is_destroyed
@@ -188,7 +188,7 @@ feature -- Status setting
 			set_xt_position (screen_object, XmNy, y_value)
 		end
 
-	move_to (x_value, y_value: INTEGER) is
+	move_to (x_value, y_value: INTEGER)
 			-- Move Current widget to x position `x_value' and
 			-- y position to `y_value'. 
 			--| The `x_value' and `y_value' will be written into the widget
@@ -202,24 +202,24 @@ feature -- Status setting
 
 feature {NONE} -- External features
 
-    xt_move_widget (w: POINTER; x1, y1: INTEGER) is
+    xt_move_widget (w: POINTER; x1, y1: INTEGER)
         external
             "C (Widget, Position, Position) | <X11/IntrinsicP.h>"
         alias
             "XtMoveWidget"
         end;
 
-	xt_real_y (scr_obj: POINTER): INTEGER is
+	xt_real_y (scr_obj: POINTER): INTEGER
 		external
 			"C"
 		end;
 
-	xt_real_x (scr_obj: POINTER): INTEGER is
+	xt_real_x (scr_obj: POINTER): INTEGER
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

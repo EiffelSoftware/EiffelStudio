@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Owner Draw State (ODS) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,40 +10,40 @@ class
 
 feature -- Access
 
-	Ods_checked: INTEGER is 8
+	Ods_checked: INTEGER = 8
 		-- Declared in Windows as ODS_CHECKED
 	
-	Ods_comboboxedit: INTEGER is 4096
+	Ods_comboboxedit: INTEGER = 4096
 		-- Declared in Windows as ODS_COMBOBOXEDIT
 	
-	Ods_default: INTEGER is 32
+	Ods_default: INTEGER = 32
 		-- Declared in Windows as ODS_DEFAULT
 	
-	Ods_disabled: INTEGER is 4
+	Ods_disabled: INTEGER = 4
 		-- Declared in Windows as ODS_DISABLED
 	
-	Ods_focus: INTEGER is 16
+	Ods_focus: INTEGER = 16
 		-- Declared in Windows as ODS_FOCUS
 	
-	Ods_grayed: INTEGER is 2
+	Ods_grayed: INTEGER = 2
 		-- Declared in Windows as ODS_GRAYED
 	
-	Ods_hotlight: INTEGER is 64
+	Ods_hotlight: INTEGER = 64
 		-- Declared in Windows as ODS_HOTLIGHT
 	
-	Ods_inactive: INTEGER is 128
+	Ods_inactive: INTEGER = 128
 		-- Declared in Windows as ODS_INACTIVE
 	
-	Ods_noaccel: INTEGER is 256
+	Ods_noaccel: INTEGER = 256
 		-- Declared in Windows as ODS_NOACCEL
 	
-	Ods_nofocusrect: INTEGER is 512
+	Ods_nofocusrect: INTEGER = 512
 		-- Declared in Windows as ODS_NOFOCUSRECT
 	
-	Ods_selected: INTEGER is 1;
+	Ods_selected: INTEGER = 1;
 		-- Declared in Windows as ODS_SELECTED
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

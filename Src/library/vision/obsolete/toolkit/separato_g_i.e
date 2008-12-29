@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General separator gadget implementation"
 	legal: "See notice at end of class.";
@@ -14,7 +14,7 @@ inherit
 
 feature
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

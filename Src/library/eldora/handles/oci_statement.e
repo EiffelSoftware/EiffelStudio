@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of a SQL Statement"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ feature -- Access
 	sql_text: STRING
 			-- Current SQL text
 
-	statement_type: INTEGER is
+	statement_type: INTEGER
 			-- Type of SQL statement (see OCI_CONST)
 		require
 			prepared: is_prepared
@@ -39,7 +39,7 @@ feature -- Access
 			Result := stmt_type
 		end
 		
-	function_code: INTEGER is
+	function_code: INTEGER
 			-- Function code of the SQL command associated with the statement
 		require
 			prepared: is_prepared
@@ -47,7 +47,7 @@ feature -- Access
 			Result := int16_attr (Oci_attr_sqlfncode, error_handler)
 		end
 		
-	column_count: INTEGER is
+	column_count: INTEGER
 			-- The number of columns in the select-list for the statement
 		require
 			described: is_described
@@ -55,7 +55,7 @@ feature -- Access
 			Result := column_list.count
 		end
 	
-	column (index: INTEGER): OCI_COLUMN_PARAM is
+	column (index: INTEGER): OCI_COLUMN_PARAM
 			-- `index'th column in select-list
 		require
 			described: is_described
@@ -64,7 +64,7 @@ feature -- Access
 			Result := column_list @ index
 		end
 		
-	index_of_column (name: STRING): INTEGER is
+	index_of_column (name: STRING): INTEGER
 			-- Index of the column with given name; 0 means not found
 		require
 			described: is_described
@@ -84,7 +84,7 @@ feature -- Access
 			end
 		end
 		
-	index_of_variable (name: STRING): INTEGER is
+	index_of_variable (name: STRING): INTEGER
 			-- Index of the bind-variable with given name; 0 means not found
 		require
 			name_not_empty: name /= Void and name.count /= 0
@@ -112,7 +112,7 @@ feature -- Access
 	auto_fetch_first_row: BOOLEAN
 		-- Automatically fetch the first row on `execute' ?
 	
-	column_value (name: STRING): ANY is
+	column_value (name: STRING): ANY
 			-- Value of the column `name' in the current row
 		require
 			is_query: is_prepared and then is_query
@@ -128,7 +128,7 @@ feature -- Access
 			Result := defines.item (index).value
 		end
 		
-	is_column_defined (name: STRING): BOOLEAN is
+	is_column_defined (name: STRING): BOOLEAN
 			-- Does column `name' exist in select-list and is of a valid type ?
 		require
 			is_query: is_prepared and then is_query
@@ -147,7 +147,7 @@ feature -- Access
 			end
 		end
 		
-	is_column_null (name: STRING): BOOLEAN is
+	is_column_null (name: STRING): BOOLEAN
 			-- Is value of the column `name' in the current row NULL ?
 		require
 			is_query: is_prepared and then is_query
@@ -163,7 +163,7 @@ feature -- Access
 			Result := defines.item (index).is_null
 		end
 		
-	variable_value (name: STRING): ANY is
+	variable_value (name: STRING): ANY
 			-- Value of bind-variable `name'
 		require
 			is_query: is_prepared and then is_query
@@ -175,7 +175,7 @@ feature -- Access
 			Result := (binds @ index).value
 		end
 		
-	row_count: INTEGER is
+	row_count: INTEGER
 			-- The number of rows processed so far
 		require
 			executed: is_executed
@@ -183,7 +183,7 @@ feature -- Access
 			Result := int_attr (Oci_attr_row_count, error_handler)
 		end
 		
-	current_row: ARRAY [ANY] is
+	current_row: ARRAY [ANY]
 			-- Entire current row (the last row fetched) as an ARRAY.
 			-- Database NULLs represented as Void.
 			-- Note: items get overriden every time a row is fetched (by `execute' or `fetch_next').
@@ -227,7 +227,7 @@ feature -- Status report
 	rows_fetched: INTEGER
 		-- Number of rows already fetched
 	
-	num_dml_errors: INTEGER is
+	num_dml_errors: INTEGER
 			-- The number of errors in the DML operation
 		require
 			executed: is_executed
@@ -236,7 +236,7 @@ feature -- Status report
 			Result := int_attr (Oci_attr_num_dml_errors, error_handler)
 		end
 		
-	parse_error_offset: INTEGER is
+	parse_error_offset: INTEGER
 			-- The parse error offset for the statement
 		require
 			prepared: is_prepared
@@ -245,31 +245,31 @@ feature -- Status report
 			Result := int16_attr (Oci_attr_parse_error_offset, error_handler)
 		end
 		
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is `Current' statement of a known type ?
 		do
 			Result := known_statement_type (statement_type)
 		end
 		
-	is_query: BOOLEAN is
+	is_query: BOOLEAN
 			-- Is `Current' statement a query ?
 		do
 			Result := is_query_type (statement_type)
 		end
 
-	is_dml: BOOLEAN is
+	is_dml: BOOLEAN
 			-- Is `Current' statement a DML statement ?
 		do
 			Result := is_dml_type (statement_type)
 		end
 
-	is_ddl: BOOLEAN is
+	is_ddl: BOOLEAN
 			-- Is `Current' statement a DDL statement ?
 		do
 			Result := is_ddl_type (statement_type)
 		end
 
-	is_pl_sql: BOOLEAN is
+	is_pl_sql: BOOLEAN
 			-- Is `Current' statement a PL/SQL statement ?
 		do
 			Result := is_pl_sql_type (statement_type)
@@ -277,7 +277,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	free is
+	free
 			-- Free the handle and reset status flags
 		do
 			Precursor
@@ -296,7 +296,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	prepare (text: STRING) is
+	prepare (text: STRING)
 			-- Prepare a SQL statement
 		local
 			status: INTEGER_16
@@ -330,7 +330,7 @@ feature -- Basic operations
 			not_eof: not eof
 		end
 
-	set_prefetch_rows (rows: INTEGER) is
+	set_prefetch_rows (rows: INTEGER)
 			-- Set the number of top level rows to be prefetched
 		require
 			valid_argument: rows > 0
@@ -338,7 +338,7 @@ feature -- Basic operations
 			set_int_attr (Oci_attr_prefetch_rows, rows, error_handler)
 		end
 		
-	declare_string_variable (name: STRING; size: INTEGER) is
+	declare_string_variable (name: STRING; size: INTEGER)
 			-- Declare a STRING bind-variable
 		require
 			prepared: is_prepared
@@ -352,7 +352,7 @@ feature -- Basic operations
 			one_more_variable: binds.count = old binds.count + 1
 		end
 		
-	declare_integer_variable (name: STRING) is
+	declare_integer_variable (name: STRING)
 			-- Declare an INTEGER bind-variable
 		require
 			prepared: is_prepared
@@ -366,7 +366,7 @@ feature -- Basic operations
 			one_more_variable: binds.count = old binds.count + 1
 		end
 		
-	declare_double_variable (name: STRING) is
+	declare_double_variable (name: STRING)
 			-- Declare a DOUBLE bind-variable
 		require
 			prepared: is_prepared
@@ -380,7 +380,7 @@ feature -- Basic operations
 			one_more_variable: binds.count = old binds.count + 1
 		end
 		
-	declare_date_time_variable (name: STRING) is
+	declare_date_time_variable (name: STRING)
 			-- Declare a DATE_TIME bind-variable
 		require
 			prepared: is_prepared
@@ -394,7 +394,7 @@ feature -- Basic operations
 			one_more_variable: binds.count = old binds.count + 1
 		end
 		
-	declare_cursor_variable (name: STRING) is
+	declare_cursor_variable (name: STRING)
 			-- Declare a CURSOR bind-variable
 		require
 			prepared: is_prepared
@@ -408,7 +408,7 @@ feature -- Basic operations
 			one_more_variable: binds.count = old binds.count + 1
 		end
 		
-	assign_variable (name: STRING; value: ANY) is
+	assign_variable (name: STRING; value: ANY)
 			-- Assign a bind-variable
 		require
 			prepared: is_prepared
@@ -424,7 +424,7 @@ feature -- Basic operations
 				(value = Void and variable_value (name) = Void)
 		end
 		
-	reset_variables is
+	reset_variables
 			-- Reset values of all bind-variables to default values
 		require
 			prepared: is_prepared
@@ -432,7 +432,7 @@ feature -- Basic operations
 			-- To do
 		end
 
-	remove_variables is
+	remove_variables
 			-- Remove all bind-variables
 		require
 			prepared: is_prepared
@@ -440,7 +440,7 @@ feature -- Basic operations
 			binds.wipe_out
 		end
 		
-	set_numbers_as_strings (value: BOOLEAN) is
+	set_numbers_as_strings (value: BOOLEAN)
 			-- Treat NUMBER columns as strings ?
 		do
 			numbers_as_strings := value
@@ -448,7 +448,7 @@ feature -- Basic operations
 			numbers_as_strings = value
 		end
 
-	set_dates_as_strings (value: BOOLEAN) is
+	set_dates_as_strings (value: BOOLEAN)
 			-- Treat DATE columns as strings ?
 		do
 			dates_as_strings := value
@@ -456,7 +456,7 @@ feature -- Basic operations
 			dates_as_strings = value
 		end
 
-	set_auto_fetch_first_row (value: BOOLEAN) is
+	set_auto_fetch_first_row (value: BOOLEAN)
 			-- Automatically fetch the first row on `execute' ?
 		do
 			auto_fetch_first_row := value
@@ -464,7 +464,7 @@ feature -- Basic operations
 			auto_fetch_first_row = value
 		end
 
-	execute (context: OCI_SERVICE_CONTEXT) is
+	execute (context: OCI_SERVICE_CONTEXT)
 			-- Execute a prepared SQL statement in given `context'
 		require
 			valid_statement: is_prepared and then is_valid
@@ -510,7 +510,7 @@ feature -- Basic operations
 			first_row_fetched: (is_query and not failed and auto_fetch_first_row) implies rows_fetched = 1
 		end
 		
-	describe (context: OCI_SERVICE_CONTEXT) is
+	describe (context: OCI_SERVICE_CONTEXT)
 			-- Describe a prepared SQL statement in given `context' without executing
 		require
 			valid_statement: is_prepared and then is_valid
@@ -532,7 +532,7 @@ feature -- Basic operations
 			success_unless_failed: (not failed) implies is_described
 		end
 		
-	define is
+	define
 			-- Define output variables based on the column list
 		require
 			described: is_described
@@ -564,7 +564,7 @@ feature -- Basic operations
 				(defines.lower = column_list.lower and defines.upper = column_list.upper)
 		end
 		
-	fetch_next is
+	fetch_next
 			-- Fetch next row from a query
 		require
 			is_query: is_prepared and then is_query
@@ -582,7 +582,7 @@ feature -- Basic operations
 			rows_fetched := rows_fetched + 1
 		end
 		
-	cancel_fetch is
+	cancel_fetch
 			-- Cancel the cursor
 		require
 			is_query: is_prepared and then is_query
@@ -598,7 +598,7 @@ feature -- Basic operations
 
 feature {OCI_HANDLE} -- Implementation
 
-	handle_type: INTEGER is
+	handle_type: INTEGER
 			-- Handle type
 		do
 			Result := Oci_htype_stmt
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 	row_data_filled: BOOLEAN
 		-- Does `row_data' contain actual field values ?
 
-	build_column_list is
+	build_column_list
 			-- Build the column list (when query is being described)
 		require
 			is_query: is_prepared and then statement_type = Oci_stmt_select
@@ -646,7 +646,7 @@ feature {NONE} -- Implementation
 			column_list_exists: column_list /= Void
 		end
 		
-	define_column (col: OCI_COLUMN_PARAM): OCI_DEFINE is
+	define_column (col: OCI_COLUMN_PARAM): OCI_DEFINE
 			-- Create a define-variable associated with a column `col'; Void if unsupported datatype
 		do
 			inspect
@@ -698,7 +698,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	fill_row_data is
+	fill_row_data
 			-- Fill `current_row' with actual data from the query
 		require
 			is_query: is_prepared and then is_query
@@ -731,21 +731,21 @@ feature {NONE} -- Implementation
 			filled: row_data_filled
 		end
 		
-	Unknown_statement_type_error: STRING is "Error: Unknown statement type"
+	Unknown_statement_type_error: STRING = "Error: Unknown statement type"
 	
-	Max_number_string_length: INTEGER is 40
+	Max_number_string_length: INTEGER = 40
 		
-	Max_date_string_length: INTEGER is 40
+	Max_date_string_length: INTEGER = 40
 	
-	Long_initial_size: INTEGER is 32000
+	Long_initial_size: INTEGER = 32000
 	
-	Year_to_month_length: INTEGER is 8
+	Year_to_month_length: INTEGER = 8
 	
-	Day_to_second_length: INTEGER is 30
+	Day_to_second_length: INTEGER = 30
 		
-	Rowid_length: INTEGER is 18
+	Rowid_length: INTEGER = 18
 		
-	known_statement_type (type: INTEGER): BOOLEAN is
+	known_statement_type (type: INTEGER): BOOLEAN
 			-- Is `type' a known statement type ?
 		do
 			Result :=
@@ -762,13 +762,13 @@ feature {NONE} -- Implementation
 				type = 0
 		end
 		
-	is_query_type (type: INTEGER): BOOLEAN is
+	is_query_type (type: INTEGER): BOOLEAN
 			-- Is `type' a query statement type ?
 		do
 			Result := type = Oci_stmt_select
 		end
 
-	is_dml_type (type: INTEGER): BOOLEAN is
+	is_dml_type (type: INTEGER): BOOLEAN
 			-- Is `type' a DML statement type ?
 		do
 			Result :=
@@ -777,7 +777,7 @@ feature {NONE} -- Implementation
 				type = Oci_stmt_insert
 		end
 
-	is_ddl_type (type: INTEGER): BOOLEAN is
+	is_ddl_type (type: INTEGER): BOOLEAN
 			-- Is `type' a DDL statement type ?
 		do
 			Result :=
@@ -786,7 +786,7 @@ feature {NONE} -- Implementation
 				type = Oci_stmt_alter
 		end
 
-	is_pl_sql_type (type: INTEGER): BOOLEAN is
+	is_pl_sql_type (type: INTEGER): BOOLEAN
 			-- Is `type' a PL/SQL statement type ?
 		do
 			Result :=
@@ -797,7 +797,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Externals
 
 	oci_stmt_prepare (stmtp: POINTER; errhp: POINTER; stmt: POINTER; stmt_len: INTEGER;
-			language: INTEGER; mode: INTEGER): INTEGER_16 is
+			language: INTEGER; mode: INTEGER): INTEGER_16
 		external
 			"C (void *, void *, char *, int, int, int): short | %"oci.h%""
 		alias
@@ -805,7 +805,7 @@ feature {NONE} -- Externals
 		end
 		
 	oci_stmt_execute (svchp: POINTER; stmtp: POINTER; errhp: POINTER; iters: INTEGER;
-			rowoff: INTEGER; snap_in: POINTER; snap_out: POINTER; mode: INTEGER): INTEGER_16 is
+			rowoff: INTEGER; snap_in: POINTER; snap_out: POINTER; mode: INTEGER): INTEGER_16
 		external
 			"C (void *, void *, void *, int, int, void *, void *, int): short | %"oci.h%""
 		alias
@@ -813,7 +813,7 @@ feature {NONE} -- Externals
 		end
 		
 	oci_stmt_fetch (stmtp: POINTER; errhp: POINTER; nrows: INTEGER; orientation: INTEGER_16; 
-			mode: INTEGER): INTEGER_16 is
+			mode: INTEGER): INTEGER_16
 		external
 			"C (void *, void *, int, short, int): short | %"oci.h%""
 		alias
@@ -831,7 +831,7 @@ invariant
 	always_eof_unless_is_query: (is_executed and then not is_query) implies eof
 	row_data_filled: row_data_filled implies (row_data /= Void and row_data.count = column_count)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

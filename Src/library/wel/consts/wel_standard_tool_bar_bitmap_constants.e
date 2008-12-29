@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Toolbar system-defined standard and view bitmaps constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,161 +10,161 @@ class
 
 feature -- Access
 
-	Std_copy: INTEGER is
+	Std_copy: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_COPY"
 		end
 
-	Std_paste: INTEGER is
+	Std_paste: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_PASTE"
 		end
 
-	Std_cut: INTEGER is
+	Std_cut: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_CUT"
 		end
 
-	Std_print: INTEGER is
+	Std_print: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_PRINT"
 		end
 
-	Std_delete: INTEGER is
+	Std_delete: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_DELETE"
 		end
 
-	Std_printpre: INTEGER is
+	Std_printpre: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_PRINTPRE"
 		end
 
-	Std_filenew: INTEGER is
+	Std_filenew: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_FILENEW"
 		end
 
-	Std_properties: INTEGER is
+	Std_properties: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_PROPERTIES"
 		end
 
-	Std_fileopen: INTEGER is
+	Std_fileopen: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_FILEOPEN"
 		end
 
-	Std_redow: INTEGER is
+	Std_redow: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_REDOW"
 		end
 
-	Std_filesave: INTEGER is
+	Std_filesave: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_FILESAVE"
 		end
 
-	Std_replace: INTEGER is
+	Std_replace: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_REPLACE"
 		end
 
-	Std_find: INTEGER is
+	Std_find: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_FIND"
 		end
 
-	Std_undo: INTEGER is
+	Std_undo: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_UNDO"
 		end
 
-	Std_help: INTEGER is
+	Std_help: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"STD_HELP"
 		end
 
-	View_largeicons: INTEGER is
+	View_largeicons: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_LARGEICONS"
 		end
 
-	View_sortname: INTEGER is
+	View_sortname: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_SORTNAME"
 		end
 
-	View_smallicons: INTEGER is
+	View_smallicons: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_SMALLICONS"
 		end
 
-	View_sortsize: INTEGER is
+	View_sortsize: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_SORTSIZE"
 		end
 
-	View_list: INTEGER is
+	View_list: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_LIST"
 		end
 
-	View_sortdate: INTEGER is
+	View_sortdate: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_SORTDATE"
 		end
 
-	View_details: INTEGER is
+	View_details: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
 			"VIEW_DETAILS"
 		end
 
-	View_sorttype: INTEGER is
+	View_sorttype: INTEGER
 		external
 			"C [macro %"cctrl.h%"]"
 		alias
@@ -173,7 +173,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_standard_tool_bar_bitmap_constant (c: INTEGER): BOOLEAN is
+	valid_standard_tool_bar_bitmap_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid standard tool bar bitmap constant?
 		do
 			Result := c = Std_copy or else
@@ -201,7 +201,7 @@ feature -- Status report
 				c = View_sorttype
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

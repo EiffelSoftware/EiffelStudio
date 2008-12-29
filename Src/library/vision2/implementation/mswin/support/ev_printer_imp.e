@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "EiffelVision printer, implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,13 +24,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current', a printer object.
 		do
 			base_make (an_interface)
 		end
 
-	set_default_colors is
+	set_default_colors
 			-- Set foreground and background color to their default values.
 		local
 			a_default_colors: EV_STOCK_COLORS
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_printer_dc (a_dc: WEL_PRINTER_DC) is
+	set_printer_dc (a_dc: WEL_PRINTER_DC)
 			-- Set `dc' to `a_dc'.
 		do
 			dc := a_dc
@@ -55,13 +55,13 @@ feature -- Access
 
 feature -- Measurement
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of `Current'.
 		do
 			Result := dc.width
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of `Current'.
 		do
 			Result := dc.height
@@ -69,19 +69,19 @@ feature -- Measurement
 
 feature -- Status setting
 
-	start_document is
+	start_document
 		do
 			dc.start_document ("Eiffel Vision Print Job")
 			dc.start_page
 		end
 
-	end_document is
+	end_document
 		do
 			dc.end_page
 			dc.end_document
 		end
 
-	redraw is 
+	redraw 
 			-- Force `Current' to redraw itself. 
 		do 
 		end 
@@ -90,7 +90,7 @@ feature -- Implementation
 	
 	interface: EV_PRINTER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

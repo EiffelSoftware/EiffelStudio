@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class that allows formatting of the numerical part of a monetary quantity"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Initialization
 
-	make_from_currency_info (a_currency_info: I18N_CURRENCY_INFO) is
+	make_from_currency_info (a_currency_info: I18N_CURRENCY_INFO)
 			-- Initialize values according
 			-- the currency information in
 			-- `a_locale_info'
@@ -39,7 +39,7 @@ feature -- Initialization
 			negative_sign := a_currency_info.currency_negative_sign
 		end
 
-	make_from_locale_info (a_locale_info: I18N_LOCALE_INFO) is
+	make_from_locale_info (a_locale_info: I18N_LOCALE_INFO)
 			-- Initialize values according
 			-- the currency information in
 			-- `a_currency_info'
@@ -47,7 +47,7 @@ feature -- Initialization
 			make_from_currency_info (a_locale_info)
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

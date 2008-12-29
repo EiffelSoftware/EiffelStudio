@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Word operations (low and high)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic operations
 
-	cwin_lo_word (value: POINTER): INTEGER is
+	cwin_lo_word (value: POINTER): INTEGER
 			-- SDK LOWORD
 		external
 			"C inline use <windows.h>"
@@ -21,7 +21,7 @@ feature -- Basic operations
 			"(EIF_INTEGER) LOWORD($value)"
 		end
 
-	cwin_hi_word (value: POINTER): INTEGER is
+	cwin_hi_word (value: POINTER): INTEGER
 			-- SDK HIWORD
 		external
 			"C inline use <windows.h>"
@@ -29,7 +29,7 @@ feature -- Basic operations
 			"(EIF_INTEGER) HIWORD($value)"
 		end
 
-	cwin_make_long (low, high: INTEGER): POINTER is
+	cwin_make_long (low, high: INTEGER): POINTER
 			-- SDK MAKELONG
 		external
 			"C inline use <windows.h>"
@@ -37,7 +37,7 @@ feature -- Basic operations
 			"(EIF_POINTER) MAKELONG($low, $high)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

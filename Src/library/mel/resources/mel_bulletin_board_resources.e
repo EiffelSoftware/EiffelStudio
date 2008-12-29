@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Bulletin Board resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNallowOverlap: POINTER is
+	XmNallowOverlap: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNallowOverlap"
 		end;
 
-	XmNautoUnmanage: POINTER is
+	XmNautoUnmanage: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNautoUnmanage"
 		end;
 
-	XmNbuttonFontList: POINTER is
+	XmNbuttonFontList: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNbuttonFontList"
 		end;
 
-	XmNcancelButton: POINTER is
+	XmNcancelButton: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNcancelButton"
 		end;
 
-	XmNdefaultButton: POINTER is
+	XmNdefaultButton: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNdefaultButton"
 		end;
 
-	XmNdefaultPosition: POINTER is
+	XmNdefaultPosition: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNdefaultPosition"
 		end;
 
-	XmNdialogStyle: POINTER is
+	XmNdialogStyle: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNdialogStyle"
 		end;
 
-	XmNdialogTitle: POINTER is
+	XmNdialogTitle: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNdialogTitle"
 		end;
 
-	XmNlabelFontList: POINTER is
+	XmNlabelFontList: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNlabelFontList"
 		end;
 
-	XmNmarginHeight: POINTER is
+	XmNmarginHeight: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNmarginHeight"
 		end;
 
-	XmNmarginWidth: POINTER is
+	XmNmarginWidth: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNmarginWidth"
 		end;
 
-	XmNnoResize: POINTER is
+	XmNnoResize: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNnoResize"
 		end;
 
-	XmNresizePolicy: POINTER is
+	XmNresizePolicy: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmNresizePolicy"
 		end;
 
-	XmNshadowType: POINTER is
+	XmNshadowType: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmNshadowType"
 		end;
 
-	XmNtextFontList: POINTER is
+	XmNtextFontList: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmNtextFontList"
 		end;
 
-	XmNtextTranslations: POINTER is
+	XmNtextTranslations: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmNtextTranslations"
 		end;
 
-	XmNfocusCallback: POINTER is
+	XmNfocusCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmNfocusCallback"
 		end;
 
-	XmNmapCallback: POINTER is
+	XmNmapCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmNmapCallback"
 		end;
 
-	XmNunmapCallback: POINTER is
+	XmNunmapCallback: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_POINTER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmNunmapCallback"
 		end;
 
-	XmDIALOG_WORK_AREA: INTEGER is
+	XmDIALOG_WORK_AREA: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_INTEGER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmDIALOG_WORK_AREA"
 		end;
 
-	XmDIALOG_MODELESS: INTEGER is
+	XmDIALOG_MODELESS: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_INTEGER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"XmDIALOG_MODELESS"
 		end;
 
-	XmDIALOG_FULL_APPLICATION_MODAL: INTEGER is
+	XmDIALOG_FULL_APPLICATION_MODAL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_INTEGER"
@@ -188,7 +188,7 @@ feature -- Implementation
 			"XmDIALOG_FULL_APPLICATION_MODAL"
 		end;
 
-	XmDIALOG_APPLICATION_MODAL: INTEGER is
+	XmDIALOG_APPLICATION_MODAL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_INTEGER"
@@ -196,7 +196,7 @@ feature -- Implementation
 			"XmDIALOG_APPLICATION_MODAL"
 		end;
 
-	XmDIALOG_PRIMARY_APPLICATION_MODAL: INTEGER is
+	XmDIALOG_PRIMARY_APPLICATION_MODAL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_INTEGER"
@@ -204,7 +204,7 @@ feature -- Implementation
 			"XmDIALOG_PRIMARY_APPLICATION_MODAL"
 		end;
 
-	XmDIALOG_SYSTEM_MODAL: INTEGER is
+	XmDIALOG_SYSTEM_MODAL: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_INTEGER"
@@ -212,7 +212,7 @@ feature -- Implementation
 			"XmDIALOG_SYSTEM_MODAL"
 		end;
 
-	XmRESIZE_NONE: INTEGER is
+	XmRESIZE_NONE: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_INTEGER"
@@ -220,7 +220,7 @@ feature -- Implementation
 			"XmRESIZE_NONE"
 		end;
 
-	XmRESIZE_GROW: INTEGER is
+	XmRESIZE_GROW: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_INTEGER"
@@ -228,7 +228,7 @@ feature -- Implementation
 			"XmRESIZE_GROW"
 		end;
 
-	XmRESIZE_ANY: INTEGER is
+	XmRESIZE_ANY: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_INTEGER"
@@ -236,7 +236,7 @@ feature -- Implementation
 			"XmRESIZE_ANY"
 		end;
 
-	XmSHADOW_IN: INTEGER is
+	XmSHADOW_IN: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_INTEGER"
@@ -244,7 +244,7 @@ feature -- Implementation
 			"XmSHADOW_IN"
 		end;
 
-	XmSHADOW_OUT: INTEGER is
+	XmSHADOW_OUT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_INTEGER"
@@ -252,7 +252,7 @@ feature -- Implementation
 			"XmSHADOW_OUT"
 		end;
 
-	XmSHADOW_ETCHED_IN: INTEGER is
+	XmSHADOW_ETCHED_IN: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_INTEGER"
@@ -260,7 +260,7 @@ feature -- Implementation
 			"XmSHADOW_ETCHED_IN"
 		end;
 
-	XmSHADOW_ETCHED_OUT: INTEGER is
+	XmSHADOW_ETCHED_OUT: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/BulletinB.h>]: EIF_INTEGER"
@@ -268,7 +268,7 @@ feature -- Implementation
 			"XmSHADOW_ETCHED_OUT"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

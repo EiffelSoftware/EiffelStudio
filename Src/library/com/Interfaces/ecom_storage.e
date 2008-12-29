@@ -1,4 +1,4 @@
-indexing
+note
 	description: "implementation of IStorage interface"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,14 +30,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_c_storage_from_pointer (cpp_obj)
 			item := ccom_item (initializer)
 		end
 
-	make_new_doc_file (filename: FILE_NAME; a_mode: INTEGER) is
+	make_new_doc_file (filename: FILE_NAME; a_mode: INTEGER)
 			-- Create new compound file with path `filename'
 			-- and mode `a_mode' in file system.
 			-- See class ECOM_STGM for `mode' values.
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			compound_file_created: exists
 		end
 
-	make_temporary_doc_file (a_mode: INTEGER) is
+	make_temporary_doc_file (a_mode: INTEGER)
 			-- Create temporary compound file with mode `mode'
 			-- See class ECOM_STGM for `a_mode' values.
 		require
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			compound_file_created: exists
 		end
 
-	make_open_file (filename: FILE_NAME; a_mode: INTEGER) is
+	make_open_file (filename: FILE_NAME; a_mode: INTEGER)
 			-- Open existing root compound file with path `filename'
 			-- and mode `mode' in file system.
 			-- excluding block pointed by `exclude' (can be default_pointer)
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	new_stream (a_name: STRING; a_mode: INTEGER) : ECOM_STREAM is
+	new_stream (a_name: STRING; a_mode: INTEGER) : ECOM_STREAM
 			-- Newly created stream with name `a_name'
 			-- and mode `a_mode' nested within Current storage
 			-- Opening the same stream more than once from the
@@ -110,7 +110,7 @@ feature -- Access
 			valid_stream: Result.exists
 		end
 
-	retrieved_stream (a_name: STRING; a_mode: INTEGER): ECOM_STREAM is
+	retrieved_stream (a_name: STRING; a_mode: INTEGER): ECOM_STREAM
 			-- Retrieved nested stream with name `a_name'
 			-- and mode `a_mode'
 			-- same storage is not supported.
@@ -130,7 +130,7 @@ feature -- Access
 			valid_stream: Result.exists
 		end
 
-	new_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE is
+	new_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE
 			-- Newly created storage with name `a_name'
 			-- and mode `a_mode'
 			-- nested within Current storage
@@ -149,7 +149,7 @@ feature -- Access
 			valid_storage: Result.exists
 		end
 
-	retrieved_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE is
+	retrieved_substorage (a_name: STRING; a_mode: INTEGER): ECOM_STORAGE
 			-- Retrieved storage with name `a_name' and mode `a_mode'
 			-- nested within Current storage
 			-- Opening the same storage object more than once from the same
@@ -170,7 +170,7 @@ feature -- Access
 			valid_storage: Result.exists
 		end
 
-	root_storage: ECOM_ROOT_STORAGE is
+	root_storage: ECOM_ROOT_STORAGE
 			-- IRootStorage interface
 		local
 			ptr: POINTER
@@ -181,7 +181,7 @@ feature -- Access
 			end
 		end
 
-	elements: ECOM_ENUM_STATSTG is
+	elements: ECOM_ENUM_STATSTG
 			-- Substorages and substreams enumerator		
 		do
 			create Result.make (ccom_enum_elements (initializer))
@@ -189,7 +189,7 @@ feature -- Access
 			Result /= Void
 		end
 
-	is_valid_name (a_name: STRING): BOOLEAN is
+	is_valid_name (a_name: STRING): BOOLEAN
 			-- is object with name `a_name'
 			-- part of Current storage
 		require
@@ -198,49 +198,49 @@ feature -- Access
 			Result := elements.is_valid_name (a_name)
 		end
 
-	name: STRING is
+	name: STRING
 			-- Name
 		do
 			Result := description (Statflag_default).name
 		end
 
-	is_same_name (a_name: STRING): BOOLEAN is
+	is_same_name (a_name: STRING): BOOLEAN
 			-- is `a_name' equal to name of Current storage
 		do
 			Result := description (Statflag_default).is_same_name (a_name)
 		end
 
-	modification_time: WEL_FILE_TIME is
+	modification_time: WEL_FILE_TIME
 			-- Modufication time
 		do
 			Result := description (Statflag_noname).modification_time
 		end
 
-	creation_time: WEL_FILE_TIME is
+	creation_time: WEL_FILE_TIME
 			-- Creation time
 		do
 			Result := description (Statflag_noname).creation_time
 		end
 
-	access_time: WEL_FILE_TIME is
+	access_time: WEL_FILE_TIME
 			-- Access time
 		do
 			Result := description (Statflag_noname).access_time
 		end
 
-	mode: INTEGER is
+	mode: INTEGER
 			-- Access mode
 		do
 			Result := description (Statflag_noname).mode
 		end
 
-	class_id: POINTER is
+	class_id: POINTER
 			-- Class identifier
 		do
 			Result := description (Statflag_noname).clsid
 		end
 
-	element_creation_time (a_name: STRING): WEL_FILE_TIME is
+	element_creation_time (a_name: STRING): WEL_FILE_TIME
 			-- Creation time of element `a_name'
 		require
 			non_void_name: a_name /= Void
@@ -251,7 +251,7 @@ feature -- Access
 			non_void_creation_time: Result /= Void
 		end
 
-	element_access_time (a_name: STRING): WEL_FILE_TIME is
+	element_access_time (a_name: STRING): WEL_FILE_TIME
 			-- Access time of element `a_name'
 		require
 			non_void_name: a_name /= Void
@@ -262,7 +262,7 @@ feature -- Access
 			non_void_access_time: Result /= Void
 		end
 
-	element_modification_time (a_name: STRING): WEL_FILE_TIME is
+	element_modification_time (a_name: STRING): WEL_FILE_TIME
 			-- Modification time of element `a_name'
 		require
 			non_void_name: a_name /= Void
@@ -275,7 +275,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	copy_all_to (dest_storage: ECOM_STORAGE) is
+	copy_all_to (dest_storage: ECOM_STORAGE)
 			-- Copy entire contents to `dest_storage'.
 		require
 			non_void_destination: dest_storage /= Void
@@ -285,7 +285,7 @@ feature -- Basic Operations
 					dest_storage.item)
 		end
 
-	commit (a_flags: INTEGER) is
+	commit (a_flags: INTEGER)
 			-- Commit any changes.
 			-- Notify parent storage.
 		require
@@ -294,14 +294,14 @@ feature -- Basic Operations
 			ccom_commit (initializer, a_flags)
 		end
 
-	revert is
+	revert
 			-- Discard all changes made to storage object
 			-- since the last commit
 		do
 			ccom_revert (initializer)
 		end
 
-	destroy_element (a_name: STRING) is
+	destroy_element (a_name: STRING)
 			-- Remove element with name `a_name' from storage.
 		require
 			non_void_name: a_name /= Void
@@ -315,7 +315,7 @@ feature -- Basic Operations
 			element_removed: not is_valid_name (a_name)
 		end
 
-	rename_element (old_name: STRING; new_name:STRING) is
+	rename_element (old_name: STRING; new_name:STRING)
 			-- Rename element `old_name' into `new_name'
 		require
 			non_void_old_name: old_name /= Void
@@ -336,7 +336,7 @@ feature -- Basic Operations
 feature -- Element Change
 
 	move_element_to (a_element_name: STRING; dest_storage: ECOM_STORAGE; new_name: STRING;
-				a_mode: INTEGER) is
+				a_mode: INTEGER)
 			-- Copy or move (depending on `mode') element `a_element_name'
 			-- of root storage to `dest_storage'.
 			-- Create new element in `dest_storage' with `new_name'.
@@ -362,7 +362,7 @@ feature -- Element Change
 			element_moved: dest_storage.is_valid_name (new_name)
 		end
 
-	set_element_creation_time (a_element_name:STRING; a_creation_time: WEL_FILE_TIME) is
+	set_element_creation_time (a_element_name:STRING; a_creation_time: WEL_FILE_TIME)
 			-- Set creation time of element `a_element_name' with `a_creation_time'.
 		require
 			non_void_element_name: a_element_name /= Void
@@ -378,7 +378,7 @@ feature -- Element Change
 			element_creation_time_set: element_creation_time (a_element_name).is_equal (a_creation_time)
 		end
 
-	set_element_access_time (a_element_name:STRING; an_access_time: WEL_FILE_TIME) is
+	set_element_access_time (a_element_name:STRING; an_access_time: WEL_FILE_TIME)
 			-- Set access time of element `a_element_name' with `an_access_time'.
 		require
 			non_void_element_name: a_element_name /= Void
@@ -394,7 +394,7 @@ feature -- Element Change
 			element_access_time_set: element_access_time (a_element_name).is_equal (an_access_time)
 		end
 
-	set_element_modification_time (a_element_name:STRING; a_modification_time: WEL_FILE_TIME) is
+	set_element_modification_time (a_element_name:STRING; a_modification_time: WEL_FILE_TIME)
 			-- Set modification time of element `a_element_name' with `a_modification_time'.
 		require
 			non_void_element_name: a_element_name /= Void
@@ -410,7 +410,7 @@ feature -- Element Change
 			element_access_time_set: element_modification_time (a_element_name).is_equal (a_modification_time)
 		end
 
-	set_access_time (an_access_time: WEL_FILE_TIME) is
+	set_access_time (an_access_time: WEL_FILE_TIME)
 			-- Set access time with `an_access_time'.
 		require
 			non_void_access_time: an_access_time /= Void
@@ -421,7 +421,7 @@ feature -- Element Change
 			access_time_set: access_time.is_equal (an_access_time)
 		end
 
-	set_modification_time (a_modification_time: WEL_FILE_TIME) is
+	set_modification_time (a_modification_time: WEL_FILE_TIME)
 			-- Set modification time with `a_modification_time'.
 		require
 			non_void_modification_time: a_modification_time /= Void
@@ -432,7 +432,7 @@ feature -- Element Change
 			modification_time_set: modification_time.is_equal (a_modification_time)
 		end
 
-	set_creation_time (a_creation_time: WEL_FILE_TIME) is
+	set_creation_time (a_creation_time: WEL_FILE_TIME)
 			-- Set creation time with `creation_time'.
 		require
 			non_void_creation_time: a_creation_time /= Void
@@ -444,7 +444,7 @@ feature -- Element Change
 		end
 
 
-	set_class (a_class_id: POINTER) is
+	set_class (a_class_id: POINTER)
 			-- Associate storage with COM component with class id `a_class-id'
 		require
 			valid_clsid: a_class_id /= default_pointer;
@@ -454,13 +454,13 @@ feature -- Element Change
 
 feature {NONE} -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete structure.
 		do
 			ccom_delete_c_storage (initializer)
 		end
 
-	description (a_flag: INTEGER): ECOM_STATSTG is
+	description (a_flag: INTEGER): ECOM_STATSTG
 			-- STATSTG structure
 			-- This structure contains statistical information.
 		require
@@ -473,123 +473,123 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	ccom_create_c_storage: POINTER is
+	ccom_create_c_storage: POINTER
 		external
 			"C++ [new E_IStorage %"E_IStorage.h%"] ()"
 		end
 
-	ccom_create_c_storage_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_c_storage_from_pointer (a_pointer: POINTER): POINTER
 		external
 			"C++ [new E_IStorage %"E_IStorage.h%"] (IStorage *)"
 		end
 
-	ccom_delete_c_storage (cpp_obj: POINTER) is
+	ccom_delete_c_storage (cpp_obj: POINTER)
 		external
 			"C++ [delete E_IStorage %"E_IStorage.h%"] ()"
 		end
 
-	ccom_create_doc_file (cpp_obj: POINTER; filename: POINTER; a_mode: INTEGER) is
+	ccom_create_doc_file (cpp_obj: POINTER; filename: POINTER; a_mode: INTEGER)
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (WCHAR *, DWORD)"
 		end
 
-	ccom_open_root_storage (cpp_obj: POINTER; filename: POINTER; a_mode: INTEGER) is
+	ccom_open_root_storage (cpp_obj: POINTER; filename: POINTER; a_mode: INTEGER)
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (WCHAR *, DWORD)"
 		end
 
-	ccom_initialize_storage (cpp_obj: POINTER; p_storage: POINTER) is
+	ccom_initialize_storage (cpp_obj: POINTER; p_storage: POINTER)
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (IStorage *)"
 		end
 
-	ccom_create_stream (cpp_obj: POINTER; filename: POINTER; a_mode: INTEGER): POINTER is
+	ccom_create_stream (cpp_obj: POINTER; filename: POINTER; a_mode: INTEGER): POINTER
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (WCHAR *, DWORD): EIF_POINTER"
 		end
 
-	ccom_open_stream (cpp_obj: POINTER; filename: POINTER; a_mode: INTEGER): POINTER is
+	ccom_open_stream (cpp_obj: POINTER; filename: POINTER; a_mode: INTEGER): POINTER
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (WCHAR *, DWORD): EIF_POINTER"
 		end
 
-	ccom_create_storage (cpp_obj: POINTER; filename: POINTER; a_mode: INTEGER): POINTER is
+	ccom_create_storage (cpp_obj: POINTER; filename: POINTER; a_mode: INTEGER): POINTER
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (WCHAR *, DWORD): EIF_POINTER"
 		end
 
-	ccom_open_storage (cpp_obj: POINTER; filename: POINTER; a_mode: INTEGER): POINTER is
+	ccom_open_storage (cpp_obj: POINTER; filename: POINTER; a_mode: INTEGER): POINTER
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (WCHAR *,  DWORD): EIF_POINTER"
 		end
 
 	ccom_copy_to (cpp_obj: POINTER; number_exclude: INTEGER; p_exclude: POINTER;
-				dest: POINTER) is
+				dest: POINTER)
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (DWORD, IID *, IStorage *)"
 		end
 
 	ccom_move_element_to (cpp_obj: POINTER; a_name: POINTER; dest: POINTER;
-				new_name: POINTER; flags: INTEGER) is
+				new_name: POINTER; flags: INTEGER)
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (WCHAR *, IStorage *, LPWSTR, DWORD)"
 		end
 
-	ccom_commit (cpp_obj: POINTER; flags: INTEGER) is
+	ccom_commit (cpp_obj: POINTER; flags: INTEGER)
 
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (DWORD)"
 		end
 
-	ccom_revert (cpp_obj: POINTER) is
+	ccom_revert (cpp_obj: POINTER)
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] ()"
 		end
 
-	ccom_enum_elements (cpp_obj: POINTER): POINTER is
+	ccom_enum_elements (cpp_obj: POINTER): POINTER
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (): EIF_POINTER"
 		end
 
-	ccom_destroy_element (cpp_obj: POINTER; a_name: POINTER) is
+	ccom_destroy_element (cpp_obj: POINTER; a_name: POINTER)
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (WCHAR *)"
 		end
 
-	ccom_rename_element (cpp_obj: POINTER; old_name: POINTER; new_name:POINTER) is
+	ccom_rename_element (cpp_obj: POINTER; old_name: POINTER; new_name:POINTER)
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (WCHAR *, WCHAR *)"
 		end
 
 	ccom_set_element_times (cpp_obj: POINTER; a_name: POINTER; ctime: POINTER;
-			atime: POINTER; mtime: POINTER) is
+			atime: POINTER; mtime: POINTER)
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (WCHAR *, FILETIME *, FILETIME *, FILETIME *)"
 		end
 
-	ccom_set_class (cpp_obj: POINTER; a_clsid: POINTER) is
+	ccom_set_class (cpp_obj: POINTER; a_clsid: POINTER)
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (REFCLSID)"
 		end
 
-	ccom_stat (cpp_obj: POINTER; a_flag: INTEGER): POINTER is
+	ccom_stat (cpp_obj: POINTER; a_flag: INTEGER): POINTER
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] (DWORD): EIF_POINTER"
 		end
 
-	ccom_root_storage (cpp_obj: POINTER) : POINTER is
+	ccom_root_storage (cpp_obj: POINTER) : POINTER
 			-- Pointer to IRootStorage interface
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"] ():EIF_POINTER"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [E_IStorage %"E_IStorage.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

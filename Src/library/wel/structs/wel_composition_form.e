@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Structure containing style and position information for a composition window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create structure with 'pt' and 'rt' and
 			-- default positioning style
 		do
@@ -39,7 +39,7 @@ feature -- Access
 			-- WEL_RECT structure containing the coordinates of the upper-left and lower-right
 			-- corners of the composition window.
 
-	style: INTEGER is
+	style: INTEGER
 			-- Position style, can be one of the values from WEL_IME_CONSTANTS
 		do
 			Result := c_style (item)
@@ -47,7 +47,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_style (sty: INTEGER) is
+	set_style (sty: INTEGER)
 			-- Set style with 'sty'
 		do
 			c_set_style (item, sty)
@@ -55,7 +55,7 @@ feature -- Status Setting
 			style_set: style = sty
 		end
 
-	set_point (a_point: WEL_POINT) is
+	set_point (a_point: WEL_POINT)
 			-- Set `a_point' tp `point'.
 		require
 			a_point_not_void: a_point /= Void
@@ -67,7 +67,7 @@ feature -- Status Setting
 			point_set: point.is_equal (a_point)
 		end
 
-	set_force_point (a_point: WEL_POINT) is
+	set_force_point (a_point: WEL_POINT)
 			-- Set `a_point' tp `point'.
 			-- Override IME settings.
 		require
@@ -80,7 +80,7 @@ feature -- Status Setting
 			point_set: point.is_equal (a_point)
 		end
 
-	set_rect (a_rect: WEL_RECT) is
+	set_rect (a_rect: WEL_RECT)
 			-- Set `rect' with `a_rect'.
 		require
 			a_rect_not_void: a_rect /= Void
@@ -94,7 +94,7 @@ feature -- Status Setting
 
 feature -- Measurment
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_compform
@@ -102,42 +102,42 @@ feature -- Measurment
 
 feature -- Externals
 
-	c_size_of_compform: INTEGER is
+	c_size_of_compform: INTEGER
 		external
 			"C macro use <windows.h>"
 		alias
 			"sizeof (COMPOSITIONFORM)"
 		end
 
-	c_point_address (a_ptr: POINTER): POINTER is
+	c_point_address (a_ptr: POINTER): POINTER
 		external
 			"C inline use <windows.h>"
 		alias
 			"&(((COMPOSITIONFORM *) $a_ptr)->ptCurrentPos)"
 		end
 
-	c_rect_address (a_ptr: POINTER): POINTER is
+	c_rect_address (a_ptr: POINTER): POINTER
 		external
 			"C inline use <windows.h>"
 		alias
 			"&(((COMPOSITIONFORM *) $a_ptr)->rcArea)"
 		end
 
-	c_style (a_ptr: POINTER): INTEGER is
+	c_style (a_ptr: POINTER): INTEGER
 		external
 			"C inline use <windows.h>"
 		alias
 			"((COMPOSITIONFORM *) $a_ptr)->dwStyle"
 		end
 
-	c_set_style (a_ptr: POINTER; a_value: INTEGER) is
+	c_set_style (a_ptr: POINTER; a_value: INTEGER)
 		external
 			"C inline use <windows.h>"
 		alias
 			"((COMPOSITIONFORM *) $a_ptr)->dwStyle = $a_value"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

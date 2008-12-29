@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,14 +42,14 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create an empty Header widget.
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_clist_new (10))
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
@@ -76,7 +76,7 @@ feature -- Initialization
 
 feature
 
-	column_resize_callback (a_column: INTEGER) is
+	column_resize_callback (a_column: INTEGER)
 			-- Column `a_column' has been resized.
 		local
 			a_width: INTEGER
@@ -100,10 +100,10 @@ feature
 --			a_widget := {EV_GTK_EXTERNALS}.gtk_clist_get_column_widget (visual_widget, a_column)
 --		end
 
-	frozen column_padding: INTEGER is 6
+	frozen column_padding: INTEGER = 6
 		-- Extra pixels that make up a column that are not reflected in the struct.
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_HEADER_ITEM_IMP
@@ -115,7 +115,7 @@ feature
 			update_items
 		end
 
-	update_items is
+	update_items
 			-- Update `Current' to match item values
 		local
 			i: INTEGER
@@ -134,7 +134,7 @@ feature
 			end
 		end
 
-	remove_i_th (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER)
 			-- Remove item a`a_position'
 		local
 			item_imp: EV_HEADER_ITEM_IMP
@@ -148,20 +148,20 @@ feature
 
 feature {NONE} -- Implementation
 
-	pointed_divider_index: INTEGER is
+	pointed_divider_index: INTEGER
 			-- Index of divider currently beneath the mouse pointer, or
 			-- 0 if none.
 		do
 		end
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		do
 			--| FIXME IEK Implement me
 		end
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			set_is_destroyed (True)
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 	interface: EV_HEADER;
 		-- Interface object of `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

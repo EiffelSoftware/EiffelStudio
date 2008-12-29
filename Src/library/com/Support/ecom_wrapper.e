@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wrapper of C structures and Interfaces"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Initialization
 
-	make (a_pointer: POINTER) is
+	make (a_pointer: POINTER)
 			-- Initialize
 		require
 			valid_pointer: a_pointer /= default_pointer
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	memory_free is
+	memory_free
 			-- Free memory pointed by `item'.
 		deferred
 		ensure
@@ -44,7 +44,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	dispose is
+	dispose
 			-- Release memory pointed by `item'.
 		do
 			if item /= default_pointer then
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			item_null: item = default_pointer
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

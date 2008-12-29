@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Iterator for pixel values of EV_PIXEL_BUFFER"
 	author: ""
 	date: "$Date$"
@@ -142,7 +142,7 @@ feature
 			end
 		end
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of current position.
 		do
 			Result := (row_value * max_column_value + column_value).to_integer_32

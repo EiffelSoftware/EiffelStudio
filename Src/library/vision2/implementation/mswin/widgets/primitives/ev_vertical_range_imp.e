@@ -1,4 +1,4 @@
-indexing 
+note 
 	description:
 		"Eiffel Vision vertical range. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create as vertical range.
 		do
 			base_make (an_interface)
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-   	set_default_minimum_size is
+   	set_default_minimum_size
    			-- Plateform dependant initializations.
    		do
 			ev_set_minimum_width (30)
@@ -46,7 +46,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_VERTICAL_RANGE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

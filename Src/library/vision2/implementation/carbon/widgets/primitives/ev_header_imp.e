@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,13 +41,13 @@ create
 
 feature -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create an empty Tree.
 		do
 			base_make (an_interface)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		do
 			Precursor {EV_ITEM_LIST_IMP}
@@ -58,7 +58,7 @@ feature -- Initialization
 
 	dummy_item: EV_HEADER_ITEM
 
-	resize_model  (a_columns: INTEGER) is
+	resize_model  (a_columns: INTEGER)
 			-- Resize the data model to match the number of columns
 		do
 
@@ -66,7 +66,7 @@ feature -- Initialization
 
 feature
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_HEADER_ITEM_IMP
@@ -77,7 +77,7 @@ feature
 			item_imp.set_parent_imp (Current)
 		end
 
-	remove_i_th (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER)
 			-- Remove item a`a_position'
 		local
 			item_imp: EV_HEADER_ITEM_IMP
@@ -93,19 +93,19 @@ feature {EV_HEADER_ITEM_IMP} -- Implemnentation
 	item_resize_tuple: TUPLE [EV_HEADER_ITEM]
 		-- Reusable item resize tuple.
 
-	set_call_item_resize_start_actions (a_flag: BOOLEAN) is
+	set_call_item_resize_start_actions (a_flag: BOOLEAN)
 			-- Set `call_item_resize_start_actions' to `a_flag'.
 		do
 
 		end
 
-	item_has_resized is
+	item_has_resized
 			-- The item has finished resizing so call `item_resize_end_actions'.
 		do
 
 		end
 
-	on_resize (a_item: EV_HEADER_ITEM) is
+	on_resize (a_item: EV_HEADER_ITEM)
 			-- `a_item' has resized.
 		do
 
@@ -117,21 +117,21 @@ feature {EV_HEADER_ITEM_IMP} -- Implemnentation
 
 feature {NONE} -- Implementation
 
-	pointed_divider_index: INTEGER is
+	pointed_divider_index: INTEGER
 			-- Index of divider currently beneath the mouse pointer, or
 			-- 0 if none.
 		do
 
 		end
 
-	call_button_event_actions (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	call_button_event_actions (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Call pointer_button_press_actions or pointer_double_press_actions
 			-- depending on event type in first position of `event_data'.
 		do
 
 		end
 
-	call_item_resize_actions is
+	call_item_resize_actions
 			-- Call the item resize end actions.
 		do
 
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 	model_count: INTEGER
 		-- Number of cells available in model
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		do
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_HEADER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

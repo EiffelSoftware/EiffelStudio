@@ -1,4 +1,4 @@
-indexing
+note
 	description: "System-predefined GDI object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Make a gdi stock object identified by `stock_id'.
 		do
 			item := cwin_get_stock_object (stock_id)
@@ -31,14 +31,14 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	stock_id: INTEGER is
+	stock_id: INTEGER
 			-- GDI stock object identifier
 		deferred
 		end
 
 feature {NONE} -- Externals
 
-	cwin_get_stock_object (index: INTEGER): POINTER is
+	cwin_get_stock_object (index: INTEGER): POINTER
 			-- SDK GetStockObject
 		external
 			"C [macro <wel.h>] (int): EIF_POINTER"
@@ -46,7 +46,7 @@ feature {NONE} -- Externals
 			"GetStockObject"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

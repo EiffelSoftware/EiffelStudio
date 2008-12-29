@@ -1,4 +1,4 @@
-indexing
+note
 	description:"Durations of time"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature -- Initialization
 
-	make (h, m, s: INTEGER) is
+	make (h, m, s: INTEGER)
 			-- Set `hour', `minute' and `second' to `h', `m', `s' respectively.
 		do
 			hour := h
@@ -46,7 +46,7 @@ feature -- Initialization
 			second_set: second = s
 		end
 
-	make_fine (h, m: INTEGER; s: DOUBLE) is
+	make_fine (h, m: INTEGER; s: DOUBLE)
 			-- Set `hour, `minute' and `second' to `h', `m' and truncated to
 			-- integer part of `s' respectively.
 			-- Set `fractional_second' to the fractional part of `s'.
@@ -60,7 +60,7 @@ feature -- Initialization
 			fine_second_set: fine_second = s
 		end
 
-	make_by_seconds (s: INTEGER) is
+	make_by_seconds (s: INTEGER)
 			-- Set the object by the number of seconds `s'.
 		do
 			fine_second := s
@@ -72,7 +72,7 @@ feature -- Initialization
 			seconds_count_set: seconds_count = s
 		end
 
-	make_by_fine_seconds (s: DOUBLE) is
+	make_by_fine_seconds (s: DOUBLE)
 			-- Set the object by the number of seconds `s'.
 		do
 			fine_second := s
@@ -90,14 +90,14 @@ feature -- Initialization
 
 feature -- Access
 
-	fine_seconds_count: DOUBLE is
+	fine_seconds_count: DOUBLE
 			-- Number of seconds and fractionals of seconds of current duration
 		do
 			Result := hour * Seconds_in_hour + minute * Seconds_in_minute +
 				fine_second
 		end
 
-	seconds_count: INTEGER is
+	seconds_count: INTEGER
 			-- Total number of seconds of current duration
 		do
 			Result := fine_seconds_count.truncated_to_integer
@@ -105,7 +105,7 @@ feature -- Access
 			same_count: Result = fine_seconds_count.truncated_to_integer
 		end
 
-	zero: like Current is
+	zero: like Current
 			-- Neutral element for "+" and "-"
 		do
 			create Result.make (0, 0, 0)
@@ -117,27 +117,27 @@ feature -- Attributes
 
 	minute: INTEGER
 
-	second: INTEGER is
+	second: INTEGER
 		do
 			Result := fine_second.truncated_to_integer
 		end
 
 	fine_second: DOUBLE
 
-	fractional_second: DOUBLE is
+	fractional_second: DOUBLE
 		do
 			Result := fine_second - second
 		end
 
 feature -- Comparaison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is the current duration smaller than `other'?
 		do
 			Result := fine_seconds_count < other.fine_seconds_count
 		end
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is the current duration equal to `other'?
 		do
 			Result := fine_seconds_count = other.fine_seconds_count
@@ -145,7 +145,7 @@ feature -- Comparaison
 
 feature -- Status report
 
-	canonical: BOOLEAN is
+	canonical: BOOLEAN
 			-- Is duration expressed minimally, i.e.
 			--	If duration is positive then
 			--		`hour' positive,
@@ -167,7 +167,7 @@ feature -- Status report
 			end
 		end
 
-	is_positive: BOOLEAN is
+	is_positive: BOOLEAN
 			-- Is duration positive?
 		do
 			Result := (hour > 0 or minute > 0 or fine_second > 0)
@@ -175,33 +175,33 @@ feature -- Status report
 
 feature -- Element Change
 
-	set_second (s: INTEGER) is
+	set_second (s: INTEGER)
 			-- Set `second' to `s'.
 			-- `fractional_second' is cut down to 0.
 		do
 			fine_second := s
 		end
 
-	set_fine_second (s: DOUBLE) is
+	set_fine_second (s: DOUBLE)
 			-- Set `fine_second' to `s'.
 		do
 			fine_second := s
 		end
 
-	set_fractionals (f: DOUBLE) is
+	set_fractionals (f: DOUBLE)
 			-- Set `fractional_second' to `f'.
 			-- `f' must have the same sign as `second'.
 		do
 			fine_second := second + f
 		end
 
-	set_minute (m: INTEGER) is
+	set_minute (m: INTEGER)
 			-- Set `minute' to `m'.
 		do
 			minute:= m
 		end
 
-	set_hour (h: INTEGER) is
+	set_hour (h: INTEGER)
 			-- Set `hour' to `h'.
 		do
 			hour := h
@@ -209,7 +209,7 @@ feature -- Element Change
 
 feature -- Basic operations
 
-	second_add (s: INTEGER) is
+	second_add (s: INTEGER)
 			-- Add `s' seconds to the current duration.
 		do
 			fine_second := fine_second + s
@@ -217,14 +217,14 @@ feature -- Basic operations
 			second_set: second = old second + s
 		end
 
-	fine_second_add (s: DOUBLE) is
+	fine_second_add (s: DOUBLE)
 			-- Add `s' seconds to the current time.
 			-- if `s' has decimals, `fractional_second' is modifed.
 		do
 			fine_second:= fine_second + s
 		end
 
-	minute_add (m: INTEGER) is
+	minute_add (m: INTEGER)
 			-- Add `m' minutes to the current duration.
 		do
 			minute := minute + m
@@ -232,7 +232,7 @@ feature -- Basic operations
 			minute_set: minute = old minute + m
 		end
 
-	hour_add (h: INTEGER) is
+	hour_add (h: INTEGER)
 			-- Add `h' hours to the current duration.
 		do
 			hour := hour + h
@@ -240,14 +240,14 @@ feature -- Basic operations
 			hour_set: hour = old hour + h
 		end
 
-	infix "+" (other: like Current): like Current is
+	infix "+" (other: like Current): like Current
 			-- Sum with `other'
 		do
 			create Result.make_fine (hour + other.hour, minute + other.minute,
 				fine_second + other.fine_second)
 		end
 
-	prefix "-": like Current is
+	prefix "-": like Current
 			-- Unary minus
 		do
 			create Result.make_fine (-hour, -minute, -fine_second)
@@ -255,7 +255,7 @@ feature -- Basic operations
 
 feature -- Conversion
 
-	to_canonical: like Current is
+	to_canonical: like Current
 			-- A new duration
 		do
 			if canonical then
@@ -272,13 +272,13 @@ feature -- Conversion
 			result_canonical: Result.canonical
 		end
 
-	to_days: INTEGER is
+	to_days: INTEGER
 			-- Total number of days equivalent to the current duration
 		do
 			Result := div (fine_seconds_count.floor, Seconds_in_day)
 		end
 
-	time_modulo_day: like Current is
+	time_modulo_day: like Current
 			-- Duration modulo duration of a day
 		do
 			create Result.make_by_seconds (mod (fine_seconds_count.floor,
@@ -292,7 +292,7 @@ feature -- Conversion
 
 feature {NONE} -- Constants
 
-	tolerance: DOUBLE is 1.0E-06
+	tolerance: DOUBLE = 1.0E-06
 			-- Tolerance for floating point errors
 
 invariant
@@ -305,7 +305,7 @@ invariant
 			fine_second <= 0)
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

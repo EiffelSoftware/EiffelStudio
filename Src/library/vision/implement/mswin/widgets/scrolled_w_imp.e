@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specially created scrolled window"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -91,7 +91,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_scrolled_window: SCROLLED_W; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (a_scrolled_window: SCROLLED_W; man: BOOLEAN; oui_parent: COMPOSITE)
 		do
 			create private_attributes
 			parent ?= oui_parent.implementation
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 			private_attributes.set_height (100)
 		end
 
-	realize_current is
+	realize_current
 			-- Realize current widget.
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -119,7 +119,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	realize is
+	realize
 			-- Realize current widget and children.
 		do
 			if not realized then
@@ -147,7 +147,7 @@ feature -- Status report
 
 feature -- Element change
 
-	add_move_action (a_command: COMMAND; arg: ANY) is
+	add_move_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when slide
 			-- is moved
 		require
@@ -156,7 +156,7 @@ feature -- Element change
 			move_actions.add (Current, a_command, arg)
 		end
 
-	add_value_changed_action (a_command: COMMAND; arg: ANY) is
+	add_value_changed_action (a_command: COMMAND; arg: ANY)
 			-- Add `a_command' to the list of action to execute when value
 			-- is changed.
 		require
@@ -165,7 +165,7 @@ feature -- Element change
 			value_changed_actions.add (Current, a_command, arg)
 		end
 
-	set_working_area (a_widget: WIDGET) is
+	set_working_area (a_widget: WIDGET)
 			-- Set working area of window to `a_widget'.
 		do
 			if working_area /= a_widget then
@@ -185,7 +185,7 @@ feature -- Element change
 
 feature -- Removal
 
-	unrealize is
+	unrealize
 			-- Unrealize current composite and its children.
 		local
 			unrealize_list: LIST [WIDGET_IMP]
@@ -210,7 +210,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	update_scrolling is
+	update_scrolling
 			-- Initialize working_area
 		do
 				set_scroll_range
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 				end
 		end
 
-	resize_for_working_area is
+	resize_for_working_area
 			-- Set size to working area
 		do
 			if working_area /= Void and then working_area.realized then
@@ -234,14 +234,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_size (hit_code, a_width, a_height: INTEGER) is
+	on_size (hit_code, a_width, a_height: INTEGER)
 			-- Respond to a size message.
 		do
 			update_scrolling
 			resize_actions.execute (Current, Void)
 		end
 
-	horizontal_update (inc, position: INTEGER) is
+	horizontal_update (inc, position: INTEGER)
 			-- Respond to an horizontal update of the scroller.
 		local
 			cd: SCROLLING_DATA_WINDOWS
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	vertical_update (inc, position: INTEGER) is
+	vertical_update (inc, position: INTEGER)
 			-- Respond to a vertical update of the scroller.
 		local
 			cd: SCROLLING_DATA_WINDOWS
@@ -267,13 +267,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_default is
+	set_default
 			-- Set default values for current widget.
 		do
 			granularity := 1
 		end
 
-	set_scroll_range is
+	set_scroll_range
 			-- Set the correct scroll range.
 		require
 			exists: exists
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_scroll_position is
+	set_scroll_position
 			-- Set the appropriate scroll_position.
 		require
 			exists: exists
@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	child_has_resized is
+	child_has_resized
 			-- A child has resized
 		do
 			if exists then
@@ -354,23 +354,23 @@ feature {NONE} -- Implementation
 			-- Value of the amount to move the slider and modify
 			-- the slide position value when a move action occurs
 
-	default_style: INTEGER is
+	default_style: INTEGER
 		do
 			Result := Ws_child + Ws_visible + Ws_border
 		end
 
-	default_ex_style: INTEGER is
+	default_ex_style: INTEGER
 		do
 			Result := Ws_ex_clientedge
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EvisionScrolledWindow"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

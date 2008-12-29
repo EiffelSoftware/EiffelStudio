@@ -1,4 +1,4 @@
-indexing
+note
 	description: "NIS constants to control state in WEL_NOTIFY_ICON_DATA structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access
 
-	nis_hidden: INTEGER is 0x1
+	nis_hidden: INTEGER = 0x1
 			-- The icon is hidden.
 
-	nis_sharedicon: INTEGER is 0x2;
+	nis_sharedicon: INTEGER = 0x2;
 			-- The icon is shared.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

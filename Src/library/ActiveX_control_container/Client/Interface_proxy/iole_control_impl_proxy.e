@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implemented `IOleControl' Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE}  -- Initialization
 
-	make_from_pointer (cpp_obj: POINTER) is
+	make_from_pointer (cpp_obj: POINTER)
 			-- Make from pointer
 		do
 			initializer := ccom_create_iole_control_impl_proxy_from_pointer(cpp_obj)
@@ -27,28 +27,28 @@ feature {NONE}  -- Initialization
 
 feature -- Basic Operations
 
-	get_control_info (p_ci: TAG_CONTROLINFO_RECORD) is
+	get_control_info (p_ci: TAG_CONTROLINFO_RECORD)
 			-- No description available.
 			-- `p_ci' [out].  
 		do
 			ccom_get_control_info (initializer, p_ci.item)
 		end
 
-	on_mnemonic (p_msg: TAG_MSG_RECORD) is
+	on_mnemonic (p_msg: TAG_MSG_RECORD)
 			-- No description available.
 			-- `p_msg' [in].  
 		do
 			ccom_on_mnemonic (initializer, p_msg.item)
 		end
 
-	on_ambient_property_change (disp_id: INTEGER) is
+	on_ambient_property_change (disp_id: INTEGER)
 			-- No description available.
 			-- `disp_id' [in].  
 		do
 			ccom_on_ambient_property_change (initializer, disp_id)
 		end
 
-	freeze_events (b_freeze: INTEGER) is
+	freeze_events (b_freeze: INTEGER)
 			-- No description available.
 			-- `b_freeze' [in].  
 		do
@@ -57,7 +57,7 @@ feature -- Basic Operations
 
 feature {NONE}  -- Implementation
 
-	delete_wrapper is
+	delete_wrapper
 			-- Delete wrapper
 		do
 			ccom_delete_iole_control_impl_proxy(initializer)
@@ -65,49 +65,49 @@ feature {NONE}  -- Implementation
 
 feature {NONE}  -- Externals
 
-	ccom_get_control_info (cpp_obj: POINTER; p_ci: POINTER) is
+	ccom_get_control_info (cpp_obj: POINTER; p_ci: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleControl_impl_proxy %"ecom_control_library_IOleControl_impl_proxy_s.h%"](ecom_control_library::tagCONTROLINFO *)"
 		end
 
-	ccom_on_mnemonic (cpp_obj: POINTER; p_msg: POINTER) is
+	ccom_on_mnemonic (cpp_obj: POINTER; p_msg: POINTER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleControl_impl_proxy %"ecom_control_library_IOleControl_impl_proxy_s.h%"](ecom_control_library::tagMSG *)"
 		end
 
-	ccom_on_ambient_property_change (cpp_obj: POINTER; disp_id: INTEGER) is
+	ccom_on_ambient_property_change (cpp_obj: POINTER; disp_id: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleControl_impl_proxy %"ecom_control_library_IOleControl_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_freeze_events (cpp_obj: POINTER; b_freeze: INTEGER) is
+	ccom_freeze_events (cpp_obj: POINTER; b_freeze: INTEGER)
 			-- No description available.
 		external
 			"C++ [ecom_control_library::IOleControl_impl_proxy %"ecom_control_library_IOleControl_impl_proxy_s.h%"](EIF_INTEGER)"
 		end
 
-	ccom_delete_iole_control_impl_proxy (a_pointer: POINTER) is
+	ccom_delete_iole_control_impl_proxy (a_pointer: POINTER)
 			-- Release resource
 		external
 			"C++ [delete ecom_control_library::IOleControl_impl_proxy %"ecom_control_library_IOleControl_impl_proxy_s.h%"]()"
 		end
 
-	ccom_create_iole_control_impl_proxy_from_pointer (a_pointer: POINTER): POINTER is
+	ccom_create_iole_control_impl_proxy_from_pointer (a_pointer: POINTER): POINTER
 			-- Create from pointer
 		external
 			"C++ [new ecom_control_library::IOleControl_impl_proxy %"ecom_control_library_IOleControl_impl_proxy_s.h%"](IUnknown *)"
 		end
 
-	ccom_item (cpp_obj: POINTER): POINTER is
+	ccom_item (cpp_obj: POINTER): POINTER
 			-- Item
 		external
 			"C++ [ecom_control_library::IOleControl_impl_proxy %"ecom_control_library_IOleControl_impl_proxy_s.h%"]():EIF_POINTER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

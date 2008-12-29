@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Elongated rectangular region similar to a scrollbar with %
@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initiaization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a scale with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -44,7 +44,7 @@ feature {NONE} -- Initiaization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged scale with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -58,7 +58,7 @@ feature {NONE} -- Initiaization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a scale with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -76,7 +76,7 @@ feature {NONE} -- Initiaization
 
 feature -- Access
 
-	value: INTEGER is
+	value: INTEGER
 			-- Value of the current slider position along the scale
 		require
 			exists: not destroyed;
@@ -86,7 +86,7 @@ feature -- Access
 			value_large_enough: Result >= minimum;
 			value_small_enough: Result <= maximum
 		end
-	granularity: INTEGER is
+	granularity: INTEGER
 			-- Value of the amount that the current slider can be moved
 			-- whenever a move action occurs
 		require
@@ -98,7 +98,7 @@ feature -- Access
 			granularity_small_enough: Result <= (maximum - minimum)
 		end;
 
-	maximum: INTEGER is
+	maximum: INTEGER
 			-- Maximum value of the slider
 		require
 			exists: not destroyed
@@ -108,7 +108,7 @@ feature -- Access
 			maximum_greater_than_minimum: Result >= minimum
 		end;
 
-	minimum: INTEGER is
+	minimum: INTEGER
 			-- Minimum value of the slider
 		require
 			exists: not destroyed
@@ -118,7 +118,7 @@ feature -- Access
 			minimum_smaller_than_maximum: Result <= maximum
 		end;
 
-	text: STRING is
+	text: STRING
 			-- Scale text
 		require
 			exists: not destroyed
@@ -128,7 +128,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_output_only: BOOLEAN is
+	is_output_only: BOOLEAN
 			-- Is scale mode output only?
 		require
 			exists: not destroyed;
@@ -136,7 +136,7 @@ feature -- Status report
 			Result := implementation.is_output_only
 		end;
 
-	is_horizontal: BOOLEAN is
+	is_horizontal: BOOLEAN
 			-- Is scale oriented horizontal?
 		require
 			exists: not destroyed;
@@ -144,14 +144,14 @@ feature -- Status report
 			Result := implementation.is_horizontal
 		end;
 
-	is_value_shown: BOOLEAN is
+	is_value_shown: BOOLEAN
 		require
 			exists: not destroyed;
 		do
 			Result := implementation.is_value_shown;
 		end;
 
-	is_maximum_right_bottom: BOOLEAN is
+	is_maximum_right_bottom: BOOLEAN
 		require
 			exists: not destroyed;
 		do
@@ -160,7 +160,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_output_only (flag: BOOLEAN) is
+	set_output_only (flag: BOOLEAN)
 			-- Set scale mode to output only if `flag'. The user
 			-- cannot modify the current scale interactively.
 		require
@@ -171,7 +171,7 @@ feature -- Status setting
 			Output_only: is_output_only = flag
 		end;
 
-	set_horizontal (flag: BOOLEAN) is
+	set_horizontal (flag: BOOLEAN)
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
 		require
@@ -182,14 +182,14 @@ feature -- Status setting
 			value_correctly_set: is_horizontal = flag
 		end;
 
-	set_maximum_right_bottom (flag: BOOLEAN) is
+	set_maximum_right_bottom (flag: BOOLEAN)
 		require
 			exists: not destroyed;
 		do
 			implementation.set_maximum_right_bottom (flag);
 		end;
 
-	show_value (flag: BOOLEAN) is
+	show_value (flag: BOOLEAN)
 		require
 			exists: not destroyed;
 		do
@@ -198,7 +198,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set scale text to `a_text'.
 		require
 			exists: not destroyed;
@@ -209,7 +209,7 @@ feature -- Element change
 			text.is_equal (a_text)
 		end;
 
-	set_value (new_value: INTEGER) is
+	set_value (new_value: INTEGER)
 			-- Set value to `new_value'.
 		require
 			exists: not destroyed;
@@ -221,7 +221,7 @@ feature -- Element change
 			value = new_value
 		end;
 
-	set_granularity (new_granularity: INTEGER) is
+	set_granularity (new_granularity: INTEGER)
 			-- Set amount to move the slider when a move action
 			-- occurs to `new_granularity'.
 		require
@@ -234,7 +234,7 @@ feature -- Element change
 			granularity = new_granularity
 		end;
 
-	set_maximum (new_maximum: INTEGER) is
+	set_maximum (new_maximum: INTEGER)
 			-- Set maximum value of the slider to `new_maximum'.
 		require
 			exists: not destroyed;
@@ -249,7 +249,7 @@ feature -- Element change
 			value <= maximum;
 		end;
 
-	set_minimum (new_minimum: INTEGER) is
+	set_minimum (new_minimum: INTEGER)
 			-- Set minimum value of the slider to `new_minimum'.
 		require
 			exists: not destroyed;
@@ -263,7 +263,7 @@ feature -- Element change
 			minimum = new_minimum;
 			value >= minimum;
 		end;
-	add_move_action (a_command: COMMAND; argument: ANY) is
+	add_move_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be executed
 			-- when slide is moved.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -275,7 +275,7 @@ feature -- Element change
 			implementation.add_move_action (a_command, argument)
 		end;
 
-	add_value_changed_action (a_command: COMMAND; argument: ANY) is
+	add_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of action to be execute when
 			-- value is changed.
 			-- `argument' will be passed to `a_command' whenever it is
@@ -289,7 +289,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_move_action (a_command: COMMAND; argument: ANY) is
+	remove_move_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to be executed when
 			-- slide is moved.
 		require
@@ -299,7 +299,7 @@ feature -- Removal
 			implementation.remove_move_action (a_command, argument)
 		end;
 
-	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
+	remove_value_changed_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' from the list of action to be executed when
 			-- value is changed.
 		require
@@ -317,12 +317,12 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {G_ANY, G_ANY_I, WIDGET_I} -- Implementation
 
-	is_fontable: BOOLEAN is true;
+	is_fontable: BOOLEAN = true;
 			-- Is current widget an heir of FONTABLE ?
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current scale.
 		do
 		ensure then
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 			--not is_horizontal;
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

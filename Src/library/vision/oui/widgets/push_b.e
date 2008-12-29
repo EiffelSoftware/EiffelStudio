@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Button with a border shadow"
 	legal: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a push button with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged push button with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a push button with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -71,19 +71,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	real_x: INTEGER is
+	real_x: INTEGER
 		do
 			Result := parent.real_x + x;
 		end;
 
-	real_y: INTEGER is
+	real_y: INTEGER
 		do
 			Result := parent.real_y + y;
 		end;
 
 feature -- Status report
 
-	is_valid (other: COMPOSITE): BOOLEAN is
+	is_valid (other: COMPOSITE): BOOLEAN
 			-- Is `other' a valid parent?
 		local
 			a_bar: BAR
@@ -92,7 +92,7 @@ feature -- Status report
 			Result := (a_bar = Void)
 		end;
 
-	is_parent_menu_pull: BOOLEAN is
+	is_parent_menu_pull: BOOLEAN
 			-- Is `parent' a menu pull?
 		local
 			a_menu_pull: MENU_PULL
@@ -103,7 +103,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_accelerator_action (a_translation: STRING) is
+	set_accelerator_action (a_translation: STRING)
 			-- Set the accerlator action (modifiers and key to use as a shortcut
 			-- in selecting a button) to `a_translation'.
 			-- `a_translation' must be specified with the X toolkit conventions.
@@ -117,7 +117,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_accelerator_action is
+	remove_accelerator_action
 			-- Remove the accelerator action.
 		require
 			exists: not destroyed;
@@ -128,7 +128,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default values to current push button.
 		do
 		end
@@ -138,7 +138,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 	implementation: PUSH_B_I;;
 			-- Implementation of push button
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

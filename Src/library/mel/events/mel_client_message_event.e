@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XClientMessageEvent."
@@ -19,7 +19,7 @@ create
 
 feature -- Access
 
-	message_type: MEL_ATOM is
+	message_type: MEL_ATOM
 			-- Atom for Message type
 		do
 			create Result.make_from_existing (c_event_message_type (handle))
@@ -27,7 +27,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	format: INTEGER is
+	format: INTEGER
 			-- Data format
 		do
 			Result := c_event_format (handle)
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Pointer Access
 
-	data: POINTER is
+	data: POINTER
 			-- Data field pointing to C union
 		do
 			Result := c_event_data (handle)
@@ -43,22 +43,22 @@ feature -- Pointer Access
 
 feature {NONE} -- Implementation
 
-	c_event_message_type (event_ptr: POINTER): POINTER is
+	c_event_message_type (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XClientMessageEvent *): EIF_POINTER"
 		end;
 
-	c_event_format (event_ptr: POINTER): INTEGER is
+	c_event_format (event_ptr: POINTER): INTEGER
 		external
 			"C [macro %"events.h%"] (XClientMessageEvent *): EIF_INTEGER"
 		end;
 
-	c_event_data (event_ptr: POINTER): POINTER is
+	c_event_data (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XClientMessageEvent *): EIF_POINTER"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

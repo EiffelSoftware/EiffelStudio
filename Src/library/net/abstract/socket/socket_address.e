@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A socket address."
@@ -24,7 +24,7 @@ create
 
 feature -- Initalization
 
-	make is
+	make
 			-- Make space available for address size.
 		do
 			create socket_address.make (address_size)
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Size of address
 		do
 			Result := socket_address.count
@@ -45,7 +45,7 @@ feature -- Measurement
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is current address equal to `other'?
 		do
 			Result := socket_address.is_equal (other.socket_address)
@@ -53,7 +53,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	family: INTEGER is
+	family: INTEGER
 			-- Get the socket family of socket address.
 		do
 			Result := get_sock_family (socket_address.item)
@@ -61,7 +61,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_family (f: INTEGER) is
+	set_family (f: INTEGER)
 			-- Set socket address family to `f'.
 		do
 			set_sock_family (socket_address.item, f)
@@ -69,7 +69,7 @@ feature -- Status setting
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Reinitialize by copying characters of `other'.
 			-- (This is also used by `clone'.)
 		do
@@ -82,37 +82,37 @@ feature -- Duplication
 
 feature {NONE} -- External
 
-	address_size: INTEGER is
+	address_size: INTEGER
 			-- Size of socket address
 		external
 			"C"
 		end;
 
-	set_sock_family (address: POINTER; a_family: INTEGER) is
+	set_sock_family (address: POINTER; a_family: INTEGER)
 			-- Set family of socket address.
 		external
 			"C"
 		end;
 
-	get_sock_family (address: POINTER): INTEGER is
+	get_sock_family (address: POINTER): INTEGER
 			-- Get socket family from socket address.
 		external
 			"C"
 		end;
 
-	set_sock_data (address: POINTER; dat: POINTER) is
+	set_sock_data (address: POINTER; dat: POINTER)
 			-- Set data area of socket address.
 		external
 			"C"
 		end;
 
-	get_sock_data (address: POINTER): POINTER is
+	get_sock_data (address: POINTER): POINTER
 			-- Get data portion of socket address.
 		external
 			"C"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,75 +11,75 @@ class
 
 feature -- Access
 
-	normal_text_color: INTEGER is unique
+	normal_text_color: INTEGER = unique
 			-- Color used to display normal text
 
-	normal_background_color: INTEGER is unique
+	normal_background_color: INTEGER = unique
 			-- Background color used to display normal text
 
-	selection_text_color: INTEGER is unique
+	selection_text_color: INTEGER = unique
 			-- Color used to display selected text
 
-	selection_background_color: INTEGER is unique
+	selection_background_color: INTEGER = unique
 			-- Background color used to display selected text
 
-	spaces_text_color: INTEGER is unique
+	spaces_text_color: INTEGER = unique
 			-- Color used to display spaces
 
-	spaces_background_color: INTEGER is unique
+	spaces_background_color: INTEGER = unique
 			-- Background color used to display spaces
 
-	string_text_color: INTEGER is unique
+	string_text_color: INTEGER = unique
 			-- Color used to display strings
 
-	string_background_color: INTEGER is unique
+	string_background_color: INTEGER = unique
 			-- Background color used to display strings
 
-	keyword_text_color: INTEGER is unique
+	keyword_text_color: INTEGER = unique
 			-- Color used to display keywords
 
-	keyword_background_color: INTEGER is unique
+	keyword_background_color: INTEGER = unique
 			-- Background color used to display keywords
 
-	comments_text_color: INTEGER is unique
+	comments_text_color: INTEGER = unique
 			-- Color used to display comments
 
-	comments_background_color: INTEGER is unique
+	comments_background_color: INTEGER = unique
 			-- Background color used to display comments
 
-	operator_text_color: INTEGER is unique
+	operator_text_color: INTEGER = unique
 			-- Color used to display operator
 
-	operator_background_color: INTEGER is unique
+	operator_background_color: INTEGER = unique
 			-- Background color used to display operator
 
 feature -- Eiffel document unique colors
 
-	number_text_color: INTEGER is unique
-	number_background_color: INTEGER is unique
-	breakpoint_background_color: INTEGER is unique
-	assertion_tag_text_color: INTEGER is unique
-	assertion_tag_background_color: INTEGER is unique
-	indexing_tag_text_color: INTEGER is unique
-	indexing_tag_background_color: INTEGER is unique
-	reserved_text_color: INTEGER is unique
-	reserved_background_color: INTEGER is unique
-	generic_text_color: INTEGER is unique
-	generic_background_color: INTEGER is unique
-	local_text_color: INTEGER is unique
-	local_background_color: INTEGER is unique
-	class_text_color: INTEGER is unique
-	class_background_color: INTEGER is unique
-	feature_text_color: INTEGER is unique
-	feature_background_color: INTEGER is unique
-	cluster_text_color: INTEGER is unique
-	cluster_background_color: INTEGER is unique
-	error_text_color: INTEGER is unique
-	error_background_color: INTEGER is unique
-	object_text_color: INTEGER is unique
-	object_background_color: INTEGER is unique;
+	number_text_color: INTEGER = unique
+	number_background_color: INTEGER = unique
+	breakpoint_background_color: INTEGER = unique
+	assertion_tag_text_color: INTEGER = unique
+	assertion_tag_background_color: INTEGER = unique
+	indexing_tag_text_color: INTEGER = unique
+	indexing_tag_background_color: INTEGER = unique
+	reserved_text_color: INTEGER = unique
+	reserved_background_color: INTEGER = unique
+	generic_text_color: INTEGER = unique
+	generic_background_color: INTEGER = unique
+	local_text_color: INTEGER = unique
+	local_background_color: INTEGER = unique
+	class_text_color: INTEGER = unique
+	class_background_color: INTEGER = unique
+	feature_text_color: INTEGER = unique
+	feature_background_color: INTEGER = unique
+	cluster_text_color: INTEGER = unique
+	cluster_background_color: INTEGER = unique
+	error_text_color: INTEGER = unique
+	error_background_color: INTEGER = unique
+	object_text_color: INTEGER = unique
+	object_background_color: INTEGER = unique;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Linear widget container.
@@ -30,7 +30,7 @@ inherit
 
 feature -- Status report
 
-	is_homogeneous: BOOLEAN is
+	is_homogeneous: BOOLEAN
 			-- Are all items forced to have same dimensions.
 		require
 			not_destroyed: not is_destroyed
@@ -40,7 +40,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_homogeneous
 		end
 
-	border_width: INTEGER is
+	border_width: INTEGER
 			-- Width of border around container in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -51,7 +51,7 @@ feature -- Status report
 			positive: Result >= 0
 		end
 
-	padding_width, padding: INTEGER is
+	padding_width, padding: INTEGER
 			-- Space between children in pixels.
 		require
 			not_destroyed: not is_destroyed
@@ -64,7 +64,7 @@ feature -- Status report
 
 feature -- Status report
 
-	is_item_expanded (an_item: EV_WIDGET): BOOLEAN is
+	is_item_expanded (an_item: EV_WIDGET): BOOLEAN
 			-- Is `an_item' expanded to occupy available spare space?
 		require
 			not_destroyed: not is_destroyed
@@ -77,7 +77,7 @@ feature -- Status report
 
 feature -- Status setting
 	
-	enable_homogeneous is
+	enable_homogeneous
 			-- Force all items to have same dimensions.
 		require
 			not_destroyed: not is_destroyed
@@ -87,7 +87,7 @@ feature -- Status setting
 			is_homogeneous: is_homogeneous
 		end
 
-	disable_homogeneous is
+	disable_homogeneous
 			-- Allow items to have different dimensions.
 		require
 			not_destroyed: not is_destroyed
@@ -97,7 +97,7 @@ feature -- Status setting
 			not_is_homogeneous: not is_homogeneous
 		end
 
-	set_border_width (value: INTEGER) is
+	set_border_width (value: INTEGER)
 			-- Assign `value' to `border_width'.
 		require
 			not_destroyed: not is_destroyed
@@ -108,7 +108,7 @@ feature -- Status setting
 			border_width_assigned: border_width = value
 		end
 
-	set_padding_width, set_padding (value: INTEGER) is
+	set_padding_width, set_padding (value: INTEGER)
 			-- Assign `value' to `padding_width'.
 		require
 			not_destroyed: not is_destroyed
@@ -119,7 +119,7 @@ feature -- Status setting
 			padding_assigned: padding = value
 		end
 
-	enable_item_expand (an_item: EV_WIDGET) is
+	enable_item_expand (an_item: EV_WIDGET)
 			-- Expand `an_item' to occupy available spare space.
 		require
 			not_destroyed: not is_destroyed
@@ -130,7 +130,7 @@ feature -- Status setting
 			an_item_expanded: is_item_expanded (an_item)
 		end
 
-	disable_item_expand (an_item: EV_WIDGET) is
+	disable_item_expand (an_item: EV_WIDGET)
 			-- Do not expand `an_item' to occupy available spare space.
 		require
 			not_destroyed: not is_destroyed
@@ -143,7 +143,7 @@ feature -- Status setting
 		
 feature {EV_ANY} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state.
 		do
 			Result := Precursor {EV_WIDGET_LIST} and (
@@ -158,7 +158,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	implementation: EV_BOX_I;
 			-- Responsible for interaction with native graphics toolkit.
 			
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

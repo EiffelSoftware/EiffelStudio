@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision dynamic list. Carbon implementation."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize the dynamic list.
 		do
 			create child_array.make (5)
@@ -26,7 +26,7 @@ feature -- Initialization
 
 feature -- Access
 
-	i_th (i: INTEGER): G is
+	i_th (i: INTEGER): G
 			-- Item at `i'-th position.
 		do
 			if child_array /= Void then
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items.
 		do
 			if child_array /= Void then
@@ -46,12 +46,12 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER) is
+	insert_i_th (v: like item; i: INTEGER)
 			-- Insert `v' at position `i'.
 		deferred
 		end
 
-	remove_i_th (i: INTEGER) is
+	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		deferred
 		end
@@ -66,7 +66,7 @@ invariant
 
 	child_array_not_void: is_usable implies child_array /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end -- class EV_DYNAMIC_LIST_IMP
 

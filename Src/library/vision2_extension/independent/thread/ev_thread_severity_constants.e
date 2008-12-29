@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Event severity constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,21 +10,21 @@ class
 
 feature -- Access
 
-	Information: INTEGER is 1
+	Information: INTEGER = 1
 			-- Informational event
 	
-	Warning: INTEGER is 2
+	Warning: INTEGER = 2
 			-- Warning event, could potentially be a problem
 	
-	Error: INTEGER is 3
+	Error: INTEGER = 3
 			-- Error event, something bad happened
 
-	Stop: INTEGER is 4
+	Stop: INTEGER = 4
 			-- Stop event, stop processing
 
 feature -- Status Report
 
-	is_valid_severity (a_severity: INTEGER): BOOLEAN is
+	is_valid_severity (a_severity: INTEGER): BOOLEAN
 			-- Is `a_severity' a valid severity?
 		do
 			Result := a_severity = Information or a_severity = Warning or
@@ -40,7 +40,7 @@ invariant
 	valid_error_severity: is_valid_severity (Error)
 	valid_stop_severity: is_valid_severity (Stop)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

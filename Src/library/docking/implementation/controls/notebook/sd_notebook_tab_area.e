@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that manage tabs on SD_NOTEBOOK."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_notebook: SD_NOTEBOOK; a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_notebook: SD_NOTEBOOK; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method.
 		require
 			a_notebook_not_void: a_notebook /= Void
@@ -66,7 +66,7 @@ feature {NONE}  -- Initlization
 
 feature -- Redefine
 
-	extend (a_widget: SD_NOTEBOOK_TAB) is
+	extend (a_widget: SD_NOTEBOOK_TAB)
 			-- Extend a_widget.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -77,7 +77,7 @@ feature -- Redefine
 			extended: tab_box.has (a_widget)
 		end
 
-	extend_tabs (a_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]) is
+	extend_tabs (a_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB])
 			-- Extend `a_tabs'
 			-- This feature is faster than extend one by one
 		require
@@ -89,13 +89,13 @@ feature -- Redefine
 
 feature -- Command
 
-	update_size is
+	update_size
 			--Update minimum size.
 		do
 			set_minimum_height (internal_shared.notebook_tab_height + 3)
 		end
 
-	set_gap (a_top: BOOLEAN) is
+	set_gap (a_top: BOOLEAN)
 			-- Set gap at top if a_top is True.
 		do
 			is_gap_at_top := a_top
@@ -103,7 +103,7 @@ feature -- Command
 			set: is_gap_at_top = a_top
 		end
 
-	resize_tabs (a_width: INTEGER) is
+	resize_tabs (a_width: INTEGER)
 			-- Hide/show tabs base on space.
 		local
 			l_tabs, l_all_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
@@ -168,7 +168,7 @@ feature -- Command
 			enable_resize: a_width >= 0 implies ignore_resize = False
 		end
 
-	update_minimum_size is
+	update_minimum_size
 			-- Update minimum size of Current.
 		local
 			l_all_tabs: like all_tabs
@@ -190,7 +190,7 @@ feature -- Command
 			end
 		end
 
-	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
 			-- Handle resize actions.
 			-- `a_width' is tab areas' width, not include other EV_TOOL_BAR.
 		do
@@ -207,7 +207,7 @@ feature -- Command
 			action_extended: True
 		end
 
-	swap (a_tab, a_tab_2: SD_NOTEBOOK_TAB) is
+	swap (a_tab, a_tab_2: SD_NOTEBOOK_TAB)
 			-- Swap position of tabs
 		require
 			has: has (a_tab) and has (a_tab_2)
@@ -216,7 +216,7 @@ feature -- Command
 			resize_tabs (tab_box_predered_width)
 		end
 
-	set_tab_position (a_tab: SD_NOTEBOOK_TAB; a_index: INTEGER) is
+	set_tab_position (a_tab: SD_NOTEBOOK_TAB; a_index: INTEGER)
 			-- Set tab position.
 		require
 			has: has (a_tab)
@@ -234,7 +234,7 @@ feature -- Command
 
 feature -- Query
 
-	has (a_tab: SD_NOTEBOOK_TAB):BOOLEAN is
+	has (a_tab: SD_NOTEBOOK_TAB):BOOLEAN
 			-- Has a_tab ?
 		do
 			Result := tab_box.has (a_tab)
@@ -243,13 +243,13 @@ feature -- Query
 	is_gap_at_top: BOOLEAN
 			-- If gap at top?
 
-	index_of (a_tab: SD_NOTEBOOK_TAB): INTEGER is
+	index_of (a_tab: SD_NOTEBOOK_TAB): INTEGER
 			-- Index of a_tab in all tabs.
 		do
 			Result := tab_box.index_of (a_tab)
 		end
 
-	all_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB] is
+	all_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
 			-- All tabs in Current.
 		do
 			Result := tab_box.tabs
@@ -260,7 +260,7 @@ feature -- Query
 	tab_box: SD_NOTEBOOK_TAB_BOX
 			-- Box which contain all tabs.
 
-	tab_box_predered_width: INTEGER is
+	tab_box_predered_width: INTEGER
 			-- tool bar prefered width
 		do
 			Result := width - internal_tool_bar.width
@@ -273,7 +273,7 @@ feature -- Query
 
 feature {NONE}  -- Implementation functions
 
-	on_tab_hide_indicator_selected is
+	on_tab_hide_indicator_selected
 			-- Handle tab hide indicator selection event.
 		local
 			l_dialog: SD_NOTEBOOK_HIDE_TAB_DIALOG
@@ -313,13 +313,13 @@ feature {NONE}  -- Implementation functions
 			l_dialog.show
 		end
 
-	on_drop_actions (a_any: ANY) is
+	on_drop_actions (a_any: ANY)
 			-- Handle drop actions.
 		do
 			internal_docking_manager.tab_drop_actions.call ([a_any, internal_notebook.selected_item])
 		end
 
-	on_veto_drop_action (a_any: ANY): BOOLEAN is
+	on_veto_drop_action (a_any: ANY): BOOLEAN
 			-- Handle veto drop action
 		local
 			l_veto_function: FUNCTION [ANY, TUPLE [ANY], BOOLEAN]
@@ -334,7 +334,7 @@ feature {NONE}  -- Implementation functions
 			end
 		end
 
-	updates_tabs_not_shown (a_width: INTEGER) is
+	updates_tabs_not_shown (a_width: INTEGER)
 			-- Calculate `internal_tabs_not_shown' base on a_width.
 		require
 			a_width_valid: a_width >= 0
@@ -380,7 +380,7 @@ feature {NONE}  -- Implementation functions
 			updated: internal_tabs_not_shown /= old internal_tabs_not_shown
 		end
 
-	show_hide_indicator (a_width: INTEGER) is
+	show_hide_indicator (a_width: INTEGER)
 			-- Show hide indicator base on `internal_tabs_not_shown''s count.
 		local
 			l_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
@@ -431,7 +431,7 @@ feature {NONE}  -- Implementation functions
 			setted: internal_tabs_not_shown.count = 0 implies not internal_tool_bar.is_displayed
 		end
 
-	total_prefered_width: INTEGER is
+	total_prefered_width: INTEGER
 			-- Calculate all tabs total prefered width.
 		local
 			l_tabs: like all_tabs
@@ -449,7 +449,7 @@ feature {NONE}  -- Implementation functions
 			valid: Result >= 0
 		end
 
-	find_only_tab_shown: SD_NOTEBOOK_TAB is
+	find_only_tab_shown: SD_NOTEBOOK_TAB
 			-- Find the only one tab which is shown.
 		require
 			only_show_one_tab: all_tabs.count - 1 = internal_tabs_not_shown.count
@@ -523,7 +523,7 @@ invariant
 	internal_tool_bar_not_void: internal_tool_bar /= Void
 	internal_auto_hide_indicator_not_void: internal_auto_hide_indicator /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

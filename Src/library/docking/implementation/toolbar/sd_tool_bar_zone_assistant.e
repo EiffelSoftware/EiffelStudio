@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Assistants that manage a SD_TOOL_BAR_ZONE size and position issues."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_tool_bar_zone: SD_TOOL_BAR_ZONE) is
+	make (a_tool_bar_zone: SD_TOOL_BAR_ZONE)
 			-- Creation method
 		require
 			not_void: a_tool_bar_zone /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	reduce_size (a_size: INTEGER): INTEGER is
+	reduce_size (a_size: INTEGER): INTEGER
 			-- Reduce `a_size', `Result' is how many size actually reduced.
 		require
 			valid: a_size >= 0
@@ -72,7 +72,7 @@ feature -- Command
 			zone.compute_minmum_size
 		end
 
-	expand_size (a_size_to_expand: INTEGER): INTEGER is
+	expand_size (a_size_to_expand: INTEGER): INTEGER
 			-- Expand `internal_tool_bar' a_size_to_expand, Result is actually size expanded.
 		require
 			valid: a_size_to_expand >= 0
@@ -146,7 +146,7 @@ feature -- Command
 			valid: 0 <= Result and Result <= a_size_to_expand
 		end
 
-	update_indicator is
+	update_indicator
 			-- Update indicator pixmap.
 		local
 			l_shared: SD_SHARED
@@ -195,7 +195,7 @@ feature -- Command
 			end
 		end
 
-	on_tail_indicator_selected is
+	on_tail_indicator_selected
 			-- Handle tail indicator selected event.
 		local
 			l_dialog: SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
@@ -223,7 +223,7 @@ feature -- Command
 			l_dialog.show
 		end
 
-	dock_last_state is
+	dock_last_state
 			-- Dock to `last_state'.
 		require
 			is_floating: zone.is_floating
@@ -234,7 +234,7 @@ feature -- Command
 			docked: not zone.is_floating
 		end
 
-	dock_last_state_for_hide is
+	dock_last_state_for_hide
 			-- Dock to `last_state' for hidding.
 		local
 			l_container: EV_BOX
@@ -270,7 +270,7 @@ feature -- Command
 			zone.docking_manager.command.resize (True)
 		end
 
-	record_docking_state is
+	record_docking_state
 			-- Record docking state.
 		require
 			is_docking: not zone.is_floating
@@ -297,7 +297,7 @@ feature -- Command
 			last_state.set_is_only_zone (l_parent.count = 1)
 		end
 
-	floating_last_state is
+	floating_last_state
 			-- Float to `last_state'
 		require
 			is_docking: not zone.is_floating
@@ -311,7 +311,7 @@ feature -- Command
 			is_floating: zone.is_floating
 		end
 
-	open_items_layout is
+	open_items_layout
 			-- Open items layout.
 		require
 			not_void: last_state.items_layout /= Void
@@ -415,7 +415,7 @@ feature -- Command
 			saved: last_state.items_layout /= Void
 		end
 
-	refresh_items_visible is
+	refresh_items_visible
 			-- Refresh items visible states.
 		local
 			l_content: SD_TOOL_BAR_CONTENT
@@ -435,7 +435,7 @@ feature -- Command
 
 feature {SD_OPEN_CONFIG_MEDIATOR} -- Special setting.
 
-	set_last_state (a_last_data: SD_TOOL_BAR_ZONE_STATE) is
+	set_last_state (a_last_data: SD_TOOL_BAR_ZONE_STATE)
 			-- Set `last_data'
 		require
 			not_void: a_last_data /= Void
@@ -447,7 +447,7 @@ feature {SD_OPEN_CONFIG_MEDIATOR} -- Special setting.
 
 feature -- Query
 
-	can_reduce_size (a_size: INTEGER): INTEGER is
+	can_reduce_size (a_size: INTEGER): INTEGER
 			-- How many size can reduce, same as `reduce_size' but not really prune items.
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -479,7 +479,7 @@ feature -- Query
 			end
 		end
 
-	can_expand_size (a_size_to_expand: INTEGER): INTEGER is
+	can_expand_size (a_size_to_expand: INTEGER): INTEGER
 			-- How many size can actually expanded
 		require
 			valid: a_size_to_expand >= 0
@@ -535,13 +535,13 @@ feature -- Query
 			valid: 0 <= Result and Result <= a_size_to_expand
 		end
 
-	hide_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM] is
+	hide_tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 			-- `internal_hidden_items'
 		do
 			Result := internal_hidden_items.twin
 		end
 
-	groups: ARRAYED_LIST [ARRAYED_LIST [SD_TOOL_BAR_ITEM]] is
+	groups: ARRAYED_LIST [ARRAYED_LIST [SD_TOOL_BAR_ITEM]]
 			-- Groups in `internal_tool_bar'.
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -578,7 +578,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	set_item_wrap (a_item: SD_TOOL_BAR_ITEM) is
+	set_item_wrap (a_item: SD_TOOL_BAR_ITEM)
 			-- Set `a_item' wrap state.
 		require
 			not_void: a_item /= Void
@@ -586,7 +586,7 @@ feature {NONE} -- Implementation
 			a_item.set_wrap (zone.is_vertical)
 		end
 
-	set_item_wrap_before_separator is
+	set_item_wrap_before_separator
 			-- When `zone' is_vertical, we should set item before separator not wrap.
 		local
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
@@ -610,7 +610,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	groups_sizes: ARRAYED_LIST [INTEGER] is
+	groups_sizes: ARRAYED_LIST [INTEGER]
 			-- Group sizes.
 		local
 			l_groups: ARRAYED_LIST [ARRAYED_LIST [SD_TOOL_BAR_ITEM]]
@@ -647,7 +647,7 @@ invariant
 	not_void: zone /= Void
 	not_void: last_state /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

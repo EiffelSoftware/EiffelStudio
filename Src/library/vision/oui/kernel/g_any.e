@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Parent of any oui graphic class"
 	legal: "See notice at end of class.";
@@ -12,14 +12,14 @@ class
 
 feature {NONE} -- Initialization
 
-	init_toolkit: like toolkit is
+	init_toolkit: like toolkit
 			-- Init toolkit to desired implementation.
 		do
 		end;
 
 feature -- Access
 
-	toolkit: TOOLKIT is
+	toolkit: TOOLKIT
 			-- Toolkit of implementation in the environment desired
 		once
 			Result := init_toolkit
@@ -27,7 +27,7 @@ feature -- Access
 			toolkit_exists: Result /= Void
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

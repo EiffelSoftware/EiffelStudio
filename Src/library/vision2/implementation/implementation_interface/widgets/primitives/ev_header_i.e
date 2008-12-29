@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an EiffelVision header control. Implementation Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,7 +33,7 @@ inherit
 
 feature -- Access
 
-	item_x_offset (an_item: EV_HEADER_ITEM): INTEGER is
+	item_x_offset (an_item: EV_HEADER_ITEM): INTEGER
 			-- `Result' is x position of `an_item' in relation to `Current'.
 		require
 			has_an_item: has (an_item)
@@ -57,7 +57,7 @@ feature -- Access
 			index_not_changed: index = old index
 		end
 
-	pointed_divider_index: INTEGER is
+	pointed_divider_index: INTEGER
 			-- Index of divider currently beneath the mouse pointer, or
 			-- 0 if none.
 		deferred
@@ -71,7 +71,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

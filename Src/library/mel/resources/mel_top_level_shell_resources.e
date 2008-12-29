@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Top resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNiconic: POINTER is
+	XmNiconic: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNiconic"
 		end;
 
-	XmNiconName: POINTER is
+	XmNiconName: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNiconName"
 		end;
 
-	XmNiconNameEncoding: POINTER is
+	XmNiconNameEncoding: POINTER
 			-- Core resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNiconNameEncoding"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

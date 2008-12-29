@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scrollable lists"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 			-- Scroll list will attempt to resize if entries
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_fixed_size (a_name: STRING; a_parent: COMPOSITE) is
+	make_fixed_size (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 			-- Scroll list will not resize if entries
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 			-- Scroll list will attempt to resize if entries
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			not_managed: not managed
 		end;
 
-	make_fixed_size_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_fixed_size_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 			-- Scroll list will not resize if entries
@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 		end;
 
 	create_ev_widget (a_name: STRING; a_parent: COMPOSITE;
-			man: BOOLEAN; is_fixed: BOOLEAN) is
+			man: BOOLEAN; is_fixed: BOOLEAN)
 			-- Create a scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	list: LIST [SCROLLABLE_LIST_ELEMENT] is
+	list: LIST [SCROLLABLE_LIST_ELEMENT]
 			-- Duplicate list of all the items
 		local
 			pos: INTEGER;
@@ -123,13 +123,13 @@ feature -- Access
 			a_list.go_i_th (pos)
 		end
 
-	cursor: CURSOR is
+	cursor: CURSOR
 			-- Current cursor position
 		do
 			Result := implementation.cursor
 		end
 
-	first: like item is
+	first: like item
 			-- Item at first position
 		require
 			not_empty: not is_empty
@@ -137,7 +137,7 @@ feature -- Access
 			Result := implementation.first
 		end
 
-	i_th, infix "@" (i: INTEGER): like item is
+	i_th, infix "@" (i: INTEGER): like item
 			-- Item at i-th position
 		require
 			valid_key: valid_index (i)
@@ -145,13 +145,13 @@ feature -- Access
 			Result := implementation.i_th (i)
 		end
 
-	index: INTEGER is
+	index: INTEGER
 			-- Current cursor index
 		do
 			Result := implementation.index
 		end
 
-	index_of (v: like item i: INTEGER): INTEGER is
+	index_of (v: like item i: INTEGER): INTEGER
 			-- Index of i-th occurrence of item identical to v.
 			-- (Reference or object equality,
 			-- based on object_comparison.)
@@ -164,7 +164,7 @@ feature -- Access
 			non_negative_result: Result >= 0
 		end
 
-	item: SCROLLABLE_LIST_ELEMENT is
+	item: SCROLLABLE_LIST_ELEMENT
 			-- Item at current position
 		require
 			not_off: not off
@@ -173,7 +173,7 @@ feature -- Access
 			Result ?= implementation.item
 		end
 
-	last: like item is
+	last: like item
 			-- Item at last position
 		require
 			not_empty: not is_empty
@@ -181,7 +181,7 @@ feature -- Access
 			Result := implementation.last
 		end
 
-	occurrences (v: like item): INTEGER is
+	occurrences (v: like item): INTEGER
 			-- Number of times v appears.
 			-- (Reference or object equality,
 			-- based on object_comparison.)
@@ -193,7 +193,7 @@ feature -- Access
 
 feature -- Status report
 
-	has (v: like item): BOOLEAN is
+	has (v: like item): BOOLEAN
 			-- Does chain include v?
 			-- (Reference or object equality,
 			-- based on object_comparison.)
@@ -205,7 +205,7 @@ feature -- Status report
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items
 		do
 			Result := implementation.count
@@ -213,7 +213,7 @@ feature -- Measurement
 
 feature -- Conversion
 
-	linear_representation: LINEAR [SCROLLABLE_LIST_ELEMENT] is
+	linear_representation: LINEAR [SCROLLABLE_LIST_ELEMENT]
 			-- Representation as a linear structure
 		do
 			Result := implementation.linear_representation
@@ -221,7 +221,7 @@ feature -- Conversion
 
 feature -- Cursor movement
 
-	back is
+	back
 			-- Move to previous position.
 		require
 			not_before: not before
@@ -231,7 +231,7 @@ feature -- Cursor movement
 			moved_back: index = old index - 1
 		end
 
-	finish is
+	finish
 			-- Move cursor to last position.
 			-- (No effect if is_empty)
 		do
@@ -240,7 +240,7 @@ feature -- Cursor movement
 			at_last: not is_empty implies islast
 		end
 
-	forth is
+	forth
 			-- Move to next position if no next position,
 			-- ensure that exhausted will be true.
 		require
@@ -251,7 +251,7 @@ feature -- Cursor movement
 			moved_forth: index = old index + 1
 		end
 
-	go_i_th (i: INTEGER) is
+	go_i_th (i: INTEGER)
 			-- Move cursor to i-th position.
 		require
 			valid_cursor_index: valid_cursor_index (i)
@@ -261,7 +261,7 @@ feature -- Cursor movement
 			position_expected: index = i
 		end
 
-	go_to (p: CURSOR) is
+	go_to (p: CURSOR)
 			-- Move cursor to position p.
 		require
 			cursor_position_valid: valid_cursor (p)
@@ -269,7 +269,7 @@ feature -- Cursor movement
 			implementation.go_to (p)
 		end
 
-	move (i: INTEGER) is
+	move (i: INTEGER)
 			-- Move cursor i positions. The cursor
 			-- may end up off if the absolute value of i
 			-- is too big.
@@ -281,7 +281,7 @@ feature -- Cursor movement
 			expected_index: (not exhausted) implies (index = old index + i)
 		end
 
-	search (v: like item) is
+	search (v: like item)
 			-- Move to first position (at or after current
 			-- position) where item and v are equal.
 			-- If structure does not include v ensure that
@@ -295,7 +295,7 @@ feature -- Cursor movement
 			item_found: (not exhausted and not object_comparison) implies v = item
 		end
 
-	start is
+	start
 			-- Move cursor to first position.
 			-- (No effect if is_empty)
 		do
@@ -306,7 +306,7 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	append (s: SEQUENCE [SCROLLABLE_LIST_ELEMENT]) is
+	append (s: SEQUENCE [SCROLLABLE_LIST_ELEMENT])
 			-- Append a copy of s.
 		require
 			argument_not_void: s /= void
@@ -316,7 +316,7 @@ feature -- Element change
 			new_count: count >= old count
 		end
 
-	extend (v: SCROLLABLE_LIST_ELEMENT) is
+	extend (v: SCROLLABLE_LIST_ELEMENT)
 			-- Add a new occurrence of v.
 		require
 			extendible: extendible
@@ -327,7 +327,7 @@ feature -- Element change
 			item_inserted: has (v)
 		end
 
-	fill (other: CONTAINER [SCROLLABLE_LIST_ELEMENT]) is
+	fill (other: CONTAINER [SCROLLABLE_LIST_ELEMENT])
 			-- Fill with as many items of other as possible.
 			-- The representations of other and current structure
 			-- need not be the same.
@@ -338,7 +338,7 @@ feature -- Element change
 			implementation.fill (other)
 		end
 
-	force (v: like item) is
+	force (v: like item)
 			-- Add v to end.
 		require
 			extendible: extendible
@@ -349,7 +349,7 @@ feature -- Element change
 			item_inserted: has (v)
 		end
 
-	merge_left (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]) is
+	merge_left (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT])
 			-- Merge other into current structure before cursor
 			-- position. Do not move cursor. Empty other.
 		require
@@ -364,7 +364,7 @@ feature -- Element change
 			other_is_empty: other.is_empty
 		end
 
-	merge_right (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT]) is
+	merge_right (other: ARRAYED_LIST [SCROLLABLE_LIST_ELEMENT])
 			-- Merge other into current structure after cursor
 			-- position. Do not move cursor. Empty other.
 		require
@@ -379,7 +379,7 @@ feature -- Element change
 			other_is_empty: other.is_empty
 		end
 
-	put (v: like item) is
+	put (v: like item)
 			-- Replace current item by v.
 			-- (Synonym for replace)
 		require
@@ -391,7 +391,7 @@ feature -- Element change
 			item_inserted: has (v)
 		end
 
-	put_front (v: like item) is
+	put_front (v: like item)
 			-- Add v at beginning.
 			-- Do not move cursor.
 		do
@@ -401,7 +401,7 @@ feature -- Element change
 			item_inserted: first = v
 		end
 
-	put_i_th (v: like item i: INTEGER) is
+	put_i_th (v: like item i: INTEGER)
 			-- Put v at i-th position.
 		require
 			valid_key: valid_index (i)
@@ -411,7 +411,7 @@ feature -- Element change
 			insertion_done: i_th (i) = v
 		end
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add v to the left of cursor position.
 			-- Do not move cursor.
 		require
@@ -424,7 +424,7 @@ feature -- Element change
 			new_index: index = old index + 1
 		end
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add v to the right of cursor position.
 			-- Do not move cursor.
 		require
@@ -437,7 +437,7 @@ feature -- Element change
 			same_index: index = old index
 		end
 
-	replace (v: SCROLLABLE_LIST_ELEMENT) is
+	replace (v: SCROLLABLE_LIST_ELEMENT)
 			-- Replace current item by v.
 		require
 			writable: writable
@@ -449,7 +449,7 @@ feature -- Element change
 
 feature -- Removal
 
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove first occurrence of v, if any,
 			-- after cursor position.
 			-- If found, move cursor to right neighbor
@@ -460,7 +460,7 @@ feature -- Removal
 			implementation.prune (v)
 		end
 
-	prune_all (v: like item) is
+	prune_all (v: like item)
 			-- Remove all occurrences of v.
 			-- (Reference or object equality,
 			-- based on object_comparison.)
@@ -474,7 +474,7 @@ feature -- Removal
 			no_more_occurrences: not has (v)
 		end
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or after if no right neighbor).
@@ -487,7 +487,7 @@ feature -- Removal
 			after_when_empty: is_empty implies after
 		end
 
-	remove_left is
+	remove_left
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		require
@@ -500,7 +500,7 @@ feature -- Removal
 			new_index: index = old index - 1
 		end
 
-	remove_right is
+	remove_right
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		require
@@ -512,7 +512,7 @@ feature -- Removal
 			same_index: index = old index
 		end
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		require
 			prunable: prunable
@@ -523,7 +523,7 @@ feature -- Removal
 			wiped_out: is_empty
 		end
 
-	remove_click_action, remove_selection_action (a_command: COMMAND; argument: ANY) is
+	remove_click_action, remove_selection_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with click selection mode in current scroll list.
 		require
@@ -535,32 +535,32 @@ feature -- Removal
 
 feature -- Status report
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid cursor position to the right of cursor?
 		do
 			Result := implementation.after
 		end
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid cursor position to the left of cursor?
 		do
 			Result := implementation.before
 		end
 
-	changeable_comparison_criterion: BOOLEAN is
+	changeable_comparison_criterion: BOOLEAN
 			-- May object_comparison be changed?
 			-- (Answer: yes by default.)
 		do
 			Result := implementation.changeable_comparison_criterion
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is structure empty?
 		do
 			Result := implementation.is_empty
 		end
 
-	empty: BOOLEAN is
+	empty: BOOLEAN
 			-- Is structure empty?
 		obsolete
 			"Use `is_empty' instead"
@@ -568,7 +568,7 @@ feature -- Status report
 			Result := is_empty
 		end
 
-	exhausted: BOOLEAN is
+	exhausted: BOOLEAN
 			-- Has structure been completely explored?
 		do
 			Result := implementation.exhausted
@@ -576,19 +576,19 @@ feature -- Status report
 			exhausted_when_off: off implies Result
 		end
 
-	extendible: BOOLEAN is
+	extendible: BOOLEAN
 			-- May new items be added?
 		do
 			Result := implementation.extendible
 		end
 
-	full: BOOLEAN is
+	full: BOOLEAN
 			-- Is structure filled to capacity?
 		do
 			Result := implementation.full
 		end
 
-	isfirst: BOOLEAN is
+	isfirst: BOOLEAN
 			-- Is cursor at first position?
 		do
 			Result := implementation.isfirst
@@ -596,7 +596,7 @@ feature -- Status report
 			valid_position: Result implies not is_empty
 		end
 
-	islast: BOOLEAN is
+	islast: BOOLEAN
 			-- Is cursor at last position?
 		do
 			Result := implementation.islast
@@ -604,32 +604,32 @@ feature -- Status report
 			valid_position: Result implies not is_empty
 		end
 
-	object_comparison: BOOLEAN is
+	object_comparison: BOOLEAN
 			-- Must search operations use equal rather than =
 			-- for comparing references? (Default: no, use =.)
 		do
 			Result := implementation.object_comparison
 		end
 
-	off: BOOLEAN is
+	off: BOOLEAN
 			-- Is there no current item?
 		do
 			Result := implementation.off
 		end
 
-	prunable: BOOLEAN is
+	prunable: BOOLEAN
 			-- May items be removed? (Answer: yes.)
 		do
 			Result := implementation.prunable
 		end
 
-	readable: BOOLEAN is
+	readable: BOOLEAN
 			-- Is there a current item that may be read?
 		do
 			Result := implementation.readable
 		end
 
-	selected_count: INTEGER is
+	selected_count: INTEGER
 			-- Number of selected items in current list
 		require
 			exists: not destroyed;
@@ -637,7 +637,7 @@ feature -- Status report
 			Result := implementation.selected_count
 		end;
 
-	selected_item: SCROLLABLE_LIST_ELEMENT is
+	selected_item: SCROLLABLE_LIST_ELEMENT
 			-- Selected item if single or browse selection mode is selected
 			-- Void if nothing is selected
 		require
@@ -646,7 +646,7 @@ feature -- Status report
 			Result := implementation.selected_item
 		end;
 
-	selected_items: LINKED_LIST [SCROLLABLE_LIST_ELEMENT] is
+	selected_items: LINKED_LIST [SCROLLABLE_LIST_ELEMENT]
 			-- Selected items
 		require
 			exists: not destroyed;
@@ -654,7 +654,7 @@ feature -- Status report
 			Result := implementation.selected_items
 		end;
 
-	selected_position: INTEGER is
+	selected_position: INTEGER
 			-- Position of selected item if single or browse selection mode is
 			-- selected
 			-- 0 if nothing is selected
@@ -664,7 +664,7 @@ feature -- Status report
 			Result := implementation.selected_position
 		end;
 
-	selected_positions: LINKED_LIST [INTEGER] is
+	selected_positions: LINKED_LIST [INTEGER]
 			-- Positions of the selected items
 		require
 			exists: not destroyed;
@@ -672,13 +672,13 @@ feature -- Status report
 			Result := implementation.selected_positions
 		end;
 
-	valid_cursor (p: CURSOR): BOOLEAN is
+	valid_cursor (p: CURSOR): BOOLEAN
 			-- Can the cursor be moved to position p?
 		do
 			Result := implementation.valid_cursor (p)
 		end
 
-	valid_cursor_index (i: INTEGER): BOOLEAN is
+	valid_cursor_index (i: INTEGER): BOOLEAN
 			-- Is i correctly bounded for cursor movement?
 		do
 			Result := implementation.valid_cursor_index (i)
@@ -686,7 +686,7 @@ feature -- Status report
 			valid_cursor_index_definition: Result = ((i >= 0) and (i <= count + 1))
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is i within allowable bounds?
 		do
 			Result := implementation.valid_index (i)
@@ -694,13 +694,13 @@ feature -- Status report
 			valid_index_definition: Result = (i >= 1) and (i <= count)
 		end
 
-	visible_item_count: INTEGER is
+	visible_item_count: INTEGER
 			-- Number of visible item of list
 		do
 			result := implementation.visible_item_count
 		end;
 
-	writable: BOOLEAN is
+	writable: BOOLEAN
 			-- Is there a current item that may be modified?
 		do
 			Result := implementation.writable
@@ -708,7 +708,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	compare_objects is
+	compare_objects
 			-- Ensure that future search operations will use equal
 			-- rather than = for comparing references.
 		require
@@ -719,7 +719,7 @@ feature -- Status setting
 			object_comparison: object_comparison
 		end
 
-	compare_references is
+	compare_references
 			-- Ensure that future search operations will use =
 			-- rather than equal for comparing references.
 		require
@@ -730,7 +730,7 @@ feature -- Status setting
 			reference_comparison: not object_comparison
 		end
 
-	deselect_all is
+	deselect_all
 			-- Deselect all selected items.
 		require
 			exists: not destroyed;
@@ -740,7 +740,7 @@ feature -- Status setting
 			selected_list_is_empty: selected_count = 0
 		end;
 
-	scroll_to_current is
+	scroll_to_current
 			-- Make `item' the first visible item in the list if
 			-- `position' < `first_visible_item_position'.
 			-- Make `item' the last visible item in the list if
@@ -753,7 +753,7 @@ feature -- Status setting
 			implementation.scroll_to_current
 		end;
 
-	select_item is
+	select_item
 			-- Select item at current position.
 		require
 			exists: not destroyed;
@@ -762,7 +762,7 @@ feature -- Status setting
 			implementation.select_item
 		end;
 
-	deselect_item is
+	deselect_item
 			-- Deselect item at current position.
 		require
 			exists: not destroyed;
@@ -771,7 +771,7 @@ feature -- Status setting
 			implementation.deselect_item
 		end;
 
-	select_i_th (i: INTEGER) is
+	select_i_th (i: INTEGER)
 			-- Select item at `i'-th position.
 		require
 			exists: not destroyed;
@@ -781,7 +781,7 @@ feature -- Status setting
 			implementation.select_i_th (i)
 		end;
 
-	deselect_i_th (i: INTEGER) is
+	deselect_i_th (i: INTEGER)
 			-- Deselect item at `i'-th position.
 		require
 			exists: not destroyed;
@@ -791,7 +791,7 @@ feature -- Status setting
 			implementation.deselect_i_th (i)
 		end;
 
-	set_multiple_selection is
+	set_multiple_selection
 			-- Set the selection to be multiple items
 		require
 			exists: not destroyed;
@@ -800,7 +800,7 @@ feature -- Status setting
 			implementation.set_multiple_selection
 		end
 
-	set_single_selection is
+	set_single_selection
 			-- Set the selection to be single items
 		require
 			exists: not destroyed;
@@ -809,7 +809,7 @@ feature -- Status setting
 			implementation.set_single_selection
 		end
 
-	set_visible_item_count (a_count: INTEGER) is
+	set_visible_item_count (a_count: INTEGER)
 			-- Set the number of visible items to `a_count'.
 		require
 			exists: not destroyed;
@@ -820,7 +820,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_click_action, add_selection_action (a_command: COMMAND; argument: ANY) is
+	add_click_action, add_selection_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when items are
 			-- selected with click selection mode in current scroll list.
 		require
@@ -832,7 +832,7 @@ feature -- Element change
 
 feature -- Default Action commands
 
-	add_default_action (a_command: COMMAND; argument: ANY) is
+	add_default_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to
 			-- execute when items are selected with double
 			-- click or by pressing `RETURN' in current
@@ -845,7 +845,7 @@ feature -- Default Action commands
 							   argument)
 		end;
 
-	remove_default_action  is
+	remove_default_action
 			-- Remove all actions executed when items are
 			-- selected with double click or by pressing
 			-- `RETURN' in current scroll list.
@@ -856,7 +856,7 @@ feature -- Default Action commands
 		end;
 feature -- Transformation
 
-	swap (i: INTEGER) is
+	swap (i: INTEGER)
 			-- Exchange item at i-th position with item
 			-- at cursor position.
 		require
@@ -876,10 +876,10 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {G_ANY, G_ANY_I, WIDGET_I} -- Implementation
 
-	is_fontable: BOOLEAN is true;
+	is_fontable: BOOLEAN = true;
 			-- Is current widget an heir of FONTABLE?
 
-	set_default is
+	set_default
 		do
 		end
 
@@ -903,7 +903,7 @@ invariant
 	non_negative_count: not destroyed implies (count >= 0)
 	extendible: not destroyed implies extendible
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

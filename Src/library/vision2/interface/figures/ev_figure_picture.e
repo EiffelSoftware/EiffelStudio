@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Pixmaps drawn on `point'."
 	legal: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create in (0, 0)
 		do
 			Precursor {EV_ATOMIC_FIGURE}
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			is_default_pixmap_used := True
 		end
 
-	make_with_pixmap (a_pixmap: EV_PIXMAP) is
+	make_with_pixmap (a_pixmap: EV_PIXMAP)
 			-- Create with `a_pixmap'.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Status report
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of pixmap.
 		do
 			Result := pixmap.width
@@ -60,7 +60,7 @@ feature -- Status report
 			assigned: Result = pixmap.width
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of Pixmap.
 		do
 			Result := pixmap.height
@@ -74,7 +74,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Set `pixmap' to `a_pixmap'.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
@@ -88,7 +88,7 @@ feature -- Status setting
 
 feature -- Events
 
-	position_on_figure (x, y: INTEGER): BOOLEAN is
+	position_on_figure (x, y: INTEGER): BOOLEAN
 			-- Is (`x', `y') on this figure?
 		local
 			ax, ay: INTEGER
@@ -98,7 +98,7 @@ feature -- Events
 			Result := point_on_rectangle (x, y, ax, ay, ax + width, ay + height)
 		end
 
-	Default_pixmap: EV_PIXMAP is
+	Default_pixmap: EV_PIXMAP
 			-- Pixmap set by `default_create'.
 		once
 			create Result
@@ -107,7 +107,7 @@ feature -- Events
 invariant
 	pixmap_exists: pixmap /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree view style (TVS) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Tvs_hasbuttons: INTEGER is 1
+	Tvs_hasbuttons: INTEGER = 1
 			-- Displays plus (+) and minus (-) buttons next to
 			-- parent items. The user clicks the buttons to expand
 			-- or collapse a parent item's list of child items. To
@@ -19,46 +19,46 @@ feature -- Access
 			--
 			-- Declared in Windows as TVS_HASBUTTONS
 
-	Tvs_haslines: INTEGER is 2
+	Tvs_haslines: INTEGER = 2
 			-- Uses lines to show the hierarchy of items.
 			--
 			-- Declared in Windows as TVS_HASLINES
 
-	Tvs_linesatroot: INTEGER is 4
+	Tvs_linesatroot: INTEGER = 4
 			-- Uses lines to link items at the root of the
 			-- tree-view control. This value is ignored if
 			-- Tvs_haslines is not also specified.
 			--
 			-- Declared in Windows as TVS_LINESATROOT
 
-	Tvs_editlabels: INTEGER is 8
+	Tvs_editlabels: INTEGER = 8
 			-- Allows the user to edit the labels of tree-view
 			-- items.
 			--
 			-- Declared in Windows as TVS_EDITLABELS
 
-	Tvs_disabledragdrop: INTEGER is 16
+	Tvs_disabledragdrop: INTEGER = 16
 			-- Prevents the tree-view control from sending
 			-- Tvn_begindrag notification messages.
 			--
 			-- Declared in Windows as TVS_DISABLEDRAGDROP
 
-	Tvs_showselalways: INTEGER is 32
+	Tvs_showselalways: INTEGER = 32
 			-- Causes a selected item to remain selected when the
 			-- tree-view control loses focus.
 			--
 			-- Declared in Windows as TVS_SHOWSELALWAYS
 			
-	Tvs_checkboxes: INTEGER is 256
+	Tvs_checkboxes: INTEGER = 256
 			-- Enables a check box for ech item contained.
 			--
 			-- Declared in Windows as TVS_CHECKBOXES
 	
 
-	Tvs_infotip: INTEGER is 2048;
+	Tvs_infotip: INTEGER = 2048;
 			-- Declared in Windows as TVS_INFOTIP
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

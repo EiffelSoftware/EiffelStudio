@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of a top"
 	legal: "See notice at end of class.";
@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	icon_name: STRING is
+	icon_name: STRING
 			-- Short form of application name to be displayed
 			-- by the window manager when application is iconified
 		deferred
@@ -24,36 +24,36 @@ feature -- Access
 
 feature -- Status report
 
-	is_iconic_state: BOOLEAN is
+	is_iconic_state: BOOLEAN
 			-- Does application start in iconic state?
 		deferred
 		end
 
-	is_maximized_state: BOOLEAN is
+	is_maximized_state: BOOLEAN
 			-- Does application start in maximized state?
 		deferred
 		end
 
 feature -- Status setting
 
-	set_iconic_state is
+	set_iconic_state
 			-- Set start state of the application to be iconic.
 		deferred
 		end;
 
-	set_normal_state is
+	set_normal_state
 			-- Set start state of the application to be normal.
 		deferred
 		end;
 
-	set_maximized_state is
+	set_maximized_state
 			-- Set start state of the application to be maximized.
 		deferred
 		end;
 
 feature -- Element change
 
-	set_icon_name (a_name: STRING) is
+	set_icon_name (a_name: STRING)
 			-- Set `icon_name' to `a_name'.
 		require
 			not_a_name_void: a_name /= Void
@@ -66,13 +66,13 @@ feature {NONE} -- Implementation
 			-- Keep track of the oui widget
 			-- Useful when calling 'delete_window_action'
 
-	delete_window_action is
+	delete_window_action
 			-- Called when base window has been destroyed
 		do
 			oui_top.delete_window_action
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Pixels on `point' with size `line_width'."
 	legal: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create a dot at (0,0)
 		do
 			Precursor {EV_MODEL_ATOMIC}
@@ -41,16 +41,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	angle: DOUBLE is 0.0
+	angle: DOUBLE = 0.0
 			-- A point is allways upright.
 
-	point_x: INTEGER is
+	point_x: INTEGER
 			-- x position of `point'.
 		do
 			Result := point_array.item (0).x
 		end
 		
-	point_y: INTEGER is
+	point_y: INTEGER
 			-- y position of `point'.
 		do
 			Result := point_array.item (0).y
@@ -58,18 +58,18 @@ feature -- Access
 
 feature -- Status
 
-	is_scalable: BOOLEAN is True
+	is_scalable: BOOLEAN = True
 			-- Is scalable? Yes, but a dot has no dimension and will therfore not grow.
 			
-	is_rotatable: BOOLEAN is True
+	is_rotatable: BOOLEAN = True
 			-- Is roatatble?
 			
-	is_transformable: BOOLEAN is True
+	is_transformable: BOOLEAN = True
 			-- Is transformable?
 			
 feature -- Element change
 
-	set_point_position (ax, ay: INTEGER) is
+	set_point_position (ax, ay: INTEGER)
 			-- Set center to `a_point' position.
 		do
 			point_array.item (0).set (ax, ay)
@@ -79,7 +79,7 @@ feature -- Element change
 
 feature -- Events
 
-	position_on_figure (ax, ay: INTEGER): BOOLEAN is
+	position_on_figure (ax, ay: INTEGER): BOOLEAN
 			-- Is (`ax', `ay') on this figure?
 		local
 			p: EV_COORDINATE
@@ -93,7 +93,7 @@ feature -- Events
 
 feature {NONE} -- Implementation
 
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
 			lw2, lw: INTEGER
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	set_center is
+	set_center
 			-- Set the position of the center
 		local
 			p:EV_COORDINATE
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			is_center_valid := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

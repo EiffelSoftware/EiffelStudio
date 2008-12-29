@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Contains information about a message filter %
 					 %notification message (for Rich Edit Controls)."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialisation
 
-	make_from_nmhdr (nmhdr: WEL_NMHDR) is
+	make_from_nmhdr (nmhdr: WEL_NMHDR)
 		require
 			nmhdr_exists: nmhdr /= Void and then nmhdr.exists
 		do
@@ -30,7 +30,7 @@ feature -- Initialisation
 
 feature -- Access
 
-	msg: INTEGER is
+	msg: INTEGER
 			-- Specifies the keyboard or mouse message identifier. 
 		require
 			exists: exists
@@ -38,7 +38,7 @@ feature -- Access
 			Result := cwel_msg_filter_get_msg (item)
 		end
 		
-	wparam: INTEGER is
+	wparam: INTEGER
 				-- Specifies the wParam parameter of the message. 
 		require
 			exists: exists
@@ -46,7 +46,7 @@ feature -- Access
 			Result := cwel_msg_filter_get_wparam (item)
 		end
 
-	lparam: INTEGER is
+	lparam: INTEGER
 			-- Specifies the lParam parameter of the message. 
 		require
 			exists: exists
@@ -56,7 +56,7 @@ feature -- Access
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_msgfilter
@@ -64,29 +64,29 @@ feature -- Measurement
 
 feature {NONE} -- Externals
 
-	c_size_of_msgfilter: INTEGER is
+	c_size_of_msgfilter: INTEGER
 		external
 			"C [macro <msgfilter.h>]"
 		alias
 			"sizeof (MSGFILTER)"
 		end
 
-	cwel_msg_filter_get_msg (ptr: POINTER): INTEGER is
+	cwel_msg_filter_get_msg (ptr: POINTER): INTEGER
 		external
 			"C [macro <msgfilter.h>] (MSGFILTER*): EIF_INTEGER"
 		end
 
-	cwel_msg_filter_get_wparam (ptr: POINTER): INTEGER is
+	cwel_msg_filter_get_wparam (ptr: POINTER): INTEGER
 		external
 			"C [macro <msgfilter.h>] (MSGFILTER*): EIF_INTEGER"
 		end
 
-	cwel_msg_filter_get_lparam (ptr: POINTER): INTEGER is
+	cwel_msg_filter_get_lparam (ptr: POINTER): INTEGER
 		external
 			"C [macro <msgfilter.h>] (MSGFILTER*): EIF_INTEGER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

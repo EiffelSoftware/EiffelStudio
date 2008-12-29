@@ -1,4 +1,4 @@
-indexing
+note
 	description: 
 		"Button that displays a `menu' when pressed.%N%
 		%The most recently `selected_item' is displayed on the button."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Create `menu' and connect event handlers.
 		do
 			Precursor {EV_BUTTON}
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_selected_item (an_item: EV_MENU_ITEM) is
+	set_selected_item (an_item: EV_MENU_ITEM)
 		require
 			not_destroyed: not is_destroyed
 			menu_has_item: menu.has (an_item)
@@ -52,7 +52,7 @@ feature -- Status setting
 			selected: selected_item = an_item
 		end
 
-	remove_selection is
+	remove_selection
 			-- Make `selected_item' `Void'.
 			-- Assign `menu' text to `text' if available,
 			-- otherwise assign `menu'.first.text to `text'.
@@ -83,7 +83,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text' and to `menu'.text.
 		do
 			implementation.set_text (a_text)
@@ -92,7 +92,7 @@ feature -- Element change
   
 feature {NONE} -- Implementation
 
-	on_item_select (an_item: EV_MENU_ITEM) is
+	on_item_select (an_item: EV_MENU_ITEM)
 			-- Update `selected_item'
 			-- Update `text'
 		require
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 invariant
 	menu_not_void: is_usable implies menu /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

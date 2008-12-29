@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Raster operations constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,56 +10,56 @@ class
 
 feature -- Access
 
-	Srccopy: INTEGER is 13369376
+	Srccopy: INTEGER = 13369376
 			-- Declared in Windows as SRCCOPY
 
-	Srcpaint: INTEGER is 15597702
+	Srcpaint: INTEGER = 15597702
 			-- Declared in Windows as SRCPAINT
 
-	Srcand: INTEGER is 8913094
+	Srcand: INTEGER = 8913094
 			-- Declared in Windows as SRCAND
 
-	Srcinvert: INTEGER is 6684742
+	Srcinvert: INTEGER = 6684742
 			-- Declared in Windows as SRCINVERT
 
-	Srcerase: INTEGER is 4457256
+	Srcerase: INTEGER = 4457256
 			-- Declared in Windows as SRCERASE
 
-	Notsrccopy: INTEGER is 3342344
+	Notsrccopy: INTEGER = 3342344
 			-- Declared in Windows as NOTSRCCOPY
 
-	Notsrcerase: INTEGER is 1114278
+	Notsrcerase: INTEGER = 1114278
 			-- Declared in Windows as NOTSRCERASE
 
-	Mergecopy: INTEGER is 12583114
+	Mergecopy: INTEGER = 12583114
 			-- Declared in Windows as MERGECOPY
 
-	Mergepaint: INTEGER is 12255782
+	Mergepaint: INTEGER = 12255782
 			-- Declared in Windows as MERGEPAINT
 
-	Patcopy: INTEGER is 15728673
+	Patcopy: INTEGER = 15728673
 			-- Declared in Windows as PATCOPY
 
-	Patpaint: INTEGER is 16452105
+	Patpaint: INTEGER = 16452105
 			-- Declared in Windows as PATPAINT
 
-	Patinvert: INTEGER is 5898313
+	Patinvert: INTEGER = 5898313
 			-- Declared in Windows as PATINVERT
 
-	Dstinvert: INTEGER is 5570569
+	Dstinvert: INTEGER = 5570569
 			-- Declared in Windows as DSTINVERT
 
-	Blackness: INTEGER is 66
+	Blackness: INTEGER = 66
 			-- Declared in Windows as BLACKNESS
 
-	Whiteness: INTEGER is 16711778
+	Whiteness: INTEGER = 16711778
 			-- Declared in Windows as WHITENESS
 
-	Maskpaint: INTEGER is 2229030 -- 0x220326
+	Maskpaint: INTEGER = 2229030 -- 0x220326
 
 	--| Constants for mask_blt only
 
-	frozen Maskcopy: INTEGER is
+	frozen Maskcopy: INTEGER
 			-- Use SRCCOPY for foreground and R2_NOOP for background
 		external
 			"C [macro %"wel.h%"]"
@@ -67,7 +67,7 @@ feature -- Access
 			"MAKEROP4(SRCCOPY, 0xAA0029)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

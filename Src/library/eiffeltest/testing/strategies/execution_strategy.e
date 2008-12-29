@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Execution strategies for test suites"
 	legal: "See notice at end of class."
@@ -18,25 +18,25 @@ deferred class EXECUTION_STRATEGY inherit
 
 feature -- Status report
 
-	is_context_needed: BOOLEAN is
+	is_context_needed: BOOLEAN
 			-- Does strategy need a context for execution?
 		deferred
 		end
 	 
-	is_suite_set: BOOLEAN is
+	is_suite_set: BOOLEAN
 			-- Has test suite callback been set?
 		do
 			Result := (suite /= Void)
 		end
 		
-	is_ready: BOOLEAN is
+	is_ready: BOOLEAN
 	 		-- Is strategy ready for execution?
 		do
 			Result := is_suite_set and then (not suite.is_empty and
 					(is_context_needed implies is_context_set))
 		end
 
-	is_context_ok: BOOLEAN is
+	is_context_ok: BOOLEAN
 			-- Is context value ok?
 		require
 			context_set: is_context_set
@@ -46,7 +46,7 @@ feature -- Status report
 	is_finished: BOOLEAN
 			-- Has test run been finished?
 
-	is_last: BOOLEAN is
+	is_last: BOOLEAN
 			-- Is current test the last test?
 		require
 			ready: is_ready
@@ -59,7 +59,7 @@ feature -- Status report
 	is_test_selected: BOOLEAN
 			-- Is a test selected?
 	 
-	is_enabled: BOOLEAN is
+	is_enabled: BOOLEAN
 			-- Is selected test enabled?
 		require
 			ready: is_ready
@@ -70,7 +70,7 @@ feature -- Status report
 	 
 feature -- Status setting
 
-	set_suite (s: like suite) is
+	set_suite (s: like suite)
 			-- Set test suite callback to `s'.
 		require
 			suite_exists: s /= Void
@@ -80,7 +80,7 @@ feature -- Status setting
 			suite_set: suite = s
 		end
 		
-	set_context (c: ANY) is
+	set_context (c: ANY)
 			-- Set context to `c'.
 		require
 			context_needed: is_context_needed
@@ -94,7 +94,7 @@ feature -- Status setting
 
 feature -- Cursor movement
 
-	forth is
+	forth
 			-- Select next test.
 		require
 			ready: is_ready
@@ -106,7 +106,7 @@ feature -- Cursor movement
 			last_yields_finish: old is_last = is_finished
 		end
 	 
-	start is
+	start
 	 		-- Select first test.
 		require
 			ready: is_ready
@@ -117,7 +117,7 @@ feature -- Cursor movement
 			reset: is_reset
 		end
 		
-	 reset is
+	 reset
 	 		-- Reset strategy.
 		do
 			is_reset := True
@@ -131,7 +131,7 @@ feature -- Cursor movement
 	 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Run strategy on test suite.
 		require
 			not_finished: not is_finished
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 	suite: TEST_SUITE
 			-- Callback reference to test suite
 
-	finish_run is
+	finish_run
 			-- Execute post-run actions.
 		do
 			if is_last then is_finished := True end
@@ -163,7 +163,7 @@ invariant
 	finished_implies_is_last: is_finished implies is_last
 	context_validity_constraint: not is_context_needed implies is_context_ok
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

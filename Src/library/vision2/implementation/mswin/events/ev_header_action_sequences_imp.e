@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_HEADER_IMP."
 	legal: "See notice at end of class."
@@ -14,25 +14,25 @@ inherit
 	
 feature {NONE} -- Implementation
 	
-	create_item_resize_actions: EV_HEADER_ITEM_ACTION_SEQUENCE is
+	create_item_resize_actions: EV_HEADER_ITEM_ACTION_SEQUENCE
 			-- Create an item resize actions.
 		do
 			create Result
 		end
 		
-	create_item_resize_start_actions: EV_HEADER_ITEM_ACTION_SEQUENCE is
+	create_item_resize_start_actions: EV_HEADER_ITEM_ACTION_SEQUENCE
 			-- Create an item resize start actions.
 		do
 			create Result
 		end
 		
-	create_item_resize_end_actions: EV_HEADER_ITEM_ACTION_SEQUENCE is
+	create_item_resize_end_actions: EV_HEADER_ITEM_ACTION_SEQUENCE
 			-- Create an item resize end actions.
 		do
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

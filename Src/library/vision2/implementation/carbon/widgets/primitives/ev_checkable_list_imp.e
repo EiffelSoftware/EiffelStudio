@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision checkable list. Gtk implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,21 +35,21 @@ create
 
 feature -- Initialization
 
-	initialize is
+	initialize
 			-- Setup `Current'
 		do
 			Precursor {EV_LIST_IMP}
 		end
 
-	boolean_tree_model_column: INTEGER is 2
+	boolean_tree_model_column: INTEGER = 2
 
-	on_tree_path_toggle (a_tree_path_str: POINTER) is
+	on_tree_path_toggle (a_tree_path_str: POINTER)
 			--
 		do
 
 		end
 
-	initialize_model is
+	initialize_model
 			-- Create our data model for `Current'
 		do
 
@@ -57,7 +57,7 @@ feature -- Initialization
 
 feature -- Access
 
-	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN is
+	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN
 			--
 		do
 
@@ -65,12 +65,12 @@ feature -- Access
 
 feature -- Status setting
 
-	check_item (list_item: EV_LIST_ITEM) is
+	check_item (list_item: EV_LIST_ITEM)
 		do
 
 		end
 
-	uncheck_item (list_item: EV_LIST_ITEM) is
+	uncheck_item (list_item: EV_LIST_ITEM)
 			-- Ensure check associated with `list_item' is
 			-- checked.
 		do
@@ -81,7 +81,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CHECKABLE_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

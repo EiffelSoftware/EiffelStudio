@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Constants for use with and by EV_CHARACTER_FORMAT and
 		EV_CHARACTER_RANGE_INFORMATION
@@ -13,36 +13,36 @@ class
 
 feature -- Access
 
-	Font_family: INTEGER is 1
+	Font_family: INTEGER = 1
 		-- Font family applicable.
 		
-	Font_weight: INTEGER is 2
+	Font_weight: INTEGER = 2
 		-- Font weight applicable.
 		
-	Font_shape: INTEGER is 4
+	Font_shape: INTEGER = 4
 		-- Font shape applicable.
 		
-	Font_height: INTEGER is 8
+	Font_height: INTEGER = 8
 		-- Font height applicable.
 		
-	Color: INTEGER is 16
+	Color: INTEGER = 16
 		-- Color applicable.
 		
-	Background_color: INTEGER is 32
+	Background_color: INTEGER = 32
 		-- Background color applicable.
 		
-	Effects_striked_out: INTEGER is 64
+	Effects_striked_out: INTEGER = 64
 		-- Effects striked out valid.
 		
-	Effects_underlined: INTEGER is 128
+	Effects_underlined: INTEGER = 128
 		-- Effects underlined valid.
 		
-	Effects_vertical_offset: INTEGER is 256
+	Effects_vertical_offset: INTEGER = 256
 		-- Effects vertical offset valid.
 
 feature -- Contract support
 
-	valid_character_format_flag (a_flag: INTEGER): BOOLEAN is
+	valid_character_format_flag (a_flag: INTEGER): BOOLEAN
 			-- Is `a_flag' a valid character format flag?
 			-- Used by EV_CHARACTER_FORMAT_RANGE_INFORMATION
 			-- May be any combination of the attribute flags above, except that
@@ -52,7 +52,7 @@ feature -- Contract support
 				effects_striked_out + effects_underlined  + effects_vertical_offset
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

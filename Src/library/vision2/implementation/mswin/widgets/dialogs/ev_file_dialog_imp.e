@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision file dialog. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			create filters.make (1)
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			set_is_initialized (True)
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	file_name: STRING_32 is
+	file_name: STRING_32
 			-- Full name of currently selected file including path.
 		do
 			if selected then
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Status report
 
-	file_title: STRING_32 is
+	file_title: STRING_32
 			-- `file_name' without its path.
 		do
 			Result := file_name
@@ -66,7 +66,7 @@ feature -- Status report
 			end
 		end
 
-	file_path: STRING_32 is
+	file_path: STRING_32
 			-- Path of `file_name'.
 		do
 			Result := file_name
@@ -77,7 +77,7 @@ feature -- Status report
 			end
 		end
 
-	selected_filter_index: INTEGER is
+	selected_filter_index: INTEGER
 			-- One based index of selected filter within `filters', or
 			-- zero if no filters set.
 		do
@@ -93,7 +93,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_filter (a_filter: STRING_GENERAL) is
+	set_filter (a_filter: STRING_GENERAL)
 			-- Set `a_filter' as new filter.
 		local
 			filter_name: STRING_32
@@ -119,13 +119,13 @@ feature -- Element change
 			wel_set_filter_index (0)
 		end
 
-	set_file_name (a_name: STRING_GENERAL) is
+	set_file_name (a_name: STRING_GENERAL)
 			-- Make `a_name' the selected file.
 		do
 			wel_set_file_name (a_name)
 		end
 
-	set_start_directory (a_path: STRING_GENERAL) is
+	set_start_directory (a_path: STRING_GENERAL)
 			-- Make `a_path' the base directory.
 		do
 			start_directory := a_path.twin
@@ -134,7 +134,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	valid_file_name (a_name: STRING_32): BOOLEAN is
+	valid_file_name (a_name: STRING_32): BOOLEAN
 			-- Is `a_name' a valid file_name on the current platform?
 			-- Certain characters are not permissible and this is dependent
 			-- on the current platform. The following characters are not permitted,
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	valid_file_title (a_title: STRING_32): BOOLEAN is
+	valid_file_title (a_title: STRING_32): BOOLEAN
 			-- Is `a_title' a valid file title on the current platform?
 			-- The following characters are not permitted,
 			-- and this list may not be exhaustive:
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			Result := valid_file_name (a_title) and not (a_title.has ('/') or a_title.has ('\') or  a_title.has (':'))
 		end
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show the window and wait until the user closed it.
 		local
 			filter_name: STRING_GENERAL
@@ -201,35 +201,35 @@ feature {NONE} -- Implementation
 
 feature -- Deferred
 
-	wel_make is
+	wel_make
 		deferred
 		end
 
-	wel_file_name: STRING_32 is
+	wel_file_name: STRING_32
 		deferred
 		end
 
-	wel_set_file_name (a_file_name: STRING_GENERAL) is
+	wel_set_file_name (a_file_name: STRING_GENERAL)
 		deferred
 		end
 
-	wel_set_filter (filter_names, filter_patterns: ARRAY [STRING_GENERAL]) is
+	wel_set_filter (filter_names, filter_patterns: ARRAY [STRING_GENERAL])
 		deferred
 		end
 
-	wel_set_filter_index (a_filter_index: INTEGER) is
+	wel_set_filter_index (a_filter_index: INTEGER)
 		deferred
 		end
 
-	wel_set_initial_directory (a_directory: STRING_GENERAL) is
+	wel_set_initial_directory (a_directory: STRING_GENERAL)
 		deferred
 		end
 
-	filter_index: INTEGER is
+	filter_index: INTEGER
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

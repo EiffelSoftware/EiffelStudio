@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of a callback with its argument"
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_command: MEL_COMMAND; an_argument: ANY) is
+	make (a_command: MEL_COMMAND; an_argument: ANY)
 			-- Store `a_command' and `an_argument'.
 		do
 			command := a_command;
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Basic operations
 
-	execute (a_callback_struct: MEL_CALLBACK_STRUCT) is
+	execute (a_callback_struct: MEL_CALLBACK_STRUCT)
 			-- Execute `command' with `argument' and `a_callback_struct'.
 		do
 			command.set_callback_struct (a_callback_struct);
@@ -43,7 +43,7 @@ invariant
 
 	command_not_void: command /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -42,20 +42,20 @@ create
 
 feature -- Initialization
 
-	needs_event_box: BOOLEAN is
+	needs_event_box: BOOLEAN
 			-- Does `a_widget' need an event box?
 		do
 			Result := False
 		end
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the tree item.
 		do
 			base_make (an_interface)
 			set_c_object  ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new)
 		end
 
-	initialize is
+	initialize
 			-- Initialize the header item.
 		local
 			l_label_ellipsize_symbol: POINTER
@@ -100,7 +100,7 @@ feature -- Initialization
 			"(FUNCTION_CAST(void, (GtkLabel*, gint)) $a_function)((GtkLabel*) $a_label, (gint) $a_ellipsize_mode);"
 		end
 
-	handle_resize is
+	handle_resize
 			-- Call the appropriate actions for the header item resize
 		local
 			a_width: INTEGER
@@ -131,14 +131,14 @@ feature -- Access
 		-- Can a user resize `Current'?
 
 
-	disable_user_resize is
+	disable_user_resize
 			-- Prevent `Current' from being resized by users.
 		do
 			user_can_resize := False
 			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_resizable (c_object, False)
 		end
 
-	enable_user_resize is
+	enable_user_resize
 			-- Permit `Current' to be resized by users.
 		do
 			user_can_resize := True
@@ -147,7 +147,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_maximum_width (a_width: INTEGER) is
+	set_maximum_width (a_width: INTEGER)
 			-- Assign `a_maximum_width' in pixels to `maximum_width'.
 			-- If `width' is greater than `a_maximum_width', resize.
 		do
@@ -155,7 +155,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_max_width (c_object, a_width)
 		end
 
-	set_minimum_width (a_width: INTEGER) is
+	set_minimum_width (a_width: INTEGER)
 			-- Assign `a_minimum_width' in pixels to `minimum_width'.
 			-- If `width' is less than `a_minimum_width', resize.
 		do
@@ -163,7 +163,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_min_width (c_object, a_width)
 		end
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Assign `a_width' to `width'.
 		do
 			width := a_width
@@ -171,7 +171,7 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, -1)
 		end
 
-	resize_to_content is
+	resize_to_content
 			-- Resize `Current' to fully display both `pixmap' and `text'.
 			-- As size of `text' is dependent on `font' of `parent', `Current'
 			-- must be parented.
@@ -194,40 +194,40 @@ feature -- PND
 		do
 		end
 
-	enable_transport is
+	enable_transport
 			-- Enable PND transport
 		do
 			is_transport_enabled := True
 		end
 
-	disable_transport is
+	disable_transport
 			-- Disable PND transport
 		do
 			is_transport_enabled := False
 		end
 
-	draw_rubber_band is
+	draw_rubber_band
 		do
 			check
 				do_not_call: False
 			end
 		end
 
-	erase_rubber_band is
+	erase_rubber_band
 		do
 			check
 				do_not_call: False
 			end
 		end
 
-	enable_capture is
+	enable_capture
 		do
 			check
 				do_not_call: False
 			end
 		end
 
-	disable_capture is
+	disable_capture
 		do
 			check
 				do_not_call: False
@@ -237,7 +237,7 @@ feature -- PND
 	start_transport (
         	a_x, a_y, a_button: INTEGER; a_press: BOOLEAN;
         	a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-        	a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN) is
+        	a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN)
         	-- Start PND transport (not needed)
 		do
 			check
@@ -247,7 +247,7 @@ feature -- PND
 
 	end_transport (a_x, a_y, a_button: INTEGER;
 		a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
-		a_screen_x, a_screen_y: INTEGER) is
+		a_screen_x, a_screen_y: INTEGER)
 			-- End PND transport (not needed)
 		do
 			check
@@ -255,7 +255,7 @@ feature -- PND
 			end
 		end
 
-	set_pointer_style, internal_set_pointer_style (c: EV_POINTER_STYLE) is
+	set_pointer_style, internal_set_pointer_style (c: EV_POINTER_STYLE)
 			-- Set 'pointer_style' to 'c' (not needed)
 		do
 			check
@@ -265,39 +265,39 @@ feature -- PND
 
 feature -- Measurement
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		do
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		do
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height in pixels.
 		do
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
 		do
 		end
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
-	process_gdk_event (n_args: INTEGER; args: POINTER) is
+	process_gdk_event (n_args: INTEGER; args: POINTER)
 			-- Process gtk events using raw marshal data.
 		local
 			gdk_event: POINTER
@@ -376,7 +376,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
 feature {EV_HEADER_IMP} -- Implementation
 
-	set_parent_imp (par_imp: like parent_imp) is
+	set_parent_imp (par_imp: like parent_imp)
 			-- Set `parent_imp' to `par_imp'.
 		local
 			a_button: POINTER
@@ -413,7 +413,7 @@ feature {EV_HEADER_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	tree_view_column_width: INTEGER is
+	tree_view_column_width: INTEGER
 			-- `Result' is width of `Current' used
 			-- while parented.
 		do
@@ -423,7 +423,7 @@ feature {NONE} -- Implementation
 	box: POINTER
 		-- Box to hold column text and pixmap.
 
-	create_drop_actions: EV_PND_ACTION_SEQUENCE is
+	create_drop_actions: EV_PND_ACTION_SEQUENCE
 		do
 			create Result
 			interface.init_drop_actions (Result)
@@ -431,14 +431,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Redundant implementation
 
-	real_pointed_target: EV_PICK_AND_DROPABLE is
+	real_pointed_target: EV_PICK_AND_DROPABLE
 		do
 			check do_not_call: False end
 		end
 
 feature {NONE} -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy `c_object'.
 		do
 			{EV_GTK_EXTERNALS}.object_unref (c_object)
@@ -449,7 +449,7 @@ feature {NONE} -- Implementation
 	interface: EV_HEADER_ITEM;
 		-- Interface object of `Current'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

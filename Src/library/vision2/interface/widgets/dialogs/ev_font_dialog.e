@@ -1,4 +1,4 @@
-indexing 
+note 
 	description:
 		"EiffelVision font selection dialog."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Access
 		
-	font: EV_FONT is
+	font: EV_FONT
 			-- Font selected in `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -34,7 +34,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_font (a_font: EV_FONT) is
+	set_font (a_font: EV_FONT)
 			-- Assign `a_font' to `font'.
 		require
 			not_destroyed: not is_destroyed
@@ -49,13 +49,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	
 feature {NONE} -- Implementation
 
-	create_implementation is
+	create_implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_FONT_DIALOG_IMP} implementation.make (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

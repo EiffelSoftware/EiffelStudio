@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"EiffelVision implementation of a Motif option button. %
@@ -63,7 +63,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_option_menu: OPTION_B; man: BOOLEAN; oui_parent: COMPOSITE) is
+	make (an_option_menu: OPTION_B; man: BOOLEAN; oui_parent: COMPOSITE)
 			-- Create a motif option menu button.
 		local
 			mc: MEL_COMPOSITE
@@ -76,13 +76,13 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	font_list: MEL_FONT_LIST is
+	font_list: MEL_FONT_LIST
 			-- Font list of button gadget
 		do
 			Result := button_gadget.font_list
 		end;
 
-	selected_button: BUTTON is
+	selected_button: BUTTON
 			-- Current Push Button selected in the option menu
 		local
 			w: WIDGET_IMP
@@ -93,19 +93,19 @@ feature -- Status report
 			end;
 		end;
 
-	text: STRING is
+	text: STRING
 			-- Label of button
 		do
 			Result := button_gadget.label_as_string
 		end;
 
-	title: STRING is
+	title: STRING
 			-- Title of option button
 		do
 			Result := label_gadget.label_as_string
 		end;
 
-	title_width: INTEGER is
+	title_width: INTEGER
 			-- Width of title
 		do
 			Result := label_gadget.width
@@ -113,13 +113,13 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_font_list (a_font_list: MEL_FONT_LIST) is
+	set_font_list (a_font_list: MEL_FONT_LIST)
 			-- Set button_gadget font_list to `_font_list'.
 		do
 			button_gadget.set_font_list (a_font_list)
 		end;
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set button text to `a_text'.
 		do
 			button_gadget.unmanage;
@@ -127,12 +127,12 @@ feature -- Status setting
 			button_gadget.manage
 		end;
 
-	set_left_alignment, set_center_alignment is
+	set_left_alignment, set_center_alignment
 			-- Do nothing.
 		do
 		end;
 
-	set_selected_button (button: BUTTON) is
+	set_selected_button (button: BUTTON)
 			-- Set `selected_button' to `button'
 		local
 			mel_w: MEL_RECT_OBJ
@@ -141,7 +141,7 @@ feature -- Status setting
 			set_menu_history (mel_w)
 		end;
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 			-- Set option button title to `a_title'.
 		do
 			label_gadget.unmanage;
@@ -149,7 +149,7 @@ feature -- Status setting
 			label_gadget.manage
 		end;
 
-	attach_menu (a_menu: OPT_PULL) is
+	attach_menu (a_menu: OPT_PULL)
 			-- Attach menu `a_menu' to the menu button, it will
 			-- be the menu which will appear when the button
 			-- is armed.
@@ -160,13 +160,13 @@ feature -- Status setting
 			button_gadget.set_sub_menu (mel_menu)
 		end;
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 			-- Set height to `new_height'.
 		do
 			button_gadget.set_height (new_height)
 		end;
 
-	set_size (new_width: INTEGER; new_height: INTEGER) is
+	set_size (new_width: INTEGER; new_height: INTEGER)
 			-- Set both width and height to `new_width'
 			-- and `new_height'.
 		local
@@ -182,14 +182,14 @@ feature -- Status setting
 			button_set_size (nw, nh);
 		end;
 
-	set_width (new_width :INTEGER) is
+	set_width (new_width :INTEGER)
 			-- Set width to `new_width'.
 		do
 			button_gadget.set_width (new_width);
 			button_set_width (new_width);
 		end;
 
-	allow_recompute_size is
+	allow_recompute_size
 			-- Allow current button to recompute its  size according to
 			-- some changes on its text.
 		do
@@ -198,7 +198,7 @@ feature -- Status setting
 			enable_resize_height
 		end;
 	
-	forbid_recompute_size is
+	forbid_recompute_size
 			-- Disallow current button to recompute its  size according to
 			-- some changes on its text.
 		do
@@ -209,7 +209,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	remove_title is
+	remove_title
 			-- Remove title.
 		do
 			set_title ("")
@@ -217,31 +217,31 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	add_activate_action (a_command: COMMAND; argument: ANY) is
+	add_activate_action (a_command: COMMAND; argument: ANY)
 		do
 		end
 
-	add_release_action (a_command: COMMAND; argument: ANY) is
+	add_release_action (a_command: COMMAND; argument: ANY)
 		do
 		end
 
-	add_arm_action (a_command: COMMAND; argument: ANY) is
+	add_arm_action (a_command: COMMAND; argument: ANY)
 		do
 		end
 
-	remove_activate_action (a_command: COMMAND; argument: ANY) is
+	remove_activate_action (a_command: COMMAND; argument: ANY)
 		do
 		end
 
-	remove_release_action (a_command: COMMAND; argument: ANY) is
+	remove_release_action (a_command: COMMAND; argument: ANY)
 		do
 		end
 
-	remove_arm_action (a_command: COMMAND; argument: ANY) is
+	remove_arm_action (a_command: COMMAND; argument: ANY)
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

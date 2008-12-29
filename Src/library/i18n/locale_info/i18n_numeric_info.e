@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class that encapsulates value formatting information"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- initialize all fields
 		do
 			set_value_decimal_separator (default_value_decimal_separator)
@@ -37,41 +37,41 @@ feature	-- Access: Number formatting
 
 feature -- Access: Default values
 
-	default_value_decimal_separator: STRING_32 is
+	default_value_decimal_separator: STRING_32
 		once
 			Result := "."
 		end
 
-	default_value_numbers_after_decimal_separator: INTEGER is 2
+	default_value_numbers_after_decimal_separator: INTEGER = 2
 
-	default_value_group_separator: STRING_32 is
+	default_value_group_separator: STRING_32
 		once
 			Result := ","
 		end
 
-	default_value_number_list_separator: STRING_32 is
+	default_value_number_list_separator: STRING_32
 		once
 			Result := ";"
 		end
 
-	default_positive_sign: STRING_32 is
+	default_positive_sign: STRING_32
 		once
 			Result := ""
 		end
 
-	default_negative_sign: STRING_32 is
+	default_negative_sign: STRING_32
 		once
 			Result := "-"
 		end
 
-	default_value_grouping: ARRAY[INTEGER] is
+	default_value_grouping: ARRAY[INTEGER]
 		once
 			Result := << 3, 3, 0 >>
 		end
 
 feature -- Element change
 
-	set_value_decimal_separator(separator:STRING_GENERAL) is
+	set_value_decimal_separator(separator:STRING_GENERAL)
 			-- set the decimal separator for values
 		require
 			argument_not_void: separator /= Void
@@ -81,7 +81,7 @@ feature -- Element change
 			value_decimal_separator_set: value_decimal_separator.is_equal(separator.as_string_32)
 		end
 
-	set_value_numbers_after_decimal_separator(numbers:INTEGER) is
+	set_value_numbers_after_decimal_separator(numbers:INTEGER)
 			-- set the amount of numbers after a decimal separator in a numeric value
 		require
 			numbers_positive: numbers >= 0
@@ -91,7 +91,7 @@ feature -- Element change
 			value_numbers_after_decimal_separator_set: value_numbers_after_decimal_separator = numbers
 		end
 
-	set_value_group_separator(separator:STRING_GENERAL) is
+	set_value_group_separator(separator:STRING_GENERAL)
 			-- set the group separator for values - sometimes called "thousands separator"
 		require
 			argument_not_void: separator /= Void
@@ -101,7 +101,7 @@ feature -- Element change
 			value_group_separator_set: value_group_separator.is_equal(separator.as_string_32)
 		end
 
-	set_value_number_list_separator(separator:STRING_GENERAL) is
+	set_value_number_list_separator(separator:STRING_GENERAL)
 			-- set the  separator for lists of numbers
 		require
 			argument_not_void: separator /= Void
@@ -111,7 +111,7 @@ feature -- Element change
 			value_number_list_separator_set: value_number_list_separator.is_equal(separator.as_string_32)
 		end
 
-	set_value_positive_sign (a_string: STRING_GENERAL) is
+	set_value_positive_sign (a_string: STRING_GENERAL)
 			-- set the positive sign to use
 		require
 			argument_not_void: a_string /= Void
@@ -121,7 +121,7 @@ feature -- Element change
 			value_positive_sign_set: value_positive_sign.is_equal (a_string)
 		end
 
-	set_value_negative_sign (a_string: STRING_GENERAL) is
+	set_value_negative_sign (a_string: STRING_GENERAL)
 			-- set the negative sign to use
 		require
 			argument_not_void: a_string /= Void
@@ -131,7 +131,7 @@ feature -- Element change
 			value_negative_sign_set: value_negative_sign.is_equal (a_string)
 		end
 
-	set_value_grouping (a_array: ARRAY[INTEGER]) is
+	set_value_grouping (a_array: ARRAY[INTEGER])
 			-- set the grouping rules
 		require
 			a_array_exists: a_array /= Void
@@ -141,7 +141,7 @@ feature -- Element change
 			groiping_set: value_grouping = a_array
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

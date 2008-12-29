@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Externals for managing the object id stack (see identified.e)"
 	legal: "See notice at end of class."
@@ -11,7 +11,7 @@ class IDENTIFIED_CONTROLLER
  
 feature -- Measurement
  
-	object_id_stack_size: INTEGER is
+	object_id_stack_size: INTEGER
 			-- Size of the object_id stack in chunks
 			--| a chunk contains 1000 elements
 		do
@@ -20,7 +20,7 @@ feature -- Measurement
 
 feature -- Status setting
  
-	extend_object_id_stack (nb_chunks: INTEGER) is
+	extend_object_id_stack (nb_chunks: INTEGER)
 			-- Extend the object_id stack by `nb_chunks' chunks.
 			--| a chunk contains 1000 elements
 		require
@@ -32,7 +32,7 @@ feature -- Status setting
 			tmp.resize (tmp.capacity + 1000 * nb_chunks)
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

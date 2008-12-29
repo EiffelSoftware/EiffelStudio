@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that traverse object graphs starting at the root object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,13 +29,13 @@ feature -- Access
 
 feature -- Status report
 
-	is_root_object_set: BOOLEAN is
+	is_root_object_set: BOOLEAN
 			-- Is starting point of graph traversing set?
 		do
 			Result := root_object /= Void
 		end
 
-	is_object_action_set: BOOLEAN is
+	is_object_action_set: BOOLEAN
 			-- Is procedure to call on every object set?
 		do
 			Result := object_action /= Void
@@ -43,7 +43,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_root_object (an_object: like root_object) is
+	set_root_object (an_object: like root_object)
 			-- Set `root_object' with 'an_object'.
 		require
 			an_object_not_void: an_object /= Void
@@ -53,7 +53,7 @@ feature -- Element change
 			root_object_set: root_object = an_object and is_root_object_set
 		end
 
-	set_object_action (an_object_action: like object_action) is
+	set_object_action (an_object_action: like object_action)
 			-- Set `object_action' with `an_object_action'.
 		require
 			an_object_action_not_void: an_object_action /= Void
@@ -65,7 +65,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	frozen traverse is
+	frozen traverse
 			-- Traverse object structure starting at 'root_object' and call object_action
 			-- on every object in the graph.
 			--| Redefine `internal_traverse' if you need to change the implementation.
@@ -91,7 +91,7 @@ feature -- Basic operations
 			retry
 		end
 
-	wipe_out is
+	wipe_out
 			-- Clear current to default values
 		do
 			visited_objects := Void
@@ -105,17 +105,17 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	new_dispenser: DISPENSER [ANY] is
+	new_dispenser: DISPENSER [ANY]
 			-- New dispenser to use for storing visited objects.
 		deferred
 		ensure
 			new_dispenser_not_void: Result /= Void
 		end
 
-	default_size: INTEGER is 200
+	default_size: INTEGER = 200
 			-- Default size for containers used during object traversal
 
-	internal_traverse is
+	internal_traverse
 			-- Traverse object structure starting at 'root_object' and call object_action
 			-- on every object in the graph.
 		require
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			visited_objects := l_visited
 		end
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

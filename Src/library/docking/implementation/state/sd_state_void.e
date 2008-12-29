@@ -1,4 +1,4 @@
-indexing
+note
 	description: "SD_STATE when a content initialized, wait for change to other SD_STATE. Or when client programmer called hide, this state remember state"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature {NONE}  -- Initlization
 
-	make (a_content: SD_CONTENT)is
+	make (a_content: SD_CONTENT)
 			-- Creation method.
 		require
 			a_content_not_void: a_content /= Void
@@ -46,19 +46,19 @@ feature {NONE}  -- Initlization
 
 feature -- Redefine.
 
-	zone: SD_ZONE is
+	zone: SD_ZONE
 			-- Redefine.
 		do
 		end
 
-	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
+	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER)
 			-- Redefine.
 		do
 			content.set_visible (False)
 			initialized := True
 		end
 
-	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
+	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
 			-- Redefine.
 		local
 			l_docking_state: SD_DOCKING_STATE
@@ -77,7 +77,7 @@ feature -- Redefine.
 			state_changed: internal_content.state /= Current
 		end
 
-	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
+	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER)
 			-- Redefine.
 		local
 			l_docking_state: SD_DOCKING_STATE
@@ -92,7 +92,7 @@ feature -- Redefine.
 			state_changed: internal_content.state /= Current
 		end
 
-	stick (a_direction: INTEGER) is
+	stick (a_direction: INTEGER)
 			-- Redefine.
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
@@ -106,7 +106,7 @@ feature -- Redefine.
 			state_changed: internal_content.state /= Current
 		end
 
-	float (a_x, a_y: INTEGER) is
+	float (a_x, a_y: INTEGER)
 			-- Redefine.
 		local
 			l_docking_state: SD_DOCKING_STATE
@@ -137,7 +137,7 @@ feature -- Redefine.
 			state_changed: internal_content.state /= Current
 		end
 
-	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER) is
+	move_to_tab_zone (a_target_zone: SD_TAB_ZONE; a_index: INTEGER)
 			-- Redefine.
 		local
 			l_tab_state: SD_TAB_STATE
@@ -154,7 +154,7 @@ feature -- Redefine.
 			state_changed: internal_content.state /= Current
 		end
 
-	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN) is
+	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN)
 			-- Redefine.
 		local
 			l_tab_state: SD_TAB_STATE
@@ -174,7 +174,7 @@ feature -- Redefine.
 			state_changed: internal_content.state /= Current
 		end
 
-	show is
+	show
 			-- Redefine
 		local
 			l_tab_zone: SD_TAB_ZONE
@@ -229,12 +229,12 @@ feature -- Redefine.
 			end
 		end
 
-	close is
+	close
 			-- Redefine
 		do
 		end
 
-	set_user_widget (a_widget: EV_WIDGET) is
+	set_user_widget (a_widget: EV_WIDGET)
 			-- Redefine
 		do
 			-- Do nothing.
@@ -242,7 +242,7 @@ feature -- Redefine.
 
 feature {SD_TAB_STATE, SD_AUTO_HIDE_STATE} -- Hide/Show issues when Tab
 
-	set_relative (a_content: SD_CONTENT) is
+	set_relative (a_content: SD_CONTENT)
 			-- Set `relative'.
 		require
 			a_content_not_void: a_content /= Void
@@ -258,7 +258,7 @@ feature {SD_TAB_STATE, SD_AUTO_HIDE_STATE} -- Hide/Show issues when Tab
 
 feature -- Contract support
 
-	content_valid (a_content: SD_CONTENT): BOOLEAN is
+	content_valid (a_content: SD_CONTENT): BOOLEAN
 			-- If content valid?
 		do
 			Result := internal_docking_manager.has_content (a_content)
@@ -266,7 +266,7 @@ feature -- Contract support
 
 feature {NONE} -- Implementation
 
-	set_size_in_idle (a_width, a_height: INTEGER; a_zone: !SD_FLOATING_ZONE) is
+	set_size_in_idle (a_width, a_height: INTEGER; a_zone: !SD_FLOATING_ZONE)
 			-- Set `a_zone''s size with `a_width' and `a_height'.
 		require
 			valid: a_width >= 0 and a_height >= 0
@@ -282,7 +282,7 @@ invariant
 	direction_valid: initialized implies direction = {SD_ENUMERATION}.top or direction = {SD_ENUMERATION}.bottom
 		or direction = {SD_ENUMERATION}.left or direction = {SD_ENUMERATION}.right
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

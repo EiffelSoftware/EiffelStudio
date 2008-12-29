@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,13 +20,13 @@ inherit
 
 feature {NONE} -- Agent functions.
 
-	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
+	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
 			-- Translation agent used for key events
 		once
 			Result := agent (App_implementation.gtk_marshal).key_event_translate
 		end
 
-	set_focus_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
+	set_focus_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE]
 			-- Translation agent used for set-focus events
 		once
 			Result := agent (App_implementation.gtk_marshal).set_focus_event_translate
@@ -34,13 +34,13 @@ feature {NONE} -- Agent functions.
 
 feature {NONE} -- Implementation
 
-	parent_imp: EV_CONTAINER_IMP is
+	parent_imp: EV_CONTAINER_IMP
 			-- Parent of `Current', always Void as windows cannot be parented
 		do
 			-- Return Void
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size measured in pixels.
 		do
 			if default_width /= -1 then
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size measured in pixels.
 		do
 			if default_height /= -1 then
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_blocking_window (a_window: EV_WINDOW) is
+	set_blocking_window (a_window: EV_WINDOW)
 			-- Set as transient for `a_window'.
 		local
 			win_imp: EV_WINDOW_IMP
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	blocking_window: EV_WINDOW is
+	blocking_window: EV_WINDOW
 			-- Window this dialog is a transient for.
 		do
 			if internal_blocking_window /= Void and then not internal_blocking_window.is_destroyed then
@@ -92,21 +92,21 @@ feature {NONE} -- Implementation
 			-- Window that `Current' is relative to.
 			-- Implementation
 
-	set_width (a_width: INTEGER) is
+	set_width (a_width: INTEGER)
 			-- Set the horizontal size to `a_width'.
 		do
 			update_request_size
 			set_size (a_width, height)
 		end
 
-	set_height (a_height: INTEGER) is
+	set_height (a_height: INTEGER)
 			-- Set the vertical size to `a_height'.
 		do
 			update_request_size
 			set_size (width, a_height)
 		end
 
-	set_size (a_width, a_height: INTEGER) is
+	set_size (a_width, a_height: INTEGER)
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
 		do
@@ -121,31 +121,31 @@ feature {NONE} -- Implementation
 			-- Default width and height for the window if set, -1 otherwise.
 			-- (see. `gtk_window_set_default_size' for more information)
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- X coordinate of `Current'
 		do
 			Result := screen_x
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Y coordinate of `Current'
 		do
 			Result := screen_y
 		end
 
-	set_x_position (a_x: INTEGER) is
+	set_x_position (a_x: INTEGER)
 			-- Set horizontal offset to parent to `a_x'.
 		do
 			set_position (a_x, y_position)
 		end
 
-	set_y_position (a_y: INTEGER) is
+	set_y_position (a_y: INTEGER)
 			-- Set vertical offset to parent to `a_y'.
 		do
 			set_position (x_position, a_y)
 		end
 
-	set_position (a_x, a_y: INTEGER) is
+	set_position (a_x, a_y: INTEGER)
 			-- Set horizontal offset to parent to `a_x'.
 			-- Set vertical offset to parent to `a_y'.
 		do
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 	positioned_by_user: BOOLEAN
 		-- Has `Current' been positioned by the user?
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal position of the window on screen,
 		local
 			a_x: INTEGER
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical position of the window on screen,
 		local
 			a_y: INTEGER
@@ -215,13 +215,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_wm_decorations: INTEGER is
+	default_wm_decorations: INTEGER
 			-- Default WM decorations of `Current'.
 		do
 			Result := 0 -- No decorations
 		end
 
-	hide is
+	hide
 			-- Hide `Current'.
 		do
 			if is_show_requested then
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 	is_modal: BOOLEAN
 		-- Is `Current' modal?
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show `Current' modal with respect to `a_window'.
 		local
 			l_window_imp: EV_WINDOW_IMP
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_relative_to_window (a_window: EV_WINDOW) is
+	show_relative_to_window (a_window: EV_WINDOW)
 			-- Show `Current' with respect to `a_window'.
 		do
 			set_blocking_window (a_window)
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 			set_blocking_window (a_window)
 		end
 
-	block is
+	block
 			-- Wait until window is closed by the user.
 		local
 			l_app_imp: like app_implementation
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	blocking_condition: BOOLEAN is
+	blocking_condition: BOOLEAN
 			-- Condition when blocking ceases if enabled.
 		do
 			Result := is_destroyed or else not is_show_requested or else app_implementation.is_destroyed
@@ -299,32 +299,32 @@ feature {NONE} -- Implementation
 
 feature {EV_INTERMEDIARY_ROUTINES}
 
-	call_close_request_actions is
+	call_close_request_actions
 			-- Call the close request actions.
 		deferred
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	enable_modal is
+	enable_modal
 			-- Set `is_modal' to `True'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, True)
 		end
 
-	disable_modal is
+	disable_modal
 			-- Set `is_modal' to `False'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, False)
 		end
 
-	forbid_resize is
+	forbid_resize
 			-- Forbid the resize of the window.
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 0, 0)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

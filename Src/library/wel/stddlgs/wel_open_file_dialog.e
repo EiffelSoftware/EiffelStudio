@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Standard dialog box to open a file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Basic operations
 
-	activate (a_parent: WEL_COMPOSITE_WINDOW) is
+	activate (a_parent: WEL_COMPOSITE_WINDOW)
 			-- Activate the dialog box (modal mode) with
 			-- `a_parent' as owner.
 		do
@@ -26,7 +26,7 @@ feature -- Basic operations
 
 feature {NONE} -- Externals
 
-	cwin_get_open_file_name (ptr: POINTER): BOOLEAN is
+	cwin_get_open_file_name (ptr: POINTER): BOOLEAN
 			-- SDK GetOpenFileName
 		external
 			"C [macro <cdlg.h>] (LPOPENFILENAME): EIF_BOOLEAN"
@@ -34,7 +34,7 @@ feature {NONE} -- Externals
 			"GetOpenFileName"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

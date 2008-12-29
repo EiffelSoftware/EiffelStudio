@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Simple implementation of DICTIONARY using a hash table to store entries"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature --Creation
 
-	make (a_plural_form: INTEGER) is
+	make (a_plural_form: INTEGER)
 			-- create the datastructure
 		do
 			Precursor (a_plural_form)
@@ -28,7 +28,7 @@ feature --Creation
 
 feature --Insertion
 
-	extend (a_entry: I18N_DICTIONARY_ENTRY) is
+	extend (a_entry: I18N_DICTIONARY_ENTRY)
 		-- add an entry
 		do
 			hash.extend (a_entry, a_entry.original_singular)
@@ -36,13 +36,13 @@ feature --Insertion
 
 feature --Access
 
-	has (original: STRING_GENERAL):BOOLEAN is
+	has (original: STRING_GENERAL):BOOLEAN
 			-- does the dictionary have this entry?
 		do
 			Result := hash.has (original.as_string_32)
 		end
 
-	has_plural(original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): BOOLEAN is
+	has_plural(original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): BOOLEAN
 			-- does the dictionary have an entry with `original_singular', `original_plural'
 			-- and does this entry have the `plural_number'-th plural translation
 		local
@@ -56,13 +56,13 @@ feature --Access
 			end
 		end
 
-	singular (original: STRING_GENERAL): STRING_32 is
+	singular (original: STRING_GENERAL): STRING_32
 			-- get the singular translation of `original'
 		do
 			Result := hash.item (original.as_string_32).singular_translation
 		end
 
-	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32 is
+	plural (original_singular, original_plural: STRING_GENERAL; plural_number: INTEGER): STRING_32
 			-- get the `plural_number'-th plural translation of entry
 			-- with `original_singular' and `original_plural'
 		do
@@ -71,7 +71,7 @@ feature --Access
 
 feature --Information
 
-	count: INTEGER is
+	count: INTEGER
 			-- number of items in hash table
 		do
 			Result := hash.count
@@ -80,9 +80,9 @@ feature --Information
 feature {NONE} --Implementation
 
 	hash: HASH_TABLE [I18N_DICTIONARY_ENTRY, STRING_32]
-	default_number_of_entries: INTEGER is 50;
+	default_number_of_entries: INTEGER = 50;
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

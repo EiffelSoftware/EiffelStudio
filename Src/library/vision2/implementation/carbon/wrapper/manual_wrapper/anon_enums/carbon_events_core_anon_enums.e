@@ -1,4 +1,4 @@
-indexing
+note
 	description: "wrapper for anynymous enums from file carbon_events_core.h "
 
 class
@@ -6,266 +6,266 @@ class
 
 feature -- Carbon constants
 
-	frozen eventAlreadyPostedErr: INTEGER is
+	frozen eventAlreadyPostedErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventAlreadyPostedErr"
 	end
 
-	frozen eventTargetBusyErr: INTEGER is
+	frozen eventTargetBusyErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventTargetBusyErr"
 	end
 
-	frozen eventClassInvalidErr: INTEGER is
+	frozen eventClassInvalidErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventClassInvalidErr"
 	end
 
-	frozen eventClassIncorrectErr: INTEGER is
+	frozen eventClassIncorrectErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventClassIncorrectErr"
 	end
 
-	frozen eventDeferAccessibilityEventErr: INTEGER is
+	frozen eventDeferAccessibilityEventErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventDeferAccessibilityEventErr"
 	end
 
-	frozen eventHandlerAlreadyInstalledErr: INTEGER is
+	frozen eventHandlerAlreadyInstalledErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventHandlerAlreadyInstalledErr"
 	end
 
-	frozen eventInternalErr: INTEGER is
+	frozen eventInternalErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventInternalErr"
 	end
 
-	frozen eventKindIncorrectErr: INTEGER is
+	frozen eventKindIncorrectErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventKindIncorrectErr"
 	end
 
-	frozen eventParameterNotFoundErr: INTEGER is
+	frozen eventParameterNotFoundErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventParameterNotFoundErr"
 	end
 
-	frozen eventNotHandledErr: INTEGER is
+	frozen eventNotHandledErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventNotHandledErr"
 	end
 
-	frozen eventLoopTimedOutErr: INTEGER is
+	frozen eventLoopTimedOutErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventLoopTimedOutErr"
 	end
 
-	frozen eventLoopQuitErr: INTEGER is
+	frozen eventLoopQuitErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventLoopQuitErr"
 	end
 
-	frozen eventNotInQueueErr: INTEGER is
+	frozen eventNotInQueueErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventNotInQueueErr"
 	end
 
-	frozen eventHotKeyExistsErr: INTEGER is
+	frozen eventHotKeyExistsErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventHotKeyExistsErr"
 	end
 
-	frozen eventHotKeyInvalidErr: INTEGER is
+	frozen eventHotKeyInvalidErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventHotKeyInvalidErr"
 	end
 
-	frozen eventPassToNextTargetErr: INTEGER is
+	frozen eventPassToNextTargetErr: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"eventPassToNextTargetErr"
 	end
 
-	frozen kEventParamDirectObject: INTEGER is
+	frozen kEventParamDirectObject: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamDirectObject"
 	end
 
-	frozen kEventParamDragRef: INTEGER is
+	frozen kEventParamDragRef: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventParamDragRef"
 	end
 
-	frozen kEventPriorityLow: INTEGER is
+	frozen kEventPriorityLow: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventPriorityLow"
 	end
 
-	frozen kEventPriorityStandard: INTEGER is
+	frozen kEventPriorityStandard: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventPriorityStandard"
 	end
 
-	frozen kEventPriorityHigh: INTEGER is
+	frozen kEventPriorityHigh: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventPriorityHigh"
 	end
 
-	frozen kEventLeaveInQueue: INTEGER is
+	frozen kEventLeaveInQueue: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventLeaveInQueue"
 	end
 
-	frozen kEventRemoveFromQueue: INTEGER is
+	frozen kEventRemoveFromQueue: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventRemoveFromQueue"
 	end
 
-	frozen kEventDurationSecond: INTEGER is
+	frozen kEventDurationSecond: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventDurationSecond"
 	end
 
-	frozen kEventDurationMillisecond: INTEGER is
+	frozen kEventDurationMillisecond: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventDurationMillisecond"
 	end
 
-	frozen kEventDurationMicrosecond: INTEGER is
+	frozen kEventDurationMicrosecond: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventDurationMicrosecond"
 	end
 
-	frozen kEventDurationNanosecond: INTEGER is
+	frozen kEventDurationNanosecond: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventDurationNanosecond"
 	end
 
-	frozen kEventDurationMinute: INTEGER is
+	frozen kEventDurationMinute: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventDurationMinute"
 	end
 
-	frozen kEventDurationHour: INTEGER is
+	frozen kEventDurationHour: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventDurationHour"
 	end
 
-	frozen kEventDurationDay: INTEGER is
+	frozen kEventDurationDay: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventDurationDay"
 	end
 
-	frozen kEventDurationNoWait: INTEGER is
+	frozen kEventDurationNoWait: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventDurationNoWait"
 	end
 
-	frozen kEventDurationForever: INTEGER is
+	frozen kEventDurationForever: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventDurationForever"
 	end
 
-	frozen kEventQueueOptionsNone: INTEGER is
+	frozen kEventQueueOptionsNone: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventQueueOptionsNone"
 	end
 
-	frozen kEventLoopIdleTimerStarted: INTEGER is
+	frozen kEventLoopIdleTimerStarted: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventLoopIdleTimerStarted"
 	end
 
-	frozen kEventLoopIdleTimerIdling: INTEGER is
+	frozen kEventLoopIdleTimerIdling: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventLoopIdleTimerIdling"
 	end
 
-	frozen kEventLoopIdleTimerStopped: INTEGER is
+	frozen kEventLoopIdleTimerStopped: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventLoopIdleTimerStopped"
 	end
 
-	frozen kEventTargetDontPropagate: INTEGER is
+	frozen kEventTargetDontPropagate: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias
 		"kEventTargetDontPropagate"
 	end
 
-	frozen kEventTargetSendToAllHandlers: INTEGER is
+	frozen kEventTargetSendToAllHandlers: INTEGER
 	external
 		"C inline use <Carbon/Carbon.h>"
 	alias

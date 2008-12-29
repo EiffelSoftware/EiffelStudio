@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Integer values coded on 64 bits"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ convert
 	to_real: {REAL},
 	to_double: {DOUBLE}
 
-indexing
+note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

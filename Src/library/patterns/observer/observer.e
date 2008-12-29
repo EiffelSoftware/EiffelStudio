@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Observer of an entity."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,12 +11,12 @@ deferred class
 
 feature -- Update 
 
-	update is
+	update
 			-- Update Current when the entity is possibly modified.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision check button, Carbon implementation."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create a Carbon check button.
 		local
 			ret: INTEGER
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			event_id := app_implementation.get_id (current)
 		end
 
-	initialize is
+	initialize
 			-- Initialize 'Current'
 		do
 			Precursor {EV_TOGGLE_BUTTON_IMP}
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 
 feature -- Minimum Size
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum height that the widget may occupy.
 		local
 			err : INTEGER
@@ -72,7 +72,7 @@ feature -- Minimum Size
 			Result := 12
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum width that the widget may occupy.
 		local
 			err : INTEGER
@@ -89,7 +89,7 @@ feature {EV_ANY_I}
 	interface: EV_CHECK_BUTTON;
 
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The Eiffel.Mac Team"
 end -- class EV_CHECK_BUTTON_IMP
 

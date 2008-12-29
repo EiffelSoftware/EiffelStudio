@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision file open dialog."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			Precursor
 			set_title ("Open")
@@ -39,7 +39,7 @@ feature {NONE} -- Access
 	multiple_selection_enabled: BOOLEAN
 		-- Is dialog enabled to select multiple files.
 
-	file_name: STRING_32 is
+	file_name: STRING_32
 			-- Retrieve file name selected by user.
 		local
 			l_file_names: like file_names
@@ -53,7 +53,7 @@ feature {NONE} -- Access
 			end
 		end
 
-	file_names: ARRAYED_LIST [STRING_32] is
+	file_names: ARRAYED_LIST [STRING_32]
 			-- List of filenames selected by user
 		local
 			fnlist: POINTER
@@ -82,14 +82,14 @@ feature {NONE} -- Access
 
 feature {NONE} -- Setting
 
-	enable_multiple_selection is
+	enable_multiple_selection
 			-- Enable multiple file selection
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_set_select_multiple (c_object, True)
 			multiple_selection_enabled := True
 		end
 
-	disable_multiple_selection is
+	disable_multiple_selection
 			-- Disable multiple file selection
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_set_select_multiple (c_object, False)
@@ -98,7 +98,7 @@ feature {NONE} -- Setting
 
 feature {NONE} -- Implementation
 
-	file_chooser_action: INTEGER is
+	file_chooser_action: INTEGER
 			-- Action constant of the file chooser, ie: to open or save files, etc.
 		do
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_open_enum
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_FILE_OPEN_DIALOG;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

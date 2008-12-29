@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Action sequence for linkable actions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,26 +21,26 @@ create {EG_LINKABLE_ACTION}
 
 feature -- Access
 
-	force_extend (action: PROCEDURE [ANY, TUPLE]) is
+	force_extend (action: PROCEDURE [ANY, TUPLE])
 			-- Extend without type checking.
 		do
 			extend (agent wrapper (?, action))
 		end
 
-	wrapper (a_linkable: EG_LINKABLE; action: PROCEDURE [ANY, TUPLE]) is
+	wrapper (a_linkable: EG_LINKABLE; action: PROCEDURE [ANY, TUPLE])
 			-- Use this to circumvent tuple type checking. (at your own risk!)
 			-- Calls `action' passing all other arguments.
 		do
 			action.call ([a_linkable])
 		end
 		
-	new_filled_list (n: INTEGER): like Current is
+	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
 		do
 			create Result.make_filled (n)
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

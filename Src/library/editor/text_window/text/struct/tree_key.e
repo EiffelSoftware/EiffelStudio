@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Key of a 3-4-5 tree"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (d: G) is
+	make (d: G)
 			-- Initialize Current with `d' as `data'.
 		do
 			data := d
@@ -39,7 +39,7 @@ feature -- Status report
 			Result := parent /= Void and then parent.valid_key (Current)
 		end
 
-	pos_in_parent: INTEGER is
+	pos_in_parent: INTEGER
 			-- position of node in parent.
 		require
 			valid_key: is_valid
@@ -59,7 +59,7 @@ feature -- Status report
 --| Christophe, 14 jan 2000
 --| Should we implement it as an attribute or as a function?
 
-	number: INTEGER is
+	number: INTEGER
 			-- position of node in tree.
 		require
 			valid_key: is_valid
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_parent (par: like parent) is
+	set_parent (par: like parent)
 			-- Make `par' the parent of Current
 		do
 			parent := par
@@ -79,7 +79,7 @@ feature -- Element change
 
 feature -- Removal
 
-	delete is
+	delete
 			-- Supress Current
 		do
 			parent.delete (pos_in_parent)
@@ -87,7 +87,7 @@ feature -- Removal
 
 feature -- Basic operations
 
-	add_right (other: like Current) is
+	add_right (other: like Current)
 			-- add `other' to the right of Current
 		local
 			next_node: like parent
@@ -100,7 +100,7 @@ feature -- Basic operations
 			end
 		end
 
-	add_left (other: like Current) is
+	add_left (other: like Current)
 			-- add `other' to the left of Current
 		local
 			previous_node: like parent
@@ -113,7 +113,7 @@ feature -- Basic operations
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

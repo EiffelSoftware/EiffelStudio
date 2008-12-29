@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_font (a_font: EV_FONT) is
+	make_with_font (a_font: EV_FONT)
 		do
 			default_create
 			implementation.set_values (
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 	
 feature -- Status report
 
-	string_width(a_string: STRING): INTEGER is
+	string_width(a_string: STRING): INTEGER
 		do
 			if is_proportional then
 					-- Proportional font, we use the normal feature
@@ -56,7 +56,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 	
-	is_proportional: BOOLEAN is
+	is_proportional: BOOLEAN
 		do
 			if not internal_is_proportional_computed then
 				internal_is_proportional := Precursor {EV_FONT} 
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 
 	internal_is_proportional_computed: BOOLEAN;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

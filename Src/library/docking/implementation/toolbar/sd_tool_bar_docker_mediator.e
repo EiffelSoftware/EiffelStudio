@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manager that control SD_TOOL_BAR_ZONE and SD_TOOL_BAR_HOT_ZONE when user drag a SD_TOOL_BAR_ZONE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_caller: SD_TOOL_BAR_ZONE; a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_caller: SD_TOOL_BAR_ZONE; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method
 		require
 			a_caller_not_void: a_caller /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			a_caller_set: a_caller = caller
 		end
 
-	init_key_actions is
+	init_key_actions
 			-- Initialize key actions.
 		do
 			internal_key_press_actions := agent on_key_press
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 
 feature -- Command
 
-	start_drag (a_screen_x, a_screen_y: INTEGER) is
+	start_drag (a_screen_x, a_screen_y: INTEGER)
 			-- Handle start drag.
 		do
 			if not caller.is_floating then
@@ -82,7 +82,7 @@ feature -- Command
 	is_resizing_mode: BOOLEAN
 			-- If only allow user resiz tool bar zone?
 
-	on_pointer_motion (a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_motion (a_screen_x, a_screen_y: INTEGER)
 			-- Handle user drag tool bar events.
 		local
 			l_in_four_side: BOOLEAN
@@ -124,7 +124,7 @@ feature -- Command
 			end
 		end
 
-	apply_change (a_screen_x, a_screen_y: INTEGER) is
+	apply_change (a_screen_x, a_screen_y: INTEGER)
 			-- Apply change.
 		do
 			notify_row (docking_manager.tool_bar_container.top)
@@ -134,7 +134,7 @@ feature -- Command
 			clean
 		end
 
-	set_offset (a_start_floating: BOOLEAN; a_offset_x, a_offset_y: INTEGER) is
+	set_offset (a_start_floating: BOOLEAN; a_offset_x, a_offset_y: INTEGER)
 			-- Set offset when start dragging.
 		require
 			vaild: a_offset_x >= 0 and a_offset_y >= 0
@@ -148,7 +148,7 @@ feature -- Command
 			set: start_floating = a_start_floating
 		end
 
-	set_ignore_focus_out_actions (a_bool: BOOLEAN) is
+	set_ignore_focus_out_actions (a_bool: BOOLEAN)
 			-- Set `ignore_next_focus_out' with True.
 		do
 			ignore_focus_out_actions := a_bool
@@ -156,7 +156,7 @@ feature -- Command
 			set: ignore_focus_out_actions = a_bool
 		end
 
-	clean is
+	clean
 			-- Clean global key press/release actions.
 		do
 			ev_application.key_press_actions.prune_all (internal_key_press_actions)
@@ -189,7 +189,7 @@ feature -- Query
 
 feature {NONE} -- Implementation functions
 
-	on_motion_in_four_side (a_screen_x, a_screen_y: INTEGER; a_offset_x, a_offset_y: INTEGER): BOOLEAN is
+	on_motion_in_four_side (a_screen_x, a_screen_y: INTEGER; a_offset_x, a_offset_y: INTEGER): BOOLEAN
 			-- Handle pointer in four tool bar area.
 		local
 			l_changed: BOOLEAN
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation functions
 			changed:
 		end
 
-	on_key_press (a_widget: EV_WIDGET; a_key: EV_KEY) is
+	on_key_press (a_widget: EV_WIDGET; a_key: EV_KEY)
 			-- Handle global key press actions.
 		do
 			inspect
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_key_release (a_widget: EV_WIDGET; a_key: EV_KEY) is
+	on_key_release (a_widget: EV_WIDGET; a_key: EV_KEY)
 			-- Handle global key release actions.
 		do
 			inspect
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	notify_row (a_box: EV_BOX) is
+	notify_row (a_box: EV_BOX)
 			-- Notify a SD_TOOL_BAR_ROW to apply change.
 		require
 			a_box_not_void: a_box /= Void
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	switch_to_reszing_mode (a_screen_x, a_screen_y: INTEGER) is
+	switch_to_reszing_mode (a_screen_x, a_screen_y: INTEGER)
 			-- Swtich to only resize tool bar mode if possible.
 		local
 			l_pixmaps: EV_STOCK_PIXMAPS
@@ -293,7 +293,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	float_tool_bar_zone (a_screen_x, a_screen_y: INTEGER) is
+	float_tool_bar_zone (a_screen_x, a_screen_y: INTEGER)
 			-- Float tool bar zone base on `a_screen_x' and `a_screen_y' if possible.
 		require
 			not_floating: not caller.is_floating
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	is_easy_drag_area (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	is_easy_drag_area (a_screen_x, a_screen_y: INTEGER): BOOLEAN
 			-- If `a_screen_x', `a_screen_y' in easy drag area?
 			-- We made a area sepcial at the beginning of tool bar row, in this area
 			-- user can easily drag a tool bar to the begining of tool bar row.
@@ -369,7 +369,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	is_horizontal_easy_drag_area (a_screen_x: INTEGER): BOOLEAN is
+	is_horizontal_easy_drag_area (a_screen_x: INTEGER): BOOLEAN
 			-- If `a_screen_x' in caller's horizontal easy drag area?
 		local
 			l_top_container: EV_CONTAINER
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation functions
 
 		end
 
-	is_vertical_easy_drag_area (a_screen_y: INTEGER): BOOLEAN is
+	is_vertical_easy_drag_area (a_screen_y: INTEGER): BOOLEAN
 			-- If `a_screen_y' in caller's vertical easy drag area?
 		local
 			l_main_container: SD_MAIN_CONTAINER
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_focus_out (a_widget: EV_WIDGET) is
+	on_focus_out (a_widget: EV_WIDGET)
 			-- Handle focus out actions.
 		local
 			l_platform: PLATFORM
@@ -431,16 +431,16 @@ feature {NONE} -- Implementation attributes.
 	is_in_orignal_row: BOOLEAN
 			-- Orignal parent row which `caller' in.
 
-	motion_count_max: INTEGER is 40
+	motion_count_max: INTEGER = 40
 			-- Max number start to change to resizing mode.
 
-	easy_drag_offset: INTEGER is 50
+	easy_drag_offset: INTEGER = 50
 			-- Left user can easily drag to the begin of a tool bar row.
 
 	motion_count: INTEGER
 			-- How many times `on_pointer_motion' is called?
 
-	internal_dockable: BOOLEAN is
+	internal_dockable: BOOLEAN
 			-- If `caller' dockable?
 		do
 			Result := not ev_application.ctrl_pressed
@@ -467,7 +467,7 @@ invariant
 	not_void: internal_right_hot_zone /= Void
 	not_void: cancel_actions /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

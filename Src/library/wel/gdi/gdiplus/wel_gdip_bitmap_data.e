@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Bitmap data strcuct used by GDI+"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,13 +14,13 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			create internal_item.make (structure_size)
 		end
 
-	make_from_pointer (a_pointer: POINTER) is
+	make_from_pointer (a_pointer: POINTER)
 			-- Create Current with `a_pointer'
 		do
 			create internal_item.make_from_pointer (a_pointer, structure_size)
@@ -28,7 +28,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_width (a_width: like width) is
+	set_width (a_width: like width)
 			-- Set `width' with `a_width'
 		do
 			c_set_width (item, a_width)
@@ -36,7 +36,7 @@ feature -- Command
 			set: width = a_width
 		end
 
-	set_height (a_height: like height) is
+	set_height (a_height: like height)
 			-- Set `height' with `a_height'
 		do
 			c_set_height (item, a_height)
@@ -44,7 +44,7 @@ feature -- Command
 			set: height = a_height
 		end
 
-	set_stride (a_stride: like stride) is
+	set_stride (a_stride: like stride)
 			-- Set `stride' with `a_stride'
 		do
 			c_set_stride (item, a_stride)
@@ -52,7 +52,7 @@ feature -- Command
 			set: stride = a_stride
 		end
 
-	set_pixel_format (a_pixel_format: like pixel_format) is
+	set_pixel_format (a_pixel_format: like pixel_format)
 			-- Set `pixel_format' with `a_pixel_format'
 		do
 			c_set_pixel_format (item, a_pixel_format)
@@ -60,7 +60,7 @@ feature -- Command
 			set: pixel_format = a_pixel_format
 		end
 
-	set_scan_0 (a_scan_0: like scan_0) is
+	set_scan_0 (a_scan_0: like scan_0)
 			-- Set `scan_0' with `a_pointer'
 		do
 			c_set_san_0 (item, a_scan_0)
@@ -68,7 +68,7 @@ feature -- Command
 			set: scan_0 = a_scan_0
 		end
 
-	set_reserved (a_reserved: like reserved) is
+	set_reserved (a_reserved: like reserved)
 			-- Set `reserved' with `reserved'
 		do
 			c_set_reserved (item, a_reserved)
@@ -78,49 +78,49 @@ feature -- Command
 
 feature -- Query
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of Current strucutre.
 		do
 			Result := c_size_of_bitmap_data
 		end
 
-	width: NATURAL_32 is
+	width: NATURAL_32
 			-- Width
 		do
 			Result := c_width (item)
 		end
 
-	height: NATURAL_32 is
+	height: NATURAL_32
 			-- Height
 		do
 			Result := c_height (item)
 		end
 
-	stride: INTEGER is
+	stride: INTEGER
 			-- Stride
 		do
 			Result := c_stride (item)
 		end
 
-	pixel_format: INTEGER is
+	pixel_format: INTEGER
 			-- Pixel format.
 		do
 			Result := c_pixel_format (item)
 		end
 
-	scan_0: POINTER is
+	scan_0: POINTER
 			-- Image data memory position.
 		do
 			Result := c_scan_0 (item)
 		end
 
-	reserved: NATURAL_32 is
+	reserved: NATURAL_32
 			-- Reserved
 		do
 			Result := c_reserved (item)
 		end
 
-	item: POINTER is
+	item: POINTER
 			-- Pointer to C struct
 		do
 			Result := internal_item.item
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- C externals
 
-	c_size_of_bitmap_data: INTEGER is
+	c_size_of_bitmap_data: INTEGER
 			-- BitmapData struct size.
 		external
 			"C [macro %"wel_gdi_plus.h%"]"
@@ -143,7 +143,7 @@ feature {NONE} -- C externals
 			"sizeof (BitmapData)"
 		end
 
-	c_set_width (a_item: POINTER; a_width: NATURAL_32) is
+	c_set_width (a_item: POINTER; a_width: NATURAL_32)
 			-- Set `a_item''s width with `a_width'.
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -155,7 +155,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_set_height (a_item: POINTER; a_height: NATURAL_32) is
+	c_set_height (a_item: POINTER; a_height: NATURAL_32)
 			-- Set `a_item''s height with `a_height'.
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -167,7 +167,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_set_stride (a_item: POINTER; a_stride: INTEGER) is
+	c_set_stride (a_item: POINTER; a_stride: INTEGER)
 			-- Set `a_item''s stride with `a_stride'.
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -179,7 +179,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_set_pixel_format (a_item: POINTER; a_pixel_format: INTEGER) is
+	c_set_pixel_format (a_item: POINTER; a_pixel_format: INTEGER)
 			-- Set `a_item''s pixel_format with `a_pixel_format'.
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -191,7 +191,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_set_san_0 (a_item: POINTER; a_scan_0: POINTER) is
+	c_set_san_0 (a_item: POINTER; a_scan_0: POINTER)
 			-- Set `a_item''s scan0 with `a_scan_0'.
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -203,7 +203,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_set_reserved (a_item: POINTER; a_reserved: NATURAL_32) is
+	c_set_reserved (a_item: POINTER; a_reserved: NATURAL_32)
 			-- Set `a_item''s reserved with `a_reserved'
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -215,7 +215,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_width (a_item: POINTER): NATURAL_32 is
+	c_width (a_item: POINTER): NATURAL_32
 			-- Width of `a_item'
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -225,7 +225,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_height (a_item: POINTER): NATURAL_32 is
+	c_height (a_item: POINTER): NATURAL_32
 			-- Height of `a_item'
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -235,7 +235,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_stride (a_item: POINTER): INTEGER is
+	c_stride (a_item: POINTER): INTEGER
 			-- Stride of `a_item'
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -245,7 +245,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_pixel_format (a_item: POINTER): INTEGER is
+	c_pixel_format (a_item: POINTER): INTEGER
 			-- PixelFormat of `a_item'
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -255,7 +255,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_scan_0 (a_item: POINTER): POINTER is
+	c_scan_0 (a_item: POINTER): POINTER
 			-- Scan0 of `a_item'
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -265,7 +265,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_reserved (a_item: POINTER): NATURAL_32 is
+	c_reserved (a_item: POINTER): NATURAL_32
 			-- Reserved of `a_item'
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -275,7 +275,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

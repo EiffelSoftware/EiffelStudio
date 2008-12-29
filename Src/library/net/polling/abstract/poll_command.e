@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"A poll command for use with a medium poller."
@@ -14,7 +14,7 @@ deferred class
 
 feature -- Initalization
 
-	make (s: like active_medium) is
+	make (s: like active_medium)
 		require
 			socket_open: s /= Void and then not s.is_closed
 		do
@@ -30,12 +30,12 @@ feature -- Access
 
 feature -- Basic operation
 
-	execute (arg: ANY) is
+	execute (arg: ANY)
 			-- do the work of the command
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

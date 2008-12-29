@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision button. Carbon implementation."
 	legal: "See notice at end of class."
@@ -64,7 +64,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Connect interface and initialize `c_object'.
 		local
 			ret: INTEGER
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 			ret := create_push_button_control_external( null, rect.item, null, $c_object )
 		end
 
-	initialize is
+	initialize
 			-- `Precursor' initialization,
 			-- create button box to hold label and pixmap.
 		local
@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	is_default_push_button: BOOLEAN is
+	is_default_push_button: BOOLEAN
 			-- Is this button currently a default push button
 			-- for a particular container?
 		do
@@ -107,7 +107,7 @@ feature -- Access
 feature -- Status Setting
 
 
-	enable_default_push_button is
+	enable_default_push_button
 			-- Set the style of the button corresponding
 			-- to the default push button.
 		local
@@ -116,7 +116,7 @@ feature -- Status Setting
 			res := set_control_data_boolean( c_object, {CONTROLS_ANON_ENUMS}.kcontrolentirecontrol, {CONTROLDEFINITIONS_ANON_ENUMS}.kControlPushButtonDefaultTag, true  )
 		end
 
-	disable_default_push_button is
+	disable_default_push_button
 			-- Remove the style of the button corresponding
 			-- to the default push button.
 		local
@@ -125,17 +125,17 @@ feature -- Status Setting
 			res := set_control_data_boolean( c_object, {CONTROLS_ANON_ENUMS}.kcontrolentirecontrol, {CONTROLDEFINITIONS_ANON_ENUMS}.kControlPushButtonDefaultTag, false  )
 		end
 
-	enable_can_default is
+	enable_can_default
 			-- Allow the style of the button to be the default push button.
 		do
 			 -- doesn't seem to be necessary in Carbon.
 		end
 
-	set_foreground_color (a_color: EV_COLOR) is
+	set_foreground_color (a_color: EV_COLOR)
 		do
 		end
 
-	set_text (a_str: STRING_GENERAL) is
+	set_text (a_str: STRING_GENERAL)
 			local
 				ret: INTEGER
 			do
@@ -147,7 +147,7 @@ feature -- Status Setting
 
 feature {NONE} -- implementation
 
-	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER) is
+	internal_set_pixmap (a_pixmap_imp: EV_PIXMAP_IMP; a_width, a_height: INTEGER)
 			--
 		local
 			ret: INTEGER
@@ -156,23 +156,23 @@ feature {NONE} -- implementation
 
 		end
 
-	internal_remove_pixmap is
+	internal_remove_pixmap
 			-- Remove pixmap from Current
 		do
 		end
 
-	set_carbon_button_picture (incontrol, inpic: POINTER): INTEGER is
+	set_carbon_button_picture (incontrol, inpic: POINTER): INTEGER
 			-- set a boolean value with set_control_data
 		do
 		end
 
-	on_focus_changed (a_has_focus: BOOLEAN) is
+	on_focus_changed (a_has_focus: BOOLEAN)
 			-- Called from focus intermediary agents when focus for `Current' has changed.
 			-- if `a_has_focus' then `Current' has just received focus.
 		do
 		end
 
-	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER is
+	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER
 			-- Feature that is called if an event occurs
 		local
 			event_class, event_kind : INTEGER
@@ -197,6 +197,6 @@ feature {EV_ANY_I} -- implementation
 
 
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_BUTTON_IMP

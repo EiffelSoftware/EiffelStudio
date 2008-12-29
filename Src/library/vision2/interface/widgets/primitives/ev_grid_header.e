@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a header control for an EV_GRID"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create {EV_GRID_I}
 
 feature {NONE} -- Initialization
 
-	make_with_grid (a_grid: EV_GRID_I) is
+	make_with_grid (a_grid: EV_GRID_I)
 			-- Create and associate `Current' with `a_grid'.
 		require
 			a_grid_not_void: a_grid /= Void
@@ -34,7 +34,7 @@ invariant
 	grid_not_void: grid /= Void
 	grid_parented_implies_header_parented: grid.parent /= Void implies parent /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

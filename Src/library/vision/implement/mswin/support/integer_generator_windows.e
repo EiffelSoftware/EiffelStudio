@@ -1,4 +1,4 @@
-indexing 
+note 
 	status: "See notice at end of class."; 
 	date: "$Date$"; 
 	revision: "$Revision$" 
@@ -11,7 +11,7 @@ create
 
 feature -- Initialization
 
-        make (a_minimum,a_maximum: INTEGER) is
+        make (a_minimum,a_maximum: INTEGER)
 			-- Make the generator.
                 do
                         minimum := a_minimum
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Status setting
 
-        next is
+        next
                 do
                         value := value + 1
                         if value > maximum then value := minimum end
@@ -45,14 +45,14 @@ feature -- Status setting
                         old value /= maximum implies value = old value + 1
                 end
 
-        reset is
+        reset
                 do
                         value := minimum
                 ensure
                         value = minimum
                 end
 
-        set_value (a_value: INTEGER) is
+        set_value (a_value: INTEGER)
                 require
                         in_range: minimum <= a_value and then a_value <= maximum
                 do
@@ -66,7 +66,7 @@ invariant
         minimal: minimum <= value
         maximal: value <= maximum
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

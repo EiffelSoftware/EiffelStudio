@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Sequences of lines through `point_array'."
 	legal: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Initialize with no points.
 		do
 			Precursor {EV_MODEL_ATOMIC}
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			set_arrow_size (10)
 		end
 
-	make_with_coordinates (coords: ARRAY [EV_COORDINATE]) is
+	make_with_coordinates (coords: ARRAY [EV_COORDINATE])
 			-- Initialize with points in `coords'.
 		require
 			coords_exist: coords /= Void
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	angle: DOUBLE is 0.0
+	angle: DOUBLE = 0.0
 			-- `Current' is allways in upright position.
 
 feature -- Status report
@@ -74,16 +74,16 @@ feature -- Status report
 			-- Should this polyline be closed?
 			-- i.e. should first and last point be connected?
 			
-	is_rotatable: BOOLEAN is True
+	is_rotatable: BOOLEAN = True
 			-- Is rotatable? (Yes)
 			
-	is_scalable: BOOLEAN is True
+	is_scalable: BOOLEAN = True
 			-- Is scalable? (Yes)
 			
-	is_transformable: BOOLEAN is True
+	is_transformable: BOOLEAN = True
 			-- Is transformable? (Yes)
 
-	line_count: INTEGER is
+	line_count: INTEGER
 			-- Returns number of lines this polyline has.
 		do
 			if point_count <= 1 then
@@ -99,7 +99,7 @@ feature -- Status report
 			Result_not_bigger_than_point_count: Result <= point_count
 		end
 
-	extract_line (index: INTEGER): EV_MODEL_LINE is
+	extract_line (index: INTEGER): EV_MODEL_LINE
 			-- Create a line-object for line with `index'.
 		require
 			index_within_bounds: index > 0 and then index <= line_count
@@ -117,7 +117,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_closed is
+	enable_closed
 			-- Set `is_closed' `True'.
 		do
 			is_closed := True
@@ -126,7 +126,7 @@ feature -- Status setting
 			is_closed: is_closed
 		end
 
-	disable_closed is
+	disable_closed
 			-- Set `is_closed' `False'.
 		do
 			is_closed := False
@@ -137,13 +137,13 @@ feature -- Status setting
 
 feature {EV_MODEL_DRAWING_ROUTINES, EV_MODEL} -- Implementation
 
-	start_point: EV_COORDINATE is
+	start_point: EV_COORDINATE
 			-- Point where `start_arrow' is drawn.
 		do
 			Result := point_array.item (0)
 		end
 
-	end_point: EV_COORDINATE is
+	end_point: EV_COORDINATE
 			-- Point where `end_arrow' is drawn.
 		do
 			Result := point_array.item (point_array.count - 1)
@@ -151,7 +151,7 @@ feature {EV_MODEL_DRAWING_ROUTINES, EV_MODEL} -- Implementation
 
 feature -- Events
 
-	position_on_figure (ax, ay: INTEGER): BOOLEAN is
+	position_on_figure (ax, ay: INTEGER): BOOLEAN
 			-- Is (`ax', `ay') on this figure? i.e. is it
 			-- on any of lines of this polyline?
 		local
@@ -192,7 +192,7 @@ feature -- Events
 		
 feature {NONE} -- Implementation
 
-	start_angle: DOUBLE is
+	start_angle: DOUBLE
 			-- Angle that line begins on relative to world.
 		local
 			a_point, b_point: EV_COORDINATE
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	end_angle: DOUBLE is
+	end_angle: DOUBLE
 			-- Angle that line ends on relative to world.
 		local
 			a_point, b_point: EV_COORDINATE
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

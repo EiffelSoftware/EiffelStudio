@@ -1,4 +1,4 @@
-indexing
+note
 	Description: "Objects that enable to create a class related%
 			%to a specific database table from a template and%
 			%a class description (class DB_REPOSITORY)."
@@ -14,7 +14,7 @@ deferred class
 
 feature -- Access
 
-	generated_file_content: STRING is
+	generated_file_content: STRING
 			-- Content of file mapped to database table associated to table description.
 		require
 			is_ok: is_ok
@@ -30,20 +30,20 @@ feature -- Status report
 	error_message: STRING
 			-- Error message.
 
-	template_content_set: BOOLEAN is
+	template_content_set: BOOLEAN
 			-- Is template file content set?
 		do
 			Result := template_content /= Void
 		end
 	
-	description_set: BOOLEAN is
+	description_set: BOOLEAN
 			-- Is description for mapping set?
 		deferred
 		end
 		
 feature -- Basic operations
 
-	set_template_content (a_template_content: STRING) is
+	set_template_content (a_template_content: STRING)
 			-- Set template file content for the class generation.
 		require
 			content_exists: a_template_content /= Void and then not a_template_content.is_empty
@@ -53,7 +53,7 @@ feature -- Basic operations
 			content_set: template_content_set
 		end
 
-	generate_file is
+	generate_file
 			-- Generate file with table description and
 			-- template file content.
 		require
@@ -98,7 +98,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	create_result_block (template_block: STRING) is
+	create_result_block (template_block: STRING)
 			-- Replace tags in `attribute_block' and iterate for table/table attributes
 			-- matching conditions given by `tags'.
 		require
@@ -128,13 +128,13 @@ feature {NONE} -- Implementation
 			result_block_not_void: result_block /= Void
 		end
 
-	append_block (template_block: STRING; index: INTEGER) is
+	append_block (template_block: STRING; index: INTEGER)
 			-- Replace tags in `template_block' with values of description item in
 			-- at `index'. Append result to `result_block'.
 		deferred
 		end
 	
-	description_count: INTEGER is
+	description_count: INTEGER
 			-- Count of database entities (table or attribute) in description.
 		deferred
 		end
@@ -149,13 +149,13 @@ feature {NONE} -- Implementation
 	template_content: STRING
 			-- Template file content for class to generate.
 
-	tags: DB_TEMPLATE_TAGS is
+	tags: DB_TEMPLATE_TAGS
 			-- Management of tags used in template file content.
 		once
 			create Result
 		end
 		
-	to_initcap (string: STRING) is
+	to_initcap (string: STRING)
 			-- Change lower case `string' to `string' with initial capital character.
 		require
 			not_void: string /= Void
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			string.put (initial, 1)
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

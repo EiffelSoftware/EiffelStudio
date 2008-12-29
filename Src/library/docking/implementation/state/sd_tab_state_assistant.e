@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Assistant for SD_TAB_STATE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_tab_state: SD_TAB_STATE; a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_tab_state: SD_TAB_STATE; a_docking_manager: SD_DOCKING_MANAGER)
 			-- Creation method.
 		require
 			not_void: a_tab_state /= Void
@@ -32,7 +32,7 @@ feature {NONE} -- Initlization
 
 feature {SD_TAB_STATE}  -- Implementation functions.
 
-	float_internal (a_x, a_y: INTEGER) is
+	float_internal (a_x, a_y: INTEGER)
 			-- Float window.
 		local
 			l_floating_state: SD_FLOATING_STATE
@@ -66,7 +66,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			internal_docking_manager.command.unlock_update
 		end
 
-	change_zone_split_area_to_docking_zone (a_target_zone: SD_ZONE; a_direction: INTEGER) is
+	change_zone_split_area_to_docking_zone (a_target_zone: SD_ZONE; a_direction: INTEGER)
 			-- Change zone split area to docking zone.
 			-- FIXIT: This routine copy from SD_DOCKING_STATE, only change internal_zone to tab_zone.
 			-- May should merge functions.
@@ -124,7 +124,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			changed: a_target_zone.parent.has (state.tab_zone)
 		end
 
-	move_whole_to_docking_zone (a_target_zone: SD_DOCKING_ZONE) is
+	move_whole_to_docking_zone (a_target_zone: SD_DOCKING_ZONE)
 			-- Move whole tab area to a docking zone.
 		require
 			a_target_zone_not_void: a_target_zone /= Void
@@ -182,7 +182,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 --			moved: old a_target_zone.parent.has (tab_zone)
 		end
 
-	move_tab_to_zone (a_target_zone: SD_ZONE; a_index: INTEGER) is
+	move_tab_to_zone (a_target_zone: SD_ZONE; a_index: INTEGER)
 			-- Move one tab from a tab zone to a docking zone.
 		require
 			a_target_zone_not_void: a_target_zone /= Void
@@ -223,7 +223,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 --			moved: a_target_zone.parent.has (internal_content.state.zone)
 		end
 
-	dock_whole_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
+	dock_whole_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
 			-- Dock whole zone at top of  `a_multi_dock_area'
 		require
 			a_multi_dock_area_not_void: a_multi_dock_area /= Void
@@ -268,7 +268,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			docked: is_top_has_zone (a_multi_dock_area)
 		end
 
-	dock_tab_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
+	dock_tab_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA)
 			-- Dock selected tab at top of `a_multi_dock_area'.
 		require
 			a_multi_dock_area_not_void: a_multi_dock_area /= Void
@@ -292,7 +292,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			docked:
 		end
 
-	update_last_content_state (a_parent: EV_CONTAINER) is
+	update_last_content_state (a_parent: EV_CONTAINER)
 			-- If there only on content left, change it's state to SD_DOCKING_STATE
 		require
 			not_void: a_parent /= Void
@@ -355,7 +355,7 @@ feature -- Query
 	state: SD_TAB_STATE
 			-- Tab state which current help.	
 
-	is_top_has_zone (a_multi_dock_area: SD_MULTI_DOCK_AREA): BOOLEAN is
+	is_top_has_zone (a_multi_dock_area: SD_MULTI_DOCK_AREA): BOOLEAN
 			-- If `a_multi_dock_area' has `tab_zone'?
 		local
 			l_split_area: EV_SPLIT_AREA
@@ -382,7 +382,7 @@ invariant
 	not_void: state /= Void
 	not_void: internal_docking_manager /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

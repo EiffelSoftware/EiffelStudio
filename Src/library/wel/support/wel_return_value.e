@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Manages nested window-procedure-return-values."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	has_return_value: BOOLEAN is
+	has_return_value: BOOLEAN
 			-- Should the window procedure return a value?
 		do
 			if
@@ -31,7 +31,7 @@ feature -- Access
 			end
 		end
 
-	message_return_value: POINTER is
+	message_return_value: POINTER
 			-- Return value of the window procedure.
 		require
 			has_return_value: has_return_value
@@ -47,7 +47,7 @@ feature -- Access
 			Result := message_return_value_area.item (level_count - 1)
 		end
 
-	default_processing: BOOLEAN is
+	default_processing: BOOLEAN
 		do
 			if
 				default_processing_area = Void
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_message_return_value (value: POINTER) is
+	set_message_return_value (value: POINTER)
 			-- Set the window-procedure-return-value.
 		do
 			if
@@ -106,7 +106,7 @@ feature -- Element Change
 			value_set: message_return_value = value
 		end
 
-	set_default_processing (value: BOOLEAN) is
+	set_default_processing (value: BOOLEAN)
 			-- Enable or disable default processing of window messages.
 		do
 			if
@@ -136,7 +136,7 @@ feature -- Element Change
 
 feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW}
 
-	increment_level is
+	increment_level
 			-- Called from WEL_DISPATCHER when the window-procedure
 			-- is called.
 		do
@@ -159,7 +159,7 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW}
 			has_return_value_false: has_return_value = False
 		end
 
-	decrement_level is
+	decrement_level
 			-- Called from WEL_DISPATCHER when the window-procedure
 			-- is about to exit.
 		require
@@ -180,10 +180,10 @@ feature {NONE} -- Implementation
 	message_return_value_area: SPECIAL [POINTER]
 	default_processing_area: SPECIAL [BOOLEAN]
 
-	Initial_area_size: INTEGER is 2
-	Area_resize_increment: INTEGER is 2;
+	Initial_area_size: INTEGER = 2
+	Area_resize_increment: INTEGER = 2;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Motif Form child resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNbottomAttachment: POINTER is
+	XmNbottomAttachment: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNbottomAttachment"
 		end;
 
-	XmNbottomOffset: POINTER is
+	XmNbottomOffset: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNbottomOffset"
 		end;
 
-	XmNbottomPosition: POINTER is
+	XmNbottomPosition: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNbottomPosition"
 		end;
 
-	XmNbottomWidget: POINTER is
+	XmNbottomWidget: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -44,7 +44,7 @@ feature -- Implementation
 			"XmNbottomWidget"
 		end;
 
-	XmNleftAttachment: POINTER is
+	XmNleftAttachment: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -52,7 +52,7 @@ feature -- Implementation
 			"XmNleftAttachment"
 		end;
 
-	XmNleftOffset: POINTER is
+	XmNleftOffset: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -60,7 +60,7 @@ feature -- Implementation
 			"XmNleftOffset"
 		end;
 
-	XmNleftPosition: POINTER is
+	XmNleftPosition: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -68,7 +68,7 @@ feature -- Implementation
 			"XmNleftPosition"
 		end;
 
-	XmNleftWidget: POINTER is
+	XmNleftWidget: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -76,7 +76,7 @@ feature -- Implementation
 			"XmNleftWidget"
 		end;
 
-	XmNresizable: POINTER is
+	XmNresizable: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -84,7 +84,7 @@ feature -- Implementation
 			"XmNresizable"
 		end;
 
-	XmNrightAttachment: POINTER is
+	XmNrightAttachment: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -92,7 +92,7 @@ feature -- Implementation
 			"XmNrightAttachment"
 		end;
 
-	XmNrightOffset: POINTER is
+	XmNrightOffset: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -100,7 +100,7 @@ feature -- Implementation
 			"XmNrightOffset"
 		end;
 
-	XmNrightPosition: POINTER is
+	XmNrightPosition: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -108,7 +108,7 @@ feature -- Implementation
 			"XmNrightPosition"
 		end;
 
-	XmNrightWidget: POINTER is
+	XmNrightWidget: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -116,7 +116,7 @@ feature -- Implementation
 			"XmNrightWidget"
 		end;
 
-	XmNtopAttachment: POINTER is
+	XmNtopAttachment: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -124,7 +124,7 @@ feature -- Implementation
 			"XmNtopAttachment"
 		end;
 
-	XmNtopOffset: POINTER is
+	XmNtopOffset: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -132,7 +132,7 @@ feature -- Implementation
 			"XmNtopOffset"
 		end;
 
-	XmNtopPosition: POINTER is
+	XmNtopPosition: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -140,7 +140,7 @@ feature -- Implementation
 			"XmNtopPosition"
 		end;
 
-	XmNtopWidget: POINTER is
+	XmNtopWidget: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Form.h>]: EIF_POINTER"
@@ -148,7 +148,7 @@ feature -- Implementation
 			"XmNtopWidget"
 		end;
 
-	XmATTACH_NONE: INTEGER is
+	XmATTACH_NONE: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Form.h>]: EIF_INTEGER"
@@ -156,7 +156,7 @@ feature -- Implementation
 			"XmATTACH_NONE"
 		end;
 
-	XmATTACH_FORM: INTEGER is
+	XmATTACH_FORM: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Form.h>]: EIF_INTEGER"
@@ -164,7 +164,7 @@ feature -- Implementation
 			"XmATTACH_FORM"
 		end;
 
-	XmATTACH_OPPOSITE_FORM: INTEGER is
+	XmATTACH_OPPOSITE_FORM: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Form.h>]: EIF_INTEGER"
@@ -172,7 +172,7 @@ feature -- Implementation
 			"XmATTACH_OPPOSITE_FORM"
 		end;
 
-	XmATTACH_WIDGET: INTEGER is
+	XmATTACH_WIDGET: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Form.h>]: EIF_INTEGER"
@@ -180,7 +180,7 @@ feature -- Implementation
 			"XmATTACH_WIDGET"
 		end;
 
-	XmATTACH_OPPOSITE_WIDGET: INTEGER is
+	XmATTACH_OPPOSITE_WIDGET: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Form.h>]: EIF_INTEGER"
@@ -188,7 +188,7 @@ feature -- Implementation
 			"XmATTACH_OPPOSITE_WIDGET"
 		end;
 
-	XmATTACH_POSITION: INTEGER is
+	XmATTACH_POSITION: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Form.h>]: EIF_INTEGER"
@@ -196,7 +196,7 @@ feature -- Implementation
 			"XmATTACH_POSITION"
 		end;
 
-	XmATTACH_SELF: INTEGER is
+	XmATTACH_SELF: INTEGER
 			-- Motif constant value
 		external
 			"C [macro <Xm/Form.h>]: EIF_INTEGER"
@@ -204,7 +204,7 @@ feature -- Implementation
 			"XmATTACH_SELF"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

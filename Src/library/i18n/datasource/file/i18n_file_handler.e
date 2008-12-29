@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 				Abstract representation of a link in a chain-of-responsability 
 				pattern that knows how to handle one particular type of dictionary file
@@ -16,7 +16,7 @@ feature -- Status report
 	handled: BOOLEAN
 			-- Was last file handled by current handler?
 
-	can_handle (a_path: STRING_32): BOOLEAN is
+	can_handle (a_path: STRING_32): BOOLEAN
 			-- Can this class handle the file pointed to?
 			--
 			-- Check extension, magic number, doctype or whatever you have to.
@@ -35,7 +35,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_next (next_handler: I18N_FILE_HANDLER) is
+	set_next (next_handler: I18N_FILE_HANDLER)
 			-- Set `next' to `next_handler'.
 			--
 			-- `next_handler': The next handler in the chain
@@ -47,7 +47,7 @@ feature -- Element change
 
 feature -- Locale
 
-	file_scope (a_path: STRING_GENERAL): I18N_FILE_SCOPE_INFORMATION is
+	file_scope (a_path: STRING_GENERAL): I18N_FILE_SCOPE_INFORMATION
 			-- Scope of file represented by `a_path'
 			--
 			-- NOTE: Void if scope cannot be determined from file contents.
@@ -75,7 +75,7 @@ feature -- Locale
 
 feature {NONE} -- Implementation
 
-	extract_scope (a_path: STRING_32): I18N_FILE_SCOPE_INFORMATION is
+	extract_scope (a_path: STRING_32): I18N_FILE_SCOPE_INFORMATION
 			-- Extract scope of file at `a_path'
 			-- NOTE: Void if scope cannot be determined from file contents
 		require
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 
 feature -- Dictionary
 
-	get_file_dictionary (a_path: STRING_32): I18N_DICTIONARY is
+	get_file_dictionary (a_path: STRING_32): I18N_DICTIONARY
 			-- get appropriate dictionary for the file at `a_path'
 		require
 			a_path_exists: a_path /= Void
@@ -110,7 +110,7 @@ feature -- Dictionary
 							implies not handled
 		end
 
-	extract_dictionary (a_path: STRING_32): I18N_DICTIONARY is
+	extract_dictionary (a_path: STRING_32): I18N_DICTIONARY
 			-- Current handler can handle the file at `a_path',
 			-- get appropriate dictionary
 		require
@@ -125,7 +125,7 @@ feature {NONE} 	-- Implementation
 
 	file: I18N_FILE;
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

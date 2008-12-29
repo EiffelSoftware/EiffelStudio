@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows for SD_FLOATING_ZONE on Windows platform."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 inherit
 	EV_POPUP_WINDOW
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tab control notification (TCN) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Tcn_keydown: INTEGER is
+	Tcn_keydown: INTEGER
 			-- Notifies a tab control's parent window that a key
 			-- has been pressed.
 		external
@@ -19,7 +19,7 @@ feature -- Access
 			"TCN_KEYDOWN"
 		end
 
-	Tcn_selchange: INTEGER is
+	Tcn_selchange: INTEGER
 			-- Notifies a tab control's parent window that the
 			-- currently selected tab has changed.
 		external
@@ -28,7 +28,7 @@ feature -- Access
 			"TCN_SELCHANGE"
 		end
 
-	Tcn_selchanging: INTEGER is
+	Tcn_selchanging: INTEGER
 			-- Notifies a tab control's parent window that the
 			-- currently selected tab is about to change.
 		external
@@ -37,7 +37,7 @@ feature -- Access
 			"TCN_SELCHANGING"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

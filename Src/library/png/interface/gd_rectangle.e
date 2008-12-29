@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Rectangle"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Initialization
 
-	make (im: GD_IMAGE;a_color_index:INTEGER; x1,y1,x2,y2: INTEGER) is
+	make (im: GD_IMAGE;a_color_index:INTEGER; x1,y1,x2,y2: INTEGER)
 		do
 			image := im
 			color_index := a_color_index
@@ -31,7 +31,7 @@ feature -- Initialization
 
 feature -- Drawing
 
-	draw_border is
+	draw_border
 			-- Draw a rectangle thanks to upper_left and bottom_right coordinates. 
 		do
 			gdImageRectangle(image,x1,y1,x2,y2,color_index)	
@@ -45,7 +45,7 @@ feature -- Implementation
 
 feature {NONE} -- Externals
 
-	gdImageRectangle(p: POINTER; x1,y1,x2,y2: INTEGER; color_index: INTEGER) is
+	gdImageRectangle(p: POINTER; x1,y1,x2,y2: INTEGER; color_index: INTEGER)
 		external
 			"c"
 		alias
@@ -55,7 +55,7 @@ feature {NONE} -- Externals
 invariant
 	point1_inside_the_image:image.coordinates_within_the_image(upper_left_x,upper_left_y)
 	point2_inside_the_image:image.coordinates_within_the_image(bottom_right_x,bottom_right_y)
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

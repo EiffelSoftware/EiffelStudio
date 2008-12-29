@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Toolbar menu item used in SD_MENU_TOOL_BAR"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Command
 
-	set_menu (a_menu: EV_MENU) is
+	set_menu (a_menu: EV_MENU)
 			-- Set `menu' with `a_menu'
 		require
 			not_void: a_menu /= Void
@@ -34,7 +34,7 @@ feature -- Query
 	menu: EV_MENU;
 			-- Menu items.
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

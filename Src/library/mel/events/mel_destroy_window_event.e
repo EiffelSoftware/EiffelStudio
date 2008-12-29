@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of XDestroyWindowEvent."
@@ -19,7 +19,7 @@ create
 
 feature -- Pointer access
 
-	event_widget: MEL_WIDGET is
+	event_widget: MEL_WIDGET
 			-- Widget that received the event
 		do
 			Result := retrieve_widget_from_window (event_window)
@@ -27,7 +27,7 @@ feature -- Pointer access
 
 feature -- Pointer access
 
-	event_window: POINTER is
+	event_window: POINTER
 			-- Window that received the event
 		do
 			Result := c_event_event (handle)
@@ -35,12 +35,12 @@ feature -- Pointer access
 
 feature {NONE} -- Implementation
 
-	c_event_event (event_ptr: POINTER): POINTER is
+	c_event_event (event_ptr: POINTER): POINTER
 		external
 			"C [macro %"events.h%"] (XDestroyWindowEvent *): EIF_INTEGER"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

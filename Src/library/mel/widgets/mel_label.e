@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Simple widget that displays a non-editable label."
@@ -30,7 +30,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create a motif label widget.
 		require
 			name_exists: a_name /= Void
@@ -54,7 +54,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	label_as_string: STRING is
+	label_as_string: STRING
 			-- Text of Current
 		require
 			exists: not is_destroyed
@@ -68,7 +68,7 @@ feature -- Status report
 			text_not_void: Result /= Void
 		end;
 
-	label_string: MEL_STRING is
+	label_string: MEL_STRING
 			-- Text of Current
 		require
 			exists: not is_destroyed
@@ -78,7 +78,7 @@ feature -- Status report
 			text_not_void: Result /= Void
 		end;
 
-	accelerator: STRING is
+	accelerator: STRING
 			-- Accelerator of Current
 		require
 			exists: not is_destroyed;	
@@ -88,7 +88,7 @@ feature -- Status report
 			accelerator_not_void: Result /= Void
 		end;
 
-	accelerator_text: MEL_STRING is
+	accelerator_text: MEL_STRING
 			-- Accelerator text of Current
 		require
 			exists: not is_destroyed;	
@@ -98,7 +98,7 @@ feature -- Status report
 			Result_not_void_is_not_empty: Result /= Void implies not Result.empty
 		end;
 
-	beginning_alignment: BOOLEAN is
+	beginning_alignment: BOOLEAN
 			-- Is `label_text' aligned to beginning?
 		require
 			exists: not is_destroyed
@@ -106,7 +106,7 @@ feature -- Status report
 			Result := alignment = XmALIGNMENT_BEGINNING
 		end;
 
-	center_alignment: BOOLEAN is
+	center_alignment: BOOLEAN
 			-- Is `label_text' aligned to center?
 		require
 			exists: not is_destroyed
@@ -114,7 +114,7 @@ feature -- Status report
 			Result := alignment = XmALIGNMENT_CENTER
 		end;
 
-	end_alignment: BOOLEAN is
+	end_alignment: BOOLEAN
 			-- Is `label_text' aligned to end?
 		require
 			exists: not is_destroyed
@@ -122,7 +122,7 @@ feature -- Status report
 			Result := alignment = XmALIGNMENT_END
 		end;
 
-	is_recomputing_size_allowed: BOOLEAN is
+	is_recomputing_size_allowed: BOOLEAN
 			-- Is Current allowed to recompute its size?
 		require
 			exists: not is_destroyed
@@ -130,7 +130,7 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNrecomputeSize)
 		end
 
-	insensitive_pixmap: MEL_PIXMAP is
+	insensitive_pixmap: MEL_PIXMAP
 			-- Insensitive pixmap of Current
 		require
 			exists: not is_destroyed
@@ -142,7 +142,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	pixmap: MEL_PIXMAP is
+	pixmap: MEL_PIXMAP
 			-- Pixmap of Current.
 		require
 			exists: not is_destroyed
@@ -154,7 +154,7 @@ feature -- Status report
 			Result_is_shared: Result.is_shared
 		end;
 
-	is_type_string: BOOLEAN is
+	is_type_string: BOOLEAN
 			-- Is Current a string rather than a pixmap?
 		require
 			exists: not is_destroyed
@@ -162,7 +162,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNlabelType) = XmSTRING
 		end;
 
-	is_type_pixmap: BOOLEAN is
+	is_type_pixmap: BOOLEAN
 			-- Is Current a pixmap rather than a string?
 		require
 			exists: not is_destroyed
@@ -170,7 +170,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNlabelType) = XmPIXMAP
 		end;
 
-	margin_bottom: INTEGER is
+	margin_bottom: INTEGER
 			-- Amount of space between bottom side of `label_string' and
 			-- the nearest margin.
 		require
@@ -181,7 +181,7 @@ feature -- Status report
 			margin_bottom_large_enough: Result >= 0
 		end;
 
-	margin_top: INTEGER is
+	margin_top: INTEGER
 			-- Amount of space between top side of `label_string' and
 			-- the nearest margin.
 		require
@@ -192,7 +192,7 @@ feature -- Status report
 			margin_top_large_enough: Result >= 0
 		end;
 
-	margin_left: INTEGER is
+	margin_left: INTEGER
 			-- Amount of space between left side of `label_string' and
 			-- the nearest margin.
 		require
@@ -203,7 +203,7 @@ feature -- Status report
 			margin_left_large_enough: Result >= 0
 		end;
  
-	margin_right: INTEGER is
+	margin_right: INTEGER
 			-- Amount of space between right side of `label_string' and
 			-- the nearest margin.
 		require
@@ -214,7 +214,7 @@ feature -- Status report
 			margin_right_large_enough: Result >= 0
 		end;
 
-	margin_height: INTEGER is
+	margin_height: INTEGER
 			-- Spacing between top or bottom side of Current and the nearest edge of a shadow.
 		require
 			exists: not is_destroyed
@@ -224,7 +224,7 @@ feature -- Status report
 			margin_height_large_enough: Result >= 0
 		end;
  
-	margin_width: INTEGER is
+	margin_width: INTEGER
 			-- Spacing between left or right side of Current and the nearest edge of a shadow.
 		require
 			exists: not is_destroyed
@@ -234,7 +234,7 @@ feature -- Status report
 			margin_width_large_enough: Result >= 0
 		end;
 
-	mnemonic_char_set: STRING is
+	mnemonic_char_set: STRING
 			-- Set of keysyms for accelerator keys
 		require
 			exists: not is_destroyed
@@ -242,7 +242,7 @@ feature -- Status report
 			Result := get_xt_string (screen_object, XmNmnemonicCharSet)
 		end;
 
-	mnemonic: CHARACTER is
+	mnemonic: CHARACTER
 			-- Keysym of the key to press in order to post the pulldown
 			-- menu associated with an option menu
 		require
@@ -251,7 +251,7 @@ feature -- Status report
 			Result := get_xt_keysym (screen_object, XmNmnemonic)
 		end;
 
-	is_string_direction_l_to_r: BOOLEAN is
+	is_string_direction_l_to_r: BOOLEAN
 			-- Is the direction of `label_text' from left to right?
 		require
 			exists: not is_destroyed
@@ -261,7 +261,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_label_as_string (a_text: STRING) is
+	set_label_as_string (a_text: STRING)
 			-- Set `label_as_string' to `a_text'.
 			--| Interpret `%N' in `a_text'.
 		require
@@ -277,7 +277,7 @@ feature -- Status setting
 			label_set: label_as_string.is_equal (a_text)
 		end;
 
-	set_label_string (a_compound_string: MEL_STRING) is
+	set_label_string (a_compound_string: MEL_STRING)
 			-- Set `label_string' to `a_compound_string'.
 		require
 			exists: not is_destroyed;
@@ -288,7 +288,7 @@ feature -- Status setting
 			label_set: label_string.is_equal (a_compound_string)
 		end;
 
-	set_accelerator (a_text: STRING) is
+	set_accelerator (a_text: STRING)
 			-- Set `accelerator' to `a_text'.
 		require
 			exists: not is_destroyed;	
@@ -299,7 +299,7 @@ feature -- Status setting
 			accelerator_set: accelerator.is_equal (a_text)
 		end;
 
-	set_accelerator_text (a_compound_string: MEL_STRING) is
+	set_accelerator_text (a_compound_string: MEL_STRING)
 			-- Set `accelerator_text' to `a_text'.
 		require
 			exists: not is_destroyed;	
@@ -317,7 +317,7 @@ feature -- Status setting
 			accelerator_text_set: equal (accelerator_text, a_compound_string)
 		end;
 
-	set_mnemonic (a_character: CHARACTER) is
+	set_mnemonic (a_character: CHARACTER)
 			-- Set `mnemonic'.
 		require
 			exists: not is_destroyed
@@ -327,7 +327,7 @@ feature -- Status setting
 			set: mnemonic = a_character
 		end;
 
-	set_mnemonic_char_set (a_string: STRING) is
+	set_mnemonic_char_set (a_string: STRING)
 			-- Set `mnemonic_char_set'.
 		require
 			exists: not is_destroyed
@@ -337,7 +337,7 @@ feature -- Status setting
 			set: mnemonic_char_set.is_equal (a_string)
 		end;
 
-	allow_recompute_size is
+	allow_recompute_size
 			-- Set `is_recomputing_size_allowed' to `True'.
 		require
 			exists: not is_destroyed
@@ -347,7 +347,7 @@ feature -- Status setting
 			recompute_size_allowed: is_recomputing_size_allowed
 		end;
 
-	forbid_recompute_size is
+	forbid_recompute_size
 			-- Set `is_recomputing_size_allowed' to `False'.
 		require
 			exists: not is_destroyed
@@ -357,7 +357,7 @@ feature -- Status setting
 			recompute_size_not_allowed: not is_recomputing_size_allowed
 		end;
 
-	set_beginning_alignment is
+	set_beginning_alignment
 			-- Set text alignment to beginning.
 		require
 			exists: not is_destroyed
@@ -367,7 +367,7 @@ feature -- Status setting
 			beginning_alignment_set: beginning_alignment
 		end;
 
-	set_center_alignment is
+	set_center_alignment
 			-- Set text alignment to center.
 		require
 			exists: not is_destroyed
@@ -377,7 +377,7 @@ feature -- Status setting
 			center_alignment_set: center_alignment
 		end;
 
-	set_end_alignment is
+	set_end_alignment
 			-- Set text alignment to end.
 		require
 			exists: not is_destroyed
@@ -387,7 +387,7 @@ feature -- Status setting
 			end_alignment_set: end_alignment
 		end;
 
-	set_insensitive_pixmap (a_pixmap: MEL_PIXMAP) is
+	set_insensitive_pixmap (a_pixmap: MEL_PIXMAP)
 			-- Set `insensitive_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
@@ -400,7 +400,7 @@ feature -- Status setting
 			insensitive_pixmap_set: insensitive_pixmap.is_equal (a_pixmap)
 		end;
 
-	set_pixmap (a_pixmap: MEL_PIXMAP) is
+	set_pixmap (a_pixmap: MEL_PIXMAP)
 			-- Set `pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
@@ -413,7 +413,7 @@ feature -- Status setting
 			pixmap_set: pixmap.is_equal (a_pixmap)
 		end;
 
-	set_type_string is
+	set_type_string
 			-- Set the type of the label to a String.
 		require
 			exists: not is_destroyed
@@ -423,7 +423,7 @@ feature -- Status setting
 			type_set: is_type_string
 		end;
 
-	set_type_pixmap is
+	set_type_pixmap
 			-- Set the type of the label to Pixmap.
 		require
 			exists: not is_destroyed
@@ -433,7 +433,7 @@ feature -- Status setting
 			type_set: is_type_pixmap
 		end;
 
-	set_margin_bottom (a_value: INTEGER) is
+	set_margin_bottom (a_value: INTEGER)
 			-- Set `margin_bottom' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -444,7 +444,7 @@ feature -- Status setting
 			value_set: margin_bottom = a_value
 		end;
 
-	set_margin_top (a_value: INTEGER) is
+	set_margin_top (a_value: INTEGER)
 			-- Set `margin_top' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -455,7 +455,7 @@ feature -- Status setting
 			value_set: margin_top = a_value
 		end;
 
-	set_margin_left (a_value: INTEGER) is
+	set_margin_left (a_value: INTEGER)
 			-- Set `margin_left' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -466,7 +466,7 @@ feature -- Status setting
 			value_set: margin_left = a_value
 		end;
 
-	set_margin_right (a_value: INTEGER) is
+	set_margin_right (a_value: INTEGER)
 			-- Set `margin_right' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -477,7 +477,7 @@ feature -- Status setting
 			value_set: margin_right = a_value
 		end;
 
-	set_margin_height (a_value: INTEGER) is
+	set_margin_height (a_value: INTEGER)
 			-- Set `margin_height' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -488,7 +488,7 @@ feature -- Status setting
 			value_set: margin_height = a_value
 		end;
 
-	set_margin_width (a_value: INTEGER) is
+	set_margin_width (a_value: INTEGER)
 			-- Set `margin_right' to `a_value'.
 		require
 			exists: not is_destroyed;
@@ -499,7 +499,7 @@ feature -- Status setting
 			value_set: margin_width = a_value
 		end;
 
-	set_string_direction_l_to_r is
+	set_string_direction_l_to_r
 			-- Set the direction in which to draw the string to left to right.
 		require
 			exists: not is_destroyed
@@ -509,7 +509,7 @@ feature -- Status setting
 			string_direction_set: is_string_direction_l_to_r
 		end;
 
-	set_string_direction_r_to_l is
+	set_string_direction_r_to_l
 			-- Set the direction in which to draw the string to right to left.
 		require
 			exists: not is_destroyed
@@ -522,7 +522,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	alignment: INTEGER is
+	alignment: INTEGER
 			-- Alignment of `label_text'
 		require
 			exists: not is_destroyed
@@ -530,14 +530,14 @@ feature {NONE} -- Implementation
 			Result := get_xt_unsigned_char (screen_object, XmNalignment)
 		end;
 
-	xm_create_label (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_label (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/Label.h>"
 		alias
 			"XmCreateLabel"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

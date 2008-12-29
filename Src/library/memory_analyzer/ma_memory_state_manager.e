@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					This is the managet of MEMORY_STATE which can save/open states from file
 
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	make (n: INTEGER)
 			-- creation method
 		do
 			create memory_states.make (1)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	states: like memory_states is
+	states: like memory_states
 			-- Get the MEMORY_STATE's ARRAYED_LIST
 		do
 			Result := memory_states
@@ -37,13 +37,13 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	extend (a_state: MA_MEMORY_STATE) is
+	extend (a_state: MA_MEMORY_STATE)
 			-- Add a memory state to the array_list
 		do
 			memory_states.extend (a_state)
 		end
 
-	i_th alias "[]" (i: INTEGER): MA_MEMORY_STATE is
+	i_th alias "[]" (i: INTEGER): MA_MEMORY_STATE
 			-- The i_th memory state of the memory_states current hold.
 		do
 			Result := memory_states [i]
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Status report
 
-	count: INTEGER is
+	count: INTEGER
 			-- The memory states already contorl by the memory manager
 		do
 			Result := memory_states.count
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature -- Open/Save States
 
-	save_states is
+	save_states
 			-- Save current states to a disk file.
 		local
 			l_dialog: EV_FILE_SAVE_DIALOG
@@ -79,7 +79,7 @@ feature -- Open/Save States
 			l_dialog.show_modal_to_window (main_window)
 		end
 
-	open_states  is
+	open_states
 			-- Retreive the states from a disk file.
 		require
 			main_window_not_void: main_window /= Void
@@ -94,7 +94,7 @@ feature -- Open/Save States
 
 feature {NONE} -- Implementation
 
-	save_states_2_file (a_dialog: EV_FILE_SAVE_DIALOG) is
+	save_states_2_file (a_dialog: EV_FILE_SAVE_DIALOG)
 			-- Save memory analyzer's datas to a file.
 		local
 			l_data_file: RAW_FILE
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			memory_states.basic_store (l_data_file)
 		end
 
-	open_states_from_file (a_dialog: EV_FILE_OPEN_DIALOG) is
+	open_states_from_file (a_dialog: EV_FILE_OPEN_DIALOG)
 			-- Open memory analyzer's datas from a file
 		do
 			memory_states ?= memory_states.retrieve_by_name (a_dialog.file_name)
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 invariant
 	memory_states_not_void: memory_states /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

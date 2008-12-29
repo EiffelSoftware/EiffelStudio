@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Rectangle which displays an option menu when armed"
 	legal: "See notice at end of class.";
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initiazliation
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING; a_parent: COMPOSITE)
 			-- Create a menu button with `a_name' as label
 			-- 'a_parent' as parent and call `set_default'.
 		require
@@ -37,7 +37,7 @@ feature {NONE} -- Initiazliation
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE)
 			-- Create an unmanaged menu button with `a_name' as label
 			-- 'a_parent' as parent and call `set_default'.
 		require
@@ -51,7 +51,7 @@ feature {NONE} -- Initiazliation
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN)
 			-- Create a menu button with `a_name' as label
 			-- 'a_parent' as parent and call `set_default'.
 		do
@@ -69,13 +69,13 @@ feature {NONE} -- Initiazliation
 
 feature -- Access
 
-	parent: COMPOSITE is
+	parent: COMPOSITE
 			-- Parent of current menu button
 		do
 			Result ?= widget_manager.parent (Current)
 		end;
 
-	selected_button: BUTTON is
+	selected_button: BUTTON
 			-- Current Push Button selected in the option menu
 		require
 			exists: not destroyed
@@ -83,14 +83,14 @@ feature -- Access
 			Result := implementation.selected_button
 		end;
 
-	title: STRING is
+	title: STRING
 		require
 			exists: not destroyed
 		do
 			Result := implementation.title;
 		end;
 
-	title_width: INTEGER is
+	title_width: INTEGER
 		require
 			exists: not destroyed
 		do
@@ -99,7 +99,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_selected_button (button: BUTTON) is
+	set_selected_button (button: BUTTON)
 			-- Set `selected_button' to `button'
 		require
 			exists: not destroyed;
@@ -110,7 +110,7 @@ feature -- Element change
 			button = selected_button
 		end;
 
-	attach_menu (a_menu: OPT_PULL) is
+	attach_menu (a_menu: OPT_PULL)
 			-- Attach menu `a_menu' to the menu button, it will
 			-- be the menu which will appear when the button
 			-- is armed.
@@ -122,21 +122,21 @@ feature -- Element change
 			implementation.attach_menu (a_menu)
 		end;
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING)
 		require
 			exists: not destroyed;
 		do
 			implementation.set_title (a_title);
 		end;
 
-	remove_title  is
+	remove_title
 		require
 			exists: not destroyed
 		do
 			implementation.remove_title;
 		end;
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 		do
 			if new_width > width or new_height > height then
 				unmanage;
@@ -147,7 +147,7 @@ feature -- Element change
 			end;
 		end;
 
-	set_width (new_width: INTEGER) is
+	set_width (new_width: INTEGER)
 		do
 			if new_width > width then
 				unmanage;
@@ -158,7 +158,7 @@ feature -- Element change
 			end;
 		end;
 
-	set_height (new_height: INTEGER) is
+	set_height (new_height: INTEGER)
 		do
 			if new_height > height then
 				unmanage;
@@ -176,12 +176,12 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	set_default is
+	set_default
 			-- Set default value to current menu button.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

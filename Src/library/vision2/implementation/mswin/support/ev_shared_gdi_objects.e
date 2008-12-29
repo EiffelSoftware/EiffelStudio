@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Records GDI objects used in system to limit their number"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,17 +10,17 @@ class
 
 feature
 
-	allocated_pens: EV_GDI_ALLOCATED_PENS is
+	allocated_pens: EV_GDI_ALLOCATED_PENS
 		once
 			create Result
 		end
 
-	allocated_brushes: EV_GDI_ALLOCATED_BRUSHES is
+	allocated_brushes: EV_GDI_ALLOCATED_BRUSHES
 		once
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

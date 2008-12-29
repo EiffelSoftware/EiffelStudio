@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class representing a locked column or row in an EV_GRID."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	initialize (a_grid: EV_GRID_I; an_offset: INTEGER) is
+	initialize (a_grid: EV_GRID_I; an_offset: INTEGER)
 			-- Create `Current' associated to grid `a_grid', locked at position `an_offset'.
 		require
 			grid_not_void: a_grid /= Void
@@ -73,74 +73,74 @@ feature -- Access
 
 feature {NONE} -- Event handling
 
-	pointer_button_press_received (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	pointer_button_press_received (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 		do
 			grid.pointer_button_press_received (x_to_drawable_x (a_x), y_to_drawable_y (a_y), a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
-	pointer_motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pointer_motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_motion_actions' of `drawable'.
 		do
 			grid.pointer_motion_received (x_to_drawable_x (a_x), y_to_drawable_y (a_y), a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
-	pointer_double_press_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pointer_double_press_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_double_press_actions' of `drawable'.
 		do
 			grid.pointer_double_press_received (x_to_drawable_x (a_x), y_to_drawable_y (a_y), a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
-	pointer_button_release_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	pointer_button_release_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Called by `pointer_button_release_actions' of `drawable'.
 		do
 			grid.pointer_button_release_received (x_to_drawable_x (a_x), y_to_drawable_y (a_y), a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
 
-	pointer_enter_received is
+	pointer_enter_received
 			-- Called by `pointer_enter_actions' of widgets comprising `Current'.
 		do
 			--| FIXME
 		end
 
-	pointer_leave_received is
+	pointer_leave_received
 			-- Called by `pointer_leave_actions' of widgets comprising `Current'.
 		do
 			--| FIXME
 		end
 
-	key_press_received (a_key: EV_KEY) is
+	key_press_received (a_key: EV_KEY)
 			-- Called by `key_press_actions' of `drawable'.
 		do
 			grid.key_press_received (a_key)
 		end
 
-	key_press_string_received (a_keystring: STRING_32) is
+	key_press_string_received (a_keystring: STRING_32)
 			-- Called by `key_press_string_actions' of `drawable'.
 		do
 			grid.key_press_string_received (a_keystring)
 		end
 
-	key_release_received (a_key: EV_KEY) is
+	key_release_received (a_key: EV_KEY)
 			-- Called by `key_release_actions' of `drawable'.
 		do
 			grid.key_release_received (a_key)
 		end
 
-	focus_in_received is
+	focus_in_received
 			-- Called by `focus_in_actions' of `drawable'.
 		do
 			grid.enable_drawables_have_focus
 			--| FIXME
 		end
 
-	focus_out_received is
+	focus_out_received
 			-- Called by `focus_out_actions' of `drawable'.
 		do
 			grid.disable_drawables_have_focus
 			--| FIXME
 		end
 
-	mouse_wheel_received (a_value: INTEGER) is
+	mouse_wheel_received (a_value: INTEGER)
 			-- Called by `mouse_wheel_actions' of `drawable'.
 		do
 			grid.mouse_wheel_received (a_value)
@@ -148,14 +148,14 @@ feature {NONE} -- Event handling
 
 feature {EV_GRID_I} -- Implementation
 
-	x_to_drawable_x (an_x: INTEGER): INTEGER is
+	x_to_drawable_x (an_x: INTEGER): INTEGER
 			-- Result is a relative x coordinate for the drawable of the grid
 			-- given a relative x coordinate to `drawing_area'.
 		do
 			Result := an_x
 		end
 
-	y_to_drawable_y (a_y: INTEGER): INTEGER is
+	y_to_drawable_y (a_y: INTEGER): INTEGER
 			-- Result is a relative y coordinate for the drawable of the grid
 			-- given a relative y coordinate to `drawing_area'.
 		do
@@ -164,14 +164,14 @@ feature {EV_GRID_I} -- Implementation
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 
-	simple_redraw (an_x, a_y, a_width, a_height: INTEGER) is
+	simple_redraw (an_x, a_y, a_width, a_height: INTEGER)
 			--
 		do
 			drawing_area.set_foreground_color ((create {EV_STOCK_COLORS}).red)
 			drawing_area.fill_rectangle (an_x, a_y, a_width, a_height)
 		end
 
-	internal_set_virtual_y_position (a_y_position: INTEGER) is
+	internal_set_virtual_y_position (a_y_position: INTEGER)
 			-- Set virtual y position of `Current' to `a_y_position'.
 		require
 			a_y_position_non_negative: a_y_position >= 0
@@ -209,7 +209,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implem
 			internal_position_set: internal_client_y = a_y_position
 		end
 
-	internal_set_virtual_x_position (a_x_position: INTEGER) is
+	internal_set_virtual_x_position (a_x_position: INTEGER)
 			-- Set virtual x position of `Current' to `a_x_position'.
 		require
 			a_x_position_non_negative: a_x_position >= 0
@@ -247,13 +247,13 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implem
 			internal_position_set: internal_client_x = a_x_position
 		end
 
-	redraw_client_area is
+	redraw_client_area
 			-- Redraw complete visible client area of `Current'.
 		do
 			drawing_area.redraw
 		end
 
-	set_locked_index (an_index: INTEGER) is
+	set_locked_index (an_index: INTEGER)
 			-- Assign `an_index' to `locked_index'.
 		require
 			an_index_positive: an_index > 0
@@ -269,7 +269,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implem
 
 	last_horizontal_scroll_bar_value, last_vertical_scroll_bar_value: INTEGER;
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

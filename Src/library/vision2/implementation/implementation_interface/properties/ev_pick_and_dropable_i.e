@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Implementation interface for pick and drop.%N%
 		%See ev_pick_and_dropable.e"
@@ -34,7 +34,7 @@ feature -- Access
 	pebble_function: FUNCTION [ANY, TUPLE, ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 
-	pebble_positioning_enabled: BOOLEAN is
+	pebble_positioning_enabled: BOOLEAN
 			-- If `True' then pick and drop start coordinates are
 			-- `pebble_x_position', `pebble_y_position'.
 			-- If `False' then pick and drop start coordinates are
@@ -54,13 +54,13 @@ feature -- Access
 		-- Deny cursor set by user.
 		-- To be displayed when the screen pointer is not over a valid target.
 
-	pebble_x_position: INTEGER is
+	pebble_x_position: INTEGER
 			-- Initial x position for pick and drop relative to `Current'.
 		do
 			Result := pick_x
 		end
 
-	pebble_y_position: INTEGER is
+	pebble_y_position: INTEGER
 			-- Initial y position for pick and drop relative to `Current'.
 		do
 			Result := pick_y
@@ -76,7 +76,7 @@ feature -- Status setting
 			end
 		end
 
-	set_pebble_position (a_x, a_y: INTEGER) is
+	set_pebble_position (a_x, a_y: INTEGER)
 			-- Set the initial position for pick and drop relative to `Current'.
 		require
 		do
@@ -87,7 +87,7 @@ feature -- Status setting
 			pick_y_assigned: pick_y = a_y
 		end
 
-	set_pebble (a_pebble: like pebble) is
+	set_pebble (a_pebble: like pebble)
 			-- Assign `a_pebble' to `pebble'.
 		require
 			a_pebble_not_void: a_pebble /= Void
@@ -101,7 +101,7 @@ feature -- Status setting
 			is_transport_enabled: interface.implementation.is_transport_enabled
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY]) is
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY])
 			-- Assign `a_function' to `pebble_function'.
 		require
 			a_function_not_void: a_function /= Void
@@ -114,7 +114,7 @@ feature -- Status setting
 			is_transport_enabled: interface.implementation.is_transport_enabled
 		end
 
-	remove_pebble is
+	remove_pebble
 			-- Remove `pebble'.
 		do
 			pebble := Void
@@ -141,7 +141,7 @@ feature -- Status setting
 			pebble_with_function: pebble_function /= Void implies pebble = Void
 		end
 
-	enable_transport is
+	enable_transport
             		-- Activate pick/drag and drop mechanism.
 		require
 			pebble_not_void: pebble /= Void or pebble_function /= Void
@@ -150,14 +150,14 @@ feature -- Status setting
 			is_transport_enabled: interface.implementation.is_transport_enabled
 		end
 
-	disable_transport is
+	disable_transport
 			-- Deactivate pick/drag and drop mechanism.
 		deferred
 		ensure
 			is_transport_disabled: not is_transport_enabled
 		end
 
-	set_pick_and_drop_mode is
+	set_pick_and_drop_mode
 			-- Set transport mechanism to pick and drop,
 		do
 			user_interface_mode := pick_and_drop_mode
@@ -165,7 +165,7 @@ feature -- Status setting
 			mode_is_pick_and_drop: mode_is_pick_and_drop
 		end
 
-	set_drag_and_drop_mode is
+	set_drag_and_drop_mode
 			-- Set transport mechanism to drag and drop,
 		do
 			user_interface_mode := drag_and_drop_mode
@@ -173,7 +173,7 @@ feature -- Status setting
 			mode_is_drag_and_drop: mode_is_drag_and_drop
 		end
 
-	set_target_menu_mode is
+	set_target_menu_mode
 			-- Set transport mechanism to a target_menu.
 		do
 			user_interface_mode := target_menu_mode
@@ -181,7 +181,7 @@ feature -- Status setting
 			mode_is_target_menu: mode_is_target_menu
 		end
 
-	set_configurable_target_menu_mode is
+	set_configurable_target_menu_mode
 			-- Set transport mechanism to a configurable target_menu.
 		do
 			user_interface_mode := configurable_target_menu_mode
@@ -195,27 +195,27 @@ feature -- Status setting
 			configurable_target_menu_handler := a_handler
 		end
 
-	set_accept_cursor (a_cursor: like accept_cursor) is
+	set_accept_cursor (a_cursor: like accept_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
 			accept_cursor := a_cursor
 		end
 
-	set_deny_cursor (a_cursor: like deny_cursor) is
+	set_deny_cursor (a_cursor: like deny_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that doesn't accept `pebble' during pick and drop.
 		do
 			deny_cursor := a_cursor
 		end
 
-	enable_pebble_positioning is
+	enable_pebble_positioning
 			-- Assign `True' to `pebble_positioning_enabled'.
 		do
 			internal_pebble_positioning_enabled := True
 		end
 
-	disable_pebble_positioning is
+	disable_pebble_positioning
 			-- Assign `False' to `pebble_positioning_enabled'.
 		do
 			internal_pebble_positioning_enabled := False
@@ -226,25 +226,25 @@ feature -- Status report
 	is_transport_enabled: BOOLEAN
 			-- Is the transport mechanism enabled?
 
-	mode_is_pick_and_drop: BOOLEAN is
+	mode_is_pick_and_drop: BOOLEAN
 			-- Is the transport mechanism pick and drop?
 		do
 			Result := user_interface_mode = pick_and_drop_mode or else user_interface_mode = configurable_target_menu_mode
 		end
 
-	mode_is_drag_and_drop: BOOLEAN is
+	mode_is_drag_and_drop: BOOLEAN
 			-- Is the transport mechanism drag and drop?
 		do
 			Result := user_interface_mode = drag_and_drop_mode
 		end
 
-	mode_is_target_menu: BOOLEAN is
+	mode_is_target_menu: BOOLEAN
 			-- Is the transport mechanism a target menu?
 		do
 			Result := user_interface_mode = target_menu_mode
 		end
 
-	mode_is_configurable_target_menu: BOOLEAN is
+	mode_is_configurable_target_menu: BOOLEAN
 			-- Is the transport mechanism a configurable target menu?
 		do
 			Result := user_interface_mode = configurable_target_menu_mode
@@ -261,16 +261,16 @@ feature {EV_ANY_I} -- Implementation
 	user_interface_mode: INTEGER_8
 			-- Transport user interface mode.
 
-	pick_and_drop_mode: INTEGER_8 is 0
-	drag_and_drop_mode: INTEGER_8 is 1
-	target_menu_mode: INTEGER_8 is 2
-	configurable_target_menu_mode: INTEGER_8 is 3
+	pick_and_drop_mode: INTEGER_8 = 0
+	drag_and_drop_mode: INTEGER_8 = 1
+	target_menu_mode: INTEGER_8 = 2
+	configurable_target_menu_mode: INTEGER_8 = 3
 
 	start_transport (
 		a_x, a_y, a_button: INTEGER; a_press: BOOLEAN;
 		a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 		a_screen_x, a_screen_y: INTEGER; a_menu_only: BOOLEAN)
-	is
+	
 			-- Start a pick and drop transport.
 		deferred
 		end
@@ -279,7 +279,7 @@ feature {EV_ANY_I} -- Implementation
 		a_x, a_y, a_button: INTEGER;
 		a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 		a_screen_x, a_screen_y: INTEGER)
-	is
+	
 			-- Terminate the pick and drop mechanism.
 		deferred
 		end
@@ -288,7 +288,7 @@ feature {EV_ANY_I} -- Implementation
 			a_x, a_y: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 			-- Executed when `pebble' is being moved.
 			-- Draw a rubber band from pick position to pointer position.
 		local
@@ -316,7 +316,7 @@ feature {EV_ANY_I} -- Implementation
 			update_pointer_style (target)
 		end
 
-	update_pointer_style (target: EV_ABSTRACT_PICK_AND_DROPABLE) is
+	update_pointer_style (target: EV_ABSTRACT_PICK_AND_DROPABLE)
 			-- Assign correct cursor for transport to `Current'.
 		do
 			if
@@ -338,7 +338,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	pointed_target: EV_ABSTRACT_PICK_AND_DROPABLE is
+	pointed_target: EV_ABSTRACT_PICK_AND_DROPABLE
 			-- Target at mouse position.
 		local
 			rpt: like real_pointed_target
@@ -359,23 +359,23 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	real_pointed_target: EV_PICK_AND_DROPABLE is
+	real_pointed_target: EV_PICK_AND_DROPABLE
 			-- Default target at mouse position.
 		deferred
 		end
 
-	draw_rubber_band  is
+	draw_rubber_band
 			-- Erase previously drawn rubber band.
 			-- Draw a rubber band between initial pick point and cursor.
 		deferred
 		end
 
-	erase_rubber_band  is
+	erase_rubber_band
 			-- Erase previously drawn rubber band.
 		deferred
 		end
 
-	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER)
 			-- Set `pebble' using `pebble_function' if present.
 		do
 			if pebble_function /= Void then
@@ -384,7 +384,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	modify_widget_appearance (starting: BOOLEAN) is
+	modify_widget_appearance (starting: BOOLEAN)
 			-- Modify the appearence of widgets to reflect current
 			-- state of pick and drop and dropable targets.
 			-- If `starting' then the pick and drop is starting,
@@ -410,35 +410,35 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_WIDGET, EV_WIDGET_I}
 
-	set_pointer_style (c: EV_POINTER_STYLE) is
+	set_pointer_style (c: EV_POINTER_STYLE)
 			-- Assign `c' to `pointer_style'
 		deferred
 		end
 
-	internal_set_pointer_style (c: EV_POINTER_STYLE) is
+	internal_set_pointer_style (c: EV_POINTER_STYLE)
 			-- Assign `c' to `pointer_style'
 		deferred
 		end
 
-	enable_capture is
+	enable_capture
 			-- Grab the user input.
 		deferred
 		end
 
-	disable_capture is
+	disable_capture
 			-- Ungrab the user input.
 		deferred
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	application_implementation: EV_APPLICATION_I is
+	application_implementation: EV_APPLICATION_I
 			-- Application implementation object.
 		do
 			Result := environment.application.implementation
 		end
 
-	environment: EV_ENVIRONMENT is
+	environment: EV_ENVIRONMENT
 			-- Environment object.
 		once
 			create Result
@@ -456,7 +456,7 @@ invariant
 	pebble_function_takes_two_integer_open_operands:
 		pebble_function /= Void implies pebble_function.valid_operands ([1,1])
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

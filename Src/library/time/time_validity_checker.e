@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Facility routines to check the validity of TIMEs"
 	legal: "See notice at end of class." 
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Preconditions
 
-	time_valid (s: STRING; code_string: STRING): BOOLEAN is
+	time_valid (s: STRING; code_string: STRING): BOOLEAN
 			-- Is the code_string enough precise
 			-- to create an instance of type TIME?
 			-- And does the string `s' correspond to `code_string'?
@@ -38,7 +38,7 @@ feature -- Preconditions
 				code.is_time (s)
 		end
 
-	compact_time_valid (c_t: INTEGER): BOOLEAN is
+	compact_time_valid (c_t: INTEGER): BOOLEAN
 			-- Is compact time `c_t' valid?
 		local
 			h, m, s: INTEGER
@@ -56,7 +56,7 @@ feature -- Preconditions
 		end
 
 	is_correct_time (h, m: INTEGER; s: DOUBLE; 
-					 twelve_hour_scale: BOOLEAN): BOOLEAN is
+					 twelve_hour_scale: BOOLEAN): BOOLEAN
 			-- Is time represented by `h', `m', `code', and `s' correct?
 			-- `twelve_hour_scale' specifies if the hour range is 1 - 12
 			-- (if True) or 0 - 23 (if False).
@@ -77,7 +77,7 @@ feature -- Preconditions
 				s < Seconds_in_minute
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

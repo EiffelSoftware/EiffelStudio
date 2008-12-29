@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common control Progress Bar Style (PBS) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,13 +10,13 @@ class
 
 feature -- Access
 
-	Pbs_smooth: INTEGER is 1
+	Pbs_smooth: INTEGER = 1
 			-- Declared in Windows as PBS_SMOOTH
 
-	Pbs_vertical: INTEGER is 4;
+	Pbs_vertical: INTEGER = 4;
 			-- Declared in Windows as PBS_VERTICAL
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

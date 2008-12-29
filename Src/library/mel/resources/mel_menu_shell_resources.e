@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Menu Shell resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNbuttonFontList: POINTER is
+	XmNbuttonFontList: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MenuShell.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNbuttonFontList"
 		end;
 
-	XmNdefaultFontList: POINTER is
+	XmNdefaultFontList: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MenuShell.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNdefaultFontList"
 		end;
 
-	XmNlabelFontList: POINTER is
+	XmNlabelFontList: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/MenuShell.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNlabelFontList"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		EiffelVision widget, mswindows implementation.
 
@@ -73,7 +73,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize  is
+	initialize
 			-- Initialize `Current'.
 		local
 			win: EV_WINDOW_IMP
@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	refresh_now is
+	refresh_now
 			-- Refresh now.
 		do
 			update
@@ -100,7 +100,7 @@ feature -- Basic Operations
 
 feature -- Access
 
-	pointer_position: EV_COORDINATE is
+	pointer_position: EV_COORDINATE
 			-- Position of the screen pointer relative to `Current'.
 		local
 			wel_point: WEL_POINT
@@ -111,13 +111,13 @@ feature -- Access
 				interface.screen_y)
 		end
 
-	pointer_style: EV_POINTER_STYLE is
+	pointer_style: EV_POINTER_STYLE
 			-- Pointer displayed when the pointing device is over `Current'.
 		do
 			Result := cursor_pixmap
 		end
 
-	background_color: EV_COLOR is
+	background_color: EV_COLOR
 			-- Color used for the background of `Current'.
 		do
 			if background_color_imp /= Void then
@@ -127,7 +127,7 @@ feature -- Access
 			end
 		end
 
-	foreground_color: EV_COLOR is
+	foreground_color: EV_COLOR
 			-- Color used for the foreground of `Current'.
 		do
 			if foreground_color_imp /= Void then
@@ -137,7 +137,7 @@ feature -- Access
 			end
 		end
 
-	top_level_window: EV_WINDOW is
+	top_level_window: EV_WINDOW
 			-- Top level window that contains `Current'.
 		do
 			if top_level_window_imp /= Void then
@@ -145,7 +145,7 @@ feature -- Access
 			end
 		end
 
-	Default_parent: EV_INTERNAL_SILLY_WINDOW_IMP is
+	Default_parent: EV_INTERNAL_SILLY_WINDOW_IMP
 			-- A default parent for creation of `Current'.
 		once
 			create Result.make_top ("Eiffel Vision default parent window")
@@ -153,13 +153,13 @@ feature -- Access
 			valid_parent: Result /= Void
 		end
 
-	Focus_on_widget: CELL [EV_WIDGET_IMP] is
+	Focus_on_widget: CELL [EV_WIDGET_IMP]
 			-- Widget that has currently the focus.
 		once
 			create Result.put (Void)
 		end
 
-	Cursor_on_widget: CELL [EV_WIDGET_IMP] is
+	Cursor_on_widget: CELL [EV_WIDGET_IMP]
 			-- This cell contains the widget_imp that currently
 			-- has the pointer of the mouse. As it is a once
 			-- feature, it is a shared data.
@@ -179,7 +179,7 @@ feature -- Access
 			result_exists: Result /= Void
 		end
 
-	parent: EV_CONTAINER is
+	parent: EV_CONTAINER
 			-- Parent of `Current'
 		local
 			l_parent_imp: like parent_imp
@@ -190,27 +190,27 @@ feature -- Access
 			end
 		end
 
-	wel_width: INTEGER is
+	wel_width: INTEGER
 		deferred
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Width of `Current'.
 		do
 			Result := minimum_width.max (ev_width)
 		end
 
-	wel_height: INTEGER is
+	wel_height: INTEGER
 		deferred
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Height of `Current'.
 		do
 			Result := minimum_height.max (ev_height)
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset of `Current' relative to screen
 		local
 			l_wind: EV_WINDOW_IMP
@@ -234,7 +234,7 @@ feature -- Access
 			end
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset of `Current' relative to screen.
 		local
 			l_wind: EV_WINDOW_IMP
@@ -262,7 +262,7 @@ feature -- Access
 			end
 		end
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- `Result' is x_position of `Current' in pixels.
 			-- If `wel_parent' not Void then `Result' is relative to `wel_parent' else
 			-- `Result' is relative to screen.
@@ -286,7 +286,7 @@ feature -- Access
 			end
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- `Result' is x_position of `Current' in pixels.
 			-- If `wel_parent' not Void then `Result' is relative to `wel_parent' else
 			-- `Result' is relative to screen.
@@ -312,22 +312,22 @@ feature -- Access
 
 feature -- Status report
 
-	destroyed: BOOLEAN is
+	destroyed: BOOLEAN
 			-- Is `Current' destroyed ?
 		do
 			Result := not exists
 		end
 
-	is_show_requested: BOOLEAN is
+	is_show_requested: BOOLEAN
 			-- Is `Current' displayed in its parent?
 		do
 			Result := flag_set (style, {WEL_WINDOW_CONSTANTS}.Ws_visible)
 		end
 
-	managed: BOOLEAN is true
+	managed: BOOLEAN = true
 		-- All widgets are managed.
 
-	has_capture: BOOLEAN is
+	has_capture: BOOLEAN
 			-- Does `Current' have capture?
 		do
 			if has_heavy_capture or wel_has_capture then
@@ -335,19 +335,19 @@ feature -- Status report
 			end
 		end
 
-	has_heavy_capture: BOOLEAN is
+	has_heavy_capture: BOOLEAN
 			-- Does `Current' have heavy capture?
 		deferred
 		end
 
-	wel_has_capture: BOOLEAN is
+	wel_has_capture: BOOLEAN
 			-- Does `Current' have a windows capture?
 		deferred
 		end
 
 feature -- Status setting
 
-	destroy is
+	destroy
 			-- Destroy `Current', but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		do
@@ -358,7 +358,7 @@ feature -- Status setting
 			set_is_destroyed (True)
 		end
 
-	show is
+	show
 			-- Show `Current'.
 			-- Need to notify the parent.
 		local
@@ -371,7 +371,7 @@ feature -- Status setting
 			end
 		end
 
-	hide is
+	hide
 			-- Hide `Current'.
 		local
 			p_imp: like parent_imp
@@ -383,7 +383,7 @@ feature -- Status setting
 			end
 		end
 
-	parent_is_sensitive: BOOLEAN is
+	parent_is_sensitive: BOOLEAN
 			-- Is parent of `Current' sensitive?
 		do
 			if parent_imp /= Void and then parent_imp.is_sensitive then
@@ -391,7 +391,7 @@ feature -- Status setting
 			end
 		end
 
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 			-- Is `Current' parented?
 		do
 			if parent_imp /= Void then
@@ -399,7 +399,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Set `Current' to insensitive mode.
 			-- This means that any events with an
 			-- event type of KeyPress, KeyRelease,
@@ -412,21 +412,21 @@ feature -- Status setting
 			disable
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Set `Current' to sensitive mode.
 			--| See comment for `disable_sensitive'.
 		do
 			enable
 		end
 
-	set_default_minimum_size is
+	set_default_minimum_size
 			-- Initialize the size of `Current'.
 			-- Redefined by many widgets.
 		do
 			ev_set_minimum_size (0, 0)
 		end
 
-	enable_capture is
+	enable_capture
 			-- Enable capture.
 			--| Accessible through the interface of widget.
 		do
@@ -436,7 +436,7 @@ feature -- Status setting
 			end
 		end
 
-	disable_capture is
+	disable_capture
 			-- Release all user events.
 		do
 			if has_capture then
@@ -447,7 +447,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_default_colors is
+	set_default_colors
 			-- Set foreground and background color to their default values.
 		do
 			background_color_imp := Void
@@ -458,14 +458,14 @@ feature -- Element change
 			end
 		end
 
-	set_parent (par: EV_CONTAINER) is
+	set_parent (par: EV_CONTAINER)
 			-- Make `par' the new parent of `Current'.
 			-- `par' can be Void then the parent is
 			-- `Default_parent'.
 		deferred
 		end
 
-	set_background_color (color: EV_COLOR) is
+	set_background_color (color: EV_COLOR)
 			-- Make `color' the new `background_color'
 		do
 			background_color_imp ?= color.implementation
@@ -475,7 +475,7 @@ feature -- Element change
 			end
 		end
 
-	set_foreground_color (color: EV_COLOR) is
+	set_foreground_color (color: EV_COLOR)
 			-- Make `color' the new `foreground_color'
 		do
 			foreground_color_imp ?= color.implementation
@@ -494,7 +494,7 @@ feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_INTERNAL_COMBO_BOX_IMP, EV_WEL_C
 			-- Color used for the foreground of `Current'
 			-- usually the text.
 
-	parent_imp: EV_CONTAINER_IMP is
+	parent_imp: EV_CONTAINER_IMP
 			-- Parent container of `Current'.
 		local
 			l_wel_parent: like wel_parent
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation, mouse_button_events
 
 	call_pointer_actions (
 		actions: EV_POINTER_BUTTON_ACTION_SEQUENCE;
-		a_x, a_y, s_x, s_y, button: INTEGER) is
+		a_x, a_y, s_x, s_y, button: INTEGER)
 			-- If `actions' not `Void' call with
 			-- `a_x', `a_y', `s_x', `s_y', and `button'.
 		do
@@ -520,7 +520,7 @@ feature {NONE} -- Implementation, mouse_button_events
 			end
 		end
 
-	on_button_down (x_pos, y_pos, button: INTEGER) is
+	on_button_down (x_pos, y_pos, button: INTEGER)
 			-- Executed when the a button is pressed.
 		local
 			t: like translate_coordinates
@@ -553,7 +553,7 @@ feature {NONE} -- Implementation, mouse_button_events
 			end
 		end
 
-	on_button_up (x_pos, y_pos, button: INTEGER) is
+	on_button_up (x_pos, y_pos, button: INTEGER)
 			-- Executed when the a button is pressed.
 		local
 			t: like translate_coordinates
@@ -565,7 +565,7 @@ feature {NONE} -- Implementation, mouse_button_events
 			call_pointer_actions (pointer_button_release_actions_internal, t.x, t.y, t.screen_x, t.screen_y, button)
 		end
 
-	on_button_double_click (x_pos, y_pos, button: INTEGER) is
+	on_button_double_click (x_pos, y_pos, button: INTEGER)
 			-- Executed when the a button is pressed.
 		local
 			t: like translate_coordinates
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation, mouse_button_events
 			end
 		end
 
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the left button is pressed.
 		do
 				-- If this button press will end a pick and drop
@@ -602,19 +602,19 @@ feature {NONE} -- Implementation, mouse_button_events
 			on_button_down (x_pos, y_pos, 1)
 		end
 
-	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the middle button is pressed.
 		do
 			on_button_down (x_pos, y_pos, 2)
 		end
 
-	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+	on_right_button_down (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the right button is pressed.
 		do
 			on_button_down (x_pos, y_pos, 3)
 		end
 
-	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_up (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the left button is released.
 		do
 			check_drag_and_drop_release (x_pos, y_pos)
@@ -622,31 +622,31 @@ feature {NONE} -- Implementation, mouse_button_events
 			check_dragable_release (x_pos, y_pos)
 		end
 
-	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
+	on_middle_button_up (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the middle button is released.
 		do
 			on_button_up (x_pos, y_pos, 2)
 		end
 
-	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
+	on_right_button_up (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the right button is released.
 		do
 			on_button_up (x_pos, y_pos, 3)
 		end
 
-	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
+	on_left_button_double_click (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the left button is double clicked.
 		do
 			on_button_double_click (x_pos, y_pos, 1)
 		end
 
-	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER) is
+	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the middle button is double clicked.
 		do
 			on_button_double_click (x_pos, y_pos, 2)
 		end
 
-	on_right_button_double_click (keys, x_pos, y_pos: INTEGER) is
+	on_right_button_double_click (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the right button is double clicked.
 		do
 			on_button_double_click (x_pos, y_pos, 3)
@@ -654,7 +654,7 @@ feature {NONE} -- Implementation, mouse_button_events
 
 feature {NONE} -- Implementation
 
-	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
+	default_process_message (msg: INTEGER; wparam, lparam: POINTER)
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
 		do
@@ -664,7 +664,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	client_to_screen (a_x, a_y: INTEGER): WEL_POINT is
+	client_to_screen (a_x, a_y: INTEGER): WEL_POINT
 			-- Absolute screen coordinates in pixels
 			-- of coordinates `a_x', a_y' on `Current'.
 		local
@@ -678,7 +678,7 @@ feature {NONE} -- Implementation
 			Result.client_to_screen (ww)
 		end
 
-	translate_coordinates (a_x, a_y: INTEGER): TUPLE [x, y, screen_x, screen_y: INTEGER] is
+	translate_coordinates (a_x, a_y: INTEGER): TUPLE [x, y, screen_x, screen_y: INTEGER]
 			-- For `a_x', `a_y', give actual x and y and screen x and y.
 			-- By default, actual x and y are the same as `a_x', `a_y'.
 			-- Redefined in EV_PIXMAP_IMP_WIDGET.
@@ -689,11 +689,11 @@ feature {NONE} -- Implementation
 			Result := [a_x, a_y, pt.x, pt.y]
 		end
 
-	track_mouse_event (info: WEL_TRACK_MOUSE_EVENT): BOOLEAN is
+	track_mouse_event (info: WEL_TRACK_MOUSE_EVENT): BOOLEAN
 		deferred
 		end
 
-	is_dockable_source (x_pos, y_pos: INTEGER): BOOLEAN is
+	is_dockable_source (x_pos, y_pos: INTEGER): BOOLEAN
 			-- Is current `enabled as dockable?
 			-- Redefined in descendents such as EV_TOOL_BAR_IMP to
 			-- handle items.
@@ -702,7 +702,7 @@ feature {NONE} -- Implementation
 		end
 
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse move.
 		local
 			t: like translate_coordinates
@@ -766,7 +766,7 @@ feature {NONE} -- Implementation
 	last_x, last_y: INTEGER
 			-- Last x, y.
 
-	on_mouse_enter is
+	on_mouse_enter
 			-- Called when the mouse enters `Current'.
 		do
 			if pointer_enter_actions_internal /= Void then
@@ -776,7 +776,7 @@ feature {NONE} -- Implementation
 
 feature {EV_WIDGET_IMP} -- Implementation
 
-	on_mouse_leave is
+	on_mouse_leave
 			-- Called when the mouse leaves `Current'.
 			-- This is called by the WEL_TRACK_MOUSE_EVENT instantiated
 			-- in on_mouse_move.
@@ -793,7 +793,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 
 feature {EV_DIALOG_IMP_COMMON} -- Implementation
 
-	process_standard_key_press (virtual_key: INTEGER) is
+	process_standard_key_press (virtual_key: INTEGER)
 			-- Process key press represented by `virtual_key'.
 		local
 			key: EV_KEY
@@ -882,7 +882,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			end
 		end
 
-	process_standard_key_release (virtual_key: INTEGER) is
+	process_standard_key_release (virtual_key: INTEGER)
 			-- Process key release represented by `virtual_key'.
 		local
 			key: EV_KEY
@@ -914,20 +914,20 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			end
 		end
 
-	propagate_key_event_to_toplevel_window (is_pressed: BOOLEAN): BOOLEAN is
+	propagate_key_event_to_toplevel_window (is_pressed: BOOLEAN): BOOLEAN
 			-- Should we propagate a key event if `Current' is parented in a dialog?
 			-- If `is_pressed', then it is a key_press event, otherwise a key_release event.
 		do
 			Result := True
 		end
 
-	fire_select_actions_on_enter is
+	fire_select_actions_on_enter
 			-- Call `select_actions' to respond to `Enter' key press if
 			-- Current supports it.
 		do
 		end
 
-	tab_action (direction: BOOLEAN) is
+	tab_action (direction: BOOLEAN)
 			-- Go to the next widget that takes the focus through to the tab
 			-- key. If `direction' it goes to the next widget otherwise,
 			-- it goes to the previous one.
@@ -948,7 +948,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			end
 		end
 
-	process_navigation_key (virtual_key: INTEGER) is
+	process_navigation_key (virtual_key: INTEGER)
 			-- Process a tab or arrow key press to give the focus to the next
 			-- widget. Need to be called in the feature on_key_down when the
 			-- control needs to process this kind of keys.
@@ -961,7 +961,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			end
 		end
 
-	is_tabable_from: BOOLEAN is
+	is_tabable_from: BOOLEAN
 			-- Can current widget be used as a starting point for key navigation
 		do
 			Result := True
@@ -977,30 +977,30 @@ feature {NONE} -- Implementation
 			Result := a_char_code = 13
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- Executed when a key is pressed.
 		do
 			process_standard_key_press (virtual_key)
 		end
 
-	on_sys_key_down (virtual_key, key_data: INTEGER) is
+	on_sys_key_down (virtual_key, key_data: INTEGER)
 			-- Executed when a system key is pressed.
 		do
 			process_standard_key_press (virtual_key)
 		end
 
-	on_sys_key_up (virtual_key, ke_data: INTEGER) is
+	on_sys_key_up (virtual_key, ke_data: INTEGER)
 		do
 			process_standard_key_release (virtual_key)
 		end
 
-	on_key_up (virtual_key, key_data: INTEGER) is
+	on_key_up (virtual_key, key_data: INTEGER)
 			-- Executed when a key is released.
 		do
 			process_standard_key_release (virtual_key)
 		end
 
-	on_char (character_code, key_data: INTEGER) is
+	on_char (character_code, key_data: INTEGER)
 			-- Executed when a key is pressed.
 			--| Now outputs all displayable characters, previously
 			--| depended on process_standard_key returning a valid EV_KEY.
@@ -1067,7 +1067,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_mouse_wheel (delta, keys, x_pos, y_pos: INTEGER) is
+	on_mouse_wheel (delta, keys, x_pos, y_pos: INTEGER)
 			-- Wm_mousewheel received.
 		local
 			l_ignore_default_processing: BOOLEAN
@@ -1097,7 +1097,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation, focus event
 
-	on_set_focus is
+	on_set_focus
 			-- Called when a `Wm_setfocus' message is recieved.
 		require
 			exists: exists
@@ -1127,7 +1127,7 @@ feature {NONE} -- Implementation, focus event
 			end
 		end
 
-	on_kill_focus is
+	on_kill_focus
 			-- Called when a `Wm_killfocus' message is recieved.
 		do
 			if top_level_window_imp /= Current then
@@ -1142,13 +1142,13 @@ feature {NONE} -- Implementation, focus event
 			end
 		end
 
-	on_desactivate is
+	on_desactivate
 			-- Called when window loses focus via alt-tab
 		do
 			on_kill_focus
 		end
 
-	update_current_push_button is
+	update_current_push_button
 			-- Update the current push button
 			--
 			-- Current is NOT a push button so we set the current push button
@@ -1165,7 +1165,7 @@ feature {NONE} -- Implementation, focus event
 
 feature {EV_ANY_I} -- Implementation, push button
 
-	redraw_current_push_button (focused_button: EV_BUTTON) is
+	redraw_current_push_button (focused_button: EV_BUTTON)
 			-- Put a bold border on the current push button and
 			-- remove any bold border to the other buttons.
 		do
@@ -1177,7 +1177,7 @@ feature {EV_ANY_I} -- Implementation, push button
 
 feature {NONE} -- Implementation, cursor of the widget
 
-	on_set_cursor (hit_code: INTEGER) is
+	on_set_cursor (hit_code: INTEGER)
 			-- Called when a `Wm_setcursor' message is received.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
 		do
@@ -1199,7 +1199,7 @@ feature {NONE} -- Implementation, cursor of the widget
 
 feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementation
 
-	internal_on_set_cursor is
+	internal_on_set_cursor
 			-- Called as a result of a `Wm_setcursor' message is received.
 			-- This was extracted from `on_set_cursor' as if we are a combo box,
 			-- we need to be able to execute this without the message processing performed
@@ -1223,7 +1223,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementati
 
 feature {NONE} -- Implementation, pick and drop
 
-	widget_source: EV_WIDGET_IMP is
+	widget_source: EV_WIDGET_IMP
 			-- Widget drag source used for transport.
 		do
 			Result := Current
@@ -1235,48 +1235,48 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Deferred features
 
-	window_rect: WEL_RECT is
+	window_rect: WEL_RECT
 			-- `Result' is rectangle of `Current'.
 		deferred
 		end
 
-	absolute_y: INTEGER is
+	absolute_y: INTEGER
 			-- `Result' is y position relative to screen in pixels.
 		deferred
 		end
 
-	absolute_x: INTEGER is
+	absolute_x: INTEGER
 			-- `Result' is x position relative to screen in pixels.
 		deferred
 		end
 
-	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
+	is_control_in_window (hwnd_control: POINTER): BOOLEAN
 			-- Is the control of handle `hwnd_control'
 			-- located inside the current window?
 		deferred
 		end
 
-	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
+	set_top_level_window_imp (a_window: EV_WINDOW_IMP)
 			-- Make `a_window' the new `top_level_window_imp'
 			-- of `Current'.
 		deferred
 		end
 
-	exists: BOOLEAN is
+	exists: BOOLEAN
 			-- Does the window exist?
 		deferred
 		end
 
-	disable is
+	disable
 			-- Disable mouse and keyboard input
 		deferred
 		end
-	enable is
+	enable
 			-- Enable mouse and keyboard input.
 		deferred
 		end
 
-	on_size (size_type, a_width, a_height: INTEGER) is
+	on_size (size_type, a_width, a_height: INTEGER)
 			-- `Current' has been resized.
 		local
 			t: like resize_actions_internal
@@ -1287,63 +1287,63 @@ feature -- Deferred features
 			end
 		end
 
-	wel_parent: WEL_WINDOW is
+	wel_parent: WEL_WINDOW
 			-- The wel parent of `Current'.
 		deferred
 		end
 
-	wel_set_parent (a_parent: WEL_WINDOW) is
+	wel_set_parent (a_parent: WEL_WINDOW)
 			-- Set the wel parent of `Current'.
 		deferred
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style of `Current'.
 		deferred
 		end
 
-	style: INTEGER is
+	style: INTEGER
 			-- Current style of `Current'
 		deferred
 		end
 
-	set_style (a_style: INTEGER) is
+	set_style (a_style: INTEGER)
 			-- Assign `a_Style' to `style' of `Current'.
 		deferred
 		end
 
-	client_rect: WEL_RECT is
+	client_rect: WEL_RECT
 			-- Area used by `Current'.
 		deferred
 		end
 
-	update is
+	update
 			-- Update the client area by sending a Wm_paint message.
 		deferred
 		end
 
-	invalidate is
+	invalidate
 			-- Cause `Current' to re-draw.
 		deferred
 		end
 
-	wel_destroy is
+	wel_destroy
 		deferred
 		end
 
-	disable_default_processing is
+	disable_default_processing
 		deferred
 		end
 
-	set_message_return_value (v: POINTER) is
+	set_message_return_value (v: POINTER)
 		deferred
 		end
 
-	wel_item: POINTER is
+	wel_item: POINTER
 		deferred
 		end
 
-	wel_background_color: WEL_COLOR_REF is
+	wel_background_color: WEL_COLOR_REF
 			-- `Result' is background color of `Current'.
 		do
 			Result := background_color_imp
@@ -1352,7 +1352,7 @@ feature -- Deferred features
 			end
 		end
 
-	wel_foreground_color: WEL_COLOR_REF is
+	wel_foreground_color: WEL_COLOR_REF
 			-- `Result' is foreground color of `Current'.
 		do
 			Result := foreground_color_imp
@@ -1361,7 +1361,7 @@ feature -- Deferred features
 			end
 		end
 
-	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
 			-- Encapsulation of the SDK GetNextDlgTabItem,
 			-- because we cannot do a deferred feature become an
 			-- external feature.
@@ -1379,7 +1379,7 @@ feature -- Deferred features
 			Result := l_widget.wel_item
 		end
 
-	start_widget_searched_cell: CELL [INTEGER] is
+	start_widget_searched_cell: CELL [INTEGER]
 			-- A cell to hold the seach index that the item tabbed from started with.
 			-- This is necessary to prevent infinite recursion in the
 			-- case where there is no next item as if we return to the
@@ -1388,7 +1388,7 @@ feature -- Deferred features
 			create Result.put (0)
 		end
 
-	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP
 			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
 			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
 			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
@@ -1424,7 +1424,7 @@ feature -- Deferred features
 				-- If there is no next tabstop widget, then simply return `start_widget'.
 		end
 
-	return_current_if_next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+	return_current_if_next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP
 			-- If `Current' is not equal to `start_widget' then return `Current' but only if `search_pos' is 1 and `forwards' or
 			-- `search_pos' is 0 and not `forwards. This ensures that we return a container in the correct order (before or after)
 			-- its children dependent on the state of `forwards'.
@@ -1454,7 +1454,7 @@ feature -- Deferred features
 			end
 		end
 
-	next_tabstop_widget_from_parent (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+	next_tabstop_widget_from_parent (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP
 			-- Return the next widget that may be tabbed to as a result of pressing the tab key from `start_widget'
 			-- by visiting the parent of `Current' with a search index determined by `search_pos' and `forwards'.
 		require
@@ -1474,14 +1474,14 @@ feature -- Deferred features
 				-- If there is no next tabstop widget, then simply return `start_widget'.
 		end
 
-	has_tabstop: BOOLEAN is
+	has_tabstop: BOOLEAN
 			-- Does `Current' exhibit all attributes to permit it to receive the
 			-- focus while tabbing?
 		do
 			Result :=  flag_set (style, {WEL_WINDOW_CONSTANTS}.ws_tabstop) and then is_sensitive and then is_displayed
 		end
 
-	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
 			-- SDK GetNextDlgGroupItem
 		deferred
 		end
@@ -1542,7 +1542,7 @@ feature {NONE} -- Implementation
 
 feature -- Feature that should be directly implemented by externals
 
-	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+	show_window (hwnd: POINTER; cmd_show: INTEGER)
 			-- Encapsulation of the cwin_show_window function of
 			-- WEL_WINDOW. Normaly, we should be able to have directly
 			-- cwin_show_window deferred but it does not wotk because
@@ -1551,14 +1551,14 @@ feature -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
-	cwin_show_window (hwnd: POINTER; cmd_show: INTEGER) is
+	cwin_show_window (hwnd: POINTER; cmd_show: INTEGER)
 			-- SDK ShowWindow
 			-- (from WEL_WINDOW)
 			-- (export status {NONE})
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

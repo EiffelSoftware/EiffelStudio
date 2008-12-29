@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an EiffelVision header control. Mswin Implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -126,7 +126,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create `Current' with interface `an_interface'.
 		do
 			base_make (an_interface)
@@ -135,7 +135,7 @@ feature {NONE} -- Initialization
 			initialize_pixmaps
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
@@ -152,7 +152,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	refresh_item (item_imp: EV_HEADER_ITEM_IMP) is
+	refresh_item (item_imp: EV_HEADER_ITEM_IMP)
 			-- Refresh `item_imp'.
 		require
 			item_not_void: item_imp /= Void
@@ -163,7 +163,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	insert_item (item_imp: EV_HEADER_ITEM_IMP; an_index: INTEGER) is
+	insert_item (item_imp: EV_HEADER_ITEM_IMP; an_index: INTEGER)
 			-- Insert `item_imp' at `an_index'.
 		do
 			insert_header_item (item_imp, an_index - 1)
@@ -172,7 +172,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_item (item_imp: EV_HEADER_ITEM_IMP) is
+	remove_item (item_imp: EV_HEADER_ITEM_IMP)
 			-- Remove `item' from the list
 		local
 			an_index: INTEGER
@@ -183,7 +183,7 @@ feature -- Removal
 
 feature -- Miscellaneous
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_HEADER_ITEM_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_HEADER_ITEM_IMP
 			-- `Result' is list item at pixel position `x_pos', `y_pos'.
 		local
 			hd_hit_test_info: WEL_HD_HIT_TEST_INFO
@@ -204,7 +204,7 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 		-- Image list associated with `Current'.
 		-- `Void' if none.
 
-	setup_image_list is
+	setup_image_list
 			-- Create the image list and associate it
 			-- to `Current' if not already associated.
 		do
@@ -214,7 +214,7 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 			image_list_not_void: image_list /= Void
 		end
 
-	pixmaps_size_changed is
+	pixmaps_size_changed
 			-- The size of the displayed pixmaps has just
 			-- changed.
 		local
@@ -238,7 +238,7 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 			ev_children.go_to (l_cursor)
 		end
 
-	resize_item_to_content (header_item: EV_HEADER_ITEM_IMP) is
+	resize_item_to_content (header_item: EV_HEADER_ITEM_IMP)
 			-- Resize `header_item' width to fully display both `pixmap' and `text'.
 		require
 			header_item_not_void: header_item /= Void
@@ -278,7 +278,7 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 			header_item.set_width (desired_width)
 		end
 
-	pointed_divider_index: INTEGER is
+	pointed_divider_index: INTEGER
 			-- Index of divider currently beneath the mouse pointer, or
 			-- 0 if none.
 		local
@@ -299,14 +299,14 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy `Current'.
 		do
 			interface.wipe_out
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
-	on_hdn_begin_track (info: WEL_HD_NOTIFY) is
+	on_hdn_begin_track (info: WEL_HD_NOTIFY)
 			-- The user has begun dragging a divider in the control
 			-- (that is, the user has pressed the left mouse button while
 			-- the mouse cursor is on a divider in the header control).
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_hdn_track (info: WEL_HD_NOTIFY) is
+	on_hdn_track (info: WEL_HD_NOTIFY)
 			-- The user is dragging a divider in the header control.
 		local
 			header_item: EV_HEADER_ITEM_IMP
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_hdn_end_track (info: WEL_HD_NOTIFY) is
+	on_hdn_end_track (info: WEL_HD_NOTIFY)
 			-- The user has finished dragging a divider.
 		local
 			header_item: EV_HEADER_ITEM_IMP
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_hdn_item_changing (info: WEL_HD_NOTIFY) is
+	on_hdn_item_changing (info: WEL_HD_NOTIFY)
 			-- The attributes of a header are changing.
 			-- (from WEL_HEADER_CONTROL)
 		local
@@ -368,13 +368,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_hdn_item_changed (info: WEL_HD_NOTIFY) is
+	on_hdn_item_changed (info: WEL_HD_NOTIFY)
 			-- The attributes of a header item have changed.
 			-- (from WEL_HEADER_CONTROL)
 		do
 		end
 
-	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER)
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer button press.
 		local
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 		end
 
 	internal_propagate_pointer_double_press
-		(keys, x_pos, y_pos, button: INTEGER) is
+		(keys, x_pos, y_pos, button: INTEGER)
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate
 			-- item event. Called on a pointer button double press.
 		local
@@ -459,7 +459,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+	on_mouse_move (keys, x_pos, y_pos: INTEGER)
 			-- Executed when the mouse move.
 		local
 			it: EV_HEADER_ITEM_IMP
@@ -478,7 +478,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
 		end
 
-	on_set_cursor (hit_code: INTEGER) is
+	on_set_cursor (hit_code: INTEGER)
 			-- Called when a `Wm_setcursor' message is received.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
 		local
@@ -490,7 +490,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

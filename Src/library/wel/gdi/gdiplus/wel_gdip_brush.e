@@ -1,4 +1,4 @@
-indexing
+note
 	description: "GpBrush used in GDI+"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature{NONE} -- Initlization
 
-	make_solid (a_color: WEL_GDIP_COLOR) is
+	make_solid (a_color: WEL_GDIP_COLOR)
 			-- Create a solid fill color
 		require
 			not_void: a_color /= Void
@@ -30,7 +30,7 @@ feature{NONE} -- Initlization
 
 feature{NONE} -- C externals
 
-	c_gdip_create_solid_fill (a_gdiplus_handle: POINTER; a_gdip_color: INTEGER_64; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+	c_gdip_create_solid_fill (a_gdiplus_handle: POINTER; a_gdip_color: INTEGER_64; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Create a solid fill brush with `a_gdip_color'.
 		external
 			"C inline use %"wel_gdi_plus.h%""
@@ -54,7 +54,7 @@ feature{NONE} -- C externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

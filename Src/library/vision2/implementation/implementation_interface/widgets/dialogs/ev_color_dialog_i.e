@@ -1,4 +1,4 @@
-indexing 
+note 
 	description: "EiffelVision color selection dialog %
 		%implementation interface."
 	legal: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	color: EV_COLOR is
+	color: EV_COLOR
 			-- Currently selected color.
 		deferred
 		ensure
@@ -23,14 +23,14 @@ feature -- Access
 
 feature -- Element change
 
-	set_color (a_color: EV_COLOR) is
+	set_color (a_color: EV_COLOR)
 			-- Assign `a_color' to `color'.
 		require
 			a_color_not_void: a_color /= Void
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

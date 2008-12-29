@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Facilities for pick and drop mechanism.%N%
 		%Decendents can act both as pick and drop sources and as targets.%N%
@@ -55,7 +55,7 @@ inherit
 
 feature -- Access
 
-	pebble: ANY is
+	pebble: ANY
 		-- Data to be transported by pick and drop mechanism.
 		do
 			check
@@ -66,7 +66,7 @@ feature -- Access
 			bridge_ok: Result = implementation.pebble
 		end
 
-	pebble_function: FUNCTION [ANY, TUPLE, ANY] is
+	pebble_function: FUNCTION [ANY, TUPLE, ANY]
 			-- Returns data to be transported by pick and drop mechanism.
 		do
 			check
@@ -77,7 +77,7 @@ feature -- Access
 			bridge_ok: Result = implementation.pebble_function
 		end
 
-	pebble_x_position: INTEGER is
+	pebble_x_position: INTEGER
 			-- Initial x position for pick and drop relative to `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -87,7 +87,7 @@ feature -- Access
 			bridge_ok: Result = implementation.pebble_x_position
 		end
 
-	pebble_y_position: INTEGER is
+	pebble_y_position: INTEGER
 			-- Initial y position for pick and drop relative to `Current'.
 		require
 			not_destroyed: not is_destroyed
@@ -97,7 +97,7 @@ feature -- Access
 			bridge_ok: Result = implementation.pebble_y_position
 		end
 
-	pebble_positioning_enabled: BOOLEAN is
+	pebble_positioning_enabled: BOOLEAN
 			-- If `True' then pick and drop start coordinates are
 			-- `pebble_x_position', `pebble_y_position'.
 			-- If `False' then pick and drop start coordinates are
@@ -110,7 +110,7 @@ feature -- Access
 			bridge_ok: Result = implementation.pebble_positioning_enabled
 		end
 
-	accept_cursor: EV_POINTER_STYLE is
+	accept_cursor: EV_POINTER_STYLE
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
@@ -125,7 +125,7 @@ feature -- Access
 			bridge_ok: Result = implementation.accept_cursor
 		end
 
-	deny_cursor: EV_POINTER_STYLE is
+	deny_cursor: EV_POINTER_STYLE
 			-- `Result' is cursor displayed when the screen pointer is over a
 			-- target that does not accept `pebble' during pick and drop.
 		do
@@ -148,7 +148,7 @@ feature -- Access
 
 feature -- Status setting
 
-	set_pebble (a_pebble: like pebble) is
+	set_pebble (a_pebble: like pebble)
 			-- Assign `a_pebble' to `pebble'.
 			-- Overrides `set_pebble_function'.
 		do
@@ -158,7 +158,7 @@ feature -- Status setting
 			implementation.set_pebble (a_pebble)
 		end
 
-	remove_pebble is
+	remove_pebble
 			-- Make `pebble' `Void' and `pebble_function' `Void,
 			-- Removing transport.
 		do
@@ -168,7 +168,7 @@ feature -- Status setting
 			implementation.remove_pebble
 		end
 
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY]) is
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY])
 			-- Set `a_function' to compute `pebble'.
 			-- It will be called once each time a pick occurs, the result
 			-- will be assigned to `pebble' for the duration of transport.
@@ -185,7 +185,7 @@ feature -- Status setting
 			implementation.set_pebble_function (a_function)
 		end
 
-	set_pick_and_drop_mode is
+	set_pick_and_drop_mode
 			-- Set user interface mode to pick and drop.
 		require
 			not_destroyed: not is_destroyed
@@ -195,7 +195,7 @@ feature -- Status setting
 			pick_and_drop_set: mode_is_pick_and_drop
 		end
 
-	set_drag_and_drop_mode is
+	set_drag_and_drop_mode
 			-- Set user interface mode to drag and drop.
 		require
 			not_destroyed: not is_destroyed
@@ -205,7 +205,7 @@ feature -- Status setting
 			drag_and_drop_set: mode_is_drag_and_drop
 		end
 
-	set_target_menu_mode is
+	set_target_menu_mode
 			-- Set user interface mode to pop-up menu of targets.
 		require
 			not_destroyed: not is_destroyed
@@ -215,7 +215,7 @@ feature -- Status setting
 			target_menu_mode_set: mode_is_target_menu
 		end
 
-	set_configurable_target_menu_mode is
+	set_configurable_target_menu_mode
 			-- Set user interface mode to pop-up menu of targets.
 			-- Target menu is configurable as the first option can be used to
 			-- initiate a regular 'pick and drop' of the source pebble.
@@ -235,7 +235,7 @@ feature -- Status setting
 			configurable_target_menu_hander_assigned: configurable_target_menu_handler = a_handler
 		end
 
-	set_pebble_position (a_x, a_y: INTEGER) is
+	set_pebble_position (a_x, a_y: INTEGER)
 			-- Set the initial position for pick and drop
 			-- Coordinates are in pixels and are relative to position of `Current'.
 			-- Pebble_positioning_enabled must be `True' for the position to be used,
@@ -249,7 +249,7 @@ feature -- Status setting
 				pebble_y_position = a_y
 		end
 
-	set_accept_cursor (a_cursor: like accept_cursor) is
+	set_accept_cursor (a_cursor: like accept_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
@@ -259,7 +259,7 @@ feature -- Status setting
 			implementation.set_accept_cursor (a_cursor)
 		end
 
-	set_deny_cursor (a_cursor: like deny_cursor) is
+	set_deny_cursor (a_cursor: like deny_cursor)
 			-- Set `a_cursor' to be displayed when the screen pointer is not
 			-- over a valid target.
 		do
@@ -269,7 +269,7 @@ feature -- Status setting
 			implementation.set_deny_cursor (a_cursor)
 		end
 
-	enable_pebble_positioning is
+	enable_pebble_positioning
 			-- Assign `True' to `pebble_positioning_enabled'.
 			-- Use `pebble_x_position' and `pebble_y_position' as the initial coordinates
 			-- for the pick and drop in pixels relative to `Current'.
@@ -281,7 +281,7 @@ feature -- Status setting
 			pebble_positioning_updated: pebble_positioning_enabled
 		end
 
-	disable_pebble_positioning is
+	disable_pebble_positioning
 			-- Assign `False' to `pebble_positioning_enabled'.
 			-- The pick and drop will start at the pointer position.
 		require
@@ -304,7 +304,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	mode_is_pick_and_drop: BOOLEAN is
+	mode_is_pick_and_drop: BOOLEAN
 			-- Is the user interface mode pick and drop?
 		require
 			not_destroyed: not is_destroyed
@@ -314,7 +314,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.mode_is_pick_and_drop
 		end
 
-	mode_is_drag_and_drop: BOOLEAN is
+	mode_is_drag_and_drop: BOOLEAN
 			-- Is the user interface mode drag and drop?
 		require
 			not_destroyed: not is_destroyed
@@ -324,7 +324,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.mode_is_drag_and_drop
 		end
 
-	mode_is_target_menu: BOOLEAN is
+	mode_is_target_menu: BOOLEAN
 			-- Is the user interface mode a pop-up menu of targets?
 		require
 			not_destroyed: not is_destroyed
@@ -334,7 +334,7 @@ feature -- Status report
 			bridge_ok: Result = implementation.mode_is_target_menu
 		end
 
-	mode_is_configurable_target_menu: BOOLEAN is
+	mode_is_configurable_target_menu: BOOLEAN
 			-- Is the user interface mode a configurable pop-up menu of targets?
 		require
 			not_destroyed: not is_destroyed
@@ -346,7 +346,7 @@ feature -- Status report
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_ANY} and Precursor {EV_POSITIONED} and mode_is_pick_and_drop
@@ -364,7 +364,7 @@ invariant
 		mode_is_drag_and_drop.to_integer +
 		mode_is_target_menu.to_integer = 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

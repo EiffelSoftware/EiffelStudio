@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu item. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -80,14 +80,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the menu item.
 		do
 			base_make (an_interface)
 			make_id
 		end
 
-	initialize is
+	initialize
 			-- Initialize `is_sensitive' True.
 		do
 			is_sensitive := True
@@ -97,13 +97,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text displayed in label.
 		do
 			Result := wel_text
 		end
 
-	object_id: INTEGER is
+	object_id: INTEGER
 			-- Run-time object Id of `Current'.
 		do
 			if internal_object_id = 0 then
@@ -114,7 +114,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_text (a_text: STRING_GENERAL) is
+	set_text (a_text: STRING_GENERAL)
 			-- Assign `a_text' to `text'.
 		do
 			wel_set_text (a_text)
@@ -129,7 +129,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_sensitive is
+	enable_sensitive
    			-- Set current item sensitive.
 		do
 			is_sensitive := True
@@ -138,7 +138,7 @@ feature -- Status setting
 			end
    		end
 
-	disable_sensitive is
+	disable_sensitive
    			-- Set current item insensitive.
 		do
 			is_sensitive := False
@@ -149,7 +149,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent_imp (a_parent_imp: like parent_imp) is
+	set_parent_imp (a_parent_imp: like parent_imp)
 			-- Make `a_parent_imp' the parent of `Current'.
 		do
 			if a_parent_imp /= Void then
@@ -161,7 +161,7 @@ feature -- Element change
 
 feature -- Measurement
 
-	x_position: INTEGER is
+	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		local
 			a_menu_bar: EV_MENU_BAR_IMP
@@ -176,7 +176,7 @@ feature -- Measurement
 			end
 		end
 
-	y_position: INTEGER is
+	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
 		local
 			a_menu_bar: EV_MENU_BAR_IMP
@@ -191,35 +191,35 @@ feature -- Measurement
 			end
 		end
 
-	screen_x: INTEGER is
+	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
 		do
 			load_bounds_rect
 			Result := bounds_rect.left
 		end
 
-	screen_y: INTEGER is
+	screen_y: INTEGER
 			-- Vertical offset relative to screen.
 		do
 			load_bounds_rect
 			Result := bounds_rect.top
 		end
 
-	width: INTEGER is
+	width: INTEGER
 			-- Horizontal size in pixels.
 		do
 			load_bounds_rect
 			Result := bounds_rect.right - bounds_rect.left
 		end
 
-	height: INTEGER is
+	height: INTEGER
 			-- Vertical size in pixels.
 		do
 			load_bounds_rect
 			Result := bounds_rect.bottom - bounds_rect.top
 		end
 
-	minimum_width: INTEGER is
+	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels.
 		do
 				-- If this is called an invariant violation is triggered in WEL_DC
@@ -228,7 +228,7 @@ feature -- Measurement
 			--Result := width
 		end
 
-	minimum_height: INTEGER is
+	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
 		do
 				-- If this is called an invariant violation is triggered in WEL_DC
@@ -239,7 +239,7 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	wel_text: STRING_32 is
+	wel_text: STRING_32
 			-- Caption of the menu item.
 			--| For the specification given in the note of EV_MENU_ITEM,
 			--| we do not have to take any special action.
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 
 	real_text: STRING_32
 
-	wel_set_text (a_text: STRING_GENERAL) is
+	wel_set_text (a_text: STRING_GENERAL)
 			-- Set `text' to `a_txt'. See `wel_text'.
 		do
 			if a_text /= Void then
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Length of text'.
 		do
 			Result := real_text.count
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 	parent_imp: EV_MENU_ITEM_LIST_IMP
 			-- The menu or menu-bar this item is in.
 
-	parent: EV_MENU_ITEM_LIST is
+	parent: EV_MENU_ITEM_LIST
 			-- Item list containing `Current'.
 		do
 			if parent_imp /= Void then
@@ -283,13 +283,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 			-- Is this menu item in a menu?
 		do
 			Result := parent_imp /= Void and then parent_imp.item_exists (id)
 		end
 
-	remove_pixmap is
+	remove_pixmap
 			-- Remove pixmap from `Current'.
 		do
 			if private_pixmap /= Void then
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
+	set_pixmap (a_pixmap: EV_PIXMAP)
 			-- Assign `a_pixmap' to `pixmap'.
 		do
 			Precursor (a_pixmap)
@@ -320,7 +320,7 @@ feature {NONE} -- Implementation
 			-- has been made so far.
 			-- This is used for drawing owner-draw menu items
 
-	dispose is
+	dispose
 			-- Destroy the inner structure of `Current'.
 			--
 			-- This function should be called by the GC when the
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 
 feature {EV_MENU_ITEM_IMP} -- Implementation
 
-	top_level_window_imp: EV_WINDOW_IMP is
+	top_level_window_imp: EV_WINDOW_IMP
 			-- Window containing `Current' in parenting heirarchy.
 		local
 			a_menu: EV_MENU_IMP
@@ -357,7 +357,7 @@ feature {EV_MENU_ITEM_IMP} -- Implementation
 
 feature {EV_MENU_IMP} -- WEL Implementation
 
-	plain_text: STRING_32 is
+	plain_text: STRING_32
 			-- Plain text of menu item (equal "N&ew" when full_text = "N&ew%TCtrl+B")
 		do
 			Result := internal_plain_text (True)
@@ -365,7 +365,7 @@ feature {EV_MENU_IMP} -- WEL Implementation
 			Result_not_void: Result /= Void
 		end
 
-	plain_text_without_ampersands: STRING_32 is
+	plain_text_without_ampersands: STRING_32
 			-- Plain text of menu item (equal "New" when full_text = "N&ew%TCtrl+B")
 			-- Ampersands are removed.
 		do
@@ -374,7 +374,7 @@ feature {EV_MENU_IMP} -- WEL Implementation
 			Result_not_void: Result /= Void
 		end
 
-	accelerator_text: STRING_32 is
+	accelerator_text: STRING_32
 			-- Accelerator text of menu item (equal "Ctrl+B" when full text = "New%TCtrl+B")
 		local
 			tab_index: INTEGER
@@ -396,7 +396,7 @@ feature {EV_MENU_IMP} -- WEL Implementation
 
 feature {NONE} -- WEL Implementation
 
-	internal_plain_text (keep_ampersands: BOOLEAN): STRING_32 is
+	internal_plain_text (keep_ampersands: BOOLEAN): STRING_32
 			-- Plain text of menu item (equal "New" when full_text = "New%TCtrl+B")
 			-- Set `keep_ampersands' to True to keep the ampersands.
 		local
@@ -420,7 +420,7 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_MENU_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 
-	set_accelerator_text_position (a_value: INTEGER) is
+	set_accelerator_text_position (a_value: INTEGER)
 			-- Set the `accelerator_text_position' to `a_value'.
 		require
 			valid_value: a_value >= 0
@@ -430,7 +430,7 @@ feature {EV_MENU_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 			value_set: accelerator_text_position = a_value
 		end
 
-	set_plain_text_position (a_value: INTEGER) is
+	set_plain_text_position (a_value: INTEGER)
 			-- Set the `plain_text_position' to `a_value'.
 		require
 			valid_value: a_value >= 0
@@ -440,7 +440,7 @@ feature {EV_MENU_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 			value_set: plain_text_position = a_value
 		end
 
-	desired_height: INTEGER is
+	desired_height: INTEGER
 			-- Desired height for this menu item
 		local
 			pixmap_height: INTEGER
@@ -455,7 +455,7 @@ feature {EV_MENU_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 			end
 		end
 
-	on_measure_item (measure_item_struct: WEL_MEASURE_ITEM_STRUCT) is
+	on_measure_item (measure_item_struct: WEL_MEASURE_ITEM_STRUCT)
 			-- Process `Wm_measureitem' message.
 		local
 			par_imp: EV_MENU_IMP
@@ -468,7 +468,7 @@ feature {EV_MENU_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 			end
 		end
 
-	on_draw_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT)
 			-- Process `Wm_drawitem' message.
 		local
 			par_imp: EV_MENU_IMP
@@ -489,7 +489,7 @@ feature {NONE} -- WEL Implementation
 	plain_text_position: INTEGER
 			-- Position in pixels where the plain text starts being written.
 
-	erase_background (a_dc: WEL_DC; a_rect: WEL_RECT; a_background_color: WEL_COLOR_REF) is
+	erase_background (a_dc: WEL_DC; a_rect: WEL_RECT; a_background_color: WEL_COLOR_REF)
 			-- Erase the background for the rectangle `a_rect' using the
 			-- Device context `a_dc'. If `hilited_state' is set, use the
 			-- background color corresponding to the hilited state.
@@ -501,7 +501,7 @@ feature {NONE} -- WEL Implementation
 			a_background_brush.delete
 		end
 
-	on_measure_menu_bar_item (measure_item_struct: WEL_MEASURE_ITEM_STRUCT) is
+	on_measure_menu_bar_item (measure_item_struct: WEL_MEASURE_ITEM_STRUCT)
 			-- Get the measure for an item within a menu bar
 		local
 			accel_text: STRING_32
@@ -527,7 +527,7 @@ feature {NONE} -- WEL Implementation
 			set_plain_text_position (pixmap_width + plain_text_width + accel_text_width)
 		end
 
-	on_draw_menu_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_menu_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT)
 			-- Process `Wm_drawitem' message for classic menu item
 			-- (i.e. not menu item in the menu bar).
 		local
@@ -634,7 +634,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_draw_menu_item_left_part (draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_menu_item_left_part (draw_item_struct: WEL_DRAW_ITEM_STRUCT)
 			-- Process `Wm_drawitem' message, for the left part.
 			-- In the left part, one draw the pixmap, check state..
 			-- or nothing.
@@ -701,7 +701,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	on_draw_menu_bar_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
+	on_draw_menu_bar_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT)
 			-- Process `Wm_drawitem' message.
 		local
 			draw_dc: WEL_CLIENT_DC
@@ -809,7 +809,7 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER is
+	disabled_image: WEL_GDIP_GRAYSCALE_IMAGE_DRAWER
 			-- Grayscale image drawer.
 			-- Void if Gdi+ not installed.
 		local
@@ -823,7 +823,7 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_ANY_I} -- Pick and Drop
 
-	set_capture is
+	set_capture
 			-- Grab user input.
 			-- Works only on current windows thread.
 		do
@@ -836,7 +836,7 @@ feature {EV_ANY_I} -- Pick and Drop
 			end
 		end
 
-	release_capture is
+	release_capture
 			-- Release user input.
 			-- Works only on current windows thread.
 		do
@@ -849,7 +849,7 @@ feature {EV_ANY_I} -- Pick and Drop
 			end
 		end
 
-	set_heavy_capture is
+	set_heavy_capture
 			-- Grab user input.
 			-- Works on all windows threads.
 		do
@@ -862,7 +862,7 @@ feature {EV_ANY_I} -- Pick and Drop
 			end
 		end
 
-	release_heavy_capture is
+	release_heavy_capture
 			-- Release user input
 			-- Works on all windows threads.
 		do
@@ -877,7 +877,7 @@ feature {EV_ANY_I} -- Pick and Drop
 
 feature {NONE} -- Contract Support
 
-	parent_is_sensitive: BOOLEAN is
+	parent_is_sensitive: BOOLEAN
 			-- is parent of `Current' sensitive?
 		do
 			if parent_imp /= Void then
@@ -887,7 +887,7 @@ feature {NONE} -- Contract Support
 
 feature {EV_ANY_I} -- Implementation
 
-	on_activate is
+	on_activate
 			-- `Current' has been clicked on.
 		do
 			if select_actions_internal /= Void then
@@ -899,7 +899,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	remove_ampersands (a_string: STRING_32): STRING_32 is
+	remove_ampersands (a_string: STRING_32): STRING_32
 			-- Remove all single ampersands in `a_string'.
 			-- Double ampersands are replaced by a single ampersand.
 		local
@@ -922,7 +922,7 @@ feature {NONE} -- Implementation
 			Result.append (a_string.substring (prv_index, a_string.count))
 		end
 
-	extract_icon (a_pixmap_imp_state: EV_PIXMAP_IMP_STATE): WEL_ICON is
+	extract_icon (a_pixmap_imp_state: EV_PIXMAP_IMP_STATE): WEL_ICON
 			-- Extract the icon from `pixmap_imp'.
 		local
 			pix_imp: EV_PIXMAP_IMP
@@ -939,7 +939,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	bounds_rect: WEL_RECT is
+	bounds_rect: WEL_RECT
 			-- Rect struct which holds boundary information
 			-- This struct is shared.
 		once
@@ -948,7 +948,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	load_bounds_rect is
+	load_bounds_rect
 			-- Load bounds rect.
 		do
 			if parent_imp = Void then
@@ -962,10 +962,10 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Menu_bar_item_pixmap_text_space: INTEGER is 4;
+	Menu_bar_item_pixmap_text_space: INTEGER = 4;
 			-- Space between the text and the pixmap in a menu bar item
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

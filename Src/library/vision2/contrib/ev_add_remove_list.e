@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Abstraction of a list in which you can add/modify/remove items.
 			+-----------------------------+
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create an Add/Remove list with `list' and `text_field'.
 		do
 			default_create
@@ -62,13 +62,13 @@ feature -- Access
 
 feature -- Status
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is `list' empty?
 		do
 			Result := list.is_empty
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of items in `list'?
 		do
 			Result := list.count
@@ -76,7 +76,7 @@ feature -- Status
 
 feature -- Setting
 
-	set_is_entry_valid (f: like is_entry_valid) is
+	set_is_entry_valid (f: like is_entry_valid)
 			-- Set `is_entry_valid' with `f'.
 		do
 			is_entry_valid := f
@@ -84,7 +84,7 @@ feature -- Setting
 			is_entry_valid_set: is_entry_valid = f
 		end
 
-	set_display_error_message (p: like display_error_message) is
+	set_display_error_message (p: like display_error_message)
 			-- Set `display_error_message' with `p'.
 		do
 			display_error_message := p
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation: access
 
 feature -- Cleaning
 
-	reset is
+	reset
 			-- Reset content of Current
 		do
 			list.wipe_out
@@ -115,7 +115,7 @@ feature -- Cleaning
 
 feature {NONE} -- GUI building
 
-	build_widget is
+	build_widget
 			-- Build current widget.
 		local
 			hbox: EV_HORIZONTAL_BOX
@@ -163,7 +163,7 @@ feature {NONE} -- GUI building
 			disable_item_expand (hbox)
 		end
 
-	build_text_field (t: STRING_GENERAL) is
+	build_text_field (t: STRING_GENERAL)
 			-- Create text field part.
 		local
 			hbox: EV_HORIZONTAL_BOX
@@ -181,7 +181,7 @@ feature {NONE} -- GUI building
 
 feature {NONE} -- Action
 
-	add_item_in is
+	add_item_in
 			-- When user press `add' buttin, we insert content
 			-- of `text_field' in `list'.
 		require
@@ -207,7 +207,7 @@ feature {NONE} -- Action
 			end
 		end
 
-	remove_item_in is
+	remove_item_in
 			-- Remove current selected item of `list' and clean
 			-- `text_field'.
 		require
@@ -225,7 +225,7 @@ feature {NONE} -- Action
 			remove_actions.call (Void)
 		end
 
-	modify_item_in is
+	modify_item_in
 			-- Modify current selected item of `list' and clean
 			-- `text_field'.
 		require
@@ -247,7 +247,7 @@ feature {NONE} -- Action
 			modify_actions.call (Void)
 		end
 
-	update_button_status is
+	update_button_status
 			-- Enable or disable sensitivity of `Apply', `Add'
 			-- and `Remove' buttons.
 		require
@@ -296,7 +296,7 @@ invariant
 	apply_button_not_void: apply_button /= Void
 	remove_button_not_void: remove_button /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

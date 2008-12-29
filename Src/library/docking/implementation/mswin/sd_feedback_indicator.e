@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objecs that use layered windows to feedback display indicators"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_pixel_buffer: like pixel_buffer; a_parent_window: EV_WINDOW) is
+	make (a_pixel_buffer: like pixel_buffer; a_parent_window: EV_WINDOW)
 			-- Creation method.
 		require
 			not_void: a_pixel_buffer /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Initlization
 			set: pixel_buffer = a_pixel_buffer
 		end
 
-	make_for_splash (a_pixel_buffer: like pixel_buffer) is
+	make_for_splash (a_pixel_buffer: like pixel_buffer)
 			-- Creation method for splash screen.
 		require
 			not_void: a_pixel_buffer /= Void
@@ -64,7 +64,7 @@ feature {NONE} -- Initlization
 			init_common (a_pixel_buffer)
 		end
 
-	init_common (a_pixel_buffer: EV_PIXEL_BUFFER) is
+	init_common (a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Initlize common parts.
 		require
 			not_void: a_pixel_buffer /= Void
@@ -77,7 +77,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	show is
+	show
 			-- Show
 		local
 			l_routine: WEL_WINDOWS_ROUTINES
@@ -97,7 +97,7 @@ feature -- Command
 			wel_show
 		end
 
-	set_pixel_buffer (a_pixel_buffer: like pixel_buffer) is
+	set_pixel_buffer (a_pixel_buffer: like pixel_buffer)
 			-- Set `pixel_buffer'
 		do
 			if a_pixel_buffer /= pixel_buffer then
@@ -114,14 +114,14 @@ feature -- Command
 			set: pixel_buffer = a_pixel_buffer
 		end
 
-	set_position (a_screen_x, a_screen_y: INTEGER) is
+	set_position (a_screen_x, a_screen_y: INTEGER)
 			-- Set position
 		do
 			set_x (a_screen_x)
 			set_y (a_screen_y)
 		end
 
-	clear is
+	clear
 			-- Disappear with fading effect.
 		require
 			exists: exists
@@ -136,7 +136,7 @@ feature -- Command
 
 feature {NONE} -- Implementation
 
-	rgba_dib: WEL_BITMAP is
+	rgba_dib: WEL_BITMAP
 			-- Load a image which has RGBA DIB data.
 		local
 			l_imp: EV_PIXEL_BUFFER_IMP
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			-- If we load rgba_dib from EV_PIXMAP we should not destroy WEL_BITMAP
 			-- If we load rgba_dib from EV_PIXEL_BUFFER we should destroy WEL_BITMAP
 
-	update_layered_window_rgba (a_alpha: INTEGER) is
+	update_layered_window_rgba (a_alpha: INTEGER)
 			-- Call `c_updatelayerwindow' with `a_alpha'.
 		require
 			valid: 0 <= a_alpha and a_alpha <= 255
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			l_dc_src.delete
 		end
 
-	on_timer is
+	on_timer
 			-- Handle`timer' actions.
 		do
 			alpha := alpha + alpha_step
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 			destroy: alpha >= 255 implies timer.is_destroyed
 		end
 
-	on_timer_for_close is
+	on_timer_for_close
 			-- Handle `timer' actions for close.
 		do
 			alpha := alpha - alpha_step
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	dispose is
+	dispose
 			-- Redefine
 		do
 			Precursor {SD_DIALOG}
@@ -283,13 +283,13 @@ feature {NONE} -- Implementation
 	timer: EV_TIMEOUT
 			-- Timer to show gradient effect.	
 
-	timer_interval: INTEGER is 50
+	timer_interval: INTEGER = 50
 			-- Interval for `timer'.
 
 	alpha: INTEGER
 			-- Current window alpha value.
 
-	alpha_step: INTEGER is 50
+	alpha_step: INTEGER = 50
 			-- Used by `timer', `alpha' increase step.
 
 	pixel_buffer: EV_PIXEL_BUFFER
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	c_updatelayerwindow (a_wnd: POINTER; a_dest_dc: POINTER; a_point: POINTER; a_size: POINTER; a_src_dc: POINTER; a_point_src: POINTER; a_alpha: INTEGER; a_result: TYPED_POINTER [INTEGER]) is
+	c_updatelayerwindow (a_wnd: POINTER; a_dest_dc: POINTER; a_point: POINTER; a_size: POINTER; a_src_dc: POINTER; a_point_src: POINTER; a_alpha: INTEGER; a_result: TYPED_POINTER [INTEGER])
 			-- Set layered window properties on Windows 2000 and later.
 		require
 			exist: a_wnd /= default_pointer
@@ -344,7 +344,7 @@ feature {NONE} -- Externals
 			]"
 		end
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "This class represents a MS_WINDOWS cursor"
 	legal: "See notice at end of class.";
@@ -28,13 +28,13 @@ create
 
 feature -- Initialization
 
-	make (a_cursor: SCREEN_CURSOR) is
+	make (a_cursor: SCREEN_CURSOR)
 			-- Create the screen cursor
 		do
 			set_type (X_cursor)
 		end
 
-	make_for_screen (a_cursor: SCREEN_CURSOR; a_screen: SCREEN) is
+	make_for_screen (a_cursor: SCREEN_CURSOR; a_screen: SCREEN)
 			-- Create the screen cursor
 		do
 			set_type (X_cursor)
@@ -47,7 +47,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_type (new_type: INTEGER) is
+	set_type (new_type: INTEGER)
 			-- Set cursor to `new_type'.
 			-- If this type is not predefined, the type will be Arrow.
 		do
@@ -78,7 +78,7 @@ feature -- Status setting
 			type := new_type
 		end
 
-	set_pixmap (pixmap, mask: PIXMAP) is
+	set_pixmap (pixmap, mask: PIXMAP)
 			-- Set `pixmap' as the new shape of the cursor.
 			-- `mask' is the pixel of pixmap that are to be displayed.
 			-- If `mask' is Void, a suitable mask is drawn from `pixmap'.
@@ -124,7 +124,7 @@ feature -- Status setting
 			type := user_defined_pixmap
 		end
 
-	mask_from_pixmap_array (array: ARRAY2 [CHARACTER]): ARRAY [CHARACTER] is
+	mask_from_pixmap_array (array: ARRAY2 [CHARACTER]): ARRAY [CHARACTER]
 				-- Create a mask from the pixmap in `array'
 		local
 			row, column: INTEGER
@@ -147,7 +147,7 @@ feature -- Status setting
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

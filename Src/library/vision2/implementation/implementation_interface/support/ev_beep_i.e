@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Eiffel Vision beep routines. Implementation interface."
 	legal: "See notice at end of class."
@@ -16,33 +16,33 @@ inherit
 
 feature -- Commands
 
-	asterisk is
+	asterisk
 			-- Asterisk beep.
 		deferred
 		end
 
-	exclamation is
+	exclamation
 			-- Exclamation beep.
 		deferred
 		end
 
-	hand is
+	hand
 			-- Hand beep.
 		deferred
 		end
 
-	question is
+	question
 			-- Question beep.
 		deferred
 		end
 
-	ok is
+	ok
 			-- Ok beep.
 			-- System default beep.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

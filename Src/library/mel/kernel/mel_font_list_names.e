@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Implementation of font names for a particular pattern."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_display: MEL_DISPLAY; a_pattern: STRING; max: INTEGER) is
+	make (a_display: MEL_DISPLAY; a_pattern: STRING; max: INTEGER)
 			-- Make from an existing C `a_font_list_ptr'.
 		require
 			valid_display: a_display /= Void and then a_display.is_valid;
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	fill_from_handle (handle: POINTER) is
+	fill_from_handle (handle: POINTER)
 			-- Fill list from C `handle'.
 		require
 			handle_not_null: handle /= default_pointer
@@ -72,28 +72,28 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External features
 
-	mel_font_list_name (a_font_list: POINTER; a_pos: INTEGER): POINTER is
+	mel_font_list_name (a_font_list: POINTER; a_pos: INTEGER): POINTER
 		external
 			"C [macro %"font.h%"] (char **, int): EIF_POINTER"
 		alias
 			"mel_font_list_name"
 		end;
 
-	x_free_font_names (a_font_list: POINTER) is
+	x_free_font_names (a_font_list: POINTER)
 		external
 			"C (char **) | <X11/Xlib.h>"
 		alias
 			"XFreeFontNames"
 		end;
 
-	x_list_fonts (a_display, a_pattern: POINTER; max: INTEGER; a_count: POINTER): POINTER is
+	x_list_fonts (a_display, a_pattern: POINTER; max: INTEGER; a_count: POINTER): POINTER
 		external
 			"C (Display *, char *, int, int *): EIF_POINTER | <X11/Xlib.h>"
 		alias
 			"XListFonts"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

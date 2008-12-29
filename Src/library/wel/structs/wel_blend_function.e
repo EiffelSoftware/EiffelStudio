@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Objects controls blending by specifying 
 					the blending functions for source and destination bitmaps.
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Creation method
 		do
 			structure_make
@@ -35,46 +35,46 @@ feature {NONE} -- Initlization
 			set_alpha_format (Ac_src_alpha)
 		end
 
-	Ac_src_over: INTEGER is 0
+	Ac_src_over: INTEGER = 0
 			-- AC_SRC_OVER
 
-	Ac_src_alpha: INTEGER is 1
+	Ac_src_alpha: INTEGER = 1
 			-- AC_SRC_ALPHA
 
 feature -- Properties
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Structure size.
 		do
 			Result := c_size_of_blend_function
 		end
 
-	blend_op: INTEGER is
+	blend_op: INTEGER
 			-- Specifies the source blend operation.
 			-- Currently, the only source and destination blend operation that has been defined is AC_SRC_OVER.
 		do
 			Result := c_blend_op (item)
 		end
 
-	set_blend_op (a_blend_op: INTEGER) is
+	set_blend_op (a_blend_op: INTEGER)
 			-- Set `blend_op'
 		do
 			c_set_blend_op (item, a_blend_op)
 		end
 
-	blend_flags: INTEGER is
+	blend_flags: INTEGER
 			-- Must be zero.
 		do
 			Result := c_blend_flags (item)
 		end
 
-	set_blend_flags (a_flags: INTEGER) is
+	set_blend_flags (a_flags: INTEGER)
 			-- Set `blend_flags'
 		do
 			c_set_blend_flags (item, a_flags)
 		end
 
-	source_constant_alpha: INTEGER is
+	source_constant_alpha: INTEGER
 			-- Specifies an alpha transparency value to be used on the entire source bitmap.
 			-- The SourceConstantAlpha value is combined with any per-pixel alpha values
 			-- in the source bitmap. If you set SourceConstantAlpha to 0, it is assumed that
@@ -84,19 +84,19 @@ feature -- Properties
 			Result := c_source_constant_alpha (item)
 		end
 
-	set_source_constant_alpha (a_source_constant_alpha: INTEGER) is
+	set_source_constant_alpha (a_source_constant_alpha: INTEGER)
 			-- Set `source_constant_alpha'
 		do
 			c_set_source_constant_alpha (item, a_source_constant_alpha)
 		end
 
-	alpha_format: INTEGER is
+	alpha_format: INTEGER
 			-- This member controls the way the source and destination bitmaps are interpreted.
 		do
 			Result := c_alpha_format (item)
 		end
 
-	set_alpha_format (a_alpha_format: INTEGER) is
+	set_alpha_format (a_alpha_format: INTEGER)
 			-- Set `alpha_format'
 		do
 			c_set_alpha_format (item, a_alpha_format)
@@ -104,7 +104,7 @@ feature -- Properties
 
 feature {NONE} -- Externals
 
-	c_size_of_blend_function: INTEGER is
+	c_size_of_blend_function: INTEGER
 			-- Size of BLENDFUNCTION structure.
 		external
 			"C [macro <windows.h>]"
@@ -112,7 +112,7 @@ feature {NONE} -- Externals
 			"sizeof (BLENDFUNCTION)"
 		end
 
-	c_set_blend_op (a_p: POINTER; a_blend_op: INTEGER) is
+	c_set_blend_op (a_p: POINTER; a_blend_op: INTEGER)
 			-- Set BlendOp.
 		external
 			"C [struct <windows.h>] (BLENDFUNCTION, BYTE)"
@@ -120,7 +120,7 @@ feature {NONE} -- Externals
 			"BlendOp"
 		end
 
-	c_blend_op (a_p: POINTER): INTEGER is
+	c_blend_op (a_p: POINTER): INTEGER
 			-- Get BlendOp.
 		external
 			"C [struct <windows.h>] (BLENDFUNCTION): EIF_INTEGER"
@@ -128,7 +128,7 @@ feature {NONE} -- Externals
 			"BlendOp"
 		end
 
-	c_set_blend_flags (a_p: POINTER; a_flags: INTEGER) is
+	c_set_blend_flags (a_p: POINTER; a_flags: INTEGER)
 			-- Set BlendFlags.
 		external
 			"C [struct <windows.h>] (BLENDFUNCTION, BYTE)"
@@ -136,7 +136,7 @@ feature {NONE} -- Externals
 			"BlendFlags"
 		end
 
-	c_blend_flags (a_p: POINTER): INTEGER is
+	c_blend_flags (a_p: POINTER): INTEGER
 			-- Get BlendFlags.
 		external
 			"C [struct <windows.h>] (BLENDFUNCTION): EIF_INTEGER"
@@ -144,7 +144,7 @@ feature {NONE} -- Externals
 			"BlendFlags"
 		end
 
-	c_set_source_constant_alpha (a_p: POINTER; a_source_constant_alpha: INTEGER) is
+	c_set_source_constant_alpha (a_p: POINTER; a_source_constant_alpha: INTEGER)
 			-- Set SourceConstantAlpha.
 		external
 			"C [struct <windows.h>] (BLENDFUNCTION, BYTE)"
@@ -152,7 +152,7 @@ feature {NONE} -- Externals
 			"SourceConstantAlpha"
 		end
 
-	c_source_constant_alpha (a_p: POINTER): INTEGER is
+	c_source_constant_alpha (a_p: POINTER): INTEGER
 			-- Get SourceConstantAlpha.
 		external
 			"C [struct <windows.h>] (BLENDFUNCTION): EIF_INTEGER"
@@ -160,7 +160,7 @@ feature {NONE} -- Externals
 			"SourceConstantAlpha"
 		end
 
-	c_set_alpha_format (a_p: POINTER; a_alpha_format: INTEGER) is
+	c_set_alpha_format (a_p: POINTER; a_alpha_format: INTEGER)
 			-- Set AlphaFormat.
 		external
 			"C [struct <windows.h>] (BLENDFUNCTION, BYTE)"
@@ -168,7 +168,7 @@ feature {NONE} -- Externals
 			"AlphaFormat"
 		end
 
-	c_alpha_format (a_p: POINTER): INTEGER is
+	c_alpha_format (a_p: POINTER): INTEGER
 			-- Get AlphaFormat.
 		external
 			"C [struct <windows.h>] (BLENDFUNCTION): EIF_INTEGER"
@@ -176,7 +176,7 @@ feature {NONE} -- Externals
 			"AlphaFormat"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

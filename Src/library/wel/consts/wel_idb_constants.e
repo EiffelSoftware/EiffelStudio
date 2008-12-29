@@ -1,4 +1,4 @@
-indexing
+note
 	description: "System-defined toolbar bitmap constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Idb_std_large_color: INTEGER is
+	Idb_std_large_color: INTEGER
 			-- Large, color standard bitmaps.
 		external
 			"C [macro %"cctrl.h%"]"
@@ -18,7 +18,7 @@ feature -- Access
 			"IDB_STD_LARGE_COLOR"
 		end
 
-	Idb_std_small_color: INTEGER is
+	Idb_std_small_color: INTEGER
 			-- Small, color standard bitmaps.
 		external
 			"C [macro %"cctrl.h%"]"
@@ -26,7 +26,7 @@ feature -- Access
 			"IDB_STD_SMALL_COLOR"
 		end
 
-	Idb_view_large_color: INTEGER is
+	Idb_view_large_color: INTEGER
 			-- Large, color view bitmaps.
 		external
 			"C [macro %"cctrl.h%"]"
@@ -34,7 +34,7 @@ feature -- Access
 			"IDB_VIEW_LARGE_COLOR"
 		end
 
-	Idb_view_small_color: INTEGER is
+	Idb_view_small_color: INTEGER
 			-- Small, color view bitmaps.
 		external
 			"C [macro %"cctrl.h%"]"
@@ -44,7 +44,7 @@ feature -- Access
 
 feature -- Status report
 
-	valid_tool_bar_bitmap_constant (c: INTEGER): BOOLEAN is
+	valid_tool_bar_bitmap_constant (c: INTEGER): BOOLEAN
 			-- Is `c' a valid tool bar bitmap constant?
 		do
 			Result := c = Idb_std_large_color or else
@@ -53,7 +53,7 @@ feature -- Status report
 				c = Idb_view_small_color
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

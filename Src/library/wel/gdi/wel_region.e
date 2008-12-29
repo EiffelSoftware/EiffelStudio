@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A region is a rectangle, polygon, or ellipse (or a %
 		%combination of two or more of these shapes) that can be %
 		%filled, painted, inverted, framed, and used to perform hit %
@@ -31,14 +31,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make_empty is
+	make_empty
 			-- Make an empty rectangle region
 		do
 			item := cwin_create_rect_rgn (0, 0, 0, 0)
 			gdi_make
 		end
 
-	make_elliptic (left, top, right, bottom: INTEGER) is
+	make_elliptic (left, top, right, bottom: INTEGER)
 			-- Make an elliptical region specified by the
 			-- bounding rectangle `left', `top', `right', `bottom'
 		do
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_elliptic_indirect (rect: WEL_RECT) is
+	make_elliptic_indirect (rect: WEL_RECT)
 			-- Make an elliptical region specified by
 			-- the bounding rectangle `rect'
 		require
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_polygon_alternate (points: ARRAY [INTEGER]) is
+	make_polygon_alternate (points: ARRAY [INTEGER])
 			-- Make a polygonal region specified by `points'
 			-- using alternate mode. Fills area between
 			-- odd-numbered and even-numbered polygon sides
@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_polygon_winding (points: ARRAY [INTEGER]) is
+	make_polygon_winding (points: ARRAY [INTEGER])
 			-- Make a polygonal region specified by `points'
 			-- using winding mode. Fills any region with a nonzero
 			-- winding value.
@@ -87,7 +87,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_rect (left, top, right, bottom: INTEGER) is
+	make_rect (left, top, right, bottom: INTEGER)
 			-- Make a rectangle region specified by
 			-- `left', `top', `right', `bottom'.
 		do
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			gdi_make
 		end
 
-	make_rect_indirect (rect: WEL_RECT) is
+	make_rect_indirect (rect: WEL_RECT)
 			-- Make a rectangle region specified by
 			-- the rectangle `rect'.
 		require
@@ -107,7 +107,7 @@ feature {NONE} -- Initialization
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `Current' equal to `other'?
 		do
 			Result := cwin_equal_rgn (item, other.item)
@@ -115,7 +115,7 @@ feature -- Comparison
 
 feature -- Basic operations
 
-	combine (region: WEL_REGION; mode: INTEGER): WEL_REGION is
+	combine (region: WEL_REGION; mode: INTEGER): WEL_REGION
 			-- Combine `region' with the current one using `mode'.
 			-- See class WEL_RGN_CONSTANTS for `mode' values.
 		require
@@ -129,7 +129,7 @@ feature -- Basic operations
 			result_not_void: Result /= Void
 		end
 
-	offset (x_offset, y_offset: INTEGER) is
+	offset (x_offset, y_offset: INTEGER)
 			-- Move the region by the specified offsets
 			-- `x_offset' and `y_offset'
 		require
@@ -138,7 +138,7 @@ feature -- Basic operations
 			cwin_offset_rgn (item, x_offset, y_offset)
 		end
 
-	set_rect (left, top, right, bottom: INTEGER) is
+	set_rect (left, top, right, bottom: INTEGER)
 			-- Change the region to a rectangle region specified
 			-- by `left', `top', `right', `bottom'
 		require
@@ -149,7 +149,7 @@ feature -- Basic operations
 
 feature -- Status report
 
-	point_in (x, y: INTEGER): BOOLEAN is
+	point_in (x, y: INTEGER): BOOLEAN
 			-- Is the point `x', `y' is in the region?
 		require
 			exists: exists
@@ -157,7 +157,7 @@ feature -- Status report
 			Result := cwin_pt_in_region (item, x, y)
 		end
 
-	rect_in (rect: WEL_RECT): BOOLEAN is
+	rect_in (rect: WEL_RECT): BOOLEAN
 			-- Is any part of the rectangle `rect' is within
 			-- the boundaries of the region?
 		require
@@ -180,7 +180,7 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	cwin_create_elliptic_rgn (x1, y1, x2, y2: INTEGER): POINTER is
+	cwin_create_elliptic_rgn (x1, y1, x2, y2: INTEGER): POINTER
 			-- SDK CreateEllipticRgn
 		external
 			"C [macro <wel.h>] (int, int, int, int): EIF_POINTER"
@@ -188,7 +188,7 @@ feature {NONE} -- Externals
 			"CreateEllipticRgn"
 		end
 
-	cwin_create_elliptic_rgn_indirect (rect: POINTER): POINTER is
+	cwin_create_elliptic_rgn_indirect (rect: POINTER): POINTER
 			-- SDK CreateEllipticRgnIndirect
 		external
 			"C [macro <wel.h>] (RECT *): EIF_POINTER"
@@ -196,7 +196,7 @@ feature {NONE} -- Externals
 			"CreateEllipticRgnIndirect"
 		end
 
-	cwin_create_polygon_rgn (points: POINTER; num, mode: INTEGER): POINTER is
+	cwin_create_polygon_rgn (points: POINTER; num, mode: INTEGER): POINTER
 			-- SDK CreatePolygonRgn
 		external
 			"C [macro <wel.h>] (POINT *, int, int): EIF_POINTER"
@@ -204,7 +204,7 @@ feature {NONE} -- Externals
 			"CreatePolygonRgn"
 		end
 
-	cwin_create_rect_rgn (x1, y1, x2, y2: INTEGER): POINTER is
+	cwin_create_rect_rgn (x1, y1, x2, y2: INTEGER): POINTER
 			-- SDK CreateRectRgn
 		external
 			"C [macro <wel.h>] (int, int, int, int): EIF_POINTER"
@@ -212,7 +212,7 @@ feature {NONE} -- Externals
 			"CreateRectRgn"
 		end
 
-	cwin_create_rect_rgn_indirect (rect: POINTER): POINTER is
+	cwin_create_rect_rgn_indirect (rect: POINTER): POINTER
 			-- SDK CreateRectRgnIndirect
 		external
 			"C [macro <wel.h>] (RECT *): EIF_POINTER"
@@ -220,7 +220,7 @@ feature {NONE} -- Externals
 			"CreateRectRgnIndirect"
 		end
 
-	cwin_equal_rgn (hrgn1, hrgn2: POINTER): BOOLEAN is
+	cwin_equal_rgn (hrgn1, hrgn2: POINTER): BOOLEAN
 			-- SDK EqualRgn
 		external
 			"C [macro <wel.h>] (HRGN, HRGN): EIF_BOOLEAN"
@@ -228,7 +228,7 @@ feature {NONE} -- Externals
 			"EqualRgn"
 		end
 
-	cwin_combine_rgn (hrgn1, hrgn2, hrgn3 : POINTER; mode: INTEGER) is
+	cwin_combine_rgn (hrgn1, hrgn2, hrgn3 : POINTER; mode: INTEGER)
 			-- SDK CombineRgn
 		external
 			"C [macro <wel.h>] (HRGN, HRGN, HRGN, int)"
@@ -236,7 +236,7 @@ feature {NONE} -- Externals
 			"CombineRgn"
 		end
 
-	cwin_pt_in_region (hrgn: POINTER; x, y: INTEGER): BOOLEAN is
+	cwin_pt_in_region (hrgn: POINTER; x, y: INTEGER): BOOLEAN
 			-- SDK PtInRegion
 		external
 			"C [macro <wel.h>] (HRGN, int, int): EIF_BOOLEAN"
@@ -244,7 +244,7 @@ feature {NONE} -- Externals
 			"PtInRegion"
 		end
 
-	cwin_rect_in_region (hrgn, rect: POINTER): BOOLEAN is
+	cwin_rect_in_region (hrgn, rect: POINTER): BOOLEAN
 			-- SDK RectInRegion
 		external
 			"C [macro <wel.h>] (HRGN, RECT *): EIF_BOOLEAN"
@@ -252,7 +252,7 @@ feature {NONE} -- Externals
 			"RectInRegion"
 		end
 
-	cwin_offset_rgn (hrgn: POINTER; x, y: INTEGER) is
+	cwin_offset_rgn (hrgn: POINTER; x, y: INTEGER)
 			-- SDK OffsetRgn
 		external
 			"C [macro <wel.h>] (HRGN, int, int)"
@@ -260,7 +260,7 @@ feature {NONE} -- Externals
 			"OffsetRgn"
 		end
 
-	cwin_set_rect_rgn (hrgn: POINTER; x1, y1, x2, y2: INTEGER) is
+	cwin_set_rect_rgn (hrgn: POINTER; x1, y1, x2, y2: INTEGER)
 			-- SDK SetRectRgn
 		external
 			"C [macro <wel.h>] (HRGN, int, int, int, int)"
@@ -276,21 +276,21 @@ feature {NONE} -- Externals
 			"GetRgnBox"
 		end
 
-	Alternate: INTEGER is
+	Alternate: INTEGER
 		external
 			"C [macro <wel.h>]"
 		alias
 			"ALTERNATE"
 		end
 
-	Winding: INTEGER is
+	Winding: INTEGER
 		external
 			"C [macro <wel.h>]"
 		alias
 			"WINDING"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

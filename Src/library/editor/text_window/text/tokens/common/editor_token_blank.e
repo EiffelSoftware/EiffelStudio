@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Token that describe either space(s) or tabulation(s)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,11 +21,11 @@ inherit
 
 feature -- Status Report
 
-	is_blank: BOOLEAN is True
+	is_blank: BOOLEAN = True
 
 feature -- Display
 
-	display (d_y: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display (d_y: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y')
 		local
@@ -34,7 +34,7 @@ feature -- Display
 			useless := display_blanks (position, d_y, a_device, False, 1, length, panel)
 		end
 
-	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc' at the coordinates (`x_offset',`d_y')
 		local
 			useless: INTEGER
@@ -42,7 +42,7 @@ feature -- Display
 			useless := display_blanks (x_offset, d_y, device, False, 1, length, panel)
 		end
 
-	display_selected (d_y: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_selected (d_y: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state.
@@ -52,7 +52,7 @@ feature -- Display
 			useless := display_blanks (position, d_y, a_device, True, 1, length, panel)
 		end
 
-	display_half_selected (d_y: INTEGER; start_selection, end_selection: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_half_selected (d_y: INTEGER; start_selection, end_selection: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL)
 			-- Display the current token on device context `dc'
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state from begining to `pivot'
@@ -81,12 +81,12 @@ feature -- Display
 
 feature -- Color ids
 
-	text_color_id: INTEGER is
+	text_color_id: INTEGER
 		do
 			Result := spaces_text_color_id
 		end
 
-	background_color_id: INTEGER is
+	background_color_id: INTEGER
 			-- Background color
 		do
 			if is_highlighted then
@@ -98,13 +98,13 @@ feature -- Color ids
 
 feature {NONE} -- Implementation
 
-	display_blanks (d_x, d_y: INTEGER; device: EV_DRAWABLE; selected: BOOLEAN; start_tab, end_tab: INTEGER; panel: TEXT_PANEL): INTEGER is
+	display_blanks (d_x, d_y: INTEGER; device: EV_DRAWABLE; selected: BOOLEAN; start_tab, end_tab: INTEGER; panel: TEXT_PANEL): INTEGER
 		require
 			valid_selection: start_tab <= end_tab
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

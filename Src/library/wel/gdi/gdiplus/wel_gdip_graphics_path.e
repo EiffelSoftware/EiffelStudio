@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Grapics path functions in Gdi+ which represents a series of connected lines and curves.
 					For more information, please see:
@@ -26,13 +26,13 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make
 			-- Initializes Current with a FillMode value of Alternate.
 		do
 			make_with_fill_mode ({WEL_GDIP_FILL_MODE}.alternate)
 		end
 
-	make_with_fill_mode (a_fill_mode: INTEGER) is
+	make_with_fill_mode (a_fill_mode: INTEGER)
 			-- Initializes Current with `a_fill_mode'
 		require
 			valid: (create {WEL_GDIP_FILL_MODE}).is_valid (a_fill_mode)
@@ -44,7 +44,7 @@ feature {NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	make_with_points_bytes_fill_mode (a_points: ARRAYED_LIST [WEL_GDIP_POINT]; a_types: ARRAYED_LIST [INTEGER]; a_fill_mode: INTEGER) is
+	make_with_points_bytes_fill_mode (a_points: ARRAYED_LIST [WEL_GDIP_POINT]; a_types: ARRAYED_LIST [INTEGER]; a_fill_mode: INTEGER)
 			-- Initializes Current with the specified PathPointType and
 			-- Point arrays and with the specified FillMode enumeration element.
 		require
@@ -91,7 +91,7 @@ feature {NONE} -- Initlization
 
 feature -- Destroy
 
-	destroy_item is
+	destroy_item
 			-- <Precursor>
 		local
 			l_result: INTEGER
@@ -105,7 +105,7 @@ feature -- Destroy
 
 feature {NONE} -- C externals
 
-	c_gdip_create_path (a_gdiplus_handle: POINTER; a_fill_mode: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+	c_gdip_create_path (a_gdiplus_handle: POINTER; a_fill_mode: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Initializes a new instance of the Current
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -132,7 +132,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_create_path_2_i (a_gdiplus_handle: POINTER; a_points: POINTER; a_types: POINTER; a_count: INTEGER; a_fill_mode: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+	c_gdip_create_path_2_i (a_gdiplus_handle: POINTER; a_points: POINTER; a_types: POINTER; a_count: INTEGER; a_fill_mode: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Initializes a new instance of the Current
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -163,7 +163,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_delete_path (a_gdiplus_handle: POINTER; a_graphics_path: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_delete_path (a_gdiplus_handle: POINTER; a_graphics_path: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Delete `a_graphics_path' gdi+ object.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -188,7 +188,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

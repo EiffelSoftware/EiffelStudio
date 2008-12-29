@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Can read and convert X-bitmap to Windows bitmap"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -24,7 +24,7 @@ create
 
 feature -- Initialization
 
-	read_from_xbm_file (a_filename: STRING) is
+	read_from_xbm_file (a_filename: STRING)
 			-- Read the X bitmap from the file
 		require
 			a_filename_exists: a_filename /= Void
@@ -100,7 +100,7 @@ feature -- Initialization
 
 feature {SCREEN_CURSOR_IMP} -- Access
 
-	array: ARRAY2 [CHARACTER] is
+	array: ARRAY2 [CHARACTER]
 		do
 			Result := temporary_storage
 		end
@@ -127,11 +127,11 @@ feature -- Access
 
 feature -- Implementation
 
-	hex_characters: STRING is "084c2a6e195d3b7f"	
+	hex_characters: STRING = "084c2a6e195d3b7f"	
 			-- Valid hexadecimal characters
 			-- in inverted order
 
-	is_value_line (l: STRING): BOOLEAN is
+	is_value_line (l: STRING): BOOLEAN
 			-- Is the line `l' a value line?
 			-- ie is approximatley "#define xyz abc"
 			-- and last line was ok
@@ -140,7 +140,7 @@ feature -- Implementation
 				l.occurrences (' ') >= 2 and is_valid
 		end
 
-	make_dib_from_array is
+	make_dib_from_array
 			-- Make the actual DIB based on information we have at hand
 		require
 			width_valid: width > 0
@@ -216,7 +216,7 @@ feature -- Implementation
 			depth := 2
 		end
 
-	process_data_item (s: STRING): CHARACTER is
+	process_data_item (s: STRING): CHARACTER
 			-- Convert a hexadecimal string to a number
 			-- representative of the same colors for 
 			-- Windows as X
@@ -232,7 +232,7 @@ feature -- Implementation
 			end
 		end
 
-	process_data_line (line: STRING; columns: INTEGER) is
+	process_data_line (line: STRING; columns: INTEGER)
 			-- Process lines of hexadecimal numbers for the DIB
 		local
 			i: INTEGER
@@ -268,7 +268,7 @@ feature -- Implementation
 			end
 		end
 
-	process_value_line (line: STRING): INTEGER is
+	process_value_line (line: STRING): INTEGER
 			-- Process `line' that reads
 			-- "#define xyz.width 22"
 			-- and return 22.
@@ -299,7 +299,7 @@ feature -- Implementation
 	temporary_storage: ARRAY2 [CHARACTER];
 			-- storage for X data being converted
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

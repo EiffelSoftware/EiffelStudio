@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision radio peer. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature -- Status report
 
-	peers: LINKED_LIST [like interface] is
+	peers: LINKED_LIST [like interface]
 			-- List of all radio items in the group `Current' is in.
 		local
 			cur, wid_obj, l_null: POINTER
@@ -43,7 +43,7 @@ feature -- Status report
 			end
 		end
 
-	selected_peer: like interface is
+	selected_peer: like interface
 			-- Radio item that is currently selected.
 		local
 			cur, wid_obj, l_null: POINTER
@@ -71,7 +71,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP is
+	eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP
 		deferred
 		end
 
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	widget_object (a_list: POINTER): POINTER is
+	widget_object (a_list: POINTER): POINTER
 			-- Returns c_object relative to a_list data.
 		do
 			Result := {EV_GTK_EXTERNALS}.gslist_struct_data (a_list)
@@ -91,14 +91,14 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	radio_group: POINTER is
+	radio_group: POINTER
 			-- Reference to front of radio group. *GSList.
 		deferred
 		end
 
 	interface: EV_RADIO_PEER;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

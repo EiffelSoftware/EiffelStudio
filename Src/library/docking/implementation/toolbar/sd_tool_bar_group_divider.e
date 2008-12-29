@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					When a SD_FLOATING_TOOL_BAR_ZONE is resizing by user.
 					SD_TOOL_BAR_GROUP_DIVIDER will calculate best grouping.
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make_with_content (a_content: SD_TOOL_BAR_CONTENT) is
+	make_with_content (a_content: SD_TOOL_BAR_CONTENT)
 			-- Make with a_content.
 		require
 			not_void: a_content /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initlization
 			set: content = a_content
 		end
 
-	init_group_width (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]): ARRAYED_LIST [INTEGER] is
+	init_group_width (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]): ARRAYED_LIST [INTEGER]
 			-- Initlizatie a list with each items width in it.
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
@@ -68,7 +68,7 @@ feature {NONE} -- Initlization
 			group_count_right: Result.count = content.groups_count (False)
 		end
 
-	init_grouping_infos is
+	init_grouping_infos
 			-- Initlialize grouping infos.
 		local
 			l_count: INTEGER
@@ -95,7 +95,7 @@ feature {NONE} -- Initlization
 
 feature -- Query
 
-	group_width (a_group: ARRAYED_LIST [SD_TOOL_BAR_ITEM]): INTEGER is
+	group_width (a_group: ARRAYED_LIST [SD_TOOL_BAR_ITEM]): INTEGER
 			-- Group total item width.
 		require
 			not_void: a_group /= Void
@@ -112,7 +112,7 @@ feature -- Query
 			valid: Result >= 0
 		end
 
-	group_item_width (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]): ARRAYED_LIST [INTEGER] is
+	group_item_width (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]): ARRAYED_LIST [INTEGER]
 			-- Initlizatie a list with each item width in it.
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
@@ -136,7 +136,7 @@ feature -- Query
 			group_count_right: Result.count = a_items.count
 		end
 
-	tool_bar_item_width (a_tool_bar_item: SD_TOOL_BAR_ITEM): INTEGER is
+	tool_bar_item_width (a_tool_bar_item: SD_TOOL_BAR_ITEM): INTEGER
 			-- Tool bar item width of `a_tool_bar_item'.
 		require
 			not_void: a_tool_bar_item /= Void
@@ -146,14 +146,14 @@ feature -- Query
 			valid: Result >= 0
 		end
 
-	group_count: INTEGER is
+	group_count: INTEGER
 			-- Group count.
 		do
 			check not_void: algorithm /= Void end
 			Result := algorithm.group_count
 		end
 
-	best_grouping_by_width_to_right (a_width: INTEGER): SD_TOOL_BAR_GROUP_INFO is
+	best_grouping_by_width_to_right (a_width: INTEGER): SD_TOOL_BAR_GROUP_INFO
 			-- Best groupinp, Result is calculated by `a_width'.
 		require
 			valid: a_width > 0
@@ -184,7 +184,7 @@ feature -- Query
 			valid: last_group_index >= 1 and last_group_index <= group_infos.count
 		end
 
-	best_grouping_by_width_to_left (a_width: INTEGER): SD_TOOL_BAR_GROUP_INFO is
+	best_grouping_by_width_to_left (a_width: INTEGER): SD_TOOL_BAR_GROUP_INFO
 			-- Best groupinp, Result is calculated by `a_width'.
 			-- When pointer is moving to left, use this feature.
 		require
@@ -219,7 +219,7 @@ feature -- Query
 	last_group_index: INTEGER
 			-- Last grouping info index.
 
-	best_grouping (a_group_count: INTEGER): SD_TOOL_BAR_GROUP_INFO is
+	best_grouping (a_group_count: INTEGER): SD_TOOL_BAR_GROUP_INFO
 			-- Best grouping.
 		require
 			valid: a_group_count >= 1 and a_group_count <= content.item_count_except_sep (False)
@@ -229,7 +229,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	max_row_count: INTEGER is
+	max_row_count: INTEGER
 			-- Actual maximum row count.
 		do
 			Result := content.item_count_except_sep (False)
@@ -243,7 +243,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	insert_arrayed_list_to_group_info_sub_level (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_sub_group_index: INTEGER; a_widths: ARRAY [INTEGER]) is
+	insert_arrayed_list_to_group_info_sub_level (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_sub_group_index: INTEGER; a_widths: ARRAY [INTEGER])
 			-- Insert `a_list' to `internal_refined_grouping'.
 		require
 			not_void: internal_refined_grouping /= Void
@@ -261,7 +261,7 @@ feature {NONE} -- Implementation
 			internal_refined_grouping.set_sub_group_info (l_sub_group_info, a_sub_group_index)
 		end
 
-	list_and_width_equal (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_items_width: ARRAY [INTEGER]): BOOLEAN is
+	list_and_width_equal (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_items_width: ARRAY [INTEGER]): BOOLEAN
 			-- Is items count in `a_list' equal to `a_items_width''s count?
 		require
 			not_void: a_list /= Void
@@ -280,7 +280,7 @@ feature {NONE} -- Implementation
 			Result := l_count = a_items_width.count
 		end
 
-	convert_arrayed_list_to_group_info (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_count_clear: BOOLEAN; a_items_width: ARRAY [INTEGER]): SD_TOOL_BAR_GROUP_INFO is
+	convert_arrayed_list_to_group_info (a_list: ARRAYED_LIST [ARRAYED_LIST [INTEGER]]; a_count_clear: BOOLEAN; a_items_width: ARRAY [INTEGER]): SD_TOOL_BAR_GROUP_INFO
 			-- Only covert first level. Item is one group which has several items.
 		require
 			not_void: a_list /= Void
@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	group_items (a_group_count: INTEGER) is
+	group_items (a_group_count: INTEGER)
 			-- Group items.
 		local
 			l_row_left: INTEGER
@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	grouping_algorithm_factory (a_max_width_group_index: INTEGER): SD_HUFFMAN_ALGORITHM is
+	grouping_algorithm_factory (a_max_width_group_index: INTEGER): SD_HUFFMAN_ALGORITHM
 			-- Factory method of algorithm.
 		require
 			valid: a_max_width_group_index > 0 and a_max_width_group_index <= content.groups_count (False)
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	compute_extra_groups (a_extra_group_count: INTEGER) is
+	compute_extra_groups (a_extra_group_count: INTEGER)
 			-- Compute extra groups when all top groups are all in separated row.
 		require
 			valid: a_extra_group_count > 0
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_initialized_sub_group (a_group_info: SD_TOOL_BAR_GROUP_INFO): BOOLEAN is
+	is_initialized_sub_group (a_group_info: SD_TOOL_BAR_GROUP_INFO): BOOLEAN
 			-- If `a_group_info' which is subgroup infornation initlialized?
 		require
 			not_void: a_group_info /= Void
@@ -445,7 +445,7 @@ invariant
 
 	not_void: algorithm /= Void
 
-indexing
+note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

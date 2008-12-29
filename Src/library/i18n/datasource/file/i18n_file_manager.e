@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation of DATASOURCE_MANAGER that uses message catalog files as a data source."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature	-- Creation
 
-	make (an_uri: STRING_GENERAL) is
+	make (an_uri: STRING_GENERAL)
 		do
 			Precursor (an_uri)
 				-- Initialize chain-of-responsability
@@ -35,7 +35,7 @@ feature	-- Creation
 
 feature	-- Access
 
-	dictionary (a_locale: I18N_LOCALE_ID): I18N_DICTIONARY is
+	dictionary (a_locale: I18N_LOCALE_ID): I18N_DICTIONARY
 			-- return appropriate dictionary
 		do
 			if available_locales.has (a_locale) then
@@ -48,14 +48,14 @@ feature	-- Access
 			end
 		end
 
-	available_locales: LINEAR[I18N_LOCALE_ID] is
+	available_locales: LINEAR[I18N_LOCALE_ID]
 			-- return locales for which there is a locale-specific translation
 		do
 			create {ARRAYED_LIST[I18N_LOCALE_ID]} Result.make_from_array (locale_list)
 			Result.compare_objects
 		end
 
-	available_languages: LINEAR[I18N_LANGUAGE_ID] is
+	available_languages: LINEAR[I18N_LANGUAGE_ID]
 			-- return languages for which there is a generic translation
 		do
 			create {ARRAYED_LIST[I18N_LANGUAGE_ID]} Result.make_from_array (language_list)
@@ -74,7 +74,7 @@ feature {NONE} --Implementation
 	directory: DIRECTORY
 	chain: I18N_FILE_HANDLER
 
-	populate_file_lists is
+	populate_file_lists
 			-- add to file lists all locales and langugaes
 			-- that are available in `directory'
 		require
@@ -134,7 +134,7 @@ invariant
 	language_file_list_exists: language_file_list /= Void
 	language_list_exists: language_list /= Void
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

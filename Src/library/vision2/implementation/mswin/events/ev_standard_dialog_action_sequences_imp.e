@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Action sequences for EV_STANDARD_DIALOG_IMP."
 	legal: "See notice at end of class."
@@ -15,19 +15,19 @@ inherit
 
 feature -- Event handling
 
-	create_ok_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_ok_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a ok action sequence.
 		do
 			create Result
 		end
 
-	create_cancel_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_cancel_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Create a cancel action sequence.
 		do
 			create Result
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

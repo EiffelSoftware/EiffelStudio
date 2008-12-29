@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Implementation interface of EV_WEL_CONTAINER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,26 +18,26 @@ inherit
 
 feature -- Access
 
-	implementation_window: WEL_WINDOW is
+	implementation_window: WEL_WINDOW
 			-- Window containing `item'.
 		deferred
 		end
 		
-	item: WEL_WINDOW is
+	item: WEL_WINDOW
 			-- `Result' is WEL_WINDOW contained in `Current'.
 		deferred
 		end
 
 feature -- Status setting
 		
-	replace (a_window: WEL_WINDOW) is
+	replace (a_window: WEL_WINDOW)
 			-- Replace `item' with `a_window'.
 		deferred
 		end
 
 feature -- Event handling
 
-	wel_message_actions: EV_WEL_MESSAGE_ACTION_SEQUENCE is
+	wel_message_actions: EV_WEL_MESSAGE_ACTION_SEQUENCE
 			-- Actions to be performed when a message is sent
 			-- by Windows, to implementation of `Current'.
 		do
@@ -55,7 +55,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Implementation of once per object `pointer_motion_actions'.
 		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

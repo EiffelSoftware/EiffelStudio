@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "SToraGe Mode flags"
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ class
 
 feature -- Access
 
-	Stgm_create: INTEGER is
+	Stgm_create: INTEGER
 			-- Stgm_create indicates an existing IStorage or IStream object
 			-- should be removed before the new one replaces it. A new object
 			-- is created when this flag is specified only if the existing
@@ -23,7 +23,7 @@ feature -- Access
 			"STGM_CREATE"
 		end
 		
-	Stgm_convert: INTEGER is
+	Stgm_convert: INTEGER
 			-- This flag is applicable only to the creation of IStorage objects.
 			-- Stgm_convert allows the creation to proceed while preserving
 			-- existing data. The old data is saved to a stream named CONTENTS
@@ -37,7 +37,7 @@ feature -- Access
 			"STGM_CONVERT"
 		end
 		
-	Stgm_failifthere: INTEGER is
+	Stgm_failifthere: INTEGER
 			-- Stgm_failifthere causes the create operation to fail if an
 			-- existing object with the specified name exists. In this case,
 			-- Stg_e_filealreadyexists is returned. Stgm_failifthere
@@ -48,7 +48,7 @@ feature -- Access
 			"STGM_FAILIFTHERE"
 		end
 		
-	Stgm_deleteonrelease: INTEGER is
+	Stgm_deleteonrelease: INTEGER
 			-- The Stgm_deleteonrelease flag indicates that the underlying
 			-- file is to be automatically destroyed when the root IStorage
 			-- object is released. This capability is most useful for
@@ -59,7 +59,7 @@ feature -- Access
 			"STGM_DELETEONRELEASE"
 		end
 		
-	Stgm_direct: INTEGER is
+	Stgm_direct: INTEGER
 			-- Stgm_DIrect is always specified for IStream objects.
 			-- Stgm_transacted is not supported in the compound file
 			-- implementation of IStream. Other implementations can choose
@@ -70,7 +70,7 @@ feature -- Access
 			"STGM_DIRECT"
 		end
 		
-	Stgm_transacted: INTEGER is
+	Stgm_transacted: INTEGER
 			-- The transaction for each open object is nested in the transaction
 			-- for its parent storage object. Therefore, committing changes at the
 			-- child level is dependent on committing changes in the parent and
@@ -92,7 +92,7 @@ feature -- Access
 			"STGM_TRANSACTED"
 		end
 		
-	Stgm_read: INTEGER is
+	Stgm_read: INTEGER
 			-- When applied to an IStream object, Stgm_READ enables
 			-- applications to successfully call IStream.Read. If Stgm_read
 			-- is omitted, IStream.Read will return an error. When applied to an
@@ -107,7 +107,7 @@ feature -- Access
 			"STGM_READ"
 		end
 		
-	Stgm_write: INTEGER is
+	Stgm_write: INTEGER
 			-- Stgm_write lets an object commit changes to the storage.
 			-- Specifically, unless this flag has been given, IStorage.Commit
 			-- and IStream.Commit will fail. An open object whose changes cannot
@@ -128,7 +128,7 @@ feature -- Access
 			"STGM_WRITE"
 		end
 		
-	Stgm_readwrite: INTEGER is
+	Stgm_readwrite: INTEGER
 			-- Stgm_readwrite is the logical combination of the
 			-- Stgm_read and Stgm_write. However, the defined value
 			-- of Stgm_readwrite is not equal to
@@ -139,7 +139,7 @@ feature -- Access
 			"STGM_READWRITE"
 		end
 		
-	Stgm_share_deny_none: INTEGER is
+	Stgm_share_deny_none: INTEGER
 			-- 0x00000040L
 			-- Stgm_SHARE_DENY_NONE indicates that neither read access nor
 			-- write access should be denied to subsequent openings. This is the
@@ -151,7 +151,7 @@ feature -- Access
 			"STGM_SHARE_DENY_NONE"
 		end
 		
-	Stgm_share_deny_read: INTEGER is
+	Stgm_share_deny_read: INTEGER
 			-- 0x00000030L
 			-- When successfully applied to a root IStorage, the
 			-- Stgm_SHARE_DENY_READ flag prevents others from opening the
@@ -170,7 +170,7 @@ feature -- Access
 			"STGM_SHARE_DENY_READ"
 		end
 		
-	Stgm_share_deny_write: INTEGER is
+	Stgm_share_deny_write: INTEGER
 			-- When successfully applied the Stgm_share_deny_write flag
 			-- prevents subsequent openings of either a storage or a stream from
 			-- specifying write mode. The open call fails and returns an error
@@ -183,7 +183,7 @@ feature -- Access
 			"STGM_SHARE_DENY_WRITE"
 		end
 		
-	Stgm_share_exclusive: INTEGER is
+	Stgm_share_exclusive: INTEGER
 			-- The compound files implementation requires that all inner elements
 			-- be opened Stgm_share_exclusive. It is the logical combination
 			-- of the Stgm_share_deny_read and Stgm_share_deny_write.
@@ -195,7 +195,7 @@ feature -- Access
 			"STGM_SHARE_EXCLUSIVE"
 		end
 		
-	Stgm_priority: INTEGER is
+	Stgm_priority: INTEGER
 			-- The Stgm_priority flag allows an IStorage object to be opened
 			-- so that a subsequent copy operation can be done at reduced cost.
 			-- Stgm_priority allows an application to read certain streams
@@ -213,7 +213,7 @@ feature -- Access
 			"STGM_PRIORITY"
 		end
 
-	is_valid_stgm (stgm: INTEGER): BOOLEAN is
+	is_valid_stgm (stgm: INTEGER): BOOLEAN
 			-- Is `stgm' a valid storage mode flag?
 		do
 			Result := stgm = Stgm_create or
@@ -232,7 +232,7 @@ feature -- Access
 						-- stgm = Stgm_priority
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

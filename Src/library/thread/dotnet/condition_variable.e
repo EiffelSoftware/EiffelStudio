@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class describing a condition variable."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 			-- Create and initialize condition variable.
 		require
 			thread_capable: {PLATFORM}.is_thread_capable
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Status setting
 
-	signal is
+	signal
 			-- Unblock one thread blocked on the current condition variable.
 		require
 			is_set: is_set
@@ -46,7 +46,7 @@ feature -- Status setting
 			end
 		end
 
-	broadcast is
+	broadcast
 			-- Unblock all threads blocked on the current condition variable.
 		require
 			is_set: is_set
@@ -73,7 +73,7 @@ feature -- Status setting
 			end
 		end
 
-	wait (a_mutex: MUTEX) is
+	wait (a_mutex: MUTEX)
 			-- Block calling thread on current condition variable.
 		require
 			is_set: is_set
@@ -122,7 +122,7 @@ feature -- Status setting
 			a_mutex.lock
 		end
 
-	wait_with_timeout (a_mutex: MUTEX; a_timeout: INTEGER): BOOLEAN is
+	wait_with_timeout (a_mutex: MUTEX; a_timeout: INTEGER): BOOLEAN
 			-- Block calling thread on current condition variable.
 			--| Return `True' is we got the condition variable on time
 			--| Otherwise return `False'
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 invariant
 	is_thread_capable: {PLATFORM}.is_thread_capable
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision WEL_DIB version. We do not want the file %
 		% given as argument to be closed."
@@ -16,7 +16,7 @@ inherit
 create
 	make_by_file, make_by_stream
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

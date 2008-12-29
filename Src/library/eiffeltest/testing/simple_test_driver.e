@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Simple test drivers for the console"
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (f: LOG_FACILITY) is
+	make (f: LOG_FACILITY)
 			-- Create driver with log output to `f'.
 		require
 			log_exists: f /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			standard_output_set: has_standard_output
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control interfaces. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,147 +12,147 @@ inherit
 
 feature -- Status Report
 
-	set_client_site_user_precondition (p_client_site: IOLE_CLIENT_SITE_INTERFACE): BOOLEAN is
+	set_client_site_user_precondition (p_client_site: IOLE_CLIENT_SITE_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `set_client_site'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_client_site_user_precondition (pp_client_site: CELL [IOLE_CLIENT_SITE_INTERFACE]): BOOLEAN is
+	get_client_site_user_precondition (pp_client_site: CELL [IOLE_CLIENT_SITE_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `get_client_site'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_host_names_user_precondition (sz_container_app: STRING; sz_container_obj: STRING): BOOLEAN is
+	set_host_names_user_precondition (sz_container_app: STRING; sz_container_obj: STRING): BOOLEAN
 			-- User-defined preconditions for `set_host_names'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	close_user_precondition (dw_save_option: INTEGER): BOOLEAN is
+	close_user_precondition (dw_save_option: INTEGER): BOOLEAN
 			-- User-defined preconditions for `close'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_moniker_user_precondition (dw_which_moniker: INTEGER; pmk: IMONIKER_INTERFACE): BOOLEAN is
+	set_moniker_user_precondition (dw_which_moniker: INTEGER; pmk: IMONIKER_INTERFACE): BOOLEAN
 			-- User-defined preconditions for `set_moniker'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_moniker_user_precondition (dw_assign: INTEGER; dw_which_moniker: INTEGER; ppmk: CELL [IMONIKER_INTERFACE]): BOOLEAN is
+	get_moniker_user_precondition (dw_assign: INTEGER; dw_which_moniker: INTEGER; ppmk: CELL [IMONIKER_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `get_moniker'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	init_from_data_user_precondition (p_data_object: IDATA_OBJECT_INTERFACE; f_creation: INTEGER; dw_reserved: INTEGER): BOOLEAN is
+	init_from_data_user_precondition (p_data_object: IDATA_OBJECT_INTERFACE; f_creation: INTEGER; dw_reserved: INTEGER): BOOLEAN
 			-- User-defined preconditions for `init_from_data'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_clipboard_data_user_precondition (dw_reserved: INTEGER; pp_data_object: CELL [IDATA_OBJECT_INTERFACE]): BOOLEAN is
+	get_clipboard_data_user_precondition (dw_reserved: INTEGER; pp_data_object: CELL [IDATA_OBJECT_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `get_clipboard_data'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	do_verb_user_precondition (i_verb: INTEGER; lpmsg: TAG_MSG_RECORD; p_active_site: IOLE_CLIENT_SITE_INTERFACE; lindex: INTEGER; hwnd_parent: POINTER; lprc_pos_rect: TAG_RECT_RECORD): BOOLEAN is
+	do_verb_user_precondition (i_verb: INTEGER; lpmsg: TAG_MSG_RECORD; p_active_site: IOLE_CLIENT_SITE_INTERFACE; lindex: INTEGER; hwnd_parent: POINTER; lprc_pos_rect: TAG_RECT_RECORD): BOOLEAN
 			-- User-defined preconditions for `do_verb'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enum_verbs_user_precondition (pp_enum_ole_verb: CELL [IENUM_OLEVERB_INTERFACE]): BOOLEAN is
+	enum_verbs_user_precondition (pp_enum_ole_verb: CELL [IENUM_OLEVERB_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `enum_verbs'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	update_user_precondition: BOOLEAN is
+	update_user_precondition: BOOLEAN
 			-- User-defined preconditions for `update'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	is_up_to_date_user_precondition: BOOLEAN is
+	is_up_to_date_user_precondition: BOOLEAN
 			-- User-defined preconditions for `is_up_to_date'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_user_class_id_user_precondition (p_clsid: ECOM_GUID): BOOLEAN is
+	get_user_class_id_user_precondition (p_clsid: ECOM_GUID): BOOLEAN
 			-- User-defined preconditions for `get_user_class_id'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_user_type_user_precondition (dw_form_of_type: INTEGER; psz_user_type: CELL [STRING]): BOOLEAN is
+	get_user_type_user_precondition (dw_form_of_type: INTEGER; psz_user_type: CELL [STRING]): BOOLEAN
 			-- User-defined preconditions for `get_user_type'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_extent_user_precondition (dw_draw_aspect: INTEGER; psizel: TAG_SIZEL_RECORD): BOOLEAN is
+	set_extent_user_precondition (dw_draw_aspect: INTEGER; psizel: TAG_SIZEL_RECORD): BOOLEAN
 			-- User-defined preconditions for `set_extent'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_extent_user_precondition (dw_draw_aspect: INTEGER; psizel: TAG_SIZEL_RECORD): BOOLEAN is
+	get_extent_user_precondition (dw_draw_aspect: INTEGER; psizel: TAG_SIZEL_RECORD): BOOLEAN
 			-- User-defined preconditions for `get_extent'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	advise_user_precondition (p_adv_sink: IADVISE_SINK_INTERFACE; pdw_connection: INTEGER_REF): BOOLEAN is
+	advise_user_precondition (p_adv_sink: IADVISE_SINK_INTERFACE; pdw_connection: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `advise'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	unadvise_user_precondition (dw_connection: INTEGER): BOOLEAN is
+	unadvise_user_precondition (dw_connection: INTEGER): BOOLEAN
 			-- User-defined preconditions for `unadvise'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	enum_advise_user_precondition (ppenum_advise: CELL [IENUM_STATDATA_INTERFACE]): BOOLEAN is
+	enum_advise_user_precondition (ppenum_advise: CELL [IENUM_STATDATA_INTERFACE]): BOOLEAN
 			-- User-defined preconditions for `enum_advise'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	get_misc_status_user_precondition (dw_aspect: INTEGER; pdw_status: INTEGER_REF): BOOLEAN is
+	get_misc_status_user_precondition (dw_aspect: INTEGER; pdw_status: INTEGER_REF): BOOLEAN
 			-- User-defined preconditions for `get_misc_status'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
 		end
 
-	set_color_scheme_user_precondition (p_logpal: TAG_LOGPALETTE_RECORD): BOOLEAN is
+	set_color_scheme_user_precondition (p_logpal: TAG_LOGPALETTE_RECORD): BOOLEAN
 			-- User-defined preconditions for `set_color_scheme'.
 			-- Redefine in descendants if needed.
 		do
@@ -161,7 +161,7 @@ feature -- Status Report
 
 feature -- Basic Operations
 
-	set_client_site (p_client_site: IOLE_CLIENT_SITE_INTERFACE) is
+	set_client_site (p_client_site: IOLE_CLIENT_SITE_INTERFACE)
 			-- No description available.
 			-- `p_client_site' [in].  
 		require
@@ -170,7 +170,7 @@ feature -- Basic Operations
 
 		end
 
-	get_client_site (pp_client_site: CELL [IOLE_CLIENT_SITE_INTERFACE]) is
+	get_client_site (pp_client_site: CELL [IOLE_CLIENT_SITE_INTERFACE])
 			-- No description available.
 			-- `pp_client_site' [out].  
 		require
@@ -182,7 +182,7 @@ feature -- Basic Operations
 			valid_pp_client_site: pp_client_site.item /= Void
 		end
 
-	set_host_names (sz_container_app: STRING; sz_container_obj: STRING) is
+	set_host_names (sz_container_app: STRING; sz_container_obj: STRING)
 			-- No description available.
 			-- `sz_container_app' [in].  
 			-- `sz_container_obj' [in].  
@@ -192,7 +192,7 @@ feature -- Basic Operations
 
 		end
 
-	close (dw_save_option: INTEGER) is
+	close (dw_save_option: INTEGER)
 			-- No description available.
 			-- `dw_save_option' [in].  
 		require
@@ -201,7 +201,7 @@ feature -- Basic Operations
 
 		end
 
-	set_moniker (dw_which_moniker: INTEGER; pmk: IMONIKER_INTERFACE) is
+	set_moniker (dw_which_moniker: INTEGER; pmk: IMONIKER_INTERFACE)
 			-- No description available.
 			-- `dw_which_moniker' [in].  
 			-- `pmk' [in].  
@@ -211,7 +211,7 @@ feature -- Basic Operations
 
 		end
 
-	get_moniker (dw_assign: INTEGER; dw_which_moniker: INTEGER; ppmk: CELL [IMONIKER_INTERFACE]) is
+	get_moniker (dw_assign: INTEGER; dw_which_moniker: INTEGER; ppmk: CELL [IMONIKER_INTERFACE])
 			-- No description available.
 			-- `dw_assign' [in].  
 			-- `dw_which_moniker' [in].  
@@ -225,7 +225,7 @@ feature -- Basic Operations
 			valid_ppmk: ppmk.item /= Void
 		end
 
-	init_from_data (p_data_object: IDATA_OBJECT_INTERFACE; f_creation: INTEGER; dw_reserved: INTEGER) is
+	init_from_data (p_data_object: IDATA_OBJECT_INTERFACE; f_creation: INTEGER; dw_reserved: INTEGER)
 			-- No description available.
 			-- `p_data_object' [in].  
 			-- `f_creation' [in].  
@@ -236,7 +236,7 @@ feature -- Basic Operations
 
 		end
 
-	get_clipboard_data (dw_reserved: INTEGER; pp_data_object: CELL [IDATA_OBJECT_INTERFACE]) is
+	get_clipboard_data (dw_reserved: INTEGER; pp_data_object: CELL [IDATA_OBJECT_INTERFACE])
 			-- No description available.
 			-- `dw_reserved' [in].  
 			-- `pp_data_object' [out].  
@@ -249,7 +249,7 @@ feature -- Basic Operations
 			valid_pp_data_object: pp_data_object.item /= Void
 		end
 
-	do_verb (i_verb: INTEGER; lpmsg: TAG_MSG_RECORD; p_active_site: IOLE_CLIENT_SITE_INTERFACE; lindex: INTEGER; hwnd_parent: POINTER; lprc_pos_rect: TAG_RECT_RECORD) is
+	do_verb (i_verb: INTEGER; lpmsg: TAG_MSG_RECORD; p_active_site: IOLE_CLIENT_SITE_INTERFACE; lindex: INTEGER; hwnd_parent: POINTER; lprc_pos_rect: TAG_RECT_RECORD)
 			-- No description available.
 			-- `i_verb' [in].  
 			-- `lpmsg' [in].  
@@ -265,7 +265,7 @@ feature -- Basic Operations
 
 		end
 
-	enum_verbs (pp_enum_ole_verb: CELL [IENUM_OLEVERB_INTERFACE]) is
+	enum_verbs (pp_enum_ole_verb: CELL [IENUM_OLEVERB_INTERFACE])
 			-- No description available.
 			-- `pp_enum_ole_verb' [out].  
 		require
@@ -277,7 +277,7 @@ feature -- Basic Operations
 			valid_pp_enum_ole_verb: pp_enum_ole_verb.item /= Void
 		end
 
-	update is
+	update
 			-- No description available.
 		require
 			update_user_precondition: update_user_precondition
@@ -285,7 +285,7 @@ feature -- Basic Operations
 
 		end
 
-	is_up_to_date is
+	is_up_to_date
 			-- No description available.
 		require
 			is_up_to_date_user_precondition: is_up_to_date_user_precondition
@@ -293,7 +293,7 @@ feature -- Basic Operations
 
 		end
 
-	get_user_class_id (p_clsid: ECOM_GUID) is
+	get_user_class_id (p_clsid: ECOM_GUID)
 			-- No description available.
 			-- `p_clsid' [out].  
 		require
@@ -304,7 +304,7 @@ feature -- Basic Operations
 
 		end
 
-	get_user_type (dw_form_of_type: INTEGER; psz_user_type: CELL [STRING]) is
+	get_user_type (dw_form_of_type: INTEGER; psz_user_type: CELL [STRING])
 			-- No description available.
 			-- `dw_form_of_type' [in].  
 			-- `psz_user_type' [out].  
@@ -317,7 +317,7 @@ feature -- Basic Operations
 			valid_psz_user_type: psz_user_type.item /= Void
 		end
 
-	set_extent (dw_draw_aspect: INTEGER; psizel: TAG_SIZEL_RECORD) is
+	set_extent (dw_draw_aspect: INTEGER; psizel: TAG_SIZEL_RECORD)
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `psizel' [in].  
@@ -329,7 +329,7 @@ feature -- Basic Operations
 
 		end
 
-	get_extent (dw_draw_aspect: INTEGER; psizel: TAG_SIZEL_RECORD) is
+	get_extent (dw_draw_aspect: INTEGER; psizel: TAG_SIZEL_RECORD)
 			-- No description available.
 			-- `dw_draw_aspect' [in].  
 			-- `psizel' [out].  
@@ -341,7 +341,7 @@ feature -- Basic Operations
 
 		end
 
-	advise (p_adv_sink: IADVISE_SINK_INTERFACE; pdw_connection: INTEGER_REF) is
+	advise (p_adv_sink: IADVISE_SINK_INTERFACE; pdw_connection: INTEGER_REF)
 			-- No description available.
 			-- `p_adv_sink' [in].  
 			-- `pdw_connection' [out].  
@@ -352,7 +352,7 @@ feature -- Basic Operations
 
 		end
 
-	unadvise (dw_connection: INTEGER) is
+	unadvise (dw_connection: INTEGER)
 			-- No description available.
 			-- `dw_connection' [in].  
 		require
@@ -361,7 +361,7 @@ feature -- Basic Operations
 
 		end
 
-	enum_advise (ppenum_advise: CELL [IENUM_STATDATA_INTERFACE]) is
+	enum_advise (ppenum_advise: CELL [IENUM_STATDATA_INTERFACE])
 			-- No description available.
 			-- `ppenum_advise' [out].  
 		require
@@ -373,7 +373,7 @@ feature -- Basic Operations
 			valid_ppenum_advise: ppenum_advise.item /= Void
 		end
 
-	get_misc_status (dw_aspect: INTEGER; pdw_status: INTEGER_REF) is
+	get_misc_status (dw_aspect: INTEGER; pdw_status: INTEGER_REF)
 			-- No description available.
 			-- `dw_aspect' [in].  
 			-- `pdw_status' [out].  
@@ -384,7 +384,7 @@ feature -- Basic Operations
 
 		end
 
-	set_color_scheme (p_logpal: TAG_LOGPALETTE_RECORD) is
+	set_color_scheme (p_logpal: TAG_LOGPALETTE_RECORD)
 			-- No description available.
 			-- `p_logpal' [in].  
 		require
@@ -395,7 +395,7 @@ feature -- Basic Operations
 
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

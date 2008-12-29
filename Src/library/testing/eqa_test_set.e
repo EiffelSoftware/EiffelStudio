@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Sets of related testing operations.
 	]"
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Access
 
-	asserter: EQA_ASSERTIONS is
+	asserter: EQA_ASSERTIONS
 			-- Assertions used to raise an exception to report unexpected behaviour.
 		do
 			if internal_asserter /= Void then
@@ -54,7 +54,7 @@ feature {NONE} -- Status report
 
 feature -- Status setting
 
-	set_asserter (a: like asserter) is
+	set_asserter (a: like asserter)
 			-- Set `asserter' with `a'.
 		require
 			a_attached: a /= Void
@@ -119,7 +119,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	assert (a_tag: STRING; a_condition: BOOLEAN) is
+	assert (a_tag: STRING; a_condition: BOOLEAN)
 			-- Assert `a_condition'.
 		require
 			a_tag_not_void: a_tag /= Void

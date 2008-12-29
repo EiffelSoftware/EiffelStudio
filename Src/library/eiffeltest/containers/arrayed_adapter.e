@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Adapter from ARRAYED_LIST to BASIC"
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature -- Element change
 
-	extend (v: G) is
+	extend (v: G)
 			-- Add `v' to end.
 		do
 			Precursor (v)
@@ -33,7 +33,7 @@ feature -- Element change
 			not_off: not off
 		end
 
-	replace (v: G; i: INTEGER) is
+	replace (v: G; i: INTEGER)
 			-- Replace `i'-th item with `v'.
 		local
 			old_idx: INTEGER
@@ -46,7 +46,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Remove `i'-th.
 		local
 			old_idx: INTEGER
@@ -58,7 +58,7 @@ feature -- Removal
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

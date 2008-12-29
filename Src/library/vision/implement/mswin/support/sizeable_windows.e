@@ -1,4 +1,4 @@
-indexing 
+note 
 
 	description: "A class for MS-Windows to simulate resizing by children"
 	legal: "See notice at end of class.";
@@ -12,7 +12,7 @@ deferred class
 
 feature -- Status report
 
-	fixed_size : BOOLEAN is
+	fixed_size : BOOLEAN
 			-- Is this widget or it's parents fixed?
 		local
 			pw : SIZEABLE_WINDOWS
@@ -26,19 +26,19 @@ feature -- Status report
 
 feature -- Status setting
 
-	allow_recompute_size is
+	allow_recompute_size
 			-- Allow resizing of the children.
 		do
 			fixed_size_flag := False
 	        end
 
-	forbid_recompute_size is
+	forbid_recompute_size
 			-- Forbid resizing of the children.
 		do
 			fixed_size_flag := True
 		end
 
-	resize_for_shell is
+	resize_for_shell
 			-- Resize current widget if the parent is a shell.			
 		local
 			tw: TOP_IMP
@@ -56,22 +56,22 @@ feature {SIZEABLE_WINDOWS} -- Implementation
 	fixed_size_flag: BOOLEAN
 			-- Flag to indicate if this widget can have its size changed
 
-	parent: COMPOSITE_IMP is
+	parent: COMPOSITE_IMP
 			-- Parent of this sizeable widget
 		deferred
 		end
 
-	set_x_y (new_x, new_y: INTEGER) is
+	set_x_y (new_x, new_y: INTEGER)
 			-- Positioning of this sizeable widget
 		deferred
 		end
 
-	set_size (new_width, new_height: INTEGER) is
+	set_size (new_width, new_height: INTEGER)
 			-- Set the size of this widget
 		deferred
 		end
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

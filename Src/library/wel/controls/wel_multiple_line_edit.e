@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Edit control which can contain multiple lines."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Basic operations
 
-	scroll (horizontal, vertical: INTEGER) is
+	scroll (horizontal, vertical: INTEGER)
 			-- Scroll the text vertically and horizontally.
 			-- `horizontal' is the number of characters to
 			-- scroll horizontally, `vertical' is the number
@@ -33,7 +33,7 @@ feature -- Basic operations
 
 feature -- Status setting
 
-	set_selection (start_position, end_position: INTEGER) is
+	set_selection (start_position, end_position: INTEGER)
 			-- Set the selection between `start_position'
 			-- and `end_position'.
 			-- If `scroll_caret_at_selection' is True, the
@@ -45,7 +45,7 @@ feature -- Status setting
 			end
 		end
 
-	set_caret_position (position: INTEGER) is
+	set_caret_position (position: INTEGER)
 			-- Set the caret position with `position'.
 			-- If `scroll_caret_at_selection' is True, the
 			-- caret will be scrolled to `position'.
@@ -56,7 +56,7 @@ feature -- Status setting
 			end
 		end
 
-	set_formatting_rect (rect: WEL_RECT) is
+	set_formatting_rect (rect: WEL_RECT)
 			-- Set `formatting_rect' with `rect'.
 		require
 			exists: exists
@@ -65,7 +65,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_setrect, to_wparam (0), rect.item)
 		end
 
-	set_tab_stops (tab: INTEGER) is
+	set_tab_stops (tab: INTEGER)
 			-- Set tab stops at every `tab' dialog box units.
 		require
 			exists: exists
@@ -75,7 +75,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_settabstops, to_wparam (1), $tab)
 		end
 
-	set_tab_stops_array (tab: ARRAY [INTEGER]) is
+	set_tab_stops_array (tab: ARRAY [INTEGER])
 			-- Set tab stops using the values of `tab'.
 		require
 			exists: exists
@@ -89,7 +89,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_settabstops, to_wparam (tab.count), a.item)
 		end
 
-	set_default_tab_stops is
+	set_default_tab_stops
 			-- Set tab stops at every 32 dialog box units.
 		require
 			exists: exists
@@ -97,7 +97,7 @@ feature -- Status setting
 			{WEL_API}.send_message (item, Em_settabstops, to_wparam (0), to_lparam (0))
 		end
 
-	enable_scroll_caret_at_selection is
+	enable_scroll_caret_at_selection
 			-- Set `scroll_caret_at_selection' to True.
 			-- The caret will be scrolled at the selection after
 			-- a call to `set_selection'.
@@ -109,7 +109,7 @@ feature -- Status setting
 			scroll_caret_at_selection_enabled: scroll_caret_at_selection
 		end
 
-	disable_scroll_caret_at_selection is
+	disable_scroll_caret_at_selection
 			-- Set `scroll_caret_at_selection' to False.
 			-- The caret will not be scrolled at the selection
 			-- after a call to `set_selection'.
@@ -123,7 +123,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	line_count: INTEGER is
+	line_count: INTEGER
 			-- Number of lines
 		require
 			exists: exists
@@ -134,7 +134,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	current_line_index: INTEGER is
+	current_line_index: INTEGER
 			-- Index of the line that contains the caret.
 		require
 			exists: exists
@@ -144,7 +144,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	first_visible_line: INTEGER is
+	first_visible_line: INTEGER
 			-- Upper most visible line
 		require
 			exists: exists
@@ -155,7 +155,7 @@ feature -- Status report
 			result_small_enough: Result < line_count
 		end
 
-	current_line_number: INTEGER is
+	current_line_number: INTEGER
 			-- Line number of the line that contains the caret.
 		require
 			exists: exists
@@ -167,7 +167,7 @@ feature -- Status report
 			result_small_enough: Result < line_count
 		end
 
-	line_length (i: INTEGER): INTEGER is
+	line_length (i: INTEGER): INTEGER
 			-- Length of the `i'th line
 		require
 			exists: exists
@@ -181,7 +181,7 @@ feature -- Status report
 			result_ok: Result = line (i).count
 		end
 
-	line (i: INTEGER): STRING_32 is
+	line (i: INTEGER): STRING_32
 			-- `i'th line
 		require
 			exists: exists
@@ -205,7 +205,7 @@ feature -- Status report
 			--count_ok: Result.count = line_length (i)
 		end
 
-	line_index (i: INTEGER): INTEGER is
+	line_index (i: INTEGER): INTEGER
 			-- Number of characters from the beginning of the edit
 			-- control to the zero-based line `i'.
 			-- Retrieve a character index for a given line number.
@@ -220,7 +220,7 @@ feature -- Status report
 			positive_result: Result >= 0
 		end
 
-	line_from_char (i: INTEGER): INTEGER is
+	line_from_char (i: INTEGER): INTEGER
 			-- Index of the line that contains the character
 			-- index `i'. A character index is the number of
 			-- characters from the beginning of the edit control.
@@ -239,7 +239,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
@@ -248,7 +248,7 @@ feature {NONE} -- Implementation
 				Ws_vscroll + Ws_hscroll + Es_multiline
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

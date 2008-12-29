@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	make
 
 feature	-- creation
-    make(m:I18N_MO_FILE) is
+    make(m:I18N_MO_FILE)
     		-- initialize `mo_file' with `m'
     		-- and open `mo_file'
     	do
@@ -23,7 +23,7 @@ feature	-- creation
 
 feature -- access test
 
-	valid_index_test is
+	valid_index_test
 			-- test valid_index feature in class `I18N_MO_FILE'
 		local
 			i:INTEGER
@@ -49,7 +49,7 @@ feature -- access
 
 	mo_file: I18N_MO_FILE;
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

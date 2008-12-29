@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tree view item (TVI) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	Tvi_root: POINTER is
+	Tvi_root: POINTER
 			-- Inserts the item as the root of the list.
 		external
 			"C [macro %"cctrl.h%"] : HTREEITEM"
@@ -18,7 +18,7 @@ feature -- Access
 			"TVI_ROOT"
 		end
 
-	Tvi_first: POINTER is
+	Tvi_first: POINTER
 			-- Inserts the item at the beginning of the list.
 		external
 			"C [macro %"cctrl.h%"] : HTREEITEM"
@@ -26,7 +26,7 @@ feature -- Access
 			"TVI_FIRST"
 		end
 
-	Tvi_last: POINTER is
+	Tvi_last: POINTER
 			-- Inserts the item at the end of the list.
 		external
 			"C [macro %"cctrl.h%"] : HTREEITEM"
@@ -34,7 +34,7 @@ feature -- Access
 			"TVI_LAST"
 		end
 
-	Tvi_sort: POINTER is
+	Tvi_sort: POINTER
 			-- Inserts the item into the list in alphabetical order.
 		external
 			"C [macro %"cctrl.h%"] : HTREEITEM"
@@ -42,7 +42,7 @@ feature -- Access
 			"TVI_SORT"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

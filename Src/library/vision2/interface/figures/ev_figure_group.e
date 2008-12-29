@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Group of EV_FIGURE's. If a figure is added to%
 		%this group, it is removed from its previous group first."
@@ -59,7 +59,7 @@ create {EV_FIGURE_GROUP}
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create without point.
 		do
 			Precursor {EV_FIGURE}
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	snap_to_grid is
+	snap_to_grid
 			-- Move all move handles to most nearby point on the grid.
 		require
 			world_not_void: world /= Void
@@ -87,7 +87,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	invalid_rectangle: EV_RECTANGLE is
+	invalid_rectangle: EV_RECTANGLE
 			-- Rectangle that needs erasing.
 			-- `Void' if no change is made.
 		local
@@ -112,7 +112,7 @@ feature -- Status report
 			end
 		end
 
-	update_rectangle: EV_RECTANGLE is
+	update_rectangle: EV_RECTANGLE
 			-- Rectangle that needs redrawing.
 			-- `Void' if no change is made.
 		local
@@ -137,7 +137,7 @@ feature -- Status report
 			end
 		end
 
-	bounding_box: EV_RECTANGLE is
+	bounding_box: EV_RECTANGLE
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
 			f: EV_FIGURE
@@ -160,7 +160,7 @@ feature -- Status report
 
 feature -- Events
 
-	position_on_figure (x, y: INTEGER): BOOLEAN is
+	position_on_figure (x, y: INTEGER): BOOLEAN
 			-- Is (`x', `y') on this figure?
 			-- Always returns `False', but descendants can override
 			-- it to improve efficiency.
@@ -170,7 +170,7 @@ feature -- Events
 
 feature -- Recomputation
 
-	calculate_absolute_position is
+	calculate_absolute_position
 			-- Recalculates all absolute positions inside this group.
 		do
 			Precursor {EV_FIGURE}
@@ -184,7 +184,7 @@ feature -- Recomputation
 			end
 		end
 
-	invalidate is
+	invalidate
 			-- Some property of `Current' has changed.
 		do
 			Precursor {EV_FIGURE}
@@ -194,7 +194,7 @@ feature -- Recomputation
 			end
 		end
 
-	validate is
+	validate
 			-- Invalidate `Current'.
 		do
 			Precursor {EV_FIGURE}
@@ -206,7 +206,7 @@ feature -- Recomputation
 
 feature -- List operations
 
-	insert (fig: like item; i: INTEGER) is
+	insert (fig: like item; i: INTEGER)
 			-- Add `fig' to the group.
 		do
 			Precursor {ARRAYED_LIST} (fig, i)
@@ -214,7 +214,7 @@ feature -- List operations
 			full_redraw
 		end
 
-	force_i_th (fig: like item; i: INTEGER) is
+	force_i_th (fig: like item; i: INTEGER)
 			-- Add `fig' to the group.
 		do
 			Precursor {ARRAYED_LIST} (fig, i)
@@ -222,7 +222,7 @@ feature -- List operations
 			full_redraw
 		end
 
-	replace (fig: like item) is
+	replace (fig: like item)
 			-- Add `fig' to the group.
 		do
 			item.unreference_group
@@ -231,7 +231,7 @@ feature -- List operations
 			full_redraw
 		end
 
-	remove is
+	remove
 			-- Remove `item' from figure.
 		do
 			item.unreference_group
@@ -239,7 +239,7 @@ feature -- List operations
 			full_redraw
 		end
 
-	prune_all (fig: like item) is
+	prune_all (fig: like item)
 			-- Remove `fig' from the group.
 		do
 			if has (fig) then
@@ -249,7 +249,7 @@ feature -- List operations
 			full_redraw
 		end
 
-	merge_left (other: ARRAYED_LIST [EV_FIGURE]) is
+	merge_left (other: ARRAYED_LIST [EV_FIGURE])
 			-- Merge `other' into group before cursor.
 			-- `other' will be empty afterwards.
 		do
@@ -258,7 +258,7 @@ feature -- List operations
 			full_redraw
 		end
 
-	merge_right (other: ARRAYED_LIST [EV_FIGURE]) is
+	merge_right (other: ARRAYED_LIST [EV_FIGURE])
 			-- Merge `other' into group after cursor.
 			-- `other' will be empty afterwards.
 		do
@@ -267,7 +267,7 @@ feature -- List operations
 			full_redraw
 		end
 
-	wipe_out is
+	wipe_out
 			-- Unreference all groups.
 		do
 			from start until after loop
@@ -278,7 +278,7 @@ feature -- List operations
 			full_redraw
 		end
 		
-	append (s: SEQUENCE [EV_FIGURE]) is
+	append (s: SEQUENCE [EV_FIGURE])
 			-- Append a copy of `s'.
 		local
 			l: like s
@@ -301,7 +301,7 @@ feature -- List operations
 			go_to (l_cursor)
 		end
 		
-	make_from_array (a: ARRAY [EV_FIGURE]) is
+	make_from_array (a: ARRAY [EV_FIGURE])
 			-- Create list from array `a'.
 		local
 			i: INTEGER
@@ -319,7 +319,7 @@ feature -- List operations
 
 feature {NONE} -- Implementation
 
-	change_group (other: ARRAYED_LIST [EV_FIGURE]) is
+	change_group (other: ARRAYED_LIST [EV_FIGURE])
 			-- Change group of all figures in `other' to Current.
 			-- Used by `merge_left' and `merge_right'.
 		local
@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	full_redraw is
+	full_redraw
 			-- Request `invalid_rectangle' to be ignored.
 		local
 			w: EV_FIGURE_WORLD
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

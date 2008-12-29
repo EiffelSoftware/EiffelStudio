@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Externals
 
-	c_free (obj_ptr: POINTER) is
+	c_free (obj_ptr: POINTER)
 		do
 		end
 

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Encryption
 
-	encrypt (s: STRING): STRING is
+	encrypt (s: STRING): STRING
 			-- Padding done if length not multiple of 8.
 		do
 			Result := Precursor {DES_ENCODER} (s)
@@ -29,7 +29,7 @@ feature -- Encryption
 
 feature  -- Implementation
 
-	convert_to_ascii (s: STRING) is
+	convert_to_ascii (s: STRING)
 			-- Convert `s' into a printable characters string.
 		require
 			s_not_void: s /= Void
@@ -64,7 +64,7 @@ feature  -- Implementation
 			--make sur that every character of `s' is a printable ASCII character.
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

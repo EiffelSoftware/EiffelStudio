@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision viewport. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,13 +35,13 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is
+	needs_event_box: BOOLEAN
 			-- Does `a_widget' need an event box?
 		do
 			Result := False
 		end
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Initialize.
 		do
 			base_make (an_interface)
@@ -54,13 +54,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	x_offset: INTEGER is
+	x_offset: INTEGER
 			-- Horizontal position of viewport relative to `item'.
 		do
 			Result := internal_x_offset
 		end
 
-	y_offset: INTEGER is
+	y_offset: INTEGER
 			-- Vertical position of viewport relative to `item'.
 		do
 			Result := internal_y_offset
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Element change
 
-	block_resize_actions is
+	block_resize_actions
 			-- Block any resize actions that may occur.
 		do
 			if item /= Void then
@@ -79,7 +79,7 @@ feature -- Element change
 			end
 		end
 
-	unblock_resize_actions is
+	unblock_resize_actions
 			-- Unblock all resize actions.
 		do
 			if item /= Void then
@@ -89,7 +89,7 @@ feature -- Element change
 			end
 		end
 
-	set_x_offset (a_x: INTEGER) is
+	set_x_offset (a_x: INTEGER)
 			-- Set `x_offset' to `a_x'.
 		do
 			set_offset (a_x, internal_y_offset)
@@ -132,13 +132,13 @@ feature -- Element change
 			end
 		end
 
-	set_y_offset (a_y: INTEGER) is
+	set_y_offset (a_y: INTEGER)
 			-- Set `y_offset' to `a_y'.
 		do
 			set_offset (internal_x_offset, a_y)
 		end
 
-	set_item_size (a_width, a_height: INTEGER) is
+	set_item_size (a_width, a_height: INTEGER)
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
@@ -155,7 +155,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	gtk_insert_i_th (a_container, a_child: POINTER; a_position: INTEGER) is
+	gtk_insert_i_th (a_container, a_child: POINTER; a_position: INTEGER)
 			-- Move `a_child' to `a_position' in `a_container'.
 		local
 			l_parent_box: POINTER
@@ -183,13 +183,13 @@ feature {NONE} -- Implementation
 	container_widget: POINTER
 			-- Pointer to the event box
 
-	visual_widget: POINTER is
+	visual_widget: POINTER
 			-- Pointer to the GtkViewport widget.
 		do
 			Result := viewport
 		end
 
-	on_removed_item (a_widget_imp: EV_WIDGET_IMP) is
+	on_removed_item (a_widget_imp: EV_WIDGET_IMP)
 			-- Reset minimum size.
 		do
 			Precursor (a_widget_imp)
@@ -199,17 +199,17 @@ feature {NONE} -- Implementation
 	internal_x_offset, internal_y_offset: INTEGER
 		-- X and Y offset values for viewport.
 
-	horizontal_adjustment: POINTER is
+	horizontal_adjustment: POINTER
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_viewport_get_hadjustment (viewport)
 		end
 
-	vertical_adjustment: POINTER is
+	vertical_adjustment: POINTER
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_viewport_get_vadjustment (viewport)
 		end
 
-	internal_set_value_from_adjustment (l_adj: POINTER; a_value: INTEGER) is
+	internal_set_value_from_adjustment (l_adj: POINTER; a_value: INTEGER)
 			-- Set `value' of adjustment `l_adj' to `a_value'.
 		require
 			l_adj_not_null: l_adj /= default_pointer
@@ -231,7 +231,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_VIEWPORT;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

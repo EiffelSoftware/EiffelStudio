@@ -1,4 +1,4 @@
-indexing
+note
 	description: "OLEMISC_ constants ."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,25 +10,25 @@ class
 
 feature -- Access
 
-	OLEMISC_INVISIBLEATRUNTIME: INTEGER is  1024
+	OLEMISC_INVISIBLEATRUNTIME: INTEGER =  1024
 	
-	OLEMISC_ALWAYSRUN: INTEGER is           2048
+	OLEMISC_ALWAYSRUN: INTEGER =           2048
 	
-	OLEMISC_ACTSLIKEBUTTON: INTEGER is      4096
+	OLEMISC_ACTSLIKEBUTTON: INTEGER =      4096
 	
-	OLEMISC_ACTSLIKELABEL: INTEGER is       8192
+	OLEMISC_ACTSLIKELABEL: INTEGER =       8192
 	
-	OLEMISC_NOUIACTIVATE: INTEGER is        16384
+	OLEMISC_NOUIACTIVATE: INTEGER =        16384
 	
-	OLEMISC_ALIGNABLE: INTEGER is           32768
+	OLEMISC_ALIGNABLE: INTEGER =           32768
 	
-	OLEMISC_SIMPLEFRAME: INTEGER is         65536
+	OLEMISC_SIMPLEFRAME: INTEGER =         65536
 	
-	OLEMISC_SETCLIENTSITEFIRST: INTEGER is  131072
+	OLEMISC_SETCLIENTSITEFIRST: INTEGER =  131072
 	
-	OLEMISC_IMEMODE: INTEGER is             262144;
+	OLEMISC_IMEMODE: INTEGER =             262144;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that is a pixmap with an id."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	
 feature {NONE} -- Initialisation
 
-	make_with_id (a_pixmap: like pixmap; an_id: like id) is
+	make_with_id (a_pixmap: like pixmap; an_id: like id)
 			-- Create an EV_IDENTIFIED_PIXMAP containing `a_pixmap' with `an_id'.
 		require
 			a_pixmap_not_Void: a_pixmap /= Void
@@ -37,7 +37,7 @@ invariant
 	pixmap_not_Void: pixmap /= Void
 	id_positive: id >= 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

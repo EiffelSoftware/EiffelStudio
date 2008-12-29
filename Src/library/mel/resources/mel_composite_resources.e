@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Composite resources."
@@ -12,7 +12,7 @@ class
 
 feature -- Implementation
 
-	XmNchildren: POINTER is
+	XmNchildren: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -20,7 +20,7 @@ feature -- Implementation
 			"XmNchildren"
 		end;
 
-	XmNinsertPosition: POINTER is
+	XmNinsertPosition: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -28,7 +28,7 @@ feature -- Implementation
 			"XmNinsertPosition"
 		end;
 
-	XmNnumChildren: POINTER is
+	XmNnumChildren: POINTER
 			-- Motif resource
 		external
 			"C [macro <Xm/Xm.h>]: EIF_POINTER"
@@ -36,7 +36,7 @@ feature -- Implementation
 			"XmNnumChildren"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

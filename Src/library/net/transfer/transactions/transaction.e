@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Data transactions"
 	legal: "See notice at end of class."
@@ -12,58 +12,58 @@ deferred class
 
 feature -- Access
 
-	source: DATA_RESOURCE is
+	source: DATA_RESOURCE
 			-- Current source
 		deferred
 		end
 	
-	target: DATA_RESOURCE is
+	target: DATA_RESOURCE
 			-- Current target
 		deferred
 		end
 	
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of transactions
 		deferred
 		end
 	 
 feature -- Status report
 
-	is_correct: BOOLEAN is
+	is_correct: BOOLEAN
 			-- Is transaction set up correctly?
 		deferred
 		end
 	 
-	error: BOOLEAN is
+	error: BOOLEAN
 			-- Has an error occurred in current transaction?
 		do
 			Result := source.error or target.error
 		end
 
-	succeeded: BOOLEAN is
+	succeeded: BOOLEAN
 			-- Has the transaction succeeded?
 		deferred
 		end
 	 
 feature -- Status setting
 
-	reset_error is
+	reset_error
 			-- Reset error flag.
 		deferred
 		end
 	 
 feature -- Basic operations
 
-	execute is
+	execute
 			-- Execute transaction.
 		require
 			correct_transaction: is_correct
 		deferred
 		end
 	 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

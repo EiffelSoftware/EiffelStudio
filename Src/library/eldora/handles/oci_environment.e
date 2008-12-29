@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wrapper for OCI Environment Handle"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,9 +36,9 @@ create
 
 feature {NONE} -- Initialization
 
-	Default_error_buffer_size: INTEGER is 512
+	Default_error_buffer_size: INTEGER = 512
 	
-	make is
+	make
 			-- Initialize OCI environment; raise an exception if an error is encountered.
 		local
 			status: INTEGER_16
@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- Removal
 
-	dispose is
+	dispose
 			-- Ensure the OCI environment is destroyed when garbage collected.
 		do
 			if is_allocated and not is_external then
@@ -77,7 +77,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	handle_type: INTEGER is
+	handle_type: INTEGER
 			-- Handle type
 		do
 			Result := Oci_htype_env
@@ -87,14 +87,14 @@ feature {NONE} -- Externals
 
 	oci_env_create (envhpp: POINTER; mode: INTEGER; ctxp: POINTER; malocfp: POINTER; 
 			ralocfp: POINTER; mfreefp: POINTER; xtramemsz: INTEGER; usrmempp: POINTER): 
-			INTEGER_16 is
+			INTEGER_16
 		external
 			"C (void **, int, void *, void *, void *, void *, int, void **): short | %"oci.h%""
 		alias
 			"OCIEnvCreate"
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

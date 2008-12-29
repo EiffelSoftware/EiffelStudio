@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision menu item list. GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature {EV_MENU_ITEM_IMP} -- implementation
 
-	list_widget: POINTER is
+	list_widget: POINTER
 			-- GtkMenuItem container for `Current'.
 		do
 			Result := c_object
@@ -33,7 +33,7 @@ feature {EV_MENU_ITEM_IMP} -- implementation
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; pos: INTEGER) is
+	insert_i_th (v: like item; pos: INTEGER)
 		local
 			an_item_imp: EV_MENU_ITEM_IMP
 			an_index: INTEGER
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			interface.go_i_th (an_index)
 		end
 
-	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
+	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER)
 			-- Generic menu item insertion.
 		do
 			{EV_GTK_EXTERNALS}.gtk_menu_shell_insert (list_widget, an_item_imp.menu_item, pos - 1)
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			an_item_imp.set_item_parent_imp (Current)
 		end
 
-	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP is
+	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP
 			-- Separator before item `an_index'.
 		require
 			an_index_within_bounds:
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 			go_to (cur)
 		end
 
-	is_menu_separator_imp (an_item_imp: EV_ITEM_I): BOOLEAN is
+	is_menu_separator_imp (an_item_imp: EV_ITEM_I): BOOLEAN
 		local
 			sep_imp: EV_MENU_SEPARATOR_IMP
 		do
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			Result := sep_imp /= Void
 		end
 
-	remove_i_th (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER)
 			-- Remove item at `a_position'
 		local
 			item_imp: EV_ITEM_IMP
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	radio_group_ref: POINTER_REF is
+	radio_group_ref: POINTER_REF
 		do
 			--| FIXME IEK Use opo syntax when available in compiler.
 			--| Same applies to access of action sequences.
@@ -224,13 +224,13 @@ feature -- Access
 			Result := radio_group_ref_internal
 		end
 
-	set_radio_group (p: POINTER) is
+	set_radio_group (p: POINTER)
 			-- Assign `p' to `radio_group'.
 		do
 			radio_group_ref.set_item (p)
 		end
 
-	radio_group: POINTER is
+	radio_group: POINTER
 			-- GSList with all radio items of this container.
 		do
 			Result := radio_group_ref.item
@@ -252,7 +252,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU_ITEM_LIST;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

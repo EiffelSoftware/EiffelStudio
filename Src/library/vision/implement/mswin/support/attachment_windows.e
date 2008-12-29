@@ -1,4 +1,4 @@
-indexing 
+note 
 
 	description: "Simulation of an attachment under Motif"
 	legal: "See notice at end of class.";
@@ -14,7 +14,7 @@ create
 
 feature -- Initialization
 
-	make (w: WIDGET_IMP) is
+	make (w: WIDGET_IMP)
 			-- Create the attachment for `w'
 		require
 			widget_not_void: w /= Void
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Status setting
 
-	attach_left (w: WIDGET_IMP; pos: INTEGER; relative: BOOLEAN) is
+	attach_left (w: WIDGET_IMP; pos: INTEGER; relative: BOOLEAN)
 			-- Attach left of this attachment to right of `w' 
 			-- separated by `pos' which may be `relative'
 		do
@@ -77,7 +77,7 @@ feature -- Status setting
 			left_relative := relative
 		end
 
-	attach_right (w: WIDGET_IMP; pos: INTEGER; relative: BOOLEAN) is
+	attach_right (w: WIDGET_IMP; pos: INTEGER; relative: BOOLEAN)
 			-- Attach right of this attachment to left of `w' 
 			-- separated by `pos' which may be `relative'
 		do
@@ -86,7 +86,7 @@ feature -- Status setting
 			right_relative := relative
 		end
 
-	attach_top (w: WIDGET_IMP; pos: INTEGER; relative: BOOLEAN) is
+	attach_top (w: WIDGET_IMP; pos: INTEGER; relative: BOOLEAN)
 			-- Attach top of this attachment to bottom of `w' 
 			-- separated by `pos' which may be `relative'
 		do
@@ -95,7 +95,7 @@ feature -- Status setting
 			top_relative := relative
 		end
 
-	attach_bottom (w: WIDGET_IMP; pos: INTEGER; relative: BOOLEAN) is
+	attach_bottom (w: WIDGET_IMP; pos: INTEGER; relative: BOOLEAN)
 			-- Attach bottom of this attachment to top of `w' 
 			-- separated by `pos' which may be `relative'
 		do
@@ -104,13 +104,13 @@ feature -- Status setting
 			bottom_relative := relative
 		end
 
-	reset is
+	reset
 			-- This widget is not processed
 		do
 			processed := false
 		end
 
-	height (f: FORM_IMP) : INTEGER is
+	height (f: FORM_IMP) : INTEGER
 			-- Height of this attachment on form `f'
 		 do
 			if not processed then
@@ -138,7 +138,7 @@ feature -- Status setting
 	private_height : INTEGER
 			-- Height of this attachment in context of form
 
-	width (f: FORM_IMP) : INTEGER is
+	width (f: FORM_IMP) : INTEGER
 			-- Width of the attachment on form `f'
 		 do
 			if not processed then
@@ -166,7 +166,7 @@ feature -- Status setting
 	private_width : INTEGER
 			-- Width of attachment in context of form
 
-	process (form : FORM_IMP) is
+	process (form : FORM_IMP)
 			-- Position this attachment
 		do
 			processed := true
@@ -234,7 +234,7 @@ feature -- Status setting
 			end
 		end
 
-	process_left (form: FORM_IMP) is
+	process_left (form: FORM_IMP)
 			-- Process attachment on left side
 		require
 			left_exists: left /= Void
@@ -260,7 +260,7 @@ feature -- Status setting
 			end
 		end
 
-	process_top (form: FORM_IMP) is
+	process_top (form: FORM_IMP)
 			-- Process attachment on top edge
 		require
 			top_exists: top /= Void
@@ -286,7 +286,7 @@ feature -- Status setting
 			end 
 		end
 
-	process_right_widget_no_left (form: FORM_IMP) is
+	process_right_widget_no_left (form: FORM_IMP)
 			-- Process right attachment to another widget with no left attachment
 		require
 			right_not_void: right /= Void
@@ -295,7 +295,7 @@ feature -- Status setting
 			widget.set_x ((0).max(right.x - right_position - widget.form_width))
 		end
 
-	process_right_widget_left_form (form: FORM_IMP) is
+	process_right_widget_left_form (form: FORM_IMP)
 			-- Process right attachment to another widget when the left attachment is `form'
 		require
 			right_not_void: right /= Void
@@ -308,7 +308,7 @@ feature -- Status setting
 			end
 		end
 
-	process_right_widget_left_widget is
+	process_right_widget_left_widget
 			-- Process right attachment to another widget when the left attachment is a widget
 		require
 			right_not_void: right /= Void
@@ -317,7 +317,7 @@ feature -- Status setting
 			widget.set_form_width ( (0).max (right.x - right_position - left_position - left.form_width - left.x))
 		end
 
-	process_right_form_no_left (form: FORM_IMP) is
+	process_right_form_no_left (form: FORM_IMP)
 			-- Process right attachment to `form' with no left attachment
 		require
 			right_not_void: right /= Void
@@ -330,7 +330,7 @@ feature -- Status setting
 			end
 		end
 
-	process_right_form_left_form (form: FORM_IMP) is
+	process_right_form_left_form (form: FORM_IMP)
 			-- Process right attachment to `form' with left also being `form'
 		require
 			right_not_void: right /= Void
@@ -351,7 +351,7 @@ feature -- Status setting
 			end
 		end
 
-	process_right_form_left_widget (form: FORM_IMP) is
+	process_right_form_left_widget (form: FORM_IMP)
 			-- Process right attachment to `form' with left being a widget
 		require
 			right_not_void: right /= Void
@@ -365,7 +365,7 @@ feature -- Status setting
 			end
 		end
 
-	process_bottom_widget_no_top (form: FORM_IMP) is
+	process_bottom_widget_no_top (form: FORM_IMP)
 			-- Process bottom attachment to another widget with no top attachment
 		require
 			bottom_not_void: bottom /= Void
@@ -374,7 +374,7 @@ feature -- Status setting
 			widget.set_y ((0).max (bottom.y - bottom_position - widget.form_height))
 		end
 
-	process_bottom_widget_top_form (form: FORM_IMP) is
+	process_bottom_widget_top_form (form: FORM_IMP)
 			-- Process bottom attachment to another widget with top attached to `form'
 		require
 			bottom_not_void: bottom /= Void
@@ -387,7 +387,7 @@ feature -- Status setting
 			end
 		end
 
-	process_bottom_widget_top_widget is
+	process_bottom_widget_top_widget
 			-- Process bottom attachment to another widget with top attached to another widget
 		require
 			bottom_not_void: bottom /= Void
@@ -396,7 +396,7 @@ feature -- Status setting
 			widget.set_form_height ( (0).max (bottom.y - bottom_position - top_position - top.form_height - top.y))
 		end
 
-	process_bottom_form_no_top (form: FORM_IMP) is
+	process_bottom_form_no_top (form: FORM_IMP)
 			-- Process bottom attachment to `form' with no top attachment
 		require
 			bottom_not_void: bottom /= Void
@@ -409,7 +409,7 @@ feature -- Status setting
 			end
 		end
 
-	process_bottom_form_top_form (form: FORM_IMP) is
+	process_bottom_form_top_form (form: FORM_IMP)
 			-- Process bottom attachment to `form' with top attached to `form'
 		require
 			bottom_not_void: bottom /= Void
@@ -430,7 +430,7 @@ feature -- Status setting
 			end
 		end
 
-	process_bottom_form_top_widget (form: FORM_IMP) is
+	process_bottom_form_top_widget (form: FORM_IMP)
 			-- Process bottom attachment to `form' with top attached to another widget
 		require
 			bottom_not_void: bottom /= Void
@@ -444,7 +444,7 @@ feature -- Status setting
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

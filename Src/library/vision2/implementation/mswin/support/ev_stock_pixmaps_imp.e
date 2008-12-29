@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Facilities for accessing default%
 				  %pixmaps and cursors"
 	legal: "See notice at end of class."
@@ -19,55 +19,55 @@ feature {NONE} -- Initialization
 
 feature -- Default pixmaps
 
-	Information_pixel_buffer: EV_PIXEL_BUFFER is
+	Information_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel Buffer symbolizing a piece of information.
 		do
 			Result := build_default_pixel_buffer ({WEL_IDI_CONSTANTS}.Idi_information)
 		end
 
-	Error_pixel_buffer: EV_PIXEL_BUFFER is
+	Error_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel Buffer symbolizing an error.
 		do
 			Result := build_default_pixel_buffer ({WEL_IDI_CONSTANTS}.Idi_error)
 		end
 
-	Warning_pixel_buffer: EV_PIXEL_BUFFER is
+	Warning_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel Buffer symbolizing a warning.
 		do
 			Result := build_default_pixel_buffer ({WEL_IDI_CONSTANTS}.Idi_warning)
 		end
 
-	Question_pixel_buffer: EV_PIXEL_BUFFER is
+	Question_pixel_buffer: EV_PIXEL_BUFFER
 			-- Pixel Buffer symbolizing a question.
 		do
 			Result := build_default_pixel_buffer ({WEL_IDI_CONSTANTS}.Idi_question)
 		end
 
-	Information_pixmap: EV_PIXMAP is
+	Information_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing a piece of information.
 		do
 			Result := build_default_pixmap ({WEL_IDI_CONSTANTS}.Idi_information)
 		end
 
-	Error_pixmap: EV_PIXMAP is
+	Error_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing an error.
 		do
 			Result := build_default_pixmap ({WEL_IDI_CONSTANTS}.Idi_error)
 		end
 
-	Warning_pixmap: EV_PIXMAP is
+	Warning_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing a warning.
 		do
 			Result := build_default_pixmap ({WEL_IDI_CONSTANTS}.Idi_warning)
 		end
 
-	Question_pixmap: EV_PIXMAP is
+	Question_pixmap: EV_PIXMAP
 			-- Pixmap symbolizing a question.
 		do
 			Result := build_default_pixmap ({WEL_IDI_CONSTANTS}.Idi_question)
 		end
 
-	Default_window_icon: EV_PIXMAP is
+	Default_window_icon: EV_PIXMAP
 			-- Pixmap used as default icon for new windows
 			-- (Vision2 logo)
 		local
@@ -83,7 +83,7 @@ feature -- Default pixmaps
 
 feature {NONE} -- Implementation
 
-	build_default_pixel_buffer (Idi_constant: POINTER): EV_PIXEL_BUFFER is
+	build_default_pixel_buffer (Idi_constant: POINTER): EV_PIXEL_BUFFER
 			-- Create the pixel buffer corresponding to the
 			-- Windows Icon constants `Idi_constant'.
 		local
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			wel_icon.decrement_reference
 		end
 
-	build_default_pixmap (Idi_constant: POINTER): EV_PIXMAP is
+	build_default_pixmap (Idi_constant: POINTER): EV_PIXMAP
 			-- Create the pixmap corresponding to the
 			-- Windows Icon constants `Idi_constant'.
 		local
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			wel_icon.decrement_reference
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

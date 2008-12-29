@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Window on which is displayed the wizards"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_factory: WIZARD_FACTORY) is
+	make (a_factory: WIZARD_FACTORY)
 			-- Initialize Current window.
 		require
 			a_factory_not_void: a_factory /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			factory_set: factory = a_factory
 		end
 
-	initialize is
+	initialize
 			-- Initialize `Current'.
 		local
 			v1: EV_VERTICAL_BOX
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 		end
 
-	build_navigation_bar (a_box: EV_BOX) is
+	build_navigation_bar (a_box: EV_BOX)
 			-- Build the navigation bar.
 		local
 			h1: EV_HORIZONTAL_BOX
@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 
 feature {WIZARD_SHARED} -- Basic Opertations
 
-	load_first_state is
+	load_first_state
 			-- Load first state.
 		local
 			wizard_initial_state: WIZARD_STATE_WINDOW
@@ -118,7 +118,7 @@ feature {WIZARD_SHARED} -- Basic Opertations
 
 feature -- Basic Operations
 
-	add_help_button is
+	add_help_button
 			-- Add help button to the navigation bar.
 		do
 			check
@@ -129,7 +129,7 @@ feature -- Basic Operations
 
 feature -- Command
 
-	destroy is
+	destroy
 			-- Destroy underlying native toolkit object.
 			-- Render `Current' unusable.
 		do
@@ -164,50 +164,50 @@ feature {NONE} -- Implementation
 
 feature {WIZARD_STATE_WINDOW, WIZARD_STATE_MANAGER} -- Basic Operations	
 
-	set_final_state (text: STRING_GENERAL) is
+	set_final_state (text: STRING_GENERAL)
 			-- Current state is final, hence a special process.
 		do
 			next_b.set_text(text)
 			is_final := True
 		end
 
-	set_intermediary_state is
+	set_intermediary_state
 			-- Current state is intermediate.
 		do
 			is_final := False
 		end
 
-	disable_next_button is
+	disable_next_button
 			-- Disable the Next/Finish button
 		do
 			next_b.disable_sensitive
 		end
 
-	disable_back_button is
+	disable_back_button
 			-- Disable the Next/Finish button
 		do
 			previous_b.disable_sensitive
 		end
 
-	disable_cancel_button is
+	disable_cancel_button
 			-- Disable the cancel button
 		do
 			cancel_b.disable_sensitive
 		end
 
-	enable_next_button is
+	enable_next_button
 			-- Ensable the Next/Finish button
 		do
 			next_b.enable_sensitive
 		end
 
-	enable_back_button is
+	enable_back_button
 			-- Enable the Next/Finish button
 		do
 			previous_b.enable_sensitive
 		end
 
-	enable_cancel_button is
+	enable_cancel_button
 			-- Enable the cancel button
 		do
 			cancel_b.enable_sensitive
@@ -215,7 +215,7 @@ feature {WIZARD_STATE_WINDOW, WIZARD_STATE_MANAGER} -- Basic Operations
 
 feature -- Basic Operations
 
-	previous_page is
+	previous_page
 			-- Go to the previous page.
 		do
 			if history.count > 1 then
@@ -224,7 +224,7 @@ feature -- Basic Operations
 			update_navigation
 		end
 
-	update_navigation is
+	update_navigation
 			-- Update navigation buttons.
 		do
 			if history.count < 1 or else history.isfirst  then
@@ -237,7 +237,7 @@ feature -- Basic Operations
 			end
 		end
 
-	next_page is
+	next_page
 			-- Go to next page if possible.
 		do
 			if not history.after then
@@ -248,13 +248,13 @@ feature -- Basic Operations
 
 feature {NONE} -- Contract support
 
-	is_in_default_state: BOOLEAN is True;
+	is_in_default_state: BOOLEAN = True;
 		-- Is `Current' in its default state?
 
 invariant
 	factory_not_void: factory /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

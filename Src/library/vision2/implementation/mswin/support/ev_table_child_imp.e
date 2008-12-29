@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"EiffelVision table child. Used only on windows implementation. This%
 		% object is a link between a table and one of its child.%
@@ -16,7 +16,7 @@ create
 
 feature -- Initialization
 
-	make (a_widget: EV_WIDGET_IMP; parent: EV_TABLE_IMP) is
+	make (a_widget: EV_WIDGET_IMP; parent: EV_TABLE_IMP)
 			-- Create `Current' with `a_widget' and parent as `parent'.
 		require
 			valid_child: a_widget /= Void
@@ -51,7 +51,7 @@ feature -- Access
 			-- coordinates.
 feature -- Element change
 
-	set_attachment (top, left, bottom, right: INTEGER) is
+	set_attachment (top, left, bottom, right: INTEGER)
 				-- Make `top', `left', `bottom' and `right' the new attachments
 				-- of `widget'.
 		require
@@ -75,7 +75,7 @@ invariant
 	good_horizontal_order: left_attachment <= right_attachment
 	good_vertical_order: top_attachment <= bottom_attachment
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

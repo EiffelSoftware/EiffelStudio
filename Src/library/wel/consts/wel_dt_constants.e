@@ -1,4 +1,4 @@
-indexing
+note
 	description: "DrawText (DT) constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,58 +10,58 @@ class
 
 feature -- Access
 
-	Dt_top: INTEGER is 0
+	Dt_top: INTEGER = 0
 			-- Declared in Windows as DT_TOP
 
-	Dt_left: INTEGER is 0
+	Dt_left: INTEGER = 0
 			-- Declared in Windows as DT_LEFT
 
-	Dt_center: INTEGER is 1
+	Dt_center: INTEGER = 1
 			-- Declared in Windows as DT_CENTER
 
-	Dt_right: INTEGER is 2
+	Dt_right: INTEGER = 2
 			-- Declared in Windows as DT_RIGHT
 
-	Dt_vcenter: INTEGER is 4
+	Dt_vcenter: INTEGER = 4
 			-- Declared in Windows as DT_VCENTER
 
-	Dt_bottom: INTEGER is 8
+	Dt_bottom: INTEGER = 8
 			-- Declared in Windows as DT_BOTTOM
 
-	Dt_wordbreak: INTEGER is 16
+	Dt_wordbreak: INTEGER = 16
 			-- Declared in Windows as DT_WORDBREAK
 
-	Dt_singleline: INTEGER is 32
+	Dt_singleline: INTEGER = 32
 			-- Declared in Windows as DT_SINGLELINE
 
-	Dt_expandtabs: INTEGER is 64
+	Dt_expandtabs: INTEGER = 64
 			-- Declared in Windows as DT_EXPANDTABS
 
-	Dt_tabstop: INTEGER is 128
+	Dt_tabstop: INTEGER = 128
 			-- Declared in Windows as DT_TABSTOP
 
-	Dt_noclip: INTEGER is 256
+	Dt_noclip: INTEGER = 256
 			-- Declared in Windows as DT_NOCLIP
 
-	Dt_externalleading: INTEGER is 512
+	Dt_externalleading: INTEGER = 512
 			-- Declared in Windows as DT_EXTERNALLEADING
 
-	Dt_calcrect: INTEGER is 1024
+	Dt_calcrect: INTEGER = 1024
 			-- Declared in Windows as DT_CALCRECT
 
-	Dt_noprefix: INTEGER is 2048
+	Dt_noprefix: INTEGER = 2048
 			-- Declared in Windows as DT_NOPREFIX
 
-	Dt_internal: INTEGER is 4096
+	Dt_internal: INTEGER = 4096
 			-- Declared in Windows as DT_INTERNAL
 
-	Dt_word_ellipsis: INTEGER is 262144
+	Dt_word_ellipsis: INTEGER = 262144
 			-- Declared in Windows as DT_WORD_ELLIPSIS
 
-	Dt_hideprefix: INTEGER is 1048576;
+	Dt_hideprefix: INTEGER = 1048576;
 			-- Declared in Windows as DT_HIDEPREFIX
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

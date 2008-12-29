@@ -1,4 +1,4 @@
-indexing
+note
 	description: "This class represents a MS_IMPlabel"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
@@ -82,7 +82,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_label: LABEL; man: BOOLEAN;  oui_parent: COMPOSITE) is
+	make (a_label: LABEL; man: BOOLEAN;  oui_parent: COMPOSITE)
 			-- Initialize a label
 		do
 			create {WEL_ANSI_VARIABLE_FONT} wel_font.make
@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_center_alignment is
+	set_center_alignment
 			-- Center align the label.
 		do
 			alignment_type := Dt_center
@@ -109,7 +109,7 @@ feature -- Status setting
 			end
 		end
 
-	set_left_alignment is
+	set_left_alignment
 			-- Left align the label.
 		do
 			alignment_type := Dt_left
@@ -118,7 +118,7 @@ feature -- Status setting
 			end
 		end
 
-	set_right_alignment is
+	set_right_alignment
 			-- Right align the label.
 		do
 			alignment_type := Dt_right
@@ -132,7 +132,7 @@ feature -- Status report
 	text: STRING
 			-- Text of label
 
-	text_length: INTEGER is
+	text_length: INTEGER
 			-- Length of the text
 		do
 			Result := text.count
@@ -140,14 +140,14 @@ feature -- Status report
 
 feature -- Element change
 
-	set_text (t: STRING) is
+	set_text (t: STRING)
 			-- Set label text to `t'
 		do
 			text := t.twin
 			adjust_label
 		end
 
-	set_font (a_font: FONT) is
+	set_font (a_font: FONT)
 			-- Set the font for the text
 		do
 			Precursor {PRIMITIVE_IMP} (a_font)
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 	alignment_type: INTEGER
 			-- Type of alignment
 
-	realize is
+	realize
 			-- Create the label.
 		local
 			wc: WEL_COMPOSITE_WINDOW
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	adjust_label is
+	adjust_label
 			-- Resize the label according to `text' or
 			-- user-defined values.
 		local
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT)
 			-- Repaint the text
 		local
 			windows_font: FONT_IMP
@@ -224,13 +224,13 @@ feature {NONE} -- Implementation
 				Dt_vcenter)
 		end
 
-	default_style: INTEGER is
+	default_style: INTEGER
 			-- Default style
 		once
 			Result := Ws_child + Ws_visible
 		end
 
-	set_default_attributes is
+	set_default_attributes
 			-- Set the default attributes.
 		local
 			color_windows: COLOR_IMP
@@ -245,18 +245,18 @@ feature {NONE} -- Implementation
 
 	wel_font: WEL_FONT
 
-	wel_set_font (f:WEL_FONT) is
+	wel_set_font (f:WEL_FONT)
 		do
 			wel_font := f
 		end
 
-	class_name: STRING_32 is
+	class_name: STRING_32
 			-- Class name
 		once
 			Result := "EVisionLabel"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

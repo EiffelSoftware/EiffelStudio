@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Grapics functions in Gdi+.
 					For more information, please see:
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make_from_image (a_image: WEL_GDIP_IMAGE) is
+	make_from_image (a_image: WEL_GDIP_IMAGE)
 			-- Initlialize Current from `a_image'
 		require
 			not_void: a_image /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initlization
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	make_from_dc (a_dc: WEL_DC) is
+	make_from_dc (a_dc: WEL_DC)
 			-- Initlialize Current from `a_dc'
 		require
 			not_void: a_dc /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	draw_line (a_pen: WEL_GDIP_PEN;  a_x_1, a_y_1, a_x_2, a_y_2: INTEGER) is
+	draw_line (a_pen: WEL_GDIP_PEN;  a_x_1, a_y_1, a_x_2, a_y_2: INTEGER)
 			-- Draw a line
 		require
 			not_void: a_pen /= Void
@@ -63,7 +63,7 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	draw_rectangle (a_pen: WEL_GDIP_PEN; a_x, a_y, a_width, a_height: INTEGER) is
+	draw_rectangle (a_pen: WEL_GDIP_PEN; a_x, a_y, a_width, a_height: INTEGER)
 			-- Draw a rectangle with the specified `a_x'/`a_y' and `a_width'/`a_height'
 		require
 			not_void: a_pen /= Void
@@ -74,7 +74,7 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	draw_image (a_image: WEL_GDIP_IMAGE; a_dest_x, a_dest_y: INTEGER) is
+	draw_image (a_image: WEL_GDIP_IMAGE; a_dest_x, a_dest_y: INTEGER)
 			-- Draw `a_image' at `a_dest_x' `a_dest_y'
 		require
 			not_void: a_image /= Void
@@ -90,7 +90,7 @@ feature -- Command
 			l_src_rect.dispose
 		end
 
-	draw_image_with_dest_rect_src_rect (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT) is
+	draw_image_with_dest_rect_src_rect (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT)
 			-- Draw `a_image' at `a_dest_rect' from `a_src_dest'
 		require
 			not_void: a_image /= Void
@@ -100,7 +100,7 @@ feature -- Command
 			draw_image_with_src_rect_dest_rect_unit_attributes (a_image, a_dest_rect, a_src_rect, {WEL_GDIP_UNIT}.unitpixel, Void)
 		end
 
-	draw_image_with_src_rect_dest_rect_unit_attributes (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT; a_unit: INTEGER; a_image_attributes: WEL_GDIP_IMAGE_ATTRIBUTES) is
+	draw_image_with_src_rect_dest_rect_unit_attributes (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT; a_unit: INTEGER; a_image_attributes: WEL_GDIP_IMAGE_ATTRIBUTES)
 			-- Draw `a_image' with arguments.
 		require
 			not_void: a_image /= Void
@@ -119,7 +119,7 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	draw_string (a_string: STRING_GENERAL; a_length: INTEGER; a_font: WEL_GDIP_FONT; a_x, a_y: REAL) is
+	draw_string (a_string: STRING_GENERAL; a_length: INTEGER; a_font: WEL_GDIP_FONT; a_x, a_y: REAL)
 			-- Draw `a_length' characters of `a_string' with `a_font' at `a_x',`a_y' position.
 		require
 			not_void: a_string /= Void
@@ -143,7 +143,7 @@ feature -- Command
 			draw_string_with_length_font_rect_format_brush (a_string, a_length, a_font, l_rect_f, l_format, l_brush)
 		end
 
-	draw_string_with_length_font_rect_format_brush (a_string: STRING_GENERAL; a_length: INTEGER; a_font: WEL_GDIP_FONT; a_rect_f: WEL_GDIP_RECT_F; a_format: WEL_GDIP_STRING_FORMAT; a_brush: WEL_GDIP_BRUSH) is
+	draw_string_with_length_font_rect_format_brush (a_string: STRING_GENERAL; a_length: INTEGER; a_font: WEL_GDIP_FONT; a_rect_f: WEL_GDIP_RECT_F; a_format: WEL_GDIP_STRING_FORMAT; a_brush: WEL_GDIP_BRUSH)
 			-- Draw string with arguments.
 		require
 			not_void: a_string /= Void
@@ -172,7 +172,7 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	fill_rectangle (a_brush: WEL_GDIP_BRUSH; a_rect: WEL_GDIP_RECT) is
+	fill_rectangle (a_brush: WEL_GDIP_BRUSH; a_rect: WEL_GDIP_RECT)
 			-- Uses `a_brush' to fill the interior of a rectangle.
 		require
 			not_void: a_brush /= Void
@@ -225,7 +225,7 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	set_clip_rect (a_rect: WEL_GDIP_RECT) is
+	set_clip_rect (a_rect: WEL_GDIP_RECT)
 			-- Sets the clipping region of Current to `a_rect'
 		require
 			not_void: a_rect /= Void
@@ -236,7 +236,7 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	set_clip_graphics (a_src_graphics: WEL_GDIP_GRAPHICS) is
+	set_clip_graphics (a_src_graphics: WEL_GDIP_GRAPHICS)
 			-- Updates the clipping region of Current to a region that is the combination of itself and the clipping region of `a_graphics'.
 		require
 			not_void: a_src_graphics /= Void and then a_src_graphics.exists
@@ -247,7 +247,7 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	set_clip_path (a_path: WEL_GDIP_GRAPHICS_PATH) IS
+	set_clip_path (a_path: WEL_GDIP_GRAPHICS_PATH)
 			-- Updates the clipping region of this Graphics object to a region that is the combination of itself and the region specified by
 			-- a graphics path. If a figure in the path is not closed, this method treats the nonclosed figure as if it were closed by a
 			-- straight line that connects the figure's starting and ending points.
@@ -258,7 +258,7 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	reset_clip is
+	reset_clip
 			-- Resets the clip region of Current to an infinite region.
 		local
 			l_result: INTEGER
@@ -269,7 +269,7 @@ feature -- Command
 
 feature -- Query
 
-	dc: WEL_MEMORY_DC  is
+	dc: WEL_MEMORY_DC
 			-- Get a gdi DC.
 		local
 			l_pointer: POINTER
@@ -282,7 +282,7 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
-	release_dc (a_dc: WEL_DC) is
+	release_dc (a_dc: WEL_DC)
 			-- Release `a_dc' which was created by previous calling of `dc'.
 		local
 			l_result: INTEGER
@@ -293,7 +293,7 @@ feature -- Query
 
 feature -- Destroy
 
-	destroy_item is
+	destroy_item
 			-- <Precursor>
 		local
 			l_result: INTEGER
@@ -307,7 +307,7 @@ feature -- Destroy
 
 feature {NONE} -- C externals
 
-	c_gdip_create_from_hdc (a_gdiplus_handle: POINTER; a_dc: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+	c_gdip_create_from_hdc (a_gdiplus_handle: POINTER; a_dc: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Create a graphics object from a win32 `a_dc'.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -333,7 +333,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_get_image_graphics_context (a_gdiplus_handle: POINTER; a_image: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+	c_gdip_get_image_graphics_context (a_gdiplus_handle: POINTER; a_image: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Get gdi+ graphics from `a_image'
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -359,7 +359,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_get_dc (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+	c_gdip_get_dc (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Get gdi HDC related with Current.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -385,7 +385,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_release_dc (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_dc: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_release_dc (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_dc: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 				-- Release gdi HDC which was created by `c_gdip_get_dc'.
 			require
 				a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -409,7 +409,7 @@ feature {NONE} -- C externals
 				]"
 			end
 
-	c_gdip_delete_graphics (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_delete_graphics (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Delete `a_graphics' gdi+ object.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -434,7 +434,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_draw_line_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_pen: POINTER; a_x_1, a_y_1, a_x_2, a_y_2: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_draw_line_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_pen: POINTER; a_x_1, a_y_1, a_x_2, a_y_2: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Draw a line on `a_graphics' from `a_x_1', `a_y_1' to `a_x_2', `a_y_2'.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -464,7 +464,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_draw_rectangle_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_pen: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_draw_rectangle_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_pen: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Draw a rectangle on `a_graphics' with specified `a_x', `a_y', `a_width', `a_height'.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -494,7 +494,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_draw_image_rect_rect_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_image: POINTER; a_dest_x, a_dest_y, a_dest_width, a_dest_height, a_src_x, a_src_y, a_src_width, a_src_height: INTEGER; a_unit: INTEGER; a_image_attributes: POINTER; a_abort_callback: POINTER; a_callback_data: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_draw_image_rect_rect_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_image: POINTER; a_dest_x, a_dest_y, a_dest_width, a_dest_height, a_src_x, a_src_y, a_src_width, a_src_height: INTEGER; a_unit: INTEGER; a_image_attributes: POINTER; a_abort_callback: POINTER; a_callback_data: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Draw `a_image' on `a_graphics'.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -531,7 +531,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_draw_string (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_wchar_string: POINTER; a_length: INTEGER; a_font: POINTER; a_gp_rect_f: POINTER; a_gp_string_format: POINTER; a_gp_brush: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_draw_string (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_wchar_string: POINTER; a_length: INTEGER; a_font: POINTER; a_gp_rect_f: POINTER; a_gp_string_format: POINTER; a_gp_brush: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Draw `a_wchar_string' on `a_graphics'.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -561,7 +561,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_fill_rectangle_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_brush: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_fill_rectangle_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_brush: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Uses a brush to fill the interior of a rectangle.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -591,7 +591,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_rotate_world_transform (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_angle: REAL; a_order: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_rotate_world_transform (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_angle: REAL; a_order: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Rotate drawing in subsequent calling of `draw_xxx'.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -618,7 +618,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_translate_world_transform (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_dx, a_dy: REAL; a_order: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_translate_world_transform (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_dx, a_dy: REAL; a_order: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Updates Current's world transformation matrix with the product of itself and a translation matrix.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -646,7 +646,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_scale_world_transform (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_sx, a_sy: REAL; a_order: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_scale_world_transform (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_sx, a_sy: REAL; a_order: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Updates Current's world transformation matrix with the product of itself and a scaling matrix.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -674,7 +674,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_clear (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_color: INTEGER_64; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_clear (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_color: INTEGER_64; a_result_status: TYPED_POINTER [INTEGER])
 			-- Clears the entire drawing surface and fills it with `a_color'
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -699,7 +699,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_set_clip_rect_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_combine_mode: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_set_clip_rect_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_combine_mode: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Sets the clipping region of Current to the Clip property of parameters.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -729,7 +729,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_set_clip_graphics (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_src_graphics: POINTER; a_combine_mode: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_set_clip_graphics (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_src_graphics: POINTER; a_combine_mode: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Sets the clipping region of Current to the Clip property of `a_src_graphics'.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -757,7 +757,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_set_clip_path (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_graphics_path: POINTER; a_combine_mode: INTEGER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_set_clip_path (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_graphics_path: POINTER; a_combine_mode: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Updates the clipping region of Current to a region that is the combination of itself and the region specified by a graphics path.
 			-- If a figure in the path is not closed, this method treats the nonclosed figure as if it were closed by a straight line that connects
 			-- the figure's starting and ending points.
@@ -787,7 +787,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_reset_clip (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_reset_clip (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Resets the clip region of `a_graphics' to an infinite region.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -813,7 +813,7 @@ feature {NONE} -- C externals
 
 feature -- Obsolete
 
-	draw_image_with_src_rect_dest_rect (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT) is
+	draw_image_with_src_rect_dest_rect (a_image: WEL_GDIP_IMAGE; a_dest_rect, a_src_rect: WEL_RECT)
 			-- Draw `a_image' at `a_dest_rect' from `a_src_dest'
 		obsolete
 			"Use draw_image_with_dest_rect_src_rect instead"
@@ -821,7 +821,7 @@ feature -- Obsolete
 			draw_image_with_dest_rect_src_rect (a_image, a_dest_rect, a_src_rect)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Viewers of EV_FIGURE_WORLDs."
 	legal: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_world (a_world: EV_FIGURE_WORLD) is
+	make_with_world (a_world: EV_FIGURE_WORLD)
 			-- Create with `a_world'.
 		require
 			a_world_not_void: a_world /= Void
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	set_world (a_world: EV_FIGURE_WORLD) is
+	set_world (a_world: EV_FIGURE_WORLD)
 			-- Set `world' to `a_world'.
 		require
 			a_world_exists: a_world /= Void
@@ -48,7 +48,7 @@ feature -- Access
 invariant
 	world_exists: world /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Basic text scanner for applying syntax highlighting."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -36,7 +36,7 @@ create
 
 feature -- Creation
 
-	make (syntax_file: STRING) is
+	make (syntax_file: STRING)
 			-- Create a lexical analyser to analyze text according to the rules in `syntax_file'.
 		require
 		    file_not_void: syntax_file /= Void
@@ -48,7 +48,7 @@ feature -- Creation
 		
 feature -- Actions
 
-	build (store_file_name, grammar_file_name: STRING) is
+	build (store_file_name, grammar_file_name: STRING)
 			-- Create a lexical analyzer.
 			-- If `store_file_name' is the name of an existing file,
 			-- use analyzer stored in that file.
@@ -58,7 +58,7 @@ feature -- Actions
 			build_from_grammar (store_file_name, grammar_file_name)			
 		end; 
 
-	store_analyzer (file_name: STRING) is
+	store_analyzer (file_name: STRING)
 			-- Store `analyzer' in file named `file_name'.
 			-- This is overridden feature does NOT store to disk in `file_name', only to memory.
 		do
@@ -67,7 +67,7 @@ feature -- Actions
 			end
 		end
 
-	execute (a_string: STRING) is
+	execute (a_string: STRING)
 			-- Analyze a string.		
 		require else
 		   	has_analyzer: analyzer /= Void	
@@ -87,7 +87,7 @@ feature -- Actions
 			end_analysis
 		end
 		
-	do_a_token (a_token: TOKEN) is
+	do_a_token (a_token: TOKEN)
 			-- Handle `read_token'.
 		local
 			l_token: EDITOR_TOKEN
@@ -100,12 +100,12 @@ feature -- Actions
     		end
     	end
     	
-    begin_analysis is
+    begin_analysis
     		-- Redefined just so no put_string's are called
     	do    		
     	end    	
     	
-    end_analysis is
+    end_analysis
             -- End of analysis
         local
             l_prev_token: EDITOR_TOKEN
@@ -130,19 +130,19 @@ feature -- Actions
     	
 feature {NONE} -- Implementation
 
-	token_list: ARRAYED_LIST [EDITOR_TOKEN] is
+	token_list: ARRAYED_LIST [EDITOR_TOKEN]
 			-- List of EDITOR_TOKENs corresponding to analyzed list of lexer TOKENs from input string
 		once
 		    create Result.make (5)
 		end
 
-	token_builder: TOKEN_BUILDER is
+	token_builder: TOKEN_BUILDER
 	        -- Build of editor tokens
 	  	once
 	  	    create Result
 	  	end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

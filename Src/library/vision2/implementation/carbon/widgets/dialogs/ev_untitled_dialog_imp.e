@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision dialog. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize `Current'
 		do
 			Precursor {EV_DIALOG_IMP}
@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, The Eiffel.Mac Team"
 end -- class EV_DIALOG_IMP
 

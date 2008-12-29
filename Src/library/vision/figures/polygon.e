@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of a polygon"
 	legal: "See notice at end of class.";
@@ -35,7 +35,7 @@ create
 
 feature -- Initialization 
 
-	make  is
+	make
 		do
 			init_fig (Void);
 			twl_make;
@@ -46,7 +46,7 @@ feature -- Initialization
 
 feature -- Access
 
-	origin: COORD_XY_FIG is
+	origin: COORD_XY_FIG
 			-- Origin of line
 		do
 			inspect
@@ -63,7 +63,7 @@ feature -- Access
 			end
 		end;
 
-	center: COORD_XY_FIG is
+	center: COORD_XY_FIG
 			-- Center of the polygon.
 		require else
 			polygon_not_empty: not is_empty;
@@ -88,7 +88,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_origin_to_center is
+	set_origin_to_center
 			-- Set origin to `center'.
 		do
 			origin_user_type := 4;
@@ -96,7 +96,7 @@ feature -- Element change
 			origin.is_superimposable (center)
 		end; 
 
-	set_origin_to_first_point is
+	set_origin_to_first_point
 			-- Set origin to first point of polygon.
 		do
 			origin_user_type := 2;
@@ -104,7 +104,7 @@ feature -- Element change
 			origin.is_superimposable (first)
 		end;
 
-	set_origin_to_last_point is
+	set_origin_to_last_point
 			-- Set origin to last point of polygon.
 		do
 			origin_user_type := 3;
@@ -112,7 +112,7 @@ feature -- Element change
 			origin.is_superimposable (last)
 		end;
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: REAL; px, py: INTEGER)
 			-- Rotate figure by `a' relative to (`px', `py').
 			-- Angle `a' is measured in degrees.
 		require else
@@ -134,7 +134,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xyscale (f: REAL; px,py: INTEGER) is
+	xyscale (f: REAL; px,py: INTEGER)
 			-- Scale figure by `f' relative to (`px', `py').
 		require else
 			scale_factor_positive: f > 0.0;
@@ -154,7 +154,7 @@ feature -- Element change
 			set_conf_modified
 		end;
 
-	xytranslate (vx, vy: INTEGER) is
+	xytranslate (vx, vy: INTEGER)
 			-- Translate by `vx' horizontally and `vy' vertically.
 		local
 			keep_cursor: CURSOR;
@@ -174,7 +174,7 @@ feature -- Element change
 
 feature -- Output 
 
-	draw is
+	draw
 			-- Draw the polygon.
 		
 		do
@@ -193,7 +193,7 @@ feature -- Output
 
 feature -- Status report
 
-	is_superimposable (other: like Current): BOOLEAN is
+	is_superimposable (other: like Current): BOOLEAN
 			-- Is the current set of line superimposable to `other' ?
 		require else
 			other_exists: other = Void;
@@ -221,7 +221,7 @@ feature -- Status report
 
 feature {CONFIGURE_NOTIFY} -- Updating
 
-	conf_recompute is
+	conf_recompute
 		local
 			keep_cursor: CURSOR;
 		do
@@ -241,7 +241,7 @@ feature {CONFIGURE_NOTIFY} -- Updating
 
 feature {NONE} -- Status report
 
-	compare (other: like Current; direction: BOOLEAN): BOOLEAN is
+	compare (other: like Current; direction: BOOLEAN): BOOLEAN
 			-- Is the sublist of Current beginning at cursor position
 			-- to the end superimposable to the sublist of other beginning
 			-- at cursor position to the beginning if direction and to the
@@ -287,7 +287,7 @@ invariant
 	origin_user_type_constarint: origin_user_type <= 4;
 	drawable: (drawing /= Void) implies (count <= drawing.max_count_for_draw_polyline)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

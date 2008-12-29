@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulates information about codepage"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,13 +12,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 		end
 
 feature -- Access: Code pages
 
-	code_page: STRING is
+	code_page: STRING
 			-- Take `oem_code_page' as default.
 		do
 			Result := oem_code_page
@@ -31,22 +31,22 @@ feature -- Access: Code pages
 
 feature {I18N_HOST_LOCALE} -- Element change: Code pages
 
-	set_ansi_code_page (a_value: STRING) is
+	set_ansi_code_page (a_value: STRING)
 		do
 			ansi_code_page := a_value
 		end
 
-	set_oem_code_page (a_value: STRING) is
+	set_oem_code_page (a_value: STRING)
 		do
 			oem_code_page := a_value
 		end
 
-	set_mac_code_page (a_value: STRING) is
+	set_mac_code_page (a_value: STRING)
 		do
 			mac_code_page := a_value
 		end
 
-indexing
+note
 	library:   "Internationalization library"
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

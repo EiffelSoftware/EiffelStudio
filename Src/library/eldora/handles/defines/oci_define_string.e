@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Define Variable of type STRING"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (size: INTEGER) is
+	make (size: INTEGER)
 		do
 			make_variable (Sqlt_chr, size)
 			create string_value.make (size)
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: STRING is
+	value: STRING
 			-- Current value of define variable
 		do
 			Result := string_value
@@ -42,9 +42,9 @@ feature -- Access
 			Result.from_c_substring (buffer, 1, actual_length)
 		end
 		
-	Max_string_length: INTEGER is 65535
+	Max_string_length: INTEGER = 65535
 	
-	valid_data_type_and_size (type: INTEGER_16; size: INTEGER): BOOLEAN is
+	valid_data_type_and_size (type: INTEGER_16; size: INTEGER): BOOLEAN
 			-- Are `type' and `size' valid values for `data_type' and `data_size' ?
 		do
 			Result := type = Sqlt_chr and (size > 0) and (size <= Max_string_length)
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 
 	string_value: STRING;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision gauge. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Default initialization of `Current'.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
-	step_forward is
+	step_forward
 			-- Increase `value' by `step'.
 		local
 			original_value: INTEGER
@@ -57,7 +57,7 @@ feature -- Status setting
 			end
 		end
 
-	step_backward is
+	step_backward
 			-- Decrease `value' by `step'.
 		local
 			original_value: INTEGER
@@ -71,7 +71,7 @@ feature -- Status setting
 			end
 		end
 
-	leap_forward is
+	leap_forward
 			-- Increment `value' by `leap' if possible.
 		local
 			original_value: INTEGER
@@ -85,7 +85,7 @@ feature -- Status setting
 			end
 		end
 
-	leap_backward is
+	leap_backward
 			-- Decrement `value' by `leap' if possible.
 		local
 			original_value: INTEGER
@@ -101,7 +101,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_value (a_value: INTEGER) is
+	set_value (a_value: INTEGER)
 			-- Assign `a_value' to `value'.
 		local
 			original_value: INTEGER
@@ -115,19 +115,19 @@ feature -- Element change
 			end
 		end
 
-	set_step (a_step: INTEGER) is
+	set_step (a_step: INTEGER)
 			-- Assign `a_step' to `step'.
 		do
 			wel_set_step (a_step)
 		end
 
-	set_leap (a_leap: INTEGER) is
+	set_leap (a_leap: INTEGER)
 			-- Assign `a_leap' to `leap'.
 		do
 			wel_set_leap (a_leap)
 		end
 
-	set_range is
+	set_range
 			-- Reflect value of `value_range' in `Current'.
 		do
 			wel_set_range (value_range.lower, value_range.upper)
@@ -135,25 +135,25 @@ feature -- Element change
 
 feature -- Deferred
 
-	on_scroll (scroll_code, pos: INTEGER) is
+	on_scroll (scroll_code, pos: INTEGER)
 			-- Called when gauge changed.
 		do
 		end
 
-	on_key_down (virtual_key, key_data: INTEGER) is
+	on_key_down (virtual_key, key_data: INTEGER)
 			-- A key has been pressed.
 		do
 			process_navigation_key (virtual_key)
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
 		end
 
-	valid_maximum (a_position: INTEGER): BOOLEAN is
+	valid_maximum (a_position: INTEGER): BOOLEAN
 			-- Is `a_position' valid as a maximum?
 		do
 			Result := True
 		end
 
-	wel_set_value (a_value: INTEGER) is
+	wel_set_value (a_value: INTEGER)
 		require
 			exists: exists
 			valid_minimum: a_value >= value_range.lower
@@ -161,19 +161,19 @@ feature -- Deferred
 		deferred
 		end
 
-	wel_set_step (a_step: INTEGER) is
+	wel_set_step (a_step: INTEGER)
 		require
 			positive_line: a_step >= 0
 		deferred
 		end
 
-	wel_set_leap (a_leap: INTEGER) is
+	wel_set_leap (a_leap: INTEGER)
 		require
 			positive_leap: a_leap >= 0
 		deferred
 		end
 
-	wel_set_range (a_minimum, a_maximum: INTEGER) is
+	wel_set_range (a_minimum, a_maximum: INTEGER)
 		require
 			exists: exists
 			valid_range: a_minimum <= a_maximum
@@ -184,7 +184,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_GAUGE;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

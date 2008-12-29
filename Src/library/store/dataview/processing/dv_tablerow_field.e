@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Graphic objects representing a database table attribute."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make_with_code (code: INTEGER) is
+	make_with_code (code: INTEGER)
 			-- Initialize with `code' to
 			-- locate table attribute in the database.
 		do
@@ -40,7 +40,7 @@ feature -- Access
 			-- Description of the database table containing
 			-- the represented attribute.
 
-	text: STRING is
+	text: STRING
 			-- Field text.
 		do
 			Result := graphical_value.value
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Status report
 
-	can_be_activated: BOOLEAN is
+	can_be_activated: BOOLEAN
 			-- Can the component be activated?
 		do
 			Result := graphical_value_set and then table_description /= Void
@@ -71,43 +71,43 @@ feature -- Status report
 	is_activated: BOOLEAN
 			-- Is component activated?
 
-	is_boolean: BOOLEAN is
+	is_boolean: BOOLEAN
 			-- Is the attribute a boolean value?
 		do
 			Result := type_code = table_description.Boolean_type
 		end
 
-	is_character: BOOLEAN is
+	is_character: BOOLEAN
 			-- Is the attribute a character value?
 		do
 			Result := type_code = table_description.Character_type
 		end
 
-	is_double: BOOLEAN is
+	is_double: BOOLEAN
 			-- Is the attribute a double value?
 		do
 			Result := type_code = table_description.Double_type
 		end
 
-	is_datetime: BOOLEAN is
+	is_datetime: BOOLEAN
 		-- Is the attribute a date & time value?
 		do
 			Result := type_code = table_description.Date_time_type
 		end
 
-	is_integer: BOOLEAN is
+	is_integer: BOOLEAN
 			-- Is the attribute an integer value?
 		do
 			Result := type_code = table_description.Integer_type
 		end
 
-	is_real: BOOLEAN is
+	is_real: BOOLEAN
 		-- Is the attribute a date & time value?
 		do
 			Result := type_code = table_description.Real_type
 		end
 
-	is_string: BOOLEAN is
+	is_string: BOOLEAN
 		-- Is the attribute a date & time value?
 		do
 			Result := type_code = table_description.String_type
@@ -116,7 +116,7 @@ feature -- Status report
 	is_date: BOOLEAN
 		-- Is the attribute a date only value?
 
-	use_redirection: BOOLEAN is
+	use_redirection: BOOLEAN
 			-- Is the display a redirection from the attribute? 
 		do
 			Result := redirector /= Void
@@ -128,25 +128,25 @@ feature -- Status report
 	is_cleared: BOOLEAN 
 			-- Has the field been cleared?
 
-	graphical_title_set: BOOLEAN is
+	graphical_title_set: BOOLEAN
 			-- Is a graphical title set?
 		do
 			Result := graphical_title /= Void
 		end
 
-	graphical_type_set: BOOLEAN is
+	graphical_type_set: BOOLEAN
 			-- Is a graphical type set?
 		do
 			Result := graphical_type /= Void
 		end
 
-	graphical_value_set: BOOLEAN is
+	graphical_value_set: BOOLEAN
 			-- Is a graphical value set?
 		do
 			Result := graphical_value /= Void
 		end
 
-	can_update: BOOLEAN is
+	can_update: BOOLEAN
 			-- Can value held be updated?
 		do
 			Result := redirector /= Void implies redirector.can_invert
@@ -154,7 +154,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_is_date is
+	set_is_date
 			-- Field must contain a date value.
 		require
 			is_datetime: is_datetime
@@ -167,7 +167,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	set_graphical_title (g_title: DV_SENSITIVE_STRING) is
+	set_graphical_title (g_title: DV_SENSITIVE_STRING)
 			-- Set graphical title to `g_title'.
 		require
 			not_activated: not is_activated
@@ -180,7 +180,7 @@ feature -- Basic operations
 			graphical_title := g_title
 		end
 
-	set_graphical_type (g_type: DV_SENSITIVE_STRING) is
+	set_graphical_type (g_type: DV_SENSITIVE_STRING)
 			-- Set graphical type to `g_type'.
 		require
 			not_activated: not is_activated
@@ -193,7 +193,7 @@ feature -- Basic operations
 			graphical_type := g_type
 		end
 
-	set_graphical_value (g_value: DV_SENSITIVE_STRING) is
+	set_graphical_value (g_value: DV_SENSITIVE_STRING)
 			-- Set graphical value to `g_value'.
 		require
 			not_activated: not is_activated
@@ -202,7 +202,7 @@ feature -- Basic operations
 			graphical_value := g_value
 		end
 
-	set_title (t: STRING) is
+	set_title (t: STRING)
 			-- Set component `title' to `t'.
 		require
 			not_activated: not is_activated
@@ -211,7 +211,7 @@ feature -- Basic operations
 			graphical_title.set_value (t)
 		end
 
-	set_type (t: STRING) is
+	set_type (t: STRING)
 			-- Set component `type' to `t'.
 		require
 			not_activated: not is_activated
@@ -220,7 +220,7 @@ feature -- Basic operations
 			graphical_type.set_value (t)
 		end
 
-	set_redirector (a_redirector: DV_VALUE_REDIRECTOR) is
+	set_redirector (a_redirector: DV_VALUE_REDIRECTOR)
 			-- Set `redirector' to redirect an integer to the associated string.
 		require
 			not_activated: not is_activated
@@ -239,7 +239,7 @@ feature {DV_COMPONENT} -- Status report
 
 feature {DV_COMPONENT} -- Status setting
 
-	enable_has_changed is
+	enable_has_changed
 			-- Enable `has_changed'.
 		require
 			is_activated: is_activated
@@ -249,7 +249,7 @@ feature {DV_COMPONENT} -- Status setting
 
 feature {DV_COMPONENT} -- Basic operations
 
-	set_table_description (table_descr: DB_TABLE_DESCRIPTION) is
+	set_table_description (table_descr: DB_TABLE_DESCRIPTION)
 			-- Set `table_descr' to finish
 			-- locating table attribute in the database.
 		require
@@ -259,7 +259,7 @@ feature {DV_COMPONENT} -- Basic operations
 			type_code := table_description.type_list.i_th (attribute_code)
 		end
 
-	activate is
+	activate
 			-- Activate component.
 		do
 			if graphical_title_set and then graphical_title.value = Void then
@@ -273,7 +273,7 @@ feature {DV_COMPONENT} -- Basic operations
 			is_activated := True
 		end
 
-	clear is
+	clear
 			-- Clear displayed text.
 		require
 			is_activated: is_activated
@@ -284,7 +284,7 @@ feature {DV_COMPONENT} -- Basic operations
 			disable_sensitive
 		end
 
-	update_tablerow (default_tablerow: DB_TABLE_DESCRIPTION) is
+	update_tablerow (default_tablerow: DB_TABLE_DESCRIPTION)
 			-- Displayed object with user changes. Fields unchanged are taken
 			-- from `default_tablerow'.
 		require
@@ -444,7 +444,7 @@ feature {DV_COMPONENT} -- Basic operations
 			end
 		end
 
-	enable_sensitive is
+	enable_sensitive
 			-- Request display sensitive.
 		do
 			if graphical_title /= void then
@@ -456,7 +456,7 @@ feature {DV_COMPONENT} -- Basic operations
 			graphical_value.request_sensitive
 		end
 
-	disable_sensitive is
+	disable_sensitive
 			-- Request display insensitive.
 		do
 			if graphical_title /= void then
@@ -468,7 +468,7 @@ feature {DV_COMPONENT} -- Basic operations
 			graphical_value.request_insensitive
 		end
 
-	refresh (table_row: DB_TABLE_DESCRIPTION) is
+	refresh (table_row: DB_TABLE_DESCRIPTION)
 			-- set `text' with value of attribute 
 			-- with code `attribute_code' of `table_row'.
 		require
@@ -488,7 +488,7 @@ feature {DV_COMPONENT} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	set_text (s: STRING) is
+	set_text (s: STRING)
 			-- Set `s' to displayed text.
 			-- Warning: call `enable_has_changed' after
 			-- to notify that field has changed.
@@ -502,7 +502,7 @@ feature {NONE} -- Implementation
 			enable_sensitive
 		end
 
-	set_datetime (table_row: DB_TABLE_DESCRIPTION) is
+	set_datetime (table_row: DB_TABLE_DESCRIPTION)
 			-- Set a date or a date & time value.
 		local
 			dt: DATE_TIME
@@ -531,7 +531,7 @@ feature {NONE} -- Implementation
 	type_name: STRING;
 			-- Represented field type name.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

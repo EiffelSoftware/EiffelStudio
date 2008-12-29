@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "String preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,13 +16,13 @@ create {PREFERENCE_FACTORY}
 
 feature -- Access
 
-	string_value: STRING is
+	string_value: STRING
 			-- String representation of `value'.
 		do
 			Result := value.twin
 		end
 
-	string_type: STRING is
+	string_type: STRING
 			-- String description of this preference type.
 		once
 			Result := "STRING"
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Query
 
-	valid_value_string (a_string: STRING): BOOLEAN is
+	valid_value_string (a_string: STRING): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?
 		do
 				-- True.  A string preference may be empty and precondition ensures it is not void.
@@ -39,7 +39,7 @@ feature -- Query
 
 feature -- Change
 
-	set_value_from_string (a_value: STRING) is
+	set_value_from_string (a_value: STRING)
 			-- Parse the string value `a_value' and set `value'.
 		do
 			set_value (a_value)
@@ -47,7 +47,7 @@ feature -- Change
 
 feature {PREFERENCES} -- Access
 
-	generating_preference_type: STRING is
+	generating_preference_type: STRING
 			-- The generating type of the preference for graphical representation.
 		once
 			Result := "TEXT"
@@ -55,13 +55,13 @@ feature {PREFERENCES} -- Access
 
 feature {NONE} -- Implementation
 
-	auto_default_value: STRING is
+	auto_default_value: STRING
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once
 			create Result.make_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

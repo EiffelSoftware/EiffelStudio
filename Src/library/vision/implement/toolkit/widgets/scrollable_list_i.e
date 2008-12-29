@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scrollable lists toolkit"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -51,7 +51,7 @@ inherit
 
 feature  -- Element change
 
-	append (s: SEQUENCE [SCROLLABLE_LIST_ELEMENT]) is
+	append (s: SEQUENCE [SCROLLABLE_LIST_ELEMENT])
 			-- Append a copy of s.
 		require
 			argument_not_void: s /= void
@@ -60,7 +60,7 @@ feature  -- Element change
 			new_count: count >= old count
 		end;
 
-	extend (v: SCROLLABLE_LIST_ELEMENT) is
+	extend (v: SCROLLABLE_LIST_ELEMENT)
 			-- Add a new occurrence of v.
 		require 
 			extendible: extendible
@@ -70,7 +70,7 @@ feature  -- Element change
 			item_inserted: has (v)
 		end;
 
-	fill (other: CONTAINER [SCROLLABLE_LIST_ELEMENT]) is
+	fill (other: CONTAINER [SCROLLABLE_LIST_ELEMENT])
 			-- Fill with as many items of other as possible.
 			-- The representations of other and current structure
 			-- need not be the same.
@@ -80,7 +80,7 @@ feature  -- Element change
 		deferred
 		end;
 
-	force (v: like item) is
+	force (v: like item)
 			-- Add v to end.
 		require
 			extendible: extendible
@@ -90,7 +90,7 @@ feature  -- Element change
 			item_inserted: has (v)
 		end;
 
-	merge_left (other: LIST [SCROLLABLE_LIST_ELEMENT]) is
+	merge_left (other: LIST [SCROLLABLE_LIST_ELEMENT])
 			-- Merge other into current structure before cursor
 			-- position. Do not move cursor. Empty other.
 		require 
@@ -104,7 +104,7 @@ feature  -- Element change
 			other_is_empty: other.is_empty
 		end;
 
-	merge_right (other: LIST [SCROLLABLE_LIST_ELEMENT]) is
+	merge_right (other: LIST [SCROLLABLE_LIST_ELEMENT])
 			-- Merge other into current structure after cursor
 			-- position. Do not move cursor. Empty other.
 		require 
@@ -118,7 +118,7 @@ feature  -- Element change
 			other_is_empty: other.is_empty
 		end;
 
-	put (v: like item) is
+	put (v: like item)
 			-- Replace current item by v.
 			-- (Synonym for replace)
 		require
@@ -130,7 +130,7 @@ feature  -- Element change
 			item_inserted: has (v)
 		end;
 
-	put_front (v: like item) is
+	put_front (v: like item)
 			-- Add v at beginning.
 			-- Do not move cursor.
 		deferred
@@ -139,7 +139,7 @@ feature  -- Element change
 			item_inserted: first = v
 		end;
 
-	put_i_th (v: like item; i: INTEGER) is
+	put_i_th (v: like item; i: INTEGER)
 			-- Put v at i-th position.
 		require 
 			valid_key: valid_index (i)
@@ -148,7 +148,7 @@ feature  -- Element change
 			insertion_done: i_th (i) = v
 		end;
 
-	put_left (v: like item) is
+	put_left (v: like item)
 			-- Add v to the left of cursor position.
 			-- Do not move cursor.
 		require 
@@ -160,7 +160,7 @@ feature  -- Element change
 			new_index: index = old index + 1
 		end;
 
-	put_right (v: like item) is
+	put_right (v: like item)
 			-- Add v to the right of cursor position.
 			-- Do not move cursor.
 		require 
@@ -172,7 +172,7 @@ feature  -- Element change
 			same_index: index = old index
 		end;
 
-	replace (v: SCROLLABLE_LIST_ELEMENT) is
+	replace (v: SCROLLABLE_LIST_ELEMENT)
 			-- Replace current item by v.
 		require 
 			writable: writable
@@ -183,7 +183,7 @@ feature  -- Element change
 
 feature  -- Removal
 
-	prune (v: like item) is
+	prune (v: like item)
 			-- Remove first occurrence of v, if any,
 			-- after cursor position.
 			-- If found, move cursor to right neighbor;
@@ -193,7 +193,7 @@ feature  -- Removal
 		deferred
 		end;
 
-	prune_all (v: like item) is
+	prune_all (v: like item)
 			-- Remove all occurrences of v.
 			-- (Reference or object equality,
 			-- based on object_comparison.)
@@ -206,7 +206,7 @@ feature  -- Removal
 			no_more_occurrences: not has (v)
 		end;
 
-	remove is
+	remove
 			-- Remove current item.
 			-- Move cursor to right neighbor
 			-- (or after if no right neighbor).
@@ -218,7 +218,7 @@ feature  -- Removal
 			after_when_empty: is_empty implies after
 		end;
 
-	remove_left is
+	remove_left
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		require
@@ -230,7 +230,7 @@ feature  -- Removal
 			new_index: index = old index - 1
 		end;
 
-	remove_right is
+	remove_right
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		require
@@ -241,7 +241,7 @@ feature  -- Removal
 			same_index: index = old index
 		end;
 
-	wipe_out is
+	wipe_out
 			-- Remove all items.
 		require 
 			prunable: prunable
@@ -253,42 +253,42 @@ feature  -- Removal
 
 feature  -- Status report
 
-	selected_count: INTEGER is
+	selected_count: INTEGER
 			-- Number of selected items in current list
 		deferred
 		end;
 
-	selected_item: SCROLLABLE_LIST_ELEMENT is
+	selected_item: SCROLLABLE_LIST_ELEMENT
 			-- Selected item if single or browse selection mode is selected
 			-- Void if nothing is selected
 		deferred
 		end;
 
-	selected_items: LINKED_LIST [SCROLLABLE_LIST_ELEMENT] is
+	selected_items: LINKED_LIST [SCROLLABLE_LIST_ELEMENT]
 			-- Selected items
 		deferred
 		end;
 
-	selected_position: INTEGER is
+	selected_position: INTEGER
 			-- Position of selected item if single or browse selection mode is
 			-- selected
 			-- Null if nothing is selected
 		deferred
 		end;
 
-	selected_positions: LINKED_LIST [INTEGER] is
+	selected_positions: LINKED_LIST [INTEGER]
 			-- Positions of the selected items
 		deferred
 		end;
 
-	visible_item_count: INTEGER is
+	visible_item_count: INTEGER
 			-- Number of visible item of list
 		deferred
 		end;
 
 feature  -- Default action callbacks
 
-	add_default_action (a_command: COMMAND; argument: ANY) is
+	add_default_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to
 			-- execute when items are selected with double
 			-- click or by pressing `RETURN' in current
@@ -298,7 +298,7 @@ feature  -- Default action callbacks
 		deferred
 		end;
 
-	remove_default_action is
+	remove_default_action
 			-- Remove all actions executed when items are
 			-- selected with double click or by pressing
 			-- `RETURN' in current scroll list.
@@ -307,7 +307,7 @@ feature  -- Default action callbacks
 
 feature  -- Status setting
 
-	add_click_action (a_command: COMMAND; argument: ANY) is
+	add_click_action (a_command: COMMAND; argument: ANY)
 			-- Add `a_command' to the list of actions to execute when items are
 			-- selected with click selection mode in current scroll list.
 		require
@@ -315,14 +315,14 @@ feature  -- Status setting
 		deferred
 		end;
 
-	deselect_all is
+	deselect_all
 			-- Deselect all selected items.
 		deferred
 		ensure
 			selected_list_is_empty: selected_count = 0
 		end;
 
-	remove_click_action (a_command: COMMAND; argument: ANY) is
+	remove_click_action (a_command: COMMAND; argument: ANY)
 			-- Remove `a_command' to the list of action to execute when items are
 			-- selected with click selection mode in current scroll list.
 		require
@@ -330,7 +330,7 @@ feature  -- Status setting
 		deferred
 		end;
 
-	scroll_to_current is
+	scroll_to_current
 			-- Make `item' the first visible item in the list if
 			-- `index' < `first_visible_item_index'.
 			-- Make `item' the last visible item in the list if
@@ -341,21 +341,21 @@ feature  -- Status setting
 		deferred
 		end;
 
-	select_item is
+	select_item
 			-- Select item at current position.
 		require
 			not_off: not off
 		deferred
 		end;
 
-	deselect_item is
+	deselect_item
 			-- Deselect item at current position.
 		require
 			not_off: not off
 		deferred
 		end;
 
-	select_i_th (i: INTEGER) is
+	select_i_th (i: INTEGER)
 			-- Select item at `i'-th position.
 		require
 			index_large_enough: i >= 1;
@@ -363,7 +363,7 @@ feature  -- Status setting
 		deferred
 		end;
 
-	deselect_i_th (i: INTEGER) is
+	deselect_i_th (i: INTEGER)
 			-- Deselect item at `i'-th position.
 		require
 			index_large_enough: i >= 1;
@@ -371,21 +371,21 @@ feature  -- Status setting
 		deferred
 		end;
 
-	set_multiple_selection is
+	set_multiple_selection
 			-- Set the selection to multiple items
 		require
 			not_realized: not realized
 		deferred
 		end
 
-	set_single_selection is
+	set_single_selection
 			-- Set the selection to single items
 		require
 			not_realized: not realized
 		deferred
 		end
 
-	set_visible_item_count (a_count: INTEGER) is
+	set_visible_item_count (a_count: INTEGER)
 			-- Set the number of visible items to `a_count'.
 		require
 			a_count_large_enough: a_count > 0
@@ -394,7 +394,7 @@ feature  -- Status setting
 
 feature -- Update
 
-	update is
+	update
 			-- Update the content of the scrollable list from
 			-- `list'.
 		deferred
@@ -420,7 +420,7 @@ invariant
 	non_negative_count: count >= 0;
 	extendible: extendible;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

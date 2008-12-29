@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Standard layout widget for an application's primary window."
@@ -30,7 +30,7 @@ create
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN)
 			-- Create Current with `a_name' as `widget_name' and `a_parent' as `parent'.
 		local
 			widget_name: ANY
@@ -45,7 +45,7 @@ feature -- Initialization
 			end
 		end;
 
-	make_detailed (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage, command_below, automatic_scrolling: BOOLEAN) is
+	make_detailed (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage, command_below, automatic_scrolling: BOOLEAN)
 			-- Create a motif main window widget with the command window
 			-- located below or above the workspace and with or without
 			-- automatic scrolling.
@@ -72,7 +72,7 @@ feature -- Initialization
 
 feature -- Status report
 
-	command_window: MEL_OBJECT is
+	command_window: MEL_OBJECT
 			-- Command window
 		require
 			exists: not is_destroyed
@@ -80,7 +80,7 @@ feature -- Status report
 			Result := get_xt_widget (screen_object, XmNcommandWindow)
 		end;
 
-	menu_bar: MEL_MENU_BAR is
+	menu_bar: MEL_MENU_BAR
 			-- Menu bar
 		require
 			exists: not is_destroyed
@@ -88,7 +88,7 @@ feature -- Status report
 			Result ?= get_xt_widget (screen_object, XmNmenuBar)
 		end;
 
-	message_window: MEL_OBJECT is
+	message_window: MEL_OBJECT
 			-- Message window
 		require
 			exists: not is_destroyed
@@ -96,7 +96,7 @@ feature -- Status report
 			Result := get_xt_widget (screen_object, XmNmessageWindow)
 		end;
 
-	is_command_above_workspace: BOOLEAN is
+	is_command_above_workspace: BOOLEAN
 			-- Is the command window above the workspace?
 		require
 			exists: not is_destroyed
@@ -104,7 +104,7 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNcommandWindowLocation) = XmCOMMAND_ABOVE_WORKSPACE
 		end;
 
-	margin_height: INTEGER is
+	margin_height: INTEGER
 			-- Margin at the height and the bottom side.
 		do
 			Result := get_xt_dimension (screen_object, XmNmainWindowMarginHeight)
@@ -112,7 +112,7 @@ feature -- Status report
 			margin_height_large_enough: Result >= 0
 		end;
 
-	margin_width: INTEGER is
+	margin_width: INTEGER
 			-- Margin at the right and the left side.
 		do
 			Result := get_xt_dimension (screen_object, XmNmainWindowMarginWidth)
@@ -120,7 +120,7 @@ feature -- Status report
 			margin_width_large_enough: Result >= 0
 		end;
 
-	is_separator_shown: BOOLEAN is
+	is_separator_shown: BOOLEAN
 			-- Is a seprarator displayed between each component?
 		require
 			exists: not is_destroyed
@@ -130,7 +130,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_command_window (a_widget: like command_window) is
+	set_command_window (a_widget: like command_window)
 			-- Set `command_window' to `a_widget'.
 		require
 			exists: not is_destroyed;
@@ -141,7 +141,7 @@ feature -- Status setting
 			command_window_set: a_widget = command_window
 		end;
 
-	set_menu_bar (a_menu_bar: like menu_bar) is
+	set_menu_bar (a_menu_bar: like menu_bar)
 			-- Set `menu_bar' to `a_menu_bar'.
 		require
 			exists: not is_destroyed;
@@ -152,7 +152,7 @@ feature -- Status setting
 			menu_bar_set: a_menu_bar = menu_bar
 		end;
 
-	set_message_window (a_widget: like message_window) is
+	set_message_window (a_widget: like message_window)
 			-- Set `message_window' to `a_widget'.
 		require
 			exists: not is_destroyed;
@@ -163,7 +163,7 @@ feature -- Status setting
 			message_window_set: a_widget = message_window
 		end;
 
-	set_margin_height (a_height: INTEGER) is
+	set_margin_height (a_height: INTEGER)
 			-- Set `margin_height' to `a_height'.
 		require else
 			a_height_large_enough: a_height >= 0
@@ -173,7 +173,7 @@ feature -- Status setting
 			margin_height_set: margin_height = a_height
 		end;
 
-	set_margin_width (a_width: INTEGER) is
+	set_margin_width (a_width: INTEGER)
 			-- Set `margin_width' to `a_width'.
 		require else
 			a_width_large_enough: a_width >= 0
@@ -183,7 +183,7 @@ feature -- Status setting
 			margin_width_set: margin_width = a_width
 		end;
 
-	show_separator is
+	show_separator
 			-- Set `is_separator_shown' to True.
 		require
 			exists: not is_destroyed
@@ -193,7 +193,7 @@ feature -- Status setting
 			separator_is_shown: is_separator_shown 
 		end;
 
-	hide_separator is
+	hide_separator
 			-- Set `is_separator_shown' to False.
 		require
 			exists: not is_destroyed
@@ -205,19 +205,19 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	xm_create_main_window (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is
+	xm_create_main_window (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER
 		external
 			"C (Widget, String, ArgList, Cardinal): EIF_POINTER | <Xm/MainW.h>"
 		alias
 			"XmCreateMainWindow"
 		end;
 
-	xm_create_main_window_detailed (a_parent, a_name: POINTER; com_below, auto_scroll: BOOLEAN): POINTER is
+	xm_create_main_window_detailed (a_parent, a_name: POINTER; com_below, auto_scroll: BOOLEAN): POINTER
 		external
 			"C"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision window. Carbon implementation."
 
 class
@@ -68,7 +68,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_interface: like interface) is
+	make (an_interface: like interface)
 			-- Create the window.
 		local
 			window_attributes: INTEGER
@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 			h_ret := app_implementation.install_event_handler (event_id, target, {CARBONEVENTS_ANON_ENUMS}.kEventClassWindow, {CARBONEVENTS_ANON_ENUMS}.kEventWindowClose)
 		end
 
-	initialize is
+	initialize
 			-- Create the vertical box `vbox' and horizontal box `hbox'
 			-- to put in the window.
 			-- The `vbox' will be able to contain the menu bar, the `hbox'
@@ -137,14 +137,14 @@ feature {NONE} -- Initialization
 
 feature  -- Access
 
-	is_sensitive: BOOLEAN is
+	is_sensitive: BOOLEAN
 			--
 		do
 			Result := True
 		end
 
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does `Current' have the keyboard focus?
 		do
 			Result := is_window_active_external (c_object) /= 0
@@ -170,27 +170,27 @@ feature  -- Access
 
 feature -- Status setting
 
-	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
+	disconnect_accelerator (an_accel: EV_ACCELERATOR)
 			-- Disconnect key combination `an_accel' from this window.
 		do
 		end
 
-	connect_accelerator (an_accel: EV_ACCELERATOR) is
+	connect_accelerator (an_accel: EV_ACCELERATOR)
 			-- Disconnect key combination `an_accel' from this window.
 		do
 		end
 
-	internal_disable_border is
+	internal_disable_border
 			-- Ensure no border is displayed around `Current'.
 		do
 		end
 
-	internal_enable_border is
+	internal_enable_border
 			-- Ensure a border is displayed around `Current'.
 		do
 		end
 
-	block is
+	block
 			-- Wait until window is closed by the user.
 		local
 			app: EV_APPLICATION_IMP
@@ -204,13 +204,13 @@ feature -- Status setting
 			end
 		end
 
-	allow_resize is
+	allow_resize
 			do
 				enable_user_resize
 			end
 
 
-	enable_user_resize is
+	enable_user_resize
 			-- Allow the resize of the window.
 		local
 			res: INTEGER
@@ -220,7 +220,7 @@ feature -- Status setting
 		end
 
 
-	disable_user_resize is
+	disable_user_resize
 			-- disable the resize of the window.
 		local
 			res: INTEGER
@@ -230,7 +230,7 @@ feature -- Status setting
 		end
 
 
-	show is
+	show
 			-- Map the Window to the screen.
 		do
 			if not is_show_requested then
@@ -250,7 +250,7 @@ feature -- Status setting
 	call_show_actions: BOOLEAN
 		-- Should the show actions be called?
 
-	hide is
+	hide
 			-- Unmap the Window from the screen.
 		do
 		end
@@ -259,7 +259,7 @@ feature -- Element change
 
 	on_attach: ACTION_SEQUENCE [TUPLE]
 
-	replace (v: like item) is
+	replace (v: like item)
 			-- Replace `item' with `v'.
 		local
 			w_imp: EV_WIDGET_IMP
@@ -290,7 +290,7 @@ feature -- Element change
 			item := v
 		end
 
-	child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER) is
+	child_has_resized (a_widget_imp: EV_WIDGET_IMP; a_height, a_width: INTEGER)
 			--
 		do
 
@@ -299,7 +299,7 @@ feature -- Element change
 		end
 
 
-	layout  is
+	layout
 				-- Sets the child control's size to the container site minus some spacing
 		local
 			ret: INTEGER
@@ -318,7 +318,7 @@ feature -- Element change
 			temp_item := void
 		end
 
-		calculate_minimum_sizes is
+		calculate_minimum_sizes
 		do
 			if temp_item /= void then
 				buffered_minimum_width := (temp_item.minimum_width + child_offset_left + child_offset_right).max(internal_minimum_width)
@@ -332,7 +332,7 @@ feature -- Element change
 			end
 		end
 
-	setup_window_binding (a_control : POINTER) is
+	setup_window_binding (a_control : POINTER)
 			-- Align the main_container to the window size
 		external
 			"C inline use <Carbon/Carbon.h>"
@@ -365,19 +365,19 @@ feature -- Element change
 			]"
 		end
 
-	set_maximum_width (max_width: INTEGER) is
+	set_maximum_width (max_width: INTEGER)
 			-- Set `maximum_width' to `max_width'.
 		do
 			maximum_width := max_width
 		end
 
-	set_maximum_height (max_height: INTEGER) is
+	set_maximum_height (max_height: INTEGER)
 			-- Set `maximum_height' to `max_height'.
 		do
 			maximum_height := max_height
 		end
 
-		set_size (a_width, a_height: INTEGER) is
+		set_size (a_width, a_height: INTEGER)
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
 		do
@@ -385,7 +385,7 @@ feature -- Element change
 			set_height (a_height)
 		end
 
-	set_title (new_title: STRING_GENERAL) is
+	set_title (new_title: STRING_GENERAL)
 			-- Set `title' to `new_title'.
 		local
 			res: INTEGER
@@ -396,7 +396,7 @@ feature -- Element change
 			title := new_title
 		end
 
-	set_menu_bar (a_menu_bar: EV_MENU_BAR) is
+	set_menu_bar (a_menu_bar: EV_MENU_BAR)
 			-- Set `menu_bar' to `a_menu_bar'.
 		local
 			mb_imp: EV_MENU_BAR_IMP
@@ -407,7 +407,7 @@ feature -- Element change
 			-- TODO attach the menubar to the current window / application in carbon
 		end
 
-	remove_menu_bar is
+	remove_menu_bar
 			-- Set `menu_bar' to `Void'.
 		local
 			mb_imp: EV_MENU_BAR_IMP
@@ -422,7 +422,7 @@ feature -- Element change
 
 feature {EV_ANY_IMP} -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy `Current'
 			-- 19.6.2006 Ueli
 		do
@@ -433,7 +433,7 @@ feature {EV_ANY_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	on_widget_mapped is
+	on_widget_mapped
 			-- `Current' has been mapped to the screen.
 			-- 19.6.06 Ueli
 		do
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 			call_show_actions := False
 		end
 
-	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
+	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER)
 			-- Set the minimum horizontal size to `a_minimum_width'.
 			-- Set the minimum vertical size to `a_minimum_height'.
 		local
@@ -463,12 +463,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_focused_widget (a_widget: EV_WIDGET_IMP) is
+	set_focused_widget (a_widget: EV_WIDGET_IMP)
 			-- Set currently focused widget to `a_widget'.
 		do
 		end
 
-	on_focus_changed (a_has_focus: BOOLEAN) is
+	on_focus_changed (a_has_focus: BOOLEAN)
 			-- Called from focus intermediary agents when focus for `Current' has changed.
 			-- if `a_has_focus' then `Current' has just received focus.
 		do
@@ -483,17 +483,17 @@ feature {NONE} -- Implementation
 	previous_x_position, previous_y_position: INTEGER
 		-- Positions of previously set x and y coordinates of `Current'.
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
 			-- Used for key event actions sequences.
 		do
 		end
 
-	client_area: POINTER is
+	client_area: POINTER
 			-- Pointer to the widget that is treated as the main holder of the client area within the window.
 		do
 		end
 
-	initialize_client_area is
+	initialize_client_area
 			-- Initialize the client area of 'Current'.
 		do
 			-- TODO: init vbox/hbox?
@@ -501,12 +501,12 @@ feature {NONE} -- Implementation
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_set_focus_event (a_widget_ptr: POINTER) is
+	on_set_focus_event (a_widget_ptr: POINTER)
 			-- The focus of a widget has changed within `Current'.
 		do
 		end
 
-	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER is
+	on_event (a_inhandlercallref: POINTER; a_inevent: POINTER; a_inuserdata: POINTER): INTEGER
 			-- Feature that is called if an event occurs
 		local
 			event_class, event_kind : INTEGER
@@ -525,7 +525,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_INTERMEDIARY_ROUTINES}
 
-	call_close_request_actions is
+	call_close_request_actions
 			-- Call the close request actions.
 		do
 		end
@@ -535,7 +535,7 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_WINDOW;
 		-- Interface object of `Current'
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_WINDOW_IMP
 

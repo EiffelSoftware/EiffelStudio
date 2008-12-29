@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: 
 		"Xt functions that can be used on objects."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	get_xt_boolean (a_target: POINTER; a_resource_name: POINTER): BOOLEAN is
+	get_xt_boolean (a_target: POINTER; a_resource_name: POINTER): BOOLEAN
 			-- Value of X boolean resource with a_resource_name
 			-- as name.
 		require
@@ -27,7 +27,7 @@ feature {NONE} -- Implementation
 			"c_get_boolean"
 		end;
 
-	set_xt_boolean (a_target: POINTER; a_resource_name: POINTER; a_boolean: BOOLEAN) is
+	set_xt_boolean (a_target: POINTER; a_resource_name: POINTER; a_boolean: BOOLEAN)
 			-- Assign a_boolean to target boolean resource
 			-- with a_resource_name as name.
 		require
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 			"c_set_boolean"
 		end;
 
-	get_xt_dimension (a_target: POINTER; a_resource_name: POINTER): INTEGER is
+	get_xt_dimension (a_target: POINTER; a_resource_name: POINTER): INTEGER
 			-- Value of X dimension resource with a_resource_name
 			-- as name.
 		require
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 			"c_get_dimension"
 		end;
 
-	set_xt_dimension (a_target: POINTER; a_resource_name: POINTER; a_dimension: INTEGER) is
+	set_xt_dimension (a_target: POINTER; a_resource_name: POINTER; a_dimension: INTEGER)
 			-- Assign a_dimension to target dimension resource
 			-- with a_resource_name as name.
 		require
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 			"c_set_dimension"
 		end;
 
-	get_xt_position (a_target: POINTER; a_resource_name: POINTER): INTEGER is
+	get_xt_position (a_target: POINTER; a_resource_name: POINTER): INTEGER
 			-- Value of X position resource with a_resource_name
 			-- as name.
 		require
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			"c_get_position"
 		end;
 
-	set_xt_position (a_target: POINTER; a_resource_name: POINTER; a_position: INTEGER) is
+	set_xt_position (a_target: POINTER; a_resource_name: POINTER; a_position: INTEGER)
 			-- Assign a_position to target position resource
 			-- with a_resource_name as name.
 		require
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 			"c_set_position"
 		end;
 
-	get_xt_int (a_target: POINTER; a_resource_name: POINTER): INTEGER is
+	get_xt_int (a_target: POINTER; a_resource_name: POINTER): INTEGER
 			-- Value of X integer resource with a_resource_name
 			-- as name.
 		require
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			"c_get_int"
 		end;
 
-	set_xt_int (a_target: POINTER; a_resource_name: POINTER; an_integer: INTEGER) is
+	set_xt_int (a_target: POINTER; a_resource_name: POINTER; an_integer: INTEGER)
 			-- Assign an_integer to target integer resource
 			-- with a_resource_name as name.
 		require
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			"c_set_int"
 		end;
 
-	get_xt_cardinal (a_target: POINTER; a_resource_name: POINTER): INTEGER is
+	get_xt_cardinal (a_target: POINTER; a_resource_name: POINTER): INTEGER
 			-- Value of X cardinal resource with a_resource_name
 			-- as name.
 		require
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			"c_get_cardinal"
 		end;
 
-	set_xt_cardinal (a_target: POINTER; a_resource_name: POINTER; a_cardinal: INTEGER) is
+	set_xt_cardinal (a_target: POINTER; a_resource_name: POINTER; a_cardinal: INTEGER)
 			-- Assign a_cardinal to target cardinal resource
 			-- with a_resource_name as name.
 		require
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			"c_set_cardinal"
 		end;
 
-	get_xt_short (a_target: POINTER; a_resource_name: POINTER): INTEGER is
+	get_xt_short (a_target: POINTER; a_resource_name: POINTER): INTEGER
 			-- Value of X short resource with a_resource_name
 			-- as name.
 		require
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			"c_get_short"
 		end;
 
-	set_xt_short (a_target: POINTER; a_resource_name: POINTER; a_short: INTEGER) is
+	set_xt_short (a_target: POINTER; a_resource_name: POINTER; a_short: INTEGER)
 			-- Assign a_short to target resource
 			-- with a_resource_name as name.
 		require
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			"c_set_short"
 		end;
 
-	get_xt_string_no_free (a_target: POINTER; a_resource_name: POINTER): STRING is
+	get_xt_string_no_free (a_target: POINTER; a_resource_name: POINTER): STRING
 			-- Value of X string resource with a_resource_name
 			-- as name. Call a C function that does not free the pointer
 			-- returned by XtVaGetValues.
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			"c_get_string_no_free"
 		end;
 
-	get_xt_string (a_target: POINTER; a_resource_name: POINTER): STRING is
+	get_xt_string (a_target: POINTER; a_resource_name: POINTER): STRING
 			-- Value of X string resource with a_resource_name
 			-- as name.
 		require
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			"c_get_string"
 		end;
 
-	set_xt_string (a_target: POINTER; a_resource_name: POINTER; a_string: STRING) is
+	set_xt_string (a_target: POINTER; a_resource_name: POINTER; a_string: STRING)
 			-- Assign a_string to target string resource
 			-- with a_resource_name as name.
 		require
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			c_set_string (a_target, a_resource_name, $resource_string)
 		end;
 
-	set_xt_allocated_string (a_target: POINTER; a_resource_name: POINTER; a_string: STRING) is
+	set_xt_allocated_string (a_target: POINTER; a_resource_name: POINTER; a_string: STRING)
 			-- Assign a_string to target string resource
 			-- with a_resource_name as name. Allocate a C string but do not
 			-- free it.
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			c_set_allocated_string (a_target, a_resource_name, $resource_string)
 		end;
 
-	get_xt_unsigned_char (a_target: POINTER; a_resource_name: POINTER): INTEGER is
+	get_xt_unsigned_char (a_target: POINTER; a_resource_name: POINTER): INTEGER
 			-- Value of X unsigned char resource with a_resource_name
 			-- as name
 		require
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			"c_get_unsigned_char"
 		end;
 
-	set_xt_unsigned_char (a_target: POINTER; a_resource_name: POINTER; an_unsigned_char: INTEGER) is
+	set_xt_unsigned_char (a_target: POINTER; a_resource_name: POINTER; an_unsigned_char: INTEGER)
 			-- Assign an_unsigned_char to target unsigned char resource
 			-- with a_resource_name as name.
 		require
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			"c_set_unsigned_char"
 		end;
 
-	get_xt_widget (a_target: POINTER; a_resource_name: POINTER): MEL_OBJECT is
+	get_xt_widget (a_target: POINTER; a_resource_name: POINTER): MEL_OBJECT
 			-- Value of X widget resource with a_resource_name
 			-- as name.
 		require
@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	set_xt_widget (a_target: POINTER; a_resource_name: POINTER; a_widget: POINTER) is
+	set_xt_widget (a_target: POINTER; a_resource_name: POINTER; a_widget: POINTER)
 			-- Assign a_widget to widget resource
 			-- with a_resource_name as name.
 		require
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 			"c_set_widget"
 		end;
 
-	get_xt_pixel (a_target: MEL_OBJECT; a_resource_name: POINTER): MEL_PIXEL is
+	get_xt_pixel (a_target: MEL_OBJECT; a_resource_name: POINTER): MEL_PIXEL
 			-- Value of X pixel resource with a_resource_name
 			-- as name.
 		require
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 				c_get_pixel (a_target.screen_object, a_resource_name))
 		end;
 
-	set_xt_pixel (a_target: POINTER; a_resource_name: POINTER; a_pixel: MEL_PIXEL) is
+	set_xt_pixel (a_target: POINTER; a_resource_name: POINTER; a_pixel: MEL_PIXEL)
 			-- Assign a_pixel to pixel resource
 			-- with a_resource_name as name.
 		require
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			c_set_pixel (a_target, a_resource_name, a_pixel.identifier)
 		end;
 
-	get_xt_pixmap (a_target: MEL_OBJECT; a_resource_name: POINTER): MEL_PIXMAP is
+	get_xt_pixmap (a_target: MEL_OBJECT; a_resource_name: POINTER): MEL_PIXMAP
 			-- Value of X pixmap resource with a_resource_name
 			-- as name.
 		require
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 					c_get_pixmap (a_target.screen_object, a_resource_name), a_depth)
 		end;
 
-	set_xt_pixmap (a_target: POINTER; a_resource_name: POINTER; a_pixmap: MEL_PIXMAP) is
+	set_xt_pixmap (a_target: POINTER; a_resource_name: POINTER; a_pixmap: MEL_PIXMAP)
 			-- Assign a_pixmap to pixmap resource
 			-- with a_resource_name as name.
 		require
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 			c_set_pixmap (a_target, a_resource_name, a_pixmap.identifier)
 		end;
 
-	get_xt_keysym (a_target: POINTER; a_resource_name: POINTER): CHARACTER is
+	get_xt_keysym (a_target: POINTER; a_resource_name: POINTER): CHARACTER
 			-- Value of X pixmap resource with a_resource_name
 			-- as name.
 		require
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 			"c_get_keysym"
 		end;
 
-	set_xt_keysym (a_target: POINTER; a_resource_name: POINTER; a_character: CHARACTER) is
+	set_xt_keysym (a_target: POINTER; a_resource_name: POINTER; a_character: CHARACTER)
 			-- Assign a_pixmap to pixmap resource
 			-- with a_resource_name as name.
 		require
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- External features
 
-	xt_is_composite (w: POINTER): BOOLEAN is
+	xt_is_composite (w: POINTER): BOOLEAN
 		external
 			"C [macro <X11/Intrinsic.h>] (Widget): EIF_BOOLEAN"
 		alias
@@ -328,168 +328,168 @@ feature {NONE} -- External features
 
 feature {NONE} -- External features
 
-	c_set_allocated_string (scr_obj: POINTER; resource: POINTER; val: POINTER) is
+	c_set_allocated_string (scr_obj: POINTER; resource: POINTER; val: POINTER)
 		external
 			"C"
 		end;
 
-	c_set_string (scr_obj: POINTER; resource: POINTER; val: POINTER) is
+	c_set_string (scr_obj: POINTER; resource: POINTER; val: POINTER)
 		external
 			"C"
 		end;
 
-	c_set_pixel (scr_obj: POINTER; resource: POINTER; val: POINTER) is
+	c_set_pixel (scr_obj: POINTER; resource: POINTER; val: POINTER)
 		external
 			"C"
 		end;
 
-	c_set_pixmap (scr_obj: POINTER; resource: POINTER; val: POINTER) is
+	c_set_pixmap (scr_obj: POINTER; resource: POINTER; val: POINTER)
 		external
 			"C"
 		end;
 
-	c_get_widget (scr_obj: POINTER; resource: POINTER): POINTER is
+	c_get_widget (scr_obj: POINTER; resource: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	c_get_pixel (scr_obj: POINTER; resource: POINTER): POINTER is
+	c_get_pixel (scr_obj: POINTER; resource: POINTER): POINTER
 		external
 			"C"
 		end;
 
-	c_get_pixmap (scr_obj: POINTER; resource: POINTER): POINTER is
+	c_get_pixmap (scr_obj: POINTER; resource: POINTER): POINTER
 		external
 			"C"
 		end;
 
 feature {NONE} -- Implementation
 
-	xt_destroy_widget (scr_obj: POINTER) is
+	xt_destroy_widget (scr_obj: POINTER)
 		external
 			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtDestroyWidget"
 		end;
 
-	xt_realize_widget (scr_obj: POINTER) is
+	xt_realize_widget (scr_obj: POINTER)
 		external
 			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtRealizeWidget"
 		end;
 
-	xt_unrealize_widget (scr_obj: POINTER) is
+	xt_unrealize_widget (scr_obj: POINTER)
 		external
 			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtUnrealizeWidget"
 		end;
 
-	xt_manage_child (scr_obj: POINTER) is
+	xt_manage_child (scr_obj: POINTER)
 		external
 			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtManageChild"
 		end;
 
-	xt_unmanage_child (scr_obj: POINTER) is
+	xt_unmanage_child (scr_obj: POINTER)
 		external
 			"C (Widget) | <X11/Intrinsic.h>"
 		alias
 			"XtUnmanageChild"
 		end;
 
-	xt_set_sensitive (scr_obj: POINTER; bool: BOOLEAN) is
+	xt_set_sensitive (scr_obj: POINTER; bool: BOOLEAN)
 		external
 			"C (Widget, Boolean) | <X11/Intrinsic.h>"
 		alias
 			"XtSetSensitive"
 		end;
 
-	xt_map_widget (scr_obj: POINTER) is
+	xt_map_widget (scr_obj: POINTER)
 		external
 			"C [macro <X11/Intrinsic.h>] (Widget)"
 		alias
 			"XtMapWidget"
 		end;
 
-	xt_unmap_widget (scr_obj: POINTER) is
+	xt_unmap_widget (scr_obj: POINTER)
 		external
 			"C [macro <X11/Intrinsic.h>] (Widget)"
 		alias
 			"XtUnmapWidget"
 		end;
 
-	xt_free (obj: POINTER) is
+	xt_free (obj: POINTER)
 		external
 			"C (XtPointer) | <X11/Intrinsic.h>"
 		alias
 			"XtFree"
 		end;
 
-	xt_display (scr_obj: POINTER): POINTER is
+	xt_display (scr_obj: POINTER): POINTER
 		external
 			"C (Widget): EIF_POINTER | <X11/Intrinsic.h>"
 		alias
 			"XtDisplay"
 		end;
 
-	xt_is_realized (scr_obj: POINTER): BOOLEAN is
+	xt_is_realized (scr_obj: POINTER): BOOLEAN
 		external
 			"C (Widget): EIF_BOOLEAN | <X11/Intrinsic.h>"
 		alias
 			"XtIsRealized"
 		end;
 
-	xt_is_managed (scr_obj: POINTER): BOOLEAN is
+	xt_is_managed (scr_obj: POINTER): BOOLEAN
 		external
 			"C (Widget): EIF_BOOLEAN | <X11/Intrinsic.h>"
 		alias
 			"XtIsManaged"
 		end;
 
-	xt_is_sensitive (scr_obj: POINTER): BOOLEAN is
+	xt_is_sensitive (scr_obj: POINTER): BOOLEAN
 		external
 			"C (Widget): EIF_BOOLEAN | <X11/Intrinsic.h>"
 		alias
 			"XtIsSensitive"
 		end;
 
-	xt_is_visible (scr_obj: POINTER): BOOLEAN is
+	xt_is_visible (scr_obj: POINTER): BOOLEAN
 		external
 			"C"
 		end;
 
-	xt_window (a_target: POINTER): POINTER is
+	xt_window (a_target: POINTER): POINTER
 		external
 			"C (Widget): EIF_POINTER | <X11/Intrinsic.h>"
 		alias
 			"XtWindow"
 		end;
 
-	xt_parent (a_target: POINTER): POINTER is
+	xt_parent (a_target: POINTER): POINTER
 		external
 			"C (Widget): EIF_POINTER | <X11/Intrinsic.h>"
 		alias
 			"XtParent"
 		end;
 
-	xt_name (a_target: POINTER): POINTER is
+	xt_name (a_target: POINTER): POINTER
 		external
 			"C (Widget): EIF_POINTER | <X11/Intrinsic.h>"
 		alias
 			"XtName"
 		end;
 
-	xt_widget_to_application_context (a_target: POINTER): POINTER is
+	xt_widget_to_application_context (a_target: POINTER): POINTER
 		external
 			"C (Widget): EIF_POINTER | <X11/Intrinsic.h>"
 		alias
 			"XtWidgetToApplicationContext"
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

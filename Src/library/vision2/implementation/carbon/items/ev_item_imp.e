@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EiffelVision item, Carbon implementation"
 	legal: "See notice at end of class.";
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER)
-		is
+		
 			-- Call pointer_button_press_actions or pointer_double_press_actions
 			-- depending on event type in first position of `event_data'.
 		do
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
+	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM]
 			-- The parent of the Current widget
 			-- May be void.
 		do
@@ -57,7 +57,7 @@ feature -- Access
 
 feature {EV_ANY_IMP} -- Implementation
 
-	destroy is
+	destroy
 			-- Destroy `Current'
 		do
 		end
@@ -66,7 +66,7 @@ feature {EV_ANY_IMP} -- Implementation
 		-- Used to store parent imp of items where parent stores
 		-- items in a list widget instead of the c_object.
 
-	set_item_parent_imp (a_parent: EV_ITEM_LIST_IMP [EV_ITEM]) is
+	set_item_parent_imp (a_parent: EV_ITEM_LIST_IMP [EV_ITEM])
 			-- Set `item_parent_imp' to `a_parent'.
 		do
 			item_parent_imp := a_parent
@@ -83,7 +83,7 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_ITEM;
 
-indexing
+note
 	copyright:	"Copyright (c) 2006, The Eiffel.Mac Team"
 end -- class EV_ITEM_IMP
 

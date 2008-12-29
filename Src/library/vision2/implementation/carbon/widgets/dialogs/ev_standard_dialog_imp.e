@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Eiffel Vision standard dialog. Carbon implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	initialize is
+	initialize
 			-- Initialize dialog
 		do
 			Precursor {EV_CARBON_WINDOW_IMP}
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	title: STRING_32 is
+	title: STRING_32
 			-- Title of dialog shown in title bar.
 		do
 		end
@@ -52,7 +52,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	show_modal_to_window (a_window: EV_WINDOW) is
+	show_modal_to_window (a_window: EV_WINDOW)
 			-- Show `Current' modal with respect to `a_window'.
 		do
 			selected_button := Void
@@ -68,29 +68,29 @@ feature -- Status setting
 			end
 		end
 
-	set_title (a_title: STRING_GENERAL) is
+	set_title (a_title: STRING_GENERAL)
 			-- Set the title of the dialog.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN)
 			-- `a_key' has either been pressed or released
 		do
 		end
 
-	block is
+	block
 			-- Wait until window is closed by the user.
 		do
 		end
 
-	enable_closeable is
+	enable_closeable
 			-- Set the window to be closeable by the user
 		do
 		end
 
-	call_close_request_actions is
+	call_close_request_actions
 			-- Call `on_cancel' if user wants to quit dialog.
 		do
 			on_cancel
@@ -101,27 +101,27 @@ feature {NONE} -- Implementation
 
 	interface: EV_STANDARD_DIALOG
 
-	default_wm_decorations: INTEGER is
+	default_wm_decorations: INTEGER
 			-- Default Window Manager decorations of `Current'.
 		do
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_ok is
+	on_ok
 			-- Close window and call action sequence.
 		do
 			user_clicked_ok := True
 			selected_button := internal_accept
 		end
 
-	on_cancel is
+	on_cancel
 			-- Close window and call action sequence.
 		do
 			selected_button := ev_cancel
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2006-2007, The ETH Eiffel.Mac Team"
 
 end -- class EV_STANDARD_DIALOG_IMP

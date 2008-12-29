@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "General notion of command history"
 	legal: "See notice at end of class.";
@@ -12,13 +12,13 @@ deferred class
 
 feature -- Basic operations
 
-	record (a_command: UNDOABLE) is
+	record (a_command: UNDOABLE)
 			-- Record `a_command' in Current
 			-- history.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

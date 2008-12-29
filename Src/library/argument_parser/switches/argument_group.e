@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a group of switches for group validation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -75,7 +75,7 @@ invariant
 				Result := ia_arr.occurrences (ia_item) = 1
 			end  (switches, ?))
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

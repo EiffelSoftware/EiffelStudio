@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Mechanisms for building lexical analyzers from regular expressions."
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make_analyzer is
+	make_analyzer
 			-- Create analyzer (if Void) and initialize it.
 		require
 			not_initialized: not initialized
@@ -43,7 +43,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	put_expression (s: STRING; n: INTEGER; c: STRING) is
+	put_expression (s: STRING; n: INTEGER; c: STRING)
 			-- Record the regular expression described by `s'
 			-- and associate it with token type `n' and name `c'.
 		require
@@ -53,7 +53,7 @@ feature -- Element change
 			put_nameless_expression (s, n)
 		end; 
 
-	add_word (s: STRING; n: INTEGER) is
+	add_word (s: STRING; n: INTEGER)
 			-- Record the word `s' and
 			-- associate it with token type `n'.
 		require
@@ -67,7 +67,7 @@ feature -- Element change
 
 feature -- Input
 
-	read_grammar (token_file_name: STRING) is
+	read_grammar (token_file_name: STRING)
 			-- Create lexical analyzer for grammar in file of name
 			-- `token_file_name'. File structure:
 			-- One or more lines of the form
@@ -83,7 +83,7 @@ feature -- Input
 			analyzer_exists: analyzer /= Void
 		end; 
 
-	No_token: INTEGER is 0
+	No_token: INTEGER = 0
 
 feature {NONE} -- Implementation
 
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			-- Construct including description
 			-- For error messages
 
-	give_h_table (d: HASH_TABLE [INTEGER, STRING]) is
+	give_h_table (d: HASH_TABLE [INTEGER, STRING])
 			-- Set the h_table to d.
 			-- Used when the h_table is not built by a `LEX_BUILDER'.
 		do
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 
 	token_file: PLAIN_TEXT_FILE;
 
-	record_atomics is
+	record_atomics
 			-- Record the regular expressions with their names and
 			-- their line numbers as token identifiers.
 		local
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	record_keywords is
+	record_keywords
 			-- Record the keywords with their names, with type
 			-- corresponding to the last atomic expression read.
 		local
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			end
 		end; 
 
-	raise_error (pos: INTEGER; expected: CHARACTER; mes: STRING) is
+	raise_error (pos: INTEGER; expected: CHARACTER; mes: STRING)
 			-- Print an error message and stop parsing.
 			-- The message is recorded in "error_list".
 		require else
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			parsing_stopped := True
 		end 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

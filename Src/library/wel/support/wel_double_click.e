@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Set and get the double-click time for the mouse."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Status report
 
-	double_click_time: INTEGER is
+	double_click_time: INTEGER
 			-- Current double-click time for the mouse (in milliseconds)
 		do
 			Result := cwin_get_double_click_time
@@ -20,7 +20,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_double_click_time (time: INTEGER) is
+	set_double_click_time (time: INTEGER)
 			-- Set `double_click_time' with `time' (in milliseconds).
 		require
 			positive_time: time > 0
@@ -32,7 +32,7 @@ feature -- Status setting
 
 feature {NONE} -- Externals
 
-	cwin_get_double_click_time: INTEGER is
+	cwin_get_double_click_time: INTEGER
 			-- SDK GetDoubleClickTime
 		external
 			"C [macro <wel.h>]: EIF_INTEGER"
@@ -40,7 +40,7 @@ feature {NONE} -- Externals
 			"GetDoubleClickTime ()"
 		end
 
-	cwin_set_double_click_time (time: INTEGER) is
+	cwin_set_double_click_time (time: INTEGER)
 			-- SDK SetDoubleClickTime
 		external
 			"C [macro <wel.h>] (UINT)"
@@ -48,7 +48,7 @@ feature {NONE} -- Externals
 			"SetDoubleClickTime"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

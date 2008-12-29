@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Gdi+ pen's functions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_color: WEL_GDIP_COLOR; a_width: REAL) is
+	make (a_color: WEL_GDIP_COLOR; a_width: REAL)
 			-- Creation method
 		local
 			l_result: INTEGER
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Destroy
 
-	destroy_item is
+	destroy_item
 			-- Redefine
 		local
 			l_result: INTEGER
@@ -45,7 +45,7 @@ feature {NONE} -- Destroy
 
 feature {NONE} -- C externals
 
-	c_gdip_create_pen_l (a_gdiplus_handle: POINTER; a_argb: INTEGER_64; a_width: REAL; a_unit: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
+	c_gdip_create_pen_l (a_gdiplus_handle: POINTER; a_argb: INTEGER_64; a_width: REAL; a_unit: INTEGER; a_result_status: TYPED_POINTER [INTEGER]): POINTER
 			-- Create Current
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -77,7 +77,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_delete_pen (a_gdiplus_handle: POINTER; a_pen: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+	c_gdip_delete_pen (a_gdiplus_handle: POINTER; a_pen: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Delete Gdi+ object `a_pen'
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
@@ -101,7 +101,7 @@ feature {NONE} -- C externals
 			]"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

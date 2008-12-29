@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of an Eiffel routine object in agent form"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (t: like target; f: like feature_name; o: like internal_operands; ht: BOOLEAN; a_as: like agent_keyword; d_as: like dot_symbol) is
+	make (t: like target; f: like feature_name; o: like internal_operands; ht: BOOLEAN; a_as: like agent_keyword; d_as: like dot_symbol)
 			-- Create a new ROUTINE_CREATION AST node.
 			-- When `t' is Void it means it is a question mark.
 		do
@@ -38,7 +38,7 @@ feature{NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_agent_routine_creation_as (Current)
@@ -80,7 +80,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				if target /= Void then
@@ -94,7 +94,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				if operands /= Void then
@@ -111,7 +111,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

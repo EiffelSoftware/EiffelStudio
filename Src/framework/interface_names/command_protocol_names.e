@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Names of command tunnel protocol. No translation is needed, because the protocol is transparent for end users.
 					This class is used cross processes.
@@ -36,7 +36,7 @@ feature -- Others
 
 	eiffel_protocol: !STRING = "eiffel:?";
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

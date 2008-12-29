@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Lexical analysis of the resource."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Parsing
 
-	parse_separators is
+	parse_separators
 			-- Get rid of the separators and comments.
 		do
 			from
@@ -35,7 +35,7 @@ feature -- Parsing
 			parse_comments
 		end;
 				
-	parse_comments is
+	parse_comments
 			-- Get rid of the comments.
 		do
 			from
@@ -54,7 +54,7 @@ feature -- Parsing
 			end
 		end;
 
-	parse_name is
+	parse_name
 			-- Parse a name and put it in `last_token'.
 			-- `last_token' is void if a syntax error ocurred.
 			-- A name as the same form as an Eiffel identifier.
@@ -89,7 +89,7 @@ feature -- Parsing
 			end
 		end;
 
-	parse_colon is
+	parse_colon
 			-- Parse a colon character.
 			-- `last_token' is void if a syntax error ocurred.
 		do
@@ -102,7 +102,7 @@ feature -- Parsing
 			end
 		end;
 
-	parse_value is
+	parse_value
 			-- Parse a resource value and put it in `last_token'.
 			-- `last_token' is void if a syntax error ocurred.
 			-- A value is either a word (characters with not blank)
@@ -139,7 +139,7 @@ feature -- Parsing
 			end
 		end;
 
-	parse_string is
+	parse_string
 			-- Parse a string and put it in `last_token'.
 			-- `last_token' is void if a syntax error ocurred.
 		require
@@ -228,7 +228,7 @@ feature -- Parsing
 			end
 		end;
 
-	parse_char_code is
+	parse_char_code
 			-- Parse a special character of the form %/../ and insert
 			-- it at the end of `last_token'. `last_token' becomes
 			-- void if an error occurred.
@@ -288,7 +288,7 @@ feature -- Parsing
 			end
 		end;
 
-	read_line is
+	read_line
 			-- Read the next line in `resource_file' and put it in `line'.
 			-- Remove the leading blank characters.
 		do
@@ -305,7 +305,7 @@ feature -- Parsing
 			read_character
 		end;
 		
-	read_character is
+	read_character
 			-- Read the next character on the `line' and 
 			-- put it in last_character.
 		require
@@ -319,13 +319,13 @@ feature -- Parsing
 
 feature -- Status report
 
-	end_of_line: BOOLEAN is
+	end_of_line: BOOLEAN
 			-- Has the end of the current line been reached?
 		do
 			Result := position = line_count + 1
 		end;
 
-	end_of_file: BOOLEAN is
+	end_of_file: BOOLEAN
 			-- Has the end of the `resource_file' been reached?
 		do
 			Result := end_of_line and resource_file.end_of_file
@@ -354,7 +354,7 @@ feature -- Access
 	last_character: CHARACTER;
 			-- Character at the current position in the `line'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access to a file date."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	file_modified_date (a_path: STRING): INTEGER is
+	file_modified_date (a_path: STRING): INTEGER
 			-- Get last modified timestamp of `a_path'.
 		local
 			l_file: RAW_FILE
@@ -25,7 +25,7 @@ feature -- Access
 			file_modified_date_valid: Result >= -1
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

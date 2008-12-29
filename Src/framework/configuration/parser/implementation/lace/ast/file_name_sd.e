@@ -1,4 +1,4 @@
-indexing
+note
 	description: "File name node in Ace"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (fn: like file__name) is
+	initialize (fn: like file__name)
 			-- Create a new FILE_NAME AST node.
 		require
 			fn_not_void: fn /= Void
@@ -31,7 +31,7 @@ feature -- Properties
 	file__name: ID_SD;
 			-- File name
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

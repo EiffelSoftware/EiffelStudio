@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a CONVERT_FEAT_AS list"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_convert_feat_list_as (Current)
@@ -28,7 +28,7 @@ feature -- Visitor
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := Precursor (a_list)
@@ -42,7 +42,7 @@ feature -- Roundtrip
 	convert_keyword_index: INTEGER
 			-- Index of keyword "convert" associated with current AST node
 
-	convert_keyword (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	convert_keyword (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Keyword "convert" associated with current AST node
 		require
 			a_list_not_void: a_list /= Void
@@ -55,7 +55,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_convert_keyword (a_keyword: KEYWORD_AS) is
+	set_convert_keyword (a_keyword: KEYWORD_AS)
 			-- Set `convert_keyword' with `a_keyword'.
 		do
 			if a_keyword /= Void then
@@ -65,7 +65,7 @@ feature -- Roundtrip
 			convert_keyword_set: a_keyword /= Void implies convert_keyword_index = a_keyword.index
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

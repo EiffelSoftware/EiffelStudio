@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Environment for bitmaps, help, binaries, scripts...."
@@ -126,7 +126,7 @@ feature {NONE} -- Access
 
 feature -- Status update
 
-	check_environment_variable is
+	check_environment_variable
 			-- Check if needed environment variables are set up.
 		local
 			l_product_names: PRODUCT_NAMES
@@ -260,7 +260,7 @@ feature -- Status report
 			end
 		end
 
-	is_workbench: BOOLEAN is
+	is_workbench: BOOLEAN
 			-- Are we running the workbench version of the compiler?
 		external
 			"C inline use %"eif_eiffel.h%""
@@ -270,7 +270,7 @@ feature -- Status report
 
 feature -- Status
 
-	has_borland: BOOLEAN is
+	has_borland: BOOLEAN
 			-- Is Borland C++ back-end C compiler?
 		once
 			Result := {PLATFORM}.is_windows and then Eiffel_c_compiler.is_equal ("bcb")
@@ -278,7 +278,7 @@ feature -- Status
 
 feature -- Status setting
 
-	set_precompile (a_is_dotnet: BOOLEAN) is
+	set_precompile (a_is_dotnet: BOOLEAN)
 			-- Set up the ISE_PRECOMP environment variable, depending on `a_is_dotnet'.
 		require
 			is_valid_environment: is_valid_environment
@@ -632,7 +632,7 @@ feature -- Directories (distribution)
 			not_result_is_empty: not Result.is_empty
 		end
 
-	language_path: DIRECTORY_NAME is
+	language_path: DIRECTORY_NAME
 			-- Path containing the internationalized mo files.
 		require
 			is_valid_environment: is_valid_environment
@@ -1557,25 +1557,25 @@ feature -- Environment update
 
 feature -- Version limitation
 
-	has_diagram: BOOLEAN is True
+	has_diagram: BOOLEAN = True
 			-- Does this version have the diagram tool?
 
-	has_metrics: BOOLEAN is True
+	has_metrics: BOOLEAN = True
 			-- Does this version have the metrics?
 
-	has_profiler: BOOLEAN is True
+	has_profiler: BOOLEAN = True
 			-- Does this version have the profiler?
 
-	has_documentation_generation: BOOLEAN is True
+	has_documentation_generation: BOOLEAN = True
 			-- Does this version have the documentation generation?
 
-	has_xmi_generation: BOOLEAN is True
+	has_xmi_generation: BOOLEAN = True
 			-- Does this version have the XMI generation?
 
-	has_dll_generation: BOOLEAN is True
+	has_dll_generation: BOOLEAN = True
 			-- Does this version have the DLL generation?
 
-	has_signable_generation: BOOLEAN is True;
+	has_signable_generation: BOOLEAN = True;
 			-- Does this version allow the signing of .NET assemblies
 
 feature {NONE} -- Basic operations
@@ -1591,7 +1591,7 @@ feature {NONE} -- Basic operations
 			l_directories.do_all (agent safe_create_dir)
 		end
 
-	safe_create_dir (a_dir: STRING) is
+	safe_create_dir (a_dir: STRING)
 			-- Try to create a directory `a_dir'.
 		require
 			a_dir_not_void: a_dir /= Void
@@ -1955,7 +1955,7 @@ feature -- Preferences
 			not_result_is_empty: not Result.is_empty
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A system that was used as a library has a precompile in it."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_library: STRING) is
+	make (a_library: STRING)
 			-- Create
 		do
 			text := "A system that was used as a library has a precompile in it: "+a_library
@@ -27,7 +27,7 @@ feature -- Access
 	text: STRING;
 		-- Error text.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of IFusionSupport"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create {FUSION_FACTORY}
 	
 feature -- Access
 
-	signed (a_loc: UNI_STRING): BOOLEAN is
+	signed (a_loc: UNI_STRING): BOOLEAN
 			-- Is assembly at 'a_loc' signed?
 		require
 			location_not_void: a_loc /= Void
@@ -31,7 +31,7 @@ feature -- Access
 			Result := is_signed /= 0
 		end
 		
-	get_assembly_info_from_assembly (a_loc: UNI_STRING): FUSION_SUPPORT_ASSEMBLY_INFO is
+	get_assembly_info_from_assembly (a_loc: UNI_STRING): FUSION_SUPPORT_ASSEMBLY_INFO
 			-- Retrieve assembly information structure for assembly at
 			-- location 'a_loc'
 		require
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Definition
 
-	assemblies: FUSION_SUPPORT_ASSEMBLIES is
+	assemblies: FUSION_SUPPORT_ASSEMBLIES
 			-- Create new scope and returns an assembly enumerator.
 		local
 			p: POINTER
@@ -63,7 +63,7 @@ feature -- Definition
 
 feature {NONE} -- Implementation
 
-	c_get_bstr (a_string: POINTER): POINTER is
+	c_get_bstr (a_string: POINTER): POINTER
 			-- Retrieve a BSTR from 'a_string' which is a LPWSTR.
 		external
 			"C macro signature (LPWSTR): EIF_POINTER use %"cli_writer.h%""
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			"SysAllocString"
 		end
 	
-	c_free_bstr (a_bstr: POINTER) is
+	c_free_bstr (a_bstr: POINTER)
 			-- Free memory associated with 'a_bstr'
 		external
 			"C macro signature (BSTR) use %"cli_writer.h%""
@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			"SysFreeString"
 		end
 
-	c_get_gac_assemblies (p, ass: POINTER): INTEGER is
+	c_get_gac_assemblies (p, ass: POINTER): INTEGER
 			-- Call `IFusionSupport->GetGacAssemblies'.
 		external
 			"C++ IFusionSupport signature (IEnumAssemblies**): EIF_INTEGER use %"ise_vs_fusion_support.h%""
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 			"GetGacAssemblies"
 		end
 		
-	c_signed (p, a_loc, sgned: POINTER): INTEGER is
+	c_signed (p, a_loc, sgned: POINTER): INTEGER
 			-- Call `IFusionSupport->IsAssemblySigned'.
 		external
 			"C++ IFusionSupport signature (BSTR, VARIANT_BOOL *): EIF_INTEGER use %"ise_vs_fusion_support.h%""
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 			"IsAssemblySigned"
 		end
 		
-	c_get_assembly_info_from_assembly (p, a_loc, ass_info: POINTER): INTEGER is
+	c_get_assembly_info_from_assembly (p, a_loc, ass_info: POINTER): INTEGER
 			-- Call `IFusionSupport->GetAssemblyInfoFromAssembly'.
 		external
 			"C++ IFusionSupport signature (BSTR, IAssemblyInfo**): EIF_INTEGER use %"ise_vs_fusion_support.h%""
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			"GetAssemblyInfoFromAssembly"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

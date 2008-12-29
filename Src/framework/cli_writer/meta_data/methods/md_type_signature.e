@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A special signature containing only one type descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Reset
 
-	reset is
+	reset
 			-- Reset current for new signature definition
 		do
 			current_position := 0
@@ -24,7 +24,7 @@ feature -- Reset
 			current_position_set: current_position = 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

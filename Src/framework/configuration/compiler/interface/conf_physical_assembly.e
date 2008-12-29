@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an included assembly"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ create {CONF_FACTORY}
 
 feature {NONE} -- Initialization
 
-	initialize_conditions is
+	initialize_conditions
 			-- Restrict to platform dotnet
 		do
 				-- We can't have any existing conditions as this group does not have an equivalent in the configuration file.
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			internal_conditions.force (default_condition)
 		end
 
-	make_from_consumed (a_consumed: CONSUMED_ASSEMBLY; a_cache_path: DIRECTORY_NAME; a_target: CONF_TARGET) is
+	make_from_consumed (a_consumed: CONSUMED_ASSEMBLY; a_cache_path: DIRECTORY_NAME; a_target: CONF_TARGET)
 			-- Create
 		require
 			a_consumed_not_void: a_consumed /= Void
@@ -75,25 +75,25 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	classes_set: BOOLEAN is
+	classes_set: BOOLEAN
 			-- Are the classes set?
 		do
 			Result := classes /= Void and dotnet_classes /= Void
 		end
 
-	is_physical_assembly: BOOLEAN is
+	is_physical_assembly: BOOLEAN
 			-- Is this a physical assembly?
 		once
 			Result := True
 		end
 
-	is_in_gac: BOOLEAN is
+	is_in_gac: BOOLEAN
 			-- Is this assembly in gac?
 		do
 			Result := consumed_assembly.is_in_gac
 		end
 
-	is_partially_consumed: BOOLEAN is
+	is_partially_consumed: BOOLEAN
 			-- Indicates if assembly is only partially consumed
 		do
 			Result := consumed_assembly.has_info_only
@@ -105,7 +105,7 @@ feature -- Status
 	location: CONF_FILE_LOCATION
 			-- Assembly location.
 
-	is_readonly: BOOLEAN is True
+	is_readonly: BOOLEAN = True
 			-- Assemblies are always read only.
 
 feature -- Access, in compiled only
@@ -116,7 +116,7 @@ feature -- Access, in compiled only
 	dotnet_classes: HASH_TABLE [like class_type, STRING]
 			-- Same as `classes' but indexed by the dotnet name.
 
-	guid: STRING is
+	guid: STRING
 			-- A unique id.
 		do
 			check
@@ -125,7 +125,7 @@ feature -- Access, in compiled only
 			Result := consumed_assembly.unique_id
 		end
 
-	consumed_path: DIRECTORY_NAME is
+	consumed_path: DIRECTORY_NAME
 			-- The path to the consumed assembly.
 		do
 			create Result.make_from_string (cache_path)
@@ -143,7 +143,7 @@ feature -- Access, in compiled only
 
 feature -- Access queries
 
-	assembly_name: STRING is
+	assembly_name: STRING
 			-- Assembly name.
 		require
 			consumed_assembly /= Void
@@ -153,7 +153,7 @@ feature -- Access queries
 			result_ok: Result /= Void and then not Result.is_empty
 		end
 
-	assembly_version: STRING is
+	assembly_version: STRING
 			-- Assembly version.
 		require
 			consumed_assembly /= Void
@@ -163,7 +163,7 @@ feature -- Access queries
 			result_ok: Result /= Void and then not Result.is_empty
 		end
 
-	assembly_culture: STRING is
+	assembly_culture: STRING
 			-- Assembly culture.
 		require
 			consumed_assembly /= Void
@@ -173,7 +173,7 @@ feature -- Access queries
 			result_ok: Result /= Void
 		end
 
-	assembly_public_key_token: STRING is
+	assembly_public_key_token: STRING
 			-- Assembly public key token.
 		require
 			consumed_assembly /= Void
@@ -183,7 +183,7 @@ feature -- Access queries
 			result_ok: Result /= Void
 		end
 
-	types_info_file_location: FILE_NAME is
+	types_info_file_location: FILE_NAME
 			-- Types info file.
 		require
 			consumed_path_not_void: consumed_path /= Void
@@ -201,7 +201,7 @@ feature -- Access queries
 			Result := (l_date = -1) or (l_date /= date)
 		end
 
-	accessible_groups: DS_HASH_SET [CONF_GROUP] is
+	accessible_groups: DS_HASH_SET [CONF_GROUP]
 			-- Groups that are accessible within `Current'.
 			-- Dependencies if we have them, else nothing.
 		do
@@ -223,14 +223,14 @@ feature -- Access queries
 			Result := accessible_groups_cache
 		end
 
-	mapping: EQUALITY_HASH_TABLE [STRING, STRING] is
+	mapping: EQUALITY_HASH_TABLE [STRING, STRING]
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		once
 				-- there are no mappings for assemblies
 			create Result.make (0)
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [like class_type] is
+	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [like class_type]
 			-- Get class by name.
 		local
 			l_dep: CONF_GROUP
@@ -253,7 +253,7 @@ feature -- Access queries
 			end
 		end
 
-	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING] is
+	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING]
 			-- Get name in this context of `a_class' (if `a_dependencies') then we check dependencies).
 		local
 			l_dep: CONF_GROUP
@@ -280,7 +280,7 @@ feature -- Access queries
 			Result_empty_or_one_element: Result.is_empty or Result.count = 1
 		end
 
-	class_by_dotnet_name (a_class: STRING; a_dependency_index: INTEGER): like class_type is
+	class_by_dotnet_name (a_class: STRING; a_dependency_index: INTEGER): like class_type
 			-- Get class by dotnet name.
 		require
 			a_class_ok: a_class /= Void and then not a_class.is_empty
@@ -294,7 +294,7 @@ feature -- Access queries
 			end
 		end
 
-	options: CONF_OPTION is
+	options: CONF_OPTION
 			-- Options of this assembly.
 		once
 				-- assemblies have no options
@@ -307,7 +307,7 @@ feature -- Access queries
 				-- classes in assemblies have no options
 		end
 
-	sub_group_by_name (a_name: STRING): CONF_GROUP is
+	sub_group_by_name (a_name: STRING): CONF_GROUP
 			-- Return assembly dependency with `a_name' if there is any.
 		do
 			if dependencies /= Void then
@@ -326,7 +326,7 @@ feature -- Access queries
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	add_condition (a_condition: CONF_CONDITION) is
+	add_condition (a_condition: CONF_CONDITION)
 			-- Add `a_condition'.
 		do
 			check
@@ -336,7 +336,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, in compiled only
 
-	set_target (a_target: like target) is
+	set_target (a_target: like target)
 			-- Set `target' to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -346,7 +346,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			target_set: target = a_target
 		end
 
-	set_consumed_assembly (a_consumed: like consumed_assembly) is
+	set_consumed_assembly (a_consumed: like consumed_assembly)
 			-- Set `consumed_assembly' to `a_consumed'.
 		require
 			a_consumed_not_void: a_consumed /= Void
@@ -356,7 +356,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			consumed_assembly_set: consumed_assembly = a_consumed
 		end
 
-	set_date is
+	set_date
 			-- Set `date' to the last modification timestamp.
 		do
 			date := file_modified_date (types_info_file_location)
@@ -364,7 +364,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			not_date_changed: not has_date_changed
 		end
 
-	set_dotnet_classes (a_classes: like dotnet_classes) is
+	set_dotnet_classes (a_classes: like dotnet_classes)
 			-- Set `dotnet_classes' to `a_classes'.
 		require
 			a_classes_not_void: a_classes /= Void
@@ -374,7 +374,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			dotnet_classes_set: dotnet_classes = a_classes
 		end
 
-	add_dependency (an_assembly: CONF_PHYSICAL_ASSEMBLY; an_index: INTEGER) is
+	add_dependency (an_assembly: CONF_PHYSICAL_ASSEMBLY; an_index: INTEGER)
 			-- Add a dependency on `an_assembly'.
 		require
 			an_assembly_not_void: an_assembly /= Void
@@ -385,13 +385,13 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			dependencies.force (an_assembly, an_index)
 		end
 
-	set_dependencies (a_dependencies: like dependencies) is
+	set_dependencies (a_dependencies: like dependencies)
 			-- Set `dependencies' to `a_dependencies'.
 		do
 			dependencies := a_dependencies
 		end
 
-	set_is_dependency (a_dependency: like is_dependency) is
+	set_is_dependency (a_dependency: like is_dependency)
 			-- Set `is_dependency' to `a_dependency'
 		do
 			is_dependency := a_dependency
@@ -399,7 +399,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			is_dependency_set: is_dependency = a_dependency
 		end
 
-	reset_assemblies is
+	reset_assemblies
 			-- Reset `assemblies' for incremental recompilation.
 		do
 			assemblies.wipe_out
@@ -409,7 +409,7 @@ feature {CONF_ACCESS} -- Update, in compiled only
 
 feature -- Equality
 
-	is_group_equivalent (other: like Current): BOOLEAN is
+	is_group_equivalent (other: like Current): BOOLEAN
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
 			Result := guid.is_equal (other.guid)
@@ -417,7 +417,7 @@ feature -- Equality
 
 feature {NONE} -- Implementation
 
-	default_condition: CONF_CONDITION is
+	default_condition: CONF_CONDITION
 			-- Default condition that restricts assemblies to .NET
 		once
 			create Result.make
@@ -432,7 +432,7 @@ invariant
 	consumed_path_set: classes_set implies consumed_path /= Void and then not consumed_path.is_empty
 	assemblies_not_void: assemblies /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

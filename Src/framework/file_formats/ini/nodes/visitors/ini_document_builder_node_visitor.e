@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Visitor pattern implmentation of `INI_AST_VISITOR' for constructing complete
 		documents from an INI AST.
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialze document builder visitor.
 		do
 			create document.make
@@ -36,7 +36,7 @@ feature -- Access
 
 feature {NONE}  -- Processing
 
-	process_document (a_document: INI_DOCUMENT_NODE) is
+	process_document (a_document: INI_DOCUMENT_NODE)
 			-- Process document node `a_document'.
 		do
 			process_list (a_document.properties)
@@ -44,7 +44,7 @@ feature {NONE}  -- Processing
 			process_list (a_document.sections)
 		end
 
-	process_section (a_section: INI_SECTION_NODE) is
+	process_section (a_section: INI_SECTION_NODE)
 			-- Process document section node `a_section'.
 		local
 			l_section: INI_SECTION
@@ -60,7 +60,7 @@ feature {NONE}  -- Processing
 			new_container_set: container /= old container
 		end
 
-	process_property (a_property: INI_PROPERTY_NODE) is
+	process_property (a_property: INI_PROPERTY_NODE)
 			-- Process property node `a_property' in container `a_container'
 		local
 			l_property: INI_PROPERTY
@@ -87,7 +87,7 @@ feature {NONE}  -- Processing
 			property_extended: container.properties.count = old container.properties.count + 1
 		end
 
-	process_literal (a_literal: INI_LITERAL_NODE) is
+	process_literal (a_literal: INI_LITERAL_NODE)
 			-- Process literal `a_literal'.
 		local
 			l_lit: INI_LITERAL
@@ -100,7 +100,7 @@ feature {NONE}  -- Processing
 			property_extended: container.literals.count = old container.literals.count + 1
 		end
 
-	process_id (a_id: INI_ID_NODE) is
+	process_id (a_id: INI_ID_NODE)
 			-- Process identifier `a_id'.
 		do
 			check
@@ -110,7 +110,7 @@ feature {NONE}  -- Processing
 			--| Should never be called!
 		end
 
-	process_symbol (a_symbol: INI_SYMBOL_NODE) is
+	process_symbol (a_symbol: INI_SYMBOL_NODE)
 			-- Process syntax symbol `a_symbol'.
 		do
 			check
@@ -120,7 +120,7 @@ feature {NONE}  -- Processing
 			--| Should never be called!
 		end
 
-	process_value (a_value: INI_VALUE_NODE) is
+	process_value (a_value: INI_VALUE_NODE)
 			-- Process value `a_value'.
 		do
 			check
@@ -139,7 +139,7 @@ invariant
 	document_attached: document /= Void
 	container_attached: container /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

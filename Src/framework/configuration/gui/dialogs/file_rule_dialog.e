@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to edit file rules."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialization
 		local
 			l_btn: EV_BUTTON
@@ -67,7 +67,7 @@ feature {NONE} -- GUI Elements
 
 feature {NONE} -- Agents
 
-	on_show is
+	on_show
 			-- Fill in value.
 		local
 			l_tab: FILE_RULE_TAB
@@ -99,7 +99,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_show_tab is
+	on_show_tab
 			-- Show a tab.
 		do
 			if notebook.selected_item /= Void then
@@ -107,7 +107,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_remove is
+	on_remove
 			-- Remove a file rule.
 		do
 			if notebook.selected_item /= Void and value /= Void then
@@ -121,7 +121,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_add is
+	on_add
 			-- Add a new file rule.
 		local
 			l_fr: CONF_FILE_RULE
@@ -142,7 +142,7 @@ feature {NONE} -- Agents
 invariant
 	elements_created: is_initialized implies notebook /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

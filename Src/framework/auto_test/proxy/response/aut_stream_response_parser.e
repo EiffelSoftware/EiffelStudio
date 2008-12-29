@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Parses interpreter responses from an input stream"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system) is
+	make (a_system: like system)
 			-- Create new parser for interpreter responses.
 		do
 			Precursor (a_system)
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Settings
 
-	set_input_stream (an_input_stream: like input_stream) is
+	set_input_stream (an_input_stream: like input_stream)
 			-- Set `input_stream' to `an_input_stream'.
 		require
 			an_input_stream_not_void: an_input_stream /= Void
@@ -54,7 +54,7 @@ feature -- Settings
 
 feature  -- Parsing
 
-	parse_invoke_response is
+	parse_invoke_response
 			-- Parse the response issued by the interpreter after a
 			-- create-object/create-object-default/invoke-feature/invoke-and-assign-feature
 			-- request has been sent.
@@ -100,7 +100,7 @@ feature  -- Parsing
 		end
 
 
-	parse_assign_expression_response  is
+	parse_assign_expression_response
 			-- Parse response issued by interpreter after receiving an
 			-- assign-expresion request.
 		do
@@ -128,7 +128,7 @@ feature  -- Parsing
 			last_response_not_void: last_response /= Void
 		end
 
-	parse_type_of_variable_response is
+	parse_type_of_variable_response
 			-- Parse response issued by interpreter after receiving a
 			-- retrieve-type-of-variable request.
 		local
@@ -157,18 +157,18 @@ feature  -- Parsing
 			last_response_not_void: last_response /= Void
 		end
 
-	parse_start_response is
+	parse_start_response
 			-- Parse the response issued by the interpreter after it has been
 			-- started.
 		do
 		end
 
-	parse_stop_response is
+	parse_stop_response
 			-- Parse the response issued by the interpreter after it received a stop request.
 		do
 		end
 
-	retrieve_response is
+	retrieve_response
 			-- Retrieve response from the interpreter,
 			-- store it in `last_raw_response'.
 		do
@@ -176,12 +176,12 @@ feature  -- Parsing
 
 feature {NONE} -- Implementation
 
-	parse_empty_response is
+	parse_empty_response
 			-- Parse a response consisting of no characters.
 		do
 		end
 
-	parse_type_name is
+	parse_type_name
 			-- Parse type name and make it available via `las_string'.
 			-- Set `last_string' to `Void' in case of error.
 		require
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 				(base_type (last_string) /= Void)
 		end
 
-	parse_status is
+	parse_status
 			-- Parse "status:" response.
 			-- Have `last_string' have the textual version of the parsed intput,
 			-- or `Void' in case of an error.
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 									is_status_exception_message (last_string))
 		end
 
-	parse_error is
+	parse_error
 			-- Parse "error:" response.
 			-- Have `last_string' have the error message,
 			-- or `Void' in case of an error.
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_done is
+	parse_done
 			-- Parse "done:" response.
 			-- Have `last_string' have the textual version of the parsed intput,
 			-- or `Void' in case of an error.
@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	parse_exception is
+	parse_exception
 			-- Parse an exception and make it available via `last_exception'.
 			-- Set it to Void if there was an error parsing the exception.
 		require
@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	try_parse_multi_line_value is
+	try_parse_multi_line_value
 			-- Try to parse a multi line value. A multi line value starts
 			-- with `multi_line_value_start_tag' and end with
 			-- `multi_line_value_start_tag'. The content in between those
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 			last_string := content
 		end
 
-	ignore_lines (a_count: INTEGER) is
+	ignore_lines (a_count: INTEGER)
 			-- Read `a_count' lines from input and
 			-- ignore content.
 		require
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	try_read_line is
+	try_read_line
 			-- Try to read a line from the input. Make resulting string
 			-- available via `last_string' or set it to `Void' if no complete
 			-- line could be read. Append  parsed text to `last_response_text'
@@ -376,7 +376,7 @@ feature {NONE} -- Implementation
 	last_response_text: STRING
 			-- Complete unparsed text of last response
 
-	is_status_success_message (a_string: STRING): BOOLEAN is
+	is_status_success_message (a_string: STRING): BOOLEAN
 			-- Is `a_string' a valid status message indicating success?
 		require
 			a_string_not_void: a_string /= Void
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 			definition: Result = a_string.is_equal ("status: success")
 		end
 
-	is_status_exception_message (a_string: STRING): BOOLEAN is
+	is_status_exception_message (a_string: STRING): BOOLEAN
 			-- Is `a_string' a valid status message indicating that an
 			-- exception was thrown?
 		require
@@ -397,14 +397,14 @@ feature {NONE} -- Implementation
 			definition: Result = a_string.is_equal ("status: exception")
 		end
 
-	default_response_length: INTEGER is 1024
+	default_response_length: INTEGER = 1024
 
 invariant
 
 	input_stream_not_void: input_stream /= Void
 	input_stream_open_read: input_stream.is_open_read
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

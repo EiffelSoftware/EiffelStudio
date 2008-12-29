@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an external."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_location: like internal_location; a_target: like target) is
+	make (a_location: like internal_location; a_target: like target)
 			-- Create with `a_location'.
 		require
 			a_location_not_void: a_location /= Void
@@ -31,34 +31,34 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	is_include: BOOLEAN is
+	is_include: BOOLEAN
 			-- Is `Current' an include external?
 		once
 		end
 
-	is_object: BOOLEAN is
+	is_object: BOOLEAN
 			-- Is `Current' an object external?
 		once
 		end
 
-	is_library: BOOLEAN is
+	is_library: BOOLEAN
 			-- Is `Current' a library external?
 		once
 		end
 
-	is_make: BOOLEAN is
+	is_make: BOOLEAN
 			-- Is `Current' a make external?
 		once
 		end
 
-	is_resource: BOOLEAN is
+	is_resource: BOOLEAN
 			-- Is `Current' an external ressource?
 		once
 		end
 
 feature -- Access, stored in configuration file
 
-	location: like internal_location is
+	location: like internal_location
 			-- The file location.
 		local
 			l_path: STRING
@@ -82,7 +82,7 @@ feature -- Access, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	set_location (a_location: like internal_location) is
+	set_location (a_location: like internal_location)
 			-- Set `location' to `a_location'.
 		require
 			a_location_not_void: a_location /= Void
@@ -92,7 +92,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			location_set: internal_location = a_location
 		end
 
-	set_description (a_description: like description) is
+	set_description (a_description: like description)
 			-- Set `description' to `a_description'.
 		do
 			description := a_description
@@ -109,7 +109,7 @@ invariant
 	internal_location_not_void: internal_location /= Void
 	target_not_void: target /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

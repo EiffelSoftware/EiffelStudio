@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"[
 			Objects that represent a contraint triple structure:
@@ -18,7 +18,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (k_as: like constrain_symbol; t_as: like type; l_as: like creation_constrain) is
+	make (k_as: like constrain_symbol; t_as: like type; l_as: like creation_constrain)
 			-- Create new CONSTRAINT_TRIPLE sturcture.
 		do
 			constrain_symbol := k_as
@@ -41,7 +41,7 @@ feature -- Access
 	creation_constrain: CREATION_CONSTRAIN_TRIPLE;
 			-- Creation constraion structure
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

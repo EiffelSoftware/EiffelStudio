@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstract description of an access to the precursor of%
 		%an Eiffel feature. Version for Bench."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (pk: like precursor_keyword; n: like parent_base_class; p: like internal_parameters) is
+	initialize (pk: like precursor_keyword; n: like parent_base_class; p: like internal_parameters)
 			-- Create a new PRECURSOR AST node.
 		require
 			pk_not_void: pk /= Void
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_precursor_as (Current)
@@ -65,7 +65,7 @@ feature -- Attributes
 	parent_base_class: CLASS_TYPE_AS
 			-- Optional name of the parent
 
-	parameters: EIFFEL_LIST [EXPR_AS] is
+	parameters: EIFFEL_LIST [EXPR_AS]
 			-- List of parameters
 		local
 			l_internal_paran: like internal_parameters
@@ -82,7 +82,7 @@ feature -- Attributes
 						 (internal_parameters /= Void implies Result = internal_parameters.meaningful_content)
 		end
 
-	parameter_count: INTEGER is
+	parameter_count: INTEGER
 			-- Number of parameters
 		do
 			if parameters /= Void then
@@ -90,13 +90,13 @@ feature -- Attributes
 			end
 		end
 
-	access_name: STRING is
+	access_name: STRING
 		do
 			-- Void because a Precursor call is like a client call but without
 			-- a client, so there is no variable which is accessing the feature.
 		end
 
-	is_precursor: BOOLEAN is True
+	is_precursor: BOOLEAN = True
 			-- Precursor makes reference to a class
 
 	class_id: INTEGER
@@ -109,12 +109,12 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := precursor_keyword.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				if parameters /= Void then
@@ -137,7 +137,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (parent_base_class, other.parent_base_class) and
@@ -146,7 +146,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_class_id (a_class_id: like class_id) is
+	set_class_id (a_class_id: like class_id)
 			-- Set `class_id' to `a_class_id'.
 		require
 			a_class_id_ok: a_class_id > 0 or a_class_id = -1
@@ -163,7 +163,7 @@ invariant
 					(internal_parameters = Void implies parameters = Void)
 	parameter_count_correct: (parameters = Void implies parameter_count = 0) and (parameters /= Void implies parameter_count > 0)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

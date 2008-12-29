@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Available properties for method parameters"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,25 +16,25 @@ inherit
 		
 feature -- Access
 
-	in: INTEGER_16 is 0x0001
+	in: INTEGER_16 = 0x0001
 			-- Parameter is `in'.
 			
-	out: INTEGER_16 is 0x0002
+	out: INTEGER_16 = 0x0002
 			-- Parameter is `out'
 			
-	optional: INTEGER_16 is 0x0004
+	optional: INTEGER_16 = 0x0004
 			-- Optional parameter.
 			
-	has_default: INTEGER_16 is 0x1000
+	has_default: INTEGER_16 = 0x1000
 			-- Parameter has default value.
 			
-	has_field_marshal: INTEGER_16 is 0x2000
+	has_field_marshal: INTEGER_16 = 0x2000
 			-- Parameter has field marshal.
 			
-	unused: INTEGER_16 is 0xCFE0;
+	unused: INTEGER_16 = 0xCFE0;
 			-- Unused.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Class to read and parse INI documents from a file or a text buffer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize document reader.
 		do
 			reset
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	read_from_file (a_file: PLAIN_TEXT_FILE; a_ignore_errors: BOOLEAN) is
+	read_from_file (a_file: PLAIN_TEXT_FILE; a_ignore_errors: BOOLEAN)
 			-- Parses file `a_file' and will set `read_document' on success.
 			--
 			-- When `a_ignore_errors', document errors are ignored but may lead to
@@ -72,7 +72,7 @@ feature -- Basic Operations
 			retry
 		end
 
-	read_from_buffer (a_buffer: STRING; a_ignore_errors: BOOLEAN) is
+	read_from_buffer (a_buffer: STRING; a_ignore_errors: BOOLEAN)
 			-- Parsers buffer `a_buffer' and sets `read_document' on success.
 			--
 			-- When `a_ignore_errors', document errors are ignored but may lead to
@@ -98,7 +98,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Basic Operations
 
-	reset is
+	reset
 			-- Reset reader for next read operation
 		do
 			create {ARRAYED_LIST [INI_SYNTAX_ERROR]}errors.make (0)
@@ -110,7 +110,7 @@ feature {NONE} -- Basic Operations
 			not_successful: not successful
 		end
 
-	parse_buffer (a_parser: INI_PARSER; a_buffer: STRING; a_ignore_errors: BOOLEAN) is
+	parse_buffer (a_parser: INI_PARSER; a_buffer: STRING; a_ignore_errors: BOOLEAN)
 			-- Parses buffer `a_buffer' using `ini_parser'
 		require
 			a_parser_attached: a_parser /= Void
@@ -133,7 +133,7 @@ feature {NONE} -- Basic Operations
 
 feature {NONE} -- Factory Functions
 
-	create_ini_parser (a_ignore_errors: BOOLEAN): INI_PARSER is
+	create_ini_parser (a_ignore_errors: BOOLEAN): INI_PARSER
 			-- Create a new INI parser and will instruct it to ignore
 			-- all errors when `a_ignore_errors' is True.
 		do
@@ -144,7 +144,7 @@ feature {NONE} -- Factory Functions
 			result_ignore_errors: Result.ignore_syntax_errors = a_ignore_errors
 		end
 
-	create_document_visitor: INI_DOCUMENT_BUILDER_NODE_VISITOR is
+	create_document_visitor: INI_DOCUMENT_BUILDER_NODE_VISITOR
 			-- Creates a new visitor used to build `read_document'
 		do
 			create Result.make
@@ -155,7 +155,7 @@ feature {NONE} -- Factory Functions
 invariant
 	errors_attached: errors /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

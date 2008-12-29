@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Name to be inserted by auto-completion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create {NAME_FOR_COMPLETION}
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name)
 			-- Initialization
 		do
 			make_from_string (a_name)
@@ -42,7 +42,7 @@ feature -- Access
 	full_name: STRING_32
 			-- Full completion item name
 
-	insert_name: STRING_32 is
+	insert_name: STRING_32
 			-- Name to insert in editor
 		do
 			Result := out
@@ -51,7 +51,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	full_insert_name: STRING_32 is
+	full_insert_name: STRING_32
 			-- Full name to insert in editor
 		do
 			Result := insert_name
@@ -60,7 +60,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	sort_name: STRING_32 is
+	sort_name: STRING_32
 			-- Name for sorting
 		do
 			Result := string_32_to_lower (name)
@@ -68,13 +68,13 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Associated icon based on data
 		do
 			Result := icon_internal
 		end
 
-	tooltip_text: STRING_32 is
+	tooltip_text: STRING_32
 			-- Text for tooltip of Current.  The tooltip shall display information which is not included in the
 			-- actual output of Current.
 		do
@@ -84,7 +84,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	grid_item: EV_GRID_ITEM is
+	grid_item: EV_GRID_ITEM
 			-- Grid item
 		local
 			l_item: EV_GRID_LABEL_ITEM
@@ -98,7 +98,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	child_grid_items: ARRAYED_LIST [EV_GRID_ITEM] is
+	child_grid_items: ARRAYED_LIST [EV_GRID_ITEM]
 			-- Grid items of children
 		require
 			has_child: has_child
@@ -118,7 +118,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	name_matcher: COMPLETION_NAME_MATCHER is
+	name_matcher: COMPLETION_NAME_MATCHER
 			-- Matcher
 		do
 			Result := name_matcher_internal
@@ -126,13 +126,13 @@ feature -- Access
 
 feature -- Status report
 
-	has_child: BOOLEAN is
+	has_child: BOOLEAN
 			-- Does current have child?
 		do
 			Result := children /= Void and then not children.is_empty
 		end
 
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 			-- Does current have parent?
 		do
 			Result := parent /= Void
@@ -143,7 +143,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_name_matcher (a_matcher: COMPLETION_NAME_MATCHER) is
+	set_name_matcher (a_matcher: COMPLETION_NAME_MATCHER)
 			-- Set `name_matcher' with `a_matcher'.
 		do
 			name_matcher_internal := a_matcher
@@ -151,7 +151,7 @@ feature -- Element change
 			name_matcher_is_set: name_matcher_internal = a_matcher
 		end
 
-	set_icon (a_icon: EV_PIXMAP) is
+	set_icon (a_icon: EV_PIXMAP)
 			-- Set `icon_internal' with `a_icon'.
 		require
 			a_icon_not_void: a_icon /= Void
@@ -161,7 +161,7 @@ feature -- Element change
 			icon_internal_not_void: icon_internal /= Void
 		end
 
-	add_child (a_child: like child_type) is
+	add_child (a_child: like child_type)
 			-- Add `a_child' into `children'.
 		require
 			a_child_not_void: a_child /= Void
@@ -179,7 +179,7 @@ feature -- Element change
 			a_child_added: children.has (a_child)
 		end
 
-	remove_child (a_child: like child_type) is
+	remove_child (a_child: like child_type)
 			-- Remove `a_child' from `children'.
 		require
 			a_child_not_void: a_child /= Void
@@ -191,7 +191,7 @@ feature -- Element change
 			a_child_removed: not children.has (a_child)
 		end
 
-	sort_children is
+	sort_children
 			-- Sort children
 		do
 			if children /= Void and children_index > 1 then
@@ -202,7 +202,7 @@ feature -- Element change
 			end
 		end
 
-	set_parent (a_parent: like parent) is
+	set_parent (a_parent: like parent)
 			-- Set `parent' with `a_parent'.
 		do
 			parent := a_parent
@@ -210,7 +210,7 @@ feature -- Element change
 			parent_set: parent = a_parent
 		end
 
-	set_is_expanded (a_b: BOOLEAN) is
+	set_is_expanded (a_b: BOOLEAN)
 			-- Set `is_expanded' with `a_b'.
 		do
 			is_expanded := a_b
@@ -220,7 +220,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is name made of same character sequence as `other' (case has no importance)
 		local
 			l_name: STRING_32
@@ -229,7 +229,7 @@ feature -- Comparison
 			Result := l_name.is_equal (other.sort_name)
 		end
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is name lexicographically lower than `other'?
 		local
 			l_name: STRING_32
@@ -242,7 +242,7 @@ feature -- Comparison
 			end
 		end
 
-	begins_with (s: STRING_32): BOOLEAN is
+	begins_with (s: STRING_32): BOOLEAN
 			-- Does this feature name begins with `s'?
 		require
 			s_not_void: s /= Void
@@ -253,7 +253,7 @@ feature -- Comparison
 			Result := name_matcher.prefix_string (s, full_name)
 		end
 
-	is_binary_searchable: BOOLEAN is
+	is_binary_searchable: BOOLEAN
 			-- Is current binary searchable?
 		do
 			if name_matcher = Void then
@@ -276,7 +276,7 @@ feature {CODE_COMPLETION_WINDOW} -- Children
 
 feature {NONE} -- Implementation
 
-	string_32_to_lower (a_str: ?STRING_32): !STRING_32 is
+	string_32_to_lower (a_str: ?STRING_32): !STRING_32
 			-- Make all possible char in `a_str' to lower.
 			-- |FIXME: We need real Unicode as lower.
 		require
@@ -308,7 +308,7 @@ feature {NONE} -- Implementation
 
 	name_matcher_internal: like name_matcher;
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

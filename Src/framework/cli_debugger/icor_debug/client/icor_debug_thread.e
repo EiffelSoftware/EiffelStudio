@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		]"
 	legal: "See notice at end of class."
@@ -17,19 +17,19 @@ create
 	
 feature {ICOR_EXPORTER} -- Access extra
 
-	set_debug_state_as_suspended is
+	set_debug_state_as_suspended
 		do
 			set_debug_state (enum_cor_debug_thread_state__thread_suspend)
 		end
 
-	set_debug_state_as_running is
+	set_debug_state_as_running
 		do
 			set_debug_state (enum_cor_debug_thread_state__thread_run)
 		end
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_process: ICOR_DEBUG_PROCESS is
+	get_process: ICOR_DEBUG_PROCESS
 		local
 			p: POINTER
 		do
@@ -41,14 +41,14 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_id: INTEGER is
+	get_id: INTEGER
 		do
 			last_call_success := cpp_get_id (item, $Result)
 		ensure
 			success: last_call_success = 0
 		end
 
-	get_app_domain: ICOR_DEBUG_APP_DOMAIN is
+	get_app_domain: ICOR_DEBUG_APP_DOMAIN
 		local
 			p: POINTER
 		do
@@ -60,7 +60,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	set_debug_state (a_state: INTEGER) is
+	set_debug_state (a_state: INTEGER)
 			-- SetDebugState sets the current debug state of the thread.
 			-- (The "current debug state"
 			-- represents the debug state if the process were to be continued,
@@ -78,7 +78,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_set_debug_state (item, a_state)
 		end
 
-	get_debug_state: INTEGER is
+	get_debug_state: INTEGER
 			-- GetDebugState returns the current debug state of the thread.
 			-- (If the process is currently stopped, the "current debug state"
 			-- represents the debug state if the process were to be continued,
@@ -91,7 +91,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 		
-	get_user_state: INTEGER is
+	get_user_state: INTEGER
 			-- GetUserState returns the user state of the thread, that is, the state
 			-- which it has when the program being debugged examines it.	
 		do
@@ -102,7 +102,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end		
 
-	get_current_exception: ICOR_DEBUG_VALUE is
+	get_current_exception: ICOR_DEBUG_VALUE
 			-- WARNING: Should be called inside Callback !
 		local
 			p: POINTER
@@ -113,13 +113,13 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	clear_current_exception is
+	clear_current_exception
 			-- Nota: Should be called before exception occurred
 		do
 			last_call_success := cpp_clear_current_exception (item)
 		end
 
-	create_stepper: ICOR_DEBUG_STEPPER is
+	create_stepper: ICOR_DEBUG_STEPPER
 		local
 			p: POINTER
 			l_app_domain: ICOR_DEBUG_APP_DOMAIN
@@ -139,7 +139,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	enumerate_chains: ICOR_DEBUG_CHAIN_ENUM is
+	enumerate_chains: ICOR_DEBUG_CHAIN_ENUM
 		local
 			p: POINTER
 		do
@@ -149,7 +149,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	get_active_chain: ICOR_DEBUG_CHAIN is
+	get_active_chain: ICOR_DEBUG_CHAIN
 		local
 			p: POINTER
 		do
@@ -159,7 +159,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 		
-	get_active_frame: ICOR_DEBUG_FRAME is
+	get_active_frame: ICOR_DEBUG_FRAME
 		local
 			p: POINTER
 		do
@@ -169,7 +169,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	create_eval: ICOR_DEBUG_EVAL is
+	create_eval: ICOR_DEBUG_EVAL
 			 -- CreateEval creates an evaluation object which operates on the 
 			 -- given thread.  The Eval will push a new chain on the thread before
 			 -- doing its computation.  
@@ -185,7 +185,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	get_object: ICOR_DEBUG_VALUE is
+	get_object: ICOR_DEBUG_VALUE
 			-- Returns the runtime thread object.
 		local
 			p: POINTER
@@ -198,7 +198,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Implementation
 
-	frozen cpp_get_process (obj: POINTER; a_p_process: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_get_process (obj: POINTER; a_p_process: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugProcess**): EIF_INTEGER 
@@ -208,7 +208,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetProcess"
 		end
 
-	frozen cpp_get_id (obj: POINTER; a_p_thread_id: TYPED_POINTER [INTEGER]): INTEGER is
+	frozen cpp_get_id (obj: POINTER; a_p_thread_id: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(DWORD*): EIF_INTEGER 
@@ -218,7 +218,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetID"
 		end
 
-	frozen cpp_get_app_domain (obj: POINTER; a_p_app_domain: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_get_app_domain (obj: POINTER; a_p_app_domain: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugAppDomain**): EIF_INTEGER 
@@ -228,7 +228,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetAppDomain"
 		end
 
-	frozen cpp_set_debug_state (obj: POINTER; a_p_state: INTEGER): INTEGER is
+	frozen cpp_set_debug_state (obj: POINTER; a_p_state: INTEGER): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(CorDebugThreadState): EIF_INTEGER 
@@ -238,7 +238,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"SetDebugState"
 		end
 
-	frozen cpp_get_debug_state (obj: POINTER; a_p_state: POINTER): INTEGER is
+	frozen cpp_get_debug_state (obj: POINTER; a_p_state: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(CorDebugThreadState*): EIF_INTEGER 
@@ -248,7 +248,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetDebugState"
 		end
 
-	frozen cpp_get_user_state (obj: POINTER; a_p_state: POINTER): INTEGER is
+	frozen cpp_get_user_state (obj: POINTER; a_p_state: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(CorDebugUserState*): EIF_INTEGER 
@@ -258,7 +258,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetUserState"
 		end
 
-	frozen cpp_get_current_exception (obj: POINTER; a_p_ex: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_get_current_exception (obj: POINTER; a_p_ex: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugValue**): EIF_INTEGER 
@@ -268,7 +268,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetCurrentException"
 		end
 
-	frozen cpp_clear_current_exception (obj: POINTER): INTEGER is
+	frozen cpp_clear_current_exception (obj: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(): EIF_INTEGER 
@@ -278,7 +278,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"ClearCurrentException"
 		end
 
-	frozen cpp_create_stepper (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_create_stepper (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugStepper**): EIF_INTEGER 
@@ -288,7 +288,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"CreateStepper"
 		end
 
-	frozen cpp_enumerate_chains (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_enumerate_chains (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugChainEnum **): EIF_INTEGER 
@@ -298,7 +298,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"EnumerateChains"
 		end
 
-	frozen cpp_get_active_chain (obj: POINTER; a_p_active_chain: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_get_active_chain (obj: POINTER; a_p_active_chain: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugChain**): EIF_INTEGER 
@@ -308,7 +308,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetActiveChain"
 		end
 
-	frozen cpp_get_active_frame (obj: POINTER; a_p_active_frame: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_get_active_frame (obj: POINTER; a_p_active_frame: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugFrame**): EIF_INTEGER 
@@ -318,7 +318,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetActiveFrame"
 		end
 
-	frozen cpp_create_eval (obj: POINTER; a_p_eval: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_create_eval (obj: POINTER; a_p_eval: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugEval**): EIF_INTEGER 
@@ -328,7 +328,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"CreateEval"
 		end
 
-	frozen cpp_get_object (obj: POINTER; a_p_obj: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_get_object (obj: POINTER; a_p_obj: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugValue**): EIF_INTEGER 
@@ -340,7 +340,7 @@ feature {ICOR_EXPORTER} -- Implementation
 
 feature -- External macro (enum)
 
-	frozen enum_cor_debug_thread_state__thread_run: INTEGER is
+	frozen enum_cor_debug_thread_state__thread_run: INTEGER
 			-- 
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
@@ -348,7 +348,7 @@ feature -- External macro (enum)
 			"THREAD_RUN"
 		end		
 		
-	frozen enum_cor_debug_thread_state__thread_suspend: INTEGER is
+	frozen enum_cor_debug_thread_state__thread_suspend: INTEGER
 			-- 
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
@@ -356,56 +356,56 @@ feature -- External macro (enum)
 			"THREAD_SUSPEND"
 		end
 		
-	enum_cor_debug_user_state__user_stop_requested: INTEGER is --		= 0x01,
+	enum_cor_debug_user_state__user_stop_requested: INTEGER --		= 0x01,
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_STOP_REQUESTED"
 		end
 
-	enum_cor_debug_user_state__user_suspend_requested: INTEGER is --	= 0x02,
+	enum_cor_debug_user_state__user_suspend_requested: INTEGER --	= 0x02,
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_SUSPEND_REQUESTED"
 		end
 
-	enum_cor_debug_user_state__user_background: INTEGER is --			= 0x04,
+	enum_cor_debug_user_state__user_background: INTEGER --			= 0x04,
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_BACKGROUND"
 		end
 
-	enum_cor_debug_user_state__user_unstarted: INTEGER is --			= 0x08,
+	enum_cor_debug_user_state__user_unstarted: INTEGER --			= 0x08,
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_UNSTARTED"
 		end
 
-	enum_cor_debug_user_state__user_stopped: INTEGER is --			= 0x10,
+	enum_cor_debug_user_state__user_stopped: INTEGER --			= 0x10,
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_STOPPED"
 		end
 
-	enum_cor_debug_user_state__user_wait_sleep_join: INTEGER is --	= 0x20,
+	enum_cor_debug_user_state__user_wait_sleep_join: INTEGER --	= 0x20,
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_WAIT_SLEEP_JOIN"
 		end
 
-	enum_cor_debug_user_state__user_suspended: INTEGER is --			= 0x40		
+	enum_cor_debug_user_state__user_suspended: INTEGER --			= 0x40		
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_SUSPENDED"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

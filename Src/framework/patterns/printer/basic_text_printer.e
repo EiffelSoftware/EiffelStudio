@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Basic implementation of a status printer for outputing information to a {IO_MEDIUM} descendent.
 	]"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_medium: like medium) is
+	make (a_medium: like medium)
 			-- Initialize printer using medium `a_medium'
 		require
 			a_medium_attached: a_medium /= Void
@@ -31,97 +31,97 @@ feature {NONE} -- Initialization
 
 feature -- Output
 
-	new_line is
+	new_line
 			-- Write a new line character to medium
 		do
 			medium.new_line
 		end
 
-	put_string_8 (a_value: STRING_8) is
+	put_string_8 (a_value: STRING_8)
 			-- Write `a_value' to printer.
 		do
 			medium.put_string (a_value)
 		end
 
-	put_string_32 (a_value: STRING_32) is
+	put_string_32 (a_value: STRING_32)
 			-- Write `a_value' to printer.
 		do
 			check not_impl: False end
 		end
 
-	put_character_8 (a_value: CHARACTER_8) is
+	put_character_8 (a_value: CHARACTER_8)
 			-- Write `a_value' to printer.
 		do
 			medium.put_character (a_value)
 		end
 
-	put_character_32 (a_value: CHARACTER_32) is
+	put_character_32 (a_value: CHARACTER_32)
 			-- Write `a_value' to printer.
 		do
 			check not_impl: False end
 		end
 
-	put_integer_8 (a_value: INTEGER_8) is
+	put_integer_8 (a_value: INTEGER_8)
 			-- Write `a_value' to printer.
 		do
 			medium.put_integer_8 (a_value)
 		end
 
-	put_integer_16 (a_value: INTEGER_16) is
+	put_integer_16 (a_value: INTEGER_16)
 			-- Write `a_value' to printer.
 		do
 			medium.put_integer_16 (a_value)
 		end
 
-	put_integer_32 (a_value: INTEGER) is
+	put_integer_32 (a_value: INTEGER)
 			-- Write `a_value' to printer.
 		do
 			medium.put_integer_32 (a_value)
 		end
 
-	put_integer_64 (a_value: INTEGER_64) is
+	put_integer_64 (a_value: INTEGER_64)
 			-- Write `a_value' to printer.
 		do
 			medium.put_integer_64 (a_value)
 		end
 
-	put_natural_8 (a_value: NATURAL_8) is
+	put_natural_8 (a_value: NATURAL_8)
 			-- Write `a_value' to printer.
 		do
 			medium.put_natural_8 (a_value)
 		end
 
-	put_natural_16 (a_value: NATURAL_16) is
+	put_natural_16 (a_value: NATURAL_16)
 			-- Write `a_value' to printer.
 		do
 			medium.put_natural_16 (a_value)
 		end
 
-	put_natural_32 (a_value: NATURAL_32) is
+	put_natural_32 (a_value: NATURAL_32)
 			-- Write `a_value' to printer.
 		do
 			medium.put_natural_32 (a_value)
 		end
 
-	put_natural_64 (a_value: NATURAL_64) is
+	put_natural_64 (a_value: NATURAL_64)
 			-- Write `a_value' to printer.
 		do
 			medium.put_natural_64 (a_value)
 		end
 
-	put_boolean (a_value: BOOLEAN) is
+	put_boolean (a_value: BOOLEAN)
 			-- Write `a_value' to printer.
 		do
 			medium.put_boolean (a_value)
 		end
 
-	put_real_32 (a_value: REAL_32) is
+	put_real_32 (a_value: REAL_32)
 			-- Write `a_value' to printer.
 		do
 			medium.put_real (a_value)
 		end
 
-	put_real_64 (a_value: REAL_64) is
+	put_real_64 (a_value: REAL_64)
 			-- Write `a_value' to printer.
 		do
 			medium.put_double (a_value)
@@ -129,7 +129,7 @@ feature -- Output
 
 feature -- Basic operations
 
-	flush is
+	flush
 			-- Flushes any buffered content.
 		local
 			l_file: FILE
@@ -142,7 +142,7 @@ feature -- Basic operations
 
 feature -- Status report
 
-	is_writable: BOOLEAN is
+	is_writable: BOOLEAN
 			-- Determines if printer can be written to
 		do
 			Result := medium.is_open_write
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 invariant
 	medium_attached: medium /= Void
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

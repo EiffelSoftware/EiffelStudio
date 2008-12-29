@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Permits argument-based formatting of {STRING} instances."
 	legal      : "See notice at end of class."
 	status     : "See notice at end of class."
@@ -46,7 +46,7 @@ feature -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 
-	format_unicode (a_str: STRING_GENERAL; a_args: TUPLE): !STRING_32 is
+	format_unicode (a_str: STRING_GENERAL; a_args: TUPLE): !STRING_32
 			-- Replaces each format item in `a_str' with the text equivalent of a corresponding to
 			-- and object's value at `a_args' @ i.
 			--
@@ -255,13 +255,13 @@ feature -- Formatting
 
 feature {NONE} -- Symbols
 
-	open_char: CHARACTER is '{'
+	open_char: CHARACTER = '{'
 			-- Index open character
 
-	close_char: CHARACTER is '}';
+	close_char: CHARACTER = '}';
 			-- Index close character
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

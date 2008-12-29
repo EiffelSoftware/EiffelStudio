@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		EiffelVision2 helper functions
 	]"
@@ -63,7 +63,7 @@ feature -- Basic operations
 
 feature -- Query
 
-	widget_top_level_window (a_widget: EV_WIDGET; a_main: BOOLEAN): EV_WINDOW is
+	widget_top_level_window (a_widget: EV_WIDGET; a_main: BOOLEAN): EV_WINDOW
 			-- Locates parent window of `a_widget', if the widget has been parented.
 			--
 			-- `a_widget': A widget to locate a top level window for.
@@ -96,7 +96,7 @@ feature -- Query
 			end
 		end
 
-	parent_window_of_focused_widget: EV_WINDOW is
+	parent_window_of_focused_widget: EV_WINDOW
 			-- Parent window of current focused widget
 			-- Result maybe void.
 		local
@@ -112,7 +112,7 @@ feature -- Query
 
 feature -- Screen
 
-	window_working_area (a_window: EV_WINDOW): TUPLE [x, y, width, height: INTEGER] is
+	window_working_area (a_window: EV_WINDOW): TUPLE [x, y, width, height: INTEGER]
 			-- Retrieves a working area for window `a_window'
 			--
 			-- `a_window': Window to retrieve a working area for.
@@ -230,7 +230,7 @@ feature -- Widget
 
 feature -- Placement
 
-	suggest_pop_up_widget_location_with_size (a_widget: EV_WIDGET; a_screen_x, a_screen_y, a_width, a_height: INTEGER): TUPLE [x, y: INTEGER] is
+	suggest_pop_up_widget_location_with_size (a_widget: EV_WIDGET; a_screen_x, a_screen_y, a_width, a_height: INTEGER): TUPLE [x, y: INTEGER]
 			-- Suggests a location for a widget based on it's size
 		require
 			a_widget_attached: a_widget /= Void
@@ -307,7 +307,7 @@ feature -- Placement
 			result_y_on_screen: Result.y <= (create {EV_SCREEN}).height
 		end
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

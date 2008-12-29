@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Do a second pass over the generic declaration of a class.
 					If its not a formal record it in the supplier list of the current class.
@@ -53,7 +53,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

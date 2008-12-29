@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstract description to access to `Current'. %
 		%Version for Bench."
@@ -28,7 +28,7 @@ create
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_current_as (Current)
@@ -36,7 +36,7 @@ feature -- Visitor
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := True
@@ -44,14 +44,14 @@ feature -- Comparison
 
 feature -- Properties
 
-	access_name: STRING is "Current"
+	access_name: STRING = "Current"
 
-	parameters: EIFFEL_LIST [EXPR_AS] is
+	parameters: EIFFEL_LIST [EXPR_AS]
 			-- No parameters for Current
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

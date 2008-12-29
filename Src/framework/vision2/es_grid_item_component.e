@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a component to be displayed in a grid listable item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,14 +14,14 @@ feature -- Access
 	grid_item: EV_GRID_ITEM
 			-- Grid item attached to Current
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Required width in pixel
 		deferred
 		ensure
 			result_attached: Result >= 0
 		end
 
-	required_height: INTEGER is
+	required_height: INTEGER
 			-- Required height in pixel
 		deferred
 		ensure
@@ -31,7 +31,7 @@ feature -- Access
 	last_pebble: ANY
 			-- Last pebble returned from `on_pick'
 
-	pebble_at_position (a_x, a_y: INTEGER): ANY is
+	pebble_at_position (a_x, a_y: INTEGER): ANY
 			-- Pebble at position (`a_x', `a_y') which is related to Current component
 			-- Void if no pebble is found.
 		deferred
@@ -44,28 +44,28 @@ feature -- General tooltip
 			-- Use this tooltip if normal tooltip provided cannot satisfy,
 			-- for example, you want to be able to pick and drop from/to tooltip.
 
-	owner_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	owner_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Pointer enter actions of owner of current tooltip
 			-- Attach this to owner's `pointer_enter_actions'.
 		do
 			Result := pointer_enter_actions
 		end
 
-	owner_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	owner_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Pointer leave actions of owner of current tooltip
 			-- Attach this to owner's `pointer_leave_actions'.			
 		do
 			Result := pointer_leave_actions
 		end
 
-	is_owner_destroyed: BOOLEAN is
+	is_owner_destroyed: BOOLEAN
 			-- If owner destroyed
 			-- Attach this to owner's `is_destroyed'.
 		do
 			Result := grid_item.is_destroyed
 		end
 
-	set_general_tooltip (a_tooltip: like general_tooltip) is
+	set_general_tooltip (a_tooltip: like general_tooltip)
 			-- Set `general_tooltip' with `a_tooltip' and enable it at the same time.
 		require
 			a_tooltip_attached: a_tooltip /= Void
@@ -79,7 +79,7 @@ feature -- General tooltip
 			general_tooltip_set: general_tooltip = a_tooltip
 		end
 
-	remove_general_tooltip is
+	remove_general_tooltip
 			-- Remove `general_tooltip'.
 		do
 			if general_tooltip /= Void then
@@ -95,13 +95,13 @@ feature -- Status report
 	is_action_blocked: BOOLEAN
 			-- Should actions attached current be blocked so they don't interfere with actions in `grid_item'?
 
-	is_parented: BOOLEAN is
+	is_parented: BOOLEAN
 			-- Does Current attached to a grid editor token item?
 		do
 			Result := grid_item /= Void
 		end
 
-	is_displayable: BOOLEAN is
+	is_displayable: BOOLEAN
 			-- Can Current component been displayed
 		do
 			Result := is_parented and then grid_item.is_parented
@@ -112,7 +112,7 @@ feature -- Pointer status
 	is_pointer_in: BOOLEAN
 			-- Is pointer within the area of current trailer?
 
-	set_is_pointer_in (b: BOOLEAN) is
+	set_is_pointer_in (b: BOOLEAN)
 			-- Set `is_pointer_in' with `b'.
 		do
 			is_pointer_in := b
@@ -122,7 +122,7 @@ feature -- Pointer status
 
 feature -- Attachment
 
-	attach (a_grid_item: like grid_item) is
+	attach (a_grid_item: like grid_item)
 			-- Attached Current to `a_grid_item'.
 		require
 			not_parented: not is_parented
@@ -133,7 +133,7 @@ feature -- Attachment
 			attached: is_parented and then grid_item = a_grid_item
 		end
 
-	detach is
+	detach
 			-- Detach current from `grid_item'.
 		do
 			set_grid_item (Void)
@@ -143,7 +143,7 @@ feature -- Attachment
 
 feature -- Setting
 
-	set_grid_item (a_grid_item: like grid_item) is
+	set_grid_item (a_grid_item: like grid_item)
 			-- Set `grid_item' with `a_grid_item'.
 		do
 			grid_item := a_grid_item
@@ -151,7 +151,7 @@ feature -- Setting
 			a_grid_item_set: grid_item = a_grid_item
 		end
 
-	block_actions is
+	block_actions
 			-- Block actions attached to Current.
 		do
 			is_action_blocked := True
@@ -159,7 +159,7 @@ feature -- Setting
 			actions_blocked: is_action_blocked
 		end
 
-	resume_actions is
+	resume_actions
 			-- Resume blocked actions is
 		do
 			is_action_blocked := False
@@ -169,7 +169,7 @@ feature -- Setting
 
 feature -- Drawing
 
-	display (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER; a_width, a_height: INTEGER) is
+	display (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER; a_width, a_height: INTEGER)
 			-- Draw current component in `a_drawable' starting from (`a_start_x', `a_start_y').
 			-- `a_start_x' and `a_start_y' are 0-based.
 			-- `a_width' and `a_height' are allowed width and leight of current component.
@@ -181,19 +181,19 @@ feature -- Drawing
 
 feature -- Actions
 
-	on_pick (a_x, a_y: INTEGER) is
+	on_pick (a_x, a_y: INTEGER)
 			-- Action to be performed when pick occurs at position (`a_x', `a_y') relative to top-left corner of current item
 		deferred
 		end
 
-	on_pick_ended is
+	on_pick_ended
 			-- Action to be performed when pick-and-drop process ended
 		deferred
 		end
 
 feature -- Actions
 
-	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
+	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer moves.
 			-- Note: `pointer_motion_actions' of associated grid item will be always invoked.
 		do
@@ -205,7 +205,7 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
-	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is pressed.
 			-- Note: `pointer_button_press_actions' of associated grid item will be always invoked.
 		do
@@ -217,7 +217,7 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
-	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer is double clicked.
 			-- Note: `pointer_double_press_actions' of associated grid item will be always invoked.
 		do
@@ -229,7 +229,7 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
-	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is released.
 			-- Note: `pointer_button_release_actions' of associated grid item will be always invoked.
 		do
@@ -241,7 +241,7 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
-	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer enters widget.
 			-- Note: `pointer_enter_actions' of associated grid item will be invoked as well if
 			--       pointer moves from outside of the grid item.
@@ -254,7 +254,7 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
-	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer leaves widget.
 			-- Note: `pointer_leave_actions' of associated grid item will be invoked as well if
 			--       pointer moves outside of the grid item.			
@@ -289,7 +289,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/Setting
 
-	set_last_pebble (a_pebble: like last_pebble) is
+	set_last_pebble (a_pebble: like last_pebble)
 			-- Set `last_pebble' with `a_pebble'.
 		do
 			last_pebble := a_pebble
@@ -297,7 +297,7 @@ feature{NONE} -- Implementation/Setting
 			last_pebble_set: last_pebble = a_pebble
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

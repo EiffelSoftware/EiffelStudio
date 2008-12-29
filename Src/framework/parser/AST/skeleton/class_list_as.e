@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a list of class name as clients"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_class_list_as (Current)
@@ -28,7 +28,7 @@ feature -- Visitor
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := Precursor (a_list)
@@ -37,7 +37,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := Precursor (a_list)
@@ -51,7 +51,7 @@ feature -- Roundtrip
 	lcurly_symbol_index, rcurly_symbol_index: INTEGER
 			-- Index in a match list for tokens.
 
-	lcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	lcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Left curly symbol(s) associated with this structure if any.
 		require
 			a_list_not_void: a_list /= Void
@@ -64,7 +64,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	rcurly_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Right curly symbol(s) associated with this structure
 			-- Maybe none, or maybe only left curly appears.
 		require
@@ -80,7 +80,7 @@ feature -- Roundtrip
 
 feature -- Settings
 
-	set_lcurly_symbol (s_as: SYMBOL_AS) is
+	set_lcurly_symbol (s_as: SYMBOL_AS)
 			-- Set `lcurly_symbol' with `s_as'.
 		do
 			if s_as /= Void then
@@ -90,7 +90,7 @@ feature -- Settings
 			lcurly_symbol_index_set: s_as /= Void implies lcurly_symbol_index = s_as.index
 		end
 
-	set_rcurly_symbol (s_as: SYMBOL_AS) is
+	set_rcurly_symbol (s_as: SYMBOL_AS)
 			-- Set `rcurly_symbol' with `s_as'.
 		do
 			if s_as /= Void then
@@ -106,7 +106,7 @@ invariant
 			Result := v = Void or else v.name.as_upper.is_equal (v.name)
 		end)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

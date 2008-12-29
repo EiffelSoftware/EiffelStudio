@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects waiting for an incoming connection in a non blocking matter.
 	]"
@@ -37,7 +37,7 @@ feature {NONE} -- Access
 	condition: CONDITION_VARIABLE
 			-- Condition variable for waiting on socket
 
-	port_cell: CELL [INTEGER] is
+	port_cell: CELL [INTEGER]
 			-- Cell to contain port number.
 		once
 			create Result.put (min_port)
@@ -184,7 +184,7 @@ feature {NONE} -- Constants
 invariant
 	current_port_not_negative: current_port >= 0
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

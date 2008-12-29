@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {AUT_SHARED_INTERPRETER_INFO}."
 	author: ""
 	date: "$Date$"
@@ -9,7 +9,7 @@ deferred class
 
 feature -- Access
 
-	system: SYSTEM_I is
+	system: SYSTEM_I
 			-- Sysetm
 		deferred
 		ensure
@@ -67,7 +67,7 @@ feature -- Access
 	feature_name_for_byte_code_injection: STRING = "execute_byte_code"
 			-- Name of feature whose byte code is to be injected.
 
-	feature_for_byte_code_injection: FEATURE_I is
+	feature_for_byte_code_injection: FEATURE_I
 			-- Feature whose byte-code is to be injected
 		do
 			Result := interpreter_root_class.feature_named (feature_name_for_byte_code_injection)
@@ -75,7 +75,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	interpreter_related_classes: DS_HASH_SET [STRING] is
+	interpreter_related_classes: DS_HASH_SET [STRING]
 			-- List of names of classes which interpreter rely on,
 			-- Make sure those classes are not tested.
 			-- Fixme: Write

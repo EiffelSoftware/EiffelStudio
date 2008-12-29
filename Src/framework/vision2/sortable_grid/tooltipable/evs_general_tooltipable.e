@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that can display a tooltip of any form in a region
 					Inherit this class to implement your own tooltipable widget.
@@ -27,7 +27,7 @@ inherit
 
 feature -- Access
 
-	veto_tooltip_display_functions: LINKED_LIST [FUNCTION [ANY, TUPLE, BOOLEAN]] is
+	veto_tooltip_display_functions: LINKED_LIST [FUNCTION [ANY, TUPLE, BOOLEAN]]
 			-- Functions used to determine whether or not to display tooltip when other condition
 			-- such as `is_tooltip_enabled', pointer on owner are all satisfied.
 			-- A True value returned by a function indicates that tooltip should be displayed,
@@ -61,7 +61,7 @@ feature {NONE} -- Access
 
 feature -- Element change
 
-	set_tooltip_remain_delay_time (a_delay: INTEGER) is
+	set_tooltip_remain_delay_time (a_delay: INTEGER)
 			-- Set `tooltip_remain_delay_time' with `a_delay' (in milliseconds).
 		require
 			a_delay_non_negative: a_delay >= 0
@@ -71,7 +71,7 @@ feature -- Element change
 			tooltip_remain_time_delay_set: tooltip_remain_delay_time = a_delay
 		end
 
-	set_tooltip_background_color (a_color: EV_COLOR) is
+	set_tooltip_background_color (a_color: EV_COLOR)
 			-- Set `tooltip_background_color' with `a_color'.
 		require
 			a_color_attached: a_color /= Void
@@ -84,7 +84,7 @@ feature -- Element change
 			tooltip_background_color_set: tooltip_background_color = a_color
 		end
 
-	set_tooltip_maximum_width (a_width: INTEGER) is
+	set_tooltip_maximum_width (a_width: INTEGER)
 			-- Set `maximum_width' with `a_width'.
 		require
 			a_width_non_negative: a_width >= 0
@@ -97,7 +97,7 @@ feature -- Element change
 			max_tooltip_width_set: max_tooltip_width = a_width
 		end
 
-	set_tooltip_maximum_height (a_height: INTEGER) is
+	set_tooltip_maximum_height (a_height: INTEGER)
 			-- Set `maximum_height' with `a_height'.
 		require
 			a_height_non_negative: a_height >= 0
@@ -110,7 +110,7 @@ feature -- Element change
 			max_tooltip_height_set: max_tooltip_height = a_height
 		end
 
-	set_tooltip_maximum_size (a_width: INTEGER; a_height: INTEGER) is
+	set_tooltip_maximum_size (a_width: INTEGER; a_height: INTEGER)
 			-- Set `maximum_width' with `a_width' and `maximum_height' with `a_height'.
 		require
 			a_width_non_negative: a_width >= 0
@@ -126,7 +126,7 @@ feature -- Element change
 			max_tooltip_height_set: max_tooltip_height = a_height
 		end
 
-	set_force_tooltip_disappear_function (a_veto_function: like force_tooltip_disappear_function) is
+	set_force_tooltip_disappear_function (a_veto_function: like force_tooltip_disappear_function)
 			-- Set `force_tooltip_disappear_function' with `a_veto_function'.
 		do
 			force_tooltip_disappear_function := a_veto_function
@@ -136,7 +136,7 @@ feature -- Element change
 
 feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Element change
 
-	set_is_pointer_on_tooltip (b: BOOLEAN) is
+	set_is_pointer_on_tooltip (b: BOOLEAN)
 			-- Set `is_pointer_on_tooltip' with `b'.
 		do
 			if is_pointer_on_tooltip_enabled then
@@ -146,7 +146,7 @@ feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Element change
 			is_pointer_on_tooltip_set: is_pointer_on_tooltip_enabled implies is_pointer_on_tooltip = b
 		end
 
-	set_is_tooltip_pined (b: BOOLEAN) is
+	set_is_tooltip_pined (b: BOOLEAN)
 			-- Set `is_tooltip_pined' with `b'.
 		do
 			is_tooltip_pined := b
@@ -154,7 +154,7 @@ feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Element change
 			is_tooltip_pined_set: is_tooltip_pined = b
 		end
 
-	set_pointer_on_tooltip (b: BOOLEAN) is
+	set_pointer_on_tooltip (b: BOOLEAN)
 			-- Set `is_pointer_on_tooltip' with `b'.
 		do
 			is_pointer_on_tooltip := b
@@ -162,7 +162,7 @@ feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Element change
 			is_pointer_on_tooltip_set: is_pointer_on_tooltip = b
 		end
 
-	set_picking_from_tooltip (b: BOOLEAN) is
+	set_picking_from_tooltip (b: BOOLEAN)
 			-- Set `is_picking_from_tooltip' with `b'.
 		do
 			is_picking_from_tooltip := b
@@ -170,7 +170,7 @@ feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Element change
 			is_picking_from_tooltip_set: is_picking_from_tooltip = b
 		end
 
-	setup_timer (timeout: INTEGER; a_agent: PROCEDURE [ANY, TUPLE]) is
+	setup_timer (timeout: INTEGER; a_agent: PROCEDURE [ANY, TUPLE])
 			-- Setup `timer' with `timeout' and `a_agent'.
 			-- Used to start `timer' or stop it (when `timeout' is 0 and `a_agent' is Void)
 		require
@@ -187,7 +187,7 @@ feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Element change
 
 feature -- Status setting
 
-	enable_tooltip is
+	enable_tooltip
 			-- Enable tooltip.
 		do
 			safe_register_agent (pointer_enter_agent, owner_pointer_enter_actions)
@@ -204,7 +204,7 @@ feature -- Status setting
 				owner_select_actions /= Void implies owner_select_actions.has (select_agent)
 		end
 
-	disable_tooltip is
+	disable_tooltip
 			-- Enable tooltip.
 		do
 			if is_tooltip_enabled then
@@ -231,7 +231,7 @@ feature -- Status setting
 				owner_select_actions /= Void implies not owner_select_actions.has (select_agent)
 		end
 
-	enable_pointer_on_tooltip is
+	enable_pointer_on_tooltip
 			-- Enable that tooltip will remain displayed when pointer is on tooltip region,
 			-- even pointer is not on owner region.
 		do
@@ -240,7 +240,7 @@ feature -- Status setting
 			pointer_on_tooltip_enabled: is_pointer_on_tooltip_enabled
 		end
 
-	disable_pointer_on_tooltip is
+	disable_pointer_on_tooltip
 			-- Make sure that tooltip will disappear once pointer is out of owner region.
 		do
 			is_pointer_on_tooltip_enabled := False
@@ -249,7 +249,7 @@ feature -- Status setting
 			pointer_on_tooltip_disabled: not is_pointer_on_tooltip_enabled
 		end
 
-	enable_tooltip_shadow is
+	enable_tooltip_shadow
 			-- Enable shadow of pop-up tooltip window.
 		do
 			lock_update
@@ -260,7 +260,7 @@ feature -- Status setting
 			tooltip_shadow_enabled: is_tooltip_shadow_enabled
 		end
 
-	disable_tooltip_shadow is
+	disable_tooltip_shadow
 			-- Disable shadow of pop-up tooltip window.
 		do
 			lock_update
@@ -271,7 +271,7 @@ feature -- Status setting
 			tooltip_shadow_disabled: not is_tooltip_shadow_enabled
 		end
 
-	enable_repeat_tooltip_display is
+	enable_repeat_tooltip_display
 			-- Enable that tooltip will be displayed repeatedly when pointer is on tooltip region,
 			-- even pointer is not on owner region.
 		do
@@ -280,7 +280,7 @@ feature -- Status setting
 			repeat_tooltip_display_enabled: is_repeat_tooltip_display_enabled
 		end
 
-	disable_repeat_tooltip_display is
+	disable_repeat_tooltip_display
 			-- Make sure that tooltip will be displayed once when pointer is out of owner region.
 		do
 			is_repeat_tooltip_display_enabled := False
@@ -290,7 +290,7 @@ feature -- Status setting
 
 feature -- Advanced operations
 
-	force_enter is
+	force_enter
 			-- Force `pointer_enter_agent' to be called.
 		do
 			if is_tooltip_enabled then
@@ -298,7 +298,7 @@ feature -- Advanced operations
 			end
 		end
 
-	force_leave is
+	force_leave
 			-- Force `pointer_leave_agent' to be called.
 		do
 			if is_tooltip_enabled then
@@ -343,7 +343,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	is_my_tooltip_displayed: BOOLEAN is
+	is_my_tooltip_displayed: BOOLEAN
 			-- Is tooltip for current displayed?
 		require
 			tooltip_enabled: is_tooltip_enabled
@@ -353,7 +353,7 @@ feature {NONE} -- Status report
 			good_result: Result implies (tooltip_window.is_displayed and then tooltip_window.owner = Current)
 		end
 
-	is_others_tooltip_displayed: BOOLEAN is
+	is_others_tooltip_displayed: BOOLEAN
 			-- Is tooltip for others displayed?
 		require
 			tooltip_enabled: is_tooltip_enabled
@@ -363,7 +363,7 @@ feature {NONE} -- Status report
 			good_result: Result implies (tooltip_window.is_displayed and then tooltip_window.owner /= Current)
 		end
 
-	is_tooltip_displayed: BOOLEAN is
+	is_tooltip_displayed: BOOLEAN
 			-- Is tooltip displayed, no mater whether it's mine or other's?
 		require
 			tooltip_enabled: is_tooltip_enabled
@@ -373,7 +373,7 @@ feature {NONE} -- Status report
 			good_result: Result implies tooltip_window.is_displayed
 		end
 
-	is_my_tooltip: BOOLEAN is
+	is_my_tooltip: BOOLEAN
 			-- Does tooltip belong to current?
 		require
 			tooltip_enabled: is_tooltip_enabled
@@ -391,7 +391,7 @@ feature -- Measure
 	max_tooltip_height: INTEGER
 			-- Max height in pixel allowed for tooltip
 
-	required_tooltip_width: INTEGER is
+	required_tooltip_width: INTEGER
 			-- Required width in pixel to display tooltip
 			-- If `max_tooltip_width' is larger than this, `max_tooltip_width' will be used when
 			-- tooltip is displayed.
@@ -402,7 +402,7 @@ feature -- Measure
 			result_non_negative: Result >= 0
 		end
 
-	required_tooltip_height: INTEGER is
+	required_tooltip_height: INTEGER
 			-- Required height in pixel to display tooltip
 			-- If `max_tooltip_height' is larger than this, `max_tooltip_height' will be used when
 			-- tooltip is displayed.
@@ -419,13 +419,13 @@ feature -- Measure
 
 feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
 
-	is_owner_destroyed: BOOLEAN is
+	is_owner_destroyed: BOOLEAN
 			-- If owner destroyed
 			-- Attach this to owner's `is_destroyed'.
 		deferred
 		end
 
-	tooltip_widget: EV_WIDGET is
+	tooltip_widget: EV_WIDGET
 			-- Widget of tooltip
 		deferred
 		ensure
@@ -434,7 +434,7 @@ feature {EVS_GENERAL_TOOLTIP_WINDOW} -- Status report
 
 feature -- Actions
 
-	before_display_actions: ACTION_SEQUENCE [TUPLE] is
+	before_display_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed just before current tooltip is displayed
 		do
 			if before_display_actions_internal = Void then
@@ -447,7 +447,7 @@ feature -- Actions
 
 feature {NONE} -- Owner actions
 
-	owner_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	owner_pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Pointer enter actions of owner of current tooltip
 			-- Attach this to owner's `pointer_enter_actions'.
 		deferred
@@ -455,7 +455,7 @@ feature {NONE} -- Owner actions
 			result_attached: Result /= Void
 		end
 
-	owner_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	owner_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Pointer leave actions of owner of current tooltip
 			-- Attach this to owner's `pointer_leave_actions'.			
 		deferred
@@ -463,7 +463,7 @@ feature {NONE} -- Owner actions
 			result_attached: Result /= Void
 		end
 
-	owner_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	owner_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Select actions of owner of current tooltip
 			-- Attach this to owner's `select_actions'.
 		deferred
@@ -471,7 +471,7 @@ feature {NONE} -- Owner actions
 
 feature {NONE} -- Actions
 
-	on_pointer_enter is
+	on_pointer_enter
 			-- Action to be performed when pointer enters current tooltip owner
 		do
 			is_pointer_on_owner := True
@@ -484,7 +484,7 @@ feature {NONE} -- Actions
 			pointer_on_owner: is_pointer_on_owner
 		end
 
-	on_pointer_leave is
+	on_pointer_leave
 			-- Action to be performed when pointer leaves current tooltip owner
 		do
 			is_pointer_on_owner := False
@@ -502,7 +502,7 @@ feature {NONE} -- Actions
 			pointer_not_on_owner: not is_pointer_on_owner
 		end
 
-	on_selected is
+	on_selected
 			-- Actions to be performed when tooltip owner is selected
 		do
 			if is_tooltip_enabled then
@@ -528,7 +528,7 @@ feature -- Basic operations
 
 feature {NONE} -- Tooltip show/hide
 
-	show_tooltip is
+	show_tooltip
 			-- Show tooltip.
 		require
 			tooltip_enabled: is_tooltip_enabled
@@ -566,7 +566,7 @@ feature {NONE} -- Tooltip show/hide
 			end
 		end
 
-	hide_tooltip is
+	hide_tooltip
 			-- Hide tooltip.
 		require
 			tooltip_enabled: is_tooltip_enabled
@@ -601,7 +601,7 @@ feature {NONE} -- Tooltip show/hide
 --				 not is_pointer_on_owner)) implies not is_my_tooltip_displayed
 		end
 
-	force_hide_tooltip is
+	force_hide_tooltip
 			-- Force to hide tooltip, don't care about other conditions at all.
 		require
 			tooltip_enabled: is_tooltip_enabled
@@ -617,7 +617,7 @@ feature {NONE} -- Tooltip show/hide
 			tooltip_hidden: not is_my_tooltip_displayed
 		end
 
-	safe_hide_tooltip is
+	safe_hide_tooltip
 			-- Hide tooltip if it's displayed.
 		require
 			tooltip_enabled: is_tooltip_enabled
@@ -629,7 +629,7 @@ feature {NONE} -- Tooltip show/hide
 
 feature{NONE} -- Implementation
 
-	timer: EV_TIMEOUT is
+	timer: EV_TIMEOUT
 			-- Timer used to simulate tooltip delay time
 		do
 			if timer_internal = Void then
@@ -643,7 +643,7 @@ feature{NONE} -- Implementation
 	timer_internal: EV_TIMEOUT
 			-- Internal timer used to simulate tooltip delay time
 
-	pointer_enter_agent: PROCEDURE [ANY, TUPLE] is
+	pointer_enter_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent to wrap `on_pointer_enter'
 		do
 			Result := pointer_enter_agent_internal
@@ -655,7 +655,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	pointer_leave_agent: PROCEDURE [ANY, TUPLE] is
+	pointer_leave_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent to wrap `on_pointer_leave'
 		do
 			Result := pointer_leave_agent_internal
@@ -667,7 +667,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	select_agent: PROCEDURE [ANY, TUPLE] is
+	select_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent to wrap `on_selected'
 		do
 			Result := select_agent_internal
@@ -691,7 +691,7 @@ feature{NONE} -- Implementation
 	before_display_actions_internal: like before_display_actions
 			-- Implementation of `before_display_actions'
 
-	actual_tooltip_background_color: EV_COLOR is
+	actual_tooltip_background_color: EV_COLOR
 			-- Actual border line color used to draw border line
 		do
 			if tooltip_background_color = Void then
@@ -703,7 +703,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	tooltip_background_color_internal: EV_COLOR is
+	tooltip_background_color_internal: EV_COLOR
 			-- Internal `tooltip_background_color'
 		local
 			l_style: EVS_TOOLTIP_STYLE
@@ -714,13 +714,13 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	tooltip_status_check_time: INTEGER is 100
+	tooltip_status_check_time: INTEGER = 100
 			-- Time interval in milliseconds to check tooltip status		
 
 	veto_tooltip_display_functions_internal: like veto_tooltip_display_functions
 			-- Implementation of once per object `veto_tooltip_display_functions'
 
-	is_tooltip_display_vetoed: BOOLEAN is
+	is_tooltip_display_vetoed: BOOLEAN
 			-- Is tooltip display vetoed according to `veto_tooltip_display_functions'?
 			-- If any function in `veto_tooltip_display_functions' returns True,
 			-- tooltip display is vetoed.
@@ -753,7 +753,7 @@ invariant
 	pointer_enter_agent_attached: pointer_enter_agent /= Void
 	pointer_leave_agent_attached: pointer_leave_agent /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

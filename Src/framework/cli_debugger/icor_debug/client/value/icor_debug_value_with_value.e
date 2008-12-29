@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		]"
 	legal: "See notice at end of class."
@@ -15,7 +15,7 @@ inherit
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_value (a_result: POINTER) is
+	get_value (a_result: POINTER)
 			-- GetValue copies the value into the specified buffer
 		require
 			arg_not_void: a_result /= default_pointer
@@ -24,7 +24,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

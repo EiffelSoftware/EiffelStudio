@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {ITP_VARIABLE_CONSTANTS}."
 	author: ""
 	date: "$Date$"
@@ -9,10 +9,10 @@ class
 
 feature -- Access
 
-	variable_name_prefix: STRING is "v_"
+	variable_name_prefix: STRING = "v_"
 			-- Prefix for variables
 
-	variable_index (a_name: STRING; a_prefix: STRING): INTEGER is
+	variable_index (a_name: STRING; a_prefix: STRING): INTEGER
 			-- Variable index from `a_name', assuming that `a_name' has the following format:
 			-- `a_prefix'index. For example, if `a_prefix' is "v_", then "v_1" will be a valid name,
 			-- and "1" will be the returned index.

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generic PROPERTY"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name)
 			-- Create.
 		do
 			Precursor {PROPERTY} (a_name)
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Update
 
-	add_sub_property (a_property: PROPERTY) is
+	add_sub_property (a_property: PROPERTY)
 			-- Add `a_property'.
 		local
 			l_row: PROPERTY_ROW
@@ -58,7 +58,7 @@ feature -- Update
 			l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
 		end
 
-	set_refresh_action (an_action: like refresh_action) is
+	set_refresh_action (an_action: like refresh_action)
 			-- Set the action to call to get the data value during a refresh.
 		require
 			an_action_not_void: an_action /= Void
@@ -68,7 +68,7 @@ feature -- Update
 			refresh_action_set: refresh_action = an_action
 		end
 
-	refresh is
+	refresh
 			-- Refresh current data.
 		do
 			if refresh_action /= Void then
@@ -94,14 +94,14 @@ feature -- Event handling
 
 feature {NONE} -- Agents
 
-	on_use_inherited is
+	on_use_inherited
 			-- Called if we have to use the inherited value.
 		do
 			use_inherited_actions.call (Void)
 			refresh
 		end
 
-	on_force_inheritance is
+	on_force_inheritance
 			-- Called if child properties should use the inherited value.
 		do
 			force_inherit_actions.call ([value])
@@ -109,7 +109,7 @@ feature {NONE} -- Agents
 
 feature -- Update
 
-	is_valid_value (a_value: like value): BOOLEAN is
+	is_valid_value (a_value: like value): BOOLEAN
 			-- Is `a_value' a correct value for `data'?
 		do
 			if not equal (value, a_value) then
@@ -119,7 +119,7 @@ feature -- Update
 			end
 		end
 
-	set_value (a_value: like value) is
+	set_value (a_value: like value)
 			-- Set `data' to `a_value' and propagate the change if it the new value is different from the old.
 		do
 			if not equal (value, a_value) then

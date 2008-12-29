@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Parses AutoTest log files and builds test case results"
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system; an_error_handler: like error_handler) is
+	make (a_system: like system; an_error_handler: like error_handler)
 			-- Create new log file parser.
 		require
 			a_system_not_void: a_system /= Void
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Parsing
 
-	parse_stream (an_input_stream: KI_TEXT_INPUT_STREAM) is
+	parse_stream (an_input_stream: KI_TEXT_INPUT_STREAM)
 			-- Parse log from `an_input_stream'.
 			-- Save parsed requests along with their responses in `request_history'.
 		require
@@ -112,7 +112,7 @@ feature -- Parsing
 
 feature {NONE} -- Reporting
 
-	report_response_line (a_line: STRING) is
+	report_response_line (a_line: STRING)
 			-- Report that `a_line' of response from interpreter is found.
 		require
 			a_line_attached: a_line /= Void
@@ -125,7 +125,7 @@ feature {NONE} -- Reporting
 			last_response_text.append_character ('%N')
 		end
 
-	report_request_line (a_line: STRING) is
+	report_request_line (a_line: STRING)
 			-- Report that `a_line' of some type of request is found.
 			-- This request should not be a "start" request.
 		require
@@ -151,7 +151,7 @@ feature {NONE} -- Reporting
 			end
 		end
 
-	report_last_request is
+	report_last_request
 			-- Report `last_request' in `request_parser'.
 		require
 			last_request_exists: request_parser.last_request /= Void
@@ -163,7 +163,7 @@ feature {NONE} -- Reporting
 
 feature {NONE} -- Processsing
 
-	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST) is
+	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST)
 		local
 			l_last_response: AUT_RESPONSE
 			l_response_stream: KL_STRING_INPUT_STREAM
@@ -184,14 +184,14 @@ feature {NONE} -- Processsing
 			a_request.set_response (l_last_response)
 		end
 
-	process_start_request (a_request: AUT_START_REQUEST) is
+	process_start_request (a_request: AUT_START_REQUEST)
 		do
 			check last_response_text.is_empty end
 			a_request.set_response (create {AUT_NORMAL_RESPONSE}.make (""))
 			variable_table.wipe_out
 		end
 
-	process_stop_request (a_request: AUT_STOP_REQUEST) is
+	process_stop_request (a_request: AUT_STOP_REQUEST)
 		local
 			l_last_response: AUT_RESPONSE
 		do
@@ -203,7 +203,7 @@ feature {NONE} -- Processsing
 			a_request.set_response (l_last_response)
 		end
 
-	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
+	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST)
 		local
 			l_last_response: AUT_RESPONSE
 			l_response_stream: KL_STRING_INPUT_STREAM
@@ -222,7 +222,7 @@ feature {NONE} -- Processsing
 			a_request.set_response (l_last_response)
 		end
 
-	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST) is
+	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST)
 		local
 			l_last_response: AUT_RESPONSE
 			l_response_stream: KL_STRING_INPUT_STREAM
@@ -238,7 +238,7 @@ feature {NONE} -- Processsing
 			a_request.set_response (l_last_response)
 		end
 
-	process_type_request (a_request: AUT_TYPE_REQUEST) is
+	process_type_request (a_request: AUT_TYPE_REQUEST)
 		local
 			l_last_response: AUT_RESPONSE
 			l_response_stream: KL_STRING_INPUT_STREAM
@@ -285,7 +285,7 @@ feature{NONE} -- Implementation
 	response_parser: AUT_STREAM_RESPONSE_PARSER
 			-- Response parser
 
-	default_response_length: INTEGER is 1024
+	default_response_length: INTEGER = 1024
 			-- Default length in byte for `last_response_text'
 
 	error_handler: AUT_ERROR_HANDLER

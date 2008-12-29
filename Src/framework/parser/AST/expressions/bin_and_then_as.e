@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of binary `and then' operation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Initialization
 
-	make (l: like left; r: like right; k_as, s_as: KEYWORD_AS) is
+	make (l: like left; r: like right; k_as, s_as: KEYWORD_AS)
 		require
 			l_not_void: l /= Void
 			r_not_void: r /= Void
@@ -41,13 +41,13 @@ feature -- Initialization
 
 feature -- Properties
 
-	infix_function_name: STRING is
+	infix_function_name: STRING
 			-- Qualified name with the infix keyword.
 		once
 			Result := infix_feature_name_with_symbol (op_name.name)
 		end
 
-	op_name: ID_AS is
+	op_name: ID_AS
 			-- Name without the infix keyword.
 		once
 			create Result.initialize ("and then")
@@ -55,7 +55,7 @@ feature -- Properties
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_bin_and_then_as (Current)
@@ -66,7 +66,7 @@ feature -- Roundtrip
 	then_keyword_index: INTEGER
 			-- Index of `then' operation AST node.
 
-	then_keyword (a_list: LEAF_AS_LIST): LEAF_AS is
+	then_keyword (a_list: LEAF_AS_LIST): LEAF_AS
 			-- Binary operation AST node.
 		require
 			a_list_not_void: a_list /= Void
@@ -79,7 +79,7 @@ feature -- Roundtrip
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

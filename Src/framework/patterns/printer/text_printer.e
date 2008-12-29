@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A printer interface for outputing information to a UI.
 	]"
@@ -12,14 +12,14 @@ deferred class
 
 feature -- Output
 
-	new_line is
+	new_line
 			-- Write a new line character to medium
 		require
 			is_writable: is_writable
 		deferred
 		end
 
-	put_string_8 (a_value: STRING_8) is
+	put_string_8 (a_value: STRING_8)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
@@ -27,7 +27,7 @@ feature -- Output
 		deferred
 		end
 
-	put_string_32 (a_value: STRING_32) is
+	put_string_32 (a_value: STRING_32)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
@@ -35,7 +35,7 @@ feature -- Output
 		deferred
 		end
 
-	put_character_8 (a_value: CHARACTER_8) is
+	put_character_8 (a_value: CHARACTER_8)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
@@ -43,84 +43,84 @@ feature -- Output
 		deferred
 		end
 
-	put_character_32 (a_value: CHARACTER_32) is
+	put_character_32 (a_value: CHARACTER_32)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
 		deferred
 		end
 
-	put_integer_8 (a_value: INTEGER_8) is
+	put_integer_8 (a_value: INTEGER_8)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
 		deferred
 		end
 
-	put_integer_16 (a_value: INTEGER_16) is
+	put_integer_16 (a_value: INTEGER_16)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
 		deferred
 		end
 
-	put_integer_32 (a_value: INTEGER) is
+	put_integer_32 (a_value: INTEGER)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
 		deferred
 		end
 
-	put_integer_64 (a_value: INTEGER_64) is
+	put_integer_64 (a_value: INTEGER_64)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
 		deferred
 		end
 
-	put_natural_8 (a_value: NATURAL_8) is
+	put_natural_8 (a_value: NATURAL_8)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
 		deferred
 		end
 
-	put_natural_16 (a_value: NATURAL_16) is
+	put_natural_16 (a_value: NATURAL_16)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
 		deferred
 		end
 
-	put_natural_32 (a_value: NATURAL_32) is
+	put_natural_32 (a_value: NATURAL_32)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
 		deferred
 		end
 
-	put_natural_64 (a_value: NATURAL_64) is
+	put_natural_64 (a_value: NATURAL_64)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
 		deferred
 		end
 
-	put_boolean (a_value: BOOLEAN) is
+	put_boolean (a_value: BOOLEAN)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
 		deferred
 		end
 
-	put_real_32 (a_value: REAL_32) is
+	put_real_32 (a_value: REAL_32)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
 		deferred
 		end
 
-	put_real_64 (a_value: REAL_64) is
+	put_real_64 (a_value: REAL_64)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
@@ -129,7 +129,7 @@ feature -- Output
 
 feature -- Output defaults
 
-	put_string (a_value: STRING_GENERAL) is
+	put_string (a_value: STRING_GENERAL)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
@@ -148,7 +148,7 @@ feature -- Output defaults
 			end
 		end
 
-	put_character (a_value: CHARACTER) is
+	put_character (a_value: CHARACTER)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
@@ -156,7 +156,7 @@ feature -- Output defaults
 			put_character_8 (a_value)
 		end
 
-	put_integer (a_value: INTEGER) is
+	put_integer (a_value: INTEGER)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
@@ -164,7 +164,7 @@ feature -- Output defaults
 			put_integer_32 (a_value)
 		end
 
-	put_natural (a_value: NATURAL) is
+	put_natural (a_value: NATURAL)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
@@ -172,7 +172,7 @@ feature -- Output defaults
 			put_natural_32 (a_value)
 		end
 
-	put_real (a_value: REAL_32) is
+	put_real (a_value: REAL_32)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
@@ -180,7 +180,7 @@ feature -- Output defaults
 			put_real_32 (a_value)
 		end
 
-	put_double (a_value: DOUBLE) is
+	put_double (a_value: DOUBLE)
 			-- Write `a_value' to printer.
 		require
 			is_writable: is_writable
@@ -190,19 +190,19 @@ feature -- Output defaults
 
 feature -- Basic operations
 
-	flush is
+	flush
 			-- Flushes any buffered content.
 		deferred
 		end
 
 feature -- Status report
 
-	is_writable: BOOLEAN is
+	is_writable: BOOLEAN
 			-- Determines if printer can be written to
 		deferred
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

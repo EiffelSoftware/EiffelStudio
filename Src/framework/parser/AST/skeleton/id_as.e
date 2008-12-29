@@ -1,4 +1,4 @@
-indexing
+note
     description: "Node for id. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (s: STRING) is
+	initialize (s: STRING)
 			-- Create a new ID AST node made up
 			-- of characters contained in `s'.
 		require
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 
 feature -- Update
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -80,7 +80,7 @@ feature -- Update
 			name_set: name.is_equal (a_name)
 		end
 
-	set_name_id (a_name_id: like name_id) is
+	set_name_id (a_name_id: like name_id)
 			-- Set `name' to `a_name'.
 		require
 			a_name_id_positive: a_name_id > 0
@@ -105,7 +105,7 @@ feature -- Access
 	name_id: INTEGER
 			-- ID representing the string in the names heap.
 
-	name: STRING is
+	name: STRING
 			-- Name of this id.
 		do
 			Result := names_heap.item (name_id)
@@ -115,7 +115,7 @@ feature -- Access
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_id_as (Current)
@@ -123,18 +123,18 @@ feature -- Visitor
 
 feature -- Properties
 
-	is_id: BOOLEAN is True
+	is_id: BOOLEAN = True
 			-- Is the current atomic node an id?
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' equal to the current object?
 		do
 			Result := name_id = other.name_id
 		end
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := is_equal (other)
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			Result := name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

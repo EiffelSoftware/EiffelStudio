@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Node for a creation instruction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize (tp: like type; tg: like target; c: like call) is
+	initialize (tp: like type; tg: like target; c: like call)
 			-- Create a new CREATION AST node.
 		require
 			tg_not_void: tg /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_creation_as (Current)
@@ -49,7 +49,7 @@ feature -- Attributes
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (call, other.call) and then
@@ -60,7 +60,7 @@ feature -- Comparison
 invariant
 	target_not_void: target /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

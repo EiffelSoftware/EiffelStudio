@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Facilities to dump a GUI tree to file or the standard output"
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_dump_file_name (a_file_name: like dump_file_name) is
+	set_dump_file_name (a_file_name: like dump_file_name)
 			-- Set `dump_file_name' to `a_file_name'.
 		do
 			dump_file_name := a_file_name
@@ -24,7 +24,7 @@ feature -- Element change
 			dump_file_name_set: dump_file_name = a_file_name
 		end
 
-	clear_dump_file is
+	clear_dump_file
 			-- Clear existing dump file.
 		local
 			a_file: PLAIN_TEXT_FILE
@@ -35,13 +35,13 @@ feature -- Element change
 
 feature -- Support
 
-	dump_tree (an_application: EV_APPLICATION) is
+	dump_tree (an_application: EV_APPLICATION)
 			-- Dump whole GUI tree.
 		do
 			an_application.windows.do_all (agent dump_window)
 		end
 
-	dump_window (a_window: EV_WINDOW) is
+	dump_window (a_window: EV_WINDOW)
 			-- Dump window.
 		do
 			print_line ("Window ("+a_window.title+")")
@@ -64,7 +64,7 @@ feature -- Support
 			undent
 		end
 
-	dump_class_info (an_any: EV_ANY) is
+	dump_class_info (an_any: EV_ANY)
 			-- Dump class information.
 		local
 			a_textable: EV_TEXTABLE
@@ -86,7 +86,7 @@ feature -- Support
 			end
 		end
 
-	dump_position (a_positioned: EV_POSITIONED) is
+	dump_position (a_positioned: EV_POSITIONED)
 			-- Dump position.
 		do
 			print_line ("Screen Position: "+a_positioned.screen_x.out+" / "+a_positioned.screen_y.out)
@@ -94,20 +94,20 @@ feature -- Support
 			print_line ("Dimension: "+a_positioned.width.out+" / "+a_positioned.height.out)
 		end
 
-	dump_identifier (an_identifiable: EV_IDENTIFIABLE) is
+	dump_identifier (an_identifiable: EV_IDENTIFIABLE)
 			-- Dump identifier.
 		do
 			print_line ("Identifier name: "+an_identifiable.identifier_name)
 			print_line ("Full path: "+an_identifiable.full_identifier_path)
 		end
 
-	dump_textable (a_textable: EV_TEXTABLE) is
+	dump_textable (a_textable: EV_TEXTABLE)
 			-- Dump textable.
 		do
 			print_line ("Text: "+a_textable.text)
 		end
 
-	dump_menu_bar (a_menu_bar: EV_MENU_BAR) is
+	dump_menu_bar (a_menu_bar: EV_MENU_BAR)
 			-- Dump menu bar.
 		do
 			print_line ("Menu bar")
@@ -119,7 +119,7 @@ feature -- Support
 			undent
 		end
 
-	dump_menu_item (a_menu_item: EV_MENU_ITEM) is
+	dump_menu_item (a_menu_item: EV_MENU_ITEM)
 			-- Dump menu item.
 		local
 			a_menu: EV_MENU
@@ -138,7 +138,7 @@ feature -- Support
 			undent
 		end
 
-	dump_item (an_item: EV_ITEM) is
+	dump_item (an_item: EV_ITEM)
 			--
 		local
 			an_item_list: EV_ITEM_LIST [EV_ITEM]
@@ -156,7 +156,7 @@ feature -- Support
 			undent
 		end
 
-	dump_widget (a_widget: EV_WIDGET) is
+	dump_widget (a_widget: EV_WIDGET)
 			--
 		local
 			an_item_list: EV_ITEM_LIST [EV_ITEM]
@@ -184,31 +184,31 @@ feature {NONE} -- Implementation
 
 	current_indentation: INTEGER
 
-	indent is
+	indent
 			--
 		do
 			current_indentation := current_indentation + 1
 		end
 
-	undent is
+	undent
 			--
 		do
 			current_indentation := current_indentation - 1
 		end
 
-	print_indentation is
+	print_indentation
 			--
 		do
 			print_text (create {STRING}.make_filled ('%T', current_indentation))
 		end
 
-	print_new_line is
+	print_new_line
 			--
 		do
 			print_text ("%N")
 		end
 
-	print_line (a_text: STRING) is
+	print_line (a_text: STRING)
 			--
 		do
 			print_indentation
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			print_new_line
 		end
 
-	print_text (a_text: STRING) is
+	print_text (a_text: STRING)
 			--
 		local
 			a_file: PLAIN_TEXT_FILE
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract description of a multi_branch instruction, %
 				  %Version for Bench."
 	legal: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (s: like switch; c: like case_list; e: like else_part; el, i_as, e_as: like end_keyword) is
+	initialize (s: like switch; c: like case_list; e: like else_part; el, i_as, e_as: like end_keyword)
 			-- Create a new INSPECT AST node.
 		require
 			s_not_void: s /= Void
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_inspect_as (Current)
@@ -54,7 +54,7 @@ feature -- Roundtrip
 	inspect_keyword_index, else_keyword_index: INTEGER
 			-- Index of keyword "inspect" and "else" associated with this structure
 
-	inspect_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	inspect_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "inspect" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -67,7 +67,7 @@ feature -- Roundtrip
 			end
 		end
 
-	else_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	else_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "else" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -96,7 +96,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and inspect_keyword_index /= 0 then
 				Result := inspect_keyword (a_list)
@@ -105,14 +105,14 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := end_keyword.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (case_list, other.case_list) and then
@@ -124,7 +124,7 @@ invariant
 	switch_not_void: switch /= Void
 	end_keyword_not_void: end_keyword /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

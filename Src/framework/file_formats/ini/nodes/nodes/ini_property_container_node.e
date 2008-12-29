@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base implementation for all AS nodes that can contain property AS nodes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize container
 		do
 			create mutable_properties.make (1)
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	properties: LIST [INI_PROPERTY_NODE] is
+	properties: LIST [INI_PROPERTY_NODE]
 			-- List of properties contained within current container
 		do
 			Result := mutable_properties
@@ -27,7 +27,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	literals: LIST [INI_LITERAL_NODE] is
+	literals: LIST [INI_LITERAL_NODE]
 			-- List of literals
 		do
 			Result := mutable_literals
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Extension
 
-	extend_property (a_property: INI_PROPERTY_NODE) is
+	extend_property (a_property: INI_PROPERTY_NODE)
 			-- Extends container with property `a_property'.
 		require
 			a_property_attached: a_property /= Void
@@ -48,7 +48,7 @@ feature -- Extension
 			a_property_added: properties.has (a_property)
 		end
 
-	extend_literal (a_id: INI_LITERAL_NODE) is
+	extend_literal (a_id: INI_LITERAL_NODE)
 			-- Extends container with literal `a_id'.
 		require
 			a_id_attached: a_id /= Void
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 invariant
 	mutable_properties_attached: mutable_properties /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

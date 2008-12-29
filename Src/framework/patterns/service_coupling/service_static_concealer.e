@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Encapsulates a service providing immediate access to the service. This class is provided only
 		for type compatibility and serves no real function.
@@ -34,7 +34,7 @@ feature -- Access
 	service: !SERVICE_I
 			-- <Precursor>
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-4-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-4-0 http://www.eiffel.com/developers/xml/configuration-1-4-0.xsd" name="api_wrapper" uuid="13CEB1E2-DB7C-49F1-AD85-348F3284AA3B" library_target="api_wrapper">
 	<description>Library used to wrap external libraries.</description>
 	<target name="api_wrapper" abstract="true">
-		<option>
+		<option syntax_level="1">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

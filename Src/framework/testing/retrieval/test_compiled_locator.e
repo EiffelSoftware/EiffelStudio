@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that implement {TEST_CLASS_LOCATOR_I} by traversing compiled descendants of
 		{TEST_SET}.
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Query
 
-	is_class_alive (a_class: !EIFFEL_CLASS_C): BOOLEAN is
+	is_class_alive (a_class: !EIFFEL_CLASS_C): BOOLEAN
 			-- Is `a_class' registered in system and contains ast?
 		do
 			Result := a_class.is_valid and then a_class.has_ast
@@ -45,7 +45,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Implementation
 
-	locate_classes is
+	locate_classes
 			-- <Precursor>
 		local
 			l_ancestor: EIFFEL_CLASS_I
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	report_descendants (an_ancestor: !EIFFEL_CLASS_C) is
+	report_descendants (an_ancestor: !EIFFEL_CLASS_C)
 			-- Report effective descendants to project as potential test classes.
 			--
 			-- `an_ancestor': Recursively report all errektive descendants (including `an_ancestor') as
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

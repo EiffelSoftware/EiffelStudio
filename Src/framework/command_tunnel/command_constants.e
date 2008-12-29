@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants used in communication"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ feature -- Access
 
 	ise_command: !STRING = "iseexc:";
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

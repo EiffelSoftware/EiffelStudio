@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog that allows to edit an ordered list of strings."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -111,14 +111,14 @@ feature {NONE} -- GUI elements
 
 feature {NONE} -- Agents
 
-	on_ok is
+	on_ok
 			-- Ok was pressed.
 		do
 			value := list.strings
 			Precursor {PROPERTY_DIALOG}
 		end
 
-	refresh_list is
+	refresh_list
 			-- Refresh `list'.
 		require
 			list_created: list /= Void
@@ -126,7 +126,7 @@ feature {NONE} -- Agents
 			update_list (value)
 		end
 
-	update_list (a_value: like value) is
+	update_list (a_value: like value)
 			-- Update `list' with new `a_value'.
 		require
 			list_created: list /= Void
@@ -137,7 +137,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_up is
+	on_up
 			-- Up was pressed
 		local
 			l_item: EV_LIST_ITEM
@@ -154,7 +154,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_down is
+	on_down
 			-- Down was pressed.
 		local
 			l_item: EV_LIST_ITEM
@@ -171,7 +171,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_add is
+	on_add
 			-- Add button was pressed.
 		local
 			l_found: BOOLEAN
@@ -189,7 +189,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_remove is
+	on_remove
 			-- Remove button was pressed.
 		do
 			if list.selected_item /= Void then
@@ -198,7 +198,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_modify is
+	on_modify
 			-- Modify button was pressed.
 		do
 			if list.selected_item /= Void then
@@ -207,7 +207,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_select is
+	on_select
 			-- Select an item in the list.
 		do
 			if list.selected_item /= Void then

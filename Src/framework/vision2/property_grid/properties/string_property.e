@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Simple string properties."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,14 +20,14 @@ create
 
 feature -- Update
 
-	is_valid_value (a_value: like value): BOOLEAN is
+	is_valid_value (a_value: like value): BOOLEAN
 			-- Is `a_value' a correct value for `data'?
 		do
 			Result := equal (value, a_value) or else
 				validate_value_actions.for_all (agent {FUNCTION [ANY, TUPLE [like value], BOOLEAN]}.item ([a_value]))
 		end
 
-	set_value (a_value: STRING_GENERAL) is
+	set_value (a_value: STRING_GENERAL)
 			-- Set `value' to `a_value' and propagate the change if the new value is different from the old one.
 		do
 			if a_value /= Void then
@@ -39,7 +39,7 @@ feature -- Update
 
 feature -- Specialized update
 
-	set_string_32_value (a_value: like value) is
+	set_string_32_value (a_value: like value)
 			-- Set `value' to `a_value' and propagate the change if it the new value is different from the old one.
 		local
 			l_val: like displayed_value
@@ -62,7 +62,7 @@ feature -- Specialized update
 
 feature {NONE} -- Implementation
 
-	convert_to_data (a_string: like displayed_value): like value is
+	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
 		local
 			l_string: like displayed_value

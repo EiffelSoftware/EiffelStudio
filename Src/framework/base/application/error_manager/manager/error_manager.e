@@ -1,4 +1,4 @@
-indexing
+note
 	description: "An error manager to handle typed errors and warnings"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make is
+	make
 			-- Create a new error manager
 		do
 			create internal_warnings.make
@@ -33,7 +33,7 @@ feature -- Access
 	last_error: ERROR_ERROR_INFO
 			-- last error raised
 
-	warnings: DYNAMIC_LIST [ERROR_WARNING_INFO] is
+	warnings: DYNAMIC_LIST [ERROR_WARNING_INFO]
 			-- list of warnings
 		do
 			Result := internal_warnings
@@ -41,13 +41,13 @@ feature -- Access
 			result_not_void: result /= Void
 		end
 
-	successful: BOOLEAN is
+	successful: BOOLEAN
 			-- Have no errors been raised, indicating a successful result
 		do
 			Result := last_error = Void
 		end
 
-	has_warnings: BOOLEAN is
+	has_warnings: BOOLEAN
 			-- Does error manager have any warnings to report?
 		do
 			Result := not warnings.is_empty
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Query
 
-	pop_error_description: STRING is
+	pop_error_description: STRING
 			-- Pops last description
 		require
 			not_successful: not successful
@@ -67,7 +67,7 @@ feature -- Query
 			not_result_is_empty: not Result.is_empty
 		end
 
-	pop_last_error: ERROR_ERROR_INFO is
+	pop_last_error: ERROR_ERROR_INFO
 			-- Retrieves last error and clears `last_error'
 		require
 			not_successful: not successful
@@ -78,7 +78,7 @@ feature -- Query
 			last_error_is_void: successful implies last_error = Void
 		end
 
-	pop_warning: ERROR_WARNING_INFO is
+	pop_warning: ERROR_WARNING_INFO
 			-- Retrieves first warning and removes it from `warnings'
 		do
 			if not warnings.is_empty then
@@ -91,7 +91,7 @@ feature -- Query
 
 feature -- Status Setting
 
-	set_last_error (a_err: ERROR_ERROR_INFO; a_raise: BOOLEAN) is
+	set_last_error (a_err: ERROR_ERROR_INFO; a_raise: BOOLEAN)
 			-- Sets last error and will raise an exception if `a_raise' is `True'
 		require
 			a_err_attached: a_err /= Void
@@ -104,7 +104,7 @@ feature -- Status Setting
 			last_error_set: last_error = a_err
 		end
 
-	add_warning (a_warn: ERROR_WARNING_INFO) is
+	add_warning (a_warn: ERROR_WARNING_INFO)
 			-- Add `a_warn' to list of warnings
 		require
 			a_warn_attached: a_warn /= Void
@@ -119,7 +119,7 @@ feature -- Status Setting
 
 feature -- Basic Operations
 
-	reset is
+	reset
 			-- Reset error manager
 		local
 			l_err: ERROR_ERROR_INFO
@@ -135,7 +135,7 @@ feature -- Basic Operations
 			not_has_warnings: not has_warnings
 		end
 
-	raise_on_error is
+	raise_on_error
 			-- checks state a raises an exception if not `successful'
 		do
 			if not successful then
@@ -148,7 +148,7 @@ feature -- Basic Operations
 			end
 		end
 
-	trace_last_error (a_printer: ERROR_PRINTER) is
+	trace_last_error (a_printer: ERROR_PRINTER)
 			-- Traces error and outputs it to `a_printer'
 			-- Default implementation pop `last_error' so state will become successful
 			-- after calling.
@@ -159,7 +159,7 @@ feature -- Basic Operations
 			a_printer.print_error (pop_last_error)
 		end
 
-	trace_warnings (a_printer: ERROR_PRINTER) is
+	trace_warnings (a_printer: ERROR_PRINTER)
 			-- Traces warnings and outputs them to `a_printer'
 			-- Default implementation pops all `warnings' so state will become successful
 			-- after calling.
@@ -177,7 +177,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Constants
 
-	unexpected_error_message: STRING is "Unexpected Error"
+	unexpected_error_message: STRING = "Unexpected Error"
 			-- Unexpected error message
 
 feature {NONE} -- Implementation
@@ -189,7 +189,7 @@ invariant
 	internal_warnings_attached: internal_warnings /= Void
 	successful_correct: not successful implies last_error /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

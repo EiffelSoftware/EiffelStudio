@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an existing item (which appears before any modification) in EIFFEL_LIST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature -- Initialization
 
-	make (a_item_ast: like item_ast; a_separator_ast: like separator_ast;  a_owner: INTEGER; a_index: INTEGER; a_list: like match_list) is
+	make (a_item_ast: like item_ast; a_separator_ast: like separator_ast;  a_owner: INTEGER; a_index: INTEGER; a_list: like match_list)
 			-- Initialize instance.
 		require
 			ast_not_void: a_item_ast /= Void
@@ -32,7 +32,7 @@ feature -- Initialization
 
 feature -- Applicability
 
-	can_apply: BOOLEAN is
+	can_apply: BOOLEAN
 			-- Can current modifier be applied?
 		do
 			Result := True
@@ -52,7 +52,7 @@ feature -- Applicability
 
 feature -- Operation
 
-	apply is
+	apply
 			-- Apply current modifier.
 		do
 			if has_text_changed then
@@ -72,7 +72,7 @@ feature -- Operation
 
 feature -- Setting
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING)
 			-- Set `text' with `a_text'.
 			-- `a_text' is empty means remove current item.
 		require
@@ -85,19 +85,19 @@ feature -- Setting
 
 feature	-- Status reporting
 
-	has_text_changed: BOOLEAN is
+	has_text_changed: BOOLEAN
 			-- Has text changed?
 		do
 			Result := text /= Void
 		end
 
-	already_has_separator: BOOLEAN is
+	already_has_separator: BOOLEAN
 			-- Does current item already has a separator?
 		do
 			Result := separator_ast /= Void
 		end
 
-	is_removed: BOOLEAN is
+	is_removed: BOOLEAN
 			-- Is current item removed?
 		do
 			Result := has_text_changed and then text.is_empty
@@ -114,7 +114,7 @@ feature
 invariant
 	item_ast_not_void: item_ast /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A logical span of text in a given text buffer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Intitialization
 
-	make (a_start_line: like start_line; a_start_index: like start_index; a_end_line: like end_line a_end_index: like end_index) is
+	make (a_start_line: like start_line; a_start_index: like start_index; a_end_line: like end_line a_end_index: like end_index)
 			-- Initialize text span
 		require
 			a_start_line_positive: a_start_line > 0
@@ -55,7 +55,7 @@ invariant
 	end_line_big_enough: end_line >= start_line
 	end_index_big_enough: end_line = start_line implies end_index >= start_index
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

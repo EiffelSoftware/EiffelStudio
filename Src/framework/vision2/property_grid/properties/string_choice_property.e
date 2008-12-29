@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Property with several string values to choose from."
 	date: "$Date$"
 	revision: "$Revision$"

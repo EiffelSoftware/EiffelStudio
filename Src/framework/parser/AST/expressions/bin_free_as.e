@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Free binary expression description. Version for Bench"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (l: like left; op: like op_name; r: like right) is
+	initialize (l: like left; op: like op_name; r: like right)
 			-- Create a new BIN_FREE AST node.
 		require
 			l_not_void: l /= Void
@@ -42,7 +42,7 @@ feature -- Attributes
 	op_name: ID_AS
 			-- Free operator name
 
-	operator (a_list: LEAF_AS_LIST): LEAF_AS is
+	operator (a_list: LEAF_AS_LIST): LEAF_AS
 			-- <Precursor>
 		do
 			Result := op_name
@@ -52,7 +52,7 @@ feature -- Attributes
 
 feature -- Properties
 
-	infix_function_name: STRING is
+	infix_function_name: STRING
 			-- Internal name of the infixed feature associated to the
 			-- binary expression
 		do
@@ -61,7 +61,7 @@ feature -- Properties
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (op_name, other.op_name) and then
@@ -71,7 +71,7 @@ feature -- Comparison
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_bin_free_as (Current)
@@ -79,7 +79,7 @@ feature -- Visitor
 
 feature {BINARY_AS}
 
-	set_infix_function_name (name: ID_AS) is
+	set_infix_function_name (name: ID_AS)
 		do
 			create op_name.initialize (extract_symbol_from_infix (name.name))
 		end
@@ -87,7 +87,7 @@ feature {BINARY_AS}
 invariant
 	op_name_not_void: op_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

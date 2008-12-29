@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ICorElementTypes constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	cor_element_type_to_string (a_id: INTEGER): STRING is
+	cor_element_type_to_string (a_id: INTEGER): STRING
 		do
 			inspect a_id
  				when Element_type_array then
@@ -86,7 +86,7 @@ feature -- Access
 		
 feature
 	
-	cor_element_type_valid (a_id: INTEGER): BOOLEAN is
+	cor_element_type_valid (a_id: INTEGER): BOOLEAN
 		do
 			inspect a_id
  				when 
@@ -128,7 +128,7 @@ feature
 			end
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

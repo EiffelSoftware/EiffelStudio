@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,19 +25,19 @@ create
 
 feature -- Access
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the section.
 		once
 			Result := conf_interface_names.group_override_tree
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon of the section.
 		once
 			Result := conf_pixmaps.top_level_folder_overrides_icon
 		end
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
@@ -51,7 +51,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toobar'.
 		do
 			toolbar.add_override_button.select_actions.wipe_out
@@ -70,7 +70,7 @@ feature {NONE} -- Type anchors
 	section_item_type: OVERRIDE_SECTION;
 			-- Type of sections contained.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

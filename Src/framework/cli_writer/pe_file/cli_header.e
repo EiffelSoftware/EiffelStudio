@@ -1,4 +1,4 @@
-indexing
+note
 	description: "CLI Header. See ECMA Partition II 24.3.2 "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_32bits: BOOLEAN) is
+	make (a_32bits: BOOLEAN)
 			-- Allocate item
 		local
 			l_flags: INTEGER
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of `CLI_IMAGE_COR20_HEADER'.
 		external
 			"C macro use <cli_writer.h>"
@@ -48,7 +48,7 @@ feature -- Measurement
 
 feature -- Access
 
-	meta_data_directory: CLI_DIRECTORY is
+	meta_data_directory: CLI_DIRECTORY
 			-- Directory for meta data.
 		do
 			create Result.make_by_pointer (c_meta_data (item))
@@ -56,7 +56,7 @@ feature -- Access
 			meta_data_directory_not_void: Result /= Void
 		end
 
-	resources_directory: CLI_DIRECTORY is
+	resources_directory: CLI_DIRECTORY
 			-- Directory for resources.
 		do
 			create Result.make_by_pointer (c_resources (item))
@@ -64,7 +64,7 @@ feature -- Access
 			resources_directory_not_void: Result /= Void
 		end
 
-	strong_name_directory: CLI_DIRECTORY is
+	strong_name_directory: CLI_DIRECTORY
 			-- Directory for strong name signature.
 		do
 			create Result.make_by_pointer (c_strong_name_signature (item))
@@ -72,7 +72,7 @@ feature -- Access
 			strong_name_directory_not_void: Result /= Void
 		end
 
-	flags: INTEGER is
+	flags: INTEGER
 			-- Specified flags of header
 		do
 			Result := c_flags (item)
@@ -80,7 +80,7 @@ feature -- Access
 
 feature -- Settings
 
-	add_flags (i: INTEGER) is
+	add_flags (i: INTEGER)
 			-- Set `flags' to `i'.
 		require
 			flags_valid: (i & il_only = il_only) or
@@ -92,7 +92,7 @@ feature -- Settings
 			flags_added: (flags & i) = i
 		end
 
-	set_entry_point_token (token: INTEGER) is
+	set_entry_point_token (token: INTEGER)
 			-- Set `token' as entry point of current CLI image.
 		require
 			token_not_null: token /= 0
@@ -102,72 +102,72 @@ feature -- Settings
 
 feature -- Constants
 
-	il_only: INTEGER is 0x00000001
+	il_only: INTEGER = 0x00000001
 			-- Should always be set.
 
-	il_32bits: INTEGER is 0x00000002
+	il_32bits: INTEGER = 0x00000002
 			-- Should be set for 32bit generated assemblies
 
-	strong_name_signed: INTEGER is 0x00000008
+	strong_name_signed: INTEGER = 0x00000008
 			-- Image has strong name signature.
 
 feature {NONE} -- Implementation
 
-	c_set_cb (an_item: POINTER; i: INTEGER) is
+	c_set_cb (an_item: POINTER; i: INTEGER)
 			-- Set `cb' to `i'.
 		external
 			"C struct CLI_IMAGE_COR20_HEADER access cb type DWORD use <cli_writer.h>"
 		end
 
-	c_set_major_runtime_version (an_item: POINTER; i: INTEGER_16) is
+	c_set_major_runtime_version (an_item: POINTER; i: INTEGER_16)
 			-- Set `MajorRuntimeVersion' to `i'.
 		external
 			"C struct CLI_IMAGE_COR20_HEADER access MajorRuntimeVersion type WORD use <cli_writer.h>"
 		end
 
-	c_set_minor_runtime_version (an_item: POINTER; i: INTEGER_16) is
+	c_set_minor_runtime_version (an_item: POINTER; i: INTEGER_16)
 			-- Set `MinorRuntimeVersion' to `i'.
 		external
 			"C struct CLI_IMAGE_COR20_HEADER access MinorRuntimeVersion type WORD use <cli_writer.h>"
 		end
 
-	c_meta_data (an_item: POINTER): POINTER is
+	c_meta_data (an_item: POINTER): POINTER
 			-- Access `MetaData'.
 		external
 			"C struct CLI_IMAGE_COR20_HEADER access &MetaData use <cli_writer.h>"
 		end
 
-	c_set_flags (an_item: POINTER; i: INTEGER) is
+	c_set_flags (an_item: POINTER; i: INTEGER)
 			-- Set `Flags' to `i'.
 		external
 			"C struct CLI_IMAGE_COR20_HEADER access Flags type DWORD use <cli_writer.h>"
 		end
 
-	c_set_entry_point_token (an_item: POINTER; i: INTEGER) is
+	c_set_entry_point_token (an_item: POINTER; i: INTEGER)
 			-- Set `EntryPointToken' to `i'.
 		external
 			"C struct CLI_IMAGE_COR20_HEADER access EntryPointToken type DWORD use <cli_writer.h>"
 		end
 
-	c_flags (an_item: POINTER): INTEGER is
+	c_flags (an_item: POINTER): INTEGER
 			-- Access `Flags'.
 		external
 			"C struct CLI_IMAGE_COR20_HEADER access Flags use <cli_writer.h>"
 		end
 
-	c_resources (an_item: POINTER): POINTER is
+	c_resources (an_item: POINTER): POINTER
 			-- Access `Resources'.
 		external
 			"C struct CLI_IMAGE_COR20_HEADER access &Resources use <cli_writer.h>"
 		end
 
-	c_strong_name_signature (an_item: POINTER): POINTER is
+	c_strong_name_signature (an_item: POINTER): POINTER
 			-- Access `StrongNameSignature'.
 		external
 			"C struct CLI_IMAGE_COR20_HEADER access &StrongNameSignature use <cli_writer.h>"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

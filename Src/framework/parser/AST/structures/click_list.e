@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of clickable syntax items."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create {CLICK_LIST}
 
 feature -- Access
 
-	item_by_node (a_node: CLICKABLE_AST): CLICK_AST is
+	item_by_node (a_node: CLICKABLE_AST): CLICK_AST
 			-- Return item with `node' `a_node'.
 		local
 			i: INTEGER
@@ -37,7 +37,7 @@ feature -- Access
 
 feature -- Debug
 
-	trace is
+	trace
 			-- Output to `io.error'.
 		local
 			i: INTEGER
@@ -54,7 +54,7 @@ feature -- Debug
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that stores 3 AST nodes for alias"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (k_as: like alias_keyword; n_as: like alias_name; c_as: like convert_keyword) is
+	make (k_as: like alias_keyword; n_as: like alias_name; c_as: like convert_keyword)
 			-- Create new ALIAS_TRIPLE sturcture.
 		do
 			alias_keyword := k_as
@@ -36,7 +36,7 @@ feature -- Access
 
 	alias_name: STRING_AS;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Comparator to compare positions of two EV_GRID_ITEM objects by rows"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Comparator
 
-	comparator (a_item, b_item: EVS_GRID_COORDINATED): BOOLEAN is
+	comparator (a_item, b_item: EVS_GRID_COORDINATED): BOOLEAN
 			-- Comparator to compare the position order `a_item' and `b_item'.
 			-- It will compare row first, and then the column.
 		local
@@ -32,7 +32,7 @@ feature -- Comparator
 			end
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

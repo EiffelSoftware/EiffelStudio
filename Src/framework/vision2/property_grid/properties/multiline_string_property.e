@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a multi line string property."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 
 	dialog: TEXT_EDITOR_DIALOG
 
-	convert_to_data (a_string: like displayed_value): like value is
+	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
 		do
 			Result := a_string.twin

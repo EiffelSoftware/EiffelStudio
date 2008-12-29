@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor that builds the compiled informations from scratch or from old informations."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_build (a_state: like state; an_application_target: like application_target; a_factory: like factory) is
+	make_build (a_state: like state; an_application_target: like application_target; a_factory: like factory)
 			-- Create.
 		require
 			a_state_not_void: a_state /= Void
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			application_target := an_application_target
 		end
 
-	make_build_from_old (a_state: like state; an_application_target, an_old_target: CONF_TARGET; a_factory: like factory) is
+	make_build_from_old (a_state: like state; an_application_target, an_old_target: CONF_TARGET; a_factory: like factory)
 			-- Create.
 		require
 			a_state_not_void: a_state /= Void
@@ -98,7 +98,7 @@ feature -- Access
 
 feature -- Update
 
-	set_assembly_cach_folder (a_location: STRING) is
+	set_assembly_cach_folder (a_location: STRING)
 			-- Set `assembly_cache_folder'.
 		require
 			a_location_not_void: a_location /= Void
@@ -106,14 +106,14 @@ feature -- Update
 			assembly_cache_folder := create {FILE_NAME}.make_from_string (a_location)
 		end
 
-	set_il_version (a_version: like il_version) is
+	set_il_version (a_version: like il_version)
 			-- Set `il_version'.
 			-- If `a_version' is `Void', use the latest version.
 		do
 			il_version := a_version
 		end
 
-	set_partial_location (a_location: like partial_location) is
+	set_partial_location (a_location: like partial_location)
 			-- Set `partial_location'.
 		require
 			a_location_not_void: a_location /= Void
@@ -121,7 +121,7 @@ feature -- Update
 			partial_location := a_location
 		end
 
-	set_is_full_class_name_analyzis (v: like is_full_class_name_analysis) is
+	set_is_full_class_name_analyzis (v: like is_full_class_name_analysis)
 			-- Set `is_full_class_name_analysis' with `v'.
 		do
 			is_full_class_name_analysis := v
@@ -129,7 +129,7 @@ feature -- Update
 			is_full_class_name_analysis_set: is_full_class_name_analysis = v
 		end
 
-	reset_classes is
+	reset_classes
 			-- Reset `xxx_classes' data structures.
 		do
 			reset
@@ -154,7 +154,7 @@ feature -- Observers
 
 feature -- Events
 
-	on_process_group (a_group: CONF_GROUP) is
+	on_process_group (a_group: CONF_GROUP)
 			-- `A_group' is processed.
 		require
 			a_group_not_void: a_group /= Void
@@ -162,7 +162,7 @@ feature -- Events
 			process_group_observer.call ([a_group])
 		end
 
-	on_process_directory (a_cluster: CONF_CLUSTER; a_path: STRING) is
+	on_process_directory (a_cluster: CONF_CLUSTER; a_path: STRING)
 			-- (Sub)directory `a_path' of `a_cluster' is processed.
 		do
 			process_directory.call ([a_cluster, a_path])
@@ -170,7 +170,7 @@ feature -- Events
 
 feature -- Visit nodes
 
-	process_target (a_target: CONF_TARGET) is
+	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		local
 			l_libraries, l_clusters, l_overrides, l_assemblies: HASH_TABLE [CONF_GROUP, STRING]
@@ -303,7 +303,7 @@ feature -- Visit nodes
 			end
 		end
 
-	process_assembly (an_assembly: CONF_ASSEMBLY) is
+	process_assembly (an_assembly: CONF_ASSEMBLY)
 			-- Visit `an_assembly'.
 		local
 			l_file: RAW_FILE
@@ -342,7 +342,7 @@ feature -- Visit nodes
 			end
 		end
 
-	process_library (a_library: CONF_LIBRARY) is
+	process_library (a_library: CONF_LIBRARY)
 			-- Visit `a_library'.
 		local
 			l_target: CONF_TARGET
@@ -458,7 +458,7 @@ feature -- Visit nodes
 			classes_set: not is_error implies a_library.classes_set
 		end
 
-	process_cluster (a_cluster: CONF_CLUSTER) is
+	process_cluster (a_cluster: CONF_CLUSTER)
 			-- Visit `a_cluster'.
 		local
 			l_old_cluster: CONF_CLUSTER
@@ -527,7 +527,7 @@ feature -- Visit nodes
 			classes_set: not is_error implies a_cluster.classes_set
 		end
 
-	process_override (an_override: CONF_OVERRIDE) is
+	process_override (an_override: CONF_OVERRIDE)
 			-- Visit `an_override'.
 		local
 			l_groups: ARRAYED_LIST [CONF_GROUP]
@@ -567,7 +567,7 @@ feature -- Visit nodes
 
 feature {CONF_BUILD_VISITOR} -- Implementation, needed for get_visitor
 
-	reset is
+	reset
 			-- Reset the values for the new visitor.
 		do
 			current_classes := Void
@@ -580,7 +580,7 @@ feature {CONF_BUILD_VISITOR} -- Implementation, needed for get_visitor
 			create handled_groups.make (groups_per_system)
 		end
 
-	set_old_target (a_target: like old_target) is
+	set_old_target (a_target: like old_target)
 			-- Set `old_target' to `a_target'.
 		do
 			old_target := a_target
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 	partial_location: CONF_DIRECTORY_LOCATION
 			-- Location where the merged partial classes will be stored (normally somewhere inside eifgen)
 
-	handle_class (a_file, a_path: STRING; a_cluster: CONF_CLUSTER) is
+	handle_class (a_file, a_path: STRING; a_cluster: CONF_CLUSTER)
 			-- Put the class in `a_path' `a_file' into `current_classes'.
 		local
 			l_file: KL_BINARY_INPUT_FILE
@@ -815,7 +815,7 @@ feature {NONE} -- Implementation
 				implies (current_classes.count = old current_classes.count + 1) or partial_classes /= Void)
 		end
 
-	merge_classes (a_group: CONF_GROUP) is
+	merge_classes (a_group: CONF_GROUP)
 			-- Merge the classes of `a_group' into `current_classes'.
 		require
 			current_classes_not_void: current_classes /= Void
@@ -824,7 +824,7 @@ feature {NONE} -- Implementation
 			current_classes.merge (a_group.classes)
 		end
 
-	process_removed (a_groups: HASH_TABLE [CONF_GROUP, STRING]) is
+	process_removed (a_groups: HASH_TABLE [CONF_GROUP, STRING])
 			-- Add the classes that have been removed to `removed_classes'
 		local
 			l_group: CONF_GROUP
@@ -882,7 +882,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_removed_classes (a_classes: HASH_TABLE [CONF_CLASS, STRING]) is
+	process_removed_classes (a_classes: HASH_TABLE [CONF_CLASS, STRING])
 			-- Add compiled classes from `a_classes' that are not in `reused_classes' to `removed_classes'.
 		local
 			l_overrides: ARRAYED_LIST [CONF_CLASS]
@@ -935,7 +935,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_with_old (a_new_groups, an_old_groups: HASH_TABLE [CONF_GROUP, STRING]) is
+	process_with_old (a_new_groups, an_old_groups: HASH_TABLE [CONF_GROUP, STRING])
 			-- Process `a_new_groups' and set `old_group' to the corresponding group of `an_old_groups'.
 		require
 			old_group_void: old_group = Void
@@ -980,7 +980,7 @@ feature {NONE} -- Implementation
 			old_group_void: old_group = Void
 		end
 
-	process_partial_classes is
+	process_partial_classes
 			-- Process `partial_classes'.
 		require
 			partial_location_not_void: partial_location /= Void
@@ -1033,7 +1033,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- contracts
 
-	libraries_intersection (a, b: like libraries): BOOLEAN is
+	libraries_intersection (a, b: like libraries): BOOLEAN
 			-- Is there an intersection between `a' and `b'?
 		local
 			l1, l2: like libraries
@@ -1063,28 +1063,28 @@ feature {NONE} -- contracts
 
 feature {NONE} -- Size constants
 
-	classes_per_cluster: INTEGER is 200
+	classes_per_cluster: INTEGER = 200
 			-- How many classes do we have per average cluster.
 
-	classes_per_system: INTEGER is 3000
+	classes_per_system: INTEGER = 3000
 			-- How many classes do we have per average system.
 
-	groups_per_system: INTEGER is 100
+	groups_per_system: INTEGER = 100
 			-- How many groups do we have per average system.
 
-	modified_classes_per_system: INTEGER is 100
+	modified_classes_per_system: INTEGER = 100
 			-- How many classes do we have per average system.
 
-	removed_classes_from_override_per_system: INTEGER is 5
+	removed_classes_from_override_per_system: INTEGER = 5
 			-- How many classes do we have each time they get removed from an override.
 
-	added_classes_per_system: INTEGER is 3000
+	added_classes_per_system: INTEGER = 3000
 			-- How many classes do we have per average system.
 
-	removed_classes_per_system: INTEGER is 10
+	removed_classes_per_system: INTEGER = 10
 			-- How many classes do we have per average system.
 
-	libraries_per_target: INTEGER is 5
+	libraries_per_target: INTEGER = 5
 			-- How many libraries do we have per average target.
 
 invariant
@@ -1099,7 +1099,7 @@ invariant
 	factory_not_void: factory /= Void
 	last_warnings_not_void: last_warnings /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

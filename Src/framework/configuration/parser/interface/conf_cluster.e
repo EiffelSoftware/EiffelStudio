@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A project cluster."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,7 +30,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_location: like location; a_target: CONF_TARGET) is
+	make (a_name: like name; a_location: like location; a_target: CONF_TARGET)
 			-- Create
 		do
 			Precursor (a_name, a_location, a_target)
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	is_cluster: BOOLEAN is
+	is_cluster: BOOLEAN
 			-- Is this a cluster?
 		once
 			Result := True
@@ -67,7 +67,7 @@ feature -- Access, stored in configuration file
 
 feature -- Access queries
 
-	dependencies: DS_HASH_SET [CONF_GROUP] is
+	dependencies: DS_HASH_SET [CONF_GROUP]
 			-- Dependencies to other groups.
 			-- Empty = No dependencies
 			-- Void = Depend on all
@@ -85,7 +85,7 @@ feature -- Access queries
 			end
 		end
 
-	active_file_rule (a_state: CONF_STATE): CONF_FILE_RULE is
+	active_file_rule (a_state: CONF_STATE): CONF_FILE_RULE
 			-- Active file rule for `a_state'.
 		require
 			a_state_not_void: a_state /= Void
@@ -108,7 +108,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	file_rule: like internal_file_rule is
+	file_rule: like internal_file_rule
 			-- Rules for files to be included or excluded.
 		do
 			Result := internal_file_rule.twin
@@ -120,7 +120,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	options: CONF_OPTION is
+	options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...)
 		local
 			l_lib: CONF_LIBRARY
@@ -156,7 +156,7 @@ feature -- Access queries
 			end
 		end
 
-	class_options: like internal_class_options is
+	class_options: like internal_class_options
 			-- Options for classes.
 		local
 			l_lib: CONF_LIBRARY
@@ -193,7 +193,7 @@ feature -- Access queries
 			end
 		end
 
-	mapping: like internal_mapping is
+	mapping: like internal_mapping
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		do
 			if cached_mapping = Void then
@@ -214,7 +214,7 @@ feature -- Access queries
 			Result_cached: Result = cached_mapping
 		end
 
-	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS] is
+	class_by_name (a_class: STRING; a_dependencies: BOOLEAN): LINKED_SET [CONF_CLASS]
 			-- Get the class with the final (after renaming/prefix) name `a_class'.
 			-- Either if it is defined in this cluster or if `a_dependencies' in a dependency.
 		local
@@ -262,7 +262,7 @@ feature -- Access queries
 			end
 		end
 
-	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING] is
+	name_by_class (a_class: CONF_CLASS; a_dependencies: BOOLEAN): LINKED_SET [STRING]
 			-- Get name in this context of `a_class' (if `a_dependencies') then we check dependencies).
 		local
 			l_groups: like accessible_groups
@@ -293,7 +293,7 @@ feature -- Access queries
 			end
 		end
 
-	accessible_groups: DS_HASH_SET [CONF_GROUP] is
+	accessible_groups: DS_HASH_SET [CONF_GROUP]
 			-- Groups that are accessible within `Current'.
 			-- Dependencies if we have them, else everything except `Current'.
 		local
@@ -353,7 +353,7 @@ feature -- Access queries
 			Result := accessible_groups_cache
 		end
 
-	sub_group_by_name (a_name: STRING): CONF_GROUP is
+	sub_group_by_name (a_name: STRING): CONF_GROUP
 			-- Return sub cluster with `a_name' if there is any.
 		do
 			if children /= Void then
@@ -370,7 +370,7 @@ feature -- Access queries
 			end
 		end
 
-	is_readonly: BOOLEAN is
+	is_readonly: BOOLEAN
 			-- Is this group read only?
 		local
 			l_lib: CONF_LIBRARY
@@ -390,7 +390,7 @@ feature -- Access queries
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	set_parent (a_cluster: like parent) is
+	set_parent (a_cluster: like parent)
 			-- Set `parent' to `a_cluster'.
 		do
 			parent := a_cluster
@@ -398,7 +398,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			parent_set: parent = a_cluster
 		end
 
-	add_child (a_cluster: like Current) is
+	add_child (a_cluster: like Current)
 			-- Add `a_cluster' to `children'.
 		do
 			if children = Void then
@@ -409,7 +409,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			child_added: children.has (a_cluster)
 		end
 
-	remove_child (a_cluster: like Current) is
+	remove_child (a_cluster: like Current)
 			-- Remove `a_cluster' from `children'.
 		do
 			if children /= Void then
@@ -421,7 +421,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			end
 		end
 
-	set_recursive (a_enabled: BOOLEAN) is
+	set_recursive (a_enabled: BOOLEAN)
 			-- Set `is_recursive' to `a_enabled'.
 		do
 			is_recursive := a_enabled
@@ -429,7 +429,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_recursive_set: is_recursive = a_enabled
 		end
 
-	set_hidden (a_enabled: BOOLEAN) is
+	set_hidden (a_enabled: BOOLEAN)
 			-- Set `is_hidden' to `a_enabled'.
 		do
 			is_hidden := a_enabled
@@ -437,7 +437,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_hidden_set: is_hidden = a_enabled
 		end
 
-	set_dependencies (a_dependencies: like internal_dependencies) is
+	set_dependencies (a_dependencies: like internal_dependencies)
 			-- Set `a_dependencies'.
 		do
 			internal_dependencies := a_dependencies
@@ -445,7 +445,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			dependencies_set: internal_dependencies = a_dependencies
 		end
 
-	add_dependency (a_group: CONF_GROUP) is
+	add_dependency (a_group: CONF_GROUP)
 			-- Add a dependency.
 		require
 			a_group_not_void: a_group /= Void
@@ -458,7 +458,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_dependencies.has (a_group)
 		end
 
-	add_file_rule (a_file_rule: CONF_FILE_RULE) is
+	add_file_rule (a_file_rule: CONF_FILE_RULE)
 			-- Add `a_file_rule'.
 		require
 			a_file_rule_not_void: a_file_rule /= Void
@@ -468,7 +468,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			file_rule_added: internal_file_rule.has (a_file_rule)
 		end
 
-	set_file_rule (a_file_rule: like internal_file_rule) is
+	set_file_rule (a_file_rule: like internal_file_rule)
 			-- Set `a_file_rule'.
 		require
 			a_file_rule_not_void: a_file_rule /= Void
@@ -478,7 +478,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			file_rule_set: internal_file_rule = a_file_rule
 		end
 
-	add_mapping (a_old_name, a_new_name: STRING) is
+	add_mapping (a_old_name, a_new_name: STRING)
 			-- Add a new mapping from `a_old_name' to `a_new_name'.
 		require
 			a_old_name_ok: a_old_name /= Void and then not a_old_name.is_empty
@@ -491,7 +491,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			cached_mapping := Void
 		end
 
-	set_mapping (a_mapping: like internal_mapping) is
+	set_mapping (a_mapping: like internal_mapping)
 			-- Set `internal_mapping' to `a_mapping'.
 		do
 			internal_mapping := a_mapping
@@ -500,7 +500,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_mapping_set: internal_mapping = a_mapping
 		end
 
-	set_mapping_32 (a_mapping_32: like mapping_32) is
+	set_mapping_32 (a_mapping_32: like mapping_32)
 			-- Set `mapping' to `a_mapping_32'.
 		do
 			if a_mapping_32 = Void then
@@ -521,7 +521,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, not stored in configuration file
 
-	wipe_class_cache is
+	wipe_class_cache
 			-- Wipe out the class cache.
 		do
 			class_by_name_cache.clear_all
@@ -530,7 +530,7 @@ feature {CONF_ACCESS} -- Update, not stored in configuration file
 
 feature -- Equality
 
-	is_group_equivalent (other: like Current): BOOLEAN is
+	is_group_equivalent (other: like Current): BOOLEAN
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
 			Result := Precursor (other) and then equal (dependencies, other.dependencies) and then
@@ -541,7 +541,7 @@ feature -- Equality
 
 feature -- Visit
 
-	process (a_visitor: CONF_VISITOR) is
+	process (a_visitor: CONF_VISITOR)
 			-- Process `a_visitor'.
 		do
 			Precursor (a_visitor)
@@ -572,7 +572,7 @@ invariant
 	internal_file_rule_not_void: internal_file_rule /= Void
 	parent_child_relationship: parent /= Void implies parent.children /= Void and then parent.children.has (Current)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

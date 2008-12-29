@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Object that observer the capturing of an application state.
 	]"

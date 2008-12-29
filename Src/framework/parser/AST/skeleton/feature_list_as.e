@@ -1,4 +1,4 @@
-indexing
+note
 	description: "List of feature names."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: like features) is
+	initialize (f: like features)
 			-- Create a new FEATURE_LIST AST node.
 		require
 			f_not_void: f /= Void
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_feature_list_as (Current)
@@ -40,19 +40,19 @@ feature -- Attributes
 
 feature -- Roundtrip/Location
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := features.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := features.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (features, other.features)
@@ -61,7 +61,7 @@ feature -- Comparison
 invariant
 	features_not_void: features /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

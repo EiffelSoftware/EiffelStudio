@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a parser token line type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make_from_integer (i: INTEGER) is
+	make_from_integer (i: INTEGER)
 			-- Initializes `Current' using `i' to correspond to a token member (see Access)
 		require
 			i_is_member: i >= min_member and i <= max_member
@@ -30,27 +30,27 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	unknown: INTEGER is 0x00
+	unknown: INTEGER = 0x00
 			-- Unknown line
 
-	section: INTEGER is 0x01
+	section: INTEGER = 0x01
 			-- Section label line
 
-	property: INTEGER is 0x02
+	property: INTEGER = 0x02
 			-- Property assigner line
 
-	comment: INTEGER is 0x03
+	comment: INTEGER = 0x03
 			-- Comment line
 
 feature -- Access
 
-	min_member: INTEGER is
+	min_member: INTEGER
 			-- Minimum value member
 		do
 			Result := unknown
 		end
 
-	max_member: INTEGER is
+	max_member: INTEGER
 			-- Maximum value member
 		do
 			Result := comment
@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- HASHABLE Implementation
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := value
@@ -66,7 +66,7 @@ feature -- HASHABLE Implementation
 
 feature -- Conversion
 
-	to_integer: INTEGER is
+	to_integer: INTEGER
 			-- Converts `Current' to an INTEGER
 		do
 			Result := value
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 invariant
 	value_is_member: value >= min_member and value <= max_member
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

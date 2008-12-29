@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Objects representing a trie (also called a prefix tree) of strings and an arbitrary associated value"
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create empty trie.
 		do
 			create root_node.make_root
@@ -32,7 +32,7 @@ feature -- Status report
 
 feature -- Searching
 
-	search (a_key: DS_INDEXABLE [H]) is
+	search (a_key: DS_INDEXABLE [H])
 			-- Search for item with key `a_key'. If an item could be found set
 			-- `last_found' to `True' (`False' otherwise) and make item available
 			-- via `last_item'.
@@ -45,7 +45,7 @@ feature -- Searching
 
 feature -- Element change
 
-	put (a_value: G; a_key: DS_INDEXABLE [H]) is
+	put (a_value: G; a_key: DS_INDEXABLE [H])
 			-- Put value `a_value' with key `a_key' in trie.
 		require
 			a_key_not_void: a_key /= Void
@@ -58,7 +58,7 @@ feature -- Nodes
 	root_node: ERL_G_TRIE_NODE [G, H]
 			-- Root child nodes of trie
 
-	search_recursive (a_key: DS_INDEXABLE [H]; a_node: like root_node) is
+	search_recursive (a_key: DS_INDEXABLE [H]; a_node: like root_node)
 			-- Search for item with key `a_key' in `node' and its children. If an item could be found set
 			-- `last_found' to `True' and make item available
 			-- via `last_item'.

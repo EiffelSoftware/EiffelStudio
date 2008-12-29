@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base class for classes wanting to shared usage of an already initialized wrapped dynamic library {DYNAMIC_API}.
 	]"
@@ -90,7 +90,7 @@ feature {NONE} -- Externals
 invariant
 	api_is_interface_usable: is_interface_usable implies api.is_interface_usable
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

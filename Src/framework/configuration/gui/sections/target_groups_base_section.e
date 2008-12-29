@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ inherit
 
 feature -- Element update
 
-	add_group is
+	add_group
 			-- Add a new external.
 		local
 			l_dial: like add_dialog_type
@@ -48,7 +48,7 @@ feature -- Element update
 			end
 		end
 
-	set_groups (a_groups: HASH_TABLE [like conf_item_type, STRING]) is
+	set_groups (a_groups: HASH_TABLE [like conf_item_type, STRING])
 			-- Set groups.
 		require
 			a_groups_ok: a_groups /= Void and then not a_groups.is_empty
@@ -83,21 +83,21 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to execute when the item is selected
 		do
 			create Result
 			Result.extend (agent configuration_window.show_empty_section (conf_interface_names.selection_tree_select_node))
 		end
 
-	create_group_section (a_group: like conf_item_type): like section_item_type is
+	create_group_section (a_group: like conf_item_type): like section_item_type
 			-- Create a new group section item.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	create_add_dialog: like add_dialog_type is
+	create_add_dialog: like add_dialog_type
 			-- Create a dialog to add a new group.
 		deferred
 		ensure
@@ -106,22 +106,22 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Type anchors
 
-	add_dialog_type: CREATE_GROUP_DIALOG is
+	add_dialog_type: CREATE_GROUP_DIALOG
 			-- Type of the dialog to create a new item.
 		deferred
 		end
 
-	conf_item_type: CONF_GROUP is
+	conf_item_type: CONF_GROUP
 			-- Type of configuration objects represented.
 		deferred
 		end
 
-	section_item_type: GROUP_SECTION is
+	section_item_type: GROUP_SECTION
 			-- Type of sections contained.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

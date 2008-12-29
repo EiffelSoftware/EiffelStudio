@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Static class providing helper functions for tags
 	]"
@@ -25,7 +25,7 @@ feature -- Access
 
 feature -- Query
 
-	is_valid_token (a_string: !STRING): BOOLEAN is
+	is_valid_token (a_string: !STRING): BOOLEAN
 			-- Is given string a valid token?
 			--
 			-- `a_string': String for which is determined if it is a valid token.
@@ -48,7 +48,7 @@ feature -- Query
 			end
 		end
 
-	is_valid_tag (a_string: !STRING): BOOLEAN is
+	is_valid_tag (a_string: !STRING): BOOLEAN
 			-- Does a given string represent a valid tag?
 			--
 			-- Note: an empty string is also considered a valid tag
@@ -143,7 +143,7 @@ feature -- Query
 		end
 
 		-- TODO: add attachement mark for `a_item'
-	tag_suffixes (a_list: DS_LINEAR [!STRING]; a_prefix: !STRING): !DS_HASH_SET [!STRING] is
+	tag_suffixes (a_list: DS_LINEAR [!STRING]; a_prefix: !STRING): !DS_HASH_SET [!STRING]
 			-- Computed list of all tags for some item, which have certain prefix
 			--
 			-- `a_item': Item which its tags will be parsed.
@@ -198,7 +198,7 @@ feature -- Basic functionality
 			result_correct: suffix (a_prefix, Result).is_equal (a_suffix)
 		end
 
-	find_tags_in_string (a_string: !STRING; a_callback: !PROCEDURE [ANY, TUPLE [!STRING]]) is
+	find_tags_in_string (a_string: !STRING; a_callback: !PROCEDURE [ANY, TUPLE [!STRING]])
 			-- Extract tags defined in string.
 			--
 			-- `a_string': String to look for tags.

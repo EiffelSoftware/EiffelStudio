@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Interface for GUI lookup"
 	legal: "See notice at end of class."
@@ -11,24 +11,24 @@ deferred class
 
 feature -- Access
 
-	application_under_test: EV_APPLICATION is
+	application_under_test: EV_APPLICATION
 			-- Application under test
 		deferred
 		end
 
-	screen: EV_SCREEN is
+	screen: EV_SCREEN
 			-- Screen
 		deferred
 		end
 
-	active_window: EV_WINDOW is
+	active_window: EV_WINDOW
 			-- Active window which is used for identifiable lookup
 		deferred
 		end
 
 feature -- Status report
 
-	has_active_window: BOOLEAN is
+	has_active_window: BOOLEAN
 			-- Is an active window set?
 		do
 			Result := active_window /= Void
@@ -36,7 +36,7 @@ feature -- Status report
 
 feature -- Element change	
 
-	set_active_window (a_window: like active_window) is
+	set_active_window (a_window: like active_window)
 			-- Set `active_window' to `a_window'.
 		require
 			a_window_not_void: a_window /= Void
@@ -48,7 +48,7 @@ feature -- Element change
 
 feature -- Window lookup
 
-	window_by_identifier (an_identifier: STRING): EV_WINDOW is
+	window_by_identifier (an_identifier: STRING): EV_WINDOW
 			-- Window which has `an_identifier' as `identifier_name'.
 		require
 			an_identifier_not_void: an_identifier /= Void
@@ -58,7 +58,7 @@ feature -- Window lookup
 			result_correct: -- has_window_with_identifier (an_identifier) implies Result /= Void
 		end
 
-	windows_by_identifier (an_identifier: STRING): LIST [EV_WINDOW] is
+	windows_by_identifier (an_identifier: STRING): LIST [EV_WINDOW]
 			-- All windows which have `an_identifier' as `identifier_name'.
 		require
 			an_identifier_not_void: an_identifier /= Void
@@ -71,7 +71,7 @@ feature -- Window lookup
 
 feature -- Identifiable lookup
 
-	identifiable (a_pattern: STRING): EV_IDENTIFIABLE is
+	identifiable (a_pattern: STRING): EV_IDENTIFIABLE
 			-- Identifiable corresponding to `a_pattern'.
 		require
 			a_pattern_not_void: a_pattern /= Void
@@ -82,7 +82,7 @@ feature -- Identifiable lookup
 			result_correct: -- has_identifiable (a_pattern) implies Result /= Void
 		end
 
-	identifiables (a_pattern: STRING): LIST [EV_IDENTIFIABLE] is
+	identifiables (a_pattern: STRING): LIST [EV_IDENTIFIABLE]
 			-- All identifiablkes corresponding to `a_pattern'.
 		require
 			a_pattern_not_void: a_pattern /= Void
@@ -96,7 +96,7 @@ feature -- Identifiable lookup
 
 feature -- Support
 
-	valid_pattern (a_pattern: STRING): BOOLEAN is
+	valid_pattern (a_pattern: STRING): BOOLEAN
 			-- Is `a_pattern' valid to use for searching?
 		local
 			l_tokens: LIST [STRING]
@@ -132,7 +132,7 @@ feature -- Support
 
 feature {NONE} -- Implementation
 
-	valid_token (a_token: STRING): BOOLEAN is
+	valid_token (a_token: STRING): BOOLEAN
 			-- Is `a_token' valid to use in a path?
 		local
 			l_brace_index: INTEGER
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

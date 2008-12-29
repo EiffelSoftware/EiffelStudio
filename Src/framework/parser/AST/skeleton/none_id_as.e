@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent an automatically created NONE id"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create.
 		do
 			initialize_from_id (none_class_name_id)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_none_id_as (Current)
@@ -44,7 +44,7 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	text (a_list: LEAF_AS_LIST): STRING is
+	text (a_list: LEAF_AS_LIST): STRING
 			-- Literal text of this token, which is stored in `a_list'
 		do
 				-- In view of roundtrip parser, text of a NONE_ID_AS is empty because this
@@ -52,7 +52,7 @@ feature -- Roundtrip
 			Result := ""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

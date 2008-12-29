@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An EiffelVision2 label extension that supports text wrapping and text ellipsing.
 	]"
@@ -113,7 +113,7 @@ feature -- Element change
 			text_set: text = a_text
 		end
 
-	set_font (a_font: like font) is
+	set_font (a_font: like font)
 			-- Assign `a_font' to `font'.
 		do
 			Precursor {EV_LABEL} (a_font)
@@ -122,7 +122,7 @@ feature -- Element change
 			end
 		end
 
-	set_maximum_width (a_width: INTEGER) is
+	set_maximum_width (a_width: INTEGER)
 			-- Set maximum size for text wrapping.
 		require
 			not_destroyed: not is_destroyed
@@ -139,7 +139,7 @@ feature -- Element change
 			is_maximum_width_set_by_user: is_maximum_width_set_by_user
 		end
 
-	set_maximum_height (a_height: INTEGER) is
+	set_maximum_height (a_height: INTEGER)
 			-- Set maximum size for text ellipsing.
 		require
 			not_destroyed: not is_destroyed
@@ -156,7 +156,7 @@ feature -- Element change
 			is_maximum_height_set_by_user: is_maximum_height_set_by_user
 		end
 
-	set_maximum_size (a_width, a_height: INTEGER) is
+	set_maximum_size (a_width, a_height: INTEGER)
 			-- Set maximum size for text wrapping and text ellipsing.
 		require
 			not_destroyed: not is_destroyed
@@ -174,7 +174,7 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_text is
+	remove_text
 			-- Make `text' `is_empty'.
 		do
 			text_lines := Void
@@ -525,7 +525,7 @@ invariant
 	text_lines_and_text_sizes_synced: (text_lines = Void) = (text_sizes = Void) and then
 			text_lines /= Void implies text_lines.count = text_sizes.count
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

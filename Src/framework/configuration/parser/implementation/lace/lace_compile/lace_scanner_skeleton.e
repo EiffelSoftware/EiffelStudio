@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Lace scanner skeletons"
 	legal: "See notice at end of class."
@@ -25,7 +25,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new Lace scanner.
 		do
 			make_with_buffer (Empty_buffer)
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input source.
 			-- (This routine can be called in wrap before scanning
 			-- another input buffer.)
@@ -61,42 +61,42 @@ feature -- Access
 
 feature -- Error handling
 
-	fatal_error (a_message: STRING) is
+	fatal_error (a_message: STRING)
 			-- A fatal error occurred.
 			-- Log `a_message' and raise an exception.
 		do
 		end
 
-	report_string_bad_special_character_error is
+	report_string_bad_special_character_error
 			-- Invalid special character after % in manisfest string.
 		do
 		end
 
-	report_string_invalid_code_error (a_code: INTEGER) is
+	report_string_invalid_code_error (a_code: INTEGER)
 			-- Invalid character code after % in manisfest string.
 		do
 		end
 
-	report_string_missing_quote_error (a_string: STRING) is
+	report_string_missing_quote_error (a_string: STRING)
 			-- Invalid string: final quote missing.
 		require
 			a_string_not_void: a_string /= Void
 		do
 		end
 
-	report_string_empty_error is
+	report_string_empty_error
 			-- Invalid string: empty string.
 		do
 		end
 
-	report_unknown_token_error (a_token: CHARACTER) is
+	report_unknown_token_error (a_token: CHARACTER)
 			-- Unknown token.
 		do
 		end
 
 feature {NONE} -- Implementation
 
-	process_string_character_code (code: INTEGER) is
+	process_string_character_code (code: INTEGER)
 			-- Check whether `code' is a valid character code
 			-- in a string and set `last_token' accordingly.
 		require
@@ -113,11 +113,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Initial_buffer_size: INTEGER is 5120
+	Initial_buffer_size: INTEGER = 5120
 			-- Initial size for `token_buffer'
 			-- (See `eif_rtlimits.h')
 
-	Maximum_character_code: INTEGER is 255
+	Maximum_character_code: INTEGER = 255
 			-- Largest supported code for CHARACTER values
 
 invariant
@@ -125,7 +125,7 @@ invariant
 	token_buffer_not_void: token_buffer /= Void
 	filename_not_void: filename /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

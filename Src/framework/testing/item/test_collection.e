@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects representing an active collection of tests.
 	]"
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize `Current'
 		do
 			create test_added_event
@@ -43,7 +43,7 @@ feature -- Events
 	tests_reset_event: !EVENT_TYPE [TUPLE [collection: !ACTIVE_COLLECTION_I [!TEST_I]]]
 			-- <Precursor>
 
-;indexing
+;note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

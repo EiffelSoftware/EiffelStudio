@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parameter_name: STRING) is
+	make (a_parameter_name: STRING)
 			-- Create a new error reporting that parameter
 			-- `a_parameter_name' has not been provided with
 			-- a value.
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	default_template: STRING is "$0: You must specify a value for '$1'"
+	default_template: STRING = "$0: You must specify a value for '$1'"
 			-- Default template used to built the error message
 
-	code: STRING is "GERL0002"
+	code: STRING = "GERL0002"
 			-- Error code
 
 invariant

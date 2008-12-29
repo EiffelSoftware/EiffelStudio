@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to change conditioning statements."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialization
 		local
 			l_btn: EV_BUTTON
@@ -71,7 +71,7 @@ feature {NONE} -- Gui elements
 
 feature {NONE} -- Agents
 
-	on_show is
+	on_show
 			-- Fill in value.
 		local
 			l_tab: CONDITION_TAB
@@ -106,7 +106,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_show_tab is
+	on_show_tab
 			-- Show a tab.
 		do
 			if notebook.selected_item /= Void then
@@ -114,7 +114,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_remove is
+	on_remove
 			-- Remove a file rule.
 		do
 			if notebook.selected_item /= Void and value /= Void then
@@ -130,7 +130,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_add is
+	on_add
 			-- Add a new file rule.
 		local
 			l_cond: CONF_CONDITION
@@ -154,13 +154,13 @@ feature {NONE} -- Agents
 			unlock_update
 		end
 
-	is_in_default_state: BOOLEAN is True
+	is_in_default_state: BOOLEAN = True
 			-- Contract.
 
 invariant
 	elements: is_initialized implies remove_button /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to add a precompile library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: CONF_TARGET; a_factory: like factory) is
+	make (a_target: CONF_TARGET; a_factory: like factory)
 			-- <Precursor>
 		do
 			Precursor {CREATE_LIBRARY_DIALOG} (a_target, a_factory)
@@ -70,7 +70,7 @@ feature {NONE} -- Action handlers
 			location.set_text (a_location)
 		end
 
-	on_ok is
+	on_ok
 			-- <Precursor>
 		do
 				-- library choosen?
@@ -88,7 +88,7 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

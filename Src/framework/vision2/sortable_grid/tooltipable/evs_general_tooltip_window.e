@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a tooltip window"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,13 +27,13 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 			-- Create current tooltip window
 		do
 			make_with_shadow
 		end
 
-	initialize is
+	initialize
 			-- Initialize current tooltip window
 		do
 			disable_border
@@ -44,7 +44,7 @@ feature{NONE} -- Initialization
 
 feature -- Show
 
-	show_tooltip (pointer_x, pointer_y: INTEGER) is
+	show_tooltip (pointer_x, pointer_y: INTEGER)
 			-- Show tooltip window at position relative to pointer position (pointer_x, pointer_y)
 		require
 			has_owner: has_owner
@@ -59,7 +59,7 @@ feature -- Show
 			show
 		end
 
-	hide_tooltip is
+	hide_tooltip
 			-- Hide tooltip
 		do
 			if is_displayed then
@@ -70,7 +70,7 @@ feature -- Show
 
 feature -- Status report
 
-	has_owner: BOOLEAN is
+	has_owner: BOOLEAN
 			-- Does current has an owner?
 		do
 			Result := owner /= Void
@@ -80,7 +80,7 @@ feature -- Status report
 
 feature -- Owner operation
 
-	attach_owner (a_owner: like owner) is
+	attach_owner (a_owner: like owner)
 			-- Attach `a_owner' to `owner'.
 		require
 			a_owner_attached: a_owner /= Void
@@ -100,7 +100,7 @@ feature -- Owner operation
 			widget_extended: has (owner.tooltip_widget)
 		end
 
-	detach_owner is
+	detach_owner
 			-- Detach `owner'.
 		require
 			owner_attached: owner /= Void
@@ -119,7 +119,7 @@ feature -- Owner operation
 
 feature{NONE} -- Actions
 
-	owner_destroyed_checker is
+	owner_destroyed_checker
 			-- Action to be performed when `owner' is destroyed.
 		require
 			has_owner: has_owner
@@ -134,7 +134,7 @@ feature{NONE} -- Actions
 			current_hidden: owner.is_owner_destroyed implies not is_displayed
 		end
 
-	on_pointer_motion (a_widget: EV_WIDGET; x, y: INTEGER) is
+	on_pointer_motion (a_widget: EV_WIDGET; x, y: INTEGER)
 			-- Action to be performed when pointer moves
 		do
 			if has_recursive (a_widget) then
@@ -146,7 +146,7 @@ feature{NONE} -- Actions
 
 feature{NONE} -- Measure
 
-	actual_tooltip_window_width: INTEGER is
+	actual_tooltip_window_width: INTEGER
 			-- Actual width in pixel of tooltip window
 		local
 			l_required_width: INTEGER
@@ -163,7 +163,7 @@ feature{NONE} -- Measure
 			result_non_negative: Result >= 0
 		end
 
-	actual_tooltip_window_height: INTEGER is
+	actual_tooltip_window_height: INTEGER
 			-- Actual height in pixel of tooltip window
 		local
 			l_required_height,
@@ -180,7 +180,7 @@ feature{NONE} -- Measure
 			result_non_negative: Result >= 0
 		end
 
-	tooltip_left_top_position (pointer_x, pointer_y: INTEGER): EV_COORDINATE is
+	tooltip_left_top_position (pointer_x, pointer_y: INTEGER): EV_COORDINATE
 			-- Coordinate of left-top position of current tooltip window
 			-- relative to pointer position (pointer_x, pointer_y)
 			-- Returned value guarantees that whole tooltip is visiable in screen.
@@ -217,13 +217,13 @@ feature -- Owner
 
 feature{NONE} -- Implementation
 
-	is_in_default_state: BOOLEAN is
+	is_in_default_state: BOOLEAN
 			-- Redefined to True since we are changing the default state by redefining `initialize'.
 		do
 			Result := True
 		end
 
-	timer: EV_TIMEOUT is
+	timer: EV_TIMEOUT
 			-- Timer used to simulate tooltip delay time
 		do
 			if timer_internal = Void then
@@ -241,10 +241,10 @@ feature{NONE} -- Implementation
 	pointer_motion_agent_internal: like pointer_motion_agent
 			-- Internal `pointer_motion_agent'
 
-	owner_destroy_checking_internal: INTEGER is 100
+	owner_destroy_checking_internal: INTEGER = 100
 			-- Time interval (in milliseconds) to check if `owner' is destroyed
 
-	pointer_motion_agent: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER]] is
+	pointer_motion_agent: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER]]
 			-- Wrapper of `on_pointer_motion'
 		do
 			if pointer_motion_agent_internal = Void then
@@ -255,7 +255,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

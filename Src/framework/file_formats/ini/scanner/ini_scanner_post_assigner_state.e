@@ -1,4 +1,4 @@
-indexing
+note
 	description: "State scanner state when scanner passed a property assigner '='."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic Operations
 
-	scan (a_line: STRING; a_index: INTEGER) is
+	scan (a_line: STRING; a_index: INTEGER)
 			-- Scans `a_line' for token information and set `token' with any located
 			-- token information. `next_state' will also be set to indicate what state
 			-- should be processed next.
@@ -22,7 +22,7 @@ feature -- Basic Operations
 			next_state := state_pool.state ({INI_SCANNER_INITIAL_STATE})
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

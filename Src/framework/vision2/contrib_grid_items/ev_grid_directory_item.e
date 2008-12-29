@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a directory grid item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			Precursor
@@ -38,14 +38,14 @@ feature -- Status
 
 feature -- Change
 
-	set_start_directory (v: like start_directory) is
+	set_start_directory (v: like start_directory)
 		do
 			start_directory := v.twin
 		end
 
 feature {NONE} -- Agents
 
-	show_dialog is
+	show_dialog
 			-- Show text editor.
 		require
 			parented: is_parented
@@ -93,7 +93,7 @@ feature {NONE} -- Agents
 			is_dialog_open := False
 		end
 
-	dialog_ok (a_dial: EV_DIRECTORY_DIALOG) is
+	dialog_ok (a_dial: EV_DIRECTORY_DIALOG)
 			-- If dialog is closed with ok.
 		do
 			if text_field /= Void then
@@ -103,7 +103,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

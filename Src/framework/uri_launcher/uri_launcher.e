@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The interface used to launch URIs in the platform's default browser.
 	]"
@@ -48,7 +48,7 @@ feature {NONE} -- Factory
 			create {URI_LAUNCHER_IMP} Result
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

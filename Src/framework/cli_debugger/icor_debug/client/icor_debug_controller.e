@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		]"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature {ICOR_EXPORTER} -- Access
 
-	stop (a_timeout: INTEGER) is
+	stop (a_timeout: INTEGER)
 			-- Stop performs a cooperative stop on all threads running managed
 			-- code in the process.  Threads running unmanaged code are
 			-- suspended .  If the cooperative stop fails due to a deadlock, all
@@ -38,7 +38,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_stop (item, a_timeout)
 		end
 
-	continue (a_f_is_out_of_band: BOOLEAN) is
+	continue (a_f_is_out_of_band: BOOLEAN)
 			-- NOTA: what about is_out_of_band ... processing ?
 		local
 			retried: BOOLEAN
@@ -60,7 +60,7 @@ feature {ICOR_EXPORTER} -- Access
 			retry
 		end
 
-	is_running: BOOLEAN is
+	is_running: BOOLEAN
 		local
 			l_result: INTEGER
 		do
@@ -70,7 +70,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	has_queued_callbacks (a_icd_th: ICOR_DEBUG_THREAD): BOOLEAN is
+	has_queued_callbacks (a_icd_th: ICOR_DEBUG_THREAD): BOOLEAN
 			-- HasQueuedCallbacks returns TRUE if there are currently managed
 			-- callbacks which are queued up for the given thread.  These
 			-- callbacks will be dispatched one at a time, each time Continue
@@ -93,7 +93,7 @@ feature {ICOR_EXPORTER} -- Access
 			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
 		end
 
-	enumerate_threads: ICOR_DEBUG_THREAD_ENUM is
+	enumerate_threads: ICOR_DEBUG_THREAD_ENUM
 		local
 			l_p: POINTER
 		do
@@ -129,14 +129,14 @@ feature {ICOR_EXPORTER} -- Access
 --			last_call_success := cpp_set_all_threads_debug_state (item, a_state, p_except_th)
 --		end
 
-	detach is
+	detach
 		do
 			last_call_success := cpp_detach (item)
 		ensure
 			success: last_call_success = 0
 		end
 
-	terminate (a_exitcode: INTEGER) is
+	terminate (a_exitcode: INTEGER)
 			-- Terminate terminates the process (with extreme prejudice, I might add).
 
 			-- NOTE: If the process or appdomain is stopped when Terminate is called,
@@ -148,7 +148,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_continue (obj: POINTER; a_f_is_out_of_band: INTEGER): INTEGER is
+	cpp_continue (obj: POINTER; a_f_is_out_of_band: INTEGER): INTEGER
 		external
 			"[
 				C++ ICorDebugController signature(BOOL): EIF_INTEGER
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 			"Continue"
 		end
 
-	cpp_detach (obj: POINTER): INTEGER is
+	cpp_detach (obj: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugController signature(): EIF_INTEGER
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			"Detach"
 		end
 
-	cpp_stop (obj: POINTER; a_timeout: INTEGER): INTEGER is
+	cpp_stop (obj: POINTER; a_timeout: INTEGER): INTEGER
 			-- Call `ICorDebugController->Stop'.
 		external
 			"[
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			"Stop"
 		end
 
-	cpp_is_running (obj: POINTER; a_is_running: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_is_running (obj: POINTER; a_is_running: TYPED_POINTER [INTEGER]): INTEGER
 			-- Call `ICorDebugController->IsRunning'.
 			-- IsRunning returns TRUE if the threads in the process are running freely
 		external
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 			"IsRunning"
 		end
 
-	cpp_has_queued_callbacks (obj: POINTER; a_icd_th_p: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_has_queued_callbacks (obj: POINTER; a_icd_th_p: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER
 			-- Call `ICorDebugController->HasQueuedCallbacks'.
 		external
 			"[
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			"HasQueuedCallbacks"
 		end
 
-	cpp_terminate (obj: POINTER; a_exitcode: INTEGER): INTEGER is
+	cpp_terminate (obj: POINTER; a_exitcode: INTEGER): INTEGER
 			-- Call `ICorDebugController->Terminate'.
 		external
 			"[
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 			"Terminate"
 		end
 
-	cpp_enumerate_threads (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_enumerate_threads (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugController signature(ICorDebugThreadEnum **): EIF_INTEGER
@@ -235,14 +235,14 @@ feature {NONE} -- Implementation
 
 feature {ICOR_EXPORTER} -- Query
 
-	frozen cpp_query_interface_ICorDebugController (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_query_interface_ICorDebugController (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"C++ inline use %"cli_debugger_utils.h%""
 		alias
 			"((ICorDebugController *) $obj)->QueryInterface (IID_ICorDebugController, (void **) $a_p)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

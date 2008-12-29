@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Type expression"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialize
 
-	initialize (t: like type) is
+	initialize (t: like type)
 			-- New instance of TYPE_EXPR_AS initialized with `t'.
 		require
 			t_not_void: t /= Void
@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			--
 		do
 			v.process_type_expr_as (Current)
@@ -41,19 +41,19 @@ feature -- Visitor
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := type.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := type.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to `Current'?
 		do
 			Result := equivalent (type, other.type)
@@ -62,7 +62,7 @@ feature -- Comparison
 invariant
 	type_not_void: type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

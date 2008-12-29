@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents all features with clients in an export clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create{ERT_PARENT_AS_MERGE_MODIFIER}
 
 feature{NONE} -- Implementation
 
-	make (export_clause: EIFFEL_LIST [EXPORT_ITEM_AS]; final_name_table: HASH_TABLE[STRING, STRING]; a_list: LEAF_AS_LIST) is
+	make (export_clause: EIFFEL_LIST [EXPORT_ITEM_AS]; final_name_table: HASH_TABLE[STRING, STRING]; a_list: LEAF_AS_LIST)
 			-- Initialize.
 		require
 			export_clause_not_void: export_clause /= Void
@@ -68,7 +68,7 @@ feature{NONE} -- Implementation
 
 feature
 
-	merge (other: like Current) is
+	merge (other: like Current)
 			-- Merge `other' into current.
 		require
 			other_not_void: other /= Void
@@ -105,7 +105,7 @@ feature
 			features.merge_right (l_temp_list)
 		end
 
-	export_items: LIST [ERT_EXPORT_ITEM_LIST] is
+	export_items: LIST [ERT_EXPORT_ITEM_LIST]
 			-- A list of feature name list which are exported to the same client set
 			-- Every item in list represents a client set and all features exported to that set.
 		local
@@ -156,7 +156,7 @@ feature -- Access
 
 feature -- Implementation
 
-	client_set (a_export_item: EXPORT_ITEM_AS): ERT_CLIENT_SET is
+	client_set (a_export_item: EXPORT_ITEM_AS): ERT_CLIENT_SET
 			-- Client set of `a_export_item' AST node
 		require
 			a_export_itme_not_void: a_export_item /= Void
@@ -187,7 +187,7 @@ feature -- Implementation
 invariant
 	features_not_void: features /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

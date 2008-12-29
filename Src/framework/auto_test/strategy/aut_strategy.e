@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_a_system: like system; an_interpreter: like interpreter) is
+	make (a_a_system: like system; an_interpreter: like interpreter)
 			-- Create new strategy.
 		require
 			a_a_system_not_void: a_a_system /= Void
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	has_next_step: BOOLEAN is
+	has_next_step: BOOLEAN
 			-- Is there a next step to execute?
 		deferred
 		end
@@ -48,20 +48,20 @@ feature -- Access
 
 feature -- Execution
 
-	start is
+	start
 		do
 			if not interpreter.is_running then
 				interpreter.start
 			end
 		end
 
-	cancel is
+	cancel
 		do
 		end
 
 feature{NONE} -- Implementation
 
-	assign_void is
+	assign_void
 			-- Assign void to the next free variable.
 		local
 			void_constant: ITP_CONSTANT

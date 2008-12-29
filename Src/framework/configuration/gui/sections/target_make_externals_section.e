@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,13 +16,13 @@ create
 
 feature -- Access
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the section.
 		once
 			Result := conf_interface_names.external_make_tree
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon of the section.
 		once
 			Result := conf_pixmaps.project_settings_make_file_icon
@@ -30,7 +30,7 @@ feature -- Access
 
 feature -- Element update
 
-	add_external is
+	add_external
 			-- Add a new external.
 		local
 			l_external: CONF_EXTERNAL_MAKE
@@ -49,7 +49,7 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 			l_item.set_pixmap (conf_pixmaps.new_makefile_icon)
 		end
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toobar'.
 		do
 			toolbar.add_make_button.select_actions.wipe_out
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			toolbar.add_make_button.enable_sensitive
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

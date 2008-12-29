@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A service container that can be sited with a parent container to promote services to higher container.
 	]"
@@ -74,7 +74,7 @@ feature -- Query
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

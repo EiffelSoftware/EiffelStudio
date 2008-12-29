@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Set of test cases results"
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_list: like list) is
+	make (a_list: like list)
 			-- Create new set of test cases containing the test cases stored in `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			list_set: list = a_list
 		end
 
-	make_empty is
+	make_empty
 			-- Create new empty test case set.
 		do
 			create {DS_ARRAYED_LIST [AUT_TEST_CASE_RESULT]} list.make (0)
@@ -75,7 +75,7 @@ feature -- Access
 	pass_count: INTEGER
 			-- Number of test cases that passed
 
-	unique_fail_count: INTEGER is
+	unique_fail_count: INTEGER
 			-- Number of test cases that failed in a unique way
 		do
 			Result := unique_failure_list.count
@@ -84,7 +84,7 @@ feature -- Access
 
 feature {NONE} -- Status update
 
-	update_status is
+	update_status
 			-- Update the status attributes
 		local
 			cs: DS_LINEAR_CURSOR [AUT_TEST_CASE_RESULT]

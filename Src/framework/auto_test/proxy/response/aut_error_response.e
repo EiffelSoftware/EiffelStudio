@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	author: ""
 	date: "$Date$"
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_response_text: like raw_text) is
+	make (a_response_text: like raw_text)
 			-- Create new response.
 		require
 			a_response_text_not_void: a_response_text /= Void
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_bad: BOOLEAN is
+	is_bad: BOOLEAN
 			-- Is response not well formed syntacticly?
 		do
 			Result := False
@@ -40,7 +40,7 @@ feature -- Status report
 			definition: not Result
 		end
 
-	is_error: BOOLEAN is
+	is_error: BOOLEAN
 			-- Is response an error message?
 		do
 			Result := True
@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Process
 
-	process (a_visitor: AUT_RESPONSE_VISITOR) is
+	process (a_visitor: AUT_RESPONSE_VISITOR)
 			-- Process `Current' using `a_visitor'.
 		do
 			a_visitor.process_error_response (Current)

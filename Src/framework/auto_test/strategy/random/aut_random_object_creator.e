@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system; an_interpreter: like interpreter; a_type: like type; a_feature_table: like feature_table) is
+	make (a_system: like system; an_interpreter: like interpreter; a_type: like type; a_feature_table: like feature_table)
 			-- Create new feature caller.
 		require
 			a_system_not_void: a_system /= Void
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	has_next_step: BOOLEAN is
+	has_next_step: BOOLEAN
 			-- Is there a next step to execute?
 		do
 			Result := interpreter.is_running and interpreter.is_ready and not steps_completed
@@ -89,7 +89,7 @@ feature -- Access
 
 feature -- Change
 
-	set_creation_procedure (a_creation_procedure: like creation_procedure) is
+	set_creation_procedure (a_creation_procedure: like creation_procedure)
 				-- Set `creation_procedure' to `a_creation_procedure'.
 		require
 			a_creation_procedure_not_void: a_creation_procedure /= Void
@@ -101,7 +101,7 @@ feature -- Change
 
 feature -- Execution
 
-	start is
+	start
 		do
 			steps_completed := False
 			input_creator := Void
@@ -111,7 +111,7 @@ feature -- Execution
 			receiver_void: receiver = Void
 		end
 
-	step is
+	step
 		do
 			if type.is_expanded then
 				choose_expanded_receiver
@@ -138,7 +138,7 @@ feature -- Execution
 			end
 		end
 
-	cancel is
+	cancel
 		do
 			steps_completed := True
 		end
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Steps
 
-	create_input_creator is
+	create_input_creator
 			-- Create `input_creator'.
 		require
 			has_creation_procedure: creation_procedure /= Void
@@ -162,7 +162,7 @@ feature {NONE} -- Steps
 			input_creator.start
 		end
 
-	choose_creation_procedure is
+	choose_creation_procedure
 			-- Choose a creation procedure (including default creation procedure)
 			-- of `type' and set `creation_procedure' to it. Note that
 			-- instead of choosing a creation procedure
@@ -187,7 +187,7 @@ feature {NONE} -- Steps
 			has_creation_procedure: creation_procedure /= Void
 		end
 
-	choose_expanded_receiver is
+	choose_expanded_receiver
 			-- Choose an expanded receiver, assign it to a new variable
 			-- and make variable available via `receiver'.
 		require
@@ -239,7 +239,7 @@ feature {NONE} -- Steps
 	last_constant: ITP_CONSTANT
 			-- Last chosen constant
 
-	choose_boolean_constant is
+	choose_boolean_constant
 			-- Choose boolean constant and set it to
 			-- `last_constant'.
 		local
@@ -256,7 +256,7 @@ feature {NONE} -- Steps
 			last_constant_not_void: last_constant /= Void
 		end
 
-	choose_character_8_constant is
+	choose_character_8_constant
 			-- Choose CHARACTER_8 constant and set it to
 			-- `last_constant'.
 		local
@@ -269,7 +269,7 @@ feature {NONE} -- Steps
 			last_constant_not_void: last_constant /= Void
 		end
 
-	choose_character_32_constant is
+	choose_character_32_constant
 			-- Choose CHARACTER_32 constant and set it to
 			-- `last_constant'.
 		local
@@ -282,7 +282,7 @@ feature {NONE} -- Steps
 			last_constant_not_void: last_constant /= Void
 		end
 
-	choose_double_constant is
+	choose_double_constant
 			-- Choose double constant and set it to
 			-- `last_constant'.
 		local
@@ -320,7 +320,7 @@ feature {NONE} -- Steps
 			last_constant_not_void: last_constant /= Void
 		end
 
-	choose_integer_8_constant is
+	choose_integer_8_constant
 			-- Choose integer constant and set it to
 			-- `last_constant'.
 		local
@@ -369,7 +369,7 @@ feature {NONE} -- Steps
 			last_constant_not_void: last_constant /= Void
 		end
 
-	choose_integer_16_constant is
+	choose_integer_16_constant
 			-- Choose integer constant and set it to
 			-- `last_constant'.
 		local
@@ -418,7 +418,7 @@ feature {NONE} -- Steps
 			last_constant_not_void: last_constant /= Void
 		end
 
-	choose_integer_constant is
+	choose_integer_constant
 			-- Choose integer constant and set it to
 			-- `last_constant'.
 		local
@@ -485,7 +485,7 @@ feature {NONE} -- Steps
 			last_constant_not_void: last_constant /= Void
 		end
 
-	choose_integer_64_constant is
+	choose_integer_64_constant
 			-- Choose integer constant and set it to
 			-- `last_constant'.
 		local
@@ -534,7 +534,7 @@ feature {NONE} -- Steps
 			last_constant_not_void: last_constant /= Void
 		end
 
-	choose_natural_8_constant is
+	choose_natural_8_constant
 			-- Choose integer constant and set it to
 			-- `last_constant'.
 		local
@@ -583,7 +583,7 @@ feature {NONE} -- Steps
 			last_constant_not_void: last_constant /= Void
 		end
 
-	choose_natural_16_constant is
+	choose_natural_16_constant
 			-- Choose integer constant and set it to
 			-- `last_constant'.
 		local
@@ -633,7 +633,7 @@ feature {NONE} -- Steps
 		end
 
 
-	choose_natural_32_constant is
+	choose_natural_32_constant
 			-- Choose integer constant and set it to
 			-- `last_constant'.
 		local
@@ -682,7 +682,7 @@ feature {NONE} -- Steps
 			last_constant_not_void: last_constant /= Void
 		end
 
-	choose_natural_64_constant is
+	choose_natural_64_constant
 			-- Choose integer constant and set it to
 			-- `last_constant'.
 		local
@@ -731,7 +731,7 @@ feature {NONE} -- Steps
 			last_constant_not_void: last_constant /= Void
 		end
 
-	choose_pointer_constant is
+	choose_pointer_constant
 			-- Choose boolean constant and set it to
 			-- `last_constant'.
 		do
@@ -740,7 +740,7 @@ feature {NONE} -- Steps
 			last_constant_not_void: last_constant /= Void
 		end
 
-	choose_real_constant is
+	choose_real_constant
 			-- Choose boolean constant and set it to
 			-- `last_constant'.
 		local

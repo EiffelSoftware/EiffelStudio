@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Syntax error when a string extension is bad."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,7 +19,7 @@ create
 
 feature -- Property
 
-	syntax_message: STRING is
+	syntax_message: STRING
 			-- Specific syntax message.
         do
 			Result := "invalid character code after percent"
@@ -27,12 +27,12 @@ feature -- Property
 
 feature -- Visitor
 
-	process (a_visitor: ERROR_VISITOR) is
+	process (a_visitor: ERROR_VISITOR)
 		do
 			a_visitor.process_string_extension (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that are only for a certain platform/build combination."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Status report
 
-	is_enabled (a_state: CONF_STATE): BOOLEAN is
+	is_enabled (a_state: CONF_STATE): BOOLEAN
 			-- Is `Current' enabled for `a_state'?
 		require
 			a_state_not_void: a_state /= Void
@@ -33,7 +33,7 @@ feature -- Status report
 
 feature {CONF_ACCESS} -- Status update
 
-	add_condition (a_condition: CONF_CONDITION) is
+	add_condition (a_condition: CONF_CONDITION)
 			-- Add `a_condition'.
 		require
 			a_condition_not_void: a_condition /= Void
@@ -46,7 +46,7 @@ feature {CONF_ACCESS} -- Status update
 			condition_added: internal_conditions /= Void and then internal_conditions.has (a_condition)
 		end
 
-	set_conditions (a_conditions: like internal_conditions) is
+	set_conditions (a_conditions: like internal_conditions)
 			-- Set `internal_conditions' to `a_conditions'.
 		require
 			object_comparison: a_conditions /= Void implies a_conditions.object_comparison
@@ -68,7 +68,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 invariant
 	internal_conditions_not_empty: internal_conditions = Void or else not internal_conditions.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

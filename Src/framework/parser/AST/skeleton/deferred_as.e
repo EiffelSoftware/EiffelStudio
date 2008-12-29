@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of a deferred routine."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ create
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_deferred_as (Current)
@@ -35,7 +35,7 @@ feature -- Visitor
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := True
@@ -43,23 +43,23 @@ feature -- Comparison
 
 feature -- Properties
 
-	is_deferred: BOOLEAN is True
+	is_deferred: BOOLEAN = True
 			-- Is the current routine body a defferred one ?
 
-	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN
 			-- Has the current routine body an instruction `i'?
 		do
 			Result := False
 		end
 
-	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER
 			-- Index of `i' in this deferred feature.
 			-- Result is `0'.
 		do
 			Result := 0
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

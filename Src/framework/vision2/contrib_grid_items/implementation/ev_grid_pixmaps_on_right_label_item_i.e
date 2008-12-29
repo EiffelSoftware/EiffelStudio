@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		The Cell is similar to EV_GRID_LABEL_ITEM, except it has extra pixmaps on the right
 		See description of EV_GRID_LABEL_ITEM for more details
@@ -25,14 +25,14 @@ create
 
 feature {EV_GRID_LABEL_ITEM} -- Status Report
 
-	required_width: INTEGER is
+	required_width: INTEGER
 			-- Width in pixels required to fully display contents, based
 			-- on current settings.
 		do
 			Result := Precursor + pixmaps_on_right_width
 		end
 
-	pixmaps_on_right_width: INTEGER is
+	pixmaps_on_right_width: INTEGER
 		local
 			i: INTEGER
 			pixs: like pixmaps_on_right
@@ -54,7 +54,7 @@ feature {EV_GRID_LABEL_ITEM} -- Status Report
 			end
 		end
 
-	pixmaps_on_right_height: INTEGER is
+	pixmaps_on_right_height: INTEGER
 		local
 			i: INTEGER
 			pixs: like pixmaps_on_right
@@ -82,7 +82,7 @@ feature {EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM} -- Properties
 
 feature {EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM} -- change
 
-	set_pixmaps_on_right_count (c: INTEGER) is
+	set_pixmaps_on_right_count (c: INTEGER)
 		do
 			if pixmaps_on_right = Void then
 				create pixmaps_on_right.make (1, c)
@@ -91,7 +91,7 @@ feature {EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM} -- change
 			end
 		end
 
-	put_pixmap_on_right (p: EV_PIXMAP; i: INTEGER) is
+	put_pixmap_on_right (p: EV_PIXMAP; i: INTEGER)
 		require
 			pixmaps_on_right_not_void: pixmaps_on_right /= Void
 			valid_index: pixmaps_on_right.valid_index (i)
@@ -104,7 +104,7 @@ feature {EV_GRID_PIXMAPS_ON_RIGHT_LABEL_ITEM} -- change
 
 feature {EV_GRID_DRAWER_I} -- Implementation
 
-	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_PIXMAP) is
+	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_PIXMAP)
 			-- Redraw `Current'.
 		local
 			l_interface: like interface
@@ -287,7 +287,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	draw_pixmaps_on_right (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER; a_spacing: INTEGER) is
+	draw_pixmaps_on_right (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER; a_spacing: INTEGER)
 			-- Draw check box on `a_drawable'
 		local
 			l_start_x: INTEGER
@@ -319,7 +319,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

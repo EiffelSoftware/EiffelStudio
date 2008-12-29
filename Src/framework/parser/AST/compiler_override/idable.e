@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object identification used in server storage"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ feature
 	id: INTEGER
 			-- Object id
 
-	set_id (i: INTEGER) is
+	set_id (i: INTEGER)
 			-- Set `id' to `i'
 		do
 			id := i
@@ -20,7 +20,7 @@ feature
 			id_set: id = i
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

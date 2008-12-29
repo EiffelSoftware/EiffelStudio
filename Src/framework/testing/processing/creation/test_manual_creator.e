@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Implementation of {TEST_CREATOR_I} creating manual test classes.
 	]"
@@ -199,7 +199,7 @@ feature {NONE} -- Constants
 			Result := {TEST_CONSTANTS}.system_level_test_ancestor_name
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

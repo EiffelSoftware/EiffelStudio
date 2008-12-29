@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Bracket expression node."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (t: like target; o: like operands; l_as, r_as: like lbracket_symbol) is
+	make (t: like target; o: like operands; l_as, r_as: like lbracket_symbol)
 			-- Create bracket expression with target `t' and operands `o'.
 		require
 			t_not_void: t /= Void
@@ -61,7 +61,7 @@ feature -- Access
 
 feature -- Location
 
-	left_bracket_location: LOCATION_AS is
+	left_bracket_location: LOCATION_AS
 			-- Location of a left bracket
 		do
 			Result := operands.first.start_location
@@ -69,12 +69,12 @@ feature -- Location
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := target.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := operands.last_token (a_list)
@@ -85,7 +85,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (target, other.target) and then
@@ -94,7 +94,7 @@ feature -- Comparison
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- Process current element.
 		do
 			v.process_bracket_as (Current)
@@ -102,7 +102,7 @@ feature -- Visitor
 
 feature -- Setting
 
-	set_class_id (a_class_id: like class_id) is
+	set_class_id (a_class_id: like class_id)
 			-- Set `class_id' to `a_class_id'.
 		require
 			a_class_id_ok: a_class_id > 0 or a_class_id = -1
@@ -115,7 +115,7 @@ invariant
 	operands_not_void: operands /= Void
 	operands_not_empty: not operands.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

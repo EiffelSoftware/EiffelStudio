@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Encapsulation of ISymUnmanagedWriter COM interface to create PDB
 		files for CLI images.
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (emitter: MD_EMIT; name: UNI_STRING; full_build: BOOLEAN) is
+	make (emitter: MD_EMIT; name: UNI_STRING; full_build: BOOLEAN)
 			-- Create a new SymUnmanagedWriter object using `emitter' in a file `name'.
 		do
 				-- Initialize COM.
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Update
 
-	close is
+	close
 			-- Stop all processing on current.
 		require
 			not_is_closed: not is_closed
@@ -48,7 +48,7 @@ feature -- Update
 			is_closed: is_closed
 		end
 
-	close_method is
+	close_method
 			-- Close current method.
 		require
 			not_is_closed: not is_closed
@@ -58,7 +58,7 @@ feature -- Update
 			success: last_call_success = 0
 		end
 
-	open_method (a_meth_token: INTEGER) is
+	open_method (a_meth_token: INTEGER)
 			-- Open method `a_meth_token'.
 		require
 			not_is_closed: not is_closed
@@ -69,7 +69,7 @@ feature -- Update
 			success: last_call_success = 0
 		end
 
-	open_scope (start_offset: INTEGER) is
+	open_scope (start_offset: INTEGER)
 			-- Create a new scope for defining local variables.
 		require
 			valid_start_offset: start_offset >= 0
@@ -81,7 +81,7 @@ feature -- Update
 			success: last_call_success = 0
 		end
 
-	close_scope (end_offset: INTEGER) is
+	close_scope (end_offset: INTEGER)
 			-- Close most recently opened scope.
 		require
 			valid_end_offset: end_offset >= 0
@@ -93,7 +93,7 @@ feature -- Update
 		
 feature -- PE file data
 
-	debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER is
+	debug_info (a_dbg_directory: CLI_DEBUG_DIRECTORY): MANAGED_POINTER
 			-- Retrieve debug info required to be inserted in PE file.
 		require
 			not_is_closed: not is_closed
@@ -118,7 +118,7 @@ feature -- Status report
 
 feature -- Definition
 
-	define_document (url: UNI_STRING; language, vendor, doc_type: WEL_GUID): DBG_DOCUMENT_WRITER is
+	define_document (url: UNI_STRING; language, vendor, doc_type: WEL_GUID): DBG_DOCUMENT_WRITER
 			-- Create a new document writer needed to generated debug info.
 		require
 			not_is_closed: not is_closed
@@ -141,7 +141,7 @@ feature -- Definition
 
 	define_sequence_points (document: DBG_DOCUMENT_WRITER; count: INTEGER; offsets, start_lines,
 			start_columns, end_lines, end_columns: ARRAY [INTEGER])
-		is
+		
 			-- Set sequence points for `document'
 		require
 			not_is_closed: not is_closed
@@ -173,7 +173,7 @@ feature -- Definition
 			success: last_call_success = 0
 		end
 
-	define_local_variable (name: UNI_STRING; pos: INTEGER; signature: MD_TYPE_SIGNATURE) is
+	define_local_variable (name: UNI_STRING; pos: INTEGER; signature: MD_TYPE_SIGNATURE)
 			-- Define local variable `name' at position `pos' in current method using
 			-- `signature' of current method.
 		require
@@ -187,7 +187,7 @@ feature -- Definition
 			success: last_call_success = 0
 		end
 
-	define_parameter (name: UNI_STRING; pos: INTEGER) is
+	define_parameter (name: UNI_STRING; pos: INTEGER)
 			-- Define parameter `name' at position `pos' in current method.
 		require
 			name_not_void: name /= Void
@@ -200,7 +200,7 @@ feature -- Definition
 	
 feature -- Settings
 
-	set_user_entry_point (entry_point_token: INTEGER) is
+	set_user_entry_point (entry_point_token: INTEGER)
 			-- Set `entry_point_token' as entry point.
 		require
 			not_is_closed: not is_closed
@@ -215,7 +215,7 @@ feature -- Settings
 		
 feature {NONE} -- Implementation
 
-	c_new_sym_writer: POINTER is
+	c_new_sym_writer: POINTER
 			-- Create a new instance of ISymUnmanagedWriter implementation.
 		external
 			"C use %"cli_writer.h%""
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 			"new_sym_writer"
 		end
 
-	c_close (an_item: POINTER): INTEGER is
+	c_close (an_item: POINTER): INTEGER
 			-- Call `ISymUnmanagedWriter->Close'.
 		external
 			"C++ ISymUnmanagedWriter signature : EIF_INTEGER use %"cli_headers.h%""
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 			"Close"
 		end
 
-	c_close_method (an_item: POINTER): INTEGER is
+	c_close_method (an_item: POINTER): INTEGER
 			-- Call `ISymUnmanagedWriter->CloseMethod'.
 		external
 			"C++ ISymUnmanagedWriter signature : EIF_INTEGER use %"cli_headers.h%""
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 			"CloseMethod"
 		end
 
-	c_close_scope (an_item: POINTER; end_offset: INTEGER): INTEGER is
+	c_close_scope (an_item: POINTER; end_offset: INTEGER): INTEGER
 			-- Call `ISymUnmanagedWriter->CloseScope'.
 		external
 			"C++ ISymUnmanagedWriter signature (ULONG32): EIF_INTEGER use %"cli_headers.h%""
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 
 	c_debug_info (an_item: POINTER; debug_directory: POINTER; input_data_size: INTEGER;
 			output_data_size: POINTER; data: POINTER): INTEGER
-		is
+		
 			-- Call `ISymUnmanagedWriter->GetDebugInfo'.
 		external
 			"[
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 			
 	c_define_document (an_item: POINTER; name: POINTER;
 			lang_guid, lang_vendor, doc_type: POINTER; sym_writer: POINTER): INTEGER
-		is
+		
 			-- Call `ISymUnmanagedWriter->DefineDocument'.
 		external 
 			"[
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 	c_define_local_variable (an_item: POINTER; name: POINTER; attributes, signature_length: INTEGER;
 			signature: POINTER; Addresskind, local_pos, unused2, unused3,
 			start_offset, end_offset: INTEGER): INTEGER
-		is
+		
 			-- Call `ISymUnmanagedWriter->DefineLocalVariable'.
 		external
 			"[
@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 
 	c_define_parameter (an_item: POINTER; name: POINTER; attributes, param_pos: INTEGER;
 			Addresskind, unused1, unused2, unused3: INTEGER): INTEGER
-		is
+		
 			-- Call `ISymUnmanagedWriter->DefineParameter'.
 		external
 			"[
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 
 	c_define_sequence_points (an_item: POINTER; document: POINTER; count: INTEGER;
 			offsets, lines, columns, end_lines, end_columns: POINTER): INTEGER
-		is
+		
 			-- Call `ISymUnmanagedWriter->DefineSequencePoints'.
 		external
 			"[
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 
 	c_initialize (an_item: POINTER; md_emitter: POINTER; filename: POINTER; stream: POINTER;
 			full_build: BOOLEAN): INTEGER
-		is
+		
 				-- Call `ISymUnmanagedWriter->Initialize'.
 		external
 			"[
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 			"Initialize"
 		end
 
-	c_open_method (an_item: POINTER; method_token: INTEGER): INTEGER is
+	c_open_method (an_item: POINTER; method_token: INTEGER): INTEGER
 				-- Call `ISymUnmanagedWriter->OpenMethod'.
 		external
 			"C++ ISymUnmanagedWriter signature (mdMethodDef): EIF_INTEGER use %"cli_headers.h%""
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation
 		end
 
 	c_open_scope (an_item: POINTER; start_offset: INTEGER; scope_id: POINTER): INTEGER
-		is
+		
 				-- Call `ISymUnmanagedWriter->OpenScope'.
 		external
 			"[
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 		end
 
 	c_set_user_entry_point (an_item: POINTER; token: INTEGER): INTEGER
-		is
+		
 				-- Call `ISymUnmanagedWriter->SetUserEntryPoint'.
 		external
 			"[
@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 			"SetUserEntryPoint"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

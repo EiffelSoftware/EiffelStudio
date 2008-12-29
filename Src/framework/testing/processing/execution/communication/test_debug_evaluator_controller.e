@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Controller for evaluators running in the debugger.
 	]"
@@ -59,7 +59,7 @@ feature -- Status setting
 			end
 		end
 
-	launch_evaluator (a_args: !LIST [!STRING]) is
+	launch_evaluator (a_args: !LIST [!STRING])
 			-- <Precursor>
 		local
 			l_param: !DEBUGGER_EXECUTION_PARAMETERS

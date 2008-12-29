@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 			"Abstract description of a nested call `target.message' where %
 			%the target is a parenthesized expression. Version for Bench."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (t: like target; m: like message; d_as, l_as, r_as: like dot_symbol) is
+	initialize (t: like target; m: like message; d_as, l_as, r_as: like dot_symbol)
 			-- Create a new NESTED CALL AST node.
 		require
 			t_not_void: t /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_nested_expr_as (Current)
@@ -74,7 +74,7 @@ feature -- Roundtrip
 			end
 		end
 
-	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	lparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "(" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -87,7 +87,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	rparan_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol ")" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -102,13 +102,13 @@ feature -- Roundtrip
 
 feature -- Status report
 
-	has_lparan: BOOLEAN is
+	has_lparan: BOOLEAN
 			-- Does current have `('?
 		do
 			Result := lparan_symbol_index /= 0
 		end
 
-	has_rparan: BOOLEAN is
+	has_rparan: BOOLEAN
 			-- Does current have `('?
 		do
 			Result := rparan_symbol_index /= 0
@@ -124,7 +124,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and lparan_symbol_index /= 0 then
 				Result := lparan_symbol (a_list)
@@ -134,14 +134,14 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := message.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (message, other.message) and
@@ -152,7 +152,7 @@ invariant
 	message_not_void: message /= Void
 	target_not_void: target /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

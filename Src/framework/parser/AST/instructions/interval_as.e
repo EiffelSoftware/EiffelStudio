@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 			"Abstract node for alternative values of a multi-branch %
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (l: like lower; u: like upper; d_as: like dotdot_symbol) is
+	initialize (l: like lower; u: like upper; d_as: like dotdot_symbol)
 			-- Create a new INTERVAL AST node.
 		require
 			l_not_void: l /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_interval_as (Current)
@@ -59,12 +59,12 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := lower.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if upper /= Void then
 				Result := upper.last_token (a_list)
@@ -75,7 +75,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (lower, other.lower) and
@@ -84,7 +84,7 @@ feature -- Comparison
 
 feature {INTERVAL_AS} -- Replication
 
-	set_lower (l: like lower) is
+	set_lower (l: like lower)
 			-- Set `lower' to `l'.
 		require
 			l_not_void: l /= Void
@@ -92,7 +92,7 @@ feature {INTERVAL_AS} -- Replication
 			lower := l
 		end
 
-	set_upper (u: like upper) is
+	set_upper (u: like upper)
 			-- Set `upper' to `u'.
 		do
 			upper := u
@@ -101,7 +101,7 @@ feature {INTERVAL_AS} -- Replication
 invariant
 	lower_not_void: lower /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

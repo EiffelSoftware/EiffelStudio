@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Information about current .NET environment"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_version: STRING) is
+	make (a_version: STRING)
 			-- Create an instance of IL_ENVIRONMENT targeting a specific .NET version `a_version'.
 			-- If `a_version' is not specified we currently take `default_version'.
 			-- Set `version' with `a_version'.
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			version_set: version /= Void and (a_version /= Void implies version = a_version)
 		end
 
-	default_create is
+	default_create
 			-- Create an instance of IL_ENVIRONMENT targetting `default_version' of .NET runtime.
 		do
 			version := default_version
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	register_environment_variable is
+	register_environment_variable
 			-- If runtime is found, we set the ISE_DOTNET_FRAMEWORK environement variable.
 		local
 			l_exec: EXECUTION_ENVIRONMENT
@@ -57,7 +57,7 @@ feature -- Initialization
 
 feature -- Access
 
-	default_version: STRING is
+	default_version: STRING
 			-- Default runtime version if `version' was not specified.
 			-- Semantic is to take `v1_0' if present, `v1_1' otherwise.
 		do
@@ -66,25 +66,25 @@ feature -- Access
 			default_version_not_void: Result /= Void
 		end
 
-	dotnet_framework_path: STRING is
+	dotnet_framework_path: STRING
 			-- Path to .NET Framework of version `version'.
 		require
 			is_dotnet_installed: is_dotnet_installed
 		do
 		end
 
-	dotnet_framework_sdk_bin_path: STRING is
+	dotnet_framework_sdk_bin_path: STRING
 			-- Path to bin directory of .NET Framework SDK of version `version'.
 		do
 		end
 
-	dotnet_framework_sdk_path: STRING is
+	dotnet_framework_sdk_path: STRING
 			-- Path to .NET Framework SDK directory of version `version'.
 			-- Void if not installed.
 		do
 		end
 
-	installed_runtimes: DS_ARRAYED_LIST [STRING] is
+	installed_runtimes: DS_ARRAYED_LIST [STRING]
 			-- List all installed version of the runtime.
 		do
 			create {DS_ARRAYED_LIST [STRING]} Result.make (1)
@@ -92,12 +92,12 @@ feature -- Access
 			installed_runtimes_not_void: Result /= Void
 		end
 
-	is_dotnet_installed: BOOLEAN is
+	is_dotnet_installed: BOOLEAN
 			-- Is dotnet version `version' installed?
 		do
 		end
 
-	ise_dotnet_framework_env: STRING is "ISE_DOTNET_FRAMEWORK"
+	ise_dotnet_framework_env: STRING = "ISE_DOTNET_FRAMEWORK"
 		-- .NET framework environment variable
 
 	version: STRING
@@ -105,21 +105,21 @@ feature -- Access
 
 feature -- Query
 
-	use_cordbg (a_string: STRING): BOOLEAN is
+	use_cordbg (a_string: STRING): BOOLEAN
 			-- Should Current use cordbg.exe?
 		require
 			a_string_not_void: a_string /= Void
 		do
 		end
 
-	use_dbgclr (a_string: STRING): BOOLEAN is
+	use_dbgclr (a_string: STRING): BOOLEAN
 			-- Should Current use DbgCLR.exe?
 		require
 			a_string_not_void: a_string /= Void
 		do
 		end
 
-	Dotnet_debugger_path (a_debug: STRING): STRING is
+	Dotnet_debugger_path (a_debug: STRING): STRING
 			-- The path to the .NET debugger associated with 'a_debug'.
 		require
 			a_debug_not_void: a_debug /= Void
@@ -129,7 +129,7 @@ feature -- Query
 invariant
 	version_not_void: version /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

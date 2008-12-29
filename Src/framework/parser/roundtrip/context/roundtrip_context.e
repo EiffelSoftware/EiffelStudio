@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that stores formatted Eiffel code"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,7 +8,7 @@ deferred class
 
 feature	-- Operation
 
-	add_string (s: STRING) is
+	add_string (s: STRING)
 			-- Add `s' into this context.
 		require
 			s_not_void: s /= Void
@@ -17,7 +17,7 @@ feature	-- Operation
 			count_set: count = old count + s.count
 		end
 
-	clear is
+	clear
 		-- Clear this context.
 		deferred
 		ensure
@@ -25,19 +25,19 @@ feature	-- Operation
 			string_representation_is_empty: string_representation.is_empty
 		end
 
-	string_representation: STRING is
+	string_representation: STRING
 			-- String representation of this context
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of characters in current context.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

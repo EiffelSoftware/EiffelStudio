@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract description of a debug clause. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (k: like internal_keys; c: like compound; d_as, e: like end_keyword) is
+	initialize (k: like internal_keys; c: like compound; d_as, e: like end_keyword)
 			-- Create a new DEBUG AST node.
 		require
 			e_not_void: e /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_debug_as (Current)
@@ -64,7 +64,7 @@ feature -- Attributes
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound to debug
 
-	keys: EIFFEL_LIST [STRING_AS] is
+	keys: EIFFEL_LIST [STRING_AS]
 			-- Debug keys
 		local
 			l_internal_keys: like internal_keys
@@ -88,7 +88,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				if keys /= Void then
@@ -103,14 +103,14 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := end_keyword.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (compound, other.compound) and then
@@ -122,7 +122,7 @@ invariant
 	keys_correct: (internal_keys /= Void implies keys = internal_keys.meaningful_content) and
 				  (internal_keys = Void implies keys = Void)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

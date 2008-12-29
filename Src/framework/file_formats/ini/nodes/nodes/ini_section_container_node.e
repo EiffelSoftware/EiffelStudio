@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base implementation for all AS nodes that can contain property AS nodes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize container
 		do
 			create mutable_sections.make (1)
@@ -18,7 +18,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	sections: LIST [INI_SECTION_NODE] is
+	sections: LIST [INI_SECTION_NODE]
 			-- List of sections contained within current container
 		do
 			Result := mutable_sections
@@ -28,7 +28,7 @@ feature -- Access
 
 feature -- Extension
 
-	extend_section (a_section: INI_SECTION_NODE) is
+	extend_section (a_section: INI_SECTION_NODE)
 			-- Extends container with section `a_section'.
 		require
 			a_section_attached: a_section /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 invariant
 	mutable_sections_attached: mutable_sections /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

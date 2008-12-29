@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a list of features that are exported to the same client set"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature{NONE} -- Implementation
 
-	make (a_clients: like clients) is
+	make (a_clients: like clients)
 			-- Initialize.
 		require
 			a_clients_not_void: a_clients /= Void
@@ -37,7 +37,7 @@ invariant
 	feature_name_list_not_void: feature_name_list /= Void
 	clients_not_void: clients /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Description of variant loop. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature -- Initialization
 
-	make (t: like tag; e: like expr; v_as: like variant_keyword; c_as: like colon_symbol) is
+	make (t: like tag; e: like expr; v_as: like variant_keyword; c_as: like colon_symbol)
 			-- Create new VARIANT AST node.
 		do
 			initialize (t, e, c_as)
@@ -49,7 +49,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and variant_keyword_index /= 0 then
 				Result := variant_keyword (a_list)
@@ -62,13 +62,13 @@ feature -- Roundtrip/Token
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_variant_as (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

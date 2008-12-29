@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that filter out incomplete tagged assertions from a given tagged list"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Filter
 
-	filter_tagged_list (a_list: EIFFEL_LIST [TAGGED_AS]): EIFFEL_LIST [TAGGED_AS] is
+	filter_tagged_list (a_list: EIFFEL_LIST [TAGGED_AS]): EIFFEL_LIST [TAGGED_AS]
 			-- Filter out all incomplete tagged assertions (in form of "tag:")
 			-- from `a_list', and return a list that only contains complete tagged assertions.
 		local
@@ -52,7 +52,7 @@ feature -- Filter
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

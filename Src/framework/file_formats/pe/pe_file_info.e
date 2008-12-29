@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A PE file header examiner to check the type if PE files.
 	]"
@@ -12,7 +12,7 @@ class
 
 feature -- Initialization
 
-	is_com2_pe_file (a_file_name: STRING): BOOLEAN is
+	is_com2_pe_file (a_file_name: STRING): BOOLEAN
 			-- Determines if `a_file_name' is a COM2 (.NET) PE file.
 		require
 			a_file_name_attached: a_file_name /= Void
@@ -69,13 +69,13 @@ feature -- Initialization
 
 feature {NONE} -- Constants
 
-	optional_32_bit_header_size: NATURAL_16 is 0xE0;
+	optional_32_bit_header_size: NATURAL_16 = 0xE0;
 			-- Size of 32bit optional header
 
-	optional_64_bit_header_size: NATURAL_32 is 0xF0;
+	optional_64_bit_header_size: NATURAL_32 = 0xF0;
 			-- Size of 64bit optional header
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

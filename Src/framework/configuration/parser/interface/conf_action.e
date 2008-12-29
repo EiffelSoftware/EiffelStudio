@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Actions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_command: like command; a_must_succeed: like must_succeed; a_working_directory: like working_directory) is
+	make (a_command: like command; a_must_succeed: like must_succeed; a_working_directory: like working_directory)
 			-- Create with `a_command'.
 		require
 			a_command_ok: a_command /= Void and then not a_command.is_empty
@@ -46,7 +46,7 @@ feature -- Access, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	set_command (a_command: like command) is
+	set_command (a_command: like command)
 			-- Set `command' to `a_command'.
 		require
 			a_command_ok: a_command /= Void and then not a_command.is_empty
@@ -56,7 +56,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			command_set: command = a_command
 		end
 
-	set_working_directory (a_directory: like working_directory) is
+	set_working_directory (a_directory: like working_directory)
 			-- Set `working_directory' to `a_directory'.
 		do
 			working_directory := a_directory
@@ -64,7 +64,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			working_directory_set: working_directory = a_directory
 		end
 
-	set_must_succeed (a_succeed: like must_succeed) is
+	set_must_succeed (a_succeed: like must_succeed)
 			-- Set `must_succeed' to `a_succeed'.
 		do
 			must_succeed := a_succeed
@@ -72,7 +72,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			must_succeed_set: must_succeed = a_succeed
 		end
 
-	set_description (a_description: like description) is
+	set_description (a_description: like description)
 			-- Set `description' to `a_description'.
 		do
 			description := a_description
@@ -83,7 +83,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 invariant
 	command_ok: command /= Void and then not command.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

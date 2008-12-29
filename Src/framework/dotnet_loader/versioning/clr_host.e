@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object representing a CLR host. It should be a singleton for the entire system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 create {CLR_HOST_FACTORY}
 	make_by_pointer
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

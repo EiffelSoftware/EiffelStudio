@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A concrete error printer for displaying errors to the command line that follow the
 		Microsoft standard for error reporting.
@@ -40,7 +40,7 @@ create
 
 feature -- Basic Operations
 
-	print_error (a_err: ERROR_ERROR_INFO) is
+	print_error (a_err: ERROR_ERROR_INFO)
 			-- Prints `a_err'
 		do
 				-- print name
@@ -63,7 +63,7 @@ feature -- Basic Operations
 
 feature {NONE} -- Output
 
-	print_name (a_err: ERROR_ERROR_INFO) is
+	print_name (a_err: ERROR_ERROR_INFO)
 			-- Prints `a_err' name
 		require
 			a_err_attached: a_err /= Void
@@ -130,7 +130,7 @@ feature {NONE} -- Output
 			io.error.put_string (l_name)
 		end
 
-	print_level_code (a_err: ERROR_ERROR_INFO) is
+	print_level_code (a_err: ERROR_ERROR_INFO)
 			-- Prints `a_err' level and code
 		require
 			a_err_attached: a_err /= Void
@@ -142,10 +142,10 @@ feature {NONE} -- Output
 
 feature {NONE} -- Implementation
 
-	msg_separator: STRING is ":"
+	msg_separator: STRING = ":"
 			-- Message separator
 
-	app_name: STRING is
+	app_name: STRING
 			-- Application name
 		require
 			app_name_attached: (create {ARGUMENTS}).argument (0) /= Void
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

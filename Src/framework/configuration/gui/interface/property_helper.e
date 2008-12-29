@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Property helper"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Property builder
 
-	new_boolean_property (a_name: STRING_GENERAL; a_value: BOOLEAN): BOOLEAN_PROPERTY is
+	new_boolean_property (a_name: STRING_GENERAL; a_value: BOOLEAN): BOOLEAN_PROPERTY
 			-- Create new boolean property with translated strings.
 		require
 			a_name_not_void: a_name /= Void
@@ -27,7 +27,7 @@ feature -- Property builder
 
 feature {NONE} -- Implementation
 
-	displayed_boolean (a_value: BOOLEAN): STRING_32 is
+	displayed_boolean (a_value: BOOLEAN): STRING_32
 			-- Displayed boolean value
 		do
 			if a_value then
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	convert_boolean_value (a_string: STRING_32): BOOLEAN is
+	convert_boolean_value (a_string: STRING_32): BOOLEAN
 			-- Convert `a_string' to a boolean value.
 		require
 			a_string_not_void: a_string /= Void
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			Result := conf_interface_names.boolean_values.item (a_string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

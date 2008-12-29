@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Create COM_CACHE_MANAGER instances"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Initialization
 
-	new_emitter (runtime_version: STRING): COM_CACHE_MANAGER is
+	new_emitter (runtime_version: STRING): COM_CACHE_MANAGER
 			-- Create a new instance of COM_CACHE_MANAGER.
 		local
 			p: POINTER
@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature {NONE} -- Externals
 
-	c_new_cache_manager: POINTER is
+	c_new_cache_manager: POINTER
 			-- Creates new instance of EiffelSoftware_MetadataConsumer_ComCacheManager.
 		external
 			"C use %"cli_writer.h%""
@@ -45,7 +45,7 @@ feature {NONE} -- Externals
 			"new_cache_manager"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

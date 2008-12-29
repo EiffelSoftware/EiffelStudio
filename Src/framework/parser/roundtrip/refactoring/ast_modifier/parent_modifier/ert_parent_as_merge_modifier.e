@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					This class is used to merge text of two PARENT_AS objects.
 					Merging criteria:
@@ -34,7 +34,7 @@ create
 feature{NONE} -- Implementation
 
 	make (dest: like destination; dest_match_list: like destination_match_list;
-	      sour: like source; sour_match_list: like source_match_list) is
+	      sour: like source; sour_match_list: like source_match_list)
 			-- Initialize instance.
 			-- Text of `source' will be merged into text of `dest'.		
 		require
@@ -57,7 +57,7 @@ feature{NONE} -- Implementation
 
 feature -- Applicability
 
-	can_apply: BOOLEAN is
+	can_apply: BOOLEAN
 		do
 			compute_modification
 			check
@@ -66,7 +66,7 @@ feature -- Applicability
 			Result := last_computed_modifier.can_apply
 		end
 
-	apply is
+	apply
 		do
 			compute_modification
 			check
@@ -81,7 +81,7 @@ feature{NONE} -- Modification computation
 	last_computed_modifier: ERT_PARENT_AS_MODIFIER
 			-- Last computed modifier with all needed modifications registered
 
-	compute_modification is
+	compute_modification
 			-- Compute modifications needed to merge text of two PARENT_AS objects.
 		do
 			create last_computed_modifier.make (destination, destination_match_list)
@@ -94,7 +94,7 @@ feature{NONE} -- Modification computation
 			last_computed_modifier_set: last_computed_modifier /= Void
 		end
 
-	compute_export_modification is
+	compute_export_modification
 			-- Compute modifications needed two merge export clauses.
 		local
 			l_index: INTEGER
@@ -162,7 +162,7 @@ feature{NONE} -- Modification computation
 			end
 		end
 
-	compute_renaming_modification is
+	compute_renaming_modification
 			-- Compute modifications needed two merge rename clauses.
 		local
 			l_index: INTEGER
@@ -191,7 +191,7 @@ feature{NONE} -- Modification computation
 			end
 		end
 
-	compute_clauses_modification (a_clause: INTEGER) is
+	compute_clauses_modification (a_clause: INTEGER)
 			-- Compute modifications needed two merge undefine, redefine or select clauses.
 			-- Inherit clause to be merged is indicated by `a_clause'.
 		require
@@ -282,7 +282,7 @@ feature{NONE} -- Modification computation
 			end
 		end
 
-	destination_contain_renamming (rename_item: RENAME_AS): BOOLEAN is
+	destination_contain_renamming (rename_item: RENAME_AS): BOOLEAN
 			-- Does rename clause of `destination' already contain `rename_item'?
 		require
 			rename_item_not_void: rename_item /= Void
@@ -309,7 +309,7 @@ feature{NONE} -- Modification computation
 			end
 		end
 
-	new_exported_items: ARRAYED_LIST [STRING] is
+	new_exported_items: ARRAYED_LIST [STRING]
 			-- List of string represnets text of merged exported items
 		local
 			l_sour_feature_set: ERT_EXPORT_FEATURE_SET
@@ -366,7 +366,7 @@ feature{NONE} -- Modification computation
 			end
 		end
 
-	final_names: HASH_TABLE [STRING, STRING] is
+	final_names: HASH_TABLE [STRING, STRING]
 			-- Final names (renamed features) of all renamed features.
 		do
 			if internal_final_names = Void then
@@ -381,7 +381,7 @@ feature{NONE} -- Modification computation
 	internal_final_names: like final_names
 			-- Final names of all renamed features.
 
-	build_final_names (a_rename_clause: RENAME_CLAUSE_AS; a_name_table: like final_names) is
+	build_final_names (a_rename_clause: RENAME_CLAUSE_AS; a_name_table: like final_names)
 			-- Build a hash_tabel for renamed features.
 		require
 			a_name_table_not_void: a_name_table /= Void
@@ -430,7 +430,7 @@ invariant
 	source_match_list_not_void: source_match_list /= Void
 	destination_match_list_not_void: destination_match_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

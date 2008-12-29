@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate properties for options."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature -- Access
 
-	conf_factory: CONF_PARSE_FACTORY is
+	conf_factory: CONF_PARSE_FACTORY
 			-- Factory to create new nodes.
 		deferred
 		ensure
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Update
 
-	set_debugs (a_debugs: like debug_clauses) is
+	set_debugs (a_debugs: like debug_clauses)
 			-- Set `debug_clauses' to `a_debugs'.
 		require
 			a_debugs_not_void: a_debugs /= Void
@@ -54,14 +54,14 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	handle_value_changes (a_has_group_changed: BOOLEAN) is
+	handle_value_changes (a_has_group_changed: BOOLEAN)
 			-- Handle changed values (e.g. store changes to disk).
 			-- `a_has_group_changed' indicates that a value that makes the node not group_equivalent has changed.
 		do
 			-- default is to do nothing
 		end
 
-	add_misc_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN) is
+	add_misc_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN)
 			-- Add option properties which may come from `an_options' (defined on the node itself) itself or from `an_inherited_options' (final value after inheritance).
 		require
 			an_options_not_void: an_options /= Void
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 		end
 
-	add_assertion_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN) is
+	add_assertion_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN)
 			-- Add option properties which may come from `an_options' (defined on the node itself) itself or from `an_inherited_options' (final value after inheritance).
 		require
 			an_options_not_void: an_options /= Void
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 		end
 
-	add_warning_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN) is
+	add_warning_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN)
 			-- Add debug option properties which may come from `an_options' (defined on the node itself) itself or from `an_inherited_options' (final value after inheritance).
 		require
 			an_options_not_void: an_options /= Void
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 		end
 
-	add_debug_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN) is
+	add_debug_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN)
 			-- Add debug option properties which may come from `an_options' (defined on the node itself) itself or from `an_inherited_options' (final value after inheritance).
 		require
 			an_options_not_void: an_options /= Void
@@ -476,7 +476,7 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 		end
 
-	add_dotnet_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits, a_il_generation: BOOLEAN) is
+	add_dotnet_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits, a_il_generation: BOOLEAN)
 			-- Add .NET option properties which may come from `an_options' (defined on the node itself) itself or from `an_inherited_options' (final value after inheritance).
 		require
 			an_options_not_void: an_options /= Void
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 		end
 
-	update_assertion (an_option, a_inherited_option: CONF_OPTION; a_name: STRING_GENERAL; a_value: BOOLEAN) is
+	update_assertion (an_option, a_inherited_option: CONF_OPTION; a_name: STRING_GENERAL; a_value: BOOLEAN)
 			-- Update the assertion setting of `an_option' with `a_name' to `a_value'.
 		require
 			an_option_not_void: an_option /= Void
@@ -586,7 +586,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_inheritance_assertion (a_require, a_ensure, a_check, a_invariant, a_loop, a_sup_require: PROPERTY; a_overriden: BOOLEAN) is
+	update_inheritance_assertion (a_require, a_ensure, a_check, a_invariant, a_loop, a_sup_require: PROPERTY; a_overriden: BOOLEAN)
 			-- Update inheritance of `a_require', `a_ensure', `a_check', `a_invariant', `a_sup_require' and `a_loop' to `a_overriden'.
 		require
 			a_require_not_void: a_require /= Void
@@ -621,12 +621,12 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Refresh displayed data.
 
-	refresh is
+	refresh
 			-- Called if the displayed data should be regenerated from scratch.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

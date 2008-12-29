@@ -1,4 +1,4 @@
-indexing
+note
 	description: "The callbacks that react on the xml parsing."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -43,7 +43,7 @@ feature -- Status
 
 feature -- Callbacks
 
-	on_error (a_message: STRING) is
+	on_error (a_message: STRING)
 			-- Event producer detected an error.
 		do
 			is_invalid_xml := True
@@ -52,7 +52,7 @@ feature -- Callbacks
 
 feature -- Setting
 
-	set_internal_error is
+	set_internal_error
 			-- When an error occur during parsing which is not caught by our callback.
 		local
 			l_error: CONF_ERROR_PARSE
@@ -65,7 +65,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	check_uuid (a_value: STRING): BOOLEAN is
+	check_uuid (a_value: STRING): BOOLEAN
 			-- Check that `a_value' is a valid uuid.
 		require
 			a_value_not_void: a_value /= Void
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 			No_error_implies_Result: not is_error implies Result
 		end
 
-	check_version (a_value: STRING) is
+	check_version (a_value: STRING)
 			-- Check that `a_value' is the correct version.
 		do
 			if a_value = Void then
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_error (an_error: CONF_ERROR_PARSE) is
+	set_error (an_error: CONF_ERROR_PARSE)
 			-- Set `an_error'.
 		require
 			an_error_ok: an_error /= Void
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 			l_conf_exception.raise
 		end
 
-	set_warning (an_error: CONF_ERROR_PARSE) is
+	set_warning (an_error: CONF_ERROR_PARSE)
 			-- Set `an_error' as a warning.
 		require
 			an_error_ok: an_error /= Void
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 			last_warning.force (an_error)
 		end
 
-	set_parse_error_message (a_message: STRING) is
+	set_parse_error_message (a_message: STRING)
 			-- We have a parse error with a message.
 		local
 			l_error: CONF_ERROR_PARSE
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 			l_conf_exception.raise
 		end
 
-	set_parse_warning_message (a_message: STRING) is
+	set_parse_warning_message (a_message: STRING)
 			-- We have a parse warning with a message.
 		local
 			l_error: CONF_ERROR_PARSE
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 			last_warning.force (l_error)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

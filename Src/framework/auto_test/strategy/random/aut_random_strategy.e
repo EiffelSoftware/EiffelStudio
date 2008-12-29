@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -27,7 +27,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system; an_interpreter: like interpreter; an_error_handler: like error_handler) is
+	make (a_system: like system; an_interpreter: like interpreter; an_error_handler: like error_handler)
 			-- Create new strategy.
 		require
 			a_system_not_void: a_system /= Void
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	has_next_step: BOOLEAN is
+	has_next_step: BOOLEAN
 		do
 			Result := sub_task /= Void and then sub_task.has_next_step
 		end
@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Execution
 
-	start is
+	start
 		do
 			Precursor
 			assign_void
@@ -74,12 +74,12 @@ feature -- Execution
 			end
 		end
 
-	cancel is
+	cancel
 		do
 			sub_task := Void
 		end
 
-	step is
+	step
 		do
 			if interpreter.is_running and interpreter.is_ready then
 				sub_task.step
@@ -102,7 +102,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	select_new_sub_task is
+	select_new_sub_task
 			-- Select new task and make it available via `sub_task'.
 		require
 			positive_priority: queue.highest_dynamic_priority > 0
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 	sub_task: AUT_TASK
 			-- Current sub task
 
-	feature_table: HASH_TABLE [ARRAY [FEATURE_I], CLASS_C] is
+	feature_table: HASH_TABLE [ARRAY [FEATURE_I], CLASS_C]
 			-- Table to store features in a class (Used for cache)
 			-- [List of a feature in a class, class]
 		do

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of manifest array."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (exp: like expressions; l_as, r_as: like larray_symbol) is
+	initialize (exp: like expressions; l_as, r_as: like larray_symbol)
 			-- Create a new Manifest ARRAY AST node.
 		require
 			exp_not_void: exp /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_array_as (Current)
@@ -49,7 +49,7 @@ feature -- Roundtrip
 	larray_symbol_index, rarray_symbol_index: INTEGER
 			-- Index of symbol "<<" and ">>" associated with this structure
 
-	larray_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	larray_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol "<<" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -62,7 +62,7 @@ feature -- Roundtrip
 			end
 		end
 
-	rarray_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	rarray_symbol (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Symbol ">>" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -82,7 +82,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and larray_symbol_index /= 0 then
 				Result := larray_symbol (a_list)
@@ -91,7 +91,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and rarray_symbol_index /= 0 then
 				Result := rarray_symbol (a_list)
@@ -102,7 +102,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (expressions, other.expressions)
@@ -110,12 +110,12 @@ feature -- Comparison
 
 feature {AST_EIFFEL} -- Output
 
-	string_value: STRING is ""
+	string_value: STRING = ""
 
 invariant
 	expressions_not_void: expressions /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

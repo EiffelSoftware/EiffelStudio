@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a text grid item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			Precursor
@@ -49,43 +49,43 @@ feature -- Access
 
 feature -- Change
 
-	set_dialog_title (s: like dialog_title) is
+	set_dialog_title (s: like dialog_title)
 			-- Set `dialog_title' to `s'
 		do
 			dialog_title := s
 		end
 
-	set_ok_button_string (s: like ok_button_string) is
+	set_ok_button_string (s: like ok_button_string)
 			-- Set `ok_button_string' to `s'
 		do
 			ok_button_string := s
 		end
 
-	set_reset_button_string (s: like reset_button_string) is
+	set_reset_button_string (s: like reset_button_string)
 			-- Set `reset_button_string' to `s'
 		do
 			reset_button_string := s
 		end
 
-	set_cancel_button_string (s: like cancel_button_string) is
+	set_cancel_button_string (s: like cancel_button_string)
 			-- Set `cancel_button_string' to `s'
 		do
 			cancel_button_string := s
 		end
 
-	enable_multiline_string is
+	enable_multiline_string
 		do
 			is_multiline_string := True
 		end
 
-	disable_multiline_string is
+	disable_multiline_string
 		do
 			is_multiline_string := False
 		end
 
 feature {NONE} -- Agents
 
-	show_dialog is
+	show_dialog
 			-- Show text editor.
 		require
 			parented: is_parented
@@ -160,7 +160,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	dialog_ok (a_win: EV_WINDOW; a_txt: EV_TEXT) is
+	dialog_ok (a_win: EV_WINDOW; a_txt: EV_TEXT)
 			-- Valid button clicked
 		local
 			t32: STRING_32
@@ -178,7 +178,7 @@ feature {NONE} -- Agents
 			a_win.destroy
 		end
 
-	dialog_reset (a_win: EV_WINDOW; a_txt: EV_TEXT) is
+	dialog_reset (a_win: EV_WINDOW; a_txt: EV_TEXT)
 			-- Reset button clicked
 		local
 			t: STRING_GENERAL
@@ -190,13 +190,13 @@ feature {NONE} -- Agents
 			a_txt.set_text (t)
 		end
 
-	dialog_cancel (a_win: EV_WINDOW; a_txt: EV_TEXT) is
+	dialog_cancel (a_win: EV_WINDOW; a_txt: EV_TEXT)
 			-- Cancel button clicked
 		do
 			a_win.destroy
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

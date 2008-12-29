@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of an assigner call."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (t: like target; s: like source; a_as: like assignment_symbol) is
+	initialize (t: like target; s: like source; a_as: like assignment_symbol)
 			-- Create a new ASSIGNER CALL AST node.
 		require
 			t_not_void: t /= Void
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_assigner_call_as (Current)
@@ -53,19 +53,19 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := target.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := source.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (source, other.source) and then
@@ -74,7 +74,7 @@ feature -- Comparison
 
 feature -- Settings
 
-	set_source (s: like source) is
+	set_source (s: like source)
 			-- Set `source' with `s'.
 		require
 			s_not_void: s /= Void
@@ -88,7 +88,7 @@ invariant
 	target_not_void: target /= Void
 	source_not_void: source /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

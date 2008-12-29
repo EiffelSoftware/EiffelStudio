@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract representation of a cluster in AST for Lace"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 
 	initialize (cn: like cluster_name; pn: like parent_name;
 		dn: like directory_name; cp: like cluster_properties;
-		is_all, is_lib: BOOLEAN) is
+		is_all, is_lib: BOOLEAN)
 			-- Create a new CLUSTER AST node.
 		require
 			cn_not_void: cn /= Void
@@ -64,7 +64,7 @@ feature -- Properties
 
 feature -- Status
 
-	has_parent: BOOLEAN is
+	has_parent: BOOLEAN
 			-- Does Current have a parent cluster
 		do
 			Result := parent_name /= Void
@@ -73,7 +73,7 @@ feature -- Status
 			not_has_parent: not Result implies parent_name = Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

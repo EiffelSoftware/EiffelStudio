@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A dynamic API loader for accessing libraries and loaded library API functions and variables.
 		
@@ -108,7 +108,7 @@ feature {NONE} -- Factory
 			create {DYNAMIC_API_LOADER_IMP} Result
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

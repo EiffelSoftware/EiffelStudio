@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Access
 
-	clusters: like internal_clusters is
+	clusters: like internal_clusters
 			-- Clusters.
 		do
 			if internal_clusters /= Void and then has (internal_clusters) then
@@ -31,7 +31,7 @@ feature -- Access
 			end
 		end
 
-	overrides: like internal_overrides is
+	overrides: like internal_overrides
 			-- Overrides.
 		do
 			if internal_overrides /= Void and then has (internal_overrides) then
@@ -39,7 +39,7 @@ feature -- Access
 			end
 		end
 
-	assemblies: like internal_assemblies is
+	assemblies: like internal_assemblies
 			-- Assemblies.
 		do
 			if internal_assemblies /= Void and then has (internal_assemblies) then
@@ -47,7 +47,7 @@ feature -- Access
 			end
 		end
 
-	libraries: like internal_libraries is
+	libraries: like internal_libraries
 			-- Libraries.
 		do
 			if internal_libraries /= Void and then has (internal_libraries) then
@@ -55,7 +55,7 @@ feature -- Access
 			end
 		end
 
-	precompile: like internal_precompile is
+	precompile: like internal_precompile
 			-- Precompile.
 		do
 			if internal_precompile /= Void and then has (internal_precompile) then
@@ -63,13 +63,13 @@ feature -- Access
 			end
 		end
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the section.
 		once
 			Result := conf_interface_names.section_groups
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon of the section.
 		once
 			Result := conf_pixmaps.project_settings_groups_icon
@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Simple operation
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toobar'.
 		do
 			toolbar.add_cluster_button.select_actions.wipe_out
@@ -105,7 +105,7 @@ feature -- Simple operation
 
 feature -- Element update
 
-	add_cluster is
+	add_cluster
 			-- Add a new cluster.
 		do
 			if clusters = Void then
@@ -117,7 +117,7 @@ feature -- Element update
 			order_headers
 		end
 
-	add_override is
+	add_override
 			-- Add a new override.
 		do
 			if overrides = Void then
@@ -129,7 +129,7 @@ feature -- Element update
 			order_headers
 		end
 
-	add_assembly is
+	add_assembly
 			-- Add a new assembly.
 		do
 			if assemblies = Void then
@@ -141,7 +141,7 @@ feature -- Element update
 			order_headers
 		end
 
-	add_library is
+	add_library
 			-- Add a new library.
 		do
 			if libraries = Void then
@@ -153,7 +153,7 @@ feature -- Element update
 			order_headers
 		end
 
-	add_precompile is
+	add_precompile
 			-- Add a new precompile.
 		do
 			if precompile = Void then
@@ -165,7 +165,7 @@ feature -- Element update
 			order_headers
 		end
 
-	set_clusters (a_groups: HASH_TABLE [CONF_CLUSTER, STRING]) is
+	set_clusters (a_groups: HASH_TABLE [CONF_CLUSTER, STRING])
 			-- Set groups.
 		do
 			if a_groups /= Void and then not a_groups.is_empty then
@@ -177,7 +177,7 @@ feature -- Element update
 			end
 		end
 
-	set_overrides (a_groups: HASH_TABLE [CONF_OVERRIDE, STRING]) is
+	set_overrides (a_groups: HASH_TABLE [CONF_OVERRIDE, STRING])
 			-- Set overrides.
 		do
 			if a_groups /= Void and then not a_groups.is_empty then
@@ -189,7 +189,7 @@ feature -- Element update
 			end
 		end
 
-	set_assemblies (a_groups: HASH_TABLE [CONF_ASSEMBLY, STRING]) is
+	set_assemblies (a_groups: HASH_TABLE [CONF_ASSEMBLY, STRING])
 			-- Set assemblies.
 		do
 			if a_groups /= Void and then not a_groups.is_empty then
@@ -201,7 +201,7 @@ feature -- Element update
 			end
 		end
 
-	set_libraries (a_groups: HASH_TABLE [CONF_LIBRARY, STRING]) is
+	set_libraries (a_groups: HASH_TABLE [CONF_LIBRARY, STRING])
 			-- Set libraries.
 		do
 			if a_groups /= Void and then not a_groups.is_empty then
@@ -213,7 +213,7 @@ feature -- Element update
 			end
 		end
 
-	set_precompile (a_group: CONF_PRECOMPILE) is
+	set_precompile (a_group: CONF_PRECOMPILE)
 			-- Set precompile.
 		local
 			l_ht: HASH_TABLE [CONF_PRECOMPILE, STRING]
@@ -230,7 +230,7 @@ feature -- Element update
 			end
 		end
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
@@ -278,14 +278,14 @@ feature {NONE} -- Implementation
 	internal_precompile: TARGET_PRECOMPILES_SECTION
 			-- Precompile (Could still be present even if it removed from Current)
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to execute when the item is selected
 		do
 			create Result
 			Result.extend (agent configuration_window.show_empty_section (conf_interface_names.selection_tree_select_node))
 		end
 
-	order_headers is
+	order_headers
 			-- Order headers in correct order.
 		local
 			l_cl, l_ov, l_as, l_lib, l_pre: BOOLEAN
@@ -340,7 +340,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

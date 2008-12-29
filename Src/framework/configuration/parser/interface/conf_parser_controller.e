@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Control behavior of CONF_PARSE_VISITOR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Status
 
-	is_ignore_bad_libraries: BOOLEAN is
+	is_ignore_bad_libraries: BOOLEAN
 			-- Should bad libraries be ignored for all instances of Current?
 		do
 			Result := is_ignore_bad_libraries_cell.item
@@ -18,7 +18,7 @@ feature -- Status
 
 feature -- Update
 
-	set_is_ignore_bad_libraries (v: like is_ignore_bad_libraries) is
+	set_is_ignore_bad_libraries (v: like is_ignore_bad_libraries)
 			-- Set `is_ignore_bad_libraries' with `v' for all instances of Current.
 		do
 			is_ignore_bad_libraries_cell.put (v)
@@ -28,7 +28,7 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	is_ignore_bad_libraries_cell: CELL [BOOLEAN] is
+	is_ignore_bad_libraries_cell: CELL [BOOLEAN]
 			-- Storage for `is_ignore_bad_libraries' for all instances of Current.
 		once
 			create Result.put (False)
@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 			is_ignore_bad_libraries_cell_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Parses source line declaring line pragma"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	parse (a_pragma: STRING) is
+	parse (a_pragma: STRING)
 			-- Parse line pragma `a_pragma' and set queries accordingly.
 		require
 			attached_pragma: a_pragma /= Void
@@ -113,10 +113,10 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	Pragma_prefix: STRING is "--#line "
+	Pragma_prefix: STRING = "--#line "
 			-- Prefix to all line pragmas
 
-	is_pragma_definition: BOOLEAN is
+	is_pragma_definition: BOOLEAN
 			-- Definition for `is_pragam'.
 		do
 			Result := (is_default and not is_hidden and document = Void) or
@@ -129,7 +129,7 @@ invariant
 	info_iff_pragma: is_pragma = is_pragma_definition
 	no_info_if_not_pragma: not is_pragma implies ((is_default = False) and (is_hidden = False) and (document = Void))
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

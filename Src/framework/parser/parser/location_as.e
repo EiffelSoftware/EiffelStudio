@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Locations in Eiffel text files"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (l, c, p, n: INTEGER) is
+	make (l, c, p, n: INTEGER)
 			-- Initialize current with line `l', column `c' and count `n'.
 		require
 			l_non_negative: l >= 0
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			location_count_set: location_count = n
 		end
 
-	make_from_other (other: LOCATION_AS) is
+	make_from_other (other: LOCATION_AS)
 			-- Copy `other' data into Current
 		require
 			other_not_void: other /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			internal_count_set: internal_count = other.internal_count
 		end
 
-	make_null is
+	make_null
 			-- Initialize current with (0,0) as `line' and `column'.
 		do
 		ensure
@@ -53,13 +53,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	line: INTEGER is
+	line: INTEGER
 			-- Line number in file of Current
 		do
 			Result := (internal_location & line_mask).to_integer_32
 		end
 
-	column: INTEGER is
+	column: INTEGER
 			-- Column number in file of Current
 		do
 			Result := (internal_location |>> column_shift).to_integer_32
@@ -68,20 +68,20 @@ feature -- Access
 	position: INTEGER
 			-- Position in file of Current
 
-	final_position: INTEGER is
+	final_position: INTEGER
 			-- Ending position of Current in file
 		do
 			Result := position + internal_count.to_integer_32 - 1
 		end
 
-	final_column: INTEGER is
+	final_column: INTEGER
 			-- Column number plus count. Assume it is on one line.
 		do
 			Result := (internal_location |>> column_shift).to_integer_32 +
 				internal_count.to_integer_32
 		end
 
-	location_count: INTEGER is
+	location_count: INTEGER
 			-- Length of Current.
 		do
 			Result := internal_count.to_integer_32
@@ -89,7 +89,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_position (l, c, p, s: INTEGER) is
+	set_position (l, c, p, s: INTEGER)
 			-- Initialize current with line `l', column `c', position `p' and count `s'.
 		require
 			l_non_negative: l >= 0
@@ -124,30 +124,30 @@ feature -- Setting
 
 feature -- Access: Constants
 
-	no_line, no_column: INTEGER is 0
+	no_line, no_column: INTEGER = 0
 			-- Value for `line' or `column' when `is_null'
 
-	max_line: INTEGER is 0x007FFFFF
+	max_line: INTEGER = 0x007FFFFF
 			-- Maximum value for `line'
 
-	max_column: INTEGER is 0x000001FF
+	max_column: INTEGER = 0x000001FF
 			-- Maximum value for `column'
 
-	max_count: INTEGER is 0x0000FFFF
+	max_count: INTEGER = 0x0000FFFF
 			-- Maximum value for `location_count'
 
-	line_mask: NATURAL_32 is {NATURAL_32} 0x007FFFFF
+	line_mask: NATURAL_32 = {NATURAL_32} 0x007FFFFF
 			-- Mask to get line information
 
-	column_mask: NATURAL_32 is {NATURAL_32} 0xFF800000
+	column_mask: NATURAL_32 = {NATURAL_32} 0xFF800000
 			-- Mask to get column information
 
-	column_shift: INTEGER is 23
+	column_shift: INTEGER = 23
 			-- Number of shift to the left needed to get column information
 
 feature -- Status Report
 
-	is_null: BOOLEAN is
+	is_null: BOOLEAN
 			-- Does current represent a null location?
 		do
 			Result := internal_location = 0
@@ -163,7 +163,7 @@ feature {LOCATION_AS} -- Internal position
 	internal_count: NATURAL_16;
 			-- Space efficient encoding of `location_count'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

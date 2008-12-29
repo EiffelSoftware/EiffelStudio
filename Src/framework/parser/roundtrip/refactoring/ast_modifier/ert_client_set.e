@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents a set of class names used as client
 
@@ -29,7 +29,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make is
+	make
 		do
 			Precursor
 			compare_objects
@@ -37,7 +37,7 @@ feature{NONE} -- Initialization
 
 feature -- Element change
 
-	put (v: STRING) is
+	put (v: STRING)
 			-- Ensure that set includes `v'.
 		require else
 			v_not_void: v /= Void
@@ -46,7 +46,7 @@ feature -- Element change
 			Precursor (v.twin.as_upper)
 		end
 
-	extend (v: STRING) is
+	extend (v: STRING)
 			-- Ensure that set includes `v'.
 		require else
 			v_not_void: v /= Void
@@ -55,7 +55,7 @@ feature -- Element change
 			put (v)
 		end
 
-	merge_other (other: like Current) is
+	merge_other (other: like Current)
 			-- Merge `other' into current.
 		require
 			other_not_void: other /= Void
@@ -76,7 +76,7 @@ feature -- Element change
 
 feature -- Status reporting
 
-	is_included_by (other: like Current): BOOLEAN is
+	is_included_by (other: like Current): BOOLEAN
 			-- Is current included by `other'?
 		require
 			other_not_void: other /= Void
@@ -96,7 +96,7 @@ feature -- Status reporting
 			go_i_th (l_index)
 		end
 
-	is_true_included_by (other: like Current): BOOLEAN is
+	is_true_included_by (other: like Current): BOOLEAN
 			-- Is current truly included by `other'?
 		require
 			other_not_void: other /= Void
@@ -104,7 +104,7 @@ feature -- Status reporting
 			Result := is_included_by (other) and other.count > count
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

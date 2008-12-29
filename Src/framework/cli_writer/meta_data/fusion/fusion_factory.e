@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Create FUSION_XX instances."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Initialization
 
-	new_fusion_support: FUSION_SUPPORT is
+	new_fusion_support: FUSION_SUPPORT
 			-- Create a new instance of FUSION_SUPPORT.
 		local
 			p: POINTER
@@ -27,7 +27,7 @@ feature -- Initialization
 
 feature {NONE} -- Externals
 
-	c_new_fusion_support: POINTER is
+	c_new_fusion_support: POINTER
 			-- New instance of IFusionSupport
 		external
 			"C use %"cli_writer.h%""
@@ -35,7 +35,7 @@ feature {NONE} -- Externals
 			"new_fusion_support"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Node for `like Current' type. Version for Bench."
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (c_as: KEYWORD_AS; l_as: KEYWORD_AS) is
+	make (c_as: KEYWORD_AS; l_as: KEYWORD_AS)
 			-- Create new LIKE_CURRENT AST node.
 		require
 			c_as_not_void: c_as /= Void
@@ -35,7 +35,7 @@ feature{NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_like_cur_as (Current)
@@ -64,7 +64,7 @@ feature -- Roundtrip
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := has_attached_mark = other.has_attached_mark and then
@@ -73,7 +73,7 @@ feature -- Comparison
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -85,7 +85,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -110,7 +110,7 @@ feature -- Output
 invariant
 	current_keyword_not_void: current_keyword /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object test node."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (l: like lcurly_symbol; n: like name; t: like type; e: like expression) is
+	make (l: like lcurly_symbol; n: like name; t: like type; e: like expression)
 			-- Create new node with given attributes.
 		require
 			n_attached: n /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Creation
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_object_test_as (Current)
@@ -59,7 +59,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if lcurly_symbol /= Void then
 				Result := lcurly_symbol.first_token (a_list)
@@ -68,14 +68,14 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := expression.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (name, other.name) and then
@@ -83,7 +83,7 @@ feature -- Comparison
 				equivalent (expression, other.expression)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

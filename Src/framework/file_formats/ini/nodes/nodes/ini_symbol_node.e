@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents an INI symbol AS node."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,19 +16,19 @@ create
 
 feature -- Access
 
-	is_section_start_indicator: BOOLEAN is
+	is_section_start_indicator: BOOLEAN
 			-- Does symbol represent start of a section?
 		do
 			Result := text.item (1) = {INI_SCANNER_SYMBOLS}.section_start_indicator
 		end
 
-	is_section_end_indicator: BOOLEAN is
+	is_section_end_indicator: BOOLEAN
 			-- Does symbol represent end of a section?
 		do
 			Result := text.item (1) = {INI_SCANNER_SYMBOLS}.section_end_indicator
 		end
 
-	is_assigner_indicator: BOOLEAN is
+	is_assigner_indicator: BOOLEAN
 			-- Does symbol represent an assigment symbol?
 		do
 			Result := text.item (1) = {INI_SCANNER_SYMBOLS}.assigner_indicator
@@ -36,7 +36,7 @@ feature -- Access
 
 feature -- Visitation
 
-	visit (a_visitor: INI_NODE_VISITOR) is
+	visit (a_visitor: INI_NODE_VISITOR)
 			-- Visit current node using vistor `a_vistor'
 		do
 			a_visitor.process_symbol (Current)
@@ -45,7 +45,7 @@ feature -- Visitation
 invariant
 	text_count_is_one: text.count = 1
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

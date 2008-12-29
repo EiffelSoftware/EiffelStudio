@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A stub for symbol in `match_list'"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ create
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- Visitor feature.
 		do
 			v.process_symbol_stub_as (Current)
@@ -39,7 +39,7 @@ feature -- Visitor
 
 feature -- Text
 
-	literal_text (a_list: LEAF_AS_LIST): STRING is
+	literal_text (a_list: LEAF_AS_LIST): STRING
 			-- Literal text of this token
 		require else
 			True
@@ -84,7 +84,7 @@ feature -- Text
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

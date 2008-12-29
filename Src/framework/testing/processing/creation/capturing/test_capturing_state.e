@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that contain a capturing state.
 	]"

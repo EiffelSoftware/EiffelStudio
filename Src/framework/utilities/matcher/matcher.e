@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:	"Abstract notion of a pattern matcher."
 	legal: "See notice at end of class.";
@@ -10,7 +10,7 @@ deferred class MATCHER
 
 feature -- Creation
 
-	make (new_pattern, new_text: STRING) is
+	make (new_pattern, new_text: STRING)
 			-- Create a matcher to search pattern
 			-- `new_pattern' in text `new_text'.
 		require
@@ -26,7 +26,7 @@ feature -- Creation
 			text_is_new_text: text = new_text;
 		end;
 
-	make_empty is
+	make_empty
 			-- Create a matcher to search for a pattern
 			-- in a text. Initialize it later.
 		do
@@ -34,7 +34,7 @@ feature -- Creation
 
 feature -- Status setting
 
-	start_at (i: INTEGER) is
+	start_at (i: INTEGER)
 			-- Start search at position `i'.
 		require
 			i_large_enough: i >= 1;
@@ -45,7 +45,7 @@ feature -- Status setting
 			index_set: index = i
 		end;
 
-	set_pattern (new_pattern: STRING) is
+	set_pattern (new_pattern: STRING)
 			-- Change the pattern to `new_pattern'.
 		require
 			new_pattern_non_void: new_pattern /= Void;
@@ -54,7 +54,7 @@ feature -- Status setting
 			pattern_is_new_pattern: pattern = new_pattern
 		end;
 
-	set_text (new_text: STRING) is
+	set_text (new_text: STRING)
 			-- Change the text to `new_text'.
 			-- Next search will start at the beginning
 			-- of the text.
@@ -73,7 +73,7 @@ feature -- Status report
 	found: BOOLEAN
 			-- Is `pattern' found in `text' ?
 
-	found_at: INTEGER is
+	found_at: INTEGER
 			-- Position where `pattern' is found in
 			-- `text'
 		require
@@ -90,7 +90,7 @@ feature -- Status report
 
 feature -- Search
 
-	search_for_pattern: BOOLEAN is
+	search_for_pattern: BOOLEAN
 			-- Search in the text to find the very next
 			-- occurrence of `pattern'.
 		require
@@ -104,7 +104,7 @@ feature {NONE} -- Attributes
 	index: INTEGER;
 			-- Current location in `text'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"AST representation of an Eiffel function pointer."
 	legal: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: like feature_name; a_as: like address_symbol) is
+	initialize (f: like feature_name; a_as: like address_symbol)
 			-- Create a new ADDRESS AST node.
 		require
 			f_not_void: f /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_address_as (Current)
@@ -56,7 +56,7 @@ feature -- Attributes
 	feature_name: FEATURE_NAME
 			-- Feature name to address
 
-	is_qualified: BOOLEAN is
+	is_qualified: BOOLEAN
 			-- Is current entity a call on an other object?
 		do
 			Result := not (is_local or is_argument)
@@ -79,7 +79,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := feature_name.first_token (a_list)
@@ -88,14 +88,14 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := feature_name.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (feature_name, other.feature_name)
@@ -103,37 +103,37 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_class_id (a_class_id: like class_id) is
+	set_class_id (a_class_id: like class_id)
 			-- Set `class_id' to `a_class_id'.
 		do
 			class_id := a_class_id
 		end
 
-	set_argument_position (an_argument_position: like argument_position) is
+	set_argument_position (an_argument_position: like argument_position)
 			-- Set `argument_position' to `an_argument_position'.
 		do
 			argument_position := an_argument_position
 		end
 
-	enable_local is
+	enable_local
 			-- Set `is_local' to true.
 		do
 			is_local := True
 		end
 
-	enable_object_test_local is
+	enable_object_test_local
 			-- Set `is_object_test_local' to true.
 		do
 			is_object_test_local := True
 		end
 
-	enable_argument is
+	enable_argument
 			-- Set `is_argument' to true.
 		do
 			is_argument := True
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

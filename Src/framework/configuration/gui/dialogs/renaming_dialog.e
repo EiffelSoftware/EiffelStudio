@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to configure class renamings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialization
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -71,7 +71,7 @@ feature {NONE} -- Gui elements
 
 feature {NONE} -- Agents
 
-	on_show is
+	on_show
 			-- Called if the dialog is shown.
 		require
 			initialized: is_initialized
@@ -83,7 +83,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_add is
+	on_add
 			-- Called if we add a new renaming.
 		require
 			initialized: is_initialized
@@ -98,7 +98,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_remove is
+	on_remove
 			-- Called if we remove a renaminge.
 		require
 			initialized: is_initialized
@@ -117,7 +117,7 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	update_key (an_old_key, a_new_key: STRING_32) is
+	update_key (an_old_key, a_new_key: STRING_32)
 			-- Update `an_old_key' with `a_new_key'.
 		require
 			an_old_key_ok: value /= Void and then value.has (an_old_key)
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			refresh
 		end
 
-	update_value (a_key, a_new_value: STRING_32) is
+	update_value (a_key, a_new_value: STRING_32)
 			-- Update value of `a_key' to `a_new_value'
 		require
 			a_key_ok: value /= Void and then value.has (a_key)
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			refresh
 		end
 
-	refresh is
+	refresh
 			-- Refresh the displayed values.
 		require
 			initialized: is_initialized
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 invariant
 	elements: is_initialized implies grid /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

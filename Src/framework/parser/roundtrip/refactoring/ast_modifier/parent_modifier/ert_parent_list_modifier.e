@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object to merge text of parent list from two classes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (dest: CLASS_AS; dest_match_list: LEAF_AS_LIST; sour: CLASS_AS; sour_match_list: LEAF_AS_LIST) is
+	make (dest: CLASS_AS; dest_match_list: LEAF_AS_LIST; sour: CLASS_AS; sour_match_list: LEAF_AS_LIST)
 			-- Initialize.
 		require
 			dest_not_void: dest /= Void
@@ -38,7 +38,7 @@ feature{NONE} -- Initialization
 
 feature -- Applicability
 
-	can_apply: BOOLEAN is
+	can_apply: BOOLEAN
 		local
 			l_source_parents, l_destination_parents: PARENT_LIST_AS
 		do
@@ -59,7 +59,7 @@ feature -- Applicability
 			end
 		end
 
-	apply is
+	apply
 		local
 			l_source_parents, l_destination_parents: PARENT_LIST_AS
 		do
@@ -85,7 +85,7 @@ feature{NONE} -- Implementation
 	last_computed_modifier: LINKED_LIST [ERT_AST_MODIFIER]
 			-- Last computed modifier list
 
-	compute_modification is
+	compute_modification
 			-- Compute modification
 		require
 			merge_needed: destination.parents /= Void and then not destination.parents.is_empty
@@ -178,7 +178,7 @@ invariant
 	source_match_list_not_void: source_match_list /= Void
 	destination_match_list_not_void: destination_match_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

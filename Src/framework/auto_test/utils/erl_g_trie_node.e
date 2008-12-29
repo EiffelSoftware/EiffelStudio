@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Node elements for ERL_G_TRIE"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: like Current; a_key: H) is
+	make (a_parent: like Current; a_key: H)
 			-- Create new empty node with parent `a_parent' and key `a_key'.
 		require
 			a_parent_not_void: a_parent /= Void
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			create children.make_default
 		end
 
-	make_root is
+	make_root
 			-- Create new empty root.
 		do
 			level := 0
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_valid_key (a_key: DS_INDEXABLE [H]): BOOLEAN is
+	is_valid_key (a_key: DS_INDEXABLE [H]): BOOLEAN
 			-- Is `a_key' a valid item to put in this node or its one of its children?
 		require
 			a_key_not_void: a_key /= Void
@@ -66,14 +66,14 @@ feature -- Status report
 	has_item: BOOLEAN
 			-- Does current node have an item?
 
-	is_leaf: BOOLEAN is
+	is_leaf: BOOLEAN
 			-- Is current node a leaf node? I.e. does it not have any children?
 		do
 			Result := children.count = 0
 		end
 
 
-	is_degenerate: BOOLEAN is
+	is_degenerate: BOOLEAN
 			-- Is the tree starting at current node degenerate
 			-- (every parent has only one child), no inner node
 			-- has an item and the leaf node has an item? If
@@ -88,7 +88,7 @@ feature -- Status report
 			end
 		end
 
-	is_part_degenerate: BOOLEAN is
+	is_part_degenerate: BOOLEAN
 			-- Is there a sequence of degenerate nodes starting with this node?
 			-- I.e. a sequence of nodes (>1) that each have exactly one child and no item?
 		do
@@ -119,7 +119,7 @@ feature -- Access
 			append_prefix_to_indexable (Result)
 		end
 
-	node_postfix: DS_INDEXABLE [H] is
+	node_postfix: DS_INDEXABLE [H]
 			-- Postfix of only item stored in this tree.
 			-- Only applicable if tree is leaf-degenerate.
 		require
@@ -147,7 +147,7 @@ feature -- Access
 			Result := n
 		end
 
-	part_degenerate_count: INTEGER is
+	part_degenerate_count: INTEGER
 			-- Number of nodes that have one child and no item (starting with current)
 		local
 			n: ERL_G_TRIE_NODE [G, H]
@@ -165,7 +165,7 @@ feature -- Access
 			end
 		end
 
-	part_degenerate_end_node: ERL_G_TRIE_NODE [G, H] is
+	part_degenerate_end_node: ERL_G_TRIE_NODE [G, H]
 			-- Last node that has no item and whose parent has one child
 		require
 			is_part_degenerate: is_part_degenerate
@@ -188,7 +188,7 @@ feature -- Access
 
 feature -- Element change
 
-	put (a_item: G; a_key: DS_INDEXABLE [H]) is
+	put (a_item: G; a_key: DS_INDEXABLE [H])
 			-- Associate `a_item' with `a_key'.
 		require
 			a_key_not_void: a_key /= Void
@@ -225,7 +225,7 @@ feature -- Element change
 
 feature {ERL_G_TRIE_NODE} -- Implementation
 
-	append_prefix_to_indexable (a_list: DS_INDEXABLE [H]) is
+	append_prefix_to_indexable (a_list: DS_INDEXABLE [H])
 			-- Apprend prefix to `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -238,7 +238,7 @@ feature {ERL_G_TRIE_NODE} -- Implementation
 			size_correct: a_list.count = old a_list.count + level
 		end
 
-	append_postfix_to_indexable (a_list: DS_INDEXABLE [H]) is
+	append_postfix_to_indexable (a_list: DS_INDEXABLE [H])
 			-- Apprend postfix to `a_list'.
 			-- Only applicable if tree is leaf-degenerate.
 		require

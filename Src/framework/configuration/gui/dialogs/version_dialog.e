@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Edit the version."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialization
 		local
 			l_label: EV_LABEL
@@ -109,7 +109,7 @@ feature {NONE} -- Gui elements
 
 feature {NONE} -- Agents
 
-	on_show is
+	on_show
 			-- Called if the dialog is shown.
 		require
 			initialized: is_initialized
@@ -134,7 +134,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_ok is
+	on_ok
 			-- Ok was pressed.
 		local
 			l_version: CONF_VERSION
@@ -163,7 +163,7 @@ invariant
 	elements: is_initialized implies minor /= Void and major /= Void and release /= Void and build /= Void and
 			product /= Void and company /= Void and copyright /= Void and trademark /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

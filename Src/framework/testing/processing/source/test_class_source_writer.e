@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that write class text to file.
 	]"
@@ -44,7 +44,7 @@ feature -- Status report
 
 feature {NONE} -- Output
 
-	put_indexing is
+	put_indexing
 			-- Append indexing clause.
 		require
 			stream_valid: is_writing
@@ -57,7 +57,7 @@ feature {NONE} -- Output
 			stream.put_line ("")
 		end
 
-	put_class_header is
+	put_class_header
 			-- Append cdd interpreter class header.
 		require
 			stream_valid: is_writing
@@ -103,7 +103,7 @@ feature {NONE} -- Output
 			end
 		end
 
-	put_class_footer is
+	put_class_footer
 			-- Append class footer
 		require
 			stream_valid: is_writing

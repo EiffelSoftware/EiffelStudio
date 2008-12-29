@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Represents an INI document literal property.
 	]"
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_container: like container) is
+	make (a_name: like name; a_container: like container)
 			-- Initialize library with name `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	document: INI_DOCUMENT is
+	document: INI_DOCUMENT
 			-- Document property is contained within
 		do
 			Result := container.document
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' with `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -65,7 +65,7 @@ feature -- Element Change
 
 feature {NONE} -- Status report
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			create Result.make_from_string (name)
@@ -78,7 +78,7 @@ invariant
 	not_name_is_empty: not name.is_empty
 	container_attached: container /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

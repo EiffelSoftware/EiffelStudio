@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A scoped utility class to automatically clean up marshalled API data. Using a cleaner simplifies
 		unmanaged resource management by performing collections of multiple piece of data with a single
@@ -100,7 +100,7 @@ feature -- Removal
 			pointers_has_a_ptr: pointers.has (a_ptr)
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

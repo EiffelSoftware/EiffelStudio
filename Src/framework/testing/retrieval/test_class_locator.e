@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that partially implement {TEST_CLASS_LOCATOR_I}.
 	]"
@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	project: !TEST_PROJECT is
+	project: !TEST_PROJECT
 			-- <Precursor>
 		local
 			l_project: like internal_project
@@ -35,7 +35,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Query
 
-	common_ancestor: ?EIFFEL_CLASS_I is
+	common_ancestor: ?EIFFEL_CLASS_I
 			-- Look for compiled test class ancestor and store it in
 			-- `common_compiled_ancestor' if found.
 		require

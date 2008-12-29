@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a target section."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target; a_window: like configuration_window) is
+	make (a_target: like target; a_window: like configuration_window)
 			-- Create.
 		require
 			a_target_not_void: a_target /= Void
@@ -43,13 +43,13 @@ feature -- Access
 	target: CONF_TARGET
 			-- Target for which information are displayed.
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the section.
 		do
 			Result := conf_interface_names.section_target (target.name)
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon of the section.
 		once
 			Result := conf_pixmaps.top_level_folder_targets_icon
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Element update
 
-	add_target is
+	add_target
 			-- Add a new target that inherits from this one.
 		local
 			l_target: CONF_TARGET
@@ -87,7 +87,7 @@ feature -- Element update
 			last.enable_select
 		end
 
-	ask_remove_target is
+	ask_remove_target
 			-- Ask for confirmation and remove Current.
 		local
 			l_prompts: ES_PROMPT_PROVIDER
@@ -127,7 +127,7 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	groups_section: TARGET_GROUPS_SECTION is
+	groups_section: TARGET_GROUPS_SECTION
 			-- Groups sub section.
 		do
 			from
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	advanced_section: TARGET_ADVANCED_SECTION is
+	advanced_section: TARGET_ADVANCED_SECTION
 			-- Advanced sub section.
 		do
 			from
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	externals_section: TARGET_EXTERNALS_SECTION is
+	externals_section: TARGET_EXTERNALS_SECTION
 			-- Externals sub section.
 		local
 			l_advanced: TARGET_ADVANCED_SECTION
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	tasks_section: TARGET_TASKS_SECTION is
+	tasks_section: TARGET_TASKS_SECTION
 			-- Tasks sub section.
 		local
 			l_advanced: TARGET_ADVANCED_SECTION
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	remove_target is
+	remove_target
 			-- Remove `Current' from the configuration and from the tree where it is displayed.
 		local
 			l_parent_tree: EV_TREE
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
 			l_groups: TARGET_GROUPS_SECTION
@@ -262,14 +262,14 @@ feature {NONE} -- Implementation
 			l_item.set_pixmap (conf_pixmaps.tool_properties_icon)
 		end
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to execute when the item is selected
 		do
 			create Result
 			Result.extend (agent configuration_window.show_properties_target_general (target))
 		end
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toolbar'.
 		local
 			l_groups: TARGET_GROUPS_SECTION
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 invariant
 	target_not_void: target /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

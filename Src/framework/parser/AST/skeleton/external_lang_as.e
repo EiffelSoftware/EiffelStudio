@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of an external structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (l: like language_name) is
+	initialize (l: like language_name)
 			-- Create a new EXTERNAL_LANGUAGE AST node.
 		require
 			l_not_void: l /= Void
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_external_lang_as (Current)
@@ -39,12 +39,12 @@ feature -- Visitor
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := language_name.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := language_name.last_token (a_list)
 		end
@@ -57,20 +57,20 @@ feature -- Attributes
 
 feature -- Status report
 
-	is_built_in: BOOLEAN is
+	is_built_in: BOOLEAN
 			-- Is current a built_in one?
 		do
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := language_name.is_equivalent (other.language_name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

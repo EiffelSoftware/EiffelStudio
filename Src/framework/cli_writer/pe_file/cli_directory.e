@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an IMAGE_DATA_DIRECTORY for CLI."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,13 +20,13 @@ create
 	
 feature -- Access
 
-	rva: INTEGER is
+	rva: INTEGER
 			-- Relative virtual address for current directory.
 		do
 			Result := c_virtual_address (item)
 		end
 		
-	data_size: INTEGER is
+	data_size: INTEGER
 			-- Size of data pointer by `relative_virtual_address'.
 		do
 			Result := c_size (item)
@@ -34,7 +34,7 @@ feature -- Access
 		
 feature -- Settings
 
-	set_rva (i: INTEGER) is
+	set_rva (i: INTEGER)
 			-- Set `rva' to `i'.
 		do
 			c_set_virtual_address (item, i)
@@ -42,7 +42,7 @@ feature -- Settings
 			rva_set: rva = i
 		end
 
-	set_data_size (i: INTEGER) is
+	set_data_size (i: INTEGER)
 			-- Set `data_size' to `i'.
 		do
 			c_set_size (item, i)
@@ -50,7 +50,7 @@ feature -- Settings
 			data_size_set: data_size = i
 		end
 		
-	set_rva_and_size (a_rva, a_size: INTEGER) is
+	set_rva_and_size (a_rva, a_size: INTEGER)
 			-- Set `rva' and `data_size' to `a_rva' and `a_size'.
 		do
 			c_set_virtual_address (item, a_rva)
@@ -62,13 +62,13 @@ feature -- Settings
 
 feature -- Measurement
 
-	count: INTEGER is
+	count: INTEGER
 			-- Size of current structure.
 		do
 			Result := structure_size
 		end
 
-	frozen structure_size: INTEGER is
+	frozen structure_size: INTEGER
 			-- Size of IMAGE_DATA_DIRECTORY.
 		external
 			"C macro use <windows.h>"
@@ -78,31 +78,31 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	c_virtual_address (an_item: POINTER): INTEGER is
+	c_virtual_address (an_item: POINTER): INTEGER
 			-- Access to `VirtualAddress'.
 		external
 			"C struct IMAGE_DATA_DIRECTORY access VirtualAddress use <windows.h>"
 		end
 
-	c_size (an_item: POINTER): INTEGER is
+	c_size (an_item: POINTER): INTEGER
 			-- Access to `Size'.
 		external
 			"C struct IMAGE_DATA_DIRECTORY access Size use <windows.h>"
 		end		
 
-	c_set_virtual_address (an_item: POINTER; i: INTEGER) is
+	c_set_virtual_address (an_item: POINTER; i: INTEGER)
 			-- Access to `VirtualAddress'.
 		external
 			"C struct IMAGE_DATA_DIRECTORY access VirtualAddress type DWORD use <windows.h>"
 		end
 
-	c_set_size (an_item: POINTER; i: INTEGER) is
+	c_set_size (an_item: POINTER; i: INTEGER)
 			-- Access to `Size'.
 		external
 			"C struct IMAGE_DATA_DIRECTORY access Size type DWORD use <windows.h>"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

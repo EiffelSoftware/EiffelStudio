@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {TEST_GENERATOR}."
 	author: ""
 	date: "$Date$"
@@ -426,7 +426,7 @@ feature {NONE} -- Interpreter generation
 
 feature{NONE} -- Test case generation and execution
 
-	build_types_and_classes_under_test is
+	build_types_and_classes_under_test
 			-- Build `types_under_test' and `classes_under_test' from `types'.
 		require
 			system_attached: system /= Void
@@ -509,7 +509,7 @@ feature{NONE} -- Test case generation and execution
 			end
 		end
 
-	execute_random_tests is
+	execute_random_tests
 			-- Execute random tests.
 		require
 			system_not_empty: system /= Void
@@ -543,7 +543,7 @@ feature{NONE} -- Test case generation and execution
 			current_task := a_task
 		end
 
-	update_remaining_time is
+	update_remaining_time
 			-- Update `error_handler.remaining_time' and mark in the proxy log every elapsed minute.
 		local
 			duration: DT_DATE_TIME_DURATION
@@ -570,7 +570,7 @@ feature{NONE} -- Test case generation and execution
 
 feature{NONE} -- Test result analyizing
 
-	replay_log (a_log_file: STRING) is
+	replay_log (a_log_file: STRING)
 			-- Replay log stored in `a_log_file'.
 		local
 			l_replay_strategy: AUT_REQUEST_PLAYER
@@ -582,7 +582,7 @@ feature{NONE} -- Test result analyizing
 			launch_task (l_replay_strategy)
 		end
 
-	requests_from_file (a_log_file_name: STRING; a_log_loader: AUT_LOG_PARSER): DS_ARRAYED_LIST [AUT_REQUEST] is
+	requests_from_file (a_log_file_name: STRING; a_log_loader: AUT_LOG_PARSER): DS_ARRAYED_LIST [AUT_REQUEST]
 			-- Result repository from log file `a_log_file_name' loaded by `a_log_loader'
 		require
 			a_log_file_name_attached: a_log_file_name /= Void
@@ -606,7 +606,7 @@ feature{NONE} -- Test result analyizing
 			result_attached: Result /= Void
 		end
 
-	build_result_repository is
+	build_result_repository
 			-- Build result repository from log file.
 		local
 			log_stream: KL_TEXT_INPUT_FILE
@@ -628,7 +628,7 @@ feature{NONE} -- Test result analyizing
 			result_repository_not_void: result_repository /= Void
 		end
 
-	generate_pre_minimize_statistics is
+	generate_pre_minimize_statistics
 			-- Generate statistics about executed tests.
 		require
 			result_repository_not_void: result_repository /= Void
@@ -646,7 +646,7 @@ feature{NONE} -- Test result analyizing
 			end
 		end
 
-	generate_statistics is
+	generate_statistics
 			-- Generate statistics about executed tests.
 		require
 			result_repository_not_void: result_repository /= Void
@@ -798,7 +798,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	application_name: STRING is "ec"
+	application_name: STRING = "ec"
 			-- Name of EiffelStudio exe;
 			-- Needed to locate the correct registry keys on windows
 			-- in order to find it's install path.
@@ -815,7 +815,7 @@ feature {NONE} -- Constants
 invariant
 	not_running_implies_status_compiling: not is_running implies (status = compile_status_code)
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

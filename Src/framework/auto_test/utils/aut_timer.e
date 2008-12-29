@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -23,14 +23,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new timer.
 		do
 		end
 
 feature -- Status report
 
-	is_running: BOOLEAN is
+	is_running: BOOLEAN
 			-- Is timer currently running?
 		do
 			Result := start_time /= Void
@@ -41,13 +41,13 @@ feature -- Status report
 
 feature -- Timing
 
-	start is
+	start
 			-- Start timer.
 		do
 			start_time := system_clock.date_time_now
 		end
 
-	calculate_duration is
+	calculate_duration
 			-- Calculate duration since `start_time' and now.
 		require
 			running: is_running

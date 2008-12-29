@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Instruction that requests the type of a variable"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system; a_variable: like variable) is
+	make (a_system: like system; a_variable: like variable)
 			-- Create new request.
 		require
 			a_system_not_void: a_system /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_type_request: BOOLEAN is True
+	is_type_request: BOOLEAN = True
 			-- Is Current a type request?
 
 feature -- Access
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Processing
 
-	process (a_processor: AUT_REQUEST_PROCESSOR) is
+	process (a_processor: AUT_REQUEST_PROCESSOR)
 			-- Process current request.
 		do
 			a_processor.process_type_request (Current)

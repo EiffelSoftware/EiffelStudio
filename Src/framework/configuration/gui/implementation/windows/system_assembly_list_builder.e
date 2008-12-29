@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A class to perform a system search for all assemblies registered as locatable.
 		Locatable does not refer to the Globabl Assembly Cache but assemblies that are found
@@ -116,7 +116,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	assemblies_properties: LIST [ASSEMBLY_PROPERTIES] is
+	assemblies_properties: LIST [ASSEMBLY_PROPERTIES]
 			-- A flat list of assembly properties
 		local
 			l_files: like assemblies
@@ -250,7 +250,7 @@ feature {NONE} -- Registry Paths
 
 feature {NONE} -- Externals
 
-	is_windows_64_bits: BOOLEAN is
+	is_windows_64_bits: BOOLEAN
 			-- Is Current running on Windows 64 bits?
 		external
 			"C macro use %"eif_eiffel.h%""
@@ -260,7 +260,7 @@ feature {NONE} -- Externals
 
 feature {NONE} -- Constants
 
-	dll_extension: STRING is ".dll"
+	dll_extension: STRING = ".dll"
 			-- DLL file extension
 
 feature {NONE} -- Internal Implementation Cache
@@ -280,7 +280,7 @@ invariant
 	not_clr_version_is_empty: not clr_version.is_empty
 	clr_version_has_v_prefix: (clr_version.item (1)).as_lower = 'v'
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

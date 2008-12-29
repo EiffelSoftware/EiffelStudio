@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract description of a conditional instruction, %
 				  %Version for Bench."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 feature {NONE} -- Initialization
 
 	initialize (cnd: like condition; cmp: like compound;
-		ei: like elsif_list; e: like else_part; el: like end_keyword; i_as, t_as, e_as: like if_keyword) is
+		ei: like elsif_list; e: like else_part; el: like end_keyword; i_as, t_as, e_as: like if_keyword)
 			-- Create a new IF AST node.
 		require
 			cnd_not_void: cnd /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_if_as (Current)
@@ -61,7 +61,7 @@ feature -- Roundtrip
 	if_keyword_index, then_keyword_index, else_keyword_index: INTEGER
 			-- Index of keyword "if", "else" and "then" assoicated with this structure
 
-	if_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	if_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "if" assoicated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -74,7 +74,7 @@ feature -- Roundtrip
 			end
 		end
 
-	then_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	then_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "then" assoicated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -87,7 +87,7 @@ feature -- Roundtrip
 			end
 		end
 
-	else_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	else_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "else" assoicated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -119,7 +119,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := condition.first_token (a_list)
@@ -128,14 +128,14 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := end_keyword.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (compound, other.compound) and then
@@ -148,7 +148,7 @@ invariant
 	condition_not_void: condition /= Void
 	end_keyword_not_void: end_keyword /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

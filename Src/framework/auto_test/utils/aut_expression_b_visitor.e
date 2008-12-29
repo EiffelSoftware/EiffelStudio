@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor to generate {EXPR_B} objects for AutoTest expressions"
 	author: ""
 	date: "$Date$"
@@ -18,7 +18,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_system: like system; a_load_object_feature: like load_object_feature) is
+	make (a_system: like system; a_load_object_feature: like load_object_feature)
 			-- Initialize.
 		require
 			a_system_attached: a_system /= Void
@@ -30,7 +30,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	expression (a_expression: ITP_EXPRESSION): EXPR_B is
+	expression (a_expression: ITP_EXPRESSION): EXPR_B
 			-- New EXPR_B node for `a_expression'
 		require
 			a_expression_attached: a_expression /= Void
@@ -43,7 +43,7 @@ feature -- Access
 
 feature {ITP_EXPRESSION} -- Processing
 
-	process_constant (a_value: ITP_CONSTANT) is
+	process_constant (a_value: ITP_CONSTANT)
 			-- Process `a_value'.
 		local
 			l_bool_ref: BOOLEAN_REF
@@ -87,7 +87,7 @@ feature {ITP_EXPRESSION} -- Processing
 			end
 		end
 
-	process_variable (a_value: ITP_VARIABLE) is
+	process_variable (a_value: ITP_VARIABLE)
 			-- Process `a_value'.
 		local
 			l_parameter: PARAMETER_B

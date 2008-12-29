@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Merge partial classes into one"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create.
 		do
 			error_message := "No error."
@@ -35,7 +35,7 @@ feature -- Status Report
 	successful: BOOLEAN
 			-- Was last call to `merge' successful?
 
-	ast_from_file (a_file: STRING): CLASS_AS is
+	ast_from_file (a_file: STRING): CLASS_AS
 			-- AST from text in file `a_file' if syntactically correct
 			-- Otherwise set `successful' to False and initialize `error_message'
 		require
@@ -100,7 +100,7 @@ feature -- Status Report
 			retry
 		end
 
-	merge (a_file_names: LIST [STRING]) is
+	merge (a_file_names: LIST [STRING])
 			-- Merge content of files in `a_file_names' into one class.
 			-- `a_file_names': Files to be merged.
 		require
@@ -160,7 +160,7 @@ feature -- Status Report
 
 feature {NONE} -- Implementation
 
-	append_features (a_match_list, a_new_match_list: LEAF_AS_LIST; a_ast, a_new_ast: CLASS_AS) is
+	append_features (a_match_list, a_new_match_list: LEAF_AS_LIST; a_ast, a_new_ast: CLASS_AS)
 			-- Append features in `l_match_list' and `l_ast' to `l_new_ast'.
 		require
 			attached_match_list: a_match_list /= Void
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	post_features_ast (a_ast: CLASS_AS): AST_EIFFEL is
+	post_features_ast (a_ast: CLASS_AS): AST_EIFFEL
 			-- First node after 'feature' keyword
 		require
 			attached_ast: a_ast /= Void
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			attached_ast: Result /= Void
 		end
 
-	append_invariants (a_match_list, a_new_match_list: LEAF_AS_LIST; a_ast, a_new_ast: CLASS_AS) is
+	append_invariants (a_match_list, a_new_match_list: LEAF_AS_LIST; a_ast, a_new_ast: CLASS_AS)
 			-- Append invariants in `l_match_list' and `l_ast' to `l_new_ast'.
 		require
 			attached_match_list: a_match_list /= Void
@@ -230,7 +230,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	merge_inheritance_clauses (a_match_list, a_new_match_list: LEAF_AS_LIST; a_ast, a_new_ast: CLASS_AS) is
+	merge_inheritance_clauses (a_match_list, a_new_match_list: LEAF_AS_LIST; a_ast, a_new_ast: CLASS_AS)
 			-- Merge inheritance clauses in `l_match_list' and `l_ast' into `l_new_ast'.
 		require
 			attached_match_list: a_match_list /= Void
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 			l_mod.apply
 		end
 
-	append_indexing_clauses (a_match_list, a_new_match_list: LEAF_AS_LIST; a_ast, a_new_ast: CLASS_AS) is
+	append_indexing_clauses (a_match_list, a_new_match_list: LEAF_AS_LIST; a_ast, a_new_ast: CLASS_AS)
 			-- Append indexing clauses in `l_match_list' and `l_ast' to `l_new_ast'.
 		require
 			attached_match_list: a_match_list /= Void
@@ -278,7 +278,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	merge_creation_routines (a_match_list, a_new_match_list: LEAF_AS_LIST; a_ast, a_new_ast: CLASS_AS) is
+	merge_creation_routines (a_match_list, a_new_match_list: LEAF_AS_LIST; a_ast, a_new_ast: CLASS_AS)
 			-- Append creation routines in `l_match_list' and `l_ast' to `l_new_ast'.
 		require
 			attached_match_list: a_match_list /= Void
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	equiv_client_index (a_creator: CREATE_AS; a_creators: EIFFEL_LIST [CREATE_AS]): INTEGER is
+	equiv_client_index (a_creator: CREATE_AS; a_creators: EIFFEL_LIST [CREATE_AS]): INTEGER
 			-- Index in `l_creators' of create_as with equivalient client export,
 			-- 0 if none.
 		require
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 			Definition: (Result > 0) implies ((a_creators.i_th (Result).clients = Void and a_creator.clients = Void) or a_creators.i_th (Result).clients.is_equiv (a_creator.clients))
 		end
 
-	analyze_file (a_file_path: STRING) is
+	analyze_file (a_file_path: STRING)
 			-- Analyze file located at `a_file_path'.
 			-- Set `line_return' accordingly.
 			-- Set `first_line_pragma' accodingly.
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Onces
 
-	roundtrip_eiffel_parser: EIFFEL_PARSER is
+	roundtrip_eiffel_parser: EIFFEL_PARSER
 			-- Shared instance of roundtrip parser
 		once
 			create Result.make_with_factory (create {AST_ROUNDTRIP_FACTORY})
@@ -434,7 +434,7 @@ feature {NONE} -- Private Access
 	first_line_pragma: STRING
 			-- First line pragma of last partial class analyzed with `ast_from_file' if any
 
-	Default_line_return: STRING is "%R%N"
+	Default_line_return: STRING = "%R%N"
 			-- Default line return in case `analyze' fails.
 			-- Use Windows convention as partial classes have more chances to be used on that platform.
 
@@ -444,7 +444,7 @@ invariant
 	valid_line_return: line_return /= Void implies (line_return.is_equal ("%N") or line_return.is_equal ("%R%N"))
 	valid_first_line_pragma: first_line_pragma /= Void implies first_line_pragma.substring (1, 8).is_equal ("--#line ")
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

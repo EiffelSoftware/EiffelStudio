@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that specify visibility of classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Basic commands
 
-	update_visible (a_added_classes: DS_HASH_SET [CONF_CLASS]) is
+	update_visible (a_added_classes: DS_HASH_SET [CONF_CLASS])
 			-- Update visible options on classes.
 		require
 			a_added_classes_not_void: a_added_classes /= Void
@@ -70,7 +70,7 @@ feature {CONF_ACCESS} -- Access, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, stored to configuration file
 
-	set_visible (a_visible: like visible) is
+	set_visible (a_visible: like visible)
 			-- Set `visible' to `a_visible'.
 		do
 			visible := a_visible
@@ -78,7 +78,7 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 			visible_set: visible = a_visible
 		end
 
-	add_visible (a_class, a_feature, a_class_rename, a_feature_rename: STRING) is
+	add_visible (a_class, a_feature, a_class_rename, a_feature_rename: STRING)
 			-- Add a visible.
 		require
 			a_class_ok: a_class /= Void and then not a_class.is_empty
@@ -135,17 +135,17 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	classes: HASH_TABLE [CONF_CLASS, STRING] is
+	classes: HASH_TABLE [CONF_CLASS, STRING]
 			-- List of classes.
 		deferred
 		end
 
-	set_error (an_error: CONF_ERROR) is
+	set_error (an_error: CONF_ERROR)
 			-- Set `an_error'.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

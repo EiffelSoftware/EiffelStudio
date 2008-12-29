@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Reads line by line from a ePosix file descriptor without blocking"
 	author		: "Andreas Leitner"
 	date		: "$Date$"
@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new line reader which gets it's content via `put_string' handler
 		do
 			create buffer.make (256)
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	has_read_line: BOOLEAN is
+	has_read_line: BOOLEAN
 			-- Has a complete line been read?
 		do
 			Result := last_string /= Void
@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Writing
 
-	put_string (a_string: STRING) is
+	put_string (a_string: STRING)
 			-- Put `a_string' into the buffer (append it)
 			-- and put full lines into the `line_queue'.
 		local
@@ -69,7 +69,7 @@ feature -- Writing
 
 feature -- Reading
 
-	reset_last_string is
+	reset_last_string
 			-- Set `last_string' to `Void'.
 		do
 			last_string := Void
@@ -77,7 +77,7 @@ feature -- Reading
 			last_string_reset: last_string = Void
 		end
 
-	try_read_line is
+	try_read_line
 			-- Try to read a complete line into `last_string'. Doesn't block if it cannot
 			-- read a complete line. Sets `has_read_line' to `True' if it
 			-- succeeded. Exit immediately if no input is available at
@@ -93,7 +93,7 @@ feature -- Reading
 			end
 		end
 
-	try_read_all_lines is
+	try_read_all_lines
 			-- Try to read all lines available in `line_queue' and
 			-- store result in `last_string'.
 		do
@@ -124,10 +124,10 @@ feature {NONE} -- Implementation
 	buffer: STRING
 			-- Buffer for partialy read lines
 
-	default_last_string_length: INTEGER is 1024
+	default_last_string_length: INTEGER = 1024
 			-- Default length in byte for `last_string'
 
-	has_line: BOOLEAN is
+	has_line: BOOLEAN
 			-- Has a complete line been stored in the `line_queue'?
 		do
 			mutex.lock

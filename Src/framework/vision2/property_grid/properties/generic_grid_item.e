@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generic grid item."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,7 @@ feature -- Access
 
 feature -- Update
 
-	set_value (a_value: like value) is
+	set_value (a_value: like value)
 			-- Set `value' to `a_value'.
 		do
 			value := a_value

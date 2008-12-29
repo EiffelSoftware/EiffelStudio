@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of an Eiffel operand of a routine object"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: like class_type; t: like target; e: like expression) is
+	initialize (c: like class_type; t: like target; e: like expression)
 			-- Create a new OPERAND AST node.
 		do
 			class_type := c
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_operand_as (Current)
@@ -58,7 +58,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_question_mark_symbol (s_as: SYMBOL_AS) is
+	set_question_mark_symbol (s_as: SYMBOL_AS)
 			-- Set `question_mark_symbol' with `s_as'.
 		do
 			if s_as /= Void then
@@ -81,7 +81,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if class_type /= Void then
 				Result := class_type.first_token (a_list)
@@ -96,7 +96,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if class_type /= Void then
 				Result := class_type.last_token (a_list)
@@ -113,7 +113,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (class_type, other.class_type) and then
@@ -123,7 +123,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_open : BOOLEAN is
+	is_open : BOOLEAN
 			-- Is it an open operand?
 		do
 			Result := (expression = Void) and then (target = Void)
@@ -133,7 +133,7 @@ feature -- Status report
 
 feature -- Conversion
 
-	converted_expression (a_additional_data: ANY): EXPR_AS is
+	converted_expression (a_additional_data: ANY): EXPR_AS
 			-- Convert current expression in another one.
 		do
 				-- Conversion can only make sense when `expression' is not void,
@@ -144,7 +144,7 @@ feature -- Conversion
 			Result := Current
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

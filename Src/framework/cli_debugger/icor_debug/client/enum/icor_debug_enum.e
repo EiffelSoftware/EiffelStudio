@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,14 +17,14 @@ create
 	
 feature {ICOR_EXPORTER} -- Access Property
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 		do
 			Result := get_count = 0
 		end
 
 feature {ICOR_EXPORTER} -- Access
 
-	skip (a_nb: INTEGER) is
+	skip (a_nb: INTEGER)
 			-- Skip the next a_nb entries
 			-- if a_nb is zero, we don't skip any
 		do
@@ -33,14 +33,14 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	reset is
+	reset
 		do
 			last_call_success := cpp_reset (item)
 		ensure
 			success: last_call_success = 0
 		end
 
-	get_clone: ICOR_DEBUG_ENUM is
+	get_clone: ICOR_DEBUG_ENUM
 		local
 			p: POINTER
 		do
@@ -52,7 +52,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_count: INTEGER is
+	get_count: INTEGER
 		do
 			last_call_success := cpp_get_count (item, $Result)
 		ensure
@@ -61,7 +61,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_skip (obj: POINTER; a_nb: INTEGER): INTEGER is
+	cpp_skip (obj: POINTER; a_nb: INTEGER): INTEGER
 		external
 			"[
 				C++ ICorDebugEnum signature(ULONG): EIF_INTEGER 
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			"Skip"
 		end
 
-	cpp_reset (obj: POINTER): INTEGER is
+	cpp_reset (obj: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugEnum signature(): EIF_INTEGER 
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			"Reset"
 		end
 
-	cpp_clone (obj: POINTER; a_result: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_clone (obj: POINTER; a_result: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugEnum signature(ICorDebugEnum**): EIF_INTEGER 
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			"Clone"
 		end
 
-	cpp_get_count (obj: POINTER; a_p_count: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_count (obj: POINTER; a_p_count: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugEnum signature(ULONG*): EIF_INTEGER 
@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			"GetCount"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Shared access to registry"
 	author: "Ilinca Ciupa and Andreas Leitner"
 	date: "$Date$"
@@ -8,7 +8,7 @@ class AUT_SHARED_REGISTRY
 
 feature -- Singleton Access
 
-	registry: AUT_REGISTRY is
+	registry: AUT_REGISTRY
 			-- Registry singleton
 		once
 			create Result

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a searchable grid with quick search bar"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Setting
 
-	enable_search is
+	enable_search
 			-- Enable search ability.
 		do
 			is_search_enabled := True
@@ -28,7 +28,7 @@ feature -- Setting
 			search_enabled: is_search_enabled
 		end
 
-	disable_search is
+	disable_search
 			-- Disable search ability.
 		do
 			is_search_enabled := False
@@ -36,7 +36,7 @@ feature -- Setting
 			search_disabled: not is_search_enabled
 		end
 
-	enable_replace is
+	enable_replace
 			-- Enable replace ability.
 		do
 			is_replace_enabled := True
@@ -44,7 +44,7 @@ feature -- Setting
 			replace_enabled: is_replace_enabled
 		end
 
-	disable_replace is
+	disable_replace
 			-- Disable replace ability.
 		do
 			is_replace_enabled := False
@@ -68,7 +68,7 @@ feature -- Status report
 
 feature -- Access
 
-	component_widget: EV_WIDGET is
+	component_widget: EV_WIDGET
 			-- Widget of current component
 		local
 			l_main_container: EV_VERTICAL_BOX
@@ -87,7 +87,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	grid_top_container: EV_VERTICAL_BOX is
+	grid_top_container: EV_VERTICAL_BOX
 			-- Top container for quick search bar
 		do
 			if grid_top_container_internal = Void then
@@ -98,7 +98,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	grid_bottom_container: EV_VERTICAL_BOX is
+	grid_bottom_container: EV_VERTICAL_BOX
 			-- Bottom container for quick search bar
 		do
 			if grid_bottom_container_internal = Void then
@@ -111,7 +111,7 @@ feature -- Access
 
 feature -- Search tool
 
-	registered_search_tool: LINKED_LIST [EVS_GRID_SEARCH_TOOL] is
+	registered_search_tool: LINKED_LIST [EVS_GRID_SEARCH_TOOL]
 			-- List of registered search tool
 		do
 			if registered_search_tool_internal = Void then
@@ -122,7 +122,7 @@ feature -- Search tool
 			result_attached: Result /= Void
 		end
 
-	register_search_tool (a_tool: EVS_GRID_SEARCH_TOOL) is
+	register_search_tool (a_tool: EVS_GRID_SEARCH_TOOL)
 			-- Register `a_tool' into Current
 		require
 			a_tool_attached: a_tool /= Void
@@ -134,7 +134,7 @@ feature -- Search tool
 			a_tool_registered: registered_search_tool.has (a_tool)
 		end
 
-	remove_search_tool (a_tool: EVS_GRID_SEARCH_TOOL) is
+	remove_search_tool (a_tool: EVS_GRID_SEARCH_TOOL)
 			-- Remove `a_tool' from Current.
 		require
 			a_tool_attached: a_tool /= Void
@@ -147,7 +147,7 @@ feature -- Search tool
 			a_tool_removed: not registered_search_tool.has (a_tool)
 		end
 
-	enable_direct_start_search is
+	enable_direct_start_search
 			-- Enable direct start search mode.
 			-- For more information of direct start search mode, see `is_direct_start_search_enabled'.			
 		do
@@ -156,7 +156,7 @@ feature -- Search tool
 			direct_start_search_mode_enabled: is_direct_start_search_enabled
 		end
 
-	disable_direct_start_search is
+	disable_direct_start_search
 			-- Disable direct start search mode.
 			-- For more information of direct start search mode, see `is_direct_start_search_enabled'.			
 		do
@@ -182,7 +182,7 @@ feature{NONE} -- Implementation
 invariant
 	component_widget_attached: component_widget /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

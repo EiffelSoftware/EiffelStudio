@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Routines to manipulate integer type masks."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,33 +9,33 @@ class INTEGER_TYPE_MASKS
 
 feature {NONE} -- Masks
 
-	integer_8_mask:  INTEGER is 0x01
+	integer_8_mask:  INTEGER = 0x01
 			-- Bit mask for INTEGER_8
 
-	integer_16_mask: INTEGER is 0x02
+	integer_16_mask: INTEGER = 0x02
 			-- Bit mask for INTEGER_16
 
-	integer_32_mask: INTEGER is 0x04
+	integer_32_mask: INTEGER = 0x04
 			-- Bit mask for INTEGER_32
 
-	integer_64_mask: INTEGER is 0x08
+	integer_64_mask: INTEGER = 0x08
 			-- Bit mask for INTEGER_64
 
-	natural_8_mask:  INTEGER is 0x10
+	natural_8_mask:  INTEGER = 0x10
 			-- Bit mask for NATURAL_8
 
-	natural_16_mask: INTEGER is 0x20
+	natural_16_mask: INTEGER = 0x20
 			-- Bit mask for NATURAL_16
 
-	natural_32_mask: INTEGER is 0x40
+	natural_32_mask: INTEGER = 0x40
 			-- Bit mask for NATURAL_32
 
-	natural_64_mask: INTEGER is 0x80
+	natural_64_mask: INTEGER = 0x80
 			-- Bit mask for NATURAL_64
 
 feature {NONE} -- Status report
 
-	is_one_mask (mask: INTEGER): BOOLEAN is
+	is_one_mask (mask: INTEGER): BOOLEAN
 			-- Does `mask' represent one type mask?
 		do
 			if
@@ -52,7 +52,7 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Evaluation
 
-	integer_mask (s: INTEGER_8): INTEGER is
+	integer_mask (s: INTEGER_8): INTEGER
 			-- Bit mask for integer type of size `s'
 		require
 			valid_size: s = 8 or s = 16 or s = 32 or s = 64
@@ -72,7 +72,7 @@ feature {NONE} -- Evaluation
 				(s = 64 implies Result = integer_64_mask)
 		end
 
-	natural_mask (s: INTEGER_8): INTEGER is
+	natural_mask (s: INTEGER_8): INTEGER
 			-- Bit mask for natural type of size `s'
 		require
 			valid_size: s = 8 or s = 16 or s = 32 or s = 64
@@ -92,7 +92,7 @@ feature {NONE} -- Evaluation
 				(s = 64 implies Result = natural_64_mask)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

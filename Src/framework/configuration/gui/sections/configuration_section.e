@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a configuration section."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_window: like configuration_window) is
+	make (a_window: like configuration_window)
 			-- Create.
 		require
 			a_window_ok: a_window /= Void and then not a_window.is_destroyed
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			toolbar_set: toolbar = configuration_window.toolbar
 		end
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			set_text (name)
@@ -58,14 +58,14 @@ feature	-- Access
 	configuration_window: CONFIGURATION_WINDOW
 			-- Window where to display information.
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the section.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon of the section.
 		deferred
 		ensure
@@ -75,7 +75,7 @@ feature	-- Access
 	toolbar: CONFIGURATION_TOOLBAR
 			-- Toolbar with actions.
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		deferred
 		ensure
@@ -84,7 +84,7 @@ feature	-- Access
 
 feature -- Simple operations
 
-	show_context_menu is
+	show_context_menu
 			-- Show the context menu.
 		do
 			create open_menu
@@ -92,14 +92,14 @@ feature -- Simple operations
 			open_menu.show
 		end
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable buttons in `toolbar' and assign actions.
 		deferred
 		end
 
 feature {NONE} -- Implementation
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to execute when the item is selected
 		deferred
 		ensure
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation helper
 
-	show_menu_on_right_click (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	show_menu_on_right_click (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Check if we clicked the right mouse button and show menu.
 		do
 			if a_button = 3 then
@@ -121,13 +121,13 @@ feature {NONE} -- Implementation helper
 
 feature {NONE} -- Contract helper
 
-	is_in_default_state: BOOLEAN is True
+	is_in_default_state: BOOLEAN = True
 
 invariant
 	toolbar_not_void: toolbar /= Void
 	configuration_window_ok: configuration_window /= Void and then not configuration_window.is_destroyed
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

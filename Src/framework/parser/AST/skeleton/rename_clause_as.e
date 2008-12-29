@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a rename inherit clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- Visitor feature.
 		do
 			v.process_rename_clause_as (Current)
@@ -106,7 +106,7 @@ feature -- Access
 			result_not_void_implies_not_empty: Result /= Void implies not Result.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

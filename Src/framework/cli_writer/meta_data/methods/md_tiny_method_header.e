@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a tiny method header."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_size: INTEGER_8) is
+	make (a_size: INTEGER_8)
 			-- Create a tiny header representing a feature
 			-- with no rescue clause, nor local variables
 			-- and a maxstack less than 8.
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	code_size: INTEGER is
+	code_size: INTEGER
 			-- Size of current feature.
 		do
 			Result := (internal_data & 0x000000FC) |>> 2
@@ -40,12 +40,12 @@ feature -- Access
 
 feature -- Access
 
-	count: INTEGER is 1
+	count: INTEGER = 1
 			-- Size of structure once emitted.
 		
 feature -- Saving
 
-	write_to_stream (m: MANAGED_POINTER; pos: INTEGER) is
+	write_to_stream (m: MANAGED_POINTER; pos: INTEGER)
 			-- Write to stream `m' at position `pos'.
 		local
 			l_data: INTEGER_8
@@ -58,7 +58,7 @@ feature -- Saving
 		
 feature -- Settings
 
-	set_code_size (a_size: INTEGER) is
+	set_code_size (a_size: INTEGER)
 			-- Set `code_size' to `a_size' of current feature.
 		require
 			valid_size: a_size >= 0 and a_size < 64
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 	internal_data: INTEGER;
 			-- Hold value of code_size and header type.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

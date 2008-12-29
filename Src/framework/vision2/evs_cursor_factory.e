@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Factory class for creating cursors from icons
 	]"
@@ -12,7 +12,7 @@ class
 
 feature -- Factory
 
-	pointer_style_from_icon (a_icon: EV_PIXEL_BUFFER): EV_POINTER_STYLE is
+	pointer_style_from_icon (a_icon: EV_PIXEL_BUFFER): EV_POINTER_STYLE
 			-- Creates a cursor from an icon
 		require
 			a_icon_attached: a_icon /= Void
@@ -29,7 +29,7 @@ feature -- Factory
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 
-	pointer_style_from_icon_and_overlay (a_icon: EV_PIXEL_BUFFER; a_overlay: EV_PIXEL_BUFFER): EV_POINTER_STYLE is
+	pointer_style_from_icon_and_overlay (a_icon: EV_PIXEL_BUFFER; a_overlay: EV_PIXEL_BUFFER): EV_POINTER_STYLE
 			-- Creates a cursor from an icon
 		require
 			a_icon_attached: a_icon /= Void
@@ -48,7 +48,7 @@ feature -- Factory
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

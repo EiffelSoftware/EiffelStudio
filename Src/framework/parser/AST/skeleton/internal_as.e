@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract class representing routines that have a body."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (c: like compound) is
+	initialize (c: like compound)
 			-- Create a new INTERNAL AST node.
 		do
 			compound := c
@@ -35,14 +35,14 @@ feature -- Attributes
 
 feature -- test for empty body
 
-	is_empty : BOOLEAN is
+	is_empty : BOOLEAN
 		do
 			Result := (compound = Void) or else (compound.is_empty)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (compound, other.compound)
@@ -50,7 +50,7 @@ feature -- Comparison
 
 feature -- Access
 
-	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN
 			-- Does the current routine body has instruction `i'?
 		do
 			from
@@ -63,7 +63,7 @@ feature -- Access
 			end
 		end
 
-	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER
 			-- Index of `i' in this feature.
 		do
 			from
@@ -81,7 +81,7 @@ feature -- Access
 			end
 		end
 
-	set_first_breakpoint_slot_index (index: INTEGER) is
+	set_first_breakpoint_slot_index (index: INTEGER)
 			-- Set `first_first_breakpoint_slot_index' to `index'
 		do
 			first_breakpoint_slot_index := index
@@ -91,12 +91,12 @@ feature -- Access
 
 feature {INTERNAL_AS} -- Replication
 
-	set_compound (c: like compound) is
+	set_compound (c: like compound)
 		do
 			compound := c
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

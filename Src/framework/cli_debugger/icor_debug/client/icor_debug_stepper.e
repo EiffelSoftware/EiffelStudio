@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		NOTA:
 			typedef struct
@@ -22,7 +22,7 @@ create
 
 feature {ICOR_EXPORTER} -- Access
 
-	is_active: BOOLEAN is
+	is_active: BOOLEAN
 		local
 			r: INTEGER
 		do
@@ -32,13 +32,13 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	deactivate is
+	deactivate
 			-- Desactivate the stepper
 		do
 			last_call_success := cpp_deactivate (item)
 		end
 
-	set_intercept_mask (a_mask: INTEGER) is
+	set_intercept_mask (a_mask: INTEGER)
 			--|     SetInterceptMask controls which intercept code will be stepped
 			--|     into by the stepper. If the bit for an interceptor is set, the
 			--|     stepper will complete with reason STEPPER_INTERCEPT when the
@@ -67,7 +67,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_set_intercept_mask (item, a_mask)
 		end
 
-	set_unmapped_stop_mask (a_mask: INTEGER) is
+	set_unmapped_stop_mask (a_mask: INTEGER)
 			--|
 			--| SetUnmappedStopMask controls whether the stepper
 			--| will stop in jitted code which is not mapped to IL.
@@ -87,7 +87,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_set_unmapped_stop_mask (item, a_mask)
 		end
 
-	step (a_b_step_in: BOOLEAN) is
+	step (a_b_step_in: BOOLEAN)
 		do
 			debug ("debugger_eifnet_data")
 				io.error.put_string ("[enter] ICOR_DEBUG_STEPPER.Step ("+a_b_step_in.out+") %N")
@@ -97,7 +97,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	step_out is
+	step_out
 		do
 			debug ("debugger_eifnet_data")
 				io.error.put_string ("[enter] ICOR_DEBUG_STEPPER.StepOut %N")
@@ -108,7 +108,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	step_range (a_b_step_in: BOOLEAN; a_ranges: ARRAY [TUPLE [left: INTEGER; right: INTEGER]]) is
+	step_range (a_b_step_in: BOOLEAN; a_ranges: ARRAY [TUPLE [left: INTEGER; right: INTEGER]])
 			-- Step ranges.
 			-- FIXME jfiat [2008/11/07] : a_ranges should be made of NATURAL_32
 		require
@@ -148,7 +148,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	set_range_il (a_b_il: BOOLEAN) is
+	set_range_il (a_b_il: BOOLEAN)
 		do
 			last_call_success := cpp_set_range_il (item, a_b_il.to_integer)
 		ensure
@@ -157,7 +157,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_is_active (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_is_active (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugStepper signature(BOOL*): EIF_INTEGER 
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			"IsActive"
 		end
 
-	cpp_deactivate (obj: POINTER): INTEGER is
+	cpp_deactivate (obj: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugStepper signature(): EIF_INTEGER 
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			"Deactivate"
 		end
 
-	cpp_set_intercept_mask (obj: POINTER; a_mask: INTEGER): INTEGER is
+	cpp_set_intercept_mask (obj: POINTER; a_mask: INTEGER): INTEGER
 		external
 			"[
 				C++ ICorDebugStepper signature(CorDebugIntercept): EIF_INTEGER 
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			"SetInterceptMask"
 		end
 
-	cpp_set_unmapped_stop_mask (obj: POINTER; a_mask: INTEGER): INTEGER is
+	cpp_set_unmapped_stop_mask (obj: POINTER; a_mask: INTEGER): INTEGER
 		external
 			"[
 				C++ ICorDebugStepper signature(CorDebugUnmappedStop): EIF_INTEGER 
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			"SetUnmappedStopMask"
 		end
 
-	cpp_step (obj: POINTER; a_b_step_in: INTEGER): INTEGER is
+	cpp_step (obj: POINTER; a_b_step_in: INTEGER): INTEGER
 		external
 			"[
 				C++ ICorDebugStepper signature(BOOL): EIF_INTEGER 
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 			"Step"
 		end
 
-	cpp_step_out (obj: POINTER): INTEGER is
+	cpp_step_out (obj: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugStepper signature(): EIF_INTEGER 
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 			"StepOut"
 		end
 
-	cpp_step_range (obj: POINTER; a_b_stepin: INTEGER; a_ranges: POINTER; a_count: NATURAL_32): INTEGER is
+	cpp_step_range (obj: POINTER; a_b_stepin: INTEGER; a_ranges: POINTER; a_count: NATURAL_32): INTEGER
 		external
 			"[
 				C++ ICorDebugStepper signature(BOOL, COR_DEBUG_STEP_RANGE*, ULONG32): EIF_INTEGER 
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 			"StepRange"
 		end
 
-	cpp_set_range_il (obj: POINTER; a_b_il: INTEGER): INTEGER is
+	cpp_set_range_il (obj: POINTER; a_b_il: INTEGER): INTEGER
 		external
 			"[
 				C++ ICorDebugStepper signature(BOOL): EIF_INTEGER 
@@ -239,49 +239,49 @@ feature {NONE} -- Implementation
 
 feature -- enum CorDebugIntercept
 
-	frozen enum_cor_debug_intercept__INTERCEPT_NONE: INTEGER is
+	frozen enum_cor_debug_intercept__INTERCEPT_NONE: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"INTERCEPT_NONE"
 		end
 
-	frozen enum_cor_debug_intercept__INTERCEPT_CLASS_INIT: INTEGER is
+	frozen enum_cor_debug_intercept__INTERCEPT_CLASS_INIT: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"INTERCEPT_CLASS_INIT"
 		end
 
-	frozen enum_cor_debug_intercept__INTERCEPT_EXCEPTION_FILTER: INTEGER is
+	frozen enum_cor_debug_intercept__INTERCEPT_EXCEPTION_FILTER: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"INTERCEPT_EXCEPTION_FILTER"
 		end
 
-	frozen enum_cor_debug_intercept__INTERCEPT_SECURITY: INTEGER is
+	frozen enum_cor_debug_intercept__INTERCEPT_SECURITY: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"INTERCEPT_SECURITY"
 		end
 
-	frozen enum_cor_debug_intercept__INTERCEPT_CONTEXT_POLICY: INTEGER is
+	frozen enum_cor_debug_intercept__INTERCEPT_CONTEXT_POLICY: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"INTERCEPT_CONTEXT_POLICY"
 		end
 
-	frozen enum_cor_debug_intercept__INTERCEPT_INTERCEPTION: INTEGER is
+	frozen enum_cor_debug_intercept__INTERCEPT_INTERCEPTION: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"INTERCEPT_INTERCEPTION"
 		end
 
-	frozen enum_cor_debug_intercept__INTERCEPT_ALL: INTEGER is
+	frozen enum_cor_debug_intercept__INTERCEPT_ALL: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
@@ -303,49 +303,49 @@ feature -- enum CorDebugUnmappedStop
 	--|
 	--|    } CorDebugUnmappedStop;
 
-	frozen enum_cor_debug_unmapped_stop__stop_none: INTEGER is
+	frozen enum_cor_debug_unmapped_stop__stop_none: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"STOP_NONE"
 		end
 
-	frozen enum_cor_debug_unmapped_stop__stop_prolog: INTEGER is
+	frozen enum_cor_debug_unmapped_stop__stop_prolog: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"STOP_PROLOG"
 		end
 
-	frozen enum_cor_debug_unmapped_stop__stop_epilog: INTEGER is
+	frozen enum_cor_debug_unmapped_stop__stop_epilog: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"STOP_EPILOG"
 		end
 
-	frozen enum_cor_debug_unmapped_stop__stop_no_mapping_info: INTEGER is
+	frozen enum_cor_debug_unmapped_stop__stop_no_mapping_info: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"STOP_NO_MAPPING_INFO"
 		end
 
-	frozen enum_cor_debug_unmapped_stop__stop_other_unmapped: INTEGER is
+	frozen enum_cor_debug_unmapped_stop__stop_other_unmapped: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"STOP_OTHER_UNMAPPED"
 		end
 
-	frozen enum_cor_debug_unmapped_stop__stop_unmanaged: INTEGER is
+	frozen enum_cor_debug_unmapped_stop__stop_unmanaged: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"STOP_UNMANAGED"
 		end
 
-	frozen enum_cor_debug_unmapped_stop__stop_all: INTEGER is
+	frozen enum_cor_debug_unmapped_stop__stop_all: INTEGER
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
@@ -366,13 +366,13 @@ feature {NONE} -- External Struct implementation
 --			"C struct COR_DEBUG_STEP_RANGE access endOffset use %"cli_debugger_headers.h%" "
 --		end
 
-	set_struct_start_offset (p: POINTER; v: NATURAL_32) is
+	set_struct_start_offset (p: POINTER; v: NATURAL_32)
 			-- Set field `StartOffset' of struct pointed by `p'.
 		external
 			"C struct COR_DEBUG_STEP_RANGE access startOffset type ULONG32 use %"cli_debugger_headers.h%" "
 		end
 
-	set_struct_end_offset (p: POINTER; v: NATURAL_32) is
+	set_struct_end_offset (p: POINTER; v: NATURAL_32)
 			-- Set field `EndOffset' of struct pointed by `p'.
 		external
 			"C struct COR_DEBUG_STEP_RANGE access endOffset type ULONG32 use %"cli_debugger_headers.h%" "
@@ -380,7 +380,7 @@ feature {NONE} -- External Struct implementation
 			"endOffset"
 		end
 
-	sizeof_COR_DEBUG_STEP_RANGE: INTEGER is
+	sizeof_COR_DEBUG_STEP_RANGE: INTEGER
 			-- Number of bytes in a value of type `COR_DEBUG_STEP_RANGE'
 		external
 			"C++ macro use %"cli_debugger_headers.h%" "
@@ -388,7 +388,7 @@ feature {NONE} -- External Struct implementation
 			"sizeof(COR_DEBUG_STEP_RANGE)"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

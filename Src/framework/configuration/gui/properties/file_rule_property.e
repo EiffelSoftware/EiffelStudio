@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Property for file rules."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature -- Display
 
-	displayed_value: STRING_32 is
+	displayed_value: STRING_32
 			-- Displayed format of the data.
 		local
 			l_fr: CONF_FILE_RULE
@@ -78,7 +78,7 @@ feature {NONE} -- Dialog
 	dialog: FILE_RULE_DIALOG;
 			-- Dialog to edit the value.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

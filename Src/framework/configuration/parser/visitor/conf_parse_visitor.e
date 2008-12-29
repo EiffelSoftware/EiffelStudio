@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor that parses all needed configuration files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_build (a_state: like state; an_application_target: like application_target; a_factory: like factory) is
+	make_build (a_state: like state; an_application_target: like application_target; a_factory: like factory)
 			-- Create.
 		require
 			a_state_not_void: a_state /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Visit nodes
 
-	process_target (a_target: CONF_TARGET) is
+	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		local
 			l_pre: CONF_PRECOMPILE
@@ -77,7 +77,7 @@ feature -- Visit nodes
 			end
 		end
 
-	process_library (a_library: CONF_LIBRARY) is
+	process_library (a_library: CONF_LIBRARY)
 			-- Visit `a_library'.
 		local
 			l_target: CONF_TARGET
@@ -171,7 +171,7 @@ feature -- Visit nodes
 			target_set: (not is_error and not is_ignore_bad_libraries) implies a_library.library_target /= Void
 		end
 
-	process_precompile (a_precompile: CONF_PRECOMPILE) is
+	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Visit `a_precompile'.
 		local
 			l_libs: like libraries
@@ -213,7 +213,7 @@ invariant
 	application_target_not_void: application_target /= Void
 	factory_not_void: factory /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

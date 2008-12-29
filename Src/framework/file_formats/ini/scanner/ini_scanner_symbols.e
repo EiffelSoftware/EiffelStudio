@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scanner terminal symbol constants."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,19 +10,19 @@ class
 
 feature -- Symbols
 
-	comment_indicator: CHARACTER is ';'
+	comment_indicator: CHARACTER = ';'
 			-- Comment start character
 
-	section_start_indicator: CHARACTER is '['
+	section_start_indicator: CHARACTER = '['
 			-- Section start indicator
 
-	section_end_indicator: CHARACTER is ']'
+	section_end_indicator: CHARACTER = ']'
 			-- Section end indicator
 
-	assigner_indicator: CHARACTER is '=';
+	assigner_indicator: CHARACTER = '=';
 			-- Assigner indicator
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

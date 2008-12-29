@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of an IL label"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize an empty label.
 		do
 			position := - 1
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 feature -- Status Report
 
-	is_position_set: BOOLEAN is
+	is_position_set: BOOLEAN
 			-- Is current label position known?
 		do
 			Result := position /= -1
@@ -31,7 +31,7 @@ feature -- Status Report
 		
 feature -- Settings
 
-	mark_branch_position (pos: INTEGER) is
+	mark_branch_position (pos: INTEGER)
 			-- Mark `pos' in current MD_METHOD_BODY as it
 			-- will need to be updated once position of current
 			-- label is known
@@ -42,7 +42,7 @@ feature -- Settings
 			mark_offsets.extend (pos)
 		end
 
-	mark_position (pos: INTEGER; body: MD_METHOD_BODY) is
+	mark_position (pos: INTEGER; body: MD_METHOD_BODY)
 			-- Set `position' to `pos' and update all previous stored
 			-- branch positions in `body'.
 		require
@@ -77,7 +77,7 @@ feature -- Integer
 			-- a branch instruction on current. We need to store correct
 			-- offset as soon as we now current label's position.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

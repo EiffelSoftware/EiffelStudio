@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialisation
 
-	make (a_prefix: STRING) is
+	make (a_prefix: STRING)
 			-- Create new unique name generator, which uses
 			-- `a_prefix' as a prefix for its unique names.
 		require
@@ -37,7 +37,7 @@ feature {NONE} -- Initialisation
 			prefix_set: prefixx = a_prefix
 		end
 
-	make_with_string_stream (a_prefix: STRING) is
+	make_with_string_stream (a_prefix: STRING)
 			-- Create new unique name generator, which uses
 			-- `a_prefix' as a prefix for its unique names.
 			-- Create a new string stream which
@@ -72,7 +72,7 @@ feature {ANY} -- Access
 
 feature {ANY} -- Basic operations
 
-	set_output_stream (a_output_stream: KI_CHARACTER_OUTPUT_STREAM) is
+	set_output_stream (a_output_stream: KI_CHARACTER_OUTPUT_STREAM)
 			-- Set `output_stream'
 		require
 			a_output_stream_not_void: a_output_stream /= Void
@@ -82,7 +82,7 @@ feature {ANY} -- Basic operations
 			output_stream_set: output_stream = a_output_stream
 		end
 
-	generate_new_name is
+	generate_new_name
 			-- Generate new unique name and append it to
 			-- `output_stream'.
 		require

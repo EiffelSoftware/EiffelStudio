@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Representation a local signature used for defining type of all
 		local variables of a method.
@@ -24,7 +24,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize current.
 		do
 			Precursor {MD_SIGNATURE}
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Reset
 
-	reset is
+	reset
 			-- Reset content.
 		do
 			internal_put ({MD_SIGNATURE_CONSTANTS}.Local_sig, 0)
@@ -52,7 +52,7 @@ feature -- Reset
 
 feature -- Settings
 
-	set_local_count (n: INTEGER) is
+	set_local_count (n: INTEGER)
 			-- Set number of method locals.
 			-- To be compressed.
 		require
@@ -67,9 +67,9 @@ feature -- State
 	state: INTEGER
 			-- Current state of signature settings.
 
-	local_count_state: INTEGER is 1;
+	local_count_state: INTEGER = 1;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

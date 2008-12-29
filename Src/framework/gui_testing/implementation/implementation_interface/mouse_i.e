@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Interface for a mouse implementation"
 	legal: "See notice at end of class."
@@ -18,14 +18,14 @@ inherit
 
 feature -- Pressing
 
-	press_button (a_mouse_button: INTEGER) is
+	press_button (a_mouse_button: INTEGER)
 			-- Press `a_mouse_button'.
 		require
 			a_mouse_button_valid: is_valid_button (a_mouse_button)
 		deferred
 		end
 
-	release_button (a_mouse_button: INTEGER) is
+	release_button (a_mouse_button: INTEGER)
 			-- Release `a_mouse_button'.
 		require
 			a_mouse_button_valid: is_valid_button (a_mouse_button)
@@ -34,24 +34,24 @@ feature -- Pressing
 
 feature -- Moving
 
-	move_to_absolute_position (an_x, a_y: INTEGER) is
+	move_to_absolute_position (an_x, a_y: INTEGER)
 			-- Move mouse to absolute coordinates `an_x' `a_y'.
 		deferred
 		end
 
 feature -- Scrolling
 
-	scroll_up is
+	scroll_up
 			-- Scroll mouse wheel up.
 		deferred
 		end
 
-	scroll_down is
+	scroll_down
 			-- Scroll mouse wheel down.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

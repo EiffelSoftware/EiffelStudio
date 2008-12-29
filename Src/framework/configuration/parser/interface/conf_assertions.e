@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Assertion settings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,43 +13,43 @@ create {CONF_PARSE_FACTORY}
 
 feature -- Access, stored in configuration file
 
-	is_precondition: BOOLEAN is
+	is_precondition: BOOLEAN
 			-- Check preconditions
 		do
 			Result := level & ck_require = ck_require
 		end
 
-	is_supplier_precondition: BOOLEAN is
+	is_supplier_precondition: BOOLEAN
 			-- Check supplier preconditions
 		do
 			Result := level & ck_sup_require = ck_sup_require
 		end
 
-	is_postcondition: BOOLEAN is
+	is_postcondition: BOOLEAN
 			-- Check postconditions
 		do
 			Result := level & ck_ensure = ck_ensure
 		end
 
-	is_check: BOOLEAN is
+	is_check: BOOLEAN
 			-- Check assertions
 		do
 			Result := level & ck_check = ck_check
 		end
 
-	is_invariant: BOOLEAN is
+	is_invariant: BOOLEAN
 			-- Check invariants
 		do
 			Result := level & ck_invariant = ck_invariant
 		end
 
-	is_loop: BOOLEAN is
+	is_loop: BOOLEAN
 			-- Check loop assertions
 		do
 			Result := level & ck_loop = ck_loop
 		end
 
-	has_assertions: BOOLEAN is
+	has_assertions: BOOLEAN
 			-- Are any assertions enabled?
 		do
 			Result := level /= 0
@@ -57,7 +57,7 @@ feature -- Access, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	enable_precondition is
+	enable_precondition
 			-- Enable precondition.
 		do
 			level := level | ck_require
@@ -70,7 +70,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_loop_unchanged: is_loop = old is_loop
 		end
 
-	enable_supplier_precondition is
+	enable_supplier_precondition
 			-- Enable supplier precondition.
 		do
 			level := level | ck_sup_require
@@ -83,7 +83,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_loop_unchanged: is_loop = old is_loop
 		end
 
-	enable_postcondition is
+	enable_postcondition
 			-- Enable postcondition.
 		do
 			level := level | ck_ensure
@@ -96,7 +96,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_loop_unchanged: is_loop = old is_loop
 		end
 
-	enable_check is
+	enable_check
 			-- Enable check.
 		do
 			level := level | ck_check
@@ -109,7 +109,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_loop_unchanged: is_loop = old is_loop
 		end
 
-	enable_invariant is
+	enable_invariant
 			-- Enable invariant.
 		do
 			level := level | ck_invariant
@@ -122,7 +122,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_loop_unchanged: is_loop = old is_loop
 		end
 
-	enable_loop is
+	enable_loop
 			-- Enable loop.
 		do
 			level := level | ck_loop
@@ -135,7 +135,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_loop: is_loop
 		end
 
-	disable_precondition is
+	disable_precondition
 			-- Enable precondition.
 		do
 			level := level & ck_require.bit_not
@@ -148,7 +148,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_loop_unchanged: is_loop = old is_loop
 		end
 
-	disable_supplier_precondition is
+	disable_supplier_precondition
 			-- Disable supplier precondition.
 		do
 			level := level & ck_sup_require.bit_not
@@ -161,7 +161,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_loop_unchanged: is_loop = old is_loop
 		end
 
-	disable_postcondition is
+	disable_postcondition
 			-- Disable postcondition.
 		do
 			level := level & ck_ensure.bit_not
@@ -174,7 +174,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_loop_unchanged: is_loop = old is_loop
 		end
 
-	disable_check is
+	disable_check
 			-- Disable check.
 		do
 			level := level & ck_check.bit_not
@@ -187,7 +187,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_loop_unchanged: is_loop = old is_loop
 		end
 
-	disable_invariant is
+	disable_invariant
 			-- Disable invariant.
 		do
 			level := level & ck_invariant.bit_not
@@ -200,7 +200,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_loop_unchanged: is_loop = old is_loop
 		end
 
-	disable_loop is
+	disable_loop
 			-- Disable loop.
 		do
 			level := level & ck_loop.bit_not
@@ -215,12 +215,12 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature -- Constants
 
-	ck_require: INTEGER is 0x01
-	ck_ensure: INTEGER is 0x02
-	ck_check: INTEGER is 0x04
-	ck_loop: INTEGER is 0x08
-	ck_invariant: INTEGER is 0x10
-	ck_sup_require: INTEGER is 0x20
+	ck_require: INTEGER = 0x01
+	ck_ensure: INTEGER = 0x02
+	ck_check: INTEGER = 0x04
+	ck_loop: INTEGER = 0x08
+	ck_invariant: INTEGER = 0x10
+	ck_sup_require: INTEGER = 0x20
 			-- Value used during C generation to define assertion level.
 			-- See values in `eif_option.h'.
 
@@ -229,7 +229,7 @@ feature -- Implementation, attributes stored in configuration file
 	level: INTEGER;
 			-- The assertion values, encoded into an integer.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

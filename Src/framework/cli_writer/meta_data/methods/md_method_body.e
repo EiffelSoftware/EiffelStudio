@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Body of an Eiffel method."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create {MD_METHOD_WRITER}
 
 feature {NONE} -- Initialization
 
-	make (token: INTEGER) is
+	make (token: INTEGER)
 			-- Create new instance ready to be updated.
 		require
 			is_method_token:
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Reset
 
-	remake (token: like method_token) is
+	remake (token: like method_token)
 			-- Reuse current object for body of method `token'.
 		require
 			is_method_token:
@@ -80,7 +80,7 @@ feature -- Reset
 
 feature -- Access
 
-	count: INTEGER is
+	count: INTEGER
 			-- Current size in memory.
 		do
 			Result := current_position
@@ -114,7 +114,7 @@ feature -- Access
 	old_exception_catch_blocks: ARRAY [MD_EXCEPTION_CATCH]
 			-- Exception clause for catching exception for old expression evaluation.
 
-	current_old_exception_catch_block: MD_EXCEPTION_CATCH is
+	current_old_exception_catch_block: MD_EXCEPTION_CATCH
 			-- Current old exception catch block
 		do
 			Result := old_exception_catch_blocks.item (current_old_expression_block_position)
@@ -122,13 +122,13 @@ feature -- Access
 
 feature -- Status report
 
-	has_locals: BOOLEAN is
+	has_locals: BOOLEAN
 			-- Has current body some local variables?
 		do
 			Result := local_token /= 0
 		end
 
-	has_exceptions_handling: BOOLEAN is
+	has_exceptions_handling: BOOLEAN
 			-- Has an exception block completely defined?
 		do
 			Result := exception_block.is_defined or else
@@ -137,7 +137,7 @@ feature -- Status report
 					is_old_exception_catch_blocks_defined
 		end
 
-	is_old_exception_catch_blocks_defined: BOOLEAN is
+	is_old_exception_catch_blocks_defined: BOOLEAN
 			-- Has old expression evaluation exception block defined?
 		local
 			i: INTEGER
@@ -163,7 +163,7 @@ feature -- Status report
 	nb_labels: INTEGER
 			-- Current number of defined labels for current body.
 
-	is_last_old_expression_exception_block: BOOLEAN is
+	is_last_old_expression_exception_block: BOOLEAN
 			-- Is `current_old_exception_catch_block' the last one?
 		do
 			Result := (current_old_expression_block_position = old_exception_catch_blocks.upper)
@@ -171,7 +171,7 @@ feature -- Status report
 
 feature -- Savings
 
-	write_to_stream (m: MANAGED_POINTER; pos: INTEGER) is
+	write_to_stream (m: MANAGED_POINTER; pos: INTEGER)
 				-- Write to stream `m' at position `pos'.
 		require
 			not_yet_written: not is_written
@@ -187,7 +187,7 @@ feature -- Savings
 
 feature -- Settings
 
-	set_local_token (token: like local_token) is
+	set_local_token (token: like local_token)
 			-- Set a local signature token to current body.
 		require
 			not_yet_written: not is_written
@@ -197,7 +197,7 @@ feature -- Settings
 			local_token_set: local_token = token
 		end
 
-	update_stack_depth (delta: INTEGER) is
+	update_stack_depth (delta: INTEGER)
 			-- Update `max_stack' and `current_stack_depth' according to
 			-- new `delta' depth change.
 		require
@@ -214,7 +214,7 @@ feature -- Settings
 			max_stack_set: max_stack >= current_stack_depth
 		end
 
-	create_old_exception_catch_blocks (a_count: INTEGER) is
+	create_old_exception_catch_blocks (a_count: INTEGER)
 			-- Create `a_count' old exception catch blocks
 		local
 			l_block: MD_EXCEPTION_CATCH
@@ -235,7 +235,7 @@ feature -- Settings
 			old_exception_catch_blocks_created: old_exception_catch_blocks.count = a_count
 		end
 
-	forth_old_expression_exception_block is
+	forth_old_expression_exception_block
 			-- Go to next old expression exception block
 		require
 			old_expression_exception_block_not_last: not is_last_old_expression_exception_block
@@ -245,7 +245,7 @@ feature -- Settings
 
 feature -- Opcode insertion
 
-	put_nop is
+	put_nop
 			-- Insert `nop'.
 		require
 			not_yet_written: not is_written
@@ -254,7 +254,7 @@ feature -- Opcode insertion
 			current_position := current_position + 1
 		end
 
-	put_throw is
+	put_throw
 			-- Insert `throw' opcode.
 		require
 			not_yet_written: not is_written
@@ -263,7 +263,7 @@ feature -- Opcode insertion
 			last_current_stack_depth := -1
 		end
 
-	put_rethrow is
+	put_rethrow
 			-- Insert `rethrow' opcode.
 		require
 			not_yet_written: not is_written
@@ -272,7 +272,7 @@ feature -- Opcode insertion
 			last_current_stack_depth := -1
 		end
 
-	put_opcode (opcode: INTEGER_16) is
+	put_opcode (opcode: INTEGER_16)
 			-- Insert `opcode'.
 		require
 			not_yet_written: not is_written
@@ -300,7 +300,7 @@ feature -- Opcode insertion
 			current_position := l_pos + l_incr
 		end
 
-	put_string (string_token: INTEGER) is
+	put_string (string_token: INTEGER)
 			-- Generate `ldstr' instruction.
 		require
 			not_yet_written: not is_written
@@ -309,7 +309,7 @@ feature -- Opcode insertion
 			add_integer (string_token)
 		end
 
-	put_opcode_mdtoken (opcode: INTEGER_16; token: INTEGER) is
+	put_opcode_mdtoken (opcode: INTEGER_16; token: INTEGER)
 			-- Insert `opcode' manipulating a metadata token.
 		require
 			not_yet_written: not is_written
@@ -319,7 +319,7 @@ feature -- Opcode insertion
 			add_integer (token)
 		end
 
-	put_opcode_natural_8 (opcode: INTEGER_16; n: NATURAL_8) is
+	put_opcode_natural_8 (opcode: INTEGER_16; n: NATURAL_8)
 			-- Insert `opcode' manipulating an integer.
 		require
 			not_yet_written: not is_written
@@ -330,7 +330,7 @@ feature -- Opcode insertion
 			current_position := current_position + 1
 		end
 
-	put_opcode_natural_16 (opcode: INTEGER_16; n: NATURAL_16) is
+	put_opcode_natural_16 (opcode: INTEGER_16; n: NATURAL_16)
 			-- Insert `opcode' manipulating an integer.
 		require
 			not_yet_written: not is_written
@@ -340,7 +340,7 @@ feature -- Opcode insertion
 			add_natural_16 (n)
 		end
 
-	put_opcode_natural_32 (opcode: INTEGER_16; n: NATURAL_32) is
+	put_opcode_natural_32 (opcode: INTEGER_16; n: NATURAL_32)
 			-- Insert `opcode' manipulating a natural.
 		require
 			not_yet_written: not is_written
@@ -350,7 +350,7 @@ feature -- Opcode insertion
 			add_natural_32 (n)
 		end
 
-	put_opcode_natural_64 (opcode: INTEGER_16; n: NATURAL_64) is
+	put_opcode_natural_64 (opcode: INTEGER_16; n: NATURAL_64)
 			-- Insert `opcode' manipulating an natural 64.
 		require
 			not_yet_written: not is_written
@@ -360,7 +360,7 @@ feature -- Opcode insertion
 			add_natural_64 (n)
 		end
 
-	put_opcode_integer_8 (opcode: INTEGER_16; i: INTEGER_8) is
+	put_opcode_integer_8 (opcode: INTEGER_16; i: INTEGER_8)
 			-- Insert `opcode' manipulating an integer.
 		require
 			not_yet_written: not is_written
@@ -371,7 +371,7 @@ feature -- Opcode insertion
 			current_position := current_position + 1
 		end
 
-	put_opcode_integer_16 (opcode: INTEGER_16; i: INTEGER_16) is
+	put_opcode_integer_16 (opcode: INTEGER_16; i: INTEGER_16)
 			-- Insert `opcode' manipulating an integer.
 		require
 			not_yet_written: not is_written
@@ -381,7 +381,7 @@ feature -- Opcode insertion
 			add_integer_16 (i)
 		end
 
-	put_opcode_integer (opcode: INTEGER_16; i: INTEGER) is
+	put_opcode_integer (opcode: INTEGER_16; i: INTEGER)
 			-- Insert `opcode' manipulating an integer.
 		require
 			not_yet_written: not is_written
@@ -391,7 +391,7 @@ feature -- Opcode insertion
 			add_integer (i)
 		end
 
-	put_opcode_integer_64 (opcode: INTEGER_16; i: INTEGER_64) is
+	put_opcode_integer_64 (opcode: INTEGER_16; i: INTEGER_64)
 			-- Insert `opcode' manipulating an integer 64.
 		require
 			not_yet_written: not is_written
@@ -401,7 +401,7 @@ feature -- Opcode insertion
 			add_integer_64 (i)
 		end
 
-	put_opcode_real_32 (opcode: INTEGER_16; r: REAL) is
+	put_opcode_real_32 (opcode: INTEGER_16; r: REAL)
 			-- Insert `opcode' manipulating a real.
 		require
 			not_yet_written: not is_written
@@ -411,7 +411,7 @@ feature -- Opcode insertion
 			add_real_32 (r)
 		end
 
-	put_opcode_real_64(opcode: INTEGER_16; d: DOUBLE) is
+	put_opcode_real_64(opcode: INTEGER_16; d: DOUBLE)
 			-- Insert `opcode' manipulating a double.
 		require
 			not_yet_written: not is_written
@@ -423,7 +423,7 @@ feature -- Opcode insertion
 
 feature -- Labels manipulation
 
-	define_label: INTEGER is
+	define_label: INTEGER
 			-- Create a new label.
 		local
 			l_label: MD_LABEL
@@ -435,7 +435,7 @@ feature -- Labels manipulation
 			Result := nb_labels
 		end
 
-	mark_label (label_id: INTEGER) is
+	mark_label (label_id: INTEGER)
 			-- Set position of `label_id' to `current_position' in
 			-- stream.
 		require
@@ -462,7 +462,7 @@ feature -- Labels manipulation
 			end
 		end
 
-	put_opcode_label (opcode: INTEGER_16; label_id: INTEGER) is
+	put_opcode_label (opcode: INTEGER_16; label_id: INTEGER)
 			-- Insert `opcode' branching to `label'
 		require
 			not_yet_written: not is_written
@@ -472,7 +472,7 @@ feature -- Labels manipulation
 			put_label (label_id, 0)
 		end
 
-	put_label (label_id: INTEGER; offset: INTEGER) is
+	put_label (label_id: INTEGER; offset: INTEGER)
 			-- Insert offset of `label', incremented by `offset'.
 		require
 			not_yet_written: not is_written
@@ -506,7 +506,7 @@ feature -- Labels manipulation
 			last_current_stack_depth := -1
 		end
 
-	set_branch_location (branch_inst_pos: INTEGER; jump_offset: INTEGER) is
+	set_branch_location (branch_inst_pos: INTEGER; jump_offset: INTEGER)
 			-- Update code at `branch_inst_pos' with new jump value `jump_offset'.
 		require
 			valid_pos: branch_inst_pos > 0 and branch_inst_pos + 4 <= count
@@ -516,7 +516,7 @@ feature -- Labels manipulation
 
 feature -- Opcode insertion with manual update of `current_stack_depth'.
 
-	put_static_call (feature_token, nb_arguments: INTEGER; is_function: BOOLEAN) is
+	put_static_call (feature_token, nb_arguments: INTEGER; is_function: BOOLEAN)
 			-- Perform a static call to `feature_token' with proper stack size computation.
 		require
 			not_yet_written: not is_written
@@ -525,7 +525,7 @@ feature -- Opcode insertion with manual update of `current_stack_depth'.
 				nb_arguments, is_function, False)
 		end
 
-	put_call (opcode: INTEGER_16; feature_token, nb_arguments: INTEGER; is_function: BOOLEAN) is
+	put_call (opcode: INTEGER_16; feature_token, nb_arguments: INTEGER; is_function: BOOLEAN)
 			-- Perform call to `feature_token' with proper stack size computation.
 		require
 			not_yet_written: not is_written
@@ -534,7 +534,7 @@ feature -- Opcode insertion with manual update of `current_stack_depth'.
 			internal_put_call (opcode, feature_token, nb_arguments, is_function, True)
 		end
 
-	put_newobj (constructor_token: INTEGER; nb_arguments: INTEGER) is
+	put_newobj (constructor_token: INTEGER; nb_arguments: INTEGER)
 			-- Perform creation of object through `constructor_token'
 			-- with proper stack size computation.
 		require
@@ -546,7 +546,7 @@ feature -- Opcode insertion with manual update of `current_stack_depth'.
 
 feature {NONE} -- Implementation
 
-	internal_put_call (opcode: INTEGER_16; feature_token, nb_arguments: INTEGER; is_function, needs_current: BOOLEAN) is
+	internal_put_call (opcode: INTEGER_16; feature_token, nb_arguments: INTEGER; is_function, needs_current: BOOLEAN)
 			-- Perform call to `feature_token' with proper stack size computation.
 		require
 			not_yet_written: not is_written
@@ -569,7 +569,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Opcode insertion helpers
 
-	add_natural_16 (val: NATURAL_16) is
+	add_natural_16 (val: NATURAL_16)
 			-- Add `val' to current.
 		require
 			not_yet_written: not is_written
@@ -585,7 +585,7 @@ feature {NONE} -- Opcode insertion helpers
 			current_position := l_pos + 2
 		end
 
-	add_natural_32 (val: NATURAL_32) is
+	add_natural_32 (val: NATURAL_32)
 			-- Add `val' to current.
 		require
 			not_yet_written: not is_written
@@ -609,7 +609,7 @@ feature {NONE} -- Opcode insertion helpers
 			current_position := l_pos
 		end
 
-	add_natural_64 (val: NATURAL_64) is
+	add_natural_64 (val: NATURAL_64)
 			-- Add `val' to current.
 		require
 			not_yet_written: not is_written
@@ -633,7 +633,7 @@ feature {NONE} -- Opcode insertion helpers
 			current_position := l_pos
 		end
 
-	add_integer_16 (val: INTEGER_16) is
+	add_integer_16 (val: INTEGER_16)
 			-- Add `val' to current.
 		require
 			not_yet_written: not is_written
@@ -649,7 +649,7 @@ feature {NONE} -- Opcode insertion helpers
 			current_position := l_pos + 2
 		end
 
-	add_integer (val: INTEGER) is
+	add_integer (val: INTEGER)
 			-- Add `val' to current.
 		require
 			not_yet_written: not is_written
@@ -672,7 +672,7 @@ feature {NONE} -- Opcode insertion helpers
 			current_position := l_pos
 		end
 
-	add_integer_64 (val: INTEGER_64) is
+	add_integer_64 (val: INTEGER_64)
 			-- Add `val' to current.
 		require
 			not_yet_written: not is_written
@@ -696,7 +696,7 @@ feature {NONE} -- Opcode insertion helpers
 			current_position := l_pos
 		end
 
-	add_real_32 (val: REAL) is
+	add_real_32 (val: REAL)
 			-- Add `val' to current.
 		require
 			not_yet_written: not is_written
@@ -709,7 +709,7 @@ feature {NONE} -- Opcode insertion helpers
 			current_position := l_pos + 4
 		end
 
-	add_real_64 (val: DOUBLE) is
+	add_real_64 (val: DOUBLE)
 			-- Add `val' to current.
 		require
 			not_yet_written: not is_written
@@ -722,7 +722,7 @@ feature {NONE} -- Opcode insertion helpers
 			current_position := l_pos + 8
 		end
 
-	internal_put (val: INTEGER_8; pos: INTEGER) is
+	internal_put (val: INTEGER_8; pos: INTEGER)
 			-- Safe insertion that will resize `item' if needed.
 		require
 			not_yet_written: not is_written
@@ -734,7 +734,7 @@ feature {NONE} -- Opcode insertion helpers
 
 feature {NONE} -- Stack depth management
 
-	allocate (new_size: INTEGER) is
+	allocate (new_size: INTEGER)
 			-- Resize `item' if needed so that it can accomdate `new_size'.
 		local
 			l_capacity: INTEGER
@@ -759,7 +759,7 @@ feature {NONE} -- Implementation
 			-- Depth at the previous IL offset. Used for checking that
 			-- our generated code is indeed valid.
 
-	Chunk_size: INTEGER is 50
+	Chunk_size: INTEGER = 50
 			-- Default body size.
 
 	labels: ARRAY [MD_LABEL]
@@ -776,7 +776,7 @@ invariant
 	once_catch_block_not_void: once_catch_block /= Void
 	once_finally_block_not_void: once_finally_block /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

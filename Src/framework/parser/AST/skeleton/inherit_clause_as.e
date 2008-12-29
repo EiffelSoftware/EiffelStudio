@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an inherit clause: rename, export, undefine, redefine or select"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (l: like content; k_as: KEYWORD_AS) is
+	make (l: like content; k_as: KEYWORD_AS)
 			-- Initialize.
 		require
 			l_valid: l /= Void implies not l.is_empty
@@ -32,7 +32,7 @@ feature{NONE} -- Initialization
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and clause_keyword_index /= 0 then
 				Result := clause_keyword (a_list)
@@ -41,7 +41,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if content /= Void then
 				Result := content.last_token (a_list)
@@ -53,7 +53,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		local
 			l_content: ?like content
@@ -84,7 +84,7 @@ feature -- Roundtrip
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

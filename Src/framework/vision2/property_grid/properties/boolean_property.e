@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Boolean item in a property grid."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_value (a_name: like name; a_value: BOOLEAN) is
+	make_with_value (a_name: like name; a_value: BOOLEAN)
 			-- Create with `a_value'.
 		do
 			make_with_choices (a_name, <<True, False>>)
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	convert_to_data (a_string: like displayed_value): like value is
+	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
 		do
 			if convert_to_data_agent /= Void then

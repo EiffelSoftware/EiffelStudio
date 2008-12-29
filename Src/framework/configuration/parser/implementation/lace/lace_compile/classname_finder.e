@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Eiffel classname finders"
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature -- Status report
 
-	valid_start_condition (sc: INTEGER): BOOLEAN is
+	valid_start_condition (sc: INTEGER): BOOLEAN
 			-- Is `sc' a valid start condition?
 		do
 			Result := (INITIAL <= sc and sc <= VERBATIM_STR3)
@@ -27,7 +27,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	yy_build_tables is
+	yy_build_tables
 			-- Build scanner tables.
 		do
 			yy_nxt := yy_nxt_template
@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			yy_acclist := yy_acclist_template
 		end
 
-	yy_execute_action (yy_act: INTEGER) is
+	yy_execute_action (yy_act: INTEGER)
 			-- Execute semantic action.
 		do
 			inspect yy_act
@@ -207,7 +207,7 @@ fatal_error ("scanner jammed")
 			end
 		end
 
-	yy_execute_eof_action (yy_sc: INTEGER) is
+	yy_execute_eof_action (yy_sc: INTEGER)
 			-- Execute EOF semantic action.
 		do
 			inspect yy_sc
@@ -245,7 +245,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yy_nxt_template: SPECIAL [INTEGER] is
+	yy_nxt_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,   12,   12,   13,   14,   12,   15,   12,   12,   16,
@@ -291,7 +291,7 @@ feature {NONE} -- Table templates
 			   81,   81,   81,   81,   81,   81,   81, yy_Dummy>>)
 		end
 
-	yy_chk_template: SPECIAL [INTEGER] is
+	yy_chk_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -337,7 +337,7 @@ feature {NONE} -- Table templates
 			   81,   81,   81,   81,   81,   81,   81, yy_Dummy>>)
 		end
 
-	yy_base_template: SPECIAL [INTEGER] is
+	yy_base_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    0,    0,   29,   49,   39,   42,  163,  147,   36,
@@ -352,7 +352,7 @@ feature {NONE} -- Table templates
 			  276,  286,  296,  306,  316,  326,  336, yy_Dummy>>)
 		end
 
-	yy_def_template: SPECIAL [INTEGER] is
+	yy_def_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,   81,    1,   82,   82,   83,   83,   84,   84,   85,
@@ -367,7 +367,7 @@ feature {NONE} -- Table templates
 			   81,   81,   81,   81,   81,   81,   81, yy_Dummy>>)
 		end
 
-	yy_ec_template: SPECIAL [INTEGER] is
+	yy_ec_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
@@ -400,7 +400,7 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>)
 		end
 
-	yy_meta_template: SPECIAL [INTEGER] is
+	yy_meta_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    2,    3,    1,    4,    1,    5,    5,
@@ -408,7 +408,7 @@ feature {NONE} -- Table templates
 			    5,    5,    5,    9,    5,    5,   10,    5,    5,    5, yy_Dummy>>)
 		end
 
-	yy_accept_template: SPECIAL [INTEGER] is
+	yy_accept_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    1,    2,    3,    3,    3,    4,    5,    6,    7,
@@ -422,7 +422,7 @@ feature {NONE} -- Table templates
 			   84,   85,   85, yy_Dummy>>)
 		end
 
-	yy_acclist_template: SPECIAL [INTEGER] is
+	yy_acclist_template: SPECIAL [INTEGER]
 		once
 			Result := yy_fixed_array (<<
 			    0,    4,    4,   16,   16,   18,   18,   20,    4,   10,
@@ -438,56 +438,56 @@ feature {NONE} -- Table templates
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 347
+	yyJam_base: INTEGER = 347
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 81
+	yyJam_state: INTEGER = 81
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 82
+	yyTemplate_mark: INTEGER = 82
 			-- Mark between normal states and templates
 
-	yyNull_equiv_class: INTEGER is 1
+	yyNull_equiv_class: INTEGER = 1
 			-- Equivalence code for NULL character
 
-	yyReject_used: BOOLEAN is false
+	yyReject_used: BOOLEAN = false
 			-- Is `reject' called?
 
-	yyVariable_trail_context: BOOLEAN is true
+	yyVariable_trail_context: BOOLEAN = true
 			-- Is there a regular expression with
 			-- both leading and trailing parts having
 			-- variable length?
 
-	yyReject_or_variable_trail_context: BOOLEAN is true
+	yyReject_or_variable_trail_context: BOOLEAN = true
 			-- Is `reject' called or is there a
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 19
+	yyNb_rules: INTEGER = 19
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 20
+	yyEnd_of_buffer: INTEGER = 20
 			-- End of buffer rule code
 
-	yyLine_used: BOOLEAN is false
+	yyLine_used: BOOLEAN = false
 			-- Are line and column numbers used?
 
-	yyPosition_used: BOOLEAN is false
+	yyPosition_used: BOOLEAN = false
 			-- Is `position' used?
 
-	INITIAL: INTEGER is 0
-	IN_CLASS: INTEGER is 1
-	VERBATIM_STR1: INTEGER is 2
-	VERBATIM_STR2: INTEGER is 3
-	VERBATIM_STR3: INTEGER is 4
+	INITIAL: INTEGER = 0
+	IN_CLASS: INTEGER = 1
+	VERBATIM_STR1: INTEGER = 2
+	VERBATIM_STR2: INTEGER = 3
+	VERBATIM_STR3: INTEGER = 4
 			-- Start condition codes
 
 feature -- User-defined features
 
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

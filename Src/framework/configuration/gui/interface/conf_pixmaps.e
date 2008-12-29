@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Pixmaps for configuration objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -455,7 +455,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	pixmap_from_group (a_group: CONF_GROUP): EV_PIXMAP is
+	pixmap_from_group (a_group: CONF_GROUP): EV_PIXMAP
 			-- Return pixmap based on `a_group'.
 		require
 			a_group_not_void: a_group /= Void
@@ -465,7 +465,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	pixmap_from_group_path (a_group: CONF_GROUP; a_path: STRING): EV_PIXMAP is
+	pixmap_from_group_path (a_group: CONF_GROUP; a_path: STRING): EV_PIXMAP
 			-- Return pixmap based on `a_group' and `a_path'.
 		require
 			a_group_not_void: a_group /= Void
@@ -551,7 +551,7 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

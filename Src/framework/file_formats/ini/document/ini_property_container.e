@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base implementation for elements of an INI document that can contain properties."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize section with label `a_label'
 		do
 			create properties.make (0)
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	document: INI_DOCUMENT is
+	document: INI_DOCUMENT
 			-- Document container is attached to.
 		deferred
 		ensure
@@ -32,7 +32,7 @@ feature -- Access
 	properties: ARRAYED_LIST [INI_PROPERTY]
 			-- Default and named section properties
 
-	default_properties: LIST [INI_PROPERTY] is
+	default_properties: LIST [INI_PROPERTY]
 			-- Retrieves list of only default (unnamed) properties in section
 		do
 			Result := partial_properties (False)
@@ -42,7 +42,7 @@ feature -- Access
 			properties_unmoved: properties.cursor.is_equal (old properties.cursor)
 		end
 
-	named_properties: LIST [INI_PROPERTY] is
+	named_properties: LIST [INI_PROPERTY]
 			-- Retrieves list of only named properties in section
 		do
 			Result := partial_properties (True)
@@ -54,7 +54,7 @@ feature -- Access
 
 feature -- Query
 
-	literals_of_name (a_name: STRING; a_ignore_case: BOOLEAN): ARRAYED_LIST [INI_LITERAL] is
+	literals_of_name (a_name: STRING; a_ignore_case: BOOLEAN): ARRAYED_LIST [INI_LITERAL]
 			-- Retrieves a list of literals by name
 		require
 			a_name_attached: a_name /= Void
@@ -87,7 +87,7 @@ feature -- Query
 			result_attached: Result /= Void
 		end
 
-	literal_of_name (a_name: STRING; a_ignore_case: BOOLEAN): INI_LITERAL is
+	literal_of_name (a_name: STRING; a_ignore_case: BOOLEAN): INI_LITERAL
 			-- Retrieves first literal of name `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -119,7 +119,7 @@ feature -- Query
 			result_attached: not literals_of_name (a_name, a_ignore_case).is_empty implies Result /= Void
 		end
 
-	properties_of_name (a_name: STRING; a_ignore_case: BOOLEAN): ARRAYED_LIST [INI_PROPERTY] is
+	properties_of_name (a_name: STRING; a_ignore_case: BOOLEAN): ARRAYED_LIST [INI_PROPERTY]
 			-- Retrieves a list of properties by name
 		require
 			a_name_attached: a_name /= Void
@@ -152,7 +152,7 @@ feature -- Query
 			result_attached: Result /= Void
 		end
 
-	property_of_name (a_name: STRING; a_ignore_case: BOOLEAN): INI_PROPERTY is
+	property_of_name (a_name: STRING; a_ignore_case: BOOLEAN): INI_PROPERTY
 			-- Retrieves first property of name `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -186,7 +186,7 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	partial_properties (a_named: BOOLEAN): LIST [INI_PROPERTY] is
+	partial_properties (a_named: BOOLEAN): LIST [INI_PROPERTY]
 			-- Retrieves list of only properties in section according to `a_named'.
 			-- When `a_named' is True only named properties are returned, when False only
 			-- unnamed (default) properties are returned.
@@ -223,7 +223,7 @@ invariant
 	properties_attached: properties /= Void
 	literals_attached: literals /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

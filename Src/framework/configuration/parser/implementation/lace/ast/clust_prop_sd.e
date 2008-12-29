@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Cluster property description for Ace"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	initialize (dep: like dependencies; us: like use_name; iop: like include_option;
 		eo: like exclude_option; ao: like adapt_option;
 		dop: like default_option; o: like options;
-		vo: like visible_option) is
+		vo: like visible_option)
 			-- Create a new CLUST_PROP AST node.
 		do
 			dependencies := dep
@@ -67,7 +67,7 @@ feature -- Properties
 	visible_option: LACE_LIST [CLAS_VISI_SD];
 			-- Visibility
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a search tool for EV_SEARCHABLE_COMPONENT"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ inherit
 
 feature -- Registration
 
-	attach_tool (a_component: like searchable_component) is
+	attach_tool (a_component: like searchable_component)
 			-- Attach current to `a_component'.
 		require
 			not_attached: not is_tool_attached
@@ -26,7 +26,7 @@ feature -- Registration
 			attached: is_tool_attached
 		end
 
-	detach_tool is
+	detach_tool
 			-- Detach current from `a_component'.
 		require
 			attached: is_tool_attached
@@ -40,7 +40,7 @@ feature -- Registration
 
 feature -- Display
 
-	show_tool is
+	show_tool
 			-- Display current search tool.
 		require
 			attached: is_tool_attached
@@ -50,7 +50,7 @@ feature -- Display
 			tool_displayed: is_tool_displayed
 		end
 
-	hide_tool is
+	hide_tool
 			-- Hide current search tool.
 		require
 			attached: is_tool_attached
@@ -67,12 +67,12 @@ feature -- Access
 
 feature -- Status report
 
-	is_tool_displayed: BOOLEAN is
+	is_tool_displayed: BOOLEAN
 			-- Is current search tool displayed?
 		deferred
 		end
 
-	is_tool_attached: BOOLEAN is
+	is_tool_attached: BOOLEAN
 			-- Is current attached to a searchable component?
 		do
 			Result := searchable_component /= Void
@@ -82,14 +82,14 @@ feature -- Status report
 
 feature{NONE} -- Registration implementation
 
-	internal_attach is
+	internal_attach
 			-- Attach current to `a_component'.
 		require
 			attached: is_tool_attached
 		deferred
 		end
 
-	internal_detach is
+	internal_detach
 			-- Detach current to `a_componet'.
 		require
 			attached: is_tool_attached
@@ -98,7 +98,7 @@ feature{NONE} -- Registration implementation
 
 invariant
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

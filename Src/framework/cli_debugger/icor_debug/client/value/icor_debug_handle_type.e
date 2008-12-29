@@ -1,4 +1,4 @@
-indexing
+note
 	description: "enum ICorDebugHandleType"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,21 +10,21 @@ class
 
 feature {ICOR_EXPORTER} -- Enum ICorDebugHandleType
 
-	frozen Handle_strong: INTEGER is
+	frozen Handle_strong: INTEGER
 		external
 			"C++ macro use %"cli_debugger_utils.h%" "
 		alias
 			"HANDLE_STRONG"
 		end
 
-	frozen Handle_weak_track_resurrection: INTEGER is
+	frozen Handle_weak_track_resurrection: INTEGER
 		external
 			"C++ macro use %"cli_debugger_utils.h%" "
 		alias
 			"HANDLE_WEAK_TRACK_RESURRECTION"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

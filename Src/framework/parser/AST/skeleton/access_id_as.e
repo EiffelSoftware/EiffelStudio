@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"AST representation of an access (local, argument or feature). %
 		%It is necessary the first call in a nested expression."
@@ -20,13 +20,13 @@ create
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_access_id_as (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

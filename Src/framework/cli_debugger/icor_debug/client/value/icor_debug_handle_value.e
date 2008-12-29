@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		interface ICorDebugHandleValue : ICorDebugReferenceValue
 		{
@@ -34,7 +34,7 @@ create
 	
 feature {ICOR_EXPORTER} -- Query
 
-	is_Handle_strong: BOOLEAN is
+	is_Handle_strong: BOOLEAN
 		local
 			l_type: INTEGER
 		do
@@ -42,7 +42,7 @@ feature {ICOR_EXPORTER} -- Query
 			Result := l_type = Handle_strong
 		end
 		
-	is_Handle_weak_track_resurrection: BOOLEAN is
+	is_Handle_weak_track_resurrection: BOOLEAN
 		local
 			l_type: INTEGER
 		do
@@ -52,13 +52,13 @@ feature {ICOR_EXPORTER} -- Query
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_handle_type: INTEGER is
+	get_handle_type: INTEGER
 			-- returns the type of this handle
 		do
 			last_call_success := cpp_get_handle_type (item, $Result)
 		end		
 
-	api_dispose is
+	api_dispose
 			-- returns the type of this handle
 		do
 			last_call_success := cpp_api_dispose (item)
@@ -66,7 +66,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature -- Cleaning / Dispose
 
-	clean_on_dispose is
+	clean_on_dispose
 			-- Call this, to clean the object as if it is about to be disposed
 		do
 			if item_not_null and then is_Handle_strong then
@@ -75,7 +75,7 @@ feature -- Cleaning / Dispose
 			Precursor {ICOR_DEBUG_REFERENCE_VALUE}
 		end
 		
-	dispose is
+	dispose
 			-- Free `item'.
 		local
 			hr: INTEGER
@@ -88,7 +88,7 @@ feature -- Cleaning / Dispose
 		
 feature {NONE} -- Implementation
 
-	cpp_get_handle_type (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_get_handle_type (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugHandleValue signature(CorDebugHandleType *): EIF_INTEGER 
@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			"GetHandleType"
 		end
 
-	cpp_api_dispose (obj: POINTER): INTEGER is
+	cpp_api_dispose (obj: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugHandleValue signature(): EIF_INTEGER 
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			"Dispose"
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

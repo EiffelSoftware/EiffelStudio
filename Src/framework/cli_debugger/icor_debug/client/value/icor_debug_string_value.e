@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		ICorDebugStringValue
 		]"
@@ -19,13 +19,13 @@ create
 
 feature {ICOR_EXPORTER} -- Access
 
-	get_length: NATURAL_32 is
+	get_length: NATURAL_32
 			-- GetLength
 		do
 			last_call_success := cpp_get_length (item, $Result)
 		end
 
-	get_string (a_len: NATURAL_32): STRING_32 is
+	get_string (a_len: NATURAL_32): STRING_32
 			-- GetString
 		local
 			p_nbfetched: NATURAL_32
@@ -43,7 +43,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_get_length (obj: POINTER; a_result: TYPED_POINTER [NATURAL_32]): INTEGER is
+	cpp_get_length (obj: POINTER; a_result: TYPED_POINTER [NATURAL_32]): INTEGER
 		external
 			"[
 				C++ ICorDebugStringValue signature(ULONG32*): EIF_INTEGER 
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 			"GetLength"
 		end
 
-	cpp_get_string (obj: POINTER; a_cchstring: NATURAL_32; a_pcchstring: TYPED_POINTER [NATURAL_32]; a_pstring: POINTER): INTEGER is
+	cpp_get_string (obj: POINTER; a_cchstring: NATURAL_32; a_pcchstring: TYPED_POINTER [NATURAL_32]; a_pstring: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugStringValue signature(ULONG32, ULONG32*, WCHAR*): EIF_INTEGER 
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 			"GetString"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

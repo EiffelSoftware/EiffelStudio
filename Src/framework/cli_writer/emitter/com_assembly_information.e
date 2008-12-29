@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Eiffel interface class for emitter.exe or ISE.CacheManager.dll assemblies
 		Encapsulates the COM_ASSEMBLY_INFORMATION class
@@ -19,7 +19,7 @@ create {COM_CACHE_MANAGER}
 
 feature -- Access
 
-	name: STRING is
+	name: STRING
 			-- assembly name
 		local
 			res: POINTER
@@ -32,7 +32,7 @@ feature -- Access
 			success: last_call_success = 0
 		end
 
-	version: STRING is
+	version: STRING
 			-- assembly version
 		local
 			res: POINTER
@@ -45,7 +45,7 @@ feature -- Access
 			success: last_call_success = 0
 		end
 
-	culture: STRING is
+	culture: STRING
 			-- assembly culture
 		local
 			res: POINTER
@@ -58,7 +58,7 @@ feature -- Access
 			success: last_call_success = 0
 		end
 
-	public_key_token: STRING is
+	public_key_token: STRING
 			-- assembly public key token
 		local
 			res: POINTER
@@ -71,7 +71,7 @@ feature -- Access
 			success: last_call_success = 0
 		end
 
-	is_in_gac: BOOLEAN is
+	is_in_gac: BOOLEAN
 			-- Was assembly consumed in GAC
 		local
 			l_res: INTEGER
@@ -82,7 +82,7 @@ feature -- Access
 			success: last_call_success = 0
 		end
 
-	is_consumed: BOOLEAN is
+	is_consumed: BOOLEAN
 			-- has assembly been consumed?
 		local
 			l_res: INTEGER
@@ -93,7 +93,7 @@ feature -- Access
 			success: last_call_success = 0
 		end
 
-	consumed_folder_name: STRING is
+	consumed_folder_name: STRING
 			-- assembly consumed folder name
 		local
 			res: POINTER
@@ -106,7 +106,7 @@ feature -- Access
 			success: last_call_success = 0
 		end
 
-	code_base: STRING is
+	code_base: STRING
 			-- assembly code base location
 		local
 			res: POINTER
@@ -121,7 +121,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	c_name (ap:POINTER; aret_val: POINTER): INTEGER is
+	c_name (ap:POINTER; aret_val: POINTER): INTEGER
 			-- assembly name
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			"name"
 		end
 
-	c_version (ap:POINTER; aret_val: POINTER): INTEGER is
+	c_version (ap:POINTER; aret_val: POINTER): INTEGER
 			-- assembly version
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 			"version"
 		end
 
-	c_culture (ap:POINTER; aret_val: POINTER): INTEGER is
+	c_culture (ap:POINTER; aret_val: POINTER): INTEGER
 			-- asssembly culture
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			"culture"
 		end
 
-	c_public_key_token (ap:POINTER; aret_val: POINTER): INTEGER is
+	c_public_key_token (ap:POINTER; aret_val: POINTER): INTEGER
 			-- assembly public key token
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			"public_key_token"
 		end
 
-	c_is_in_gac (ap:POINTER; aret_val: POINTER): INTEGER is
+	c_is_in_gac (ap:POINTER; aret_val: POINTER): INTEGER
 			-- was assembly consumed in GAC
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			"is_in_gac"
 		end
 
-	c_is_consumed (ap:POINTER; aret_val: POINTER): INTEGER is
+	c_is_consumed (ap:POINTER; aret_val: POINTER): INTEGER
 			-- assembly consumed folder name
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION signature (VARIANT_BOOL*):EIF_INTEGER use %"metadata_consumer.h%""
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 			"is_consumed"
 		end
 
-	c_consumed_folder_name (ap:POINTER; aret_val: POINTER): INTEGER is
+	c_consumed_folder_name (ap:POINTER; aret_val: POINTER): INTEGER
 			-- assembly consumed folder name
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			"consumed_folder_name"
 		end
 
-	c_code_base (ap:POINTER; aret_val: POINTER): INTEGER is
+	c_code_base (ap:POINTER; aret_val: POINTER): INTEGER
 			-- assembly code base
 		external
 			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION signature (LPWSTR*):EIF_INTEGER use %"metadata_consumer.h%""
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			"code_base"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

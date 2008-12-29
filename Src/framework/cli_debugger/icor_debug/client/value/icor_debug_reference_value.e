@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		ICorDebugReferenceValue
 			GetValue([out] void *pTo);
@@ -19,7 +19,7 @@ create
 
 feature {ICOR_EXPORTER} -- Access
 
-	is_null: BOOLEAN is
+	is_null: BOOLEAN
 			-- IsNull tests whether the reference is null
 		local
 			r: INTEGER
@@ -30,20 +30,20 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
-	get_value (a_p_cordb_address: POINTER) is
+	get_value (a_p_cordb_address: POINTER)
 			-- GetValue copies the value into the specified buffer
 		do
 			last_call_success := cpp_get_value (item, a_p_cordb_address)
 		end
 	
-	set_value (a_cordb_address: NATURAL_64) is
+	set_value (a_cordb_address: NATURAL_64)
 			-- SetValue copies a new value from the specified buffer. The buffer should
 			-- be the appropriate size for the simple type.
 		do
 			last_call_success := cpp_set_value (item, a_cordb_address)
 		end		
 
-	dereference: ICOR_DEBUG_VALUE is
+	dereference: ICOR_DEBUG_VALUE
 			-- Dereference returns a ICorDebugValue representing the value
 			-- referenced. If the resulting value is a garbage collected
 			-- object, then the resulting value is a "weak reference" which
@@ -57,7 +57,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 		
-	dereference_strong: ICOR_DEBUG_VALUE is
+	dereference_strong: ICOR_DEBUG_VALUE
 			-- DereferenceStrong returns a ICorDebugValue representing the value
 			-- referenced. If the resulting value is a garbage collected object,
 			-- then the resulting value is a "strong reference" which will cause
@@ -73,7 +73,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_is_null (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_is_null (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugReferenceValue signature(BOOL*): EIF_INTEGER 
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			"IsNull"
 		end
 
-	cpp_get_value (obj: POINTER; a_p_cordb_address: POINTER): INTEGER is
+	cpp_get_value (obj: POINTER; a_p_cordb_address: POINTER): INTEGER
 			--| Nb: typedef ULONG64 CORDB_ADDRESS;
 		external
 			"[
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			"GetValue"
 		end
 		
-	cpp_set_value (obj: POINTER; a_cordb_address: NATURAL_64): INTEGER is
+	cpp_set_value (obj: POINTER; a_cordb_address: NATURAL_64): INTEGER
 			--| Nb: typedef ULONG64 CORDB_ADDRESS;
 		external
 			"[
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 			"SetValue"
 		end
 		
-	cpp_dereference (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_dereference (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugReferenceValue signature(ICorDebugValue**): EIF_INTEGER 
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			"Dereference"
 		end
 		
-	cpp_dereference_strong (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_dereference_strong (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugReferenceValue signature(ICorDebugValue**): EIF_INTEGER 
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			"DereferenceStrong"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

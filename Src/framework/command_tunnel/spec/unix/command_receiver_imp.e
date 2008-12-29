@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Comand recevier implementation"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature -- Operation
 
-	destroy is
+	destroy
 			-- <precursor>
 		do
 		end
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 
 	interface: !COMMAND_RECEIVER;
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

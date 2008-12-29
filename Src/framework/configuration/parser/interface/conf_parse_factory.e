@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory for configuration objects needed to parse a config file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature
 
-	new_system_generate_uuid (a_name: STRING): CONF_SYSTEM is
+	new_system_generate_uuid (a_name: STRING): CONF_SYSTEM
 			-- Create a {CONF_SYSTEM} object with an automatically generated UUID.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -20,7 +20,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_system (a_name: STRING an_uuid: UUID): CONF_SYSTEM is
+	new_system (a_name: STRING an_uuid: UUID): CONF_SYSTEM
 			-- Create a `CONF_SYSTEM' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -31,7 +31,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_target (a_name: STRING; a_system: CONF_SYSTEM): CONF_TARGET is
+	new_target (a_name: STRING; a_system: CONF_SYSTEM): CONF_TARGET
 			-- Create a `CONF_TARGET' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -42,7 +42,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_location_from_path (a_path: STRING; a_target: CONF_TARGET): CONF_DIRECTORY_LOCATION is
+	new_location_from_path (a_path: STRING; a_target: CONF_TARGET): CONF_DIRECTORY_LOCATION
 			-- Create a `CONF_LOCATION' object.
 			-- Create with `a_path' (without a filename).
 			-- e.g. aa/bb/cc =>
@@ -57,7 +57,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_location_from_full_path (a_full_path: STRING; a_target: CONF_TARGET): CONF_FILE_LOCATION is
+	new_location_from_full_path (a_full_path: STRING; a_target: CONF_TARGET): CONF_FILE_LOCATION
 			-- Create a `CONF_LOCATION' object.
 			-- Create with `a_full_path' (with a filename).
 			-- e.g. aa/bb/cc =>
@@ -72,7 +72,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_root (a_cluster, a_class, a_feature: STRING; a_all_root: BOOLEAN): CONF_ROOT is
+	new_root (a_cluster, a_class, a_feature: STRING; a_all_root: BOOLEAN): CONF_ROOT
 			-- Create a `CONF_ROOT' object.
 		require
 			a_cluster_ok: a_cluster /= Void implies not a_cluster.is_empty
@@ -84,7 +84,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_version (a_major, a_minor, a_release, a_build: NATURAL_16): CONF_VERSION is
+	new_version (a_major, a_minor, a_release, a_build: NATURAL_16): CONF_VERSION
 			-- Create a `CONF_VERSION' object.
 		do
 			create Result.make_version (a_major, a_minor, a_release, a_build)
@@ -92,7 +92,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_option: CONF_OPTION is
+	new_option: CONF_OPTION
 			-- Create a `CONF_OPTION' object.
 		do
 			create Result
@@ -100,7 +100,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_file_rule: CONF_FILE_RULE is
+	new_file_rule: CONF_FILE_RULE
 			-- Create a `CONF_FILE_RULE' object.
 		do
 			create Result.make
@@ -108,7 +108,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_external_include (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_INCLUDE is
+	new_external_include (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_INCLUDE
 			-- Create a `CONF_EXTERNAL_INCLUDE' object.
 		require
 			a_location_not_void: a_location /= Void
@@ -119,7 +119,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_external_object (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_OBJECT is
+	new_external_object (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_OBJECT
 			-- Create a `CONF_EXTERNAL_OBJECT' object.
 		require
 			a_location_not_void: a_location /= Void
@@ -130,7 +130,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_external_library (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_LIBRARY is
+	new_external_library (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_LIBRARY
 			-- Create a `CONF_EXTERNAL_LIBRARY' object.
 		require
 			a_location_not_void: a_location /= Void
@@ -141,7 +141,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_external_resource (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_RESOURCE is
+	new_external_resource (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_RESOURCE
 			-- Create a `CONF_EXTERNAL_RESOURCE' object.
 		require
 			a_location_not_void: a_location /= Void
@@ -152,7 +152,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_external_make (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_MAKE is
+	new_external_make (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_MAKE
 			-- Create a `CONF_EXTERNAL_MAKE' object.
 		require
 			a_location_not_void: a_location /= Void
@@ -163,7 +163,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_action (a_command: STRING; a_must_succeed: BOOLEAN; a_working_directory: CONF_DIRECTORY_LOCATION): CONF_ACTION is
+	new_action (a_command: STRING; a_must_succeed: BOOLEAN; a_working_directory: CONF_DIRECTORY_LOCATION): CONF_ACTION
 			-- Create a `CONF_ACTION' object.
 		require
 			a_command_ok: a_command /= Void and then not a_command.is_empty
@@ -173,7 +173,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_assertions: CONF_ASSERTIONS is
+	new_assertions: CONF_ASSERTIONS
 			-- Create a `CONF_ASSERTIONS' object.
 		do
 			create Result
@@ -181,7 +181,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_assembly (a_name: STRING; a_file: STRING; a_target: CONF_TARGET): CONF_ASSEMBLY is
+	new_assembly (a_name: STRING; a_file: STRING; a_target: CONF_TARGET): CONF_ASSEMBLY
 			-- Create a `CONF_ASSEMBLY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -196,7 +196,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_assembly_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: STRING; a_target: CONF_TARGET): CONF_ASSEMBLY is
+	new_assembly_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: STRING; a_target: CONF_TARGET): CONF_ASSEMBLY
 			-- Create a `CONF_ASSEMBLY' object from gac.
 		require
 			a_name_not_void: a_name /= Void
@@ -211,7 +211,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_library (a_name: STRING; a_directory: CONF_FILE_LOCATION; a_target: CONF_TARGET): CONF_LIBRARY is
+	new_library (a_name: STRING; a_directory: CONF_FILE_LOCATION; a_target: CONF_TARGET): CONF_LIBRARY
 			-- Create a `CONF_LIBRARY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -223,7 +223,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_precompile (a_name: STRING; a_file: STRING; a_target: CONF_TARGET): CONF_PRECOMPILE is
+	new_precompile (a_name: STRING; a_file: STRING; a_target: CONF_TARGET): CONF_PRECOMPILE
 			-- Create a `CONF_PRECOMPILE' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -235,7 +235,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_CLUSTER is
+	new_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_CLUSTER
 			-- Create a `CONF_CLUSTER' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -247,7 +247,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_test_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_TEST_CLUSTER is
+	new_test_cluster (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_TEST_CLUSTER
 			-- Create a `CONF_TEST_CLUSTER' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -259,7 +259,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_override (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_OVERRIDE is
+	new_override (a_name: STRING; a_directory: CONF_DIRECTORY_LOCATION; a_target: CONF_TARGET): CONF_OVERRIDE
 			-- Create a `CONF_OVERRIDE' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -271,7 +271,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	uuid_generator: UUID_GENERATOR is
+	uuid_generator: UUID_GENERATOR
 			-- UUID generator.
 		once
 			create Result
@@ -279,7 +279,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -28,7 +28,7 @@ create
 feature {NONE} -- Initialization
 
 	make (a_test_case: CLASS_C; a_system: like system; an_interpreter: like interpreter;
-			an_error_handler: like error_handler) is
+			an_error_handler: like error_handler)
 			-- Create new test case caller.
 		require
 			a_test_case_not_void: a_test_case /= Void
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	has_next_step: BOOLEAN is
+	has_next_step: BOOLEAN
 			-- Is there a next step to execute?
 		do
 			Result := interpreter.is_running and interpreter.is_ready and not steps_completed
@@ -74,15 +74,15 @@ feature -- Access
 	error_handler: AUT_ERROR_HANDLER
 			-- Error handler
 
-	set_up_procedure_name: STRING is "set_up"
+	set_up_procedure_name: STRING = "set_up"
 			-- Name for procedure `set_up'
 
-	tear_down_procedure_name: STRING is "tear_down"
+	tear_down_procedure_name: STRING = "tear_down"
 			-- Name for procedure `set_up'
 
 feature -- Execution
 
-	start is
+	start
 		do
 			procedure_index := 1
 			steps_completed := False
@@ -93,7 +93,7 @@ feature -- Execution
 			test_case_variable_void: test_case_variable = Void
 		end
 
-	step is
+	step
 		do
 			if procedure_index > test_case.feature_table.count then
 				steps_completed := True
@@ -106,7 +106,7 @@ feature -- Execution
 			end
 		end
 
-	cancel is
+	cancel
 		do
 			steps_completed := True
 		end
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 	procedure_index: INTEGER
 			-- Index of current procedure from `test_case'
 
-	procedure: FEATURE_I is
+	procedure: FEATURE_I
 			-- Procedure indexed by `procedure_index'
 		require
 			procedure_index <= test_case.feature_table.count
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Steps
 
-	create_test_case is
+	create_test_case
 			-- Create an object of type `test_case' and make it available via variable
 			-- `test_case_variable'. If creation should fail, abort task.
 		require
@@ -169,7 +169,7 @@ feature {NONE} -- Steps
 			canceled_or_created: steps_completed xor test_case_variable /= Void
 		end
 
-	invoke_test_procedure is
+	invoke_test_procedure
 			-- Invoke `set_up', `procedure' and `tear_down'.
 		require
 			test_case_variable_not_void: test_case_variable /= Void
@@ -191,7 +191,7 @@ feature {NONE} -- Steps
 
 feature {NONE} -- Implementation
 
-	skip_non_test_routines is
+	skip_non_test_routines
 			-- Increment `procedure_index' until it indexes a test procedure.
 			-- (See `test_case_locator.is_test_procedure' for a defintion of what constitutes a
 			-- test procedure.)

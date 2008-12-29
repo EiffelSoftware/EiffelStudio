@@ -1,4 +1,4 @@
-indexing
+note
 	description: "TTY menu."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_title: STRING_GENERAL) is
+	make (a_title: STRING_GENERAL)
 			-- Initialization
 		require
 			a_title /= Void
@@ -54,7 +54,7 @@ feature -- Properties
 
 feature -- Change
 
-	set_line_prefix (s: STRING_GENERAL) is
+	set_line_prefix (s: STRING_GENERAL)
 			-- Set menu's line_prefix
 		require
 			s /= Void
@@ -62,7 +62,7 @@ feature -- Change
 			line_prefix := s.as_string_8.twin
 		end
 
-	set_title (s: STRING_GENERAL) is
+	set_title (s: STRING_GENERAL)
 			-- Set menu's title
 		require
 			s /= Void
@@ -70,7 +70,7 @@ feature -- Change
 			title := s.twin
 		end
 
-	set_entry_disabled_message (s: STRING_GENERAL) is
+	set_entry_disabled_message (s: STRING_GENERAL)
 			-- Set entry_disabled_message
 		require
 			s /= Void
@@ -78,13 +78,13 @@ feature -- Change
 			entry_disabled_message := s.twin
 		end
 
-	add_entry (a_abr: STRING; a_text: STRING_GENERAL; a_action: like action_from) is
+	add_entry (a_abr: STRING; a_text: STRING_GENERAL; a_action: like action_from)
 			-- Add a new entry
 		do
 			add_conditional_entry (a_abr, a_text, a_action, Void)
 		end
 
-	add_conditional_entry (a_abr: STRING; a_text: STRING_GENERAL; a_action: like action_from; a_cond: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	add_conditional_entry (a_abr: STRING; a_text: STRING_GENERAL; a_action: like action_from; a_cond: FUNCTION [ANY, TUPLE, BOOLEAN])
 			-- Add a new entry with condition
 			-- the entry will be display only if the `a_cond' is satisfied.
 		local
@@ -98,13 +98,13 @@ feature -- Change
 			entries.force ([last_entry_index, l_abr, a_text, a_action, a_cond])
 		end
 
-	add_quit_entry (a_abr: STRING; a_text: STRING_GENERAL) is
+	add_quit_entry (a_abr: STRING; a_text: STRING_GENERAL)
 			-- Add a quit entry
 		do
 			add_entry (a_abr, a_text, agent quit)
 		end
 
-	add_separator (a_text: STRING_GENERAL) is
+	add_separator (a_text: STRING_GENERAL)
 			-- Add a new entry as a separator
 		do
 			entries.force ([0, Void, a_text, Void, Void])
@@ -112,7 +112,7 @@ feature -- Change
 
 feature -- Access
 
-	execute (a_display_entry: BOOLEAN) is
+	execute (a_display_entry: BOOLEAN)
 			-- Execute the menu
 		local
 			menu_shown: BOOLEAN
@@ -162,24 +162,24 @@ feature -- Access
 			retry
 		end
 
-	quit is
+	quit
 		do
 			leave := True
 		end
 
-	request_menu_display is
+	request_menu_display
 		do
 			menu_shown_requested := True
 			menu_asked := True
 		end
 
-	console_print (m: STRING_GENERAL) is
+	console_print (m: STRING_GENERAL)
 			-- console.put_string ...
 		do
 			console.put_string (m.as_string_8)
 		end
 
-	console_print_entry_disabled is
+	console_print_entry_disabled
 		do
 			if entry_disabled_message /= Void then
 				console_print (entry_disabled_message)
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 	leave: BOOLEAN
 			-- Leave when possible.
 
-	action_from (t: like entry): PROCEDURE [ANY, TUPLE] is
+	action_from (t: like entry): PROCEDURE [ANY, TUPLE]
 			-- Menu action for entry `t'.
 		require
 			t /= Void
@@ -205,13 +205,13 @@ feature {NONE} -- Implementation
 			Result := t.action
 		end
 
-	entry_enabled (a_entry: like entry): BOOLEAN is
+	entry_enabled (a_entry: like entry): BOOLEAN
 			-- Is `a_entry' enabled (depending of the condition) ?
 		do
 			Result := a_entry.cond = Void or else a_entry.cond.item (Void)
 		end
 
-	entry (a_index: INTEGER; a_abr: STRING): TUPLE [index:INTEGER; abrev: STRING; text: STRING_GENERAL; action: PROCEDURE [ANY, TUPLE]; cond: FUNCTION [ANY, TUPLE, BOOLEAN]] is
+	entry (a_index: INTEGER; a_abr: STRING): TUPLE [index:INTEGER; abrev: STRING; text: STRING_GENERAL; action: PROCEDURE [ANY, TUPLE]; cond: FUNCTION [ANY, TUPLE, BOOLEAN]]
 			-- Entry indexed by `a_index'.
 		local
 			lst: like entries
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Answers implementation
 
-	get_entry: like entry is
+	get_entry: like entry
 			-- return entry according to user answer.
 		local
 			s: STRING
@@ -267,7 +267,7 @@ feature {NONE} -- Answers implementation
 			end
 		end
 
-	string_started_by (s: STRING; a_prefix: STRING; a_is_entire: BOOLEAN): BOOLEAN is
+	string_started_by (s: STRING; a_prefix: STRING; a_is_entire: BOOLEAN): BOOLEAN
 			-- Is string `s' started by `a_prefix' string ?
 			-- (first blanks are ignored)
 		require
@@ -296,7 +296,7 @@ feature {NONE} -- Answers implementation
 			end
 		end
 
-	display_menu is
+	display_menu
 			-- Display menu
 		local
 			item: like entry
@@ -337,7 +337,7 @@ feature {NONE} -- Answers implementation
 --			console.put_string (offset + "(0) Quit%N")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

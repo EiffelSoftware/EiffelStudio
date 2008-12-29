@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Description of class invariant. Version for Bench."
 	legal: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a: like assertion_list; oms_count: like once_manifest_string_count; i_as: like invariant_keyword; ot_locals: like object_test_locals) is
+	initialize (a: like assertion_list; oms_count: like once_manifest_string_count; i_as: like invariant_keyword; ot_locals: like object_test_locals)
 			-- Create a new INVARIANT AST node.
 		require
 			valid_oms_count: oms_count >= 0
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_invariant_as (Current)
@@ -86,7 +86,7 @@ feature -- Attribute
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and invariant_keyword_index /= 0 then
 				Result := invariant_keyword (a_list)
@@ -95,7 +95,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if full_assertion_list /= Void then
 				Result := full_assertion_list.last_token (a_list)
@@ -106,14 +106,14 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 				-- FIXME: optimize (order doesn't matter)
 			Result := equivalent (assertion_list, other.assertion_list)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

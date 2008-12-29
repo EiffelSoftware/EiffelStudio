@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error handler that manages warning and error messages."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create {SHARED_ERROR_HANDLER}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialization
 		do
 			create error_list.make
@@ -38,14 +38,14 @@ feature -- Properties
 	warning_list: LINKED_LIST [ERROR]
 			-- Warning list
 
-	error_level: NATURAL is
+	error_level: NATURAL
 		do
 			Result := error_list.count.as_natural_32
 		end
 
 feature -- Error handling primitives
 
-	insert_error (e: ERROR) is
+	insert_error (e: ERROR)
 			-- Insert `e' in `error_list'.
 		require
 			good_argument: e /= Void
@@ -58,7 +58,7 @@ feature -- Error handling primitives
 			error_list.finish
 		end
 
-	insert_warning (w: ERROR) is
+	insert_warning (w: ERROR)
 			-- Insert `w' in `warning_list'.
 		require
 			good_argument: w /= Void
@@ -67,7 +67,7 @@ feature -- Error handling primitives
 			warning_list.finish
 		end
 
-	raise_error is
+	raise_error
 			-- Raise an exception that needs to be caught for processing.
 		require
 			non_void_error_displayer: error_displayer /= Void
@@ -77,7 +77,7 @@ feature -- Error handling primitives
 			raise ("Compiler error")
 		end
 
-	checksum is
+	checksum
 			-- Check if there are new errors in `error_list' and raise
 			-- an error if needed.
 		require
@@ -88,7 +88,7 @@ feature -- Error handling primitives
 			end
 		end
 
-	force_display is
+	force_display
 			-- Make sure the user can see the messages we send.
 		do
 			if error_displayer /= Void then
@@ -96,7 +96,7 @@ feature -- Error handling primitives
 			end
 		end
 
-	wipe_out is
+	wipe_out
 			-- Empty `error_list' and `warning_list'.
 		do
 			error_list.wipe_out
@@ -105,13 +105,13 @@ feature -- Error handling primitives
 
 feature -- Status
 
-	has_error: BOOLEAN is
+	has_error: BOOLEAN
 			-- Has error handler detected an error so far?
 		do
 			Result := not error_list.is_empty
 		end
 
-	has_warning: BOOLEAN is
+	has_warning: BOOLEAN
 			-- Has error handler detected a warning so far?
 		do
 			Result := not warning_list.is_empty
@@ -127,7 +127,7 @@ feature {COMPILER_EXPORTER} -- Output
 			end
 		end
 
-	trace is
+	trace
 			-- Trace the output of the errors if there are any.
 		require
 			non_void_error_displayer: error_displayer /= Void
@@ -140,7 +140,7 @@ feature {COMPILER_EXPORTER} -- Output
 			end
 		end
 
-	trace_warnings is
+	trace_warnings
 			-- Trace the output of the warnings if there are any.
 		require
 			non_void_error_displayer: error_displayer /= Void
@@ -154,7 +154,7 @@ feature {COMPILER_EXPORTER} -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_error_displayer (ed: like error_displayer) is
+	set_error_displayer (ed: like error_displayer)
 			-- Set `error_displayer' to `ed'.
 		require
 			non_void_ed: ed /= Void
@@ -168,7 +168,7 @@ invariant
 	error_list_exists: error_list /= Void
 	warning_list_exists: warning_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

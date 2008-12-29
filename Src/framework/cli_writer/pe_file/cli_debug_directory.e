@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Data regarding debugger info in PE file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Allocate `item'
 		do
 			managed_pointer_make (structure_size)
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
-	set_size (a_size: INTEGER) is
+	set_size (a_size: INTEGER)
 			--
 		require
 			valid_size: a_size >= 0
@@ -40,7 +40,7 @@ feature -- Settings
 			c_set_size (item, a_size)
 		end
 
-	set_address_of_data (a_rva: INTEGER) is
+	set_address_of_data (a_rva: INTEGER)
 			-- Set RVA of debug info into PE file.
 		require
 			valid_rva: a_rva /= 0
@@ -48,7 +48,7 @@ feature -- Settings
 			c_set_address_of_raw_data (item, a_rva)
 		end
 
-	set_pointer_to_data (a_pos: INTEGER) is
+	set_pointer_to_data (a_pos: INTEGER)
 			-- Set position of debug info in PE file.
 		require
 			valid_rva: a_pos /= 0
@@ -58,7 +58,7 @@ feature -- Settings
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of IMAGE_DATA_DIRECTORY.
 		external
 			"C macro use <windows.h>"
@@ -68,55 +68,55 @@ feature -- Measurement
 
 feature {NONE} -- Implementation
 
-	c_set_characteristics (an_item: POINTER; i: INTEGER) is
+	c_set_characteristics (an_item: POINTER; i: INTEGER)
 			-- Set `Characteristics' to `i'.
 		external
 			"C struct IMAGE_DEBUG_DIRECTORY access Characteristics type DWORD use <windows.h>"
 		end
 
-	c_set_date_stamp (an_item: POINTER; t: INTEGER) is
+	c_set_date_stamp (an_item: POINTER; t: INTEGER)
 			-- Set `TimeDataStamp' to `t'.
 		external
 			"C struct IMAGE_DEBUG_DIRECTORY access TimeDateStamp type DWORD use <windows.h>"
 		end
 
-	c_set_major_version (an_item: POINTER; v: INTEGER_16) is
+	c_set_major_version (an_item: POINTER; v: INTEGER_16)
 			-- Set `MajorVersion' to `v'.
 		external
 			"C struct IMAGE_DEBUG_DIRECTORY access MajorVersion type WORD use <windows.h>"
 		end
 
-	c_set_minor_version (an_item: POINTER; v: INTEGER_16) is
+	c_set_minor_version (an_item: POINTER; v: INTEGER_16)
 			-- Set `MinorVersion' to `v'.
 		external
 			"C struct IMAGE_DEBUG_DIRECTORY access MinorVersion type WORD use <windows.h>"
 		end
 
-	c_set_type (an_item: POINTER; t: INTEGER) is
+	c_set_type (an_item: POINTER; t: INTEGER)
 			-- Set `Type' to `t'.
 		external
 			"C struct IMAGE_DEBUG_DIRECTORY access @Type type DWORD use <windows.h>"
 		end
 
-	c_set_size (an_item: POINTER; i: INTEGER) is
+	c_set_size (an_item: POINTER; i: INTEGER)
 			-- Set `SizeOfData' to `i'.
 		external
 			"C struct IMAGE_DEBUG_DIRECTORY access SizeOfData type DWORD use <windows.h>"
 		end
 
-	c_set_address_of_raw_data (an_item: POINTER; i: INTEGER) is
+	c_set_address_of_raw_data (an_item: POINTER; i: INTEGER)
 			-- Set `AddressOfRawData' to i.
 		external
 			"C struct IMAGE_DEBUG_DIRECTORY access AddressOfRawData type DWORD use <windows.h>"
 		end
 
-	c_set_pointer_to_raw_data (an_item: POINTER; i: INTEGER) is
+	c_set_pointer_to_raw_data (an_item: POINTER; i: INTEGER)
 			-- Set `PointerToRawData' to i.
 		external
 			"C struct IMAGE_DEBUG_DIRECTORY access PointerToRawData type DWORD use <windows.h>"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

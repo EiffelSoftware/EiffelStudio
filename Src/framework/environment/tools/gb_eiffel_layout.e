@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Environment for bitmaps, help, binaries, scripts...."
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	application_name: STRING is "esbuilder"
+	application_name: STRING = "esbuilder"
 			-- <Precursor>
 
 	distribution_name: !STRING_8
@@ -26,7 +26,7 @@ feature -- Access
 			Result := application_name
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

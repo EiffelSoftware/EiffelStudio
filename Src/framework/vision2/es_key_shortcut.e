@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A key shortcut representation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ convert
 
 feature{NONE} -- Initialization
 
-	make_with_key_combination (a_key: EV_KEY; require_control, require_alt, require_shift: BOOLEAN) is
+	make_with_key_combination (a_key: EV_KEY; require_control, require_alt, require_shift: BOOLEAN)
 			-- Create with `a_key' and modifiers.
 		require
 			a_key_not_void: a_key /= Void
@@ -44,7 +44,7 @@ feature{NONE} -- Initialization
 			key_attached: key /= Void
 		end
 
-	make_from_accelerator (a_accelerator: EV_ACCELERATOR) is
+	make_from_accelerator (a_accelerator: EV_ACCELERATOR)
 			-- Initialize with key combination from `a_accelerator'.
 		require
 			a_accelerator_attached: a_accelerator /= Void
@@ -54,7 +54,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := key.code
@@ -63,7 +63,7 @@ feature -- Access
 	key: EV_KEY
 			-- Key of current shortcut
 
-	out: STRING is
+	out: STRING
 			-- String representation of key combination.
 		local
 			a_key: STRING
@@ -99,7 +99,7 @@ feature -- Status report
 	is_control_required: BOOLEAN
 			-- Must the control key be pressed to make current shortcut triggered?
 
-	is_triggered (a_key: EV_KEY; require_control, require_alt, require_shift: BOOLEAN): BOOLEAN is
+	is_triggered (a_key: EV_KEY; require_control, require_alt, require_shift: BOOLEAN): BOOLEAN
 			-- Is current shortcut triggered by key combination defined by
 			-- `a_key', `requre_control', `require_alt' and `require_shift'?
 		require
@@ -114,7 +114,7 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Does `other' have the same key combination as `Current'?
 		do
 			Result := is_triggered (other.key, other.is_control_required, other.is_alt_required, other.is_shift_required)
@@ -122,7 +122,7 @@ feature -- Comparison
 
 feature -- Status setting
 
-	set_key (a_key: EV_KEY) is
+	set_key (a_key: EV_KEY)
 			-- Assign `a_key' to `key'.
 		require
 			a_key_not_void: a_key /= Void
@@ -132,7 +132,7 @@ feature -- Status setting
 			key_assigned: key = a_key
 		end
 
-	enable_shift_required is
+	enable_shift_required
 			-- Make `is_shift_required' True.
 		do
 			is_shift_required := True
@@ -140,7 +140,7 @@ feature -- Status setting
 			shift_required: is_shift_required
 		end
 
-	disable_shift_required is
+	disable_shift_required
 			-- Make `is_shift_required' False.
 		do
 			is_shift_required := False
@@ -148,7 +148,7 @@ feature -- Status setting
 			not_shift_required: not is_shift_required
 		end
 
-	enable_alt_required is
+	enable_alt_required
 			-- Make `is_alt_required' True.
 		do
 			is_alt_required := True
@@ -156,7 +156,7 @@ feature -- Status setting
 			alt_required: is_alt_required
 		end
 
-	disable_alt_required is
+	disable_alt_required
 			-- Make `is_alt_required' False.
 		do
 			is_alt_required := False
@@ -164,7 +164,7 @@ feature -- Status setting
 			not_alt_required: not is_alt_required
 		end
 
-	enable_control_required is
+	enable_control_required
 			-- Make `is_control_required' True.
 		do
 			is_control_required := True
@@ -172,7 +172,7 @@ feature -- Status setting
 			control_required: is_control_required
 		end
 
-	disable_control_required is
+	disable_control_required
 			-- Make `is_control_required' False.
 		do
 			is_control_required := False
@@ -182,7 +182,7 @@ feature -- Status setting
 
 feature -- Conversion
 
-	as_ev_accelerator: EV_ACCELERATOR is
+	as_ev_accelerator: EV_ACCELERATOR
 			-- Convert current to {EV_ACCELERATOR}.
 		do
 			create Result.make_with_key_combination (key, is_control_required, is_alt_required, is_shift_required)
@@ -193,7 +193,7 @@ feature -- Conversion
 invariant
 	key_attached: key /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

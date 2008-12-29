@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of an Eiffel function pointer for Current."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature{NONE} -- Initialization
 
-	initialize (c_as: like current_keyword; a_as: like address_symbol) is
+	initialize (c_as: like current_keyword; a_as: like address_symbol)
 			-- Create new ADDRESS_CURRENT AST node.
 		require
 			c_as_not_void: c_as /= Void
@@ -32,7 +32,7 @@ feature{NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_address_current_as (Current)
@@ -61,7 +61,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and address_symbol_index /= 0 then
 				Result := address_symbol (a_list)
@@ -70,14 +70,14 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := current_keyword
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := True
@@ -86,7 +86,7 @@ feature -- Comparison
 invariant
 	current_keyword_not_void: current_keyword /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

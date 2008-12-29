@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract registry."
 	author: "Ilinca Ciupa and Andreas Leitner"
 	date: "$Date$"
@@ -9,7 +9,7 @@ deferred class
 	
 feature -- Access
 
-	subkeys (key: STRING): DS_LINEAR [STRING] is
+	subkeys (key: STRING): DS_LINEAR [STRING]
 			-- List of subkeys of key `key' or `Void' if 
 			-- there is no `key' key.
 		require
@@ -20,7 +20,7 @@ feature -- Access
 			no_empty_keys: Result /= Void implies not Result.has (Void)
 		end
 
-	string_value (key: STRING): STRING is
+	string_value (key: STRING): STRING
 			-- String value of key `key';
 			-- `Void' if there is no key `key' or its type is not string.
 		require
@@ -31,7 +31,7 @@ feature -- Access
 		
 feature -- Status report
 
-	is_available: BOOLEAN is
+	is_available: BOOLEAN
 			-- Is registry available on current platform?
 		deferred
 		end

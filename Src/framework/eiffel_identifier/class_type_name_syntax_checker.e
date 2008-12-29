@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Checks whether a string contains a valid Eiffel type."
 	author: ""
 	date: "$Date$"
@@ -12,7 +12,7 @@ create
 
 feature -- Status report
 
-	is_valid_class_type_name (a_class_type: STRING): BOOLEAN is
+	is_valid_class_type_name (a_class_type: STRING): BOOLEAN
 			-- Is `cn' a valid class type?
 			-- according to ECMA-367 Section 8.11.1
 		require
@@ -35,7 +35,7 @@ feature {NONE} -- Implementation of is_valid_class_type
 --	TypeList -> ']'
 --	TypeList -> ',' Type TypeList
 
-	consume_start is
+	consume_start
 			-- Start parsing
 		do
 			-- Set current_charachter manually to a start symbol
@@ -45,7 +45,7 @@ feature {NONE} -- Implementation of is_valid_class_type
 			consume_type
 		end
 
-	consume_type is
+	consume_type
 			-- Consume a type
 		do
 			if current_token = tkn_id then
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation of is_valid_class_type
 			end
 		end
 
-	consume_generics is
+	consume_generics
 			-- Consume generics
 		do
 			if current_token = tkn_left_bracket then
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation of is_valid_class_type
 			end
 		end
 
-	consume_type_list is
+	consume_type_list
 			-- Consume a type list
 		do
 			if current_token = tkn_right_bracket then
@@ -84,13 +84,13 @@ feature {NONE} -- Implementation of is_valid_class_type
 
 -- Tokens: 'Id'  '['  ']'  ','  'empty' and error
 
-	tkn_start: INTEGER is 1
-	tkn_id: INTEGER is 2
-	tkn_left_bracket: INTEGER is 3
-	tkn_right_bracket: INTEGER is 4
-	tkn_comma: INTEGER is 5
-	tkn_empty: INTEGER is 6
-	tkn_error: INTEGER is 7
+	tkn_start: INTEGER = 1
+	tkn_id: INTEGER = 2
+	tkn_left_bracket: INTEGER = 3
+	tkn_right_bracket: INTEGER = 4
+	tkn_comma: INTEGER = 5
+	tkn_empty: INTEGER = 6
+	tkn_error: INTEGER = 7
 
 	-- THIS IS NOT MT SAVE
 	current_position_in_input: INTEGER
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation of is_valid_class_type
 	current_token: INTEGER
 		-- States the current token.
 
-	is_end_of_input: BOOLEAN is
+	is_end_of_input: BOOLEAN
 			-- Is all the input consumed?
 		do
 			Result := current_position_in_input >  current_parsed_string.count
@@ -112,16 +112,16 @@ feature {NONE} -- Implementation of is_valid_class_type
 			-- Current character used by the the lexer.
 			-- require: not is_eof
 
-	eof: CHARACTER is '%/0/'
+	eof: CHARACTER = '%/0/'
 			-- Denotes End Of File.
 
-	is_eof: BOOLEAN is
+	is_eof: BOOLEAN
 			-- Is end of input reached?
 		do
 			Result := current_character = eof
 		end
 
-	consume_current_character is
+	consume_current_character
 			-- Consume current character.
 		require
 			not_eof: current_character /= eof
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation of is_valid_class_type
 			end
 		end
 
-	consume_current_token is
+	consume_current_token
 			-- Consume the current token.
 		local
 

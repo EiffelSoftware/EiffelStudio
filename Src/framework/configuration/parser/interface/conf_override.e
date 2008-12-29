@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Clusters that override other groups."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create {CONF_PARSE_FACTORY}
 
 feature -- Status
 
-	is_override: BOOLEAN is
+	is_override: BOOLEAN
 			-- Is this an override?
 		once
 			Result := True
@@ -34,7 +34,7 @@ feature -- Access, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	set_override (an_override: like override) is
+	set_override (an_override: like override)
 			-- Set `override' to `an_override'.
 		do
 			override := an_override
@@ -42,7 +42,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			override_set: override = an_override
 		end
 
-	add_override (a_group: CONF_GROUP) is
+	add_override (a_group: CONF_GROUP)
 			-- Add an override.
 		require
 			a_group_not_void: a_group /= Void
@@ -55,7 +55,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature -- Equality
 
-	is_group_equivalent (other: like Current): BOOLEAN is
+	is_group_equivalent (other: like Current): BOOLEAN
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
 			Result := Precursor (other) and then equal_override (override, other.override)
@@ -63,7 +63,7 @@ feature -- Equality
 
 feature -- Visit
 
-	process (a_visitor: CONF_VISITOR) is
+	process (a_visitor: CONF_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_group (Current)
@@ -72,7 +72,7 @@ feature -- Visit
 
 feature {NONE} -- Implementation
 
-	equal_override (a, b: like override): BOOLEAN is
+	equal_override (a, b: like override): BOOLEAN
 			-- Are `a' and `b' equal?
 		do
 			if a = b then
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

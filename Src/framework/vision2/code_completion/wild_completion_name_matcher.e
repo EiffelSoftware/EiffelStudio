@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Wild cards matcher for completion names."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature -- Match
 
-	prefix_string (a_prefix: STRING_32; a_string: STRING_32): BOOLEAN is
+	prefix_string (a_prefix: STRING_32; a_string: STRING_32): BOOLEAN
 			-- Is `a_prefix' start of `a_string'?
 		local
 			l_pattern: STRING_32
@@ -43,7 +43,7 @@ feature -- Match
 
 feature -- Status report
 
-	binary_searchable (a_str: STRING_32): BOOLEAN is
+	binary_searchable (a_str: STRING_32): BOOLEAN
 		do
 			wild_matcher.set_pattern (a_str)
 			Result := not wild_matcher.has_wild_cards
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	wild_matcher: KMP_WILD is
+	wild_matcher: KMP_WILD
 			-- Wild card matcher
 		once
 			create Result.make_empty
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 invariant
 	invariant_clause: True -- Your invariant here
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2006, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

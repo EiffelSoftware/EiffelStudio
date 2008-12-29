@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Base implementation for all warnings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,16 +17,16 @@ inherit
 
 feature -- Access
 
-	frozen is_fatal: BOOLEAN is False
+	frozen is_fatal: BOOLEAN = False
 			-- Is error fatal? It's a warning so no.
 
-	error_level_tag: STRING is
+	error_level_tag: STRING
 			-- Error level description
 		do
 			Result := "warning"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

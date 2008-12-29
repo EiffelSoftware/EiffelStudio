@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Type formatter"
 	author: ""
 	date: "$Date$"
@@ -9,7 +9,7 @@ class
 
 feature -- Access
 
-	type_name (a_type: TYPE_A; a_feature: FEATURE_I): STRING is
+	type_name (a_type: TYPE_A; a_feature: FEATURE_I): STRING
 			-- Name of `a_type'.
 			-- `a_feature' is used to resolve anchored type.
 		require
@@ -25,7 +25,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	type_name_with_context (a_type: TYPE_A; a_context_class: CLASS_C; a_context_feature: FEATURE_I): STRING is
+	type_name_with_context (a_type: TYPE_A; a_context_class: CLASS_C; a_context_feature: FEATURE_I): STRING
 			-- Name of `a_type' in context `a_context_class' and `a_context_feature'
 		require
 			a_type_attached: a_type /= Void
@@ -43,7 +43,7 @@ feature -- Access
 
 feature{NONE} -- Implementation
 
-	type_output_strategy: AST_TYPE_OUTPUT_STRATEGY is
+	type_output_strategy: AST_TYPE_OUTPUT_STRATEGY
 			-- Output strategy for type
 		once
 			create Result
@@ -51,7 +51,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	type_formatter: AUT_TYPE_A_TEXT_FORMATTER is
+	type_formatter: AUT_TYPE_A_TEXT_FORMATTER
 			-- Type formatter
 		once
 			create Result.make

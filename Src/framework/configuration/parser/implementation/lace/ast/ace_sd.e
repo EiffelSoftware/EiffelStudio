@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a Lace AST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 
 	initialize (sn: like system_name; r: like root;
 		d: like defaults; c: like clusters; a: like assemblies;
-		e: like externals) is
+		e: like externals)
 			-- Create a new ACE AST node.
 		require
 			sn_not_void: sn /= Void
@@ -58,7 +58,7 @@ feature -- Properties
 	externals: LACE_LIST [LANG_TRIB_SD];
 			-- Description of extenal clauses
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

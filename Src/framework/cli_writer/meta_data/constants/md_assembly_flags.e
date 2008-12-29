@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Possible flags you can pass to `define_assembly' from `MD_ASSEMBLY_EMIT'"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,26 +10,26 @@ class
 
 feature -- Access
 
-	side_by_side_compatible: INTEGER is 0
+	side_by_side_compatible: INTEGER = 0
 			-- The assembly is side by side compatible.
 
-	public_key: INTEGER is 1
+	public_key: INTEGER = 1
 			-- The assembly reference holds the full (unhashed) public key.
 			
-	reserved: INTEGER is 0x00000030
+	reserved: INTEGER = 0x00000030
 			-- Reserved: Both bits shall be zero.
 			
-	enable_jit_compile_tracking: INTEGER is 0x00008000
+	enable_jit_compile_tracking: INTEGER = 0x00008000
 			-- Reserved:  a conforming implementation of the CLI may ignore this
 			-- setting on read; some implementations might use this bit to indicate
 			-- that a CIL-to-native-code compiler should generate CIL-to-native code map.
 			
-	disable_jit_compiler_optimizer: INTEGER is 0x00004000;
+	disable_jit_compiler_optimizer: INTEGER = 0x00004000;
 			-- Reserved: a conforming implementation of the CLI may ignore this
 			-- setting on read; some implementations might use this bit to indicate
 			-- that a CIL-to-native-code compiler should not generate optimized code.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

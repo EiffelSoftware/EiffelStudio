@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Sequence of requests with their responses that are witness to an observation of that execution"
@@ -31,7 +31,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_list: like list; a_first_index: like first_index; a_last_index: like last_index) is
+	make (a_list: like list; a_first_index: like first_index; a_last_index: like last_index)
 			-- Create new witness.
 		do
 			Precursor (a_list, a_first_index, a_last_index)
@@ -57,7 +57,7 @@ feature -- Access
 	classifications: DS_ARRAYED_LIST [AUT_TEST_CASE_RESULT]
 			-- Classifcations resulting from this witness
 
-	is_same_bug (other: AUT_WITNESS): BOOLEAN is
+	is_same_bug (other: AUT_WITNESS): BOOLEAN
 			-- Is `other' witnessing the same bug as this witness?
 			-- Note that this is a heuristics that considers class, feature and exception only.
 		require
@@ -116,7 +116,7 @@ feature -- Access
 
 feature -- Deltas
 
-	deltas (n: INTEGER): DS_LINEAR [DS_LIST [AUT_REQUEST]] is
+	deltas (n: INTEGER): DS_LINEAR [DS_LIST [AUT_REQUEST]]
 			-- Request list divided into `n' parts.
 			-- Requests will be fresh.
 		require
@@ -130,7 +130,7 @@ feature -- Deltas
 			delta_size_correct: Result.count = n
 		end
 
-	deltas_complement (i: INTEGER; n: INTEGER): DS_LIST [AUT_REQUEST] is
+	deltas_complement (i: INTEGER; n: INTEGER): DS_LIST [AUT_REQUEST]
 			-- All but the `i'-th complement of the `n' delta list of the current requests.
 			-- Requests will be fresh.
 		require
@@ -146,7 +146,7 @@ feature -- Deltas
 
 feature {NONE} -- Implementation
 
-	judge is
+	judge
 			-- Judge current witness.
 		local
 			last_request: AUT_REQUEST

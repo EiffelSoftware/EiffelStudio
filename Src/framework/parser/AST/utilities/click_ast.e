@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"To be filled from parser with start, end position and reference to AST,%N%
 		%AST being STONABLE."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: AST_EIFFEL; real_node: CLICKABLE_AST) is
+	initialize (n: AST_EIFFEL; real_node: CLICKABLE_AST)
 			-- Create a new clickable element for syntaxic element `n' using `real_node'
 			-- as associated clickable.
 		require
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN is
+	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
@@ -62,7 +62,7 @@ feature -- Comparison
 invariant
 	node_not_void: node /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

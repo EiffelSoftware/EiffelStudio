@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -42,7 +42,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_output_dirname: like output_dirname; a_system: like system; a_classes_under_test: like classes_under_test) is
+	make (an_output_dirname: like output_dirname; a_system: like system; a_classes_under_test: like classes_under_test)
 			-- Create new html generator.
 		do
 			Precursor (an_output_dirname, a_system, a_classes_under_test)
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	absolute_index_filename: STRING is
+	absolute_index_filename: STRING
 			-- Absolute filename of main entry page
 		do
 			Result := file_system.pathname (output_dirname, "index.html")
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- HTML generation
 
-	generate (a_repository: AUT_TEST_CASE_RESULT_REPOSITORY) is
+	generate (a_repository: AUT_TEST_CASE_RESULT_REPOSITORY)
 			-- Generate HTML pages describing the results from `a_repository'.
 		local
 			cs: DS_LINEAR_CURSOR [CLASS_C]
@@ -160,14 +160,14 @@ feature -- HTML generation
 
 feature {NONE} -- HTML Generation
 
-	copy_static_files is
+	copy_static_files
 			-- Copy static files from test studio directory to html directory.
 		do
 			file_system_routines.copy_recursive (pathnames.image_dirname, file_system.pathname (output_dirname, "image"))
 			file_system_routines.copy_recursive (pathnames.misc_html_dirname, output_dirname)
 		end
 
-	generate_summary_page (a_repository: AUT_TEST_CASE_RESULT_REPOSITORY) is
+	generate_summary_page (a_repository: AUT_TEST_CASE_RESULT_REPOSITORY)
 			-- Generate main summary page.
 		require
 			a_repository_not_void: a_repository /= Void
@@ -188,7 +188,7 @@ feature {NONE} -- HTML Generation
 			end
 		end
 
-	generate_header_page is
+	generate_header_page
 			-- Generate header page.
 		local
 			file: KL_TEXT_OUTPUT_FILE
@@ -203,7 +203,7 @@ feature {NONE} -- HTML Generation
 			end
 		end
 
-	generate_class (a_class: CLASS_C; a_repository: AUT_TEST_CASE_RESULT_REPOSITORY) is
+	generate_class (a_class: CLASS_C; a_repository: AUT_TEST_CASE_RESULT_REPOSITORY)
 			-- Generate HTML pages describing the results from `a_repository' of class `a_class'.
 		require
 			a_repository_not_void: a_repository /= Void
@@ -321,7 +321,7 @@ feature {NONE} -- HTML Generation
 			end
 		end
 
-	generate_feature (a_class: CLASS_C; a_feature: FEATURE_I; a_repository: AUT_TEST_CASE_RESULT_REPOSITORY; a_id_list: DS_ARRAYED_LIST [INTEGER]) is
+	generate_feature (a_class: CLASS_C; a_feature: FEATURE_I; a_repository: AUT_TEST_CASE_RESULT_REPOSITORY; a_id_list: DS_ARRAYED_LIST [INTEGER])
 			-- Generate HTML pages describing the results from `a_repository' of class `a_class'.
 			-- This routine also generates the corresponding tree node entry and puts the id for the node into `a_id_list'.
 		require
@@ -460,7 +460,7 @@ feature {NONE} -- HTML Generation
 			end
 		end
 
-	generate_test_case_result (a_result: AUT_TEST_CASE_RESULT; a_stream: KI_TEXT_OUTPUT_STREAM) is
+	generate_test_case_result (a_result: AUT_TEST_CASE_RESULT; a_stream: KI_TEXT_OUTPUT_STREAM)
 			-- Print test case results in `a_set' to `a_stream'.
 		require
 			a_result_not_void: a_result /= Void
@@ -503,7 +503,7 @@ feature {NONE} -- HTML Generation
 			a_stream.put_line ("<br/>")
 		end
 
-	generate_summary (a_set: AUT_TEST_CASE_RESULT_SET; a_stream: KI_TEXT_OUTPUT_STREAM) is
+	generate_summary (a_set: AUT_TEST_CASE_RESULT_SET; a_stream: KI_TEXT_OUTPUT_STREAM)
 			-- Generate summary for set `a_set' into `a_stream'.
 		require
 			a_set_not_void: a_set /= Void
@@ -546,7 +546,7 @@ feature {NONE} -- HTML Generation
 						>>))
 		end
 
-	generate_tree_content_file_header is
+	generate_tree_content_file_header
 			-- Generate header for `tree_file'.
 		require
 			tree_content_file_not_void: tree_content_file /= Void
@@ -573,7 +573,7 @@ feature {NONE} -- HTML Generation
 			tree_content_file.put_line ("Others.iconSrcClosed = %"image/folder.gif%"")
 		end
 
-	generate_tree_content_file_footer is
+	generate_tree_content_file_footer
 			-- Generate header for `tree_file'.
 		require
 			tree_content_file_not_void: tree_content_file /= Void
@@ -589,7 +589,7 @@ feature {NONE} -- File handles
 
 feature {NONE} -- Implementation
 
-	class_summary_file_name (a_class: CLASS_C): STRING is
+	class_summary_file_name (a_class: CLASS_C): STRING
 				-- File name for class sumamry file for class `a_class'
 			require
 				a_class_not_void: a_class /= Void
@@ -603,7 +603,7 @@ feature {NONE} -- Implementation
 				name_not_empty: Result.count > 0
 			end
 
-	feature_summary_file_name (a_class: CLASS_C; a_feature: FEATURE_I): STRING is
+	feature_summary_file_name (a_class: CLASS_C; a_feature: FEATURE_I): STRING
 				-- File name for feature sumamry file for feature `a_feature' of class `a_class'
 			require
 				a_class_not_void: a_class /= Void
@@ -620,7 +620,7 @@ feature {NONE} -- Implementation
 				name_not_empty: Result.count > 0
 			end
 
-	consume_id is
+	consume_id
 			-- Mark the id stored in `current_id' as used and provide a new one.
 		do
 			current_id := current_id + 1
@@ -634,11 +634,11 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation constants
 
-	class_summary_file_postfix: STRING is "_class_summary.html"
+	class_summary_file_postfix: STRING = "_class_summary.html"
 
-	feature_summary_file_postfix: STRING is "_feature_summary.html"
+	feature_summary_file_postfix: STRING = "_feature_summary.html"
 
-	class_summary_header_template: STRING is "[
+	class_summary_header_template: STRING = "[
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 	<head>
@@ -651,12 +651,12 @@ feature {NONE} -- Implementation constants
 			<h1>${1}</h2>
 ]"
 
-	class_summary_footer_template: STRING is "[
+	class_summary_footer_template: STRING = "[
 		</div>
 	</body>
 </html>
 ]"
-	feature_summary_header_template: STRING is "[
+	feature_summary_header_template: STRING = "[
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 	<head>
@@ -673,13 +673,13 @@ feature {NONE} -- Implementation constants
 			</p>
 ]"
 
-	feature_summary_footer_template: STRING is "[
+	feature_summary_footer_template: STRING = "[
 		</div>
 	</body>
 </html>
 ]"
 
-	summary_page_header_template: STRING is "[
+	summary_page_header_template: STRING = "[
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 	<head>
@@ -692,12 +692,12 @@ feature {NONE} -- Implementation constants
 		<h1>System '${1}'</h1>
 ]"
 
-	summary_page_footer_template: STRING is "[
+	summary_page_footer_template: STRING = "[
 		</div>
 	</body>
 </html>
 ]"
-	summary_table_template: STRING is "[
+	summary_table_template: STRING = "[
 			<h1>Test Case Summary</h1>
 			<table>
 				<tr>
@@ -727,7 +727,7 @@ feature {NONE} -- Implementation constants
 			</table>
 ]"
 
-	header_page_template: STRING is "[
+	header_page_template: STRING = "[
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 	<head>
@@ -759,11 +759,11 @@ feature {NONE} -- Implementation constants
 </html>
 ]"
 
-	class_has_error_template: STRING is "[
+	class_has_error_template: STRING = "[
 <ul><li>The class has syntax or type errors.</li></ul>
 ]"
 
-	explain_link_template: STRING is "[
+	explain_link_template: STRING = "[
 <a href="JavaScript: explain ('${1}')">${2}</a>
 ]"
 

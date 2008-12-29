@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_a_system: like system; an_interpreter: like interpreter) is
+	make (a_a_system: like system; an_interpreter: like interpreter)
 			-- Create new strategy.
 		require
 			a_a_system_not_void: a_a_system /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	has_next_step: BOOLEAN is
+	has_next_step: BOOLEAN
 		do
 			Result := not has_error and then not request_list_cursor.off and then (interpreter.is_running implies interpreter.is_ready)
 		end
@@ -73,7 +73,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_request_list (a_request_list: like request_list) is
+	set_request_list (a_request_list: like request_list)
 			-- Set `request_list' to `a_request_list'.
 		require
 			a_request_list_not_void: a_request_list /= Void
@@ -85,7 +85,7 @@ feature -- Setting
 			request_list_set: request_list = a_request_list
 		end
 
-	set_is_interpreter_started_by_default (b: BOOLEAN) is
+	set_is_interpreter_started_by_default (b: BOOLEAN)
 			-- Set `is_interpreter_started_by_default' with `b'.
 		do
 			is_interpreter_started_by_default := b
@@ -96,7 +96,7 @@ feature -- Setting
 
 feature -- Execution
 
-	start is
+	start
 		do
 			if interpreter.is_running then
 				interpreter.stop
@@ -108,7 +108,7 @@ feature -- Execution
 			request_list_cursor.start
 		end
 
-	step is
+	step
 		do
 --			if not interpreter.is_running then
 --				interpreter.start
@@ -123,19 +123,19 @@ feature -- Execution
 
 feature {AUT_REQUEST} -- Processing
 
-	process_start_request (a_request: AUT_START_REQUEST) is
+	process_start_request (a_request: AUT_START_REQUEST)
 		do
 			interpreter.start
 			a_request.set_response (interpreter.last_request.response)
 		end
 
-	process_stop_request (a_request: AUT_STOP_REQUEST) is
+	process_stop_request (a_request: AUT_STOP_REQUEST)
 		do
 			interpreter.stop
 			a_request.set_response (interpreter.last_request.response)
 		end
 
-	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST) is
+	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST)
 		do
 			if a_request.argument_list /= Void and then interpreter.variable_table.are_expressions_valid (a_request.argument_list) then
 				interpreter.create_object (a_request.target, a_request.target_type, a_request.creation_procedure, a_request.argument_list)
@@ -145,7 +145,7 @@ feature {AUT_REQUEST} -- Processing
 			end
 		end
 
-	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
+	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST)
 		local
 			l_variable_table: AUT_VARIABLE_TABLE
 		do
@@ -169,7 +169,7 @@ feature {AUT_REQUEST} -- Processing
 			end
 		end
 
-	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST) is
+	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST)
 		local
 			variable: ITP_VARIABLE
 		do
@@ -182,7 +182,7 @@ feature {AUT_REQUEST} -- Processing
 			end
 		end
 
-	process_type_request (a_request: AUT_TYPE_REQUEST) is
+	process_type_request (a_request: AUT_TYPE_REQUEST)
 		do
 			interpreter.retrieve_type_of_variable (a_request.variable)
 			a_request.set_response (interpreter.last_request.response)

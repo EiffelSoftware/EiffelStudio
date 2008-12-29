@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Builds result repositories from log files"
@@ -23,7 +23,7 @@ create
 
 feature -- Building
 
-	build (a_input_stream: KI_TEXT_INPUT_STREAM) is
+	build (a_input_stream: KI_TEXT_INPUT_STREAM)
 			-- Build result repository from `a_input_stream' and
 			-- store result in `last_result_repository'.
 		require
@@ -43,7 +43,7 @@ feature -- Access
 
 feature{NONE} -- Processing
 
-	process_start_request (a_request: AUT_START_REQUEST) is
+	process_start_request (a_request: AUT_START_REQUEST)
 		do
 			check
 				a_request_in_history: request_history.has (a_request)
@@ -52,13 +52,13 @@ feature{NONE} -- Processing
 			last_start_index := request_history.count + 1
 		end
 
-	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST) is
+	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST)
 		do
 			Precursor (a_request)
 			update_result_reposotory
 		end
 
-	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
+	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST)
 		do
 			Precursor (a_request)
 			update_result_reposotory
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 	last_start_index: INTEGER
 			-- Index of the last "start" request in `request_history'
 
-	update_result_reposotory is
+	update_result_reposotory
 			-- Update result repository based on last request in result-history.			
 		require
 			last_start_index_large_enough: last_start_index > 0 -- To be removed when added back to invariant

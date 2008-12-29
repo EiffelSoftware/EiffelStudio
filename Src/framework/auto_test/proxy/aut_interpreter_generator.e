@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: SYSTEM_I) is
+	make (a_system: SYSTEM_I)
 			-- Initialize `system' with `a_system'.
 		require
 			a_system_not_void: a_system /= Void
@@ -55,7 +55,7 @@ feature -- Access
 
 feature -- Generation
 
-	generate_interpreter_skeleton (a_pathname: STRING) is
+	generate_interpreter_skeleton (a_pathname: STRING)
 			-- Generate skeleton (supporting files) of interpreter in location `a_pathname'.
 			-- `a_pathname' should be an absolute path.
 		require
@@ -67,7 +67,7 @@ feature -- Generation
 			file_system_routines.copy_recursive (pathnames.runtime_dirname, file_system.pathname (a_pathname, "runtime"))
 		end
 
-	create_interpreter (a_pathname: STRING; a_log_dirname: STRING; a_error_handler: AUT_ERROR_HANDLER) is
+	create_interpreter (a_pathname: STRING; a_log_dirname: STRING; a_error_handler: AUT_ERROR_HANDLER)
 			-- Create interpreter proxy based on executable found in `a_pathname'
 			-- and make it available via `last_interpreter'.
 		require

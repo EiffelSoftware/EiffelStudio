@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Raw response retrieved from interpreter"
 	author: ""
 	date: "$Date$"
@@ -12,7 +12,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_output: like output; a_error: like error; a_interpreter_error: BOOLEAN) is
+	make (a_output: like output; a_error: like error; a_interpreter_error: BOOLEAN)
 			-- Set `output' with `a_output' and `error' with `a_error'.
 		do
 			set_output (a_output)
@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_output (a_output: like output) is
+	set_output (a_output: like output)
 			-- Set `output' with `a_output'.
 		do
 			output := a_output
@@ -50,7 +50,7 @@ feature -- Setting
 			output_set: output = a_output
 		end
 
-	set_error (a_error: like error) is
+	set_error (a_error: like error)
 			-- Set `error' with `a_error'.
 		do
 			error := a_error

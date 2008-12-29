@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 			"Abstract description of the content of a %
 			%feature. Version for Bench."
@@ -19,39 +19,39 @@ feature -- Properties
 		deferred
 		end
 
-	is_constant: BOOLEAN is
+	is_constant: BOOLEAN
 			-- is the current content a constant content ?
 		do
 			-- Do nothing
 		end
 
-	is_unique: BOOLEAN is
+	is_unique: BOOLEAN
 			-- Is the current content a unique ?
 		do
 			-- Do nothing
 		end
 
-	is_require_else: BOOLEAN is
+	is_require_else: BOOLEAN
 			-- Is the precondition block of the content preceeded by
 			-- `require else' ?
 		do
 			-- Do nothing
 		end
 
-	is_ensure_then: BOOLEAN is
+	is_ensure_then: BOOLEAN
 			-- Is the postcondition block of the content preceeded by
 			-- `ensure then' ?
 		do
 			-- Do nothing
 		end
 
-	has_precondition: BOOLEAN is
+	has_precondition: BOOLEAN
 			-- Has the content precondition(s) ?
 		do
 			-- Do nothing
 		end
 
-	has_postcondition: BOOLEAN is
+	has_postcondition: BOOLEAN
 			-- Has the content postcondition(s) ?
 		do
 			-- Do nothing
@@ -59,43 +59,43 @@ feature -- Properties
 
 feature -- Access
 
-	has_assertion: BOOLEAN is
+	has_assertion: BOOLEAN
 			-- Has the content pre- or postcondition(s) ?
 		do
 			Result := has_precondition or else has_postcondition
 		end
 
-	has_rescue: BOOLEAN is
+	has_rescue: BOOLEAN
 			-- Has the current content a rescue clause ?
 		do
 			-- Do nothing
 		end
 
-	is_body_equiv (other: like Current): BOOLEAN is
+	is_body_equiv (other: like Current): BOOLEAN
 		-- Is the current feature equivalent to `other' ?
 		require
 			valid_other: other /= Void
 		deferred
 		end
 
-	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN
 			-- Does the current content has instruction `i'?
 		deferred
 		end
 
-	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER
 			-- Index of `i' in current content.
 		deferred
 		end
 
-	number_of_precondition_slots: INTEGER is
+	number_of_precondition_slots: INTEGER
 			-- Number of postconditions
 			-- (inherited assertions are not taken into account)
 		do
 			-- Return 0
 		end
 
-	number_of_postcondition_slots: INTEGER is
+	number_of_postcondition_slots: INTEGER
 			-- Number of preconditions
 			-- (inherited assertions are not taken into account)
 		do
@@ -104,7 +104,7 @@ feature -- Access
 
 feature -- test for empty body
 
-	is_empty : BOOLEAN is
+	is_empty : BOOLEAN
 			-- Is content empty?
 		do
 			Result := True  -- redefined in ROUTINE_AS
@@ -112,7 +112,7 @@ feature -- test for empty body
 
 feature -- default rescue
 
-	create_default_rescue (def_resc_name_id: INTEGER) is
+	create_default_rescue (def_resc_name_id: INTEGER)
 			-- Create default rescue clause if necessary
 		require
 			valid_feature_name_id: def_resc_name_id > 0
@@ -120,7 +120,7 @@ feature -- default rescue
 			-- redefined in ROUTINE_AS
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

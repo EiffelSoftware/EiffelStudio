@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A configuration target."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_system: CONF_SYSTEM) is
+	make (a_name: STRING; a_system: CONF_SYSTEM)
 			-- Create with `a_name'.
 		require
 			a_name_ok: a_name /= Void and not a_name.is_empty
@@ -110,7 +110,7 @@ feature -- Access, in compiled only, not stored to configuration file
 
 feature -- Access queries
 
-	child_targets: LIST [CONF_TARGET] is
+	child_targets: LIST [CONF_TARGET]
 			-- Targets that extend this target.
 		local
 			l_targets: HASH_TABLE [CONF_TARGET, STRING]
@@ -133,7 +133,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	version: CONF_VERSION is
+	version: CONF_VERSION
 			-- Version number of the target.
 		do
 			if internal_version /= Void then
@@ -143,7 +143,7 @@ feature -- Access queries
 			end
 		end
 
-	precompile: like internal_precompile is
+	precompile: like internal_precompile
 			-- The precompile (if any).
 		do
 			if internal_precompile = Void and extends /= Void then
@@ -153,7 +153,7 @@ feature -- Access queries
 			end
 		end
 
-	libraries: like internal_libraries is
+	libraries: like internal_libraries
 			-- The used libraries.
 		do
 			if extends /= Void then
@@ -166,7 +166,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	assemblies: like internal_assemblies is
+	assemblies: like internal_assemblies
 			-- The assemblies.
 		do
 			if extends /= Void then
@@ -179,7 +179,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	clusters: like internal_clusters is
+	clusters: like internal_clusters
 			-- The normal clusters.
 		do
 			if extends /= Void then
@@ -192,7 +192,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	overrides: like internal_overrides is
+	overrides: like internal_overrides
 			-- The override clusters.
 		do
 			if extends /= Void then
@@ -205,7 +205,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	groups: HASH_TABLE [CONF_GROUP, STRING] is
+	groups: HASH_TABLE [CONF_GROUP, STRING]
 			-- All groups of this target (union of clusters, assemblies, overrides and libraries)
 		do
 			create Result.make (libraries.count + assemblies.count + clusters.count + overrides.count + 1)
@@ -220,7 +220,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	root: CONF_ROOT is
+	root: CONF_ROOT
 			-- The root feature.
 		do
 			if internal_root /= Void then
@@ -230,7 +230,7 @@ feature -- Access queries
 			end
 		end
 
-	file_rule: like internal_file_rule is
+	file_rule: like internal_file_rule
 			-- Rules for files to be included or excluded.
 		do
 			Result := internal_file_rule.twin
@@ -241,7 +241,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	options: like internal_options is
+	options: like internal_options
 			-- Options (Debuglevel, assertions, ...)
 		do
 			if internal_options /= Void then
@@ -254,7 +254,7 @@ feature -- Access queries
 			end
 		end
 
-	settings: like internal_settings is
+	settings: like internal_settings
 			-- Settings.
 		do
 			if extends /= Void then
@@ -267,7 +267,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	external_include: like internal_external_include is
+	external_include: like internal_external_include
 			-- Global external include files.
 		do
 			Result := internal_external_include.twin
@@ -278,7 +278,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	external_object: like internal_external_object is
+	external_object: like internal_external_object
 			-- Global external object files.
 		do
 			Result := internal_external_object.twin
@@ -289,7 +289,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	external_library: like internal_external_library is
+	external_library: like internal_external_library
 			-- Global external library files.
 		do
 			Result := internal_external_library.twin
@@ -300,7 +300,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	external_make: like internal_external_make is
+	external_make: like internal_external_make
 			-- Global external make files.
 		do
 			Result := internal_external_make.twin
@@ -311,7 +311,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	external_resource: like internal_external_resource is
+	external_resource: like internal_external_resource
 			-- Global external ressource files.
 		do
 			Result := internal_external_resource.twin
@@ -322,7 +322,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	pre_compile_action: like internal_pre_compile_action is
+	pre_compile_action: like internal_pre_compile_action
 			-- Actions to be executed before compilation.
 		do
 			if internal_pre_compile_action /= Void then
@@ -337,7 +337,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	post_compile_action: like internal_post_compile_action is
+	post_compile_action: like internal_post_compile_action
 			-- Actions to be executed after compilation.
 		do
 			if internal_post_compile_action /= Void then
@@ -352,7 +352,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	variables: like internal_variables is
+	variables: like internal_variables
 			-- User defined variables.
 		do
 			if extends /= Void then
@@ -365,7 +365,7 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	mapping: like internal_mapping is
+	mapping: like internal_mapping
 			-- Special classes name mapping (eg. STRING => STRING_32)
 		do
 			if extends /= Void then
@@ -386,7 +386,7 @@ feature -- Access queries
 
 feature -- Access queries for settings
 
-	setting_boolean (a_name: STRING): BOOLEAN is
+	setting_boolean (a_name: STRING): BOOLEAN
 			-- Get value of boolean setting with `a_name'.
 		require
 			a_name_valid: valid_setting (a_name)
@@ -420,73 +420,73 @@ feature -- Access queries for settings
 			end
 		end
 
-	setting_address_expression: BOOLEAN is
+	setting_address_expression: BOOLEAN
 			-- Value of the address_expression setting.
 		do
 			Result := setting_boolean (s_address_expression)
 		end
 
-	setting_array_optimization: BOOLEAN is
+	setting_array_optimization: BOOLEAN
 			-- Value of the array_optimization setting.
 		do
 			Result := setting_boolean (s_array_optimization)
 		end
 
-	setting_check_for_void_target: BOOLEAN is
+	setting_check_for_void_target: BOOLEAN
 			-- Value for the `check_for_void_target' setting.
 		do
 			Result := setting_boolean (s_check_for_void_target)
 		end
 
-	setting_check_for_catcall_at_runtime: BOOLEAN is
+	setting_check_for_catcall_at_runtime: BOOLEAN
 			-- Value for the `check_for_catcall_at_runtime' setting.
 		do
 			Result := setting_boolean (s_check_for_catcall_at_runtime)
 		end
 
-	setting_check_generic_creation_constraint: BOOLEAN is
+	setting_check_generic_creation_constraint: BOOLEAN
 			-- Value of the check_generic_creation_constraint setting.
 		do
 			Result := setting_boolean (s_check_generic_creation_constraint)
 		end
 
-	setting_check_vape: BOOLEAN is
+	setting_check_vape: BOOLEAN
 			-- Value for the check_vape setting.
 		do
 			Result := setting_boolean (s_check_vape)
 		end
 
-	setting_console_application: BOOLEAN is
+	setting_console_application: BOOLEAN
 			-- Value for the console_application setting.
 		do
 			Result := setting_boolean (s_console_application)
 		end
 
-	setting_cls_compliant: BOOLEAN is
+	setting_cls_compliant: BOOLEAN
 			-- Value for the cls_compliant setting.
 		do
 			Result := setting_boolean (s_cls_compliant)
 		end
 
-	setting_dead_code_removal: BOOLEAN is
+	setting_dead_code_removal: BOOLEAN
 			-- Value for the dead_code_removal setting.
 		do
 			Result := setting_boolean (s_dead_code_removal)
 		end
 
-	setting_dotnet_naming_convention: BOOLEAN is
+	setting_dotnet_naming_convention: BOOLEAN
 			-- Value for the dotnet_naming_convention setting.
 		do
 			Result := setting_boolean (s_dotnet_naming_convention)
 		end
 
-	setting_dynamic_runtime: BOOLEAN is
+	setting_dynamic_runtime: BOOLEAN
 			-- Value for the dynamic_runtime setting.
 		do
 			Result := setting_boolean (s_dynamic_runtime)
 		end
 
-	setting_executable_name: STRING is
+	setting_executable_name: STRING
 			-- Value for the executable_name setting.
 		do
 			Result := settings.item (s_executable_name)
@@ -503,31 +503,31 @@ feature -- Access queries for settings
 			Result := setting_boolean (s_enforce_unique_class_names)
 		end
 
-	setting_exception_trace: BOOLEAN is
+	setting_exception_trace: BOOLEAN
 			-- Value for the exception_trace setting.
 		do
 			Result := setting_boolean (s_exception_trace)
 		end
 
-	setting_force_32bits: BOOLEAN is
+	setting_force_32bits: BOOLEAN
 			-- Value for the force_32bits setting.
 		do
 			Result := setting_boolean (s_force_32bits)
 		end
 
-	setting_il_verifiable: BOOLEAN is
+	setting_il_verifiable: BOOLEAN
 			-- Value for the console_application setting.
 		do
 			Result := setting_boolean (s_il_verifiable)
 		end
 
-	setting_inlining: BOOLEAN is
+	setting_inlining: BOOLEAN
 			-- Value for the inlining setting.
 		do
 			Result := setting_boolean (s_inlining)
 		end
 
-	setting_inlining_size: NATURAL_8 is
+	setting_inlining_size: NATURAL_8
 			-- Value for the inlining_size setting.
 		local
 			l_settings: like settings
@@ -542,19 +542,19 @@ feature -- Access queries for settings
 			end
 		end
 
-	setting_java_generation: BOOLEAN is
+	setting_java_generation: BOOLEAN
 			-- Value for the java_generation setting.
 		do
 			Result := setting_boolean (s_java_generation)
 		end
 
-	setting_line_generation: BOOLEAN is
+	setting_line_generation: BOOLEAN
 			-- Value for the line_generation setting.
 		do
 			Result := setting_boolean (s_line_generation)
 		end
 
-	setting_metadata_cache_path: STRING is
+	setting_metadata_cache_path: STRING
 			-- Value for the metadata_cache_path setting.
 		do
 			Result := settings.item (s_metadata_cache_path)
@@ -565,7 +565,7 @@ feature -- Access queries for settings
 			Result_not_void: Result /= Void
 		end
 
-	setting_msil_assembly_compatibility: STRING is
+	setting_msil_assembly_compatibility: STRING
 			-- Value for the msil_assembly_compatibility setting.
 		do
 			Result := settings.item (s_msil_assembly_compatibility)
@@ -576,7 +576,7 @@ feature -- Access queries for settings
 			Result_not_void: Result /= Void
 		end
 
-	setting_msil_classes_per_module: NATURAL_16 is
+	setting_msil_classes_per_module: NATURAL_16
 			-- Value for the msil_classes_per_module setting.
 		local
 			l_settings: like settings
@@ -591,7 +591,7 @@ feature -- Access queries for settings
 			end
 		end
 
-	setting_msil_clr_version: STRING is
+	setting_msil_clr_version: STRING
 			-- Value for the msil_clr_version setting.
 		do
 			Result := settings.item (s_msil_clr_version)
@@ -602,7 +602,7 @@ feature -- Access queries for settings
 			Result_not_void: Result /= Void
 		end
 
-	setting_msil_culture: STRING is
+	setting_msil_culture: STRING
 			-- Value for the msil_culture setting.
 		do
 			Result := settings.item (s_msil_culture)
@@ -613,13 +613,13 @@ feature -- Access queries for settings
 			Result_not_void: Result /= Void
 		end
 
-	setting_msil_generation: BOOLEAN is
+	setting_msil_generation: BOOLEAN
 			-- Value for the msil_generation setting.
 		do
 			Result := setting_boolean (s_msil_generation)
 		end
 
-	setting_msil_generation_type: STRING is
+	setting_msil_generation_type: STRING
 			-- Value for the msil_generation_type setting.
 		local
 			l_settings: like settings
@@ -634,7 +634,7 @@ feature -- Access queries for settings
 			end
 		end
 
-	setting_msil_key_file_name: STRING is
+	setting_msil_key_file_name: STRING
 			-- Value for the msil_key_file_name setting.
 		do
 			Result := settings.item (s_msil_key_file_name)
@@ -645,19 +645,19 @@ feature -- Access queries for settings
 			Result_not_void: Result /= Void
 		end
 
-	setting_msil_use_optimized_precompile: BOOLEAN is
+	setting_msil_use_optimized_precompile: BOOLEAN
 			-- Value for the msil_use_optimized_precompile setting.
 		do
 			Result := setting_boolean (s_msil_use_optimized_precompile)
 		end
 
-	setting_multithreaded: BOOLEAN is
+	setting_multithreaded: BOOLEAN
 			-- Value for the multithreaded setting.
 		do
 			Result := setting_boolean (s_multithreaded)
 		end
 
-	setting_platform: STRING is
+	setting_platform: STRING
 			-- Value for the platform setting.
 		local
 			l_settings: like settings
@@ -672,7 +672,7 @@ feature -- Access queries for settings
 			end
 		end
 
-	setting_external_runtime: STRING is
+	setting_external_runtime: STRING
 			-- Value for the external_runtime setting.
 		do
 			Result := settings.item (s_external_runtime)
@@ -683,7 +683,7 @@ feature -- Access queries for settings
 			Result_not_void: Result /= Void
 		end
 
-	setting_shared_library_definition: STRING is
+	setting_shared_library_definition: STRING
 			-- Value for the shared_library_definition setting.
 		do
 			Result := settings.item (s_shared_library_definition)
@@ -694,19 +694,19 @@ feature -- Access queries for settings
 			Result_not_void: Result /= Void
 		end
 
-	setting_use_cluster_name_as_namespace: BOOLEAN is
+	setting_use_cluster_name_as_namespace: BOOLEAN
 			-- Value for the use_cluster_name_as_namespace setting.
 		do
 			Result := setting_boolean (s_use_cluster_name_as_namespace)
 		end
 
-	setting_use_all_cluster_name_as_namespace: BOOLEAN is
+	setting_use_all_cluster_name_as_namespace: BOOLEAN
 			-- Value for the use_all_cluster_name_as_namespace setting.
 		do
 			Result := setting_boolean (s_use_all_cluster_name_as_namespace)
 		end
 
-	setting_automatic_backup: BOOLEAN is
+	setting_automatic_backup: BOOLEAN
 			-- Value for the automatic_backup setting.
 		do
 			Result := setting_boolean (s_automatic_backup)
@@ -714,7 +714,7 @@ feature -- Access queries for settings
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	set_name (a_name: like name) is
+	set_name (a_name: like name)
 			-- Set `name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -727,7 +727,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			name_set: name.is_case_insensitive_equal (a_name) and name.is_equal (name.as_lower)
 		end
 
-	set_description (a_description: like description) is
+	set_description (a_description: like description)
 			-- Set `description' to `a_description'.
 		do
 			description := a_description
@@ -735,7 +735,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			description_set: description = a_description
 		end
 
-	set_parent (a_target: like extends) is
+	set_parent (a_target: like extends)
 			-- Set `extends' to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -745,7 +745,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			parent_set: extends = a_target
 		end
 
-	set_parent_by_name (a_target: STRING) is
+	set_parent_by_name (a_target: STRING)
 			-- Set `parent' to `a_target'.
 		require
 			system: system /= Void
@@ -758,13 +758,13 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			end
 		end
 
-	remove_parent is
+	remove_parent
 			-- Remove the parent target.
 		do
 			extends := Void
 		end
 
-	set_version (a_version: like internal_version) is
+	set_version (a_version: like internal_version)
 			-- Set `version' to `a_version'.
 		do
 			internal_version := a_version
@@ -772,7 +772,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			version_set: internal_version = a_version
 		end
 
-	set_precompile (a_precompile: CONF_PRECOMPILE) is
+	set_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Set `a_precompile'.
 		do
 			internal_precompile := a_precompile
@@ -780,7 +780,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			precompile_set: internal_precompile = a_precompile
 		end
 
-	add_library (a_library: CONF_LIBRARY) is
+	add_library (a_library: CONF_LIBRARY)
 			-- Add `a_library'.
 		require
 			a_library_not_void: a_library /= Void
@@ -791,7 +791,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			library_added: internal_libraries.has (a_library.name)
 		end
 
-	add_assembly (an_assembly: CONF_ASSEMBLY) is
+	add_assembly (an_assembly: CONF_ASSEMBLY)
 			-- Add `an_assembly'.
 		require
 			an_assembly_not_void: an_assembly /= Void
@@ -801,7 +801,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			assembly_added: internal_assemblies.has (an_assembly.name)
 		end
 
-	add_cluster (a_cluster: CONF_CLUSTER) is
+	add_cluster (a_cluster: CONF_CLUSTER)
 			-- Add `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -812,7 +812,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			cluster_added: internal_clusters.has (a_cluster.name)
 		end
 
-	add_override (an_override: CONF_OVERRIDE) is
+	add_override (an_override: CONF_OVERRIDE)
 			-- Add `an_override'.
 		require
 			an_override_not_void: an_override /= Void
@@ -822,7 +822,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			override_added: internal_overrides.has (an_override.name)
 		end
 
-	remove_library (a_name: STRING) is
+	remove_library (a_name: STRING)
 			-- Remove a library with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -831,7 +831,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_libraries.remove (a_name)
 		end
 
-	remove_assembly (a_name: STRING) is
+	remove_assembly (a_name: STRING)
 			-- Remove an assembly with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -840,7 +840,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_assemblies.remove (a_name)
 		end
 
-	remove_cluster (a_name: STRING) is
+	remove_cluster (a_name: STRING)
 			-- Remove a cluster with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -849,7 +849,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_clusters.remove (a_name)
 		end
 
-	remove_override (a_name: STRING) is
+	remove_override (a_name: STRING)
 			-- Remove an override with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -858,7 +858,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_overrides.remove (a_name)
 		end
 
-	set_root (a_root: like root) is
+	set_root (a_root: like root)
 			-- Set `a_root'.
 		do
 			internal_root := a_root
@@ -866,7 +866,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			root_set: internal_root = a_root
 		end
 
-	remove_root is
+	remove_root
 			-- Remove root.
 		do
 			internal_root := Void
@@ -874,7 +874,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			root_removed: internal_root = Void
 		end
 
-	set_file_rules (a_file_rules: like internal_file_rule) is
+	set_file_rules (a_file_rules: like internal_file_rule)
 			-- Set `internal_file_rule' to `a_file_rules'.
 		do
 			if a_file_rules /= Void then
@@ -887,7 +887,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			file_rules_set: a_file_rules = Void implies internal_file_rule.is_empty
 		end
 
-	add_file_rule (a_file_rule: CONF_FILE_RULE) is
+	add_file_rule (a_file_rule: CONF_FILE_RULE)
 			-- Add `a_file_rule'.
 		require
 			a_file_rule_not_void: a_file_rule /= Void
@@ -897,7 +897,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			file_rule_added: internal_file_rule.has (a_file_rule)
 		end
 
-	set_options (an_option: like internal_options) is
+	set_options (an_option: like internal_options)
 			-- Set `an_option'.
 		require
 			an_option_not_void: an_option /= Void
@@ -907,7 +907,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			option_set: internal_options = an_option
 		end
 
-	set_settings (a_settings: like internal_settings) is
+	set_settings (a_settings: like internal_settings)
 			-- Set `a_settings'.
 		require
 			a_settings_not_void: a_settings /= Void
@@ -917,7 +917,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			settings_set: internal_settings = a_settings
 		end
 
-	add_setting (a_name, a_value: STRING) is
+	add_setting (a_name, a_value: STRING)
 			-- Add a new setting.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -928,7 +928,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_settings.item (a_name) = a_value
 		end
 
-	update_setting (a_name, a_value: STRING) is
+	update_setting (a_name, a_value: STRING)
 			-- Update/add/remove a setting.
 		require
 			a_name_valid: a_name /= Void and then valid_setting (a_name)
@@ -943,7 +943,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			updated_added_set: a_value /= Void and then not a_value.is_empty implies internal_settings.item (a_name) = a_value
 		end
 
-	set_external_includes (an_includes: like internal_external_include) is
+	set_external_includes (an_includes: like internal_external_include)
 			-- Set `an_includes'.
 		require
 			an_includes_not_void: an_includes /= Void
@@ -953,7 +953,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			includes_set: internal_external_include =an_includes
 		end
 
-	set_external_objects (an_objects: like internal_external_object) is
+	set_external_objects (an_objects: like internal_external_object)
 			-- Set `an_objects'.
 		require
 			an_objects_not_void: an_objects /= Void
@@ -963,7 +963,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			objects_set: internal_external_object = an_objects
 		end
 
-	set_external_libraries (a_libraries: like internal_external_library) is
+	set_external_libraries (a_libraries: like internal_external_library)
 			-- Set `a_libraries'.
 		require
 			a_libraries_not_void: a_libraries /= Void
@@ -973,7 +973,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			libraries_set: internal_external_library = a_libraries
 		end
 
-	set_external_ressources (a_ressources: like internal_external_resource) is
+	set_external_ressources (a_ressources: like internal_external_resource)
 			-- Set `a_ressources'.
 		require
 			a_ressources_not_void: a_ressources /= Void
@@ -983,7 +983,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			ressources_set: internal_external_resource = a_ressources
 		end
 
-	set_external_make (a_makes: like internal_external_make) is
+	set_external_make (a_makes: like internal_external_make)
 			-- Set `a_makes'.
 		require
 			a_makes_not_void: a_makes /= Void
@@ -993,7 +993,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			makes_set: internal_external_make = a_makes
 		end
 
-	add_external_include (an_include: CONF_EXTERNAL_INCLUDE) is
+	add_external_include (an_include: CONF_EXTERNAL_INCLUDE)
 			-- Add `an_include'.
 		require
 			an_include_not_void: an_include /= Void
@@ -1003,7 +1003,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_external_include.has (an_include)
 		end
 
-	add_external_object (an_object: CONF_EXTERNAL_OBJECT) is
+	add_external_object (an_object: CONF_EXTERNAL_OBJECT)
 			-- Add `an_object'.
 		require
 			an_object_not_void: an_object /= Void
@@ -1013,7 +1013,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_external_object.has (an_object)
 		end
 
-	add_external_library (a_library: CONF_EXTERNAL_LIBRARY) is
+	add_external_library (a_library: CONF_EXTERNAL_LIBRARY)
 			-- Add `a_library'.
 		require
 			a_library_not_void: a_library /= Void
@@ -1023,7 +1023,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_external_library.has (a_library)
 		end
 
-	add_external_resource (a_resource: CONF_EXTERNAL_RESOURCE) is
+	add_external_resource (a_resource: CONF_EXTERNAL_RESOURCE)
 			-- Add `a_resource'.
 		require
 			a_resource_not_void: a_resource /= Void
@@ -1036,7 +1036,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_external_resource.has (a_resource)
 		end
 
-	add_external_make (a_make: CONF_EXTERNAL_MAKE) is
+	add_external_make (a_make: CONF_EXTERNAL_MAKE)
 			-- Add `a_make'.
 		require
 			a_make_not_void: a_make /= Void
@@ -1046,7 +1046,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_external_make.has (a_make)
 		end
 
-	remove_external_include (an_include: CONF_EXTERNAL_INCLUDE) is
+	remove_external_include (an_include: CONF_EXTERNAL_INCLUDE)
 			-- Remove `an_include'.
 		require
 			an_include_not_void: an_include /= Void
@@ -1059,7 +1059,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			removed: not internal_external_include.has (an_include)
 		end
 
-	remove_external_object (an_object: CONF_EXTERNAL_OBJECT) is
+	remove_external_object (an_object: CONF_EXTERNAL_OBJECT)
 			-- Remove `an_object'.
 		require
 			an_object_not_void: an_object /= Void
@@ -1072,7 +1072,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			removed: not internal_external_object.has (an_object)
 		end
 
-	remove_external_library (a_library: CONF_EXTERNAL_LIBRARY) is
+	remove_external_library (a_library: CONF_EXTERNAL_LIBRARY)
 			-- Remove `a_library'.
 		require
 			a_library_not_void: a_library /= Void
@@ -1085,7 +1085,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			removed: not internal_external_library.has (a_library)
 		end
 
-	remove_external_resource (a_resource: CONF_EXTERNAL_RESOURCE) is
+	remove_external_resource (a_resource: CONF_EXTERNAL_RESOURCE)
 			-- Remove `a_ressource'.
 		require
 			a_ressource_not_void: a_resource /= Void
@@ -1098,7 +1098,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			removed: not internal_external_resource.has (a_resource)
 		end
 
-	remove_external_make (a_make: CONF_EXTERNAL_MAKE) is
+	remove_external_make (a_make: CONF_EXTERNAL_MAKE)
 			-- Remove `a_make'.
 		require
 			a_make_not_void: a_make /= Void
@@ -1111,7 +1111,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			removed: not internal_external_make.has (a_make)
 		end
 
-	set_pre_compile (a_pre_compile: like internal_pre_compile_action) is
+	set_pre_compile (a_pre_compile: like internal_pre_compile_action)
 			-- Set `a_pre_compile'.
 		do
 			internal_pre_compile_action := a_pre_compile
@@ -1119,7 +1119,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			pre_compile_set: internal_pre_compile_action = a_pre_compile
 		end
 
-	set_post_compile (a_post_compile: like internal_post_compile_action) is
+	set_post_compile (a_post_compile: like internal_post_compile_action)
 			-- Set `a_post_compile'.
 		do
 			internal_post_compile_action := a_post_compile
@@ -1127,7 +1127,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			post_compile_set: internal_post_compile_action = a_post_compile
 		end
 
-	add_pre_compile (an_action: CONF_ACTION) is
+	add_pre_compile (an_action: CONF_ACTION)
 			-- Add `an_action'.
 		require
 			an_action_not_void: an_action /= Void
@@ -1138,7 +1138,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_pre_compile_action.extend (an_action)
 		end
 
-	add_post_compile (an_action: CONF_ACTION) is
+	add_post_compile (an_action: CONF_ACTION)
 			-- Add `an_action'.
 		require
 			an_action_not_void: an_action /= Void
@@ -1149,7 +1149,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_post_compile_action.extend (an_action)
 		end
 
-	remove_action (an_action: CONF_ACTION) is
+	remove_action (an_action: CONF_ACTION)
 			-- Remove `an_action'.
 		require
 			an_action_not_void: an_action /= Void
@@ -1163,7 +1163,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 					not internal_post_compile_action.has (an_action)
 		end
 
-	add_variable (a_name, a_value: STRING) is
+	add_variable (a_name, a_value: STRING)
 			-- Add a variable with `a_name' and `a_value'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -1174,7 +1174,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			variable_added: internal_variables.has (a_name.as_lower) and then internal_variables.item (a_name.as_lower) = a_value
 		end
 
-	remove_variable (a_name: STRING) is
+	remove_variable (a_name: STRING)
 			-- Remove a variable with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -1184,7 +1184,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			variable_removed: not internal_variables.has (a_name.as_lower)
 		end
 
-	add_mapping (a_old_name, a_new_name: STRING) is
+	add_mapping (a_old_name, a_new_name: STRING)
 			-- Add/replace  mapping from `a_old_name' to `a_new_name'.
 		require
 			a_old_name_ok: a_old_name /= Void and then not a_old_name.is_empty
@@ -1196,7 +1196,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
 		end
 
-	remove_mapping (a_name: STRING) is
+	remove_mapping (a_name: STRING)
 			-- Remove a mapping with `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -1208,7 +1208,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			mapping_removed: not internal_mapping.has (a_name.as_upper)
 		end
 
-	set_abstract (an_enabled: like is_abstract) is
+	set_abstract (an_enabled: like is_abstract)
 			-- Set `is_abstract' to `an_enabled'.
 		do
 			is_abstract := an_enabled
@@ -1218,7 +1218,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
-	set_environ_variables (a_vars: like environ_variables) is
+	set_environ_variables (a_vars: like environ_variables)
 			-- Set `environ_variables' to `a_vars'.
 		require
 			a_vars_not_void: a_vars /= Void
@@ -1230,7 +1230,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 
 feature -- Equality
 
-	is_group_equivalent (other: like Current): BOOLEAN is
+	is_group_equivalent (other: like Current): BOOLEAN
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
 			Result := is_abstract = other.is_abstract and then is_group_equal_check (libraries, other.libraries) and then
@@ -1251,7 +1251,7 @@ feature -- Equality
 			end
 		end
 
-	is_deep_group_equivalent (other: like Current; a_processed_libraries: SEARCH_TABLE [UUID]): BOOLEAN is
+	is_deep_group_equivalent (other: like Current; a_processed_libraries: SEARCH_TABLE [UUID]): BOOLEAN
 			-- Is `other' and `Current' the same with respect to the group layout, even down into used libraries?
 			-- do not process already processed libraries and add newly processed libraries to `a_processed_libraries'.
 		require
@@ -1295,7 +1295,7 @@ feature -- Equality
 
 feature -- Visit
 
-	process (a_visitor: CONF_VISITOR) is
+	process (a_visitor: CONF_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_target (Current)
@@ -1303,7 +1303,7 @@ feature -- Visit
 
 feature -- Output
 
-	debug_output: STRING is
+	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			Result := system.name + "/" + name
@@ -1341,7 +1341,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 	internal_mapping: EQUALITY_HASH_TABLE [STRING, STRING]
 			-- Special classes name mapping (eg. STRING => STRING_32) of this target itself.
 
-	changeable_internal_options: like internal_options is
+	changeable_internal_options: like internal_options
 			-- A possibility to change settings without knowing if we have some options already set.
 		do
 			if internal_options = Void then
@@ -1381,7 +1381,7 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 
 feature {NONE} -- Implementation
 
-	is_group_equal_check (a, b: HASH_TABLE [CONF_GROUP, STRING]): BOOLEAN is
+	is_group_equal_check (a, b: HASH_TABLE [CONF_GROUP, STRING]): BOOLEAN
 			-- Check if `a' and `b' are group equivalent.
 		do
 			if a.count = b.count then
@@ -1418,7 +1418,7 @@ invariant
 	internal_settings_not_void: internal_settings /= Void
 	environ_variables_not_void: environ_variables /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Test field for tags."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -29,14 +29,14 @@ convert
 
 feature {NONE} -- Initialization
 
-	default_create is
+	default_create
 			-- Create Current
 		do
 			create change_actions
 			build_interface
 		end
 
-	build_interface is
+	build_interface
 			-- Build interface
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -75,7 +75,7 @@ feature -- Properties
 
 feature -- Measurement
 
-	is_modified: BOOLEAN is
+	is_modified: BOOLEAN
 			-- Value modified ?
 		local
 			t,o: like text
@@ -100,7 +100,7 @@ feature -- Measurement
 
 feature -- Access
 
-	text: STRING_32 is
+	text: STRING_32
 			-- Text
 		do
 			Result := text_field.text
@@ -108,7 +108,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	used_tags: ARRAY [STRING_32] is
+	used_tags: ARRAY [STRING_32]
 			-- Used tags as Array.
 		do
 			Result := string_to_array_tags (text)
@@ -116,19 +116,19 @@ feature -- Access
 
 feature -- Change
 
-	set_category_mode (b: BOOLEAN) is
+	set_category_mode (b: BOOLEAN)
 			-- Set `category_mode' to `b'
 		do
 			category_mode := b
 		end
 
-	set_provider (a_prov: like provider) is
+	set_provider (a_prov: like provider)
 			-- Set `provider' to `a_prov'
 		do
 			provider := a_prov
 		end
 
-	set_text (s: STRING_GENERAL) is
+	set_text (s: STRING_GENERAL)
 			-- Set text
 		require
 			s_not_void: s /= Void
@@ -137,21 +137,21 @@ feature -- Change
 			original_text := text
 		end
 
-	set_tags (arr: ARRAY [STRING_32]) is
+	set_tags (arr: ARRAY [STRING_32])
 			-- Set tags
 		do
 			internal_set_tags (arr)
 			original_text := text
 		end
 
-	remove_text is
+	remove_text
 			-- Remove text
 		do
 			internal_remove_text
 			original_text := Void
 		end
 
-	set_pixmap (p: EV_PIXMAP) is
+	set_pixmap (p: EV_PIXMAP)
 			-- Set tags's button pixmap
 		do
 			if p /= Void then
@@ -163,19 +163,19 @@ feature -- Change
 			end
 		end
 
-	set_background_color (c: EV_COLOR) is
+	set_background_color (c: EV_COLOR)
 			-- Set background_color
 		do
 			text_field.set_background_color (c)
 		end
 
-	set_foreground_color (c: EV_COLOR) is
+	set_foreground_color (c: EV_COLOR)
 			-- Set foreground_color
 		do
 			text_field.set_foreground_color (c)
 		end
 
-	validate_changes is
+	validate_changes
 			-- Validate current change,
 			-- and update original_value
 		do
@@ -184,7 +184,7 @@ feature -- Change
 
 feature -- event
 
-	on_key_released (k: EV_KEY) is
+	on_key_released (k: EV_KEY)
 			-- Key released event
 		do
 			if ev_application.ctrl_pressed then
@@ -194,7 +194,7 @@ feature -- event
 			end
 		end
 
-	update_text is
+	update_text
 			-- Update text with well formatted string from `used_tags'
 		do
 			internal_set_tags (used_tags)
@@ -203,7 +203,7 @@ feature -- event
 			end
 		end
 
-	add_tag	(t: STRING_32) is
+	add_tag	(t: STRING_32)
 			-- Add tag `t'
 		local
 			s: like text
@@ -216,7 +216,7 @@ feature -- event
 			internal_set_text (s)
 		end
 
-	open_tags_popup is
+	open_tags_popup
 			-- Open tags popup
 		local
 			pw: EV_POPUP_WINDOW
@@ -420,7 +420,7 @@ feature -- event
 			g.set_focus
 		end
 
-	category_name_tag (a_tag: STRING_32): TUPLE [category: STRING_32; name: STRING_32] is
+	category_name_tag (a_tag: STRING_32): TUPLE [category: STRING_32; name: STRING_32]
 			-- Details from `a_tag'.
 		require
 			is_valid_tag: a_tag /= Void and then not a_tag.is_empty
@@ -435,7 +435,7 @@ feature -- event
 			end
 		end
 
-	remove_tag_from_tags_text (t: STRING_32; a_text: STRING_32) is
+	remove_tag_from_tags_text (t: STRING_32; a_text: STRING_32)
 			-- Remove tag `t' from `a_text'
 		require
 			a_text /= Void
@@ -493,7 +493,7 @@ feature -- Convertion
 	widget: EV_WIDGET
 			-- Related widget (represents Current)
 
-	to_widget: EV_WIDGET is
+	to_widget: EV_WIDGET
 			-- Current as widget.
 		do
 			Result := widget
@@ -501,7 +501,7 @@ feature -- Convertion
 			Result /= Void
 		end
 
-	to_text_field: EV_TEXT_FIELD is
+	to_text_field: EV_TEXT_FIELD
 			-- Current as text field.
 		do
 			Result := text_field
@@ -509,7 +509,7 @@ feature -- Convertion
 			Result /= Void
 		end
 
-	parent_window (w: EV_WIDGET): EV_WINDOW is
+	parent_window (w: EV_WIDGET): EV_WINDOW
 			-- Parent window of `w'.
 		require
 			w /= Void
@@ -522,18 +522,18 @@ feature -- Convertion
 
 feature {NONE} -- Implementation
 
-	stock_colors: EV_STOCK_COLORS is
+	stock_colors: EV_STOCK_COLORS
 		once
 			create Result
 		end
 
-	internal_remove_text is
+	internal_remove_text
 			-- Remove text
 		do
 			text_field.remove_text
 		end
 
-	internal_set_text (s: STRING_GENERAL) is
+	internal_set_text (s: STRING_GENERAL)
 			-- Set text
 		require
 			s_not_void: s /= Void
@@ -575,7 +575,7 @@ feature {NONE} -- Implementation
 			text_field.set_text (t)
 		end
 
-	internal_set_tags (arr: ARRAY [STRING_32]) is
+	internal_set_tags (arr: ARRAY [STRING_32])
 			-- Set internal storage of tags from `arr'
 		local
 			t: like text
@@ -603,7 +603,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	string_to_array_tags (a_text: STRING_32): ARRAY [STRING_32] is
+	string_to_array_tags (a_text: STRING_32): ARRAY [STRING_32]
 			-- Used tags as Array from `s'.
 		require
 			a_text_not_void: a_text /= Void
@@ -663,7 +663,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor for responses"
 	author: ""
 	date: "$Date$"
@@ -9,21 +9,21 @@ deferred class
 
 feature -- Process
 
-	process_normal_response (a_response: AUT_NORMAL_RESPONSE) is
+	process_normal_response (a_response: AUT_NORMAL_RESPONSE)
 			-- Process `a_response'.
 		require
 			a_response_attached: a_response /= Void
 		deferred
 		end
 
-	process_error_response (a_response: AUT_ERROR_RESPONSE) is
+	process_error_response (a_response: AUT_ERROR_RESPONSE)
 			-- Process `a_response'.
 		require
 			a_response_attached: a_response /= Void
 		deferred
 		end
 
-	process_bad_response (a_response: AUT_BAD_RESPONSE) is
+	process_bad_response (a_response: AUT_BAD_RESPONSE)
 			-- Process `a_response'.
 		require
 			a_response_attached: a_response /= Void

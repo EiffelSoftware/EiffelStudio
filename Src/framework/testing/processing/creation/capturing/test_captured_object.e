@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Representation of an debugee object that was captured by {EIFFEL_TEST_CAPTURER}.
 	]"

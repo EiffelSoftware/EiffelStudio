@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Grid item in which a list of components can be displayed"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize Current
 		do
 			Precursor
@@ -35,13 +35,13 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	grid_item: EV_GRID_ITEM is
+	grid_item: EV_GRID_ITEM
 			-- Grid item
 		do
 			Result := Current
 		end
 
-	pebble_at_position: ANY is
+	pebble_at_position: ANY
 			-- Pebble at pointer position
 			-- Void if no pebble found at that position
 		local
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Actions
 
-	on_pick: ANY is
+	on_pick: ANY
 			-- Action to be performed when pick starts
 			-- Return value is the picked pebble if any.
 		do
@@ -79,7 +79,7 @@ feature -- Actions
 			end
 		end
 
-	on_pick_ends is
+	on_pick_ends
 			-- Action to be performed when pick-and-drop finishes
 		do
 			if is_component_pebble_enabled and then last_picked_item > 0 and then last_picked_item <= component_count then
@@ -90,7 +90,7 @@ feature -- Actions
 
 feature{NONE} -- Implementation
 
-	required_dimension_for_items: TUPLE [width, height: INTEGER] is
+	required_dimension_for_items: TUPLE [width, height: INTEGER]
 			-- Required dimension in pixels for `items'
 		local
 			l_items: like components
@@ -131,7 +131,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation/Redraw
 
-	perform_redraw (a_drawable: EV_DRAWABLE) is
+	perform_redraw (a_drawable: EV_DRAWABLE)
 			-- Redraw Current
 		require
 			a_drawable_attached: a_drawable /= Void
@@ -139,7 +139,7 @@ feature{NONE} -- Implementation/Redraw
 			display (a_drawable, is_selected, parent.has_focus)
 		end
 
-	safe_redraw is
+	safe_redraw
 			-- Redraw Current if parented
 		do
 			set_required_width (required_dimension_for_items.width)
@@ -175,7 +175,7 @@ feature{NONE} -- Implementation/Redraw
 			a_drawable.fill_rectangle (a_x, a_y, a_width, a_height)
 		end
 
-	display (a_drawable: EV_DRAWABLE; a_selected: BOOLEAN; a_focused: BOOLEAN) is
+	display (a_drawable: EV_DRAWABLE; a_selected: BOOLEAN; a_focused: BOOLEAN)
 			-- Display Current in `a_drawable'.
 		require
 			a_drawable_attached: a_drawable /= Void
@@ -239,13 +239,13 @@ feature{NONE} -- Implementation/Redraw
 			end
 		end
 
-	default_padding: INTEGER is 10
+	default_padding: INTEGER = 10
 			-- Default padding in pixel
 
 invariant
 	displayed_item_position_attached: component_position /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

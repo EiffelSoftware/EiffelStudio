@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants to identify Unmanaged Callback method"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,18 +11,18 @@ class
 
 feature {NONE} -- Constants
 
-	Cst_unmanaged_debug_event: INTEGER is 35
+	Cst_unmanaged_debug_event: INTEGER = 35
 
 feature
 
-	unmanaged_callbacks: ARRAY[INTEGER] is
+	unmanaged_callbacks: ARRAY[INTEGER]
 		do
 			Result := <<
 				Cst_unmanaged_debug_event
 			>>
 		end
 
-	value_of_cst_unmanaged_cb (cst: INTEGER): STRING is
+	value_of_cst_unmanaged_cb (cst: INTEGER): STRING
 		do
 			inspect cst 
 				when Cst_unmanaged_debug_event then
@@ -32,7 +32,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

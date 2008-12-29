@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"A delayed action operation."
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 
 	make (	a_delayed_action: like delayed_action;
 			a_delay: like delay
-			) is
+			)
 			-- Initialize Current with `a_delayed_action' and `a_delay'.
 			-- Current is in kamikazed mode by default (See `enable_kamikazed' for more information).
 		require
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 	make_in_non_kamikazed_mode ( a_delayed_action: like delayed_action;
 							 a_delay: like delay;
-							 a_interval: like interval) is
+							 a_interval: like interval)
 			-- Initialze Current in non-kamikazed mode.
 		require
 			a_delayed_action /= Void
@@ -55,31 +55,31 @@ feature {NONE} -- Initialization
 
 feature -- Changes
 
-	set_delayed_action (v: like delayed_action) is
+	set_delayed_action (v: like delayed_action)
 			-- Change the `delayed_action'
 		do
 			delayed_action := v
 		end
 
-	set_delay (d: like delay) is
+	set_delay (d: like delay)
 			-- Change the `delay'
 		do
 			delay := d
 		end
 
-	set_on_request_start_action (v: like on_request_start_action) is
+	set_on_request_start_action (v: like on_request_start_action)
 			-- Change the `on_request_start_action'
 		do
 			on_request_start_action := v
 		end
 
-	set_on_request_end_action (v: like on_request_end_action) is
+	set_on_request_end_action (v: like on_request_end_action)
 			-- Change the `on_request_end_action'
 		do
 			on_request_end_action := v
 		end
 
-	set_interval (a_interval: INTEGER) is
+	set_interval (a_interval: INTEGER)
 			-- Set `interval' with `a_interval'.
 		require
 			a_interval_positive: a_interval > 0
@@ -89,19 +89,19 @@ feature -- Changes
 			interval_set: interval = a_interval
 		end
 
-	enable_reset_timer_on_request is
+	enable_reset_timer_on_request
 			-- Enable reset_timer_on_request
 		do
 			reset_timer_on_request := True
 		end
 
-	disable_reset_timer_on_request is
+	disable_reset_timer_on_request
 			-- Disable reset_timer_on_request
 		do
 			reset_timer_on_request := False
 		end
 
-	enable_kamikazed is
+	enable_kamikazed
 			-- Ensure `delayed_action' will be invoked in kamikazed mode.
 			-- Has effects the next time when `requrest_call' is called.
 		do
@@ -110,7 +110,7 @@ feature -- Changes
 			is_kamikazed_set: is_kamikazed
 		end
 
-	disable_kamikazed is
+	disable_kamikazed
 			-- Ensure `delayed_action' will be invoked in non-kamikazed mode.
 			-- Has effects the next time when `request_call' is called.
 		do
@@ -140,13 +140,13 @@ feature -- Properties
 
 feature -- Delayed action access
 
-	delayed_action_exists: BOOLEAN is
+	delayed_action_exists: BOOLEAN
 			-- Is there any delayed_action set ?
 		do
 			Result := delayed_action /= Void
 		end
 
-	call is
+	call
 			-- Directly call the action (no delay)
 		require
 			delayed_action_exists: delayed_action_exists
@@ -159,7 +159,7 @@ feature -- Delayed action access
 			end
 		end
 
-	repeat_call is
+	repeat_call
 			-- Call `delayed_action' continuously every `internal' milliseconds.
 		do
 			if action_timer = Void then
@@ -171,7 +171,7 @@ feature -- Delayed action access
 			action_timer.actions.extend (delayed_action)
 		end
 
-	request_call is
+	request_call
 			-- Request evaluation of `delayed_action' after `delay'
 		require
 			delayed_action_exists: delayed_action_exists
@@ -194,7 +194,7 @@ feature -- Delayed action access
 			delayed_action_timer_created: delay > 0 implies delayed_action_timer /= Void
 		end
 
-	cancel_request is
+	cancel_request
 			-- Cancel request
 		require
 			delayed_action_exists: delayed_action_exists
@@ -212,7 +212,7 @@ feature -- Delayed action access
 			delayed_action_timer_destroyed: delayed_action_timer = Void
 		end
 
-	destroy is
+	destroy
 			-- Destroy current
 		do
 			on_request_start_action := Void
@@ -245,7 +245,7 @@ feature {NONE} -- Delayed cleaning implementation
 	action_timer: EV_TIMEOUT;
 			-- Timer used to call `delayed_action' continuously
 
-	dispose_action_timer is
+	dispose_action_timer
 			-- Dispose `action_timer'.
 		do
 			if action_timer /= Void then
@@ -255,7 +255,7 @@ feature {NONE} -- Delayed cleaning implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

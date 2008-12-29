@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Abstract description of a the content of an Eiffel %
 		%constant. Version for Bench."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (v: like value) is
+	initialize (v: like value)
 			-- Create a new CONSTANT AST node.
 		require
 			v_not_void: v /= Void
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_constant_as (Current)
@@ -45,25 +45,25 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := value.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := value.last_token (a_list)
 		end
 
 feature -- Properties
 
-	is_built_in: BOOLEAN is False
+	is_built_in: BOOLEAN = False
 			-- Is the current content a built in?
 
-	is_constant: BOOLEAN is True
+	is_constant: BOOLEAN = True
 			-- Is the current content a constant one ?
 
-	is_unique: BOOLEAN is
+	is_unique: BOOLEAN
 			-- Is the content a unique ?
 		do
 			Result := value.is_unique
@@ -71,7 +71,7 @@ feature -- Properties
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (value, other.value)
@@ -79,19 +79,19 @@ feature -- Comparison
 
 feature -- Access
 
-	is_body_equiv (other: like Current): BOOLEAN is
+	is_body_equiv (other: like Current): BOOLEAN
 			-- Are the values of Current and other the
 			-- same?
 		do
 			Result := equivalent (value, other.value)
 		end
 
-	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN
 		do
 			Result := False
 		end
 
-	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER
 			-- Index of `i' in this constant.
 			-- Result is `0'.
 		do
@@ -100,7 +100,7 @@ feature -- Access
 
 feature {CONSTANT_AS} -- Replication
 
-	set_value (v: like value) is
+	set_value (v: like value)
 		do
 			value := v
 		end
@@ -108,7 +108,7 @@ feature {CONSTANT_AS} -- Replication
 invariant
 	value_not_void: value /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Interface to control keyboard"
 	legal: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize object.
 		do
 			create {KEYBOARD_IMP}implementation
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Typing
 
-	type (a_string: STRING) is
+	type (a_string: STRING)
 			-- Type `a_string' into keyboard.
 		require
 			a_string_not_void: a_string /= Void
@@ -41,7 +41,7 @@ feature -- Typing
 			a_string.linear_representation.do_all (agent type_character)
 		end
 
-	type_character (a_character: CHARACTER) is
+	type_character (a_character: CHARACTER)
 			-- Type `a_character' into keyboard.
 		do
 			if a_character = ' ' then
@@ -55,7 +55,7 @@ feature -- Typing
 			end
 		end
 
-	type_key (a_key_code: INTEGER) is
+	type_key (a_key_code: INTEGER)
 			-- Type key denoted by `a_key_code'.
 		require
 			a_key_code_valid: valid_key_code (a_key_code)
@@ -63,7 +63,7 @@ feature -- Typing
 			type_ev_key (create {EV_KEY}.make_with_code (a_key_code))
 		end
 
-	type_modified_key (a_modifier_mask, a_key_code: INTEGER) is
+	type_modified_key (a_modifier_mask, a_key_code: INTEGER)
 			-- Type key denoted by `a_key_code' while using modifiers.
 		require
 			a_key_code_valid: valid_key_code (a_key_code)
@@ -73,7 +73,7 @@ feature -- Typing
 			release_modifiers (a_modifier_mask)
 		end
 
-	type_ev_key (a_key: EV_KEY) is
+	type_ev_key (a_key: EV_KEY)
 			-- Type `a_key' into keyboard.
 		require
 			a_key_not_void: a_key /= Void
@@ -85,7 +85,7 @@ feature -- Typing
 
 feature -- Pressing
 
-	press_key (a_key_code: INTEGER) is
+	press_key (a_key_code: INTEGER)
 			-- Press `a_key'.
 		require
 			a_key_code_valid: valid_key_code (a_key_code)
@@ -93,7 +93,7 @@ feature -- Pressing
 			press_ev_key (create {EV_KEY}.make_with_code (a_key_code))
 		end
 
-	release_key (a_key_code: INTEGER) is
+	release_key (a_key_code: INTEGER)
 			-- Release `a_key'.
 		require
 			a_key_code_valid: valid_key_code (a_key_code)
@@ -101,21 +101,21 @@ feature -- Pressing
 			release_ev_key (create {EV_KEY}.make_with_code (a_key_code))
 		end
 
-	press_ev_key (a_key: EV_KEY) is
+	press_ev_key (a_key: EV_KEY)
 			-- Press `a_key'.
 		do
 			implementation.press_key (a_key)
 			sleep (pressing_delay)
 		end
 
-	release_ev_key (a_key: EV_KEY) is
+	release_ev_key (a_key: EV_KEY)
 			-- Release `a_key'.
 		do
 			implementation.release_key (a_key)
 			sleep (releasing_delay)
 		end
 
-	press_modifiers (a_modifier_mask: INTEGER) is
+	press_modifiers (a_modifier_mask: INTEGER)
 			-- Press modifiers.
 		do
 			if a_modifier_mask.bit_and (shift) /= 0 then
@@ -129,7 +129,7 @@ feature -- Pressing
 			end
 		end
 
-	release_modifiers (a_modifier_mask: INTEGER) is
+	release_modifiers (a_modifier_mask: INTEGER)
 			-- Press modifiers.
 		do
 			if a_modifier_mask.bit_and (shift) /= 0 then
@@ -156,7 +156,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_typing_delay (a_value: INTEGER) is
+	set_typing_delay (a_value: INTEGER)
 			-- Set `typing_delay' to `a_value'.
 		require
 			a_value_not_negative: a_value > 0
@@ -166,7 +166,7 @@ feature -- Element change
 			typing_delay_set: typing_delay = a_value
 		end
 
-	set_pressing_delay (a_value: INTEGER) is
+	set_pressing_delay (a_value: INTEGER)
 			-- Set `pressing_delay' to `a_value'.
 		require
 			a_value_not_negative: a_value > 0
@@ -176,7 +176,7 @@ feature -- Element change
 			pressing_delay_set: pressing_delay = a_value
 		end
 
-	set_releasing_delay (a_value: INTEGER) is
+	set_releasing_delay (a_value: INTEGER)
 			-- Set `releasing_delay' to `a_value'.
 		require
 			a_value_not_negative: a_value > 0
@@ -195,7 +195,7 @@ invariant
 
 	implementation_not_void: implementation /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

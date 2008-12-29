@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Displays warning and error messages from Error handler%
 		%during a compilation."
@@ -33,7 +33,7 @@ feature -- Basic operations
 
 feature -- Output
 
-	trace_warnings (handler: ERROR_HANDLER) is
+	trace_warnings (handler: ERROR_HANDLER)
 			-- Display warnings messages from `handler'.
 		require
 			non_void_handler: handler /= Void;
@@ -43,7 +43,7 @@ feature -- Output
 			warnings_list_unmoved: handler.warning_list.cursor.is_equal (old handler.warning_list.cursor)
 		end
 
-	trace_errors (handler: ERROR_HANDLER) is
+	trace_errors (handler: ERROR_HANDLER)
 			-- Display error messages from `handler'.
 		require
 			non_void_handler: handler /= Void;
@@ -53,12 +53,12 @@ feature -- Output
 			warnings_list_unmoved: handler.error_list.cursor.is_equal (old handler.error_list.cursor)
 		end
 
-	force_display is
+	force_display
 			-- Make sure the user can see the messages we send.
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

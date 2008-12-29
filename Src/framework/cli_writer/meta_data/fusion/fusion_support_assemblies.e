@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of IEnumAssemblies defined in <vs_support.h>"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature -- Access
 
-	count: INTEGER is
+	count: INTEGER
 			-- Number of assemblies in Current
 		do
 			last_call_success := c_count (item, $Result)
@@ -24,7 +24,7 @@ feature -- Access
 			no_error: last_call_success = 0
 		end
 		
-	i_th (i: INTEGER): FUSION_SUPPORT_ASSEMBLY_INFO is
+	i_th (i: INTEGER): FUSION_SUPPORT_ASSEMBLY_INFO
 			-- COM interface to assembly information at index 'a_index'
 		local
 			p: POINTER
@@ -37,7 +37,7 @@ feature -- Access
 	
 feature {NONE} -- Implementation
 
-	c_count (p, cnt: POINTER): INTEGER is
+	c_count (p, cnt: POINTER): INTEGER
 			-- Call `IEnumAssemblies->Count'.
 		external
 			"C++ IEnumAssemblies signature (long *): EIF_INTEGER use %"ise_vs_fusion_support.h%""
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 		end
 
 	c_ith (p: POINTER; i: INTEGER; ass_info: POINTER): INTEGER
-		is
+		
 			-- Call `IEnumAssemblies->IthItem'.
 		external
 			"C++ IEnumAssemblies signature (long, IAssemblyInfo**): EIF_INTEGER use %"ise_vs_fusion_support.h%""
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 			"IthItem"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

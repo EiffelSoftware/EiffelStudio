@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		ICorDebugGenericValue
 			GetValue([out] void *pTo);
@@ -19,7 +19,7 @@ create
 	
 feature {ICOR_EXPORTER} -- Access
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- IsValid tests whether the object is valid
 		local
 			r: INTEGER
@@ -28,7 +28,7 @@ feature {ICOR_EXPORTER} -- Access
 			Result := (r /= 0) --| TRUE = 1 , FALSE = 0
 		end
 		
-	last_error_was_object_neutered: BOOLEAN is
+	last_error_was_object_neutered: BOOLEAN
 			-- last call returned an Object_neutered error code ?
 		do
 			Result := error_code_is_object_neutered (last_call_success)
@@ -36,7 +36,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_is_valid (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER is
+	cpp_is_valid (obj: POINTER; a_result: TYPED_POINTER [INTEGER]): INTEGER
 		external
 			"[
 				C++ ICorDebugHeapValue signature(BOOL*): EIF_INTEGER 
@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 			"IsValid"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

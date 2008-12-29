@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Constants for debug info"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,27 +10,27 @@ class
 
 feature -- Type
 	
-	type_unknown, type_reserved10: INTEGER is 0
+	type_unknown, type_reserved10: INTEGER = 0
 
-	type_coff, type_clsid: INTEGER is 1
+	type_coff, type_clsid: INTEGER = 1
 
-	type_codeview: INTEGER is 2
+	type_codeview: INTEGER = 2
 
-	type_fpo: INTEGER is 3
+	type_fpo: INTEGER = 3
 
-	type_misc: INTEGER is 4
+	type_misc: INTEGER = 4
 
-	type_exception: INTEGER is 5
+	type_exception: INTEGER = 5
 
-	type_fixup: INTEGER is 6
+	type_fixup: INTEGER = 6
 
-	type_omap_to_src: INTEGER is 7
+	type_omap_to_src: INTEGER = 7
 
-	type_omap_from_src: INTEGER is 8
+	type_omap_from_src: INTEGER = 8
 
-	type_borland: INTEGER is 9;
+	type_borland: INTEGER = 9;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

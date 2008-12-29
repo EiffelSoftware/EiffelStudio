@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of bit symbols."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (s: like bits_symbol; b_as: KEYWORD_AS) is
+	initialize (s: like bits_symbol; b_as: KEYWORD_AS)
 			-- Create a new BITS_SYMBOL AST node.
 		require
 			s_not_void: s /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_bits_symbol_as (Current)
@@ -65,7 +65,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -77,7 +77,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -87,7 +87,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (bits_symbol, other.bits_symbol)
@@ -95,7 +95,7 @@ feature -- Comparison
 
 feature -- Output
 
-	dump: STRING is
+	dump: STRING
 			-- Debug purpose
 		do
 			create Result.make (5 + bits_symbol.name.count)
@@ -106,7 +106,7 @@ feature -- Output
 invariant
 	bits_symbol_not_void: bits_symbol /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

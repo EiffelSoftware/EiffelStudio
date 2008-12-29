@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -34,14 +34,14 @@ create
 
 feature {AUT_SHARED_PATHNAMES}
 
-	make is
+	make
 			-- Create new object.
 		do
 		end
 
 feature -- Directory names
 
-	auto_test_dirname: STRING is
+	auto_test_dirname: STRING
 			-- Directory where AutoTest has been installed.
 			-- First the registry (if available) will be queried for the dirname
 			-- then the ${AUTO_TEST} environment variable will be used.
@@ -61,7 +61,7 @@ feature -- Directory names
 			directory_not_void: Result /= Void
 		end
 
-	runtime_dirname: STRING is
+	runtime_dirname: STRING
 			-- Directory where runtime files are stored
 		once
 			Result := execution_environment.variable_value ("ERL_G")
@@ -74,7 +74,7 @@ feature -- Directory names
 			directory_not_void: Result /= Void
 		end
 
-	image_dirname: STRING is
+	image_dirname: STRING
 			-- Directory where images are stored
 		do
 			Result := file_system.pathname (auto_test_dirname, "image")
@@ -82,7 +82,7 @@ feature -- Directory names
 			dirname_not_void: Result /= Void
 		end
 
-	misc_dirname: STRING is
+	misc_dirname: STRING
 			-- Directory where miscelaneous files are stored
 		do
 			Result := file_system.pathname (auto_test_dirname, "misc")
@@ -90,7 +90,7 @@ feature -- Directory names
 			dirname_not_void: Result /= Void
 		end
 
-	misc_html_dirname: STRING is
+	misc_html_dirname: STRING
 			-- Directory where miscelaneous files are stored
 		do
 			Result := file_system.pathname (misc_dirname, "html")
@@ -100,7 +100,7 @@ feature -- Directory names
 
 feature {NONE} -- Implementation
 
-	auto_test_key_name: STRING is "HKEY_LOCAL_MACHINE\software\AutoTest"
+	auto_test_key_name: STRING = "HKEY_LOCAL_MACHINE\software\AutoTest"
 			-- Name of AutoTest key
 
 end

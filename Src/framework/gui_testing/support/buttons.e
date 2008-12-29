@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Mouse button constants"
 	legal: "See notice at end of class."
@@ -11,24 +11,24 @@ class
 
 feature -- Access
 
-	left: INTEGER is 1
+	left: INTEGER = 1
 		-- Left mouse button
 
-	right: INTEGER is 2
+	right: INTEGER = 2
 		-- Right mouse button
 
-	middle: INTEGER is 3
+	middle: INTEGER = 3
 		-- Middle mouse button
 
 feature -- Status report
 
-	is_valid_button (a_button: INTEGER): BOOLEAN is
+	is_valid_button (a_button: INTEGER): BOOLEAN
 			-- Is `a_button' a valid mouse button?
 		do
 			Result := a_button = left or a_button = right or a_button = middle
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Objects that manage the layout of a grid ...
 			In fact, it will keep the expanded nodes layout on 'record'
@@ -33,7 +33,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_grid: like grid; a_name: STRING) is
+	make (a_grid: like grid; a_name: STRING)
 		do
 			grid := a_grid
 			name := a_name
@@ -78,35 +78,35 @@ feature -- Layout acces
 			--    }
 			-- ]
 
-	set_layout (v: like layout) is
+	set_layout (v: like layout)
 		do
 			layout := v
 		end
 
 feature -- Change
 
-	enable is
+	enable
 		do
 			enabled := True
 		end
 
-	disable is
+	disable
 		do
 			enabled := False
 			wipe_out
 		end
 
-	enable_positioning is
+	enable_positioning
 		do
 			positioning_enabled := True
 		end
 
-	disable_positioning is
+	disable_positioning
 		do
 			positioning_enabled := False
 		end
 
-	reset_layout_recorded_values is
+	reset_layout_recorded_values
 		do
 			debug ("es_grid_layout")
 				print (":" + name + ": " + generator + ".reset_layout_recorded_values %N")
@@ -117,7 +117,7 @@ feature -- Change
 			end
 		end
 
-	wipe_out is
+	wipe_out
 		do
 			debug ("es_grid_layout")
 				print (":" + name + ": " + generator + ".wipe_out %N")
@@ -131,39 +131,39 @@ feature -- Change
 
 feature -- Change agents
 
-	set_row_is_ready_for_identification_agent (a_agent: like row_is_ready_for_identification_agent) is
+	set_row_is_ready_for_identification_agent (a_agent: like row_is_ready_for_identification_agent)
 		do
 			row_is_ready_for_identification_agent := a_agent
 		end
 
-	set_row_is_ready_for_evaluation_agent (a_agent: like row_is_ready_for_evaluation_agent) is
+	set_row_is_ready_for_evaluation_agent (a_agent: like row_is_ready_for_evaluation_agent)
 		do
 			row_is_ready_for_evaluation_agent := a_agent
 		end
 
-	set_global_identification_agent (a_agent: like global_identification_agent) is
+	set_global_identification_agent (a_agent: like global_identification_agent)
 		do
 			global_identification_agent := a_agent
 		end
 
-	set_identification_agent (a_agent: like identification_agent) is
+	set_identification_agent (a_agent: like identification_agent)
 		do
 			identification_agent := a_agent
 		end
 
-	set_value_agent (a_agent: like value_agent) is
+	set_value_agent (a_agent: like value_agent)
 		do
 			value_agent := a_agent
 		end
 
-	set_on_difference_callback (a_agent: like on_difference_callback) is
+	set_on_difference_callback (a_agent: like on_difference_callback)
 		do
 			on_difference_callback := a_agent
 		end
 
 feature -- Access
 
-	record is
+	record
 		local
 			r: INTEGER
 			lst: DS_LIST [TUPLE]
@@ -205,7 +205,7 @@ feature -- Access
 			end
 		end
 
-	restore is
+	restore
 		local
 			s: STRING
 			lst: DS_LIST [TUPLE]
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 	last_row_set_as_first_visible_row: EV_GRID_ROW
 			-- Last row set as first visible row during layout restoring.
 
-	ensure_row_is_first_visible_row (r: EV_GRID_ROW) is
+	ensure_row_is_first_visible_row (r: EV_GRID_ROW)
 		do
 			if r.parent /= Void then
 				grid.set_first_visible_row (r.index)
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	row_is_ready_for_identification (a_row: EV_GRID_ROW): BOOLEAN is
+	row_is_ready_for_identification (a_row: EV_GRID_ROW): BOOLEAN
 		do
 			if identification_agent /= Void and row_is_ready_for_identification_agent /= Void then
 				Result := row_is_ready_for_identification_agent.item ([a_row])
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	row_is_ready_for_evaluation (a_row: EV_GRID_ROW): BOOLEAN is
+	row_is_ready_for_evaluation (a_row: EV_GRID_ROW): BOOLEAN
 		require
 			value_agent /= Void
 		do
@@ -309,12 +309,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	row_is_ready_for_default_identification (a_row: EV_GRID_ROW): BOOLEAN is
+	row_is_ready_for_default_identification (a_row: EV_GRID_ROW): BOOLEAN
 		do
 			Result := a_row.item (1) /= Void
 		end
 
-	global_identification: STRING is
+	global_identification: STRING
 		local
 			s: STRING
 		do
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	row_identification (a_row: EV_GRID_ROW): STRING is
+	row_identification (a_row: EV_GRID_ROW): STRING
 		do
 			if identification_agent /= Void then
 				Result := identification_agent.item ([a_row])
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	default_identification (a_row: EV_GRID_ROW): STRING is
+	default_identification (a_row: EV_GRID_ROW): STRING
 		require
 			a_row /= Void
 		local
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	reset_recorded_values_from (lay: like layout) is
+	reset_recorded_values_from (lay: like layout)
 		require
 			lay /= Void
 		local
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	recorded_row_layout (a_row: EV_GRID_ROW): TUPLE [id:STRING; subrows: DS_LIST [TUPLE]; value:ANY; is_visible_row: BOOLEAN] is
+	recorded_row_layout (a_row: EV_GRID_ROW): TUPLE [id:STRING; subrows: DS_LIST [TUPLE]; value:ANY; is_visible_row: BOOLEAN]
 			-- FIXME: compiler is complaining when using 'like layout' for Result type
 		local
 			r: INTEGER
@@ -425,7 +425,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	restore_row_layout_on_idle (a_row: EV_GRID_ROW; lay: like layout; l_curr_pid: INTEGER) is
+	restore_row_layout_on_idle (a_row: EV_GRID_ROW; lay: like layout; l_curr_pid: INTEGER)
 		do
 			debug ("es_grid_layout")
 				print (":" + name + ": " + generator + ".restore_row_layout_on_idle : " + a_row.index.out + " -> " + string_id_for_lay (lay) + ": BEGIN %N")
@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	delayed_restore_row_layout (a_row: EV_GRID_ROW; lay: like layout; l_curr_pid: INTEGER) is
+	delayed_restore_row_layout (a_row: EV_GRID_ROW; lay: like layout; l_curr_pid: INTEGER)
 		do
 			debug ("es_grid_layout")
 				print (":" + name + ": " + generator + ".delayed_restore_row_layout : " + a_row.index.out + " -> " + string_id_for_lay (lay) +"%N")
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	restore_row_layout (a_row: EV_GRID_ROW; lay: like layout; on_idle: BOOLEAN; l_pid: INTEGER) is
+	restore_row_layout (a_row: EV_GRID_ROW; lay: like layout; on_idle: BOOLEAN; l_pid: INTEGER)
 			-- if on_idle is True, this means the feature is called on idle
 			-- in this case, we identify the current processing id with `l_pid'
 			-- if it is different from `current_processing_id', this operation is cancelled.
@@ -605,7 +605,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_row_layout_restoring (a_row: EV_GRID_ROW; lay: like layout) is
+	process_row_layout_restoring (a_row: EV_GRID_ROW; lay: like layout)
 		require
 			lay /= Void
 		do
@@ -646,7 +646,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Debugging
 
-	string_id_for_lay (lay: like layout): STRING is
+	string_id_for_lay (lay: like layout): STRING
 		do
 			Result := lay.id
 			if Result = Void then
@@ -654,7 +654,7 @@ feature {NONE} -- Debugging
 			end
 		end
 
-	debug_output: STRING is
+	debug_output: STRING
 		do
 			if layout = Void then
 				Result := ":" + name + ": No layout %N"
@@ -663,7 +663,7 @@ feature {NONE} -- Debugging
 			end
 		end
 
-	grid_layout_output (a_layout: like layout; off: STRING): STRING is
+	grid_layout_output (a_layout: like layout; off: STRING): STRING
 		local
 			tu: like layout
 			tu_s: STRING
@@ -729,7 +729,7 @@ feature {NONE} -- Agent
 	on_difference_callback: PROCEDURE [ANY, TUPLE [EV_GRID_ROW, ANY]];
 			-- row and old value
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

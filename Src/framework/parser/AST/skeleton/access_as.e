@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of a non-nested call."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,16 +12,16 @@ inherit
 
 feature -- Properties
 
-	access_name: STRING is
+	access_name: STRING
 		deferred
 		end
 		
-	parameters: EIFFEL_LIST [EXPR_AS] is
+	parameters: EIFFEL_LIST [EXPR_AS]
 			-- List of parameters if any
 		deferred
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a modification to an EIFFEL_LIST item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ inherit
 
 feature -- Initialization
 
-	initialize (a_text: STRING; a_owner: INTEGER; a_index: INTEGER; a_marker: INTEGER; a_list: like match_list) is
+	initialize (a_text: STRING; a_owner: INTEGER; a_index: INTEGER; a_marker: INTEGER; a_list: like match_list)
 			-- Initialize
 		require
 			a_list_not_void: a_list /= Void
@@ -49,7 +49,7 @@ feature -- Initialization
 
 feature -- Comparison
 
-	is_less alias "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			if owner /= other.owner then
@@ -64,7 +64,7 @@ feature -- Comparison
 
 feature -- Setting
 
-	set_is_separator_needed (b: BOOLEAN) is
+	set_is_separator_needed (b: BOOLEAN)
 			-- Set `is_separator_needed' with `b'.
 		do
 			is_separator_needed := b
@@ -84,7 +84,7 @@ feature -- Access
 	index: INTEGER
 			-- Index of inserted order	
 
-	is_original_item: BOOLEAN is
+	is_original_item: BOOLEAN
 			-- Is current an original item?
 		do
 			Result := addition_marker = 0
@@ -92,7 +92,7 @@ feature -- Access
 
 feature -- Status reporting
 
-	is_removed: BOOLEAN is
+	is_removed: BOOLEAN
 			-- Is current item removed?
 		deferred
 		end
@@ -100,7 +100,7 @@ feature -- Status reporting
 	is_separator_needed: BOOLEAN
 			-- Is separator needed?
 
-	has_text_changed: BOOLEAN is
+	has_text_changed: BOOLEAN
 			-- Has text changed?
 		deferred
 		end
@@ -116,7 +116,7 @@ feature{NONE} -- Implementation
 invariant
 	match_list_not_void: match_list /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

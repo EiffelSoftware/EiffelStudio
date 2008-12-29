@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects implementing {TEST_SUITE_S}.
 	]"
@@ -162,7 +162,7 @@ feature {TEST_PROCESSOR_I} -- Status setting
 
 feature {TEST_EXECUTOR_I} -- Status setting
 
-	set_test_queued (a_test: !TEST_I; a_executor: !TEST_EXECUTOR_I) is
+	set_test_queued (a_test: !TEST_I; a_executor: !TEST_EXECUTOR_I)
 			-- <Precursor>
 		do
 			a_test.set_queued (a_executor)
@@ -170,7 +170,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			a_test.clear_changes
 		end
 
-	set_test_running (a_test: !TEST_I) is
+	set_test_running (a_test: !TEST_I)
 			-- <Precursor>
 		do
 			a_test.set_running
@@ -178,7 +178,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			a_test.clear_changes
 		end
 
-	add_outcome_to_test (a_test: !TEST_I; a_outcome: !EQA_TEST_OUTCOME) is
+	add_outcome_to_test (a_test: !TEST_I; a_outcome: !EQA_TEST_OUTCOME)
 			-- <Precursor>
 		local
 			l_old, l_new: NATURAL_8
@@ -206,7 +206,7 @@ feature {TEST_EXECUTOR_I} -- Status setting
 			a_test.clear_changes
 		end
 
-	set_test_aborted (a_test: !TEST_I) is
+	set_test_aborted (a_test: !TEST_I)
 			-- <Precursor>
 		do
 			a_test.abort
@@ -364,7 +364,7 @@ feature -- Events
 invariant
 	internal_processors_usable: internal_processors.for_all (agent {!TEST_PROCESSOR_I}.is_interface_usable)
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

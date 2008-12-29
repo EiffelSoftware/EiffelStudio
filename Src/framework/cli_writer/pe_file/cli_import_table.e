@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of PE import table for CLI"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (is_dll: BOOLEAN) is
+	make (is_dll: BOOLEAN)
 			-- Allocate `item'.
 		local
 			str: POINTER
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
-	set_rvas (section_rva, current_location: INTEGER) is
+	set_rvas (section_rva, current_location: INTEGER)
 			-- Knowing that current lies in a section at `section_rva'
 			-- and that its current RVA is `current_location', updates
 			-- attributes of current to match those.
@@ -59,7 +59,7 @@ feature -- Settings
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of CLI_IMPORT_TABLE.
 		external
 			"C macro use %"cli_writer.h%""
@@ -67,69 +67,69 @@ feature -- Measurement
 			"sizeof(CLI_IMPORT_TABLE)"
 		end
 
-	size_to_import_by_name: INTEGER is 48
+	size_to_import_by_name: INTEGER = 48
 			-- Location of import by name table from top of structure.
 
 feature -- Constants
 
-	dll_entry_point_name: STRING is "_CorDllMain"
-	exe_entry_point_name: STRING is "_CorExeMain"
+	dll_entry_point_name: STRING = "_CorDllMain"
+	exe_entry_point_name: STRING = "_CorExeMain"
 			-- Entry point names for `dll' or `exe'.
 
-	library_name: STRING is "mscoree.dll"
+	library_name: STRING = "mscoree.dll"
 			-- Name of library containing above entry points.
 
 feature {NONE} -- Settings
 
-	c_set_import_lookup_table (an_item: POINTER; i: INTEGER) is
+	c_set_import_lookup_table (an_item: POINTER; i: INTEGER)
 			-- Set `ImportLookupTable' to `i'.
 		external
 			"C struct CLI_IMPORT_TABLE access ImportLookupTable type DWORD use %"cli_writer.h%""
 		end
 
-	c_set_time_date_stamp (an_item: POINTER; i: INTEGER) is
+	c_set_time_date_stamp (an_item: POINTER; i: INTEGER)
 			-- Set `TimeDateStamp' to `i'.
 		external
 			"C struct CLI_IMPORT_TABLE access TimeDateStamp type DWORD use %"cli_writer.h%""
 		end
 
-	c_set_forwarder_chain (an_item: POINTER; i: INTEGER) is
+	c_set_forwarder_chain (an_item: POINTER; i: INTEGER)
 			-- Set `ForwarderChain' to `i'.
 		external
 			"C struct CLI_IMPORT_TABLE access ForwarderChain type DWORD use %"cli_writer.h%""
 		end
 
-	c_set_name_rva (an_item: POINTER; i: INTEGER) is
+	c_set_name_rva (an_item: POINTER; i: INTEGER)
 			-- Set `NameRVA' to `i'.
 		external
 			"C struct CLI_IMPORT_TABLE access NameRVA type DWORD use %"cli_writer.h%""
 		end
 
-	c_set_iat_rva (an_item: POINTER; i: INTEGER) is
+	c_set_iat_rva (an_item: POINTER; i: INTEGER)
 			-- Set `IatRVA' to `i'.
 		external
 			"C struct CLI_IMPORT_TABLE access IatRVA type DWORD use %"cli_writer.h%""
 		end
 
-	c_set_import_by_name_rva (an_item: POINTER; i: INTEGER) is
+	c_set_import_by_name_rva (an_item: POINTER; i: INTEGER)
 			-- Set `ImportByNameRVA' to `i'.
 		external
 			"C struct CLI_IMPORT_TABLE access ImportByNameRVA type DWORD use %"cli_writer.h%""
 		end
 
-	c_entry_point_name (an_item: POINTER): POINTER is
+	c_entry_point_name (an_item: POINTER): POINTER
 			-- Access `EntryPointName'.
 		external
 			"C struct CLI_IMPORT_TABLE access EntryPointName use %"cli_writer.h%""
 		end
 
-	c_library_name (an_item: POINTER): POINTER is
+	c_library_name (an_item: POINTER): POINTER
 			-- Access `LibraryName'.
 		external
 			"C struct CLI_IMPORT_TABLE access LibraryName use %"cli_writer.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

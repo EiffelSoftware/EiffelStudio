@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that specify configuration options."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -63,7 +63,7 @@ feature -- Status
 	is_void_safe_configured: BOOLEAN
 			-- Is `is_void_safe' configured?
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is `Current' empty? No settings are set?
 		do
 			Result := not (is_profile_configured or is_trace_configured or is_optimize_configured or is_debug_configured or
@@ -74,56 +74,56 @@ feature -- Status
 
 feature -- Status update
 
-	unset_profile is
+	unset_profile
 			-- Unset profile.
 		do
 			is_profile_configured := False
 			is_profile := False
 		end
 
-	unset_trace is
+	unset_trace
 			-- Unset trace.
 		do
 			is_trace_configured := False
 			is_trace := False
 		end
 
-	unset_optimize is
+	unset_optimize
 			-- Unset optimize.
 		do
 			is_optimize_configured := False
 			is_optimize := False
 		end
 
-	unset_debug is
+	unset_debug
 			-- Unset debug.
 		do
 			is_debug_configured := False
 			is_debug := False
 		end
 
-	unset_warning is
+	unset_warning
 			-- Unset warning.
 		do
 			is_warning_configured := False
 			is_warning := False
 		end
 
-	unset_msil_application_optimize is
+	unset_msil_application_optimize
 			-- Unset .NET application optimizations
 		do
 			is_msil_application_optimize_configured := False
 			is_msil_application_optimize := False
 		end
 
-	unset_full_class_checking is
+	unset_full_class_checking
 			-- Unset full class checking.
 		do
 			is_full_class_checking_configured := False
 			is_full_class_checking := False
 		end
 
-	unset_cat_call_detection is
+	unset_cat_call_detection
 			-- Unset cat call detection.
 		do
 			is_cat_call_detection_configured := False
@@ -226,13 +226,13 @@ feature -- Access, stored in configuration file.
 
 feature -- Access queries
 
-	is_debug_enabled (a_debug: STRING): BOOLEAN is
+	is_debug_enabled (a_debug: STRING): BOOLEAN
 			-- Is `a_debug' enabled?
 		do
 			Result := is_debug and then debugs /= Void and then debugs.item (a_debug)
 		end
 
-	is_warning_enabled (a_warning: STRING): BOOLEAN is
+	is_warning_enabled (a_warning: STRING): BOOLEAN
 			-- Is `a_warning' enabled?
 		require
 			a_warning_valid: valid_warning (a_warning)
@@ -242,7 +242,7 @@ feature -- Access queries
 
 feature {CONF_ACCESS} -- Update, stored in configuration file.
 
-	set_assertions (an_assertions: like assertions) is
+	set_assertions (an_assertions: like assertions)
 			-- Set `assertions' to `an_assertions'.
 		do
 			assertions := an_assertions
@@ -250,7 +250,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			assertions_set: assertions = an_assertions
 		end
 
-	add_debug (a_name: STRING; an_enabled: BOOLEAN) is
+	add_debug (a_name: STRING; an_enabled: BOOLEAN)
 			-- Add a debug.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -264,7 +264,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			added: debugs.has (a_name) and then debugs.item (a_name) = an_enabled
 		end
 
-	add_warning (a_name: STRING; an_enabled: BOOLEAN) is
+	add_warning (a_name: STRING; an_enabled: BOOLEAN)
 			-- Add a warning.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -279,7 +279,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			added: warnings.has (a_name) and then warnings.item (a_name) = an_enabled
 		end
 
-	set_local_namespace (a_namespace: like local_namespace) is
+	set_local_namespace (a_namespace: like local_namespace)
 			-- Set `local_namespace' from `a_namepace' and reset `namespace'.
 		do
 			if a_namespace /= Void and then a_namespace.is_empty then
@@ -296,7 +296,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			namespace_reset: namespace = Void
 		end
 
-	set_profile (a_enabled: BOOLEAN) is
+	set_profile (a_enabled: BOOLEAN)
 			-- Set `is_profile' to `a_enabled'.
 		do
 			is_profile_configured := True
@@ -306,7 +306,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_profile_configured: is_profile_configured
 		end
 
-	set_trace (a_enabled: BOOLEAN) is
+	set_trace (a_enabled: BOOLEAN)
 			-- Set `is_trace' to `a_enabled'.
 		do
 			is_trace_configured := True
@@ -316,7 +316,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_trace_configured: is_trace_configured
 		end
 
-	set_optimize (a_enabled: BOOLEAN) is
+	set_optimize (a_enabled: BOOLEAN)
 			-- Set `is_optimize' to `a_enabled'.
 		do
 			is_optimize_configured := True
@@ -326,7 +326,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_optimize_configured: is_optimize_configured
 		end
 
-	set_debug (a_enabled: BOOLEAN) is
+	set_debug (a_enabled: BOOLEAN)
 			-- Set `is_debug' to `a_enabled'.
 			-- Enables/disables debug clauses in general.
 		do
@@ -337,7 +337,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_debug_configured: is_debug_configured
 		end
 
-	set_warning (a_enabled: BOOLEAN) is
+	set_warning (a_enabled: BOOLEAN)
 			-- Set `is_warning' to `a_enabled'.
 			-- Enables/disables warning clauses in general.
 		do
@@ -348,7 +348,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_warning_configured: is_warning_configured
 		end
 
-	set_msil_application_optimize (a_enabled: BOOLEAN) is
+	set_msil_application_optimize (a_enabled: BOOLEAN)
 			-- Set `is_msil_application_optimize' to `a_enable'.
 			-- Enabled/disables .NET application optimizations in general.
 		do
@@ -359,7 +359,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_msil_application_optimize_configured: is_msil_application_optimize_configured
 		end
 
-	set_full_class_checking (a_enabled: BOOLEAN) is
+	set_full_class_checking (a_enabled: BOOLEAN)
 			-- Set `is_full_class_checking' to `a_enabled'.
 		do
 			is_full_class_checking_configured := True
@@ -369,7 +369,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_full_class_checking_configured: is_full_class_checking_configured
 		end
 
-	set_cat_call_detection (a_enabled: BOOLEAN) is
+	set_cat_call_detection (a_enabled: BOOLEAN)
 			-- Set `is_cat_call_detection' to `a_enabled'.
 		do
 			is_cat_call_detection_configured := True
@@ -399,7 +399,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_void_safe_configured: is_void_safe_configured
 		end
 
-	set_description (a_description: like description) is
+	set_description (a_description: like description)
 			-- Set `description' to `a_description'.
 		do
 			description := a_description
@@ -409,7 +409,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 
 feature -- Duplication
 
-	copy (other: like Current) is
+	copy (other: like Current)
 			-- Update current object using fields of object attached
 			-- to `other', so as to yield equal objects.
 		do
@@ -502,7 +502,7 @@ feature -- Comparison
 			end
 		end
 
-	is_equal_options (other: like Current): BOOLEAN is
+	is_equal_options (other: like Current): BOOLEAN
 			-- Are `current' and `other' equal considering the options that are in the compiled result?
 		do
 			Result := equal (assertions, other.assertions) and is_debug = other.is_debug and
@@ -519,7 +519,7 @@ feature -- Comparison
 
 feature -- Merging
 
-	merge (other: like Current) is
+	merge (other: like Current)
 			-- Merge with other, if the values aren't defined in `Current' take the values of `other'.
 		local
 			l_tmp: like debugs
@@ -609,7 +609,7 @@ invariant
 	syntax_level_attached: syntax_level /= Void
 	syntax_level_count_set: syntax_level.count = syntax_level_count
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

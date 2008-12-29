@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Optional option"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (o: like option; v: like value; t: like target_list) is
+	initialize (o: like option; v: like value; t: like target_list)
 			-- Create a new O_OPTION AST node.
 		require
 			o_not_void: o /= Void
@@ -42,10 +42,10 @@ feature -- Properties
 
 feature -- Status report
 
-	is_optional: BOOLEAN is True;
+	is_optional: BOOLEAN = True;
 			-- Current is an instance of `O_OPTION_SD'.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to edit the root of a target."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialization
 		local
 			l_label: EV_LABEL
@@ -78,7 +78,7 @@ feature -- Access
 
 feature -- Update
 
-	set_target (a_target: like target) is
+	set_target (a_target: like target)
 			-- Set `target' to `a_target'.
 		do
 			target := a_target
@@ -102,7 +102,7 @@ feature {NONE} -- Gui elements
 
 feature {NONE} -- Agents
 
-	on_show is
+	on_show
 			-- Called if the dialog is shown.
 		require
 			initialized: is_initialized
@@ -123,7 +123,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_all_classes is
+	on_all_classes
 			-- All classes was selected.
 		do
 			if all_classes.is_selected then
@@ -137,7 +137,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_ok is
+	on_ok
 			-- Ok was pressed.
 		local
 			l_root: CONF_ROOT
@@ -186,7 +186,7 @@ feature {NONE} -- Agents
 invariant
 	elements: is_initialized implies cluster_name /= Void and class_name /= Void and feature_name /= Void and all_classes /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

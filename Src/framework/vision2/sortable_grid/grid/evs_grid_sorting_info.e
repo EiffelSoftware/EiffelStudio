@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object contains sorting information for a column in EV_GRID"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 
 feature{NONE} -- Implementation
 
-	make (a_sort_order_change_func: like sort_order_change_function; a_comparator: like comparator; a_current_order: INTEGER) is
+	make (a_sort_order_change_func: like sort_order_change_function; a_comparator: like comparator; a_current_order: INTEGER)
 			-- Initialize `sort_order_change_function with `a_sort_order_change_funct',
 			-- `comparator' with `a_comparator' and `current_order' with `a_current_order'.
 		require
@@ -29,7 +29,7 @@ feature{NONE} -- Implementation
 
 feature -- Sort
 
-	change_order is
+	change_order
 			-- Change `current_order' using `sort_order_change_function'.
 		do
 			sort_order_change_function.call ([current_order])
@@ -65,7 +65,7 @@ feature -- Status reporting
 
 feature{EVS_GRID_WRAPPER} -- Setting
 
-	set_column_index (a_index: INTEGER) is
+	set_column_index (a_index: INTEGER)
 			-- Set `column_index' with `a_index'.
 		do
 			column_index := a_index
@@ -75,7 +75,7 @@ feature{EVS_GRID_WRAPPER} -- Setting
 
 feature -- Setting
 
-	enable_auto_indicator is
+	enable_auto_indicator
 			-- Enable auto indicator.
 		do
 			is_auto_indicator_enabled := True
@@ -83,7 +83,7 @@ feature -- Setting
 			auto_indicator_enabled: is_auto_indicator_enabled
 		end
 
-	disable_auto_indicator is
+	disable_auto_indicator
 			-- Disable auto indicator setting.
 		do
 			is_auto_indicator_enabled := False
@@ -91,7 +91,7 @@ feature -- Setting
 			auto_indicator_disabled: not is_auto_indicator_enabled
 		end
 
-	set_sort_order_change_function (a_func: like sort_order_change_function) is
+	set_sort_order_change_function (a_func: like sort_order_change_function)
 			-- Set `sort_order_change_function' with `a_func'.
 		require
 			a_func_attached: a_func /= Void
@@ -101,7 +101,7 @@ feature -- Setting
 			sort_order_change_function_set: sort_order_change_function = a_func
 		end
 
-	set_comparator (a_comparator: like comparator) is
+	set_comparator (a_comparator: like comparator)
 			-- Set `comparator' with `a_comparator'.
 		require
 			a_comparator_attached: a_comparator /= Void
@@ -111,7 +111,7 @@ feature -- Setting
 			comparator_set: comparator = a_comparator
 		end
 
-	set_current_order (a_order: INTEGER) is
+	set_current_order (a_order: INTEGER)
 			-- Set `current_order' with `a_order'.
 		do
 			current_order := a_order
@@ -124,7 +124,7 @@ invariant
 	sort_order_change_function_attached: sort_order_change_function /= Void
 	comparator_attached: comparator /= Void
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

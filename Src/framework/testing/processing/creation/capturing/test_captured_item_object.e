@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 	 	Captured eiffel object defined through a number of items. This is currently used for {TUPLE} or
 	 	    {SPECIAL} objects.

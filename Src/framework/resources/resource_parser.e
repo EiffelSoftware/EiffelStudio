@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Parser for the resource file."
@@ -15,7 +15,7 @@ inherit
 
 feature -- Parsing
 
-	parse_file (filename: FILE_NAME; table: RESOURCE_TABLE) is
+	parse_file (filename: FILE_NAME; table: RESOURCE_TABLE)
 			-- Parse the resource file `filename' and store the
 			-- information in the resource table `table'.
 		require
@@ -70,7 +70,7 @@ feature -- Parsing
 				
 feature -- Errors
 
-	syntax_error (message: STRING) is
+	syntax_error (message: STRING)
 			-- Display a warning message.
 			-- Move the pointer to the next line in the file.
 		require
@@ -86,7 +86,7 @@ feature -- Errors
 			read_line
 		end;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

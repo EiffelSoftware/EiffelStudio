@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that represents a wrapper for an EV_GRID object
 					This wrapper will add search/replace and sort ability to that EV_GRID object.
@@ -22,7 +22,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_grid: like grid) is
+	make (a_grid: like grid)
 			-- Initialize `grid' with `a_grid'.
 		require
 			a_grid_attached: a_grid /= Void
@@ -42,7 +42,7 @@ feature{NONE} -- Initialization
 
 feature -- Setting
 
-	set_sort_info (a_column_index: INTEGER; a_sort_info: EVS_GRID_SORTING_INFO [G]) is
+	set_sort_info (a_column_index: INTEGER; a_sort_info: EVS_GRID_SORTING_INFO [G])
 			-- Set `a_sort_info' in `grid' to column indexed by `a_column_index'.
 		require
 			a_column_index_valid: is_column_index_valid (a_column_index)
@@ -64,7 +64,7 @@ feature -- Setting
 			sort_info_set: column_sort_info.item (a_sort_info.column_index) = a_sort_info
 		end
 
-	remove_sort_info (a_column_index: INTEGER) is
+	remove_sort_info (a_column_index: INTEGER)
 			-- Remove sort information associated with `a_column_index'-th column in `grid'.
 		require
 			a_column_index_valid: is_column_index_valid (a_column_index)
@@ -88,7 +88,7 @@ feature -- Setting
 				a_column_index <= column_sort_info.upper implies column_sort_info.item (a_column_index) = Void
 		end
 
-	enable_auto_sort_order_change is
+	enable_auto_sort_order_change
 			-- Enable sort order will change automatically.
 		do
 			is_auto_sort_order_change_enabled := True
@@ -96,7 +96,7 @@ feature -- Setting
 			auto_sort_order_change_enabled: is_auto_sort_order_change_enabled
 		end
 
-	disable_auto_sort_order_change is
+	disable_auto_sort_order_change
 			-- Disable automatical sort order change.
 		do
 			is_auto_sort_order_change_enabled := False
@@ -104,7 +104,7 @@ feature -- Setting
 			auto_sort_order_change_disabled: not is_auto_sort_order_change_enabled
 		end
 
-	ensure_visible (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
+	ensure_visible (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN)
 			-- Ensure `a_item' is visible in viewable area of `grid'.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
 		require
@@ -113,7 +113,7 @@ feature -- Setting
 			ensure_visible_action.call ([a_item, a_selected])
 		end
 
-	set_sort_action (a_action: like sort_action) is
+	set_sort_action (a_action: like sort_action)
 			-- Set `sort_action' with `a_action'.
 		do
 			sort_action := a_action
@@ -121,7 +121,7 @@ feature -- Setting
 			sort_action_set: sort_action = a_action
 		end
 
-	set_sorting_status (a_status:  LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
+	set_sorting_status (a_status:  LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]])
 			-- Set sorting status to `a_status'.
 		require
 			a_status_attached: a_status /= Void
@@ -152,7 +152,7 @@ feature -- Setting
 			end
 		end
 
-	enable_force_multi_column_sorting is
+	enable_force_multi_column_sorting
 			-- Enable force multi column sorting.
 		do
 			is_multi_column_sorting_forced := True
@@ -160,7 +160,7 @@ feature -- Setting
 			multi_column_sorting_forced: is_multi_column_sorting_forced
 		end
 
-	disable_force_multi_column_sorting is
+	disable_force_multi_column_sorting
 			-- Disable force multi column sorting.
 		do
 			is_multi_column_sorting_forced := False
@@ -168,7 +168,7 @@ feature -- Setting
 			multi_column_sorting_not_forced: not is_multi_column_sorting_forced
 		end
 
-	wipe_out_sorted_columns is
+	wipe_out_sorted_columns
 			-- Wipe out `sorted_columns'.
 		do
 			sorted_columns.wipe_out
@@ -176,7 +176,7 @@ feature -- Setting
 			sorted_columns_is_empty: sorted_columns.is_empty
 		end
 
-	set_grid_item_function (a_function: like grid_item_function) is
+	set_grid_item_function (a_function: like grid_item_function)
 			-- Set `grid_item_function' with `a_function'.
 		require
 			a_function_attached: a_function /= Void
@@ -186,7 +186,7 @@ feature -- Setting
 			grid_item_function_set: grid_item_function = a_function
 		end
 
-	set_ensure_visible_action (a_action: like ensure_visible_action) is
+	set_ensure_visible_action (a_action: like ensure_visible_action)
 			-- Set `ensure_visible_action' with `a_action'.
 		require
 			a_action_attached: a_action /= Void
@@ -196,7 +196,7 @@ feature -- Setting
 			ensure_visible_action_set: ensure_visible_action = a_action
 		end
 
-	set_selection_function (a_function: like selection_function) is
+	set_selection_function (a_function: like selection_function)
 			-- Set `selection_function' with `a_function'.
 		do
 			selection_function := a_function
@@ -204,7 +204,7 @@ feature -- Setting
 			selection_function_set: selection_function = a_function
 		end
 
-	set_item_text_function (a_function: like item_text_function) is
+	set_item_text_function (a_function: like item_text_function)
 			-- Set `item_text_unction' with `a_function'.		
 		do
 			item_text_function := a_function
@@ -212,7 +212,7 @@ feature -- Setting
 			item_text_function_set: item_text_function = a_function
 		end
 
-	enable_copy is
+	enable_copy
 			-- Enable using Ctrl+A, Ctrl+C to select items and copy them to clipboard.
 		do
 			if not grid.key_press_actions.has (on_copy_using_key_agent) then
@@ -220,13 +220,13 @@ feature -- Setting
 			end
 		end
 
-	disable_copy is
+	disable_copy
 			-- Disable using Ctrl+A, Ctrl+C to select items and copy them to clipboard.
 		do
 			grid.key_press_actions.prune_all (on_copy_using_key_agent)
 		end
 
-	set_select_all_action (a_action: like select_all_action) is
+	set_select_all_action (a_action: like select_all_action)
 			-- Set `select_all_action" with `a_action'.
 		do
 			select_all_action := a_action
@@ -236,7 +236,7 @@ feature -- Setting
 
 feature -- Sort
 
-	sort (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_column_index: INTEGER) is
+	sort (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_column_index: INTEGER)
 			-- Sort on column indicated by `column_index' and change sort order.
 		require
 			a_column_index_valid: a_column_index >= 1 and a_column_index <= grid_column_count
@@ -288,7 +288,7 @@ feature -- Sort
 
 feature -- Status report
 
-	is_column_sortable (a_column_index: INTEGER): BOOLEAN is
+	is_column_sortable (a_column_index: INTEGER): BOOLEAN
 			-- Is column indicated by `a_column_index' sortable?
 		do
 			Result := (a_column_index > 0 and a_column_index <= grid.column_count) and then (
@@ -309,7 +309,7 @@ feature -- Status report
 			-- Is multi-column soring forced?
 			-- This means we conduct a multi-column sorting even though Ctrl key is not pressed
 
-	is_sorting_status_valid (a_status: LIST [TUPLE [a_sorted_column: INTEGER; a_sorting_order: INTEGER]]): BOOLEAN is
+	is_sorting_status_valid (a_status: LIST [TUPLE [a_sorted_column: INTEGER; a_sorting_order: INTEGER]]): BOOLEAN
 			-- Is `a_status' valid for `grid'?
 			-- e.g., every column whose index is `a_sorted_clumn' is a valid sortable column and `a_sorting_order' is
 			-- a valid sorting order for that column?
@@ -335,7 +335,7 @@ feature -- Status report
 
 feature -- Access
 
-	column_sort_info: ARRAY [EVS_GRID_SORTING_INFO [G]] is
+	column_sort_info: ARRAY [EVS_GRID_SORTING_INFO [G]]
 			-- Sort information of every column in `grid'.
 			-- If `column_sort_info'.`item' (i) is Void, then i-th column in `grid' is not sortable.
 		local
@@ -361,7 +361,7 @@ feature -- Access
 			-- In this list, a list of column index are maintained, the first item is the earliest sorted column, the last item is
 			-- the most recently sorted column.
 
-	last_sorted_column: INTEGER is
+	last_sorted_column: INTEGER
 			-- Index of last sorted column
 			-- 0 if no sorting has been applied
 		local
@@ -381,7 +381,7 @@ feature -- Access
 	sort_action: PROCEDURE [ANY, TUPLE [a_sorted_columns: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [G]]]
 			-- Action used to sort
 
-	post_sort_actions: ACTION_SEQUENCE [TUPLE [LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]]] is
+	post_sort_actions: ACTION_SEQUENCE [TUPLE [LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]]]
 			-- Actions got called after sorting is finished
 			-- Argument of those actions is a list of columns to be sorted.
 		do
@@ -404,7 +404,7 @@ feature -- Access
 			-- Function to return selected text in grid' (all selected rows or items should be taken into consideration).
 			-- If Void, `selection' will return an empty string.
 
-	selection: STRING_GENERAL is
+	selection: STRING_GENERAL
 			-- String representation of all selected rows or items in `grid'.
 			-- If `selection_function' is Void, `default_selection_function' will be used to get selected text.
 			-- In this case, make sure `item_text_function' is set.
@@ -424,21 +424,21 @@ feature -- Access
 			-- Used in Ctrl+A.
 			-- If Void, `default_select_all_action' will be used.
 
-	largest_sorted_column_index: INTEGER is
+	largest_sorted_column_index: INTEGER
 			-- Index of largest sorted column
 			-- 0 if no sort had occurred
 		do
 			Result := extreme_index_of_sorted_columns (True)
 		end
 
-	smallest_sorted_column_index: INTEGER is
+	smallest_sorted_column_index: INTEGER
 			-- Index of smallest sorted column
 			-- 0 if no sort had occurred
 		do
 			Result := extreme_index_of_sorted_columns (False)
 		end
 
-	string_representation_of_sorted_columns: STRING is
+	string_representation_of_sorted_columns: STRING
 			-- String representation of a list of sorted columns from `a_columns'
 		local
 			c: INTEGER
@@ -468,7 +468,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	sorted_columns_from_string (a_str: STRING): LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]] is
+	sorted_columns_from_string (a_str: STRING): LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]
 			-- A list of sorting columns from its string representation
 		require
 			a_str_attached: a_str /= Void
@@ -495,7 +495,7 @@ feature -- Access
 
 feature -- Virtual grid
 
-	is_grid_empty: BOOLEAN is
+	is_grid_empty: BOOLEAN
 			-- Does `grid' contain no item even Void item?
 		do
 			Result := grid_row_count = 0 or grid_column_count = 0
@@ -503,7 +503,7 @@ feature -- Virtual grid
 			good_result: Result implies (grid_row_count = 0 or grid_column_count = 0)
 		end
 
-	is_position_valid (a_column_index, a_row_index: INTEGER): BOOLEAN is
+	is_position_valid (a_column_index, a_row_index: INTEGER): BOOLEAN
 			-- Is position (`a_column_index', `a_row_index') valid in `grid'?
 		do
 			Result := (a_column_index > 0 and a_column_index <= grid_column_count and
@@ -515,7 +515,7 @@ feature -- Virtual grid
 					 a_row_index > 0 and a_row_index <= grid_row_count)
 		end
 
-	is_column_index_valid (a_column_index: INTEGER): BOOLEAN is
+	is_column_index_valid (a_column_index: INTEGER): BOOLEAN
 			-- Is column indicated by `a_column_index' a valid column in `grid'?
 		do
 			Result := a_column_index > 0 and a_column_index <= grid_column_count
@@ -523,7 +523,7 @@ feature -- Virtual grid
 			good_result: Result implies (a_column_index > 0 and a_column_index <= grid_column_count)
 		end
 
-	is_row_index_valid (a_row_index: INTEGER): BOOLEAN is
+	is_row_index_valid (a_row_index: INTEGER): BOOLEAN
 			-- Is row indicated by `a_row_index' a valid row in `grid'?
 		do
 			Result := a_row_index > 0 and a_row_index <= grid_row_count
@@ -531,7 +531,7 @@ feature -- Virtual grid
 			good_result: Result implies (a_row_index > 0 and a_row_index <= grid_row_count)
 		end
 
-	grid_column_count: INTEGER is
+	grid_column_count: INTEGER
 			-- Number of columns in `grid'.		
 		do
 			Result := grid.column_count
@@ -539,7 +539,7 @@ feature -- Virtual grid
 			result_non_negative: Result >= 0
 		end
 
-	grid_row_count: INTEGER is
+	grid_row_count: INTEGER
 			-- Number of rows in `grid'.		
 		do
 			Result := grid.row_count
@@ -547,7 +547,7 @@ feature -- Virtual grid
 			result_non_negative: Result >= 0
 		end
 
-	grid_selected_items: DS_ARRAYED_LIST [EVS_GRID_COORDINATED] is
+	grid_selected_items: DS_ARRAYED_LIST [EVS_GRID_COORDINATED]
 			-- Selected items in `grid'.
 			-- Returned list is unsorted so no particular ordering is guaranteed.			
 		local
@@ -573,7 +573,7 @@ feature -- Virtual grid
 			result_attached: Result /= Void
 		end
 
-	grid_item (a_column: INTEGER; a_row: INTEGER): EVS_GRID_SEARCHABLE_ITEM is
+	grid_item (a_column: INTEGER; a_row: INTEGER): EVS_GRID_SEARCHABLE_ITEM
 			-- Cell at `a_row' and `a_column' position.
 			-- It may not be actual item in `grid' but your own item.
 		require
@@ -596,7 +596,7 @@ feature{NONE} -- Implementation
 	sort_agent_table_internal: like sort_agent_table
 			-- Internal `sort_agent_table'
 
-	update_sorted_columns (a_ctrl_pressed: BOOLEAN; a_next_column_to_sort: INTEGER) is
+	update_sorted_columns (a_ctrl_pressed: BOOLEAN; a_next_column_to_sort: INTEGER)
 			-- Prepare `sorted_columns' for next column (whose index is in `a_next_column_to_sort') to be sorted.
 			-- `a_ctrl_pressed' indicates if Ctrl key is pressed.		
 		local
@@ -633,7 +633,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	current_comparator: AGENT_LIST_COMPARATOR [G] is
+	current_comparator: AGENT_LIST_COMPARATOR [G]
 			-- Comparator used to sort
 			-- 	The first two arguments are rows to be compared with each other
 			-- 	The third integer argument is current sorting order
@@ -644,7 +644,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	comparator (a_column_index: LIST [INTEGER]): AGENT_LIST_COMPARATOR [G] is
+	comparator (a_column_index: LIST [INTEGER]): AGENT_LIST_COMPARATOR [G]
 			-- Comparator to sort columns whose indexes are specified by `a_comlumn_index'
 		require
 			a_column_index_attached: a_column_index /= Void
@@ -678,14 +678,14 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	is_ctrl_key_pressed: BOOLEAN is
+	is_ctrl_key_pressed: BOOLEAN
 			-- Is Ctrl key pressed?
 			-- Take `is_multi_column_sorting_forced' into consideration.
 		do
 			Result := is_multi_column_sorting_forced or else ev_application.ctrl_pressed
 		end
 
-	sort_agent_table: HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER] is
+	sort_agent_table: HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER]
 			-- Table to store sort agents, key is column index, value is sort agent for that column
 		do
 			if sort_agent_table_internal = Void then
@@ -700,7 +700,7 @@ feature{NONE} -- Implementation
 			-- Index of last sorted column
 			-- 0 if no sort has been applied.
 
-	sorting_order_snapshort: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]] is
+	sorting_order_snapshort: LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]
 			-- Snapshot of current sorting status
 			-- The first item in list is the first column (whose index is `a_column_index') to be sorted usring `a_sorting_order'.			
 		local
@@ -722,7 +722,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
+	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN)
 			-- Ensure that `a_item' is visible.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
 		require
@@ -746,7 +746,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	default_selection_function: like selection is
+	default_selection_function: like selection
 			-- Default implementation for `selection_function'
 			-- This feature only take EV_GRID_LABEL_ITEM and its descendants into consideration.
 			-- If you have other type of grid item, use `selection_function' to define your own selection function.
@@ -838,7 +838,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	is_row_recursively_expanded (a_row: EV_GRID_ROW): BOOLEAN is
+	is_row_recursively_expanded (a_row: EV_GRID_ROW): BOOLEAN
 			-- Is `a_row' recursively expanded?
 		require
 			a_row_attached: a_row /= Void
@@ -857,7 +857,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	topologically_sorted_items (a_item_list: LIST [EV_GRID_ITEM]): DS_LIST [EV_GRID_ITEM] is
+	topologically_sorted_items (a_item_list: LIST [EV_GRID_ITEM]): DS_LIST [EV_GRID_ITEM]
 			-- Sorted representation of `a_item_list'.
 			-- Item order is decided by `grid_item_order_tester'.
 		require
@@ -882,7 +882,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	topologically_sorted_rows (a_row_list: LIST [EV_GRID_ROW]): DS_LIST [EV_GRID_ROW] is
+	topologically_sorted_rows (a_row_list: LIST [EV_GRID_ROW]): DS_LIST [EV_GRID_ROW]
 			-- Sorted representation of `a_item_list'.
 			-- Item order is decided by `grid_item_order_tester'.
 		require
@@ -907,7 +907,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	grid_item_order_tester (a_item: EV_GRID_ITEM; b_item: EV_GRID_ITEM): BOOLEAN is
+	grid_item_order_tester (a_item: EV_GRID_ITEM; b_item: EV_GRID_ITEM): BOOLEAN
 			-- Grid item order tester.
 			-- If `a_item' is smaller than `b_item', return True, otherwise, False.
 		require
@@ -928,7 +928,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	grid_row_order_tester (a_row, b_row: EV_GRID_ROW): BOOLEAN is
+	grid_row_order_tester (a_row, b_row: EV_GRID_ROW): BOOLEAN
 			-- Grid row order tester.
 			-- If `a_row' is smaller than `b_row', return True, otherwise, False.
 		require
@@ -938,7 +938,7 @@ feature{NONE} -- Implementation
 			Result := a_row.index < b_row.index
 		end
 
-	tabs (n: INTEGER): STRING is
+	tabs (n: INTEGER): STRING
 			-- String representation of `n' tabs
 		require
 			n_non_negative: n >= 0
@@ -948,7 +948,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	row_indentation (a_row: EV_GRID_ROW): INTEGER is
+	row_indentation (a_row: EV_GRID_ROW): INTEGER
 			-- Row indentation of `a_row'.
 			-- Root row has indentation 0.
 		require
@@ -969,7 +969,7 @@ feature{NONE} -- Implementation
 			good_result: Result >= 0
 		end
 
-	on_ctrl_c_pressed is
+	on_ctrl_c_pressed
 			-- Action to be performed when Ctrl+C is pressed
 		local
 			l_text: like selection
@@ -980,7 +980,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	on_ctrl_a_pressed is
+	on_ctrl_a_pressed
 			-- Action to be performed when Ctrl+A is pressed
 		do
 			if grid.is_multiple_row_selection_enabled or grid.is_multiple_item_selection_enabled then
@@ -992,7 +992,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	on_copy_using_key (a_key: EV_KEY) is
+	on_copy_using_key (a_key: EV_KEY)
 			-- Action to be performed to deal with Ctr+A or Ctrl+C key press
 		require
 			a_key_attached: a_key /= Void
@@ -1009,7 +1009,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	on_copy_using_key_agent: PROCEDURE [ANY, TUPLE [EV_KEY]] is
+	on_copy_using_key_agent: PROCEDURE [ANY, TUPLE [EV_KEY]]
 			-- Agent of `on_copy_using_key'
 		do
 			if on_copy_using_key_agent_internal = Void then
@@ -1023,7 +1023,7 @@ feature{NONE} -- Implementation
 	on_copy_using_key_agent_internal: like on_copy_using_key_agent
 			-- Implementation of `on_copy_using_key_agent'
 
-	default_select_all_action is
+	default_select_all_action
 			-- Default action to select all items in `grid'
 		local
 			l_grid: like grid
@@ -1044,7 +1044,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	extreme_index_of_sorted_columns (a_largest: BOOLEAN): INTEGER is
+	extreme_index_of_sorted_columns (a_largest: BOOLEAN): INTEGER
 			-- Max (if `a_largest' is True) or min (if `a_largest' is False) index of sorted columns
 			-- 0 if no sort had occurred.
 		local
@@ -1076,7 +1076,7 @@ invariant
 	grid_item_function_attached: grid_item_function /= Void
 	ensure_visible_action_attached: ensure_visible_action /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

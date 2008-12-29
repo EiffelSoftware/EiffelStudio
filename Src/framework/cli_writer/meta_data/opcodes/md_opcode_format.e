@@ -1,4 +1,4 @@
-indexing
+note
 	description: "How opcodes are formatted?"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,25 +10,25 @@ class
 
 feature -- Access
 
-	no_arg: INTEGER is 1
-	variable_arg: INTEGER is 2
-	i_arg: INTEGER is 3
-	r_arg: INTEGER is 4
-	i8_arg: INTEGER is 5
-	short_variable_arg: INTEGER is 6
-	short_i_arg: INTEGER is 7
-	short_r_arg: INTEGER is 8
-	method_arg: INTEGER is 9
-	field_arg: INTEGER is 10
-	type_arg: INTEGER is 11
-	signature_arg: INTEGER is 12
-	string_arg: INTEGER is 13
-	token_arg: INTEGER is 14
-	branch_target_arg: INTEGER is 15
-	switch_arg: INTEGER is 16
-	short_branch_target_arg: INTEGER is 17;
+	no_arg: INTEGER = 1
+	variable_arg: INTEGER = 2
+	i_arg: INTEGER = 3
+	r_arg: INTEGER = 4
+	i8_arg: INTEGER = 5
+	short_variable_arg: INTEGER = 6
+	short_i_arg: INTEGER = 7
+	short_r_arg: INTEGER = 8
+	method_arg: INTEGER = 9
+	field_arg: INTEGER = 10
+	type_arg: INTEGER = 11
+	signature_arg: INTEGER = 12
+	string_arg: INTEGER = 13
+	token_arg: INTEGER = 14
+	branch_target_arg: INTEGER = 15
+	switch_arg: INTEGER = 16
+	short_branch_target_arg: INTEGER = 17;
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

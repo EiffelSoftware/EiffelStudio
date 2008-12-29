@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Printer to print requests into text form"
 	author: ""
 	date: "$Date$"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system; an_output_stream: like output_stream) is
+	make (a_system: like system; an_output_stream: like output_stream)
 			-- Create new request.
 		require
 			a_system_not_void: a_system /= Void
@@ -50,7 +50,7 @@ feature -- Access
 
 feature -- Setting
 
-	set_output_stream (an_output_stream: like output_stream) is
+	set_output_stream (an_output_stream: like output_stream)
 			-- Set `output_stream' to `an_output_stream'.
 		require
 			an_output_stream_not_void: an_output_stream /= Void
@@ -62,17 +62,17 @@ feature -- Setting
 
 feature {AUT_REQUEST} -- Processing
 
-	process_start_request (a_request: AUT_START_REQUEST) is
+	process_start_request (a_request: AUT_START_REQUEST)
 		do
 			-- Do nothing.
 		end
 
-	process_stop_request (a_request: AUT_STOP_REQUEST) is
+	process_stop_request (a_request: AUT_STOP_REQUEST)
 		do
 			output_stream.put_line (":quit")
 		end
 
-	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST) is
+	process_create_object_request (a_request: AUT_CREATE_OBJECT_REQUEST)
 		do
 			output_stream.put_string (execute_request_header)
 			output_stream.put_string ("create {")
@@ -87,7 +87,7 @@ feature {AUT_REQUEST} -- Processing
 			output_stream.put_new_line
 		end
 
-	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST) is
+	process_invoke_feature_request (a_request: AUT_INVOKE_FEATURE_REQUEST)
 		do
 			output_stream.put_string (execute_request_header)
 			if a_request.is_feature_query then
@@ -104,7 +104,7 @@ feature {AUT_REQUEST} -- Processing
 			output_stream.put_new_line
 		end
 
-	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST) is
+	process_assign_expression_request (a_request: AUT_ASSIGN_EXPRESSION_REQUEST)
 		do
 			output_stream.put_string (execute_request_header)
 			output_stream.put_string (a_request.receiver.name (variable_name_prefix))
@@ -116,7 +116,7 @@ feature {AUT_REQUEST} -- Processing
 			output_stream.put_new_line
 		end
 
-	process_type_request (a_request: AUT_TYPE_REQUEST) is
+	process_type_request (a_request: AUT_TYPE_REQUEST)
 		do
 			output_stream.put_string (":type ")
 			output_stream.put_line (a_request.variable.name (variable_name_prefix))
@@ -124,7 +124,7 @@ feature {AUT_REQUEST} -- Processing
 
 feature {NONE} -- Printing
 
-	print_argument_list (an_argument_list: DS_LINEAR [ITP_EXPRESSION]) is
+	print_argument_list (an_argument_list: DS_LINEAR [ITP_EXPRESSION])
 			-- Print argument list `an_arinstruction' to `output_stream'.
 		require
 			an_argument_list_not_void: an_argument_list /= Void
@@ -155,7 +155,7 @@ feature {NONE} -- Printing
 	expression_printer: AUT_EXPRESSION_PRINTER
 			-- Expression printer
 
-	execute_request_header: STRING is ":execute "
+	execute_request_header: STRING = ":execute "
 			-- Header for "execute" request
 
 invariant

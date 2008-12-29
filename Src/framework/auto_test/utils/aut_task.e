@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -14,28 +14,28 @@ deferred class AUT_TASK
 
 feature -- Status
 
-	has_next_step: BOOLEAN is
+	has_next_step: BOOLEAN
 			-- Is there a next step to execute?
 		deferred
 		end
 
 feature -- Execution
 
-	start is
+	start
 			-- Start execution of task.
 		require
 			not_has_next_step: not has_next_step
 		deferred
 		end
 
-	step is
+	step
 			-- Perform the next step of the task.
 		require
 			has_next_step: has_next_step
 		deferred
 		end
 
-	cancel is
+	cancel
 			-- Cancel task.
 		require
 			has_next_step: has_next_step

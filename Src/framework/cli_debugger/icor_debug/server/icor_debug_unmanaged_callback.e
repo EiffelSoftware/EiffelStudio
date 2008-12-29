@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Common Language Runtime Debugging 1.0 Type Library. Help file: "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,24 +19,24 @@ create {ICOR_DEBUG_FACTORY}
 	
 feature -- Initialization
 		
-	initialize_callback is
+	initialize_callback
 		do
 		end
 
-	terminate_callback is
+	terminate_callback
 			-- Terminate callback
 		do
 		end
 
 feature -- disposable
 
-	dispose is
+	dispose
 		do
 			terminate_callback
 			Precursor
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

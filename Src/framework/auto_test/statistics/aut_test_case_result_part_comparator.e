@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Partial order comparator for test case result"
@@ -20,14 +20,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create new comparator.
 		do
 		end
 
 feature -- Status report
 
-	less_than (u, v: AUT_TEST_CASE_RESULT): BOOLEAN is
+	less_than (u, v: AUT_TEST_CASE_RESULT): BOOLEAN
 			-- Is `u' considered less than `v'?
 		do
 			Result := u.witness.count < v.witness.count

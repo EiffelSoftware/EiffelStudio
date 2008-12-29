@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Two different configuration files have the same uuid."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_first_location, a_second_location: STRING) is
+	make (a_first_location, a_second_location: STRING)
 			-- Create.
 		require
 			a_first_location_not_void: a_first_location /= Void
@@ -30,7 +30,7 @@ feature -- Access
 	text: STRING;
 		-- Error text.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

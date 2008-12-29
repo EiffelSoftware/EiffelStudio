@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of generic classes."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: like class_name; g: like generics) is
+	initialize (n: like class_name; g: like generics)
 			-- Create a new CLASS_TYPE AST node.
 		require
 			n_not_void: n /= Void
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- Process current element.
 		do
 			v.process_generic_class_type_as (Current)
@@ -43,7 +43,7 @@ feature -- Visitor
 
 feature -- Access
 
-	generics: TYPE_LIST_AS is
+	generics: TYPE_LIST_AS
 			-- Possible generical parameters
 		do
 			Result := internal_generics
@@ -59,7 +59,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -72,7 +72,7 @@ feature -- Roundtrip/Token
 
 feature -- Conveniences
 
-	dump: STRING is
+	dump: STRING
 			-- Dumped string
 		do
 			Result := Precursor {CLASS_TYPE_AS}

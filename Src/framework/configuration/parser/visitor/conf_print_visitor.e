@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate a text representation of the configuration in xml."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -32,14 +32,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create.
 		do
 			namespace := latest_namespace
 			schema := latest_schema
 		end
 
-	make_1_0_0 is
+	make_1_0_0
 			-- Create for EiffelStudio 5.7
 		do
 			namespace := namespace_1_0_0
@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Update
 
-	set_namespace (a_namespace: like namespace) is
+	set_namespace (a_namespace: like namespace)
 			-- Set `namespace' to `a_namespace'.
 		require
 			a_namespace_ok: a_namespace /= Void and then not a_namespace.is_empty
@@ -69,7 +69,7 @@ feature -- Update
 			namespace_set: namespace = a_namespace
 		end
 
-	set_schema (a_schema: like schema) is
+	set_schema (a_schema: like schema)
 			-- Set `schema' to `a_schema'.
 		require
 			a_schema_ok: a_schema /= Void and then not a_schema.is_empty
@@ -81,7 +81,7 @@ feature -- Update
 
 feature -- Visit nodes
 
-	process_system (a_system: CONF_SYSTEM) is
+	process_system (a_system: CONF_SYSTEM)
 			-- Visit `a_system'.
 		local
 			l_target: CONF_TARGET
@@ -115,7 +115,7 @@ feature -- Visit nodes
 			indent_back: indent = old indent
 		end
 
-	process_target (a_target: CONF_TARGET) is
+	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		local
 			l_root: CONF_ROOT
@@ -234,7 +234,7 @@ feature -- Visit nodes
 			indent_back: indent = old indent
 		end
 
-	process_assembly (an_assembly: CONF_ASSEMBLY) is
+	process_assembly (an_assembly: CONF_ASSEMBLY)
 			-- Visit `an_assembly'.
 		local
 			l_str: STRING
@@ -266,7 +266,7 @@ feature -- Visit nodes
 			indent_back: indent = old indent
 		end
 
-	process_library (a_library: CONF_LIBRARY) is
+	process_library (a_library: CONF_LIBRARY)
 			-- Visit `a_library'.
 		do
 			append_pre_group ("library", a_library)
@@ -282,7 +282,7 @@ feature -- Visit nodes
 			indent_back: indent = old indent
 		end
 
-	process_precompile (a_precompile: CONF_PRECOMPILE) is
+	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Visit `a_precompile'.
 		do
 			append_pre_group ("precompile", a_precompile)
@@ -295,7 +295,7 @@ feature -- Visit nodes
 			indent_back: indent = old indent
 		end
 
-	process_cluster (a_cluster: CONF_CLUSTER) is
+	process_cluster (a_cluster: CONF_CLUSTER)
 			-- Visit `a_cluster'.
 		do
 				-- ignore subclusters, except if we are handling one.
@@ -319,7 +319,7 @@ feature -- Visit nodes
 			indent_back: indent = old indent
 		end
 
-	process_override (an_override: CONF_OVERRIDE) is
+	process_override (an_override: CONF_OVERRIDE)
 			-- Visit `an_override'.
 		local
 			l_overrides: ARRAYED_LIST [CONF_GROUP]
@@ -362,7 +362,7 @@ feature {NONE} -- Implementation
 	current_is_subcluster: BOOLEAN
 			-- Is the current cluster/override a subcluster?
 
-	process_in_alphabetic_order (a_groups: HASH_TABLE [CONF_GROUP, STRING]) is
+	process_in_alphabetic_order (a_groups: HASH_TABLE [CONF_GROUP, STRING])
 			-- Process `a_groups' in alphabetic order corresponding to their key.
 		require
 			a_groups_not_void: a_groups /= Void
@@ -381,7 +381,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	escape_xml (a_string: STRING): STRING is
+	escape_xml (a_string: STRING): STRING
 			-- Escape xml entities in `a_string'.
 		do
 			if a_string /= Void then
@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 			result_void_iff_a_string_void: (Result = Void) = (a_string = Void)
 		end
 
-	append_tag (a_name, a_value: STRING; an_attribute_names, an_attribute_values: ARRAYED_LIST [STRING]) is
+	append_tag (a_name, a_value: STRING; an_attribute_names, an_attribute_values: ARRAYED_LIST [STRING])
 			-- Append a tag with `a_name', `a_value' and `an_attributes' to `text', intendend it with `indent' tabs.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_text_indent (a_text: STRING) is
+	append_text_indent (a_text: STRING)
 			-- Append `a_text' at the current `indent' intendation level.
 		require
 			a_text_ok: a_text /= Void and then not a_text.is_empty
@@ -446,7 +446,7 @@ feature {NONE} -- Implementation
 			text.append (a_text)
 		end
 
-	append_text (a_text: STRING) is
+	append_text (a_text: STRING)
 			-- Append `a_text'.
 		require
 			a_text_not_void: a_text /= Void and then not a_text.is_empty
@@ -454,7 +454,7 @@ feature {NONE} -- Implementation
 			text.append (a_text)
 		end
 
-	append_description_tag (a_description: STRING) is
+	append_description_tag (a_description: STRING)
 			-- Append `a_description'.
 		do
 			if a_description /= Void and then not a_description.is_empty then
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_conditionals (a_conditions: ARRAYED_LIST [CONF_CONDITION]; is_assembly: BOOLEAN) is
+	append_conditionals (a_conditions: ARRAYED_LIST [CONF_CONDITION]; is_assembly: BOOLEAN)
 			-- Append `a_conditions' ignore platform if it `is_assembly'.
 		local
 			l_condition: CONF_CONDITION
@@ -590,7 +590,7 @@ feature {NONE} -- Implementation
 			indent_back: indent = old indent
 		end
 
-	append_mapping (a_mapping: EQUALITY_HASH_TABLE [STRING, STRING]) is
+	append_mapping (a_mapping: EQUALITY_HASH_TABLE [STRING, STRING])
 			-- Append `a_mapping'.
 		do
 			if a_mapping /= Void then
@@ -605,7 +605,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_externals (an_externals: ARRAYED_LIST [CONF_EXTERNAL]; a_name: STRING) is
+	append_externals (an_externals: ARRAYED_LIST [CONF_EXTERNAL]; a_name: STRING)
 			-- Append `an_externals'.
 		require
 			an_externals_not_void: an_externals /= Void
@@ -643,7 +643,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_actions (an_actions: ARRAYED_LIST [CONF_ACTION]; a_name: STRING) is
+	append_actions (an_actions: ARRAYED_LIST [CONF_ACTION]; a_name: STRING)
 			-- Append `an_actions'.
 		require
 			an_actions_not_void: an_actions /= Void
@@ -675,7 +675,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_file_rule (a_file_rules: ARRAYED_LIST [CONF_FILE_RULE]) is
+	append_file_rule (a_file_rules: ARRAYED_LIST [CONF_FILE_RULE])
 			-- Append `a_file_rule'
 		local
 			l_pattern: DS_HASH_SET [STRING]
@@ -723,7 +723,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_options (an_options: CONF_OPTION; a_class: STRING) is
+	append_options (an_options: CONF_OPTION; a_class: STRING)
 			-- Append `an_options', optionally for `a_class'.
 		local
 			l_str: STRING
@@ -853,7 +853,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_visible (a_visible: EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]], STRING]) is
+	append_visible (a_visible: EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]], STRING])
 			-- Append visible rules.
 		require
 			a_visible_not_void: a_visible /= Void
@@ -906,7 +906,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	append_pre_group (a_tag: STRING; a_group: CONF_GROUP) is
+	append_pre_group (a_tag: STRING; a_group: CONF_GROUP)
 			-- Append the things that start the entry for `a_group'
 		require
 			a_group_not_void: a_group /= Void
@@ -936,7 +936,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_val_group (a_group: CONF_GROUP) is
+	append_val_group (a_group: CONF_GROUP)
 			-- Append the things that come in the value part of `a_group'.
 		require
 			a_group_not_void: a_group /= Void
@@ -979,7 +979,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_post_group (a_tag: STRING) is
+	append_post_group (a_tag: STRING)
 			-- Finish the the tag for the group.
 		require
 			a_tag_ok: a_tag /= Void and then not a_tag.is_empty
@@ -993,7 +993,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_attr_cluster (a_cluster: CONF_CLUSTER) is
+	append_attr_cluster (a_cluster: CONF_CLUSTER)
 			-- Append the attributes for `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -1006,7 +1006,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_val_cluster (a_cluster: CONF_CLUSTER) is
+	append_val_cluster (a_cluster: CONF_CLUSTER)
 			-- Append the values for `a_cluster'.
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -1043,7 +1043,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_note_tag (a_notable: CONF_NOTABLE) is
+	append_note_tag (a_notable: CONF_NOTABLE)
 			-- Append `a_notes'.
 		local
 			l_names, l_values: ARRAYED_LIST [STRING]
@@ -1079,7 +1079,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

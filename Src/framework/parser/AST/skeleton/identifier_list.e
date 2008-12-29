@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent a list of identifiers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,7 @@ feature -- Access
 	separator_list: CONSTRUCT_LIST [INTEGER]
 			-- List to store terminals that appear in between every 2 items of this list
 
-	separator_list_i_th (i: INTEGER; a_list: LEAF_AS_LIST): LEAF_AS is
+	separator_list_i_th (i: INTEGER; a_list: LEAF_AS_LIST): LEAF_AS
 			-- Terminals at position `i' in `separator_list' using `a_list'.
 		require
 			valid_index: separator_list.valid_index (i)
@@ -41,7 +41,7 @@ feature -- Access
 			end
 		end
 
-	reverse_extend_separator (l_as: LEAF_AS) is
+	reverse_extend_separator (l_as: LEAF_AS)
 			-- Add `l_as' into `separator_list'.
 		do
 			if separator_list = Void then
@@ -55,7 +55,7 @@ feature -- Access
 			separator_list.reverse_extend (l_as.index)
 		end
 
-	reverse_extend_identifier (l_as: ID_AS) is
+	reverse_extend_identifier (l_as: ID_AS)
 			-- Add `l_as' into `id_list'.
 		do
 			if id_list = Void then
@@ -64,7 +64,7 @@ feature -- Access
 			id_list.reverse_extend (l_as.index)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

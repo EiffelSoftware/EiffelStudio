@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for invalid regexps."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_regexp: STRING) is
+	make (a_regexp: STRING)
 			-- Create.
 		do
 			regexp := a_regexp
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: STRING is
+	text: STRING
 			-- Error text.
 		do
 			if file /= Void then
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 	regexp: STRING;
 		-- Incorrect regular expression.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

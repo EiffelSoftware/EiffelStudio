@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Utilities for CLI PE file handling"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	padding (i, chunk_size: INTEGER): INTEGER is
+	padding (i, chunk_size: INTEGER): INTEGER
 			-- Compute needed padding from position `i' to reach a multiple of `chunk_size'.
 		require
 			valid_i: i >= 0
@@ -23,7 +23,7 @@ feature -- Access
 			valid_result: Result >= 0
 		end
 
-	pad_up (i, chunk_size: INTEGER): INTEGER is
+	pad_up (i, chunk_size: INTEGER): INTEGER
 			-- Padded position of `i' to reach a multiple of `chunk_size'.
 		require
 			valid_i: i >= 0
@@ -36,7 +36,7 @@ feature -- Access
 			valid_result: Result >= 0
 		end
 
-	file_alignment: INTEGER is
+	file_alignment: INTEGER
 			-- Current chosen file alignment.
 		once
 			Result := small_file_alignment
@@ -46,16 +46,16 @@ feature -- Access
 
 feature -- Constants
 
-	section_alignment: INTEGER is 0x2000
+	section_alignment: INTEGER = 0x2000
 			-- Default section alignment.
 	
-	small_file_alignment: INTEGER is 0x0200
+	small_file_alignment: INTEGER = 0x0200
 			-- Small file alignment.
 	
-	large_file_alignment: INTEGER is 0x1000;
+	large_file_alignment: INTEGER = 0x1000;
 			-- Large file alignment.
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Debug clause description in Ace"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (v: BOOLEAN) is
+	initialize (v: BOOLEAN)
 			-- Create a new DEBUG AST node.
 		do
 			enabled := v
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	option_name: STRING is
+	option_name: STRING
 		do
 			if enabled then
 				Result := "debug"
@@ -37,13 +37,13 @@ feature -- Properties
 			end
 		end
 
-	is_debug: BOOLEAN is True
+	is_debug: BOOLEAN = True
 			-- Is the option a debug one?
 
 	enabled: BOOLEAN;
 			-- Is current option active?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

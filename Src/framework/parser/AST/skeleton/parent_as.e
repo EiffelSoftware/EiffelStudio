@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract description of a parent. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 feature {NONE} -- Initialization
 
 	initialize (t: like type; rn: like internal_renaming; e: like internal_exports;
-		u: like internal_undefining; rd: like internal_redefining; s: like internal_selecting; ek: like end_keyword) is
+		u: like internal_undefining; rd: like internal_redefining; s: like internal_selecting; ek: like end_keyword)
 			-- Create a new PARENT AST node.
 		require
 			t_not_void: t /= Void
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_parent_as (Current)
@@ -56,7 +56,7 @@ feature -- Attributes
 	type: CLASS_TYPE_AS
 			-- Parent type
 
-	renaming: EIFFEL_LIST [RENAME_AS] is
+	renaming: EIFFEL_LIST [RENAME_AS]
 			-- Rename clause
 		local
 			l_internal_renaming: like internal_renaming
@@ -72,7 +72,7 @@ feature -- Attributes
 						 (internal_renaming /= Void implies Result = internal_renaming.meaningful_content)
 		end
 
-	exports: EIFFEL_LIST [EXPORT_ITEM_AS] is
+	exports: EIFFEL_LIST [EXPORT_ITEM_AS]
 			-- Exports for parent
 		local
 			l_internal_exports: like internal_exports
@@ -89,7 +89,7 @@ feature -- Attributes
 						 								   (internal_exports.meaningful_content /= Void implies (Result /= Void and then Result.is_equal (internal_exports.meaningful_content))))
 )		end
 
-	undefining: EIFFEL_LIST [FEATURE_NAME] is
+	undefining: EIFFEL_LIST [FEATURE_NAME]
 			-- Undefine clause
 		local
 			l_internal_undefining: like internal_undefining
@@ -105,7 +105,7 @@ feature -- Attributes
 						 (internal_undefining /= Void implies Result = internal_undefining.meaningful_content)
 		end
 
-	redefining: EIFFEL_LIST [FEATURE_NAME] is
+	redefining: EIFFEL_LIST [FEATURE_NAME]
 			-- Redefining clause
 		local
 			l_internal_redefining: like internal_redefining
@@ -121,7 +121,7 @@ feature -- Attributes
 						 (internal_redefining /= Void implies Result = internal_redefining.meaningful_content)
 		end
 
-	selecting: EIFFEL_LIST [FEATURE_NAME] is
+	selecting: EIFFEL_LIST [FEATURE_NAME]
 			-- Select clause
 		local
 			l_internal_selecting: like internal_selecting
@@ -174,13 +174,13 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- First token in current AST node
 		do
 			Result := type.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 			-- Last token in current AST node
 		do
 			if a_list /= Void and end_keyword_index /= 0 then
@@ -192,7 +192,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (exports, other.exports) and
@@ -205,7 +205,7 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_effecting: BOOLEAN is
+	is_effecting: BOOLEAN
 			-- Is this parent clause redefining or undefining
 			-- one or more features?
 		do
@@ -213,7 +213,7 @@ feature -- Status report
 				and then redefining /= Void and then not redefining.is_empty
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

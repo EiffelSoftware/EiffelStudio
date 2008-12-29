@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Type with its renaming in a constraint list of a formal generic parameter declaration."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create {AST_FACTORY}
 
 feature{NONE} -- Initialization
 
-	make (a_type: like type; a_renaming: like renaming; a_end_of_renaming: like end_keyword) is
+	make (a_type: like type; a_renaming: like renaming; a_end_of_renaming: like end_keyword)
 			-- Initialize instance.
 		require
 			a_type_not_void: a_type /= Void
@@ -62,7 +62,7 @@ feature -- Access
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_constraining_type_as (Current)
@@ -86,12 +86,12 @@ feature -- Roundtrip
 			end
 		end
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := type.first_token (a_list)
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and end_keyword_index /= 0 then
 				Result := end_keyword (a_list)
@@ -104,7 +104,7 @@ feature -- Roundtrip
 
 feature --Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (type, other.type) and equivalent (renaming, other.renaming)
@@ -113,7 +113,7 @@ feature --Comparison
 invariant
 	type_not_void: type /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

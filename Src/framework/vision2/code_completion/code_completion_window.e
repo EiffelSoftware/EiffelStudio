@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Window that displays a text area and a list of possible features for automatic completion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create
 		local
 			vbox: EV_VERTICAL_BOX
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			resize_actions.force_extend (agent resize_column_to_window_width)
 		end
 
-	build_option_bar: EV_VERTICAL_BOX is
+	build_option_bar: EV_VERTICAL_BOX
 			-- Build option bar.
 		do
 			create Result
@@ -80,7 +80,7 @@ feature -- Initialization
 	common_initialization (an_editor: like code_completable;
 						a_name: STRING; a_remainder: INTEGER;
 						a_completion_possibilities: like sorted_names;
-						a_complete_word: BOOLEAN) is
+						a_complete_word: BOOLEAN)
 			-- Initialize fields common to class and feature choice window.		
 		do
 			code_completable := an_editor
@@ -147,17 +147,17 @@ feature -- Status report
 	user_completion: BOOLEAN
 			-- Should single items in completion list be completed automatically?
 
-	mouse_wheel_scroll_full_page: BOOLEAN is
+	mouse_wheel_scroll_full_page: BOOLEAN
 		do
 			Result := mouse_wheel_scroll_full_page_internal
 		end
 
-	mouse_wheel_scroll_size: INTEGER is
+	mouse_wheel_scroll_size: INTEGER
 		do
 			Result := mouse_wheel_scroll_size_internal
 		end
 
-	scrolling_common_line_count: INTEGER is
+	scrolling_common_line_count: INTEGER
 		do
 			Result := scrolling_common_line_count_internal
 		end
@@ -168,7 +168,7 @@ feature -- Status report
 
 feature -- Status Setting
 
-	show is
+	show
 			-- Show
 		do
 			check
@@ -182,7 +182,7 @@ feature -- Status Setting
 
 feature -- Query
 
-	has_match: BOOLEAN is
+	has_match: BOOLEAN
 			-- Number of matches based on `a_name' using `buffered_input' value.
 		do
 			if rebuild_list_during_matching then
@@ -192,13 +192,13 @@ feature -- Query
 			end
 		end
 
-	default_font: EV_FONT is
+	default_font: EV_FONT
 			-- Default font
 		once
 			create Result
 		end
 
-	should_show: BOOLEAN is
+	should_show: BOOLEAN
 			-- Should show in current state?
 		do
 			Result := choice_list.row_count > 0
@@ -212,7 +212,7 @@ feature -- Query
 
 feature {NONE} -- Events handling
 
-	mouse_selection (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER) is
+	mouse_selection (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER)
 			-- process mouse click in the list
 		do
 			if button = 1 and not choice_list.selected_items.is_empty then
@@ -220,7 +220,7 @@ feature {NONE} -- Events handling
 			end
 		end
 
-	on_key_released (ev_key: EV_KEY) is
+	on_key_released (ev_key: EV_KEY)
 			-- process user input in `choice_list'
 		do
 			if ev_key /= Void then
@@ -264,7 +264,7 @@ feature {NONE} -- Events handling
 			end
 		end
 
-	on_key_down (ev_key: EV_KEY) is
+	on_key_down (ev_key: EV_KEY)
 			-- process user input in `choice_list'	
 		local
 			l_char_string: STRING
@@ -311,7 +311,7 @@ feature {NONE} -- Events handling
 			end
 		end
 
-	on_char (character_string: STRING_32) is
+	on_char (character_string: STRING_32)
    			-- Process displayable character key press event.
    		local
    			c: CHARACTER
@@ -332,7 +332,7 @@ feature {NONE} -- Events handling
 			end
 		end
 
-	on_lose_focus is
+	on_lose_focus
 			-- close window
 		do
 			if (not (is_destroyed or else has_focus or else choice_list.has_focus)) and is_displayed then
@@ -340,7 +340,7 @@ feature {NONE} -- Events handling
 			end
 		end
 
-	on_mouse_wheel (a: INTEGER) is
+	on_mouse_wheel (a: INTEGER)
 			-- Mouse wheel scrolled up or down
 		local
 			l_row: EV_GRID_ROW
@@ -359,7 +359,7 @@ feature {NONE} -- Events handling
 			end
 		end
 
-	on_row_expand (a_row: EV_GRID_ROW) is
+	on_row_expand (a_row: EV_GRID_ROW)
 			-- On row expand
 		require
 			a_row_not_void: a_row /= Void
@@ -391,7 +391,7 @@ feature {NONE} -- Events handling
 			ev_application.do_once_on_idle (agent resize_column_to_window_width)
 		end
 
-	on_row_collapse (a_row: EV_GRID_ROW) is
+	on_row_collapse (a_row: EV_GRID_ROW)
 			-- On row collapse
 		require
 			a_row_not_void: a_row /= Void
@@ -401,7 +401,7 @@ feature {NONE} -- Events handling
 
 feature {NONE} -- Cursor movement
 
-	page_up is
+	page_up
 			-- Page up
 		local
 			l_selected_row: INTEGER
@@ -442,7 +442,7 @@ feature {NONE} -- Cursor movement
 			end
 		end
 
-	page_down is
+	page_down
 			-- Page down
 		local
 			l_selected_row: INTEGER
@@ -485,7 +485,7 @@ feature {NONE} -- Cursor movement
 			end
 		end
 
-	go_to_last_visible_item is
+	go_to_last_visible_item
 			-- Go to last visible item.
 		local
 			i, ix: INTEGER
@@ -529,7 +529,7 @@ feature {NONE} -- Cursor movement
 			end
 		end
 
-	go_to_next_visible_item is
+	go_to_next_visible_item
 			-- Go to last visible item.
 		local
 			i, ix: INTEGER
@@ -573,7 +573,7 @@ feature {NONE} -- Cursor movement
 			end
 		end
 
-	expand_current_item is
+	expand_current_item
 			-- Expand current item.
 		local
 			ix: INTEGER
@@ -605,7 +605,7 @@ feature {NONE} -- Cursor movement
 			end
 		end
 
-	collapse_current_item is
+	collapse_current_item
 			-- Collapse current item.
 			-- If parented, collapse parent.
 		local
@@ -637,7 +637,7 @@ feature {NONE} -- Cursor movement
 			end
 		end
 
-	select_row (a_row: INTEGER) is
+	select_row (a_row: INTEGER)
 			-- Select row `i'
 			-- If invisible, select its parent
 		require
@@ -685,19 +685,19 @@ feature {NONE} -- Implementation
 	matches: SORTABLE_ARRAY [like name_type]
 			-- Last matches
 
-	rebuild_list_during_matching: BOOLEAN is
+	rebuild_list_during_matching: BOOLEAN
 			-- Should the list be rebuilt according to current match?
 		do
 			Result := True
 		end
 
-	automatically_complete_words: BOOLEAN is
+	automatically_complete_words: BOOLEAN
 			-- Should completion list automatically complete words.
 		do
 			Result := True
 		end
 
-	build_displayed_list (name: STRING) is
+	build_displayed_list (name: STRING)
 			-- Build the list based on matches with `name'
 		require
 			full_list_not_void: full_list /= Void
@@ -791,7 +791,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	top_node_count_of (a_names: SORTABLE_ARRAY [like name_type]): INTEGER is
+	top_node_count_of (a_names: SORTABLE_ARRAY [like name_type]): INTEGER
 			-- Count of node with no parent
 		require
 			a_names_not_void: a_names /= Void
@@ -819,7 +819,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_full_list is
+	build_full_list
 			-- Build full list including children nodes.
 		local
 			i: INTEGER
@@ -856,7 +856,7 @@ feature {NONE} -- Implementation
 	full_list: like sorted_names
 			-- Sorted full list of name.
 
-	has_child_node: BOOLEAN is
+	has_child_node: BOOLEAN
 			-- Any child node?
 		local
 			i: INTEGER
@@ -875,7 +875,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	calculate_full_count: INTEGER is
+	calculate_full_count: INTEGER
 			-- Calculate total number of names including children.
 		local
 			i: INTEGER
@@ -894,7 +894,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	flat_count_of_name (a_name: like name_type): INTEGER is
+	flat_count_of_name (a_name: like name_type): INTEGER
 			-- Number of flat count of `a_name', including itself and its children.
 		require
 			a_name_not_void: a_name /= Void
@@ -916,7 +916,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	collect_names (a_name: like name_type; a_list: like full_list; a_start_pos: INTEGER): INTEGER is
+	collect_names (a_name: like name_type; a_list: like full_list; a_start_pos: INTEGER): INTEGER
 			-- Collect all nodes of `a_name', including itself and its children.
 		require
 			a_name_not_void: a_name /= Void
@@ -944,7 +944,7 @@ feature {NONE} -- Implementation
 			Result := l_count
 		end
 
-	close_and_complete is
+	close_and_complete
 			-- close the window and perform completion with selected item
 		do
 			if not choice_list.selected_rows.is_empty then
@@ -957,7 +957,7 @@ feature {NONE} -- Implementation
 			exit
 		end
 
-	complete is
+	complete
 			-- Complete current name
 		local
 			l_name: STRING_GENERAL
@@ -985,7 +985,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	exit is
+	exit
 			-- Cancel autocomplete
 		do
 			if not is_closing then
@@ -1006,14 +1006,14 @@ feature {NONE} -- Implementation
 			code_completable.resume_focus_in_actions
 		end
 
-	exit_complete_mode is
+	exit_complete_mode
 			-- Exit editor complete mode.
 		do
 			code_completable.exit_complete_mode
 			continue_completion := False
 		end
 
-	save_window_position is
+	save_window_position
 			-- Save current window position.
 		do
 			if code_completable.save_list_position_action /= Void and is_displayed then
@@ -1024,18 +1024,18 @@ feature {NONE} -- Implementation
 	is_closing: BOOLEAN
 			-- Is the window being closed?
 
-	current_meta_keys: ARRAY [BOOLEAN] is
+	current_meta_keys: ARRAY [BOOLEAN]
 		do
 			Result := <<ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed>>
 		end
 
-	activate_tooltip is
+	activate_tooltip
 			-- Activate selected item tooltip in list
 		do
 --			choice_list.selected_items.first. selected_item.pointer_motion_actions.call ([1,1,1.0,1.0,1.0,1,1])
 		end
 
-	remove_characters_entered_since_display is
+	remove_characters_entered_since_display
 			-- Remove characters entered so we may put them back
 		require
 			buffered_input_not_void: buffered_input /= Void
@@ -1052,7 +1052,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resize_column_to_window_width is
+	resize_column_to_window_width
 			-- Resize the column width to the width of the window
 		local
 			i: INTEGER
@@ -1087,7 +1087,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_scroll (x, y: INTEGER) is
+	on_scroll (x, y: INTEGER)
 			-- On vertical bar scroll
 		do
 			ev_application.do_once_on_idle (agent resize_column_to_window_width)
@@ -1095,7 +1095,7 @@ feature {NONE} -- Implementation
 
 	is_first_show: BOOLEAN
 
-	determine_show_needed is
+	determine_show_needed
 			-- Determins if completion window needs to be show to user.
 			-- `show_needed' is set as a result of calling this routine.
 		require
@@ -1167,7 +1167,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_expanded_row_icon (a_item: EV_GRID_ITEM; a_name: like name_type) is
+	set_expanded_row_icon (a_item: EV_GRID_ITEM; a_name: like name_type)
 			-- Set pixmap of `a_item'.
 		require
 			a_item_not_void: a_item /= Void
@@ -1184,15 +1184,15 @@ feature {NONE} -- Implementation
 
 	name_type: NAME_FOR_COMPLETION
 
-	mouse_wheel_scroll_full_page_internal: BOOLEAN is False
+	mouse_wheel_scroll_full_page_internal: BOOLEAN = False
 
-	mouse_wheel_scroll_size_internal: INTEGER is 3
+	mouse_wheel_scroll_size_internal: INTEGER = 3
 
-	scrolling_common_line_count_internal: INTEGER is 1
+	scrolling_common_line_count_internal: INTEGER = 1
 
 feature {NONE} -- String matching
 
-	pos_of_first (table: like full_list): INTEGER is
+	pos_of_first (table: like full_list): INTEGER
 		require
 			table_not_void: table /= Void
 		local
@@ -1213,7 +1213,7 @@ feature {NONE} -- String matching
 			end
 		end
 
-	pos_of_first_greater (table: like full_list; a_name: like name_type): INTEGER is
+	pos_of_first_greater (table: like full_list; a_name: like name_type): INTEGER
 		local
 			low, up, mid: INTEGER
 		do
@@ -1250,7 +1250,7 @@ feature {NONE} -- String matching
 	current_index: INTEGER
 			-- Index of selected item in `choice_list' (if any)
 
-	select_closest_match is
+	select_closest_match
 			-- Select the closest match in the list
 		do
 			if not is_first_show then
@@ -1263,7 +1263,7 @@ feature {NONE} -- String matching
 			is_first_show := False
 		end
 
-	ensure_item_selection is
+	ensure_item_selection
 			-- Ensure item seletion in the list.
 		local
 			l_row: EV_GRID_ROW
@@ -1341,7 +1341,7 @@ feature {NONE} -- String matching
 			end
 		end
 
-	matches_based_on_name (a_name: STRING): SORTABLE_ARRAY [like name_type] is
+	matches_based_on_name (a_name: STRING): SORTABLE_ARRAY [like name_type]
 			-- Array of matches based on `a_name'.
 			-- Always use this function before building lists to get correct matches.
 		require
@@ -1408,7 +1408,7 @@ feature {NONE} -- String matching
 			has_result: Result /= Void
 		end
 
-	viewable_row_count: INTEGER is
+	viewable_row_count: INTEGER
 			-- Number of items that will be scrolled when doing a page up or down operation.
 		local
 			l_list: like choice_list
@@ -1417,7 +1417,7 @@ feature {NONE} -- String matching
 			Result := l_list.viewable_height // l_list.row_height
 		end
 
-	grid_row_by_data (a_data: ANY) : INTEGER is
+	grid_row_by_data (a_data: ANY) : INTEGER
 			-- Find a row in a_grid that include a_data
 		local
 			i: INTEGER
@@ -1441,7 +1441,7 @@ feature {NONE} -- String matching
 			end
 		end
 
-	on_item_display (a_column, a_row: INTEGER): EV_GRID_ITEM is
+	on_item_display (a_column, a_row: INTEGER): EV_GRID_ITEM
 			-- On item expose.
 		local
 			l_row: EV_GRID_ROW
@@ -1457,7 +1457,7 @@ feature {NONE} -- String matching
 invariant
 	choice_list_attached: choice_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

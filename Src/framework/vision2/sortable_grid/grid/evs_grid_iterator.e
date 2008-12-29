@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an iterator for EVS_GRID_WRAPPER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,28 +19,28 @@ inherit
 
 feature -- Iteration
 
-	start is
+	start
 			-- Move to first position if any.
 		deferred
 		end
 
-	forth is
+	forth
 			-- Move to next position; if no next position,
 			-- ensure that `exhausted' will be true.
 		deferred
 		end
 
-	finish is
+	finish
 			-- Move to last position.
 		deferred
 		end
 
-	back is
+	back
 			-- Move to previous position.
 		deferred
 		end
 
-	go_to (x, y: INTEGER) is
+	go_to (x, y: INTEGER)
 			-- Move to position (x, y).
 		require
 			valid_position: not is_empty and then grid_wrapper.is_position_valid (x, y)
@@ -51,24 +51,24 @@ feature -- Iteration
 
 feature -- Access
 
-	item: EVS_GRID_SEARCHABLE_ITEM is
+	item: EVS_GRID_SEARCHABLE_ITEM
 			-- Item at current position
 		deferred
 		end
 
-	index: INTEGER is
+	index: INTEGER
 			-- Index of current position
 		deferred
 		end
 
-	item_column_index: INTEGER is
+	item_column_index: INTEGER
 			-- Column index of `item'
 		require
 			not_off: not off
 		deferred
 		end
 
-	item_row_index: INTEGER is
+	item_row_index: INTEGER
 			-- Row index of `item'
 		require
 			not_off: not off
@@ -77,7 +77,7 @@ feature -- Access
 
 feature -- Status setting
 
-	enable_wrap_iteration is
+	enable_wrap_iteration
 			-- Enable wrap iteration.
 		do
 			is_wrap_iteration_enabled := True
@@ -85,7 +85,7 @@ feature -- Status setting
 			wrap_iteration_enabled: is_wrap_iteration_enabled
 		end
 
-	disable_wrap_iteration is
+	disable_wrap_iteration
 			-- Disable wrap iteration.
 		do
 			is_wrap_iteration_enabled := False
@@ -98,7 +98,7 @@ feature -- Status report
 	is_wrap_iteration_enabled: BOOLEAN
 			-- Is wrap iteration enabled?
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is there no element?
 			-- e.g. Is there no items in `grid_wrapper'.`grid'?
 		do
@@ -107,7 +107,7 @@ feature -- Status report
 			good_result: Result implies grid_wrapper.is_grid_empty
 		end
 
-	before: BOOLEAN is
+	before: BOOLEAN
 			-- Is there no valid position to the left of current one?
 		do
 			if is_wrap_iteration_enabled then
@@ -120,7 +120,7 @@ feature -- Status report
 						  (not Result implies (is_wrap_iteration_enabled or else  not internal_before))
 		end
 
-	after: BOOLEAN is
+	after: BOOLEAN
 			-- Is there no valid position to the right of current one?
 		do
 			if is_wrap_iteration_enabled then
@@ -133,7 +133,7 @@ feature -- Status report
 						  (not Result implies (is_wrap_iteration_enabled or else  not internal_after))
 		end
 
-	is_same_position (a_column_index, a_row_index: INTEGER): BOOLEAN is
+	is_same_position (a_column_index, a_row_index: INTEGER): BOOLEAN
 			-- Is position (`a_column_index', `a_row_index') same as
 			-- position of `item'?
 		require
@@ -146,7 +146,7 @@ feature -- Status report
 
 feature -- Iteration
 
-	do_all (action: PROCEDURE [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM]]) is
+	do_all (action: PROCEDURE [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM]])
 			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -161,7 +161,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (action: PROCEDURE [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM]]; test: FUNCTION [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM], BOOLEAN]) is
+	do_if (action: PROCEDURE [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM]]; test: FUNCTION [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM], BOOLEAN])
 			-- Apply `action' to every item that satisfies `test'.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -176,7 +176,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (test: FUNCTION [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM], BOOLEAN]): BOOLEAN is
+	there_exists (test: FUNCTION [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM], BOOLEAN]): BOOLEAN
 			-- Is `test' true for at least one item?
 			-- Semantics not guaranteed if `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -191,7 +191,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (test: FUNCTION [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM], BOOLEAN]): BOOLEAN is
+	for_all (test: FUNCTION [ANY, TUPLE [EVS_GRID_SEARCHABLE_ITEM], BOOLEAN]): BOOLEAN
 			-- Is `test' true for all items?
 			-- Semantics not guaranteed if `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -208,7 +208,7 @@ feature -- Iteration
 
 feature -- Access
 
-	search (v: like item) is
+	search (v: like item)
 			-- Move to first position (at or after current
 			-- position) where `item' and `v' are equal.
 			-- If structure does not include `v' ensure that
@@ -239,17 +239,17 @@ feature{NONE} -- Implementation
 	y_internal: INTEGER
 			-- Internal row index
 
-	internal_after: BOOLEAN is
+	internal_after: BOOLEAN
 			-- Is there no valid position to the right of current one?
 		deferred
 		end
 
-	internal_before: BOOLEAN is
+	internal_before: BOOLEAN
 			-- Is there no valid position to the left of current one?
 		deferred
 		end
 
-	sequential_search (v: like item) is
+	sequential_search (v: like item)
 		do
 			if is_wrap_iteration_enabled then
 				disable_wrap_iteration
@@ -260,7 +260,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	force_go_to (x, y: INTEGER) is
+	force_go_to (x, y: INTEGER)
 			-- Move to position (x, y) even the position is not valid in `grid_wrapper'.`grid'.
 		require
 			x_non_negative: x >= 0
@@ -277,7 +277,7 @@ invariant
 	x_internal_non_negative: x_internal >= 0
 	y_internal_non_negative: y_internal >= 0
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

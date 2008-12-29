@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of IMetaDataDispenser"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- New instance of a IMetaDataDispenser.
 		do
 				-- Initialize COM.
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Definition
 
-	emitter: MD_EMIT is
+	emitter: MD_EMIT
 			-- Create new scope and returns an emitter.
 		do
 			debug ("MD out-of-order")
@@ -39,25 +39,25 @@ feature -- Definition
 		
 feature {NONE} -- Implementation
 
-	new_md_dispenser: POINTER is
+	new_md_dispenser: POINTER
 			-- New instance of IMetaDataDispenser
 		external
 			"C use %"cli_writer.h%""
 		end
 
-	c_define_scope_for_md_emit (an_item: POINTER): POINTER is
+	c_define_scope_for_md_emit (an_item: POINTER): POINTER
 			-- Call `DefineScope (CLSID_CorMetaDataRuntime, 0, IID_IMetaDataEmit, (IUnknown **) &imde)'.
 		external
 			"C use %"cli_writer.h%""
 		end
 		
-	c_define_option_for_md_emit (an_item: POINTER; val: INTEGER) is
+	c_define_option_for_md_emit (an_item: POINTER; val: INTEGER)
 			-- Call `SetOption' to check some more errors.
 		external
 			"C use %"cli_writer.h%""
 		end
 		
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		An EiffelVision2 link-like label.
 	]"
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Contract support
 
-	is_in_default_state_for_tabs: BOOLEAN is
+	is_in_default_state_for_tabs: BOOLEAN
 		do
 			Result := is_tabable_from and is_tabable_to
 		end
@@ -63,7 +63,7 @@ feature {NONE} -- Action handlers
 invariant
 	select_actions_attached: select_actions /= Void
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

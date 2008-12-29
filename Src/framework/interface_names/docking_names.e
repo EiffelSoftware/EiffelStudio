@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Names used in docking library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,97 +13,97 @@ inherit
 
 feature -- Access
 
-	Zone_navigation_left_column_name: STRING_32 is
+	Zone_navigation_left_column_name: STRING_32
 			-- Left column name of SD_ZONE_NAVIGATION_DIALOG.
 		do
 			Result := locale.translation ("Tools")
 		end
 
-	Zone_navigation_right_column_name: STRING_32 is
+	Zone_navigation_right_column_name: STRING_32
 			-- Right column name of SD_ZONE_NAVIGATION_DIALOG.
 		do
 			Result := locale.translation ("Targets")
 		end
 
-	Tooltip_mini_toolbar_stick: STRING_32 is
+	Tooltip_mini_toolbar_stick: STRING_32
 			-- Tooltip for mini toolbar pin buttons.
 		do
 			Result := locale.translation ("Auto Hide")
 		end
 
-	Tooltip_mini_toolbar_stick_unpin: STRING_32 is
+	Tooltip_mini_toolbar_stick_unpin: STRING_32
 			-- Tooltip for mini toolbar unpin buttons.
 		do
 			Result := locale.translation ("Disable Auto Hide")
 		end
 
-	Tooltip_mini_toolbar_maximize: STRING_32 is
+	Tooltip_mini_toolbar_maximize: STRING_32
 			-- Tooltip for mini toolbar maximize buttons.
 		do
 			Result :=  locale.translation ("Maximize")
 		end
 
-	Tooltip_mini_toolbar_restore: STRING_32 is
+	Tooltip_mini_toolbar_restore: STRING_32
 			-- Tooltip for mini toolbar restore buttons.
 		do
 			Result := locale.translation ("Restore")
 		end
 
-	Tooltip_mini_toolbar_minimize: STRING_32 is
+	Tooltip_mini_toolbar_minimize: STRING_32
 			-- Tooltip for mini toolbar minimize buttons.
 		do
 			Result :=  locale.translation ("Minimize")
 		end
 
-	Tooltip_mini_toolbar_close: STRING_32 is
+	Tooltip_mini_toolbar_close: STRING_32
 			-- Tooltip for mini toolbar close buttons.
 		do
 			Result := locale.translation ("Close")
 		end
 
-	Tooltip_mini_toolbar_hidden_toolbar_indicator: STRING_32 is
+	Tooltip_mini_toolbar_hidden_toolbar_indicator: STRING_32
 			-- Tooltip for mini toolbar hidden tool bar indicators.
 		do
 			Result := locale.translation ("Show Mini Toolbar")
 		end
 
-	Tooltip_mini_toolbar_hidden_tab_indicator: STRING_32 is
+	Tooltip_mini_toolbar_hidden_tab_indicator: STRING_32
 			-- Tooltip for mini toolbar hidden tab indicators.
 		do
 			Result := locale.translation ("Show List")
 		end
 
-	Tooltip_toolbar_tail_indicator: STRING_32 is
+	Tooltip_toolbar_tail_indicator: STRING_32
 			-- Tooltip for tool bar tail indicators.
 		do
 			Result := locale.translation ("Toolbar Options")
 		end
 
-	Tooltip_toolbar_floating_close: STRING_32 is
+	Tooltip_toolbar_floating_close: STRING_32
 			-- Tooltip for tool bar close button.
 		do
 			Result := locale.translation ("Close")
 		end
 
-	Tooltip_notebook_hidden_tab_indicator: STRING_32 is
+	Tooltip_notebook_hidden_tab_indicator: STRING_32
 			-- Tooltip for notebook hidden tab indicator.
 		do
 			Result := locale.translation ("Show List")
 		end
 
-	Zone_navigation_no_description_available: STRING_32 is
+	Zone_navigation_no_description_available: STRING_32
 			-- Label text for zone navigation dialog.
 		do
 			Result := locale.translation ("No description available.")
 		end
 
-	Zone_navigation_no_detail_available: STRING_32 is
+	Zone_navigation_no_detail_available: STRING_32
 			-- Label text for zone navigation dialog.
 		do
 			Result := locale.translation ("No detail available.")
 		end
 
-	tool_bar_right_click_customize (toolbar_name: STRING_GENERAL): STRING_32 is
+	tool_bar_right_click_customize (toolbar_name: STRING_GENERAL): STRING_32
 			-- String for menu area right click menu.
 		do
 			Result := locale.formatted_string (locale.translation ("Customize $1..."), [toolbar_name])
@@ -111,61 +111,61 @@ feature -- Access
 
 feature -- Tool bar customize dialog strings
 
-	tool_bar_customize_title: STRING_32 is
+	tool_bar_customize_title: STRING_32
 			-- Tool bar customize dialog title.
 		do
 			Result := locale.translation ("Customize Toolbar")
 		end
 
-	available_buttons: STRING_32 is
+	available_buttons: STRING_32
 			-- Tool bar customize dialog label.
 		do
 			Result := locale.translation ("Available buttons")
 		end
 
-	displayed_buttons: STRING_32 is
+	displayed_buttons: STRING_32
 			-- Tool bar customize dialog label.
 		do
 			Result := locale.translation ("Displayed buttons")
 		end
 
-	add_button: STRING_32 is
+	add_button: STRING_32
 			-- Tool bar customize dialog add button text.
 		do
 			Result := locale.translation ("Add ->")
 		end
 
-	remove_button: STRING_32 is
+	remove_button: STRING_32
 			-- Tool bar customize dialog remove button text.
 		do
 			Result := locale.translation ("<- Remove")
 		end
 
-	move_button_up: STRING_32 is
+	move_button_up: STRING_32
 			-- Tool bar customize dialog move button up button text.
 		do
 			Result := locale.translation ("Up")
 		end
 
-	move_button_down: STRING_32 is
+	move_button_down: STRING_32
 			-- Tool bar customize dialog move button down button text.
 		do
 			Result := locale.translation ("Down")
 		end
 
-	separator: STRING_32 is
+	separator: STRING_32
 			-- Tool bar separator name which appeared in tool bar customize dialog.
 		do
 			Result := locale.translation ("Separator")
 		end
 
-	ok: STRING_32 is
+	ok: STRING_32
 			-- Ok button text.
 		do
 			Result := locale.translation ("OK")
 		end
 
-	cancel: STRING_32 is
+	cancel: STRING_32
 			-- Cancel button text.
 		do
 			Result := locale.translation ("Cancel")
@@ -173,7 +173,7 @@ feature -- Tool bar customize dialog strings
 
 feature -- Hidden item dialog strings
 
-	customize: STRING_32 is
+	customize: STRING_32
 			-- Customize menu entry text.
 		do
 			Result := locale.translation ("Customize")
@@ -207,7 +207,7 @@ feature -- Editor
 			Result := locale.translation ("Editor Area")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

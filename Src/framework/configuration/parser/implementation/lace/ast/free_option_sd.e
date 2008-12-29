@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST structure in Lace file for setting options."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (type_id: INTEGER) is
+	make (type_id: INTEGER)
 			-- Create a new FREE_OPTION AST node with code `type_id'.
 		require
 			type_id_positive: type_id > 0
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			code_set: code = type_id
 		end
 
-	initialize (on: ID_SD) is
+	initialize (on: ID_SD)
 			-- Create a new FREE_OPTION AST node.
 		require
 			on_not_void: on /= Void
@@ -51,13 +51,13 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	is_valid: BOOLEAN is
+	is_valid: BOOLEAN
 			-- Is current option valid?
 		do
 			Result := code /= -1
 		end
 
-	option_name: STRING is
+	option_name: STRING
 			-- Free option name
 		do
 			Result := option_names.item (code).twin
@@ -66,69 +66,69 @@ feature -- Properties
 	code: INTEGER
 			-- Code representing option.
 
-	is_free_option: BOOLEAN is True
+	is_free_option: BOOLEAN = True
 
-	is_override: BOOLEAN is
+	is_override: BOOLEAN
 			-- Is Current the override_cluster option?
 		do
 			Result := override_cluster = code
 		end
 
-	address_expression: INTEGER is 1
-	arguments: INTEGER is 2
-	array_optimization: INTEGER is 3
-	check_generic_creation_constraint: INTEGER is 4
-	check_vape: INTEGER is 5
-	company: INTEGER is 6
-	console_application: INTEGER is 7
-	copyright: INTEGER is 8
-	dead_code: INTEGER is 9
-	description: INTEGER is 10
-	document: INTEGER is 11
-	dynamic_runtime: INTEGER is 12
-	exception_stack_managed: INTEGER is 13
-	force_recompile: INTEGER is 14
-	full_type_checking: INTEGER is 15
-	metadata_cache_path: INTEGER is 16
-	msil_assembly_compatibility: INTEGER is 17
-	msil_classes_per_module: INTEGER is 18
-	msil_clr_version: INTEGER is 19
-	msil_culture: INTEGER is 20
-	msil_full_name: INTEGER is 21
-	msil_generation: INTEGER is 22
-	msil_generation_type: INTEGER is 23
-	msil_key_file_name: INTEGER is 24
-	msil_use_optimized_precompile: INTEGER is 25
-	namespace: INTEGER is 26
-	il_verifiable: INTEGER is 27
-	cls_compliant: INTEGER is 28
-	dotnet_naming_convention: INTEGER is 29
-	inlining: INTEGER is 30
-	inlining_size: INTEGER is 31
-	ise_gc_runtime: INTEGER is 32
-	java_generation: INTEGER is 33
-	line_generation: INTEGER is 34
-	multithreaded: INTEGER is 35
-	old_verbatim_strings: INTEGER is 36
-	old_verbatim_strings_warning: INTEGER is 37
-	override_cluster: INTEGER is 38
-	profile: INTEGER is 39
-	product: INTEGER is 40
-	external_runtime: INTEGER is 41
-	server_file_size: INTEGER is 42
-	shared_library_definition: INTEGER is 43
-	syntax_warning: INTEGER is 44
-	title: INTEGER is 45
-	trademark: INTEGER is 46
-	use_cluster_name_as_namespace: INTEGER is 47
-	use_all_cluster_name_as_namespace: INTEGER is 48
-	version: INTEGER is 49
-	working_directory: INTEGER is 50
-	free_option_count: INTEGER is 51
+	address_expression: INTEGER = 1
+	arguments: INTEGER = 2
+	array_optimization: INTEGER = 3
+	check_generic_creation_constraint: INTEGER = 4
+	check_vape: INTEGER = 5
+	company: INTEGER = 6
+	console_application: INTEGER = 7
+	copyright: INTEGER = 8
+	dead_code: INTEGER = 9
+	description: INTEGER = 10
+	document: INTEGER = 11
+	dynamic_runtime: INTEGER = 12
+	exception_stack_managed: INTEGER = 13
+	force_recompile: INTEGER = 14
+	full_type_checking: INTEGER = 15
+	metadata_cache_path: INTEGER = 16
+	msil_assembly_compatibility: INTEGER = 17
+	msil_classes_per_module: INTEGER = 18
+	msil_clr_version: INTEGER = 19
+	msil_culture: INTEGER = 20
+	msil_full_name: INTEGER = 21
+	msil_generation: INTEGER = 22
+	msil_generation_type: INTEGER = 23
+	msil_key_file_name: INTEGER = 24
+	msil_use_optimized_precompile: INTEGER = 25
+	namespace: INTEGER = 26
+	il_verifiable: INTEGER = 27
+	cls_compliant: INTEGER = 28
+	dotnet_naming_convention: INTEGER = 29
+	inlining: INTEGER = 30
+	inlining_size: INTEGER = 31
+	ise_gc_runtime: INTEGER = 32
+	java_generation: INTEGER = 33
+	line_generation: INTEGER = 34
+	multithreaded: INTEGER = 35
+	old_verbatim_strings: INTEGER = 36
+	old_verbatim_strings_warning: INTEGER = 37
+	override_cluster: INTEGER = 38
+	profile: INTEGER = 39
+	product: INTEGER = 40
+	external_runtime: INTEGER = 41
+	server_file_size: INTEGER = 42
+	shared_library_definition: INTEGER = 43
+	syntax_warning: INTEGER = 44
+	title: INTEGER = 45
+	trademark: INTEGER = 46
+	use_cluster_name_as_namespace: INTEGER = 47
+	use_all_cluster_name_as_namespace: INTEGER = 48
+	version: INTEGER = 49
+	working_directory: INTEGER = 50
+	free_option_count: INTEGER = 51
 
 feature -- Access
 
-	option_names: ARRAY [STRING] is
+	option_names: ARRAY [STRING]
 			-- Name of each option associated to its code
 		once
 			from
@@ -144,7 +144,7 @@ feature -- Access
 
 feature {NONE} -- Codes and names.
 
-	option_codes: HASH_TABLE [INTEGER, STRING] is
+	option_codes: HASH_TABLE [INTEGER, STRING]
 			-- Possible values for free operators
 		once
 			create Result.make (free_option_count)
@@ -200,7 +200,7 @@ feature {NONE} -- Codes and names.
 			Result.force (version, "version")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

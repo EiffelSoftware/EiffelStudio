@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to choose visible classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialization
 		local
 			hb: EV_HORIZONTAL_BOX
@@ -120,7 +120,7 @@ feature {NONE} -- Gui elements
 
 feature {NONE} -- Agents
 
-	on_show is
+	on_show
 			-- Called if the dialog is shown.
 		require
 			initialized: is_initialized
@@ -128,7 +128,7 @@ feature {NONE} -- Agents
 			refresh
 		end
 
-	show_class (a_class: STRING) is
+	show_class (a_class: STRING)
 			-- Show information about `a_class'.
 		require
 			a_class_ok: a_class /= Void and then value /= Void and then value.has (a_class)
@@ -140,7 +140,7 @@ feature {NONE} -- Agents
 			current_feature_not_set: current_feature = Void
 		end
 
-	show_feature (a_class, a_feature: STRING) is
+	show_feature (a_class, a_feature: STRING)
 			-- Show information about `a_feature' in `a_class'.
 		require
 			a_class_ok: a_class /= Void and then value /= Void and then value.has (a_class)
@@ -153,7 +153,7 @@ feature {NONE} -- Agents
 			current_feature_set: current_feature = a_feature
 		end
 
-	remove is
+	remove
 			-- Remove `current_class' or `current_feature'.
 		local
 			l_features: EQUALITY_HASH_TABLE [STRING, STRING]
@@ -176,7 +176,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	add_class is
+	add_class
 			-- Add a new class.
 		local
 			l_name, l_vis_name: STRING
@@ -199,7 +199,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	add_feature is
+	add_feature
 			-- Add a new feature.
 		local
 			l_name, l_vis_name: STRING
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 	current_feature: STRING
 			-- Currently displayed feature.
 
-	refresh is
+	refresh
 			-- Refresh the displayed values.
 		local
 			l_sort: DS_ARRAYED_LIST [STRING]
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 invariant
 	elements: is_initialized implies tree /= Void and original_name /= Void and renamed_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

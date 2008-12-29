@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Representation of a relocation structure for CLI."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Allocate `item'.
 		do
 			managed_pointer_make (structure_size)
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Settings
 
-	set_data (data_location: INTEGER) is
+	set_data (data_location: INTEGER)
 			-- Set current structure knowing that relocation
 			-- location is at position `data_location' in memory.
 		require
@@ -58,7 +58,7 @@ feature -- Settings
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of CLI_IMAGE_RELOCATION structure.
 		external
 			"C macro use %"cli_writer.h%""
@@ -66,30 +66,30 @@ feature -- Measurement
 			"sizeof(CLI_IMAGE_RELOCATION)"
 		end
 
-	Block_size: INTEGER is 4096
+	Block_size: INTEGER = 4096
 			-- Size of block for a relocation location.
 
 feature {NONE} -- Implementation
 
-	c_set_block_rva (an_item: POINTER; i: INTEGER) is
+	c_set_block_rva (an_item: POINTER; i: INTEGER)
 			-- Set `BlockRVA' to `i'.
 		external
 			"C struct CLI_IMAGE_RELOCATION access BlockRVA type DWORD use %"cli_writer.h%""
 		end
 
-	c_set_block_size (an_item: POINTER; i: INTEGER) is
+	c_set_block_size (an_item: POINTER; i: INTEGER)
 			-- Set `BlockSize' to `i'.
 		external
 			"C struct CLI_IMAGE_RELOCATION access BlockSize type DWORD use %"cli_writer.h%""
 		end
 
-	c_set_fixup (an_item: POINTER; i: INTEGER_16) is
+	c_set_fixup (an_item: POINTER; i: INTEGER_16)
 			-- Set `Fixup' to `i'.
 		external
 			"C struct CLI_IMAGE_RELOCATION access Fixup type WORD use %"cli_writer.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

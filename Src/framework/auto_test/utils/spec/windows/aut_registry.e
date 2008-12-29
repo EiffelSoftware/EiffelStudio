@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Windows registry implementation"
 	author: "Ilinca Ciupa and Andreas Leitner"
 	date: "$Date$"
@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	subkeys (key_name: STRING): DS_LINEAR [STRING] is
+	subkeys (key_name: STRING): DS_LINEAR [STRING]
 		local
 			result_list: DS_LINKED_LIST [STRING]
 			registry: WEL_REGISTRY
@@ -54,7 +54,7 @@ feature -- Access
 			end
 		end
 
-	string_value (key_name: STRING): STRING is
+	string_value (key_name: STRING): STRING
 		local
 			registry: WEL_REGISTRY
 			key_value: WEL_REGISTRY_KEY_VALUE
@@ -79,6 +79,6 @@ feature -- Access
 
 feature -- Status report
 
-	is_available: BOOLEAN is True
+	is_available: BOOLEAN = True
 
 end

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		A utility for clients accessing a service (globally or locally via a service provider) and determining a service's existence.
 	]"
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			--
 			-- `a_provider': A service provider to use when querying for a service, instead of the global
 			--               one.
-		indexing
+		note
 			doc: "wiki://Service Consumers:Using Local Service Providers"
 		require
 			a_provider_attached: a_provider /= Void
@@ -81,7 +81,7 @@ feature -- Status report
 
 	is_service_available: BOOLEAN
 			-- Indicates if the service is available
-		indexing
+		note
 			doc: "wiki://Service Consumers:Services Are Tentative"
 		do
 			Result := internal_service /= Void or else (service_provider.service ({G}) /= Void)
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Cached version of `service_provider'
 			-- Note: Do not use directly!
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

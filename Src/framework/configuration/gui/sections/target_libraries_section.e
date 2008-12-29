@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,19 +16,19 @@ create
 
 feature -- Access
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the section.
 		once
 			Result := conf_interface_names.group_library_tree
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon of the section.
 		once
 			Result := conf_pixmaps.top_level_folder_library_icon
 		end
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
@@ -42,19 +42,19 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	create_group_section (a_group: like conf_item_type): like section_item_type is
+	create_group_section (a_group: like conf_item_type): like section_item_type
 			-- Create a new group section item.
 		do
 			create Result.make (a_group, target, configuration_window)
 		end
 
-	create_add_dialog: like add_dialog_type is
+	create_add_dialog: like add_dialog_type
 			-- Create a dialog to add a new group.
 		do
 			create Result.make (target, configuration_window.conf_factory)
 		end
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toobar'.
 		do
 			toolbar.add_library_button.select_actions.wipe_out
@@ -73,7 +73,7 @@ feature {NONE} -- Type anchors
 	section_item_type: LIBRARY_SECTION;
 			-- Type of sections contained.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

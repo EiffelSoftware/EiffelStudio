@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: like feature_; a_type: like type) is
+	make (a_feature: like feature_; a_type: like type)
 			-- Create new object representing feature
 			-- `a_feature' of type `a_type'.
 		require
@@ -45,7 +45,7 @@ feature -- Access
 			-- Type associated with `feature_'
 			-- The type of target when `feature_' is called.
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 		do
 			Result := feature_.feature_name_id
 		end

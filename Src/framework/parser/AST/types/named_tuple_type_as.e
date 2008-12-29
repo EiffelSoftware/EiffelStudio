@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of a TUPLE type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: like class_name; p: like parameters) is
+	initialize (n: like class_name; p: like parameters)
 			-- Create a new CLASS_TYPE AST node.
 		require
 			n_not_void: n /= Void
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_named_tuple_type_as (Current)
@@ -53,7 +53,7 @@ feature -- Roundtrip
 	separate_keyword_index: INTEGER
 			-- Index of keyword "separate" associated with this structure.	
 
-	separate_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	separate_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "separate" associated with this structure.	
 		require
 			a_list_not_void: a_list /= Void
@@ -71,7 +71,7 @@ feature -- Attributes
 	class_name: ID_AS
 			-- Class type name
 
-	generics: EIFFEL_LIST [TYPE_DEC_AS] is
+	generics: EIFFEL_LIST [TYPE_DEC_AS]
 			-- Direct access to generic parameters
 		do
 		   Result := parameters.arguments
@@ -82,7 +82,7 @@ feature -- Attributes
 	parameters: FORMAL_ARGU_DEC_LIST_AS
 			-- Generic parameters
 
-	is_class: BOOLEAN is True
+	is_class: BOOLEAN = True
 			-- Does the Current AST represent a class?
 
 	is_separate: BOOLEAN
@@ -90,7 +90,7 @@ feature -- Attributes
 
 feature -- Status report
 
-	generic_count: INTEGER is
+	generic_count: INTEGER
 			-- Number of actual generic parameters.
 		local
 			l_generics: like generics
@@ -111,7 +111,7 @@ feature -- Status report
 			generic_count_positive: generic_count > 0
 		end
 
-	i_th_type_declaration (i: INTEGER): TYPE_DEC_AS is
+	i_th_type_declaration (i: INTEGER): TYPE_DEC_AS
 			-- Extract the type declaration for the `i-th' identifier of Current.
 		require
 			valid_index: i >= 1 and i <= generic_count
@@ -143,7 +143,7 @@ feature -- Status report
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -155,7 +155,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -165,7 +165,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (class_name, other.class_name) and then
@@ -176,7 +176,7 @@ feature -- Comparison
 
 feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 
-	set_is_separate (i: like is_separate; s_as: like separate_keyword) is
+	set_is_separate (i: like is_separate; s_as: like separate_keyword)
 			-- Set `is_separate' to `i'.
 		do
 			is_separate := i
@@ -188,13 +188,13 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 			separate_keyword_set: s_as /= Void implies separate_keyword_index = s_as.index
 		end
 
-	set_class_name (s: like class_name) is
+	set_class_name (s: like class_name)
 			-- Assign `s' to `class_name'.
 		do
 			class_name := s
 		end
 
-	dump: STRING is
+	dump: STRING
 			-- Dumped string
 		local
 			i, nb: INTEGER
@@ -241,7 +241,7 @@ invariant
 	parameters_not_void: parameters /= Void and then parameters.arguments /= Void and then
 		not parameters.arguments.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

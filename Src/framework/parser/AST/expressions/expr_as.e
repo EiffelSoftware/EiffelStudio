@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract class for expression nodes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,7 @@ inherit
 
 feature -- Conversion
 
-	converted_expression (a_additional_data: ANY): EXPR_AS is
+	converted_expression (a_additional_data: ANY): EXPR_AS
 			-- Convert current expression in another one.
 		do
 			create {CONVERTED_EXPR_AS} Result.initialize (Current, a_additional_data)
@@ -20,7 +20,7 @@ feature -- Conversion
 			converted_expression_not_void: Result /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

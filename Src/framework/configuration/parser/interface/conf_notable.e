@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Configuration elements with notes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -15,7 +15,7 @@ feature -- Access queries
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	add_note (a_note: HASH_TABLE [STRING, STRING]) is
+	add_note (a_note: HASH_TABLE [STRING, STRING])
 			-- Set `internal_notes' with `a_notes'
 		require
 			a_note_not_void: a_note /= Void
@@ -29,7 +29,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_note_extended: notes.has (a_note)
 		end
 
-	remove_note (a_note: HASH_TABLE [STRING, STRING]) is
+	remove_note (a_note: HASH_TABLE [STRING, STRING])
 			-- Remove `a_note' from `notes'
 		require
 			a_note_not_void: a_note /= Void
@@ -40,7 +40,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			end
 		end
 
-	replace_note (a_old_note, a_new_note: HASH_TABLE [STRING, STRING]) is
+	replace_note (a_old_note, a_new_note: HASH_TABLE [STRING, STRING])
 			-- Replace `a_old_note' with `a_new_note' in `notes'.
 		require
 			a_old_note_void: a_old_note /= Void
@@ -56,7 +56,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		end
 
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

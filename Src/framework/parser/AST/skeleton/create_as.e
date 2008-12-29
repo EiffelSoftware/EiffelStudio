@@ -1,4 +1,4 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class CREATE_AS
@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: like clients; f: like feature_list; c_as: like create_creation_keyword) is
+	initialize (c: like clients; f: like feature_list; c_as: like create_creation_keyword)
 			-- Create a new CREATION clause AST node.
 		do
 			clients := c
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_create_as (Current)
@@ -64,7 +64,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and create_creation_keyword_index /= 0 then
 				Result := create_creation_keyword (a_list)
@@ -77,7 +77,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if feature_list /= Void then
 				Result := feature_list.last_token (a_list)
@@ -92,7 +92,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (clients, other.clients) and
@@ -101,7 +101,7 @@ feature -- Comparison
 
 feature -- Access
 
-	has_feature_name (f: FEATURE_NAME): BOOLEAN is
+	has_feature_name (f: FEATURE_NAME): BOOLEAN
 			-- Is `f' present in current creation?
 		local
 			cur: INTEGER
@@ -122,17 +122,17 @@ feature -- Access
 
 feature {COMPILER_EXPORTER} -- Convenience
 
-	set_feature_list (f: like feature_list) is
+	set_feature_list (f: like feature_list)
 		do
 			feature_list := f
 		end
 
-	set_clients (c: like clients) is
+	set_clients (c: like clients)
 		do
 			clients := c
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					Object that is responsiable for modifying text of a PARENT_AS for refactoring.
 				]"
@@ -27,7 +27,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_parent_as: PARENT_AS; a_match_list: like match_list) is
+	make (a_parent_as: PARENT_AS; a_match_list: like match_list)
 			-- Initialize instance.
 			-- `a_parent_as' is PARENT AST node on which modifications are conducted.
 			-- `a_match_list' is match_list needed by roundtrip operations.
@@ -45,7 +45,7 @@ feature{NONE} -- Initialization
 
 feature -- Applicability
 
-	can_apply: BOOLEAN is
+	can_apply: BOOLEAN
 			-- Can current modifier be applied?
 		local
 			i: INTEGER
@@ -64,7 +64,7 @@ feature -- Applicability
 			end
 		end
 
-	apply is
+	apply
 			-- Apply current modifier.
 		local
 			i: INTEGER
@@ -102,7 +102,7 @@ feature -- Applicability
 
 feature -- Modification Register
 
-	extend (a_clause: INTEGER; a_text: STRING) is
+	extend (a_clause: INTEGER; a_text: STRING)
 			-- Register an item insertion in `a_clause'-th inherit clause.
 			-- `a_text' is text of the item to be inserted at the last position in that inherit clause.
 			-- `a_clause' can be `rename_clause', `export_clause', `undefine_clause', `redefine_clause' or `select_caluse'.
@@ -114,7 +114,7 @@ feature -- Modification Register
 			inherit_clause_modifier.i_th (a_clause).append (a_text)
 		end
 
-	replace (a_clause: INTEGER; a_index: INTEGER; a_text: STRING) is
+	replace (a_clause: INTEGER; a_index: INTEGER; a_text: STRING)
 			-- Register an item replacement of the `a_index'-th item in `a_clause'-th inherit clause
 			-- by `a_text'.
 			-- `a_clause' can be `rename_clause', `export_clause', `undefine_clause', `redefine_clause' or `select_caluse'.			
@@ -127,7 +127,7 @@ feature -- Modification Register
 			inherit_clause_modifier.i_th (a_clause).replace (a_text, a_index)
 		end
 
-	remove (a_clause: INTEGER; a_index: INTEGER) is
+	remove (a_clause: INTEGER; a_index: INTEGER)
 			-- Register a removal of `a_index'-th item in `a_clause'-th inherit clause.
 			-- `a_clause' can be `rename_clause', `export_clause', `undefine_clause', `redefine_clause' or `select_caluse'.			
 		require
@@ -139,7 +139,7 @@ feature -- Modification Register
 
 feature -- Inherit clause indicators
 
-	valid_clause (a_clause: INTEGER): BOOLEAN is
+	valid_clause (a_clause: INTEGER): BOOLEAN
 			-- Is `a_clause' valid?
 		do
 			Result := a_clause = rename_clause or a_clause = export_clause or a_clause = undefine_clause or a_clause = redefine_clause or a_clause = select_clause
@@ -147,7 +147,7 @@ feature -- Inherit clause indicators
 			Result_set: (a_clause = rename_clause or a_clause = export_clause or a_clause = undefine_clause or a_clause = redefine_clause or a_clause = select_clause) implies Result
 		end
 
-	valid_index (a_clause: INTEGER; a_index: INTEGER): BOOLEAN is
+	valid_index (a_clause: INTEGER; a_index: INTEGER): BOOLEAN
 			-- Is `a_index' in `a_clause'-th inherit clause valid?
 		require
 			a_clause_valid: valid_clause (a_clause)
@@ -159,16 +159,16 @@ feature -- Inherit clause indicators
 			end
 		end
 
-	rename_clause: INTEGER is 1
-	export_clause: INTEGER is 2
-	undefine_clause: INTEGER is 3
-	redefine_clause: INTEGER is 4
-	select_clause: INTEGER is 5
+	rename_clause: INTEGER = 1
+	export_clause: INTEGER = 2
+	undefine_clause: INTEGER = 3
+	redefine_clause: INTEGER = 4
+	select_clause: INTEGER = 5
 			-- Indicators for rename, export, undefine, redefine and select inherit clauses.
 
 feature{NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize
 		local
 			l_sep_list: ARRAYED_LIST [STRING]
@@ -229,7 +229,7 @@ feature{NONE} -- Initialization
 
 feature{NONE} -- Implementation
 
-	can_inherit_clause_apply (a_clause: INTEGER): BOOLEAN is
+	can_inherit_clause_apply (a_clause: INTEGER): BOOLEAN
 			-- Can modifications done on `a_clause'-th inherit clause be applied?
 		require
 			a_clause_valid: valid_clause (a_clause)
@@ -245,7 +245,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	can_end_keyword_modification_apply: BOOLEAN is
+	can_end_keyword_modification_apply: BOOLEAN
 			-- Can modifications done on "end" keyword of `parent_as' be applied?
 		do
 			Result := True
@@ -260,7 +260,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	inherit_clause_has_comment (a_clause: INTEGER): BOOLEAN is
+	inherit_clause_has_comment (a_clause: INTEGER): BOOLEAN
 			-- Does `a_clause'-th inherit clause has comment?
 			-- If it does, we don't remove the clause even there is no item in it.
 		require
@@ -282,7 +282,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	attached_ast (a_clause: INTEGER): AST_EIFFEL is
+	attached_ast (a_clause: INTEGER): AST_EIFFEL
 			-- The AST structure appearing befor `a_index'-th inherit clause
 			-- It is used when an inherit clause is present while the one before it is missing.
 		local
@@ -312,7 +312,7 @@ feature{NONE} -- Implementation
 	is_footer_needed: BOOLEAN
 			-- Is a footer needed to separate two inherit clauses?
 
-	next_inherit_clause_start_token (a_clause: INTEGER): LEAF_AS is
+	next_inherit_clause_start_token (a_clause: INTEGER): LEAF_AS
 			-- Start token of the next inherit clause of `a_clause'.
 		require
 			a_clause_valid: valid_clause (a_clause)
@@ -334,7 +334,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	is_end_keyword_needed: BOOLEAN is
+	is_end_keyword_needed: BOOLEAN
 			-- Is "end" keyword needed?
 			-- If no inherit presents, "end" keyword is not needed, otherwise, needed.
 		local
@@ -351,7 +351,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	inherit_clause_index: ARRAYED_LIST [INTEGER] is
+	inherit_clause_index: ARRAYED_LIST [INTEGER]
 			-- List of inherit clause index
 		once
 			create Result.make (5)
@@ -375,7 +375,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	end_keyword_string: STRING is "%N%T%Tend"
+	end_keyword_string: STRING = "%N%T%Tend"
 
 feature{NONE} -- Implementation
 
@@ -388,7 +388,7 @@ invariant
 	inherit_clause_not_void: inherit_clause /= Void
 	match_list_not_void: match_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

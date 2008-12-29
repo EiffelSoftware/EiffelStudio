@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specifies a condition."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create.
 		do
 			create version.make (1)
@@ -60,7 +60,7 @@ feature -- Access
 
 feature -- Queries
 
-	satisfied (a_state: CONF_STATE): BOOLEAN is
+	satisfied (a_state: CONF_STATE): BOOLEAN
 			-- Does `a_state' satisfy `Current'?
 		require
 			a_state_not_void: a_state /= Void
@@ -139,7 +139,7 @@ feature -- Queries
 
 feature -- Update
 
-	add_platform (a_platform: INTEGER) is
+	add_platform (a_platform: INTEGER)
 			-- Add requirement on `a_platform'.
 		require
 			valid_platform: valid_platform (a_platform)
@@ -152,7 +152,7 @@ feature -- Update
 			platform.item.value.force (a_platform)
 		end
 
-	exclude_platform (a_platform: INTEGER) is
+	exclude_platform (a_platform: INTEGER)
 			-- Add an exclude requirement on `a_platform'.
 		require
 			valid_platform: valid_platform (a_platform)
@@ -166,7 +166,7 @@ feature -- Update
 			platform.item.value.force (a_platform)
 		end
 
-	wipe_out_platform is
+	wipe_out_platform
 			-- Wipe out platforms.
 		do
 			platform := Void
@@ -174,7 +174,7 @@ feature -- Update
 			platform_void: platform = Void
 		end
 
-	add_build (a_build: INTEGER) is
+	add_build (a_build: INTEGER)
 			-- Add requirement on `a_build'.
 		require
 			valid_build: valid_build (a_build)
@@ -187,7 +187,7 @@ feature -- Update
 			build.item.value.force (a_build)
 		end
 
-	exclude_build (a_build: INTEGER) is
+	exclude_build (a_build: INTEGER)
 			-- Add an exclude requirement on `a_build'.
 		require
 			valid_build: valid_build (a_build)
@@ -201,7 +201,7 @@ feature -- Update
 			build.item.value.force (a_build)
 		end
 
-	wipe_out_build is
+	wipe_out_build
 			-- Wipe out builds.
 		do
 			build := Void
@@ -209,43 +209,43 @@ feature -- Update
 			build_void: build = Void
 		end
 
-	set_multithreaded (a_value: BOOLEAN) is
+	set_multithreaded (a_value: BOOLEAN)
 			-- Set `multithreaded' to `a_value'.
 		do
 			create multithreaded.put (a_value)
 		end
 
-	set_dotnet (a_value: BOOLEAN) is
+	set_dotnet (a_value: BOOLEAN)
 			-- Set `dotnet' to `a_value'.
 		do
 			create dotnet.put (a_value)
 		end
 
-	set_dynamic_runtime (a_value: BOOLEAN) is
+	set_dynamic_runtime (a_value: BOOLEAN)
 			-- Set `dynamic_runtime' to `a_value'.
 		do
 			create dynamic_runtime.put (a_value)
 		end
 
-	unset_multithreaded is
+	unset_multithreaded
 			-- Unset `multithreaded'.
 		do
 			multithreaded := Void
 		end
 
-	unset_dotnet is
+	unset_dotnet
 			-- Unset `dotnet'.
 		do
 			dotnet := Void
 		end
 
-	unset_dynamic_runtime is
+	unset_dynamic_runtime
 			-- Unset `dynamic_runtime'.
 		do
 			dynamic_runtime := Void
 		end
 
-	add_custom (a_name, a_value: STRING) is
+	add_custom (a_name, a_value: STRING)
 			-- Add requirement that `a_name'=`a_value'.
 		require
 			a_name_not_void: a_name /= Void
@@ -254,7 +254,7 @@ feature -- Update
 			custom.force (create {EQUALITY_TUPLE [TUPLE [STRING_GENERAL, BOOLEAN]]}.make ([a_value, False]), a_name)
 		end
 
-	exclude_custom (a_name, a_value: STRING) is
+	exclude_custom (a_name, a_value: STRING)
 			-- Add exclude requirement that `a_name'=`a_value'.
 		require
 			a_name_not_void: a_name /= Void
@@ -263,7 +263,7 @@ feature -- Update
 			custom.force (create {EQUALITY_TUPLE [TUPLE [STRING_GENERAL, BOOLEAN]]}.make ([a_value, True]), a_name)
 		end
 
-	wipe_out_custom is
+	wipe_out_custom
 			-- Wipe out custom.
 		do
 			custom.clear_all
@@ -271,7 +271,7 @@ feature -- Update
 			custom_empty: custom.is_empty
 		end
 
-	unset_version (a_type: STRING) is
+	unset_version (a_type: STRING)
 			-- Unset version constraint.
 		require
 			valid_type: valid_version_type (a_type)
@@ -281,7 +281,7 @@ feature -- Update
 			unset: not version.has (a_type)
 		end
 
-	add_version (a_min, a_max: CONF_VERSION; a_type: STRING) is
+	add_version (a_min, a_max: CONF_VERSION; a_type: STRING)
 			-- Set version constraint.
 		require
 			min_or_max: a_min /= Void or a_max /= Void
@@ -310,7 +310,7 @@ feature -- Equality
 
 feature -- Output
 
-	out: STRING is
+	out: STRING
 			-- Text representation for the conditions.
 		local
 			l_conc: STRING
@@ -432,7 +432,7 @@ invariant
 	version_not_void: version /= Void
 	custom_not_void: custom /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

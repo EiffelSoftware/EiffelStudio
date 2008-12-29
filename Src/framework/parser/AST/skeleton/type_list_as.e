@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Specialized EIFFEL_LIST for a list of TYPE_AS, mostly used for the actual generics and %
 		%find the location of `[' and `]'."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and opening_bracket_as_index /= 0 then
 				Result := opening_bracket_as (a_list)
@@ -29,7 +29,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and closing_bracket_as_index /= 0 then
 				Result := closing_bracket_as (a_list)
@@ -40,7 +40,7 @@ feature -- Roundtrip/Token
 
 feature -- Visitor
 
-	process (a_visitor: AST_VISITOR) is
+	process (a_visitor: AST_VISITOR)
 			-- Process current node.
 		do
 			a_visitor.process_type_list_as (Current)
@@ -48,7 +48,7 @@ feature -- Visitor
 
 feature -- Setting
 
-	set_positions (a_opener, a_closer: SYMBOL_AS) is
+	set_positions (a_opener, a_closer: SYMBOL_AS)
 			-- Set `start_location' and `end_location' with `a_opener' and `a_closer'
 			-- if not Void, nothing otherwise
 		do
@@ -71,7 +71,7 @@ feature
 	closing_bracket_as_index: INTEGER
 			-- Location of `]' if present.
 
-	opening_bracket_as (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	opening_bracket_as (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Location of `[' if present.
 		require
 			a_list_not_void: a_list /= Void
@@ -84,7 +84,7 @@ feature
 			end
 		end
 
-	closing_bracket_as (a_list: LEAF_AS_LIST): SYMBOL_AS is
+	closing_bracket_as (a_list: LEAF_AS_LIST): SYMBOL_AS
 			-- Location of `]' if present.
 		require
 			a_list_not_void: a_list /= Void
@@ -97,7 +97,7 @@ feature
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

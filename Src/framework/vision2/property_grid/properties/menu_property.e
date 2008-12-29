@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Property that allows user to choose from a menu"
 	author: ""
 	date: "$Date$"
@@ -19,7 +19,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make_with_menu (a_name: like name; a_menu: like menu) is
+	make_with_menu (a_name: like name; a_menu: like menu)
 			-- Initialize `menu' with `a_menu'.
 		require
 			a_name_ok: a_name /= Void
@@ -28,7 +28,7 @@ feature{NONE} -- Initialization
 			set_menu (a_menu)
 		end
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			Precursor
@@ -62,7 +62,7 @@ feature -- Status report
 
 feature -- Setting
 
-	set_menu (a_menu: like menu) is
+	set_menu (a_menu: like menu)
 			-- Set `menu' with `a_menu'.
 		do
 			if menu /= Void then
@@ -73,7 +73,7 @@ feature -- Setting
 			menu_set: menu = a_menu
 		end
 
-	set_menu_position_function (a_function: like menu_position_function) is
+	set_menu_position_function (a_function: like menu_position_function)
 			-- Set `menu_position_function' with `a_function'.
 		do
 			menu_position_function := a_function
@@ -81,7 +81,7 @@ feature -- Setting
 			menu_position_function_set: menu_position_function = a_function
 		end
 
-	set_value_retriever (a_function: like value_retriever) is
+	set_value_retriever (a_function: like value_retriever)
 			-- Set `value_retriever' with `a_function'.
 		do
 			value_retriever := a_function
@@ -89,7 +89,7 @@ feature -- Setting
 			data_retriever_set: value_retriever = a_function
 		end
 
-	set_value_converter (a_function: like value_converter) is
+	set_value_converter (a_function: like value_converter)
 			-- Set `value_converter' with `a_function'.
 		do
 			value_converter := a_function
@@ -97,7 +97,7 @@ feature -- Setting
 			data_converter_set: value_converter = a_function
 		end
 
-	enable_auto_set_data is
+	enable_auto_set_data
 			-- Enable `auto_set_data'.
 		do
 			auto_set_data := True
@@ -105,7 +105,7 @@ feature -- Setting
 			auto_set_data_set: auto_set_data
 		end
 
-	disable_auto_set_data is
+	disable_auto_set_data
 			-- Disable `auto_set_data'.
 		do
 			detach_agents
@@ -116,7 +116,7 @@ feature -- Setting
 
 feature {NONE} -- Implementation
 
-	convert_to_data (a_string: like displayed_value): like value is
+	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
 		do
 			if value_converter /= Void then
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_menu is
+	show_menu
 			-- Display `menu'.
 		local
 			l_pos_func: like menu_position_function
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	attach_agents is
+	attach_agents
 			-- Attach agents.
 		do
 			auto_set_data := True
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 			)
 		end
 
-	detach_agents is
+	detach_agents
 			-- Detach agents.
 		do
 			recursive_do (
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 			)
 		end
 
-	recursive_do (a_menu: like menu; a_proc: PROCEDURE [ANY, TUPLE [a_menu: EV_MENU]]) is
+	recursive_do (a_menu: like menu; a_proc: PROCEDURE [ANY, TUPLE [a_menu: EV_MENU]])
 			-- Recursive apply `a_proc' to every menu from `a_menu'.
 		require
 			a_proc_attached: a_proc /= Void
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 
 feature{NONE} -- Actions
 
-	on_menu_item_selected (a_item: EV_MENU_ITEM) is
+	on_menu_item_selected (a_item: EV_MENU_ITEM)
 			-- Action to be performed when `a_item' from `menu' is selected
 		require
 			a_item_attached: a_item /= Void
@@ -209,7 +209,7 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_menu_item_selected_agent: PROCEDURE [ANY, TUPLE [EV_MENU_ITEM]] is
+	on_menu_item_selected_agent: PROCEDURE [ANY, TUPLE [EV_MENU_ITEM]]
 			-- Agent of `on_menu_item_selected'
 		do
 			if on_menu_item_selected_agent_internal = Void then

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represent system section of a configuration."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system; a_window: like configuration_window) is
+	make (a_system: like system; a_window: like configuration_window)
 			-- Create.
 		require
 			a_system_not_void: a_system /= Void
@@ -55,13 +55,13 @@ feature -- Access
 	system: CONF_SYSTEM
 			-- Configuration system for which information should be displayed.
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the section.
 		once
 			Result := conf_interface_names.section_system
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon of the section.
 		once
 			Result := conf_pixmaps.project_settings_system_icon
@@ -69,7 +69,7 @@ feature -- Access
 
 feature -- Element update
 
-	add_target is
+	add_target
 			-- Add a new target.
 		local
 			l_target: CONF_TARGET
@@ -98,7 +98,7 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
@@ -113,14 +113,14 @@ feature {NONE} -- Implementation
 			l_item.set_pixmap (conf_pixmaps.tool_properties_icon)
 		end
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to execute when the item is selected
 		do
 			create Result
 			Result.extend (agent configuration_window.show_properties_system)
 		end
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toobar'.
 		do
 			toolbar.add_target_button.select_actions.wipe_out
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 invariant
 	system_not_void: system /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

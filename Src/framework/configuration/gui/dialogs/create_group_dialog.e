@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Dialog to create a new group."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,7 +35,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_target: CONF_TARGET; a_factory: like factory) is
+	make (a_target: CONF_TARGET; a_factory: like factory)
 			-- Create.
 		require
 			a_target_not_void: a_target /= Void
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 	factory: CONF_PARSE_FACTORY
 			-- Factory to create a group.
 
-	group_exists (a_group: STRING; a_target: CONF_TARGET): BOOLEAN is
+	group_exists (a_group: STRING; a_target: CONF_TARGET): BOOLEAN
 			-- Check if `a_target' or any child of `a_target' already has `a_group'.
 		require
 			a_group_ok: a_group /= Void and then not a_group.is_empty
@@ -85,7 +85,7 @@ invariant
 	target_not_void: target /= Void
 	factory_not_void: factory /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

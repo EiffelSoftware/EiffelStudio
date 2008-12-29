@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Precompiles are almost the same as libraries, except that on the first build they load the date as initial point for the incremental compilation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_location: like location; a_target: CONF_TARGET) is
+	make (a_name: like name; a_location: like location; a_target: CONF_TARGET)
 			-- Create associated to `a_target'.
 		do
 			target := a_target
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	is_precompile: BOOLEAN is
+	is_precompile: BOOLEAN
 			-- Is this a precompile?
 		once
 			Result := True
@@ -46,7 +46,7 @@ feature -- Access
 
 feature {CONF_ACCESS} -- Update
 
-	set_eifgens_location (a_location: like eifgens_location) is
+	set_eifgens_location (a_location: like eifgens_location)
 			-- Set `eifgens_location' to `a_location'.
 		do
 			eifgens_location := a_location
@@ -56,14 +56,14 @@ feature {CONF_ACCESS} -- Update
 
 feature -- Visit
 
-	process (a_visitor: CONF_VISITOR) is
+	process (a_visitor: CONF_VISITOR)
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_group (Current)
 			a_visitor.process_precompile (Current)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

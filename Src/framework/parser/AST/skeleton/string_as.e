@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Node for string constants. Version for Bench."
 	legal: "See notice at end of class."
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (s: STRING; l, c, p, n: INTEGER) is
+	initialize (s: STRING; l, c, p, n: INTEGER)
 			-- Create a new STRING AST node.
 		require
 			s_not_void: s /= Void
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_string_as (Current)
@@ -62,7 +62,7 @@ feature -- Properties
 
 feature -- Settings
 
-	set_is_once_string (v: like is_once_string) is
+	set_is_once_string (v: like is_once_string)
 			-- Set `is_once_string' with `v'.
 		do
 			is_once_string := v
@@ -72,7 +72,7 @@ feature -- Settings
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 				-- `value' cannot be Void
@@ -81,7 +81,7 @@ feature -- Comparison
 
 feature -- Output
 
-	string_value: STRING is
+	string_value: STRING
 			-- Formatted value.
 		do
 			Result := eiffel_string (value)
@@ -91,7 +91,7 @@ feature -- Output
 
 feature {INFIX_PREFIX_AS} -- Status setting
 
-	set_value (s: STRING) is
+	set_value (s: STRING)
 		do
 			value := s
 		end
@@ -101,7 +101,7 @@ feature -- Roundtrip
 	once_string_keyword_index: INTEGER
 			-- Once string keyword.
 
-	once_string_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	once_string_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Once string keyword
 		require
 			a_list_not_void: a_list /= Void
@@ -114,7 +114,7 @@ feature -- Roundtrip
 			end
 		end
 
-	set_once_string_keyword (k_as: KEYWORD_AS) is
+	set_once_string_keyword (k_as: KEYWORD_AS)
 			-- Set `once_keyword' with `k_as'.
 		do
 			if k_as /= Void then
@@ -127,7 +127,7 @@ feature -- Roundtrip
 	type: TYPE_AS
 			-- Type that associated with this string.
 
-	set_type (t_as: TYPE_AS) is
+	set_type (t_as: TYPE_AS)
 			-- Set `type' with `t_as'.
 		do
 			type := t_as
@@ -137,7 +137,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := Current
@@ -153,7 +153,7 @@ feature -- Roundtrip/Token
 invariant
 	value_not_void: value /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

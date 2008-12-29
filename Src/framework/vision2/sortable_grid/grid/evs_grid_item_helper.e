@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Helper for grid item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	relative_position (a_grid_item: EV_GRID_ITEM; a_x, a_y: INTEGER): EV_COORDINATE is
+	relative_position (a_grid_item: EV_GRID_ITEM; a_x, a_y: INTEGER): EV_COORDINATE
 			-- Position relative to top-left corner of `a_grid_item' from (`a_x', `a_y')
 		require
 			a_grid_item_attached: a_grid_item /= Void
@@ -33,7 +33,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	relative_pointer_position (a_grid_item: EV_GRID_ITEM): EV_COORDINATE is
+	relative_pointer_position (a_grid_item: EV_GRID_ITEM): EV_COORDINATE
 			-- Pointer position relative to top-left corner of `a_grid_item'
 		require
 			a_grid_item_attached: a_grid_item /= Void
@@ -47,7 +47,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

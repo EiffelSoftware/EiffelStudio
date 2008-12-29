@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Free unary expression description. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (op: like op_name; e: like expr) is
+	initialize (op: like op_name; e: like expr)
 			-- Create a new UN_FREE AST node.
 		require
 			op_not_void: op /= Void
@@ -42,7 +42,7 @@ feature -- Attributes
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_un_free_as (Current)
@@ -50,20 +50,20 @@ feature -- Visitor
 
 feature -- Properties
 
-	prefix_feature_name: STRING is
+	prefix_feature_name: STRING
 			-- Internal name
 		do
 			Result := prefix_feature_name_with_symbol (op_name.name)
 		end
 
-	operator_name: STRING is
+	operator_name: STRING
 		do
 			Result := op_name.name
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (op_name, other.op_name) and then
@@ -72,12 +72,12 @@ feature -- Comparison
 
 feature {UNARY_AS}	-- Replication
 
-	set_prefix_feature_name (p: like prefix_feature_name) is
+	set_prefix_feature_name (p: like prefix_feature_name)
 		do
 			create op_name.initialize (extract_symbol_from_prefix (p))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

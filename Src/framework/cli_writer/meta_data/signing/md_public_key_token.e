@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A public key token"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,7 @@ create
 	
 feature {NONE} -- Initialize
 
-	make_from_array (data: ARRAY [NATURAL_8]) is
+	make_from_array (data: ARRAY [NATURAL_8])
 			-- Initialize `item' with content of `data'.
 		require
 			data_not_void: data /= Void
@@ -22,7 +22,7 @@ feature {NONE} -- Initialize
 			create item.make_from_array (data)
 		end
 		
-	make_from_string (data: STRING) is
+	make_from_string (data: STRING)
 			-- Initialize `item' with content of `data' expressed in hexadecimal.
 		require
 			data_not_void: data /= Void
@@ -46,7 +46,7 @@ feature {NONE} -- Initialize
 			make_from_array (l_data)
 		end
 		
-	read_hexa_value (s: STRING): INTEGER is
+	read_hexa_value (s: STRING): INTEGER
 			-- Convert `s' hexadecimal value into an integer representation.
 		require
 			s_not_void: s /= Void
@@ -96,7 +96,7 @@ feature -- Access
 invariant
 	item_not_void: item /= Void
 	
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

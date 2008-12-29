@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error if a class is overriden by multiple classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class, a_location, a_first, a_second: STRING) is
+	make (a_class, a_location, a_first, a_second: STRING)
 			-- Create.
 		require
 			a_class_not_void: a_class /= Void
@@ -35,7 +35,7 @@ feature -- Access
 	text: STRING;
 		-- Error text.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

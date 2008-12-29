@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system) is
+	make (a_system: like system)
 			-- Create new queue. By default all features from
 			-- `a_system' will have a priority of 0.
 		require
@@ -50,7 +50,7 @@ feature -- Access
 	system: SYSTEM_I
 			-- System
 
-	static_priority (a_feature: AUT_FEATURE_OF_TYPE): INTEGER is
+	static_priority (a_feature: AUT_FEATURE_OF_TYPE): INTEGER
 			-- Static priority of feature `a_feature'
 		require
 			a_feature_not_void: a_feature /= Void
@@ -63,7 +63,7 @@ feature -- Access
 			priority_valid: Result >= 0
 		end
 
-	dynamic_priority (a_feature: AUT_FEATURE_OF_TYPE): INTEGER is
+	dynamic_priority (a_feature: AUT_FEATURE_OF_TYPE): INTEGER
 			-- Dynamic priority of feature `a_feature'
 		require
 			a_feature_not_void: a_feature /= Void
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Changing Priority
 
-	set_static_priority_of_feature (a_feature: AUT_FEATURE_OF_TYPE; a_priority: INTEGER) is
+	set_static_priority_of_feature (a_feature: AUT_FEATURE_OF_TYPE; a_priority: INTEGER)
 			-- Sets the static priority of `a_feature' to `a_priority'.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -115,7 +115,7 @@ feature -- Changing Priority
 			end
 		end
 
-	set_static_priority_of_type (a_type: CL_TYPE_A; a_priority: INTEGER) is
+	set_static_priority_of_type (a_type: CL_TYPE_A; a_priority: INTEGER)
 			-- Set static priority of all feaures in `a_type' to a
 			-- priority `a_priority'. Features of class ANY are ignored. Note
 			-- that expanded types are not yet supported.
@@ -156,7 +156,7 @@ feature -- Changing Priority
 
 feature -- Basic routines
 
-	select_next is
+	select_next
 			-- Select a feature to test and make it available via
 			-- `last_feature'.
 		require
@@ -177,7 +177,7 @@ feature -- Basic routines
 			last_feature_has_highest_priority: dynamic_priority (last_feature) = highest_dynamic_priority
 		end
 
-	mark (a_feature: AUT_FEATURE_OF_TYPE) is
+	mark (a_feature: AUT_FEATURE_OF_TYPE)
 			-- Mark `a_feature' as called.
 		require
 			a_feature_not_void: a_feature /= Void
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 	priority_table: DS_HASH_TABLE [DS_PAIR [INTEGER, INTEGER], AUT_FEATURE_OF_TYPE]
 			-- Table that maps features to their priorities (static, dynamic)
 
-	reset_dynamic_priorities is
+	reset_dynamic_priorities
 			-- Reset the dynamic priorities of all
 			-- features to their static value.
 		local
@@ -270,7 +270,7 @@ feature {NONE} -- Implementation
 			set_highest_priority
 		end
 
-	set_highest_priority is
+	set_highest_priority
 			-- Set `highest_dynamic_priority' to the highest priority value
 			-- found in `feature_list_table'.
 		local
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Assertion helpers
 
-	is_highest_priority_valid: BOOLEAN is
+	is_highest_priority_valid: BOOLEAN
 			-- Is `highest_dynamic_priority' set to the highest priority found
 			-- in `feature_list_table'.
 		local
@@ -313,7 +313,7 @@ feature {NONE} -- Assertion helpers
 			cs.go_after
 		end
 
-	are_tables_valid: BOOLEAN is
+	are_tables_valid: BOOLEAN
 			-- Are the tables `feature_list_table' and `priority_table'
 			-- synchronized?
 		local

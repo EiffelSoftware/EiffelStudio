@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -14,7 +14,7 @@ class AUT_SHARED_PATHNAMES
 
 feature -- Singleton Access
 
-	pathnames: AUT_PATHNAMES is
+	pathnames: AUT_PATHNAMES
 			-- Singleton Access to AUT_PATHNAMES
 		once
 			create Result.make

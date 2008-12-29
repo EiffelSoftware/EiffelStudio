@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Create a new cluster."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,7 +38,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			l_btn: EV_BUTTON
@@ -132,7 +132,7 @@ feature -- Access
 
 feature -- Update
 
-	set_parent_cluster (a_parent: like parent_cluster) is
+	set_parent_cluster (a_parent: like parent_cluster)
 			-- Set `parent_cluster' to `a_parent'.
 		do
 			parent_cluster := a_parent
@@ -150,7 +150,7 @@ feature {NONE} -- GUI elements
 
 feature {NONE} -- Actions
 
-	browser_dialog: EV_DIRECTORY_DIALOG is
+	browser_dialog: EV_DIRECTORY_DIALOG
 			-- Dialog to browse to a directory.
 		local
 			l_dir: DIRECTORY
@@ -164,7 +164,7 @@ feature {NONE} -- Actions
 			result_not_void: Result /= Void
 		end
 
-	browse is
+	browse
 			-- Browse for a location.
 		local
 			l_loc: CONF_DIRECTORY_LOCATION
@@ -182,7 +182,7 @@ feature {NONE} -- Actions
 			browser_dialog.show_modal_to_window (Current)
 		end
 
-	fill_fields is
+	fill_fields
 			-- Set location from `browser_dialog'.
 		local
 			l_name: STRING
@@ -199,13 +199,13 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_cancel is
+	on_cancel
 			-- Close the dialog.
 		do
 			destroy
 		end
 
-	on_ok is
+	on_ok
 			-- Add group and close the dialog.
 		local
 			l_loc: CONF_DIRECTORY_LOCATION
@@ -233,7 +233,7 @@ feature {NONE} -- Actions
 			is_ok_last_group: is_ok implies last_group /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

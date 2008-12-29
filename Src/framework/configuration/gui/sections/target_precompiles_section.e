@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -25,13 +25,13 @@ create
 
 feature -- Access
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the section.
 		once
 			Result := conf_interface_names.group_precompile_tree
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon of the section.
 		once
 			Result := conf_pixmaps.top_level_folder_precompiles_icon
@@ -39,14 +39,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		do
 			create Result.make (0)
 				-- we can only have one precompile, so as soon as this folder appears we can't add any more.
 		end
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toolbar'.
 		do
 				-- we can only have one precompile, so as soon as this folder appears we can't add any more.
@@ -63,7 +63,7 @@ feature {NONE} -- Type anchors
 	section_item_type: PRECOMPILE_SECTION;
 			-- Type of sections contained.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

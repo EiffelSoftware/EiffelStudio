@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract description of an Eiffel loop instruction. %
 				  %Version for Bench."
 	legal: "See notice at end of class."
@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 
 	initialize (f: like from_part; i: like invariant_part;
 		v: like variant_part; s: like stop;
-		c: like compound; e, f_as, i_as, u_as, l_as: like end_keyword) is
+		c: like compound; e, f_as, i_as, u_as, l_as: like end_keyword)
 			-- Create a new LOOP AST node.
 		require
 			s_not_void: s /= Void
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_loop_as (Current)
@@ -75,7 +75,7 @@ feature -- Roundtrip
 	from_keyword_index, invariant_keyword_index, until_keyword_index, loop_keyword_index: INTEGER
 			-- Index of keyword "from", "invariant", "until" and "loop" associated with this structure
 
-	from_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	from_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "from" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -88,7 +88,7 @@ feature -- Roundtrip
 			end
 		end
 
-	invariant_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	invariant_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "invariant" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -101,7 +101,7 @@ feature -- Roundtrip
 			end
 		end
 
-	until_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	until_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "until"  associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -114,7 +114,7 @@ feature -- Roundtrip
 			end
 		end
 
-	loop_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	loop_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "loop" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
@@ -149,7 +149,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and from_keyword_index /= 0 then
 				Result := from_keyword (a_list)
@@ -168,14 +168,14 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := end_keyword.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (compound, other.compound) and then
@@ -188,7 +188,7 @@ feature -- Comparison
 invariant
 	stop_not_void: stop /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

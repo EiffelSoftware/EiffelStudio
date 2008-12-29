@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Abstract ancestor to all well formed responses received from the interpreter"
@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_response_text: like raw_text) is
+	make (a_response_text: like raw_text)
 			-- Create new response.
 		require
 			a_response_text_not_void: a_response_text /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			exception_void: exception = Void
 		end
 
-	make_exception (a_response_text: like raw_text; an_exception: like exception) is
+	make_exception (a_response_text: like raw_text; an_exception: like exception)
 			-- Create new response where an exception was raised.
 		require
 			a_response_text_not_void: a_response_text /= Void
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_bad: BOOLEAN is
+	is_bad: BOOLEAN
 			-- Is response not well formed syntacticly?
 		do
 			Result := False
@@ -60,7 +60,7 @@ feature -- Status report
 			definition: not Result
 		end
 
-	is_error: BOOLEAN is
+	is_error: BOOLEAN
 			-- Is response an error message?
 		do
 			Result := False
@@ -68,7 +68,7 @@ feature -- Status report
 			definition: not Result
 		end
 
-	is_exception: BOOLEAN is
+	is_exception: BOOLEAN
 			-- Does response contain an exception from testee feature?
 		do
 			Result := exception /= Void
@@ -76,7 +76,7 @@ feature -- Status report
 			good_result: Result = (exception /= Void)
 		end
 
-	has_exception: BOOLEAN is
+	has_exception: BOOLEAN
 			-- Does `Current' contain an exception from testee?
 		do
 			Result := exception /= Void
@@ -91,7 +91,7 @@ feature -- Access
 
 feature -- Process
 
-	process (a_visitor: AUT_RESPONSE_VISITOR) is
+	process (a_visitor: AUT_RESPONSE_VISITOR)
 			-- Process `Current' using `a_visitor'.
 		do
 			a_visitor.process_normal_response (Current)

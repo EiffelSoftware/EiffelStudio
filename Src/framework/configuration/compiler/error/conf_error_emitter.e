@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error if the il emitter doesn't exist"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,10 +13,10 @@ inherit
 
 feature -- Access
 
-	text: STRING is "Could not load ISE Eiffel Metadata Consumer tool.";
+	text: STRING = "Could not load ISE Eiffel Metadata Consumer tool.";
 		-- Error text.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

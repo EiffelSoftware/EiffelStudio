@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -29,7 +29,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_group: like group; a_target: like target; a_window: like configuration_window) is
+	make (a_group: like group; a_target: like target; a_window: like configuration_window)
 			-- Create.
 		require
 			a_group_not_void: a_group /= Void
@@ -49,13 +49,13 @@ feature -- Access
 	group: CONF_GROUP
 			-- Group for which information are displayed.
 
-	name: STRING_GENERAL is
+	name: STRING_GENERAL
 			-- Name of the section.
 		do
 			Result := group.name
 		end
 
-	icon: EV_PIXMAP is
+	icon: EV_PIXMAP
 			-- Icon of the section.
 		do
 			Result := conf_pixmaps.pixmap_from_group (group)
@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Element update
 
-	ask_remove_group is
+	ask_remove_group
 			-- Ask for confirmation and remove `Current'.
 		local
 			l_msg: STRING_32
@@ -78,7 +78,7 @@ feature -- Element update
 				l_msg, configuration_window, agent remove_group, Void)
 		end
 
-	update_pixmap is
+	update_pixmap
 			-- Update the pixmap if necessary.
 		do
 			if icon /= pixmap then
@@ -88,7 +88,7 @@ feature -- Element update
 
 feature {NONE} -- Implementation
 
-	remove_group is
+	remove_group
 			-- Remove `Current' from the tree where it is displayed.
 			-- Also remove the parent node if it is empty.
 		local
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	context_menu: ARRAYED_LIST [EV_MENU_ITEM] is
+	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
 			l_item: EV_MENU_ITEM
@@ -140,14 +140,14 @@ feature {NONE} -- Implementation
 			l_item.set_pixmap (conf_pixmaps.tool_properties_icon)
 		end
 
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to execute when the item is selected
 		do
 			create Result
 			Result.extend (agent configuration_window.show_properties_target_groups (target, group))
 		end
 
-	update_toolbar_sensitivity is
+	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toobar'.
 		do
 			toolbar.remove_button.select_actions.wipe_out
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 invariant
 	group_not_void: group /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

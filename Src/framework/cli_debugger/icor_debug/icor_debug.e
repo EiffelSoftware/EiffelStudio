@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents the COM object ICorDebug"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,12 +20,12 @@ create
 
 feature {ICOR_EXPORTER} -- Access
 
-	initialize is
+	initialize
 		do
 			last_call_success := cpp_initialize (item)
 		end
 
-	terminate is
+	terminate
 			-- Terminate current ICorDebug
 			-- this will close access to .Net COM debugger
 		local
@@ -46,7 +46,7 @@ feature {ICOR_EXPORTER} -- Access
  			retry
 		end
 
-	create_process (a_command_line, a_working_directory: STRING; a_env: STRING_GENERAL): POINTER is
+	create_process (a_command_line, a_working_directory: STRING; a_env: STRING_GENERAL): POINTER
 			-- Pointer on the freshly creared ICorDebugProcess
 		require
 			non_void_command_line: a_command_line /= Void
@@ -105,7 +105,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	debug_active_process (p_id: INTEGER; win32_attach: BOOLEAN): ICOR_DEBUG_PROCESS is
+	debug_active_process (p_id: INTEGER; win32_attach: BOOLEAN): ICOR_DEBUG_PROCESS
 			-- Debug process indentified by `p_id' and return the Process object.
 		local
 			icordebug_process: POINTER
@@ -116,7 +116,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-	set_managed_handler (a_cordebug_managed_callback: ICOR_DEBUG_MANAGED_CALLBACK) is
+	set_managed_handler (a_cordebug_managed_callback: ICOR_DEBUG_MANAGED_CALLBACK)
 		do
 			last_icd_managed_callback := a_cordebug_managed_callback
 			last_call_success := cpp_set_managed_handler (item, last_icd_managed_callback.item)
@@ -124,7 +124,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	set_unmanaged_handler (a_cordebug_unmanaged_callback: ICOR_DEBUG_UNMANAGED_CALLBACK) is
+	set_unmanaged_handler (a_cordebug_unmanaged_callback: ICOR_DEBUG_UNMANAGED_CALLBACK)
 		do
 			last_icd_unmanaged_callback := a_cordebug_unmanaged_callback
 			last_call_success := cpp_set_unmanaged_handler (item, last_icd_unmanaged_callback.item)
@@ -132,7 +132,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_process (a_process_id: INTEGER): ICOR_DEBUG_PROCESS is
+	get_process (a_process_id: INTEGER): ICOR_DEBUG_PROCESS
 		local
 			p: POINTER
 		do
@@ -146,7 +146,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature -- Disposable
 
-	dispose is
+	dispose
 		do
 			last_call_success := cpp_terminate (item)
 			Precursor
@@ -154,7 +154,7 @@ feature -- Disposable
 
 feature {ICOR_EXPORTER} -- Access
 
-	clean_data is
+	clean_data
 			-- Clean used data for the previous debugging session
 		local
 			l_hr: INTEGER
@@ -168,7 +168,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	cpp_initialize (obj: POINTER): INTEGER is
+	cpp_initialize (obj: POINTER): INTEGER
 			-- Call `ICorDebug->Initialize'.
 		external
 			"[
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 						a_environnement, a_directory, a_startup_info, a_process_info: POINTER;
 					 	a_cordebug_createprocess_flags: INTEGER;
 						icordebugprocess: TYPED_POINTER [POINTER]
-						): INTEGER is
+						): INTEGER
 			-- Call `ICorDebug->CreateProcess'.
 		external
 			"[
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			"CreateProcess"
 		end
 
-	cpp_terminate (obj: POINTER): INTEGER is
+	cpp_terminate (obj: POINTER): INTEGER
 			-- Call `ICorDebug->Terminate'.
 		external
 			"[
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			"Terminate"
 		end
 
-	cpp_set_managed_handler (obj: POINTER; a_icordebug_managed_callback: POINTER): INTEGER is
+	cpp_set_managed_handler (obj: POINTER; a_icordebug_managed_callback: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebug signature(ICorDebugManagedCallback*): EIF_INTEGER 
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 			"SetManagedHandler"
 		end
 
-	cpp_set_unmanaged_handler (obj: POINTER; a_icordebug_unmanaged_callback: POINTER): INTEGER is
+	cpp_set_unmanaged_handler (obj: POINTER; a_icordebug_unmanaged_callback: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebug signature(ICorDebugUnmanagedCallback*): EIF_INTEGER 
@@ -232,7 +232,7 @@ feature {NONE} -- Implementation
 			"SetUnmanagedHandler"
 		end
 
-	cpp_get_process (obj: POINTER; a_process_id: INTEGER; a_p_process: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_get_process (obj: POINTER; a_process_id: INTEGER; a_p_process: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebug signature(DWORD, ICorDebugProcess**): EIF_INTEGER 
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	cpp_debug_active_process (obj: POINTER; p_id: INTEGER; win32_attach: INTEGER; icordebugprocess: TYPED_POINTER [POINTER]): INTEGER is
+	cpp_debug_active_process (obj: POINTER; p_id: INTEGER; win32_attach: INTEGER; icordebugprocess: TYPED_POINTER [POINTER]): INTEGER
 			-- Call `ICorDebug->DebugActiveProcess'.
 		external
 			"[
@@ -274,14 +274,14 @@ feature {NONE} -- Implementation routines
 	process_info: WEL_PROCESS_INFO
 			-- Process information
 
-	startup_info: WEL_STARTUP_INFO is
+	startup_info: WEL_STARTUP_INFO
 			-- Process startup information
 		do
 			create Result.make
 			Result.initialize
 		end
 
-	cwin_create_new_console: INTEGER is
+	cwin_create_new_console: INTEGER
 			-- SDK CREATE_NEW_CONSOLE constant
 		external
 			"C macro use %"cli_debugger_headers.h%" "
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation routines
 			"CREATE_NEW_CONSOLE"
 		end
 
-	cwin_create_unicode_environment: INTEGER is
+	cwin_create_unicode_environment: INTEGER
 			-- SDK CREATE_UNICODE_ENVIRONMENT constant
 			-- Environment variables passed to new process uses Unicode characters instead of ANSI characters.
 		external
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation routines
 			"CREATE_UNICODE_ENVIRONMENT"
 		end
 
-	cwin_debug_only_this_process: INTEGER is
+	cwin_debug_only_this_process: INTEGER
 			-- SDK DEBUG_ONLY_THIS_PROCESS constant
 		external
 			"C macro use %"cli_debugger_headers.h%" "
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation routines
 			"DEBUG_ONLY_THIS_PROCESS"
 		end
 
-	cwin_debug_no_specials_options: INTEGER is
+	cwin_debug_no_specials_options: INTEGER
 			-- SDK DEBUG_NO_SPECIAL_OPTIONS constant
 		external
 			"C macro use %"cli_debugger_headers.h%" "
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation routines
 			"DEBUG_NO_SPECIAL_OPTIONS"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

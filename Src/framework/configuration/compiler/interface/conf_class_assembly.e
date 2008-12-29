@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Classes in assemblies."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create {CONF_FACTORY}
 
 feature {NONE} -- Implementation
 
-	make_assembly_class (a_name, a_dotnet_name: STRING; an_assembly: like group; a_position: INTEGER; a_factory: like factory) is
+	make_assembly_class (a_name, a_dotnet_name: STRING; an_assembly: like group; a_position: INTEGER; a_factory: like factory)
 			-- Create.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -47,15 +47,15 @@ feature {NONE} -- Implementation
 
 feature -- Access
 
-	is_read_only: BOOLEAN is True
+	is_read_only: BOOLEAN = True
 			-- A class in an assembly is always read-only.
 
-	is_class_assembly: BOOLEAN is True
+	is_class_assembly: BOOLEAN = True
 			-- We are a class in an assembly.
 
 feature {CONF_ACCESS} -- Update
 
-	set_group (a_group: like group) is
+	set_group (a_group: like group)
 			-- Set `group' to `a_group'.
 		require
 			a_group_ok: a_group /= Void and then a_group.is_valid
@@ -65,13 +65,13 @@ feature {CONF_ACCESS} -- Update
 			group_set: group = a_group
 		end
 
-	name_from_associated_file: STRING is
+	name_from_associated_file: STRING
 			-- Compute `renamed_name' from `name'.
 		do
 			Result := name
 		end
 
-	set_type_position (a_position: INTEGER) is
+	set_type_position (a_position: INTEGER)
 			-- Set class type description position.
 		require
 			a_position_ok: a_position >= 0
@@ -89,7 +89,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	extract_path_from_dotnet (a_name: STRING): STRING is
+	extract_path_from_dotnet (a_name: STRING): STRING
 			-- Extract path from a dotnet name.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 	type_position: INTEGER
 			-- Position of class type description.
 
-	type_file: STRING is
+	type_file: STRING
 			-- File of class type description.
 		require
 			consumed_path: group.consumed_path /= Void
@@ -121,13 +121,13 @@ feature {NONE} -- Implementation
 			Result.append (classes_file_name)
 		end
 
-	classes_file_name: STRING is "classes.info"
+	classes_file_name: STRING = "classes.info"
 			-- Directory from Assembly location where classes are located.
 
 invariant
 	dotnet_name_ok: dotnet_name /= Void and then not dotnet_name.is_empty
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

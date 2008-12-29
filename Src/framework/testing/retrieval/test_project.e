@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that will scan an eiffel project in order to find classes containing tests.
 	]"
@@ -146,7 +146,7 @@ feature {NONE} -- Status report
 
 feature -- Query
 
-	is_test_class (a_class: !EIFFEL_CLASS_I): BOOLEAN is
+	is_test_class (a_class: !EIFFEL_CLASS_I): BOOLEAN
 			-- <Precursor>
 		do
 			Result := test_class_map.has (a_class)
@@ -186,7 +186,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	is_valid_feature (a_feature_as: !FEATURE_AS): BOOLEAN is
+	is_valid_feature (a_feature_as: !FEATURE_AS): BOOLEAN
 			-- Is `a_feature_as' the syntax of a valid test routine?
 		do
 			Result := (a_feature_as.body.arguments = Void or else a_feature_as.body.arguments.is_empty) and
@@ -200,7 +200,7 @@ feature {NONE} -- Query
 				(a_class.creators = Void or else a_class.creators.is_empty)
 		end
 
-	is_valid_feature_clause (a_clause_as: !FEATURE_CLAUSE_AS): BOOLEAN is
+	is_valid_feature_clause (a_clause_as: !FEATURE_CLAUSE_AS): BOOLEAN
 			-- Is `a_clause_as' exported to ANY?
 		require
 			a_clause_as_not_void: a_clause_as /= Void
@@ -225,7 +225,7 @@ feature {NONE} -- Query
 			end
 		end
 
-	is_valid_routine_name (a_name: !STRING): BOOLEAN is
+	is_valid_routine_name (a_name: !STRING): BOOLEAN
 			-- Is `a_name' a valid test routine name?
 		do
 			Result := not (a_name.is_equal ({TEST_CONSTANTS}.prepare_routine_name) or a_name.is_equal ({TEST_CONSTANTS}.clean_routine_name))
@@ -239,7 +239,7 @@ feature {NONE} -- Query
 			result_implies_not_tear_down: Result implies not a_name.is_equal ({TEST_CONSTANTS}.clean_routine_name)
 		end
 
-	class_name (a_class: !CLASS_I): !STRING is
+	class_name (a_class: !CLASS_I): !STRING
 			-- Name of `a_class' in upper case.
 		do
 			create Result.make_from_string (a_class.name)
@@ -248,7 +248,7 @@ feature {NONE} -- Query
 			result_not_empty: not Result.is_empty
 		end
 
-	test_routine_name (a_feature: !FEATURE_AS): ?STRING is
+	test_routine_name (a_feature: !FEATURE_AS): ?STRING
 			-- First valid test routine name in `a_feature', Void if there are none
 		local
 			l_name: !STRING
@@ -276,7 +276,7 @@ feature {NONE} -- Query
 				is_valid_routine_name (Result)
 		end
 
-	valid_features (a_class: !CLASS_AS): !DS_HASH_TABLE [!FEATURE_AS, !STRING] is
+	valid_features (a_class: !CLASS_AS): !DS_HASH_TABLE [!FEATURE_AS, !STRING]
 			-- Hash table with test routines of `a_class' where the key
 			-- is the name of the feature
 		local
@@ -325,7 +325,7 @@ feature {NONE} -- Query
 					end (?, Result))
 		end
 
-	test_identifier (a_class: !TEST_CLASS; a_name: !STRING): !STRING is
+	test_identifier (a_class: !TEST_CLASS; a_name: !STRING): !STRING
 			-- Create unqiue identifier for test routine
 			--
 			-- `a_class': Class in which test is defined.
@@ -410,7 +410,7 @@ feature -- Status setting
 			end
 		end
 
-	synchronize_with_class (a_class: !EIFFEL_CLASS_I) is
+	synchronize_with_class (a_class: !EIFFEL_CLASS_I)
 			-- <Precursor>
 		local
 			l_is_test_class: BOOLEAN
@@ -448,7 +448,7 @@ feature -- Status setting
 
 feature {NONE} -- Status setting
 
-	update_root_class is
+	update_root_class
 			-- If test classes have changed since last time `udpate_root_class' has been called, write
 			-- new class referencing all test classes and register it as root clas in system.
 		local
@@ -554,7 +554,7 @@ feature {NONE} -- Element change
 			added: is_test_class (a_class)
 		end
 
-	synchronize_test_class (a_test_class: !TEST_CLASS; a_class_as: !CLASS_AS) is
+	synchronize_test_class (a_test_class: !TEST_CLASS; a_class_as: !CLASS_AS)
 			-- Add eiffel class to eiffel test class map.
 			--
 			-- Note: `add_test_class' will add a {TEST_CLASS} instance to `test_class_map'. In
@@ -657,7 +657,7 @@ feature {NONE} -- Element change
 			end
 		end
 
-	remove_old_classes is
+	remove_old_classes
 			-- Remove all test routines for any remaining test class in `old_class_map'.
 		require
 			old_class_map_attached: old_class_map /= Void
@@ -702,7 +702,7 @@ feature {NONE} -- Element change
 
 feature {TEST_CLASS_LOCATOR_I} -- Implementation
 
-	report_test_class (a_class: !EIFFEL_CLASS_I) is
+	report_test_class (a_class: !EIFFEL_CLASS_I)
 			-- <Precursor>
 		local
 			l_ast: ?CLASS_AS
@@ -734,7 +734,7 @@ feature {NONE} -- Implementation: tag retrieval
 	cluster_stack: !DS_ARRAYED_LIST [!CONF_GROUP]
 			-- List used as a stack by `add_class_path'
 
-	add_tag (a_tag: !STRING; a_set: !DS_SET [!STRING]) is
+	add_tag (a_tag: !STRING; a_set: !DS_SET [!STRING])
 			-- Add tag to set by replacing all class names with current cluster/class/feature hierarchy.
 			--
 			-- `a_tag': Tag to be added to set
@@ -801,7 +801,7 @@ feature {NONE} -- Implementation: tag retrieval
 			a_set_increased: a_set.count = old a_set.count + 1
 		end
 
-	add_class_path (a_tag: !STRING; a_class_name: !STRING; a_feature_name: ?STRING) is
+	add_class_path (a_tag: !STRING; a_class_name: !STRING; a_feature_name: ?STRING)
 			-- Add cluster/class/feature information to tag
 			--
 			-- `a_tag': Tag to which information should be added
@@ -980,7 +980,7 @@ feature {NONE} -- Implementation
 invariant
 	cluster_stack_empty: cluster_stack.is_empty
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

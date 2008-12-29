@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Plain encapsulation of StrongName API"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make_with_version (a_runtime_version: STRING) is
+	make_with_version (a_runtime_version: STRING)
 			-- Initialize Current. Initialize `exists' accordingly.
 		require
 			a_runtime_version_not_void: a_runtime_version /= Void
@@ -41,7 +41,7 @@ feature -- Status report
 
 feature {NONE} -- Status report
 
-	setup is
+	setup
 			-- Initialize environment for loading `mscorsn.dll', i.e.
 			-- append path to `mscorsn.dll' to PATH environment variable.
 		local
@@ -73,13 +73,13 @@ feature {NONE} -- Status report
 
 feature -- Constants
 
-	sn_leave_key: INTEGER is 0x00000001
+	sn_leave_key: INTEGER = 0x00000001
 			-- Flags for StrongNameKeyGen.
 			-- Leave key pair registered with CSP.
 
 feature -- Access
 
-	public_key (a_key_blob: MANAGED_POINTER): MANAGED_POINTER is
+	public_key (a_key_blob: MANAGED_POINTER): MANAGED_POINTER
 			-- Retrieve public portion of key pair `a_key_blob'.
 		require
 			a_key_blob_not_void: a_key_blob /= Void
@@ -95,7 +95,7 @@ feature -- Access
 			public_key_not_void: Result /= Void
 		end
 
-	public_key_token (a_public_key_blob: MANAGED_POINTER): MANAGED_POINTER is
+	public_key_token (a_public_key_blob: MANAGED_POINTER): MANAGED_POINTER
 			-- Retrieve public key token associated with `a_public_key_blob'.
 		require
 			a_public_key_blob_not_void: a_public_key_blob /= Void
@@ -111,7 +111,7 @@ feature -- Access
 			public_key_token_not_void: Result /= Void
 		end
 
-	assembly_signature (a_file: UNI_STRING; a_public_private_key: MANAGED_POINTER): MANAGED_POINTER is
+	assembly_signature (a_file: UNI_STRING; a_public_private_key: MANAGED_POINTER): MANAGED_POINTER
 			-- Signature of assembly `a_file' using `a_public_private_key'.
 		require
 			a_file_not_void: a_file /= Void
@@ -126,7 +126,7 @@ feature -- Access
 			strong_name_free_buffer (l_ptr)
 		end
 
-	assembly_signature_size (a_public_private_key: MANAGED_POINTER): INTEGER is
+	assembly_signature_size (a_public_private_key: MANAGED_POINTER): INTEGER
 			-- Size of signature using `a_public_private_key'.
 		require
 			a_public_private_key_not_void: a_public_private_key /= Void
@@ -137,7 +137,7 @@ feature -- Access
 				a_public_private_key.item, a_public_private_key.count, $Result)
 		end
 
-	hash_of_file (a_file_path: UNI_STRING): MANAGED_POINTER is
+	hash_of_file (a_file_path: UNI_STRING): MANAGED_POINTER
 			-- Compute hash of `a_file_path' using default algorithm.
 		require
 			a_file_path_not_void: a_file_path /= Void
@@ -152,7 +152,7 @@ feature -- Access
 
 feature -- Factory
 
-	new_public_private_key_pair: MANAGED_POINTER is
+	new_public_private_key_pair: MANAGED_POINTER
 			-- Generate a new public-private key pair.
 		local
 			l_ptr: POINTER
@@ -167,7 +167,7 @@ feature -- Factory
 
 feature {NONE} -- C externals
 
-	frozen get_error: INTEGER is
+	frozen get_error: INTEGER
 			-- Retrieve error code if any.
 		external
 			"dllwin mscorsn.dll signature : EIF_INTEGER use <StrongName.h>"
@@ -175,7 +175,7 @@ feature {NONE} -- C externals
 			"StrongNameErrorInfo"
 		end
 
-	frozen strong_name_free_buffer (a_key_blob: POINTER) is
+	frozen strong_name_free_buffer (a_key_blob: POINTER)
 			-- Free buffer allocated by routines below.
 		external
 			"dllwin mscorsn.dll signature (BYTE *) use <StrongName.h>"
@@ -185,7 +185,7 @@ feature {NONE} -- C externals
 
 	frozen strong_name_key_gen (a_container_name: POINTER; flags: INTEGER;
 			a_public_key, a_key_size: POINTER): INTEGER
-		is
+		
 			-- Generate a new key pair for strong name use.
 		external
 			"dllwin mscorsn.dll signature (LPCWSTR, DWORD, BYTE **, ULONG *): EIF_INTEGER use <StrongName.h>"
@@ -195,7 +195,7 @@ feature {NONE} -- C externals
 
 	frozen strong_name_install (a_container_name: POINTER; a_public_key: POINTER;
 			a_key_size: INTEGER): INTEGER
-		is
+		
 			-- Import key pair into a key container.
 		external
 			"dllwin mscorsn.dll signature (LPCWSTR, BYTE *, ULONG): EIF_INTEGER use <StrongName.h>"
@@ -203,7 +203,7 @@ feature {NONE} -- C externals
 			"StrongNameKeyInstall"
 		end
 
-	frozen strong_name_delete (a_container_name: POINTER): INTEGER is
+	frozen strong_name_delete (a_container_name: POINTER): INTEGER
 			-- Import key pair into a key container.
 		external
 			"dllwin mscorsn.dll signature (LPCWSTR): EIF_INTEGER use <StrongName.h>"
@@ -213,7 +213,7 @@ feature {NONE} -- C externals
 
 	frozen strong_name_get_public_key (a_container_name: POINTER; a_key_blob: POINTER;
 			a_key_blob_size: INTEGER; a_public_key: POINTER; a_public_key_size: POINTER): INTEGER
-		is
+		
 			-- Retrieve the public portion of a key pair.
 		external
 			"[
@@ -224,7 +224,7 @@ feature {NONE} -- C externals
 			"StrongNameGetPublicKey"
 		end
 
-	frozen strong_name_hash_size (a_hash_alg: INTEGER; a_hash_size: POINTER): INTEGER is
+	frozen strong_name_hash_size (a_hash_alg: INTEGER; a_hash_size: POINTER): INTEGER
 			-- Compute size of buffer in `a_hash_size' needed to hold a hash
 			-- for a given hash algorithm `a_hash_alg'.
 		external
@@ -235,7 +235,7 @@ feature {NONE} -- C externals
 
 	frozen strong_name_signature_size (a_public_key: POINTER; a_key_size: INTEGER;
 			a_hash_size: POINTER): INTEGER
-		is
+		
 			-- Compute size that needs to be allocated for a signature in an assembly.
 		external
 			"dllwin mscorsn.dll signature (BYTE *, ULONG, DWORD *): EIF_INTEGER use <StrongName.h>"
@@ -245,7 +245,7 @@ feature {NONE} -- C externals
 
 	frozen strong_name_signature_generation (a_file_path, a_container, a_public_key: POINTER;
 			a_public_key_size: INTEGER; a_hash_buffer, a_hash_buffer_size: POINTER): INTEGER
-		is
+		
 			-- Hash and sign a manifest.
 		external
 			"[
@@ -258,7 +258,7 @@ feature {NONE} -- C externals
 
 	frozen strong_name_token_from_public_key (a_public_key: POINTER; key_length: INTEGER;
 			token, token_lenght: POINTER): INTEGER
-		is
+		
 			-- Create a strong name token from a public key blob.
 		external
 			"[
@@ -271,7 +271,7 @@ feature {NONE} -- C externals
 
 	frozen get_hash_from_assembly_file (a_file_path: POINTER; a_hash_alg_id: POINTER;
 			a_hash_buffer: POINTER; a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
-		is
+		
 			-- Compute hash of `a_blob' using `a_hash_alg_id'.
 		external
 			"[
@@ -284,7 +284,7 @@ feature {NONE} -- C externals
 
 	frozen get_hash_from_blob (a_blob: POINTER; a_blob_size: INTEGER; a_hash_alg_id: POINTER;
 			a_hash_buffer: POINTER; a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
-		is
+		
 				-- Compute hash of `a_blob' using `a_hash_alg_id'.
 		external
 			"[
@@ -298,7 +298,7 @@ feature {NONE} -- C externals
 
 	frozen get_hash_from_file (a_path: POINTER; a_hash_alg_id: POINTER; a_hash_buffer: POINTER;
 			a_hash_buffer_size: INTEGER; computed_size: POINTER): INTEGER
-		is
+		
 		external
 			"[
 				dllwin mscorsn.dll
@@ -309,7 +309,7 @@ feature {NONE} -- C externals
 			"GetHashFromFileW"
 		end
 
-	frozen get_environment_variable (name, buffer: POINTER; size: INTEGER): INTEGER is
+	frozen get_environment_variable (name, buffer: POINTER; size: INTEGER): INTEGER
 			-- Get environment variable `name' and put result in `buffer' with size `size'.
 			-- Return size of variable or 0 if not found.
 		external
@@ -318,7 +318,7 @@ feature {NONE} -- C externals
 			"GetEnvironmentVariable"
 		end
 
-	frozen set_environment_variable (name, value: POINTER): BOOLEAN is
+	frozen set_environment_variable (name, value: POINTER): BOOLEAN
 			-- Set environment variable `name' with value `value'.
 			-- Return True if successful.
 		external
@@ -330,7 +330,7 @@ feature {NONE} -- C externals
 invariant
 	runtime_version_not_void: runtime_version /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

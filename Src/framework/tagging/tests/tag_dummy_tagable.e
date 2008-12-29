@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Dummy {TAGABLE_I} used for unit tests.
 	]"

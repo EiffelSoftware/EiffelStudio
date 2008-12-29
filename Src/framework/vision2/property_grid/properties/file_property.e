@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Property to choose a file."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			Precursor
@@ -32,7 +32,7 @@ feature -- Access
 
 feature -- Update
 
-	add_filters (a_extension, a_description: STRING_GENERAL) is
+	add_filters (a_extension, a_description: STRING_GENERAL)
 			-- Add a filter with `a_extension' and `a_description'.
 		require
 			a_extension_ok: a_extension /= Void and then not a_extension.is_empty
@@ -51,7 +51,7 @@ feature -- Status
 
 feature {NONE} -- Agents
 
-	show_dialog is
+	show_dialog
 			-- Show text editor.
 		require
 			parented: is_parented
@@ -82,13 +82,13 @@ feature {NONE} -- Agents
 			is_dialog_open := False
 		end
 
-	dialog_ok (a_dial: EV_FILE_OPEN_DIALOG) is
+	dialog_ok (a_dial: EV_FILE_OPEN_DIALOG)
 			-- If dialog is closed with ok.
 		do
 			set_value (a_dial.file_name)
 		end
 
-	directory_location_value: STRING_32 is
+	directory_location_value: STRING_32
 			-- Directory location from the value (e.g. resolve variables).
 		local
 			i: INTEGER
@@ -109,7 +109,7 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	convert_to_data (a_string: like displayed_value): like value is
+	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
 		do
 			Result := a_string.twin

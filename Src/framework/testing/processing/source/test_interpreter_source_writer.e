@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Source writer for printing ITP_INTERPRETER_ROOT class.
 	]"

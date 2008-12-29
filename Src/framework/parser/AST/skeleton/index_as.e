@@ -1,4 +1,4 @@
-indexing
+note
 
 	 description:
 			"Abstract description of an item in the class indexing list. %
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (t: like tag; i: like index_list; c_as: SYMBOL_AS) is
+	initialize (t: like tag; i: like index_list; c_as: SYMBOL_AS)
 			-- Create a new INDEX AST node.
 		require
 			i_not_void: i /= Void
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_index_as (Current)
@@ -70,7 +70,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if tag /= Void then
 				Result := tag.first_token (a_list)
@@ -79,21 +79,21 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := index_list.last_token (a_list)
 		end
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (tag, other.tag) and
 				equivalent (index_list, other.index_list)
 		end
 
-	is_equiv (other: like Current): BOOLEAN is
+	is_equiv (other: like Current): BOOLEAN
 		do
 			Result := equivalent (tag, other.tag) and then
 						equivalent (index_list, other.index_list)
@@ -101,7 +101,7 @@ feature -- Comparison
 
 feature {DOCUMENTATION_EXPORT} -- Access
 
-	content_as_string: STRING is
+	content_as_string: STRING
 			-- Merge content into a single string.
 		local
 			il: like index_list
@@ -124,7 +124,7 @@ feature {DOCUMENTATION_EXPORT} -- Access
 invariant
 	index_list_not_void: index_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

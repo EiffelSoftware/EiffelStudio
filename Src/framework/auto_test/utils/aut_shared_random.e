@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 
@@ -13,7 +13,7 @@ class AUT_SHARED_RANDOM
 
 feature -- Access
 
-	random: RANDOM is
+	random: RANDOM
 		once
 			create Result.make
 		ensure

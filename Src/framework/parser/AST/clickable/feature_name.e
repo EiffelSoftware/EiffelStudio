@@ -1,4 +1,4 @@
-indexing
+note
 
 	description:
 		"Abstract class for an Eiffel feature name: id or %
@@ -56,7 +56,7 @@ inherit
 
 feature -- Stoning
 
-	internal_name: ID_AS is
+	internal_name: ID_AS
 			-- Internal name used by the compiler.
 		deferred
 		end
@@ -66,35 +66,35 @@ feature -- Status report
 	is_frozen: BOOLEAN
 			-- Is the name of the feature frozen?
 
-	is_infix: BOOLEAN is
+	is_infix: BOOLEAN
 			-- Is the feature name an infixed notation?
 		do
 		end
 
-	is_prefix: BOOLEAN is
+	is_prefix: BOOLEAN
 			-- Is the feature name a prefixed notation?
 		do
 		end
 
-	is_bracket: BOOLEAN is
+	is_bracket: BOOLEAN
 			-- Is feature alias (if any) bracket?
 		do
 		end
 
-	is_binary: BOOLEAN is
+	is_binary: BOOLEAN
 			-- Is feature alias (if any) a binary operator?
 		do
 		end
 
-	is_unary: BOOLEAN is
+	is_unary: BOOLEAN
 			-- Is feature alias (if any) an unary operator?
 		do
 		end
 
-	is_feature: BOOLEAN is True
+	is_feature: BOOLEAN = True
 			-- Does the Current AST represent a feature?
 
-	visual_name: STRING is
+	visual_name: STRING
 			-- Named used in Eiffel code
 		do
 			Result := internal_name.name
@@ -102,7 +102,7 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-	internal_alias_name_id: INTEGER is
+	internal_alias_name_id: INTEGER
 			-- `internal_alias_name' ID in NAMES_HEAP
 		do
 			if alias_name /= Void then
@@ -113,7 +113,7 @@ feature -- Status report
 			has_no_alias: alias_name = Void implies Result = 0
 		end
 
-	internal_alias_name: ID_AS is
+	internal_alias_name: ID_AS
 			-- Operator associated with the feature (if any)
 			-- augmented with information about its arity
 		deferred
@@ -121,19 +121,19 @@ feature -- Status report
 			consistent_result: (Result /= Void) = (alias_name /= Void)
 		end
 
-	alias_name: STRING_AS is
+	alias_name: STRING_AS
 			-- Operator name associated with the feature (if any)
 		deferred
 		end
 
-	has_convert_mark: BOOLEAN is
+	has_convert_mark: BOOLEAN
 			-- Is operator marked with "convert"?
 		do
 		end
 
 feature -- Status setting
 
-	set_is_binary is
+	set_is_binary
 			-- Mark alias operator as binary.
 		require
 			has_alias: alias_name /= Void
@@ -145,7 +145,7 @@ feature -- Status setting
 			is_binary: is_binary
 		end
 
-	set_is_unary is
+	set_is_unary
 			-- Mark alias operator as unary.
 		require
 			has_alias: alias_name /= Void
@@ -157,7 +157,7 @@ feature -- Status setting
 			is_unary: is_unary
 		end
 
-	set_is_frozen (v: BOOLEAN) is
+	set_is_frozen (v: BOOLEAN)
 			-- Set `is_frozen' with `v'.
 		do
 			is_frozen := v
@@ -165,7 +165,7 @@ feature -- Status setting
 			is_frozen_set: is_frozen = v
 		end
 
-	set_frozen_keyword (l: KEYWORD_AS) is
+	set_frozen_keyword (l: KEYWORD_AS)
 			-- Set location of the associated "frozen" keyword to `l'.
 		do
 			if l /= Void then
@@ -177,7 +177,7 @@ feature -- Status setting
 
 feature -- Comparison
 
-	is_less alias "<" (other: FEATURE_NAME): BOOLEAN is
+	is_less alias "<" (other: FEATURE_NAME): BOOLEAN
 		deferred
 		end
 
@@ -201,7 +201,7 @@ feature -- Location
 
 feature {NONE} -- Implementation: helper functions
 
-	get_internal_alias_name: STRING is
+	get_internal_alias_name: STRING
 			-- Internal alias name augmented with arity information
 			-- in the form "prefix ..." or "infix ..."
 		require
@@ -221,7 +221,7 @@ invariant
 	consistent_operator_status: not (is_bracket and is_binary) and not (is_bracket and is_unary) and not (is_binary and is_unary)
 	consistent_operator_name: (is_bracket or is_binary or is_unary) = (alias_name /= Void)
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

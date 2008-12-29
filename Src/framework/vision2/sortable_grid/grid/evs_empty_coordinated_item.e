@@ -1,4 +1,4 @@
-indexing
+note
 	description: "object that represents just a coordinate"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_column, a_row: INTEGER) is
+	make (a_column, a_row: INTEGER)
 			-- Initialize `column_index' with `a_column' and
 			-- `row_index' with `a_row'.
 		do
@@ -44,13 +44,13 @@ feature -- Position
 
 feature -- Status report
 
-	is_column_index_available: BOOLEAN is True
+	is_column_index_available: BOOLEAN = True
 			-- Is `column_index' available?
 
-	is_row_index_available: BOOLEAN is True;
+	is_row_index_available: BOOLEAN = True;
 			-- Is `row_index' available?
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

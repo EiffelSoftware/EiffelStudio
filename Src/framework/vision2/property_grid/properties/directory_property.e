@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Property to choose a directory."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize.
 		do
 			Precursor
@@ -32,7 +32,7 @@ feature -- Status
 
 feature {NONE} -- Agents
 
-	show_dialog is
+	show_dialog
 			-- Show text editor.
 		require
 			parented: is_parented
@@ -60,13 +60,13 @@ feature {NONE} -- Agents
 			is_dialog_open := False
 		end
 
-	dialog_ok (a_dial: EV_DIRECTORY_DIALOG) is
+	dialog_ok (a_dial: EV_DIRECTORY_DIALOG)
 			-- If dialog is closed with ok.
 		do
 			set_value (a_dial.directory)
 		end
 
-	location_value: STRING_32 is
+	location_value: STRING_32
 			-- Location from the value (e.g. resolve variables).
 		do
 			if value /= Void then
@@ -80,7 +80,7 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	convert_to_data (a_string: like displayed_value): like value is
+	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
 		do
 			Result := a_string.twin

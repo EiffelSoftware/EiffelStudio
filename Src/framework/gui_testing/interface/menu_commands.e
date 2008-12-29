@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 		"Specialized commands to control menus"
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Clicking menu items
 
-	left_click (a_path: STRING) is
+	left_click (a_path: STRING)
 			-- Click all menu items denoted by `a_path' with left mouse button.
 		local
 			l_items: LIST [EV_IDENTIFIABLE]
@@ -32,7 +32,7 @@ feature -- Clicking menu items
 			l_items.do_all (agent mouse.left_click_on (?))
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

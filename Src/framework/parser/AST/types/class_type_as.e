@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Node for normal class type. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: like class_name) is
+	initialize (n: like class_name)
 			-- Create a new CLASS_TYPE AST node.
 		require
 			n_not_void: n /= Void
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_class_type_as (Current)
@@ -48,12 +48,12 @@ feature -- Attributes
 	class_name: ID_AS
 			-- Class type name
 
-	generics: TYPE_LIST_AS is
+	generics: TYPE_LIST_AS
 			-- Possible generical parameters
 		do
 		end
 
-	is_class: BOOLEAN is True
+	is_class: BOOLEAN = True
 			-- Does the Current AST represent a class?
 
 	is_expanded: BOOLEAN
@@ -70,7 +70,7 @@ feature -- Roundtrip
 	separate_keyword_index: INTEGER
 			-- Index of keyword "separate" associated with this structure.	
 
-	expanded_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	expanded_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "expanded" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
@@ -83,7 +83,7 @@ feature -- Roundtrip
 			end
 		end
 
-	separate_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS is
+	separate_keyword (a_list: LEAF_AS_LIST): KEYWORD_AS
 			-- Keyword "separate" associated with this structure.	
 		require
 			a_list_not_void: a_list /= Void
@@ -98,7 +98,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -114,7 +114,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			Result := Precursor (a_list)
 			if Result = Void then
@@ -124,7 +124,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (class_name, other.class_name) and then
@@ -136,7 +136,7 @@ feature -- Comparison
 
 feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 
-	set_is_expanded (i: like is_expanded; s_as: like expanded_keyword) is
+	set_is_expanded (i: like is_expanded; s_as: like expanded_keyword)
 			-- Set `is_separate' to `i'.
 		do
 			is_expanded := i
@@ -148,7 +148,7 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 			expanded_keyword_set: s_as /= Void implies expanded_keyword_index = s_as.index
 		end
 
-	set_is_separate (i: like is_separate; s_as: like separate_keyword) is
+	set_is_separate (i: like is_separate; s_as: like separate_keyword)
 			-- Set `is_separate' to `i'.
 		do
 			is_separate := i
@@ -160,13 +160,13 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 			separate_keyword_set: s_as /= Void implies separate_keyword_index = s_as.index
 		end
 
-	set_class_name (s: like class_name) is
+	set_class_name (s: like class_name)
 			-- Assign `s' to `class_name'.
 		do
 			class_name := s
 		end
 
-	dump: STRING is
+	dump: STRING
 			-- Dumped string
 		do
 			create Result.make (class_name.name.count)
@@ -178,7 +178,7 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 			Result.append (class_name.name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

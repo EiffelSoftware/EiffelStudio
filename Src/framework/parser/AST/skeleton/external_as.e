@@ -1,4 +1,4 @@
-indexing
+note
 	description: "AST representation of a external C routine."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (l: like language_name; a: STRING_AS; e_as, a_as: KEYWORD_AS) is
+	initialize (l: like language_name; a: STRING_AS; e_as, a_as: KEYWORD_AS)
 			-- Create a new EXTERNAL AST node.
 		require
 			l_not_void: l /= Void
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_external_as (Current)
@@ -103,7 +103,7 @@ feature -- Attributes
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list /= Void and external_keyword_index /= 0 then
 				Result := external_keyword (a_list)
@@ -112,7 +112,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				Result := language_name.last_token (a_list)
@@ -127,12 +127,12 @@ feature -- Roundtrip/Token
 
 feature -- Properties
 
-	is_external: BOOLEAN is True
+	is_external: BOOLEAN = True
 			-- Is the current routine body an external one ?
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := alias_name_id = other.alias_name_id and then
@@ -144,7 +144,7 @@ invariant
 	alias_name_literal_valid: alias_name_id > 0 implies alias_name_literal /= Void
 	alias_name_id_valid: alias_name_literal /= Void implies alias_name_id > 0
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

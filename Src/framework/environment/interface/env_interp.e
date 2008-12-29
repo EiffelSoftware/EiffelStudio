@@ -1,11 +1,11 @@
-indexing
+note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class ENV_INTERP
 
 feature -- Access
 
-	interpreted_string (s: STRING): STRING is
+	interpreted_string (s: STRING): STRING
 			-- Interpretation of string `s' where the environment variables
 			-- are interpreted
 		require
@@ -16,7 +16,7 @@ feature -- Access
 			good_result: Result /= Void
 		end
 
-	translated_string (s: STRING): STRING is
+	translated_string (s: STRING): STRING
 			-- Interpretation of string `s' where the environment variables
 			-- are replaced by "$(VARIABLE)"
 			--| Useful when writing makefiles.
@@ -30,12 +30,12 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	execution_environment: EXECUTION_ENVIRONMENT is
+	execution_environment: EXECUTION_ENVIRONMENT
 		once
 			create Result
 		end
 
-	processed_string (s: STRING; interpreted: BOOLEAN): STRING is
+	processed_string (s: STRING; interpreted: BOOLEAN): STRING
 			-- Interpretation of string `s' where the environment variables
 			-- are either replaced by their values (`interpreted' = True)
 			-- or replaced by "$(VARIABLE)" in order to be written in
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			good_result: Result /= Void;
 		end;
 	
-	variable_value (a_name: STRING): STRING is
+	variable_value (a_name: STRING): STRING
 			-- Value of variable `a_name', if any.
 		require
 			attached_name: a_name /= Void
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			Result := Execution_environment.get (a_name)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

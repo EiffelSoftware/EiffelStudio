@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Access to a file date."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	file_modified_date (a_path: STRING): INTEGER is
+	file_modified_date (a_path: STRING): INTEGER
 			-- Get last modified timestamp of `a_path'.
 		require
 			a_path_set: a_path /= Void and then not a_path.is_empty
@@ -25,7 +25,7 @@ feature -- Access
 
 feature {NONE} -- Externals
 
-	eif_date (a_path: POINTER; r: TYPED_POINTER [INTEGER]) is
+	eif_date (a_path: POINTER; r: TYPED_POINTER [INTEGER])
 			-- Date of file of name `str'.
 	external
 		"C inline use %"eif_eiffel.h%", <sys/types.h>, <sys/stat.h>"
@@ -84,7 +84,7 @@ feature {NONE} -- Externals
          }"
 	end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

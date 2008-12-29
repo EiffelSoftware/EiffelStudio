@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Generate a warning for an obsolete syntax."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s, e: INTEGER; f: like file_name; m: STRING) is
+	make (s, e: INTEGER; f: like file_name; m: STRING)
 			-- Create a new SYNTAX_WARNING instance.
 		require
 			f_not_void: f /= Void
@@ -44,7 +44,7 @@ feature -- Properties
 	file_name: STRING
 			-- Path to file where syntax issue happened
 
-	code: STRING is "Syntax Warning"
+	code: STRING = "Syntax Warning"
 			-- Error code
 
 	has_associated_file: BOOLEAN = True
@@ -52,7 +52,7 @@ feature -- Properties
 
 feature -- Visitor
 
-	process (a_visitor: ERROR_VISITOR) is
+	process (a_visitor: ERROR_VISITOR)
 		do
 			a_visitor.process_syntax_warning (Current)
 		end
@@ -60,7 +60,7 @@ feature -- Visitor
 invariant
 	warning_message_not_void: warning_message /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

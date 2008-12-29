@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Factory that create a memory stream holding IL instruction stream."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create Factory to store method bodys into `item'.
 		do
 			create method_locations.make (10)
@@ -37,7 +37,7 @@ feature -- Access
 	item: MANAGED_POINTER
 			-- Memory where IL data instruction stream is stored.
 
-	count: INTEGER is
+	count: INTEGER
 			-- Size of code
 		do
 			Result := current_position
@@ -45,7 +45,7 @@ feature -- Access
 
 feature -- Method body definition
 
-	new_method_body (token: INTEGER): MD_METHOD_BODY is
+	new_method_body (token: INTEGER): MD_METHOD_BODY
 			-- Get a new body for method token `token'.
 		require
 			not_closed: not is_closed
@@ -76,7 +76,7 @@ feature -- Status Report
 
 feature -- Update
 
-	update_rvas (md_emit: MD_EMIT; top_rva: INTEGER) is
+	update_rvas (md_emit: MD_EMIT; top_rva: INTEGER)
 			-- Now that all bodys have been emitted, update each
 			-- method token with its corresponding rva knowing
 			-- that current memory stream starts at `top_rva'.
@@ -99,7 +99,7 @@ feature -- Update
 
 feature -- Settings
 
-	write_duplicate_body (source_meth, new_meth: INTEGER) is
+	write_duplicate_body (source_meth, new_meth: INTEGER)
 			-- Make method `new_meth' point to same code location
 			-- as `source_meth'. Useful in Eiffel as each Eiffel feature
 			-- is in fact represented by two methods: one static
@@ -118,7 +118,7 @@ feature -- Settings
 			method_locations.put (source_pos, new_meth)
 		end
 
-	write_current_body is
+	write_current_body
 			-- Store `current body' in `Current'.
 		require
 			not_closed: not is_closed
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 	internal_method_body: MD_METHOD_BODY
 			-- Body used over and over to avoid memory consumption.
 
-	update_size (a_new_offset: INTEGER) is
+	update_size (a_new_offset: INTEGER)
 			-- Resized `internal_item' if it cannot hold up to `a_new_offset' new items.
 		require
 			a_new_offset_non_negative: a_new_offset >= 0
@@ -269,22 +269,22 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- constants
 
-	Chunk_size: INTEGER is 1000000
+	Chunk_size: INTEGER = 1000000
 			-- Default chunk size is 1MB.
 
-	tiny_method_header: MD_TINY_METHOD_HEADER is
+	tiny_method_header: MD_TINY_METHOD_HEADER
 			-- To avoid over creating method headers.
 		once
 			create Result.make (0)
 		end
 
-	fat_method_header: MD_FAT_METHOD_HEADER is
+	fat_method_header: MD_FAT_METHOD_HEADER
 			-- To avoid over creating method headers.
 		once
 			create Result.make (0, 0, 0)
 		end
 
-	exception_header: MD_METHOD_SECTION_HEADER is
+	exception_header: MD_METHOD_SECTION_HEADER
 			-- To avoid creating method section headers.
 		once
 			create Result.make
@@ -294,7 +294,7 @@ invariant
 	good_capacity: capacity > 0 and current_position <= capacity
 	method_locations_not_void: method_locations /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

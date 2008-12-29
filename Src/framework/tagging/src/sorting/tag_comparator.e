@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Summary description for {TAG_COMPARATOR}."
 	author: ""
 	date: "$Date$"

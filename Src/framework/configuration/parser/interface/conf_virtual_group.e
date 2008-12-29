@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			Virtual group like a library or an assembly that only provides access to classes in another group.
 			Virtual groups also allow renamings/prefixing of the classes they give access to.
@@ -19,7 +19,7 @@ feature -- Access, stored in configuration file
 	renaming: EQUALITY_HASH_TABLE [STRING, STRING]
 			-- Mapping of renamed classes from the old name to the new name.
 
-	renaming_32: EQUALITY_HASH_TABLE [STRING_32, STRING_32] is
+	renaming_32: EQUALITY_HASH_TABLE [STRING_32, STRING_32]
 			-- Same as `renaming' but with STRING_32.
 		local
 			l_renaming: like renaming
@@ -43,7 +43,7 @@ feature -- Access, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	set_name_prefix (a_name_prefix: like name_prefix) is
+	set_name_prefix (a_name_prefix: like name_prefix)
 			-- Set `name_prefix' to `a_name_prefix'.
 		do
 			name_prefix := a_name_prefix
@@ -54,7 +54,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			name_prefix_set: name_prefix = a_name_prefix
 		end
 
-	set_renaming (a_renaming: like renaming) is
+	set_renaming (a_renaming: like renaming)
 			-- Set `renaming' to `a_renaming'.
 		do
 			renaming := a_renaming
@@ -62,7 +62,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			renaming_set: renaming = a_renaming
 		end
 
-	set_renaming_32 (a_renaming_32: like renaming_32) is
+	set_renaming_32 (a_renaming_32: like renaming_32)
 			-- Set `renaming_32' to `a_renaming_32'.
 		do
 			if a_renaming_32 = Void then
@@ -80,7 +80,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			end
 		end
 
-	add_renaming (an_old_name, a_new_name: STRING) is
+	add_renaming (an_old_name, a_new_name: STRING)
 			-- Add a renaming.
 		require
 			an_old_name_ok: an_old_name /= Void and then not an_old_name.is_empty
@@ -99,7 +99,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 invariant
 	name_prefix_upper: name_prefix /= Void implies name_prefix.is_equal (name_prefix.as_upper)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

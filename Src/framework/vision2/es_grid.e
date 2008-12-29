@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that represents a enhanced GRID"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -41,7 +41,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 		do
 			Precursor {EV_GRID}
 
@@ -77,12 +77,12 @@ feature {NONE} -- Initialization
 				end)
 		end
 
-	color_separator: EV_COLOR is
+	color_separator: EV_COLOR
 		once
 			create Result.make_with_8_bit_rgb (210, 210, 210)
 		end
 
-	color_tree_node_connector: EV_COLOR is
+	color_tree_node_connector: EV_COLOR
 		once
 			create Result.make_with_8_bit_rgb (0, 0, 0)
 		end
@@ -111,7 +111,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	enable_last_column_use_all_width is
+	enable_last_column_use_all_width
 			-- Enables last column with to be automatically adjust to fit the viewable width of the grid
 		do
 			last_column_use_all_width_enabled := True
@@ -121,7 +121,7 @@ feature -- Status setting
 			not_use_auto_size_best_fit: not use_auto_size_best_fit
 		end
 
-	disable_last_column_use_all_width is
+	disable_last_column_use_all_width
 			-- Disables last column with to be automatically adjust to fit the viewable width of the grid
 		do
 			last_column_use_all_width_enabled := False
@@ -161,7 +161,7 @@ feature -- properties
 
 	resizing_behavior: ES_GRID_RESIZING_BEHAVIOR
 
-	selected_rows_function: FUNCTION [ANY, TUPLE, LIST [EV_GRID_ROW]] is
+	selected_rows_function: FUNCTION [ANY, TUPLE, LIST [EV_GRID_ROW]]
 			-- Selected rows.
 			-- Use `selected_rows' by default.
 		do
@@ -179,46 +179,46 @@ feature -- properties
 
 feature -- Change
 
-	disable_resize_column (a_column: INTEGER) is
+	disable_resize_column (a_column: INTEGER)
 			-- Disable resize for `a_column'.
 		do
 			resizing_behavior.disable_resize_on_column (a_column)
 		end
 
-	enable_resize_column (a_column: INTEGER) is
+	enable_resize_column (a_column: INTEGER)
 			-- Enable resize for `a_column'.
 		do
 			resizing_behavior.enable_resize_on_column (a_column)
 		end
 
-	enable_border is
+	enable_border
 			-- enabled the cell's borders
 		do
 			set_border_enabled (True)
 		end
 
-	disable_border is
+	disable_border
 			-- enabled the cell's borders
 		do
 			set_border_enabled (False)
 		end
 
-	set_mouse_wheel_scroll_size (i: INTEGER) is
+	set_mouse_wheel_scroll_size (i: INTEGER)
 		do
 			scrolling_behavior.set_mouse_wheel_scroll_size (i)
 		end
 
-	set_mouse_wheel_scroll_full_page (b: BOOLEAN) is
+	set_mouse_wheel_scroll_full_page (b: BOOLEAN)
 		do
 			scrolling_behavior.set_mouse_wheel_scroll_full_page (b)
 		end
 
-	set_scrolling_common_line_count (i: INTEGER) is
+	set_scrolling_common_line_count (i: INTEGER)
 		do
 			scrolling_behavior.set_scrolling_common_line_count (i)
 		end
 
-	set_selected_rows_function (a_function: like selected_rows_function) is
+	set_selected_rows_function (a_function: like selected_rows_function)
 			-- Set `selected_rows_function' with `a_function'.
 		do
 			selected_rows_function_internal := a_function
@@ -226,7 +226,7 @@ feature -- Change
 			selected_rows_function_set: selected_rows_function = a_function
 		end
 
-	enable_default_tree_navigation_behavior (a_expand, a_expand_recursive, a_collapse, a_collapse_recursive: BOOLEAN) is
+	enable_default_tree_navigation_behavior (a_expand, a_expand_recursive, a_collapse, a_collapse_recursive: BOOLEAN)
 			-- Enable default tree navigation behavior.
 			-- `a_expand' indicates if expanding a node should be enabled.
 			-- `a_expand_recursive' indicates if expanding a node recursively should be enabled.
@@ -261,7 +261,7 @@ feature -- Change
 
 feature {NONE} -- Grid Events
 
-	on_key_pressed (k: EV_KEY) is
+	on_key_pressed (k: EV_KEY)
 			-- Action to be performed when `k' is pressed in Current.
 		local
 			l_ev_application: like ev_application
@@ -305,7 +305,7 @@ feature {NONE} -- Grid Events
 			end
 		end
 
-	on_header_item_clicked (hi: EV_HEADER_ITEM; ax, ay, abutton: INTEGER) is
+	on_header_item_clicked (hi: EV_HEADER_ITEM; ax, ay, abutton: INTEGER)
 		local
 			m: EV_MENU
 			col: EV_GRID_COLUMN
@@ -327,7 +327,7 @@ feature {NONE} -- Grid Events
 			end
 		end
 
-	on_header_auto_width_resize is
+	on_header_auto_width_resize
 		local
 			div_index: INTEGER
 			col: EV_GRID_COLUMN
@@ -342,7 +342,7 @@ feature {NONE} -- Grid Events
 
 feature -- Resizing
 
-	resize_column_to_content (col: EV_GRID_COLUMN; include_header_text, only_visible_part: BOOLEAN) is
+	resize_column_to_content (col: EV_GRID_COLUMN; include_header_text, only_visible_part: BOOLEAN)
 		require
 			col_not_void: col /= Void
 			grid_not_empty: row_count > 0
@@ -371,7 +371,7 @@ feature -- Resizing
 			end
 		end
 
-	safe_resize_column_to_content (col: EV_GRID_COLUMN; include_header_text, only_visible_part: BOOLEAN) is
+	safe_resize_column_to_content (col: EV_GRID_COLUMN; include_header_text, only_visible_part: BOOLEAN)
 			-- similar to resize_column_to_content but check input first
 		do
 			if col /= Void and row_count > 0 then
@@ -381,7 +381,7 @@ feature -- Resizing
 
 feature -- Header menu
 
-	header_menu_on_column (col: EV_GRID_COLUMN): EV_MENU is
+	header_menu_on_column (col: EV_GRID_COLUMN): EV_MENU
 			-- Menu related to `col'.
 		local
 			mi: EV_MENU_ITEM
@@ -434,7 +434,7 @@ feature -- Header menu
 			end
 		end
 
-	grid_menu: EV_MENU is
+	grid_menu: EV_MENU
 			-- Menu related to current grid.
 		local
 			sm: EV_MENU
@@ -479,7 +479,7 @@ feature -- Header menu
 
 feature {NONE} -- Borders drawing
 
-	set_border_enabled (b: BOOLEAN) is
+	set_border_enabled (b: BOOLEAN)
 		do
 			if b /= border_enabled then
 				border_enabled := B
@@ -493,7 +493,7 @@ feature {NONE} -- Borders drawing
 			end
 		end
 
-	on_draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
+	on_draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER)
 		local
 			current_column_width, current_row_height: INTEGER
 			all_remaining_columns_minimized: BOOLEAN
@@ -519,7 +519,7 @@ feature {NONE} -- Borders drawing
 			drawable.draw_segment (0, current_row_height - 1, current_column_width, current_row_height - 1)
 		end
 
-	invalidate_for_border (header_item: EV_HEADER_ITEM) is
+	invalidate_for_border (header_item: EV_HEADER_ITEM)
 			-- resized that has a width greater than 0 as the column border must be updated
 			-- in this column.
 			-- (export status {NONE})
@@ -545,7 +545,7 @@ feature {NONE} -- Borders drawing
 			end
 		end
 
-	last_width_of_header_during_resize: INTEGER is
+	last_width_of_header_during_resize: INTEGER
 			-- The last width of the header item that is currently being
 			-- resized. Used to determine if we must refresh the column to
 			-- the left of the current one as it could cause the border to
@@ -562,7 +562,7 @@ feature {NONE} -- Borders drawing
 
 feature -- column resizing access
 
-	set_auto_resizing_column (c: INTEGER; auto: BOOLEAN) is
+	set_auto_resizing_column (c: INTEGER; auto: BOOLEAN)
 		do
 			if column_has_auto_resizing (c) then
 				if not auto then
@@ -575,7 +575,7 @@ feature -- column resizing access
 			end
 		end
 
-	request_columns_auto_resizing is
+	request_columns_auto_resizing
 		do
 			if not auto_resized_columns.is_empty then
 				delayed_columns_auto_resizing.request_call
@@ -584,7 +584,7 @@ feature -- column resizing access
 
 feature {NONE} -- column resizing impl
 
-	ensure_auto_size_best_fit is
+	ensure_auto_size_best_fit
 			-- Automatically resized a selected column to fit the grid's viewable area
 		local
 			l_index: INTEGER
@@ -656,7 +656,7 @@ feature {NONE} -- column resizing impl
 			end
 		end
 
-	ensure_last_column_use_all_width is
+	ensure_last_column_use_all_width
 			-- Ensures the last column width fits the containing grid.
 		local
 			c: INTEGER
@@ -711,7 +711,7 @@ feature {NONE} -- column resizing impl
 
 	delayed_columns_auto_resizing: ES_DELAYED_ACTION
 
-	build_delayed_columns_auto_resizing is
+	build_delayed_columns_auto_resizing
 		do
 			if delayed_columns_auto_resizing = Void then
 				create delayed_columns_auto_resizing.make (
@@ -723,7 +723,7 @@ feature {NONE} -- column resizing impl
 
 	delayed_last_column_auto_resizing: ES_DELAYED_ACTION
 
-	build_delayed_last_column_auto_resizing is
+	build_delayed_last_column_auto_resizing
 		do
 			if delayed_last_column_auto_resizing = Void then
 				create delayed_last_column_auto_resizing.make (
@@ -740,15 +740,15 @@ feature {NONE} -- column resizing impl
 			end
 		end
 
-	Additional_pixels_for_column_width: INTEGER is 5
+	Additional_pixels_for_column_width: INTEGER = 5
 			-- Additional width to add the column's content width during resizing
 			-- for better reading.
 
-	Additional_pixels_for_header_item_width: INTEGER is 20
+	Additional_pixels_for_header_item_width: INTEGER = 20
 			-- Additional width to add the header item's content width during resizing
 			-- for better reading.
 
-	process_columns_auto_resizing is
+	process_columns_auto_resizing
 		local
 			col: EV_GRID_COLUMN
 			c: INTEGER
@@ -785,7 +785,7 @@ feature {NONE} -- column resizing impl
 			end
 		end
 
-	column_has_auto_resizing (c: INTEGER): BOOLEAN is
+	column_has_auto_resizing (c: INTEGER): BOOLEAN
 		do
 			Result := auto_resized_columns.has (c)
 		end
@@ -794,7 +794,7 @@ feature {NONE} -- column resizing impl
 
 feature {NONE} -- Auto Events
 
-	on_resize_events (ax, ay, aw, ah: INTEGER) is
+	on_resize_events (ax, ay, aw, ah: INTEGER)
 		do
 			last_resized_grid_header := Void
 			if not is_destroyed then
@@ -804,17 +804,17 @@ feature {NONE} -- Auto Events
 
 feature -- Grid helpers
 
-	front_new_row: EV_GRID_ROW is
+	front_new_row: EV_GRID_ROW
 		do
 			Result := grid_front_new_row (Current)
 		end
 
-	extended_new_row: EV_GRID_ROW is
+	extended_new_row: EV_GRID_ROW
 		do
 			Result := grid_extended_new_row (Current)
 		end
 
-	extended_new_subrow (a_row: EV_GRID_ROW): EV_GRID_ROW is
+	extended_new_subrow (a_row: EV_GRID_ROW): EV_GRID_ROW
 		require
 			a_row /= Void
 			row_related_to_current: a_row.parent = Current
@@ -822,7 +822,7 @@ feature -- Grid helpers
 			Result := grid_extended_new_subrow (a_row)
 		end
 
-	remove_and_clear_subrows_from (a_row: EV_GRID_ROW) is
+	remove_and_clear_subrows_from (a_row: EV_GRID_ROW)
 		require
 			a_row /= Void
 			row_related_to_current: a_row.parent = Current
@@ -830,7 +830,7 @@ feature -- Grid helpers
 			grid_remove_and_clear_subrows_from (a_row)
 		end
 
-	remove_and_clear_all_rows is
+	remove_and_clear_all_rows
 		require
 			not is_processing_remove_and_clear_all_rows
 		do
@@ -841,7 +841,7 @@ feature -- Grid helpers
 
 	is_processing_remove_and_clear_all_rows: BOOLEAN
 
-	select_all_rows is
+	select_all_rows
 			-- Select all rows from the grid
 		local
 			r: INTEGER
@@ -858,7 +858,7 @@ feature -- Grid helpers
 			end
 		end
 
-	single_selected_row: EV_GRID_ROW is
+	single_selected_row: EV_GRID_ROW
 		require
 			is_single_row_selection_enabled: is_single_row_selection_enabled
 		local
@@ -872,33 +872,33 @@ feature -- Grid helpers
 
 feature -- Delayed cleaning
 
-	delayed_cleaning_exists: BOOLEAN is
+	delayed_cleaning_exists: BOOLEAN
 		do
 			Result := delayed_cleaning /= Void
 		end
 
-	request_delayed_clean is
+	request_delayed_clean
 		require
 			delayed_cleaning_exists
 		do
 			delayed_cleaning.request_call
 		end
 
-	call_delayed_clean is
+	call_delayed_clean
 		require
 			delayed_cleaning_exists
 		do
 			delayed_cleaning.call
 		end
 
-	cancel_delayed_clean is
+	cancel_delayed_clean
 		require
 			delayed_cleaning_exists
 		do
 			delayed_cleaning.cancel_request
 		end
 
-	set_cleaning_delay (v: INTEGER) is
+	set_cleaning_delay (v: INTEGER)
 		require
 			v_positive_or_zero: v >= 0
 		do
@@ -908,7 +908,7 @@ feature -- Delayed cleaning
 			end
 		end
 
-	build_delayed_cleaning is
+	build_delayed_cleaning
 		do
 			if delayed_cleaning = Void then
 				create delayed_cleaning.make (
@@ -920,12 +920,12 @@ feature -- Delayed cleaning
 			end
 		end
 
-	default_clean is
+	default_clean
 		do
 			remove_and_clear_all_rows
 		end
 
-	set_delayed_cleaning_action (v: PROCEDURE [ANY, TUPLE]) is
+	set_delayed_cleaning_action (v: PROCEDURE [ANY, TUPLE])
 		require
 			delayed_cleaning_exists
 		do
@@ -934,7 +934,7 @@ feature -- Delayed cleaning
 
 feature -- Commands
 
-	destroy is
+	destroy
 			-- Destroy underlying native toolkit object.
 			-- Render `Current' unusable.
 		do
@@ -962,7 +962,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Actions
 
-	on_expand_rows (a_recursive: BOOLEAN) is
+	on_expand_rows (a_recursive: BOOLEAN)
 			-- Action to be performed when expanding rows.
 		do
 			if not a_recursive then
@@ -976,7 +976,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_collapse_rows (a_recursive: BOOLEAN) is
+	on_collapse_rows (a_recursive: BOOLEAN)
 			-- Action to be performed when collapsing rows.
 		do
 			if not a_recursive then
@@ -992,7 +992,7 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Tree view behavior
 
-	expand_row (a_row: EV_GRID_ROW; a_recursive: BOOLEAN) is
+	expand_row (a_row: EV_GRID_ROW; a_recursive: BOOLEAN)
 			-- Expand `a_row'.
 			-- If `a_recursive' is True, recursively expand all subrows of `a_row'.
 		require
@@ -1017,7 +1017,7 @@ feature {NONE} -- Tree view behavior
 			end
 		end
 
-	collapse_row (a_row: EV_GRID_ROW; a_recursive: BOOLEAN) is
+	collapse_row (a_row: EV_GRID_ROW; a_recursive: BOOLEAN)
 			-- Collapse `a_row'.
 			-- If `a_recursive' is True, recursively collapse all subrows of `a_row'.
 		require
@@ -1042,7 +1042,7 @@ feature {NONE} -- Tree view behavior
 			end
 		end
 
-	expand_rows (a_recursive: BOOLEAN) is
+	expand_rows (a_recursive: BOOLEAN)
 			-- Expand all rows returned by `selected_rows_function'.
 			-- If `a_recursive' is True, expand those rows recursively.
 		local
@@ -1057,7 +1057,7 @@ feature {NONE} -- Tree view behavior
 			end
 		end
 
-	collapse_rows (a_recursive: BOOLEAN) is
+	collapse_rows (a_recursive: BOOLEAN)
 			-- Collapse all rows returned by `selected_rows_function'.
 			-- If `a_recursive' is True, collapse those rows recursively.
 		local
@@ -1086,7 +1086,7 @@ feature {NONE} -- Tree view behavior
 			end
 		end
 
-	remove_unnecessary_rows (a_rows: LIST [EV_GRID_ROW]) is
+	remove_unnecessary_rows (a_rows: LIST [EV_GRID_ROW])
 			-- Remove unnecessary rows in `a_rows' for recursive expansion or collapsion.
 		require
 			a_rows_attached: a_rows /= Void
@@ -1133,7 +1133,7 @@ feature {NONE} -- Tree view behavior
 			end
 		end
 
-	selected_rows_in_grid: LIST [EV_GRID_ROW] is
+	selected_rows_in_grid: LIST [EV_GRID_ROW]
 			-- Selected rows in Current
 			-- If `is_single_row_selection_enabled' is True, return selected rows.
 			-- If `is_single_item_selection_enabled' is True, return a list of rows in which some items are selected.
@@ -1165,7 +1165,7 @@ feature {NONE} -- Tree view behavior
 invariant
 	selected_rows_agent_attached: selected_rows_function /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

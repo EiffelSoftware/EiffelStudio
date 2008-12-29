@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Captured string object ({STRING_8} or {STRING_32}).
 	]"

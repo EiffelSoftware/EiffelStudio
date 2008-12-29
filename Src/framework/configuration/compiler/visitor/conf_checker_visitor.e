@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Check if renamings, options and visiblities are done on valid classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,7 @@ create
 
 feature -- Visit nodes
 
-	process_group (a_group: CONF_GROUP) is
+	process_group (a_group: CONF_GROUP)
 			-- Visit `a_group'.
 		local
 			l_ren: EQUALITY_HASH_TABLE [STRING, STRING]
@@ -88,7 +88,7 @@ feature -- Visit nodes
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

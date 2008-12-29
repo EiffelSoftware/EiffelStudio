@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Recompute options."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_new_target: CONF_TARGET) is
+	make (a_new_target: CONF_TARGET)
 			-- Create from `a_new_target'.
 		require
 			a_new_target_not_void: a_new_target /= Void
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 
 feature -- Visit nodes
 
-	process_target (a_target: CONF_TARGET) is
+	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		require else
 			new_target_group_equivalent: new_target.is_group_equivalent (a_target)
@@ -84,7 +84,7 @@ feature -- Visit nodes
 			end
 		end
 
-	process_group (a_group: CONF_GROUP) is
+	process_group (a_group: CONF_GROUP)
 			-- Visit `a_group'.
 		local
 			l_cluster, l_cluster_new: CONF_CLUSTER
@@ -118,7 +118,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	process_with_new (an_old_groups, a_new_groups: HASH_TABLE [CONF_GROUP, STRING]) is
+	process_with_new (an_old_groups, a_new_groups: HASH_TABLE [CONF_GROUP, STRING])
 			-- Process `a_old_groups' and set `new_group' to the corresponding group of `a_new_groups'.
 		local
 			l_group: CONF_GROUP
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

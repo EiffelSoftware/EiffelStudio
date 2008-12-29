@@ -1,4 +1,4 @@
-indexing
+note
 	description	: "Abstract description of the body of an Eiffel feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a: like internal_arguments; t: like type; r: like assigner c: like content; c_as: SYMBOL_AS; k_as: LEAF_AS; a_as: KEYWORD_AS; i_as: like indexing_clause) is
+	initialize (a: like internal_arguments; t: like type; r: like assigner c: like content; c_as: SYMBOL_AS; k_as: LEAF_AS; a_as: KEYWORD_AS; i_as: like indexing_clause)
 			-- Create a new BODY AST node.
 		do
 			set_arguments (a)
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- process current element.
 		do
 			v.process_body_as (Current)
@@ -106,7 +106,7 @@ feature -- Roundtrip
 
 feature -- Attributes
 
-	arguments: EIFFEL_LIST [TYPE_DEC_AS] is
+	arguments: EIFFEL_LIST [TYPE_DEC_AS]
 			-- List (of list) of arguments
 		local
 			l_internal_arguments: like internal_arguments
@@ -129,13 +129,13 @@ feature -- Attributes
 	content: CONTENT_AS
 			-- Content of the body: constant or regular body
 
-	as_routine: ROUTINE_AS is
+	as_routine: ROUTINE_AS
 			-- See `content' as an instance of ROUTINE_AS.
 		do
 			Result ?= content
 		end
 
-	as_constant: CONSTANT_AS is
+	as_constant: CONSTANT_AS
 			-- See `content' as an instance of CONSTANT_AS.
 		do
 			Result ?= content
@@ -151,7 +151,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip/Token
 
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	first_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if internal_arguments /= Void then
 				Result := internal_arguments.first_token (a_list)
@@ -172,7 +172,7 @@ feature -- Roundtrip/Token
 			end
 		end
 
-	last_token (a_list: LEAF_AS_LIST): LEAF_AS is
+	last_token (a_list: LEAF_AS_LIST): LEAF_AS
 		do
 			if a_list = Void then
 				if content /= Void then
@@ -208,7 +208,7 @@ feature -- Roundtrip/Token
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (arguments, other.arguments) and
@@ -218,7 +218,7 @@ feature -- Comparison
 
 feature -- Access
 
-	has_instruction (i: INSTRUCTION_AS): BOOLEAN is
+	has_instruction (i: INSTRUCTION_AS): BOOLEAN
 			-- Does this body has instruction `i'?
 		do
 			if content /= Void then
@@ -228,7 +228,7 @@ feature -- Access
 			end
 		end
 
-	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
+	index_of_instruction (i: INSTRUCTION_AS): INTEGER
 			-- Index of `i' in this body.
 			-- Result is `0' not found.
 		do
@@ -241,7 +241,7 @@ feature -- Access
 
 feature -- empty body
 
-	is_empty : BOOLEAN is
+	is_empty : BOOLEAN
 				-- Is body empty?
 		do
 			Result := (content = Void) or else (content.is_empty)
@@ -249,7 +249,7 @@ feature -- empty body
 
 feature -- default rescue
 
-	create_default_rescue (def_resc_name_id: INTEGER) is
+	create_default_rescue (def_resc_name_id: INTEGER)
 				-- Create default rescue if necessary
 		require
 			valid_feature_name_id: def_resc_name_id > 0
@@ -261,25 +261,25 @@ feature -- default rescue
 
 feature -- Type check, byte code and dead code removal
 
-	is_unique: BOOLEAN is
+	is_unique: BOOLEAN
 		do
 			Result := content /= Void and then content.is_unique
 		end
 
-	is_built_in: BOOLEAN is
+	is_built_in: BOOLEAN
 			-- Is current body a built in?
 		do
 			Result := content /= Void and then content.is_built_in
 		end
 
-	is_routine: BOOLEAN is
+	is_routine: BOOLEAN
 			-- Is current body a routine?
 		do
 				-- If not a constant then current body is a routine.
 			Result := content /= Void and then not content.is_constant
 		end
 
-	is_constant: BOOLEAN is
+	is_constant: BOOLEAN
 			-- Is current body a constant?
 		do
 			Result := content /= Void and then content.is_constant
@@ -287,7 +287,7 @@ feature -- Type check, byte code and dead code removal
 
 feature -- New feature description
 
-	is_body_equiv (other: like Current): BOOLEAN is
+	is_body_equiv (other: like Current): BOOLEAN
 			-- Is the body of current feature equivalent to
 			-- body of `other' ?
 		do
@@ -307,7 +307,7 @@ feature -- New feature description
 			end
 		end
 
-	is_assertion_equiv (other: like Current): BOOLEAN is
+	is_assertion_equiv (other: like Current): BOOLEAN
 			-- Is the assertion of Current feature equivalent to
 			-- assertion of `other' ?
 			--|Note: This test is valid since assertions are generated
@@ -338,7 +338,7 @@ feature -- New feature description
 
 feature {BODY_AS, FEATURE_AS} -- Replication
 
-	set_arguments (a: like internal_arguments) is
+	set_arguments (a: like internal_arguments)
 			-- Set `internal_arguments' with `a'.
 		do
 			internal_arguments := a
@@ -346,12 +346,12 @@ feature {BODY_AS, FEATURE_AS} -- Replication
 			internal_arguments_set: internal_arguments = a
 		end
 
-	set_type (t: like type) is
+	set_type (t: like type)
 		do
 			type := t
 		end
 
-	set_content (c: like content) is
+	set_content (c: like content)
 		do
 			content := c
 		end
@@ -360,7 +360,7 @@ invariant
 	arguments_correct: (internal_arguments /= Void implies arguments = internal_arguments.meaningful_content) and
 	   				   (internal_arguments = Void implies arguments = Void)
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

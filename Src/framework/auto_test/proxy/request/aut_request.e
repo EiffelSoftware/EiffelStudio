@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Abstract ancestor to all interpreter requests"
@@ -12,7 +12,7 @@ deferred class AUT_REQUEST
 
 feature {NONE} -- Initialization
 
-	make (a_system: like system) is
+	make (a_system: like system)
 			-- Create new request.
 		require
 			a_system_not_void: a_system /= Void
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_response: BOOLEAN is
+	has_response: BOOLEAN
 			-- Does this request have a corresponding response
 			-- from the interpreter?
 		do
@@ -33,7 +33,7 @@ feature -- Status report
 			definition: Result = (response /= Void)
 		end
 
-	is_type_request: BOOLEAN is
+	is_type_request: BOOLEAN
 			-- Is Current a type request?
 		do
 		end
@@ -49,7 +49,7 @@ feature -- Access
 
 feature -- Change
 
-	set_response (a_response: like response) is
+	set_response (a_response: like response)
 			-- Set `response' to `a_response'.
 		require
 			a_response_not_void: a_response /= Void
@@ -59,7 +59,7 @@ feature -- Change
 			response_set: response = a_response
 		end
 
-	remove_response is
+	remove_response
 			-- Set `response' to Void.
 		do
 			response := Void
@@ -69,7 +69,7 @@ feature -- Change
 
 feature -- Processing
 
-	process (a_processor: AUT_REQUEST_PROCESSOR) is
+	process (a_processor: AUT_REQUEST_PROCESSOR)
 			-- Process current request.
 		require
 			a_processor_not_void: a_processor /= Void
@@ -78,7 +78,7 @@ feature -- Processing
 
 feature -- Duplication
 
-	fresh_twin: like Current is
+	fresh_twin: like Current
 			-- New request equal to `Current', but no response.
 			-- Ready to be used for testing again.
 		do

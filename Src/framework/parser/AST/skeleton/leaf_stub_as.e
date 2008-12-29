@@ -1,4 +1,4 @@
-indexing
+note
 	description: "A Stub representing original text for terminal tokens in a match list"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature{NONE} -- Implementation
 
-	make (a_text: STRING; l, c, p, n: INTEGER) is
+	make (a_text: STRING; l, c, p, n: INTEGER)
 			--
 		require
 			a_text_not_void: a_text /= Void
@@ -37,7 +37,7 @@ feature{NONE} -- Implementation
 
 feature
 
-	literal_text (a_list: LEAF_AS_LIST): STRING is
+	literal_text (a_list: LEAF_AS_LIST): STRING
 			-- Literal text of current AST node
 		require else
 			True
@@ -47,18 +47,18 @@ feature
 
 feature
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 		do
 			Result := literal_text (Void).is_equal (other.literal_text (Void))
 		end
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- Visitor feature.
 		do
 			v.process_leaf_stub_as (Current)
 		end
 
-	number_of_breakpoint_slots: INTEGER is
+	number_of_breakpoint_slots: INTEGER
 		do
 		end
 
@@ -70,7 +70,7 @@ feature{NONE} -- Implementation
 invariant
 	literal_text_not_void: literal_text (Void) /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

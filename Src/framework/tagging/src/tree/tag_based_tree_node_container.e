@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Objects that represent a node in {TAG_BASED_TREE} that can have child nodes.
 	]"
@@ -191,7 +191,7 @@ feature -- Query
 
 feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 
-	insert_tag_for_item (a_tag: !STRING; a_item: !G) is
+	insert_tag_for_item (a_tag: !STRING; a_item: !G)
 			-- Recursively add tag for given item to subtree represented by `Current'.
 			--
 			-- `a_tag': Suffix of original tag that has `tag' as prefix
@@ -233,7 +233,7 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 			inserted: (a_tag.is_empty and is_evaluated) implies cached_items.has (a_item)
 		end
 
-	remove_tag_for_item (a_tag: !STRING; a_item: !G) is
+	remove_tag_for_item (a_tag: !STRING; a_item: !G)
 			-- Recursively remove tag for given item from subtree represented by `Current'.
 			--
 			-- `a_tag': Suffix of original tag that has `tag' as prefix
@@ -277,7 +277,7 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 			item_removed: (a_tag.is_empty and is_evaluated) implies not cached_items.has (a_item)
 		end
 
-	add_item (a_item: !G) is
+	add_item (a_item: !G)
 			-- Add item to `items'
 		require
 			usable: is_interface_usable
@@ -302,7 +302,7 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 			a_item_removed: not items.has (a_item)
 		end
 
-	propagate_item_change (a_tag: !STRING; a_item: !G) is
+	propagate_item_change (a_tag: !STRING; a_item: !G)
 			-- Notify nodes representing tag that an item has changed.
 		require
 			usable: is_interface_usable
@@ -320,7 +320,7 @@ feature {TAG_BASED_TREE_NODE_CONTAINER} -- Element change
 
 feature {NONE} -- Element change
 
-	add_child (a_token: !STRING) is
+	add_child (a_token: !STRING)
 			-- Add child to node in `Current'
 		require
 			usable: is_interface_usable
@@ -338,7 +338,7 @@ feature {NONE} -- Element change
 			child_empty: child_for_token (a_token).is_empty
 		end
 
-	remove_child (a_token: !STRING) is
+	remove_child (a_token: !STRING)
 			-- Remove child for `a_token'
 		require
 			usable: is_interface_usable
@@ -353,7 +353,7 @@ feature {NONE} -- Element change
 
 feature {TAG_BASED_TREE} -- Implementation
 
-	compute_descendants is
+	compute_descendants
 			-- Use tags in `descending_tags' to compute children.
 		require
 			usable: is_interface_usable

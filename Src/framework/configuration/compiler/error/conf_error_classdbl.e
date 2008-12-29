@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error for two classes with same name in same cluster."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class, a_file1, a_file2, a_config: STRING) is
+	make (a_class, a_file1, a_file2, a_config: STRING)
 			-- Create.
 		do
 			text := "Duplicate class: "+a_class+"%N"+a_file1+"%N"+a_file2+"%NConfiguration: "+a_config
@@ -27,7 +27,7 @@ feature -- Access
 	text: STRING;
 		-- The error message.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ inherit
 
 feature {ICOR_EXPORTER} -- Access
 
-	i_th (i: INTEGER): G is
+	i_th (i: INTEGER): G
 			-- i_th item of the enum items.
 		require
 			valid_index: i > 0 and i <= get_count
@@ -31,7 +31,7 @@ feature {ICOR_EXPORTER} -- Access
 			Result := arr.item (1)
 		end
 
-	next (a_celt: INTEGER): ARRAY [G] is
+	next (a_celt: INTEGER): ARRAY [G]
 			-- Array of `a_celt' fetched items.
 			-- index start at '1'
 		require
@@ -75,13 +75,13 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {NONE} -- Implementation
 
-	icor_object_made_by_pointer (a_p: POINTER): G is
+	icor_object_made_by_pointer (a_p: POINTER): G
 			-- 
 		do
 			create Result.make_by_pointer (a_p)
 		end
 		
-	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: TYPED_POINTER [INTEGER]): INTEGER is
+	call_cpp_next (obj: POINTER; a_celt: INTEGER; a_p: POINTER; a_pceltfetched: TYPED_POINTER [INTEGER]): INTEGER
 		deferred
 		end
 
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 --			"Next"
 --		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Lace parser skeletons"
 	legal: "See notice at end of class."
@@ -37,7 +37,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new Lace parser.
 		do
 			make_lace_scanner
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset Parser before parsing next input source.
 			-- (This routine can be called in wrap before scanning
 			-- another input buffer.)
@@ -56,7 +56,7 @@ feature -- Initialization
 
 feature {NONE} -- Parsing
 
-	parse_lace (a_file: KL_BINARY_INPUT_FILE) is
+	parse_lace (a_file: KL_BINARY_INPUT_FILE)
 			-- Parse Lace class text from `a_file'.
 			-- Make result available in `ast'.
 			-- An exception is raised if a syntax error is found.
@@ -74,7 +74,7 @@ feature {NONE} -- Parsing
 
 feature -- Removal
 
-	wipe_out is
+	wipe_out
 			-- Release unused objects to garbage collector.
 		do
 			ast := Void
@@ -83,7 +83,7 @@ feature -- Removal
 			ast_void: ast = Void
 		end
 
-	clear_all is
+	clear_all
 			-- Clear temporary objects so that they can be collected
 			-- by the garbage collector. (This routine is called by
 			-- `parse' before exiting.)
@@ -92,7 +92,7 @@ feature -- Removal
 
 feature {NONE} -- Keywords
 
-	All_keyword: OPT_VAL_SD is
+	All_keyword: OPT_VAL_SD
 			-- ALL keyword AST node
 		once
 			create Result.make_all
@@ -100,7 +100,7 @@ feature {NONE} -- Keywords
 			all_keyword_void: Result /= Void
 		end
 
-	Assertion_keyword: ASSERTION_SD is
+	Assertion_keyword: ASSERTION_SD
 			-- ASSERTION keyword AST node
 		once
 			create Result
@@ -108,7 +108,7 @@ feature {NONE} -- Keywords
 			assertion_keyword_void: Result /= Void
 		end
 
-	Check_keyword: OPT_VAL_SD is
+	Check_keyword: OPT_VAL_SD
 			-- CHECK keyword AST node
 		once
 			create Result.make_check
@@ -116,7 +116,7 @@ feature {NONE} -- Keywords
 			check_keyword_not_void: Result /= Void
 		end
 
-	Debug_keyword: DEBUG_SD is
+	Debug_keyword: DEBUG_SD
 			-- DEBUG keyword AST node
 		once
 				-- Create an enabled DEBUG_SD node
@@ -125,7 +125,7 @@ feature {NONE} -- Keywords
 			debug_keyword_void: Result /= Void
 		end
 
-	Disabled_debug_keyword: DEBUG_SD is
+	Disabled_debug_keyword: DEBUG_SD
 			-- DISABLED_DEBUG keyword AST node
 		once
 				-- Create an enabled DEBUG_SD node
@@ -134,7 +134,7 @@ feature {NONE} -- Keywords
 			debug_keyword_void: Result /= Void
 		end
 
-	Ensure_keyword: OPT_VAL_SD is
+	Ensure_keyword: OPT_VAL_SD
 			-- ENSURE keyword AST node
 		once
 			create Result.make_ensure
@@ -142,7 +142,7 @@ feature {NONE} -- Keywords
 			ensure_keyword_not_void: Result /= Void
 		end
 
-	Invariant_keyword: OPT_VAL_SD is
+	Invariant_keyword: OPT_VAL_SD
 			-- INVARIANT keyword AST node
 		once
 			create Result.make_invariant
@@ -150,7 +150,7 @@ feature {NONE} -- Keywords
 			invariant_keyword_not_void: Result /= Void
 		end
 
-	Loop_keyword: OPT_VAL_SD is
+	Loop_keyword: OPT_VAL_SD
 			-- LOOP keyword AST node
 		once
 			create Result.make_loop
@@ -158,7 +158,7 @@ feature {NONE} -- Keywords
 			loop_keyword_not_void: Result /= Void
 		end
 
-	No_keyword: OPT_VAL_SD is
+	No_keyword: OPT_VAL_SD
 			-- NO keyword AST node
 		once
 			create Result.make_no
@@ -166,7 +166,7 @@ feature {NONE} -- Keywords
 			no_keyword_not_void: Result /= Void
 		end
 
-	Optimize_keyword: OPTIMIZE_SD is
+	Optimize_keyword: OPTIMIZE_SD
 			-- OPTIMIZE keyword AST node
 		once
 			create Result
@@ -174,7 +174,7 @@ feature {NONE} -- Keywords
 			optimize_keyword_void: Result /= Void
 		end
 
-	Precompiled_keyword: PRECOMPILED_SD is
+	Precompiled_keyword: PRECOMPILED_SD
 			-- PRECOMPILED keyword AST node
 		once
 			create Result
@@ -182,7 +182,7 @@ feature {NONE} -- Keywords
 			precompiled_keyword_void: Result /= Void
 		end
 
-	Require_keyword: OPT_VAL_SD is
+	Require_keyword: OPT_VAL_SD
 			-- REQUIRE keyword AST node
 		once
 			create Result.make_require
@@ -190,7 +190,7 @@ feature {NONE} -- Keywords
 			require_keyword_not_void: Result /= Void
 		end
 
-	Trace_keyword: TRACE_SD is
+	Trace_keyword: TRACE_SD
 			-- TRACE keyword AST node
 		once
 			create Result
@@ -198,7 +198,7 @@ feature {NONE} -- Keywords
 			trace_keyword_void: Result /= Void
 		end
 
-	Yes_keyword: OPT_VAL_SD is
+	Yes_keyword: OPT_VAL_SD
 			-- YES keyword AST node
 		once
 			create Result.make_yes
@@ -208,7 +208,7 @@ feature {NONE} -- Keywords
 
 feature {NONE} -- Implementation
 
-	File_buffer: YY_FILE_BUFFER is
+	File_buffer: YY_FILE_BUFFER
 			-- Parser input file buffer
 		once
 			create Result.make_with_size ((create {KL_STANDARD_FILES}).input, 50000)
@@ -218,14 +218,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Error handling
 
-	report_error (a_message: STRING) is
+	report_error (a_message: STRING)
 			-- A syntax error has been detected.
 			-- Print error message.
 		do
 			set_last_syntax_error (a_message + " (line "+line.out+", column "+column.out+")")
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

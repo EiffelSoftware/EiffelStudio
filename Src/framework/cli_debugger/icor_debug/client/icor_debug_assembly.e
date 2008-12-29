@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		]"
 	legal: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 	
 feature {ICOR_EXPORTER} -- Access
 
-	get_process: ICOR_DEBUG_PROCESS is
+	get_process: ICOR_DEBUG_PROCESS
 			-- Reference to the ICorDebugProcess
 		local
 			p: POINTER
@@ -30,7 +30,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_app_domain: ICOR_DEBUG_APP_DOMAIN is
+	get_app_domain: ICOR_DEBUG_APP_DOMAIN
 			-- Reference to the ICorDebugAppDomain
 		local
 			p: POINTER
@@ -43,7 +43,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	enumerate_modules: ICOR_DEBUG_MODULE_ENUM is
+	enumerate_modules: ICOR_DEBUG_MODULE_ENUM
 		local
 			p: POINTER
 		do
@@ -55,7 +55,7 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-	get_name: STRING is
+	get_name: STRING
 			-- GetName returns the name of the assembly
 		local
 			p_cchname: NATURAL_32
@@ -73,7 +73,7 @@ feature {ICOR_EXPORTER} -- Access
 
 feature {ICOR_EXPORTER} -- Implementation
 
-	frozen cpp_get_process (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_get_process (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugAssembly signature(ICorDebugProcess**): EIF_INTEGER 
@@ -83,7 +83,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetProcess"
 		end		
 
-	frozen cpp_get_app_domain (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_get_app_domain (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugAssembly signature(ICorDebugAppDomain**): EIF_INTEGER 
@@ -93,7 +93,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetAppDomain"
 		end		
 
-	frozen cpp_enumerate_modules (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER is
+	frozen cpp_enumerate_modules (obj: POINTER; a_p: TYPED_POINTER [POINTER]): INTEGER
 		external
 			"[
 				C++ ICorDebugAssembly signature(ICorDebugModuleEnum **): EIF_INTEGER 
@@ -103,7 +103,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"EnumerateModules"
 		end
 
-	frozen cpp_get_name (obj: POINTER; a_cchname: NATURAL_32; a_pcchname: TYPED_POINTER [NATURAL_32]; a_szname: POINTER): INTEGER is
+	frozen cpp_get_name (obj: POINTER; a_cchname: NATURAL_32; a_pcchname: TYPED_POINTER [NATURAL_32]; a_szname: POINTER): INTEGER
 		external
 			"[
 				C++ ICorDebugAssembly signature(ULONG32, ULONG32 *, WCHAR*): EIF_INTEGER 
@@ -113,7 +113,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			"GetName"
 		end		
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Light encapsulation of COM basics for Unmanaged MetaData and Debugger APIs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,7 @@ class
 
 feature -- High level
 
-	initialize_com is
+	initialize_com
 			-- Call `com_initialize' only once as required
 			-- per Windows documentation.
 		local
@@ -24,7 +24,7 @@ feature -- High level
 
 feature -- Disposal
 
-	frozen release (a_pointer: POINTER): INTEGER is
+	frozen release (a_pointer: POINTER): INTEGER
 			-- Release COM objects represented by `a_pointer'.
 		external
 			"C++ IUnknown use %"unknwn.h%""
@@ -34,7 +34,7 @@ feature -- Disposal
 
 feature -- AddRef
 
-	frozen add_ref (a_pointer: POINTER): INTEGER is
+	frozen add_ref (a_pointer: POINTER): INTEGER
 			-- AddRef COM objects represented by `a_pointer'.
 		external
 			"C++ IUnknown use %"unknwn.h%""
@@ -44,56 +44,56 @@ feature -- AddRef
 
 feature {NONE} -- Initialization
 
-	frozen com_uninitialize is
+	frozen com_uninitialize
 		external
 			"C inline use %"unknwn.h%""
 		alias
 			"CoUninitialize()"
 		end
 
-	frozen com_initialize: INTEGER is
+	frozen com_initialize: INTEGER
 		external
 			"C inline use %"unknwn.h%""
 		alias
 			"CoInitialize(NULL)"
 		end
 
-	frozen com_initialize_multithreaded: INTEGER is
+	frozen com_initialize_multithreaded: INTEGER
 		external
 			"C++ inline use %"objbase.h%""
 		alias
 			"CoInitializeEx(NULL, COINIT_MULTITHREADED)"
 		end
 
-	frozen com_initialize_apartmentthreaded: INTEGER is
+	frozen com_initialize_apartmentthreaded: INTEGER
 		external
 			"C++ inline use %"objbase.h%""
 		alias
 			"CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)"
 		end
 
-	frozen com_S_OK: INTEGER is
+	frozen com_S_OK: INTEGER
 		external
 			"C macro use %"objbase.h%""
 		alias
 			"S_OK"
 		end
 
-	frozen com_S_FALSE: INTEGER is
+	frozen com_S_FALSE: INTEGER
 		external
 			"C macro use %"unknwn.h%""
 		alias
 			"S_FALSE"
 		end
 
-	frozen com_RPC_E_CHANGED_MODE: INTEGER is
+	frozen com_RPC_E_CHANGED_MODE: INTEGER
 		external
 			"C macro use %"unknwn.h%""
 		alias
 			"RPC_E_CHANGED_MODE"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base class for wrapping a dynamic library API.
 	]"
@@ -146,7 +146,7 @@ feature {DYNAMIC_SHARED_API} -- Externals
 invariant
 	not_module_handle_is_null: is_interface_usable implies module_handle /= default_pointer
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

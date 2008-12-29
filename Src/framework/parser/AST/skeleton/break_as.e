@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents a break AST node"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (a_text: STRING; l, c, p, s: INTEGER) is
+	make (a_text: STRING; l, c, p, s: INTEGER)
 			-- Create an comment object with `a_text' as literal text of this comment in source code.
 			-- `l', `c', `p', `s' are positions. See `make_with_location' for more information.
 		require
@@ -33,20 +33,20 @@ feature -- Initialization
 
 feature -- Access
 
-	number_of_breakpoint_slots: INTEGER is
+	number_of_breakpoint_slots: INTEGER
 		do
 		end
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 		do
 			v.process_break_as (Current)
 		end
 
 feature -- Separator
 
-	is_separator: BOOLEAN is
+	is_separator: BOOLEAN
 			-- Is current leaf AST node a separator (break or semicolon)?
 		do
 			Result := True
@@ -54,7 +54,7 @@ feature -- Separator
 
 feature -- Text
 
-	literal_text (a_list: LEAF_AS_LIST): STRING is
+	literal_text (a_list: LEAF_AS_LIST): STRING
 			-- Literal text of current AST node
 		require else
 			True
@@ -64,13 +64,13 @@ feature -- Text
 
 feature -- Comment extraction
 
-	has_comment: BOOLEAN is
+	has_comment: BOOLEAN
 			-- Doese current node has comment?
 		do
 			Result := internal_text.index_of ('-', 1) > 0
 		end
 
-	extract_comment: EIFFEL_COMMENTS is
+	extract_comment: EIFFEL_COMMENTS
 			-- Extract comment lines in current.
 		local
 			l, c, p, n: INTEGER
@@ -139,14 +139,14 @@ feature -- Comment extraction
 
 feature -- Comparison
 
-	is_equivalent (other: like Current): BOOLEAN is
+	is_equivalent (other: like Current): BOOLEAN
 		do
 			Result := text (Void).is_equal (other.text (Void))
 		end
 
 feature{NONE} -- Implementation
 
-	set_internal_text (s: STRING) is
+	set_internal_text (s: STRING)
 			-- Set `internal_text' with `s'.
 		do
 			internal_text := s
@@ -160,7 +160,7 @@ feature{NONE} -- Implementation
 invariant
 	internal_text_not_void: internal_text /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

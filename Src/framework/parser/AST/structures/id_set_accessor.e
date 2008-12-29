@@ -1,4 +1,4 @@
-indexing
+note
 	description: "ID_SET accessor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	id_set: ID_SET is
+	id_set: ID_SET
 			-- Access the id set.
 		do
 			Result := Current
@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Update
 
-	set_id_set (an_id_set: ID_SET) is
+	set_id_set (an_id_set: ID_SET)
 			-- Set the id_set.
 		require
 			an_id_set_not_void: an_id_set /= Void
@@ -34,7 +34,7 @@ feature -- Update
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

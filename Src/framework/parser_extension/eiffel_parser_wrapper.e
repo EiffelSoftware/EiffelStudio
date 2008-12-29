@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 			An Eiffel parser wrapper for optionally contain errors/warnings within a parser. Parsers can be
 			performed with a set of configuration options also.
@@ -162,7 +162,7 @@ feature {NONE} -- Basic operations
 			not_has_error: not has_error
 		end
 
-;indexing
+;note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

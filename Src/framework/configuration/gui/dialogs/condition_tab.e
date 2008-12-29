@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Tab page to edit condition."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -65,7 +65,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_condition: CONF_CONDITION) is
+	make (a_condition: CONF_CONDITION)
 			-- Create with `a_condition'.
 		require
 			a_condition_not_void: a_condition /= Void
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			condition_set: data = a_condition
 		end
 
-	initialize is
+	initialize
 			-- Initialize.
 		local
 			l_label: EV_LABEL
@@ -366,7 +366,7 @@ feature {NONE} -- GUI elements
 
 feature {NONE} -- Actions
 
-	on_platform is
+	on_platform
 			-- Platform value was changed, update data.
 		local
 			l_pfs: LIST [EV_LIST_ITEM]
@@ -395,7 +395,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_dotnet_enabled is
+	on_dotnet_enabled
 			-- enable/disable combo box to choose a value for .NET.
 		do
 			if dotnet_enabled.is_selected then
@@ -407,7 +407,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_multithreaded_enabled is
+	on_multithreaded_enabled
 			-- enable/disable combo box to choose a value for multithreaded.
 		do
 			if multithreaded_enabled.is_selected then
@@ -419,7 +419,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_dynamic_runtime_enabled is
+	on_dynamic_runtime_enabled
 			-- enable/disable combo box to choose a value for dynamic runtime.
 		do
 			if dynamic_runtime_enabled.is_selected then
@@ -431,7 +431,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_build_enabled is
+	on_build_enabled
 			-- enable/disable combo box to choose a value for build.
 		do
 			if build_enabled.is_selected then
@@ -443,14 +443,14 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_build is
+	on_build
 			-- Build value was changed, update data.
 		do
 			data.wipe_out_build
 			data.add_build (get_build (builds.text))
 		end
 
-	on_dotnet is
+	on_dotnet
 			-- Dotnet value was changed, update data.
 		do
 			check
@@ -459,7 +459,7 @@ feature {NONE} -- Actions
 			data.set_dotnet (boolean_value_from_name (dotnet.text))
 		end
 
-	on_multithreaded is
+	on_multithreaded
 			-- Multithreaded value hsas changed, udpate data.
 		do
 			check
@@ -468,7 +468,7 @@ feature {NONE} -- Actions
 			data.set_multithreaded (boolean_value_from_name (multithreaded.text))
 		end
 
-	on_dynamic_runtime is
+	on_dynamic_runtime
 			-- Dynamic_runtime value was changed, update data.
 		do
 			check
@@ -477,7 +477,7 @@ feature {NONE} -- Actions
 			data.set_dynamic_runtime (boolean_value_from_name (dynamic_runtime.text))
 		end
 
-	on_compiler_version is
+	on_compiler_version
 			-- Compiler version was changed.
 		local
 			l_ver: STRING
@@ -505,7 +505,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_msil_clr_version is
+	on_msil_clr_version
 			-- MSIL CLR version was changed.
 		local
 			l_ver: STRING
@@ -533,7 +533,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	update_variable (a_new_key: STRING_GENERAL; an_old_key: STRING_GENERAL) is
+	update_variable (a_new_key: STRING_GENERAL; an_old_key: STRING_GENERAL)
 			-- Update variable name from `an_old_key' to `a_new_key'.
 		require
 			an_old_key_ok: an_old_key /= Void and then data.custom /= Void and then data.custom.has (an_old_key)
@@ -545,7 +545,7 @@ feature {NONE} -- Actions
 			fill_custom
 		end
 
-	update_invert (a_value: STRING_GENERAL; a_key: STRING_GENERAL) is
+	update_invert (a_value: STRING_GENERAL; a_key: STRING_GENERAL)
 			-- Update inversion status of custom condition of `a_key'.
 		require
 			a_key_ok: a_key /= Void and then data.custom /= Void and then data.custom.has (a_key)
@@ -558,7 +558,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	update_value (a_value: STRING_GENERAL; a_key: STRING_GENERAL) is
+	update_value (a_value: STRING_GENERAL; a_key: STRING_GENERAL)
 			-- Update value of custom condition of `a_key'.
 		require
 			a_key_ok: a_key /= Void and then data.custom /= Void and then data.custom.has (a_key)
@@ -571,7 +571,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	add_custom is
+	add_custom
 			-- Add a new custom condition.
 		do
 			if not data.custom.has (conf_interface_names.dial_cond_new_custom) then
@@ -580,7 +580,7 @@ feature {NONE} -- Actions
 			fill_custom
 		end
 
-	remove_custom is
+	remove_custom
 			-- Remove a custom condition.
 		local
 			l_item: TEXT_PROPERTY [STRING_GENERAL]
@@ -597,17 +597,17 @@ feature {NONE} -- Actions
 
 feature {NONE} -- Layout constants
 
-	version_field_width: INTEGER is 100
+	version_field_width: INTEGER = 100
 			-- Width of version fields.
 
 feature {NONE} -- Contract
 
-	is_in_default_state: BOOLEAN is True
+	is_in_default_state: BOOLEAN = True
 			-- Contract.
 
 feature {NONE} -- Implementation
 
-	fill_compiler_version is
+	fill_compiler_version
 			-- Fill fields with the constraints for the compiler version.
 		local
 			l_version: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
@@ -630,7 +630,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_msil_clr_version is
+	fill_msil_clr_version
 			-- Fill fields with the constraints for the msil clr version.
 		local
 			l_version: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
@@ -653,7 +653,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_custom is
+	fill_custom
 			-- Fill custom conditions.
 		local
 			l_cust: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]], STRING_GENERAL]
@@ -705,7 +705,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	boolean_list: ARRAY [STRING_GENERAL] is
+	boolean_list: ARRAY [STRING_GENERAL]
 			-- Array with boolean names
 		do
 			Result := <<conf_interface_names.boolean_true, conf_interface_names.boolean_false>>
@@ -714,7 +714,7 @@ feature {NONE} -- Implementation
 			Result_has_two_value: Result @ 1 /= Void and Result @ 2 /= Void
 		end
 
-	boolean_value_from_name (a_string: STRING_GENERAL): BOOLEAN is
+	boolean_value_from_name (a_string: STRING_GENERAL): BOOLEAN
 			-- Boolean value from translated string.
 		require
 			a_string_not_void: a_string /= Void
@@ -723,7 +723,7 @@ feature {NONE} -- Implementation
 			Result := conf_interface_names.boolean_values.item (a_string)
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

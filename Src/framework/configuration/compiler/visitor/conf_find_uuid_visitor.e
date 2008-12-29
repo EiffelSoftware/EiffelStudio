@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Visitor that looks for libraries with a given UUID.
 	]"
@@ -34,7 +34,7 @@ feature -- Status setting
 
 feature {NONE} -- Query
 
-	is_matching (a_library: !CONF_LIBRARY): BOOLEAN is
+	is_matching (a_library: !CONF_LIBRARY): BOOLEAN
 			-- <Precursor>
 		do
 			if a_library.library_target /= Void then

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Loads a configuration from a file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_factory: like factory) is
+	make (a_factory: like factory)
 			-- Create.
 		require
 			a_factory_not_void: a_factory /= Void
@@ -43,7 +43,7 @@ feature -- Status
 	last_warnings: ARRAYED_LIST [CONF_ERROR]
 			-- The last warning messages.
 
-	last_warning_messages: STRING is
+	last_warning_messages: STRING
 			-- Warning messages as a single string.
 		do
 			if last_warnings /= Void then
@@ -70,7 +70,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	retrieve_configuration (a_file: STRING) is
+	retrieve_configuration (a_file: STRING)
 			-- Retreive the configuration in `a_file' and make it available in `last_system'.
 		require
 			a_file_ok: a_file /= Void
@@ -92,7 +92,7 @@ feature -- Basic operation
 			no_error_implies_last_system_not_void: not is_error implies last_system /= Void
 		end
 
-	retrieve_uuid (a_file: STRING) is
+	retrieve_uuid (a_file: STRING)
 			-- Retrieve the uuid of the configuration in `a_file' and make it available in `last_uuid'.
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 	factory: CONF_PARSE_FACTORY
 			-- Factory to create nodes.
 
-	parse_file (a_file: STRING; a_callback: CONF_LOAD_CALLBACKS) is
+	parse_file (a_file: STRING; a_callback: CONF_LOAD_CALLBACKS)
 			-- Parse `a_file' using `a_callbacks'.
 		require
 			a_file_ok: a_file /= Void
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 invariant
 	factory_not_void: factory /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

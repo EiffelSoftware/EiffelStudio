@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object to get theme drawer of current system"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,7 +22,7 @@ create
 
 feature -- Theme drawer
 
-	theme_drawer: EV_THEME_DRAWER_IMP is
+	theme_drawer: EV_THEME_DRAWER_IMP
 			-- Theme drawer
 		local
 			l_app_imp: EV_APPLICATION_IMP
@@ -34,7 +34,7 @@ feature -- Theme drawer
 			result_attached: Result /= Void
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

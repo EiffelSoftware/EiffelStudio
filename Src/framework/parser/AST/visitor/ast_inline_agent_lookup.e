@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Visitor that looks up an inline agent body in its enclosing feature"
 	author: ""
 	date: "$Date$"
@@ -16,7 +16,7 @@ inherit
 
 feature
 
-	lookup_inline_agent_of_feature (a_body: FEATURE_AS; a_inline_agent_nr: INTEGER): BODY_AS is
+	lookup_inline_agent_of_feature (a_body: FEATURE_AS; a_inline_agent_nr: INTEGER): BODY_AS
 			-- Looks up the ast body of inline-agent with number `a_inline_agent_nr' in the ast body `a_body'
 		require
 			valid_inline_agent_nr: a_inline_agent_nr > 0
@@ -37,7 +37,7 @@ feature
 			Result := found_inline_agent
 		end
 
-	lookup_inline_agent_of_invariant (invariant_as: INVARIANT_AS; a_inline_agent_nr: INTEGER): BODY_AS is
+	lookup_inline_agent_of_invariant (invariant_as: INVARIANT_AS; a_inline_agent_nr: INTEGER): BODY_AS
 			-- Looks up the ast body of inline-agent with number `a_inline_agent_nr' in the ast body of invariant `invariant_as'
 		require
 			valid_inline_agent_nr: a_inline_agent_nr > 0
@@ -63,7 +63,7 @@ feature
 
 		end
 
-	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS) is
+	process_inline_agent_creation_as (l_as: INLINE_AGENT_CREATION_AS)
 			-- Process `l_as'.
 		do
 			distance_from_target := distance_from_target - 1
@@ -74,7 +74,7 @@ feature
 			end
 		end
 
-	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL]) is
+	process_eiffel_list (l_as: EIFFEL_LIST [AST_EIFFEL])
 		local
 			l_cursor: INTEGER
 		do
@@ -95,7 +95,7 @@ feature {NONE}
 	distance_from_target: INTEGER
 	found_inline_agent: BODY_AS;
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

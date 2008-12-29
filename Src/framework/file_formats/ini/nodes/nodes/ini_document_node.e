@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represents a INI document AS root node."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize new document
 		do
 			Precursor {INI_SECTION_CONTAINER_NODE}
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	span: INI_TEXT_SPAN is
+	span: INI_TEXT_SPAN
 			-- Span of abstract syntax node
 		local
 			l_props: like properties
@@ -79,7 +79,7 @@ feature -- Access
 
 feature -- Extension
 
-	extend_property (a_property: INI_PROPERTY_NODE) is
+	extend_property (a_property: INI_PROPERTY_NODE)
 			-- Extends properties with property `a_property'.
 		require
 			a_property_attached: a_property /= Void
@@ -101,7 +101,7 @@ feature -- Extension
 			span_invalidated: internal_span = Void
 		end
 
-	extend_literal (a_id: INI_LITERAL_NODE) is
+	extend_literal (a_id: INI_LITERAL_NODE)
 			-- Extends literals with literal `a_id'.
 		require
 			a_id_attached: a_id /= Void
@@ -123,7 +123,7 @@ feature -- Extension
 			span_invalidated: internal_span = Void
 		end
 
-	extend_section (a_section: INI_SECTION_NODE) is
+	extend_section (a_section: INI_SECTION_NODE)
 			-- Extends sections with section `a_section'.
 		do
 			Precursor {INI_SECTION_CONTAINER_NODE} (a_section)
@@ -134,7 +134,7 @@ feature -- Extension
 
 feature -- Visitation
 
-	visit (a_visitor: INI_NODE_VISITOR) is
+	visit (a_visitor: INI_NODE_VISITOR)
 			-- Visit current node using vistor `a_vistor'
 		do
 			a_visitor.process_document (Current)
@@ -146,7 +146,7 @@ feature {NONE} -- Internal Implementation Cache
 			-- Cached version of `span'
 			-- Note: Do not use directly!
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

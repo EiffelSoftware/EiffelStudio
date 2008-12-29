@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object for modifying text of an AST node"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ deferred class
 
 feature -- Applicability
 
-	can_apply: BOOLEAN is
+	can_apply: BOOLEAN
 			-- Can current modifier be applied?
 		deferred
 		end
@@ -19,7 +19,7 @@ feature -- Applicability
 	applied: BOOLEAN
 			-- Has current modifier been applied?
 
-	apply is
+	apply
 			-- Apply current modifier.
 		require
 			can_apply: can_apply
@@ -29,7 +29,7 @@ feature -- Applicability
 			modifier_applied: applied
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 description: "Objects that convert a path to double quoted path"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Safe path
 
-	safe_path (a_path: STRING): STRING is
+	safe_path (a_path: STRING): STRING
 			-- Double quoted string from `a_path'.
 			-- Use double quote to avoid issue with blank in `a_path'
 		do
@@ -33,7 +33,7 @@ feature -- Safe path
 			Result_not_argument: a_path /= Void implies Result /= a_path
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2007, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

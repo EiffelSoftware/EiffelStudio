@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Renaming clause in Ace file"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (o: like old_name; n: like new_name) is
+	initialize (o: like old_name; n: like new_name)
 			-- Create a new TWO_NAME AST node.
 		require
 			o_not_void: o /= Void
@@ -41,7 +41,7 @@ invariant
 	old_name_not_void: old_name /= Void
 	new_name_not_void: new_name /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

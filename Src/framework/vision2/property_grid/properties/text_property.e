@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Simple text properties."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize
 			-- Initialize
 		do
 			pointer_button_press_actions.force_extend (agent activate)
@@ -47,7 +47,7 @@ feature -- Access
 	value: G
 			-- Data
 
-	displayed_value: STRING_32 is
+	displayed_value: STRING_32
 			-- Displayed format of the data.
 		do
 			Result := to_displayed_value (value)
@@ -57,7 +57,7 @@ feature -- Access
 
 feature -- Update
 
-	set_value (a_value: like value) is
+	set_value (a_value: like value)
 			-- Set `value' to `a_value'.
 		local
 			l_val: like displayed_value
@@ -75,7 +75,7 @@ feature -- Update
 			end
 		end
 
-	set_display_agent (an_agent: like display_agent) is
+	set_display_agent (an_agent: like display_agent)
 			-- Set `display_agent' to `an_agent'.
 		do
 			display_agent := an_agent
@@ -85,7 +85,7 @@ feature -- Update
 			display_agent_set: display_agent = an_agent
 		end
 
-	set_convert_to_data_agent (an_agent: like convert_to_data_agent) is
+	set_convert_to_data_agent (an_agent: like convert_to_data_agent)
 			-- Set `convert_to_data_agent' to `an_agent'.
 		do
 			convert_to_data_agent := an_agent
@@ -95,7 +95,7 @@ feature -- Update
 
 feature {NONE} -- Agents
 
-	update_text_on_deactivation is
+	update_text_on_deactivation
 			-- Update text on deactivation.
 		local
 			l_data: like value
@@ -111,7 +111,7 @@ feature {NONE} -- Agents
 			end
 		end
 
-	activate_action (popup_window: EV_POPUP_WINDOW) is
+	activate_action (popup_window: EV_POPUP_WINDOW)
 			-- Activate action.
 		local
 		do
@@ -129,7 +129,7 @@ feature {NONE} -- Agents
 			popup_window.set_size (popup_window.width - (left_border - 1) - (right_border - 1), popup_window.height - 1)
 		end
 
-	save_set_text (a_text: G) is
+	save_set_text (a_text: G)
 			-- Save `set_text'.
 		do
 			set_text (displayed_value)
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 
 	display_agent: FUNCTION [ANY, TUPLE [G], STRING_32]
 
-	to_displayed_value (a_value: like value): like displayed_value is
+	to_displayed_value (a_value: like value): like displayed_value
 		do
 			if a_value /= Void then
 				if display_agent /= Void then
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 
 	convert_to_data_agent: FUNCTION [ANY, TUPLE [STRING_32], G]
 
-	convert_to_data (a_string: like displayed_value): like value is
+	convert_to_data (a_string: like displayed_value): like value
 			-- Convert displayed data into data.
 		deferred
 		end

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Optimize option in Ace"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -15,12 +15,12 @@ inherit
 
 feature -- Properties
 
-	option_name: STRING is "optimize"
+	option_name: STRING = "optimize"
 
-	is_optimize: BOOLEAN is True;
+	is_optimize: BOOLEAN = True;
 			-- is the option an optimize one ?
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

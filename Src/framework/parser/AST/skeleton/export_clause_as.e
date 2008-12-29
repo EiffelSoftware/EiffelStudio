@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents an export inherit clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 feature -- Content
 
-	meaningful_content: like content is
+	meaningful_content: like content
 			-- Meaningful `content'.
 			-- Returns a list of EXPORT_ITEM_AS objects whose `features' are not Void.
 			-- If no item in `content' satisfy this criterion, return Void.
@@ -68,7 +68,7 @@ feature -- Content
 
 feature -- Visitor
 
-	process (v: AST_VISITOR) is
+	process (v: AST_VISITOR)
 			-- Visitor feature.
 		do
 			v.process_export_clause_as (Current)
@@ -76,7 +76,7 @@ feature -- Visitor
 
 feature -- Status reporting
 
-	valid_meaningful_content (a_meaningful_content: like meaningful_content): BOOLEAN is
+	valid_meaningful_content (a_meaningful_content: like meaningful_content): BOOLEAN
 			-- Is `a_meaningful_content' valid?
 		local
 			l_cursor: INTEGER
@@ -123,7 +123,7 @@ feature{NONE} -- Implementation
 	is_meaningful_content_calculated: BOOLEAN;
 			-- Flag to indicate whether or not `meaningful_content' has been calculated already.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Object that represents sorter to sort a list of given grid items according to their positions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 
 feature -- Sort
 
-	sort_with_position_comparator (a_list: DS_LIST [EVS_GRID_COORDINATED]; a_comparator: EVS_GRID_ITEM_POSITION_COMPARATOR) is
+	sort_with_position_comparator (a_list: DS_LIST [EVS_GRID_COORDINATED]; a_comparator: EVS_GRID_ITEM_POSITION_COMPARATOR)
 			-- Sort `a_list' with `a_comparator'.
 		require
 			a_list_attached: a_list /= Void
@@ -25,7 +25,7 @@ feature -- Sort
 			l_sorter.sort (a_list)
 		end
 
-indexing
+note
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"

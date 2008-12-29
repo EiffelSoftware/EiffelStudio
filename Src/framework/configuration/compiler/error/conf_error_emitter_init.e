@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Error that the emitter could not be initialized."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_code: INTEGER) is
+	make (a_code: INTEGER)
 			-- Create error message with COM error `a_code'.
 		do
 			text := "Unable to initialize Eiffel Assembly Cache (COM error: 0x" + a_code.to_hex_string + ")."
@@ -27,7 +27,7 @@ feature -- Access
 	text: STRING;
 		-- Error text.
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

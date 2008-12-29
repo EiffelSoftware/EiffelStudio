@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create {SHARED_ICOR_OBJECTS_MANAGER}
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			create modules.make (50)
 			create classes.make (100)
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Cleaning
 
-	clean is
+	clean
 			--
 		do
 			clean_modules
@@ -34,7 +34,7 @@ feature -- Cleaning
 			clean_functions
 		end
 
-	clean_modules is
+	clean_modules
 		local
 			l_module: ICOR_DEBUG_MODULE
 		do
@@ -50,7 +50,7 @@ feature -- Cleaning
 			modules.clear_all
 		end
 
-	clean_classes is
+	clean_classes
 		local
 			l_class: ICOR_DEBUG_CLASS
 		do
@@ -66,7 +66,7 @@ feature -- Cleaning
 			classes.clear_all
 		end
 
-	clean_functions is
+	clean_functions
 		local
 			l_function: ICOR_DEBUG_FUNCTION
 		do
@@ -84,7 +84,7 @@ feature -- Cleaning
 
 feature {SHARED_ICOR_OBJECTS_MANAGER, ICOR_EXPORTER} -- Access
 
-	icd_module (p: POINTER): ICOR_DEBUG_MODULE is
+	icd_module (p: POINTER): ICOR_DEBUG_MODULE
 		require
 			pointer_valid: p /= default_pointer
 		do
@@ -104,7 +104,7 @@ feature {SHARED_ICOR_OBJECTS_MANAGER, ICOR_EXPORTER} -- Access
 			result_indexed: modules.has (Result.item)
 		end
 
-	icd_class (p: POINTER): ICOR_DEBUG_CLASS is
+	icd_class (p: POINTER): ICOR_DEBUG_CLASS
 		require
 			pointer_valid: p /= default_pointer
 		do
@@ -124,7 +124,7 @@ feature {SHARED_ICOR_OBJECTS_MANAGER, ICOR_EXPORTER} -- Access
 			result_indexed: classes.has (Result.item)
 		end
 
-	icd_function (p: POINTER): ICOR_DEBUG_FUNCTION is
+	icd_function (p: POINTER): ICOR_DEBUG_FUNCTION
 		require
 			pointer_valid: p /= default_pointer
 		do
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 
 	functions: HASH_TABLE [ICOR_DEBUG_FUNCTION, POINTER];
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

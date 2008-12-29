@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Represent a DIRECTORY_PROPERTY with the replacements of a CONF_LOCATION"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ feature -- Access
 
 feature -- Update
 
-	set_target (a_target: like target) is
+	set_target (a_target: like target)
 			-- Set `target' to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
@@ -35,7 +35,7 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	location_value: STRING_32 is
+	location_value: STRING_32
 			-- Location from value with replacements.
 		local
 			l_loc: CONF_FILE_LOCATION
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Container for manifest resources binary stored in memory."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Initialize new instance of CLI_RESOURCES.
 		do
 			create resources.make (2)
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: MANAGED_POINTER is
+	item: MANAGED_POINTER
 			-- Concatenation of all resources.
 		do
 			if not resources.is_empty then
@@ -42,7 +42,7 @@ feature -- Access
 		
 feature -- Status report
 
-	count: INTEGER is
+	count: INTEGER
 			-- Size of all resources.
 		do
 			from
@@ -57,7 +57,7 @@ feature -- Status report
 			count_positive: Result >= 0
 		end
 
-	i_th_position (i: INTEGER): INTEGER is
+	i_th_position (i: INTEGER): INTEGER
 			-- Position of `i'-th resource in memory.
 		require
 			valid_index: valid_index (i)
@@ -78,7 +78,7 @@ feature -- Status report
 			i_th_position_positive: Result >= 0
 		end
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' a valid index?
 		do
 			Result := resources.valid_index (i)
@@ -86,7 +86,7 @@ feature -- Status report
 	
 feature -- Settings
 
-	extend (p: MANAGED_POINTER) is
+	extend (p: MANAGED_POINTER)
 			-- Convenience feature.
 		do
 			resources.extend (p)
@@ -103,7 +103,7 @@ invariant
 	resources_not_void: resources /= Void
 	resources_compare_references: not resources.object_comparison
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

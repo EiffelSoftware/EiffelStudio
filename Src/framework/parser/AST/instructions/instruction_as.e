@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Abstract class for instruction AS node. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ feature -- Access
 
 feature {EIFFEL_PARSER_SKELETON} -- Line pragma
 
-	set_line_pragma (a_line_pragma: like line_pragma) is
+	set_line_pragma (a_line_pragma: like line_pragma)
 			-- Set `line_pragma' with `a_line_pragma'.
 		do
 			line_pragma := a_line_pragma
@@ -27,14 +27,14 @@ feature {EIFFEL_PARSER_SKELETON} -- Line pragma
 
 feature -- Status report
 
-	starts_with_parenthesis: BOOLEAN is
+	starts_with_parenthesis: BOOLEAN
 			-- Is the first format item a "(".
 			-- See: INTERNAL_AS.format_compound.
 		do
 			-- False
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

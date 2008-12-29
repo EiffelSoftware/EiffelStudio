@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Scanner token type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,7 @@ convert
 
 feature {NONE} -- Initialization
 
-	make_from_integer (i: INTEGER) is
+	make_from_integer (i: INTEGER)
 			-- Initializes `Current' using `i' to correspond to a token member (see Access)
 		require
 			i_is_member: i >= min_member and i <= max_member
@@ -30,42 +30,42 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	unknown: INTEGER is 0x00
+	unknown: INTEGER = 0x00
 			-- Unknown token
 
-	whitespace: INTEGER is 0x01
+	whitespace: INTEGER = 0x01
 			-- Whitespace tokens
 
-	text: INTEGER is 0x02
+	text: INTEGER = 0x02
 			-- Text blob token
 
-	section_open: INTEGER is 0x03
+	section_open: INTEGER = 0x03
 			-- Assigner symbol token '['
 
-	section_label: INTEGER is 0x04
+	section_label: INTEGER = 0x04
 			-- INI section label token '[label]'
 
-	section_close: INTEGER is 0x05
+	section_close: INTEGER = 0x05
 			-- Assigner symbol token ']'
 
-	identifier: INTEGER is 0x06
+	identifier: INTEGER = 0x06
 			-- Property identifier token 'property'=xxxx
 
-	assigner: INTEGER is 0x07
+	assigner: INTEGER = 0x07
 			-- Assigner symbol token '='
 
-	comment: INTEGER is 0x08
+	comment: INTEGER = 0x08
 			-- Comment token, anything after ';' without anything but whitespace before
 
 feature -- Access
 
-	min_member: INTEGER is
+	min_member: INTEGER
 			-- Minimum value member
 		do
 			Result := unknown
 		end
 
-	max_member: INTEGER is
+	max_member: INTEGER
 			-- Maximum value member
 		do
 			Result := comment
@@ -73,7 +73,7 @@ feature -- Access
 
 feature -- HASHABLE Implementation
 
-	hash_code: INTEGER is
+	hash_code: INTEGER
 			-- Hash code value
 		do
 			Result := value
@@ -81,7 +81,7 @@ feature -- HASHABLE Implementation
 
 feature -- Conversion
 
-	to_integer: INTEGER is
+	to_integer: INTEGER
 			-- Converts `Current' to an INTEGER
 		do
 			Result := value
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 invariant
 	value_is_member: value >= min_member and value <= max_member
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

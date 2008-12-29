@@ -1,4 +1,4 @@
-indexing
+note
 	description: "EIFFEL_LIST modifier"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,21 +16,21 @@ inherit
 
 feature -- Header/footer
 
-	set_header_text (a_text: STRING) is
+	set_header_text (a_text: STRING)
 			-- Set header text of the EIFFEL_LIST node.
 			-- `a_text' is empty means remove header from current node.	
 		do
 			header_text := a_text
 		end
 
-	set_footer_text (a_text: STRING) is
+	set_footer_text (a_text: STRING)
 			-- Set footer text of the EIFFEL_LIST node.
 			-- `a_text' is empty means remove footer from current node.	
 		do
 			footer_text := a_text
 		end
 
-	set_header_ast (ast: AST_EIFFEL) is
+	set_header_ast (ast: AST_EIFFEL)
 			-- Set `header_ast' with `ast'.
 		do
 			header_ast := ast
@@ -38,7 +38,7 @@ feature -- Header/footer
 			header_ast_set: header_ast = ast
 		end
 
-	set_footer_ast (ast: AST_EIFFEL) is
+	set_footer_ast (ast: AST_EIFFEL)
 			-- Set `footer_ast' with `ast'.
 		do
 			footer_ast := ast
@@ -74,7 +74,7 @@ feature -- Header/footer
 
 feature -- Item modification
 
-	insert_left (item_text: STRING; i: INTEGER) is
+	insert_left (item_text: STRING; i: INTEGER)
 			-- Register a left-insertion operation on `i'-th item in `eiffel_list'.
 			-- e.g. `item_text' will be inserted before `i'-th item.
 		require
@@ -83,7 +83,7 @@ feature -- Item modification
 		deferred
 		end
 
-	insert_right (item_text: STRING; i: INTEGER) is
+	insert_right (item_text: STRING; i: INTEGER)
 			-- Register an right-insertion operation on `i'-th item in `eiffel_list'.
 			-- e.g. `item_text' will be inserted after `i'-th item.			
 		require
@@ -92,7 +92,7 @@ feature -- Item modification
 		deferred
 		end
 
-	replace (item_text: STRING; i: INTEGER) is
+	replace (item_text: STRING; i: INTEGER)
 			-- Register a replace operation on `i'-th item in `eiffel_list'.
 		require
 			item_text_not_void: item_text /= Void
@@ -100,12 +100,12 @@ feature -- Item modification
 		deferred
 		end
 
-	remove (i: INTEGER) is
+	remove (i: INTEGER)
 			-- Register a remove operation on `i'-th item in `eiffel_list'.
 		deferred
 		end
 
-	prepend (item_text: STRING) is
+	prepend (item_text: STRING)
 			-- Register a prepend operation on `eiffel_list'.
 			-- e.g. `item_text' will be inserted before the first item.			
 		require
@@ -114,7 +114,7 @@ feature -- Item modification
 		deferred
 		end
 
-	append (item_text: STRING) is
+	append (item_text: STRING)
 			-- Register a append operation on  `eiffel_list'.
 			-- e.g. `item_text' will be inserted after the last item.
 		require
@@ -123,7 +123,7 @@ feature -- Item modification
 		deferred
 		end
 
-	merge_left (other_eiffel_list: EIFFEL_LIST [AST_EIFFEL]; other_match_list: like match_list) is
+	merge_left (other_eiffel_list: EIFFEL_LIST [AST_EIFFEL]; other_match_list: like match_list)
 			-- Merge `other_eiffel_list' into current structure before the first item.
 		require
 			other_eiffel_list_not_void: other_eiffel_list /= void
@@ -145,7 +145,7 @@ feature -- Item modification
 			end
 		end
 
-	merge_right (other_eiffel_list: EIFFEL_LIST [AST_EIFFEL]; other_match_list: like match_list) is
+	merge_right (other_eiffel_list: EIFFEL_LIST [AST_EIFFEL]; other_match_list: like match_list)
 			-- Merge `other_eiffel_list' into current structure after the last item.
 		require
 			other_eiffel_list_not_void: other_eiffel_list /= void
@@ -168,7 +168,7 @@ feature -- Item modification
 
 feature -- Status reporting
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is current empty?
 		deferred
 		end
@@ -181,7 +181,7 @@ feature{NONE} -- Implementation
 invariant
 	match_list_not_void: match_list /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

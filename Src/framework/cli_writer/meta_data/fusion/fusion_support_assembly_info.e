@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 	
 feature -- Access
 
-	name: STRING is
+	name: STRING
 		-- Assembly name
 		local
 			a_ptr: POINTER
@@ -28,7 +28,7 @@ feature -- Access
 			Result := uni_string.string
 		end
 		
-	version: STRING is
+	version: STRING
 		-- Assembly version
 		local
 			a_ptr: POINTER
@@ -39,7 +39,7 @@ feature -- Access
 			Result := uni_string.string
 		end
 		
-	culture: STRING is
+	culture: STRING
 		-- Assembly culture
 		local
 			a_ptr: POINTER
@@ -50,7 +50,7 @@ feature -- Access
 			Result := uni_string.string
 		end
 		
-	public_key_token: STRING is
+	public_key_token: STRING
 		-- Assembly public key token
 		local
 			a_ptr: POINTER
@@ -67,7 +67,7 @@ feature {NONE} -- Internal
 		
 feature {NONE} -- Implementation
 
-	c_name (p, a_name: POINTER): INTEGER is
+	c_name (p, a_name: POINTER): INTEGER
 			-- Call `IAssemblyInfo->assembly_name'.
 		external
 			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"ise_vs_fusion_support.h%""
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			"get_AssemblyName"
 		end
 		
-	c_version (p, a_version: POINTER): INTEGER is
+	c_version (p, a_version: POINTER): INTEGER
 			-- Call `IAssemblyInfo->assembly_version ((IUnknown **) &iai)'.
 		external
 			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"ise_vs_fusion_support.h%""
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			"get_Version"
 		end
 		
-	c_culture (p, a_culture: POINTER): INTEGER is
+	c_culture (p, a_culture: POINTER): INTEGER
 			-- Call `IAssemblyInfo->assembly_culture'.
 		external
 			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"ise_vs_fusion_support.h%""
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			"get_Culture"
 		end
 		
-	c_public_key_token (p, a_public_key_token: POINTER): INTEGER is
+	c_public_key_token (p, a_public_key_token: POINTER): INTEGER
 			-- Call `IAssemblyInfo->assembly_public_key_token'.
 		external
 			"C++ IAssemblyInfo signature (LPWSTR *): EIF_INTEGER use %"ise_vs_fusion_support.h%""
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			"get_PublicKeyToken"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

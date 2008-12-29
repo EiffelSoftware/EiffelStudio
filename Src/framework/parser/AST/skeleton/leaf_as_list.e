@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 					AST leaf list for roundtrip parser.
 				    It is a list to store terminals (or leaves) in a source file.
@@ -40,7 +40,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_trunk_number: INTEGER) is
+	make (a_trunk_number: INTEGER)
 			-- Initialize current list to contain at least `a_trunk_number' of trunks.
 		require
 			a_trunk_number_positive: a_trunk_number > 0
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	extend (a_leaf: LEAF_AS) is
+	extend (a_leaf: LEAF_AS)
 			-- Extend `a_leaf' into current list.
 		require
 			a_leaf_not_void: a_leaf /= Void
@@ -73,7 +73,7 @@ feature -- Element change
 
 feature -- Access
 
-	i_th alias "[]", infix "@" (i: INTEGER): LEAF_AS is
+	i_th alias "[]", infix "@" (i: INTEGER): LEAF_AS
 			-- Entry at index `i', if in index interval
 		require
 			i_valid: valid_index (i)
@@ -84,7 +84,7 @@ feature -- Access
 			Result := trunks.i_th (j // trunk_size + 1).item (j \\ trunk_size)
 		end
 
-	first: LEAF_AS is
+	first: LEAF_AS
 			-- First element in list
 		require
 			list_not_empty: count > 0
@@ -92,7 +92,7 @@ feature -- Access
 			Result := trunks.i_th (1).item (0)
 		end
 
-	last: LEAF_AS is
+	last: LEAF_AS
 			-- Last element in list
 		require
 			list_not_empty: count > 0
@@ -100,7 +100,7 @@ feature -- Access
 			Result := current_trunk.item (in_trunk_count - 1)
 		end
 
-	is_empty: BOOLEAN is
+	is_empty: BOOLEAN
 			-- Is Current empty?
 		do
 			Result := count = 0
@@ -110,7 +110,7 @@ feature -- Access
 
 feature -- Status reporting
 
-	valid_index (i: INTEGER): BOOLEAN is
+	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' a valid index?
 		do
 			Result := (1 <= i) and (i <= count)
@@ -119,7 +119,7 @@ feature -- Status reporting
 	count: INTEGER
 			-- Number of items in current list
 
-	capacity: INTEGER is
+	capacity: INTEGER
 			-- Capacity of current
 		do
 			Result := trunk_count * trunk_size
@@ -132,7 +132,7 @@ feature -- Status reporting
 	current_trunk: SPECIAL [LEAF_AS]
 			-- Current trunk
 
-	trunk_count: INTEGER is
+	trunk_count: INTEGER
 			-- Count of trunks
 		do
 			Result := trunks.count
@@ -146,10 +146,10 @@ feature{NONE} -- Implementation
 	trunks: ARRAYED_LIST [like current_trunk]
 			-- List of trunks of tokens
 
-	trunk_size: INTEGER is 1000
+	trunk_size: INTEGER = 1000
 			-- Initial size of every trunk
 
-	initial_trunk_number: INTEGER is 10
+	initial_trunk_number: INTEGER = 10
 			-- Initial number of trunks
 
 feature -- Status
@@ -159,7 +159,7 @@ feature -- Status
 
 feature -- Status update
 
-	set_generated (a_timestamp: INTEGER) is
+	set_generated (a_timestamp: INTEGER)
 			-- Set the timestamp when this matchlist was generated.
 		do
 			generated := a_timestamp
@@ -167,7 +167,7 @@ feature -- Status update
 
 feature -- Item searching
 
-	item_by_start_position (start_pos: INTEGER): LEAF_AS is
+	item_by_start_position (start_pos: INTEGER): LEAF_AS
 			-- Item in `Current' whose `start_position' equals to `start_pos'
 			-- Return Void if no item in `Current' satisfies.
 		local
@@ -195,7 +195,7 @@ feature -- Item searching
 			end
 		end
 
-	item_by_end_position (end_pos: INTEGER): LEAF_AS is
+	item_by_end_position (end_pos: INTEGER): LEAF_AS
 			-- Item in `Current' whose `end_position' equals to `end_pos'
 			-- Return Void if no item in `Current' satisfies.
 		local
@@ -223,7 +223,7 @@ feature -- Item searching
 			end
 		end
 
-	item_by_position (a_pos: INTEGER): LEAF_AS is
+	item_by_position (a_pos: INTEGER): LEAF_AS
 			-- Item in `Current' between which `a_pos' is located
 			-- Return Void if no item in `Current' satisfies.
 		local
@@ -256,7 +256,7 @@ feature -- Item searching
 
 feature -- Region validity
 
-	valid_region (a_region: ERT_TOKEN_REGION):BOOLEAN is
+	valid_region (a_region: ERT_TOKEN_REGION):BOOLEAN
 			-- Is `a_region' valid?
 		require
 			a_region_not_void: a_region /= Void
@@ -264,7 +264,7 @@ feature -- Region validity
 			Result := a_region.start_index > 0 and a_region.end_index >= a_region.start_index and a_region.end_index <= count
 		end
 
-	valid_text_region (a_region: ERT_TOKEN_REGION):BOOLEAN is
+	valid_text_region (a_region: ERT_TOKEN_REGION):BOOLEAN
 			-- Is `a_region' valid to get text?
 		require
 			a_region_not_void: a_region /= Void
@@ -280,7 +280,7 @@ feature -- Region validity
 			end
 		end
 
-	valid_append_region (a_region: ERT_TOKEN_REGION):BOOLEAN is
+	valid_append_region (a_region: ERT_TOKEN_REGION):BOOLEAN
 			-- Is `a_region' valid to append some text to?
 		require
 			a_region_not_void: a_region /= Void
@@ -296,7 +296,7 @@ feature -- Region validity
 			end
 		end
 
-	valid_prepend_region (a_region: ERT_TOKEN_REGION):BOOLEAN is
+	valid_prepend_region (a_region: ERT_TOKEN_REGION):BOOLEAN
 			-- Is `a_region' valid to prepend some text to?
 		require
 			a_region_not_void: a_region /= Void
@@ -312,7 +312,7 @@ feature -- Region validity
 			end
 		end
 
-	valid_replace_region (a_region: ERT_TOKEN_REGION):BOOLEAN is
+	valid_replace_region (a_region: ERT_TOKEN_REGION):BOOLEAN
 			-- Is `a_region' valid to be replaced by some other text?
 		require
 			a_region_not_void: a_region /= Void
@@ -328,7 +328,7 @@ feature -- Region validity
 			end
 		end
 
-	valid_remove_region (a_region: ERT_TOKEN_REGION):BOOLEAN is
+	valid_remove_region (a_region: ERT_TOKEN_REGION):BOOLEAN
 			-- Is `a_region' valid to be removed?
 		require
 			a_region_not_void: a_region /= Void
@@ -346,7 +346,7 @@ feature -- Region validity
 
 feature -- Text modification
 
-	prepend_region (a_region: ERT_TOKEN_REGION; a_text: STRING) is
+	prepend_region (a_region: ERT_TOKEN_REGION; a_text: STRING)
 			-- Prepend `a_text' to `a_region'.
 			-- A prepend modifier will be registered.
 		require
@@ -362,7 +362,7 @@ feature -- Text modification
 			l_modifier.apply (Current)
 		end
 
-	append_region (a_region: ERT_TOKEN_REGION; a_text: STRING) is
+	append_region (a_region: ERT_TOKEN_REGION; a_text: STRING)
 			-- Append `a_text' to `a_region'.
 			-- An append modifier will be registered.			
 		require
@@ -378,7 +378,7 @@ feature -- Text modification
 			l_modifier.apply (Current)
 		end
 
-	replace_region (a_region: ERT_TOKEN_REGION; a_text: STRING) is
+	replace_region (a_region: ERT_TOKEN_REGION; a_text: STRING)
 			-- Prepend `a_region' by `a_text'.
 			-- A replace modifier will be registered.			
 		require
@@ -394,7 +394,7 @@ feature -- Text modification
 			l_modifier.apply (Current)
 		end
 
-	remove_region (a_region: ERT_TOKEN_REGION) is
+	remove_region (a_region: ERT_TOKEN_REGION)
 			-- Remove `a_region'.
 			-- A remove modifier will be registered.			
 		require
@@ -412,7 +412,7 @@ feature -- Text modification
 
 feature -- Text status
 
-	is_text_modified (a_region: ERT_TOKEN_REGION): BOOLEAN is
+	is_text_modified (a_region: ERT_TOKEN_REGION): BOOLEAN
 			-- Has text in `a_region' been modified?
 		require
 			a_region_not_void: a_region /= Void
@@ -423,7 +423,7 @@ feature -- Text status
 
 feature -- Text
 
-	original_text (a_region: ERT_TOKEN_REGION): STRING is
+	original_text (a_region: ERT_TOKEN_REGION): STRING
 			-- Original text of `a_region'
 		require
 			a_region_not_void: a_region /= Void
@@ -442,7 +442,7 @@ feature -- Text
 			end
 		end
 
-	original_text_count (a_region: ERT_TOKEN_REGION): INTEGER is
+	original_text_count (a_region: ERT_TOKEN_REGION): INTEGER
 			-- Original text count of `a_region'
 		require
 			a_region_not_void: a_region /= Void
@@ -461,7 +461,7 @@ feature -- Text
 			end
 		end
 
-	text (a_region: ERT_TOKEN_REGION): STRING is
+	text (a_region: ERT_TOKEN_REGION): STRING
 			-- Text (with all modifications, if any, applied) of `a_region'
 		require
 			a_region_not_void: a_region /= Void
@@ -489,7 +489,7 @@ feature -- Text
 			Result_not_void: Result /= Void
 		end
 
-	text_count (a_region: ERT_TOKEN_REGION): INTEGER is
+	text_count (a_region: ERT_TOKEN_REGION): INTEGER
 			-- Text (with all modifications, if any, applied) count of `a_region'
 		require
 			a_region_not_void: a_region /= Void
@@ -501,13 +501,13 @@ feature -- Text
 			Result_non_negative: Result >= 0
 		end
 
-	out, all_original_text: STRING is
+	out, all_original_text: STRING
 			-- String representation of current match list (without modification applied)
 		do
 			Result := original_text (create {ERT_TOKEN_REGION}.make (1, count))
 		end
 
-	all_modified_text: STRING is
+	all_modified_text: STRING
 			-- String representation of current match list (with modification applied)
 		do
 			Result := text (create {ERT_TOKEN_REGION}.make (1, count))
@@ -515,7 +515,7 @@ feature -- Text
 
 feature -- Text/Separator
 
-	has_leading_separator (a_region: ERT_TOKEN_REGION): BOOLEAN is
+	has_leading_separator (a_region: ERT_TOKEN_REGION): BOOLEAN
 			-- Is there any separator structure (break or semicolon) appears before `a_region'?
 		require
 			a_region_not_void: a_region /= Void
@@ -528,7 +528,7 @@ feature -- Text/Separator
 			end
 		end
 
-	has_trailing_separator (a_region: ERT_TOKEN_REGION): BOOLEAN is
+	has_trailing_separator (a_region: ERT_TOKEN_REGION): BOOLEAN
 			-- Is there any separator structure (break or semicolon) appears after `a_region'?
 		require
 			a_region_not_void: a_region /= Void
@@ -541,7 +541,7 @@ feature -- Text/Separator
 			end
 		end
 
-	has_comment (a_region: ERT_TOKEN_REGION): BOOLEAN is
+	has_comment (a_region: ERT_TOKEN_REGION): BOOLEAN
 			-- Is there any comment within `a_region'?
 		require
 			a_region_not_void: a_region /= Void
@@ -568,7 +568,7 @@ feature -- Text/Separator
 
 feature -- Modifier operation
 
-	modifier_count: INTEGER is
+	modifier_count: INTEGER
 			-- Count of registered modifiers
 		do
 			Result := modifier_list.count
@@ -576,7 +576,7 @@ feature -- Modifier operation
 			Result_non_negative: Result >= 0
 		end
 
-	modifier (i: INTEGER): ERT_REGION_MODIFIER is
+	modifier (i: INTEGER): ERT_REGION_MODIFIER
 			-- `i'-th registered modifier
 		require
 			valid_i: i >0 and i <= modifier_count
@@ -586,7 +586,7 @@ feature -- Modifier operation
 			Result_set: Result = modifier_list.i_th (i)
 		end
 
-	remove_last_modifier is
+	remove_last_modifier
 			-- Remove last registered modifier.
 		require
 			modifiers_not_applied: not modifier_applied
@@ -597,7 +597,7 @@ feature -- Modifier operation
 			end
 		end
 
-	undo_modifications is
+	undo_modifications
 			-- Undo all applied modifications to text.
 		require
 			all_existing_modifiers_applied: modifier_applied
@@ -617,7 +617,7 @@ feature -- Modifier operation
 			modifier_not_applied: not modifier_applied
 		end
 
-	redo_modifications is
+	redo_modifications
 			-- Redo all registered modifications to text.
 		require
 			modifiers_not_applied: not modifier_applied
@@ -633,7 +633,7 @@ feature -- Modifier operation
 	modifier_applied: BOOLEAN
 			-- Have all modifiers been applied to current?
 
-	is_modifier_registered (a_modifier: ERT_REGION_MODIFIER): BOOLEAN is
+	is_modifier_registered (a_modifier: ERT_REGION_MODIFIER): BOOLEAN
 			-- Is `a_modifier' registered?
 		require
 			a_modifier_not_void: a_modifier /= Void
@@ -643,7 +643,7 @@ feature -- Modifier operation
 
 feature -- Comment extraction
 
-	extract_comment (a_region: ERT_TOKEN_REGION): EIFFEL_COMMENTS is
+	extract_comment (a_region: ERT_TOKEN_REGION): EIFFEL_COMMENTS
 			-- Extract all comments from `a_region'.
 			-- Only comments in `original_text' will be extracted.
 		require
@@ -678,7 +678,7 @@ feature -- Comment extraction
 
 feature -- Status reporting
 
-	if_all_in_region (a_region: ERT_TOKEN_REGION; test: FUNCTION [ANY, TUPLE [LEAF_AS], BOOLEAN]): BOOLEAN is
+	if_all_in_region (a_region: ERT_TOKEN_REGION; test: FUNCTION [ANY, TUPLE [LEAF_AS], BOOLEAN]): BOOLEAN
 			-- Do all tokens in `a_region' satisfy `test'?
 		require
 			a_region_not_void: a_region /= Void
@@ -700,7 +700,7 @@ feature -- Status reporting
 			end
 		end
 
-	if_any_in_region (a_region: ERT_TOKEN_REGION; test: FUNCTION [ANY, TUPLE [LEAF_AS], BOOLEAN]): BOOLEAN is
+	if_any_in_region (a_region: ERT_TOKEN_REGION; test: FUNCTION [ANY, TUPLE [LEAF_AS], BOOLEAN]): BOOLEAN
 			-- Does any token in `a_region' satisfy `test'?
 		require
 			a_region_not_void: a_region /= Void
@@ -724,7 +724,7 @@ feature -- Status reporting
 
 feature{NONE} -- Implementation
 
-	modifier_list: LINKED_LIST [ERT_REGION_MODIFIER] is
+	modifier_list: LINKED_LIST [ERT_REGION_MODIFIER]
 			-- List of modifiers
 		do
 			if internal_modifier_list = Void then
@@ -735,7 +735,7 @@ feature{NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	register_modifier (a_modifier: ERT_REGION_MODIFIER) is
+	register_modifier (a_modifier: ERT_REGION_MODIFIER)
 			-- Register `a_modifier' in current.
 		require
 			a_modifier_not_void: a_modifier /= Void
@@ -748,7 +748,7 @@ feature{NONE} -- Implementation
 
 feature{ERT_REGION_MODIFIER} -- Implementation
 
-	active_modifier_list: like modifier_list is
+	active_modifier_list: like modifier_list
 			-- List of active modifiers
 		do
 			if internal_active_modifier_list = Void then
@@ -759,7 +759,7 @@ feature{ERT_REGION_MODIFIER} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	active_prepend_modifier_list: SORTED_TWO_WAY_LIST [ERT_PREPEND_REGION_MODIFIER] is
+	active_prepend_modifier_list: SORTED_TWO_WAY_LIST [ERT_PREPEND_REGION_MODIFIER]
 			-- List of active prepend modifiers
 		do
 			if internal_prepend_modifier_list = Void then
@@ -770,7 +770,7 @@ feature{ERT_REGION_MODIFIER} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	active_append_modifier_list: SORTED_TWO_WAY_LIST [ERT_APPEND_REGION_MODIFIER] is
+	active_append_modifier_list: SORTED_TWO_WAY_LIST [ERT_APPEND_REGION_MODIFIER]
 			-- List of active prepend modifiers
 		do
 			if internal_append_modifier_list = Void then
@@ -781,7 +781,7 @@ feature{ERT_REGION_MODIFIER} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	set_token_text (a_index: INTEGER; a_text: STRING) is
+	set_token_text (a_index: INTEGER; a_text: STRING)
 			-- Set text of `a_index'-th token with `a_text'.
 		require
 			valid_index: valid_index (a_index)
@@ -794,7 +794,7 @@ feature{ERT_REGION_MODIFIER} -- Implementation
 
 feature{NONE} -- Implementation
 
-	final_token_text (a_index: INTEGER): STRING is
+	final_token_text (a_index: INTEGER): STRING
 			-- Final text of a token specified by `a_index' with all modification applied, if any.
 		require
 			valid_index: valid_index (a_index)
@@ -819,7 +819,7 @@ feature{NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	prepended_token_text (a_index: INTEGER): STRING is
+	prepended_token_text (a_index: INTEGER): STRING
 			--	All prepended text of token specified by `a_index'
 		require
 			valid_index: valid_index (a_index)
@@ -844,7 +844,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	appended_token_text (a_index: INTEGER): STRING is
+	appended_token_text (a_index: INTEGER): STRING
 			--	All appended text of token specified by `a_index'
 		require
 			valid_index: valid_index (a_index)
@@ -886,7 +886,7 @@ feature{NONE} -- Implementation
 	internal_append_modifier_list: like active_append_modifier_list
 			-- List of active append modifiers
 
-	token_text_table: HASH_TABLE [STRING, INTEGER] is
+	token_text_table: HASH_TABLE [STRING, INTEGER]
 			-- Hashtable to store all tokens whose text has been changed
 		do
 			if internal_token_text_table = Void then
@@ -901,7 +901,7 @@ invariant
 	trunks_not_void: trunks /= Void
 	trunks_not_empty: not trunks.is_empty
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

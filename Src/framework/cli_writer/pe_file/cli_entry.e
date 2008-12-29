@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Small structure that holds entry point of current CLI image"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Allocated `item'.
 		do
 			managed_pointer_make (structure_size)
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Measurement
 
-	structure_size: INTEGER is
+	structure_size: INTEGER
 			-- Size of `CLI_ENTRY' structure.
 		external
 			"C macro use %"cli_writer.h%""
@@ -37,16 +37,16 @@ feature -- Measurement
 			"sizeof(CLI_ENTRY)"
 		end
 
-	start_position: INTEGER is 2
+	start_position: INTEGER = 2
 			-- Actual position where `jump' info and `rva'
 			-- are located.
 
-	jump_size: INTEGER is 4
+	jump_size: INTEGER = 4
 			-- Size taken by padding + `jump' instruction.
 
 feature -- Settings
 
-	set_iat_rva (rva: INTEGER) is
+	set_iat_rva (rva: INTEGER)
 			-- Set `iat_rva' to `rva'.
 		do
 			c_set_iat_rva (item, rva + 0x400000)
@@ -54,25 +54,25 @@ feature -- Settings
 
 feature {NONE} -- Initialization
 
-	c_set_jump_inst_high (an_item: POINTER; i: INTEGER_8) is
+	c_set_jump_inst_high (an_item: POINTER; i: INTEGER_8)
 			-- Set `JumpInstH' to `i'.
 		external
 			"C struct CLI_ENTRY access JumpInstH type BYTE use %"cli_writer.h%""
 		end
 
-	c_set_jump_inst_low (an_item: POINTER; i: INTEGER_8) is
+	c_set_jump_inst_low (an_item: POINTER; i: INTEGER_8)
 			-- Set `JumpInstL' to `i'.
 		external
 			"C struct CLI_ENTRY access JumpInstL type BYTE use %"cli_writer.h%""
 		end
 
-	c_set_iat_rva (an_item: POINTER; i: INTEGER) is
+	c_set_iat_rva (an_item: POINTER; i: INTEGER)
 			-- Set `IAT_RVA' to `i'.
 		external
 			"C struct CLI_ENTRY access IAT_RVA type DWORD use %"cli_writer.h%""
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

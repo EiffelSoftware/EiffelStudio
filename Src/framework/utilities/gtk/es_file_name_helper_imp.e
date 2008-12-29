@@ -1,4 +1,4 @@
-indexing
+note
 	description: "GTK implementation of ES_FILE_NAME_HELPER"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -10,14 +10,14 @@ class
 
 feature -- Query
 
-	short_name_of (a_long_file_name: !STRING_GENERAL): STRING_32 is
+	short_name_of (a_long_file_name: !STRING_GENERAL): STRING_32
 			-- Short name of `a_long_file_name'
 		do
 			-- FIXIT: not implemented yet
 			Result := a_long_file_name.as_string_32
 		end
 
-indexing
+note
 	copyright: "Copyright (c) 1984-2008, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

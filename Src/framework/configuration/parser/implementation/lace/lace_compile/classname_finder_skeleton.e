@@ -1,4 +1,4 @@
-indexing
+note
 
 	description: "Classname finder skeletons"
 	legal: "See notice at end of class."
@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 			-- Create a new classname finder.
 		do
 			make_with_buffer (Empty_buffer)
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	reset is
+	reset
 			-- Reset scanner before scanning next input source.
 			-- (This routine can be called in wrap before scanning
 			-- another input buffer.)
@@ -51,7 +51,7 @@ feature -- Access
 
 feature -- Parsing
 
-	parse (a_file: KL_BINARY_INPUT_FILE) is
+	parse (a_file: KL_BINARY_INPUT_FILE)
 			-- Parse `a_file' and set `classname' if `a_file'
 			-- contains an Eiffel class text. Void otherwise.
 		require
@@ -81,14 +81,14 @@ feature -- Parsing
 
 feature -- Error handling
 
-	fatal_error (a_message: STRING) is
+	fatal_error (a_message: STRING)
 			-- A fatal error occurred.
 		do
 		end
 
 feature -- Update
 
-	set_partial_class (b: BOOLEAN) is
+	set_partial_class (b: BOOLEAN)
 			-- Set `is_partial_class' to `b'.
 		do
 			is_partial_class := b
@@ -96,7 +96,7 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	File_buffer: YY_FILE_BUFFER is
+	File_buffer: YY_FILE_BUFFER
 			-- Parser input file buffer
 		once
 			create Result.make_with_size ((create {KL_STANDARD_FILES}).input, 500)
@@ -104,7 +104,7 @@ feature {NONE} -- Implementation
 			file_buffer_not_void: Result /= Void
 		end
 
-	is_verbatim_string_closer: BOOLEAN is
+	is_verbatim_string_closer: BOOLEAN
 			-- Is `text' a valid Verbatim_string_closer?
 		require
 			-- valid_text: `text' matches regexp [ \t\r]*[\]\}][^\n"]*\"
@@ -144,16 +144,16 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Initial_verbatim_marker_size: INTEGER is 3
+	Initial_verbatim_marker_size: INTEGER = 3
 			-- Initial size for `verbatim_marker'
 
-	TE_ID: INTEGER is 300
+	TE_ID: INTEGER = 300
 
 invariant
 
 	verbatim_marker_not_void: verbatim_marker /= Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

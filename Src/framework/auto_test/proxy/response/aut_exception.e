@@ -1,4 +1,4 @@
-indexing
+note
 	description:
 
 		"Exception"
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		  an_exception_recipient_name:  like recipient_name;
 		  an_exception_class_name: like class_name;
 		  an_exception_tag_name: like tag_name;
-		  an_exception_trace: like trace) is
+		  an_exception_trace: like trace)
 			-- Create new exception.
 		require
 			an_exception_recipient_name_not_void: an_exception_recipient_name /= Void
@@ -69,7 +69,7 @@ feature -- Access
 	trace: STRING
 			-- Stack trace of exception
 
-	name: STRING is
+	name: STRING
 			-- Name of `exception'
 		do
 			if code = Void_call_target then
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 
 		end
 
-	go_after_next_dash_line (a_cs: DS_LINEAR_CURSOR [STRING]) is
+	go_after_next_dash_line (a_cs: DS_LINEAR_CURSOR [STRING])
 		require
 			a_cs_not_void: a_cs /= Void
 			a_cs_not_off: not a_cs.off
@@ -199,10 +199,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	interpreter_class: STRING is "ITP_INTERPRETER"
-	dash_line: STRING is "-------------------------------------------------------------------------------"
+	interpreter_class: STRING = "ITP_INTERPRETER"
+	dash_line: STRING = "-------------------------------------------------------------------------------"
 
-	is_erl_class_imp_line (v: STRING): BOOLEAN is
+	is_erl_class_imp_line (v: STRING): BOOLEAN
 			-- Is `v' a stack line describing a frame in an ERL_CLASS_IMP_* class?
 		require
 			v_not_void: v /= Void
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 					(v.substring (1, interpreter_class.count).is_equal (interpreter_class))
 		end
 
-	break_point_slot_regexp: RX_PCRE_REGULAR_EXPRESSION is
+	break_point_slot_regexp: RX_PCRE_REGULAR_EXPRESSION
 			-- Regular expression to match the break point slot of a line
 			-- from a stack trace
 		once

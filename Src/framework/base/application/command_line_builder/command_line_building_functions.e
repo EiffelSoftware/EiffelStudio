@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Utility client or ancestor to use when building command lines for application
 		that use the Eiffel Software argument parser library.
@@ -19,7 +19,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_use_separated_switch_values (a_use: like use_separated_switch_values) is
+	set_use_separated_switch_values (a_use: like use_separated_switch_values)
 			-- Sets `use_separated_switch_values' with `a_use'.
 		do
 			use_separated_switch_values := a_use
@@ -29,7 +29,7 @@ feature -- Status Setting
 
 feature -- Command line switch building
 
-	quote_string (a_value: STRING): STRING is
+	quote_string (a_value: STRING): STRING
 			-- Surrounds `a_value' with quotation marks
 		require
 			a_value_attached: a_value /= VOid
@@ -46,7 +46,7 @@ feature -- Command line switch building
 			result_ends_with_quote: Result.item (Result.count) = quote_char
 		end
 
-	switch_string (a_name: STRING; a_value: STRING; a_quote: BOOLEAN): STRING is
+	switch_string (a_name: STRING; a_value: STRING; a_quote: BOOLEAN): STRING
 			-- Builds a command line switch with value `a_value', if `a_value' is attached.
 		require
 			a_name_attached: a_name /= Void
@@ -72,7 +72,7 @@ feature -- Command line switch building
 			not_result_is_empty: a_value /= Void implies not Result.is_empty
 		end
 
-	switch_bool_string (a_name: STRING; a_value: BOOLEAN): STRING is
+	switch_bool_string (a_name: STRING; a_value: BOOLEAN): STRING
 			-- Builds a command line boolean switch for `a_name'
 		require
 			a_name_attached: a_name /= Void
@@ -96,7 +96,7 @@ feature {NONE} -- Special characters
 	switch_qualifier: CHARACTER_8 = '-'
 			-- Command-line switch qualifer character
 
-	switch_value_qualifer: CHARACTER is
+	switch_value_qualifer: CHARACTER
 			-- Character used to separate an switch from it's value
 		do
 			if use_separated_switch_values then
@@ -115,7 +115,7 @@ feature {NONE} -- Special characters
 	space_char: CHARACTER_8 = ' ';
 			-- Space character
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

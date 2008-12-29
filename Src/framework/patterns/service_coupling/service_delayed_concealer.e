@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Encapsulates a service object so that the services is created, through an activator function,
 		when requested for the first time.
@@ -70,7 +70,7 @@ invariant
 	activator_attached: internal_service = Void implies activator /= Void
 	activator_detached: internal_service /= Void implies activator = Void
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

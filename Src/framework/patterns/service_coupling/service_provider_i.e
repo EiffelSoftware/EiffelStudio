@@ -1,4 +1,4 @@
-indexing
+note
 	description: "[
 		Base interface for all classes exposing a means to query for a service.
 		
@@ -34,7 +34,7 @@ feature -- Query
 			result_compatiable: Result /= Void implies a_type.attempt (Result) /= Void
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

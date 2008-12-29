@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Iterates through a configuration."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature -- Visit nodes
 
-	process_system (a_system: CONF_SYSTEM) is
+	process_system (a_system: CONF_SYSTEM)
 			-- Visit `a_system'.
 		local
 			l_targets: ARRAYED_LIST [CONF_TARGET]
@@ -37,7 +37,7 @@ feature -- Visit nodes
 			end
 		end
 
-	process_target (a_target: CONF_TARGET) is
+	process_target (a_target: CONF_TARGET)
 			-- Visit `a_target'.
 		do
 			if not is_error then
@@ -56,47 +56,47 @@ feature -- Visit nodes
 			end
 		end
 
-	process_group (a_group: CONF_GROUP) is
+	process_group (a_group: CONF_GROUP)
 			-- Visit `a_group'.
 		do
 		end
 
-	process_assembly (an_assembly: CONF_ASSEMBLY) is
+	process_assembly (an_assembly: CONF_ASSEMBLY)
 			-- Visit `an_assembly'.
 		do
 		end
 
-	process_physical_assembly (an_assembly: CONF_PHYSICAL_ASSEMBLY_INTERFACE) is
+	process_physical_assembly (an_assembly: CONF_PHYSICAL_ASSEMBLY_INTERFACE)
 			-- Visit `an_assembly'.
 		do
 		end
 
-	process_library (a_library: CONF_LIBRARY) is
+	process_library (a_library: CONF_LIBRARY)
 			-- Visit `a_library'.
 		do
 		end
 
-	process_precompile (a_precompile: CONF_PRECOMPILE) is
+	process_precompile (a_precompile: CONF_PRECOMPILE)
 			-- Visit `a_precompile'.
 		do
 		end
 
-	process_cluster (a_cluster: CONF_CLUSTER) is
+	process_cluster (a_cluster: CONF_CLUSTER)
 			-- Visit `a_cluster'.
 		do
 		end
 
-	process_test_cluster (a_test_cluster: CONF_TEST_CLUSTER) is
+	process_test_cluster (a_test_cluster: CONF_TEST_CLUSTER)
 			-- <Precursor>
 		do
 		end
 
-	process_override (an_override: CONF_OVERRIDE) is
+	process_override (an_override: CONF_OVERRIDE)
 			-- Visit `an_override'.
 		do
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

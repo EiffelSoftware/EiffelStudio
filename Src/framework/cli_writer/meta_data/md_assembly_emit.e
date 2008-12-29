@@ -1,4 +1,4 @@
-indexing
+note
 	description: "Encapsulation of IMetaDataAssemblyEmit"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,7 +17,7 @@ create
 feature -- Access
 
 	define_assembly_ref (assembly_name: UNI_STRING; assembly_info: MD_ASSEMBLY_INFO;
-			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER is
+			public_key_token: MD_PUBLIC_KEY_TOKEN): INTEGER
 		require
 			assembly_name_not_void: assembly_name /= Void
 			assembly_info_not_void: assembly_info /= Void
@@ -41,7 +41,7 @@ feature -- Definition
 
 	define_assembly (assembly_name: UNI_STRING; assembly_flags: INTEGER;
 			assembly_info: MD_ASSEMBLY_INFO; public_key: MD_PUBLIC_KEY): INTEGER
-		is
+		
 			-- Define a new assembly `assembly_name' with characteristics
 			-- `assembly_flags' and `assembly_info', and if not void with
 			-- a public key `public_key'.
@@ -68,7 +68,7 @@ feature -- Definition
 
 	define_exported_type (type_name: UNI_STRING; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER): INTEGER
-		is
+		
 				-- Ensure that `type_name' type defined in `implementation_token' with
 				-- `type_def_token' and `type_flags' is exported from Current assembly.
 		require
@@ -83,7 +83,7 @@ feature -- Definition
 
 	define_file (file_name: UNI_STRING; hash_value: MANAGED_POINTER;
 			file_flags: INTEGER): INTEGER
-		is
+		
 			-- Define a new entry in file table.
 		require
 			file_name_not_void: file_name /= Void
@@ -100,7 +100,7 @@ feature -- Definition
 
 	define_manifest_resource (resource_name: UNI_STRING; implementation_token: INTEGER
 			offset, resource_flags: INTEGER): INTEGER
-		is
+		
 			-- Define a new entry in manifest resource table.
 		require
 		do
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 	c_define_assembly (an_item: POINTER; public_key: POINTER; key_length: INTEGER;
 			hash_alg: INTEGER; assembly_name: POINTER; assembly_metadata: POINTER;
 			assembly_flags: INTEGER; assembly_token: POINTER): INTEGER
-		is
+		
 			-- Call `IMetaDataAssemblyEmit->DefineAssembly'.
 		external
 			"[
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 
 	c_define_exported_type (an_item: POINTER; type_name: POINTER; implementation_token: INTEGER;
 			type_def_token: INTEGER; type_flags: INTEGER; exported_type_token: POINTER): INTEGER
-		is
+		
 			-- Call `IMetaDataAssemblyEmit->DefineExportedType'.
 		external
 			"[
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 		
 	c_define_file (an_item: POINTER; file_name: POINTER; hash_value: POINTER; hash_length: INTEGER;
 			file_flags: INTEGER; file_token: POINTER): INTEGER
-		is
+		
 			-- Call `IMetaDataAssemblyEmit->DefineFile'.
 		external
 			"[
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 	
 	c_define_manifest_resource (an_item: POINTER; resource_name: POINTER;
 			implementation_token, offset, resource_flags: INTEGER; resource_token: POINTER): INTEGER
-		is
+		
 			-- Call `IMetaDataAssemblyEmit->DefineManifestResource'.
 		external
 			"[
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 	c_define_assembly_ref (an_item: POINTER; public_key: POINTER; key_length: INTEGER;
 			assembly_name: POINTER; assembly_metadata: POINTER; hash_value: POINTER;
 			hash_length: INTEGER; assembly_flags: INTEGER; assembly_token: POINTER): INTEGER
-		is
+		
 			-- Call `IMetaDataAssemblyEmit->DefineAssemblyRef'.
 		external
 			"[
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			"DefineAssemblyRef"
 		end
 
-indexing
+note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

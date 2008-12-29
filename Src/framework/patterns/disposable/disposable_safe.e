@@ -28,8 +28,6 @@ feature {NONE} -- Clean Up
 	frozen unmake
 			-- GC finalization call.
 		do
-			check do_not_call_excplicitly: False end
-
 			if not is_disposed then
 				safe_dispose (False)
 			end
